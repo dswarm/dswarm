@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>de.avgl.dmp</groupId>
+		<artifactId>dmp</artifactId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
+	<groupId>de.avgl.dmp</groupId>
+	<artifactId>controller</artifactId>
+	<version>0.1-SNAPSHOT</version>
+	<name>DMP - Controller</name>
+	<url>http://avantgarde-labs.de</url>
+	<dependencies>
+		<!-- other project module dependencies -->
+		<dependency>
+			<groupId>de.avgl.dmp</groupId>
+			<artifactId>converter</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>de.avgl.dmp</groupId>
+			<artifactId>init</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>de.avgl.dmp</groupId>
+			<artifactId>persistence</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+</project>
