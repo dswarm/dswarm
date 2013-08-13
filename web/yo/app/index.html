@@ -20,8 +20,8 @@
         <link rel="stylesheet" href="styles/main.css">
         <!-- endbuild -->
 
-</head>
-  <body ng-cloak ng-app="frontendApp">
+  </head>
+  <body ng-cloak ng-app="dmpApp">
     <!--[if lt IE 7]>
       <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
     <![endif]-->
@@ -31,59 +31,71 @@
       <script src="components/json3/lib/json3.min.js"></script>
     <![endif]-->
 
-    <!-- Add your site or application content here -->
-    <div class="container" ng-view></div>
+    <div id="wrap">
 
-    <script src="components/jquery/jquery.js"></script>
+      <div class="navbar">
+        <button type="button" class="navbar-toggle" data-toggle="collapse"
+                data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">{{ projectName }}</a>
+
+        <div class="nav-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#/">Home</a></li>
+          </ul>
+          <ul class="nav navbar-nav pull-right">
+            <li><a href="https://intranet.slub-dresden.de:8443/x/c4U_AQ"
+                   target="_blank">About</a></li>
+            <li><a href="https://jira.slub-dresden.de/browse/DD"
+                   target="_blank">Issues</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="content">
+        <div class="row row-2">
+          <div class="col-3 box" ui-view="sourceData"></div>
+          <div class="col-6 box" ui-view="schema"></div>
+          <div class="col-3 box" ui-view="targetData"></div>
+        </div>
+        <div class="row row-1">
+          <div class="col-3 box" ui-view="configuration"></div>
+          <div class="col-6 box" ui-view="transformation"></div>
+          <div class="col-3 box" ui-view="components"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="footer">
+      <div class="container">
+        <p class="text-muted credit">&copy; Avantgarde Labs / SLUB 2013</p>
+      </div>
+    </div>
+
+    <!--<script src="components/jquery/jquery.js"></script>-->
     <script src="components/angular/angular.js"></script>
-
-        <!-- build:js scripts/plugins.js -->
-        <script src="components/bootstrap-sass/js/bootstrap-affix.js"></script>
-        <script src="components/bootstrap-sass/js/bootstrap-alert.js"></script>
-        <script src="components/bootstrap-sass/js/bootstrap-dropdown.js"></script>
-        <script src="components/bootstrap-sass/js/bootstrap-tooltip.js"></script>
-        <script src="components/bootstrap-sass/js/bootstrap-modal.js"></script>
-        <script src="components/bootstrap-sass/js/bootstrap-transition.js"></script>
-        <script src="components/bootstrap-sass/js/bootstrap-button.js"></script>
-        <script src="components/bootstrap-sass/js/bootstrap-popover.js"></script>
-        <script src="components/bootstrap-sass/js/bootstrap-typeahead.js"></script>
-        <script src="components/bootstrap-sass/js/bootstrap-carousel.js"></script>
-        <script src="components/bootstrap-sass/js/bootstrap-scrollspy.js"></script>
-        <script src="components/bootstrap-sass/js/bootstrap-collapse.js"></script>
-        <script src="components/bootstrap-sass/js/bootstrap-tab.js"></script>
-        <!-- endbuild -->
-
-        <!-- build:js scripts/angular-ui.js -->
-        <script src="components/angular-ui-bootstrap/src/accordion/accordion.js"></script>
-        <script src="components/angular-ui-bootstrap/src/alert/alert.js"></script>
-        <script src="components/angular-ui-bootstrap/src/buttons/buttons.js"></script>
-        <script src="components/angular-ui-bootstrap/src/carousel/carousel.js"></script>
-        <script src="components/angular-ui-bootstrap/src/collapse/collapse.js"></script>
-        <script src="components/angular-ui-bootstrap/src/datepicker/datepicker.js"></script>
-        <script src="components/angular-ui-bootstrap/src/dialog/dialog.js"></script>
-        <script src="components/angular-ui-bootstrap/src/dropdownToggle/dropdownToggle.js"></script>
-        <script src="components/angular-ui-bootstrap/src/modal/modal.js"></script>
-        <script src="components/angular-ui-bootstrap/src/pagination/pagination.js"></script>
-        <script src="components/angular-ui-bootstrap/src/position/position.js"></script>
-        <script src="components/angular-ui-bootstrap/src/progressbar/progressbar.js"></script>
-        <script src="components/angular-ui-bootstrap/src/rating/rating.js"></script>
-        <script src="components/angular-ui-bootstrap/src/tabs/tabs.js"></script>
-        <script src="components/angular-ui-bootstrap/src/timepicker/timepicker.js"></script>
-        <script src="components/angular-ui-bootstrap/src/tooltip/tooltip.js"></script>
-        <script src="components/angular-ui-bootstrap/src/transition/transition.js"></script>
-        <script src="components/angular-ui-bootstrap/src/typeahead/typeahead.js"></script>
-        <!-- script src="components/angular-ui-bootstrap/src/popover/popover.js"></script -->
-        <!-- endbuild -->
 
         <!-- build:js scripts/modules.js -->
         <script src="components/angular-resource/angular-resource.js"></script>
         <script src="components/angular-cookies/angular-cookies.js"></script>
         <script src="components/angular-sanitize/angular-sanitize.js"></script>
+        <script src="components/angular-ui-bootstrap/dist/ui-bootstrap-tpls-0.4.0.js"></script>
+        <script src="components/angular-ui-router/release/angular-ui-router.js"></script>
         <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
+        <script src="scripts/controllers/source-data.js"></script>
+        <script src="scripts/controllers/schema.js"></script>
+        <script src="scripts/controllers/target-data.js"></script>
+        <script src="scripts/controllers/configuration.js"></script>
+        <script src="scripts/controllers/transformation.js"></script>
+        <script src="scripts/controllers/components.js"></script>
         <!-- endbuild -->
 </body>
 </html>
