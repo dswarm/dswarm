@@ -6,6 +6,16 @@ angular.module('dmpApp')
 
     $scope.sourceSchema = {}
 
+    $scope.chevron = function (data) {
+      if (data.show) {
+        if (data.children && data.children.length) {
+          return "icon-chevron-down"
+        }
+      } else {
+        return "icon-chevron-right"
+      }
+    }
+
     $http.get('/data/schema.json')
       .success(function (result) {
         $scope.sourceSchema = result

@@ -1,5 +1,7 @@
-{{data.name}}<small ng-show="data.title"> &nbsp; {{ data.title }}</small>
-<ul ng-show="data.children">
+<span ng-click="expandCollapse(data)">
+  <i ng-class="chevron(data)"></i>
+  {{data.name}}<small ng-show="data.title" class="data-sample"> &nbsp; {{ data.title }}</small></span>
+<ul ng-show="data.show" class="tree-list">
   <li ng-repeat="data in data.children"
       ng-include="'views/include/data_tree_item.html'"></li>
 </ul>

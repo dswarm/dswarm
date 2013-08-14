@@ -6,6 +6,31 @@ angular.module('dmpApp')
 
     $scope.data = {}
 
+    $scope.chevron = function (data) {
+      if (data.children && data.children.length) {
+        if (data.show) {
+          return "icon-chevron-down"
+        } else {
+          return "icon-chevron-right"
+        }
+      }
+    }
+
+    $scope.expandCollapse = function (data) {
+      data.show = data.children && data.children.length && !data.show
+    }
+
+    function makeItem(name, children, title) {
+      var item = {'name': name, 'show': true}
+      if (children && children.length) {
+        item['children'] = children
+      }
+      if (title) {
+        item['title'] = title
+      }
+      return item
+    }
+
     function parseObject(container, name, properties) {
       var ary = []
       angular.forEach(properties, function (val, key) {
@@ -14,7 +39,7 @@ angular.module('dmpApp')
           it && ary.push(it)
         }
       })
-      return {'name': name, 'children': ary}
+      return makeItem(name, ary)
     }
 
     function parseArray(container, name, properties) {
@@ -23,16 +48,16 @@ angular.module('dmpApp')
         var it = parseAny(item, name, properties)
         it && ary.push(it)
       })
-      return {'name': name, 'children': ary}
+      return makeItem(name, ary)
     }
 
     function parseString(container, name) {
       if (angular.isString(container)) {
-        return {'name': name, 'title': container.trim()}
+        return makeItem(name, null, container.trim())
       }
 
       if (container['#text'] && container['#text'].trim()) {
-        return {'name': name, 'title': container['#text'].trim()}
+        return makeItem(name, null, container['#text'].trim())
       }
 
       if (angular.isArray(container)) {
@@ -41,13 +66,13 @@ angular.module('dmpApp')
           var it = parseString(item, name)
           it && ary.push(it)
         })
-        return {'name': name, 'children': ary}
+        return makeItem(name, ary)
       }
     }
 
     function parseEnum(container, name, enumeration) {
       if (enumeration.indexOf(container) !== -1) {
-        return {'name': name, 'title': container}
+        return makeItem(name, null, container)
       }
     }
 

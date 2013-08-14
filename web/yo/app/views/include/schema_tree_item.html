@@ -1,5 +1,7 @@
-{{name}}
-<ul ng-show="data.properties">
+<span ng-click="expandCollapse(data)">
+  <i ng-class="chevron(data)"></i>
+  {{name}}</span>
+<ul ng-show="data.properties" class="tree-list">
   <li ng-repeat="(name, data) in data.properties"
       ng-include="'views/include/schema_tree_item.html'"></li>
 </ul>
