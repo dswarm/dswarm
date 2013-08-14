@@ -1,1 +1,10 @@
-{{ internalName }}
+<div class="row">
+  <div class="col-6 box">
+    <h5>{{ sourceSchema.title }}</h5>
+    <ul>
+      <li ng-repeat="(name, data) in sourceSchema.properties"
+          ng-include="'views/include/schema_tree_item.html'"></li>
+      </li>
+    </ul>
+  </div>
+</div>

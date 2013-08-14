@@ -1,0 +1,5 @@
+{{name}}
+<ul ng-show="data.properties">
+  <li ng-repeat="(name, data) in data.properties"
+      ng-include="'views/include/schema_tree_item.html'"></li>
+</ul>
