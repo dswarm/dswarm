@@ -4,3 +4,7 @@ dist
 .tmp
 .sass-cache
 app/components
+
+!.bowerrc
+!.editorconfig
+!.jshintrc
