@@ -4,7 +4,7 @@ angular.module('dmpApp')
   .controller('TreeCtrl', ['$scope', function ($scope) {
     $scope.chevron = function (data) {
       if (data.children && data.children.length) {
-        return "icon-chevron-" + (data.show ? "down" : "right")
+        return 'icon-chevron-' + (data.show ? 'down' : 'right')
       }
     }
 
@@ -12,9 +12,9 @@ angular.module('dmpApp')
       data.show = data.children && data.children.length && !data.show
     }
   }])
-  .directive("tree", ['$compile', function ($compile) {
+  .directive('tree', ['$compile', function ($compile) {
     return {
-      restrict: "E",
+      restrict: 'E',
       scope: {data: '='},
       templateUrl: 'views/directives/tree.html',
       controller: 'TreeCtrl',

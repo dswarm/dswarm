@@ -2,7 +2,7 @@
 
 angular.module('dmpApp')
   .controller('SchemaCtrl', ['$scope', '$http', function ($scope, $http) {
-    $scope.internalName = "Source Target Schema Mapper"
+    $scope.internalName = 'Source Target Schema Mapper'
 
     $scope.data = {}
 

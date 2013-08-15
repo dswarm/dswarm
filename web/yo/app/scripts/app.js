@@ -2,7 +2,7 @@
 
 angular.module('dmpApp', ['ui.state'])
   .config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise("/")
+    $urlRouterProvider.otherwise('/')
 
     $stateProvider
       .state('main', {

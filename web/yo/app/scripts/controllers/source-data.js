@@ -2,7 +2,7 @@
 
 angular.module('dmpApp')
   .controller('SourceDataCtrl', ['$scope', '$http', '$q', function ($scope, $http, $q) {
-    $scope.internalName = "Source Data Widget"
+    $scope.internalName = 'Source Data Widget'
 
     $scope.data = {}
 
@@ -22,7 +22,9 @@ angular.module('dmpApp')
       angular.forEach(properties, function (val, key) {
         if (container[key]) {
           var it = parseAny(container[key], key, val)
-          it && ary.push(it)
+          if (it) {
+            ary.push(it)
+          }
         }
       })
       return makeItem(name, ary)
@@ -32,7 +34,9 @@ angular.module('dmpApp')
       var ary = []
       angular.forEach(container, function (item) {
         var it = parseAny(item, name, properties)
-        it && ary.push(it)
+        if (it) {
+          ary.push(it)
+        }
       })
       return makeItem(name, ary)
     }
@@ -50,7 +54,9 @@ angular.module('dmpApp')
         var ary = []
         angular.forEach(container, function(item) {
           var it = parseString(item, name)
-          it && ary.push(it)
+          if (it) {
+            ary.push(it)
+          }
         })
         return makeItem(name, ary)
       }
@@ -63,17 +69,17 @@ angular.module('dmpApp')
     }
 
     function parseAny(container, name, obj) {
-      if (obj.type === "object") {
-        return parseObject(container, name, obj.properties)
+      if (obj['type'] === 'object') {
+        return parseObject(container, name, obj['properties'])
       }
-      else if (obj.type === "array") {
-        return parseArray(container, name, obj.items);
+      if (obj['type'] === 'array') {
+        return parseArray(container, name, obj['items'])
       }
-      else if (obj.type === "string") {
+      if (obj['type'] === 'string') {
         return parseString(container, name)
       }
-      else if (obj.enum) {
-        return parseEnum(container, name, obj.enum)
+      if (obj['enum']) {
+        return parseEnum(container, name, obj['enum'])
       }
     }
 
