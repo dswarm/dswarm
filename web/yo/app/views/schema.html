@@ -1,10 +1,6 @@
 <div class="row">
   <div class="col-6 box">
-    <h5>{{ sourceSchema.title }}</h5>
-    <ul class="tree-list">
-      <li ng-repeat="(name, data) in sourceSchema.properties"
-          ng-include="'views/include/schema_tree_item.html'"></li>
-      </li>
-    </ul>
+    <h5>Schema</h5>
+    <tree data="data"></tree>
   </div>
 </div>

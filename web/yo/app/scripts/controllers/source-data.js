@@ -6,20 +6,6 @@ angular.module('dmpApp')
 
     $scope.data = {}
 
-    $scope.chevron = function (data) {
-      if (data.children && data.children.length) {
-        if (data.show) {
-          return "icon-chevron-down"
-        } else {
-          return "icon-chevron-right"
-        }
-      }
-    }
-
-    $scope.expandCollapse = function (data) {
-      data.show = data.children && data.children.length && !data.show
-    }
-
     function makeItem(name, children, title) {
       var item = {'name': name, 'show': true}
       if (children && children.length) {
