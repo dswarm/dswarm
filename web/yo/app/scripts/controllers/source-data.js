@@ -6,20 +6,6 @@ angular.module('dmpApp')
 
     $scope.data = {}
 
-    $scope.chevron = function (data) {
-      if (data.children && data.children.length) {
-        if (data.show) {
-          return "icon-chevron-down"
-        } else {
-          return "icon-chevron-right"
-        }
-      }
-    }
-
-    $scope.expandCollapse = function (data) {
-      data.show = data.children && data.children.length && !data.show
-    }
-
     function makeItem(name, children, title) {
       var item = {'name': name, 'show': true}
       if (children && children.length) {
@@ -92,7 +78,7 @@ angular.module('dmpApp')
     }
 
     var schemaPromise = $http.get('/data/schema.json')
-      , dataPromise = $http.get("/data/urn:nbn:de:bsz:14-ds-1229427875176-76287.json")
+      , dataPromise = $http.get('/data/record.json')
       , allPromise = $q.all([schemaPromise, dataPromise])
 
     allPromise.then(function (result) {
