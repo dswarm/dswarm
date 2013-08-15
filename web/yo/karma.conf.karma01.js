@@ -17,7 +17,10 @@ module.exports = function(config) {
           'app/scripts/*.js',
           'app/scripts/**/*.js',
           'test/mock/**/*.js',
-          'test/spec/**/*.js'
+          'test/spec/**/*.js',
+
+          // templates
+          'app/views/directives/**/*.html'
         ],
 
         // list of files to exclude
@@ -65,7 +68,11 @@ module.exports = function(config) {
             suite: 'unit'
         },
 
-        frameworks : ["jasmine"]
+        frameworks : ["jasmine"],
+
+        preprocessors : {
+            '**/*.html': 'html2js'
+        }
 
     })
 };
