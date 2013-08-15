@@ -92,7 +92,7 @@ angular.module('dmpApp')
     }
 
     var schemaPromise = $http.get('/data/schema.json')
-      , dataPromise = $http.get("/data/urn:nbn:de:bsz:14-ds-1229427875176-76287.json")
+      , dataPromise = $http.get('/data/record.json')
       , allPromise = $q.all([schemaPromise, dataPromise])
 
     allPromise.then(function (result) {
