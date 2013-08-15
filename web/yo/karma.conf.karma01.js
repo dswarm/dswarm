@@ -7,10 +7,13 @@ module.exports = function(config) {
 
         // list of files / patterns to load in the browser
         files : [
-          //JASMINE,
-          //JASMINE_ADAPTER,
           'app/components/angular/angular.js',
           'app/components/angular-mocks/angular-mocks.js',
+          'app/components/angular-ui-bootstrap/misc/test-lib/angular-mocks.js',
+          'app/components/angular-resource/angular-resource.js',
+          'app/components/angular-cookies/angular-cookies.js',
+          'app/components/angular-sanitize/angular-sanitize.js',
+          'app/components/angular-ui-router/release/angular-ui-router.js',
           'app/scripts/*.js',
           'app/scripts/**/*.js',
           'test/mock/**/*.js',
@@ -22,23 +25,23 @@ module.exports = function(config) {
 
         // test results reporter to use
         // possible values: dots || progress || growl
-        reporters : ['progress'],
+        //reporters : ['progress'],
 
         // web server port
-        port : 8080,
+        //port : 8080,
 
         // cli runner port
-        runnerPort : 9100,
+        //runnerPort : 9100,
         
         // enable / disable colors in the output (reporters and logs)
         colors : true,
 
         // level of logging
         // possible values: LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG
-        logLevel : LOG_INFO,
+        //logLevel : LOG_DEBUG,
 
         // enable / disable watching file and executing tests whenever any file changes
-        autoWatch : false,
+        autoWatch : true,
 
         // Start these browsers, currently available:
         // - Chrome
@@ -55,7 +58,14 @@ module.exports = function(config) {
 
         // Continuous Integration mode
         // if true, it capture browsers, run tests and exit
-        singleRun : false
+        singleRun : false,
+
+        junitReporter : {
+            outputFile: 'test_out/unit.xml',
+            suite: 'unit'
+        },
+
+        frameworks : ["jasmine"]
 
     })
 };

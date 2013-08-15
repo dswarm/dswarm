@@ -1,22 +1,32 @@
 'use strict';
 
-describe('Controller: MainCtrl', function () {
+beforeEach(module('dmpApp', 'mockedSchema'));
 
-  // load the controller's module
-  beforeEach(module('frontendApp'));
+describe('Controller: SchemaCtrl', function () {
 
-  var MainCtrl,
-    scope;
+  var SchemaCtrl,
+    scope,
+    mockedSchema;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope) {
-    scope = $rootScope.$new();
-    MainCtrl = $controller('MainCtrl', {
-      $scope: scope
-    });
+  beforeEach(inject(function ($controller, $httpBackend, $rootScope, mockSchemaJSON) {
+      scope = $rootScope.$new();
+
+      $httpBackend.whenGET('/data/schema.json').respond(mockSchemaJSON);
+
+      SchemaCtrl = $controller('SchemaCtrl', {
+        $scope: scope
+      });
+
+      $httpBackend.flush();
+
   }));
 
-  it('should attach a list of awesomeThings to the scope', function () {
-    expect(scope.awesomeThings.length).toBe(3);
+  it('should have loaded schema data', function () {
+
+      expect(scope.data.name).toBe('OAI-PMH');
+
+      expect(scope.data.children.length).toBe(3);
+
   });
 });
