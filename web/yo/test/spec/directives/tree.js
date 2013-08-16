@@ -20,7 +20,7 @@ describe('Directive: tree', function() {
         scope.$digest();
     }));
 
-    it("should have the correct amount of albums in the list", function() {
+    it("should have the correct amount of tree nodes", function() {
         var list = element.find('tree');
         expect(list.length).toBe(33);
     });
