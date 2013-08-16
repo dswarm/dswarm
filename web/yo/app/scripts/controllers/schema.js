@@ -19,5 +19,4 @@ angular.module('dmpApp')
         $scope.targetSchema = schemaParser.mapData(targetSchema['title'], targetSchema);
 
     });
-
   }]);
