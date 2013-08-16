@@ -13,6 +13,7 @@ describe('Controller: SchemaCtrl', function () {
       scope = $rootScope.$new();
 
       $httpBackend.whenGET('/data/schema.json').respond(mockSchemaJSON);
+      $httpBackend.whenGET('/data/targetschema.json').respond(mockSchemaJSON);
 
       SchemaCtrl = $controller('SchemaCtrl', {
         $scope: scope
@@ -24,9 +25,11 @@ describe('Controller: SchemaCtrl', function () {
 
   it('should have loaded schema data', function () {
 
-      expect(scope.data.name).toBe('OAI-PMH');
+      expect(scope.sourceSchema.name).toBe('OAI-PMH');
+      expect(scope.sourceSchema.children.length).toBe(3);
 
-      expect(scope.data.children.length).toBe(3);
+      expect(scope.targetSchema.name).toBe('OAI-PMH');
+      expect(scope.targetSchema.children.length).toBe(3);
 
   });
 });
