@@ -25,7 +25,6 @@ describe('Controller: SchemaCtrl', function () {
   it('should have loaded schema data', function () {
 
       expect(scope.data.name).toBe('OAI-PMH');
-
       expect(scope.data.children.length).toBe(3);
 
   });
