@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-  .controller('SchemaCtrl', ['$scope', '$http', 'schemaParser', function ($scope, $http, schemaParser) {
+  .controller('SchemaCtrl', ['$scope', '$http', 'schemaParser', '$q', function ($scope, $http, schemaParser, $q) {
     $scope.internalName = 'Source Target Schema Mapper'
 
     $scope.sourceSchema = {};
