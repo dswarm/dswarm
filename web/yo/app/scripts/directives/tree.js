@@ -4,9 +4,9 @@ angular.module('dmpApp')
   .controller('TreeCtrl', ['$scope', function ($scope) {
     $scope.chevron = function (data) {
       if (data.children && data.children.length) {
-        return 'icon-chevron-' + (data.show ? 'down' : 'right')
+        return 'icon-chevron-' + (data.show ? 'down' : 'right');
       }
-    }
+    };
 
     $scope.handleClick = function (evt, data) {
       if ($scope.isLeaf(data)) {
@@ -15,7 +15,7 @@ angular.module('dmpApp')
           data: data
         });
       }
-    }
+    };
 
     $scope.expandCollapse = function (data) {
       data.show = !$scope.isLeaf(data) && !data.show;
@@ -42,11 +42,11 @@ angular.module('dmpApp')
 
         return function (scope, iElement) {
           if (!compiledContents) {
-            compiledContents = $compile(contents)
+            compiledContents = $compile(contents);
           }
 
           if (!isInternal) {
-            scope.$on('leafClicked', function(evt, data) {
+            scope.$on('leafClicked', function (evt, data) {
               evt.stopPropagation();
               evt.preventDefault();
 
@@ -55,9 +55,9 @@ angular.module('dmpApp')
           }
 
           compiledContents(scope, function (clone) {
-            iElement.append(clone)
-          })
-        }
+            iElement.append(clone);
+          });
+        };
       }
-    }
-  }])
+    };
+  }]);

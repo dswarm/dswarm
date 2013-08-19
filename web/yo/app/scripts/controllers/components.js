@@ -2,16 +2,16 @@
 
 angular.module('dmpApp')
   .controller('ComponentsCtrl', ['$scope', '$http', function ($scope, $http) {
-    $scope.internalName = 'Function List Widget'
+    $scope.internalName = 'Function List Widget';
 
     $scope.functions = {
       'name': 'Functions',
       'show': true,
       'children': []
-    }
+    };
 
     $scope.onLeafClick = function (event, data) {
-      var $el = angular.element(event.target)
+      var $el = angular.element(event.target);
 
       if (!$el.data('uiDraggable')) {
         $el.draggable({
@@ -23,19 +23,19 @@ angular.module('dmpApp')
           appendTo: 'body',
 //          helper: 'clone',
           helper: function() {
-            var $el = angular.element('<div class="component">' + data.name + '</div>')
-            $el.data('component-type', 'function')
+            var $el = angular.element('<div class="component">' + data.name + '</div>');
+            $el.data('componentType', 'fun')
               .data('payload', data);
-            return $el
+            return $el;
           }
-        })
+        });
       }
       console.log('on leaf click');
       console.log(data);
-    }
+    };
 
     $http.get('/data/functions.json')
       .success(function (result) {
-        $scope.functions.children = result['functions']
-      })
-  }])
+        $scope.functions.children = result['functions'];
+      });
+  }]);

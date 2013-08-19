@@ -2,7 +2,7 @@
 
 angular.module('dmpApp')
   .controller('SchemaCtrl', ['$scope', '$http', 'schemaParser', '$q', function ($scope, $http, schemaParser, $q) {
-    $scope.internalName = 'Source Target Schema Mapper'
+    $scope.internalName = 'Source Target Schema Mapper';
 
     $scope.sourceSchema = {};
     $scope.targetSchema = {};
@@ -18,5 +18,5 @@ angular.module('dmpApp')
         $scope.sourceSchema = schemaParser.mapData(sourceSchema['title'], sourceSchema);
         $scope.targetSchema = schemaParser.mapData(targetSchema['title'], targetSchema);
 
-    });
+      });
   }]);
