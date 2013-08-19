@@ -371,7 +371,7 @@ module.exports = function (grunt) {
     'less',
     'concurrent:test',
     'connect:test',
-    'karma'
+    'karma:unit'
   ]);
 
   grunt.registerTask('build', [
