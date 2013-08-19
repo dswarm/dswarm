@@ -9,7 +9,7 @@ angular.module('dmpApp')
     }
 
     $scope.handleClick = function (evt, data) {
-      if (data.leaf || !data.children || !data.children.length) {
+      if ($scope.isLeaf(data)) {
         $scope.$emit('leafClicked', {
           event: evt,
           data: data
@@ -18,8 +18,13 @@ angular.module('dmpApp')
     }
 
     $scope.expandCollapse = function (data) {
-      data.show = data.children && data.children.length && !data.show
-    }
+      data.show = !$scope.isLeaf(data) && !data.show;
+    };
+
+    $scope.isLeaf = function (data) {
+      return data.leaf || !data.children || !data.children.length;
+    };
+
   }])
   .directive('tree', ['$compile', function ($compile) {
     return {
