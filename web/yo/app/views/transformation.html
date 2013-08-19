@@ -1,1 +1,10 @@
 {{ internalName }}
+<div id="dropzone" ui-jq="droppable" ui-options="droppableOptions" style="height: 100%; width: 100%;">
+  <div>
+    <ul>
+      <li ng-repeat="component in components">
+        {{ component.payload.name }}
+      </li>
+    </ul>
+  </div>
+</div>
