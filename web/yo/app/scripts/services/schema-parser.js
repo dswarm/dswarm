@@ -16,7 +16,7 @@ angular.module('dmpApp').
       return data
     }
 
-    function makeItem(name, children, title) {
+    function makeItem(name, children, title, extra) {
       var item = {'name': name, 'show': true}
       if (children && children.length) {
         item['children'] = children
@@ -24,7 +24,7 @@ angular.module('dmpApp').
       if (title) {
         item['title'] = title
       }
-      return item
+      return angular.extend(extra || {}, item)
     }
 
     function parseObject(container, name, properties) {
@@ -53,11 +53,11 @@ angular.module('dmpApp').
 
     function parseString(container, name) {
       if (angular.isString(container)) {
-        return makeItem(name, null, container.trim())
+        return makeItem(name, null, container.trim(), {leaf: true})
       }
 
       if (container['#text'] && container['#text'].trim()) {
-        return makeItem(name, null, container['#text'].trim())
+        return makeItem(name, null, container['#text'].trim(), {leaf: true})
       }
 
       if (angular.isArray(container)) {
