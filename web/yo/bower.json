@@ -4,6 +4,7 @@
   "dependencies": {
     "angular": "~1.0.7",
     "angular-ui-bootstrap": "~0.5.0",
+    "angular-ui-utils": "~0.0.4",
     "json3": "~3.2.4",
     "bootstrap": "~3.0.0",
     "font-awesome": "~3.2.1",

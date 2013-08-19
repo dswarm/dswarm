@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('dmpApp', ['ui.state'])
+angular.module('dmpApp', ['ui.state', 'ui.utils'])
   .config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/')
 
