@@ -84,9 +84,57 @@ body {
   height: 480px;
 }
 
-.component {
-  border-width: 2px;
-  border-style: groove;
-  border-color: @brand-primary;
+.functionDraggable {
+
+  list-style: none;
+
+  &.ui-draggable-dragging,
+  &.ui-sortable-helper,
+  &.ui-sortable-placeholder {
+    border-width: 2px;
+    border-style: groove;
+    border-color: @btn-primary-border;
+    padding: 10px;
+    height: 3em !important;
+    width: auto !important;
+  }
+}
+
+.functionSortable {
   padding: 10px;
+  background-color: @btn-warning-bg;
+  color: @btn-warning-color;
+}
+
+#transformation {
+
+  .functionDraggable {
+
+    display: inline-block;
+    border: 2px groove @btn-danger-border;
+    padding: 0 0.7em;
+    margin: 0 0.7em;
+    height: 3em;
+    position: relative;
+    background-color: @btn-success-bg;
+    color: @btn-success-color;
+
+    &.ui-sortable-placeholder {
+      border:           2px dotted @btn-danger-border;
+      background-color: lighten(@btn-success-bg, 15%);
+      visibility:       visible !important;
+      min-width:        4em;
+    }
+
+    div {
+      display: table;
+      height: 100%;
+      width: auto;
+    }
+
+    span {
+      display: table-cell;
+      vertical-align: middle;
+    }
+  }
 }
