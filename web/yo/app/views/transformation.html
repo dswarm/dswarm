@@ -1,6 +1,6 @@
 {{ internalName }}
 <ul class="functionSortable" ui-jq="sortable" ui-options="sortableOptions">
-  <li ng-repeat="component in components" class="functionDraggable">
+  <li ng-repeat="component in components" class="functionDraggable" ng-click="onFunctionClick(component)">
     <div ng-switch on="component.componentType">
       <span ng-switch-when="fun">{{ component.payload.name }}</span>
       <span ng-switch-default></span>

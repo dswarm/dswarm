@@ -35,4 +35,9 @@ angular.module('dmpApp', ['ui.state', 'ui.utils'])
         }
 
       });
-  }]);
+  }])
+  .run(function($rootScope) {
+      $rootScope.$on('editConfig', function(event, args) {
+          $rootScope.$broadcast('handleEditConfig', args);
+      });
+  });

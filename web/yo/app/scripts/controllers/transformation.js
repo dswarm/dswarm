@@ -53,4 +53,9 @@ angular.module('dmpApp')
         $scope.$digest();
       }
     };
+
+    $scope.onFunctionClick = function(component) {
+        $scope.$emit('editConfig', component);
+    }
+
   }]);
