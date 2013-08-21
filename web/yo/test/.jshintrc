@@ -4,7 +4,6 @@
   "asi": true,
   "esnext": true,
   "bitwise": true,
-  "camelcase": true,
   "curly": true,
   "eqeqeq": true,
   "globalstrict": true,
@@ -23,6 +22,17 @@
   "trailing": true,
   "smarttabs": true,
   "globals": {
-    "angular": false
+    "after": false,
+    "afterEach": false,
+    "angular": false,
+    "before": false,
+    "beforeEach": false,
+    "browser": false,
+    "describe": false,
+    "expect": false,
+    "inject": false,
+    "it": false,
+    "spyOn": false
   }
 }
+

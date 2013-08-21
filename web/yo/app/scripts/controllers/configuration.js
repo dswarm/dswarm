@@ -2,5 +2,5 @@
 
 angular.module('dmpApp')
   .controller('ConfigurationCtrl', ['$scope', function ($scope) {
-    $scope.internalName = "Configuration Widget"
+    $scope.internalName = 'Configuration Widget'
   }])
