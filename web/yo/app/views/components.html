@@ -3,9 +3,7 @@
   {{functions.name}}
 </span>
 <ul ng-show="functions.show" class="tree-list">
-  <li ng-repeat="child in functions.children"
-      class="functionDraggable componentMember" ui-jq="draggable"
-      ui-options="draggableOptions">
+  <li ng-repeat="child in functions.children" class="function draggable component-member">
     <span>{{ child.name }}</span>
   </li>
 </ul>

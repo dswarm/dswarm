@@ -9,7 +9,7 @@ html, body {
 }
 
 body {
-  background: #fafafa;
+  background:  #fafafa;
   padding-top: @navbar-top-padding;
 
 }
@@ -30,7 +30,7 @@ body {
 
 /* Set the fixed height of the footer here */
 #footer {
-  height: @footer-height;
+  height:           @footer-height;
   background-color: @gray-lighter;
 }
 
@@ -57,17 +57,17 @@ body {
 }
 
 .box {
-  outline: 2px dashed @gray;
-  padding: @padding-base-vertical;
-  height: 100%;
+  outline:    2px dashed @gray;
+  padding:    @padding-base-vertical;
+  height:     100%;
   background: @gray-lighter;
-  border: @padding-base-vertical solid @body-bg;
-  overflow: scroll;
+  border:     @padding-base-vertical solid @body-bg;
+  overflow:   scroll;
 }
 
 .tree-list {
   list-style-type: none;
-  margin-left: -10px;
+  margin-left:     -10px;
 }
 
 .data-sample {
@@ -75,68 +75,13 @@ body {
 }
 
 .row-1 {
-//  height: percentage((1 / @box-rows));
+  //  height: percentage((1 / @box-rows));
   height: 240px;
 }
 
 .row-2 {
-//  height: percentage((2 / @box-rows));
+  //  height: percentage((2 / @box-rows));
   height: 480px;
-}
-
-.functionDraggable {
-
-  list-style: none;
-
-  &.ui-draggable-dragging,
-  &.ui-sortable-helper,
-  &.ui-sortable-placeholder {
-    border-width: 2px;
-    border-style: groove;
-    border-color: @btn-primary-border;
-    padding: 10px;
-    height: 3em !important;
-    width: auto !important;
-  }
-}
-
-.functionSortable {
-  padding: 10px;
-  background-color: @btn-warning-bg;
-  color: @btn-warning-color;
-}
-
-#transformation {
-
-  .functionDraggable {
-
-    display: inline-block;
-    border: 2px groove @btn-danger-border;
-    padding: 0 0.7em;
-    margin: 0 0.7em;
-    height: 3em;
-    position: relative;
-    background-color: @btn-success-bg;
-    color: @btn-success-color;
-
-    &.ui-sortable-placeholder {
-      border:           2px dotted @btn-danger-border;
-      background-color: lighten(@btn-success-bg, 15%);
-      visibility:       visible !important;
-      min-width:        4em;
-    }
-
-    div {
-      display: table;
-      height: 100%;
-      width: auto;
-    }
-
-    span {
-      display: table-cell;
-      vertical-align: middle;
-    }
-  }
 }
 
 #configuration {
@@ -152,3 +97,6 @@ body {
   }
 
 }
+
+@import 'directives/sortable.less';
+
