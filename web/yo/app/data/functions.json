@@ -6,13 +6,13 @@
       "reference": "blacklist",
       "parameters" : {
           "source" : {
-              "type" : "string"
+              "type" : "text"
           },
           "entry" : {
               "repeat" : true,
               "parameters" : {
                   "name" : {
-                      "type" : "string"
+                      "type" : "text"
                   }
               }
           }
@@ -34,10 +34,10 @@
       "reference": "compose",
       "parameters" : {
           "prefix" : {
-              "type" : "string"
+              "type" : "text"
           },
           "postfix" : {
-              "type" : "string"
+              "type" : "text"
           }
       }
     },
@@ -47,7 +47,7 @@
       "reference": "constant",
       "parameters" : {
           "value" : {
-              "type" : "string"
+              "type" : "text"
           }
       }
     },
@@ -62,7 +62,7 @@
       "reference": "equals",
       "parameters" : {
           "string" : {
-              "type" : "string"
+              "type" : "text"
           }
       }
     },
@@ -82,16 +82,16 @@
       "reference": "lookup",
       "parameters" : {
           "source" : {
-              "type" : "string"
+              "type" : "text"
           },
           "entry" : {
               "repeat" : true,
               "parameters" : {
                   "name" : {
-                     "type" : "string"
+                     "type" : "text"
                   } ,
                   "value" : {
-                      "type" : "string"
+                      "type" : "text"
                   }
               }
           }
@@ -108,7 +108,7 @@
       "reference": "not-equals",
       "parameters" : {
           "string" : {
-              "type" : "string"
+              "type" : "text"
           }
       }
     },
@@ -118,7 +118,7 @@
       "reference": "occurrence",
       "parameters" : {
           "only" : {
-              "type" : "string"
+              "type" : "text"
           }
       }
     },
@@ -131,7 +131,7 @@
               "type" : "regexp"
           },
           "format" : {
-              "type" : "string",
+              "type" : "text",
               "optional" : true
           }
       }
@@ -145,7 +145,7 @@
               "type" : "regexp"
           },
           "with" : {
-              "type" : "string"
+              "type" : "text"
           }
       }
     },
@@ -155,16 +155,16 @@
       "reference": "setreplace",
       "parameters" : {
           "source" : {
-            "type" : "string"
+            "type" : "text"
           },
           "entry" : {
               "repeat" : true,
               "parameters" : {
                   "name" : {
-                      "type" : "string"
+                      "type" : "text"
                   },
                   "value" : {
-                      "type" : "string"
+                      "type" : "text"
                   }
               }
           }
@@ -176,7 +176,7 @@
       "reference": "split",
       "parameters" : {
           "delimiter" : {
-              "type" : "string"
+              "type" : "text"
           }
       }
     },
@@ -186,10 +186,10 @@
       "reference": "substring",
       "parameters" : {
           "start" : {
-              "type" : "int"
+              "type" : "number"
           },
           "end" : {
-              "type" : "int"
+              "type" : "number"
           }
       }
     },
@@ -199,7 +199,7 @@
       "reference": "switch-name-value",
       "parameters" : {
           "contant" : {
-              "type" : "string",
+              "type" : "text",
               "optional" : true
           }
       }
@@ -225,13 +225,13 @@
       "reference": "whitelist",
       "parameters" : {
           "source" : {
-              "type" : "string"
+              "type" : "text"
           },
           "entry" : {
               "repeat" : true,
               "parameters" : {
                   "name" : {
-                      "type" : "string"
+                      "type" : "text"
                   }
               }
           }
