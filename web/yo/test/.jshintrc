@@ -4,7 +4,6 @@
   "asi": true,
   "esnext": true,
   "bitwise": true,
-  "camelcase": true,
   "curly": true,
   "eqeqeq": true,
   "globalstrict": true,

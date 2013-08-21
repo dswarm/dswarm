@@ -1,27 +1,23 @@
 'use strict';
 
 angular.module('dmpApp')
-  .controller('SchemaCtrl', ['$scope', '$http', function ($scope, $http) {
+  .controller('SchemaCtrl', ['$scope', '$http', 'schemaParser', '$q', function ($scope, $http, schemaParser, $q) {
     $scope.internalName = 'Source Target Schema Mapper'
 
-    $scope.data = {}
+    $scope.sourceSchema = {};
+    $scope.targetSchema = {};
 
-    function mapData(name, container) {
-      var data = {'name': name, 'show': true}
+    var sourceSchema = $http.get('/data/schema.json')
+        , targetSchema = $http.get('/data/targetschema.json')
+        , allPromise = $q.all([sourceSchema, targetSchema]);
 
-      if (container['properties']) {
-        var children = []
-        angular.forEach(container['properties'], function (val, key) {
-          children.push(mapData(key, val))
-        })
-        data['children'] = children
-      }
+    allPromise.then(function (result) {
+        var sourceSchema = result[0]['data']
+            , targetSchema = result[1]['data'];
 
-      return data
-    }
+        $scope.sourceSchema = schemaParser.mapData(sourceSchema['title'], sourceSchema);
+        $scope.targetSchema = schemaParser.mapData(targetSchema['title'], targetSchema);
 
-    $http.get('/data/schema.json')
-      .success(function (result) {
-        $scope.data = mapData(result['title'], result)
-      })
-  }])
+    });
+
+  }]);
