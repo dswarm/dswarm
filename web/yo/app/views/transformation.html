@@ -1,1 +1,9 @@
 {{ internalName }}
+<ul class="function-sortable">
+  <li ng-repeat="component in components" class="function component" dmp-connectible>
+    <div ng-switch on="component.componentType">
+      <span ng-switch-when="fun">{{ component.payload.name }}</span>
+      <span ng-switch-default></span>
+    </div>
+  </li>
+</ul>

@@ -18,6 +18,7 @@
 
         <!-- build:css({.tmp,app}) styles/main.css -->
         <link rel="stylesheet" href="styles/main.css">
+        <link rel="stylesheet" href="components/jquery-ui/themes/smoothness/jquery-ui.css">
         <!-- endbuild -->
 
   </head>
@@ -56,15 +57,15 @@
       </div>
 
       <div id="content">
-        <div class="row row-2">
-          <div class="col-3 box" ui-view="sourceData"></div>
-          <div class="col-6 box" ui-view="schema"></div>
-          <div class="col-3 box" ui-view="targetData"></div>
+        <div class="row row-2" id="top-row">
+          <div class="col-3 box" id="sourceData" ui-view="sourceData"></div>
+          <div class="col-6 box" id="schema" ui-view="schema"></div>
+          <div class="col-3 box" id="targetData" ui-view="targetData"></div>
         </div>
-        <div class="row row-1">
-          <div class="col-3 box" ui-view="configuration"></div>
-          <div class="col-6 box" ui-view="transformation"></div>
-          <div class="col-3 box" ui-view="components"></div>
+        <div class="row row-1" id="bottom-row">
+          <div class="col-3 box" id="configuration" ui-view="configuration"></div>
+          <div class="col-6 box" id="transformation" ui-view="transformation"></div>
+          <div class="col-3 box" id="components" ui-view="components"></div>
         </div>
       </div>
 
@@ -76,8 +77,13 @@
       </div>
     </div>
 
-    <!--<script src="components/jquery/jquery.js"></script>-->
+    <script src="components/jquery/jquery.js"></script>
+    <script src="components/jquery-ui/ui/jquery-ui.js"></script>
     <script src="components/angular/angular.js"></script>
+
+        <!-- build:js scripts/plumb.js -->
+        <script src="components/jsPlumb/dist/js/jquery.jsPlumb-1.5.1.js"></script>
+        <!-- endbuild -->
 
         <!-- build:js scripts/modules.js -->
         <script src="components/angular-resource/angular-resource.js"></script>
@@ -85,12 +91,15 @@
         <script src="components/angular-sanitize/angular-sanitize.js"></script>
         <script src="components/angular-ui-bootstrap/dist/ui-bootstrap-tpls-0.5.0.js"></script>
         <script src="components/angular-ui-router/release/angular-ui-router.js"></script>
+        <script src="components/angular-ui-utils/components/angular-ui-docs/build/ui-utils.js"></script>
         <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/services/schema-parser.js"></script>
         <script src="scripts/directives/tree.js"></script>
+        <script src="scripts/directives/sortable.js"></script>
+        <script src="scripts/directives/connectible.js"></script>
         <script src="scripts/controllers/source-data.js"></script>
         <script src="scripts/controllers/schema.js"></script>
         <script src="scripts/controllers/target-data.js"></script>

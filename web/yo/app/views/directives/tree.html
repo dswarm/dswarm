@@ -1,10 +1,12 @@
-<span ng-click="expandCollapse(data)">
+<span ng-click="expandCollapse(data)"
+      ng-mousedown="handleClick($event, data)"
+      ng-class="{'tree-leaf':isLeaf(data)}">
   <i ng-class="chevron(data)"></i>
   {{data.name}}
-  <small ng-if="data.title" class="data-sample"> &nbsp; {{data.title }}</small>
+  <small ng-show="data.title" class="data-sample"> &nbsp; {{data.title }}</small>
 </span>
 <ul ng-show="data.show" class="tree-list">
   <li ng-repeat="child in data.children">
-    <tree data="child"></tree>
+    <tree data="child" internal></tree>
   </li>
 </ul>
