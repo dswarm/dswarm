@@ -10,6 +10,7 @@ module.exports = function(config) {
           'components/angular/angular.js',
           'components/angular-mocks/angular-mocks.js',
           'components/angular-ui-bootstrap/misc/test-lib/angular-mocks.js',
+          'components/angular-ui-utils/components/angular-ui-docs/build/ui-utils.js',
           'components/angular-resource/angular-resource.js',
           'components/angular-cookies/angular-cookies.js',
           'components/angular-sanitize/angular-sanitize.js',
