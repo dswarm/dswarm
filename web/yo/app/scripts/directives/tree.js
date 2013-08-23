@@ -4,7 +4,7 @@ angular.module('dmpApp')
   .controller('TreeCtrl', ['$scope', function ($scope) {
     $scope.chevron = function (data) {
       if (data.children && data.children.length) {
-        return 'icon-chevron-' + (data.show ? 'down' : 'right');
+        return 'glyphicon-chevron-' + (data.show ? 'down' : 'right');
       }
     };
 
