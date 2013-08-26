@@ -1,6 +1,6 @@
-<div ng-class="visibility">
+<div ng-show="component">
 
-    Function: {{component.name}}
+    <span>Function: {{component.name}}</span>
     <div class="functionRow" ng-repeat="(key,parameter) in component.parameters">
         <div class="functionName">{{ key }}</div> <input type="{{parameter.type}}" ng-model="parameter.data">
     </div>
