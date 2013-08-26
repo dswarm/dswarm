@@ -1,6 +1,6 @@
 {{ internalName }}
 <ul class="function-sortable">
-  <li ng-repeat="component in components" class="function component" dmp-connectible>
+  <li ng-repeat="component in components" class="function component" dmp-connectible ng-click="onFunctionClick(component)">
     <div ng-switch on="component.componentType">
       <span ng-switch-when="fun">{{ component.payload.name }}</span>
       <span ng-switch-default></span>

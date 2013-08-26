@@ -1,1 +1,11 @@
-{{ internalName }}
+<div ng-show="component">
+
+    <span>Function: {{component.name}}</span>
+    <div class="functionRow" ng-repeat="(key,parameter) in component.parameters">
+        <div class="functionName">{{ key }}</div> <input type="{{parameter.type}}" ng-model="parameter.data">
+    </div>
+
+    <input type="button" value="save" ng-click="onSaveClick()">
+
+</div>
+

@@ -28,6 +28,12 @@ describe('Controller: SchemaCtrl', function () {
     $httpBackend.verifyNoOutstandingRequest();
   }));
 
+  it('should have a SchemaCtrl controller', function() {
+      var SchemaCtrl = schemaCtrl();
+      $httpBackend.flush();
+      expect(SchemaCtrl).not.toBe(null);
+  });
+
   it('should have loaded source schema data', inject(function () {
       $httpBackend.expectGET('/data/schema.json');
       schemaCtrl();
