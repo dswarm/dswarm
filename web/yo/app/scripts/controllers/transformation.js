@@ -45,7 +45,7 @@ angular.module('dmpApp')
     };
 
     $scope.onFunctionClick = function(component) {
-        PubSub.broadcast('handleEditConfig', component);
-    }
+      PubSub.broadcast('handleEditConfig', component);
+    };
 
   }]);

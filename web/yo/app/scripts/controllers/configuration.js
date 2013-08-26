@@ -2,23 +2,24 @@
 
 angular.module('dmpApp')
   .controller('ConfigurationCtrl', ['$scope', 'PubSub', function ($scope, PubSub) {
-        $scope.internalName = 'Configuration Widget';
 
-        $scope.component = {};
-        $scope.visibility = "hide";
+    $scope.internalName = 'Configuration Widget';
 
-        PubSub.subscribe($scope, 'handleEditConfig', function(args) {
-            $scope.component = {};
-            $scope.data = {};
+    $scope.component = {};
+    $scope.visibility = 'hide';
 
-            $scope.component = args['payload'];
+    PubSub.subscribe($scope, 'handleEditConfig', function(args) {
+      $scope.component = {};
+      $scope.data = {};
 
-            $scope.visibility = "show";
-        });
+      $scope.component = args['payload'];
 
-        $scope.onSaveClick = function() {
-            $scope.component = {};
-            $scope.visibility = "hide";
-        }
+      $scope.visibility = 'show';
+    });
+
+    $scope.onSaveClick = function() {
+      $scope.component = {};
+      $scope.visibility = 'hide';
+    };
 
   }]);
