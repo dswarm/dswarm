@@ -1,7 +1,7 @@
 <span ng-click="expandCollapse(data)"
       ng-mousedown="handleClick($event, data)"
       ng-class="{'tree-leaf':isLeaf(data)}">
-  <i ng-class="chevron(data)"></i>
+  <i class="glyphicon" ng-class="chevron(data)"></i>
   {{data.name}}
   <small ng-show="data.title" class="data-sample"> &nbsp; {{data.title }}</small>
 </span>

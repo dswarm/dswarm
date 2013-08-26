@@ -25,7 +25,8 @@ angular.module('dmpApp')
         lastPayload = {componentType: 'fun', payload: payload};
       },
       update: function (event, ui) {
-        var index = ui.item.parent().children().index(ui.item)
+        //noinspection JSCheckFunctionSignatures
+        var index = ui.item.parent().children('.function').index(ui.item)
           , payload, oldIndex;
         if (lastPayload) {
           payload = angular.copy(lastPayload);
