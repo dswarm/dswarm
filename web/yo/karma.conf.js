@@ -15,6 +15,8 @@ module.exports = function(config) {
           'components/angular-cookies/angular-cookies.js',
           'components/angular-sanitize/angular-sanitize.js',
           'components/angular-ui-router/release/angular-ui-router.js',
+          'components/jquery/jquery.js',
+          'components/jsPlumb/dist/js/jquery.jsPlumb-1.5.1.js',
           'scripts/*.js',
           'scripts/**/*.js',
 
@@ -30,7 +32,7 @@ module.exports = function(config) {
 
         // test results reporter to use
         // possible values: dots || progress || growl
-        //reporters : ['progress'],
+        reporters : ['progress', 'junit'],
 
         // web server port
         //port : 8080,
