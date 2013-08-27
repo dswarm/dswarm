@@ -2,7 +2,7 @@
 
 angular.module('dmpApp')
   /**
-   * Provides configurable options for jsPlumb.
+   * Provide configurable options for jsPlumb.
    * @see http://jsplumbtoolkit.com/doc/parameters
    * These will be used whenever a new connection is created.
    * to configure:
@@ -59,8 +59,8 @@ angular.module('dmpApp')
     };
   })
   /**
-   * Provides an injectable instance of jsPlumb. Defaults to jsPlumb.getInstance
-   * but can be mocked out
+   * Provide an injectable instance of jsPlumb. Defaults to jsPlumb.getInstance
+   * but can be mocked out (so, injectable...)
    */
   .provider('jsPlumb', function() {
     var instance = null;
@@ -82,12 +82,12 @@ angular.module('dmpApp')
     };
   })
   /**
-   * Provides the js-plumb service that is meant to be used by the application
-   * code that deals with the jsPlumb specifics should go in here.
+   * Provide the js-plumb service that is meant to be used by the application.
+   * Code that deals with the jsPlumb specifics should go in here.
    */
   .factory('jsP', ['jsPlumbOptions', 'jsPlumb', function(jsPlumbOptions, jsPlumb) {
     /**
-     * Creates a new connection between two nodes, that is, it draws an arrow
+     * Create a new connection between two nodes, that is, it draws an arrow
      * unless configured otherwise. connection is directed from source to target
      * @param source {JQLite|jQuery} source of the new connection
      * @param target {JQLite|jQuery} target of the new connection
@@ -105,7 +105,7 @@ angular.module('dmpApp')
     }
 
     /**
-     * Detaches an existing connection between the two given elements.
+     * Detach an existing connection between the two given elements.
      * @param connection {jsPlumb.Connection}
      * @param source {JQLite|jQuery}
      * @param target {JQLite|jQuery}
@@ -117,8 +117,46 @@ angular.module('dmpApp')
       }
     }
 
+    /**
+     * Detach all connections that were bound to the given element.
+     * TODO: this fires an event. capture event and fire a custom one, maybe?
+     * @param element {jqLite|jQuery}
+     */
+    function detachAll(element) {
+      jsPlumb.detachAllConnections(element[0]);
+    }
+
+    /**
+     * Create a source out of an element. A source can then be used to draw
+     *   new connections via mouse.  The style of these connections should go
+     *   to `opts`.
+     * @see http://jsplumbtoolkit.com/doc/connections#sourcesandtargets
+     * @param element {jqLite|jQuery}  the soon-to-be source element
+     * @param attrs {Object}  an angular element attributes instance
+     * @param opts {Object}  jsPlumb creation options
+     */
+    function makeSource(element, attrs, opts) {
+      jsPlumb.makeSource(element[0], opts);
+    }
+
+    /**
+     * Create a target out of an element. A target is a valid drop target for
+     *   connections, that are drawn out of a source element.  The style of
+     *   these connections should go to `opts`, although I'm not quite sure, how
+     *   different styles for sources and targets affect each other.
+     * @param element
+     * @param attrs
+     * @param opts
+     */
+    function makeTarget(element, attrs, opts) {
+      jsPlumb.makeTarget(element[0], opts);
+    }
+
     return {
       connect:connect,
-      detach: detach
+      detach: detach,
+      detachAll: detachAll,
+      makeSource: makeSource,
+      makeTarget: makeTarget
     };
   }]);
