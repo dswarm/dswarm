@@ -10,32 +10,35 @@ angular.module('dmpApp')
           , asSourceWatch = function(scope) {
               return scope.$eval(asSource);
             }
-          , asTarget = tAttrs['source']
+          , asTarget = tAttrs['target']
           , asTargetWatch = function(scope) {
               return scope.$eval(asTarget);
             }
-          , jspOpts = tAttrs['jspOptions'] || tAttrs['jsPlumbOptions']
-          , jspOptsWatch = function(scope) {
-              return scope.$eval(jspOpts);
+          , jspSourceOpts = tAttrs['jspSourceOptions'] || tAttrs['jsPlumbSourceOptions']
+          , jspSourceOptsWatch = function(scope) {
+              return scope.$eval(jspSourceOpts);
+            }
+          , jspTargetOpts = tAttrs['jspTargetOptions'] || tAttrs['jsPlumbTargetOptions']
+          , jspTargetOptsWatch = function(scope) {
+              return scope.$eval(jspTargetOpts);
             };
 
-        var opts;
-
         return function(scope, iElement, iAttrs) {
-          opts = jspOptsWatch(scope) || {};
+          var sourceOpts = jspSourceOptsWatch(scope) || {}
+            , targetOpts = jspTargetOptsWatch(scope) || {};
 
           scope.$watch(asSourceWatch, function (isSource) {
             if (isSource) {
-              jsP.makeSource(iElement, iAttrs, opts);
+              jsP.makeSource(iElement, iAttrs, sourceOpts);
             } else {
-              jsP.detachAll(iElement);
+              jsP.unmakeSource(iElement);
             }
           });
           scope.$watch(asTargetWatch, function (isTarget) {
             if (isTarget) {
-              jsP.makeTarget(iElement, iAttrs, opts);
+              jsP.makeTarget(iElement, iAttrs, targetOpts);
             } else {
-              jsP.detachAll(iElement);
+              jsP.unmakeTarget(iElement);
             }
           });
         };

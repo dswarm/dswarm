@@ -144,12 +144,31 @@ angular.module('dmpApp')
      *   connections, that are drawn out of a source element.  The style of
      *   these connections should go to `opts`, although I'm not quite sure, how
      *   different styles for sources and targets affect each other.
-     * @param element
-     * @param attrs
-     * @param opts
+     * @param element {jqLite|jQuery}  the soon-to-be target element
+     * @param attrs {Object}  an angular element attributes instance
+     * @param opts {Object}  jsPlumb creation options
      */
     function makeTarget(element, attrs, opts) {
       jsPlumb.makeTarget(element[0], opts);
+    }
+
+    /**
+     * Cancel previous makeSource calls.  If element wasn't a source, nothing
+     *   happens
+     * @see http://jsplumbtoolkit.com/doc/connections#sourcesandtargets
+     * @param element {jqLite|jQuery}  the current source element
+     */
+    function unmakeSource(element) {
+      jsPlumb.unmakeSource(element[0]);
+    }
+
+    /**
+     * Cancel previous makeTarget calls.  If element wasn't a target, nothing
+     *   happens.
+     * @param element {jqLite|jQuery}  the current target element
+     */
+    function unmakeTarget(element) {
+      jsPlumb.unmakeTarget(element[0]);
     }
 
     return {
@@ -157,6 +176,8 @@ angular.module('dmpApp')
       detach: detach,
       detachAll: detachAll,
       makeSource: makeSource,
-      makeTarget: makeTarget
+      makeTarget: makeTarget,
+      unmakeSource: unmakeSource,
+      unmakeTarget: unmakeTarget
     };
   }]);
