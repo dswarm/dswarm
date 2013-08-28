@@ -6,12 +6,12 @@ angular.module('dmpApp')
     $scope.isTarget = $scope.$parent && $scope.$parent.isTarget;
 
     $scope.jspSourceOptions = {
+      scope: 'schema',
       container: 'schema',
       anchor: 'Continuous',
       endpoint: ['Dot', {
         radius: 5,
-        cssClass: 'source-endpoint',
-        hoverClass: 'source-endpoint-hover'
+        cssClass: 'source-endpoint'
       }],
       connectorOverlays: [
         ['Arrow', {
@@ -33,6 +33,7 @@ angular.module('dmpApp')
     };
 
     $scope.jspTargetOptions = {
+      scope: 'schema',
       container: 'schema',
       anchor: 'Continuous',
       endpoint: ['Dot', {
@@ -47,6 +48,9 @@ angular.module('dmpApp')
       paintStyle: {
         fillStyle: 'transparent',
         lineWidth: 3
+      },
+      dropOptions: {
+        hoverClass: 'mapping-droppable'
       }
     };
 

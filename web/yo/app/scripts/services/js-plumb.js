@@ -91,13 +91,14 @@ angular.module('dmpApp')
      * unless configured otherwise. connection is directed from source to target
      * @param source {JQLite|jQuery} source of the new connection
      * @param target {JQLite|jQuery} target of the new connection
+     * @param opts {Object}  addition options for jsPlumb
      * @returns {jsPlumb.Connection}
      */
-    function connect(source, target) {
+    function connect(source, target, opts) {
       var connection = jsPlumb.connect(angular.extend({
         source: source,
         target: target
-      }, jsPlumbOptions));
+      }, jsPlumbOptions, opts || {}));
 
       source.data('_outbound', connection);
 
@@ -123,7 +124,7 @@ angular.module('dmpApp')
      * @param element {jqLite|jQuery}
      */
     function detachAll(element) {
-      jsPlumb.detachAllConnections(element[0]);
+      jsPlumb.detachAllConnections(element[0], {fireEvent: false});
     }
 
     /**
@@ -171,7 +172,19 @@ angular.module('dmpApp')
       jsPlumb.unmakeTarget(element[0]);
     }
 
+    /**
+     * Register eventhandler on jsPlumb.
+     * @see http://jsplumbtoolkit.com/doc/events
+     * @param event {String}  the name of the event, e.g. 'click'
+     * @param callback {Function}  the event handler, that gets called when
+     *   the event fires
+     */
+    function on(event, callback) {
+      jsPlumb.bind(event, callback);
+    }
+
     return {
+      on: on,
       connect:connect,
       detach: detach,
       detachAll: detachAll,

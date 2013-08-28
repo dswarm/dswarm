@@ -26,6 +26,27 @@
   color: @gray-light;
 }
 
+svg.mapping-active {
+  z-index: 1000;
+}
+
+.mapping-label {
+  font-size:   1.3em;
+  font-weight: 200;
+  text-shadow: 0 0 15px fadeout(black, 20%);
+  margin-top:  0.5em;
+
+  &.mapping-active {
+    color: red;
+    z-index: 1000;
+  }
+}
+
+.mapping-droppable {
+  color: lighten(black, 10%);
+  text-shadow: 0 0 10px fadeout(black, 20%);
+}
+
 .source-endpoint._jsPlumb_dragging,
 .source-endpoint._jsPlumb_dragging *,
 .transparent,

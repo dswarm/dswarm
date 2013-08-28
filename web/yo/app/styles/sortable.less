@@ -1,7 +1,24 @@
-.function-sortable {
+.transformation-container {
   padding:          10px;
   background-color: @btn-warning-bg;
   color:            @btn-warning-color;
+}
+
+#transformation {
+  .function-source,
+  .function-target {
+    display: block;
+    margin: 0;
+  }
+}
+
+.function-sortable {
+  display: inline-block;
+  margin-top: 10px;
+
+  &.bigger {
+    padding: 2em;
+  }
 }
 
 .function {
@@ -37,11 +54,21 @@
     display:          inline-block;
     border:           2px groove @btn-danger-border;
     padding:          0 0.7em;
-    margin:           0 2em 0.4em;
+    margin:           0 2em;
     height:           3em;
     position:         relative;
     background-color: @btn-success-bg;
     color:            @btn-success-color;
+
+    &.function-source {
+      background-color: lighten(@btn-info-bg, 10%);
+      color: @btn-info-color;
+    }
+
+    &.function-target {
+      background-color: darken(@btn-info-bg, 10%);
+      color: @btn-info-color;
+    }
 
     &:first-child {
       margin-left: 0;
