@@ -38,6 +38,7 @@ public class MyResourceTest {
 	 */
 	@Test
 	public void testGetItJSON() {
+		
 		String responseMsg = target.path("myresource").request()
 				.accept(MediaType.APPLICATION_JSON).get(String.class);
 		Assert.assertEquals("{\"message\":\"Hello World\"}", responseMsg);

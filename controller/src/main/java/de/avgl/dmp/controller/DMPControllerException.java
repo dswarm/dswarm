@@ -3,10 +3,6 @@ package de.avgl.dmp.controller;
 /**
  * The exception class for DMP controller exceptions.<br>
  * 
- * @author tgaengler (created), May 22, 2013
- * @author $Author$ (last changed)
- * @version $Rev$, $Date$<br>
- *          $Id: $
  */
 
 public class DMPControllerException extends Exception {
