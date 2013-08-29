@@ -9,14 +9,14 @@ public class Transformation extends DMPObject {
 
 	private Set<Component>	components;
 
-	private Set<Connection>	connection;
+	private Set<Connection>	connections;
 
 	public Set<Connection> getConnection() {
-		return connection;
+		return connections;
 	}
 
-	public void setConnection(Set<Connection> connection) {
-		this.connection = connection;
+	public void setConnections(Set<Connection> connections) {
+		this.connections = connections;
 	}
 
 	public Set<Component> getComponents() {
