@@ -1,6 +1,8 @@
 {{ internalName }}
 <tabset>
-  <tab ng-repeat="tab in tabs" heading="{{ tab.title }}" active="tab.active" select="switchTab(tab)"></tab>
+  <tab ng-repeat="tab in tabs" heading="{{ tab.title }}" active="tab.active" select="switchTab(tab)">
+    <button class="btn btn-primary" ng-click="sendTransformation(tab)">Run Transformation</button>
+  </tab>
 </tabset>
 <div class="transformation-container">
   <div class="function component function-source" ng-show="sourceComponent" connect-with="{'.function-target': targetComponent}" connect-when="sourceComponent">

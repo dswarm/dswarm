@@ -1,12 +1,19 @@
 'use strict';
 
 angular.module('dmpApp')
-  .controller('TransformationCtrl', ['$scope', 'PubSub', function ($scope, PubSub) {
+  .controller('TransformationCtrl', ['$scope', '$http', 'PubSub', function ($scope, $http, PubSub) {
     $scope.internalName = 'Transformation Logic Widget';
 
     var allComponents = {}
       , activeComponentId = null
-      , availableIds = [];
+      , availableIds = []
+      , makeComponentId = (function () {
+          var _id = 0;
+          return function () {
+            _id += 1;
+            return [activeComponentId, 'fun_' + _id].join(':');
+          };
+        })();
 
     $scope.showSortable = false;
     $scope.sourceComponent = null;
@@ -43,6 +50,35 @@ angular.module('dmpApp')
 
     $scope.switchTab = function(tab) {
       activate(tab.id);
+    };
+
+    $scope.sendTransformation = function (tab) {
+      var id = tab.id;
+      if (activeComponentId === id) {
+        var payload = {
+            'id': id,
+            'name': tab.title,
+            'components': angular.copy($scope.components),
+            'source': angular.copy($scope.sourceComponent),
+            'target': angular.copy($scope.targetComponent)
+          }
+        , transformations = {
+            'transformations': [payload]
+          };
+
+        var p = $http.post(
+          'http://localhost:8087/dmp/tranformations', transformations);
+
+        p.then(function(resp) {
+          console.log(resp);
+        });
+
+//        var json = JSON.stringify({
+//          'transformations': [payload]
+//        }, null, 4);
+//        console.log(json);
+      }
+
     };
 
     PubSub.subscribe($scope, 'connectionSelected', function(data) {
@@ -94,8 +130,10 @@ angular.module('dmpApp')
 
     $scope.sortableCallbacks = {
       receive: function (event, ui) {
-        var payload = angular.element(ui.item).scope()['child'];
-        lastPayload = {componentType: 'fun', payload: payload};
+        var payload = angular.element(ui.item).scope()['child']
+          , componentId = makeComponentId();
+
+        lastPayload = {componentType: 'fun', payload: payload, id: componentId};
       },
       update: function (event, ui) {
         //noinspection JSCheckFunctionSignatures
