@@ -1,6 +1,7 @@
 package de.avgl.dmp.controller.resources;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -27,16 +28,20 @@ public class MyResource {
 
 		final String message = "Got it!";
 
-		return Response.ok(message).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		return Response.ok(message).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, OPTIONS, HEAD")
+				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Accept, Origin, X-Requested-With, Content-Type").build();
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + "; qs=2")
 	public Response getItJSON() {
 
 		final TestObject testObject = new TestObject();
 
-		return Response.ok(testObject).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		return Response.ok(testObject).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, OPTIONS, HEAD")
+				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Accept, Origin, X-Requested-With, Content-Type").build();
 	}
 
 	@GET
@@ -45,6 +50,16 @@ public class MyResource {
 
 		final TestObject testObject = new TestObject();
 
-		return Response.ok(testObject).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		return Response.ok(testObject).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, OPTIONS, HEAD")
+				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Accept, Origin, X-Requested-With, Content-Type").build();
+	}
+
+	@OPTIONS
+	public Response getOptions() {
+
+		return Response.ok().header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, OPTIONS, HEAD")
+				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Accept, Origin, X-Requested-With, Content-Type").build();
 	}
 }
