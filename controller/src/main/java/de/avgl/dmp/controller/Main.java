@@ -9,26 +9,24 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
+import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
 /**
  * Main class.
- * 
  */
 public class Main {
 
-	private static final org.apache.log4j.Logger log = org.apache.log4j.Logger
-			.getLogger(Main.class);
-	
+	private static final org.apache.log4j.Logger	log	= org.apache.log4j.Logger.getLogger(Main.class);
+
 	// Base URI the Grizzly HTTP server will listen on
-	public static final String BASE_URI;
+	public static final String						BASE_URI;
 
 	static {
 
-		final InputStream inStream = Thread.currentThread()
-				.getContextClassLoader().getResourceAsStream("dmp.properties");
+		final InputStream inStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("dmp.properties");
 		final Properties properties = new Properties();
-		
+
 		try {
 
 			properties.load(inStream);
@@ -36,18 +34,17 @@ public class Main {
 
 			log.debug("could not load properties");
 		}
-		
+
 		final String host = properties.getProperty("backend_http_server_host");
 		final int port = Integer.valueOf(properties.getProperty("backend_http_server_port")).intValue();
-		
-		final URI baseUri= UriBuilder.fromUri("http://" + host).port(port).path("dmp/").build();
-		
+
+		final URI baseUri = UriBuilder.fromUri("http://" + host).port(port).path("dmp/").build();
+
 		BASE_URI = baseUri.toString();
 	}
 
 	/**
-	 * Starts Grizzly HTTP server exposing JAX-RS resources defined in this
-	 * application.
+	 * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
 	 * 
 	 * @return Grizzly HTTP server.
 	 */
@@ -55,13 +52,12 @@ public class Main {
 		// create a resource config that scans for JAX-RS resources and
 		// providers
 		// in de.avgl.dmp.controller.resources package
-		final ResourceConfig rc = new ResourceConfig()
+		final ResourceConfig rc = new ResourceConfig().packages("org.glassfish.jersey.examples.jackson").register(JacksonFeature.class)
 				.packages("de.avgl.dmp.controller.resources");
 
 		// create and start a new instance of grizzly http server
 		// exposing the Jersey application at BASE_URI
-		final HttpServer httpServer = GrizzlyHttpServerFactory
-				.createHttpServer(URI.create(BASE_URI), rc);
+		final HttpServer httpServer = GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
 
 		return httpServer;
 	}
@@ -74,10 +70,7 @@ public class Main {
 	 */
 	public static void main(String[] args) throws IOException {
 		final HttpServer server = startServer();
-		System.out.println(String.format(
-				"Jersey app started with WADL available at "
-						+ "%sapplication.wadl\nHit enter to stop it...",
-				BASE_URI));
+		System.out.println(String.format("Jersey app started with WADL available at " + "%sapplication.wadl\nHit enter to stop it...", BASE_URI));
 		System.in.read();
 		server.stop();
 	}
