@@ -51,7 +51,8 @@ public class Main {
 		// create a resource config that scans for JAX-RS resources and
 		// providers
 		// in de.avgl.dmp.controller.resources package
-		final ResourceConfig rc = new ResourceConfig()// .packages("org.glassfish.jersey.examples.jackson").register(JacksonFeature.class)
+		final ResourceConfig rc = new ResourceConfig()
+		// .register(JacksonJaxbJsonProvider.class)
 				.packages("de.avgl.dmp.controller.resources");
 
 		// create and start a new instance of grizzly http server

@@ -1,10 +1,10 @@
 package de.avgl.dmp.controller.resources.test;
 
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
 import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.junit.After;
 import org.junit.Before;
 
@@ -24,10 +24,12 @@ public class ResourceTest {
 
 	@Before
 	public void setUp() throws Exception {
+			
 		// start the server
 		server = Main.startServer();
 		// create the client
-		client = ClientBuilder.newBuilder() // .register(JacksonFeature.class)
+		client = JerseyClientBuilder.newBuilder()
+				// .register(JacksonJaxbJsonProvider.class)
 				.build();
 
 		target = client.target(Main.BASE_URI);

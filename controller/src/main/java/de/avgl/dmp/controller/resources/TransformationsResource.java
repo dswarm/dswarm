@@ -34,7 +34,6 @@ public class TransformationsResource {
 	// return testObject;
 	// }
 
-	@Path("/test")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -75,7 +74,7 @@ public class TransformationsResource {
 			}
 		}
 
-		return Response.ok(responseJSON).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+		return Response.ok(responseJSON.toString()).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
 				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "POST, OPTIONS, HEAD")
 				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Accept, Origin, X-Requested-With, Content-Type").build();
 	}

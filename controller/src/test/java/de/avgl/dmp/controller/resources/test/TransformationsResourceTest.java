@@ -113,7 +113,7 @@ public class TransformationsResourceTest extends ResourceTest {
 		// Assert.assertEquals("{\"message\":\"Hello World\"}", responseMsg);
 
 		// POST method
-		ClientResponse response = target.path(resourceIdentifier + "/test").request(MediaType.APPLICATION_JSON_TYPE)
+		ClientResponse response = target.path(resourceIdentifier).request(MediaType.APPLICATION_JSON_TYPE)
 				.post(Entity.json(transformationJSON.toString()), ClientResponse.class);
 
 		// check response status code
