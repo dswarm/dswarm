@@ -34,7 +34,6 @@ public class TransformationsResource {
 	// return testObject;
 	// }
 
-	@Path("/test")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -80,7 +79,6 @@ public class TransformationsResource {
 				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Accept, Origin, X-Requested-With, Content-Type").build();
 	}
 
-	@Path("/test")
 	@OPTIONS
 	public Response getOptions() {
 
