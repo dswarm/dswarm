@@ -118,19 +118,19 @@ public class TransformationsResourceTest extends ResourceTest {
 
 		// check response status code
 		if (response.getStatus() != 200) {
-			
+
 			throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
 		}
-		
+
 		String result = null;
-		
+
 		try {
 			result = IOUtils.toString(response.getEntityStream(), "UTF-8");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		Assert.assertEquals("wrong", "bla", result);
 	}
 }

@@ -9,7 +9,6 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
-import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
 /**
@@ -52,7 +51,7 @@ public class Main {
 		// create a resource config that scans for JAX-RS resources and
 		// providers
 		// in de.avgl.dmp.controller.resources package
-		final ResourceConfig rc = new ResourceConfig().packages("org.glassfish.jersey.examples.jackson").register(JacksonFeature.class)
+		final ResourceConfig rc = new ResourceConfig()// .packages("org.glassfish.jersey.examples.jackson").register(JacksonFeature.class)
 				.packages("de.avgl.dmp.controller.resources");
 
 		// create and start a new instance of grizzly http server

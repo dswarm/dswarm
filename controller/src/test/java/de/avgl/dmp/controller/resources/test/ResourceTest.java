@@ -5,7 +5,6 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
 import org.glassfish.grizzly.http.server.HttpServer;
-import org.glassfish.jersey.jackson.JacksonFeature;
 import org.junit.After;
 import org.junit.Before;
 
@@ -28,7 +27,8 @@ public class ResourceTest {
 		// start the server
 		server = Main.startServer();
 		// create the client
-		client = ClientBuilder.newBuilder().register(JacksonFeature.class).build();
+		client = ClientBuilder.newBuilder() // .register(JacksonFeature.class)
+				.build();
 
 		target = client.target(Main.BASE_URI);
 	}
