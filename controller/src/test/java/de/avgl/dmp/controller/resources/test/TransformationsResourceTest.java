@@ -16,6 +16,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import com.google.common.collect.Sets;
@@ -107,30 +108,38 @@ public class TransformationsResourceTest extends ResourceTest {
 	@Test
 	public void testPOSTJSON() {
 
-		// String responseMsg = target.path(resourceIdentifier).request()
-		// .accept(MediaType.APPLICATION_JSON).post(Entity.json(transformationJSON.toString()), String.class);
-		//
-		// Assert.assertEquals("{\"message\":\"Hello World\"}", responseMsg);
-
 		// POST method
-		ClientResponse response = target.path(resourceIdentifier).request(MediaType.APPLICATION_JSON_TYPE)
-				.post(Entity.json(transformationJSON.toString()), ClientResponse.class);
+		// ClientResponse response = target.path(resourceIdentifier).request(MediaType.APPLICATION_JSON_TYPE)
+		// .post(Entity.json(transformationJSON.toString()), ClientResponse.class);
 
-		// check response status code
-		if (response.getStatus() != 200) {
+		String responseString = target.path(resourceIdentifier).request(MediaType.APPLICATION_JSON_TYPE)
+				.post(Entity.json(transformationJSON.toString()), String.class);
 
-			throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-		}
+		final JsonNodeFactory factory = JsonNodeFactory.instance;
 
-		String result = null;
+		final ObjectNode referenceResponseJSON = new ObjectNode(factory);
 
-		try {
-			result = IOUtils.toString(response.getEntityStream(), "UTF-8");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		referenceResponseJSON.put("response_message", "this is your response message");
 
-		Assert.assertEquals("wrong", "bla", result);
+		referenceResponseJSON.put("request_message", transformationJSON);
+
+		Assert.assertEquals("POST responses are not equal", referenceResponseJSON.toString(), responseString);
+
+		// // check response status code
+		// if (response.getStatus() != 200) {
+		//
+		// throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+		// }
+		//
+		// String result = null;
+		//
+		// try {
+		// result = IOUtils.toString(response.getEntityStream(), "UTF-8");
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		//
+		// Assert.assertEquals("wrong", "bla", result);
 	}
 }
