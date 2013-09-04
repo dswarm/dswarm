@@ -71,12 +71,8 @@ angular.module('dmpApp')
 
         p.then(function(resp) {
           console.log(resp);
+          PubSub.broadcast('transformationFinished', resp.data);
         });
-
-//        var json = JSON.stringify({
-//          'transformations': [payload]
-//        }, null, 4);
-//        console.log(json);
       }
 
     };
