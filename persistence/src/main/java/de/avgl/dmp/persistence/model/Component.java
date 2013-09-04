@@ -7,6 +7,8 @@ public class Component extends DMPObject {
 
 	private ComponentType	type;
 
+	private Payload			payload;
+
 	public ComponentType getType() {
 
 		return type;
@@ -16,4 +18,14 @@ public class Component extends DMPObject {
 
 		this.type = type;
 	}
+
+	public Payload getPayload() {
+		return payload;
+	}
+
+	public void setPayload(Payload payload) {
+		this.payload = payload;
+	}
+
+
 }

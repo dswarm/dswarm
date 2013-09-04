@@ -46,7 +46,7 @@ public class Main {
 
 	/**
 	 * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
-	 * 
+	 *
 	 * @return Grizzly HTTP server.
 	 */
 	public static HttpServer startServer() {
@@ -66,7 +66,7 @@ public class Main {
 
 	/**
 	 * Main method.
-	 * 
+	 *
 	 * @param args
 	 * @throws IOException
 	 */

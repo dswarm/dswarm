@@ -67,7 +67,7 @@ angular.module('dmpApp')
           };
 
         var p = $http.post(
-          'http://localhost:8087/dmp/tranformations', transformations);
+          'http://localhost:8087/dmp/transformations', transformations);
 
         p.then(function(resp) {
           console.log(resp);
@@ -92,12 +92,14 @@ angular.module('dmpApp')
           var start = {
               componentType: 'source',
               payload: data.sourceData,
+              id: data.id + ':source',
               source: data.source,
               target: data.target
             }
             , end = {
               componentType: 'target',
               payload: data.targetData,
+              id: data.id + ':source',
               source: data.source,
               target: data.target
             };

@@ -1,5 +1,6 @@
 package de.avgl.dmp.persistence.model;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -7,25 +8,33 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Transformation extends DMPObject {
 
-	private Set<Component>	components;
+	private List<Component> components;
+	private Component source;
+	private Component target;
 
-	private Set<Connection>	connections;
-
-	public Set<Connection> getConnection() {
-		return connections;
-	}
-
-	public void setConnections(Set<Connection> connections) {
-		this.connections = connections;
-	}
-
-	public Set<Component> getComponents() {
+	public List<Component> getComponents() {
 
 		return components;
 	}
 
-	public void setComponents(final Set<Component> components) {
+	public void setComponents(final List<Component> components) {
 
 		this.components = components;
+	}
+
+	public void setSource(Component source) {
+		this.source = source;
+	}
+
+	public Component getSource() {
+		return source;
+	}
+
+	public void setTarget(Component target) {
+		this.target = target;
+	}
+
+	public Component getTarget() {
+		return target;
 	}
 }
