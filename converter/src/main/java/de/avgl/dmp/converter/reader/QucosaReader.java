@@ -8,6 +8,11 @@ public final class QucosaReader implements Reader {
 
 	private final QucosaDecoder decoder;
 
+	public QucosaReader(String recordPrefix) {
+		super();
+		this.decoder = new QucosaDecoder(recordPrefix);
+	}
+
 	public QucosaReader() {
 		super();
 		this.decoder = new QucosaDecoder();

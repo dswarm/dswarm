@@ -1,9 +1,9 @@
 package de.avgl.dmp.converter.decoder;
 
 import de.avgl.dmp.converter.functional.Function1;
+import de.avgl.dmp.converter.functional.NodeListOps;
 import de.avgl.dmp.converter.functional.UnitFunction1;
 import de.avgl.dmp.converter.functional.UnitFunction2;
-import de.avgl.dmp.converter.functional.NodeListOps;
 import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
@@ -20,10 +20,15 @@ import java.io.*;
 
 public final class QucosaDecoder extends DefaultObjectPipe<String, StreamReceiver> {
 
-	static final String HEADER_TAG = "header";
-	static final String METADATA_TAG = "metadata";
-	static final String OAI_DATA_TAG = "oai_dc:dc";
-	static final String ENTITY_MARKER = ".";
+	private static final String RECORD_TAG = "record";
+	private static final String HEADER_TAG = "header";
+	private static final String METADATA_TAG = "metadata";
+	private static final String OAI_DATA_TAG = "oai_dc:dc";
+	private static final String ENTITY_MARKER = ".";
+
+	static final String DEFAULT_RECORD_PREFIX = "record";
+
+	private final String recordPrefix;
 
 	private final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
@@ -63,12 +68,17 @@ public final class QucosaDecoder extends DefaultObjectPipe<String, StreamReceive
 		}
 	}
 
-	public QucosaDecoder() {
+	public QucosaDecoder(final String recordPrefix) {
 		super();
+		this.recordPrefix = recordPrefix;
+	}
+
+	public QucosaDecoder() {
+		this(DEFAULT_RECORD_PREFIX);
 	}
 
 	private void processOneRecord(final Node record, Emitter emit) {
-		getReceiver().startEntity("record");
+		getReceiver().startEntity(recordPrefix);
 
 		final NodeListOps recordChildren = new NodeListOps(record.getChildNodes());
 
@@ -109,7 +119,7 @@ public final class QucosaDecoder extends DefaultObjectPipe<String, StreamReceive
 
 		doc.getDocumentElement().normalize();
 
-		new NodeListOps(doc.getElementsByTagName("record")).forEach(new UnitFunction1<Node>() {
+		new NodeListOps(doc.getElementsByTagName(RECORD_TAG)).forEach(new UnitFunction1<Node>() {
 			@Override
 			public void apply(Node in) {
 				receiver.startRecord("");

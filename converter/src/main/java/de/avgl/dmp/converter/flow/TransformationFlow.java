@@ -1,6 +1,6 @@
 package de.avgl.dmp.converter.flow;
 
-import de.avgl.dmp.converter.pipe.StreamJsonArrayfier;
+import de.avgl.dmp.converter.pipe.StreamJsonCollapser;
 import de.avgl.dmp.converter.pipe.StreamUnflattener;
 import de.avgl.dmp.converter.reader.QucosaReader;
 import de.avgl.dmp.converter.sink.ObjectBufferWriter;
@@ -17,13 +17,15 @@ import java.io.InputStream;
 public class TransformationFlow {
 
 	private static String flow(final Metamorph transformer) {
+		final String recordDummy = "record";
+
 		final ResourceOpener opener = new ResourceOpener();
-		final QucosaReader reader = new QucosaReader();
+		final QucosaReader reader = new QucosaReader(recordDummy);
 
 		final StreamFlattener flattener = new StreamFlattener();
-		final StreamUnflattener unflattener = new StreamUnflattener("record");
+		final StreamUnflattener unflattener = new StreamUnflattener(recordDummy);
+		final StreamJsonCollapser collapser = new StreamJsonCollapser();
 
-		final StreamJsonArrayfier arrayfier = new StreamJsonArrayfier();
 		final JsonEncoder converter = new JsonEncoder();
 		final ObjectBufferWriter writer = new ObjectBufferWriter();
 
@@ -32,7 +34,7 @@ public class TransformationFlow {
 				.setReceiver(flattener)
 				.setReceiver(transformer)
 				.setReceiver(unflattener)
-				.setReceiver(arrayfier)
+				.setReceiver(collapser)
 				.setReceiver(converter)
 				.setReceiver(writer);
 

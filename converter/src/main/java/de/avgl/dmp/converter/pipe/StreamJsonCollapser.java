@@ -7,7 +7,7 @@ import org.culturegraph.mf.framework.StreamReceiver;
 import java.util.Collection;
 import java.util.Map;
 
-public class StreamJsonArrayfier extends DefaultStreamPipe<StreamReceiver> {
+public class StreamJsonCollapser extends DefaultStreamPipe<StreamReceiver> {
 
 	public static final String ARRAY_MARKER = "[]";
 
