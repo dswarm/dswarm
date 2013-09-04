@@ -53,7 +53,7 @@ public final class QucosaDecoder extends DefaultObjectPipe<String, StreamReceive
 				public void apply(Node in) {
 					receiver.literal(
 							in.getNodeName(),
-							in.getTextContent().trim());
+							in.getTextContent());
 				}
 			});
 
