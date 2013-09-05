@@ -1,7 +1,8 @@
-{{ internalName }}
+<span>{{ internalName }}</span>
+<button class="btn btn-success" type="button" ng-click="sendTransformations()" ng-class="{'disabled':tabs.length == 0}">Run all transformations</button>
 <tabset>
   <tab ng-repeat="tab in tabs" heading="{{ tab.title }}" active="tab.active" select="switchTab(tab)">
-    <button class="btn btn-primary" ng-click="sendTransformation(tab)">Run Transformation</button>
+    <button class="btn btn-primary" type="button" ng-click="sendTransformation(tab)">Run Transformation</button>
   </tab>
 </tabset>
 <div class="transformation-container">

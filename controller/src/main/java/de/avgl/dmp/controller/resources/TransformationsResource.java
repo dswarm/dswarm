@@ -94,7 +94,7 @@ public class TransformationsResource {
 		String xml = null;
 		try {
 			final List<Transformation> pojos = TransformationsConverter.toList(jsonObjectString);
-			xml = TransformationsConverter.createDom(pojos.get(0));
+			xml = TransformationsConverter.createDom(pojos);
 		} catch (IOException | ParserConfigurationException e) {
 			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
 		}
