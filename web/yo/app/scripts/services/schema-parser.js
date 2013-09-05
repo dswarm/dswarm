@@ -2,16 +2,18 @@
 
 angular.module('dmpApp').
   factory('schemaParser', function () {
-    function mapData(name, container) {
-      var data = {'name': name, 'show': true};
+    function mapData(name, container, editableTitle) {
+      var data = {'name': name, 'show': true, 'editableTitle' : editableTitle};
 
       if (container['properties']) {
         var children = [];
         angular.forEach(container['properties'], function (val, key) {
-          children.push(mapData(key, val));
+          children.push(mapData(key, val, editableTitle));
         });
         data['children'] = children;
       }
+
+      data.hasChildren = (data['children'] && data['children'].length > 0);
 
       return data;
     }
@@ -93,6 +95,29 @@ angular.module('dmpApp').
       }
     }
 
+    function getData(data) {
+
+        if(data.children) {
+
+            var returnData = [];
+
+            angular.forEach(data.children,function(child) {
+
+                var tempData = getData(child);
+
+                if(tempData.length > 0) {
+                    returnData.push(tempData);
+                }
+
+            });
+
+            return returnData;
+        } else {
+         return (data.title) ? data.title : '';
+        }
+
+    }
+
     return {
       mapData: mapData
     , makeItem: makeItem
@@ -101,5 +126,6 @@ angular.module('dmpApp').
     , parseString: parseString
     , parseEnum: parseEnum
     , parseAny: parseAny
+    , getData: getData
     };
   });
