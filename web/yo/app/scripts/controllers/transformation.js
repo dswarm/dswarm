@@ -160,4 +160,8 @@ angular.module('dmpApp')
       PubSub.broadcast('handleEditConfig', component);
     };
 
+    $scope.onFilterClick = function(component) {
+      PubSub.broadcast('handleEditFilter', component);
+    };
+
   }]);
