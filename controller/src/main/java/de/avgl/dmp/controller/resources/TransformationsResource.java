@@ -17,7 +17,6 @@ import de.avgl.dmp.converter.resources.TransformationsConverter;
 import de.avgl.dmp.persistence.model.Transformation;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -73,7 +72,7 @@ public class TransformationsResource {
 
 		List<Transformation> pojos = null;
 		try {
-			pojos = TransformationsConverter.toList(jsonObjectString);
+			pojos = TransformationsConverter.toPojo(jsonObjectString);
 		} catch (IOException e) {
 			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
 		}
@@ -93,7 +92,7 @@ public class TransformationsResource {
 	public Response runToXML(final String jsonObjectString) {
 		String xml = null;
 		try {
-			final List<Transformation> pojos = TransformationsConverter.toList(jsonObjectString);
+			final List<Transformation> pojos = TransformationsConverter.toPojo(jsonObjectString);
 			xml = TransformationsConverter.createDom(pojos);
 		} catch (IOException | ParserConfigurationException e) {
 			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.

@@ -141,7 +141,7 @@ public class TransformationsConverterTest {
 	@Test
 	public void testToList() throws Exception {
 
-		List<Transformation> result = TransformationsConverter.toList(jsonInput);
+		List<Transformation> result = TransformationsConverter.toPojo(jsonInput);
 
 		Assert.assertEquals("There should only be one transformation", 1, result.size());
 

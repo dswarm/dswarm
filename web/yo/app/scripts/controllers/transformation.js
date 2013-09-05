@@ -2,7 +2,7 @@
 'use strict';
 
 angular.module('dmpApp')
-  .controller('TransformationCtrl', ['$scope', '$http', 'PubSub', function ($scope, $http, PubSub) {
+  .controller('TransformationCtrl', ['$scope', '$http', 'PubSub', '$window', function ($scope, $http, PubSub, $window) {
     $scope.internalName = 'Transformation Logic Widget';
 
     var allComponents = {}
@@ -77,6 +77,9 @@ angular.module('dmpApp')
       p.then(function (resp) {
         console.log(resp);
         PubSub.broadcast('transformationFinished', resp.data);
+      }, function (resp) {
+        console.log(resp);
+        $window.alert(resp.data.error);
       });
     }
 

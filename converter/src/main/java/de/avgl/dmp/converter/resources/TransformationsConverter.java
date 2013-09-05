@@ -103,7 +103,7 @@ public class TransformationsConverter {
 	}
 
 	public static File createMorphFile(final String jsonIn) throws IOException, ParserConfigurationException {
-		final List<Transformation> pojos = toList(jsonIn);
+		final List<Transformation> pojos = toPojo(jsonIn);
 
 		return createMorphFile(pojos);
 	}
@@ -176,7 +176,7 @@ public class TransformationsConverter {
 		return createDom(Lists.newArrayList(transformation));
 	}
 
-	public static List<Transformation> toList(final String jsonObjectString) throws IOException {
+	public static List<Transformation> toPojo(final String jsonObjectString) throws IOException {
 		final JsonNode root = mapper.readTree(jsonObjectString);
 
 		final ImmutableList.Builder<Transformation> transformationsBuilder = ImmutableList.builder();
@@ -235,17 +235,18 @@ public class TransformationsConverter {
 
 		Payload payload = new Payload();
 
-		String name = null;
+		String name;
 		switch (componentType) {
 			case SOURCE:
-			case TARGET:
+			case TARGET:	// fall through
 				name = jsPayload.get("path").asText();
 				break;
 			case FUNCTION:
-				name = jsPayload.get("name").asText();
+				name = jsPayload.get("reference").asText();
 				break;
 			case EXTENDED:
-			default:
+			default:		// fall through
+				name = jsPayload.hasNonNull("name")? jsPayload.get("name").asText() : null;
 				break;
 		}
 
