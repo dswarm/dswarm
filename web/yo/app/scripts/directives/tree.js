@@ -5,6 +5,8 @@ angular.module('dmpApp')
     $scope.isSource = $scope.$parent && $scope.$parent.isSource;
     $scope.isTarget = $scope.$parent && $scope.$parent.isTarget;
 
+    $scope.update = $scope.$parent && $scope.$parent.update;
+
     $scope.jspSourceOptions = {
       scope: 'schema',
       container: 'schema',
