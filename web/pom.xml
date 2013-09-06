@@ -16,11 +16,6 @@
 
 	<dependencies>
 		<!-- other project module dependencies -->
-		<dependency>
-			<groupId>de.avgl.dmp</groupId>
-			<artifactId>controller</artifactId>
-			<version>0.1-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 
 	<properties>

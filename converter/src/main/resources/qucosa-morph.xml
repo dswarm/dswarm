@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph entityMarker="." version="1"
+           xmlns="http://www.culturegraph.org/metamorph">
+    <meta>
+        <name>Subject Mapping</name>
+    </meta>
+    <rules>
+        <data name="record.OAI-PMH.dc:subject"
+              source="record.metadata.oai_dc:dc.dc:subject">
+            <trim/>
+            <replace pattern="ddc:020" with="Hier war mal DDC020"/>
+            <replace pattern="SLUB"
+                     with="Sächsische Landesbibliothek – Staats- und Universitätsbibliothek Dresden"/>
+            <replace pattern="Saxony" with="Sachsen"/>
+            <replace pattern="Libraries" with="Bibliotheken"/>
+            <blacklist>
+                <entry name="rvk:--"/>
+            </blacklist>
+            <unique/>
+        </data>
+    </rules>
+</metamorph>

@@ -33,13 +33,6 @@ as well as
     cd app/components/angular-ui-utils
     npm install && grunt build
 
-You'all also need jsPlumb, which isn't available through bower ([issue](https://github.com/sporritt/jsPlumb/issues/53))
-So, you have to download the github archive:
-
-    cd app/components
-    wget -qO- https://github.com/sporritt/jsPlumb/archive/1.5.1.tar.gz | tar xvz -
-    mv jsPlumb-1.5.1 jsPlumb
-
 
 ### Start Development Server ###
 
