@@ -1,9 +1,30 @@
 {{ internalName }}
-<ul class="function-sortable">
-  <li ng-repeat="component in components" class="function component" dmp-connectible ng-click="onFunctionClick(component)">
-    <div ng-switch on="component.componentType">
-      <span ng-switch-when="fun">{{ component.payload.name }}</span>
-      <span ng-switch-default></span>
+<tabset>
+  <tab ng-repeat="tab in tabs" heading="{{ tab.title }}" active="tab.active" select="switchTab(tab)">
+    <button class="btn btn-primary" ng-click="sendTransformation(tab)">Run Transformation</button>
+  </tab>
+</tabset>
+<div class="transformation-container">
+  <div class="function component function-source" ng-show="sourceComponent" connect-with="{'.function-target': targetComponent}" connect-when="sourceComponent">
+    <div>
+      <span>{{ sourceComponent.payload.name }}</span>
     </div>
-  </li>
-</ul>
+  </div>
+  <ul class="function-sortable" ng-show="showSortable" ng-class="{bigger:!components.length}">
+    <li ng-repeat="component in components" class="function component"
+        ng-class="'function-'+component.componentType" dmp-connectible
+        ng-click="onFunctionClick(component)">
+      <div ng-switch on="component.componentType">
+        <span ng-switch-when="fun">{{ component.payload.name }}</span>
+        <span ng-switch-when="source">{{ component.payload.name }}</span>
+        <span ng-switch-when="target">{{ component.payload.name }}</span>
+        <span ng-switch-default></span>
+      </div>
+    </li>
+  </ul>
+  <div class="function component function-target" ng-show="targetComponent">
+    <div>
+      <span>{{ targetComponent.payload.name }}</span>
+    </div>
+  </div>
+</div>

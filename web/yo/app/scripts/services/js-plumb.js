@@ -2,7 +2,7 @@
 
 angular.module('dmpApp')
   /**
-   * Provides configurable options for jsPlumb.
+   * Provide configurable options for jsPlumb.
    * @see http://jsplumbtoolkit.com/doc/parameters
    * These will be used whenever a new connection is created.
    * to configure:
@@ -59,8 +59,8 @@ angular.module('dmpApp')
     };
   })
   /**
-   * Provides an injectable instance of jsPlumb. Defaults to jsPlumb.getInstance
-   * but can be mocked out
+   * Provide an injectable instance of jsPlumb. Defaults to jsPlumb.getInstance
+   * but can be mocked out (so, injectable...)
    */
   .provider('jsPlumb', function() {
     var instance = null;
@@ -82,22 +82,23 @@ angular.module('dmpApp')
     };
   })
   /**
-   * Provides the js-plumb service that is meant to be used by the application
-   * code that deals with the jsPlumb specifics should go in here.
+   * Provide the js-plumb service that is meant to be used by the application.
+   * Code that deals with the jsPlumb specifics should go in here.
    */
   .factory('jsP', ['jsPlumbOptions', 'jsPlumb', function(jsPlumbOptions, jsPlumb) {
     /**
-     * Creates a new connection between two nodes, that is, it draws an arrow
+     * Create a new connection between two nodes, that is, it draws an arrow
      * unless configured otherwise. connection is directed from source to target
      * @param source {JQLite|jQuery} source of the new connection
      * @param target {JQLite|jQuery} target of the new connection
+     * @param opts {Object}  addition options for jsPlumb
      * @returns {jsPlumb.Connection}
      */
-    function connect(source, target) {
+    function connect(source, target, opts) {
       var connection = jsPlumb.connect(angular.extend({
         source: source,
         target: target
-      }, jsPlumbOptions));
+      }, jsPlumbOptions, opts || {}));
 
       source.data('_outbound', connection);
 
@@ -105,7 +106,7 @@ angular.module('dmpApp')
     }
 
     /**
-     * Detaches an existing connection between the two given elements.
+     * Detach an existing connection between the two given elements.
      * @param connection {jsPlumb.Connection}
      * @param source {JQLite|jQuery}
      * @param target {JQLite|jQuery}
@@ -117,8 +118,79 @@ angular.module('dmpApp')
       }
     }
 
+    /**
+     * Detach all connections that were bound to the given element.
+     * TODO: this fires an event. capture event and fire a custom one, maybe?
+     * @param element {jqLite|jQuery}
+     */
+    function detachAll(element) {
+      jsPlumb.detachAllConnections(element[0], {fireEvent: false});
+    }
+
+    /**
+     * Create a source out of an element. A source can then be used to draw
+     *   new connections via mouse.  The style of these connections should go
+     *   to `opts`.
+     * @see http://jsplumbtoolkit.com/doc/connections#sourcesandtargets
+     * @param element {jqLite|jQuery}  the soon-to-be source element
+     * @param attrs {Object}  an angular element attributes instance
+     * @param opts {Object}  jsPlumb creation options
+     */
+    function makeSource(element, attrs, opts) {
+      jsPlumb.makeSource(element[0], opts);
+    }
+
+    /**
+     * Create a target out of an element. A target is a valid drop target for
+     *   connections, that are drawn out of a source element.  The style of
+     *   these connections should go to `opts`, although I'm not quite sure, how
+     *   different styles for sources and targets affect each other.
+     * @param element {jqLite|jQuery}  the soon-to-be target element
+     * @param attrs {Object}  an angular element attributes instance
+     * @param opts {Object}  jsPlumb creation options
+     */
+    function makeTarget(element, attrs, opts) {
+      jsPlumb.makeTarget(element[0], opts);
+    }
+
+    /**
+     * Cancel previous makeSource calls.  If element wasn't a source, nothing
+     *   happens
+     * @see http://jsplumbtoolkit.com/doc/connections#sourcesandtargets
+     * @param element {jqLite|jQuery}  the current source element
+     */
+    function unmakeSource(element) {
+      jsPlumb.unmakeSource(element[0]);
+    }
+
+    /**
+     * Cancel previous makeTarget calls.  If element wasn't a target, nothing
+     *   happens.
+     * @param element {jqLite|jQuery}  the current target element
+     */
+    function unmakeTarget(element) {
+      jsPlumb.unmakeTarget(element[0]);
+    }
+
+    /**
+     * Register eventhandler on jsPlumb.
+     * @see http://jsplumbtoolkit.com/doc/events
+     * @param event {String}  the name of the event, e.g. 'click'
+     * @param callback {Function}  the event handler, that gets called when
+     *   the event fires
+     */
+    function on(event, callback) {
+      jsPlumb.bind(event, callback);
+    }
+
     return {
+      on: on,
       connect:connect,
-      detach: detach
+      detach: detach,
+      detachAll: detachAll,
+      makeSource: makeSource,
+      makeTarget: makeTarget,
+      unmakeSource: unmakeSource,
+      unmakeTarget: unmakeTarget
     };
   }]);

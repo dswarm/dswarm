@@ -15,9 +15,13 @@
 	<name>DMP - Persistence</name>
 	<url>http://avantgarde-labs.de</url>
 
+	<properties>
+		<project.root>${basedir}/..</project.root>
+	</properties>
+
 	<build>
 		<filters>
-			<filter>${user.home}/dmp.properties</filter>
+			<filter>${project.root}/dmp.properties</filter>
 		</filters>
 		<resources>
 			<resource>

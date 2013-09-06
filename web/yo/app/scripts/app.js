@@ -1,3 +1,3 @@
 'use strict';
 
-angular.module('dmpApp', ['ui.state', 'ui.utils']);
+angular.module('dmpApp', ['ui.state', 'ui.utils', 'ui.bootstrap.tabs']);
