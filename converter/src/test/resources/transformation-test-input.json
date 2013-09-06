@@ -73,16 +73,20 @@
       "source": {
         "componentType": "source",
         "payload": {
+          "path": "dc:publisher",
           "name": "dc:publisher",
           "show": true
-        }
+        },
+        "id": "con_124:source"
       },
       "target": {
         "componentType": "target",
         "payload": {
+          "path": "dc:publisher",
           "name": "dc:publisher",
           "show": true
-        }
+        },
+        "id": "con_124:target"
       }
     }
   ]

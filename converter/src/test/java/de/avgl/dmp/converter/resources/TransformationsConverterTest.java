@@ -116,63 +116,13 @@ public class TransformationsConverterTest {
 	}
 
 	@Test
-	public void testMetamorph() throws Exception {
-		Metamorph mf = new Metamorph(this.getClass().getClassLoader().getResourceAsStream("filter-morph.xml"));
-	}
-
-//	private void doParameterTest(Map<String, Parameter> expectedParameters, Map<String, Parameter> actualParameters) {
-//		for (String expectedParameterName : expectedParameters.keySet()) {
-//			Assert.assertTrue("There is a parameter missing", actualParameters.containsKey(expectedParameterName));
-//
-//			Parameter expectedParameter = expectedParameters.get(expectedParameterName);
-//			Parameter actualParameter = actualParameters.get(expectedParameterName);
-//
-//			Assert.assertEquals(expectedParameter.getId(), actualParameter.getId());
-//			Assert.assertEquals(expectedParameter.getName(), actualParameter.getName());
-//			Assert.assertEquals(expectedParameter.getType(), actualParameter.getType());
-//			Assert.assertEquals(expectedParameter.getData(), actualParameter.getData());
-//
-//			if (expectedParameter.getParameters() != null) {
-//				doParameterTest(expectedParameter.getParameters(), actualParameter.getParameters());
-//			}
-//		}
-//	}
-
-	@Test
 	public void testToList() throws Exception {
 
-		List<Transformation> result = TransformationsConverter.toList(jsonInput);
+		List<Transformation> result = TransformationsConverter.toPojo(jsonInput);
 
 		Assert.assertEquals("There should only be one transformation", 1, result.size());
 
 		Transformation actual = result.get(0);
-
-//		Assert.assertEquals(actual.getId(), transformation.getId());
-//		Assert.assertEquals(actual.getName(), transformation.getName());
-//
-//		Iterator<Component> actualComponentsIterator = actual.getComponents().iterator();
-//
-//		for (Component expectedComponent: transformation.getComponents()) {
-//			Assert.assertTrue("The number of components does not match", actualComponentsIterator.hasNext());
-//			Component actualComponent = actualComponentsIterator.next();
-//
-//			Assert.assertEquals(expectedComponent.getId(), actualComponent.getId());
-//			Assert.assertEquals(expectedComponent.getName(), actualComponent.getName());
-//			Assert.assertEquals(expectedComponent.getType(), actualComponent.getType());
-//
-//			Payload expectedPayload = expectedComponent.getPayload();
-//			Payload actualPayload = actualComponent.getPayload();
-//
-//			Assert.assertEquals(expectedPayload.getId(), actualPayload.getId());
-//			Assert.assertEquals(expectedPayload.getName(), actualPayload.getName());
-//
-//			Map<String, Parameter> expectedParameters = expectedPayload.getParameters();
-//			Map<String, Parameter> actualParameters = actualPayload.getParameters();
-//
-//			if (expectedParameters != null) {
-//				doParameterTest(expectedParameters, actualParameters);
-//			}
-//		}
 
 		Assert.assertEquals("The Transformation was not constructed correctly", transformation, actual);
 	}

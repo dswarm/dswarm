@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import de.avgl.dmp.persistence.DMPPersistenceException;
@@ -85,18 +87,35 @@ public class TransformationsConverter {
 		}
 	}
 
-	public static File createMorphFile(final String jsonIn) throws IOException, ParserConfigurationException {
-		final List<Transformation> pojos = toList(jsonIn);
+	private static Element createDomFor(final Transformation transformation, final Document doc) throws ParserConfigurationException, IOException {
+		Element data = doc.createElement("data");
+		data.setAttribute("source", "record." + transformation.getSource().getName());
+		data.setAttribute("name", "record." + transformation.getTarget().getName());
 
-		return createMorphFile(pojos.get(0));
+		for (Component component : transformation.getComponents()) {
+			Element comp = doc.createElement(component.getName());
+
+			createParameters(component.getPayload().getParameters(), doc, comp);
+			data.appendChild(comp);
+		}
+
+		return data;
 	}
 
+	public static File createMorphFile(final String jsonIn) throws IOException, ParserConfigurationException {
+		final List<Transformation> pojos = toPojo(jsonIn);
 
-	public static File createMorphFile(final Transformation transformation) throws IOException, ParserConfigurationException {
-		final String xml = createDom(transformation);
+		return createMorphFile(pojos);
+	}
+
+	public static File createMorphFile(final List<Transformation> transformations) throws IOException, ParserConfigurationException {
+		final String xml = createDom(transformations);
 		return createMorphFile(xml.getBytes("UTF-8"));
 	}
 
+	public static File createMorphFile(final Transformation transformation) throws IOException, ParserConfigurationException {
+		return createMorphFile(Lists.newArrayList(transformation));
+	}
 
 	public static File createMorphFile(final byte[] xmlContent) throws IOException, ParserConfigurationException {
 		final File file = File.createTempFile("avgl_dmp", ".tmp");
@@ -108,7 +127,7 @@ public class TransformationsConverter {
 		return file;
 	}
 
-	public static String createDom(final Transformation transformation) throws ParserConfigurationException, IOException {
+	public static String createDom(final List<Transformation> transformations) throws ParserConfigurationException, IOException {
 		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
 		Document doc = docBuilder.newDocument();
@@ -124,23 +143,21 @@ public class TransformationsConverter {
 		rootElement.appendChild(meta);
 
 		Element metaName = doc.createElement("name");
-		metaName.setTextContent(transformation.getName());
 		meta.appendChild(metaName);
 
 		Element rules = doc.createElement("rules");
 		rootElement.appendChild(rules);
 
-		Element data = doc.createElement("data");
-		data.setAttribute("source", "record." + transformation.getSource().getName());
-		data.setAttribute("name", "record." + transformation.getTarget().getName());
-		rules.appendChild(data);
+		final List<String> metas = new ArrayList<>();
 
-		for (Component component : transformation.getComponents()) {
-			Element comp = doc.createElement(component.getName());
+		for (Transformation transformation : transformations) {
+			metas.add(transformation.getName());
+			Element data = createDomFor(transformation, doc);
 
-			createParameters(component.getPayload().getParameters(), doc, comp);
-			data.appendChild(comp);
+			rules.appendChild(data);
 		}
+
+		metaName.setTextContent(Joiner.on(", ").join(metas));
 
 		OutputFormat format = new OutputFormat(doc);
 		format.setEncoding("UTF-8");
@@ -155,7 +172,11 @@ public class TransformationsConverter {
 		return out.toString();
 	}
 
-	public static List<Transformation> toList(final String jsonObjectString) throws IOException {
+	public static String createDom(final Transformation transformation) throws ParserConfigurationException, IOException {
+		return createDom(Lists.newArrayList(transformation));
+	}
+
+	public static List<Transformation> toPojo(final String jsonObjectString) throws IOException {
 		final JsonNode root = mapper.readTree(jsonObjectString);
 
 		final ImmutableList.Builder<Transformation> transformationsBuilder = ImmutableList.builder();
@@ -214,17 +235,18 @@ public class TransformationsConverter {
 
 		Payload payload = new Payload();
 
-		String name = null;
+		String name;
 		switch (componentType) {
 			case SOURCE:
-			case TARGET:
+			case TARGET:	// fall through
 				name = jsPayload.get("path").asText();
 				break;
 			case FUNCTION:
-				name = jsPayload.get("name").asText();
+				name = jsPayload.get("reference").asText();
 				break;
 			case EXTENDED:
-			default:
+			default:		// fall through
+				name = jsPayload.hasNonNull("name")? jsPayload.get("name").asText() : null;
 				break;
 		}
 

@@ -16,7 +16,9 @@ angular.module('dmpApp')
         var schema = results[0].data
           , transformation = results[1];
 
-        $scope.data = schemaParser.parseAny(transformation[schema['title']], schema['title'], schema);
+        if (transformation && transformation[schema['title']]) {
+          $scope.data = schemaParser.parseAny(transformation[schema['title']], schema['title'], schema);
+        }
       });
 
       deferred.resolve(data);

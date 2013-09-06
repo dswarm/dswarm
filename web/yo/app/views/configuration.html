@@ -1,23 +1,107 @@
 <div ng-show="component">
 
-    <span>Function: {{component.name}}</span>
-    <div class="functionRow" ng-repeat="(key,parameter) in component.parameters">
-        <div ng-switch on="parameter.type">
-          <div ng-switch-when="repeat">
-            <div class="functionRow" ng-repeat="(key2,parameter2) in parameter.parameters">
-              <span class="functionName">{{ key2 }}</span>
-              <input type="{{parameter2.type}}" ng-model="parameter2.data">
-            </div>
-          </div>
-          <div ng-switch-default>
-            <span class="functionName">{{ key }}</span>
-            <input type="{{parameter.type}}" ng-model="parameter.data">
-          </div>
+  <header>
+    <h5>Function: {{component.name}}</h5>
+    <span>{{ component.description }}</span>
+  </header>
+
+  <hr>
+
+  <form role="form" ng-submit="onSaveClick()" name="componentForm">
+
+    <div class="form-group" ng-repeat="(key,parameter) in component.parameters">
+      <ng-form name="compForm" ng-switch on="parameter.type">
+
+        <div ng-switch-when="repeat">
+          <ng-form name="entForm"
+                   ng-repeat="(key2,parameter2) in parameter.parameters"
+                   ng-class="formClasses(entForm.input, parameter2.optional)">
+            <label class="control-label">
+              {{ key2 }}<span
+                ng-show="entForm.input.$error.required"
+                class="pull-right">required <i
+                class="glyphicon glyphicon-exclamation-sign"></i></span>
+              <input type="{{parameter2.type}}"
+                     name="input"
+                     class="form-control"
+                     ng-model="parameter2.data"
+                     ng-required="!parameter2.optional"
+                     ng-pattern="getPattern(parameter2.pattern)">
+            </label>
+            <span class="help-block" ng-show="parameter2.description">{{ parameter2.description }}</span>
+          </ng-form>
         </div>
 
+        <div ng-switch-when="select"
+             ng-class="formClasses(compForm.input, parameter.optional)">
+          <label class="control-label">
+            {{ key }}<span
+              ng-show="compForm.input.$error.required"
+              class="pull-right">required <i
+              class="glyphicon glyphicon-exclamation-sign"></i></span>
+            <select class="form-control" ng-required="!parameter.optional"
+                    name="input"
+                    ng-model="parameter.data"
+                    ng-options="choice for choice in parameter.choices">
+              <option value="">----</option>
+            </select>
+          </label>
+          <span class="help-block" ng-show="parameter.description">{{ parameter.description }}</span>
+        </div>
+
+        <div ng-switch-when="radio">
+          <span>{{ key }}<span
+              ng-show="compForm.input.$error.required"
+              class="pull-right">required <i
+              class="glyphicon glyphicon-exclamation-sign"></i></span></span>
+          <ng-form name="radioForm" class="radio"
+                   ng-repeat="choice in parameter.choices"
+                   ng-class="formClasses(radioForm.input, parameter.optional)">
+            <label class="control-label">
+              {{ choice }}
+              <input type="radio" ng-model="parameter.data" ng-required="!parameter.optional" name="input" ng-value="choice">
+            </label>
+          </ng-form>
+          <span class="help-block" ng-show="parameter.description">{{ parameter.description }}</span>
+        </div>
+
+        <div ng-switch-when="checkbox" class="checkbox"
+             ng-class="formClasses(compForm.input, parameter.optional)">
+          <label class="control-label">
+            {{ key }}<span
+              ng-show="compForm.input.$error.required"
+              class="pull-right">required <i
+              class="glyphicon glyphicon-exclamation-sign"></i></span>
+            <input type="checkbox" name="input" ng-model="parameter.data">
+          </label>
+          <span class="help-block" ng-show="parameter.description">{{ parameter.description }}</span>
+        </div>
+
+        <div ng-switch-default ng-class="formClasses(compForm.input, parameter.optional)">
+          <label class="control-label">
+            {{ key }}<span
+              ng-show="compForm.input.$error.required"
+              class="pull-right">required <i class="glyphicon glyphicon-exclamation-sign"></i></span>
+            <input type="{{parameter.type}}"
+                   name="input"
+                   class="form-control"
+                   ng-model="parameter.data"
+                   ng-required="!parameter.optional"
+                   ng-pattern="getPattern(parameter.pattern)">
+          </label>
+          <span class="help-block" ng-show="parameter.description">{{ parameter.description }}</span>
+          <span class="help-block" ng-show="compForm.input.$error.pattern">
+            Input doesn't match /{{ parameter.pattern }}/
+          </span>
+        </div>
+
+      </ng-form>
     </div>
 
-    <input type="button" value="save" ng-click="onSaveClick()">
+    <button type="submit" class="btn btn-default"
+            ng-show="component.parameters"
+            ng-disabled="componentForm.$invalid">Save</button>
+  </form>
 
 </div>
 
