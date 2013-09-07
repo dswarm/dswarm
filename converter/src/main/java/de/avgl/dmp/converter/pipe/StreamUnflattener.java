@@ -1,9 +1,12 @@
 package de.avgl.dmp.converter.pipe;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,7 +30,7 @@ public class StreamUnflattener extends DefaultStreamPipe<StreamReceiver> {
 	 * {@link org.culturegraph.mf.stream.pipe.StreamFlattener#entityMarker}
 	 * but represents a regular expression, so make sure to use proper escaping!
 	 */
-	public static final String DEFAULT_ENTITY_MARKER = "\\.";
+	public static final char DEFAULT_ENTITY_MARKER = '.';
 
 	/**
 	 * Any entity at the root level, that value-equals this property will be
@@ -39,14 +42,14 @@ public class StreamUnflattener extends DefaultStreamPipe<StreamReceiver> {
 	private final Map<Integer, String> openEntities = new HashMap<>();
 	private int currentLevel = 0;
 
-	private final String entityMarker;
+	private final char entityMarker;
 	private final String initialDiscard;
 
 	/**
 	 * @return the entity marker
 	 * @see #DEFAULT_ENTITY_MARKER
 	 */
-	public String getEntityMarker() {
+	public char getEntityMarker() {
 		return entityMarker;
 	}
 
@@ -64,7 +67,7 @@ public class StreamUnflattener extends DefaultStreamPipe<StreamReceiver> {
 	 * @param initialDiscard  use this <code>initialDiscard</code>
 	 * @param entityMarker    use this <code>entityMarker</code>
 	 */
-	public StreamUnflattener(final String initialDiscard, final String entityMarker) {
+	public StreamUnflattener(final String initialDiscard, final char entityMarker) {
 		this.entityMarker = entityMarker;
 		this.initialDiscard = initialDiscard;
 	}
@@ -147,12 +150,12 @@ public class StreamUnflattener extends DefaultStreamPipe<StreamReceiver> {
 	@Override
 	public void literal(final String name, final String value) {
 		assert !isClosed();
-		final String[] es = name.split(entityMarker);
+		List<String> es = Lists.newArrayList(Splitter.on(entityMarker).split(name));
 
-		int l = es.length;
+		int l = es.size();
 
 		for (int i = 0; i < l; i++) {
-			String entity = es[i];
+			String entity = es.get(i);
 
 			if (i + 1 == l) {
 				getReceiver().literal(entity, value);

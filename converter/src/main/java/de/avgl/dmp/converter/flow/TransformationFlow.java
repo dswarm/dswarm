@@ -3,57 +3,69 @@ package de.avgl.dmp.converter.flow;
 import de.avgl.dmp.converter.pipe.StreamJsonCollapser;
 import de.avgl.dmp.converter.pipe.StreamUnflattener;
 import de.avgl.dmp.converter.reader.QucosaReader;
-import de.avgl.dmp.converter.sink.ObjectBufferWriter;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.stream.converter.JsonEncoder;
-import org.culturegraph.mf.stream.pipe.StreamFlattener;
+import org.culturegraph.mf.stream.sink.ObjectJavaIoWriter;
 import org.culturegraph.mf.stream.source.ResourceOpener;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 
 public class TransformationFlow {
 
-	private static String flow(final Metamorph transformer) {
+	public static String DEFAULT_RECORD = "qucosa_record.xml";
+
+	private final Metamorph transformer;
+
+	public TransformationFlow(final Metamorph transformer) {
+		this.transformer = transformer;
+	}
+
+	public String apply(String record) {
 		final String recordDummy = "record";
 
 		final ResourceOpener opener = new ResourceOpener();
 		final QucosaReader reader = new QucosaReader(recordDummy);
 
-		final StreamFlattener flattener = new StreamFlattener();
 		final StreamUnflattener unflattener = new StreamUnflattener(recordDummy);
 		final StreamJsonCollapser collapser = new StreamJsonCollapser();
 
 		final JsonEncoder converter = new JsonEncoder();
-		final ObjectBufferWriter writer = new ObjectBufferWriter();
+		final StringWriter stringWriter = new StringWriter();
+		final ObjectJavaIoWriter<String> writer = new ObjectJavaIoWriter<>(stringWriter);
 
 		opener
 				.setReceiver(reader)
-				.setReceiver(flattener)
 				.setReceiver(transformer)
 				.setReceiver(unflattener)
 				.setReceiver(collapser)
 				.setReceiver(converter)
 				.setReceiver(writer);
 
-		opener.process("qucosa_record.xml");
+		opener.process(record);
 
-		return writer.toString();
+		return stringWriter.toString();
 	}
 
-	public static String flow(final File file) throws FileNotFoundException {
+	public String apply() {
+		return apply(DEFAULT_RECORD);
+	}
+
+	public static TransformationFlow from(final File file) throws FileNotFoundException {
 		final FileInputStream is = new FileInputStream(file);
 		final Metamorph transformer = new Metamorph(is);
 
-		return flow(transformer);
+		return new TransformationFlow(transformer);
+	}
+
+	public static TransformationFlow from(String resourcePath) {
+		final InputStream morph = TransformationFlow.class.getClassLoader().getResourceAsStream(resourcePath);
+		final Metamorph transformer = new Metamorph(morph);
+
+		return new TransformationFlow(transformer);
 	}
 
 	public static void main(String[] args) {
-		final InputStream morph = TransformationFlow.class.getClassLoader().getResourceAsStream("qucosa-morph.xml");
-		final Metamorph transformer = new Metamorph(morph);
-
-		System.out.println(flow(transformer));
+		TransformationFlow t = TransformationFlow.from("qucosa-morph.xml");
+		System.out.println(t.apply());
 	}
 }

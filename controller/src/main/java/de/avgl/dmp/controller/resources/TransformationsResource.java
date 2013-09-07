@@ -1,21 +1,19 @@
 package de.avgl.dmp.controller.resources;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.OPTIONS;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.xml.parsers.ParserConfigurationException;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.net.HttpHeaders;
 import de.avgl.dmp.converter.flow.TransformationFlow;
+import de.avgl.dmp.converter.resources.JsonToPojoMapper;
+import de.avgl.dmp.converter.resources.PojoToXMLBuilder;
 import de.avgl.dmp.converter.resources.TransformationsConverter;
+import de.avgl.dmp.converter.resources.TransformationsCoverterException;
 import de.avgl.dmp.persistence.model.Transformation;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -40,7 +38,7 @@ public class TransformationsResource {
 	@Path("/echo")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response run(final String jsonObjectString) {
+	public Response run(final String jsonObjectString) throws IOException {
 
 		final JsonNodeFactory factory = JsonNodeFactory.instance;
 
@@ -48,7 +46,8 @@ public class TransformationsResource {
 
 		responseJSON.put("response_message", "this is your response message");
 
-		ObjectNode json = TransformationsConverter.toObjectNode(jsonObjectString);
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectNode json = mapper.readValue(jsonObjectString, ObjectNode.class);
 
 		if (json != null) {
 			responseJSON.put("request_message", json);
@@ -72,7 +71,7 @@ public class TransformationsResource {
 
 		List<Transformation> pojos = null;
 		try {
-			pojos = TransformationsConverter.toPojo(jsonObjectString);
+			pojos = new JsonToPojoMapper().apply(jsonObjectString);
 		} catch (IOException e) {
 			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
 		}
@@ -89,14 +88,10 @@ public class TransformationsResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_XML)
-	public Response runToXML(final String jsonObjectString) {
-		String xml = null;
-		try {
-			final List<Transformation> pojos = TransformationsConverter.toPojo(jsonObjectString);
-			xml = TransformationsConverter.createDom(pojos);
-		} catch (IOException | ParserConfigurationException e) {
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-		}
+	public Response runToXML(final String jsonObjectString) throws IOException, TransformationsCoverterException {
+
+		final List<Transformation> pojos = new JsonToPojoMapper().apply(jsonObjectString);
+		final String xml = new PojoToXMLBuilder().apply(pojos).toString();
 
 		return Response.ok(xml).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 	}
@@ -104,10 +99,11 @@ public class TransformationsResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response runWithMetamorph(final String jsonObjectString) throws IOException, ParserConfigurationException {
+	public Response runWithMetamorph(final String jsonObjectString) throws IOException, TransformationsCoverterException {
 
-		final File file = TransformationsConverter.createMorphFile(jsonObjectString);
-		final String result = TransformationFlow.flow(file);
+		final File file = TransformationsConverter.toMetamorph(jsonObjectString);
+		final TransformationFlow flow = TransformationFlow.from(file);
+		final String result = flow.apply(TransformationFlow.DEFAULT_RECORD);
 
 		return Response.ok(result).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 	}

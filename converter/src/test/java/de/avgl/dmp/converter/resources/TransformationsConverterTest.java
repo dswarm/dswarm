@@ -3,13 +3,13 @@ package de.avgl.dmp.converter.resources;
 import com.google.common.collect.Lists;
 import com.google.common.io.ByteStreams;
 import de.avgl.dmp.persistence.model.*;
-import org.culturegraph.mf.morph.Metamorph;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
 
 import java.io.InputStream;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
 
 public class TransformationsConverterTest {
 
@@ -118,7 +118,7 @@ public class TransformationsConverterTest {
 	@Test
 	public void testToList() throws Exception {
 
-		List<Transformation> result = TransformationsConverter.toPojo(jsonInput);
+		List<Transformation> result = new JsonToPojoMapper().apply(jsonInput);
 
 		Assert.assertEquals("There should only be one transformation", 1, result.size());
 
