@@ -27,7 +27,8 @@ angular.module('dmpApp')
 
         $scope.opts = {
             backdropFade: true,
-            dialogFade:true
+            dialogFade:true,
+            triggerClass: 'really in'
         };
 
         $scope.addFilter = function () {
