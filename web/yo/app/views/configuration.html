@@ -85,6 +85,7 @@
             <input type="{{parameter.type}}"
                    name="input"
                    class="form-control"
+                   ng-trim="false"
                    ng-model="parameter.data"
                    ng-required="!parameter.optional"
                    ng-pattern="getPattern(parameter.pattern)">
