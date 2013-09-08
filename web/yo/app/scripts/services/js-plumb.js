@@ -40,7 +40,7 @@ angular.module('dmpApp')
           foldback: 0.75          // tailpoint is at 9 pixels (9 / 12)
         }]
       ]
-    } , options = {};
+    } , options;
 
     /**
      * Set options to the default options.
@@ -56,7 +56,7 @@ angular.module('dmpApp')
      * @param opts {Object}  Extension to the current options
      */
     this.set = function(opts) {
-      options = angular.extend(options, opts);
+      options = angular.extend(options || {}, opts);
     };
 
     /**
