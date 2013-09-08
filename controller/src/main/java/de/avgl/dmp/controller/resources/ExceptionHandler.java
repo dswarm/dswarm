@@ -3,7 +3,6 @@ package de.avgl.dmp.controller.resources;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.net.HttpHeaders;
-import de.avgl.dmp.converter.resources.TransformationsConverter;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;

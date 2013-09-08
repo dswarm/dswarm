@@ -29,8 +29,8 @@ public class StreamUnflattenerTest {
 
 	@Test
 	public void testGetEntityMarker() throws Exception {
-		String expectedDefault = StreamUnflattener.DEFAULT_ENTITY_MARKER;
-		String expected = ";";
+		char expectedDefault = StreamUnflattener.DEFAULT_ENTITY_MARKER;
+		char expected = ';';
 
 		StreamUnflattener unflattenerDefault = new StreamUnflattener();
 		assertEquals("Zero-Arg constructor should set the default entity marker", expectedDefault, unflattenerDefault.getEntityMarker());
@@ -92,7 +92,7 @@ public class StreamUnflattenerTest {
 		final String expectedValue = "bar";
 		final String expectedEntity = "baz";
 
-		final String inName = Joiner.on(".").join(expectedEntity, expectedName);
+		final String inName = Joiner.on(StreamUnflattener.DEFAULT_ENTITY_MARKER).join(expectedEntity, expectedName);
 
 		unflattener.literal(inName, expectedValue);
 
@@ -107,7 +107,7 @@ public class StreamUnflattenerTest {
 		final String expectedEntity1 = "baz";
 		final String expectedEntity2 = "qux";
 
-		final String inName = Joiner.on(".").join(expectedEntity1, expectedEntity2, expectedName);
+		final String inName = Joiner.on(StreamUnflattener.DEFAULT_ENTITY_MARKER).join(expectedEntity1, expectedEntity2, expectedName);
 
 		unflattener.literal(inName, expectedValue);
 
@@ -126,7 +126,7 @@ public class StreamUnflattenerTest {
 		StreamUnflattener unflattener = new StreamUnflattener(initialDiscard);
 		unflattener.setReceiver(mockedReceiver);
 
-		final String inName = Joiner.on(".").join(initialDiscard, expectedEntity, expectedName);
+		final String inName = Joiner.on(StreamUnflattener.DEFAULT_ENTITY_MARKER).join(initialDiscard, expectedEntity, expectedName);
 
 		unflattener.literal(inName, expectedValue);
 
@@ -144,8 +144,8 @@ public class StreamUnflattenerTest {
 		final String expectedEntity21 = "qux";
 		final String expectedEntity22 = "quux";
 
-		final String inName1 = Joiner.on(".").join(expectedEntity1, expectedEntity21, expectedName1);
-		final String inName2 = Joiner.on(".").join(expectedEntity1, expectedEntity22, expectedName2);
+		final String inName1 = Joiner.on(StreamUnflattener.DEFAULT_ENTITY_MARKER).join(expectedEntity1, expectedEntity21, expectedName1);
+		final String inName2 = Joiner.on(StreamUnflattener.DEFAULT_ENTITY_MARKER).join(expectedEntity1, expectedEntity22, expectedName2);
 
 		unflattener.literal(inName1, expectedValue1);
 
@@ -170,8 +170,8 @@ public class StreamUnflattenerTest {
 		final String expectedEntity1 = "baz";
 		final String expectedEntity2 = "qux";
 
-		final String inName1 = Joiner.on(".").join(expectedEntity1, expectedEntity2, expectedName1);
-		final String inName2 = Joiner.on(".").join(expectedEntity1, expectedEntity2, expectedName2);
+		final String inName1 = Joiner.on(StreamUnflattener.DEFAULT_ENTITY_MARKER).join(expectedEntity1, expectedEntity2, expectedName1);
+		final String inName2 = Joiner.on(StreamUnflattener.DEFAULT_ENTITY_MARKER).join(expectedEntity1, expectedEntity2, expectedName2);
 
 		unflattener.literal(inName1, expectedValue1);
 
@@ -197,8 +197,8 @@ public class StreamUnflattenerTest {
 		final String expectedEntity3 = "corge";
 		final String expectedEntity22 = "quux";
 
-		final String inName1 = Joiner.on(".").join(expectedEntity1, expectedEntity21, expectedEntity3, expectedName1);
-		final String inName2 = Joiner.on(".").join(expectedEntity1, expectedEntity22, expectedName2);
+		final String inName1 = Joiner.on(StreamUnflattener.DEFAULT_ENTITY_MARKER).join(expectedEntity1, expectedEntity21, expectedEntity3, expectedName1);
+		final String inName2 = Joiner.on(StreamUnflattener.DEFAULT_ENTITY_MARKER).join(expectedEntity1, expectedEntity22, expectedName2);
 
 		unflattener.literal(inName1, expectedValue1);
 
@@ -221,7 +221,7 @@ public class StreamUnflattenerTest {
 		final String expectedValue = "bar";
 		final String expectedEntity = "baz";
 
-		final String inName = Joiner.on(".").join(expectedEntity, expectedName);
+		final String inName = Joiner.on(StreamUnflattener.DEFAULT_ENTITY_MARKER).join(expectedEntity, expectedName);
 
 		unflattener.literal(inName, expectedValue);
 

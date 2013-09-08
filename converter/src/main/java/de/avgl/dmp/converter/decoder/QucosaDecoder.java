@@ -1,9 +1,9 @@
 package de.avgl.dmp.converter.decoder;
 
-import de.avgl.dmp.converter.functional.Function1;
-import de.avgl.dmp.converter.functional.NodeListOps;
-import de.avgl.dmp.converter.functional.UnitFunction1;
-import de.avgl.dmp.converter.functional.UnitFunction2;
+import com.google.common.base.Joiner;
+import com.google.common.base.Optional;
+import com.google.common.base.Splitter;
+import de.avgl.dmp.converter.util.NodeListIterable;
 import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
@@ -20,6 +20,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 
+import static de.avgl.dmp.converter.util.NodeListOps.getChildrenFor;
+
 /**
  * Decode a OAI-PMH file containing a Qucosa record.
  *
@@ -28,13 +30,13 @@ import java.io.*;
 @Description("Decode a OAI-PMH file containing a Qucosa record.")
 @In(Reader.class)
 @Out(StreamReceiver.class)
-public final class QucosaDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
+public class QucosaDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
 
-	private static final String RECORD_TAG = "record";
-	private static final String HEADER_TAG = "header";
-	private static final String METADATA_TAG = "metadata";
-	private static final String OAI_DATA_TAG = "oai_dc:dc";
-	private static final String ENTITY_MARKER = ".";
+	public static final String RECORD_TAG = "record";
+	public static final String HEADER_TAG = "header";
+	public static final String METADATA_TAG = "metadata";
+	public static final String OAI_DATA_TAG = "oai_dc:dc";
+	public static final char ENTITY_MARKER = '.';
 
 	static final String DEFAULT_RECORD_PREFIX = "record";
 
@@ -42,39 +44,20 @@ public final class QucosaDecoder extends DefaultObjectPipe<Reader, StreamReceive
 
 	private final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
-	private class Emitter implements UnitFunction2<NodeListOps, String> {
 
-		private final StreamReceiver receiver;
+	private void emit(Iterable<Node> nodes, String section) {
+		Iterable<String> sections = Splitter.on(ENTITY_MARKER).split(section);
 
-		public Emitter(StreamReceiver receiver) {
-			this.receiver = receiver;
+		for (String s : sections) {
+			getReceiver().startEntity(s);
 		}
 
-		@Override
-		public void apply(NodeListOps node, String section) {
-			String[] sections = section.split("\\.");
+		for (Node node : nodes) {
+			getReceiver().literal(node.getNodeName(), node.getTextContent());
+		}
 
-			for (String s : sections) {
-				receiver.startEntity(s);
-			}
-
-			node.filter(new Function1<Node, Boolean>() {
-				@Override
-				public Boolean apply(Node obj) {
-					return obj.getNodeType() == Node.ELEMENT_NODE;
-				}
-			}).forEach(new UnitFunction1<Node>() {
-				@Override
-				public void apply(Node in) {
-					receiver.literal(
-							in.getNodeName(),
-							in.getTextContent());
-				}
-			});
-
-			for (int i = sections.length; i --> 0 ;) {
-				receiver.endEntity();
-			}
+		for (String ignored : sections) {
+			getReceiver().endEntity();
 		}
 	}
 
@@ -97,24 +80,27 @@ public final class QucosaDecoder extends DefaultObjectPipe<Reader, StreamReceive
 		this(DEFAULT_RECORD_PREFIX);
 	}
 
-	private void processOneRecord(final Node record, Emitter emit) {
+	private void processOneRecord(final Node record) {
 		getReceiver().startEntity(recordPrefix);
 
-		final NodeListOps recordChildren = new NodeListOps(record.getChildNodes());
+		final NodeListIterable recordChildren = new NodeListIterable(record.getChildNodes());
 
-		final Node header = recordChildren.getElementByTagName(HEADER_TAG);
-		final Node metadata = recordChildren.getElementByTagName(METADATA_TAG);
+		final Optional<Iterable<Node>> headerNodes = getChildrenFor(recordChildren, HEADER_TAG);
 
-		final NodeListOps headerNodes = new NodeListOps(header.getChildNodes());
+		if (headerNodes.isPresent()) {
+			emit(headerNodes.get(), HEADER_TAG);
+		}
 
-		emit.apply(headerNodes, HEADER_TAG);
 
-		final NodeListOps metadataNodes = new NodeListOps(metadata.getChildNodes());
-		final Node oaiDc = metadataNodes.getElementByTagName(OAI_DATA_TAG);
+		final Optional<Iterable<Node>> metadataNodes = getChildrenFor(recordChildren, METADATA_TAG);
 
-		final NodeListOps dcNodes = new NodeListOps(oaiDc.getChildNodes());
+		if (metadataNodes.isPresent()) {
+			final Optional<Iterable<Node>> dcNodes = getChildrenFor(metadataNodes.get(), OAI_DATA_TAG);
 
-		emit.apply(dcNodes, METADATA_TAG + ENTITY_MARKER + OAI_DATA_TAG);
+			if (dcNodes.isPresent()) {
+				emit(dcNodes.get(), Joiner.on(ENTITY_MARKER).join(METADATA_TAG, OAI_DATA_TAG));
+			}
+		}
 
 		getReceiver().endEntity();
 	}
@@ -139,19 +125,13 @@ public final class QucosaDecoder extends DefaultObjectPipe<Reader, StreamReceive
 			throw new MetafactureException(e);
 		}
 
-		final StreamReceiver receiver = getReceiver();
-		final Emitter emit = new Emitter(receiver);
-
 		doc.getDocumentElement().normalize();
 
-		new NodeListOps(doc.getElementsByTagName(RECORD_TAG)).forEach(new UnitFunction1<Node>() {
-			@Override
-			public void apply(Node in) {
-				receiver.startRecord("");
-				processOneRecord(in, emit);
-				receiver.endRecord();
-			}
-		});
+		for (Node node : new NodeListIterable(doc.getElementsByTagName(RECORD_TAG))) {
+			getReceiver().startRecord("");
+			processOneRecord(node);
+			getReceiver().endRecord();
+		}
 	}
 
 	/**
