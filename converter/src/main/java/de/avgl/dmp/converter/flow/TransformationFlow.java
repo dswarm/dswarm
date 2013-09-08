@@ -3,12 +3,16 @@ package de.avgl.dmp.converter.flow;
 import de.avgl.dmp.converter.pipe.StreamJsonCollapser;
 import de.avgl.dmp.converter.pipe.StreamUnflattener;
 import de.avgl.dmp.converter.reader.QucosaReader;
+import de.avgl.dmp.converter.resources.PojoToXMLBuilder;
+import de.avgl.dmp.converter.resources.TransformationsCoverterException;
+import de.avgl.dmp.persistence.model.Transformation;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.stream.converter.JsonEncoder;
 import org.culturegraph.mf.stream.sink.ObjectJavaIoWriter;
 import org.culturegraph.mf.stream.source.ResourceOpener;
 
 import java.io.*;
+import java.util.List;
 
 public class TransformationFlow {
 
@@ -62,6 +66,12 @@ public class TransformationFlow {
 		final Metamorph transformer = new Metamorph(morph);
 
 		return new TransformationFlow(transformer);
+	}
+
+	public static TransformationFlow from(List<Transformation> transformations) throws IOException, TransformationsCoverterException {
+		final File file = new PojoToXMLBuilder().apply(transformations).toFile();
+
+		return from(file);
 	}
 
 	public static void main(String[] args) {

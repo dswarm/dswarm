@@ -1,4 +1,4 @@
-package de.avgl.dmp.converter.resources;
+package de.avgl.dmp.controller.mapping;
 
 import com.google.common.collect.Lists;
 import com.google.common.io.ByteStreams;
@@ -11,7 +11,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 
-public class TransformationsConverterTest {
+public class JsonToPojoMapperTest {
 
 	private Transformation transformation = null;
 
@@ -116,7 +116,7 @@ public class TransformationsConverterTest {
 	}
 
 	@Test
-	public void testToList() throws Exception {
+	public void testApply() throws Exception {
 
 		List<Transformation> result = new JsonToPojoMapper().apply(jsonInput);
 

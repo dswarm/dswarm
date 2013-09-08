@@ -30,7 +30,7 @@ import static de.avgl.dmp.converter.util.NodeListOps.getChildrenFor;
 @Description("Decode a OAI-PMH file containing a Qucosa record.")
 @In(Reader.class)
 @Out(StreamReceiver.class)
-public final class QucosaDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
+public class QucosaDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
 
 	public static final String RECORD_TAG = "record";
 	public static final String HEADER_TAG = "header";

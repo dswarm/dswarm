@@ -15,8 +15,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.ByteArrayOutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,8 +26,12 @@ public class PojoToXMLBuilder {
 
 	private static final DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 
-	private static final TransformerFactory transformerFactory = TransformerFactory.newInstance();
+	private static final TransformerFactory transformerFactory;
 
+	static {
+		transformerFactory = TransformerFactory.newInstance();
+		transformerFactory.setAttribute("indent-number", 2);
+	}
 
 	private Document doc;
 
@@ -65,8 +69,8 @@ public class PojoToXMLBuilder {
 		return data;
 	}
 
-	@Override
-	public String toString() {
+	public String render(boolean indent, Charset encoding) {
+		final String defaultEncoding = encoding.name();
 		final Transformer transformer;
 		try {
 			transformer = transformerFactory.newTransformer();
@@ -75,25 +79,54 @@ public class PojoToXMLBuilder {
 			return null;
 		}
 
-		transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-		transformer.setOutputProperty(OutputKeys.INDENT, "2");
+		transformer.setOutputProperty(OutputKeys.INDENT, indent? "yes" : "no");
+
+		transformer.setOutputProperty(OutputKeys.ENCODING, defaultEncoding);
 
 		final ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
+		final StreamResult result;
 		try {
-			transformer.transform(new DOMSource(doc), new StreamResult(stream));
+			result = new StreamResult(new OutputStreamWriter(stream, defaultEncoding));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		try {
+			transformer.transform(new DOMSource(doc), result);
 		} catch (TransformerException e) {
 			e.printStackTrace();
 			return null;
 		}
 
 		try {
-			return stream.toString("UTF-8");
+			return stream.toString(defaultEncoding);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return null;
 		}
+	}
 
+	public String render(boolean indent) {
+		return render(indent, Charset.forName("UTF-8"));
+	}
+
+	@Override
+	public String toString() {
+		return render(true);
+	}
+
+	public File toFile() throws IOException {
+		final String str = render(false);
+
+		final File file = File.createTempFile("avgl_dmp", ".tmp");
+
+		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+		bw.write(str);
+		bw.close();
+
+		return file;
 	}
 
 	public PojoToXMLBuilder apply(final List<Transformation> transformations) throws TransformationsCoverterException {

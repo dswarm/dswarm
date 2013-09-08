@@ -28,17 +28,24 @@ public final class QucosaReader implements Reader {
 	 *                      relevant record section. See {@link QucosaDecoder}.
 	 */
 	public QucosaReader(String recordPrefix) {
-		super();
-		this.decoder = new QucosaDecoder(recordPrefix);
+		this(new QucosaDecoder(recordPrefix));
 	}
 
 	/**
-	 * Class Constructor.  QucosaReader implements {@link Reader} by deferring
-	 *   all operations to {@link QucosaDecoder}.
+	 * Class Constructor, setting up the default {@link QucosaDecoder}.
+	 * QucosaReader implements {@link Reader} by deferring all operations to
+	 * this QucosaDecoder.
 	 */
 	public QucosaReader() {
+		this(new QucosaDecoder());
+	}
+
+	/**
+	 * Class Constructor, allowing for injecting a custom QucosaDecoder.
+	 */
+	public QucosaReader(QucosaDecoder decoder) {
 		super();
-		this.decoder = new QucosaDecoder();
+		this.decoder = decoder;
 	}
 
 	@Override

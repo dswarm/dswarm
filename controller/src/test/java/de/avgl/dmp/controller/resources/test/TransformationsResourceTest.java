@@ -1,33 +1,20 @@
 package de.avgl.dmp.controller.resources.test;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Set;
-
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-
-import com.google.common.collect.Lists;
-import org.apache.commons.io.IOUtils;
-import org.glassfish.jersey.client.ClientResponse;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
-import com.google.common.collect.Sets;
+import com.google.common.collect.Lists;
+import de.avgl.dmp.persistence.model.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-import de.avgl.dmp.persistence.model.Component;
-import de.avgl.dmp.persistence.model.ComponentType;
-import de.avgl.dmp.persistence.model.Connection;
-import de.avgl.dmp.persistence.model.ConnectionType;
-import de.avgl.dmp.persistence.model.Transformation;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import java.io.IOException;
+import java.util.List;
 
 public class TransformationsResourceTest extends ResourceTest {
 
@@ -86,12 +73,6 @@ public class TransformationsResourceTest extends ResourceTest {
 
 		try {
 			transformationJSON = mapper.readValue(str, ObjectNode.class);
-		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -104,13 +85,14 @@ public class TransformationsResourceTest extends ResourceTest {
 	 * test post of transformations
 	 */
 	@Test
-	public void testPOSTJSON() {
+	public void testEchoJSON() {
 
 		// POST method
 		// ClientResponse response = target.path(resourceIdentifier).request(MediaType.APPLICATION_JSON_TYPE)
 		// .post(Entity.json(transformationJSON.toString()), ClientResponse.class);
 
-		String responseString = target.path(resourceIdentifier).request(MediaType.APPLICATION_JSON_TYPE)
+		String responseString = target.path(resourceIdentifier + "/echo").request(MediaType.APPLICATION_JSON_TYPE)
+				.accept(MediaType.APPLICATION_JSON_TYPE)
 				.post(Entity.json(transformationJSON.toString()), String.class);
 
 		final JsonNodeFactory factory = JsonNodeFactory.instance;
