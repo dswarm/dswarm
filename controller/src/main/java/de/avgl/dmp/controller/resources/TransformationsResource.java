@@ -49,27 +49,6 @@ public class TransformationsResource {
 		return buildResponse(responseJSON.toString());
 	}
 
-
-	@POST
-	@Path("/pojo")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response runToPojo(final String jsonObjectString) throws IOException {
-
-		final JsonNodeFactory factory = JsonNodeFactory.instance;
-
-		final ObjectNode responseJSON = new ObjectNode(factory);
-
-		responseJSON.put("response_message", "this is your response message");
-
-		final List<Transformation> pojos = new JsonToPojoMapper().apply(jsonObjectString);
-		String responseText = pojos.toString();
-		responseJSON.put("request_message", responseText);
-
-		return buildResponse(responseJSON.toString());
-	}
-
-
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_XML)

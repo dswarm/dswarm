@@ -30,7 +30,7 @@ public class PojoToXMLBuilder {
 
 	static {
 		transformerFactory = TransformerFactory.newInstance();
-		transformerFactory.setAttribute("indent-number", 2);
+		transformerFactory.setAttribute("indent-number", 4);
 	}
 
 	private Document doc;
