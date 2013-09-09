@@ -1,84 +1,40 @@
 package de.avgl.dmp.controller.resources.test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
-import com.google.common.collect.Lists;
-import de.avgl.dmp.persistence.model.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.util.List;
 
 public class TransformationsResourceTest extends ResourceTest {
 
-	private ObjectNode	transformationJSON	= null;
+	private static final JsonNodeFactory factory = JsonNodeFactory.instance;
+	private static final ObjectMapper mapper;
+
+	static {
+		mapper = new ObjectMapper();
+		final JaxbAnnotationModule module = new JaxbAnnotationModule();
+		mapper.registerModule(module);
+	}
+
+	private ObjectNode transformationJSON = null;
+	private String transformationJSONString = null;
 
 	public TransformationsResourceTest() {
 		super("transformations");
 	}
 
 	@Before
-	public void prepare() {
-
-		final Transformation transformation = new Transformation();
-		transformation.setId("1234bla");
-		transformation.setName("Hi my name is ...");
-
-		final Component component1 = new Component();
-		component1.setId("bliblablub123");
-		component1.setName("Component 1");
-		component1.setType(ComponentType.EXTENDED);
-
-		final Component component2 = new Component();
-		component2.setId("bliblablub1245");
-		component2.setName("Component 2");
-		component2.setType(ComponentType.EXTENDED);
-
-		final Connection connection1 = new Connection();
-		connection1.setId("345345gfdfg");
-		connection1.setName("Connection 1");
-		connection1.setType(ConnectionType.DEFAULT);
-		connection1.setTarget(component2);
-		connection1.setSource(component1);
-
-		final List<Component> components = Lists.newArrayList();
-		components.add(component1);
-		components.add(component2);
-
-		transformation.setComponents(components);
-
-		final ObjectMapper mapper = new ObjectMapper();
-
-		final JaxbAnnotationModule module = new JaxbAnnotationModule();
-		// configure as necessary
-		mapper.registerModule(module);
-
-		String str = null;
-
-		try {
-			str = mapper.writeValueAsString(transformation);
-		} catch (JsonProcessingException e) {
-
-			e.printStackTrace();
-
-			Assert.assertTrue("something went wrong", false);
-		}
-
-		try {
-			transformationJSON = mapper.readValue(str, ObjectNode.class);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		Assert.assertTrue(true);
+	public void prepare() throws IOException {
+		transformationJSONString = getResourceAsString("complex-request.json");
+		transformationJSON = mapper.readValue(transformationJSONString, ObjectNode.class);
 	}
 
 	/**
@@ -86,40 +42,43 @@ public class TransformationsResourceTest extends ResourceTest {
 	 */
 	@Test
 	public void testEchoJSON() {
-
-		// POST method
-		// ClientResponse response = target.path(resourceIdentifier).request(MediaType.APPLICATION_JSON_TYPE)
-		// .post(Entity.json(transformationJSON.toString()), ClientResponse.class);
-
-		String responseString = target.path(resourceIdentifier + "/echo").request(MediaType.APPLICATION_JSON_TYPE)
+		Response response = target.path(resourceIdentifier + "/echo").request(MediaType.APPLICATION_JSON_TYPE)
 				.accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(Entity.json(transformationJSON.toString()), String.class);
+				.post(Entity.json(transformationJSONString));
+		String responseString = response.readEntity(String.class);
 
-		final JsonNodeFactory factory = JsonNodeFactory.instance;
+		final ObjectNode expected = new ObjectNode(factory);
 
-		final ObjectNode referenceResponseJSON = new ObjectNode(factory);
+		expected.put("response_message", "this is your response message");
+		expected.put("request_message", transformationJSON);
 
-		referenceResponseJSON.put("response_message", "this is your response message");
+		Assert.assertEquals("POST responses are not equal", expected.toString(), responseString);
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+	}
 
-		referenceResponseJSON.put("request_message", transformationJSON);
+	@Test
+	public void testXML() throws Exception {
+		Response response = target.path(resourceIdentifier).request(MediaType.APPLICATION_XML_TYPE)
+				.accept(MediaType.APPLICATION_XML_TYPE)
+				.post(Entity.json(transformationJSONString));
+		String responseString = response.readEntity(String.class);
 
-		Assert.assertEquals("POST responses are not equal", referenceResponseJSON.toString(), responseString);
+		final String expected = getResourceAsString("complex-metamorph.xml");
 
-		// // check response status code
-		// if (response.getStatus() != 200) {
-		//
-		// throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-		// }
-		//
-		// String result = null;
-		//
-		// try {
-		// result = IOUtils.toString(response.getEntityStream(), "UTF-8");
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		//
-		// Assert.assertEquals("wrong", "bla", result);
+		Assert.assertEquals("POST responses are not equal", expected, responseString);
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+	}
+
+	@Test
+	public void testTransformation() throws Exception {
+		Response response = target.path(resourceIdentifier).request(MediaType.APPLICATION_JSON_TYPE)
+				.accept(MediaType.APPLICATION_JSON_TYPE)
+				.post(Entity.json(transformationJSONString));
+		String responseString = response.readEntity(String.class);
+
+		final String expected = getResourceAsString("complex-result.json");
+
+		Assert.assertEquals("POST responses are not equal", expected, responseString);
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
 	}
 }
