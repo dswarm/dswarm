@@ -1,0 +1,156 @@
+# See http://help.github.com/ignore-files/ for more about
+# ignoring files.
+#
+# If you find yourself ignoring temporary files generated
+# by your text editor or operating system, you probably
+# want to add a global ignore instead:
+#   git config --global core.excludesfile ~/.gitignore_global
+#
+# NOTE! Please use 'git ls-files -i --exclude-standard'
+# command after changing this file, to see if there are
+# any tracked files which get ignored after the change.
+#
+#
+
+# completly ignore dotfiles
+.*
+
+# except for gitignore and gitattributes
+# (or any other dotfile, for that matter)
+!.gitignore
+!.gitattributes
+
+
+# Eclipse
+
+*.pydevproject
+.project
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# CDT-specific
+.cproject
+
+# PDT-specific
+.buildpath
+
+# IntelliJ IDEA
+*.iml
+*.ipr
+*.iws
+.idea/
+atlassian-ide-plugin.xml
+
+# SublimeText project files
+*.sublime-project
+*.sublime-workspace
+
+# VIM
+*.s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+*~
+
+# Scala-IDE specific
+.scala_dependencies
+
+# Netbeans
+.tmproj
+nbproject
+
+# Dreamweaver added files
+_notes
+dwsync.xml
+
+# Komodo
+*.komodoproject
+.komodotools
+
+# Espresso
+*.esproj
+*.espressostorage
+
+
+# OS specific files
+
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Java stuff
+*.class
+
+# Package Files
+*.jar
+*.war
+*.ear
+
+
+*.log
+
+dist/*
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+
+# Numerous always-ignore extensions
+*.gz
+*.bz2
+*.lzma
+*.patch
+*.pyc
+*.diff
+*.err
+*.orig
+*.log
+*.rej
+*.swo
+*.swp
+*.vi
+*~
+*.sass-cache
+
+# Folders to ignore
+.hg
+.svn
+.CVS
+
+\#*#
+
+/web/yo/app/test_out/
