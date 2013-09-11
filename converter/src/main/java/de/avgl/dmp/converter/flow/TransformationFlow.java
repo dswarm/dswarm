@@ -48,7 +48,7 @@ public class TransformationFlow {
 		return apply(resourcePath, opener);
 	}
 
-	public String apply(final String record, final DefaultObjectPipe<String, ObjectReceiver<Reader>> opener) {
+	public String apply(final String object, final DefaultObjectPipe<String, ObjectReceiver<Reader>> opener) {
 
 		final String recordDummy = "record";
 
@@ -61,10 +61,14 @@ public class TransformationFlow {
 		final StringWriter stringWriter = new StringWriter();
 		final ObjectJavaIoWriter<String> writer = new ObjectJavaIoWriter<>(stringWriter);
 
-		opener.setReceiver(reader).setReceiver(transformer).setReceiver(unflattener).setReceiver(collapser).setReceiver(converter)
-				.setReceiver(writer);
+		opener.setReceiver(reader)
+			.setReceiver(transformer)
+			.setReceiver(unflattener)
+			.setReceiver(collapser)
+			.setReceiver(converter)
+			.setReceiver(writer);
 
-		opener.process(record);
+		opener.process(object);
 
 		return stringWriter.toString();
 	}
