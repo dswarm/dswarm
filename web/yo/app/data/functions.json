@@ -3,7 +3,20 @@
     {
       "name": "blacklist",
       "dsl": "metafacture",
-      "reference": "blacklist"
+      "reference": "blacklist",
+      "parameters" : {
+          "source" : {
+              "type" : "text"
+          },
+          "entry" : {
+              "repeat" : true,
+              "parameters" : {
+                  "name" : {
+                      "type" : "text"
+                  }
+              }
+          }
+      }
     },
     {
       "name": "buffer",
@@ -18,12 +31,25 @@
     {
       "name": "compose",
       "dsl": "metafacture",
-      "reference": "compose"
+      "reference": "compose",
+      "parameters" : {
+          "prefix" : {
+              "type" : "text"
+          },
+          "postfix" : {
+              "type" : "text"
+          }
+      }
     },
     {
       "name": "constant",
       "dsl": "metafacture",
-      "reference": "constant"
+      "reference": "constant",
+      "parameters" : {
+          "value" : {
+              "type" : "text"
+          }
+      }
     },
     {
       "name": "count",
@@ -33,7 +59,12 @@
     {
       "name": "equals",
       "dsl": "metafacture",
-      "reference": "equals"
+      "reference": "equals",
+      "parameters" : {
+          "string" : {
+              "type" : "text"
+          }
+      }
     },
     {
       "name": "htmlanchor",
@@ -48,7 +79,23 @@
     {
       "name": "lookup",
       "dsl": "metafacture",
-      "reference": "lookup"
+      "reference": "lookup",
+      "parameters" : {
+          "source" : {
+              "type" : "text"
+          },
+          "entry" : {
+              "repeat" : true,
+              "parameters" : {
+                  "name" : {
+                     "type" : "text"
+                  } ,
+                  "value" : {
+                      "type" : "text"
+                  }
+              }
+          }
+      }
     },
     {
       "name": "normalize-utf8",
@@ -58,42 +105,104 @@
     {
       "name": "not-equals",
       "dsl": "metafacture",
-      "reference": "not-equals"
+      "reference": "not-equals",
+      "parameters" : {
+          "string" : {
+              "type" : "text"
+          }
+      }
     },
     {
       "name": "occurrence",
       "dsl": "metafacture",
-      "reference": "occurrence"
+      "reference": "occurrence",
+      "parameters" : {
+          "only" : {
+              "type" : "text"
+          }
+      }
     },
     {
       "name": "regexp",
       "dsl": "metafacture",
-      "reference": "regexp"
+      "reference": "regexp",
+      "parameters" : {
+          "pattern" : {
+              "type" : "regexp"
+          },
+          "format" : {
+              "type" : "text",
+              "optional" : true
+          }
+      }
     },
     {
       "name": "replace",
       "dsl": "metafacture",
-      "reference": "replace"
+      "reference": "replace",
+      "parameters" : {
+          "pattern" : {
+              "type" : "regexp"
+          },
+          "with" : {
+              "type" : "text"
+          }
+      }
     },
     {
       "name": "setreplace",
       "dsl": "metafacture",
-      "reference": "setreplace"
+      "reference": "setreplace",
+      "parameters" : {
+          "source" : {
+            "type" : "text"
+          },
+          "entry" : {
+              "repeat" : true,
+              "parameters" : {
+                  "name" : {
+                      "type" : "text"
+                  },
+                  "value" : {
+                      "type" : "text"
+                  }
+              }
+          }
+      }
     },
     {
       "name": "split",
       "dsl": "metafacture",
-      "reference": "split"
+      "reference": "split",
+      "parameters" : {
+          "delimiter" : {
+              "type" : "text"
+          }
+      }
     },
     {
       "name": "substring",
       "dsl": "metafacture",
-      "reference": "substring"
+      "reference": "substring",
+      "parameters" : {
+          "start" : {
+              "type" : "number"
+          },
+          "end" : {
+              "type" : "number"
+          }
+      }
     },
     {
       "name": "switch-name-value",
       "dsl": "metafacture",
-      "reference": "switch-name-value"
+      "reference": "switch-name-value",
+      "parameters" : {
+          "contant" : {
+              "type" : "text",
+              "optional" : true
+          }
+      }
     },
     {
       "name": "trim",
@@ -113,7 +222,20 @@
     {
       "name": "whitelist",
       "dsl": "metafacture",
-      "reference": "whitelist"
+      "reference": "whitelist",
+      "parameters" : {
+          "source" : {
+              "type" : "text"
+          },
+          "entry" : {
+              "repeat" : true,
+              "parameters" : {
+                  "name" : {
+                      "type" : "text"
+                  }
+              }
+          }
+      }
     }
   ]
 }

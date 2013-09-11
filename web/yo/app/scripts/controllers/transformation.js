@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-  .controller('TransformationCtrl', ['$scope', function ($scope) {
+  .controller('TransformationCtrl', ['$scope', 'PubSub', function ($scope, PubSub) {
     $scope.internalName = 'Transformation Logic Widget';
 
     $scope.components = [];
@@ -44,4 +44,9 @@ angular.module('dmpApp')
         $scope.$digest();
       }
     };
+
+    $scope.onFunctionClick = function(component) {
+      PubSub.broadcast('handleEditConfig', component);
+    };
+
   }]);
