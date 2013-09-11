@@ -1,21 +1,51 @@
 'use strict';
 
 angular.module('dmpApp').
+ /**
+  * A factory that handles the parsing of a loaded schema
+  * to usable data.
+  *
+  * It is specific to the used schmema format.
+  *
+  * Normally only mapData and getData would be needed to be used.
+  *
+  * * mapData returns the parsed data from the schema
+  * * getData returns all title data. most useful in combination
+  *           with with the editableTitle flag
+  *
+  */
   factory('schemaParser', function () {
-    function mapData(name, container) {
-      var data = {'name': name, 'show': true};
+    /**
+     * parses input data to usable data format
+     * @param name {String}
+     * @param container {*}
+     * @param editableTitle {Boolean}
+     * @returns {*}
+     */
+    function mapData(name, container, editableTitle) {
+      var data = {'name': name, 'show': true, 'editableTitle' : editableTitle};
 
       if (container['properties']) {
         var children = [];
         angular.forEach(container['properties'], function (val, key) {
-          children.push(mapData(key, val));
+          children.push(mapData(key, val, editableTitle));
         });
         data['children'] = children;
       }
 
+      data.hasChildren = (data['children'] && data['children'].length > 0);
+
       return data;
     }
 
+    /**
+     * creates a leaf item
+     * @param name {String}
+     * @param children {*}
+     * @param title {String=} (optional)
+     * @param extra {*=} (optional)
+     * @returns {*}
+     */
     function makeItem(name, children, title, extra) {
       var item = {'name': name, 'show': true};
       if (children && children.length) {
@@ -27,6 +57,13 @@ angular.module('dmpApp').
       return angular.extend(extra || {}, item);
     }
 
+    /**
+     * creates leafs from object type
+     * @param container {*}
+     * @param name {String}
+     * @param properties {Object}
+     * @returns {*}
+     */
     function parseObject(container, name, properties) {
       var ary = [];
       angular.forEach(properties, function (val, key) {
@@ -40,6 +77,13 @@ angular.module('dmpApp').
       return makeItem(name, ary);
     }
 
+    /**
+     * creates leafs from array type
+     * @param container {*}
+     * @param name {String}
+     * @param properties {Array}
+     * @returns {*}
+     */
     function parseArray(container, name, properties) {
       var ary = [];
       angular.forEach(container, function (item) {
@@ -51,6 +95,12 @@ angular.module('dmpApp').
       return makeItem(name, ary);
     }
 
+    /**
+     *  creates leafs from string type
+     * @param container {*}
+     * @param name {String}
+     * @returns {*}
+     */
     function parseString(container, name) {
       if (angular.isString(container)) {
         return makeItem(name, null, container.trim(), {leaf: true});
@@ -72,12 +122,26 @@ angular.module('dmpApp').
       }
     }
 
+    /**
+     * creates leafs from enum type
+     * @param container {*}
+     * @param name {String}
+     * @param enumeration {Enum}
+     * @returns {*}
+     */
     function parseEnum(container, name, enumeration) {
       if (enumeration.indexOf(container) !== -1) {
         return makeItem(name, null, container);
       }
     }
 
+    /**
+     * dispatches current leaf to correct parser
+     * @param container {*}
+     * @param name {String}
+     * @param obj {*}
+     * @returns {*}
+     */
     function parseAny(container, name, obj) {
       if (obj['type'] === 'object') {
         return parseObject(container, name, obj['properties']);
@@ -93,6 +157,26 @@ angular.module('dmpApp').
       }
     }
 
+    /**
+     * takes input data object and returns title data as array
+     * @param data {*}
+     * @returns {Array}
+     */
+    function getData(data) {
+        if(data.children) {
+            var returnData = [];
+            angular.forEach(data.children,function(child) {
+                var tempData = getData(child);
+                if(tempData.length > 0) {
+                    returnData.push(tempData);
+                }
+            });
+            return returnData;
+        } else {
+         return (data.title) ? data.title : '';
+        }
+    }
+
     return {
       mapData: mapData
     , makeItem: makeItem
@@ -101,5 +185,6 @@ angular.module('dmpApp').
     , parseString: parseString
     , parseEnum: parseEnum
     , parseAny: parseAny
+    , getData: getData
     };
   });

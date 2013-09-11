@@ -6,7 +6,11 @@
   </tab>
 </tabset>
 <div class="transformation-container">
-  <div class="function component function-source" ng-show="sourceComponent" connect-with="{'.function-target': targetComponent}" connect-when="sourceComponent">
+  <div class="function component function-source"
+       ng-show="sourceComponent"
+       connect-with="{'.function-target': targetComponent}"
+       connect-when="sourceComponent"
+       ng-click="onFilterClick(sourceComponent)">
     <div>
       <span>{{ sourceComponent.payload.name }}</span>
     </div>
@@ -23,7 +27,9 @@
       </div>
     </li>
   </ul>
-  <div class="function component function-target" ng-show="targetComponent">
+  <div class="function component function-target"
+       ng-show="targetComponent"
+       ng-click="onFilterClick(targetComponent)">
     <div>
       <span>{{ targetComponent.payload.name }}</span>
     </div>
