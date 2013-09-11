@@ -1,0 +1,48 @@
+<div modal="filterShouldBeOpen" close="close()" options="opts">
+    <div class="filters modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+            <h3>filters for {{component.name}}</h3>
+            <button class="btn btn-warning cancel" ng-click="addFilter()">add filter</button>
+        </div>
+        <div class="modal-body">
+            <div class="row row-2">
+
+                <div class="tabbable col-md-3">
+
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a>data</a>
+                        </li>
+                    </ul>
+
+                    <div class="box" id="sourceData" ui-view="sourceData"></div>
+
+
+                </div>
+
+                <div class="tabbable col-md-3" ng-repeat="filter in component.filters">
+
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a>{{filter.name}}</a>
+                        </li>
+                    </ul>
+
+                    <div class="box">
+                        <tree data="filter.filter"></tree>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-warning cancel" ng-click="close()">Ok</button>
+        </div>
+
+       </div>
+
+    </div>
+</div>

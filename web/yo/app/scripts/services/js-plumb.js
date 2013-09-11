@@ -4,7 +4,9 @@ angular.module('dmpApp')
   /**
    * Provide configurable options for jsPlumb.
    * @see http://jsplumbtoolkit.com/doc/parameters
-   * These will be used whenever a new connection is created.
+   * These will be used whenever a new connection is created, via #connect,
+   *   that is, they are not used for #makeSource and #makeTarget calls.
+   *
    * to configure:
    * `myApp.config(function(jsPlumbOptionsProvider) {
    *    jsPlumbOptionsProvider.set({
@@ -40,17 +42,28 @@ angular.module('dmpApp')
       ]
     } , options;
 
+    /**
+     * Set options to the default options.
+     */
     function setDefault() {
       options = angular.extend({}, defaultOptions);
     }
-    setDefault();
 
+    /**
+     * Extend options with the provided options. The semantics of `extend'
+     *   follow angular.extend
+     *
+     * @param opts {Object}  Extension to the current options
+     */
     this.set = function(opts) {
-      options = angular.extend(options, opts);
+      options = angular.extend(options || {}, opts);
     };
 
-    this.setDefault = setDefault;
-
+    /**
+     * Provide the jsPlumbOptions.  This gets called during injection-time
+     *   and will set-up the default options if options wasn't specified earlier.
+     * @returns {Object}  The configured options
+     */
     this.$get = function() {
       if (!options) {
         setDefault();
@@ -65,20 +78,35 @@ angular.module('dmpApp')
   .provider('jsPlumb', function() {
     var instance = null;
 
+    /**
+     * Set up the default instance, which is pulled from the global jsPlumb
+     *   object.  Thus, you have to load some jsPlumb.js before setting up
+     *   jsPlumb.
+     */
     function setDefaultInstance() {
       /* global jsPlumb */
       instance = jsPlumb.getInstance();
     }
 
+    /**
+     * Set the instance to use as jsPlumb.  If you want to mock, use this.
+     * @param inst {Object}
+     */
+    this.setInstance = function (inst) {
+      instance = inst;
+    };
+
+    /**
+     * Provide the jsPlumb implementation.  This gets called during
+     *   injection-time and will set-up the default options if options wasn't
+     *   specified earlier.
+     * @returns {jsPlumb}
+     */
     this.$get = function() {
       if (!instance) {
         setDefaultInstance();
       }
       return instance;
-    };
-
-    this.setInstance = function(inst) {
-      instance = inst;
     };
   })
   /**

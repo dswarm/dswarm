@@ -31,6 +31,10 @@ angular.module('dmpApp')
           'components': {
             templateUrl: 'views/components.html',
             controller: 'ComponentsCtrl'
+          },
+          'filter': {
+            templateUrl: 'views/filter.html',
+            controller: 'FilterCtrl'
           }
         }
       });
