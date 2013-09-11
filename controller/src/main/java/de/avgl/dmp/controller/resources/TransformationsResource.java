@@ -73,8 +73,8 @@ public class TransformationsResource {
 
 		final List<Transformation> pojos = new JsonToPojoMapper().apply(jsonObjectString);
 
-		final TransformationFlow flow = TransformationFlow.from(pojos);
-		final String result = flow.apply(TransformationFlow.DEFAULT_RECORD);
+		final TransformationFlow flow = TransformationFlow.fromTransformations(pojos);
+		final String result = flow.applyResource(TransformationFlow.DEFAULT_RESOURCE_PATH);
 
 		return buildResponse(result);
 	}

@@ -7,7 +7,6 @@ import java.util.List;
 import org.junit.Test;
 
 import de.avgl.dmp.converter.flow.TransformationFlow;
-import de.avgl.dmp.converter.morph.MorphScriptBuilder;
 import de.avgl.dmp.init.util.DMPUtil;
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
 import de.avgl.dmp.persistence.model.Transformation;
@@ -23,7 +22,7 @@ public class TransformationFlowTest {
 		final String expected = DMPUtil.getResourceAsString("complex-result.json");
 
 		List<Transformation> pojos = new JsonToPojoMapper().apply(request);
-		final TransformationFlow flow = TransformationFlow.from(pojos);
+		final TransformationFlow flow = TransformationFlow.fromTransformations(pojos);
 
 		final String actual = flow.apply();
 
@@ -35,9 +34,22 @@ public class TransformationFlowTest {
 
 		final String expected = DMPUtil.getResourceAsString("complex-result.json");
 
-		final TransformationFlow flow = TransformationFlow.from("complex-metamorph.xml");
+		final TransformationFlow flow = TransformationFlow.fromFile("complex-metamorph.xml");
 
 		final String actual = flow.apply();
+
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void testEndToEndByRecordStringExample() throws Exception {
+
+		final String request = DMPUtil.getResourceAsString("qucosa_record.xml");
+		final String expected = DMPUtil.getResourceAsString("complex-result.json");
+
+		final TransformationFlow flow = TransformationFlow.fromFile("complex-metamorph.xml");
+
+		final String actual = flow.applyRecord(request);
 
 		assertEquals(expected, actual);
 	}
