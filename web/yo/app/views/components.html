@@ -1,1 +1,10 @@
-<tree data="functions"></tree>
+<span ng-click="functions.show = !functions.show">
+  <i class="glyphicon" ng-class="{'glyphicon-chevron-down': functions.show, 'glyphicon-chevron-right': !functions.show}"></i>
+  {{functions.name}}
+</span>
+<ul ng-show="functions.show" class="tree-list">
+  <li ng-repeat="child in functions.children" class="function draggable component-member">
+    <span>{{ child.name }}</span>
+  </li>
+</ul>
+

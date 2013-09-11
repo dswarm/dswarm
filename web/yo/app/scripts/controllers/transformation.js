@@ -1,119 +1,10 @@
 'use strict';
 
 angular.module('dmpApp')
-  .controller('TransformationCtrl', ['$scope', '$http', 'PubSub', function ($scope, $http, PubSub) {
+  .controller('TransformationCtrl', ['$scope', function ($scope) {
     $scope.internalName = 'Transformation Logic Widget';
 
-    var allComponents = {}
-      , activeComponentId = null
-      , availableIds = []
-      , makeComponentId = (function () {
-          var _id = 0;
-          return function () {
-            _id += 1;
-            return [activeComponentId, 'fun_' + _id].join(':');
-          };
-        })();
-
-    $scope.showSortable = false;
-    $scope.sourceComponent = null;
-    $scope.targetComponent = null;
     $scope.components = [];
-    $scope.tabs = [];
-
-    function activate(id, skipBackup, skipBroadcast) {
-      $scope.showSortable = true;
-      if (activeComponentId !== id) {
-        $scope.$broadcast('tabSwitch', id);
-
-        if (!skipBackup) {
-          allComponents[activeComponentId] = {
-            components: $scope.components,
-            source: $scope.sourceComponent,
-            target: $scope.targetComponent
-          };
-        }
-
-        var newComponents = allComponents[id];
-
-        $scope.components = newComponents.components;
-        $scope.sourceComponent = newComponents.source;
-        $scope.targetComponent = newComponents.target;
-
-        activeComponentId = id;
-
-        if (!skipBroadcast) {
-          PubSub.broadcast('connectionSwitched', {id: id});
-        }
-      }
-    }
-
-    $scope.switchTab = function(tab) {
-      activate(tab.id);
-    };
-
-    $scope.sendTransformation = function (tab) {
-      var id = tab.id;
-      if (activeComponentId === id) {
-        var payload = {
-            'id': id,
-            'name': tab.title,
-            'components': angular.copy($scope.components),
-            'source': angular.copy($scope.sourceComponent),
-            'target': angular.copy($scope.targetComponent)
-          }
-        , transformations = {
-            'transformations': [payload]
-          };
-
-        var p = $http.post(
-          'http://localhost:8087/dmp/tranformations', transformations);
-
-        p.then(function(resp) {
-          console.log(resp);
-        });
-
-//        var json = JSON.stringify({
-//          'transformations': [payload]
-//        }, null, 4);
-//        console.log(json);
-      }
-
-    };
-
-    PubSub.subscribe($scope, 'connectionSelected', function(data) {
-      var id = data.id;
-      if (activeComponentId !== id) {
-        if (allComponents.hasOwnProperty(id)) {
-          var idx = availableIds.indexOf(id);
-          $scope.tabs[idx].active = true;
-        } else {
-
-          var start = {
-              componentType: 'source',
-              payload: data.sourceData,
-              source: data.source,
-              target: data.target
-            }
-            , end = {
-              componentType: 'target',
-              payload: data.targetData,
-              source: data.source,
-              target: data.target
-            };
-
-          allComponents[id] = {
-            components: [],
-            source: start,
-            target: end
-          };
-          $scope.tabs.push({title: data.label, active: true, id: id});
-          availableIds.push(id);
-          activate(id, true, true);
-        }
-      }
-      $scope.$digest();
-    });
 
     var lastPayload;
 
@@ -130,10 +21,8 @@ angular.module('dmpApp')
 
     $scope.sortableCallbacks = {
       receive: function (event, ui) {
-        var payload = angular.element(ui.item).scope()['child']
-          , componentId = makeComponentId();
-
-        lastPayload = {componentType: 'fun', payload: payload, id: componentId};
+        var payload = angular.element(ui.item).scope()['child'];
+        lastPayload = {componentType: 'fun', payload: payload};
       },
       update: function (event, ui) {
         //noinspection JSCheckFunctionSignatures
@@ -155,9 +44,4 @@ angular.module('dmpApp')
         $scope.$digest();
       }
     };
-
-    $scope.onFunctionClick = function(component) {
-      PubSub.broadcast('handleEditConfig', component);
-    };
-
   }]);
