@@ -1,15 +1,22 @@
-package de.avgl.dmp.controller.mapping;
-
-import com.google.common.collect.Lists;
-import com.google.common.io.ByteStreams;
-import de.avgl.dmp.persistence.model.*;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+package de.avgl.dmp.persistence.mapping.test;
 
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import com.google.common.collect.Lists;
+import com.google.common.io.ByteStreams;
+
+import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
+import de.avgl.dmp.persistence.model.Component;
+import de.avgl.dmp.persistence.model.ComponentType;
+import de.avgl.dmp.persistence.model.Parameter;
+import de.avgl.dmp.persistence.model.Payload;
+import de.avgl.dmp.persistence.model.Transformation;
 
 public class JsonToPojoMapperTest {
 

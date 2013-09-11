@@ -3,7 +3,6 @@ package de.avgl.dmp.controller.resources.test;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 
-import de.avgl.dmp.controller.AbstractBaseTest;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.junit.After;
@@ -11,7 +10,7 @@ import org.junit.Before;
 
 import de.avgl.dmp.controller.Main;
 
-public class ResourceTest extends AbstractBaseTest {
+public class ResourceTest {
 
 	protected HttpServer	server;
 	protected Client		client;

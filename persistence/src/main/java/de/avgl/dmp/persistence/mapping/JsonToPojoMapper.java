@@ -1,4 +1,4 @@
-package de.avgl.dmp.controller.mapping;
+package de.avgl.dmp.persistence.mapping;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
