@@ -1,30 +1,39 @@
 'use strict';
 
 angular.module('dmpApp').
- /**
-  * A factory that handles the parsing of a loaded schema
-  * to usable data.
-  *
-  * It is specific to the used schmema format.
-  *
-  * Normally only mapData and getData would be needed to be used.
-  *
-  * * mapData returns the parsed data from the schema
-  * * getData returns all title data. most useful in combination
-  *           with with the editableTitle flag
-  *
-  */
+  /**
+   * A service that parses json-schema into an internal tree model [1]. It also
+   *   provides functionality to transform an XML2JSON model [2] into the
+   *   aforementioned tree model, using the same json-schema definition.
+   *
+   *   [1] The internal tree model is defined in directives/tree.js
+   *   [2] Based on the unmodified results of https://github.com/hay/xml2json
+   *
+   *   Due to the nature of representing a tree structure, most of these
+   *   methods are utilizing either plain recursion or trampoline recursion.
+   *
+   *   Normally only mapData and getData would be needed to be used.
+   *
+   * * mapData returns the parsed data from the schema
+   * * getData returns all title data. most useful in combination
+   *           with with the editableTitle flag
+   */
   factory('schemaParser', function () {
     /**
-     * parses input data to usable data format
-     * @param name {String}
-     * @param container {*}
+     * Maps from json-schema to the internal tree model.  Since json-schema
+     *   already is very tree-ish, there is nothing much to do but renaming
+     *   some properties and apply recursion all the way down.
+     *
+     * @param name {String}  The name of the current property, that is
+     *   enumerated on.
+     * @param container {Object}  The definition of the current property.
+     *   A json-schema is usually like "Property": { ... (definition) }
+     *   and `name' and `container' are just that.
      * @param editableTitle {Boolean}
-     * @returns {*}
+     * @returns {{name: String, show: boolean}}
      */
     function mapData(name, container, editableTitle) {
-      var data = {'name': name, 'show': true, 'editableTitle' : editableTitle};
-
+      var data = {'name': name, 'show': true, 'editableTitle': editableTitle};
       if (container['properties']) {
         var children = [];
         angular.forEach(container['properties'], function (val, key) {
@@ -41,9 +50,9 @@ angular.module('dmpApp').
     /**
      * creates a leaf item
      * @param name {String}
-     * @param children {*}
+     * @param children {Object}
      * @param title {String=} (optional)
-     * @param extra {*=} (optional)
+     * @param extra {Object=} (optional)
      * @returns {*}
      */
     function makeItem(name, children, title, extra) {
@@ -163,18 +172,18 @@ angular.module('dmpApp').
      * @returns {Array}
      */
     function getData(data) {
-        if(data.children) {
-            var returnData = [];
-            angular.forEach(data.children,function(child) {
-                var tempData = getData(child);
-                if(tempData.length > 0) {
-                    returnData.push(tempData);
-                }
-            });
-            return returnData;
-        } else {
-         return (data.title) ? data.title : '';
-        }
+      if(data.children) {
+        var returnData = [];
+        angular.forEach(data.children,function(child) {
+          var tempData = getData(child);
+          if(tempData.length > 0) {
+            returnData.push(tempData);
+          }
+        });
+        return returnData;
+      } else {
+        return (data.title) ? data.title : '';
+      }
     }
 
     return {

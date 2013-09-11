@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" entityMarker="." version="1">
+    <meta>
+        <name>Identifier, Title, Identifier 2, Creator 1, Creator 2, Subjects</name>
+    </meta>
+    <rules>
+        <data name="record.OAI-PMH.dc:identifier" source="record.header.identifier">
+            <trim/>
+        </data>
+        <data name="record.OAI-PMH.dc:title" source="record.metadata.oai_dc:dc.dc:title">
+            <trim/>
+        </data>
+        <data name="record.OAI-PMH.dc:identifier" source="record.metadata.oai_dc:dc.dc:identifier">
+            <trim/>
+        </data>
+        <data name="record.OAI-PMH.dc:creator" source="record.metadata.oai_dc:dc.dc:creator">
+            <trim/>
+        </data>
+        <data name="record.OAI-PMH.dc:creator" source="record.metadata.oai_dc:dc.dc:contributor">
+            <trim/>
+        </data>
+        <data name="record.OAI-PMH.dc:subject" source="record.metadata.oai_dc:dc.dc:subject">
+            <trim/>
+            <replace pattern="Libraries" with="Bibliotheken"/>
+            <replace pattern="Saxony" with="Sachsen"/>
+            <unique/>
+            <blacklist>
+                <entry name="ddc:020"/>
+            </blacklist>
+            <blacklist>
+                <entry name="rvk:--"/>
+            </blacklist>
+            <urlencode/>
+            <htmlanchor postfix="/1/" prefix="http://slub-dd.de/s/"/>
+        </data>
+    </rules>
+</metamorph>
