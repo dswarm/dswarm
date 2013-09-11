@@ -1,7 +1,8 @@
+/* global _ */
 'use strict';
 
 angular.module('dmpApp')
-  .controller('TransformationCtrl', ['$scope', '$http', 'PubSub', function ($scope, $http, PubSub) {
+  .controller('TransformationCtrl', ['$scope', '$http', 'PubSub', '$window', function ($scope, $http, PubSub, $window) {
     $scope.internalName = 'Transformation Logic Widget';
 
     var allComponents = {}
@@ -52,29 +53,56 @@ angular.module('dmpApp')
       activate(tab.id);
     };
 
-    $scope.sendTransformation = function (tab) {
-      var id = tab.id;
-      if (activeComponentId === id) {
-        var payload = {
-            'id': id,
-            'name': tab.title,
-            'components': angular.copy($scope.components),
-            'source': angular.copy($scope.sourceComponent),
-            'target': angular.copy($scope.targetComponent)
-          }
-        , transformations = {
-            'transformations': [payload]
-          };
+    function generatePayload(tab) {
+      var id = tab.id
+        , scp = allComponents[id];
 
-        var p = $http.post(
-          'http://localhost:8087/dmp/transformations', transformations);
-
-        p.then(function(resp) {
-          console.log(resp);
-          PubSub.broadcast('transformationFinished', resp.data);
-        });
+      if (!scp) {
+        return null;
       }
 
+      return {
+        'id': id,
+        'name': tab.title,
+        'components': angular.copy(scp.components),
+        'source': angular.copy(scp.source),
+        'target': angular.copy(scp.target)
+      };
+    }
+
+    function sendTransformations(transformations) {
+      var p = $http.post(
+        'http://localhost:8087/dmp/transformations', transformations);
+
+      p.then(function (resp) {
+        console.log(resp);
+        PubSub.broadcast('transformationFinished', resp.data);
+      }, function (resp) {
+        console.log(resp);
+        $window.alert(resp.data.error);
+      });
+    }
+
+    $scope.sendTransformation = function (tab) {
+      if (activeComponentId === tab.id) {
+        var transformations = {
+          'transformations': [generatePayload(tab)]
+        };
+
+        sendTransformations(transformations);
+      }
+    };
+
+    $scope.sendTransformations = function () {
+      var payloads = _($scope.tabs).map(generatePayload).filter(function (payload) {
+          return payload !== null;
+        }).valueOf();
+
+      var transformations = {
+        'transformations': payloads
+      };
+
+      sendTransformations(transformations);
     };
 
     PubSub.subscribe($scope, 'connectionSelected', function(data) {

@@ -7,6 +7,9 @@ import de.avgl.dmp.converter.functional.UnitFunction2;
 import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
+import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.In;
+import org.culturegraph.mf.framework.annotations.Out;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
@@ -17,8 +20,15 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 
-
-public final class QucosaDecoder extends DefaultObjectPipe<String, StreamReceiver> {
+/**
+ * Decode a OAI-PMH file containing a Qucosa record.
+ *
+ * @author Paul Horn <phorn@avantgarde-labs.de>
+ */
+@Description("Decode a OAI-PMH file containing a Qucosa record.")
+@In(Reader.class)
+@Out(StreamReceiver.class)
+public final class QucosaDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
 
 	private static final String RECORD_TAG = "record";
 	private static final String HEADER_TAG = "header";
@@ -50,8 +60,8 @@ public final class QucosaDecoder extends DefaultObjectPipe<String, StreamReceive
 
 			node.filter(new Function1<Node, Boolean>() {
 				@Override
-				public Boolean apply(Node in) {
-					return in.getNodeType() == Node.ELEMENT_NODE;
+				public Boolean apply(Node obj) {
+					return obj.getNodeType() == Node.ELEMENT_NODE;
 				}
 			}).forEach(new UnitFunction1<Node>() {
 				@Override
@@ -68,11 +78,21 @@ public final class QucosaDecoder extends DefaultObjectPipe<String, StreamReceive
 		}
 	}
 
+	/**
+	 * Class Constructor setting the <code>recordPrefix</code>
+	 *
+	 * @param recordPrefix  the prefix that will be used to identify the
+	 *                      relevant record section.
+	 */
 	public QucosaDecoder(final String recordPrefix) {
 		super();
 		this.recordPrefix = recordPrefix;
 	}
 
+	/**
+	 * Class Constructor setting the <code>DEFAULT_RECORD_PREFIX</code> for
+	 * <code>recordPrefix</code>
+	 */
 	public QucosaDecoder() {
 		this(DEFAULT_RECORD_PREFIX);
 	}
@@ -99,6 +119,11 @@ public final class QucosaDecoder extends DefaultObjectPipe<String, StreamReceive
 		getReceiver().endEntity();
 	}
 
+	/**
+	 * Process the Qucosa file. Parse the XML and for evert occurrence of
+	 * <code>recordPrefix</code>, send a new record downstream.
+	 * @param in  The {@link InputSource}  for the XML file.
+	 */
 	public void process(final InputSource in) {
 		final DocumentBuilder documentBuilder;
 		try {
@@ -129,12 +154,11 @@ public final class QucosaDecoder extends DefaultObjectPipe<String, StreamReceive
 		});
 	}
 
-	public void process(final Reader reader) {
-		InputSource in = new InputSource(reader);
-		process(in);
-	}
-
-	@Override
+	/**
+	 * Process a Qucosa file provide as String (where the string denotes the
+	 *   actual file content, not the filename.)
+	 * @param content  The textual content of the Qucosa file
+	 */
 	public void process(final String content) {
 		InputStream is;
 		try {
@@ -144,6 +168,18 @@ public final class QucosaDecoder extends DefaultObjectPipe<String, StreamReceive
 		}
 
 		final InputSource in = new InputSource(is);
+		process(in);
+	}
+
+	/**
+	 * Process a Qucosa file provide as Reader. This is the method that will be
+	 * used in a flow/flux context.
+	 *
+	 * @param reader  A {@link Reader} pointing to the Qucosa file
+	 */
+	@Override
+	public void process(final Reader reader) {
+		InputSource in = new InputSource(reader);
 		process(in);
 	}
 }
