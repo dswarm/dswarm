@@ -152,3 +152,5 @@ project/plugins/project/
 .CVS
 
 \#*#
+
+/web/yo/app/test_out/

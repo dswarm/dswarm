@@ -164,26 +164,26 @@ module.exports = function (grunt) {
     },
     less: {
       options: {
-        paths: ['app/components']
+        paths: ['app/components', '<%= yeoman.app %>/styles/']
         //, dumpLineNumbers: true
       },
       dist: {
         files: [{
           expand: true,     // Enable dynamic expansion.
           cwd: '<%= yeoman.app %>/styles/',      // Src matches are relative to this path.
-          src: ['**/*.less'], // Actual pattern(s) to match.
+          src: ['**/main.less'], // Actual pattern(s) to match.
           dest: '.tmp/styles/',   // Destination path prefix.
-          ext: '.css',   // Dest filepaths will have this extension.
-        }],
+          ext: '.css'   // Dest filepaths will have this extension.
+        }]
       },
       server: {
         files: [{
           expand: true,     // Enable dynamic expansion.
           cwd: '<%= yeoman.app %>/styles/',      // Src matches are relative to this path.
-          src: ['**/*.less'], // Actual pattern(s) to match.
+          src: ['**/main.less'], // Actual pattern(s) to match.
           dest: '.tmp/styles/',   // Destination path prefix.
-          ext: '.css',   // Dest filepaths will have this extension.
-        }],
+          ext: '.css'   // Dest filepaths will have this extension.
+        }]
       }
     },
     // not used since Uglify task does concat,
@@ -313,9 +313,15 @@ module.exports = function (grunt) {
       ]
     },
     karma: {
+      continuous: {
+        configFile: 'karma.conf.js',
+        singleRun: false,
+        autoWatch: true
+      },
       unit: {
         configFile: 'karma.conf.js',
-        singleRun: true
+        singleRun: true,
+        autoWatch: false
       }
     },
     cdnify: {
@@ -366,7 +372,7 @@ module.exports = function (grunt) {
     'less',
     'concurrent:test',
     'connect:test',
-    'karma'
+    'karma:unit'
   ]);
 
   grunt.registerTask('build', [

@@ -14,12 +14,16 @@
 	<name>DMP - Initialization</name>
 	<packaging>jar</packaging>
 	<url>http://www.avantgarde-labs.de</url>
+	
+	<properties>
+		<project.root>${basedir}/..</project.root>
+	</properties>
 
 	<build>
 		<filters>
 			<filter>src/test/filters/dmp-common.properties</filter>
 			<filter>src/test/filters/dmp-${env}.properties</filter>
-			<filter>${user.home}/dmp.properties</filter>
+			<filter>${project.root}/dmp.properties</filter>
 		</filters>
 		<resources>
 			<resource>
