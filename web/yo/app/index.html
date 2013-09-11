@@ -1,0 +1,117 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>DMP 2000</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+        display: none !important;
+      }
+    </style>
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        <!-- build:css({.tmp,app}) styles/main.css -->
+        <link rel="stylesheet" href="styles/main.css">
+        <link rel="stylesheet" href="components/jquery-ui/themes/smoothness/jquery-ui.css">
+        <!-- endbuild -->
+
+  </head>
+  <body ng-cloak ng-app="dmpApp">
+    <!--[if lt IE 7]>
+      <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+    <![endif]-->
+
+    <!--[if lt IE 9]>
+      <script src="components/es5-shim/es5-shim.js"></script>
+      <script src="components/json3/lib/json3.min.js"></script>
+    <![endif]-->
+
+    <div id="wrap">
+
+      <nav class="navbar navbar-default" role="navigation">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse"
+                  data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">{{ projectName }}</a>
+        </div>
+
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><!--suppress HtmlUnknownTarget --><a href="#/">Home</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="https://intranet.slub-dresden.de:8443/x/c4U_AQ"
+                   target="_blank">About</a></li>
+            <li><a href="https://jira.slub-dresden.de/browse/DD"
+                   target="_blank">Issues</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <div id="content">
+        <div class="row row-2" id="top-row">
+          <div class="col-md-3 box" id="sourceData" ui-view="sourceData"></div>
+          <div class="col-md-6 box" id="schema" ui-view="schema"></div>
+          <div class="col-md-3 box" id="targetData" ui-view="targetData"></div>
+        </div>
+        <div class="row row-1" id="bottom-row">
+          <div class="col-md-3 box" id="configuration" ui-view="configuration"></div>
+          <div class="col-md-6 box" id="transformation" ui-view="transformation"></div>
+          <div class="col-md-3 box" id="components" ui-view="components"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="footer">
+      <div class="container">
+        <p class="text-muted credit">&copy; Avantgarde Labs / SLUB 2013</p>
+      </div>
+    </div>
+
+    <script src="components/jquery/jquery.js"></script>
+    <script src="components/jquery-ui/ui/jquery-ui.js"></script>
+    <script src="components/angular/angular.js"></script>
+
+        <!-- build:js scripts/plumb.js -->
+        <script src="components/jsPlumb/dist/js/jquery.jsPlumb-1.5.1.js"></script>
+        <!-- endbuild -->
+
+        <!-- build:js scripts/modules.js -->
+        <script src="components/angular-resource/angular-resource.js"></script>
+        <script src="components/angular-cookies/angular-cookies.js"></script>
+        <script src="components/angular-sanitize/angular-sanitize.js"></script>
+        <script src="components/angular-ui-bootstrap/dist/ui-bootstrap-tpls-0.5.0.js"></script>
+        <script src="components/angular-ui-router/release/angular-ui-router.js"></script>
+        <script src="components/angular-ui-utils/components/angular-ui-docs/build/ui-utils.js"></script>
+        <script src="components/bootstrap/js/transition.js"></script>
+        <script src="components/bootstrap/js/collapse.js"></script>
+        <!-- endbuild -->
+
+        <!-- build:js({.tmp,app}) scripts/scripts.js -->
+        <script src="scripts/app.js"></script>
+        <script src="scripts/services/schema-parser.js"></script>
+        <script src="scripts/services/js-plumb.js"></script>
+        <script src="scripts/directives/tree.js"></script>
+        <script src="scripts/directives/sortable.js"></script>
+        <script src="scripts/directives/connectible.js"></script>
+        <script src="scripts/controllers/source-data.js"></script>
+        <script src="scripts/controllers/schema.js"></script>
+        <script src="scripts/controllers/target-data.js"></script>
+        <script src="scripts/controllers/configuration.js"></script>
+        <script src="scripts/controllers/transformation.js"></script>
+        <script src="scripts/controllers/components.js"></script>
+        <script src="scripts/bootstrap.js"></script>
+        <!-- endbuild -->
+</body>
+</html>
