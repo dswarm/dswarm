@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>de.avgl.dmp</groupId>
+		<artifactId>dmp</artifactId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
+	<groupId>de.avgl.dmp</groupId>
+	<artifactId>init</artifactId>
+	<version>0.1-SNAPSHOT</version>
+	<name>DMP - Initialization</name>
+	<packaging>jar</packaging>
+	<url>http://www.avantgarde-labs.de</url>
+
+	<build>
+		<filters>
+			<filter>src/test/filters/dmp-common.properties</filter>
+			<filter>src/test/filters/dmp-${env}.properties</filter>
+			<filter>${user.home}/dmp.properties</filter>
+		</filters>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<filtering>true</filtering>
+			</testResource>
+		</testResources>
+	</build>
+</project>

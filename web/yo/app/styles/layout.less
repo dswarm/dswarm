@@ -1,0 +1,59 @@
+@navbar-top-padding: 20px;
+@box-rows: 3;
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background:  #fafafa;
+  padding-top: @navbar-top-padding;
+
+}
+
+/** Navbar, and sticky Footer **/
+@footer-height: 60px;
+/* Wrapper for page content to push down footer */
+#wrap {
+  min-height: 100%;
+  height:     auto !important;
+  height:     100%;
+  /* Negative indent footer by its height */
+  margin:     0 auto -@footer-height;
+  /* Pad bottom by footer height */
+  padding:    0 10px @footer-height;
+}
+
+/* Set the fixed height of the footer here */
+#footer {
+  height:           @footer-height;
+  background-color: @gray-lighter;
+}
+
+.navbar {
+  margin-bottom: @navbar-top-padding;
+}
+
+#content {
+  padding: 0 20px;
+}
+
+/* Lastly, apply responsive CSS fixes as necessary */
+@media (max-width: 767px) {
+  #footer {
+    margin-left:   -20px;
+    margin-right:  -20px;
+    padding-left:  20px;
+    padding-right: 20px;
+  }
+}
+
+.row-1 {
+  //  height: percentage((1 / @box-rows));
+  height: 240px;
+}
+
+.row-2 {
+  //  height: percentage((2 / @box-rows));
+  height: 480px;
+}
