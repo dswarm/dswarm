@@ -1,0 +1,73 @@
+@import 'bootstrap/less/bootstrap.less';
+
+@import 'layout.less';
+@import 'sortable.less';
+@import 'configuration.less';
+
+.container .credit {
+  margin: 20px 0;
+}
+
+.box {
+  outline:    2px dashed @gray;
+  padding:    @padding-base-vertical;
+  height:     100%;
+  background: @gray-lighter;
+  border:     @padding-base-vertical solid @body-bg;
+  overflow:   scroll;
+}
+
+.tree-list {
+  list-style-type: none;
+  margin-left:     -10px;
+}
+
+.data-sample {
+  color: @gray-light;
+}
+
+svg.mapping-active {
+  z-index: 1000;
+}
+
+.mapping-label {
+  font-size:   1.3em;
+  font-weight: 200;
+  text-shadow: 0 0 15px fadeout(black, 20%);
+  margin-top:  0.5em;
+
+  &.mapping-active {
+    color: red;
+    z-index: 1000;
+  }
+}
+
+.mapping-droppable {
+  color: lighten(black, 10%);
+  text-shadow: 0 0 10px fadeout(black, 20%);
+}
+
+.source-endpoint._jsPlumb_dragging,
+.source-endpoint._jsPlumb_dragging *,
+.transparent,
+.transparent * {
+  background-color: transparent;
+  fill: transparent;
+}
+
+.filters .tree-leaf input {
+  border: 1px solid lightgrey;
+  position: absolute;
+  right: 0;
+  width: 80px;
+}
+
+.filters .tabbable {
+  overflow: hidden;
+  height: 100%;
+  padding-bottom: 40px;
+}
+
+.filters .tabbable .box {
+  position: relative;
+}
