@@ -1,14 +1,14 @@
 package de.avgl.dmp.persistence.model.test;
 
-import java.util.Set;
+import java.util.List;
 
+import com.google.common.collect.Lists;
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
-import com.google.common.collect.Sets;
 
 import de.avgl.dmp.persistence.model.Component;
 import de.avgl.dmp.persistence.model.ComponentType;
@@ -42,15 +42,11 @@ public class TransformationTest {
 		connection1.setTarget(component2);
 		connection1.setSource(component1);
 
-		final Set<Component> components = Sets.newLinkedHashSet();
+		final List<Component> components = Lists.newArrayList();
 		components.add(component1);
 		components.add(component2);
 
-		final Set<Connection> connections = Sets.newLinkedHashSet();
-		connections.add(connection1);
-
 		transformation.setComponents(components);
-		transformation.setConnections(connections);
 
 		final ObjectMapper mapper = new ObjectMapper();
 

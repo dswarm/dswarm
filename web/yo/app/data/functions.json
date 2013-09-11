@@ -10,6 +10,7 @@
           },
           "entry" : {
               "repeat" : true,
+              "type": "repeat",
               "parameters" : {
                   "name" : {
                       "type" : "text"
@@ -86,6 +87,7 @@
           },
           "entry" : {
               "repeat" : true,
+              "type": "repeat",
               "parameters" : {
                   "name" : {
                      "type" : "text"
@@ -159,6 +161,7 @@
           },
           "entry" : {
               "repeat" : true,
+              "type": "repeat",
               "parameters" : {
                   "name" : {
                       "type" : "text"
@@ -229,6 +232,7 @@
           },
           "entry" : {
               "repeat" : true,
+              "type": "repeat",
               "parameters" : {
                   "name" : {
                       "type" : "text"

@@ -3,8 +3,8 @@ package de.avgl.dmp.persistence.model;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 
 public enum ComponentType {
-	
-	EXTENDED("extended");
+
+	EXTENDED("extended"), FUNCTION("fun"), SOURCE("source"), TARGET("target");
 
 	/**
 	 * The name of the component type as it can occur in a transformation.
@@ -13,7 +13,7 @@ public enum ComponentType {
 
 	/**
 	 * Creates a new component with the given name.
-	 * 
+	 *
 	 * @param name the name of the component type
 	 */
 	private ComponentType(final String name) {
@@ -24,7 +24,7 @@ public enum ComponentType {
 	/**
 	 * Gets the name of the component type.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @return the name of the component type
 	 */
 	public String getName() {
@@ -35,7 +35,7 @@ public enum ComponentType {
 	/**
 	 * Tries to get a component type by its name.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param name the name of the component type
 	 * @return the component type that matches the given name
 	 * @throws DMPPersistenceException if the component type by the given name is not part of this enumeration, i.e., this
@@ -58,5 +58,5 @@ public enum ComponentType {
 
 		throw new DMPPersistenceException("couldn't determine component type for connection name = " + name);
 	}
-	
+
 }

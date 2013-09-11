@@ -1,3 +1,29 @@
+<<<<<<< HEAD
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>de.avgl.dmp</groupId>
+		<artifactId>dmp</artifactId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
+	<groupId>de.avgl.dmp</groupId>
+	<artifactId>web</artifactId>
+	<version>0.1-SNAPSHOT</version>
+	<url>http://avantgarde-labs.de</url>
+	<name>DMP - Web App</name>
+
+	<dependencies>
+		<!-- other project module dependencies -->
+		<dependency>
+			<groupId>com.avgl.cdc</groupId>
+			<artifactId>controller</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+=======
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -495,4 +521,5 @@
 		</dependency>
 	</dependencies>
 	<!-- </dependencyManagement> -->
+>>>>>>> 2346e57e207b497b691cc24aa47c885d5bb1ff1c
 </project>

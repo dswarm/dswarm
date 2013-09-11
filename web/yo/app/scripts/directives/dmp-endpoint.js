@@ -32,6 +32,21 @@ angular.module('dmpApp')
       });
     }
 
+    function realPath(segments, scp) {
+      if (angular.isUndefined(scp.data) || scp.data.name === 'record') {
+        return segments.join('.');
+      }
+
+      var lastSegment = segments[0]
+        , currentSegment = scp.data && scp.data.name;
+
+      if (!currentSegment || currentSegment === lastSegment) {
+        return realPath(segments, scp.$parent);
+      }
+
+      return realPath([currentSegment].concat(segments), scp.$parent);
+    }
+
     function activate(connection, dontFire) {
       if (components.pool.indexOf(connection) === -1) {
         components.pool.push(connection);
@@ -40,17 +55,23 @@ angular.module('dmpApp')
       deSelectAll();
       doSelect(connection);
 
-      var sourceData = angular.element(connection.source).scope().data
-        , targetData = angular.element(connection.target).scope().data
-        , label = connection.getLabel()
+      function getData(c) {
+        var scp = angular.element(c).scope()
+          , data = scp.data;
+
+        data.path = realPath([], scp);
+        return data;
+      }
+
+      var label = connection.getLabel()
         , id = connection.id;
 
       if (!dontFire) {
         PubSub.broadcast('connectionSelected', {
           id: id,
           label: label,
-          sourceData: sourceData,
-          targetData: targetData
+          sourceData: getData(connection.source),
+          targetData: getData(connection.target)
         });
       }
     }

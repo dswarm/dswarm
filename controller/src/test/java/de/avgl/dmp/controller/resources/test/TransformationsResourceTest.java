@@ -1,11 +1,13 @@
 package de.avgl.dmp.controller.resources.test;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.client.ClientResponse;
 import org.junit.Assert;
@@ -59,15 +61,11 @@ public class TransformationsResourceTest extends ResourceTest {
 		connection1.setTarget(component2);
 		connection1.setSource(component1);
 
-		final Set<Component> components = Sets.newLinkedHashSet();
+		final List<Component> components = Lists.newArrayList();
 		components.add(component1);
 		components.add(component2);
 
-		final Set<Connection> connections = Sets.newLinkedHashSet();
-		connections.add(connection1);
-
 		transformation.setComponents(components);
-		transformation.setConnections(connections);
 
 		final ObjectMapper mapper = new ObjectMapper();
 
