@@ -1,28 +1,42 @@
-package de.avgl.dmp.converter.resources;
+package de.avgl.dmp.converter.morph;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
-import de.avgl.dmp.persistence.model.Component;
-import de.avgl.dmp.persistence.model.Parameter;
-import de.avgl.dmp.persistence.model.Transformation;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
-public class PojoToXMLBuilder {
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
+
+import de.avgl.dmp.converter.DMPConverterException;
+import de.avgl.dmp.persistence.model.Component;
+import de.avgl.dmp.persistence.model.Parameter;
+import de.avgl.dmp.persistence.model.Transformation;
+
+
+public class MorphScriptBuilder {
 
 	private static final DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 
@@ -129,12 +143,12 @@ public class PojoToXMLBuilder {
 		return file;
 	}
 
-	public PojoToXMLBuilder apply(final List<Transformation> transformations) throws TransformationsCoverterException {
+	public MorphScriptBuilder apply(final List<Transformation> transformations) throws DMPConverterException {
 		final DocumentBuilder docBuilder;
 		try {
 			docBuilder = docFactory.newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
-			throw new TransformationsCoverterException(e);
+			throw new DMPConverterException(e.getMessage());
 		}
 
 		doc = docBuilder.newDocument();
@@ -169,7 +183,7 @@ public class PojoToXMLBuilder {
 		return this;
 	}
 
-	public PojoToXMLBuilder apply(final Transformation transformation) throws TransformationsCoverterException {
+	public MorphScriptBuilder apply(final Transformation transformation) throws DMPConverterException {
 		return apply(Lists.newArrayList(transformation));
 	}
 }

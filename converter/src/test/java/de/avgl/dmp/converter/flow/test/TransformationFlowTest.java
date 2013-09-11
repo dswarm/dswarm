@@ -7,7 +7,7 @@ import java.util.List;
 import org.junit.Test;
 
 import de.avgl.dmp.converter.flow.TransformationFlow;
-import de.avgl.dmp.converter.resources.PojoToXMLBuilder;
+import de.avgl.dmp.converter.morph.MorphScriptBuilder;
 import de.avgl.dmp.init.util.DMPUtil;
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
 import de.avgl.dmp.persistence.model.Transformation;
@@ -49,7 +49,7 @@ public class TransformationFlowTest {
 		final String expected = DMPUtil.getResourceAsString("complex-metamorph.xml");
 
 		List<Transformation> pojos = new JsonToPojoMapper().apply(request);
-		final String actual = new PojoToXMLBuilder().apply(pojos).toString();
+		final String actual = new MorphScriptBuilder().apply(pojos).toString();
 
 		assertEquals(expected, actual);
 	}

@@ -1,18 +1,24 @@
 package de.avgl.dmp.converter.flow;
 
-import de.avgl.dmp.converter.pipe.StreamJsonCollapser;
-import de.avgl.dmp.converter.pipe.StreamUnflattener;
-import de.avgl.dmp.converter.reader.QucosaReader;
-import de.avgl.dmp.converter.resources.PojoToXMLBuilder;
-import de.avgl.dmp.converter.resources.TransformationsCoverterException;
-import de.avgl.dmp.persistence.model.Transformation;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.util.List;
+
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.stream.converter.JsonEncoder;
 import org.culturegraph.mf.stream.sink.ObjectJavaIoWriter;
 import org.culturegraph.mf.stream.source.ResourceOpener;
 
-import java.io.*;
-import java.util.List;
+import de.avgl.dmp.converter.DMPConverterException;
+import de.avgl.dmp.converter.morph.MorphScriptBuilder;
+import de.avgl.dmp.converter.pipe.StreamJsonCollapser;
+import de.avgl.dmp.converter.pipe.StreamUnflattener;
+import de.avgl.dmp.converter.reader.QucosaReader;
+import de.avgl.dmp.persistence.model.Transformation;
 
 public class TransformationFlow {
 
@@ -68,8 +74,8 @@ public class TransformationFlow {
 		return new TransformationFlow(transformer);
 	}
 
-	public static TransformationFlow from(List<Transformation> transformations) throws IOException, TransformationsCoverterException {
-		final File file = new PojoToXMLBuilder().apply(transformations).toFile();
+	public static TransformationFlow from(List<Transformation> transformations) throws IOException, DMPConverterException {
+		final File file = new MorphScriptBuilder().apply(transformations).toFile();
 
 		return from(file);
 	}

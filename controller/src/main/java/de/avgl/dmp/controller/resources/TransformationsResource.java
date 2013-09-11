@@ -17,9 +17,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import com.google.common.net.HttpHeaders;
 
+import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.TransformationFlow;
-import de.avgl.dmp.converter.resources.PojoToXMLBuilder;
-import de.avgl.dmp.converter.resources.TransformationsCoverterException;
+import de.avgl.dmp.converter.morph.MorphScriptBuilder;
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
 import de.avgl.dmp.persistence.model.Transformation;
 
@@ -58,10 +58,10 @@ public class TransformationsResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_XML)
-	public Response runToXML(final String jsonObjectString) throws IOException, TransformationsCoverterException {
+	public Response runToXML(final String jsonObjectString) throws IOException, DMPConverterException {
 
 		final List<Transformation> pojos = new JsonToPojoMapper().apply(jsonObjectString);
-		final String xml = new PojoToXMLBuilder().apply(pojos).toString();
+		final String xml = new MorphScriptBuilder().apply(pojos).toString();
 
 		return buildResponse(xml);
 	}
@@ -69,7 +69,7 @@ public class TransformationsResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response runWithMetamorph(final String jsonObjectString) throws IOException, TransformationsCoverterException {
+	public Response runWithMetamorph(final String jsonObjectString) throws IOException, DMPConverterException {
 
 		final List<Transformation> pojos = new JsonToPojoMapper().apply(jsonObjectString);
 
