@@ -26,30 +26,30 @@ import de.avgl.dmp.persistence.model.Transformation;
 
 public class TransformationFlow {
 
-	public static String DEFAULT_RESOURCE_PATH = "qucosa_record.xml";
+	public static String	DEFAULT_RESOURCE_PATH	= "qucosa_record.xml";
 
-	private final Metamorph transformer;
+	private final Metamorph	transformer;
 
 	public TransformationFlow(final Metamorph transformer) {
 		this.transformer = transformer;
 	}
-	
+
 	public String applyRecord(final String record) {
-		
+
 		StringReader opener = new StringReader();
-		
+
 		return apply(record, opener);
 	}
-	
+
 	public String applyResource(final String resourcePath) {
-		
+
 		ResourceOpener opener = new ResourceOpener();
-		
+
 		return apply(resourcePath, opener);
 	}
 
 	public String apply(final String record, final DefaultObjectPipe<String, ObjectReceiver<Reader>> opener) {
-		
+
 		final String recordDummy = "record";
 
 		final QucosaReader reader = new QucosaReader(recordDummy);
@@ -61,12 +61,7 @@ public class TransformationFlow {
 		final StringWriter stringWriter = new StringWriter();
 		final ObjectJavaIoWriter<String> writer = new ObjectJavaIoWriter<>(stringWriter);
 
-		opener
-				.setReceiver(reader)
-				.setReceiver(transformer)
-				.setReceiver(unflattener)
-				.setReceiver(collapser)
-				.setReceiver(converter)
+		opener.setReceiver(reader).setReceiver(transformer).setReceiver(unflattener).setReceiver(collapser).setReceiver(converter)
 				.setReceiver(writer);
 
 		opener.process(record);
@@ -76,6 +71,13 @@ public class TransformationFlow {
 
 	public String apply() {
 		return applyResource(DEFAULT_RESOURCE_PATH);
+	}
+
+	public static TransformationFlow fromString(final String morphScriptString) throws FileNotFoundException {
+		final java.io.StringReader stringReader = new java.io.StringReader(morphScriptString);
+		final Metamorph transformer = new Metamorph(stringReader);
+
+		return new TransformationFlow(transformer);
 	}
 
 	public static TransformationFlow fromFile(final File file) throws FileNotFoundException {
@@ -93,13 +95,9 @@ public class TransformationFlow {
 	}
 
 	public static TransformationFlow fromTransformations(List<Transformation> transformations) throws IOException, DMPConverterException {
-		final File file = new MorphScriptBuilder().apply(transformations).toFile();
 
-		return fromFile(file);
-	}
+		final String morphScriptString = new MorphScriptBuilder().apply(transformations).toString();
 
-	public static void main(String[] args) {
-		TransformationFlow t = TransformationFlow.fromFile("qucosa-morph.xml");
-		System.out.println(t.apply());
+		return fromString(morphScriptString);
 	}
 }
