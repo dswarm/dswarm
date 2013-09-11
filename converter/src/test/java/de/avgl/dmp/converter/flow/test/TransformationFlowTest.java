@@ -41,16 +41,4 @@ public class TransformationFlowTest {
 
 		assertEquals(expected, actual);
 	}
-
-	@Test
-	public void testRequestToMorph() throws Exception {
-
-		final String request = DMPUtil.getResourceAsString("complex-request.json");
-		final String expected = DMPUtil.getResourceAsString("complex-metamorph.xml");
-
-		List<Transformation> pojos = new JsonToPojoMapper().apply(request);
-		final String actual = new MorphScriptBuilder().apply(pojos).toString();
-
-		assertEquals(expected, actual);
-	}
 }
