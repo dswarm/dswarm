@@ -1,0 +1,23 @@
+<div ng-show="component">
+
+    <span>Function: {{component.name}}</span>
+    <div class="functionRow" ng-repeat="(key,parameter) in component.parameters">
+        <div ng-switch on="parameter.type">
+          <div ng-switch-when="repeat">
+            <div class="functionRow" ng-repeat="(key2,parameter2) in parameter.parameters">
+              <span class="functionName">{{ key2 }}</span>
+              <input type="{{parameter2.type}}" ng-model="parameter2.data">
+            </div>
+          </div>
+          <div ng-switch-default>
+            <span class="functionName">{{ key }}</span>
+            <input type="{{parameter.type}}" ng-model="parameter.data">
+          </div>
+        </div>
+
+    </div>
+
+    <input type="button" value="save" ng-click="onSaveClick()">
+
+</div>
+

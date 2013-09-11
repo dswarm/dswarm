@@ -1,0 +1,89 @@
+{
+  "transformations": [
+    {
+      "id": "con_124",
+      "name": "Publisher Mapping",
+      "components": [
+        {
+          "componentType": "fun",
+          "payload": {
+            "name": "trim",
+            "dsl": "metafacture",
+            "reference": "trim"
+          },
+          "id": "con_124:fun_1"
+        },
+        {
+          "componentType": "fun",
+          "payload": {
+            "name": "unique",
+            "dsl": "metafacture",
+            "reference": "unique"
+          },
+          "id": "con_124:fun_2"
+        },
+        {
+          "componentType": "fun",
+          "payload": {
+            "name": "replace",
+            "dsl": "metafacture",
+            "reference": "replace",
+            "parameters": {
+              "pattern": {
+                "type": "regexp",
+                "data": "::"
+              },
+              "with": {
+                "type": "text",
+                "data": "?"
+              }
+            }
+          },
+          "id": "con_124:fun_3"
+        },
+        {
+          "componentType": "fun",
+          "payload": {
+            "name": "lookup",
+            "dsl": "metafacture",
+            "reference": "lookup",
+            "parameters": {
+              "source": {
+                "type": "text",
+                "data": "050m"
+              },
+              "entry": {
+                "repeat": true,
+                "parameters": {
+                  "name": {
+                    "type": "text",
+                    "data": "entry name"
+                  },
+                  "value": {
+                    "type": "text",
+                    "data": "entry value"
+                  }
+                }
+              }
+            }
+          },
+          "id": "con_124:fun_4"
+        }
+      ],
+      "source": {
+        "componentType": "source",
+        "payload": {
+          "name": "dc:publisher",
+          "show": true
+        }
+      },
+      "target": {
+        "componentType": "target",
+        "payload": {
+          "name": "dc:publisher",
+          "show": true
+        }
+      }
+    }
+  ]
+}

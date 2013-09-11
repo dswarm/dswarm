@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>de.avgl.dmp</groupId>
+		<artifactId>dmp</artifactId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
+	<groupId>de.avgl.dmp</groupId>
+	<artifactId>converter</artifactId>
+	<version>0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<url>http://avantgarde-labs.de</url>
+	<name>DMP - Jobscript Converter</name>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>de.avgl.dmp</groupId>
+			<artifactId>init</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>de.avgl.dmp</groupId>
+			<artifactId>persistence</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.culturegraph</groupId>
+			<artifactId>metafacture-core</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+	</dependencies>
+</project>
