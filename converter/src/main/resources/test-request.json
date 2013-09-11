@@ -1,0 +1,127 @@
+{
+  "transformations": [
+    {
+      "id": "con_124",
+      "name": "Subject Mapping",
+      "components": [
+        {
+          "componentType": "fun",
+          "payload": {
+            "name": "trim",
+            "dsl": "metafacture",
+            "reference": "trim"
+          },
+          "id": "con_124:fun_1"
+        },
+        {
+          "componentType": "fun",
+          "payload": {
+            "name": "replace",
+            "dsl": "metafacture",
+            "reference": "replace",
+            "parameters": {
+              "pattern": {
+                "type": "regexp",
+                "data": "ddc:020"
+              },
+              "with": {
+                "type": "text",
+                "data": "Hier war mal DDC020"
+              }
+            }
+          },
+          "id": "con_124:fun_2"
+        },
+        {
+          "componentType": "fun",
+          "payload": {
+            "name": "replace",
+            "dsl": "metafacture",
+            "reference": "replace",
+            "parameters": {
+              "pattern": {
+                "type": "regexp",
+                "data": "SLUB"
+              },
+              "with": {
+                "type": "text",
+                "data": "Sächsische Landesbibliothek – Staats- und Universitätsbibliothek Dresden"
+              }
+            }
+          },
+          "id": "con_124:fun_3"
+        },
+        {
+          "componentType": "fun",
+          "payload": {
+            "name": "replace",
+            "dsl": "metafacture",
+            "reference": "replace",
+            "parameters": {
+              "pattern": {
+                "type": "regexp",
+                "data": "Saxony"
+              },
+              "with": {
+                "type": "text",
+                "data": "Sachsen"
+              }
+            }
+          },
+          "id": "con_124:fun_4"
+        },
+        {
+          "componentType": "fun",
+          "payload": {
+            "name": "blacklist",
+            "dsl": "metafacture",
+            "reference": "blacklist",
+            "parameters": {
+              "entry": {
+                "repeat": true,
+                "parameters": {
+                  "name": {
+                    "type": "text",
+                    "data": "rvk:--"
+                  },
+                  "value": {
+                    "type": "text"
+                  }
+                }
+              }
+            }
+          },
+          "id": "con_124:fun_5"
+        },
+        {
+          "componentType": "fun",
+          "payload": {
+            "name": "unique",
+            "dsl": "metafacture",
+            "reference": "unique"
+          },
+          "id": "con_124:fun_6"
+        }
+      ],
+      "source": {
+        "componentType": "source",
+        "id": "con_124:source",
+        "payload": {
+          "name": "metadata.oai_dc:dc.dc:subject",
+          "show": true
+        }
+      },
+      "target": {
+        "componentType": "target",
+        "id": "con_124:target",
+        "payload": {
+          "name": "dc:subject",
+          "show": true
+        }
+      }
+    }
+  ]
+}
+
+
+
