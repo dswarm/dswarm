@@ -22,7 +22,7 @@ import de.avgl.dmp.converter.morph.MorphScriptBuilder;
 import de.avgl.dmp.converter.pipe.StreamJsonCollapser;
 import de.avgl.dmp.converter.pipe.StreamUnflattener;
 import de.avgl.dmp.converter.reader.QucosaReader;
-import de.avgl.dmp.persistence.model.Transformation;
+import de.avgl.dmp.persistence.model.transformation.Transformation;
 
 public class TransformationFlow {
 

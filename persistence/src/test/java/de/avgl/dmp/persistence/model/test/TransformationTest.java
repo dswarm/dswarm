@@ -3,6 +3,7 @@ package de.avgl.dmp.persistence.model.test;
 import java.util.List;
 
 import com.google.common.collect.Lists;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -10,11 +11,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 
-import de.avgl.dmp.persistence.model.Component;
-import de.avgl.dmp.persistence.model.ComponentType;
-import de.avgl.dmp.persistence.model.Connection;
-import de.avgl.dmp.persistence.model.ConnectionType;
-import de.avgl.dmp.persistence.model.Transformation;
+import de.avgl.dmp.persistence.model.transformation.Component;
+import de.avgl.dmp.persistence.model.transformation.ComponentType;
+import de.avgl.dmp.persistence.model.transformation.Connection;
+import de.avgl.dmp.persistence.model.transformation.ConnectionType;
+import de.avgl.dmp.persistence.model.transformation.Transformation;
 
 public class TransformationTest {
 

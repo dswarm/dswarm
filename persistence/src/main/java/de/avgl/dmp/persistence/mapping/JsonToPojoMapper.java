@@ -5,8 +5,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import com.google.common.collect.ImmutableList;
+
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.*;
+import de.avgl.dmp.persistence.model.transformation.Component;
+import de.avgl.dmp.persistence.model.transformation.ComponentType;
+import de.avgl.dmp.persistence.model.transformation.Parameter;
+import de.avgl.dmp.persistence.model.transformation.Payload;
+import de.avgl.dmp.persistence.model.transformation.Transformation;
 
 import java.io.IOException;
 import java.util.HashMap;

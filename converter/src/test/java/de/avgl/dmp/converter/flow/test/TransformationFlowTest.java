@@ -14,7 +14,7 @@ import org.junit.Test;
 import de.avgl.dmp.converter.flow.TransformationFlow;
 import de.avgl.dmp.init.util.DMPUtil;
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
-import de.avgl.dmp.persistence.model.Transformation;
+import de.avgl.dmp.persistence.model.transformation.Transformation;
 
 public class TransformationFlowTest {
 

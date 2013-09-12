@@ -1,4 +1,4 @@
-package de.avgl.dmp.persistence.model;
+package de.avgl.dmp.persistence.model.transformation;
 
 import java.util.List;
 import java.util.Set;

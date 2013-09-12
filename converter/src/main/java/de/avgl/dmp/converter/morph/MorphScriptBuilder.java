@@ -31,9 +31,9 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 
 import de.avgl.dmp.converter.DMPConverterException;
-import de.avgl.dmp.persistence.model.Component;
-import de.avgl.dmp.persistence.model.Parameter;
-import de.avgl.dmp.persistence.model.Transformation;
+import de.avgl.dmp.persistence.model.transformation.Component;
+import de.avgl.dmp.persistence.model.transformation.Parameter;
+import de.avgl.dmp.persistence.model.transformation.Transformation;
 
 
 public class MorphScriptBuilder {

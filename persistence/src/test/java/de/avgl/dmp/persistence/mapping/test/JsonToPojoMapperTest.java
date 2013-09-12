@@ -12,11 +12,11 @@ import com.google.common.collect.Lists;
 import com.google.common.io.ByteStreams;
 
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
-import de.avgl.dmp.persistence.model.Component;
-import de.avgl.dmp.persistence.model.ComponentType;
-import de.avgl.dmp.persistence.model.Parameter;
-import de.avgl.dmp.persistence.model.Payload;
-import de.avgl.dmp.persistence.model.Transformation;
+import de.avgl.dmp.persistence.model.transformation.Component;
+import de.avgl.dmp.persistence.model.transformation.ComponentType;
+import de.avgl.dmp.persistence.model.transformation.Parameter;
+import de.avgl.dmp.persistence.model.transformation.Payload;
+import de.avgl.dmp.persistence.model.transformation.Transformation;
 
 public class JsonToPojoMapperTest {
 

@@ -21,7 +21,7 @@ import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.TransformationFlow;
 import de.avgl.dmp.converter.morph.MorphScriptBuilder;
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
-import de.avgl.dmp.persistence.model.Transformation;
+import de.avgl.dmp.persistence.model.transformation.Transformation;
 
 @Path("transformations")
 public class TransformationsResource {
