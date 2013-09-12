@@ -51,14 +51,6 @@
 		<apache.commons.version>3.1</apache.commons.version>
 	</properties>
 
-	<!--repositories>
-		<repository>
-			<id>nexus</id>
-			<name>Avantgarde Labs Internal Maven Repository</name>
-			<url>http://achvcontes01.avantgarde-labs.de:8082/nexus/content/groups/public</url>
-		</repository>
-	</repositories-->
-
 	<build>
 
 		<pluginManagement>
@@ -391,19 +383,6 @@
 	</reporting>
 
 	<url>http://avantgarde-labs.de</url>
-
-	<distributionManagement>
-		<repository>
-			<id>deployment</id>
-			<name>Internal Releases</name>
-			<url>http://192.168.178.167:8081/nexus/content/repositories/releases/</url>
-		</repository>
-		<snapshotRepository>
-			<id>deployment</id>
-			<name>Internal Releases</name>
-			<url>http://192.168.178.167:8081/nexus/content/repositories/snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
 
 	<profiles>
 		<profile>
