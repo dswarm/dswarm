@@ -1,4 +1,4 @@
-package de.avgl.dmp.persistence.model.test;
+package de.avgl.dmp.persistence.model.transformation.test;
 
 import java.util.List;
 
