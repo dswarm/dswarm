@@ -390,6 +390,9 @@
 			<id>JENKINS</id>
 			<properties>
 				<env>jenkins</env>
+				<rdb.url>jdbc:hsqldb:file:target/hsql/dmpdb;hsqldb.lock_file=false</rdb.url>
+				<rdb.username>SA</rdb.username>
+				<rdb.password></rdb.password>
 			</properties>
 		</profile>
 		<profile>
