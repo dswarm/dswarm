@@ -17,6 +17,11 @@
 
 	<properties>
 		<project.root>${basedir}/..</project.root>
+		<hsqldb.version>2.3.0</hsqldb.version>
+		<hibernate-entitymanager.version>4.2.5.Final</hibernate-entitymanager.version>
+		<hibernate-validator.version>5.0.1.Final</hibernate-validator.version>
+		<hibernate-ehcache.version>4.2.5.Final</hibernate-ehcache.version>
+		<ehcache.version>2.7.2</ehcache.version>
 	</properties>
 
 	<build>
@@ -36,6 +41,37 @@
 			<groupId>de.avgl.dmp</groupId>
 			<artifactId>init</artifactId>
 			<version>0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<version>${hsqldb.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>${hibernate-entitymanager.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>${hibernate-validator.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-ehcache</artifactId>
+			<version>${hibernate-ehcache.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>net.sf.ehcache</groupId>
+					<artifactId>ehcache-core</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
+			<version>${ehcache.version}</version>
 		</dependency>
 	</dependencies>
 </project>
