@@ -386,6 +386,12 @@
 
 	<profiles>
 		<profile>
+			<id>JENKINS</id>
+			<properties>
+				<env>jenkins</env>
+			</properties>
+		</profile>
+		<profile>
 			<id>DEV</id>
 			<repositories>
 				<repository>
