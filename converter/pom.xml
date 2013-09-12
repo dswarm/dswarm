@@ -13,7 +13,7 @@
 	<version>0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<url>http://avantgarde-labs.de</url>
-	<name>DMP - Jobscript Converter</name>
+	<name>DMP - Transformations Converter</name>
 
 	<build>
 		<resources>

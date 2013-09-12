@@ -1,11 +1,13 @@
 package de.avgl.dmp.controller;
 
+import de.avgl.dmp.init.DMPException;
+
 /**
  * The exception class for DMP controller exceptions.<br>
  * 
  */
 
-public class DMPControllerException extends Exception {
+public class DMPControllerException extends DMPException {
 
 	/**
 	 * 
