@@ -9,7 +9,6 @@
 	<name>Data Management Platform</name>
 
 	<modules>
-		<module>web</module>
 		<module>init</module>
 		<module>controller</module>
 		<module>converter</module>
@@ -52,13 +51,13 @@
 		<apache.commons.version>3.1</apache.commons.version>
 	</properties>
 
-	<repositories>
+	<!--repositories>
 		<repository>
 			<id>nexus</id>
 			<name>Avantgarde Labs Internal Maven Repository</name>
 			<url>http://achvcontes01.avantgarde-labs.de:8082/nexus/content/groups/public</url>
 		</repository>
-	</repositories>
+	</repositories-->
 
 	<build>
 
