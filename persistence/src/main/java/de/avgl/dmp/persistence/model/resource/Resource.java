@@ -14,6 +14,7 @@ import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -23,6 +24,7 @@ import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.init.util.DMPUtil;
 import de.avgl.dmp.persistence.model.DMPJPAObject;
 
+@XmlRootElement
 @Entity
 @Table(name = "RESOURCE")
 public class Resource extends DMPJPAObject {

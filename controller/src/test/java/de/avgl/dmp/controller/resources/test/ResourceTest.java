@@ -5,6 +5,7 @@ import javax.ws.rs.client.WebTarget;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.client.JerseyClientBuilder;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.junit.After;
 import org.junit.Before;
 
@@ -31,7 +32,8 @@ public class ResourceTest {
 		server = main.startServer();
 		// create the client
 		client = JerseyClientBuilder.newBuilder()
-				// .register(JacksonJaxbJsonProvider.class)
+		// .register(JacksonJaxbJsonProvider.class)
+				.register(MultiPartFeature.class)
 				.build();
 
 		target = client.target(main.getBaseUri());
