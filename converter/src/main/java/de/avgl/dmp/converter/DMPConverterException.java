@@ -1,11 +1,13 @@
 package de.avgl.dmp.converter;
 
+import de.avgl.dmp.init.DMPException;
+
 /**
  * The exception class for DMP converter exceptions.<br>
  * 
  */
 
-public class DMPConverterException extends Exception {
+public class DMPConverterException extends DMPException {
 
 	/**
 	 * 

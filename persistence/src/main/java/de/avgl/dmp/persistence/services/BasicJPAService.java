@@ -6,9 +6,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
+import de.avgl.dmp.persistence.model.DMPJPAObject;
 import de.avgl.dmp.persistence.services.utils.JPAUtil;
 
-public abstract class BasicJPAService<POJOCLASS> {
+public abstract class BasicJPAService<POJOCLASS extends DMPJPAObject> {
 
 	private final Class<POJOCLASS>	clasz;
 	private final String			className;
@@ -51,6 +52,55 @@ public abstract class BasicJPAService<POJOCLASS> {
 
 		return object;
 	}
+	
+	/**
+	 * Updates a given instance of the specific class and writes this object persistent to the DB afterwards.<br>
+	 * Created by: tgaengler
+	 * 
+	 * @param object the to be updated instance of the specific class
+	 */
+	public POJOCLASS updateObjectTransactional(final POJOCLASS object) throws DMPPersistenceException {
+
+		final EntityManager entityManager = JPAUtil.getEntityManager();
+		final POJOCLASS updateObject = getObject(object, entityManager);
+
+		JPAUtil.beginNewTransaction(entityManager);
+		updateObjectInternal(object, updateObject, entityManager);
+		entityManager.merge(updateObject);
+		JPAUtil.endTransaction(entityManager);
+		
+		return updateObject;
+	}
+
+	/**
+	 * Updates a given instance of the specific class without writing this object persistent right now, i.e., the process that calls
+	 * this method needs to ensure that the update will be written persistent.<br>
+	 * Created by: tgaengler
+	 * 
+	 * @param object the to be updated instance of the specific class
+	 */
+	public POJOCLASS updateObject(final POJOCLASS object) throws DMPPersistenceException {
+
+		final EntityManager entityManager = JPAUtil.getEntityManager();
+		final POJOCLASS updateObject = getObject(object, entityManager);
+
+		updateObjectInternal(object, updateObject, entityManager);
+		
+		return updateObject;
+	}
+
+	/**
+	 * The internal update method for the specific class that will be called from {@link BasicJPAService#updateObject(POJOCLASS)} and
+	 * {@link BasicJPAService#updateObjectTransactional(POJOCLASS)}, i.e., this method includes the real update logic of this service.<br>
+	 * Created by: tgaengler
+	 * 
+	 * @param object the instance of the specific class with the update data
+	 * @param updateObject the to be updated instance of the specific class
+	 * @param entityManager the {@link EntityManager} instance for managing the update process
+	 * @throws DMPPersistenceException
+	 */
+	protected abstract void updateObjectInternal(final POJOCLASS object, final POJOCLASS updateObject, final EntityManager entityManager)
+			throws DMPPersistenceException;
 
 	/**
 	 * Generic 'find all instances of a specific class' method.<br>
@@ -74,7 +124,7 @@ public abstract class BasicJPAService<POJOCLASS> {
 	 * @param id the idenfier of the requested instance of a specific class
 	 * @return the instance for the identifier of the specific class
 	 */
-	public POJOCLASS getObject(final String id) {
+	public POJOCLASS getObject(final Long id) {
 
 		final EntityManager entityManager = JPAUtil.getEntityManager();
 
@@ -105,4 +155,28 @@ public abstract class BasicJPAService<POJOCLASS> {
 
 	protected abstract void prepareObjectForRemoval(final POJOCLASS object);
 
+	/**
+	 * Tries to retrieve a {@link EDObject} instance or will create a new one, if the identifier is null.<br>
+	 * Created by: tgaengler
+	 * 
+	 * @param edObject the {@link EDObject} instance that should be fetched from the DB
+	 * @param entityManager the {@link EntityManager} instance that should handle this retrieval process
+	 * @return the requested {@link EDObject} instance fresh from the DB or a new {@link EDObject} instance
+	 * @throws Exception
+	 */
+	private POJOCLASS getObject(final POJOCLASS object, final EntityManager entityManager) throws DMPPersistenceException {
+
+		final POJOCLASS updateObject;
+
+		if (object.getId() == null) {
+
+			updateObject = this.createObject();
+
+		} else {
+
+			updateObject = entityManager.find(clasz, object.getId());
+		}
+
+		return updateObject;
+	}
 }

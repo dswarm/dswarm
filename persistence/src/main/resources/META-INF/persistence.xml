@@ -8,6 +8,7 @@ http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
 		
 		<!-- classes -->
 		<class>de.avgl.dmp.persistence.model.resource.Resource</class>
+		<class>de.avgl.dmp.persistence.model.resource.Configuration</class>
 
 		<!-- if you want to selectively cache entities using the @Cacheable annotation -->
 		<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>

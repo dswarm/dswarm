@@ -1,24 +1,23 @@
 package de.avgl.dmp.persistence.mapping;
 
 
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Maps;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
-import de.avgl.dmp.persistence.model.*;
 import de.avgl.dmp.persistence.model.transformation.Component;
 import de.avgl.dmp.persistence.model.transformation.ComponentType;
 import de.avgl.dmp.persistence.model.transformation.Parameter;
 import de.avgl.dmp.persistence.model.transformation.Payload;
 import de.avgl.dmp.persistence.model.transformation.Transformation;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 public class JsonToPojoMapper {
 
@@ -39,7 +38,7 @@ public class JsonToPojoMapper {
 		}
 
 		Iterator<String> jsParameterFields = root.fieldNames();
-		Map<String, Parameter> parameters = new HashMap<>();
+		Map<String, Parameter> parameters = Maps.newHashMap();
 
 
 		while (jsParameterFields.hasNext()) {
