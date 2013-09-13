@@ -47,6 +47,7 @@
 		<commons.logging.version>1.1.3</commons.logging.version>
 		<maxallowedviolations>7000</maxallowedviolations>
 		<google.guava.version>14.0.1</google.guava.version>
+		<google.collections.version>1.0</google.collections.version>
 		<jackson.version>2.2.3</jackson.version>
 		<apache.commons.version>3.1</apache.commons.version>
 	</properties>
@@ -200,7 +201,7 @@
 							<version>${google.collections.version}</version>
 						</dependency>
 						<dependency>
-							<groupId>com.avgl.cdc</groupId>
+							<groupId>de.avgl.dmp</groupId>
 							<artifactId>init</artifactId>
 							<version>0.1-SNAPSHOT</version>
 						</dependency>
@@ -231,7 +232,7 @@
 					</configuration>
 					<dependencies>
 						<dependency>
-							<groupId>com.avgl.cdc</groupId>
+							<groupId>de.avgl.dmp</groupId>
 							<artifactId>init</artifactId>
 							<version>0.1-SNAPSHOT</version>
 						</dependency>
@@ -247,7 +248,7 @@
 					</configuration>
 					<dependencies>
 						<dependency>
-							<groupId>com.avgl.cdc</groupId>
+							<groupId>de.avgl.dmp</groupId>
 							<artifactId>init</artifactId>
 							<version>0.1-SNAPSHOT</version>
 						</dependency>
@@ -396,12 +397,12 @@
 		<repository>
 			<id>deployment</id>
 			<name>Internal Releases</name>
-			<url>http://192.168.178.167:8081/nexus/content/repositories/releases/</url>
+			<url>http://achvcontes01.avantgarde-labs.de:8082/nexus/content/repositories/releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>deployment</id>
 			<name>Internal Releases</name>
-			<url>http://192.168.178.167:8081/nexus/content/repositories/snapshots/</url>
+			<url>http://achvcontes01.avantgarde-labs.de:8082/nexus/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
@@ -434,6 +435,9 @@
 			</pluginRepositories>
 			<properties>
 				<env>dev</env>
+				<rdb.url>jdbc:hsqldb:file:target/hsql/dmpdb;hsqldb.lock_file=false</rdb.url>
+				<rdb.username>SA</rdb.username>
+				<rdb.password></rdb.password>
 			</properties>
 		</profile>
 	</profiles>

@@ -1,33 +1,57 @@
 package de.avgl.dmp.converter.flow;
 
-import de.avgl.dmp.converter.pipe.StreamJsonCollapser;
-import de.avgl.dmp.converter.pipe.StreamUnflattener;
-import de.avgl.dmp.converter.reader.QucosaReader;
-import de.avgl.dmp.converter.resources.PojoToXMLBuilder;
-import de.avgl.dmp.converter.resources.TransformationsCoverterException;
-import de.avgl.dmp.persistence.model.Transformation;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.util.List;
+
+import org.culturegraph.mf.framework.DefaultObjectPipe;
+import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.stream.converter.JsonEncoder;
 import org.culturegraph.mf.stream.sink.ObjectJavaIoWriter;
 import org.culturegraph.mf.stream.source.ResourceOpener;
+import org.culturegraph.mf.stream.source.StringReader;
 
-import java.io.*;
-import java.util.List;
+import de.avgl.dmp.converter.DMPConverterException;
+import de.avgl.dmp.converter.morph.MorphScriptBuilder;
+import de.avgl.dmp.converter.pipe.StreamJsonCollapser;
+import de.avgl.dmp.converter.pipe.StreamUnflattener;
+import de.avgl.dmp.converter.reader.QucosaReader;
+import de.avgl.dmp.persistence.model.transformation.Transformation;
 
 public class TransformationFlow {
 
-	public static String DEFAULT_RECORD = "qucosa_record.xml";
+	public static String	DEFAULT_RESOURCE_PATH	= "qucosa_record.xml";
 
-	private final Metamorph transformer;
+	private final Metamorph	transformer;
 
 	public TransformationFlow(final Metamorph transformer) {
 		this.transformer = transformer;
 	}
 
-	public String apply(String record) {
+	public String applyRecord(final String record) {
+
+		StringReader opener = new StringReader();
+
+		return apply(record, opener);
+	}
+
+	public String applyResource(final String resourcePath) {
+
+		ResourceOpener opener = new ResourceOpener();
+
+		return apply(resourcePath, opener);
+	}
+
+	public String apply(final String object, final DefaultObjectPipe<String, ObjectReceiver<Reader>> opener) {
+
 		final String recordDummy = "record";
 
-		final ResourceOpener opener = new ResourceOpener();
 		final QucosaReader reader = new QucosaReader(recordDummy);
 
 		final StreamUnflattener unflattener = new StreamUnflattener(recordDummy);
@@ -37,45 +61,47 @@ public class TransformationFlow {
 		final StringWriter stringWriter = new StringWriter();
 		final ObjectJavaIoWriter<String> writer = new ObjectJavaIoWriter<>(stringWriter);
 
-		opener
-				.setReceiver(reader)
-				.setReceiver(transformer)
-				.setReceiver(unflattener)
-				.setReceiver(collapser)
-				.setReceiver(converter)
-				.setReceiver(writer);
+		opener.setReceiver(reader)
+			.setReceiver(transformer)
+			.setReceiver(unflattener)
+			.setReceiver(collapser)
+			.setReceiver(converter)
+			.setReceiver(writer);
 
-		opener.process(record);
+		opener.process(object);
 
 		return stringWriter.toString();
 	}
 
 	public String apply() {
-		return apply(DEFAULT_RECORD);
+		return applyResource(DEFAULT_RESOURCE_PATH);
 	}
 
-	public static TransformationFlow from(final File file) throws FileNotFoundException {
+	public static TransformationFlow fromString(final String morphScriptString) throws FileNotFoundException {
+		final java.io.StringReader stringReader = new java.io.StringReader(morphScriptString);
+		final Metamorph transformer = new Metamorph(stringReader);
+
+		return new TransformationFlow(transformer);
+	}
+
+	public static TransformationFlow fromFile(final File file) throws FileNotFoundException {
 		final FileInputStream is = new FileInputStream(file);
 		final Metamorph transformer = new Metamorph(is);
 
 		return new TransformationFlow(transformer);
 	}
 
-	public static TransformationFlow from(String resourcePath) {
+	public static TransformationFlow fromFile(String resourcePath) {
 		final InputStream morph = TransformationFlow.class.getClassLoader().getResourceAsStream(resourcePath);
 		final Metamorph transformer = new Metamorph(morph);
 
 		return new TransformationFlow(transformer);
 	}
 
-	public static TransformationFlow from(List<Transformation> transformations) throws IOException, TransformationsCoverterException {
-		final File file = new PojoToXMLBuilder().apply(transformations).toFile();
+	public static TransformationFlow fromTransformations(List<Transformation> transformations) throws IOException, DMPConverterException {
 
-		return from(file);
-	}
+		final String morphScriptString = new MorphScriptBuilder().apply(transformations).toString();
 
-	public static void main(String[] args) {
-		TransformationFlow t = TransformationFlow.from("qucosa-morph.xml");
-		System.out.println(t.apply());
+		return fromString(morphScriptString);
 	}
 }

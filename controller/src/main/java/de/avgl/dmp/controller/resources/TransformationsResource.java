@@ -1,21 +1,27 @@
 package de.avgl.dmp.controller.resources;
 
+import java.io.IOException;
+import java.util.List;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.OPTIONS;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import com.google.common.net.HttpHeaders;
-import de.avgl.dmp.controller.mapping.JsonToPojoMapper;
-import de.avgl.dmp.converter.flow.TransformationFlow;
-import de.avgl.dmp.converter.resources.PojoToXMLBuilder;
-import de.avgl.dmp.converter.resources.TransformationsCoverterException;
-import de.avgl.dmp.persistence.model.Transformation;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.util.List;
+import de.avgl.dmp.converter.DMPConverterException;
+import de.avgl.dmp.converter.flow.TransformationFlow;
+import de.avgl.dmp.converter.morph.MorphScriptBuilder;
+import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
+import de.avgl.dmp.persistence.model.transformation.Transformation;
 
 @Path("transformations")
 public class TransformationsResource {
@@ -52,10 +58,10 @@ public class TransformationsResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_XML)
-	public Response runToXML(final String jsonObjectString) throws IOException, TransformationsCoverterException {
+	public Response runToXML(final String jsonObjectString) throws IOException, DMPConverterException {
 
 		final List<Transformation> pojos = new JsonToPojoMapper().apply(jsonObjectString);
-		final String xml = new PojoToXMLBuilder().apply(pojos).toString();
+		final String xml = new MorphScriptBuilder().apply(pojos).toString();
 
 		return buildResponse(xml);
 	}
@@ -63,12 +69,12 @@ public class TransformationsResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response runWithMetamorph(final String jsonObjectString) throws IOException, TransformationsCoverterException {
+	public Response runWithMetamorph(final String jsonObjectString) throws IOException, DMPConverterException {
 
 		final List<Transformation> pojos = new JsonToPojoMapper().apply(jsonObjectString);
 
-		final TransformationFlow flow = TransformationFlow.from(pojos);
-		final String result = flow.apply(TransformationFlow.DEFAULT_RECORD);
+		final TransformationFlow flow = TransformationFlow.fromTransformations(pojos);
+		final String result = flow.applyResource(TransformationFlow.DEFAULT_RESOURCE_PATH);
 
 		return buildResponse(result);
 	}
