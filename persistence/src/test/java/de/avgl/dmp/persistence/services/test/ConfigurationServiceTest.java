@@ -32,7 +32,7 @@ public class ConfigurationServiceTest extends BasicJPAServiceTest<Configuration,
 		
 		configuration.setParameters(parameters);
 		
-		updateObject(configuration);
+		updateObjectTransactional(configuration);
 		
 		Configuration updatedConfiguration = getUpdatedObject(configuration);
 		

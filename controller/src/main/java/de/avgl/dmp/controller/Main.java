@@ -65,7 +65,9 @@ public class Main {
 		// in de.avgl.dmp.controller.resources package
 		final ResourceConfig rc = new ResourceConfig()
 		// .register(JacksonJaxbJsonProvider.class)
-				.packages("de.avgl.dmp.controller.resources").register(MultiPartFeature.class);
+				.packages("de.avgl.dmp.controller.resources")
+				.register(MultiPartFeature.class)
+				.register(de.avgl.dmp.controller.providers.ExceptionHandler.class);
 
 		// create and start a new instance of grizzly http server
 		// exposing the Jersey application at BASE_URI

@@ -6,12 +6,15 @@ import java.io.InputStream;
 import java.nio.file.Files;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -60,11 +63,40 @@ public class ResourcesResource {
 		return buildResponse(resourceJSON);
 	}
 
+	@GET
+	@Path("/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getResource(@PathParam("id") Long id) throws DMPControllerException {
+		
+		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
+		
+		final Resource resource = resourceService.getObject(id);
+		
+		if(resource == null) {
+			
+			LOG.debug("couldn't find resource");
+			
+			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		}
+		
+		String resourceJSON = null;
+
+		try {
+
+			resourceJSON = DMPUtil.getJSONObjectMapper().writeValueAsString(resource);
+		} catch (final JsonProcessingException e) {
+
+			throw new DMPControllerException("couldn't transform resource object to JSON string.\n" + e.getMessage());
+		}
+
+		return buildResponse(resourceJSON);
+	}
+
 	@OPTIONS
 	public Response getOptions() {
 
 		return Response.ok().header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
-				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "POST, OPTIONS, HEAD")
+				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, POST, OPTIONS, HEAD")
 				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Accept, Origin, X-Requested-With, Content-Type").build();
 	}
 
@@ -120,7 +152,7 @@ public class ResourcesResource {
 
 		try {
 
-			resourceService.updateObject(resource);
+			resourceService.updateObjectTransactional(resource);
 		} catch (final DMPPersistenceException e) {
 
 			LOG.debug("something went wrong while resource updating");

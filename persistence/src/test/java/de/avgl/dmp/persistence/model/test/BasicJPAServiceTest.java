@@ -87,7 +87,7 @@ public abstract class BasicJPAServiceTest<POJOCLASS extends DMPJPAObject, JPASER
 		return object;
 	}
 
-	protected POJOCLASS updateObject(final POJOCLASS object) {
+	protected POJOCLASS updateObjectTransactional(final POJOCLASS object) {
 
 		POJOCLASS updatedObject = null;
 		

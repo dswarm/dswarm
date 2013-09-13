@@ -31,7 +31,7 @@ public class ResourceServiceTest extends BasicJPAServiceTest<Resource, ResourceS
 
 		Resource resource = createSimpleResource();
 
-		updateObject(resource);
+		updateObjectTransactional(resource);
 
 		Resource updatedResource = getUpdatedObject(resource);
 
@@ -79,7 +79,7 @@ public class ResourceServiceTest extends BasicJPAServiceTest<Resource, ResourceS
 
 		// update resource
 
-		updateObject(resource);
+		updateObjectTransactional(resource);
 
 		final Resource updatedResource = getUpdatedObject(resource);
 
@@ -101,7 +101,7 @@ public class ResourceServiceTest extends BasicJPAServiceTest<Resource, ResourceS
 
 		// update resource
 
-		updateObject(updatedResource);
+		updateObjectTransactional(updatedResource);
 
 		final Resource updatedResource2 = getUpdatedObject(updatedResource);
 
@@ -138,7 +138,7 @@ public class ResourceServiceTest extends BasicJPAServiceTest<Resource, ResourceS
 
 		// update resource
 
-		updateObject(updatedResource2);
+		updateObjectTransactional(updatedResource2);
 
 		final Resource updatedResource3 = getUpdatedObject(updatedResource2);
 

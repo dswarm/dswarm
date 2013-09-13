@@ -8,6 +8,7 @@ import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +28,9 @@ public class DMPUtil {
 	static {
 		mapper = new ObjectMapper();
 		final JaxbAnnotationModule module = new JaxbAnnotationModule();
-		mapper.registerModule(module);
+		mapper.registerModule(module)
+			.setSerializationInclusion(Include.NON_NULL)
+			.setSerializationInclusion(Include.NON_EMPTY);
 	}
 
 	public static String getResourceAsString(String resource) throws IOException {

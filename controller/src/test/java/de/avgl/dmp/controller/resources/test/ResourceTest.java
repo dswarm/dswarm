@@ -34,6 +34,7 @@ public class ResourceTest {
 		client = JerseyClientBuilder.newBuilder()
 		// .register(JacksonJaxbJsonProvider.class)
 				.register(MultiPartFeature.class)
+				.register(de.avgl.dmp.controller.providers.ExceptionHandler.class)
 				.build();
 
 		target = client.target(main.getBaseUri());
