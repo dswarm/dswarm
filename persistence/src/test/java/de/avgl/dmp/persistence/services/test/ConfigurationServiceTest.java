@@ -25,7 +25,6 @@ public class ConfigurationServiceTest extends BasicJPAServiceTest<Configuration,
 		
 		Configuration configuration = createObject();
 		
-		
 		final ObjectNode parameters = new ObjectNode(DMPUtil.getJSONFactory());
 		final String parameterKey = "fileseparator";
 		final String parameterValue = ";";
