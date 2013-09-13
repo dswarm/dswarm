@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -63,6 +64,41 @@ public class ResourcesResource {
 		return buildResponse(resourceJSON);
 	}
 
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getResources() throws DMPControllerException {
+		
+		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
+		
+		final List<Resource> resources = resourceService.getObjects();
+		
+		if(resources == null) {
+			
+			LOG.debug("couldn't find resource");
+			
+			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		}
+		
+		if(resources.isEmpty()) {
+			
+			LOG.debug("there are no resources");
+			
+			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		}
+		
+		String resourcesJSON = null;
+
+		try {
+
+			resourcesJSON = DMPUtil.getJSONObjectMapper().writeValueAsString(resources);
+		} catch (final JsonProcessingException e) {
+
+			throw new DMPControllerException("couldn't transform resources list object to JSON string.\n" + e.getMessage());
+		}
+
+		return buildResponse(resourcesJSON);
+	}
+	
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
