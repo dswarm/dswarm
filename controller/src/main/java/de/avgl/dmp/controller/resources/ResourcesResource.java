@@ -3,6 +3,7 @@ package de.avgl.dmp.controller.resources;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.nio.file.Files;
 import java.util.List;
 
@@ -13,9 +14,11 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -38,6 +41,9 @@ public class ResourcesResource {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ResourcesResource.class);
 
+	@Context
+	UriInfo uri;
+	
 	private Response buildResponse(final String responseContent) {
 
 		return Response.ok(responseContent).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
@@ -60,8 +66,11 @@ public class ResourcesResource {
 
 			throw new DMPControllerException("couldn't transform resource object to JSON string");
 		}
-
-		return buildResponse(resourceJSON);
+		
+		URI baseURI = uri.getRequestUri();
+		URI resourceURI = URI.create(baseURI.toString() + "/" + resource.getId());
+		
+		return Response.created(resourceURI).entity(resourceJSON).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 	}
 
 	@GET
