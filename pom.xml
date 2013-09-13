@@ -61,6 +61,7 @@
 					<artifactId>cobertura-maven-plugin</artifactId>
 					<version>${cobertura-maven-plugin.version}</version>
 					<configuration>
+						<format>xml</format>
 						<check>
 							<branchRate>80</branchRate>
 							<lineRate>80</lineRate>
