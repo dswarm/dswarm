@@ -1,12 +1,12 @@
 package de.avgl.dmp.converter.util;
 
 import com.google.common.base.Function;
+import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.annotation.Nullable;
-import java.util.Objects;
 
 /**
  * Static class (object), that implements convenience methods for working
@@ -47,7 +47,7 @@ public class NodeListOps {
 	 */
 	public static Optional<Node> getElementByTagName(Iterable<Node> nodes, String tag) {
 		for (Node node : nodes) {
-			if (Objects.equals(node.getNodeName(), tag)) {
+			if (Objects.equal(node.getNodeName(), tag)) {
 				return Optional.of(node);
 			}
 		}

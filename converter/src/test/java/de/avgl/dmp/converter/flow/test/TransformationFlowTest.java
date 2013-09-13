@@ -67,7 +67,7 @@ public class TransformationFlowTest {
 		reader.setHasHeader(true);
 		final JsonEncoder converter = new JsonEncoder();
 		final StringWriter stringWriter = new StringWriter();
-		final ObjectJavaIoWriter<String> writer = new ObjectJavaIoWriter<>(stringWriter);
+		final ObjectJavaIoWriter<String> writer = new ObjectJavaIoWriter<String>(stringWriter);
 
 		opener.setReceiver(reader).setReceiver(converter).setReceiver(writer);
 
