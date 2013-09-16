@@ -58,9 +58,9 @@ public class ResourcesResource {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response uploadResource(@FormDataParam("file") InputStream uploadedInputStream,
-			@FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("description") String description) throws DMPControllerException {
+			@FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("name") String name, @FormDataParam("description") String description) throws DMPControllerException {
 		
-		final Resource resource = createResource(uploadedInputStream, fileDetail, description);
+		final Resource resource = createResource(uploadedInputStream, fileDetail, name, description);
 
 		String resourceJSON = null;
 
@@ -234,11 +234,9 @@ public class ResourcesResource {
 				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Accept, Origin, X-Requested-With, Content-Type").build();
 	}
 
-	private Resource createResource(final InputStream uploadInputedStream, final FormDataContentDisposition fileDetail, final String description) throws DMPControllerException {
+	private Resource createResource(final InputStream uploadInputedStream, final FormDataContentDisposition fileDetail, final String name, final String description) throws DMPControllerException {
 
-		final String fileName = fileDetail.getFileName();
-
-		final File file = DMPControllerUtils.writeToFile(uploadInputedStream, fileName, "resources");
+		final File file = DMPControllerUtils.writeToFile(uploadInputedStream, fileDetail.getFileName(), "resources");
 
 		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
 
@@ -259,7 +257,7 @@ public class ResourcesResource {
 			throw new DMPControllerException("fresh resource shouldn't be null");
 		}
 
-		resource.setName(fileName);
+		resource.setName(name);
 
 		if (description != null) {
 

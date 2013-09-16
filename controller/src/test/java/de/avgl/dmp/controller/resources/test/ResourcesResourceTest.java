@@ -295,6 +295,7 @@ public class ResourcesResourceTest extends ResourceTest {
 	private String testResourceUploadInteral() throws Exception {
 
 		final FormDataMultiPart form = new FormDataMultiPart();
+		form.field("name", resourceFile.getName());
 		form.field("filename", resourceFile.getName());
 		form.field("description", "this is a description");
 		form.bodyPart(new FileDataBodyPart("file", resourceFile, MediaType.MULTIPART_FORM_DATA_TYPE));
