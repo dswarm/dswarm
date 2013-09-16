@@ -58,9 +58,9 @@ public class ResourcesResource {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response uploadResource(@FormDataParam("file") InputStream uploadedInputStream,
-			@FormDataParam("file") FormDataContentDisposition fileDetail) throws DMPControllerException {
-
-		final Resource resource = createResource(uploadedInputStream, fileDetail);
+			@FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("description") String description) throws DMPControllerException {
+		
+		final Resource resource = createResource(uploadedInputStream, fileDetail, description);
 
 		String resourceJSON = null;
 
@@ -177,7 +177,7 @@ public class ResourcesResource {
 
 		return buildResponse(configurationsJSON);
 	}
-	
+
 	@POST
 	@Path("/{id}/configurations")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -185,16 +185,16 @@ public class ResourcesResource {
 	public Response run(@PathParam("id") Long id, final String jsonObjectString) throws DMPControllerException {
 
 		final Resource resource = getResourceInternal(id);
-		
+
 		if (resource == null) {
 
 			LOG.debug("couldn't find resource");
 
 			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 		}
-		
+
 		final Configuration configuration = addConfiguration(resource, jsonObjectString);
-		
+
 		String configurationsJSON = null;
 
 		try {
@@ -215,7 +215,7 @@ public class ResourcesResource {
 				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, POST, OPTIONS, HEAD")
 				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Accept, Origin, X-Requested-With, Content-Type").build();
 	}
-	
+
 	@OPTIONS
 	@Path("/{id}")
 	public Response getResourceOptions() {
@@ -224,7 +224,7 @@ public class ResourcesResource {
 				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, OPTIONS, HEAD")
 				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Accept, Origin, X-Requested-With, Content-Type").build();
 	}
-	
+
 	@OPTIONS
 	@Path("/{id}/configurations")
 	public Response getConfigurationsOptions() {
@@ -234,7 +234,7 @@ public class ResourcesResource {
 				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Accept, Origin, X-Requested-With, Content-Type").build();
 	}
 
-	private Resource createResource(final InputStream uploadInputedStream, final FormDataContentDisposition fileDetail) throws DMPControllerException {
+	private Resource createResource(final InputStream uploadInputedStream, final FormDataContentDisposition fileDetail, final String description) throws DMPControllerException {
 
 		final String fileName = fileDetail.getFileName();
 
@@ -260,6 +260,12 @@ public class ResourcesResource {
 		}
 
 		resource.setName(fileName);
+
+		if (description != null) {
+
+			resource.setDescription(description);
+		}
+
 		resource.setType(ResourceType.FILE);
 
 		String fileType = null;
@@ -296,77 +302,77 @@ public class ResourcesResource {
 
 		return resource;
 	}
-	
+
 	private Configuration addConfiguration(final Resource resource, final String configurationJSONString) throws DMPControllerException {
-		
+
 		Configuration configurationFromJSON = null;
-		
+
 		try {
-			
+
 			configurationFromJSON = DMPUtil.getJSONObjectMapper().readValue(configurationJSONString, Configuration.class);
 		} catch (final JsonParseException e) {
-			
+
 			LOG.debug("something went wrong while deserializing the configuration JSON string");
-			
+
 			throw new DMPControllerException("something went wrong while deserializing the configuration JSON string.\n" + e.getMessage());
 		} catch (final JsonMappingException e) {
-			
+
 			LOG.debug("something went wrong while deserializing the configuration JSON string");
-			
+
 			throw new DMPControllerException("something went wrong while deserializing the configuration JSON string.\n" + e.getMessage());
 		} catch (final IOException e) {
-			
+
 			LOG.debug("something went wrong while deserializing the configuration JSON string");
-			
+
 			throw new DMPControllerException("something went wrong while deserializing the configuration JSON string.\n" + e.getMessage());
 		}
-		
-		if(configurationFromJSON == null) {
-			
+
+		if (configurationFromJSON == null) {
+
 			throw new DMPControllerException("deserialized configuration is null");
 		}
-		
+
 		final ConfigurationService configurationService = PersistenceServices.getInstance().getConfigurationService();
-		
+
 		Configuration configuration = null;
-		
+
 		try {
-			
+
 			configuration = configurationService.createObject();
 		} catch (final DMPPersistenceException e) {
-			
+
 			LOG.debug("something went wrong while configuration creation");
 
 			throw new DMPControllerException("something went wrong while configuration creation\n" + e.getMessage());
 		}
-		
+
 		if (configuration == null) {
 
 			throw new DMPControllerException("fresh configuration shouldn't be null");
 		}
-		
+
 		configuration.setParameters(configurationFromJSON.getParameters());
 		configuration.setResource(resource);
-		
+
 		try {
-			
+
 			configurationService.updateObjectTransactional(configuration);
 		} catch (final DMPPersistenceException e) {
-			
+
 			LOG.debug("something went wrong while configuration updating");
 
 			throw new DMPControllerException("something went wrong while configuration updating\n" + e.getMessage());
 		}
-		
+
 		return configuration;
 	}
-	
+
 	private Resource getResourceInternal(final Long id) {
-		
+
 		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
 
 		final Resource resource = resourceService.getObject(id);
-		
+
 		return resource;
 	}
 }

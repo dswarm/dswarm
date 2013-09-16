@@ -296,6 +296,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final FormDataMultiPart form = new FormDataMultiPart();
 		form.field("filename", resourceFile.getName());
+		form.field("description", "this is a description");
 		form.bodyPart(new FileDataBodyPart("file", resourceFile, MediaType.MULTIPART_FORM_DATA_TYPE));
 
 		final Response response = target.path(resourceIdentifier).request(MediaType.MULTIPART_FORM_DATA_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
@@ -306,12 +307,16 @@ public class ResourcesResourceTest extends ResourceTest {
 		String responseResourceString = response.readEntity(String.class);
 
 		Assert.assertNotNull("resource shouldn't be null", responseResourceString);
+		
+		LOG.debug("created resource = '" + responseResourceString + "'");
 
 		final Resource responseResource = DMPUtil.getJSONObjectMapper().readValue(responseResourceString, Resource.class);
 
 		Assert.assertNotNull("resource shouldn't be null", responseResource);
 		Assert.assertNotNull("resource name shouldn't be null", responseResource.getName());
 		Assert.assertEquals("the resource names should be equal", expectedResource.getName(), responseResource.getName());
+		Assert.assertNotNull("resource description shouldn't be null", responseResource.getDescription());
+		Assert.assertEquals("the resource descriptions should be equal", expectedResource.getDescription(), responseResource.getDescription());
 		Assert.assertNotNull("resource type shouldn't be null", responseResource.getType());
 		Assert.assertEquals("the resource types should be equal", expectedResource.getType(), responseResource.getType());
 		Assert.assertNotNull("resource attributes shouldn't be null", responseResource.getAttributes());
