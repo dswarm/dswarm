@@ -307,8 +307,6 @@ public class ResourcesResourceTest extends ResourceTest {
 		String responseResourceString = response.readEntity(String.class);
 
 		Assert.assertNotNull("resource shouldn't be null", responseResourceString);
-		
-		LOG.debug("created resource = '" + responseResourceString + "'");
 
 		final Resource responseResource = DMPUtil.getJSONObjectMapper().readValue(responseResourceString, Resource.class);
 

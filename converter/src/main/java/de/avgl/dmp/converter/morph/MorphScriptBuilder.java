@@ -217,7 +217,7 @@ public class MorphScriptBuilder {
 		Element rules = doc.createElement("rules");
 		rootElement.appendChild(rules);
 
-		final List<String> metas = new ArrayList<>();
+		final List<String> metas = Lists.newArrayList();
 
 		for (Transformation transformation : transformations) {
 			metas.add(transformation.getName());
