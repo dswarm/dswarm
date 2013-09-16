@@ -24,7 +24,9 @@ import javax.ws.rs.core.UriInfo;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.net.HttpHeaders;
 
@@ -36,6 +38,7 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
+import de.avgl.dmp.persistence.services.ConfigurationService;
 import de.avgl.dmp.persistence.services.ResourceService;
 
 @Path("resources")
@@ -115,9 +118,7 @@ public class ResourcesResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getResource(@PathParam("id") Long id) throws DMPControllerException {
 
-		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
-
-		final Resource resource = resourceService.getObject(id);
+		final Resource resource = getResourceInternal(id);
 
 		if (resource == null) {
 
@@ -172,6 +173,36 @@ public class ResourcesResource {
 		} catch (final JsonProcessingException e) {
 
 			throw new DMPControllerException("couldn't transform resource configurations set to JSON string.\n" + e.getMessage());
+		}
+
+		return buildResponse(configurationsJSON);
+	}
+	
+	@POST
+	@Path("/{id}/configurations")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response run(@PathParam("id") Long id, final String jsonObjectString) throws DMPControllerException {
+
+		final Resource resource = getResourceInternal(id);
+		
+		if (resource == null) {
+
+			LOG.debug("couldn't find resource");
+
+			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		}
+		
+		final Configuration configuration = addConfiguration(resource, jsonObjectString);
+		
+		String configurationsJSON = null;
+
+		try {
+
+			configurationsJSON = DMPUtil.getJSONObjectMapper().writeValueAsString(configuration);
+		} catch (final JsonProcessingException e) {
+
+			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
 		}
 
 		return buildResponse(configurationsJSON);
@@ -263,6 +294,79 @@ public class ResourcesResource {
 			throw new DMPControllerException("something went wrong while resource updating\n" + e.getMessage());
 		}
 
+		return resource;
+	}
+	
+	private Configuration addConfiguration(final Resource resource, final String configurationJSONString) throws DMPControllerException {
+		
+		Configuration configurationFromJSON = null;
+		
+		try {
+			
+			configurationFromJSON = DMPUtil.getJSONObjectMapper().readValue(configurationJSONString, Configuration.class);
+		} catch (final JsonParseException e) {
+			
+			LOG.debug("something went wrong while deserializing the configuration JSON string");
+			
+			throw new DMPControllerException("something went wrong while deserializing the configuration JSON string.\n" + e.getMessage());
+		} catch (final JsonMappingException e) {
+			
+			LOG.debug("something went wrong while deserializing the configuration JSON string");
+			
+			throw new DMPControllerException("something went wrong while deserializing the configuration JSON string.\n" + e.getMessage());
+		} catch (final IOException e) {
+			
+			LOG.debug("something went wrong while deserializing the configuration JSON string");
+			
+			throw new DMPControllerException("something went wrong while deserializing the configuration JSON string.\n" + e.getMessage());
+		}
+		
+		if(configurationFromJSON == null) {
+			
+			throw new DMPControllerException("deserialized configuration is null");
+		}
+		
+		final ConfigurationService configurationService = PersistenceServices.getInstance().getConfigurationService();
+		
+		Configuration configuration = null;
+		
+		try {
+			
+			configuration = configurationService.createObject();
+		} catch (final DMPPersistenceException e) {
+			
+			LOG.debug("something went wrong while configuration creation");
+
+			throw new DMPControllerException("something went wrong while configuration creation\n" + e.getMessage());
+		}
+		
+		if (configuration == null) {
+
+			throw new DMPControllerException("fresh configuration shouldn't be null");
+		}
+		
+		configuration.setParameters(configurationFromJSON.getParameters());
+		configuration.setResource(resource);
+		
+		try {
+			
+			configurationService.updateObjectTransactional(configuration);
+		} catch (final DMPPersistenceException e) {
+			
+			LOG.debug("something went wrong while configuration updating");
+
+			throw new DMPControllerException("something went wrong while configuration updating\n" + e.getMessage());
+		}
+		
+		return configuration;
+	}
+	
+	private Resource getResourceInternal(final Long id) {
+		
+		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
+
+		final Resource resource = resourceService.getObject(id);
+		
 		return resource;
 	}
 }
