@@ -14,6 +14,7 @@ import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -23,9 +24,15 @@ import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.init.util.DMPUtil;
 import de.avgl.dmp.persistence.model.DMPJPAObject;
 
+@XmlRootElement
 @Entity
 @Table(name = "RESOURCE")
 public class Resource extends DMPJPAObject {
+
+	/**
+	 * 
+	 */
+	private static final long						serialVersionUID		= 1L;
 
 	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(Resource.class);
 
@@ -57,7 +64,7 @@ public class Resource extends DMPJPAObject {
 	 * All configurations of the resource.
 	 */
 	// TODO set correct casacade type
-	@OneToMany(mappedBy = "resource", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "resource", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Configuration>						configurations;
 
 	public String getName() {
@@ -79,13 +86,13 @@ public class Resource extends DMPJPAObject {
 
 		this.type = type;
 	}
-	
+
 	public String getDescription() {
 		return description;
 	}
-	
+
 	public void setDescription(final String description) {
-		
+
 		this.description = description;
 	}
 
@@ -177,6 +184,35 @@ public class Resource extends DMPJPAObject {
 
 				configurations.add(configuration);
 			}
+
+			if (configuration.getResource() == null) {
+
+				configuration.setResource(this);
+			}
+		}
+	}
+
+	/**
+	 * Replaces an existing configuration, i.e., the configuration with the same identifier will be replaced.<br>
+	 * Created by: tgaengler
+	 * 
+	 * @param configuration an existing, updated configuration
+	 */
+	public void replaceConfiguration(final Configuration configuration) {
+
+		if (configuration != null) {
+
+			if (configurations == null) {
+
+				configurations = Sets.newLinkedHashSet();
+			}
+
+			if (configurations.contains(configuration)) {
+
+				configurations.remove(configuration);
+			}
+
+			configurations.add(configuration);
 
 			if (configuration.getResource() == null) {
 

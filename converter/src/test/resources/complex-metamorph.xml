@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<metamorph xmlns="http://www.culturegraph.org/metamorph" entityMarker="." version="1">
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="." version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
     <meta>
         <name>Identifier, Title, Identifier 2, Creator 1, Creator 2, Subjects</name>
     </meta>

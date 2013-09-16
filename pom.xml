@@ -50,6 +50,7 @@
 		<google.collections.version>1.0</google.collections.version>
 		<jackson.version>2.2.3</jackson.version>
 		<apache.commons.version>3.1</apache.commons.version>
+		<commons-io.version>2.4</commons-io.version>
 	</properties>
 
 	<build>
@@ -460,6 +461,12 @@
 			<groupId>com.fasterxml.jackson.module</groupId>
 			<artifactId>jackson-module-jaxb-annotations</artifactId>
 			<version>${jackson.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${commons-io.version}</version>
 		</dependency>
 	</dependencies>
 	<!-- </dependencyManagement> -->

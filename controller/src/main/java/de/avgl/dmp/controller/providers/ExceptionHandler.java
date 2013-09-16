@@ -1,4 +1,4 @@
-package de.avgl.dmp.controller.resources;
+package de.avgl.dmp.controller.providers;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -11,8 +11,9 @@ import javax.ws.rs.ext.Provider;
 
 @Provider
 public class ExceptionHandler implements ExceptionMapper<Exception> {
+
 	@Override
-	public Response toResponse(Exception exception) {
+	public Response toResponse(final Exception exception) {
 		exception.printStackTrace();
 
 		final String[] clientSegments = exception.getMessage().split(":");
@@ -24,10 +25,7 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
 		responseJSON.put("status", "nok");
 		responseJSON.put("error", clientMessage);
 
-		return Response.status(500)
-				.entity(responseJSON.toString())
-				.type(MediaType.APPLICATION_JSON_TYPE)
-				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
-				.build();
+		return Response.status(500).entity(responseJSON.toString()).type(MediaType.APPLICATION_JSON_TYPE)
+				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 	}
 }

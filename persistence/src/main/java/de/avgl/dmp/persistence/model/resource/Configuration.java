@@ -23,6 +23,11 @@ import de.avgl.dmp.persistence.model.DMPJPAObject;
 @Table(name = "CONFIGURATION")
 public class Configuration extends DMPJPAObject {
 
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+
 	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(Configuration.class);
 
 	@Lob
