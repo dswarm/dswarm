@@ -3,6 +3,7 @@ package de.avgl.dmp.persistence.services.test;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import de.avgl.dmp.init.util.DMPUtil;
@@ -145,6 +146,19 @@ public class ResourceServiceTest extends BasicJPAServiceTest<Resource, ResourceS
 		checkSimpleResource(updatedResource2, updatedResource3);
 
 		checkComplexResource(updatedResource2, updatedResource3);
+		
+		String resourceJSON = null;
+
+		try {
+
+			resourceJSON = DMPUtil.getJSONObjectMapper().writeValueAsString(updatedResource3);
+		} catch (final JsonProcessingException e) {
+
+			LOG.debug("couldn't transform resource object to JSON string.\n" + e.getMessage());
+		}
+		
+		System.out.println("resource configurations size: " + updatedResource3.getConfigurations().size());
+		System.out.println("resource JSON: " + resourceJSON);
 
 		// clean up DB
 		deletedObject(resource.getId());

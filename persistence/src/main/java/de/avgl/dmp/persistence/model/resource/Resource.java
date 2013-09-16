@@ -16,6 +16,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
@@ -65,6 +66,7 @@ public class Resource extends DMPJPAObject {
 	 */
 	// TODO set correct casacade type
 	@OneToMany(mappedBy = "resource", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference
 	private Set<Configuration>						configurations;
 
 	public String getName() {

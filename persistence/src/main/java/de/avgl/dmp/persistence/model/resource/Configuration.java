@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -46,6 +47,7 @@ public class Configuration extends DMPJPAObject {
 	 */
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "RESOURCE")
+	@JsonBackReference
 	private Resource								resource;
 
 	public ObjectNode getParameters() {

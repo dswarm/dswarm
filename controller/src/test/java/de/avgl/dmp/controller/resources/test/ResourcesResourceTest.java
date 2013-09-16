@@ -21,7 +21,10 @@ import com.google.common.io.Resources;
 
 import de.avgl.dmp.controller.services.PersistenceServices;
 import de.avgl.dmp.init.util.DMPUtil;
+import de.avgl.dmp.persistence.DMPPersistenceException;
+import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
+import de.avgl.dmp.persistence.services.ConfigurationService;
 import de.avgl.dmp.persistence.services.ResourceService;
 
 public class ResourcesResourceTest extends ResourceTest {
@@ -74,10 +77,117 @@ public class ResourcesResourceTest extends ResourceTest {
 		final Response response = target.path(resourceIdentifier + "/" + resource.getId()).request().accept(MediaType.APPLICATION_JSON_TYPE)
 				.get(Response.class);
 
-		String responseResource = response.readEntity(String.class);
+		final String responseResource = response.readEntity(String.class);
 
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
 		Assert.assertEquals("resource JSONs are not equal", resourceJSON, responseResource);
+
+		cleanUpDB(resource);
+	}
+
+	@Test
+	public void getResourceConfigurations() throws Exception {
+
+		final String complexResourceJSONString = DMPUtil.getResourceAsString("complex_resource.json");
+		final Resource expectedComplexResource = DMPUtil.getJSONObjectMapper().readValue(complexResourceJSONString, Resource.class);
+
+		Assert.assertNotNull("the complex resource shouldn't be null", expectedComplexResource);
+		Assert.assertNotNull("the name of the complex resource shouldn't be null", expectedComplexResource.getName());
+		Assert.assertNotNull("the description of the complex resource shouldn't be null", expectedComplexResource.getDescription());
+		Assert.assertNotNull("the type of the complex resource shouldn't be null", expectedComplexResource.getType());
+		Assert.assertNotNull("the attributes of the complex resource shouldn't be null", expectedComplexResource.getAttributes());
+		Assert.assertNotNull("the configurations of the complex resource shouldn't be null", expectedComplexResource.getConfigurations());
+		Assert.assertFalse("the configurations of the complex resource shouldn't be empty", expectedComplexResource.getConfigurations().isEmpty());
+
+		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
+
+		Resource complexResource = null;
+
+		try {
+
+			complexResource = resourceService.createObject();
+		} catch (final DMPPersistenceException e) {
+
+			Assert.assertTrue("something went wrong during object creation.\n" + e.getMessage(), false);
+		}
+
+		Assert.assertNotNull("resource shouldn't be null", complexResource);
+		Assert.assertNotNull("resource id shouldn't be null", complexResource.getId());
+
+		LOG.debug("create new resource with id = '" + complexResource.getId() + "'");
+
+		complexResource.setName(expectedComplexResource.getName());
+		complexResource.setDescription(expectedComplexResource.getDescription());
+		complexResource.setType(expectedComplexResource.getType());
+		complexResource.setAttributes(expectedComplexResource.getAttributes());
+
+		final ConfigurationService configurationService = PersistenceServices.getInstance().getConfigurationService();
+
+		for (final Configuration expectedConfiguration : expectedComplexResource.getConfigurations()) {
+
+			Configuration configuration = null;
+
+			try {
+
+				configuration = configurationService.createObject();
+			} catch (final DMPPersistenceException e) {
+
+				Assert.assertTrue("something went wrong during object creation.\n" + e.getMessage(), false);
+			}
+
+			Assert.assertNotNull("configuration shouldn't be null", configuration);
+			Assert.assertNotNull("configuration id shouldn't be null", configuration.getId());
+
+			configuration.setParameters(expectedConfiguration.getParameters());
+
+			complexResource.addConfiguration(configuration);
+		}
+
+		Resource updatedComplexResource = null;
+
+		try {
+
+			updatedComplexResource = resourceService.updateObjectTransactional(complexResource);
+		} catch (DMPPersistenceException e) {
+
+			Assert.assertTrue("something went wrong while updating the resource", false);
+		}
+
+		Assert.assertNotNull("updated resource shouldn't be null", updatedComplexResource);
+		Assert.assertNotNull("updated resource id shouldn't be null", updatedComplexResource.getId());
+
+		LOG.debug("try to retrieve configurations of resource '" + updatedComplexResource.getId() + "'");
+
+		final Response response = target.path(resourceIdentifier + "/" + updatedComplexResource.getId() + "/configurations").request()
+				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+
+		final String responseResourceConfigurations = response.readEntity(String.class);
+		final String resourceConfigurationsJSON = DMPUtil.getResourceAsString("resource_configurations.json");
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+		Assert.assertEquals("resource JSONs are not equal", resourceConfigurationsJSON, responseResourceConfigurations);
+
+		cleanUpDB(updatedComplexResource);
+	}
+	
+	@Test
+	public void getResourceConfigurations2() throws Exception {
+
+		final String resourceJSON = testResourceUploadInteral();
+
+		LOG.debug("created resource = '" + resourceJSON + "'");
+
+		final Resource resource = DMPUtil.getJSONObjectMapper().readValue(resourceJSON, Resource.class);
+
+		Assert.assertNotNull("resource shouldn't be null", resource);
+		Assert.assertNotNull("resource id shouldn't be null", resource.getId());
+
+		LOG.debug("try to retrieve resource '" + resource.getId() + "'");
+
+		final Response response = target.path(resourceIdentifier + "/" + resource.getId() + "/configurations").request()
+				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+
+		Assert.assertEquals("404 NOT FOUND was expected", 404, response.getStatus());
 
 		cleanUpDB(resource);
 	}
