@@ -39,9 +39,8 @@
 		<cobertura-maven-plugin.version>2.6</cobertura-maven-plugin.version>
 		<exec-maven-plugin.version>1.2.1</exec-maven-plugin.version>
 		<org.umlgraph.doclet.version>5.1</org.umlgraph.doclet.version>
-		<!-- since metafacture isn't 1.7 compatible -->
-		<java.source.version>1.6</java.source.version>
-		<java.target.version>1.6</java.target.version>
+		<java.source.version>1.7</java.source.version>
+		<java.target.version>1.7</java.target.version>
 		<slf4j.log4j.version>1.7.5</slf4j.log4j.version>
 		<slf4j.log4j.api.version>1.7.5</slf4j.log4j.api.version>
 		<apache.log4j.version>1.2.17</apache.log4j.version>

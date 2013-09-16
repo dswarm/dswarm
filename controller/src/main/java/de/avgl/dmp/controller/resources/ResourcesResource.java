@@ -207,6 +207,53 @@ public class ResourcesResource {
 
 		return buildResponse(configurationsJSON);
 	}
+	
+	@GET
+	@Path("/{id}/configurations/{configurationid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getResourceConfiguration(@PathParam("id") Long id, @PathParam("configurationid") Long configurationId) throws DMPControllerException {
+
+		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
+
+		final Resource resource = resourceService.getObject(id);
+
+		if (resource == null) {
+
+			LOG.debug("couldn't find resource");
+
+			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		}
+
+		final Set<Configuration> configurations = resource.getConfigurations();
+
+		if (configurations == null || configurations.isEmpty()) {
+
+			LOG.debug("couldn't find configurations for resource '" + id + "'; or there are no configurations for this resource");
+
+			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		}
+		
+		final Configuration configuration = resource.getConfiguration(configurationId);
+		
+		if(configuration == null) {
+			
+			LOG.debug("couldn't find configuration '" + configurationId + "' for resource '" + id + "'");
+
+			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		}
+
+		String configurationJSON = null;
+
+		try {
+
+			configurationJSON = DMPUtil.getJSONObjectMapper().writeValueAsString(configuration);
+		} catch (final JsonProcessingException e) {
+
+			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
+		}
+
+		return buildResponse(configurationJSON);
+	}
 
 	@OPTIONS
 	public Response getOptions() {
@@ -231,6 +278,15 @@ public class ResourcesResource {
 
 		return Response.ok().header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
 				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, POST, OPTIONS, HEAD")
+				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Accept, Origin, X-Requested-With, Content-Type").build();
+	}
+	
+	@OPTIONS
+	@Path("/{id}/configurations/{configurationid}")
+	public Response getConfigurationOptions() {
+
+		return Response.ok().header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, OPTIONS, HEAD")
 				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Accept, Origin, X-Requested-With, Content-Type").build();
 	}
 

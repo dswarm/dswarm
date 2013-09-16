@@ -23,6 +23,14 @@
 		<hibernate-ehcache.version>4.2.5.Final</hibernate-ehcache.version>
 		<ehcache.version>2.7.2</ehcache.version>
 	</properties>
+	
+	<repositories>
+		<repository>
+			<id>googlecode.lambdaj</id>
+			<name>Internal Release Repository</name>
+			<url>https://lambdaj.googlecode.com/svn/repo/releases</url>
+		</repository>
+	</repositories>
 
 	<build>
 		<filters>
@@ -72,6 +80,11 @@
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache</artifactId>
 			<version>${ehcache.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.lambdaj</groupId>
+			<artifactId>lambdaj</artifactId>
+			<version>2.4</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -1,5 +1,11 @@
 package de.avgl.dmp.persistence.model.resource;
 
+import static ch.lambdaj.Lambda.filter;
+import static ch.lambdaj.Lambda.having;
+import static ch.lambdaj.Lambda.on;
+import static org.hamcrest.Matchers.equalTo;
+
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Access;
@@ -165,6 +171,28 @@ public class Resource extends DMPJPAObject {
 	public void setConfigurations(final Set<Configuration> configurationsArg) {
 
 		this.configurations = configurationsArg;
+	}
+	
+	public Configuration getConfiguration(final Long id) {
+		
+		if(id == null) {
+			
+			return null;
+		}
+		
+		if(this.configurations == null || this.configurations.isEmpty()) {
+			
+			return null;
+		}
+		
+		final List<Configuration> configurationsFiltered = filter(having(on(Configuration.class).getId(), equalTo(id)), this.configurations);
+		
+		if(configurationsFiltered == null || configurationsFiltered.isEmpty()) {
+			
+			return null;
+		}
+		
+		return configurationsFiltered.get(0);
 	}
 
 	/**

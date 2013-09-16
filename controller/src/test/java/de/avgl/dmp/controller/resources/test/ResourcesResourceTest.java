@@ -198,56 +198,35 @@ public class ResourcesResourceTest extends ResourceTest {
 	@Test
 	public void addResourceConfiguration() throws Exception {
 
-		final String resourceJSON = testResourceUploadInteral();
+		final Resource resource = addResourceConfigurationInternal();
+		
+		cleanUpDB(resource);
+	}
+	
+	@Test
+	public void getResourceConfiguration() throws Exception {
 
-		LOG.debug("created resource = '" + resourceJSON + "'");
+		final Resource resource = addResourceConfigurationInternal();
+		
+		final Configuration configuration = resource.getConfigurations().iterator().next();
 
-		final Resource resource = DMPUtil.getJSONObjectMapper().readValue(resourceJSON, Resource.class);
+		LOG.debug("try to retrieve resource configuration '" + configuration.getId() + "'");
 
-		Assert.assertNotNull("resource shouldn't be null", resource);
-		Assert.assertNotNull("resource id shouldn't be null", resource.getId());
-
-		LOG.debug("try to add configuration to resource '" + resource.getId() + "'");
-
-		final String configurationJSON = DMPUtil.getResourceAsString("configuration.json");
-		final Configuration configuration = DMPUtil.getJSONObjectMapper().readValue(configurationJSON, Configuration.class);
-
-		final Response response = target.path(resourceIdentifier + "/" + resource.getId() + "/configurations")
-				.request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(configurationJSON));
-
-		final String responseConfigurationJSON = response.readEntity(String.class);
-
+		final Response response = target.path(resourceIdentifier + "/" + resource.getId() + "/configurations/" + configuration.getId()).request()
+				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+		
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
-		Assert.assertNotNull("response configuration JSON shouldn't be null", responseConfigurationJSON);
-
-		final Configuration responseConfiguration = DMPUtil.getJSONObjectMapper().readValue(responseConfigurationJSON, Configuration.class);
-
-		Assert.assertNotNull("response configuration shouldn't be null", responseConfiguration);
-
-		final ObjectNode parameters = configuration.getParameters();
-
-		final Iterator<Entry<String, JsonNode>> parameterEntriesIter = parameters.fields();
-
-		final ObjectNode responseParameters = responseConfiguration.getParameters();
-
-		Assert.assertNotNull("response parameters shoudln't be null", responseParameters);
-
-		while (parameterEntriesIter.hasNext()) {
-
-			final Entry<String, JsonNode> parameterEntry = parameterEntriesIter.next();
-
-			final String parameterKey = parameterEntry.getKey();
-
-			final JsonNode parameterValueNode = responseParameters.get(parameterKey);
-
-			Assert.assertNotNull("parameter '" + parameterKey + "' is not part of the response configuration parameters", parameterValueNode);
-
-			final String parameterValue = parameterEntry.getValue().asText();
-
-			Assert.assertTrue("the parameter values of '" + parameterKey + "' are not equal. expected = '" + parameterValue + "'; was = '"
-					+ parameterValueNode.asText() + "'", parameterValue.equals(parameterValueNode.asText()));
-		}
-
+		
+		final String responseResourceConfigurationJSON = response.readEntity(String.class);
+		
+		Assert.assertNotNull("response resource configuration JSON shouldn't be null", responseResourceConfigurationJSON);
+		
+		final Configuration responseResourceConfiguration = DMPUtil.getJSONObjectMapper().readValue(responseResourceConfigurationJSON, Configuration.class);
+		
+		Assert.assertNotNull("response resource configuration shoudln't be null", responseResourceConfiguration);
+		
+		compareConfigurations(configuration, responseResourceConfiguration);
+		
 		cleanUpDB(resource);
 	}
 
@@ -328,6 +307,41 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		return responseResourceString;
 	}
+	
+	private Resource addResourceConfigurationInternal() throws Exception {
+		
+		final String resourceJSON = testResourceUploadInteral();
+
+		LOG.debug("created resource = '" + resourceJSON + "'");
+
+		final Resource resource = DMPUtil.getJSONObjectMapper().readValue(resourceJSON, Resource.class);
+		
+		Assert.assertNotNull("resource shouldn't be null", resource);
+		Assert.assertNotNull("resource id shouldn't be null", resource.getId());
+
+		LOG.debug("try to add configuration to resource '" + resource.getId() + "'");
+
+		final String configurationJSON = DMPUtil.getResourceAsString("configuration.json");
+		final Configuration configuration = DMPUtil.getJSONObjectMapper().readValue(configurationJSON, Configuration.class);
+
+		final Response response = target.path(resourceIdentifier + "/" + resource.getId() + "/configurations")
+				.request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(configurationJSON));
+
+		final String responseConfigurationJSON = response.readEntity(String.class);
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+		Assert.assertNotNull("response configuration JSON shouldn't be null", responseConfigurationJSON);
+
+		final Configuration responseConfiguration = DMPUtil.getJSONObjectMapper().readValue(responseConfigurationJSON, Configuration.class);
+
+		Assert.assertNotNull("response configuration shouldn't be null", responseConfiguration);
+
+		compareConfigurations(configuration, responseConfiguration);
+		
+		resource.addConfiguration(responseConfiguration);
+		
+		return resource;
+	}
 
 	private void cleanUpDB(final Resource resource) {
 
@@ -347,5 +361,32 @@ public class ResourcesResourceTest extends ResourceTest {
 		final Resource deletedResource = resourceService.getObject(resourceId);
 
 		Assert.assertNull("deleted resource should be null", deletedResource);
+	}
+	
+	private void compareConfigurations(final Configuration expectedConfiguration, final Configuration actualConfiguration) {
+		
+		final ObjectNode parameters = expectedConfiguration.getParameters();
+
+		final Iterator<Entry<String, JsonNode>> parameterEntriesIter = parameters.fields();
+
+		final ObjectNode responseParameters = actualConfiguration.getParameters();
+
+		Assert.assertNotNull("response parameters shoudln't be null", responseParameters);
+
+		while (parameterEntriesIter.hasNext()) {
+
+			final Entry<String, JsonNode> parameterEntry = parameterEntriesIter.next();
+
+			final String parameterKey = parameterEntry.getKey();
+
+			final JsonNode parameterValueNode = responseParameters.get(parameterKey);
+
+			Assert.assertNotNull("parameter '" + parameterKey + "' is not part of the response configuration parameters", parameterValueNode);
+
+			final String parameterValue = parameterEntry.getValue().asText();
+
+			Assert.assertTrue("the parameter values of '" + parameterKey + "' are not equal. expected = '" + parameterValue + "'; was = '"
+					+ parameterValueNode.asText() + "'", parameterValue.equals(parameterValueNode.asText()));
+		}
 	}
 }
