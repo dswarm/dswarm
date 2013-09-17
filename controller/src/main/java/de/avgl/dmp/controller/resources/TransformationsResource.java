@@ -66,6 +66,15 @@ public class TransformationsResource {
 		return buildResponse(xml);
 	}
 
+	/**
+	 * TODO: (@tgaengler) currently, this endpoint consumes a list of transformations as JSON representation; however, the intention of this
+	 * endpoint is that it should only consume one transformation
+	 * 
+	 * @param jsonObjectString a JSON representation of one transformation
+	 * @return
+	 * @throws IOException
+	 * @throws DMPConverterException
+	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
