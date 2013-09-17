@@ -12,24 +12,24 @@ import com.google.common.collect.Lists;
 import com.google.common.io.ByteStreams;
 
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
-import de.avgl.dmp.persistence.model.transformation.Component;
-import de.avgl.dmp.persistence.model.transformation.ComponentType;
-import de.avgl.dmp.persistence.model.transformation.Parameter;
-import de.avgl.dmp.persistence.model.transformation.Payload;
-import de.avgl.dmp.persistence.model.transformation.Transformation;
+import de.avgl.dmp.persistence.model.job.Component;
+import de.avgl.dmp.persistence.model.job.ComponentType;
+import de.avgl.dmp.persistence.model.job.Job;
+import de.avgl.dmp.persistence.model.job.Parameter;
+import de.avgl.dmp.persistence.model.job.Payload;
+import de.avgl.dmp.persistence.model.job.Transformation;
 
 public class JsonToPojoMapperTest {
 
-	private Transformation transformation = null;
+	private Transformation	transformation	= null;
 
-	private String jsonInput = null;
+	private String			jsonInput		= null;
 
 	@Before
 	public void setUp() throws Exception {
 
 		InputStream in = this.getClass().getClassLoader().getResourceAsStream("transformation-test-input.json");
 		jsonInput = new String(ByteStreams.toByteArray(in), "UTF-8");
-
 
 		final Parameter parameter1 = new Parameter();
 		parameter1.setName("pattern");
@@ -59,10 +59,13 @@ public class JsonToPojoMapperTest {
 		final Parameter parameter6 = new Parameter();
 		parameter6.setName("entry");
 		parameter6.setRepeat(true);
-		parameter6.setParameters(new HashMap<String, Parameter>() {{
-			put("name", parameter4);
-			put("value", parameter5);
-		}});
+		parameter6.setParameters(new HashMap<String, Parameter>() {
+
+			{
+				put("name", parameter4);
+				put("value", parameter5);
+			}
+		});
 
 		Payload payload1 = new Payload();
 		payload1.setName("trim");
@@ -72,17 +75,23 @@ public class JsonToPojoMapperTest {
 
 		Payload payload3 = new Payload();
 		payload3.setName("replace");
-		payload3.setParameters(new HashMap<String, Parameter>() {{
-			put("pattern", parameter1);
-			put("with", parameter2);
-		}});
+		payload3.setParameters(new HashMap<String, Parameter>() {
+
+			{
+				put("pattern", parameter1);
+				put("with", parameter2);
+			}
+		});
 
 		Payload payload4 = new Payload();
 		payload4.setName("lookup");
-		payload4.setParameters(new HashMap<String, Parameter>() {{
-			put("source", parameter3);
-			put("entry", parameter6);
-		}});
+		payload4.setParameters(new HashMap<String, Parameter>() {
+
+			{
+				put("source", parameter3);
+				put("entry", parameter6);
+			}
+		});
 
 		final Component component1 = new Component();
 		component1.setId("con_124:fun_1");
@@ -112,7 +121,6 @@ public class JsonToPojoMapperTest {
 		transformation.setId("con_124");
 		transformation.setName("Publisher Mapping");
 
-
 		final List<Component> components = Lists.newArrayList();
 		components.add(component1);
 		components.add(component2);
@@ -125,11 +133,11 @@ public class JsonToPojoMapperTest {
 	@Test
 	public void testApply() throws Exception {
 
-		List<Transformation> result = new JsonToPojoMapper().apply(jsonInput);
+		final Job job = new JsonToPojoMapper().toJob(jsonInput);
 
-		Assert.assertEquals("There should only be one transformation", 1, result.size());
+		Assert.assertEquals("There should only be one transformation", 1, job.getTransformations().size());
 
-		Transformation actual = result.get(0);
+		final Transformation actual = job.getTransformations().get(0);
 
 		Assert.assertEquals("The Transformation was not constructed correctly", transformation, actual);
 	}

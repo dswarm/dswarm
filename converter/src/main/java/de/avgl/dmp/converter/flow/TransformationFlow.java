@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringWriter;
-import java.util.List;
 
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
@@ -17,12 +16,15 @@ import org.culturegraph.mf.stream.sink.ObjectJavaIoWriter;
 import org.culturegraph.mf.stream.source.ResourceOpener;
 import org.culturegraph.mf.stream.source.StringReader;
 
+import com.google.common.collect.ImmutableList;
+
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.morph.MorphScriptBuilder;
 import de.avgl.dmp.converter.pipe.StreamJsonCollapser;
 import de.avgl.dmp.converter.pipe.StreamUnflattener;
 import de.avgl.dmp.converter.reader.QucosaReader;
-import de.avgl.dmp.persistence.model.transformation.Transformation;
+import de.avgl.dmp.persistence.model.job.Job;
+import de.avgl.dmp.persistence.model.job.Transformation;
 
 public class TransformationFlow {
 
@@ -61,12 +63,8 @@ public class TransformationFlow {
 		final StringWriter stringWriter = new StringWriter();
 		final ObjectJavaIoWriter<String> writer = new ObjectJavaIoWriter<String>(stringWriter);
 
-		opener.setReceiver(reader)
-			.setReceiver(transformer)
-			.setReceiver(unflattener)
-			.setReceiver(collapser)
-			.setReceiver(converter)
-			.setReceiver(writer);
+		opener.setReceiver(reader).setReceiver(transformer).setReceiver(unflattener).setReceiver(collapser).setReceiver(converter)
+				.setReceiver(writer);
 
 		opener.process(object);
 
@@ -98,9 +96,20 @@ public class TransformationFlow {
 		return new TransformationFlow(transformer);
 	}
 
-	public static TransformationFlow fromTransformations(List<Transformation> transformations) throws IOException, DMPConverterException {
+	public static TransformationFlow fromJob(final Job job) throws IOException, DMPConverterException {
 
-		final String morphScriptString = new MorphScriptBuilder().apply(transformations).toString();
+		final String morphScriptString = new MorphScriptBuilder().apply(job.getTransformations()).toString();
+
+		return fromString(morphScriptString);
+	}
+
+	public static TransformationFlow fromTransformation(final Transformation transformation) throws IOException, DMPConverterException {
+
+		final ImmutableList.Builder<Transformation> transformationsBuilder = ImmutableList.builder();
+
+		transformationsBuilder.add(transformation);
+
+		final String morphScriptString = new MorphScriptBuilder().apply(transformationsBuilder.build()).toString();
 
 		return fromString(morphScriptString);
 	}

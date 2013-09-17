@@ -11,11 +11,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 
-import de.avgl.dmp.persistence.model.transformation.Component;
-import de.avgl.dmp.persistence.model.transformation.ComponentType;
-import de.avgl.dmp.persistence.model.transformation.Connection;
-import de.avgl.dmp.persistence.model.transformation.ConnectionType;
-import de.avgl.dmp.persistence.model.transformation.Transformation;
+import de.avgl.dmp.persistence.model.job.Component;
+import de.avgl.dmp.persistence.model.job.ComponentType;
+import de.avgl.dmp.persistence.model.job.Connection;
+import de.avgl.dmp.persistence.model.job.ConnectionType;
+import de.avgl.dmp.persistence.model.job.Transformation;
 
 public class TransformationTest {
 

@@ -37,7 +37,7 @@ public class TransformationsResourceTest extends ResourceTest {
 
 	@Before
 	public void prepare() throws IOException {
-		transformationJSONString = DMPUtil.getResourceAsString("complex-request.json");
+		transformationJSONString = DMPUtil.getResourceAsString("transformations-post-request.json");
 		transformationJSON = mapper.readValue(transformationJSONString, ObjectNode.class);
 	}
 
@@ -62,15 +62,18 @@ public class TransformationsResourceTest extends ResourceTest {
 
 	@Test
 	public void testXML() throws Exception {
-		Response response = target.path(resourceIdentifier).request(MediaType.APPLICATION_XML_TYPE)
+		
+		final Response response = target.path(resourceIdentifier).request(MediaType.APPLICATION_XML_TYPE)
 				.accept(MediaType.APPLICATION_XML_TYPE)
 				.post(Entity.json(transformationJSONString));
-		String responseString = response.readEntity(String.class);
+		
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+		
+		final String responseString = response.readEntity(String.class);
 
-		final String expected = DMPUtil.getResourceAsString("complex-metamorph.xml");
+		final String expected = DMPUtil.getResourceAsString("transformations-post-metamorph.xml");
 
 		Assert.assertEquals("POST responses are not equal", expected, responseString);
-		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
 	}
 
 	@Test
@@ -80,7 +83,7 @@ public class TransformationsResourceTest extends ResourceTest {
 				.post(Entity.json(transformationJSONString));
 		String responseString = response.readEntity(String.class);
 
-		final String expected = DMPUtil.getResourceAsString("complex-result.json");
+		final String expected = DMPUtil.getResourceAsString("transformations-post-result.json");
 
 		Assert.assertEquals("POST responses are not equal", expected, responseString);
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());

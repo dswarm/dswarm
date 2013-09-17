@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -37,9 +36,9 @@ import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
 
 import de.avgl.dmp.converter.DMPConverterException;
-import de.avgl.dmp.persistence.model.transformation.Component;
-import de.avgl.dmp.persistence.model.transformation.Parameter;
-import de.avgl.dmp.persistence.model.transformation.Transformation;
+import de.avgl.dmp.persistence.model.job.Component;
+import de.avgl.dmp.persistence.model.job.Parameter;
+import de.avgl.dmp.persistence.model.job.Transformation;
 
 public class MorphScriptBuilder {
 
@@ -232,6 +231,7 @@ public class MorphScriptBuilder {
 	}
 
 	public MorphScriptBuilder apply(final Transformation transformation) throws DMPConverterException {
+		
 		return apply(Lists.newArrayList(transformation));
 	}
 }

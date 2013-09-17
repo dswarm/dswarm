@@ -1,4 +1,4 @@
-package de.avgl.dmp.persistence.model.transformation;
+package de.avgl.dmp.persistence.model.job;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;

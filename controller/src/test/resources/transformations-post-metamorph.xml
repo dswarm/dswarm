@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="." version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+    <meta>
+        <name>Identifier</name>
+    </meta>
+    <rules>
+        <data name="record.OAI-PMH.dc:identifier" source="record.header.identifier">
+            <trim/>
+        </data>
+    </rules>
+</metamorph>

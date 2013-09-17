@@ -3,7 +3,6 @@ package de.avgl.dmp.converter.flow.test;
 import static org.junit.Assert.assertEquals;
 
 import java.io.StringWriter;
-import java.util.List;
 
 import org.culturegraph.mf.stream.converter.JsonEncoder;
 import org.culturegraph.mf.stream.reader.CsvReader;
@@ -14,7 +13,7 @@ import org.junit.Test;
 import de.avgl.dmp.converter.flow.TransformationFlow;
 import de.avgl.dmp.init.util.DMPUtil;
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
-import de.avgl.dmp.persistence.model.transformation.Transformation;
+import de.avgl.dmp.persistence.model.job.Job;
 
 public class TransformationFlowTest {
 
@@ -24,8 +23,8 @@ public class TransformationFlowTest {
 		final String request = DMPUtil.getResourceAsString("complex-request.json");
 		final String expected = DMPUtil.getResourceAsString("complex-result.json");
 
-		List<Transformation> pojos = new JsonToPojoMapper().apply(request);
-		final TransformationFlow flow = TransformationFlow.fromTransformations(pojos);
+		final Job job = new JsonToPojoMapper().toJob(request);
+		final TransformationFlow flow = TransformationFlow.fromJob(job);
 
 		final String actual = flow.apply();
 

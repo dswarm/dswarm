@@ -1,7 +1,6 @@
 package de.avgl.dmp.controller.resources;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.OPTIONS;
@@ -21,7 +20,7 @@ import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.TransformationFlow;
 import de.avgl.dmp.converter.morph.MorphScriptBuilder;
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
-import de.avgl.dmp.persistence.model.transformation.Transformation;
+import de.avgl.dmp.persistence.model.job.Transformation;
 
 @Path("transformations")
 public class TransformationsResource {
@@ -60,15 +59,15 @@ public class TransformationsResource {
 	@Produces(MediaType.APPLICATION_XML)
 	public Response runToXML(final String jsonObjectString) throws IOException, DMPConverterException {
 
-		final List<Transformation> pojos = new JsonToPojoMapper().apply(jsonObjectString);
-		final String xml = new MorphScriptBuilder().apply(pojos).toString();
+		final Transformation transformation = new JsonToPojoMapper().toTransformation(jsonObjectString);
+
+		final String xml = new MorphScriptBuilder().apply(transformation).toString();
 
 		return buildResponse(xml);
 	}
 
 	/**
-	 * TODO: (@tgaengler) currently, this endpoint consumes a list of transformations as JSON representation; however, the intention of this
-	 * endpoint is that it should only consume one transformation
+	 * this endpoint consumes a transformation as JSON representation
 	 * 
 	 * @param jsonObjectString a JSON representation of one transformation
 	 * @return
@@ -80,9 +79,9 @@ public class TransformationsResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response runWithMetamorph(final String jsonObjectString) throws IOException, DMPConverterException {
 
-		final List<Transformation> pojos = new JsonToPojoMapper().apply(jsonObjectString);
+		final Transformation transformation = new JsonToPojoMapper().toTransformation(jsonObjectString);
 
-		final TransformationFlow flow = TransformationFlow.fromTransformations(pojos);
+		final TransformationFlow flow = TransformationFlow.fromTransformation(transformation);
 		final String result = flow.applyResource(TransformationFlow.DEFAULT_RESOURCE_PATH);
 
 		return buildResponse(result);

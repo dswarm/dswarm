@@ -1,0 +1,32 @@
+{
+    "components": [{
+        "componentType": "fun",
+        "id": "con_99:fun_9",
+        "payload": {
+            "description": "Trimms the value",
+            "dsl": "metafacture",
+            "name": "trim",
+            "reference": "trim"
+        }
+    }],
+    "id": "con_99",
+    "name": "Identifier",
+    "source": {
+        "componentType": "source",
+        "id": "con_99:source",
+        "payload": {
+            "name": "identifier",
+            "path": "header.identifier",
+            "show": true
+        }
+    },
+    "target": {
+        "componentType": "target",
+        "id": "con_99:source",
+        "payload": {
+            "name": "dc:identifier",
+            "path": "OAI-PMH.dc:identifier",
+            "show": true
+        }
+    }
+}

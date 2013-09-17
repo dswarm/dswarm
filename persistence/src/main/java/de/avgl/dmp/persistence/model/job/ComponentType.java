@@ -1,4 +1,4 @@
-package de.avgl.dmp.persistence.model.transformation;
+package de.avgl.dmp.persistence.model.job;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
 

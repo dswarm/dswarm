@@ -1,7 +1,6 @@
 package de.avgl.dmp.controller.resources;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.OPTIONS;
@@ -16,7 +15,7 @@ import com.google.common.net.HttpHeaders;
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.TransformationFlow;
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
-import de.avgl.dmp.persistence.model.transformation.Transformation;
+import de.avgl.dmp.persistence.model.job.Job;
 
 @Path("jobs")
 public class JobsResource {
@@ -30,9 +29,9 @@ public class JobsResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response executeJob(final String jsonObjectString) throws IOException, DMPConverterException {
 
-		final List<Transformation> pojos = new JsonToPojoMapper().apply(jsonObjectString);
+		final Job job = new JsonToPojoMapper().toJob(jsonObjectString);
 
-		final TransformationFlow flow = TransformationFlow.fromTransformations(pojos);
+		final TransformationFlow flow = TransformationFlow.fromJob(job);
 		final String result = flow.applyResource(TransformationFlow.DEFAULT_RESOURCE_PATH);
 
 		return buildResponse(result);

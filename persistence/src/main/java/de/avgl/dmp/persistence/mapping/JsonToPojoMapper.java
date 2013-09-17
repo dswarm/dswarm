@@ -1,9 +1,7 @@
 package de.avgl.dmp.persistence.mapping;
 
-
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -13,15 +11,16 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
-import de.avgl.dmp.persistence.model.transformation.Component;
-import de.avgl.dmp.persistence.model.transformation.ComponentType;
-import de.avgl.dmp.persistence.model.transformation.Parameter;
-import de.avgl.dmp.persistence.model.transformation.Payload;
-import de.avgl.dmp.persistence.model.transformation.Transformation;
+import de.avgl.dmp.persistence.model.job.Component;
+import de.avgl.dmp.persistence.model.job.ComponentType;
+import de.avgl.dmp.persistence.model.job.Job;
+import de.avgl.dmp.persistence.model.job.Parameter;
+import de.avgl.dmp.persistence.model.job.Payload;
+import de.avgl.dmp.persistence.model.job.Transformation;
 
 public class JsonToPojoMapper {
 
-	private static final ObjectMapper mapper;
+	private static final ObjectMapper	mapper;
 
 	static {
 		// create once, reuse
@@ -39,7 +38,6 @@ public class JsonToPojoMapper {
 
 		Iterator<String> jsParameterFields = root.fieldNames();
 		Map<String, Parameter> parameters = Maps.newHashMap();
-
 
 		while (jsParameterFields.hasNext()) {
 			String parameterName = jsParameterFields.next();
@@ -86,14 +84,14 @@ public class JsonToPojoMapper {
 		String name;
 		switch (componentType) {
 			case SOURCE:
-			case TARGET:    // fall through
+			case TARGET: // fall through
 				name = jsPayload.get("path").asText();
 				break;
 			case FUNCTION:
 				name = jsPayload.get("reference").asText();
 				break;
 			case EXTENDED:
-			default:        // fall through
+			default: // fall through
 				name = jsPayload.hasNonNull("name") ? jsPayload.get("name").asText() : null;
 				break;
 		}
@@ -106,7 +104,8 @@ public class JsonToPojoMapper {
 		return component;
 	}
 
-	public List<Transformation> apply(final String json) throws IOException {
+	public Job toJob(final String json) throws IOException {
+
 		final JsonNode root = mapper.readTree(json);
 
 		final ImmutableList.Builder<Transformation> transformationsBuilder = ImmutableList.builder();
@@ -114,36 +113,54 @@ public class JsonToPojoMapper {
 		final JsonNode jsTransformations = root.get("transformations");
 
 		for (final JsonNode jsTransformation : jsTransformations) {
+			
+			final Transformation transformation = toTransformation(jsTransformation);
 
-			final Transformation transformation = new Transformation();
-
-			transformation.setId(jsTransformation.get("id").asText());
-			transformation.setName(jsTransformation.get("name").asText());
-
-			final JsonNode jsSource = jsTransformation.get("source");
-			final JsonNode jsTarget = jsTransformation.get("target");
-			final Component source = extractComponent(jsSource);
-			final Component target = extractComponent(jsTarget);
-
-			transformation.setSource(source);
-			transformation.setTarget(target);
-
-			final ImmutableList.Builder<Component> componentsBuilder = ImmutableList.builder();
-
-			for (final JsonNode jsComponent : jsTransformation.get("components")) {
-
-				final Component component = extractComponent(jsComponent);
-				if (component == null) continue;
-
-				componentsBuilder.add(component);
-			}
-
-			transformation.setComponents(componentsBuilder.build());
 			transformationsBuilder.add(transformation);
 		}
 
-		return transformationsBuilder.build();
+		final Job job = new Job();
+
+		job.setTransformations(transformationsBuilder.build());
+
+		return job;
+	}
+
+	public Transformation toTransformation(final String json) throws IOException {
+
+		final JsonNode root = mapper.readTree(json);
+
+		return toTransformation(root);
+	}
+
+	private Transformation toTransformation(final JsonNode transformationJsonNode) {
+
+		final Transformation transformation = new Transformation();
+
+		transformation.setId(transformationJsonNode.get("id").asText());
+		transformation.setName(transformationJsonNode.get("name").asText());
+
+		final JsonNode jsSource = transformationJsonNode.get("source");
+		final JsonNode jsTarget = transformationJsonNode.get("target");
+		final Component source = extractComponent(jsSource);
+		final Component target = extractComponent(jsTarget);
+
+		transformation.setSource(source);
+		transformation.setTarget(target);
+
+		final ImmutableList.Builder<Component> componentsBuilder = ImmutableList.builder();
+
+		for (final JsonNode jsComponent : transformationJsonNode.get("components")) {
+
+			final Component component = extractComponent(jsComponent);
+			if (component == null)
+				continue;
+
+			componentsBuilder.add(component);
+		}
+
+		transformation.setComponents(componentsBuilder.build());
+
+		return transformation;
 	}
 }
-
-
