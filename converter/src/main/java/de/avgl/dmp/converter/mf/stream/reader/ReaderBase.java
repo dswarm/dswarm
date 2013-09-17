@@ -51,6 +51,7 @@ public class ReaderBase<D extends ObjectPipe<String, StreamReceiver>> implements
 
 	@Override
 	public final void read(final String entry) {
+		
 		decoder.process(entry);
 	}
 

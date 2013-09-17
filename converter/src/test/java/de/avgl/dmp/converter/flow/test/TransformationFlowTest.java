@@ -2,13 +2,19 @@ package de.avgl.dmp.converter.flow.test;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
 import java.io.StringWriter;
+import java.net.URL;
 
+import org.apache.commons.io.FileUtils;
 import org.culturegraph.mf.stream.converter.JsonEncoder;
 import org.culturegraph.mf.stream.sink.ObjectJavaIoWriter;
-import org.culturegraph.mf.stream.source.StringReader;
+import org.culturegraph.mf.stream.source.FileOpener;
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
 
 import de.avgl.dmp.converter.flow.TransformationFlow;
 import de.avgl.dmp.converter.mf.stream.reader.CsvReader;
@@ -60,10 +66,18 @@ public class TransformationFlowTest {
 	@Test
 	public void readCSVTest() throws Exception {
 
-		StringReader opener = new StringReader();
-		final String testCSVString = DMPUtil.getResourceAsString("test_csv.csv");
+		final FileOpener opener = new FileOpener();
+		
+		// set encoding
+		opener.setEncoding(Charsets.UTF_8.name());
+		
+		final URL url = Resources.getResource("test_csv.csv");
+		final File file = FileUtils.toFile(url);
 
+		// set column separator and line separator
 		final CsvReader reader = new CsvReader(";", "\t\n");
+		
+		// set number of header lines (if header lines = 1, then schema header line = 1)
 		reader.setHeaderLines(1);
 		final JsonEncoder converter = new JsonEncoder();
 		final StringWriter stringWriter = new StringWriter();
@@ -71,7 +85,7 @@ public class TransformationFlowTest {
 
 		opener.setReceiver(reader).setReceiver(converter).setReceiver(writer);
 
-		opener.process(testCSVString);
+		opener.process(file.getAbsolutePath());
 
 		final String resultOutput = stringWriter.toString();
 
