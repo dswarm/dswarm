@@ -63,7 +63,7 @@ public class TransformationFlowTest {
 		StringReader opener = new StringReader();
 		final String testCSVString = DMPUtil.getResourceAsString("test_csv.csv");
 
-		final CsvReader reader = new CsvReader();
+		final CsvReader reader = new CsvReader(";", "\t\n");
 		reader.setHeaderLines(1);
 		final JsonEncoder converter = new JsonEncoder();
 		final StringWriter stringWriter = new StringWriter();

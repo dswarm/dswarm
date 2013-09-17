@@ -13,7 +13,7 @@ import de.avgl.dmp.converter.mf.stream.converter.CsvDecoder;
  * 
  * @author tgaengler
  */
-@Description("reads Csv files. First n lines are interpreted as header. Provide value separators in brackets as regexp.")
+@Description("reads Csv files. First n lines are interpreted as header.")
 @In(java.io.Reader.class)
 @Out(StreamReceiver.class)
 public final class CsvReader extends ReaderBase<CsvDecoder> {

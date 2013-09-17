@@ -32,7 +32,7 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
 	 */
 	public CsvDecoder(final String columnSeparator) {
 		super();
-		this.columnSeparator = Pattern.compile(columnSeparator);
+		this.columnSeparator = Pattern.compile("[" + columnSeparator + "]");
 	}
 
 	public CsvDecoder() {
