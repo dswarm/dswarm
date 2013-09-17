@@ -31,6 +31,12 @@ public class Configuration extends DMPJPAObject {
 
 	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(Configuration.class);
 
+	@Column(name = "NAME")
+	private String									name					= null;
+
+	@Column(name = "DESCRIPTION")
+	private String									description				= null;
+	
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "parameters", columnDefinition = "CLOB")
@@ -41,6 +47,25 @@ public class Configuration extends DMPJPAObject {
 
 	@Transient
 	private boolean									parametersInitialized	= false;
+	
+	public String getName() {
+
+		return name;
+	}
+
+	public void setName(final String name) {
+
+		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(final String description) {
+
+		this.description = description;
+	}
 
 	/**
 	 * The related resource.

@@ -25,6 +25,9 @@ public class ConfigurationServiceTest extends BasicJPAServiceTest<Configuration,
 		
 		Configuration configuration = createObject();
 		
+		configuration.setName("my configuration");
+		configuration.setDescription("configuration description");
+		
 		final ObjectNode parameters = new ObjectNode(DMPUtil.getJSONFactory());
 		final String parameterKey = "fileseparator";
 		final String parameterValue = ";";
@@ -36,8 +39,12 @@ public class ConfigurationServiceTest extends BasicJPAServiceTest<Configuration,
 		
 		Configuration updatedConfiguration = getUpdatedObject(configuration);
 		
-		Assert.assertNotNull("the configuration of the updated resource shouldn't be null", updatedConfiguration.getParameters());
-		Assert.assertEquals("the configurations of the resource are not equal", configuration.getParameters(), updatedConfiguration.getParameters());
+		Assert.assertNotNull("the configuration name of the updated resource shouldn't be null", updatedConfiguration.getName());
+		Assert.assertEquals("the configuration' names of the resource are not equal", configuration.getName(), updatedConfiguration.getName());
+		Assert.assertNotNull("the configuration description of the updated resource shouldn't be null", updatedConfiguration.getDescription());
+		Assert.assertEquals("the configuration descriptions of the resource are not equal", configuration.getDescription(), updatedConfiguration.getDescription());
+		Assert.assertNotNull("the configuration parameters of the updated resource shouldn't be null", updatedConfiguration.getParameters());
+		Assert.assertEquals("the configurations parameters of the resource are not equal", configuration.getParameters(), updatedConfiguration.getParameters());
 		Assert.assertNotNull("the parameter value shouldn't be null", configuration.getParameter(parameterKey));
 		Assert.assertEquals("the parameter value should be equal", configuration.getParameter(parameterKey).asText(), parameterValue);
 		
