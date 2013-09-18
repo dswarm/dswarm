@@ -3,6 +3,7 @@ package de.avgl.dmp.converter.pipe;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
 import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 

@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.nio.file.Files;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -43,7 +42,7 @@ public class ResourcesResource {
 
 	@Context
 	UriInfo uri;
-	
+
 	private Response buildResponse(final String responseContent) {
 
 		return Response.ok(responseContent).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
@@ -66,35 +65,35 @@ public class ResourcesResource {
 
 			throw new DMPControllerException("couldn't transform resource object to JSON string");
 		}
-		
+
 		URI baseURI = uri.getRequestUri();
 		URI resourceURI = URI.create(baseURI.toString() + "/" + resource.getId());
-		
+
 		return Response.created(resourceURI).entity(resourceJSON).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getResources() throws DMPControllerException {
-		
+
 		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
-		
+
 		final List<Resource> resources = resourceService.getObjects();
-		
+
 		if(resources == null) {
-			
+
 			LOG.debug("couldn't find resource");
-			
+
 			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 		}
-		
+
 		if(resources.isEmpty()) {
-			
+
 			LOG.debug("there are no resources");
-			
+
 			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 		}
-		
+
 		String resourcesJSON = null;
 
 		try {
@@ -107,23 +106,23 @@ public class ResourcesResource {
 
 		return buildResponse(resourcesJSON);
 	}
-	
+
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getResource(@PathParam("id") Long id) throws DMPControllerException {
-		
+
 		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
-		
+
 		final Resource resource = resourceService.getObject(id);
-		
+
 		if(resource == null) {
-			
+
 			LOG.debug("couldn't find resource");
-			
+
 			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 		}
-		
+
 		String resourceJSON = null;
 
 		try {
@@ -136,6 +135,7 @@ public class ResourcesResource {
 
 		return buildResponse(resourceJSON);
 	}
+
 
 	@OPTIONS
 	public Response getOptions() {
@@ -173,23 +173,24 @@ public class ResourcesResource {
 		resource.setName(fileName);
 		resource.setType(ResourceType.FILE);
 
-		String fileType = null;
+		// String fileType = null;
 
-		try {
-
-			fileType = Files.probeContentType(file.toPath());
-		} catch (IOException e1) {
-
-			LOG.debug("couldn't determine file type from file '" + file.getAbsolutePath() + "'");
-		}
+		// TODO: Files.probeContentType is JDK 1.7 only -> will be re-enabled when JDK 1.7 is support again
+		// try {
+		//
+		// fileType = Files.probeContentType(file.toPath());
+		// } catch (IOException e1) {
+		//
+		// LOG.debug("couldn't determine file type from file '" + file.getAbsolutePath() + "'");
+		// }
 
 		final ObjectNode attributes = new ObjectNode(DMPUtil.getJSONFactory());
 		attributes.put("path", file.getAbsolutePath());
 
-		if (fileType != null) {
-
-			attributes.put("filetype", fileType);
-		}
+		// if (fileType != null) {
+		//
+		// attributes.put("filetype", fileType);
+		// }
 
 		attributes.put("filesize", fileDetail.getSize());
 
