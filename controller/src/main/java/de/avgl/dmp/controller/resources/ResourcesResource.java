@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.Set;
 
@@ -58,8 +57,9 @@ public class ResourcesResource {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response uploadResource(@FormDataParam("file") InputStream uploadedInputStream,
-			@FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("name") String name, @FormDataParam("description") String description) throws DMPControllerException {
-		
+			@FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("name") String name,
+			@FormDataParam("description") String description) throws DMPControllerException {
+
 		final Resource resource = createResource(uploadedInputStream, fileDetail, name, description);
 
 		String resourceJSON = null;
@@ -207,11 +207,12 @@ public class ResourcesResource {
 
 		return buildResponse(configurationsJSON);
 	}
-	
+
 	@GET
 	@Path("/{id}/configurations/{configurationid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResourceConfiguration(@PathParam("id") Long id, @PathParam("configurationid") Long configurationId) throws DMPControllerException {
+	public Response getResourceConfiguration(@PathParam("id") Long id, @PathParam("configurationid") Long configurationId)
+			throws DMPControllerException {
 
 		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
 
@@ -232,11 +233,11 @@ public class ResourcesResource {
 
 			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 		}
-		
+
 		final Configuration configuration = resource.getConfiguration(configurationId);
-		
-		if(configuration == null) {
-			
+
+		if (configuration == null) {
+
 			LOG.debug("couldn't find configuration '" + configurationId + "' for resource '" + id + "'");
 
 			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
@@ -280,7 +281,7 @@ public class ResourcesResource {
 				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, POST, OPTIONS, HEAD")
 				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Accept, Origin, X-Requested-With, Content-Type").build();
 	}
-	
+
 	@OPTIONS
 	@Path("/{id}/configurations/{configurationid}")
 	public Response getConfigurationOptions() {
@@ -290,7 +291,8 @@ public class ResourcesResource {
 				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Accept, Origin, X-Requested-With, Content-Type").build();
 	}
 
-	private Resource createResource(final InputStream uploadInputedStream, final FormDataContentDisposition fileDetail, final String name, final String description) throws DMPControllerException {
+	private Resource createResource(final InputStream uploadInputedStream, final FormDataContentDisposition fileDetail, final String name,
+			final String description) throws DMPControllerException {
 
 		final File file = DMPControllerUtils.writeToFile(uploadInputedStream, fileDetail.getFileName(), "resources");
 
@@ -322,23 +324,24 @@ public class ResourcesResource {
 
 		resource.setType(ResourceType.FILE);
 
-		String fileType = null;
+		// String fileType = null;
 
-		try {
-
-			fileType = Files.probeContentType(file.toPath());
-		} catch (IOException e1) {
-
-			LOG.debug("couldn't determine file type from file '" + file.getAbsolutePath() + "'");
-		}
+		// TODO: Files.probeContentType is JDK 1.7 only -> will be re-enabled when JDK 1.7 is support again
+		// try {
+		//
+		// fileType = Files.probeContentType(file.toPath());
+		// } catch (IOException e1) {
+		//
+		// LOG.debug("couldn't determine file type from file '" + file.getAbsolutePath() + "'");
+		// }
 
 		final ObjectNode attributes = new ObjectNode(DMPUtil.getJSONFactory());
 		attributes.put("path", file.getAbsolutePath());
 
-		if (fileType != null) {
-
-			attributes.put("filetype", fileType);
-		}
+		// if (fileType != null) {
+		//
+		// attributes.put("filetype", fileType);
+		// }
 
 		attributes.put("filesize", fileDetail.getSize());
 

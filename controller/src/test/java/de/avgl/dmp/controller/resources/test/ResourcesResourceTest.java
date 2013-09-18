@@ -298,9 +298,9 @@ public class ResourcesResourceTest extends ResourceTest {
 		Assert.assertNotNull("resource type shouldn't be null", responseResource.getType());
 		Assert.assertEquals("the resource types should be equal", expectedResource.getType(), responseResource.getType());
 		Assert.assertNotNull("resource attributes shouldn't be null", responseResource.getAttributes());
-		Assert.assertNotNull("resource attribute 'filetype' shouldn't be null", responseResource.getAttribute("filetype"));
-		Assert.assertEquals("the resource file types should be equal", expectedResource.getAttribute("filetype"),
-				responseResource.getAttribute("filetype"));
+//		Assert.assertNotNull("resource attribute 'filetype' shouldn't be null", responseResource.getAttribute("filetype"));
+//		Assert.assertEquals("the resource file types should be equal", expectedResource.getAttribute("filetype"),
+//				responseResource.getAttribute("filetype"));
 		Assert.assertNotNull("resource attribute 'filesize' shouldn't be null", responseResource.getAttribute("filesize"));
 		Assert.assertEquals("the resource file sizes should be equal", expectedResource.getAttribute("filesize"),
 				responseResource.getAttribute("filesize"));
