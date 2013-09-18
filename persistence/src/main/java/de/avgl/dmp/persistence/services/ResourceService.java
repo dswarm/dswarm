@@ -20,8 +20,8 @@ public class ResourceService extends BasicJPAService<Resource> {
 
 	@Override
 	protected void prepareObjectForRemoval(final Resource object) {
-		// TODO Auto-generated method stub
-
+		
+		object.setConfigurations(null);
 	}
 
 	@Override

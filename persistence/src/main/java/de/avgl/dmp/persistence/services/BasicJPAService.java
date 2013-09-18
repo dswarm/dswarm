@@ -19,6 +19,11 @@ public abstract class BasicJPAService<POJOCLASS extends DMPJPAObject> {
 		this.clasz = clasz;
 		this.className = clasz.getSimpleName();
 	}
+	
+	public Class<POJOCLASS> getClasz() {
+		
+		return clasz;
+	}
 
 	/**
 	 * Create and persist an object of the specific class.<br>

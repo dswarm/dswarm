@@ -18,7 +18,7 @@ public class ConfigurationService extends BasicJPAService<Configuration> {
 	protected void prepareObjectForRemoval(final Configuration object) {
 
 		// should clear the relationship to the resource
-		object.setResource(null);
+		object.setResources(null);
 	}
 
 	@Override

@@ -18,17 +18,17 @@ import com.google.common.io.Resources;
 
 import de.avgl.dmp.converter.flow.TransformationFlow;
 import de.avgl.dmp.converter.mf.stream.reader.CsvReader;
-import de.avgl.dmp.init.util.DMPUtil;
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
 import de.avgl.dmp.persistence.model.job.Job;
+import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public class TransformationFlowTest {
 
 	@Test
 	public void testEndToEnd() throws Exception {
 
-		final String request = DMPUtil.getResourceAsString("complex-request.json");
-		final String expected = DMPUtil.getResourceAsString("complex-result.json");
+		final String request = DMPPersistenceUtil.getResourceAsString("complex-request.json");
+		final String expected = DMPPersistenceUtil.getResourceAsString("complex-result.json");
 
 		final Job job = new JsonToPojoMapper().toJob(request);
 		final TransformationFlow flow = TransformationFlow.fromJob(job);
@@ -41,7 +41,7 @@ public class TransformationFlowTest {
 	@Test
 	public void testMorphToEnd() throws Exception {
 
-		final String expected = DMPUtil.getResourceAsString("complex-result.json");
+		final String expected = DMPPersistenceUtil.getResourceAsString("complex-result.json");
 
 		final TransformationFlow flow = TransformationFlow.fromFile("complex-metamorph.xml");
 
@@ -53,8 +53,8 @@ public class TransformationFlowTest {
 	@Test
 	public void testEndToEndByRecordStringExample() throws Exception {
 
-		final String request = DMPUtil.getResourceAsString("qucosa_record.xml");
-		final String expected = DMPUtil.getResourceAsString("complex-result.json");
+		final String request = DMPPersistenceUtil.getResourceAsString("qucosa_record.xml");
+		final String expected = DMPPersistenceUtil.getResourceAsString("complex-result.json");
 
 		final TransformationFlow flow = TransformationFlow.fromFile("complex-metamorph.xml");
 
@@ -91,7 +91,7 @@ public class TransformationFlowTest {
 
 		Assert.assertNotNull("the result output shoudln't be null", resultOutput);
 		
-		final String expectedResult = DMPUtil.getResourceAsString("csv_json.output");
+		final String expectedResult = DMPPersistenceUtil.getResourceAsString("csv_json.output");
 		
 		Assert.assertEquals("the processing outputs are not equal", expectedResult, resultOutput);
 	}

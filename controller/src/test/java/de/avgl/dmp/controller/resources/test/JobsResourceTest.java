@@ -10,7 +10,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.avgl.dmp.init.util.DMPUtil;
+import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public class JobsResourceTest extends ResourceTest {
 
@@ -24,7 +24,7 @@ public class JobsResourceTest extends ResourceTest {
 	@Before
 	public void prepare() throws IOException {
 
-		jobJSONString = DMPUtil.getResourceAsString("complex-request.json");
+		jobJSONString = DMPPersistenceUtil.getResourceAsString("complex-request.json");
 	}
 
 	@Test
@@ -37,7 +37,7 @@ public class JobsResourceTest extends ResourceTest {
 
 		final String responseString = response.readEntity(String.class);
 
-		final String expected = DMPUtil.getResourceAsString("complex-result.json");
+		final String expected = DMPPersistenceUtil.getResourceAsString("complex-result.json");
 
 		Assert.assertEquals("POST responses are not equal", expected, responseString);
 	}

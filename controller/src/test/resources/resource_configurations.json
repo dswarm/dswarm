@@ -1,1 +1,1 @@
-[{"id":1,"parameters":{"fieldseparator":"|"}},{"id":2,"parameters":{"lineseparator":"\n"}}]
+[{"id":1,"resources":[{"id":1}],"parameters":{"fieldseparator":"|"}},{"id":2,"resources":[{"id":1}],"parameters":{"lineseparator":"\n"}}]

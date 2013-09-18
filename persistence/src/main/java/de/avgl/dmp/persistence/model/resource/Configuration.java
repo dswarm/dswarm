@@ -1,25 +1,34 @@
 package de.avgl.dmp.persistence.model.resource;
 
+import java.util.Set;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlList;
+import javax.xml.bind.annotation.XmlRootElement;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Sets;
 
 import de.avgl.dmp.init.DMPException;
-import de.avgl.dmp.init.util.DMPUtil;
 import de.avgl.dmp.persistence.model.DMPJPAObject;
+import de.avgl.dmp.persistence.model.utils.ResourceReferenceDeserializer;
+import de.avgl.dmp.persistence.model.utils.ResourceReferenceSerializer;
+import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
+@XmlRootElement
 @Entity
 @Table(name = "CONFIGURATION")
 public class Configuration extends DMPJPAObject {
@@ -27,7 +36,7 @@ public class Configuration extends DMPJPAObject {
 	/**
 	 * 
 	 */
-	private static final long	serialVersionUID	= 1L;
+	private static final long						serialVersionUID		= 1L;
 
 	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(Configuration.class);
 
@@ -37,6 +46,16 @@ public class Configuration extends DMPJPAObject {
 	@Column(name = "DESCRIPTION")
 	private String									description				= null;
 	
+	/**
+	 * The related resources.
+	 */
+	@ManyToMany(mappedBy = "configurations", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonSerialize(using = ResourceReferenceSerializer.class)
+	@JsonDeserialize(using = ResourceReferenceDeserializer.class)
+	@XmlIDREF
+	@XmlList
+	private Set<Resource>	resources;
+
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "parameters", columnDefinition = "CLOB")
@@ -47,7 +66,7 @@ public class Configuration extends DMPJPAObject {
 
 	@Transient
 	private boolean									parametersInitialized	= false;
-	
+
 	public String getName() {
 
 		return name;
@@ -67,21 +86,13 @@ public class Configuration extends DMPJPAObject {
 		this.description = description;
 	}
 
-	/**
-	 * The related resource.
-	 */
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "RESOURCE")
-	@JsonBackReference
-	private Resource								resource;
-
 	public ObjectNode getParameters() {
 
 		if (parameters == null && parametersInitialized == false) {
 
 			try {
 
-				parameters = DMPUtil.getJSON(parametersString);
+				parameters = DMPPersistenceUtil.getJSON(parametersString);
 			} catch (DMPException e) {
 
 				LOG.debug("couldn't parse parameters JSON string for resource '" + getId() + "'");
@@ -104,7 +115,7 @@ public class Configuration extends DMPJPAObject {
 
 		if (parameters == null) {
 
-			parameters = new ObjectNode(DMPUtil.getJSONFactory());
+			parameters = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
 		}
 
 		parameters.set(key, value);
@@ -124,25 +135,97 @@ public class Configuration extends DMPJPAObject {
 		return parameters.get(key);
 	}
 
-	public Resource getResource() {
+	public Set<Resource> getResources() {
 
-		return resource;
+		return resources;
 	}
 
-	public void setResource(final Resource resourceArg) {
+	public void setResources(final Set<Resource> resourcesArg) {
 
-		if (resourceArg == null && resource != null) {
+		if (resourcesArg == null && resources != null) {
 
-			// remove configuration from resource, if configuration, will be prepared for removal
+			// remove configuration from resources, if configuration, will be prepared for removal
 
-			resource.removeConfiguration(this);
+			for (final Resource resource : resources) {
+
+				resource.removeConfiguration(this);
+			}
 		}
 
-		resource = resourceArg;
+		resources = resourcesArg;
 
-		if (resourceArg != null) {
+		if (resourcesArg != null) {
 
+			for (final Resource resource : resourcesArg) {
+
+				resource.addConfiguration(this);
+			}
+		}
+	}
+
+	/**
+	 * Adds a new resource to the collection of resources of this configuration.<br>
+	 * Created by: tgaengler
+	 * 
+	 * @param resource a new export definition revision
+	 */
+	public void addResource(final Resource resource) {
+
+		if (resource != null) {
+
+			if (resources == null) {
+
+				resources = Sets.newLinkedHashSet();
+			}
+
+			if (!resources.contains(resource)) {
+
+				resources.add(resource);
+				resource.addConfiguration(this);
+			}
+		}
+	}
+
+	/**
+	 * Replaces an existing resource, i.e., the resource with the same identifier will be replaced.<br>
+	 * Created by: tgaengler
+	 * 
+	 * @param resource an existing, updated resource
+	 */
+	public void replaceResource(final Resource resource) {
+
+		if (resource != null) {
+
+			if (resources == null) {
+
+				resources = Sets.newLinkedHashSet();
+			}
+
+			if (resources.contains(resource)) {
+
+				resources.remove(resource);
+			}
+
+			resources.add(resource);
+
+			resource.removeConfiguration(this);
 			resource.addConfiguration(this);
+		}
+	}
+
+	/**
+	 * Removes an existing resource from the collection of resources of this configuration.<br>
+	 * Created by: tgaengler
+	 * 
+	 * @param resource an existing resource that should be removed
+	 */
+	public void removeResource(final Resource resource) {
+
+		if (resources != null && resource != null && resources.contains(resource)) {
+
+			resources.remove(resource);
+
+			resource.removeConfiguration(this);
 		}
 	}
 

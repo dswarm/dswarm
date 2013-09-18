@@ -32,13 +32,13 @@ import com.google.common.net.HttpHeaders;
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.services.PersistenceServices;
 import de.avgl.dmp.controller.utils.DMPControllerUtils;
-import de.avgl.dmp.init.util.DMPUtil;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
 import de.avgl.dmp.persistence.services.ConfigurationService;
 import de.avgl.dmp.persistence.services.ResourceService;
+import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 @Path("resources")
 public class ResourcesResource {
@@ -66,7 +66,7 @@ public class ResourcesResource {
 
 		try {
 
-			resourceJSON = DMPUtil.getJSONObjectMapper().writeValueAsString(resource);
+			resourceJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(resource);
 		} catch (final JsonProcessingException e) {
 
 			throw new DMPControllerException("couldn't transform resource object to JSON string");
@@ -104,7 +104,7 @@ public class ResourcesResource {
 
 		try {
 
-			resourcesJSON = DMPUtil.getJSONObjectMapper().writeValueAsString(resources);
+			resourcesJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(resources);
 		} catch (final JsonProcessingException e) {
 
 			throw new DMPControllerException("couldn't transform resources list object to JSON string.\n" + e.getMessage());
@@ -131,7 +131,7 @@ public class ResourcesResource {
 
 		try {
 
-			resourceJSON = DMPUtil.getJSONObjectMapper().writeValueAsString(resource);
+			resourceJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(resource);
 		} catch (final JsonProcessingException e) {
 
 			throw new DMPControllerException("couldn't transform resource object to JSON string.\n" + e.getMessage());
@@ -169,7 +169,7 @@ public class ResourcesResource {
 
 		try {
 
-			configurationsJSON = DMPUtil.getJSONObjectMapper().writeValueAsString(resource.getConfigurations());
+			configurationsJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(resource.getConfigurations());
 		} catch (final JsonProcessingException e) {
 
 			throw new DMPControllerException("couldn't transform resource configurations set to JSON string.\n" + e.getMessage());
@@ -199,7 +199,7 @@ public class ResourcesResource {
 
 		try {
 
-			configurationsJSON = DMPUtil.getJSONObjectMapper().writeValueAsString(configuration);
+			configurationsJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(configuration);
 		} catch (final JsonProcessingException e) {
 
 			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
@@ -247,7 +247,7 @@ public class ResourcesResource {
 
 		try {
 
-			configurationJSON = DMPUtil.getJSONObjectMapper().writeValueAsString(configuration);
+			configurationJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(configuration);
 		} catch (final JsonProcessingException e) {
 
 			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
@@ -335,7 +335,7 @@ public class ResourcesResource {
 		// LOG.debug("couldn't determine file type from file '" + file.getAbsolutePath() + "'");
 		// }
 
-		final ObjectNode attributes = new ObjectNode(DMPUtil.getJSONFactory());
+		final ObjectNode attributes = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
 		attributes.put("path", file.getAbsolutePath());
 
 		// if (fileType != null) {
@@ -366,7 +366,7 @@ public class ResourcesResource {
 
 		try {
 
-			configurationFromJSON = DMPUtil.getJSONObjectMapper().readValue(configurationJSONString, Configuration.class);
+			configurationFromJSON = DMPPersistenceUtil.getJSONObjectMapper().readValue(configurationJSONString, Configuration.class);
 		} catch (final JsonParseException e) {
 
 			LOG.debug("something went wrong while deserializing the configuration JSON string");
@@ -409,7 +409,7 @@ public class ResourcesResource {
 		}
 
 		configuration.setParameters(configurationFromJSON.getParameters());
-		configuration.setResource(resource);
+		configuration.addResource(resource);
 
 		try {
 

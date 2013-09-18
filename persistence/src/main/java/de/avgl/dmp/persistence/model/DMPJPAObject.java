@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.xml.bind.annotation.XmlID;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Cache;
@@ -18,6 +19,7 @@ import com.google.common.base.Objects;
 @MappedSuperclass
 @Cacheable(true)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+// @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 public abstract class DMPJPAObject implements Serializable {
 
 	/**
@@ -26,6 +28,7 @@ public abstract class DMPJPAObject implements Serializable {
 	private static final long	serialVersionUID	= 1L;
 	
 	@Id
+	@XmlID
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "ID")
 	private Long	id;

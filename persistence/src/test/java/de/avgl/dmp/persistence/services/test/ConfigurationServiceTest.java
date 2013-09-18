@@ -5,10 +5,10 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import de.avgl.dmp.init.util.DMPUtil;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.test.BasicJPAServiceTest;
 import de.avgl.dmp.persistence.services.ConfigurationService;
+import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 
 public class ConfigurationServiceTest extends BasicJPAServiceTest<Configuration, ConfigurationService> {
@@ -28,7 +28,7 @@ public class ConfigurationServiceTest extends BasicJPAServiceTest<Configuration,
 		configuration.setName("my configuration");
 		configuration.setDescription("configuration description");
 		
-		final ObjectNode parameters = new ObjectNode(DMPUtil.getJSONFactory());
+		final ObjectNode parameters = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
 		final String parameterKey = "fileseparator";
 		final String parameterValue = ";";
 		parameters.put(parameterKey, parameterValue);

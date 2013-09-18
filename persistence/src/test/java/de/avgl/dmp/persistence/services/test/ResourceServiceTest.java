@@ -6,7 +6,6 @@ import org.junit.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import de.avgl.dmp.init.util.DMPUtil;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
@@ -14,6 +13,7 @@ import de.avgl.dmp.persistence.model.resource.ResourceType;
 import de.avgl.dmp.persistence.model.test.BasicJPAServiceTest;
 import de.avgl.dmp.persistence.services.ConfigurationService;
 import de.avgl.dmp.persistence.services.ResourceService;
+import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public class ResourceServiceTest extends BasicJPAServiceTest<Resource, ResourceService> {
 
@@ -67,7 +67,7 @@ public class ResourceServiceTest extends BasicJPAServiceTest<Resource, ResourceS
 
 		final Long configurationId = configuration.getId();
 
-		final ObjectNode parameters = new ObjectNode(DMPUtil.getJSONFactory());
+		final ObjectNode parameters = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
 		final String parameterKey = "fieldseparator";
 		final String parameterValue = ";";
 		parameters.put(parameterKey, parameterValue);
@@ -126,7 +126,7 @@ public class ResourceServiceTest extends BasicJPAServiceTest<Resource, ResourceS
 
 		final Long configuration2Id = configuration2.getId();
 
-		final ObjectNode parameters2 = new ObjectNode(DMPUtil.getJSONFactory());
+		final ObjectNode parameters2 = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
 		final String parameterKey2 = "lineseparator";
 		final String parameterValue2 = "\n";
 		parameters2.put(parameterKey2, parameterValue2);
@@ -151,7 +151,7 @@ public class ResourceServiceTest extends BasicJPAServiceTest<Resource, ResourceS
 
 		try {
 
-			resourceJSON = DMPUtil.getJSONObjectMapper().writeValueAsString(updatedResource3);
+			resourceJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(updatedResource3);
 		} catch (final JsonProcessingException e) {
 
 			LOG.debug("couldn't transform resource object to JSON string.\n" + e.getMessage());
@@ -161,6 +161,8 @@ public class ResourceServiceTest extends BasicJPAServiceTest<Resource, ResourceS
 		System.out.println("resource JSON: " + resourceJSON);
 
 		// clean up DB
+		configurationService.deleteObject(configurationId);
+		configurationService.deleteObject(configuration2Id);
 		deletedObject(resource.getId());
 
 		final Configuration deletedConfiguration = configurationService.getObject(configurationId);
@@ -180,7 +182,7 @@ public class ResourceServiceTest extends BasicJPAServiceTest<Resource, ResourceS
 		resource.setDescription("blubblub");
 		resource.setType(ResourceType.FILE);
 
-		final ObjectNode attributes = new ObjectNode(DMPUtil.getJSONFactory());
+		final ObjectNode attributes = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
 		attributes.put(attributeKey, attributeValue);
 
 		resource.setAttributes(attributes);

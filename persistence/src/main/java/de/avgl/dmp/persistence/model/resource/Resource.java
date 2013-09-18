@@ -16,20 +16,23 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
 
 import de.avgl.dmp.init.DMPException;
-import de.avgl.dmp.init.util.DMPUtil;
 import de.avgl.dmp.persistence.model.DMPJPAObject;
+import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 @XmlRootElement
 @Entity
@@ -71,8 +74,12 @@ public class Resource extends DMPJPAObject {
 	 * All configurations of the resource.
 	 */
 	// TODO set correct casacade type
-	@OneToMany(mappedBy = "resource", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonManagedReference
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinTable(name = "RESOURCES_CONFIGURATIONS", joinColumns = { @JoinColumn(name = "RESOURCE_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "CONFIGURATION_ID", referencedColumnName = "ID") })
+	// @JsonSerialize(using = ConfigurationReferenceSerializer.class)
+	// @JsonDeserialize(using = ConfigurationReferenceDeserializer.class)
+	@XmlIDREF
+	@XmlList
 	private Set<Configuration>						configurations;
 
 	public String getName() {
@@ -110,7 +117,7 @@ public class Resource extends DMPJPAObject {
 
 			try {
 
-				attributes = DMPUtil.getJSON(attributesString);
+				attributes = DMPPersistenceUtil.getJSON(attributesString);
 			} catch (DMPException e) {
 
 				LOG.debug("couldn't parse attributes JSON string for resource '" + getId() + "'");
@@ -133,7 +140,7 @@ public class Resource extends DMPJPAObject {
 
 		if (attributes == null) {
 
-			attributes = new ObjectNode(DMPUtil.getJSONFactory());
+			attributes = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
 		}
 
 		attributes.set(key, value);
@@ -171,27 +178,47 @@ public class Resource extends DMPJPAObject {
 	public void setConfigurations(final Set<Configuration> configurationsArg) {
 
 		this.configurations = configurationsArg;
+
+		if (configurationsArg == null && configurations != null) {
+
+			// remove resource from configurations, if resource, will be prepared for removal
+
+			for (final Configuration configuration : configurations) {
+
+				configuration.removeResource(this);
+			}
+		}
+
+		configurations = configurationsArg;
+
+		if (configurationsArg != null) {
+
+			for (final Configuration configuration : configurationsArg) {
+
+				configuration.addResource(this);
+			}
+		}
 	}
-	
+
 	public Configuration getConfiguration(final Long id) {
-		
-		if(id == null) {
-			
+
+		if (id == null) {
+
 			return null;
 		}
-		
-		if(this.configurations == null || this.configurations.isEmpty()) {
-			
+
+		if (this.configurations == null || this.configurations.isEmpty()) {
+
 			return null;
 		}
-		
+
 		final List<Configuration> configurationsFiltered = filter(having(on(Configuration.class).getId(), equalTo(id)), this.configurations);
-		
-		if(configurationsFiltered == null || configurationsFiltered.isEmpty()) {
-			
+
+		if (configurationsFiltered == null || configurationsFiltered.isEmpty()) {
+
 			return null;
 		}
-		
+
 		return configurationsFiltered.get(0);
 	}
 
@@ -213,11 +240,7 @@ public class Resource extends DMPJPAObject {
 			if (!configurations.contains(configuration)) {
 
 				configurations.add(configuration);
-			}
-
-			if (configuration.getResource() == null) {
-
-				configuration.setResource(this);
+				configuration.addResource(this);
 			}
 		}
 	}
@@ -244,10 +267,8 @@ public class Resource extends DMPJPAObject {
 
 			configurations.add(configuration);
 
-			if (configuration.getResource() == null) {
-
-				configuration.setResource(this);
-			}
+			configuration.removeResource(this);
+			configuration.addResource(this);
 		}
 	}
 
@@ -263,10 +284,7 @@ public class Resource extends DMPJPAObject {
 
 			configurations.remove(configuration);
 
-			if (configuration.getResource() != null) {
-
-				configuration.setResource(null);
-			}
+			configuration.removeResource(this);
 		}
 	}
 
