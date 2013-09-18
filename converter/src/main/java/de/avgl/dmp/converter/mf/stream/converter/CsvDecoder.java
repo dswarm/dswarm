@@ -1,7 +1,8 @@
 package de.avgl.dmp.converter.mf.stream.converter;
 
-import java.util.regex.Pattern;
+import java.util.Iterator;
 
+import org.apache.commons.csv.CSVRecord;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
@@ -14,112 +15,81 @@ import org.culturegraph.mf.framework.annotations.Out;
  * @author tgaengler
  */
 @Description("Decodes lines of CSV files.")
-@In(String.class)
+@In(CSVRecord.class)
 @Out(StreamReceiver.class)
-public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> {
+public final class CsvDecoder extends DefaultObjectPipe<CSVRecord, StreamReceiver> {
 
-	private static final String	DEFAULT_SEP		= "[\t,;]";
-	private final Pattern		columnSeparator;
-	private String[][]			header			= new String[0][0];
-	private int					count;
-	private int					headerLines;
-	private int					headerLinesCount;
-	private int					schemaHeaderLine = -1;
-	private boolean				readHeaderLines	= false;
-
-	/**
-	 * @param columnSeparator regexp to split lines
-	 */
-	public CsvDecoder(final String columnSeparator) {
-		super();
-		this.columnSeparator = Pattern.compile("[" + columnSeparator + "]");
-	}
+	private boolean		hasHeader = false;
+	private String[]	header	= new String[0];
+	private int			count;
 
 	public CsvDecoder() {
 		super();
-		this.columnSeparator = Pattern.compile(DEFAULT_SEP);
 	}
 
 	@Override
-	public void process(final String string) {
-		
+	public void process(final CSVRecord record) {
+
 		assert !isClosed();
-		
-		final String[] parts = columnSeparator.split(string);
 
-		if ((headerLines > 0)) {
+		if (hasHeader) {
 
-			if (readHeaderLines == false) {
+			if (header.length == 0) {
 
-				// read header lines
+				// determine schema properties from header
 
-				if (header[headerLinesCount].length == 0) {
+				final Iterator<String> headerIter = record.iterator();
 
-					header[headerLinesCount] = parts;
-					headerLinesCount++;
+				header = new String[record.size()];
 
-					if (headerLinesCount == headerLines) {
+				int i = 0;
 
-						readHeaderLines = true;
-					}
+				while (headerIter.hasNext()) {
+
+					header[i] = headerIter.next();
+					i++;
 				}
+			} else if (record.size() == header.length) {
+
+				// utilise header for schema properties
+
+				getReceiver().startRecord(String.valueOf(++count));
+
+				final Iterator<String> columnsIter = record.iterator();
+
+				int i = 0;
+
+				while (columnsIter.hasNext()) {
+
+					getReceiver().literal(header[i], columnsIter.next());
+					i++;
+				}
+
+				getReceiver().endRecord();
 			} else {
-				
-				if(((schemaHeaderLine >= 0) && (schemaHeaderLine < headerLines)) == false) {
-					
-					throw new IllegalArgumentException("illegal schema header line: " + schemaHeaderLine);
-				}
-
-				if (parts.length == header[schemaHeaderLine].length) {
-
-					// process schema header line
-
-					getReceiver().startRecord(String.valueOf(++count));
-
-					for (int i = 0; i < parts.length; ++i) {
-
-						getReceiver().literal(header[schemaHeaderLine][i], parts[i]);
-					}
-
-					getReceiver().endRecord();
-				} else {
-
-					throw new IllegalArgumentException("wrong number of columns in input line: " + string);
-				}
+				throw new IllegalArgumentException("wrong number of columns in input line: " + record.toString());
 			}
 		} else {
 
+			// utilise column number as default for schema property
+
 			getReceiver().startRecord(String.valueOf(++count));
 
-			for (int i = 0; i < parts.length; ++i) {
+			final Iterator<String> columnsIter = record.iterator();
 
-				getReceiver().literal(String.valueOf(i), parts[i]);
+			int i = 0;
+
+			while (columnsIter.hasNext()) {
+
+				getReceiver().literal(String.valueOf(i), columnsIter.next());
+				i++;
 			}
-
 			getReceiver().endRecord();
 		}
 	}
 
-	public void setHeaderLines(final int headerLines) {
+	public void setHeader(final boolean hasHeaderArg) {
 
-		if(headerLines < 0) {
-			
-			throw new IllegalArgumentException("the number of header lines must be greater than 0");
-		}
-		
-		this.headerLines = headerLines;
-		this.headerLinesCount = 0;
-		this.header = new String[headerLines][0];
-		this.header[0] = new String[0];
-		
-		if(headerLines == 1) {
-			
-			this.schemaHeaderLine = 0;
-		}
-	}
-
-	public void setSchemaHeaderLine(final int schemaHeaderLine) {
-
-		this.schemaHeaderLine = schemaHeaderLine - 1;
+		hasHeader = hasHeaderArg;
 	}
 }

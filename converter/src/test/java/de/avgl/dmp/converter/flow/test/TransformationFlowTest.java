@@ -75,10 +75,10 @@ public class TransformationFlowTest {
 		final File file = FileUtils.toFile(url);
 
 		// set column separator and line separator
-		final CsvReader reader = new CsvReader(";", "\t\n");
+		final CsvReader reader = new CsvReader('\\', '"', ';', "\n");
 		
 		// set number of header lines (if header lines = 1, then schema header line = 1)
-		reader.setHeaderLines(1);
+		reader.setHeader(true);
 		final JsonEncoder converter = new JsonEncoder();
 		final StringWriter stringWriter = new StringWriter();
 		final ObjectJavaIoWriter<String> writer = new ObjectJavaIoWriter<String>(stringWriter);
