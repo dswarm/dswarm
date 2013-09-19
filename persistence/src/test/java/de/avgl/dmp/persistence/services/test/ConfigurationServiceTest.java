@@ -3,6 +3,7 @@ package de.avgl.dmp.persistence.services.test;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import de.avgl.dmp.persistence.model.resource.Configuration;
@@ -47,6 +48,17 @@ public class ConfigurationServiceTest extends BasicJPAServiceTest<Configuration,
 		Assert.assertEquals("the configurations parameters of the resource are not equal", configuration.getParameters(), updatedConfiguration.getParameters());
 		Assert.assertNotNull("the parameter value shouldn't be null", configuration.getParameter(parameterKey));
 		Assert.assertEquals("the parameter value should be equal", configuration.getParameter(parameterKey).asText(), parameterValue);
+		
+		String json = null;
+		
+		try {
+			json = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(updatedConfiguration);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		LOG.debug("configuration json: " + json);
 		
 		// clean up DB
 		deletedObject(configuration.getId());

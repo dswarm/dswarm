@@ -407,8 +407,28 @@ public class ResourcesResource {
 
 			throw new DMPControllerException("fresh configuration shouldn't be null");
 		}
+		
+		final String name = configurationFromJSON.getName();
+		
+		if(name != null) {
+			
+			configuration.setName(name);
+		}
+		
+		final String description = configurationFromJSON.getDescription();
+		
+		if(description != null) {
+			
+			configuration.setDescription(description);
+		}
 
-		configuration.setParameters(configurationFromJSON.getParameters());
+		final ObjectNode parameters = configurationFromJSON.getParameters();
+		
+		if(parameters != null && parameters.size() > 0) {
+			
+			configuration.setParameters(parameters);
+		}
+		
 		configuration.addResource(resource);
 
 		try {
