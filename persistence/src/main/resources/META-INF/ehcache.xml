@@ -9,7 +9,6 @@
 	<defaultCache maxElementsInMemory="30000" eternal="false"
 		timeToIdleSeconds="172800" timeToLiveSeconds="0"
 		diskExpiryThreadIntervalSeconds="172800" memoryStoreEvictionPolicy="LRU">
-		<persistence strategy="localTempSwap" />
 	</defaultCache>
 
 	<!--  <cache name="class path"
