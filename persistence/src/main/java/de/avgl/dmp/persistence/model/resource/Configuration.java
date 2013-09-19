@@ -16,6 +16,7 @@ import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -51,6 +52,7 @@ public class Configuration extends DMPJPAObject {
 	 */
 	@ManyToMany(mappedBy = "configurations", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonSerialize(using = ResourceReferenceSerializer.class)
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@JsonDeserialize(using = ResourceReferenceDeserializer.class)
 	@XmlIDREF
 	@XmlList

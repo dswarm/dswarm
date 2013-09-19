@@ -22,7 +22,7 @@ public abstract class ReferenceSerializer<DMPJPAOBJECTIMPL extends DMPJPAObject>
 		
 		if(objects == null || objects.isEmpty()) {
 			
-			generator.writeObject(null);
+			return;
 		}
 
 		final Set<Reference> references = Sets.newHashSet();
