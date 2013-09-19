@@ -168,38 +168,12 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		LOG.debug("try to retrieve configurations of resource '" + updatedComplexResource.getId() + "'");
 
-		final Response response = target.path(resourceIdentifier + "/" + updatedComplexResource.getId() + "/configurations").request()
-				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+		for (int i = 0; i < 5; i++) {
 
-		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
-		final String responseResourceConfigurations = response.readEntity(String.class);
-		final String resourceConfigurationsJSON = DMPPersistenceUtil.getResourceAsString("resource_configurations.json");
-
-		final Map<Long, Configuration> responseConfigurations = Maps.newLinkedHashMap();
-		final ArrayNode responseConfigurationsJSONArray = DMPPersistenceUtil.getJSONObjectMapper().readValue(resourceConfigurationsJSON,
-				ArrayNode.class);
-		final Iterator<JsonNode> responseConfigurationJSONIter = responseConfigurationsJSONArray.iterator();
-
-		while (responseConfigurationJSONIter.hasNext()) {
-
-			final JsonNode responseConfigurationJSON = responseConfigurationJSONIter.next();
-
-			final Configuration responseConfiguration = DMPPersistenceUtil.getJSONObjectMapper().readValue(
-					((ObjectNode) responseConfigurationJSON).toString(), Configuration.class);
-			
-			responseConfigurations.put(responseConfiguration.getId(), responseConfiguration);
+			getResourceConfigurationsInternal(updatedComplexResource, createdConfigurations);
 		}
-		
-		for(final Configuration configuration : createdConfigurations) {
-			
-			final Configuration responseConfiguration = responseConfigurations.get(configuration.getId());
-			
-			Assert.assertNotNull("response configuration shouldn't be null", responseConfiguration);
-			Assert.assertEquals(configuration, responseConfiguration);
-			Assert.assertNotNull(responseConfiguration.getResources());
-			Assert.assertNotNull(responseConfiguration.getParameters());
-			Assert.assertEquals("parameters are not equal", responseConfiguration.getParameters(), configuration.getParameters());
-		}
+
+		// clean up
 
 		for (final Configuration configuration : createdConfigurations) {
 
@@ -402,17 +376,18 @@ public class ResourcesResourceTest extends ResourceTest {
 	}
 
 	private void compareConfigurations(final Configuration expectedConfiguration, final Configuration actualConfiguration) {
-		
-		if(expectedConfiguration.getName() != null) {
-			
+
+		if (expectedConfiguration.getName() != null) {
+
 			Assert.assertNotNull("the configuration name shouldn't be null", actualConfiguration.getName());
 			Assert.assertEquals("the configuration names should be equal", expectedConfiguration.getName(), actualConfiguration.getName());
 		}
-		
-		if(expectedConfiguration.getDescription() != null) {
-			
+
+		if (expectedConfiguration.getDescription() != null) {
+
 			Assert.assertNotNull("the configuration description shouldn't be null", actualConfiguration.getDescription());
-			Assert.assertEquals("the configuration descriptions should be equal", expectedConfiguration.getDescription(), actualConfiguration.getDescription());
+			Assert.assertEquals("the configuration descriptions should be equal", expectedConfiguration.getDescription(),
+					actualConfiguration.getDescription());
 		}
 
 		final ObjectNode parameters = expectedConfiguration.getParameters();
@@ -437,6 +412,41 @@ public class ResourcesResourceTest extends ResourceTest {
 
 			Assert.assertTrue("the parameter values of '" + parameterKey + "' are not equal. expected = '" + parameterValue + "'; was = '"
 					+ parameterValueNode.asText() + "'", parameterValue.equals(parameterValueNode.asText()));
+		}
+	}
+
+	private void getResourceConfigurationsInternal(final Resource resource, final Set<Configuration> configurations) throws Exception {
+
+		final Response response = target.path(resourceIdentifier + "/" + resource.getId() + "/configurations").request()
+				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+		final String resourceConfigurationsJSON = DMPPersistenceUtil.getResourceAsString("resource_configurations.json");
+
+		final Map<Long, Configuration> responseConfigurations = Maps.newLinkedHashMap();
+		final ArrayNode responseConfigurationsJSONArray = DMPPersistenceUtil.getJSONObjectMapper().readValue(resourceConfigurationsJSON,
+				ArrayNode.class);
+		final Iterator<JsonNode> responseConfigurationJSONIter = responseConfigurationsJSONArray.iterator();
+
+		while (responseConfigurationJSONIter.hasNext()) {
+
+			final JsonNode responseConfigurationJSON = responseConfigurationJSONIter.next();
+
+			final Configuration responseConfiguration = DMPPersistenceUtil.getJSONObjectMapper().readValue(
+					((ObjectNode) responseConfigurationJSON).toString(), Configuration.class);
+
+			responseConfigurations.put(responseConfiguration.getId(), responseConfiguration);
+		}
+
+		for (final Configuration configuration : configurations) {
+
+			final Configuration responseConfiguration = responseConfigurations.get(configuration.getId());
+
+			Assert.assertNotNull("response configuration shouldn't be null", responseConfiguration);
+			Assert.assertEquals("configurations are not euql", configuration, responseConfiguration);
+			Assert.assertNotNull("configuration resources are null", responseConfiguration.getResources());
+			Assert.assertNotNull("parameters are null", responseConfiguration.getParameters());
+			Assert.assertEquals("parameters are not equal", responseConfiguration.getParameters(), configuration.getParameters());
 		}
 	}
 }
