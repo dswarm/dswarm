@@ -73,6 +73,7 @@
 					<configuration>
 						<!-- <instrumentation> <ignores> <ignore>...</ignore> </ignores> <excludes>
 							<exclude>...</exclude> </excludes> </instrumentation> -->
+                        <format>xml</format>
 						<source>${java.source.version}</source>
 						<target>${java.source.version}</target>
 						<check>
