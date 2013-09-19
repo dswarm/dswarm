@@ -53,14 +53,6 @@
 		<commons-io.version>2.4</commons-io.version>
 	</properties>
 
-	<repositories>
-		<repository>
-			<id>nexus</id>
-			<name>Avantgarde Labs Internal Maven Repository</name>
-			<url>http://achvcontes01.avantgarde-labs.de:8082/nexus/content/groups/public</url>
-		</repository>
-	</repositories>
-
 	<build>
 
 		<pluginManagement>
@@ -419,30 +411,6 @@
 		</profile>
 		<profile>
 			<id>DEV</id>
-			<repositories>
-				<repository>
-					<id>central</id>
-					<url>http://central</url>
-					<releases>
-						<enabled>true</enabled>
-					</releases>
-					<snapshots>
-						<enabled>true</enabled>
-					</snapshots>
-				</repository>
-			</repositories>
-			<pluginRepositories>
-				<pluginRepository>
-					<id>central</id>
-					<url>http://central</url>
-					<releases>
-						<enabled>true</enabled>
-					</releases>
-					<snapshots>
-						<enabled>true</enabled>
-					</snapshots>
-				</pluginRepository>
-			</pluginRepositories>
 			<properties>
 				<env>dev</env>
 				<rdb.url>jdbc:hsqldb:file:target/hsql/dmpdb;hsqldb.lock_file=false</rdb.url>
