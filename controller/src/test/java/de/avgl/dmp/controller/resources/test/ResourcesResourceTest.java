@@ -402,6 +402,18 @@ public class ResourcesResourceTest extends ResourceTest {
 	}
 
 	private void compareConfigurations(final Configuration expectedConfiguration, final Configuration actualConfiguration) {
+		
+		if(expectedConfiguration.getName() != null) {
+			
+			Assert.assertNotNull("the configuration name shouldn't be null", actualConfiguration.getName());
+			Assert.assertEquals("the configuration names should be equal", expectedConfiguration.getName(), actualConfiguration.getName());
+		}
+		
+		if(expectedConfiguration.getDescription() != null) {
+			
+			Assert.assertNotNull("the configuration description shouldn't be null", actualConfiguration.getDescription());
+			Assert.assertEquals("the configuration descriptions should be equal", expectedConfiguration.getDescription(), actualConfiguration.getDescription());
+		}
 
 		final ObjectNode parameters = expectedConfiguration.getParameters();
 
