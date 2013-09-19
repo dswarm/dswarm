@@ -127,6 +127,7 @@ public class QucosaDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
 			throw new MetafactureException(e);
 		}
 
+
 		doc.getDocumentElement().normalize();
 
 		for (Node node : new NodeListIterable(doc.getElementsByTagName(RECORD_TAG))) {
