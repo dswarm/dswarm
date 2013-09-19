@@ -51,7 +51,16 @@
 		<jackson.version>2.2.3</jackson.version>
 		<apache.commons.version>3.1</apache.commons.version>
 		<commons-io.version>2.4</commons-io.version>
-	</properties>
+    </properties>
+
+		<repositories>
+		 <repository>
+		   <id>apache-snapshots</id>
+		   <url>https://repository.apache.org/content/groups/snapshots/</url>
+		   <releases><enabled>false</enabled></releases>
+		   <snapshots><enabled>true</enabled></snapshots>
+		 </repository>
+		</repositories>
 
 	<build>
 
@@ -62,7 +71,7 @@
 					<artifactId>cobertura-maven-plugin</artifactId>
 					<version>${cobertura-maven-plugin.version}</version>
 					<configuration>
-						<!-- <instrumentation> <ignores> <ignore>...</ignore> </ignores> <excludes> 
+						<!-- <instrumentation> <ignores> <ignore>...</ignore> </ignores> <excludes>
 							<exclude>...</exclude> </excludes> </instrumentation> -->
 						<source>${java.source.version}</source>
 						<target>${java.source.version}</target>
