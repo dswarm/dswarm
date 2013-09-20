@@ -5,11 +5,15 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.DMPJPAObject;
 import de.avgl.dmp.persistence.services.utils.JPAUtil;
 
 public abstract class BasicJPAService<POJOCLASS extends DMPJPAObject> {
+	
+	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(BasicJPAService.class);
 
 	private final Class<POJOCLASS>	clasz;
 	private final String			className;
@@ -50,10 +54,16 @@ public abstract class BasicJPAService<POJOCLASS extends DMPJPAObject> {
 		}
 
 		final EntityManager entityManager = JPAUtil.getEntityManager();
+		
+		LOG.debug("try to create new " + className);
 
 		JPAUtil.beginNewTransaction(entityManager);
+		
 		entityManager.persist(object);
+		
 		JPAUtil.endTransaction(entityManager);
+		
+		LOG.debug("created new " + className + " with id '" + object.getId() + "'");
 
 		return object;
 	}
@@ -68,11 +78,15 @@ public abstract class BasicJPAService<POJOCLASS extends DMPJPAObject> {
 
 		final EntityManager entityManager = JPAUtil.getEntityManager();
 		final POJOCLASS updateObject = getObject(object, entityManager);
+		
+		LOG.debug("try to update " + className + " with id '" + object.getId() + "' transactional");
 
 		JPAUtil.beginNewTransaction(entityManager);
 		updateObjectInternal(object, updateObject, entityManager);
 		entityManager.merge(updateObject);
 		JPAUtil.endTransaction(entityManager);
+		
+		LOG.debug("updated " + className + " with id '" + object.getId() + "' transactional");
 		
 		return updateObject;
 	}
@@ -88,8 +102,12 @@ public abstract class BasicJPAService<POJOCLASS extends DMPJPAObject> {
 
 		final EntityManager entityManager = JPAUtil.getEntityManager();
 		final POJOCLASS updateObject = getObject(object, entityManager);
+		
+		LOG.debug("try to update " + className + " with id '" + object.getId() + "' non-transactional");
 
 		updateObjectInternal(object, updateObject, entityManager);
+		
+		LOG.debug("updated " + className + " with id '" + object.getId() + "' non-transactional");
 		
 		return updateObject;
 	}
@@ -132,8 +150,18 @@ public abstract class BasicJPAService<POJOCLASS extends DMPJPAObject> {
 	public POJOCLASS getObject(final Long id) {
 
 		final EntityManager entityManager = JPAUtil.getEntityManager();
+		
+		LOG.debug("try to find " + className + " with id '" + id + "' in the database");
 
 		final POJOCLASS entity = entityManager.find(clasz, id);
+		
+		if(entity != null) {
+			
+			LOG.debug("found " + className + " with id '" + id + "' in the database");
+		} else {
+			
+			LOG.debug("couldn't find " + className + " with id '" + id + "' in the database");
+		}
 
 		return entity;
 	}
@@ -148,6 +176,8 @@ public abstract class BasicJPAService<POJOCLASS extends DMPJPAObject> {
 
 		final EntityManager entityManager = JPAUtil.getEntityManager();
 		final POJOCLASS updateObject = entityManager.find(clasz, id);
+		
+		LOG.debug("try to delete " + className + " with id '" + id + "' from the database");
 
 		JPAUtil.beginNewTransaction(entityManager);
 
@@ -156,6 +186,8 @@ public abstract class BasicJPAService<POJOCLASS extends DMPJPAObject> {
 		entityManager.remove(updateObject);
 
 		JPAUtil.endTransaction(entityManager);
+		
+		LOG.debug("deleted " + className + " with id '" + id + "' from the database");
 	}
 
 	protected abstract void prepareObjectForRemoval(final POJOCLASS object);

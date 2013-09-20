@@ -40,8 +40,8 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 @XmlRootElement
 @Entity
-@Cacheable(true)
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+//@Cacheable(true)
+//@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "RESOURCE")
 public class Resource extends DMPJPAObject {
 
@@ -80,7 +80,7 @@ public class Resource extends DMPJPAObject {
 	 * All configurations of the resource.
 	 */
 	// TODO set correct casacade type
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "RESOURCES_CONFIGURATIONS", joinColumns = { @JoinColumn(name = "RESOURCE_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "CONFIGURATION_ID", referencedColumnName = "ID") })
 	// @JsonSerialize(using = ConfigurationReferenceSerializer.class)
 	// @JsonDeserialize(using = ConfigurationReferenceDeserializer.class)

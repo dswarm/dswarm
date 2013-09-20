@@ -259,7 +259,9 @@ public final class JPAUtil {
 		}
 
 		try {
-			final Query query = entityManager.createNativeQuery("SELECT TOP 1 current_timestamp FROM INFORMATION_SCHEMA.SYSTEM_TABLES");
+			// H2 = SELECT 1
+			// HSQL = SELECT TOP 1 current_timestamp FROM INFORMATION_SCHEMA.SYSTEM_TABLES
+			final Query query = entityManager.createNativeQuery("SELECT 1");
 
 			if (query == null) {
 

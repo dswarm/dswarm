@@ -169,15 +169,39 @@ public class ResourcesResourceTest extends ResourceTest {
 		LOG.debug("try to retrieve configurations of resource '" + updatedComplexResource.getId() + "'");
 
 		// check idempotency of GET
-		
-		for (int i = 0; i < 5; i++) {
 
+		closeClient();
+
+		for (int i = 0; i < 10; i++) {
+
+			createClient();
 			getResourceConfigurationsInternal(updatedComplexResource, createdConfigurations);
+			closeClient();
 		}
 
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 10; i++) {
 
+			createClient();
 			getResourcesInternal(updatedComplexResource.getId(), expectedComplexResource);
+			closeClient();
+		}
+
+		for (int i = 0; i < 10; i++) {
+
+			createClient();
+			getResourceConfigurationsInternal(updatedComplexResource, createdConfigurations);
+			closeClient();
+
+			Thread.sleep(2000);
+		}
+
+		for (int i = 0; i < 10; i++) {
+
+			createClient();
+			getResourcesInternal(updatedComplexResource.getId(), expectedComplexResource);
+			closeClient();
+
+			Thread.sleep(2000);
 		}
 
 		// clean up
@@ -217,6 +241,15 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final Resource resource = addResourceConfigurationInternal();
 
+		// clean up
+
+		final ConfigurationService configurationService = PersistenceServices.getInstance().getConfigurationService();
+
+		for (final Configuration configuration : resource.getConfigurations()) {
+
+			configurationService.deleteObject(configuration.getId());
+		}
+
 		cleanUpDB(resource);
 	}
 
@@ -244,6 +277,10 @@ public class ResourcesResourceTest extends ResourceTest {
 		Assert.assertNotNull("response resource configuration shoudln't be null", responseResourceConfiguration);
 
 		compareConfigurations(configuration, responseResourceConfiguration);
+
+		final ConfigurationService configurationService = PersistenceServices.getInstance().getConfigurationService();
+
+		configurationService.deleteObject(configuration.getId());
 
 		cleanUpDB(resource);
 	}
@@ -334,7 +371,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final String responseConfigurationJSON = response.readEntity(String.class);
 
-		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+		Assert.assertEquals("201 Created was expected", 201, response.getStatus());
 		Assert.assertNotNull("response configuration JSON shouldn't be null", responseConfigurationJSON);
 
 		final Configuration responseConfiguration = DMPPersistenceUtil.getJSONObjectMapper()
@@ -503,18 +540,18 @@ public class ResourcesResourceTest extends ResourceTest {
 		// Assert.assertNotNull("resource attribute 'filetype' shouldn't be null", responseResource.getAttribute("filetype"));
 		// Assert.assertEquals("the resource file types should be equal", expectedResource.getAttribute("filetype"),
 		// responseResource.getAttribute("filetype"));
-		
+
 		final Iterator<Entry<String, JsonNode>> attributesJSONNodeIter = expectedResource.getAttributes().fields();
-		
-		while(attributesJSONNodeIter.hasNext()) {
-			
+
+		while (attributesJSONNodeIter.hasNext()) {
+
 			final Entry<String, JsonNode> attributeJSONEntry = attributesJSONNodeIter.next();
 			final String attributeKey = attributeJSONEntry.getKey();
-			
+
 			Assert.assertNotNull("resource attribute '" + attributeKey + "' shouldn't be null", responseResource.getAttribute(attributeKey));
 			Assert.assertEquals("the resource " + attributeKey + "s should be equal", expectedResource.getAttribute(attributeKey),
 					responseResource.getAttribute(attributeKey));
-			
+
 		}
 	}
 }

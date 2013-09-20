@@ -26,22 +26,36 @@ public class ResourceTest {
 	@Before
 	public void setUp() throws Exception {
 
-		Main main = Main.create(9998);
+		createClient();
+	}
+
+	protected void createClient() {
+
+		System.out.print("create client");
+
+		final Main main = Main.create(9998);
 
 		// start the server
 		server = main.startServer();
 		// create the client
 		client = JerseyClientBuilder.newBuilder()
 		// .register(JacksonJaxbJsonProvider.class)
-				.register(MultiPartFeature.class)
-				.register(de.avgl.dmp.controller.providers.ExceptionHandler.class)
-				.build();
+				.register(MultiPartFeature.class).register(de.avgl.dmp.controller.providers.ExceptionHandler.class).build();
 
 		target = client.target(main.getBaseUri());
 	}
 
 	@After
 	public void tearDown() throws Exception {
+
+		closeClient();
+	}
+
+	protected void closeClient() {
+
+		System.out.print("close client");
+
+		client.close();
 		server.stop();
 	}
 

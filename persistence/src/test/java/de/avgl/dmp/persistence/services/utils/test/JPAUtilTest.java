@@ -46,10 +46,10 @@ public class JPAUtilTest {
 	@Test
 	public void modifiedEntityManagerFactoryTest() {
 
-		final String connectionURL = "jdbc:hsqldb:.";
+		final String connectionURL = "jdbc:h2:.";
 		final String connectionUserName = "foo";
 		//final String connectionPassword = "bla";
-		final String dialect = "org.hibernate.dialect.HSQLDialect";
+		final String dialect = "org.hibernate.dialect.H2Dialect";
 		final String sharedCacheMode = "NONE";
 		final boolean enableL1Cache = false;
 		final boolean enableL2Cache = false;
