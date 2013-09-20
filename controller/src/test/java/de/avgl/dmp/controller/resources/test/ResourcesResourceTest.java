@@ -168,9 +168,16 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		LOG.debug("try to retrieve configurations of resource '" + updatedComplexResource.getId() + "'");
 
+		// check idempotency of GET
+		
 		for (int i = 0; i < 5; i++) {
 
 			getResourceConfigurationsInternal(updatedComplexResource, createdConfigurations);
+		}
+
+		for (int i = 0; i < 5; i++) {
+
+			getResourcesInternal(updatedComplexResource.getId(), expectedComplexResource);
 		}
 
 		// clean up
@@ -301,20 +308,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final Resource responseResource = DMPPersistenceUtil.getJSONObjectMapper().readValue(responseResourceString, Resource.class);
 
-		Assert.assertNotNull("resource shouldn't be null", responseResource);
-		Assert.assertNotNull("resource name shouldn't be null", responseResource.getName());
-		Assert.assertEquals("the resource names should be equal", expectedResource.getName(), responseResource.getName());
-		Assert.assertNotNull("resource description shouldn't be null", responseResource.getDescription());
-		Assert.assertEquals("the resource descriptions should be equal", expectedResource.getDescription(), responseResource.getDescription());
-		Assert.assertNotNull("resource type shouldn't be null", responseResource.getType());
-		Assert.assertEquals("the resource types should be equal", expectedResource.getType(), responseResource.getType());
-		Assert.assertNotNull("resource attributes shouldn't be null", responseResource.getAttributes());
-		// Assert.assertNotNull("resource attribute 'filetype' shouldn't be null", responseResource.getAttribute("filetype"));
-		// Assert.assertEquals("the resource file types should be equal", expectedResource.getAttribute("filetype"),
-		// responseResource.getAttribute("filetype"));
-		Assert.assertNotNull("resource attribute 'filesize' shouldn't be null", responseResource.getAttribute("filesize"));
-		Assert.assertEquals("the resource file sizes should be equal", expectedResource.getAttribute("filesize"),
-				responseResource.getAttribute("filesize"));
+		compareResource(expectedResource, responseResource);
 
 		return responseResourceString;
 	}
@@ -426,6 +420,9 @@ public class ResourcesResourceTest extends ResourceTest {
 		final Map<Long, Configuration> responseConfigurations = Maps.newLinkedHashMap();
 		final ArrayNode responseConfigurationsJSONArray = DMPPersistenceUtil.getJSONObjectMapper().readValue(resourceConfigurationsJSON,
 				ArrayNode.class);
+
+		Assert.assertNotNull("response configurations JSON array shouldn't be null", responseConfigurationsJSONArray);
+
 		final Iterator<JsonNode> responseConfigurationJSONIter = responseConfigurationsJSONArray.iterator();
 
 		while (responseConfigurationJSONIter.hasNext()) {
@@ -438,15 +435,86 @@ public class ResourcesResourceTest extends ResourceTest {
 			responseConfigurations.put(responseConfiguration.getId(), responseConfiguration);
 		}
 
+		final Map<Long, Configuration> actualConfigurations = Maps.newHashMap();
+
 		for (final Configuration configuration : configurations) {
 
-			final Configuration responseConfiguration = responseConfigurations.get(configuration.getId());
+			actualConfigurations.put(configuration.getId(), configuration);
+		}
 
-			Assert.assertNotNull("response configuration shouldn't be null", responseConfiguration);
-			Assert.assertEquals("configurations are not euql", configuration, responseConfiguration);
-			Assert.assertNotNull("configuration resources are null", responseConfiguration.getResources());
-			Assert.assertNotNull("parameters are null", responseConfiguration.getParameters());
-			Assert.assertEquals("parameters are not equal", responseConfiguration.getParameters(), configuration.getParameters());
+		compareConfigurations(configurations, actualConfigurations);
+	}
+
+	private void getResourcesInternal(final Long resourceId, final Resource expectedResource) throws Exception {
+
+		final Response response = target.path(resourceIdentifier + "/" + resourceId).request().accept(MediaType.APPLICATION_JSON_TYPE)
+				.get(Response.class);
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+
+		final String responseResourceJSON = response.readEntity(String.class);
+
+		Assert.assertNotNull("response resource JSON shouldn't be null", responseResourceJSON);
+
+		final Resource responseResource = DMPPersistenceUtil.getJSONObjectMapper().readValue(responseResourceJSON, Resource.class);
+
+		Assert.assertNotNull("the response resource shouldn't be null", responseResource);
+
+		compareResource(expectedResource, responseResource);
+
+		Assert.assertNotNull(responseResource.getConfigurations());
+
+		final Map<Long, Configuration> actualConfigurations = Maps.newHashMap();
+
+		for (final Configuration configuration : responseResource.getConfigurations()) {
+
+			actualConfigurations.put(configuration.getId(), configuration);
+		}
+
+		compareConfigurations(expectedResource.getConfigurations(), actualConfigurations);
+	}
+
+	private void compareConfigurations(final Set<Configuration> expectedConfigurations, final Map<Long, Configuration> actualConfigurations) {
+
+		for (final Configuration expectedConfiguration : expectedConfigurations) {
+
+			final Configuration actualConfiguration = actualConfigurations.get(expectedConfiguration.getId());
+
+			Assert.assertNotNull("response configuration shouldn't be null", actualConfiguration);
+			Assert.assertEquals("configurations are not equal", expectedConfiguration, actualConfiguration);
+			Assert.assertNotNull("configuration resources are null", actualConfiguration.getResources());
+			Assert.assertNotNull("parameters are null", actualConfiguration.getParameters());
+			Assert.assertEquals("parameters are not equal", expectedConfiguration.getParameters(), actualConfiguration.getParameters());
+
+			compareConfigurations(expectedConfiguration, actualConfiguration);
+		}
+	}
+
+	private void compareResource(final Resource expectedResource, final Resource responseResource) {
+
+		Assert.assertNotNull("resource shouldn't be null", responseResource);
+		Assert.assertNotNull("resource name shouldn't be null", responseResource.getName());
+		Assert.assertEquals("the resource names should be equal", expectedResource.getName(), responseResource.getName());
+		Assert.assertNotNull("resource description shouldn't be null", responseResource.getDescription());
+		Assert.assertEquals("the resource descriptions should be equal", expectedResource.getDescription(), responseResource.getDescription());
+		Assert.assertNotNull("resource type shouldn't be null", responseResource.getType());
+		Assert.assertEquals("the resource types should be equal", expectedResource.getType(), responseResource.getType());
+		Assert.assertNotNull("resource attributes shouldn't be null", responseResource.getAttributes());
+		// Assert.assertNotNull("resource attribute 'filetype' shouldn't be null", responseResource.getAttribute("filetype"));
+		// Assert.assertEquals("the resource file types should be equal", expectedResource.getAttribute("filetype"),
+		// responseResource.getAttribute("filetype"));
+		
+		final Iterator<Entry<String, JsonNode>> attributesJSONNodeIter = expectedResource.getAttributes().fields();
+		
+		while(attributesJSONNodeIter.hasNext()) {
+			
+			final Entry<String, JsonNode> attributeJSONEntry = attributesJSONNodeIter.next();
+			final String attributeKey = attributeJSONEntry.getKey();
+			
+			Assert.assertNotNull("resource attribute '" + attributeKey + "' shouldn't be null", responseResource.getAttribute(attributeKey));
+			Assert.assertEquals("the resource " + attributeKey + "s should be equal", expectedResource.getAttribute(attributeKey),
+					responseResource.getAttribute(attributeKey));
+			
 		}
 	}
 }
