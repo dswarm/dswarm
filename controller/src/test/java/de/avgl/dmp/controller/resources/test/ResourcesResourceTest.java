@@ -28,6 +28,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.io.Resources;
 
+import de.avgl.dmp.controller.resources.test.utils.ResourceTestUtils;
 import de.avgl.dmp.controller.services.PersistenceServices;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
@@ -101,7 +102,7 @@ public class ResourcesResourceTest extends ResourceTest {
 	public void getResourceConfigurations() throws Exception {
 
 		prepareGetResourceConfigurations();
-		
+
 		// check idempotency of GET
 
 		closeClient();
@@ -145,7 +146,7 @@ public class ResourcesResourceTest extends ResourceTest {
 	public void curlGetResourceConfigurations() throws Exception {
 
 		prepareGetResourceConfigurations();
-		
+
 		// check idempotency of GET
 
 		for (int i = 0; i < 10; i++) {
@@ -237,7 +238,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		Assert.assertNotNull("response resource configuration shoudln't be null", responseResourceConfiguration);
 
-		compareConfigurations(configuration, responseResourceConfiguration);
+		ResourceTestUtils.compareConfigurations(configuration, responseResourceConfiguration);
 
 		final ConfigurationService configurationService = PersistenceServices.getInstance().getConfigurationService();
 
@@ -340,7 +341,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		Assert.assertNotNull("response configuration shouldn't be null", responseConfiguration);
 
-		compareConfigurations(configuration, responseConfiguration);
+		ResourceTestUtils.compareConfigurations(configuration, responseConfiguration);
 
 		resource.addConfiguration(responseConfiguration);
 
@@ -367,46 +368,6 @@ public class ResourcesResourceTest extends ResourceTest {
 		Assert.assertNull("deleted resource should be null", deletedResource);
 	}
 
-	private void compareConfigurations(final Configuration expectedConfiguration, final Configuration actualConfiguration) {
-
-		if (expectedConfiguration.getName() != null) {
-
-			Assert.assertNotNull("the configuration name shouldn't be null", actualConfiguration.getName());
-			Assert.assertEquals("the configuration names should be equal", expectedConfiguration.getName(), actualConfiguration.getName());
-		}
-
-		if (expectedConfiguration.getDescription() != null) {
-
-			Assert.assertNotNull("the configuration description shouldn't be null", actualConfiguration.getDescription());
-			Assert.assertEquals("the configuration descriptions should be equal", expectedConfiguration.getDescription(),
-					actualConfiguration.getDescription());
-		}
-
-		final ObjectNode parameters = expectedConfiguration.getParameters();
-
-		final Iterator<Entry<String, JsonNode>> parameterEntriesIter = parameters.fields();
-
-		final ObjectNode responseParameters = actualConfiguration.getParameters();
-
-		Assert.assertNotNull("response parameters shoudln't be null", responseParameters);
-
-		while (parameterEntriesIter.hasNext()) {
-
-			final Entry<String, JsonNode> parameterEntry = parameterEntriesIter.next();
-
-			final String parameterKey = parameterEntry.getKey();
-
-			final JsonNode parameterValueNode = responseParameters.get(parameterKey);
-
-			Assert.assertNotNull("parameter '" + parameterKey + "' is not part of the response configuration parameters", parameterValueNode);
-
-			final String parameterValue = parameterEntry.getValue().asText();
-
-			Assert.assertTrue("the parameter values of '" + parameterKey + "' are not equal. expected = '" + parameterValue + "'; was = '"
-					+ parameterValueNode.asText() + "'", parameterValue.equals(parameterValueNode.asText()));
-		}
-	}
-
 	private void getResourceConfigurationsInternal(final Resource resource) throws Exception {
 
 		final Response response = target.path(resourceIdentifier + "/" + resource.getId() + "/configurations").request()
@@ -415,14 +376,15 @@ public class ResourcesResourceTest extends ResourceTest {
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
 		final String resourceConfigurationsJSON = response.readEntity(String.class);
 
-		evaluateGetResourceConfigurationsInternal(resourceConfigurationsJSON);
+		ResourceTestUtils.evaluateConfigurations(resourceConfigurationsJSON, exceptedConfigurations);
 	}
 
 	private void curlGetResourceConfigurationsInternal(final Resource resource) throws Exception {
 
-		final String resourceConfigurationsJSON = executeCommand("curl -G -H \"Content-Type: application/json\" -H \"Accepted: application/json\" " + baseURI + "resources/" + resource.getId().toString() + "/configurations");
+		final String resourceConfigurationsJSON = executeCommand("curl -G -H \"Content-Type: application/json\" -H \"Accepted: application/json\" "
+				+ baseURI + "resources/" + resource.getId().toString() + "/configurations");
 
-		evaluateGetResourceConfigurationsInternal(resourceConfigurationsJSON);
+		ResourceTestUtils.evaluateConfigurations(resourceConfigurationsJSON, exceptedConfigurations);
 	}
 
 	private void getResourcesInternal(final Long resourceId, final Resource expectedResource) throws Exception {
@@ -438,26 +400,11 @@ public class ResourcesResourceTest extends ResourceTest {
 	}
 
 	private void curlGetResourcesInternal(final Long resourceId, final Resource expectedResource) throws Exception {
-		
-		final String responseResourceJSON = executeCommand("curl -G -H \"Content-Type: application/json\" -H \"Accepted: application/json\" " + baseURI + "resources/" + resourceId.toString());
+
+		final String responseResourceJSON = executeCommand("curl -G -H \"Content-Type: application/json\" -H \"Accepted: application/json\" "
+				+ baseURI + "resources/" + resourceId.toString());
 
 		evaluateGetResourcesInternal(responseResourceJSON);
-	}
-
-	private void compareConfigurations(final Set<Configuration> expectedConfigurations, final Map<Long, Configuration> actualConfigurations) {
-
-		for (final Configuration expectedConfiguration : expectedConfigurations) {
-
-			final Configuration actualConfiguration = actualConfigurations.get(expectedConfiguration.getId());
-
-			Assert.assertNotNull("response configuration for id '" + expectedConfiguration.getId() + "' shouldn't be null", actualConfiguration);
-			Assert.assertEquals("configurations are not equal", expectedConfiguration, actualConfiguration);
-			Assert.assertNotNull("configuration resources are null", actualConfiguration.getResources());
-			Assert.assertNotNull("parameters are null", actualConfiguration.getParameters());
-			Assert.assertEquals("parameters are not equal", expectedConfiguration.getParameters(), actualConfiguration.getParameters());
-
-			compareConfigurations(expectedConfiguration, actualConfiguration);
-		}
 	}
 
 	private void compareResource(final Resource expectedResource, final Resource responseResource) {
@@ -580,31 +527,6 @@ public class ResourcesResourceTest extends ResourceTest {
 		cleanUpDB(actualResource);
 	}
 
-	private void evaluateGetResourceConfigurationsInternal(final String resourceConfigurationsJSON) throws Exception {
-		
-		Assert.assertNotNull("the resource configurations string", resourceConfigurationsJSON);
-
-		final Map<Long, Configuration> responseConfigurations = Maps.newLinkedHashMap();
-		final ArrayNode responseConfigurationsJSONArray = DMPPersistenceUtil.getJSONObjectMapper().readValue(resourceConfigurationsJSON,
-				ArrayNode.class);
-
-		Assert.assertNotNull("response configurations JSON array shouldn't be null", responseConfigurationsJSONArray);
-
-		final Iterator<JsonNode> responseConfigurationJSONIter = responseConfigurationsJSONArray.iterator();
-
-		while (responseConfigurationJSONIter.hasNext()) {
-
-			final JsonNode responseConfigurationJSON = responseConfigurationJSONIter.next();
-
-			final Configuration responseConfiguration = DMPPersistenceUtil.getJSONObjectMapper().readValue(
-					((ObjectNode) responseConfigurationJSON).toString(), Configuration.class);
-
-			responseConfigurations.put(responseConfiguration.getId(), responseConfiguration);
-		}
-
-		compareConfigurations(exceptedConfigurations, responseConfigurations);
-	}
-
 	private void evaluateGetResourcesInternal(final String responseResourceJSON) throws Exception {
 
 		Assert.assertNotNull("response resource JSON shouldn't be null", responseResourceJSON);
@@ -624,14 +546,14 @@ public class ResourcesResourceTest extends ResourceTest {
 			actualConfigurations.put(configuration.getId(), configuration);
 		}
 
-		compareConfigurations(exceptedConfigurations, actualConfigurations);
+		ResourceTestUtils.compareConfigurations(exceptedConfigurations, actualConfigurations);
 	}
 
 	private String executeCommand(final String command) throws Exception {
 
 		final Process process = Runtime.getRuntime().exec(command);
 		int exitStatus = process.waitFor();
-		
+
 		Assert.assertEquals("exit status should be 0", 0, exitStatus);
 
 		final StringBuffer sb = new StringBuffer();
@@ -642,9 +564,9 @@ public class ResourcesResourceTest extends ResourceTest {
 			sb.append(line);
 			line = reader.readLine();
 		}
-		
+
 		LOG.debug("got result from command execution '" + command + "' = '" + sb.toString() + "'");
-		
+
 		return sb.toString();
 	}
 }

@@ -19,8 +19,10 @@ public abstract class ReferenceSerializer<DMPJPAOBJECTIMPL extends DMPJPAObject>
 	@Override
 	public void serialize(final Set<DMPJPAOBJECTIMPL> objects, final JsonGenerator generator, final SerializerProvider provider) throws IOException,
 			JsonProcessingException {
-		
-		if(objects == null || objects.isEmpty()) {
+
+		if (objects == null || objects.isEmpty()) {
+
+			generator.writeNull();
 			
 			return;
 		}

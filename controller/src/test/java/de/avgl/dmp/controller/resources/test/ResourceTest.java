@@ -13,12 +13,14 @@ import de.avgl.dmp.controller.Main;
 
 public class ResourceTest {
 
-	protected HttpServer	server;
-	protected Client		client;
-	protected WebTarget		target;
-	protected String		resourceIdentifier;
-	protected static final int port = 9998;
-	protected String baseURI = null;
+	private static final org.apache.log4j.Logger	LOG		= org.apache.log4j.Logger.getLogger(ResourceTest.class);
+
+	protected HttpServer							server;
+	protected Client								client;
+	protected WebTarget								target;
+	protected String								resourceIdentifier;
+	protected static final int						port	= 9998;
+	protected String								baseURI	= null;
 
 	public ResourceTest(final String resourceIdentifier) {
 
@@ -33,7 +35,7 @@ public class ResourceTest {
 
 	protected void createClient() {
 
-		System.out.print("create client");
+		LOG.debug("create Jersey client for test");
 
 		final Main main = Main.create(port);
 
@@ -56,7 +58,7 @@ public class ResourceTest {
 
 	protected void closeClient() {
 
-		System.out.print("close client");
+		LOG.debug("close Jersey client of test");
 
 		client.close();
 		server.stop();

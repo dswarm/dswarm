@@ -26,7 +26,7 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
 			stacktraceString.append("\n\t").append(stacktraceElement);
 		}
 		
-		LOG.error("exception was thron:\ntype = '" + exception.getClass().getCanonicalName() + "'\nmessage = " + exception.getMessage()
+		LOG.error("exception was thrown:\ntype = '" + exception.getClass().getCanonicalName() + "'\nmessage = " + exception.getMessage()
 				+ "\nstacktrace = " + stacktraceString.toString());
 
 		final String[] clientSegments = exception.getMessage().split(":");
