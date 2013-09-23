@@ -58,7 +58,7 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 				.withEscape(escapeCharacter).withRecordSeparator(lineEnding);
 
 		CSVParser csvParser = null;
-
+		
 		try {
 
 			csvParser = new CSVParser(reader, csvFormat);
