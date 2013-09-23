@@ -47,8 +47,8 @@ public class JPAUtilTest {
 	public void modifiedEntityManagerFactoryTest() {
 
 		final String connectionURL = "jdbc:h2:.";
-		final String connectionUserName = "foo";
-		//final String connectionPassword = "bla";
+		final String connectionUserName = "sa";
+		// final String connectionPassword = "bar";
 		final String dialect = "org.hibernate.dialect.H2Dialect";
 		final String sharedCacheMode = "NONE";
 		final boolean enableL1Cache = false;
@@ -63,7 +63,7 @@ public class JPAUtilTest {
 
 		Assert.assertEquals("connection URL is not equal", connectionURL, properties.get("javax.persistence.jdbc.url"));
 		Assert.assertEquals("connection user name is not equal", connectionUserName, properties.get("javax.persistence.jdbc.user"));
-		//Assert.assertEquals("connection password is not equal", connectionPassword, properties.get("javax.persistence.jdbc.password"));
+		// Assert.assertEquals("connection password is not equal", connectionPassword, properties.get("javax.persistence.jdbc.password"));
 		Assert.assertEquals("dialect is not equal", dialect, properties.get("hibernate.dialect"));
 		Assert.assertEquals("shared cache mode is not equal", sharedCacheMode, properties.get("javax.persistence.sharedCache.mode"));
 		Assert.assertEquals("enable L1 cache flag is not equal", enableL1Cache, properties.get("hibernate.cache.use_query_cache"));
@@ -80,7 +80,7 @@ public class JPAUtilTest {
 
 		final String connectionURL = (String) JPAUtilTest.properties.get("javax.persistence.jdbc.url");
 		final String connectionUserName = (String) JPAUtilTest.properties.get("javax.persistence.jdbc.user");
-		//final String connectionPassword = (String) JPAUtilTest.properties.get("javax.persistence.jdbc.password");
+		// final String connectionPassword = (String) JPAUtilTest.properties.get("javax.persistence.jdbc.password");
 		final String dialect = (String) JPAUtilTest.properties.get("hibernate.dialect");
 		final String sharedCacheMode = (String) JPAUtilTest.properties.get("javax.persistence.sharedCache.mode");
 		final boolean enableL1Cache = Boolean.valueOf((String) JPAUtilTest.properties.get("hibernate.cache.use_query_cache"));
@@ -88,7 +88,7 @@ public class JPAUtilTest {
 
 		JPAUtilTest.LOG.debug("connection url = " + connectionURL);
 		JPAUtilTest.LOG.debug("connection user name = " + connectionUserName);
-		//JPAUtilTest.LOG.debug("connection password = " + connectionPassword);
+		// JPAUtilTest.LOG.debug("connection password = " + connectionPassword);
 		JPAUtilTest.LOG.debug("connection dialect = " + dialect);
 		JPAUtilTest.LOG.debug("connection shared cache mode = " + sharedCacheMode);
 		JPAUtilTest.LOG.debug("connection enable L1 cache = " + enableL1Cache);

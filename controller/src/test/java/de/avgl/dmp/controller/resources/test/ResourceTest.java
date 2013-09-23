@@ -17,6 +17,8 @@ public class ResourceTest {
 	protected Client		client;
 	protected WebTarget		target;
 	protected String		resourceIdentifier;
+	protected static final int port = 9998;
+	protected String baseURI = null;
 
 	public ResourceTest(final String resourceIdentifier) {
 
@@ -33,7 +35,7 @@ public class ResourceTest {
 
 		System.out.print("create client");
 
-		final Main main = Main.create(9998);
+		final Main main = Main.create(port);
 
 		// start the server
 		server = main.startServer();
@@ -43,6 +45,7 @@ public class ResourceTest {
 				.register(MultiPartFeature.class).register(de.avgl.dmp.controller.providers.ExceptionHandler.class).build();
 
 		target = client.target(main.getBaseUri());
+		baseURI = main.getBaseUri();
 	}
 
 	@After

@@ -1,7 +1,9 @@
 package de.avgl.dmp.controller.resources.test;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
@@ -36,11 +38,14 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public class ResourcesResourceTest extends ResourceTest {
 
-	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(ResourcesResourceTest.class);
+	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(ResourcesResourceTest.class);
 
-	private String									resourceJSONString	= null;
-	private File									resourceFile		= null;
-	private Resource								expectedResource	= null;
+	private String									resourceJSONString		= null;
+	private File									resourceFile			= null;
+	private Resource								expectedResource		= null;
+	private Resource								actualResource			= null;
+	private Set<Configuration>						exceptedConfigurations	= null;
+	private ConfigurationService					configurationService	= null;
 
 	public ResourcesResourceTest() {
 		super("resources");
@@ -95,79 +100,8 @@ public class ResourcesResourceTest extends ResourceTest {
 	@Test
 	public void getResourceConfigurations() throws Exception {
 
-		final String complexResourceJSONString = DMPPersistenceUtil.getResourceAsString("complex_resource.json");
-		final Resource expectedComplexResource = DMPPersistenceUtil.getJSONObjectMapper().readValue(complexResourceJSONString, Resource.class);
-
-		Assert.assertNotNull("the complex resource shouldn't be null", expectedComplexResource);
-		Assert.assertNotNull("the name of the complex resource shouldn't be null", expectedComplexResource.getName());
-		Assert.assertNotNull("the description of the complex resource shouldn't be null", expectedComplexResource.getDescription());
-		Assert.assertNotNull("the type of the complex resource shouldn't be null", expectedComplexResource.getType());
-		Assert.assertNotNull("the attributes of the complex resource shouldn't be null", expectedComplexResource.getAttributes());
-		Assert.assertNotNull("the configurations of the complex resource shouldn't be null", expectedComplexResource.getConfigurations());
-		Assert.assertFalse("the configurations of the complex resource shouldn't be empty", expectedComplexResource.getConfigurations().isEmpty());
-
-		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
-
-		Resource complexResource = null;
-
-		try {
-
-			complexResource = resourceService.createObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong during object creation.\n" + e.getMessage(), false);
-		}
-
-		Assert.assertNotNull("resource shouldn't be null", complexResource);
-		Assert.assertNotNull("resource id shouldn't be null", complexResource.getId());
-
-		LOG.debug("create new resource with id = '" + complexResource.getId() + "'");
-
-		complexResource.setName(expectedComplexResource.getName());
-		complexResource.setDescription(expectedComplexResource.getDescription());
-		complexResource.setType(expectedComplexResource.getType());
-		complexResource.setAttributes(expectedComplexResource.getAttributes());
-
-		final ConfigurationService configurationService = PersistenceServices.getInstance().getConfigurationService();
-		final Set<Configuration> createdConfigurations = Sets.newLinkedHashSet();
-
-		for (final Configuration expectedConfiguration : expectedComplexResource.getConfigurations()) {
-
-			Configuration configuration = null;
-
-			try {
-
-				configuration = configurationService.createObject();
-			} catch (final DMPPersistenceException e) {
-
-				Assert.assertTrue("something went wrong during object creation.\n" + e.getMessage(), false);
-			}
-
-			Assert.assertNotNull("configuration shouldn't be null", configuration);
-			Assert.assertNotNull("configuration id shouldn't be null", configuration.getId());
-
-			configuration.setParameters(expectedConfiguration.getParameters());
-
-			complexResource.addConfiguration(configuration);
-
-			createdConfigurations.add(configuration);
-		}
-
-		Resource updatedComplexResource = null;
-
-		try {
-
-			updatedComplexResource = resourceService.updateObjectTransactional(complexResource);
-		} catch (DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while updating the resource", false);
-		}
-
-		Assert.assertNotNull("updated resource shouldn't be null", updatedComplexResource);
-		Assert.assertNotNull("updated resource id shouldn't be null", updatedComplexResource.getId());
-
-		LOG.debug("try to retrieve configurations of resource '" + updatedComplexResource.getId() + "'");
-
+		prepareGetResourceConfigurations();
+		
 		// check idempotency of GET
 
 		closeClient();
@@ -175,21 +109,21 @@ public class ResourcesResourceTest extends ResourceTest {
 		for (int i = 0; i < 10; i++) {
 
 			createClient();
-			getResourceConfigurationsInternal(updatedComplexResource, createdConfigurations);
+			getResourceConfigurationsInternal(actualResource);
 			closeClient();
 		}
 
 		for (int i = 0; i < 10; i++) {
 
 			createClient();
-			getResourcesInternal(updatedComplexResource.getId(), expectedComplexResource);
+			getResourcesInternal(actualResource.getId(), expectedResource);
 			closeClient();
 		}
 
 		for (int i = 0; i < 10; i++) {
 
 			createClient();
-			getResourceConfigurationsInternal(updatedComplexResource, createdConfigurations);
+			getResourceConfigurationsInternal(actualResource);
 			closeClient();
 
 			Thread.sleep(2000);
@@ -198,20 +132,47 @@ public class ResourcesResourceTest extends ResourceTest {
 		for (int i = 0; i < 10; i++) {
 
 			createClient();
-			getResourcesInternal(updatedComplexResource.getId(), expectedComplexResource);
+			getResourcesInternal(actualResource.getId(), expectedResource);
 			closeClient();
 
 			Thread.sleep(2000);
 		}
 
-		// clean up
+		finalizeGetResourceConfigurations();
+	}
 
-		for (final Configuration configuration : createdConfigurations) {
+	@Test
+	public void curlGetResourceConfigurations() throws Exception {
 
-			configurationService.deleteObject(configuration.getId());
+		prepareGetResourceConfigurations();
+		
+		// check idempotency of GET
+
+		for (int i = 0; i < 10; i++) {
+
+			curlGetResourceConfigurationsInternal(actualResource);
 		}
 
-		cleanUpDB(updatedComplexResource);
+		for (int i = 0; i < 10; i++) {
+
+			curlGetResourcesInternal(actualResource.getId(), expectedResource);
+		}
+
+		for (int i = 0; i < 10; i++) {
+
+			curlGetResourceConfigurationsInternal(actualResource);
+
+			Thread.sleep(2000);
+		}
+
+		for (int i = 0; i < 10; i++) {
+
+			curlGetResourcesInternal(actualResource.getId(), expectedResource);
+
+			Thread.sleep(2000);
+		}
+
+		finalizeGetResourceConfigurations();
 	}
 
 	@Test
@@ -446,40 +407,22 @@ public class ResourcesResourceTest extends ResourceTest {
 		}
 	}
 
-	private void getResourceConfigurationsInternal(final Resource resource, final Set<Configuration> configurations) throws Exception {
+	private void getResourceConfigurationsInternal(final Resource resource) throws Exception {
 
 		final Response response = target.path(resourceIdentifier + "/" + resource.getId() + "/configurations").request()
 				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
 
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
-		final String resourceConfigurationsJSON = DMPPersistenceUtil.getResourceAsString("resource_configurations.json");
+		final String resourceConfigurationsJSON = response.readEntity(String.class);
 
-		final Map<Long, Configuration> responseConfigurations = Maps.newLinkedHashMap();
-		final ArrayNode responseConfigurationsJSONArray = DMPPersistenceUtil.getJSONObjectMapper().readValue(resourceConfigurationsJSON,
-				ArrayNode.class);
+		evaluateGetResourceConfigurationsInternal(resourceConfigurationsJSON);
+	}
 
-		Assert.assertNotNull("response configurations JSON array shouldn't be null", responseConfigurationsJSONArray);
+	private void curlGetResourceConfigurationsInternal(final Resource resource) throws Exception {
 
-		final Iterator<JsonNode> responseConfigurationJSONIter = responseConfigurationsJSONArray.iterator();
+		final String resourceConfigurationsJSON = executeCommand("curl -G -H \"Content-Type: application/json\" -H \"Accepted: application/json\" " + baseURI + "resources/" + resource.getId().toString() + "/configurations");
 
-		while (responseConfigurationJSONIter.hasNext()) {
-
-			final JsonNode responseConfigurationJSON = responseConfigurationJSONIter.next();
-
-			final Configuration responseConfiguration = DMPPersistenceUtil.getJSONObjectMapper().readValue(
-					((ObjectNode) responseConfigurationJSON).toString(), Configuration.class);
-
-			responseConfigurations.put(responseConfiguration.getId(), responseConfiguration);
-		}
-
-		final Map<Long, Configuration> actualConfigurations = Maps.newHashMap();
-
-		for (final Configuration configuration : configurations) {
-
-			actualConfigurations.put(configuration.getId(), configuration);
-		}
-
-		compareConfigurations(configurations, actualConfigurations);
+		evaluateGetResourceConfigurationsInternal(resourceConfigurationsJSON);
 	}
 
 	private void getResourcesInternal(final Long resourceId, final Resource expectedResource) throws Exception {
@@ -491,24 +434,14 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final String responseResourceJSON = response.readEntity(String.class);
 
-		Assert.assertNotNull("response resource JSON shouldn't be null", responseResourceJSON);
+		evaluateGetResourcesInternal(responseResourceJSON);
+	}
 
-		final Resource responseResource = DMPPersistenceUtil.getJSONObjectMapper().readValue(responseResourceJSON, Resource.class);
+	private void curlGetResourcesInternal(final Long resourceId, final Resource expectedResource) throws Exception {
+		
+		final String responseResourceJSON = executeCommand("curl -G -H \"Content-Type: application/json\" -H \"Accepted: application/json\" " + baseURI + "resources/" + resourceId.toString());
 
-		Assert.assertNotNull("the response resource shouldn't be null", responseResource);
-
-		compareResource(expectedResource, responseResource);
-
-		Assert.assertNotNull(responseResource.getConfigurations());
-
-		final Map<Long, Configuration> actualConfigurations = Maps.newHashMap();
-
-		for (final Configuration configuration : responseResource.getConfigurations()) {
-
-			actualConfigurations.put(configuration.getId(), configuration);
-		}
-
-		compareConfigurations(expectedResource.getConfigurations(), actualConfigurations);
+		evaluateGetResourcesInternal(responseResourceJSON);
 	}
 
 	private void compareConfigurations(final Set<Configuration> expectedConfigurations, final Map<Long, Configuration> actualConfigurations) {
@@ -517,7 +450,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 			final Configuration actualConfiguration = actualConfigurations.get(expectedConfiguration.getId());
 
-			Assert.assertNotNull("response configuration shouldn't be null", actualConfiguration);
+			Assert.assertNotNull("response configuration for id '" + expectedConfiguration.getId() + "' shouldn't be null", actualConfiguration);
 			Assert.assertEquals("configurations are not equal", expectedConfiguration, actualConfiguration);
 			Assert.assertNotNull("configuration resources are null", actualConfiguration.getResources());
 			Assert.assertNotNull("parameters are null", actualConfiguration.getParameters());
@@ -553,5 +486,165 @@ public class ResourcesResourceTest extends ResourceTest {
 					responseResource.getAttribute(attributeKey));
 
 		}
+	}
+
+	private void prepareGetResourceConfigurations() throws Exception {
+
+		final String complexResourceJSONString = DMPPersistenceUtil.getResourceAsString("complex_resource.json");
+		final Resource expectedComplexResource = DMPPersistenceUtil.getJSONObjectMapper().readValue(complexResourceJSONString, Resource.class);
+
+		Assert.assertNotNull("the complex resource shouldn't be null", expectedComplexResource);
+		Assert.assertNotNull("the name of the complex resource shouldn't be null", expectedComplexResource.getName());
+		Assert.assertNotNull("the description of the complex resource shouldn't be null", expectedComplexResource.getDescription());
+		Assert.assertNotNull("the type of the complex resource shouldn't be null", expectedComplexResource.getType());
+		Assert.assertNotNull("the attributes of the complex resource shouldn't be null", expectedComplexResource.getAttributes());
+		Assert.assertNotNull("the configurations of the complex resource shouldn't be null", expectedComplexResource.getConfigurations());
+		Assert.assertFalse("the configurations of the complex resource shouldn't be empty", expectedComplexResource.getConfigurations().isEmpty());
+
+		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
+
+		Resource complexResource = null;
+
+		try {
+
+			complexResource = resourceService.createObject();
+		} catch (final DMPPersistenceException e) {
+
+			Assert.assertTrue("something went wrong during object creation.\n" + e.getMessage(), false);
+		}
+
+		Assert.assertNotNull("resource shouldn't be null", complexResource);
+		Assert.assertNotNull("resource id shouldn't be null", complexResource.getId());
+
+		LOG.debug("create new resource with id = '" + complexResource.getId() + "'");
+
+		complexResource.setName(expectedComplexResource.getName());
+		complexResource.setDescription(expectedComplexResource.getDescription());
+		complexResource.setType(expectedComplexResource.getType());
+		complexResource.setAttributes(expectedComplexResource.getAttributes());
+
+		configurationService = PersistenceServices.getInstance().getConfigurationService();
+		final Set<Configuration> createdConfigurations = Sets.newLinkedHashSet();
+
+		for (final Configuration expectedConfiguration : expectedComplexResource.getConfigurations()) {
+
+			Configuration configuration = null;
+
+			try {
+
+				configuration = configurationService.createObject();
+			} catch (final DMPPersistenceException e) {
+
+				Assert.assertTrue("something went wrong during object creation.\n" + e.getMessage(), false);
+			}
+
+			Assert.assertNotNull("configuration shouldn't be null", configuration);
+			Assert.assertNotNull("configuration id shouldn't be null", configuration.getId());
+
+			configuration.setParameters(expectedConfiguration.getParameters());
+
+			complexResource.addConfiguration(configuration);
+
+			createdConfigurations.add(configuration);
+		}
+
+		Resource updatedComplexResource = null;
+
+		try {
+
+			updatedComplexResource = resourceService.updateObjectTransactional(complexResource);
+		} catch (DMPPersistenceException e) {
+
+			Assert.assertTrue("something went wrong while updating the resource", false);
+		}
+
+		Assert.assertNotNull("updated resource shouldn't be null", updatedComplexResource);
+		Assert.assertNotNull("updated resource id shouldn't be null", updatedComplexResource.getId());
+
+		LOG.debug("try to retrieve configurations of resource '" + updatedComplexResource.getId() + "'");
+
+		expectedResource = expectedComplexResource;
+		actualResource = updatedComplexResource;
+		exceptedConfigurations = createdConfigurations;
+	}
+
+	private void finalizeGetResourceConfigurations() {
+
+		// clean up
+
+		for (final Configuration configuration : exceptedConfigurations) {
+
+			configurationService.deleteObject(configuration.getId());
+		}
+
+		cleanUpDB(actualResource);
+	}
+
+	private void evaluateGetResourceConfigurationsInternal(final String resourceConfigurationsJSON) throws Exception {
+		
+		Assert.assertNotNull("the resource configurations string", resourceConfigurationsJSON);
+
+		final Map<Long, Configuration> responseConfigurations = Maps.newLinkedHashMap();
+		final ArrayNode responseConfigurationsJSONArray = DMPPersistenceUtil.getJSONObjectMapper().readValue(resourceConfigurationsJSON,
+				ArrayNode.class);
+
+		Assert.assertNotNull("response configurations JSON array shouldn't be null", responseConfigurationsJSONArray);
+
+		final Iterator<JsonNode> responseConfigurationJSONIter = responseConfigurationsJSONArray.iterator();
+
+		while (responseConfigurationJSONIter.hasNext()) {
+
+			final JsonNode responseConfigurationJSON = responseConfigurationJSONIter.next();
+
+			final Configuration responseConfiguration = DMPPersistenceUtil.getJSONObjectMapper().readValue(
+					((ObjectNode) responseConfigurationJSON).toString(), Configuration.class);
+
+			responseConfigurations.put(responseConfiguration.getId(), responseConfiguration);
+		}
+
+		compareConfigurations(exceptedConfigurations, responseConfigurations);
+	}
+
+	private void evaluateGetResourcesInternal(final String responseResourceJSON) throws Exception {
+
+		Assert.assertNotNull("response resource JSON shouldn't be null", responseResourceJSON);
+
+		final Resource responseResource = DMPPersistenceUtil.getJSONObjectMapper().readValue(responseResourceJSON, Resource.class);
+
+		Assert.assertNotNull("the response resource shouldn't be null", responseResource);
+
+		compareResource(expectedResource, responseResource);
+
+		Assert.assertNotNull(responseResource.getConfigurations());
+
+		final Map<Long, Configuration> actualConfigurations = Maps.newHashMap();
+
+		for (final Configuration configuration : responseResource.getConfigurations()) {
+
+			actualConfigurations.put(configuration.getId(), configuration);
+		}
+
+		compareConfigurations(exceptedConfigurations, actualConfigurations);
+	}
+
+	private String executeCommand(final String command) throws Exception {
+
+		final Process process = Runtime.getRuntime().exec(command);
+		int exitStatus = process.waitFor();
+		
+		Assert.assertEquals("exit status should be 0", 0, exitStatus);
+
+		final StringBuffer sb = new StringBuffer();
+
+		final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+		String line = reader.readLine();
+		while (line != null) {
+			sb.append(line);
+			line = reader.readLine();
+		}
+		
+		LOG.debug("got result from command execution '" + command + "' = '" + sb.toString() + "'");
+		
+		return sb.toString();
 	}
 }

@@ -445,10 +445,13 @@
 			</pluginRepositories>
 			<properties>
 				<env>dev</env>
+				<!-- MySQL <rdb.url>jdbc:mysql://localhost:3306/dmp</rdb.url> -->
 				<rdb.url>jdbc:h2:file:target/h2/dmpdb</rdb.url>
-				<!-- <rdb.url>jdbc:hsqldb:file:target/hsql/dmpdb;hsqldb.lock_file=false</rdb.url> -->
+				<!-- HSQL <rdb.url>jdbc:hsqldb:file:target/hsql/dmpdb;hsqldb.lock_file=false</rdb.url> -->
+				<!-- H2 + HSQL -->
 				<rdb.username>SA</rdb.username>
 				<rdb.password></rdb.password>
+				<!-- <rdb.username>dmp</rdb.username> <rdb.password>dmp</rdb.password> -->
 			</properties>
 		</profile>
 	</profiles>
