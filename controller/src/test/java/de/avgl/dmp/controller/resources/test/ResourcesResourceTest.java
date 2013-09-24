@@ -287,6 +287,31 @@ public class ResourcesResourceTest extends ResourceTest {
 		cleanUpDB(resource);
 		cleanUpDB(resource2);
 	}
+	
+	@Test
+	public void testPOSTConfigurationPreview() throws Exception {
+		
+		final String resourceJSON = testResourceUploadInteral();
+
+		LOG.debug("created resource = '" + resourceJSON + "'");
+
+		final Resource resource = DMPPersistenceUtil.getJSONObjectMapper().readValue(resourceJSON, Resource.class);
+		
+		Assert.assertNotNull("resource shouldn't be null", resource);
+		
+		final String configurationJSON = DMPPersistenceUtil.getResourceAsString("configuration2.json");
+		
+		final Response response = target.path(resourceIdentifier + "/" + resource.getId() + "/configurationpreview").request(MediaType.APPLICATION_JSON_TYPE)
+				.accept(MediaType.TEXT_PLAIN_TYPE)
+				.post(Entity.json(configurationJSON));
+		final String responseString = response.readEntity(String.class);
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+		
+		final String expected = DMPPersistenceUtil.getResourceAsString("test_csv.csv");
+
+		Assert.assertEquals("POST responses are not equal", expected, responseString);
+	}
 
 	private String testResourceUploadInteral() throws Exception {
 
