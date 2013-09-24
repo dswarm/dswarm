@@ -63,20 +63,20 @@ public class TransformationFlowTest {
 		assertEquals(expected, actual);
 	}
 
-	@Test
+
 	public void readCSVTest() throws Exception {
 
 		final FileOpener opener = new FileOpener();
-		
+
 		// set encoding
 		opener.setEncoding(Charsets.UTF_8.name());
-		
+
 		final URL url = Resources.getResource("test_csv.csv");
 		final File file = FileUtils.toFile(url);
 
 		// set column separator and line separator
 		final CsvReader reader = new CsvReader('\\', '"', ';', "\n");
-		
+
 		// set number of header lines (if header lines = 1, then schema header line = 1)
 		reader.setHeader(true);
 		final JsonEncoder converter = new JsonEncoder();
@@ -90,9 +90,9 @@ public class TransformationFlowTest {
 		final String resultOutput = stringWriter.toString();
 
 		Assert.assertNotNull("the result output shoudln't be null", resultOutput);
-		
+
 		final String expectedResult = DMPPersistenceUtil.getResourceAsString("csv_json.output");
-		
+
 		Assert.assertEquals("the processing outputs are not equal", expectedResult, resultOutput);
 	}
 }
