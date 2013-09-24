@@ -4,10 +4,13 @@ import java.util.Set;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
@@ -15,6 +18,9 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -31,6 +37,8 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 @XmlRootElement
 @Entity
+// @Cacheable(true)
+// @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "CONFIGURATION")
 public class Configuration extends DMPJPAObject {
 
@@ -46,21 +54,22 @@ public class Configuration extends DMPJPAObject {
 
 	@Column(name = "DESCRIPTION")
 	private String									description				= null;
-	
+
 	/**
 	 * The related resources.
 	 */
-	@ManyToMany(mappedBy = "configurations", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinTable(name = "RESOURCES_CONFIGURATIONS", joinColumns = { @JoinColumn(name = "CONFIGURATION_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "RESOURCE_ID", referencedColumnName = "ID") })
 	@JsonSerialize(using = ResourceReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@JsonDeserialize(using = ResourceReferenceDeserializer.class)
 	@XmlIDREF
 	@XmlList
-	private Set<Resource>	resources;
+	private Set<Resource>							resources;
 
 	@Lob
 	@Access(AccessType.FIELD)
-	@Column(name = "parameters", columnDefinition = "CLOB")
+	@Column(name = "parameters", columnDefinition = "VARCHAR(4000)", length = 4000)
 	private String									parametersString;
 
 	@Transient
@@ -234,5 +243,16 @@ public class Configuration extends DMPJPAObject {
 	private void refreshParametersString() {
 
 		parametersString = parameters.toString();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+
+		if (!Configuration.class.isInstance(obj)) {
+
+			return false;
+		}
+
+		return super.equals(obj);
 	}
 }

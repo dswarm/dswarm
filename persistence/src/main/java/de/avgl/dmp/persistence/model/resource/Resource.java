@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,6 +27,9 @@ import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
@@ -36,6 +40,8 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 @XmlRootElement
 @Entity
+//@Cacheable(true)
+//@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "RESOURCE")
 public class Resource extends DMPJPAObject {
 
@@ -61,7 +67,7 @@ public class Resource extends DMPJPAObject {
 
 	@Lob
 	@Access(AccessType.FIELD)
-	@Column(name = "attributes", columnDefinition = "CLOB")
+	@Column(name = "attributes", columnDefinition = "VARCHAR(4000)", length=4000)
 	private String									attributesString;
 
 	@Transient
@@ -74,8 +80,7 @@ public class Resource extends DMPJPAObject {
 	 * All configurations of the resource.
 	 */
 	// TODO set correct casacade type
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable(name = "RESOURCES_CONFIGURATIONS", joinColumns = { @JoinColumn(name = "RESOURCE_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "CONFIGURATION_ID", referencedColumnName = "ID") })
+	@ManyToMany(mappedBy = "resources", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	// @JsonSerialize(using = ConfigurationReferenceSerializer.class)
 	// @JsonDeserialize(using = ConfigurationReferenceDeserializer.class)
 	@XmlIDREF
@@ -291,5 +296,16 @@ public class Resource extends DMPJPAObject {
 	private void refreshAttributesString() {
 
 		attributesString = attributes.toString();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		
+		if (!Resource.class.isInstance(obj)) {
+
+			return false;
+		}
+		
+		return super.equals(obj);
 	}
 }

@@ -1,0 +1,1 @@
+{"id":1,"name":"foo","description":"bar","parameters":{"encoding":"UTF-8", "escape_character" : "\\", "quote_character" : "\"", "column_delimiter" : ";", "row_delimiter" : "\n"}}

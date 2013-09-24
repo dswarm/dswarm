@@ -2,7 +2,6 @@ package de.avgl.dmp.persistence.model;
 
 import java.io.Serializable;
 
-import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,14 +10,10 @@ import javax.persistence.MappedSuperclass;
 import javax.xml.bind.annotation.XmlID;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.google.common.base.Objects;
 
 @MappedSuperclass
-@Cacheable(true)
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 // @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 public abstract class DMPJPAObject implements Serializable {
 

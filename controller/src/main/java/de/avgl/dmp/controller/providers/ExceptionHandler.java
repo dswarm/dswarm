@@ -18,9 +18,16 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
 	@Override
 	public Response toResponse(final Exception exception) {
 
-		LOG.error("exception was thrown:\ntype = '" + exception.getClass().getCanonicalName() + "'\n" + exception.getMessage());
-
-		exception.printStackTrace();
+		final StackTraceElement[] stacktrace = exception.getStackTrace();
+		final StringBuffer stacktraceString = new StringBuffer();
+		
+		for(final StackTraceElement stacktraceElement : stacktrace) {
+			
+			stacktraceString.append("\n\t").append(stacktraceElement);
+		}
+		
+		LOG.error("exception was thrown:\ntype = '" + exception.getClass().getCanonicalName() + "'\nmessage = " + exception.getMessage()
+				+ "\nstacktrace = " + stacktraceString.toString());
 
 		final String[] clientSegments = exception.getMessage().split(":");
 		final String clientMessage = clientSegments[clientSegments.length - 1];
@@ -30,30 +37,30 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
 
 		responseJSON.put("status", "nok");
 		responseJSON.put("error", clientMessage);
-		
+
 		Integer status = null;
-		
-		if(WebApplicationException.class.isInstance(exception)) {
-			
+
+		if (WebApplicationException.class.isInstance(exception)) {
+
 			WebApplicationException webApplicationException = (WebApplicationException) exception;
-			
+
 			final Response response = webApplicationException.getResponse();
-			
-			if(response != null) {
-				
+
+			if (response != null) {
+
 				final int statusInt = response.getStatus();
-				
+
 				status = Integer.valueOf(statusInt);
 			}
 		}
-		
+
 		final int responseStatus;
-		
-		if(status != null) {
-			
+
+		if (status != null) {
+
 			responseStatus = status.intValue();
 		} else {
-			
+
 			responseStatus = 500;
 		}
 

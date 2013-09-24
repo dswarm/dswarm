@@ -4,6 +4,8 @@ import java.util.Set;
 
 import javax.persistence.EntityManager;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
@@ -48,5 +50,17 @@ public class ResourceService extends BasicJPAService<Resource> {
 
 			updateObject.setName(object.getName());
 		}
+	}
+
+	@Override
+	public Resource getObject(Long id) {
+		
+		ConfigurationService cS = new ConfigurationService();
+		
+		
+		
+		System.out.println("all objects: " + ToStringBuilder.reflectionToString(cS.getObjects()));
+		
+		return super.getObject(id);
 	}
 }
