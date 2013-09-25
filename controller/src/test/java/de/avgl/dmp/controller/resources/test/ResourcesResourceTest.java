@@ -289,7 +289,32 @@ public class ResourcesResourceTest extends ResourceTest {
 	}
 	
 	@Test
-	public void testPOSTConfigurationPreview() throws Exception {
+	public void testPOSTConfigurationCSVPreview() throws Exception {
+		
+		final String resourceJSON = testResourceUploadInteral();
+
+		LOG.debug("created resource = '" + resourceJSON + "'");
+
+		final Resource resource = DMPPersistenceUtil.getJSONObjectMapper().readValue(resourceJSON, Resource.class);
+		
+		Assert.assertNotNull("resource shouldn't be null", resource);
+		
+		final String configurationJSON = DMPPersistenceUtil.getResourceAsString("configuration2.json");
+		
+		final Response response = target.path(resourceIdentifier + "/" + resource.getId() + "/configurationpreview").request(MediaType.TEXT_PLAIN_TYPE)
+				.accept(MediaType.TEXT_PLAIN_TYPE)
+				.post(Entity.json(configurationJSON));
+		final String responseString = response.readEntity(String.class);
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+		
+		final String expected = DMPPersistenceUtil.getResourceAsString("test_csv.csv");
+
+		Assert.assertEquals("POST responses are not equal", expected, responseString);
+	}
+	
+	@Test
+	public void testPOSTConfigurationCSVJSONPreview() throws Exception {
 		
 		final String resourceJSON = testResourceUploadInteral();
 
@@ -302,13 +327,13 @@ public class ResourcesResourceTest extends ResourceTest {
 		final String configurationJSON = DMPPersistenceUtil.getResourceAsString("configuration2.json");
 		
 		final Response response = target.path(resourceIdentifier + "/" + resource.getId() + "/configurationpreview").request(MediaType.APPLICATION_JSON_TYPE)
-				.accept(MediaType.TEXT_PLAIN_TYPE)
+				.accept(MediaType.APPLICATION_JSON_TYPE)
 				.post(Entity.json(configurationJSON));
 		final String responseString = response.readEntity(String.class);
 
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
 		
-		final String expected = DMPPersistenceUtil.getResourceAsString("test_csv.csv");
+		final String expected = DMPPersistenceUtil.getResourceAsString("test_csv.json");
 
 		Assert.assertEquals("POST responses are not equal", expected, responseString);
 	}
