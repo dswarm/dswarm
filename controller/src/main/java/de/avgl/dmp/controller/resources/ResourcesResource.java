@@ -35,7 +35,7 @@ import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.services.PersistenceServices;
 import de.avgl.dmp.controller.utils.DMPControllerUtils;
 import de.avgl.dmp.converter.DMPConverterException;
-import de.avgl.dmp.converter.flow.CSVSourceResourcePreviewFlow;
+import de.avgl.dmp.converter.flow.CSVSourceResourceCSVPreviewFlow;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
@@ -544,10 +544,10 @@ public class ResourcesResource {
 		
 		final Configuration configurationFromJSON = getConfiguration(configurationJSONString);
 		
-		CSVSourceResourcePreviewFlow flow = null;
+		CSVSourceResourceCSVPreviewFlow flow = null;
 		
 		try {
-			flow = CSVSourceResourcePreviewFlow.fromConfiguration(configurationFromJSON);
+			flow = CSVSourceResourceCSVPreviewFlow.fromConfiguration(configurationFromJSON);
 		} catch (DMPConverterException e) {
 			
 			throw new DMPControllerException("something went wrong while apply configuration to resource");

@@ -2,11 +2,9 @@ package de.avgl.dmp.converter.flow;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.io.StringWriter;
 
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
-import org.culturegraph.mf.stream.sink.ObjectJavaIoWriter;
 import org.culturegraph.mf.stream.source.FileOpener;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -14,13 +12,14 @@ import com.google.common.base.Charsets;
 
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.mf.stream.reader.CsvReader;
-import de.avgl.dmp.converter.mf.stream.source.CSVEncoder;
+import de.avgl.dmp.converter.mf.stream.source.CSVJSONEncoder;
+import de.avgl.dmp.converter.mf.stream.source.CSVJSONWriter;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
 
-public class CSVSourceResourcePreviewFlow {
+public class CSVSourceResourceCSVJSONPreviewFlow {
 
-	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(CSVSourceResourcePreviewFlow.class);
+	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(CSVSourceResourceCSVJSONPreviewFlow.class);
 
 	private final String							encoding;
 
@@ -42,7 +41,7 @@ public class CSVSourceResourcePreviewFlow {
 
 	private static final String						defaultRowDelimiter		= "\n";
 
-	public CSVSourceResourcePreviewFlow() {
+	public CSVSourceResourceCSVJSONPreviewFlow() {
 
 		encoding = defaultEncoding;
 		escapeCharacter = defaultEscapeCharacter;
@@ -51,7 +50,7 @@ public class CSVSourceResourcePreviewFlow {
 		rowDelimiter = defaultRowDelimiter;
 	}
 
-	public CSVSourceResourcePreviewFlow(final String encoding, final Character escapeCharacter, final Character quoteCharacter,
+	public CSVSourceResourceCSVJSONPreviewFlow(final String encoding, final Character escapeCharacter, final Character quoteCharacter,
 			final Character columnDelimiter, final String rowDelimiter) {
 
 		this.encoding = encoding;
@@ -61,7 +60,7 @@ public class CSVSourceResourcePreviewFlow {
 		this.rowDelimiter = rowDelimiter;
 	}
 
-	public CSVSourceResourcePreviewFlow(final Configuration configuration) throws DMPConverterException {
+	public CSVSourceResourceCSVJSONPreviewFlow(final Configuration configuration) throws DMPConverterException {
 
 		if (configuration == null) {
 
@@ -152,27 +151,26 @@ public class CSVSourceResourcePreviewFlow {
 		// TODO: process header from configuration
 		reader.setHeader(true);
 		// TODO: process header from configuration
-		final CSVEncoder converter = new CSVEncoder();
-		converter.withHeader();
-		final StringWriter stringWriter = new StringWriter();
-		final ObjectJavaIoWriter<String> writer = new ObjectJavaIoWriter<String>(stringWriter);
+		final CSVJSONEncoder encoder = new CSVJSONEncoder();
+		encoder.withHeader();
+		final CSVJSONWriter writer = new CSVJSONWriter();
 
-		opener.setReceiver(reader).setReceiver(converter).setReceiver(writer);
+		opener.setReceiver(reader).setReceiver(encoder).setReceiver(writer);
 
 		opener.process(filePath);
 
-		return stringWriter.toString();
+		return writer.toString();
 	}
 
-	public static CSVSourceResourcePreviewFlow fromConfigurationParameters(final String encoding, final Character escapeCharacter,
+	public static CSVSourceResourceCSVJSONPreviewFlow fromConfigurationParameters(final String encoding, final Character escapeCharacter,
 			final Character quoteCharacter, final Character columnDelimiter, final String rowDelimiter) {
 
-		return new CSVSourceResourcePreviewFlow(encoding, escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter);
+		return new CSVSourceResourceCSVJSONPreviewFlow(encoding, escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter);
 	}
 
-	public static CSVSourceResourcePreviewFlow fromConfiguration(final Configuration configuration) throws IOException, DMPConverterException {
+	public static CSVSourceResourceCSVJSONPreviewFlow fromConfiguration(final Configuration configuration) throws IOException, DMPConverterException {
 
-		return new CSVSourceResourcePreviewFlow(configuration);
+		return new CSVSourceResourceCSVJSONPreviewFlow(configuration);
 	}
 
 	private JsonNode getParameterValue(final Configuration configuration, final String key) throws DMPConverterException {
