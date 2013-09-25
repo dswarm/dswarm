@@ -638,6 +638,8 @@ public class ResourcesResource {
 
 			throw new DMPControllerException("something went wrong while apply configuration to resource");
 		}
+		
+		flow.withLimit(50);
 
 		if (resource.getAttributes() == null) {
 

@@ -40,6 +40,9 @@ public class CSVSourceResourceCSVJSONPreviewFlow {
 	private static final Character					defaultColumnDelimiter	= ';';
 
 	private static final String						defaultRowDelimiter		= "\n";
+	
+	private boolean withLimit = false;
+	private int limit = -1;
 
 	public CSVSourceResourceCSVJSONPreviewFlow() {
 
@@ -146,12 +149,26 @@ public class CSVSourceResourceCSVJSONPreviewFlow {
 	public String apply(final String filePath, final DefaultObjectPipe<String, ObjectReceiver<Reader>> opener) {
 		
 		// set parsing attributes
-		final CsvReader reader = new CsvReader(escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter);
+		final CsvReader reader;
+		
+		if(withLimit) {
+			
+			reader = new CsvReader(escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter, limit);
+		} else {
+			reader = new CsvReader(escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter);
+		}
 
 		// TODO: process header from configuration
 		reader.setHeader(true);
 		// TODO: process header from configuration
-		final CSVJSONEncoder encoder = new CSVJSONEncoder();
+		final CSVJSONEncoder encoder;
+		
+		if(withLimit) {
+			
+			encoder = new CSVJSONEncoder(limit);
+		} else {
+			encoder = new CSVJSONEncoder();
+		}
 		encoder.withHeader();
 		final CSVJSONWriter writer = new CSVJSONWriter();
 
@@ -171,6 +188,14 @@ public class CSVSourceResourceCSVJSONPreviewFlow {
 	public static CSVSourceResourceCSVJSONPreviewFlow fromConfiguration(final Configuration configuration) throws IOException, DMPConverterException {
 
 		return new CSVSourceResourceCSVJSONPreviewFlow(configuration);
+	}
+	
+	public CSVSourceResourceCSVJSONPreviewFlow withLimit(final int limit) {
+		
+		this.limit = limit;
+		withLimit = true;
+		
+		return this;
 	}
 
 	private JsonNode getParameterValue(final Configuration configuration, final String key) throws DMPConverterException {

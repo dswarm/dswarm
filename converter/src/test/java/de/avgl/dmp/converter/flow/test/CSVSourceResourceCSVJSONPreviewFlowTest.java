@@ -22,7 +22,8 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 		final String expected = DMPPersistenceUtil.getResourceAsString("test_csv.json");
 
 		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVSourceResourceCSVJSONPreviewFlow.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ';', "\n");
-
+		flow.withLimit(50);
+		
 		final URL url = Resources.getResource("test_csv.csv");
 		final File file = FileUtils.toFile(url);
 		

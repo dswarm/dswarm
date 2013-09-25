@@ -37,13 +37,32 @@ public final class CSVJSONEncoder extends DefaultStreamPipe<ObjectReceiver<JsonN
 	private boolean			withHeader				= false;
 	private boolean			firstLine				= false;
 	private boolean			firstLineInitialized	= false;
+	private boolean			withLimit				= false;
+	private int				limit					= -1;
+	private int				count					= 0;
 
 	public CSVJSONEncoder() {
 
 	}
 
+	public CSVJSONEncoder(final int limit) {
+
+		this.limit = limit;
+		this.withLimit = true;
+	}
+
 	@Override
 	public void startRecord(final String id) {
+
+		if (withLimit) {
+
+			if (count == limit) {
+
+				return;
+			}
+			
+			count++;
+		}
 
 		if (firstLine) {
 
@@ -69,6 +88,14 @@ public final class CSVJSONEncoder extends DefaultStreamPipe<ObjectReceiver<JsonN
 	@Override
 	public void endRecord() {
 
+		if (withLimit) {
+
+			if (count == limit) {
+
+				return;
+			}
+		}
+
 		// TODO: workaround (?)
 
 		endEntity();
@@ -92,12 +119,12 @@ public final class CSVJSONEncoder extends DefaultStreamPipe<ObjectReceiver<JsonN
 					json.put("schema", schemaJSON);
 				}
 			}
-			
+
 			final ArrayNode dataJSONArray = new ArrayNode(DMPPersistenceUtil.getJSONFactory());
 
 			dataJSONArray.add(dataJSON);
 			json.put("data", dataJSONArray);
-			
+
 		}
 
 		getReceiver().process(json);
@@ -155,6 +182,13 @@ public final class CSVJSONEncoder extends DefaultStreamPipe<ObjectReceiver<JsonN
 	public void withHeader() {
 
 		withHeader = true;
+
+		if (withLimit) {
+
+			// increase limit for header row
+
+			limit++;
+		}
 	}
 
 	private void printHeader() {
@@ -185,94 +219,4 @@ public final class CSVJSONEncoder extends DefaultStreamPipe<ObjectReceiver<JsonN
 			dataJSON.put(headerField, value);
 		}
 	}
-
-	// public static final String ARRAY_MARKER = "[]";
-	//
-	//
-	//
-	// @Override
-	// public void startRecord(final String id) {
-	// final StringBuffer buffer = writer.getBuffer();
-	// buffer.delete(0, buffer.length());
-	// startGroup(id);
-	// }
-	//
-	// @Override
-	// public void endRecord() {
-	// endGroup();
-	// try {
-	// jsonGenerator.flush();
-	// } catch (IOException e) {
-	// throw new MetafactureException(e);
-	// }
-	// }
-	//
-	// @Override
-	// public void startEntity(final String name) {
-	// startGroup(name);
-	// }
-	//
-	// @Override
-	// public void endEntity() {
-	// endGroup();
-	// }
-	//
-	// @Override
-	// public void literal(final String name, final String value) {
-	// try {
-	// final JsonStreamContext ctx = jsonGenerator.getOutputContext();
-	// if (ctx.inObject()) {
-	// jsonGenerator.writeFieldName(name);
-	// }
-	// if (value == null) {
-	// jsonGenerator.writeNull();
-	// } else {
-	// jsonGenerator.writeString(value);
-	// }
-	// } catch (JsonGenerationException e) {
-	// throw new MetafactureException(e);
-	// }
-	// catch (IOException e) {
-	// throw new MetafactureException(e);
-	// }
-	// }
-	//
-	// private void startGroup(final String name) {
-	// try {
-	// final JsonStreamContext ctx = jsonGenerator.getOutputContext();
-	// if (name.endsWith(ARRAY_MARKER)) {
-	// if (ctx.inObject()) {
-	// jsonGenerator.writeFieldName(name.substring(0, name.length() - ARRAY_MARKER.length()));
-	// }
-	// jsonGenerator.writeStartArray();
-	// } else {
-	// if (ctx.inObject()) {
-	// jsonGenerator.writeFieldName(name);
-	// }
-	// jsonGenerator.writeStartObject();
-	// }
-	// } catch (JsonGenerationException e) {
-	// throw new MetafactureException(e);
-	// }
-	// catch (IOException e) {
-	// throw new MetafactureException(e);
-	// }
-	// }
-	//
-	// private void endGroup() {
-	// try {
-	// final JsonStreamContext ctx = jsonGenerator.getOutputContext();
-	// if (ctx.inObject()) {
-	// jsonGenerator.writeEndObject();
-	// } else if (ctx.inArray()) {
-	// jsonGenerator.writeEndArray();
-	// }
-	// } catch (JsonGenerationException e) {
-	// throw new MetafactureException(e);
-	// }
-	// catch (IOException e) {
-	// throw new MetafactureException(e);
-	// }
-	// }
-
 }
