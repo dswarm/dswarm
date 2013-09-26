@@ -17,7 +17,23 @@
 
 	<properties>
 		<project.root>${basedir}/..</project.root>
+		<!-- <mysql-connector-java.version>5.1.26</mysql-connector-java.version> -->
+		<!-- <hsqldb.version>2.3.0</hsqldb.version> -->
+		<h2.version>1.3.173</h2.version>
+		<hibernate-core.version>4.2.5.Final</hibernate-core.version>
+		<hibernate-entitymanager.version>4.2.5.Final</hibernate-entitymanager.version>
+		<hibernate-validator.version>5.0.1.Final</hibernate-validator.version>
+		<hibernate-ehcache.version>4.2.5.Final</hibernate-ehcache.version>
+		<ehcache.version>2.7.2</ehcache.version>
 	</properties>
+
+	<repositories>
+		<repository>
+			<id>googlecode.lambdaj</id>
+			<name>Internal Release Repository</name>
+			<url>https://lambdaj.googlecode.com/svn/repo/releases</url>
+		</repository>
+	</repositories>
 
 	<build>
 		<filters>
@@ -36,6 +52,40 @@
 			<groupId>de.avgl.dmp</groupId>
 			<artifactId>init</artifactId>
 			<version>0.1-SNAPSHOT</version>
+		</dependency>
+		<!-- <dependency> <groupId>mysql</groupId> <artifactId>mysql-connector-java</artifactId> 
+			<version>${mysql-connector-java.version}</version> </dependency> -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>${h2.version}</version>
+		</dependency>
+		<!-- <dependency> <groupId>org.hsqldb</groupId> <artifactId>hsqldb</artifactId> 
+			<version>${hsqldb.version}</version> </dependency> -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>${hibernate-core.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>${hibernate-entitymanager.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>${hibernate-validator.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-ehcache</artifactId>
+			<version>${hibernate-ehcache.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.lambdaj</groupId>
+			<artifactId>lambdaj</artifactId>
+			<version>2.3.3</version>
 		</dependency>
 	</dependencies>
 </project>

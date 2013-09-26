@@ -1,0 +1,19 @@
+<!-- configure ehcache settings properly -->
+
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
+
+	<diskStore path="${ehcache_disk_store_dir}" />
+
+	<!-- overflowToDisk="true" diskPersistent="true" - this is ehcache 2.5 -->
+	<defaultCache maxElementsInMemory="30000" eternal="false"
+		timeToIdleSeconds="172800" timeToLiveSeconds="0"
+		diskExpiryThreadIntervalSeconds="172800" memoryStoreEvictionPolicy="LRU">
+	</defaultCache>
+
+	<!--  <cache name="class path"
+		maxElementsInMemory="10000">
+		<persistence strategy="localTempSwap" />
+	</cache> -->
+
+</ehcache>

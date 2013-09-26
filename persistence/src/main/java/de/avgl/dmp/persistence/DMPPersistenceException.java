@@ -1,11 +1,13 @@
 package de.avgl.dmp.persistence;
 
+import de.avgl.dmp.init.DMPException;
+
 /**
  * The exception class for DMP persistence exceptions.<br>
  * 
  */
 
-public class DMPPersistenceException extends Exception {
+public class DMPPersistenceException extends DMPException {
 
 	/**
 	 * 

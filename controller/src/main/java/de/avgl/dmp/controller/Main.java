@@ -9,6 +9,7 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
 /**
@@ -19,7 +20,7 @@ public class Main {
 	private static final org.apache.log4j.Logger	log	= org.apache.log4j.Logger.getLogger(Main.class);
 
 	// Base URI the Grizzly HTTP server will listen on
-	public final String						BASE_URI;
+	public final String								BASE_URI;
 
 	public Main(Properties properties) {
 		final String host = properties.getProperty("backend_http_server_host");
@@ -53,11 +54,9 @@ public class Main {
 		return loadProperties("dmp.properties");
 	}
 
-
-
 	/**
 	 * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
-	 *
+	 * 
 	 * @return Grizzly HTTP server.
 	 */
 	public HttpServer startServer() {
@@ -65,8 +64,10 @@ public class Main {
 		// providers
 		// in de.avgl.dmp.controller.resources package
 		final ResourceConfig rc = new ResourceConfig()
-				// .register(JacksonJaxbJsonProvider.class)
-				.packages("de.avgl.dmp.controller.resources");
+		// .register(JacksonJaxbJsonProvider.class)
+				.packages("de.avgl.dmp.controller.resources")
+				.register(MultiPartFeature.class)
+				.register(de.avgl.dmp.controller.providers.ExceptionHandler.class);
 
 		// create and start a new instance of grizzly http server
 		// exposing the Jersey application at BASE_URI
@@ -89,14 +90,15 @@ public class Main {
 
 	/**
 	 * Main method.
-	 *
+	 * 
 	 * @param args
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
 		final Main main = Main.create();
 		final HttpServer server = main.startServer();
-		System.out.println(String.format("Jersey app started with WADL available at " + "%sapplication.wadl\nHit enter to stop it...", main.getBaseUri()));
+		System.out.println(String.format("Jersey app started with WADL available at " + "%sapplication.wadl\nHit enter to stop it...",
+				main.getBaseUri()));
 		System.in.read();
 		server.stop();
 	}

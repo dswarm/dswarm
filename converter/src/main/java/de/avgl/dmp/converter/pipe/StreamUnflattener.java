@@ -2,6 +2,8 @@ package de.avgl.dmp.converter.pipe;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
 import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 
@@ -39,7 +41,7 @@ public class StreamUnflattener extends DefaultStreamPipe<StreamReceiver> {
 	 */
 	public static final String DEFAULT_INITIAL_DISCARD = "";
 
-	private final Map<Integer, String> openEntities = new HashMap<>();
+	private final Map<Integer, String> openEntities = Maps.newHashMap();
 	private int currentLevel = 0;
 
 	private final char entityMarker;

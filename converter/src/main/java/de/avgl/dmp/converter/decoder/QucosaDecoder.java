@@ -121,9 +121,12 @@ public class QucosaDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
 		final Document doc;
 		try {
 			doc = documentBuilder.parse(in);
-		} catch (SAXException | IOException e) {
+		} catch (SAXException e) {
+			throw new MetafactureException(e);
+		} catch (IOException e) {
 			throw new MetafactureException(e);
 		}
+
 
 		doc.getDocumentElement().normalize();
 

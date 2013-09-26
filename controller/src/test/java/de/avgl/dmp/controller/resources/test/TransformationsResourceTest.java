@@ -1,17 +1,21 @@
 package de.avgl.dmp.controller.resources.test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import java.io.IOException;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
+
+import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public class TransformationsResourceTest extends ResourceTest {
 
@@ -33,7 +37,7 @@ public class TransformationsResourceTest extends ResourceTest {
 
 	@Before
 	public void prepare() throws IOException {
-		transformationJSONString = getResourceAsString("complex-request.json");
+		transformationJSONString = DMPPersistenceUtil.getResourceAsString("transformations-post-request.json");
 		transformationJSON = mapper.readValue(transformationJSONString, ObjectNode.class);
 	}
 
@@ -58,15 +62,18 @@ public class TransformationsResourceTest extends ResourceTest {
 
 	@Test
 	public void testXML() throws Exception {
-		Response response = target.path(resourceIdentifier).request(MediaType.APPLICATION_XML_TYPE)
+		
+		final Response response = target.path(resourceIdentifier).request(MediaType.APPLICATION_XML_TYPE)
 				.accept(MediaType.APPLICATION_XML_TYPE)
 				.post(Entity.json(transformationJSONString));
-		String responseString = response.readEntity(String.class);
+		
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+		
+		final String responseString = response.readEntity(String.class);
 
-		final String expected = getResourceAsString("complex-metamorph.xml");
+		final String expected = DMPPersistenceUtil.getResourceAsString("transformations-post-metamorph.xml");
 
 		Assert.assertEquals("POST responses are not equal", expected, responseString);
-		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
 	}
 
 	@Test
@@ -76,7 +83,7 @@ public class TransformationsResourceTest extends ResourceTest {
 				.post(Entity.json(transformationJSONString));
 		String responseString = response.readEntity(String.class);
 
-		final String expected = getResourceAsString("complex-result.json");
+		final String expected = DMPPersistenceUtil.getResourceAsString("transformations-post-result.json");
 
 		Assert.assertEquals("POST responses are not equal", expected, responseString);
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
