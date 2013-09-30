@@ -15,19 +15,19 @@ import org.junit.Test;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 
-import de.avgl.dmp.converter.flow.CSVSourceResourcePreviewFlow;
+import de.avgl.dmp.converter.flow.CSVSourceResourceCSVPreviewFlow;
 import de.avgl.dmp.converter.mf.stream.reader.CsvReader;
 import de.avgl.dmp.converter.mf.stream.source.CSVEncoder;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class CSVSourceResourcePreviewFlowTest {
+public class CSVSourceResourceCSVPreviewFlowTest {
 
 	@Test
 	public void testEndToEnd() throws Exception {
 		
 		final String expected = DMPPersistenceUtil.getResourceAsString("test_csv.csv");
 
-		final CSVSourceResourcePreviewFlow flow = CSVSourceResourcePreviewFlow.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ';', "\n");
+		final CSVSourceResourceCSVPreviewFlow flow = CSVSourceResourceCSVPreviewFlow.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ';', "\n");
 
 		final URL url = Resources.getResource("test_csv.csv");
 		final File file = FileUtils.toFile(url);

@@ -24,9 +24,12 @@ public final class CsvReader implements Reader<CSVRecord> {
 
 	private final CsvLineReader	lineReader;
 	private final CsvDecoder	decoder;
+	private boolean				withLimit	= false;
+	private int					limit		= -1;
+	private int					count		= 0;
 
 	public CsvReader() {
-		
+
 		super();
 
 		this.decoder = new CsvDecoder();
@@ -34,13 +37,38 @@ public final class CsvReader implements Reader<CSVRecord> {
 		lineReader.setReceiver(this.decoder);
 	}
 
+	public CsvReader(final int limit) {
+
+		super();
+
+		this.decoder = new CsvDecoder();
+		lineReader = new CsvLineReader();
+		lineReader.setReceiver(this.decoder);
+
+		this.limit = limit;
+		this.withLimit = true;
+	}
+
 	public CsvReader(final char escapeCharacteArg, final char quoteCharacterArg, final char columnSeparatorArg, final String lineEnding) {
-		
+
 		super();
 
 		this.decoder = new CsvDecoder();
 		lineReader = new CsvLineReader(escapeCharacteArg, quoteCharacterArg, columnSeparatorArg, lineEnding);
 		lineReader.setReceiver(this.decoder);
+	}
+
+	public CsvReader(final char escapeCharacteArg, final char quoteCharacterArg, final char columnSeparatorArg, final String lineEnding,
+			final int limit) {
+
+		super();
+
+		this.decoder = new CsvDecoder();
+		lineReader = new CsvLineReader(escapeCharacteArg, quoteCharacterArg, columnSeparatorArg, lineEnding);
+		lineReader.setReceiver(this.decoder);
+
+		this.limit = limit;
+		this.withLimit = true;
 	}
 
 	public final CsvDecoder getDecoder() {
@@ -64,6 +92,16 @@ public final class CsvReader implements Reader<CSVRecord> {
 
 	@Override
 	public final void read(final CSVRecord entry) {
+		
+		if (withLimit) {
+
+			if (count == limit) {
+
+				return;
+			}
+			
+			count++;
+		}
 
 		decoder.process(entry);
 	}
@@ -81,6 +119,11 @@ public final class CsvReader implements Reader<CSVRecord> {
 	}
 
 	public void setHeader(final boolean hasHeader) {
+		
+		if(hasHeader) {
+			
+			limit++;
+		}
 
 		decoder.setHeader(hasHeader);
 	}

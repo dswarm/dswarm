@@ -19,18 +19,38 @@ import org.culturegraph.mf.framework.annotations.Out;
 @Out(StreamReceiver.class)
 public final class CsvDecoder extends DefaultObjectPipe<CSVRecord, StreamReceiver> {
 
-	private boolean		hasHeader = false;
-	private String[]	header	= new String[0];
+	private boolean		hasHeader	= false;
+	private String[]	header		= new String[0];
 	private int			count;
+	private boolean		withLimit	= false;
+	private int			limit		= -1;
+	private int			limitCount	= 0;
 
 	public CsvDecoder() {
 		super();
+	}
+
+	public CsvDecoder(final int limit) {
+		super();
+
+		this.limit = limit;
+		this.withLimit = true;
 	}
 
 	@Override
 	public void process(final CSVRecord record) {
 
 		assert !isClosed();
+
+		if (withLimit) {
+
+			if (limitCount == limit) {
+
+				return;
+			}
+
+			limitCount++;
+		}
 
 		if (hasHeader) {
 
@@ -89,6 +109,13 @@ public final class CsvDecoder extends DefaultObjectPipe<CSVRecord, StreamReceive
 	}
 
 	public void setHeader(final boolean hasHeaderArg) {
+
+		if (withLimit) {
+
+			// increase limit for header row
+
+			limit++;
+		}
 
 		hasHeader = hasHeaderArg;
 	}

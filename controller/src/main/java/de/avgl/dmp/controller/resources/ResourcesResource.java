@@ -35,7 +35,8 @@ import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.services.PersistenceServices;
 import de.avgl.dmp.controller.utils.DMPControllerUtils;
 import de.avgl.dmp.converter.DMPConverterException;
-import de.avgl.dmp.converter.flow.CSVSourceResourcePreviewFlow;
+import de.avgl.dmp.converter.flow.CSVSourceResourceCSVJSONPreviewFlow;
+import de.avgl.dmp.converter.flow.CSVSourceResourceCSVPreviewFlow;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
@@ -63,17 +64,18 @@ public class ResourcesResource {
 	public Response uploadResource(@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("name") String name,
 			@FormDataParam("description") String description) throws DMPControllerException {
-		
+
 		LOG.debug("try to create new resource '" + name + "' for file '" + fileDetail.getFileName() + "'");
 
 		final Resource resource = createResource(uploadedInputStream, fileDetail, name, description);
-		
-		if(resource == null) {
-			
+
+		if (resource == null) {
+
 			throw new DMPControllerException("couldn't create new resource");
 		}
-		
-		LOG.debug("created new resource '" + name + "' for file '" + fileDetail.getFileName() + "' = '" + ToStringBuilder.reflectionToString(resource) + "'");
+
+		LOG.debug("created new resource '" + name + "' for file '" + fileDetail.getFileName() + "' = '"
+				+ ToStringBuilder.reflectionToString(resource) + "'");
 
 		String resourceJSON = null;
 
@@ -87,7 +89,7 @@ public class ResourcesResource {
 
 		URI baseURI = uri.getRequestUri();
 		URI resourceURI = URI.create(baseURI.toString() + "/" + resource.getId());
-		
+
 		LOG.debug("created new resource at '" + resourceURI.toString() + "' with content '" + resourceJSON + "'");
 
 		return Response.created(resourceURI).entity(resourceJSON).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
@@ -96,7 +98,7 @@ public class ResourcesResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getResources() throws DMPControllerException {
-		
+
 		LOG.debug("try to get all resources");
 
 		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
@@ -116,7 +118,7 @@ public class ResourcesResource {
 
 			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 		}
-		
+
 		LOG.debug("got all resources = ' = '" + ToStringBuilder.reflectionToString(resources) + "'");
 
 		String resourcesJSON = null;
@@ -128,7 +130,7 @@ public class ResourcesResource {
 
 			throw new DMPControllerException("couldn't transform resources list object to JSON string.\n" + e.getMessage());
 		}
-		
+
 		LOG.debug("return all resources '" + resourcesJSON + "'");
 
 		return buildResponse(resourcesJSON);
@@ -138,7 +140,7 @@ public class ResourcesResource {
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getResource(@PathParam("id") Long id) throws DMPControllerException {
-		
+
 		LOG.debug("try to get resource with id '" + id.toString() + "'");
 
 		final Resource resource = getResourceInternal(id);
@@ -149,7 +151,7 @@ public class ResourcesResource {
 
 			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 		}
-		
+
 		LOG.debug("got resource with id '" + id.toString() + "' = '" + ToStringBuilder.reflectionToString(resource) + "'");
 
 		String resourceJSON = null;
@@ -161,7 +163,7 @@ public class ResourcesResource {
 
 			throw new DMPControllerException("couldn't transform resource object to JSON string.\n" + e.getMessage());
 		}
-		
+
 		LOG.debug("return resource with id '" + id + "' and content '" + resourceJSON + "'");
 
 		return buildResponse(resourceJSON);
@@ -171,7 +173,7 @@ public class ResourcesResource {
 	@Path("/{id}/configurations")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getResourceConfigurations(@PathParam("id") Long id) throws DMPControllerException {
-		
+
 		LOG.debug("try to get resource configurations for resource with id '" + id.toString() + "'");
 
 		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
@@ -184,8 +186,9 @@ public class ResourcesResource {
 
 			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 		}
-		
-		LOG.debug("got resource with id '" + id.toString() + "' for resource configurations retrieval = '" + ToStringBuilder.reflectionToString(resource) + "'");
+
+		LOG.debug("got resource with id '" + id.toString() + "' for resource configurations retrieval = '"
+				+ ToStringBuilder.reflectionToString(resource) + "'");
 
 		final Set<Configuration> configurations = resource.getConfigurations();
 
@@ -195,8 +198,9 @@ public class ResourcesResource {
 
 			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 		}
-		
-		LOG.debug("got resource configurations for resource with id '" + id.toString() + "' = '" + ToStringBuilder.reflectionToString(configurations) + "'");
+
+		LOG.debug("got resource configurations for resource with id '" + id.toString() + "' = '" + ToStringBuilder.reflectionToString(configurations)
+				+ "'");
 
 		String configurationsJSON = null;
 
@@ -207,7 +211,7 @@ public class ResourcesResource {
 
 			throw new DMPControllerException("couldn't transform resource configurations set to JSON string.\n" + e.getMessage());
 		}
-		
+
 		LOG.debug("return resource configurations for resource with id '" + id.toString() + "' and content '" + configurationsJSON + "'");
 
 		return buildResponse(configurationsJSON);
@@ -218,7 +222,7 @@ public class ResourcesResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addConfiguration(@PathParam("id") Long id, final String jsonObjectString) throws DMPControllerException {
-		
+
 		LOG.debug("try to create new configuration for resource with id '" + id + "'");
 		LOG.debug("try to recieve resource with id '" + id + "' for configuration creation");
 
@@ -230,19 +234,19 @@ public class ResourcesResource {
 
 			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 		}
-		
+
 		LOG.debug("found resource with id '" + id + "' for configuration creation = '" + ToStringBuilder.reflectionToString(resource) + "'");
 		LOG.debug("try to add new configuration to resource with id '" + id + "'");
 
 		final Configuration configuration = addConfiguration(resource, jsonObjectString);
-		
-		if(configuration == null) {
-			
+
+		if (configuration == null) {
+
 			LOG.debug("couldn't add configuration to resource with id '" + id + "'");
-			
+
 			throw new DMPControllerException("couldn't add configuration to resource with id '" + id + "'");
 		}
-		
+
 		LOG.debug("added new configuration to resource with id '" + id + "' = '" + ToStringBuilder.reflectionToString(configuration) + "'");
 
 		String configurationJSON = null;
@@ -257,11 +261,11 @@ public class ResourcesResource {
 
 		URI baseURI = uri.getRequestUri();
 		URI configurationURI = URI.create(baseURI.toString() + "/" + configuration.getId());
-		
+
 		LOG.debug("return new configuration at '" + configurationURI.toString() + "' with content '" + configurationJSON + "'");
 
 		return Response.created(configurationURI).entity(configurationJSON).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
-	
+
 	}
 
 	@GET
@@ -269,7 +273,7 @@ public class ResourcesResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getResourceConfiguration(@PathParam("id") Long id, @PathParam("configurationid") Long configurationId)
 			throws DMPControllerException {
-		
+
 		LOG.debug("try to get configuration with id '" + configurationId + "' for resource with id '" + id + "'");
 
 		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
@@ -282,8 +286,9 @@ public class ResourcesResource {
 
 			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 		}
-		
-		LOG.debug("got resource with id '" + id + "' for configuration with id '" + configurationId + "' = '" + ToStringBuilder.reflectionToString(resource) + "'");
+
+		LOG.debug("got resource with id '" + id + "' for configuration with id '" + configurationId + "' = '"
+				+ ToStringBuilder.reflectionToString(resource) + "'");
 
 		final Set<Configuration> configurations = resource.getConfigurations();
 
@@ -302,8 +307,9 @@ public class ResourcesResource {
 
 			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 		}
-		
-		LOG.debug("got configuration with id '" + configurationId + "' for resource with id '" + id + "' = '" + ToStringBuilder.reflectionToString(configuration) + "'");
+
+		LOG.debug("got configuration with id '" + configurationId + "' for resource with id '" + id + "' = '"
+				+ ToStringBuilder.reflectionToString(configuration) + "'");
 
 		String configurationJSON = null;
 
@@ -314,20 +320,20 @@ public class ResourcesResource {
 
 			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
 		}
-		
+
 		LOG.debug("return configuration with id '" + configurationId + "' for resource with id '" + id + "' and content '" + configurationJSON + "'");
 
 		return buildResponse(configurationJSON);
 	}
-	
+
 	@POST
 	@Path("/{id}/configurationpreview")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response previewConfiguration(@PathParam("id") Long id, final String jsonObjectString) throws DMPControllerException {
-		
+	public Response csvPreviewConfiguration(@PathParam("id") Long id, final String jsonObjectString) throws DMPControllerException {
+
 		LOG.debug("try to apply configuration for resource with id '" + id + "'");
-		LOG.debug("try to recieve resource with id '" + id + "' for configuration preview");
+		LOG.debug("try to recieve resource with id '" + id + "' for csv configuration preview");
 
 		final Resource resource = getResourceInternal(id);
 
@@ -337,23 +343,57 @@ public class ResourcesResource {
 
 			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 		}
-		
-		LOG.debug("found resource with id '" + id + "' for configuration preview = '" + ToStringBuilder.reflectionToString(resource) + "'");
+
+		LOG.debug("found resource with id '" + id + "' for csv configuration preview = '" + ToStringBuilder.reflectionToString(resource) + "'");
 		LOG.debug("try to apply configuration to resource with id '" + id + "'");
 
-		final String result = applyConfiguration(resource, jsonObjectString);
-		
-		if(result == null) {
-			
+		final String result = applyConfigurationForCSVPreview(resource, jsonObjectString);
+
+		if (result == null) {
+
 			LOG.debug("couldn't apply configuration to resource with id '" + id + "'");
-			
+
 			throw new DMPControllerException("couldn't apply configuration to resource with id '" + id + "'");
 		}
-		
+
 		LOG.debug("applied configuration to resource with id '" + id + "'");
 
 		return Response.ok().entity(result).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
-	
+	}
+
+	@POST
+	@Path("/{id}/configurationpreview")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response csvJSONPreviewConfiguration(@PathParam("id") Long id, final String jsonObjectString) throws DMPControllerException {
+
+		LOG.debug("try to apply configuration for resource with id '" + id + "'");
+		LOG.debug("try to recieve resource with id '" + id + "' for csv json configuration preview");
+
+		final Resource resource = getResourceInternal(id);
+
+		if (resource == null) {
+
+			LOG.debug("couldn't find resource");
+
+			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		}
+
+		LOG.debug("found resource with id '" + id + "' for csv json configuration preview = '" + ToStringBuilder.reflectionToString(resource) + "'");
+		LOG.debug("try to apply configuration to resource with id '" + id + "'");
+
+		final String result = applyConfigurationForCSVJSONPreview(resource, jsonObjectString);
+
+		if (result == null) {
+
+			LOG.debug("couldn't apply configuration to resource with id '" + id + "'");
+
+			throw new DMPControllerException("couldn't apply configuration to resource with id '" + id + "'");
+		}
+
+		LOG.debug("applied configuration to resource with id '" + id + "'");
+
+		return Response.ok().entity(result).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 	}
 
 	@OPTIONS
@@ -390,7 +430,7 @@ public class ResourcesResource {
 				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, OPTIONS, HEAD")
 				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Accept, Origin, X-Requested-With, Content-Type").build();
 	}
-	
+
 	@Path("/{id}/configurationpreview")
 	@OPTIONS
 	public Response getConfigurationPreviewOptions() {
@@ -472,7 +512,7 @@ public class ResourcesResource {
 	private Configuration addConfiguration(final Resource resource, final String configurationJSONString) throws DMPControllerException {
 
 		final Configuration configurationFromJSON = getConfiguration(configurationJSONString);
-		
+
 		final ConfigurationService configurationService = PersistenceServices.getInstance().getConfigurationService();
 
 		Configuration configuration = null;
@@ -491,28 +531,28 @@ public class ResourcesResource {
 
 			throw new DMPControllerException("fresh configuration shouldn't be null");
 		}
-		
+
 		final String name = configurationFromJSON.getName();
-		
-		if(name != null) {
-			
+
+		if (name != null) {
+
 			configuration.setName(name);
 		}
-		
+
 		final String description = configurationFromJSON.getDescription();
-		
-		if(description != null) {
-			
+
+		if (description != null) {
+
 			configuration.setDescription(description);
 		}
 
 		final ObjectNode parameters = configurationFromJSON.getParameters();
-		
-		if(parameters != null && parameters.size() > 0) {
-			
+
+		if (parameters != null && parameters.size() > 0) {
+
 			configuration.setParameters(parameters);
 		}
-		
+
 		configuration.addResource(resource);
 
 		try {
@@ -524,9 +564,9 @@ public class ResourcesResource {
 
 			throw new DMPControllerException("something went wrong while configuration updating\n" + e.getMessage());
 		}
-		
+
 		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
-		
+
 		try {
 
 			resourceService.updateObjectTransactional(resource);
@@ -539,47 +579,87 @@ public class ResourcesResource {
 
 		return configuration;
 	}
-	
-	private String applyConfiguration(final Resource resource, final String configurationJSONString) throws DMPControllerException {
-		
+
+	private String applyConfigurationForCSVPreview(final Resource resource, final String configurationJSONString) throws DMPControllerException {
+
 		final Configuration configurationFromJSON = getConfiguration(configurationJSONString);
-		
-		CSVSourceResourcePreviewFlow flow = null;
-		
+
+		CSVSourceResourceCSVPreviewFlow flow = null;
+
 		try {
-			flow = CSVSourceResourcePreviewFlow.fromConfiguration(configurationFromJSON);
+			flow = CSVSourceResourceCSVPreviewFlow.fromConfiguration(configurationFromJSON);
 		} catch (DMPConverterException e) {
-			
+
 			throw new DMPControllerException("something went wrong while apply configuration to resource");
 		} catch (IOException e) {
 
 			throw new DMPControllerException("something went wrong while apply configuration to resource");
 		}
-		
-		if(flow == null) {
+
+		if (flow == null) {
 
 			throw new DMPControllerException("something went wrong while apply configuration to resource");
 		}
 
-		if(resource.getAttributes() == null) {
-			
+		if (resource.getAttributes() == null) {
+
 			throw new DMPControllerException("there are no attributes available at resource '" + resource.getId() + "'");
 		}
-		
+
 		final JsonNode filePathNode = resource.getAttribute("path");
-		
-		if(filePathNode == null) {
-			
+
+		if (filePathNode == null) {
+
 			throw new DMPControllerException("couldn't determine file path");
 		}
-		
+
 		final String result = flow.applyFile(filePathNode.asText());
-		
+
 		return result;
 	}
-	
-	private Configuration getConfiguration(final String configurationJSONString) throws DMPControllerException {
+
+	private String applyConfigurationForCSVJSONPreview(final Resource resource, final String configurationJSONString) throws DMPControllerException {
+
+		final Configuration configurationFromJSON = getConfiguration(configurationJSONString);
+
+		CSVSourceResourceCSVJSONPreviewFlow flow = null;
+
+		try {
+			flow = CSVSourceResourceCSVJSONPreviewFlow.fromConfiguration(configurationFromJSON);
+		} catch (DMPConverterException e) {
+
+			throw new DMPControllerException("something went wrong while apply configuration to resource");
+		} catch (IOException e) {
+
+			throw new DMPControllerException("something went wrong while apply configuration to resource");
+		}
+
+		if (flow == null) {
+
+			throw new DMPControllerException("something went wrong while apply configuration to resource");
+		}
 		
+		flow.withLimit(50);
+
+		if (resource.getAttributes() == null) {
+
+			throw new DMPControllerException("there are no attributes available at resource '" + resource.getId() + "'");
+		}
+
+		final JsonNode filePathNode = resource.getAttribute("path");
+
+		if (filePathNode == null) {
+
+			throw new DMPControllerException("couldn't determine file path");
+		}
+
+		final String result = flow.applyFile(filePathNode.asText());
+
+		return result;
+	}
+
+	private Configuration getConfiguration(final String configurationJSONString) throws DMPControllerException {
+
 		Configuration configurationFromJSON = null;
 
 		try {
@@ -606,7 +686,7 @@ public class ResourcesResource {
 
 			throw new DMPControllerException("deserialized configuration is null");
 		}
-		
+
 		return configurationFromJSON;
 	}
 

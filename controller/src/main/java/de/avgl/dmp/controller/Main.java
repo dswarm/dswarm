@@ -71,8 +71,11 @@ public class Main {
 
 		// create and start a new instance of grizzly http server
 		// exposing the Jersey application at BASE_URI
+		
+		final HttpServer httpServer = GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
+		httpServer.getListener("grizzly").setMaxFormPostSize(Integer.MAX_VALUE);
 
-		return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
+		return httpServer;
 	}
 
 	public static Main create(int port) {

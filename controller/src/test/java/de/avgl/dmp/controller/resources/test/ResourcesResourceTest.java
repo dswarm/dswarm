@@ -74,6 +74,24 @@ public class ResourcesResourceTest extends ResourceTest {
 	}
 
 	@Test
+	public void testResourceUpload2() throws Exception {
+
+		resourceJSONString = DMPPersistenceUtil.getResourceAsString("resource2.json");
+		expectedResource = DMPPersistenceUtil.getJSONObjectMapper().readValue(resourceJSONString, Resource.class);
+
+		final URL fileURL = Resources.getResource("utf8dmpf04.n3");
+		resourceFile = FileUtils.toFile(fileURL);
+
+		final String resourceJSON = testResourceUploadInteral();
+
+		LOG.debug("created resource = '" + resourceJSON + "'");
+
+		final Resource resource = DMPPersistenceUtil.getJSONObjectMapper().readValue(resourceJSON, Resource.class);
+
+		cleanUpDB(resource);
+	}
+
+	@Test
 	public void getResource() throws Exception {
 
 		final String resourceJSON = testResourceUploadInteral();
@@ -287,28 +305,51 @@ public class ResourcesResourceTest extends ResourceTest {
 		cleanUpDB(resource);
 		cleanUpDB(resource2);
 	}
-	
+
 	@Test
-	public void testPOSTConfigurationPreview() throws Exception {
-		
+	public void testPOSTConfigurationCSVPreview() throws Exception {
+
 		final String resourceJSON = testResourceUploadInteral();
 
 		LOG.debug("created resource = '" + resourceJSON + "'");
 
 		final Resource resource = DMPPersistenceUtil.getJSONObjectMapper().readValue(resourceJSON, Resource.class);
-		
+
 		Assert.assertNotNull("resource shouldn't be null", resource);
-		
+
 		final String configurationJSON = DMPPersistenceUtil.getResourceAsString("configuration2.json");
-		
-		final Response response = target.path(resourceIdentifier + "/" + resource.getId() + "/configurationpreview").request(MediaType.APPLICATION_JSON_TYPE)
-				.accept(MediaType.TEXT_PLAIN_TYPE)
-				.post(Entity.json(configurationJSON));
+
+		final Response response = target.path(resourceIdentifier + "/" + resource.getId() + "/configurationpreview")
+				.request(MediaType.TEXT_PLAIN_TYPE).accept(MediaType.TEXT_PLAIN_TYPE).post(Entity.json(configurationJSON));
 		final String responseString = response.readEntity(String.class);
 
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
-		
+
 		final String expected = DMPPersistenceUtil.getResourceAsString("test_csv.csv");
+
+		Assert.assertEquals("POST responses are not equal", expected, responseString);
+	}
+
+	@Test
+	public void testPOSTConfigurationCSVJSONPreview() throws Exception {
+
+		final String resourceJSON = testResourceUploadInteral();
+
+		LOG.debug("created resource = '" + resourceJSON + "'");
+
+		final Resource resource = DMPPersistenceUtil.getJSONObjectMapper().readValue(resourceJSON, Resource.class);
+
+		Assert.assertNotNull("resource shouldn't be null", resource);
+
+		final String configurationJSON = DMPPersistenceUtil.getResourceAsString("configuration2.json");
+
+		final Response response = target.path(resourceIdentifier + "/" + resource.getId() + "/configurationpreview")
+				.request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(configurationJSON));
+		final String responseString = response.readEntity(String.class);
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+
+		final String expected = DMPPersistenceUtil.getResourceAsString("test_csv.json");
 
 		Assert.assertEquals("POST responses are not equal", expected, responseString);
 	}
@@ -442,9 +483,6 @@ public class ResourcesResourceTest extends ResourceTest {
 		Assert.assertNotNull("resource type shouldn't be null", responseResource.getType());
 		Assert.assertEquals("the resource types should be equal", expectedResource.getType(), responseResource.getType());
 		Assert.assertNotNull("resource attributes shouldn't be null", responseResource.getAttributes());
-		// Assert.assertNotNull("resource attribute 'filetype' shouldn't be null", responseResource.getAttribute("filetype"));
-		// Assert.assertEquals("the resource file types should be equal", expectedResource.getAttribute("filetype"),
-		// responseResource.getAttribute("filetype"));
 
 		final Iterator<Entry<String, JsonNode>> attributesJSONNodeIter = expectedResource.getAttributes().fields();
 
@@ -452,11 +490,14 @@ public class ResourcesResourceTest extends ResourceTest {
 
 			final Entry<String, JsonNode> attributeJSONEntry = attributesJSONNodeIter.next();
 			final String attributeKey = attributeJSONEntry.getKey();
-
+			
 			Assert.assertNotNull("resource attribute '" + attributeKey + "' shouldn't be null", responseResource.getAttribute(attributeKey));
-			Assert.assertEquals("the resource " + attributeKey + "s should be equal", expectedResource.getAttribute(attributeKey),
-					responseResource.getAttribute(attributeKey));
 
+			if ("path".equals(attributeKey) == false) {
+
+				Assert.assertEquals("the resource " + attributeKey + "s should be equal", expectedResource.getAttribute(attributeKey),
+						responseResource.getAttribute(attributeKey));
+			}
 		}
 	}
 
