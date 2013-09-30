@@ -56,7 +56,7 @@ public class Main {
 
 	/**
 	 * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
-	 * 
+	 *
 	 * @return Grizzly HTTP server.
 	 */
 	public HttpServer startServer() {
@@ -71,7 +71,7 @@ public class Main {
 
 		// create and start a new instance of grizzly http server
 		// exposing the Jersey application at BASE_URI
-		
+
 		final HttpServer httpServer = GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
 		httpServer.getListener("grizzly").setMaxFormPostSize(Integer.MAX_VALUE);
 
@@ -93,16 +93,27 @@ public class Main {
 
 	/**
 	 * Main method.
-	 * 
+	 *
 	 * @param args
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
 		final Main main = Main.create();
 		final HttpServer server = main.startServer();
-		System.out.println(String.format("Jersey app started with WADL available at " + "%sapplication.wadl\nHit enter to stop it...",
+
+		System.out.println(String.format("Jersey app started with WADL available at " + "%sapplication.wadl\nHit ^C to stop it...",
 				main.getBaseUri()));
-		System.in.read();
-		server.stop();
+
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				System.out.println("Stopping server");
+				server.stop();
+			}
+		});
+
+		try {
+			Thread.currentThread().join();
+		} catch (InterruptedException ignored) {}
 	}
 }
