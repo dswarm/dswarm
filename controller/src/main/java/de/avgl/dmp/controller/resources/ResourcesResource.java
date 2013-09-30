@@ -5,39 +5,50 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataParam;
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Optional;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Table;
+import com.google.common.eventbus.EventBus;
 import com.google.common.net.HttpHeaders;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
+import de.avgl.dmp.controller.eventbus.ConverterEvent;
 import de.avgl.dmp.controller.services.PersistenceServices;
 import de.avgl.dmp.controller.utils.DMPControllerUtils;
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.CSVSourceResourceCSVJSONPreviewFlow;
 import de.avgl.dmp.converter.flow.CSVSourceResourceCSVPreviewFlow;
 import de.avgl.dmp.persistence.DMPPersistenceException;
+import de.avgl.dmp.persistence.model.internal.InternalMemoryDb;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
@@ -52,6 +63,15 @@ public class ResourcesResource {
 
 	@Context
 	UriInfo											uri;
+
+	@Inject
+	EventBus			eventBus;
+
+	@Inject
+	InternalMemoryDb	memoryDb;
+
+	@Inject
+	EntityManager		entityManager;
 
 	private Response buildResponse(final String responseContent) {
 
@@ -103,7 +123,7 @@ public class ResourcesResource {
 
 		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
 
-		final List<Resource> resources = resourceService.getObjects();
+		final List<Resource> resources = resourceService.getObjects(entityManager);
 
 		if (resources == null) {
 
@@ -178,7 +198,7 @@ public class ResourcesResource {
 
 		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
 
-		final Resource resource = resourceService.getObject(id);
+		final Resource resource = resourceService.getObject(entityManager, id);
 
 		if (resource == null) {
 
@@ -249,6 +269,8 @@ public class ResourcesResource {
 
 		LOG.debug("added new configuration to resource with id '" + id + "' = '" + ToStringBuilder.reflectionToString(configuration) + "'");
 
+		eventBus.post(new ConverterEvent(configuration, resource));
+
 		String configurationJSON = null;
 
 		try {
@@ -278,7 +300,7 @@ public class ResourcesResource {
 
 		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
 
-		final Resource resource = resourceService.getObject(id);
+		final Resource resource = resourceService.getObject(entityManager, id);
 
 		if (resource == null) {
 
@@ -322,6 +344,91 @@ public class ResourcesResource {
 		}
 
 		LOG.debug("return configuration with id '" + configurationId + "' for resource with id '" + id + "' and content '" + configurationJSON + "'");
+
+		return buildResponse(configurationJSON);
+	}
+
+	@GET
+	@Path("/{id}/configurations/{configurationid}/schema")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getResourceConfigurationSchema(@PathParam("id") Long id, @PathParam("configurationid") Long configurationId)
+			throws DMPControllerException {
+
+		LOG.debug("try to get schema for configuration with id '" + configurationId + "' for resource with id '" + id + "'");
+
+		final Optional<Set<String>> schemaOptional = memoryDb.schema(id, configurationId);
+
+		if (!schemaOptional.isPresent()) {
+
+			LOG.debug("couldn't find schema");
+
+			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		}
+
+		final List<String> schema = Lists.newArrayList(schemaOptional.get());
+		final Map<String, List<String>> jsonMap = Maps.newHashMap();
+
+		jsonMap.put("schema", schema);
+
+		String configurationJSON = null;
+
+		try {
+
+			configurationJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(jsonMap);
+		} catch (final JsonProcessingException e) {
+
+			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
+		}
+
+		LOG.debug("return schema for configuration with id '" + configurationId + "' for resource with id '" + id + "' and content '" + configurationJSON + "'");
+
+		return buildResponse(configurationJSON);
+	}
+
+	@GET
+	@Path("/{id}/configurations/{configurationid}/data")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getResourceConfigurationData(@PathParam("id") Long id, @PathParam("configurationid") Long configurationId,
+		@DefaultValue("3") @QueryParam("atMost") int atMost)
+			throws DMPControllerException {
+
+		LOG.debug("try to get schema for configuration with id '" + configurationId + "' for resource with id '" + id + "'");
+
+		final Optional<Table<String,String,String>> maybeTable = memoryDb.get(id, configurationId);
+
+		if (!maybeTable.isPresent()) {
+
+			LOG.debug("couldn't find data");
+
+			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		}
+
+		final Table<String, String, String> table = maybeTable.get();
+		final Iterable<String> rows = Iterables.limit(table.rowKeySet(), atMost);
+
+		final Map<String,List<Map<String,String>>> jsonMap = Maps.newHashMap();
+		final List<Map<String, String>> jsonList = Lists.newArrayList();
+
+		for (String row : rows) {
+			final Map<String, String> tableRow = table.row(row);
+			tableRow.put("recordId", row);
+
+			jsonList.add(tableRow);
+		}
+
+		jsonMap.put("records", jsonList);
+
+		String configurationJSON = null;
+
+		try {
+
+			configurationJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(jsonMap);
+		} catch (final JsonProcessingException e) {
+
+			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
+		}
+
+		LOG.debug("return data for configuration with id '" + configurationId + "' for resource with id '" + id + "' and content '" + configurationJSON + "'");
 
 		return buildResponse(configurationJSON);
 	}
@@ -451,7 +558,7 @@ public class ResourcesResource {
 
 		try {
 
-			resource = resourceService.createObject();
+			resource = resourceService.createObject(entityManager);
 		} catch (final DMPPersistenceException e) {
 
 			LOG.debug("something went wrong while resource creation");
@@ -519,7 +626,7 @@ public class ResourcesResource {
 
 		try {
 
-			configuration = configurationService.createObject();
+			configuration = configurationService.createObject(entityManager);
 		} catch (final DMPPersistenceException e) {
 
 			LOG.debug("something went wrong while configuration creation");
@@ -557,7 +664,7 @@ public class ResourcesResource {
 
 		try {
 
-			configurationService.updateObjectTransactional(configuration);
+			configurationService.updateObjectTransactional(entityManager, configuration);
 		} catch (final DMPPersistenceException e) {
 
 			LOG.debug("something went wrong while configuration updating");
@@ -569,7 +676,7 @@ public class ResourcesResource {
 
 		try {
 
-			resourceService.updateObjectTransactional(resource);
+			resourceService.updateObjectTransactional(entityManager, resource);
 		} catch (final DMPPersistenceException e) {
 
 			LOG.debug("something went wrong while resource updating for configuration");
@@ -638,7 +745,7 @@ public class ResourcesResource {
 
 			throw new DMPControllerException("something went wrong while apply configuration to resource");
 		}
-		
+
 		flow.withLimit(50);
 
 		if (resource.getAttributes() == null) {
@@ -694,7 +801,7 @@ public class ResourcesResource {
 
 		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
 
-		final Resource resource = resourceService.getObject(id);
+		final Resource resource = resourceService.getObject(entityManager, id);
 
 		return resource;
 	}

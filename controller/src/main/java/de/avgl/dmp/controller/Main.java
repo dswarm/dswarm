@@ -5,13 +5,15 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
-
 import javax.ws.rs.core.UriBuilder;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
+
+import de.avgl.dmp.controller.providers.ExceptionHandler;
+import de.avgl.dmp.controller.providers.DMPBinder;
 
 /**
  * Main class.
@@ -68,7 +70,8 @@ public class Main {
 		// .register(JacksonJaxbJsonProvider.class)
 				.packages("de.avgl.dmp.controller.resources")
 				.register(MultiPartFeature.class)
-				.register(de.avgl.dmp.controller.providers.ExceptionHandler.class);
+				.register(ExceptionHandler.class)
+				.register(new DMPBinder());
 
 		// create and start a new instance of grizzly http server
 		// exposing the Jersey application at BASE_URI
@@ -95,7 +98,7 @@ public class Main {
 	/**
 	 * Main method.
 	 *
-	 * @param args
+	 * @param args main args
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
@@ -105,8 +108,8 @@ public class Main {
 		System.out.println(String.format("Jersey app started with WADL available at " + "%sapplication.wadl\nHit ^C to stop it...",
 				main.getBaseUri()));
 
-		System.out.close();
-		System.err.close();
+//		System.out.close();
+//		System.err.close();
 
 		final CountDownLatch keepAliveLatch = new CountDownLatch(1);
 		Runtime.getRuntime().addShutdownHook(new Thread() {

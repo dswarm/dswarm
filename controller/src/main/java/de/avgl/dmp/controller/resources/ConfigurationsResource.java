@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Set;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.OPTIONS;
@@ -18,14 +17,13 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
 import com.google.common.net.HttpHeaders;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.services.PersistenceServices;
@@ -86,7 +84,7 @@ public class ConfigurationsResource {
 
 	/**
 	 * this endpoint consumes a configuration as JSON representation and writes this configuration persistent to the database
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one configuration
 	 * @return
 	 * @throws IOException
@@ -170,7 +168,7 @@ public class ConfigurationsResource {
 				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, POST, OPTIONS, HEAD")
 				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Accept, Origin, X-Requested-With, Content-Type").build();
 	}
-	
+
 	@Path("/{id}")
 	@OPTIONS
 	public Response getConfigurationOptions() {
