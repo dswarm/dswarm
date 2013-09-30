@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Properties;
+import java.util.concurrent.CountDownLatch;
 
 import javax.ws.rs.core.UriBuilder;
 
@@ -104,16 +105,29 @@ public class Main {
 		System.out.println(String.format("Jersey app started with WADL available at " + "%sapplication.wadl\nHit ^C to stop it...",
 				main.getBaseUri()));
 
+		System.out.close();
+		System.err.close();
+
+		final CountDownLatch keepAliveLatch = new CountDownLatch(1);
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				System.out.println("Stopping server");
 				server.stop();
+				keepAliveLatch.countDown();
 			}
 		});
 
-		try {
-			Thread.currentThread().join();
-		} catch (InterruptedException ignored) {}
+		final Thread keepAliveThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					keepAliveLatch.await();
+				} catch (InterruptedException ignore) {
+				}
+			}
+		}, "dmp/grizzly");
+
+		keepAliveThread.setDaemon(false);
+		keepAliveThread.start();
 	}
 }
