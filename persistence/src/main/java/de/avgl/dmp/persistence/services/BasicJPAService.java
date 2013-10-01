@@ -225,6 +225,17 @@ public abstract class BasicJPAService<POJOCLASS extends DMPJPAObject> {
 	public void deleteObject(final Long id) {
 
 		final EntityManager entityManager = JPAUtil.getEntityManager();
+		deleteObject(entityManager, id);
+	}
+
+	/**
+	 * Deletes an instance of the specific class permanently from the DB by a given identifier.<br>
+	 * Created by: tgaengler
+	 *
+	 * @param id the identifier of the to be deleted instance of the specific class
+	 */
+	public void deleteObject(final EntityManager entityManager, final Long id) {
+
 		final POJOCLASS updateObject = entityManager.find(clasz, id);
 
 		LOG.debug("try to delete " + className + " with id '" + id + "' from the database");
