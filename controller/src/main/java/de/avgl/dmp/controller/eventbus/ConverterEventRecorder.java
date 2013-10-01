@@ -1,22 +1,23 @@
 package de.avgl.dmp.controller.eventbus;
 
+import java.util.List;
+
 import com.google.common.eventbus.Subscribe;
+
 import de.avgl.dmp.converter.DMPConverterException;
+import de.avgl.dmp.converter.flow.CSVResourceFlowFactory;
 import de.avgl.dmp.converter.flow.CSVSourceResourceTriplesFlow;
-import de.avgl.dmp.persistence.model.internal.InternalMemoryDb;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
-
-import java.io.IOException;
-import java.util.List;
+import de.avgl.dmp.persistence.services.InternalService;
 
 public class ConverterEventRecorder {
 
-	final InternalMemoryDb db;
+	private InternalService internalService;
 
-	public ConverterEventRecorder(final InternalMemoryDb db) {
+	public ConverterEventRecorder(final InternalService internalService) {
 
-		this.db = db;
+		this.internalService = internalService;
 	}
 
 	@Subscribe public void convertConfiguration(ConverterEvent event) {
@@ -25,13 +26,11 @@ public class ConverterEventRecorder {
 
 		List<org.culturegraph.mf.types.Triple> result = null;
 		try {
-			final CSVSourceResourceTriplesFlow flow = CSVSourceResourceTriplesFlow.fromConfiguration(configuration);
+			final CSVSourceResourceTriplesFlow flow = CSVResourceFlowFactory.fromConfiguration(configuration, CSVSourceResourceTriplesFlow.class);
 
 			final String path = resource.getAttribute("path").asText();
 			result = flow.applyFile(path);
 
-		} catch (IOException e) {
-			e.printStackTrace();
 		} catch (DMPConverterException e) {
 			e.printStackTrace();
 		} catch (NullPointerException e) {
@@ -40,7 +39,7 @@ public class ConverterEventRecorder {
 
 		if (result != null) {
 			for (org.culturegraph.mf.types.Triple triple : result) {
-				db.put(resource.getId(), configuration.getId(), triple.getSubject(), triple.getPredicate(), triple.getObject());
+				internalService.createObject(resource.getId(), configuration.getId(), triple.getSubject(), triple.getPredicate(), triple.getObject());
 			}
 		}
 	}

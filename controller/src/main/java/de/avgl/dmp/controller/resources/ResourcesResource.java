@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.persistence.EntityManager;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
@@ -30,10 +30,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Table;
 import com.google.common.eventbus.EventBus;
 import com.google.common.net.HttpHeaders;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -42,17 +40,17 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.eventbus.ConverterEvent;
-import de.avgl.dmp.controller.services.PersistenceServices;
 import de.avgl.dmp.controller.utils.DMPControllerUtils;
 import de.avgl.dmp.converter.DMPConverterException;
+import de.avgl.dmp.converter.flow.CSVResourceFlowFactory;
 import de.avgl.dmp.converter.flow.CSVSourceResourceCSVJSONPreviewFlow;
 import de.avgl.dmp.converter.flow.CSVSourceResourceCSVPreviewFlow;
 import de.avgl.dmp.persistence.DMPPersistenceException;
-import de.avgl.dmp.persistence.model.internal.InternalMemoryDb;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
 import de.avgl.dmp.persistence.services.ConfigurationService;
+import de.avgl.dmp.persistence.services.InternalService;
 import de.avgl.dmp.persistence.services.ResourceService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
@@ -65,13 +63,19 @@ public class ResourcesResource {
 	UriInfo											uri;
 
 	@Inject
-	EventBus			eventBus;
+	private Provider<EventBus>				eventBusProvider;
 
 	@Inject
-	InternalMemoryDb	memoryDb;
+	private Provider<ResourceService>		resourceServiceProvider;
 
 	@Inject
-	EntityManager		entityManager;
+	private Provider<ConfigurationService>	configurationServiceProvider;
+
+	@Inject
+	private Provider<InternalService>		internalServiceProvider;
+
+	@Inject
+	private EntityManager					entityManager;
 
 	private Response buildResponse(final String responseContent) {
 
@@ -121,7 +125,7 @@ public class ResourcesResource {
 
 		LOG.debug("try to get all resources");
 
-		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
+		final ResourceService resourceService = resourceServiceProvider.get();
 
 		final List<Resource> resources = resourceService.getObjects(entityManager);
 
@@ -161,18 +165,14 @@ public class ResourcesResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getResource(@PathParam("id") Long id) throws DMPControllerException {
 
-		LOG.debug("try to get resource with id '" + id.toString() + "'");
+		final Optional<Resource> resourceOptional = fetchResource(id);
 
-		final Resource resource = getResourceInternal(id);
-
-		if (resource == null) {
-
-			LOG.debug("couldn't find resource");
+		if (!resourceOptional.isPresent()) {
 
 			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 		}
 
-		LOG.debug("got resource with id '" + id.toString() + "' = '" + ToStringBuilder.reflectionToString(resource) + "'");
+		final Resource resource = resourceOptional.get();
 
 		String resourceJSON = null;
 
@@ -196,16 +196,14 @@ public class ResourcesResource {
 
 		LOG.debug("try to get resource configurations for resource with id '" + id.toString() + "'");
 
-		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
+		final Optional<Resource> resourceOptional = fetchResource(id);
 
-		final Resource resource = resourceService.getObject(entityManager, id);
-
-		if (resource == null) {
-
-			LOG.debug("couldn't find resource");
+		if (!resourceOptional.isPresent()) {
 
 			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 		}
+
+		final Resource resource = resourceOptional.get();
 
 		LOG.debug("got resource with id '" + id.toString() + "' for resource configurations retrieval = '"
 				+ ToStringBuilder.reflectionToString(resource) + "'");
@@ -244,19 +242,17 @@ public class ResourcesResource {
 	public Response addConfiguration(@PathParam("id") Long id, final String jsonObjectString) throws DMPControllerException {
 
 		LOG.debug("try to create new configuration for resource with id '" + id + "'");
-		LOG.debug("try to recieve resource with id '" + id + "' for configuration creation");
 
-		final Resource resource = getResourceInternal(id);
+		final Optional<Resource> resourceOptional = fetchResource(id);
 
-		if (resource == null) {
-
-			LOG.debug("couldn't find resource");
+		if (!resourceOptional.isPresent()) {
 
 			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 		}
 
-		LOG.debug("found resource with id '" + id + "' for configuration creation = '" + ToStringBuilder.reflectionToString(resource) + "'");
 		LOG.debug("try to add new configuration to resource with id '" + id + "'");
+
+		final Resource resource = resourceOptional.get();
 
 		final Configuration configuration = addConfiguration(resource, jsonObjectString);
 
@@ -269,7 +265,7 @@ public class ResourcesResource {
 
 		LOG.debug("added new configuration to resource with id '" + id + "' = '" + ToStringBuilder.reflectionToString(configuration) + "'");
 
-		eventBus.post(new ConverterEvent(configuration, resource));
+		eventBusProvider.get().post(new ConverterEvent(configuration, resource));
 
 		String configurationJSON = null;
 
@@ -296,48 +292,18 @@ public class ResourcesResource {
 	public Response getResourceConfiguration(@PathParam("id") Long id, @PathParam("configurationid") Long configurationId)
 			throws DMPControllerException {
 
-		LOG.debug("try to get configuration with id '" + configurationId + "' for resource with id '" + id + "'");
+		final Optional<Configuration> configurationOptional = fetchConfiguration(id, configurationId);
 
-		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
-
-		final Resource resource = resourceService.getObject(entityManager, id);
-
-		if (resource == null) {
-
-			LOG.debug("couldn't find resource");
+		if (!configurationOptional.isPresent()) {
 
 			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 		}
-
-		LOG.debug("got resource with id '" + id + "' for configuration with id '" + configurationId + "' = '"
-				+ ToStringBuilder.reflectionToString(resource) + "'");
-
-		final Set<Configuration> configurations = resource.getConfigurations();
-
-		if (configurations == null || configurations.isEmpty()) {
-
-			LOG.debug("couldn't find configurations for resource '" + id + "'; or there are no configurations for this resource");
-
-			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
-		}
-
-		final Configuration configuration = resource.getConfiguration(configurationId);
-
-		if (configuration == null) {
-
-			LOG.debug("couldn't find configuration '" + configurationId + "' for resource '" + id + "'");
-
-			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
-		}
-
-		LOG.debug("got configuration with id '" + configurationId + "' for resource with id '" + id + "' = '"
-				+ ToStringBuilder.reflectionToString(configuration) + "'");
 
 		String configurationJSON = null;
 
 		try {
 
-			configurationJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(configuration);
+			configurationJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(configurationOptional.get());
 		} catch (final JsonProcessingException e) {
 
 			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
@@ -356,7 +322,14 @@ public class ResourcesResource {
 
 		LOG.debug("try to get schema for configuration with id '" + configurationId + "' for resource with id '" + id + "'");
 
-		final Optional<Set<String>> schemaOptional = memoryDb.schema(id, configurationId);
+		final Optional<Configuration> configurationOptional = fetchConfiguration(id, configurationId);
+
+		if (!configurationOptional.isPresent()) {
+
+			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		}
+
+		final Optional<Set<String>> schemaOptional = internalServiceProvider.get().getSchema(id, configurationId);
 
 		if (!schemaOptional.isPresent()) {
 
@@ -365,10 +338,19 @@ public class ResourcesResource {
 			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 		}
 
-		final List<String> schema = Lists.newArrayList(schemaOptional.get());
-		final Map<String, List<String>> jsonMap = Maps.newHashMap();
+		//TODO: wouldn't work with XML
+		final Map<String, Map<String, String>> schema = Maps.newHashMap();
+		final Map jsonMap = Maps.newHashMap();
 
-		jsonMap.put("schema", schema);
+		for (String schemaProp : schemaOptional.get()) {
+			Map<String, String> schemaPropMap = Maps.newHashMap();
+			schemaPropMap.put("type", "string");
+			schema.put(schemaProp, schemaPropMap);
+		}
+
+		jsonMap.put("title", configurationOptional.get().getName());
+		jsonMap.put("type", "object");
+		jsonMap.put("properties", schema);
 
 		String configurationJSON = null;
 
@@ -389,40 +371,41 @@ public class ResourcesResource {
 	@Path("/{id}/configurations/{configurationid}/data")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getResourceConfigurationData(@PathParam("id") Long id, @PathParam("configurationid") Long configurationId,
-		@DefaultValue("3") @QueryParam("atMost") int atMost)
+		@QueryParam("atMost") Integer atMost)
 			throws DMPControllerException {
 
 		LOG.debug("try to get schema for configuration with id '" + configurationId + "' for resource with id '" + id + "'");
 
-		final Optional<Table<String,String,String>> maybeTable = memoryDb.get(id, configurationId);
+		final Optional<Configuration> configurationOptional = fetchConfiguration(id, configurationId);
 
-		if (!maybeTable.isPresent()) {
+		if (!configurationOptional.isPresent()) {
+
+			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		}
+
+		final Optional<Map<String, Map<String, String>>> maybeTriples = internalServiceProvider.get().getObjects(id, configurationId, Optional.fromNullable(atMost));
+
+		if (!maybeTriples.isPresent()) {
 
 			LOG.debug("couldn't find data");
 
 			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 		}
 
-		final Table<String, String, String> table = maybeTable.get();
-		final Iterable<String> rows = Iterables.limit(table.rowKeySet(), atMost);
-
-		final Map<String,List<Map<String,String>>> jsonMap = Maps.newHashMap();
+		final Map<String, Map<String, String>> triples = maybeTriples.get();
 		final List<Map<String, String>> jsonList = Lists.newArrayList();
 
-		for (String row : rows) {
-			final Map<String, String> tableRow = table.row(row);
-			tableRow.put("recordId", row);
-
+		for (final String record : triples.keySet()) {
+			final Map<String, String> tableRow = triples.get(record);
+			tableRow.put("recordId", record);
 			jsonList.add(tableRow);
 		}
-
-		jsonMap.put("records", jsonList);
 
 		String configurationJSON = null;
 
 		try {
 
-			configurationJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(jsonMap);
+			configurationJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(jsonList);
 		} catch (final JsonProcessingException e) {
 
 			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
@@ -442,14 +425,14 @@ public class ResourcesResource {
 		LOG.debug("try to apply configuration for resource with id '" + id + "'");
 		LOG.debug("try to recieve resource with id '" + id + "' for csv configuration preview");
 
-		final Resource resource = getResourceInternal(id);
+		final Optional<Resource> resourceOptional = fetchResource(id);
 
-		if (resource == null) {
-
-			LOG.debug("couldn't find resource");
+		if (!resourceOptional.isPresent()) {
 
 			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 		}
+
+		final Resource resource = resourceOptional.get();
 
 		LOG.debug("found resource with id '" + id + "' for csv configuration preview = '" + ToStringBuilder.reflectionToString(resource) + "'");
 		LOG.debug("try to apply configuration to resource with id '" + id + "'");
@@ -477,14 +460,14 @@ public class ResourcesResource {
 		LOG.debug("try to apply configuration for resource with id '" + id + "'");
 		LOG.debug("try to recieve resource with id '" + id + "' for csv json configuration preview");
 
-		final Resource resource = getResourceInternal(id);
+		final Optional<Resource> resourceOptional = fetchResource(id);
 
-		if (resource == null) {
-
-			LOG.debug("couldn't find resource");
+		if (!resourceOptional.isPresent()) {
 
 			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 		}
+
+		final Resource resource = resourceOptional.get();
 
 		LOG.debug("found resource with id '" + id + "' for csv json configuration preview = '" + ToStringBuilder.reflectionToString(resource) + "'");
 		LOG.debug("try to apply configuration to resource with id '" + id + "'");
@@ -547,12 +530,68 @@ public class ResourcesResource {
 				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Accept, Origin, X-Requested-With, Content-Type").build();
 	}
 
+	private Optional<Resource> fetchResource(long resourceId) {
+
+		LOG.debug("try to recieve resource with id '" + resourceId + "'");
+
+		final ResourceService resourceService = resourceServiceProvider.get();
+
+		final Resource resource = resourceService.getObject(entityManager, resourceId);
+
+		if (resource == null) {
+
+			LOG.debug("couldn't find resource");
+
+			return Optional.absent();
+		}
+
+		LOG.debug("found resource with id '" + resourceId + "' = '" + ToStringBuilder.reflectionToString(resource) + "'");
+
+		return Optional.of(resource);
+	}
+
+	private Optional<Configuration> fetchConfiguration(long resourceId, long configurationId) {
+		LOG.debug("try to get configuration with id '" + configurationId + "' for resource with id '" + resourceId + "'");
+
+		final Optional<Resource> resourceOptional = fetchResource(resourceId);
+
+		if (!resourceOptional.isPresent()) {
+
+			return Optional.absent();
+		}
+
+		final Resource resource = resourceOptional.get();
+
+		final Set<Configuration> configurations = resource.getConfigurations();
+
+		if (configurations == null || configurations.isEmpty()) {
+
+			LOG.debug("couldn't find configurations for resource '" + resourceId + "'; or there are no configurations for this resource");
+
+			return Optional.absent();
+		}
+
+		final Configuration configuration = resource.getConfiguration(configurationId);
+
+		if (configuration == null) {
+
+			LOG.debug("couldn't find configuration '" + configurationId + "' for resource '" + resourceId + "'");
+
+			return Optional.absent();
+		}
+
+		LOG.debug("got configuration with id '" + configurationId + "' for resource with id '" + resourceId + "' = '"
+				+ ToStringBuilder.reflectionToString(configuration) + "'");
+
+		return Optional.of(configuration);
+	}
+
 	private Resource createResource(final InputStream uploadInputedStream, final FormDataContentDisposition fileDetail, final String name,
 			final String description) throws DMPControllerException {
 
 		final File file = DMPControllerUtils.writeToFile(uploadInputedStream, fileDetail.getFileName(), "resources");
 
-		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
+		final ResourceService resourceService = resourceServiceProvider.get();
 
 		Resource resource = null;
 
@@ -620,7 +659,7 @@ public class ResourcesResource {
 
 		final Configuration configurationFromJSON = getConfiguration(configurationJSONString);
 
-		final ConfigurationService configurationService = PersistenceServices.getInstance().getConfigurationService();
+		final ConfigurationService configurationService = configurationServiceProvider.get();
 
 		Configuration configuration = null;
 
@@ -672,7 +711,7 @@ public class ResourcesResource {
 			throw new DMPControllerException("something went wrong while configuration updating\n" + e.getMessage());
 		}
 
-		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
+		final ResourceService resourceService = resourceServiceProvider.get();
 
 		try {
 
@@ -691,23 +730,6 @@ public class ResourcesResource {
 
 		final Configuration configurationFromJSON = getConfiguration(configurationJSONString);
 
-		CSVSourceResourceCSVPreviewFlow flow = null;
-
-		try {
-			flow = CSVSourceResourceCSVPreviewFlow.fromConfiguration(configurationFromJSON);
-		} catch (DMPConverterException e) {
-
-			throw new DMPControllerException("something went wrong while apply configuration to resource");
-		} catch (IOException e) {
-
-			throw new DMPControllerException("something went wrong while apply configuration to resource");
-		}
-
-		if (flow == null) {
-
-			throw new DMPControllerException("something went wrong while apply configuration to resource");
-		}
-
 		if (resource.getAttributes() == null) {
 
 			throw new DMPControllerException("there are no attributes available at resource '" + resource.getId() + "'");
@@ -720,34 +742,22 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't determine file path");
 		}
 
-		final String result = flow.applyFile(filePathNode.asText());
+		CSVSourceResourceCSVPreviewFlow flow;
 
-		return result;
+		try {
+			flow = CSVResourceFlowFactory.fromConfiguration(configurationFromJSON, CSVSourceResourceCSVPreviewFlow.class);
+		} catch (DMPConverterException e) {
+
+			throw new DMPControllerException("something went wrong while apply configuration to resource");
+		}
+
+		return flow.applyFile(filePathNode.asText());
 	}
 
 	private String applyConfigurationForCSVJSONPreview(final Resource resource, final String configurationJSONString) throws DMPControllerException {
 
 		final Configuration configurationFromJSON = getConfiguration(configurationJSONString);
 
-		CSVSourceResourceCSVJSONPreviewFlow flow = null;
-
-		try {
-			flow = CSVSourceResourceCSVJSONPreviewFlow.fromConfiguration(configurationFromJSON);
-		} catch (DMPConverterException e) {
-
-			throw new DMPControllerException("something went wrong while apply configuration to resource");
-		} catch (IOException e) {
-
-			throw new DMPControllerException("something went wrong while apply configuration to resource");
-		}
-
-		if (flow == null) {
-
-			throw new DMPControllerException("something went wrong while apply configuration to resource");
-		}
-
-		flow.withLimit(50);
-
 		if (resource.getAttributes() == null) {
 
 			throw new DMPControllerException("there are no attributes available at resource '" + resource.getId() + "'");
@@ -760,9 +770,18 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't determine file path");
 		}
 
-		final String result = flow.applyFile(filePathNode.asText());
+		CSVSourceResourceCSVJSONPreviewFlow flow;
 
-		return result;
+		try {
+			flow = CSVResourceFlowFactory.fromConfiguration(configurationFromJSON, CSVSourceResourceCSVJSONPreviewFlow.class);
+		} catch (DMPConverterException e) {
+
+			throw new DMPControllerException("something went wrong while apply configuration to resource");
+		}
+
+		flow.withLimit(50);
+
+		return flow.applyFile(filePathNode.asText());
 	}
 
 	private Configuration getConfiguration(final String configurationJSONString) throws DMPControllerException {
@@ -795,14 +814,5 @@ public class ResourcesResource {
 		}
 
 		return configurationFromJSON;
-	}
-
-	private Resource getResourceInternal(final Long id) {
-
-		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
-
-		final Resource resource = resourceService.getObject(entityManager, id);
-
-		return resource;
 	}
 }

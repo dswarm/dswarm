@@ -1,208 +1,69 @@
 package de.avgl.dmp.converter.flow;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.base.Charsets;
-import com.google.common.collect.ImmutableList;
-import de.avgl.dmp.converter.DMPConverterException;
-import de.avgl.dmp.converter.mf.stream.reader.CsvReader;
-import de.avgl.dmp.persistence.model.resource.Configuration;
-import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
-import org.culturegraph.mf.framework.DefaultObjectPipe;
-import org.culturegraph.mf.framework.ObjectReceiver;
-import org.culturegraph.mf.stream.converter.StreamToTriples;
-import org.culturegraph.mf.stream.source.FileOpener;
-import org.culturegraph.mf.types.Triple;
-
 import java.io.IOException;
 import java.io.Reader;
 
-public class CSVSourceResourceTriplesFlow {
+import com.google.common.collect.ImmutableList;
+import org.culturegraph.mf.framework.ObjectPipe;
+import org.culturegraph.mf.framework.ObjectReceiver;
+import org.culturegraph.mf.stream.converter.StreamToTriples;
+import org.culturegraph.mf.types.Triple;
 
-	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(CSVSourceResourceTriplesFlow.class);
+import de.avgl.dmp.converter.DMPConverterException;
+import de.avgl.dmp.converter.mf.stream.reader.CsvReader;
+import de.avgl.dmp.persistence.model.resource.Configuration;
 
-	private final String							encoding;
+public class CSVSourceResourceTriplesFlow extends CSVResourceFlow<ImmutableList<Triple>> {
 
-	private final Character							escapeCharacter;
+	private static class ListTripleReceiver implements ObjectReceiver<Triple> {
+		ImmutableList.Builder<Triple> builder = ImmutableList.builder();
+		ImmutableList<Triple> collection = null;
 
-	private final Character							quoteCharacter;
-
-	private final Character							columnDelimiter;
-
-	private final String							rowDelimiter;
-
-	private static final String						defaultEncoding			= Charsets.UTF_8.name();
-
-	private static final Character					defaultEscapeCharacter	= '\\';
-
-	private static final Character					defaultQuoteCharacter	= '"';
-
-	private static final Character					defaultColumnDelimiter	= ';';
-
-	private static final String						defaultRowDelimiter		= "\n";
-
-	public CSVSourceResourceTriplesFlow(final String encoding, final Character escapeCharacter, final Character quoteCharacter,
-										final Character columnDelimiter, final String rowDelimiter) {
-
-		this.encoding = encoding;
-		this.escapeCharacter = escapeCharacter;
-		this.quoteCharacter = quoteCharacter;
-		this.columnDelimiter = columnDelimiter;
-		this.rowDelimiter = rowDelimiter;
-	}
-
-	public CSVSourceResourceTriplesFlow(final Configuration configuration) throws DMPConverterException {
-
-		if (configuration == null) {
-
-			throw new DMPConverterException("the configuration shouldn't be null");
+		@Override
+		public void process(Triple obj) {
+			builder.add(obj);
 		}
 
-		if (configuration.getParameters() == null) {
-
-			throw new DMPConverterException("the configuration parameters shouldn't be null");
+		@Override
+		public void resetStream() {
+			builder = ImmutableList.builder();
 		}
 
-		final JsonNode encodingNode = getParameterValue(configuration, ConfigurationStatics.ENCODING);
-
-		if (encodingNode != null) {
-
-			encoding = encodingNode.asText();
-		} else {
-
-			encoding = defaultEncoding;
+		@Override
+		public void closeStream() {
+			buildCollection();
 		}
 
-		final JsonNode escapeCharacterNode = getParameterValue(configuration, ConfigurationStatics.ESCAPE_CHARACTER);
-
-		if (escapeCharacterNode != null) {
-
-			escapeCharacter = Character.valueOf(escapeCharacterNode.asText().charAt(0));
-		} else {
-
-			escapeCharacter = defaultEscapeCharacter;
-		}
-
-		final JsonNode quoteCharacterNode = getParameterValue(configuration, ConfigurationStatics.QUOTE_CHARACTER);
-
-		if (quoteCharacterNode != null) {
-
-			quoteCharacter = Character.valueOf(quoteCharacterNode.asText().charAt(0));
-		} else {
-
-			quoteCharacter = defaultQuoteCharacter;
-		}
-
-		final JsonNode columnDelimiterNode = getParameterValue(configuration, ConfigurationStatics.COLUMN_DELIMITER);
-
-		if (columnDelimiterNode != null) {
-
-			columnDelimiter = Character.valueOf(columnDelimiterNode.asText().charAt(0));
-		} else {
-
-			columnDelimiter = defaultColumnDelimiter;
-		}
-
-		final JsonNode rowDelimiterNode = getParameterValue(configuration, ConfigurationStatics.ROW_DELIMITER);
-
-		if (rowDelimiterNode != null) {
-
-			rowDelimiter = rowDelimiterNode.asText();
-		} else {
-
-			rowDelimiter = defaultRowDelimiter;
-		}
-	}
-
-	public ImmutableList<Triple> applyFile(final String filePath) {
-
-		FileOpener opener = new FileOpener();
-
-		// set encoding
-		final String finalEncoding;
-
-		if (encoding != null) {
-
-			finalEncoding = encoding;
-		} else {
-
-			finalEncoding = defaultEncoding;
-		}
-
-		opener.setEncoding(finalEncoding);
-
-		return apply(filePath, opener);
-	}
-
-	public ImmutableList<Triple> apply(final String filePath, final DefaultObjectPipe<String, ObjectReceiver<Reader>> opener) {
-
-		// set parsing attributes
-		final CsvReader reader;
-
-		reader = new CsvReader(escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter);
-
-		// TODO: process header from configuration
-		reader.setHeader(true);
-		// TODO: process header from configuration
-
-		class ListTripleReceiver implements ObjectReceiver<Triple> {
-			ImmutableList.Builder<Triple> builder = ImmutableList.builder();
-			ImmutableList<Triple> collection = null;
-
-			@Override
-			public void process(Triple obj) {
-				builder.add(obj);
-			}
-
-			@Override
-			public void resetStream() {
-				builder = ImmutableList.builder();
-			}
-
-			@Override
-			public void closeStream() {
+		public ImmutableList<Triple> getCollection() {
+			if (collection == null) {
 				buildCollection();
 			}
-
-			public ImmutableList<Triple> getCollection() {
-				if (collection == null) {
-					buildCollection();
-				}
-				return collection;
-			}
-
-			private void buildCollection() {
-				collection = builder.build();
-			}
+			return collection;
 		}
 
+		private void buildCollection() {
+			collection = builder.build();
+		}
+	}
 
+	public CSVSourceResourceTriplesFlow(String encoding, Character escapeCharacter, Character quoteCharacter, Character columnDelimiter, String rowDelimiter) {
+		super(encoding, escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter);
+	}
+
+	public CSVSourceResourceTriplesFlow(Configuration configuration) throws DMPConverterException {
+		super(configuration);
+	}
+
+	@Override
+	protected ImmutableList<Triple> process(ObjectPipe<String, ObjectReceiver<Reader>> opener, String obj, CsvReader pipe) {
 		ListTripleReceiver tripleReceiver = new ListTripleReceiver();
+		pipe.setReceiver(new StreamToTriples()).setReceiver(tripleReceiver);
 
-		opener.setReceiver(reader).setReceiver(new StreamToTriples()).setReceiver(tripleReceiver);
-		opener.process(filePath);
-
+		opener.process(obj);
 		return tripleReceiver.getCollection();
 	}
 
 	public static CSVSourceResourceTriplesFlow fromConfiguration(final Configuration configuration) throws IOException, DMPConverterException {
-
 		return new CSVSourceResourceTriplesFlow(configuration);
-	}
-
-	private JsonNode getParameterValue(final Configuration configuration, final String key) throws DMPConverterException {
-
-		if (key == null) {
-
-			throw new DMPConverterException("the parameter key shouldn't be null");
-		}
-
-		final JsonNode valueNode = configuration.getParameter(key);
-
-		if (valueNode == null) {
-
-			LOG.debug("couldn't find value for parameter '" + key + "'; try to utilise default value for this parameter");
-		}
-
-		return valueNode;
 	}
 }

@@ -10,18 +10,27 @@ import de.avgl.dmp.controller.eventbus.ConverterEventRecorder;
 import de.avgl.dmp.controller.factories.DMPEntityManagerFactory;
 import de.avgl.dmp.controller.factories.EventBusFactory;
 import de.avgl.dmp.persistence.model.internal.InternalMemoryDb;
+import de.avgl.dmp.persistence.services.ConfigurationService;
+import de.avgl.dmp.persistence.services.InternalService;
+import de.avgl.dmp.persistence.services.ResourceService;
 
 public class DMPBinder extends AbstractBinder {
 	@Override
 	protected void configure() {
-		final InternalMemoryDb db = new InternalMemoryDb();
-		final ConverterEventRecorder eventRecorder = new ConverterEventRecorder(db);
+		final InternalMemoryDb internalMemoryDb = new InternalMemoryDb();
+
+		final InternalService internalService = new InternalService();
+		internalService.setMemoryDb(internalMemoryDb);
+
+		final ConverterEventRecorder eventRecorder = new ConverterEventRecorder(internalService);
 
 
-		bind(db).to(InternalMemoryDb.class);
+		bind(internalMemoryDb).to(InternalMemoryDb.class);
+		bind(internalService).to(InternalService.class);
+		bind(new ResourceService()).to(ResourceService.class);
+		bind(new ConfigurationService()).to(ConfigurationService.class);
 
 		bindFactory(new EventBusFactory(eventRecorder)).to(EventBus.class);
-
 		bindFactory(DMPEntityManagerFactory.class).to(EntityManager.class).in(RequestScoped.class);
 	}
 }

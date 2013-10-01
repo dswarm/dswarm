@@ -13,7 +13,7 @@ import de.avgl.dmp.converter.mf.stream.converter.CsvLineReader;
 /**
  * Reads Csv files. First line can be interpreted as header.<br>
  * Inspired by org.culturegraph.mf.stream.reader.CsvReader
- * 
+ *
  * @author tgaengler
  */
 @Description("reads Csv files. First line can be interpreted as header.")
@@ -76,6 +76,13 @@ public final class CsvReader implements Reader<CSVRecord> {
 		return decoder;
 	}
 
+	public final CsvReader withLimit(final int limit) {
+		this.limit = limit;
+		this.withLimit = true;
+
+		return this;
+	}
+
 	@Override
 	public final <R extends StreamReceiver> R setReceiver(final R receiver) {
 
@@ -92,14 +99,14 @@ public final class CsvReader implements Reader<CSVRecord> {
 
 	@Override
 	public final void read(final CSVRecord entry) {
-		
+
 		if (withLimit) {
 
 			if (count == limit) {
 
 				return;
 			}
-			
+
 			count++;
 		}
 
@@ -119,9 +126,9 @@ public final class CsvReader implements Reader<CSVRecord> {
 	}
 
 	public void setHeader(final boolean hasHeader) {
-		
+
 		if(hasHeader) {
-			
+
 			limit++;
 		}
 
