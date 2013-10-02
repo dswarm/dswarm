@@ -2,6 +2,7 @@ package de.avgl.dmp.persistence.util;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -25,6 +26,9 @@ public class DMPPersistenceUtil {
 		mapper = new ObjectMapper();
 		final JaxbAnnotationModule module = new JaxbAnnotationModule();
 		mapper.registerModule(module)
+			.registerModule(new com.codahale.metrics.json.MetricsModule(
+					TimeUnit.SECONDS, TimeUnit.MILLISECONDS, false
+			))
 			.setSerializationInclusion(Include.NON_NULL)
 			.setSerializationInclusion(Include.NON_EMPTY);
 	}
@@ -59,5 +63,5 @@ public class DMPPersistenceUtil {
 
 		return factory;
 	}
-	
+
 }
