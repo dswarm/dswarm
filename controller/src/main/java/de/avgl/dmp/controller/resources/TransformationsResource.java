@@ -1,7 +1,6 @@
 package de.avgl.dmp.controller.resources;
 
 import java.io.IOException;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
@@ -68,7 +67,7 @@ public class TransformationsResource {
 
 	/**
 	 * this endpoint consumes a transformation as JSON representation
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one transformation
 	 * @return
 	 * @throws IOException

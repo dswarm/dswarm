@@ -31,12 +31,16 @@ public abstract class BasicJPAService<POJOCLASS extends DMPJPAObject> {
 		return clasz;
 	}
 
+	public POJOCLASS createObject() throws DMPPersistenceException {
+		return createObject(JPAUtil.getEntityManager());
+	}
+
 	/**
 	 * Create and persist an object of the specific class.<br>
-	 * 
+	 *
 	 * @return the persisted object of the specific class
 	 */
-	public POJOCLASS createObject() throws DMPPersistenceException {
+	public POJOCLASS createObject(final EntityManager entityManager) throws DMPPersistenceException {
 
 		final POJOCLASS object;
 
@@ -55,8 +59,6 @@ public abstract class BasicJPAService<POJOCLASS extends DMPJPAObject> {
 			throw new DMPPersistenceException(e.getMessage());
 		}
 
-		final EntityManager entityManager = JPAUtil.getEntityManager();
-
 		LOG.debug("try to create new " + className);
 
 		JPAUtil.beginNewTransaction(entityManager);
@@ -73,12 +75,23 @@ public abstract class BasicJPAService<POJOCLASS extends DMPJPAObject> {
 	/**
 	 * Updates a given instance of the specific class and writes this object persistent to the DB afterwards.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param object the to be updated instance of the specific class
 	 */
 	public POJOCLASS updateObjectTransactional(final POJOCLASS object) throws DMPPersistenceException {
 
 		final EntityManager entityManager = JPAUtil.getEntityManager();
+		return updateObjectTransactional(entityManager, object);
+	}
+
+	/**
+	 * Updates a given instance of the specific class and writes this object persistent to the DB afterwards.<br>
+	 * Created by: tgaengler
+	 *
+	 * @param object the to be updated instance of the specific class
+	 */
+	public POJOCLASS updateObjectTransactional(final EntityManager entityManager, final POJOCLASS object) throws DMPPersistenceException {
+
 		final POJOCLASS updateObject = getObject(object, entityManager);
 
 		LOG.debug("try to update " + className + " with id '" + object.getId() + "' transactional");
@@ -97,7 +110,7 @@ public abstract class BasicJPAService<POJOCLASS extends DMPJPAObject> {
 	 * Updates a given instance of the specific class without writing this object persistent right now, i.e., the process that
 	 * calls this method needs to ensure that the update will be written persistent.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param object the to be updated instance of the specific class
 	 */
 	public POJOCLASS updateObject(final POJOCLASS object) throws DMPPersistenceException {
@@ -119,7 +132,7 @@ public abstract class BasicJPAService<POJOCLASS extends DMPJPAObject> {
 	 * and {@link BasicJPAService#updateObjectTransactional(POJOCLASS)}, i.e., this method includes the real update logic of this
 	 * service.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param object the instance of the specific class with the update data
 	 * @param updateObject the to be updated instance of the specific class
 	 * @param entityManager the {@link EntityManager} instance for managing the update process
@@ -131,12 +144,22 @@ public abstract class BasicJPAService<POJOCLASS extends DMPJPAObject> {
 	/**
 	 * Generic 'find all instances of a specific class' method.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @return the instance list of the specific class
 	 */
 	public List<POJOCLASS> getObjects() {
 
 		final EntityManager entityManager = JPAUtil.getEntityManager();
+		return getObjects(entityManager);
+	}
+
+	/**
+	 * Generic 'find all instances of a specific class' method.<br>
+	 * Created by: tgaengler
+	 *
+	 * @return the instance list of the specific class
+	 */
+	public List<POJOCLASS> getObjects(final EntityManager entityManager) {
 
 		final TypedQuery<POJOCLASS> query = entityManager.createQuery("from " + className, clasz);
 
@@ -146,13 +169,31 @@ public abstract class BasicJPAService<POJOCLASS extends DMPJPAObject> {
 	/**
 	 * Generic 'exist instance for identifier of a specific class' method.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param id the idenfier of the requested instance of a specific class
 	 * @return the instance for the identifier of the specific class
 	 */
 	public POJOCLASS getObject(final Long id) {
-
 		final EntityManager entityManager = JPAUtil.getEntityManager();
+		POJOCLASS entity = getObject(entityManager, id);
+
+		if (entity != null) {
+
+			// refresh entity to ensure that the most current, persistent version will be utilised
+			entityManager.refresh(entity);
+		}
+
+		return entity;
+	}
+
+	/**
+	 * Generic 'exist instance for identifier of a specific class' method.<br>
+	 * Created by: tgaengler
+	 *
+	 * @param id the idenfier of the requested instance of a specific class
+	 * @return the instance for the identifier of the specific class
+	 */
+	public POJOCLASS getObject(final EntityManager entityManager, final Long id) {
 
 		LOG.debug("try to find " + className + " with id '" + id + "' in the database");
 
@@ -164,7 +205,7 @@ public abstract class BasicJPAService<POJOCLASS extends DMPJPAObject> {
 			LOG.debug("found " + className + " with id '" + id + "' in the database = '" + ToStringBuilder.reflectionToString(entity) + "'");
 
 			// refresh entity to ensure that the most current, persistent version will be utilised
-			entityManager.refresh(entity);
+//			entityManager.refresh(entity);
 		} else {
 
 			LOG.debug("couldn't find " + className + " with id '" + id + "' in the database");
@@ -173,15 +214,28 @@ public abstract class BasicJPAService<POJOCLASS extends DMPJPAObject> {
 		return entity;
 	}
 
+
+
 	/**
 	 * Deletes an instance of the specific class permanently from the DB by a given identifier.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param id the identifier of the to be deleted instance of the specific class
 	 */
 	public void deleteObject(final Long id) {
 
 		final EntityManager entityManager = JPAUtil.getEntityManager();
+		deleteObject(entityManager, id);
+	}
+
+	/**
+	 * Deletes an instance of the specific class permanently from the DB by a given identifier.<br>
+	 * Created by: tgaengler
+	 *
+	 * @param id the identifier of the to be deleted instance of the specific class
+	 */
+	public void deleteObject(final EntityManager entityManager, final Long id) {
+
 		final POJOCLASS updateObject = entityManager.find(clasz, id);
 
 		LOG.debug("try to delete " + className + " with id '" + id + "' from the database");
@@ -202,7 +256,7 @@ public abstract class BasicJPAService<POJOCLASS extends DMPJPAObject> {
 	/**
 	 * Tries to retrieve a {@link EDObject} instance or will create a new one, if the identifier is null.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param edObject the {@link EDObject} instance that should be fetched from the DB
 	 * @param entityManager the {@link EntityManager} instance that should handle this retrieval process
 	 * @return the requested {@link EDObject} instance fresh from the DB or a new {@link EDObject} instance

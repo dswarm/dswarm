@@ -55,7 +55,7 @@ public final class JPAUtil {
 
 	/**
 	 * Get the configured entity manager factory of this utility class
-	 * 
+	 *
 	 * @return entity manager factory of this utility class
 	 */
 	public static EntityManagerFactory getEntityManagerFactory() {
@@ -75,7 +75,7 @@ public final class JPAUtil {
 	 * <li>enable L2 cache flag</li>
 	 * </ul>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param connectionURL the connection URL string
 	 * @param connectionUserName the connection user name
 	 * @param connectionPassword the connection password
@@ -124,7 +124,7 @@ public final class JPAUtil {
 
 	/**
 	 * Get a thread local entity manger instance
-	 * 
+	 *
 	 * @return a thread local entity manger instance
 	 */
 	public static EntityManager getEntityManager() {
@@ -143,12 +143,16 @@ public final class JPAUtil {
 		JPAUtil.entityManagerThreadLocal.set(null);
 	}
 
+	public static void closeEntityManager() {
+		closeEntityManager(JPAUtil.entityManagerThreadLocal.get());
+		JPAUtil.entityManagerThreadLocal.remove();
+	}
+
 	/**
 	 * Closes a thread local entity manager instance.<br>
 	 * Created by: tgaengler
 	 */
-	public static void closeEntityManager() {
-		final EntityManager entityManager = JPAUtil.entityManagerThreadLocal.get();
+	public static void closeEntityManager(final EntityManager entityManager) {
 		if (null != entityManager) {
 			final boolean open = entityManager.isOpen();
 			final EntityTransaction transaction = entityManager.getTransaction();
@@ -174,14 +178,13 @@ public final class JPAUtil {
 				}
 			}
 		}
-		JPAUtil.entityManagerThreadLocal.remove();
 	}
 
 	/**
 	 * Begins a new transacation for the given entity manager instance or utilises an already open transaction of this entity
 	 * manager.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param entityManager the entity manager instance that should be utilised to open a new transaction or where an already open
 	 *            transaction should be utilised from
 	 */
@@ -216,7 +219,7 @@ public final class JPAUtil {
 	/**
 	 * Ends an existing transaction of the given entity manager instance if it wouldn't be needed anymore.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param entityManager the entity manager instance, where the transaction should be closed
 	 */
 	public static void endTransaction(final EntityManager entityManager) {
@@ -244,7 +247,7 @@ public final class JPAUtil {
 	/**
 	 * Checks the database connection with the default query 'SELECT 123 FROM dual'.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @return true, if everything is okay; otherwise false
 	 */
 	public static boolean checkDBConnection() {
