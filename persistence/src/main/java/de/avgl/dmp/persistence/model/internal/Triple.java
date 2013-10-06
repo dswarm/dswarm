@@ -1,5 +1,7 @@
 package de.avgl.dmp.persistence.model.internal;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  *
  */
@@ -14,9 +16,9 @@ public class Triple<V1, V2, V3> {
 	private final V3 v3;
 
 	public Triple(V1 v1, V2 v2, V3 v3) {
-		this.v1 = v1;
-		this.v2 = v2;
-		this.v3 = v3;
+		this.v1 = checkNotNull(v1);
+		this.v2 = checkNotNull(v2);
+		this.v3 = checkNotNull(v3);
 	}
 
 	public V1 v1() {
@@ -38,18 +40,24 @@ public class Triple<V1, V2, V3> {
 
 		Triple triple = (Triple) o;
 
-		if (v1 != null ? !v1.equals(triple.v1) : triple.v1 != null) return false;
-		if (v2 != null ? !v2.equals(triple.v2) : triple.v2 != null) return false;
-		if (v3 != null ? !v3.equals(triple.v3) : triple.v3 != null) return false;
+		if (!v1.equals(triple.v1)) {
+			return false;
+		}
+		if (!v2.equals(triple.v2)) {
+			return false;
+		}
+		if (!v3.equals(triple.v3)) {
+			return false;
+		}
 
 		return true;
 	}
 
 	@Override
 	public int hashCode() {
-		int result = v1 != null ? v1.hashCode() : 0;
-		result = 31 * result + (v2 != null ? v2.hashCode() : 0);
-		result = 17 * result + (v3 != null ? v3.hashCode() : 0);
+		int result = v1.hashCode();
+		result = 31 * result + v2.hashCode();
+		result = 17 * result + v3.hashCode();
 		return result;
 	}
 }

@@ -1,8 +1,12 @@
 package de.avgl.dmp.controller.eventbus;
 
 import java.util.List;
+import java.util.logging.Logger;
 
+import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.CSVResourceFlowFactory;
@@ -11,13 +15,16 @@ import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.services.InternalService;
 
+@Singleton
 public class ConverterEventRecorder {
 
 	private InternalService internalService;
 
-	public ConverterEventRecorder(final InternalService internalService) {
+	@Inject
+	public ConverterEventRecorder(final InternalService internalService, final EventBus eventBus) {
 
 		this.internalService = internalService;
+		eventBus.register(this);
 	}
 
 	@Subscribe public void convertConfiguration(ConverterEvent event) {

@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table;
 
 
@@ -49,5 +50,16 @@ public abstract class MemoryDb<A, B, S, P, O> {
 		synchronized (this) {
 			table.remove(resourceId, configurationId);
 		}
+	}
+
+	public Table<A, B, Table<S, P, O>> underlying() {
+		final ImmutableTable.Builder<A, B, Table<S, P, O>> builder = ImmutableTable.builder();
+
+		for (Table.Cell<A, B, Table<S, P, O>> cell : table.cellSet()) {
+			final ImmutableTable<S, P, O> innerTable = ImmutableTable.copyOf(cell.getValue());
+			builder.put(cell.getRowKey(), cell.getColumnKey(), innerTable);
+		}
+
+		return builder.build();
 	}
 }

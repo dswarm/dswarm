@@ -2,18 +2,10 @@ package de.avgl.dmp.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
-import javax.ws.rs.core.UriBuilder;
 
 import org.glassfish.grizzly.http.server.HttpServer;
-import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
-import org.glassfish.jersey.media.multipart.MultiPartFeature;
-import org.glassfish.jersey.server.ResourceConfig;
-
-import de.avgl.dmp.controller.providers.ExceptionHandler;
-import de.avgl.dmp.controller.providers.DMPBinder;
 
 /**
  * Main class.
@@ -22,20 +14,18 @@ public class Main {
 
 	private static final org.apache.log4j.Logger	log	= org.apache.log4j.Logger.getLogger(Main.class);
 
-	// Base URI the Grizzly HTTP server will listen on
-	public final String								BASE_URI;
+	private EmbeddedServer server;
 
 	public Main(Properties properties) {
 		final String host = properties.getProperty("backend_http_server_host");
-		final int port = Integer.valueOf(properties.getProperty("backend_http_server_port"));
+		final String port = properties.getProperty("backend_http_server_port");
 
-		final URI baseUri = UriBuilder.fromUri("http://" + host).port(port).path("dmp/").build();
-
-		BASE_URI = baseUri.toString();
+		System.setProperty("dmp.http.host", host);
+		System.setProperty("dmp.http.port", port);
 	}
 
 	public String getBaseUri() {
-		return BASE_URI;
+		return server.getBaseUri().toString();
 	}
 
 	private static Properties loadProperties(String propertiesPath) {
@@ -63,23 +53,15 @@ public class Main {
 	 * @return Grizzly HTTP server.
 	 */
 	public HttpServer startServer() {
-		// create a resource config that scans for JAX-RS resources and
-		// providers
-		// in de.avgl.dmp.controller.resources package
-		final ResourceConfig rc = new ResourceConfig()
-		// .register(JacksonJaxbJsonProvider.class)
-				.packages("de.avgl.dmp.controller.resources")
-				.register(MultiPartFeature.class)
-				.register(ExceptionHandler.class)
-				.register(new DMPBinder());
+		server = new EmbeddedServer();
 
-		// create and start a new instance of grizzly http server
-		// exposing the Jersey application at BASE_URI
+		try {
+			return server.start();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-		final HttpServer httpServer = GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
-		httpServer.getListener("grizzly").setMaxFormPostSize(Integer.MAX_VALUE);
-
-		return httpServer;
+		return null;
 	}
 
 	public static Main create(int port) {
@@ -102,35 +84,6 @@ public class Main {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		final Main main = Main.create();
-		final HttpServer server = main.startServer();
-
-		System.out.println(String.format("Jersey app started with WADL available at " + "%sapplication.wadl\nHit ^C to stop it...",
-				main.getBaseUri()));
-
-//		System.out.close();
-//		System.err.close();
-
-		final CountDownLatch keepAliveLatch = new CountDownLatch(1);
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run() {
-				server.stop();
-				keepAliveLatch.countDown();
-			}
-		});
-
-		final Thread keepAliveThread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					keepAliveLatch.await();
-				} catch (InterruptedException ignore) {
-				}
-			}
-		}, "dmp/grizzly");
-
-		keepAliveThread.setDaemon(false);
-		keepAliveThread.start();
+		EmbeddedServer.main(args);
 	}
 }

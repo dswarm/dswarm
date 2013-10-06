@@ -17,7 +17,7 @@ public class JobsResourceTest extends ResourceTest {
 	private String							jobJSONString	= null;
 
 	public JobsResourceTest() {
-		
+
 		super("jobs");
 	}
 
@@ -30,7 +30,7 @@ public class JobsResourceTest extends ResourceTest {
 	@Test
 	public void testExecuteJob() throws Exception {
 
-		Response response = target.path(resourceIdentifier).request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+		Response response = target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
 				.post(Entity.json(jobJSONString));
 
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());

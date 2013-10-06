@@ -46,7 +46,7 @@ public class TransformationsResourceTest extends ResourceTest {
 	 */
 	@Test
 	public void testEchoJSON() {
-		Response response = target.path(resourceIdentifier + "/echo").request(MediaType.APPLICATION_JSON_TYPE)
+		Response response = target("echo").request(MediaType.APPLICATION_JSON_TYPE)
 				.accept(MediaType.APPLICATION_JSON_TYPE)
 				.post(Entity.json(transformationJSONString));
 		String responseString = response.readEntity(String.class);
@@ -62,13 +62,13 @@ public class TransformationsResourceTest extends ResourceTest {
 
 	@Test
 	public void testXML() throws Exception {
-		
-		final Response response = target.path(resourceIdentifier).request(MediaType.APPLICATION_XML_TYPE)
+
+		final Response response = target().request(MediaType.APPLICATION_XML_TYPE)
 				.accept(MediaType.APPLICATION_XML_TYPE)
 				.post(Entity.json(transformationJSONString));
-		
+
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
-		
+
 		final String responseString = response.readEntity(String.class);
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("transformations-post-metamorph.xml");
@@ -78,7 +78,7 @@ public class TransformationsResourceTest extends ResourceTest {
 
 	@Test
 	public void testTransformation() throws Exception {
-		Response response = target.path(resourceIdentifier).request(MediaType.APPLICATION_JSON_TYPE)
+		Response response = target().request(MediaType.APPLICATION_JSON_TYPE)
 				.accept(MediaType.APPLICATION_JSON_TYPE)
 				.post(Entity.json(transformationJSONString));
 		String responseString = response.readEntity(String.class);

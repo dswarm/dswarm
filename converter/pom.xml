@@ -19,7 +19,7 @@
 		<metafacture-core.version>1.1.0-SNAPSHOT</metafacture-core.version>
 		<commons-csv.version>1.0-SNAPSHOT</commons-csv.version>
 	</properties>
-	
+
 	<repositories>
 		<repository>
 			<id>repository.apache.org.snapshots</id>
@@ -51,6 +51,24 @@
 			<groupId>org.culturegraph</groupId>
 			<artifactId>metafacture-core</artifactId>
 			<version>${metafacture-core.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>jackson-core</artifactId>
+					<groupId>com.fasterxml.jackson.core</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>commons-io</artifactId>
+					<groupId>commons-io</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-log4j12</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -62,6 +80,12 @@
 			<artifactId>mockito-core</artifactId>
 			<version>1.9.5</version>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>objenesis</artifactId>
+					<groupId>org.objenesis</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.findbugs</groupId>

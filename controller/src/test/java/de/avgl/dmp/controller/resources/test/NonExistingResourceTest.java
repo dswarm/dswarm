@@ -22,7 +22,7 @@ public class NonExistingResourceTest extends ResourceTest {
 
 		LOG.debug("expecting NotFoundException near this, because we are testing this exception here");
 
-		final Response response = target.path(resourceDirective).request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+		final Response response = target().request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
 
 		Assert.assertEquals("404 NOT FOUND was expected", 404, response.getStatus());
 

@@ -9,11 +9,17 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Optional;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import com.google.common.io.Resources;
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
@@ -21,21 +27,25 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import com.google.common.io.Resources;
-
+import de.avgl.dmp.controller.servlet.DMPInjector;
 import de.avgl.dmp.controller.resources.test.utils.ResourceTestUtils;
 import de.avgl.dmp.controller.services.PersistenceServices;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.services.ConfigurationService;
+import de.avgl.dmp.persistence.services.InternalService;
 import de.avgl.dmp.persistence.services.ResourceService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.hasItem;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 
 public class ResourcesResourceTest extends ResourceTest {
 
@@ -105,7 +115,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		LOG.debug("try to retrieve resource '" + resource.getId() + "'");
 
-		final Response response = target.path(resourceIdentifier + "/" + resource.getId()).request().accept(MediaType.APPLICATION_JSON_TYPE)
+		final Response response = target(String.valueOf(resource.getId())).request().accept(MediaType.APPLICATION_JSON_TYPE)
 				.get(Response.class);
 
 		final String responseResource = response.readEntity(String.class);
@@ -123,36 +133,26 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		// check idempotency of GET
 
-		closeClient();
-
 		for (int i = 0; i < 10; i++) {
 
-			createClient();
 			getResourceConfigurationsInternal(actualResource);
-			closeClient();
 		}
 
 		for (int i = 0; i < 10; i++) {
 
-			createClient();
 			getResourcesInternal(actualResource.getId(), expectedResource);
-			closeClient();
 		}
 
 		for (int i = 0; i < 10; i++) {
 
-			createClient();
 			getResourceConfigurationsInternal(actualResource);
-			closeClient();
 
 			Thread.sleep(2000);
 		}
 
 		for (int i = 0; i < 10; i++) {
 
-			createClient();
 			getResourcesInternal(actualResource.getId(), expectedResource);
-			closeClient();
 
 			Thread.sleep(2000);
 		}
@@ -208,7 +208,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		LOG.debug("try to retrieve resource '" + resource.getId() + "'");
 
-		final Response response = target.path(resourceIdentifier + "/" + resource.getId() + "/configurations").request()
+		final Response response = target(String.valueOf(resource.getId()), "configurations").request()
 				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
 
 		Assert.assertEquals("404 NOT FOUND was expected", 404, response.getStatus());
@@ -242,7 +242,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		LOG.debug("try to retrieve resource configuration '" + configuration.getId() + "'");
 
-		final Response response = target.path(resourceIdentifier + "/" + resource.getId() + "/configurations/" + configuration.getId()).request()
+		final Response response = target(String.valueOf(resource.getId()), "/configurations/", String.valueOf(configuration.getId())).request()
 				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
 
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
@@ -261,6 +261,154 @@ public class ResourcesResourceTest extends ResourceTest {
 		final ConfigurationService configurationService = PersistenceServices.getInstance().getConfigurationService();
 
 		configurationService.deleteObject(configuration.getId());
+
+		cleanUpDB(resource);
+	}
+
+	@Test
+	public void testResourceConfigurationSchema() throws Exception {
+
+		final Resource resource = addResourceConfigurationInternal();
+
+		final Configuration config = resource.getConfigurations().iterator().next();
+
+		InternalService service = DMPInjector.injector.getInstance(InternalService.class);
+		final Optional<Set<String>> schema = service.getSchema(resource.getId(), config.getId());
+
+		assertTrue(schema.isPresent());
+		assertFalse(schema.get().isEmpty());
+		assertThat(schema.get().size(), equalTo(5));
+		//noinspection unchecked
+		assertThat(schema.get(), allOf(hasItem("id"), hasItem("name"), hasItem("description"), hasItem("year"), hasItem("isbn")));
+
+		final Response response = target(
+				String.valueOf(resource.getId()), "/configurations/",
+				String.valueOf(config.getId()), "schema").request()
+				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+
+		final String responseSchemaJsonString = response.readEntity(String.class);
+
+		final JsonNode json = DMPPersistenceUtil.getJSONObjectMapper().readValue(
+				responseSchemaJsonString, JsonNode.class);
+
+		assertThat(json.get("title").asText(), equalTo(config.getName()));
+		assertThat(json.get("type").asText(), equalTo("object"));
+
+		final Iterator<Entry<String, JsonNode>> properties = json.get("properties").fields();
+
+		while (properties.hasNext()) {
+
+			Entry<String, JsonNode> property = properties.next();
+			assertThat(property.getValue().get("type").asText(), equalTo("string"));
+			//noinspection unchecked
+			assertThat(property.getKey(), anyOf(equalTo("id"), equalTo("name"), equalTo("description"), equalTo("year"), equalTo("isbn")));
+		}
+
+		// clean up
+
+		final ConfigurationService configurationService = PersistenceServices.getInstance().getConfigurationService();
+
+		for (final Configuration configuration : resource.getConfigurations()) {
+
+			configurationService.deleteObject(configuration.getId());
+		}
+
+		cleanUpDB(resource);
+
+	}
+
+	@Test
+	public void testResourceConfigurationSchemaMissing() throws Exception {
+
+		final Resource resource = addResourceConfigurationInternal();
+
+		final Response response = target("42", "configurations", "21", "schema").request()
+				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+
+		assertThat("404 Not Found was expected", response.getStatus(), equalTo(404));
+		assertThat(response.hasEntity(), equalTo(false));
+
+		cleanUpDB(resource, true);
+	}
+
+	@Test
+	public void testResourceConfigurationData() throws Exception {
+
+		final Resource resource = addResourceConfigurationInternal();
+
+		final Configuration config = resource.getConfigurations().iterator().next();
+
+		final int atMost = 1;
+
+		InternalService service = DMPInjector.injector.getInstance(InternalService.class);
+		final Optional<Map<String, Map<String, String>>> data = service.getObjects(resource.getId(), config.getId(), Optional.of(atMost));
+
+		assertTrue(data.isPresent());
+		assertFalse(data.get().isEmpty());
+		assertThat(data.get().size(), equalTo(atMost));
+
+		final String recordId = data.get().keySet().iterator().next();
+
+		final Response response = target(
+				String.valueOf(resource.getId()), "/configurations/",
+				String.valueOf(config.getId()), "data")
+				.queryParam("atMost", atMost).request()
+				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+
+		final ArrayNode jsonArray = response.readEntity(ArrayNode.class);
+
+		assertThat(jsonArray.size(), equalTo(atMost));
+
+		final JsonNode json = jsonArray.get(0);
+
+		assertThat(json.get("recordId").asText(), equalTo(recordId));
+		assertThat(json.get("id").asText(), equalTo(data.get().get(recordId).get("id")));
+		assertThat(json.get("year").asText(), equalTo(data.get().get(recordId).get("year")));
+		assertThat(json.get("description").asText(), equalTo(data.get().get(recordId).get("description")));
+		assertThat(json.get("name").asText(), equalTo(data.get().get(recordId).get("name")));
+		assertThat(json.get("isbn").asText(), equalTo(data.get().get(recordId).get("isbn")));
+
+		// clean up
+
+		final ConfigurationService configurationService = PersistenceServices.getInstance().getConfigurationService();
+
+		for (final Configuration configuration : resource.getConfigurations()) {
+
+			configurationService.deleteObject(configuration.getId());
+		}
+
+		cleanUpDB(resource);
+
+	}
+
+	@Test
+	public void testResourceConfigurationDataMissing() throws Exception {
+
+		final Resource resource = addResourceConfigurationInternal();
+
+		final Response response = target("42", "configurations", "21", "data").request()
+				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+
+		assertThat("404 Not Found was expected", response.getStatus(), equalTo(404));
+		assertThat(response.hasEntity(), equalTo(false));
+
+		cleanUpDB(resource, true);
+	}
+
+	private void cleanUpDB(Resource resource, boolean withConfigurations) {
+		if (withConfigurations) {
+
+			final ConfigurationService configurationService = PersistenceServices.getInstance().getConfigurationService();
+
+			for (final Configuration configuration : resource.getConfigurations()) {
+
+				configurationService.deleteObject(configuration.getId());
+			}
+		}
 
 		cleanUpDB(resource);
 	}
@@ -295,7 +443,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		LOG.debug("try to retrieve resources");
 
-		final Response response = target.path(resourceIdentifier).request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+		final Response response = target().request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
 
 		String responseResources = response.readEntity(String.class);
 
@@ -319,7 +467,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final String configurationJSON = DMPPersistenceUtil.getResourceAsString("configuration2.json");
 
-		final Response response = target.path(resourceIdentifier + "/" + resource.getId() + "/configurationpreview")
+		final Response response = target(String.valueOf(resource.getId()), "/configurationpreview")
 				.request(MediaType.TEXT_PLAIN_TYPE).accept(MediaType.TEXT_PLAIN_TYPE).post(Entity.json(configurationJSON));
 		final String responseString = response.readEntity(String.class);
 
@@ -343,7 +491,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final String configurationJSON = DMPPersistenceUtil.getResourceAsString("configuration2.json");
 
-		final Response response = target.path(resourceIdentifier + "/" + resource.getId() + "/configurationpreview")
+		final Response response = target(String.valueOf(resource.getId()), "/configurationpreview")
 				.request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(configurationJSON));
 		final String responseString = response.readEntity(String.class);
 
@@ -362,7 +510,7 @@ public class ResourcesResourceTest extends ResourceTest {
 		form.field("description", "this is a description");
 		form.bodyPart(new FileDataBodyPart("file", resourceFile, MediaType.MULTIPART_FORM_DATA_TYPE));
 
-		final Response response = target.path(resourceIdentifier).request(MediaType.MULTIPART_FORM_DATA_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+		final Response response = target().request(MediaType.MULTIPART_FORM_DATA_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
 				.post(Entity.entity(form, MediaType.MULTIPART_FORM_DATA));
 
 		Assert.assertEquals("200 OK was expected", 201, response.getStatus());
@@ -394,7 +542,7 @@ public class ResourcesResourceTest extends ResourceTest {
 		final String configurationJSON = DMPPersistenceUtil.getResourceAsString("configuration.json");
 		final Configuration configuration = DMPPersistenceUtil.getJSONObjectMapper().readValue(configurationJSON, Configuration.class);
 
-		final Response response = target.path(resourceIdentifier + "/" + resource.getId() + "/configurations")
+		final Response response = target(String.valueOf(resource.getId()), "/configurations")
 				.request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(configurationJSON));
 
 		final String responseConfigurationJSON = response.readEntity(String.class);
@@ -436,7 +584,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 	private void getResourceConfigurationsInternal(final Resource resource) throws Exception {
 
-		final Response response = target.path(resourceIdentifier + "/" + resource.getId() + "/configurations").request()
+		final Response response = target(String.valueOf(resource.getId()), "/configurations").request()
 				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
 
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
@@ -448,14 +596,14 @@ public class ResourcesResourceTest extends ResourceTest {
 	private void curlGetResourceConfigurationsInternal(final Resource resource) throws Exception {
 
 		final String resourceConfigurationsJSON = executeCommand("curl -G -H \"Content-Type: application/json\" -H \"Accepted: application/json\" "
-				+ baseURI + "resources/" + resource.getId().toString() + "/configurations");
+				+ baseUri() + "/resources/" + resource.getId().toString() + "/configurations");
 
 		ResourceTestUtils.evaluateConfigurations(resourceConfigurationsJSON, exceptedConfigurations);
 	}
 
 	private void getResourcesInternal(final Long resourceId, final Resource expectedResource) throws Exception {
 
-		final Response response = target.path(resourceIdentifier + "/" + resourceId).request().accept(MediaType.APPLICATION_JSON_TYPE)
+		final Response response = target(String.valueOf(resourceId)).request().accept(MediaType.APPLICATION_JSON_TYPE)
 				.get(Response.class);
 
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
@@ -468,7 +616,7 @@ public class ResourcesResourceTest extends ResourceTest {
 	private void curlGetResourcesInternal(final Long resourceId, final Resource expectedResource) throws Exception {
 
 		final String responseResourceJSON = executeCommand("curl -G -H \"Content-Type: application/json\" -H \"Accepted: application/json\" "
-				+ baseURI + "resources/" + resourceId.toString());
+				+ baseUri() + "/resources/" + resourceId.toString());
 
 		evaluateGetResourcesInternal(responseResourceJSON);
 	}
@@ -490,10 +638,10 @@ public class ResourcesResourceTest extends ResourceTest {
 
 			final Entry<String, JsonNode> attributeJSONEntry = attributesJSONNodeIter.next();
 			final String attributeKey = attributeJSONEntry.getKey();
-			
+
 			Assert.assertNotNull("resource attribute '" + attributeKey + "' shouldn't be null", responseResource.getAttribute(attributeKey));
 
-			if ("path".equals(attributeKey) == false) {
+			if (!"path".equals(attributeKey)) {
 
 				Assert.assertEquals("the resource " + attributeKey + "s should be equal", expectedResource.getAttribute(attributeKey),
 						responseResource.getAttribute(attributeKey));
@@ -622,7 +770,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		Assert.assertEquals("exit status should be 0", 0, exitStatus);
 
-		final StringBuffer sb = new StringBuffer();
+		final StringBuilder sb = new StringBuilder();
 
 		final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 		String line = reader.readLine();

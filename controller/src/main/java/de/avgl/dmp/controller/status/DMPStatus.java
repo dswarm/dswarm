@@ -1,19 +1,17 @@
 package de.avgl.dmp.controller.status;
 
 import java.lang.management.ManagementFactory;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
-import org.jvnet.hk2.annotations.Service;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import de.avgl.dmp.controller.resources.ResourcesResource;
 
 import static com.codahale.metrics.MetricRegistry.name;
 
-@Service
 @Singleton
 public class DMPStatus {
 
@@ -33,18 +31,18 @@ public class DMPStatus {
 
 	@Inject
 	public DMPStatus(MetricRegistry registry) {
-		allRequestsMeter = registry.meter(name(ResourcesResource.class.getSimpleName(), "requests", "all"));
+		allRequestsMeter = registry.meter(name(ResourcesResource.class, "requests", "all"));
 
-		createNewResourceTimer = registry.timer(name(ResourcesResource.class.getSimpleName(), "post-requests", "resources", "create"));
-		configurationsPreviewTimer = registry.timer(name(ResourcesResource.class.getSimpleName(), "post-requests", "configurations", "preview"));
-		createNewConfigurationsTimer = registry.timer(name(ResourcesResource.class.getSimpleName(), "post-requests", "configurations", "create"));
+		createNewResourceTimer = registry.timer(name(ResourcesResource.class, "post-requests", "resources", "create"));
+		configurationsPreviewTimer = registry.timer(name(ResourcesResource.class, "post-requests", "configurations", "preview"));
+		createNewConfigurationsTimer = registry.timer(name(ResourcesResource.class, "post-requests", "configurations", "create"));
 
-		getAllResourcesTimer = registry.timer(name(ResourcesResource.class.getSimpleName(), "get-requests", "resources", "all"));
-		getSingleResourcesTimer = registry.timer(name(ResourcesResource.class.getSimpleName(), "get-requests", "resources", "specific"));
-		getAllConfigurationsTimer = registry.timer(name(ResourcesResource.class.getSimpleName(), "get-requests", "configurations", "all"));
-		getSingleConfigurationTimer = registry.timer(name(ResourcesResource.class.getSimpleName(), "get-requests", "configurations", "specific"));
-		getConfigurationsSchemaTimer = registry.timer(name(ResourcesResource.class.getSimpleName(), "get-requests", "configurations", "schema"));
-		getConfigurationsDataTimer = registry.timer(name(ResourcesResource.class.getSimpleName(), "get-requests", "configurations", "data"));
+		getAllResourcesTimer = registry.timer(name(ResourcesResource.class, "get-requests", "resources", "all"));
+		getSingleResourcesTimer = registry.timer(name(ResourcesResource.class, "get-requests", "resources", "specific"));
+		getAllConfigurationsTimer = registry.timer(name(ResourcesResource.class, "get-requests", "configurations", "all"));
+		getSingleConfigurationTimer = registry.timer(name(ResourcesResource.class, "get-requests", "configurations", "specific"));
+		getConfigurationsSchemaTimer = registry.timer(name(ResourcesResource.class, "get-requests", "configurations", "schema"));
+		getConfigurationsDataTimer = registry.timer(name(ResourcesResource.class, "get-requests", "configurations", "data"));
 	}
 
 	public Timer.Context createNewResource() {
