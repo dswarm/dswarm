@@ -52,10 +52,10 @@ public class ConfigurationsResourceTest extends ResourceTest {
 
 		LOG.debug("try to retrieve configurations");
 
-		final Response response = target.path(resourceIdentifier).request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+		final Response response = target().request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
 
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
-		
+
 		final String responseConfigurations = response.readEntity(String.class);
 
 		expectedConfigurations = Sets.newHashSet();
@@ -73,7 +73,7 @@ public class ConfigurationsResourceTest extends ResourceTest {
 
 		LOG.debug("try to retrieve configurations");
 
-		final Response response = target.path(resourceIdentifier + "/" + actualConfiguration.getId()).request()
+		final Response response = target(String.valueOf(actualConfiguration.getId())).request()
 				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
 
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
@@ -94,7 +94,7 @@ public class ConfigurationsResourceTest extends ResourceTest {
 
 	private Configuration createConfigurationInternal() throws Exception {
 
-		final Response response = target.path(resourceIdentifier).request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
 				.post(Entity.json(configurationJSONString));
 
 		Assert.assertEquals("201 Created was expected", 201, response.getStatus());

@@ -1,0 +1,95 @@
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+	<servlet>
+		<servlet-name>de.avgl.dmp.Application</servlet-name>
+		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+		<init-param>
+			<param-name>javax.ws.rs.Application</param-name>
+			<param-value>de.avgl.dmp.controller.providers.DMPApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>de.avgl.dmp.Application</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>MetricsServlet</servlet-name>
+		<servlet-class>com.codahale.metrics.servlets.MetricsServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>MetricsServlet</servlet-name>
+		<url-pattern>/_stats/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>PingServlet</servlet-name>
+		<servlet-class>com.codahale.metrics.servlets.PingServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>PingServlet</servlet-name>
+		<url-pattern>/_ping/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ThreadDumpServlet</servlet-name>
+		<servlet-class>com.codahale.metrics.servlets.ThreadDumpServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>ThreadDumpServlet</servlet-name>
+		<url-pattern>/_threads/*</url-pattern>
+	</servlet-mapping>
+
+	<filter>
+		<filter-name>guice-filter</filter-name>
+		<filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>guice-filter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+
+	<filter>
+		<filter-name>metrics-filter</filter-name>
+		<filter-class>de.avgl.dmp.controller.servlet.filter.InstrumentedFilterImpl</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>metrics-filter</filter-name>
+		<servlet-name>de.avgl.dmp.Application</servlet-name>
+	</filter-mapping>
+
+	<listener>
+		<listener-class>de.avgl.dmp.controller.servlet.DMPInjector</listener-class>
+	</listener>
+	<listener>
+		<listener-class>
+			de.avgl.dmp.controller.servlet.DMPMetricsServletContextListener
+		</listener-class>
+	</listener>
+
+	<context-param>
+		<param-name>maxPostSize</param-name>
+		<param-value>2147483647</param-value>
+	</context-param>
+	<context-param>
+		<param-name>com.codahale.metrics.servlets.MetricsServlet.rateUnit</param-name>
+		<param-value>seconds</param-value>
+	</context-param>
+	<context-param>
+		<param-name>com.codahale.metrics.servlets.MetricsServlet.durationUnit</param-name>
+		<param-value>milliseconds</param-value>
+	</context-param>
+	<context-param>
+		<param-name>com.codahale.metrics.servlets.MetricsServlet.allowedOrigin</param-name>
+		<param-value>*</param-value>
+	</context-param>
+
+</web-app>

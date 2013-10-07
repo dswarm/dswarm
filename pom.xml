@@ -51,6 +51,8 @@
 		<jackson.version>2.2.3</jackson.version>
 		<apache.commons.version>3.1</apache.commons.version>
 		<commons-io.version>2.4</commons-io.version>
+		<guice.version>3.0</guice.version>
+		<metrics.version>3.0.1</metrics.version>
 	</properties>
 
 		<repositories>
@@ -73,7 +75,10 @@
 					<configuration>
 						<!-- <instrumentation> <ignores> <ignore>...</ignore> </ignores> <excludes>
 							<exclude>...</exclude> </excludes> </instrumentation> -->
-						<format>xml</format>
+                        <formats>
+                            <format>xml</format>
+                            <format>html</format>
+                        </formats>
 						<source>${java.source.version}</source>
 						<target>${java.source.version}</target>
 						<check>
@@ -493,6 +498,20 @@
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>${commons-io.version}</version>
+		</dependency>
+
+		<!-- Metrics -->
+		<dependency>
+			<groupId>com.codahale.metrics</groupId>
+			<artifactId>metrics-core</artifactId>
+			<version>${metrics.version}</version>
+		</dependency>
+
+		<!-- Guice -->
+		<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+			<version>${guice.version}</version>
 		</dependency>
 	</dependencies>
 	<!-- </dependencyManagement> -->

@@ -1,6 +1,5 @@
 package de.avgl.dmp.converter.flow;
 
-import java.io.IOException;
 import java.io.Reader;
 
 import com.google.common.collect.ImmutableList;
@@ -61,9 +60,5 @@ public class CSVSourceResourceTriplesFlow extends CSVResourceFlow<ImmutableList<
 
 		opener.process(obj);
 		return tripleReceiver.getCollection();
-	}
-
-	public static CSVSourceResourceTriplesFlow fromConfiguration(final Configuration configuration) throws IOException, DMPConverterException {
-		return new CSVSourceResourceTriplesFlow(configuration);
 	}
 }

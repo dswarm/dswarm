@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.persistence.EntityManager;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -35,6 +34,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.eventbus.EventBus;
 import com.google.common.net.HttpHeaders;
+import com.google.inject.Provider;
+import com.google.inject.servlet.RequestScoped;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -56,31 +57,42 @@ import de.avgl.dmp.persistence.services.InternalService;
 import de.avgl.dmp.persistence.services.ResourceService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
+@RequestScoped
 @Path("resources")
 public class ResourcesResource {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ResourcesResource.class);
 
+
 	@Context
 	UriInfo											uri;
 
-	@Inject
-	private Provider<EventBus>				eventBusProvider;
+	private final Provider<EventBus>				eventBusProvider;
+
+	private final Provider<ResourceService>			resourceServiceProvider;
+
+	private final Provider<ConfigurationService>	configurationServiceProvider;
+
+	private final Provider<InternalService>			internalServiceProvider;
+
+	private final EntityManager						entityManager;
+
+	private final DMPStatus							dmpStatus;
+
 
 	@Inject
-	private Provider<ResourceService>		resourceServiceProvider;
-
-	@Inject
-	private Provider<ConfigurationService>	configurationServiceProvider;
-
-	@Inject
-	private Provider<InternalService>		internalServiceProvider;
-
-	@Inject
-	private EntityManager					entityManager;
-
-	@Inject
-	private DMPStatus						dmpStatus;
+	public ResourcesResource(EntityManager entityManager, DMPStatus dmpStatus,
+							 Provider<ResourceService> resourceServiceProvider,
+							 Provider<ConfigurationService> configurationServiceProvider,
+							 Provider<InternalService> internalServiceProvider,
+							 Provider<EventBus> eventBusProvider) {
+		this.eventBusProvider = eventBusProvider;
+		this.resourceServiceProvider = resourceServiceProvider;
+		this.configurationServiceProvider = configurationServiceProvider;
+		this.internalServiceProvider = internalServiceProvider;
+		this.entityManager = entityManager;
+		this.dmpStatus = dmpStatus;
+	}
 
 	private Response buildResponse(final String responseContent) {
 
