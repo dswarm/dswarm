@@ -27,7 +27,7 @@
 
 	<servlet>
 		<servlet-name>PingServlet</servlet-name>
-		<servlet-class>com.codahale.metrics.servlets.PingServlet</servlet-class>
+		<servlet-class>de.avgl.dmp.controller.servlet.HeartbeatServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
