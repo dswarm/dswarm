@@ -641,7 +641,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 			Assert.assertNotNull("resource attribute '" + attributeKey + "' shouldn't be null", responseResource.getAttribute(attributeKey));
 
-			if (!"path".equals(attributeKey) && !"filesizes".equals(attributeKey)) {
+			if (!"path".equals(attributeKey) && !"filesize".equals(attributeKey)) {
 
 				Assert.assertEquals("the resource " + attributeKey + "s should be equal", expectedResource.getAttribute(attributeKey),
 						responseResource.getAttribute(attributeKey));
