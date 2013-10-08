@@ -425,6 +425,15 @@
 			</properties>
 		</profile>
 		<profile>
+			<id>SDVDMPDEV</id>
+			<properties>
+				<env>sdvdmpdev</env>
+				<rdb.url>jdbc:h2:file:target/h2/dmpdb</rdb.url>
+				<rdb.username>SA</rdb.username>
+				<rdb.password></rdb.password>
+			</properties>
+		</profile>
+		<profile>
 			<id>DEV</id>
 			<properties>
 				<env>dev</env>
