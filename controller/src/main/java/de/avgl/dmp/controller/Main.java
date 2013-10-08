@@ -3,7 +3,6 @@ package de.avgl.dmp.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import java.util.concurrent.CountDownLatch;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 
@@ -84,6 +83,10 @@ public class Main {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
+		Main main = Main.create();
+		// not that HotSpot might optimize this away
+		main.toString();
+
 		EmbeddedServer.main(args);
 	}
 }
