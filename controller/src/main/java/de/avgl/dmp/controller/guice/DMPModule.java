@@ -8,10 +8,10 @@ import javax.persistence.EntityManager;
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
+import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
-import com.google.inject.servlet.ServletModule;
 
 import de.avgl.dmp.controller.eventbus.ConverterEventRecorder;
 import de.avgl.dmp.controller.status.DMPStatus;
@@ -22,17 +22,15 @@ import de.avgl.dmp.persistence.services.ResourceService;
 import de.avgl.dmp.persistence.services.impl.InternalServiceImpl;
 import de.avgl.dmp.persistence.services.utils.JPAUtil;
 
-public class DMPModule extends ServletModule {
-
-	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(DMPModule.class);
+public class DMPModule extends AbstractModule {
 
 	@Override
-	protected void configureServlets() {
 
 		//	synchronous event bus
 		//	bind(EventBus.class).asEagerSingleton();
 
 		bind(InternalMemoryDb.class).asEagerSingleton();
+	protected void configure() {
 		bind(ConverterEventRecorder.class).asEagerSingleton();
 
 		bind(ResourceService.class).in(Scopes.SINGLETON);
