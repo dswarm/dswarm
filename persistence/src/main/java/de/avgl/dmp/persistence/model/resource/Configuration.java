@@ -1,10 +1,8 @@
 package de.avgl.dmp.persistence.model.resource;
 
 import java.util.Set;
-
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,9 +16,6 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -43,7 +38,7 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 public class Configuration extends DMPJPAObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long						serialVersionUID		= 1L;
 
@@ -99,7 +94,7 @@ public class Configuration extends DMPJPAObject {
 
 	public ObjectNode getParameters() {
 
-		if (parameters == null && parametersInitialized == false) {
+		if (parameters == null && !parametersInitialized) {
 
 			try {
 
@@ -177,7 +172,7 @@ public class Configuration extends DMPJPAObject {
 	/**
 	 * Adds a new resource to the collection of resources of this configuration.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param resource a new export definition revision
 	 */
 	public void addResource(final Resource resource) {
@@ -200,7 +195,7 @@ public class Configuration extends DMPJPAObject {
 	/**
 	 * Replaces an existing resource, i.e., the resource with the same identifier will be replaced.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param resource an existing, updated resource
 	 */
 	public void replaceResource(final Resource resource) {
@@ -227,7 +222,7 @@ public class Configuration extends DMPJPAObject {
 	/**
 	 * Removes an existing resource from the collection of resources of this configuration.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param resource an existing resource that should be removed
 	 */
 	public void removeResource(final Resource resource) {

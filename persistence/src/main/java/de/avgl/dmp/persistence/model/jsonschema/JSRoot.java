@@ -14,15 +14,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JSRoot extends JSObject {
 
-	public JSRoot(String name) {
+	public JSRoot(final String name) {
 		super(name);
 	}
 
 	@Override
-	public JSElement withName(String newName) {
+	public JSElement withName(final String newName) {
 		final JSRoot jsRoot = new JSRoot(newName);
 
-		for (JSElement jsElement : this) {
+		for (final JSElement jsElement : this) {
 			jsRoot.add(jsElement);
 		}
 
@@ -30,7 +30,7 @@ public class JSRoot extends JSObject {
 	}
 
 	@Override
-	protected void render(JsonGenerator jgen) throws IOException {
+	protected void render(final JsonGenerator jgen) throws IOException {
 		jgen.writeStartObject();
 
 		jgen.writeStringField("title", getName());
@@ -46,40 +46,40 @@ public class JSRoot extends JSObject {
 		jgen.close();
 	}
 
-	public void render(ObjectMapper mapper, OutputStream out) throws IOException {
+	public void render(final ObjectMapper mapper, final OutputStream out) throws IOException {
 		render(mapper.getFactory(), out);
 
 	}
-	public void render(ObjectMapper mapper, OutputStream out, JsonEncoding encoding) throws IOException {
+	public void render(final ObjectMapper mapper, final OutputStream out, final JsonEncoding encoding) throws IOException {
 		render(mapper.getFactory(), out, encoding);
 
 	}
-	public void render(ObjectMapper mapper, Writer writer) throws IOException {
+	public void render(final ObjectMapper mapper, final Writer writer) throws IOException {
 		render(mapper.getFactory(), writer);
 
 	}
-	public void render(ObjectMapper mapper, File file, JsonEncoding encoding) throws IOException {
+	public void render(final ObjectMapper mapper, final File file, final JsonEncoding encoding) throws IOException {
 		render(mapper.getFactory(), file, encoding);
 	}
 
-	public void render(JsonFactory jsonFactory, OutputStream out) throws IOException {
+	public void render(final JsonFactory jsonFactory, final OutputStream out) throws IOException {
 		render(jsonFactory.createGenerator(out));
 
 	}
-	public void render(JsonFactory jsonFactory, OutputStream out, JsonEncoding encoding) throws IOException {
+	public void render(final JsonFactory jsonFactory, final OutputStream out, final JsonEncoding encoding) throws IOException {
 		render(jsonFactory.createGenerator(out, encoding));
 
 	}
-	public void render(JsonFactory jsonFactory, Writer writer) throws IOException {
+	public void render(final JsonFactory jsonFactory, final Writer writer) throws IOException {
 		render(jsonFactory.createGenerator(writer));
 
 	}
-	public void render(JsonFactory jsonFactory, File file, JsonEncoding encoding) throws IOException {
+	public void render(final JsonFactory jsonFactory, final File file, final JsonEncoding encoding) throws IOException {
 		render(jsonFactory.createGenerator(file, encoding));
 	}
 
 	public String render() throws IOException {
-		JsonFactory jsonFactory = new JsonFactory();
+		final JsonFactory jsonFactory = new JsonFactory();
 		final StringWriter writer = new StringWriter();
 
 		render(jsonFactory, writer);

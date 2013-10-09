@@ -27,7 +27,7 @@ public final class QucosaReader implements Reader {
 	 * @param recordPrefix  the prefix that will be used to identify the
 	 *                      relevant record section. See {@link QucosaDecoder}.
 	 */
-	public QucosaReader(String recordPrefix) {
+	public QucosaReader(final String recordPrefix) {
 		this(new QucosaDecoder(recordPrefix));
 	}
 
@@ -43,34 +43,34 @@ public final class QucosaReader implements Reader {
 	/**
 	 * Class Constructor, allowing for injecting a custom QucosaDecoder.
 	 */
-	public QucosaReader(QucosaDecoder decoder) {
+	public QucosaReader(final QucosaDecoder decoder) {
 		super();
 		this.decoder = decoder;
 	}
 
 	@Override
-	public final <R extends StreamReceiver> R setReceiver(final R receiver) {
+	public <R extends StreamReceiver> R setReceiver(final R receiver) {
 		decoder.setReceiver(receiver);
 		return receiver;
 	}
 
 	@Override
-	public final void process(final java.io.Reader reader) {
+	public void process(final java.io.Reader reader) {
 		decoder.process(reader);
 	}
 
 	@Override
-	public final void read(final String entry) {
+	public void read(final String entry) {
 		decoder.process(entry);
 	}
 
 	@Override
-	public final void resetStream() {
+	public void resetStream() {
 		decoder.resetStream();
 	}
 
 	@Override
-	public final void closeStream() {
+	public void closeStream() {
 		decoder.closeStream();
 	}
 }

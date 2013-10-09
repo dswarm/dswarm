@@ -20,7 +20,7 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 /**
  * Serialises an object as JSON. Records and entities are represented as objects unless their name ends with []. If the name ends
  * with [], an array is created.
- * 
+ *
  * @author tgaengler
  */
 @Description("Serialises an object as JSON")
@@ -32,7 +32,6 @@ public final class CSVJSONEncoder extends DefaultStreamPipe<ObjectReceiver<JsonN
 	private List<String>	values					= null;
 	private ArrayNode		schemaJSON				= null;
 	private ObjectNode		dataJSON				= null;
-	private ObjectNode		json					= null;
 
 	private boolean			withHeader				= false;
 	private boolean			firstLine				= false;
@@ -60,7 +59,7 @@ public final class CSVJSONEncoder extends DefaultStreamPipe<ObjectReceiver<JsonN
 
 				return;
 			}
-			
+
 			count++;
 		}
 
@@ -69,7 +68,7 @@ public final class CSVJSONEncoder extends DefaultStreamPipe<ObjectReceiver<JsonN
 			firstLine = false;
 		}
 
-		if (firstLineInitialized == false) {
+		if (!firstLineInitialized) {
 
 			firstLine = true;
 			firstLineInitialized = true;
@@ -105,9 +104,9 @@ public final class CSVJSONEncoder extends DefaultStreamPipe<ObjectReceiver<JsonN
 			throw new MetafactureException("there is no data for printing");
 		}
 
-		json = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
+		ObjectNode json = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
 
-		if (firstLine == false) {
+		if (!firstLine) {
 
 			json = dataJSON;
 		} else {
@@ -205,7 +204,7 @@ public final class CSVJSONEncoder extends DefaultStreamPipe<ObjectReceiver<JsonN
 
 		dataJSON = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
 
-		int i = 0;
+		final int i = 0;
 
 		for (final String headerField : header) {
 

@@ -35,32 +35,32 @@ public class MetricsFilter implements Filter {
 	 * Creates a new instance of the filter.
 	 */
 	@Inject
-	protected MetricsFilter(MetricRegistry metricRegistry) {
+	protected MetricsFilter(final MetricRegistry metricRegistry) {
 
-		final String NAME_PREFIX = "responseCodes.";
-		final String otherMetricName = NAME_PREFIX + "other";
+		final String namePrefix = "responseCodes.";
+		final String otherMetricName = namePrefix + "other";
 
 		final Map<Integer, String> meterNamesByStatusCode = new HashMap<Integer, String>(13);
 
-		meterNamesByStatusCode.put(HttpServletResponse.SC_OK, NAME_PREFIX + "ok");
-		meterNamesByStatusCode.put(HttpServletResponse.SC_CREATED, NAME_PREFIX + "created");
-		meterNamesByStatusCode.put(HttpServletResponse.SC_NO_CONTENT, NAME_PREFIX + "noContent");
+		meterNamesByStatusCode.put(HttpServletResponse.SC_OK, namePrefix + "ok");
+		meterNamesByStatusCode.put(HttpServletResponse.SC_CREATED, namePrefix + "created");
+		meterNamesByStatusCode.put(HttpServletResponse.SC_NO_CONTENT, namePrefix + "noContent");
 
-		meterNamesByStatusCode.put(HttpServletResponse.SC_BAD_REQUEST, NAME_PREFIX + "badRequest");
-		meterNamesByStatusCode.put(HttpServletResponse.SC_NOT_FOUND, NAME_PREFIX + "notFound");
-		meterNamesByStatusCode.put(HttpServletResponse.SC_METHOD_NOT_ALLOWED, NAME_PREFIX + "methodNotAllowed");
-		meterNamesByStatusCode.put(HttpServletResponse.SC_NOT_ACCEPTABLE, NAME_PREFIX + "notAcceptable");
-		meterNamesByStatusCode.put(HttpServletResponse.SC_REQUEST_TIMEOUT, NAME_PREFIX + "requestTimeout");
-		meterNamesByStatusCode.put(HttpServletResponse.SC_CONFLICT, NAME_PREFIX + "conflict");
-		meterNamesByStatusCode.put(HttpServletResponse.SC_REQUEST_ENTITY_TOO_LARGE, NAME_PREFIX + "requestEntityTooLarge");
-		meterNamesByStatusCode.put(HttpServletResponse.SC_REQUEST_URI_TOO_LONG, NAME_PREFIX + "requestUriTooLong");
-		meterNamesByStatusCode.put(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, NAME_PREFIX + "unsupportedMediaType");
+		meterNamesByStatusCode.put(HttpServletResponse.SC_BAD_REQUEST, namePrefix + "badRequest");
+		meterNamesByStatusCode.put(HttpServletResponse.SC_NOT_FOUND, namePrefix + "notFound");
+		meterNamesByStatusCode.put(HttpServletResponse.SC_METHOD_NOT_ALLOWED, namePrefix + "methodNotAllowed");
+		meterNamesByStatusCode.put(HttpServletResponse.SC_NOT_ACCEPTABLE, namePrefix + "notAcceptable");
+		meterNamesByStatusCode.put(HttpServletResponse.SC_REQUEST_TIMEOUT, namePrefix + "requestTimeout");
+		meterNamesByStatusCode.put(HttpServletResponse.SC_CONFLICT, namePrefix + "conflict");
+		meterNamesByStatusCode.put(HttpServletResponse.SC_REQUEST_ENTITY_TOO_LARGE, namePrefix + "requestEntityTooLarge");
+		meterNamesByStatusCode.put(HttpServletResponse.SC_REQUEST_URI_TOO_LONG, namePrefix + "requestUriTooLong");
+		meterNamesByStatusCode.put(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, namePrefix + "unsupportedMediaType");
 
-		meterNamesByStatusCode.put(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, NAME_PREFIX + "serverError");
+		meterNamesByStatusCode.put(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, namePrefix + "serverError");
 
 
 		final ConcurrentMap<Integer, Meter> metersByStatusCode = new ConcurrentHashMap<Integer, Meter>(meterNamesByStatusCode.size());
-		for (Map.Entry<Integer, String> entry : meterNamesByStatusCode.entrySet()) {
+		for (final Map.Entry<Integer, String> entry : meterNamesByStatusCode.entrySet()) {
 			metersByStatusCode.put(entry.getKey(),
 					metricRegistry.meter(name(MetricsFilter.class, entry.getValue())));
 		}
@@ -72,15 +72,15 @@ public class MetricsFilter implements Filter {
 	}
 
 	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {}
+	public void init(final FilterConfig filterConfig) throws ServletException {}
 
 	@Override
 	public void destroy() {}
 
 	@Override
-	public void doFilter(ServletRequest request,
-						 ServletResponse response,
-						 FilterChain chain) throws IOException, ServletException {
+	public void doFilter(final ServletRequest request,
+						 final ServletResponse response,
+						 final FilterChain chain) throws IOException, ServletException {
 		final StatusExposingServletResponse wrappedResponse =
 				new StatusExposingServletResponse((HttpServletResponse) response);
 		activeRequests.inc();
@@ -94,7 +94,7 @@ public class MetricsFilter implements Filter {
 		}
 	}
 
-	private void markMeterForStatusCode(int status) {
+	private void markMeterForStatusCode(final int status) {
 		final Meter metric = metersByStatusCode.get(status);
 		if (metric != null) {
 			metric.mark();
@@ -107,24 +107,24 @@ public class MetricsFilter implements Filter {
 		// The Servlet spec says: calling setStatus is optional, if no status is set, the default is 200.
 		private int httpStatus = 200;
 
-		public StatusExposingServletResponse(HttpServletResponse response) {
+		public StatusExposingServletResponse(final HttpServletResponse response) {
 			super(response);
 		}
 
 		@Override
-		public void sendError(int sc) throws IOException {
+		public void sendError(final int sc) throws IOException {
 			httpStatus = sc;
 			super.sendError(sc);
 		}
 
 		@Override
-		public void sendError(int sc, String msg) throws IOException {
+		public void sendError(final int sc, final String msg) throws IOException {
 			httpStatus = sc;
 			super.sendError(sc, msg);
 		}
 
 		@Override
-		public void setStatus(int sc) {
+		public void setStatus(final int sc) {
 			httpStatus = sc;
 			super.setStatus(sc);
 		}

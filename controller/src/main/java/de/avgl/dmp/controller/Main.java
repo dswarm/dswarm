@@ -15,7 +15,7 @@ public class Main {
 
 	private EmbeddedServer server;
 
-	public Main(Properties properties) {
+	public Main(final Properties properties) {
 		final String host = properties.getProperty("backend_http_server_host");
 		final String port = properties.getProperty("backend_http_server_port");
 
@@ -27,7 +27,7 @@ public class Main {
 		return server.getBaseUri().toString();
 	}
 
-	private static Properties loadProperties(String propertiesPath) {
+	private static Properties loadProperties(final String propertiesPath) {
 		final InputStream inStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(propertiesPath);
 		final Properties properties = new Properties();
 
@@ -63,9 +63,9 @@ public class Main {
 		return null;
 	}
 
-	public static Main create(int port) {
+	public static Main create(final int port) {
 		final Properties properties = loadProperties();
-		properties.setProperty("backend_http_server_port", Integer.valueOf(port).toString());
+		properties.setProperty("backend_http_server_port", String.valueOf(port));
 
 		return new Main(properties);
 	}
@@ -82,8 +82,8 @@ public class Main {
 	 * @param args main args
 	 * @throws IOException
 	 */
-	public static void main(String[] args) throws IOException {
-		Main main = Main.create();
+	public static void main(final String[] args) throws IOException {
+		final Main main = Main.create();
 		// not that HotSpot might optimize this away
 		main.toString();
 

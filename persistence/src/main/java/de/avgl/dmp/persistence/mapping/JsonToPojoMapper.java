@@ -36,14 +36,14 @@ public class JsonToPojoMapper {
 			return null;
 		}
 
-		Iterator<String> jsParameterFields = root.fieldNames();
-		Map<String, Parameter> parameters = Maps.newHashMap();
+		final Iterator<String> jsParameterFields = root.fieldNames();
+		final Map<String, Parameter> parameters = Maps.newHashMap();
 
 		while (jsParameterFields.hasNext()) {
-			String parameterName = jsParameterFields.next();
-			JsonNode jsParameter = root.get(parameterName);
+			final String parameterName = jsParameterFields.next();
+			final JsonNode jsParameter = root.get(parameterName);
 
-			Parameter parameter = new Parameter();
+			final Parameter parameter = new Parameter();
 
 			parameter.setName(parameterName);
 			parameter.setType(jsParameter.has("type") ? jsParameter.get("type").asText() : null);
@@ -61,25 +61,25 @@ public class JsonToPojoMapper {
 		return parameters;
 	}
 
-	private Component extractComponent(JsonNode jsComponent) {
+	private Component extractComponent(final JsonNode jsComponent) {
 		ComponentType componentType;
 		try {
-			JsonNode jsComponentTyeJs = jsComponent.get("componentType");
-			String jsComponentType = jsComponentTyeJs.asText();
+			final JsonNode jsComponentTyeJs = jsComponent.get("componentType");
+			final String jsComponentType = jsComponentTyeJs.asText();
 			componentType = ComponentType.getComponentTypeByName(jsComponentType);
 		} catch (DMPPersistenceException e) {
 			e.printStackTrace();
 			return null;
 		}
 
-		Component component = new Component();
+		final Component component = new Component();
 
 		component.setId(jsComponent.get("id").asText());
 		component.setType(componentType);
 
-		JsonNode jsPayload = jsComponent.get("payload");
+		final JsonNode jsPayload = jsComponent.get("payload");
 
-		Payload payload = new Payload();
+		final Payload payload = new Payload();
 
 		String name;
 		switch (componentType) {
@@ -113,7 +113,7 @@ public class JsonToPojoMapper {
 		final JsonNode jsTransformations = root.get("transformations");
 
 		for (final JsonNode jsTransformation : jsTransformations) {
-			
+
 			final Transformation transformation = toTransformation(jsTransformation);
 
 			transformationsBuilder.add(transformation);
@@ -153,8 +153,9 @@ public class JsonToPojoMapper {
 		for (final JsonNode jsComponent : transformationJsonNode.get("components")) {
 
 			final Component component = extractComponent(jsComponent);
-			if (component == null)
+			if (component == null) {
 				continue;
+			}
 
 			componentsBuilder.add(component);
 		}

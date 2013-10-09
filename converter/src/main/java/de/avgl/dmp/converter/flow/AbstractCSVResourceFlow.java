@@ -14,9 +14,9 @@ import de.avgl.dmp.converter.mf.stream.reader.CsvReader;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
 
-public abstract class CSVResourceFlow<T> {
+public abstract class AbstractCSVResourceFlow<T> {
 
-	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(CSVResourceFlow.class);
+	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(AbstractCSVResourceFlow.class);
 
 	private final String							encoding;
 
@@ -73,7 +73,7 @@ public abstract class CSVResourceFlow<T> {
 		return Optional.of(jsonNode.asText().charAt(0));
 	}
 
-	protected CSVResourceFlow() {
+	protected AbstractCSVResourceFlow() {
 		this.encoding = defaultEncoding;
 		this.escapeCharacter = defaultEscapeCharacter;
 		this.quoteCharacter = defaultQuoteCharacter;
@@ -81,8 +81,8 @@ public abstract class CSVResourceFlow<T> {
 		this.rowDelimiter = defaultRowDelimiter;
 	}
 
-	public CSVResourceFlow(final String encoding, final Character escapeCharacter, final Character quoteCharacter,
-						   final Character columnDelimiter, final String rowDelimiter) {
+	public AbstractCSVResourceFlow(final String encoding, final Character escapeCharacter, final Character quoteCharacter,
+								   final Character columnDelimiter, final String rowDelimiter) {
 
 		this.encoding = encoding;
 		this.escapeCharacter = escapeCharacter;
@@ -91,7 +91,7 @@ public abstract class CSVResourceFlow<T> {
 		this.rowDelimiter = rowDelimiter;
 	}
 
-	public CSVResourceFlow(final Configuration configuration) throws DMPConverterException {
+	public AbstractCSVResourceFlow(final Configuration configuration) throws DMPConverterException {
 
 		if (configuration == null) {
 
@@ -118,7 +118,7 @@ public abstract class CSVResourceFlow<T> {
 
 	public T applyFile(final String filePath) {
 
-		FileOpener opener = new FileOpener();
+		final FileOpener opener = new FileOpener();
 
 		// set encoding
 		final String finalEncoding = encoding != null ? encoding : defaultEncoding;
@@ -136,7 +136,7 @@ public abstract class CSVResourceFlow<T> {
 		reader.setHeader(true);
 
 
-		CsvReader pipe = opener.setReceiver(reader);
+		final CsvReader pipe = opener.setReceiver(reader);
 
 		return process(opener, obj, pipe);
 	}

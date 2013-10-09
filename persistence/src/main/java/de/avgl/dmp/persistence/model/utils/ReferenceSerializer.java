@@ -23,7 +23,7 @@ public abstract class ReferenceSerializer<DMPJPAOBJECTIMPL extends DMPJPAObject>
 		if (objects == null || objects.isEmpty()) {
 
 			generator.writeNull();
-			
+
 			return;
 		}
 
@@ -41,7 +41,7 @@ public abstract class ReferenceSerializer<DMPJPAOBJECTIMPL extends DMPJPAObject>
 	static class Reference {
 
 		@XmlID
-		private Long	id;
+		private final Long	id;
 
 		Reference(final Long idArg) {
 

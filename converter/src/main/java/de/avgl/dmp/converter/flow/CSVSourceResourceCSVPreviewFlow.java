@@ -12,22 +12,24 @@ import de.avgl.dmp.converter.mf.stream.reader.CsvReader;
 import de.avgl.dmp.converter.mf.stream.source.CSVEncoder;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 
-public class CSVSourceResourceCSVPreviewFlow extends CSVResourceFlow<String> {
+public class CSVSourceResourceCSVPreviewFlow extends AbstractCSVResourceFlow<String> {
 
-	public CSVSourceResourceCSVPreviewFlow(String encoding, Character escapeCharacter, Character quoteCharacter, Character columnDelimiter, String rowDelimiter) {
+	public CSVSourceResourceCSVPreviewFlow(final String encoding, final Character escapeCharacter,
+										   final Character quoteCharacter, final Character columnDelimiter,
+										   final String rowDelimiter) {
 		super(encoding, escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter);
 	}
 
-	public CSVSourceResourceCSVPreviewFlow(Configuration configuration) throws DMPConverterException {
+	public CSVSourceResourceCSVPreviewFlow(final Configuration configuration) throws DMPConverterException {
 		super(configuration);
 	}
 
 	@Override
-	protected String process(ObjectPipe<String, ObjectReceiver<Reader>> opener, String obj, CsvReader pipe) {
+	protected String process(final ObjectPipe<String, ObjectReceiver<Reader>> opener, final String obj, final CsvReader pipe) {
 		final CSVEncoder converter = new CSVEncoder();
 		converter.withHeader();
 
-		StringWriter stringWriter = new StringWriter();
+		final StringWriter stringWriter = new StringWriter();
 		final ObjectJavaIoWriter<String> writer = new ObjectJavaIoWriter<String>(stringWriter);
 
 		pipe.setReceiver(converter).setReceiver(writer);

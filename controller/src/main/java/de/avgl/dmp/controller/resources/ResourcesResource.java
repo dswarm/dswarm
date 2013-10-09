@@ -87,12 +87,13 @@ public class ResourcesResource {
 
 
 	@Inject
-	public ResourcesResource(EntityManager entityManager, DMPStatus dmpStatus,
-							 Provider<ResourceService> resourceServiceProvider,
-							 Provider<ConfigurationService> configurationServiceProvider,
-							 Provider<InternalService> internalServiceProvider,
-							 Provider<SchemaService> schemaServiceProvider,
-							 Provider<EventBus> eventBusProvider) {
+	public ResourcesResource(final EntityManager entityManager,
+							 final DMPStatus dmpStatus,
+							 final Provider<ResourceService> resourceServiceProvider,
+							 final Provider<ConfigurationService> configurationServiceProvider,
+							 final Provider<InternalService> internalServiceProvider,
+							 final Provider<SchemaService> schemaServiceProvider,
+							 final Provider<EventBus> eventBusProvider) {
 		this.eventBusProvider = eventBusProvider;
 		this.resourceServiceProvider = resourceServiceProvider;
 		this.configurationServiceProvider = configurationServiceProvider;
@@ -110,9 +111,9 @@ public class ResourcesResource {
 	@POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response uploadResource(@FormDataParam("file") InputStream uploadedInputStream,
-			@FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("name") String name,
-			@FormDataParam("description") String description) throws DMPControllerException {
+	public Response uploadResource(@FormDataParam("file") final InputStream uploadedInputStream,
+			@FormDataParam("file") final FormDataContentDisposition fileDetail, @FormDataParam("name") final String name,
+			@FormDataParam("description") final String description) throws DMPControllerException {
 		final Timer.Context context = dmpStatus.createNewResource();
 
 		LOG.debug("try to create new resource '" + name + "' for file '" + fileDetail.getFileName() + "'");
@@ -139,8 +140,8 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't transform resource object to JSON string");
 		}
 
-		URI baseURI = uri.getRequestUri();
-		URI resourceURI = URI.create(baseURI.toString() + "/" + resource.getId());
+		final URI baseURI = uri.getRequestUri();
+		final URI resourceURI = URI.create(baseURI.toString() + "/" + resource.getId());
 
 		LOG.debug("created new resource at '" + resourceURI.toString() + "' with content '" + resourceJSON + "'");
 
@@ -197,7 +198,7 @@ public class ResourcesResource {
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResource(@PathParam("id") Long id) throws DMPControllerException {
+	public Response getResource(@PathParam("id") final Long id) throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getSingleResource();
 
 		final Optional<Resource> resourceOptional = fetchResource(id);
@@ -230,7 +231,7 @@ public class ResourcesResource {
 	@GET
 	@Path("/{id}/configurations")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResourceConfigurations(@PathParam("id") Long id) throws DMPControllerException {
+	public Response getResourceConfigurations(@PathParam("id") final Long id) throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getAllConfigurations();
 
 		LOG.debug("try to get resource configurations for resource with id '" + id.toString() + "'");
@@ -282,7 +283,7 @@ public class ResourcesResource {
 	@Path("/{id}/configurations")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addConfiguration(@PathParam("id") Long id, final String jsonObjectString) throws DMPControllerException {
+	public Response addConfiguration(@PathParam("id") final Long id, final String jsonObjectString) throws DMPControllerException {
 		final Timer.Context context = dmpStatus.createNewConfiguration();
 
 		LOG.debug("try to create new configuration for resource with id '" + id + "'");
@@ -333,8 +334,8 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
 		}
 
-		URI baseURI = uri.getRequestUri();
-		URI configurationURI = URI.create(baseURI.toString() + "/" + configuration.getId());
+		final URI baseURI = uri.getRequestUri();
+		final URI configurationURI = URI.create(baseURI.toString() + "/" + configuration.getId());
 
 		LOG.debug("return new configuration at '" + configurationURI.toString() + "' with content '" + configurationJSON + "'");
 
@@ -346,7 +347,7 @@ public class ResourcesResource {
 	@GET
 	@Path("/{id}/configurations/{configurationid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResourceConfiguration(@PathParam("id") Long id, @PathParam("configurationid") Long configurationId)
+	public Response getResourceConfiguration(@PathParam("id") final Long id, @PathParam("configurationid") final Long configurationId)
 			throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getSingleConfiguration();
 
@@ -378,7 +379,7 @@ public class ResourcesResource {
 	@GET
 	@Path("/{id}/configurations/{configurationid}/schema")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResourceConfigurationSchema(@PathParam("id") Long id, @PathParam("configurationid") Long configurationId)
+	public Response getResourceConfigurationSchema(@PathParam("id") final Long id, @PathParam("configurationid") final Long configurationId)
 			throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getConfigurationSchema();
 
@@ -426,8 +427,8 @@ public class ResourcesResource {
 			final Map<String, Map<String, String>> schema = Maps.newHashMap();
 			final Map jsonMap = Maps.newHashMap();
 
-			for (String schemaProp : schemaOptional.get()) {
-				Map<String, String> schemaPropMap = Maps.newHashMap();
+			for (final String schemaProp : schemaOptional.get()) {
+				final Map<String, String> schemaPropMap = Maps.newHashMap();
 				schemaPropMap.put("type", "string");
 				schema.put(schemaProp, schemaPropMap);
 			}
@@ -455,8 +456,8 @@ public class ResourcesResource {
 	@GET
 	@Path("/{id}/configurations/{configurationid}/data")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResourceConfigurationData(@PathParam("id") Long id, @PathParam("configurationid") Long configurationId,
-		@QueryParam("atMost") Integer atMost)
+	public Response getResourceConfigurationData(@PathParam("id") final Long id, @PathParam("configurationid") final Long configurationId,
+		@QueryParam("atMost") final Integer atMost)
 			throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getConfigurationData();
 
@@ -483,9 +484,9 @@ public class ResourcesResource {
 		final Map<String, Map<String, String>> triples = maybeTriples.get();
 		final List<Map<String, String>> jsonList = Lists.newArrayList();
 
-		for (final String record : triples.keySet()) {
-			final Map<String, String> tableRow = triples.get(record);
-			tableRow.put("recordId", record);
+		for (final Map.Entry<String, Map<String, String>> record : triples.entrySet()) {
+			final Map<String, String> tableRow = record.getValue();
+			tableRow.put("recordId", record.getKey());
 			jsonList.add(tableRow);
 		}
 
@@ -510,7 +511,7 @@ public class ResourcesResource {
 	@Path("/{id}/configurationpreview")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response csvPreviewConfiguration(@PathParam("id") Long id, final String jsonObjectString) throws DMPControllerException {
+	public Response csvPreviewConfiguration(@PathParam("id") final Long id, final String jsonObjectString) throws DMPControllerException {
 		final Timer.Context context = dmpStatus.configurationsPreview();
 
 		LOG.debug("try to apply configuration for resource with id '" + id + "'");
@@ -549,7 +550,7 @@ public class ResourcesResource {
 	@Path("/{id}/configurationpreview")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response csvJSONPreviewConfiguration(@PathParam("id") Long id, final String jsonObjectString) throws DMPControllerException {
+	public Response csvJSONPreviewConfiguration(@PathParam("id") final Long id, final String jsonObjectString) throws DMPControllerException {
 		final Timer.Context context = dmpStatus.configurationsPreview();
 
 		LOG.debug("try to apply configuration for resource with id '" + id + "'");
@@ -628,7 +629,7 @@ public class ResourcesResource {
 				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Accept, Origin, X-Requested-With, Content-Type").build();
 	}
 
-	private Optional<Resource> fetchResource(long resourceId) {
+	private Optional<Resource> fetchResource(final long resourceId) {
 
 		LOG.debug("try to recieve resource with id '" + resourceId + "'");
 
@@ -648,7 +649,7 @@ public class ResourcesResource {
 		return Optional.of(resource);
 	}
 
-	private Optional<Configuration> fetchConfiguration(long resourceId, long configurationId) {
+	private Optional<Configuration> fetchConfiguration(final long resourceId, final long configurationId) {
 		LOG.debug("try to get configuration with id '" + configurationId + "' for resource with id '" + resourceId + "'");
 
 		final Optional<Resource> resourceOptional = fetchResource(resourceId);

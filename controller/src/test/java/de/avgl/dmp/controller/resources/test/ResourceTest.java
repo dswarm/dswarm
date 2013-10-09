@@ -42,7 +42,7 @@ public class ResourceTest {
 			}
 		}
 
-		DMPInjector.injector = Guice.createInjector(new TestModule(), new DMPServletModule());
+		DMPInjector.injector = Guice.createInjector(new TestModule());
 
 		grizzlyServer = new EmbeddedServer();
 		grizzlyServer.start();

@@ -12,14 +12,34 @@ import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.mf.stream.reader.CsvReader;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 
-public class CSVSourceResourceTriplesFlow extends CSVResourceFlow<ImmutableList<Triple>> {
+public class CSVSourceResourceTriplesFlow extends AbstractCSVResourceFlow<ImmutableList<Triple>> {
+
+	public CSVSourceResourceTriplesFlow(final String encoding, final Character escapeCharacter,
+										final Character quoteCharacter, final Character columnDelimiter,
+										final String rowDelimiter) {
+		super(encoding, escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter);
+	}
+
+	public CSVSourceResourceTriplesFlow(final Configuration configuration) throws DMPConverterException {
+		super(configuration);
+	}
+
+	@Override
+	protected ImmutableList<Triple> process(final ObjectPipe<String, ObjectReceiver<Reader>> opener, final String obj,
+											final CsvReader pipe) {
+		final ListTripleReceiver tripleReceiver = new ListTripleReceiver();
+		pipe.setReceiver(new StreamToTriples()).setReceiver(tripleReceiver);
+
+		opener.process(obj);
+		return tripleReceiver.getCollection();
+	}
 
 	private static class ListTripleReceiver implements ObjectReceiver<Triple> {
-		ImmutableList.Builder<Triple> builder = ImmutableList.builder();
-		ImmutableList<Triple> collection = null;
+		private ImmutableList.Builder<Triple> builder = ImmutableList.builder();
+		private ImmutableList<Triple> collection = null;
 
 		@Override
-		public void process(Triple obj) {
+		public void process(final Triple obj) {
 			builder.add(obj);
 		}
 
@@ -43,22 +63,5 @@ public class CSVSourceResourceTriplesFlow extends CSVResourceFlow<ImmutableList<
 		private void buildCollection() {
 			collection = builder.build();
 		}
-	}
-
-	public CSVSourceResourceTriplesFlow(String encoding, Character escapeCharacter, Character quoteCharacter, Character columnDelimiter, String rowDelimiter) {
-		super(encoding, escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter);
-	}
-
-	public CSVSourceResourceTriplesFlow(Configuration configuration) throws DMPConverterException {
-		super(configuration);
-	}
-
-	@Override
-	protected ImmutableList<Triple> process(ObjectPipe<String, ObjectReceiver<Reader>> opener, String obj, CsvReader pipe) {
-		ListTripleReceiver tripleReceiver = new ListTripleReceiver();
-		pipe.setReceiver(new StreamToTriples()).setReceiver(tripleReceiver);
-
-		opener.process(obj);
-		return tripleReceiver.getCollection();
 	}
 }

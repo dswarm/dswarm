@@ -19,7 +19,7 @@ import de.avgl.dmp.persistence.model.job.Job;
 @Path("jobs")
 public class JobsResource {
 
-	private Response buildResponse(String responseContent) {
+	private Response buildResponse(final String responseContent) {
 		return Response.ok(responseContent).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 	}
 

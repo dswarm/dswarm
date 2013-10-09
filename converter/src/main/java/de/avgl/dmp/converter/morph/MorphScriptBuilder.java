@@ -43,7 +43,7 @@ import de.avgl.dmp.persistence.model.job.Transformation;
 public class MorphScriptBuilder {
 
 	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(MorphScriptBuilder.class);
-	
+
 	private static final DocumentBuilderFactory	docFactory					= DocumentBuilderFactory.newInstance();
 
 	private static final String					SCHEMA_PATH					= "schemata/metamorph.xsd";
@@ -57,22 +57,22 @@ public class MorphScriptBuilder {
 		transformerFactory = TransformerFactory.newInstance();
 		transformerFactory.setAttribute("indent-number", 4);
 
-		InputStream SCHEMA_STREAM = null;
-		
+		InputStream schemaStream = null;
+
 		try {
-			
-			SCHEMA_STREAM = Resources.newInputStreamSupplier(Resources.getResource(SCHEMA_PATH)).getInput();
+
+			schemaStream = Resources.newInputStreamSupplier(Resources.getResource(SCHEMA_PATH)).getInput();
 		} catch (final IOException e1) {
-			
+
 			e1.printStackTrace();
 		}
-		
-		if(SCHEMA_STREAM == null) {
-			
+
+		if(schemaStream == null) {
+
 			LOG.error("couldn't read schema resource");
 		}
-		
-		// final StreamSource SCHEMA_SOURCE = new StreamSource(SCHEMA_STREAM);
+
+		// final StreamSource SCHEMA_SOURCE = new StreamSource(schemaStream);
 		final SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		Schema schema = null;
 
@@ -84,9 +84,9 @@ public class MorphScriptBuilder {
 
 			e.printStackTrace();
 		}
-		
+
 		if(schema == null) {
-			
+
 			LOG.error("couldn't parse schema");
 		}
 
@@ -95,9 +95,9 @@ public class MorphScriptBuilder {
 
 	private Document							doc;
 
-	private void createParameters(final Map<String, Parameter> parameters, Element component) {
+	private void createParameters(final Map<String, Parameter> parameters, final Element component) {
 		if (parameters != null) {
-			for (Parameter parameter : parameters.values()) {
+			for (final Parameter parameter : parameters.values()) {
 				if (parameter.getName() != null) {
 					if (parameter.getData() != null) {
 						final Attr param = doc.createAttribute(parameter.getName());
@@ -114,12 +114,12 @@ public class MorphScriptBuilder {
 	}
 
 	private Element createTransformation(final Transformation transformation) {
-		Element data = doc.createElement("data");
+		final Element data = doc.createElement("data");
 		data.setAttribute("source", "record." + transformation.getSource().getName());
 		data.setAttribute("name", "record." + transformation.getTarget().getName());
 
-		for (Component component : transformation.getComponents()) {
-			Element comp = doc.createElement(component.getName());
+		for (final Component component : transformation.getComponents()) {
+			final Element comp = doc.createElement(component.getName());
 
 			createParameters(component.getPayload().getParameters(), comp);
 			data.appendChild(comp);
@@ -128,7 +128,7 @@ public class MorphScriptBuilder {
 		return data;
 	}
 
-	public String render(boolean indent, Charset encoding) {
+	public String render(final boolean indent, final Charset encoding) {
 		final String defaultEncoding = encoding.name();
 		final Transformer transformer;
 		try {
@@ -167,7 +167,7 @@ public class MorphScriptBuilder {
 		}
 	}
 
-	public String render(boolean indent) {
+	public String render(final boolean indent) {
 		return render(indent, Charset.forName("UTF-8"));
 	}
 
@@ -181,7 +181,7 @@ public class MorphScriptBuilder {
 
 		final File file = File.createTempFile("avgl_dmp", ".tmp");
 
-		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+		final BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 		bw.write(str);
 		bw.close();
 
@@ -199,7 +199,7 @@ public class MorphScriptBuilder {
 		doc = docBuilder.newDocument();
 		doc.setXmlVersion("1.0");
 
-		Element rootElement = doc.createElement("metamorph");
+		final Element rootElement = doc.createElement("metamorph");
 		rootElement.setAttribute("xmlns", "http://www.culturegraph.org/metamorph");
 		rootElement.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
 		rootElement.setAttribute("xsi:schemaLocation", "http://www.culturegraph.org/metamorph metamorph.xsd");
@@ -207,20 +207,20 @@ public class MorphScriptBuilder {
 		rootElement.setAttribute("version", "1");
 		doc.appendChild(rootElement);
 
-		Element meta = doc.createElement("meta");
+		final Element meta = doc.createElement("meta");
 		rootElement.appendChild(meta);
 
-		Element metaName = doc.createElement("name");
+		final Element metaName = doc.createElement("name");
 		meta.appendChild(metaName);
 
-		Element rules = doc.createElement("rules");
+		final Element rules = doc.createElement("rules");
 		rootElement.appendChild(rules);
 
 		final List<String> metas = Lists.newArrayList();
 
-		for (Transformation transformation : transformations) {
+		for (final Transformation transformation : transformations) {
 			metas.add(transformation.getName());
-			Element data = createTransformation(transformation);
+			final Element data = createTransformation(transformation);
 
 			rules.appendChild(data);
 		}
@@ -231,7 +231,7 @@ public class MorphScriptBuilder {
 	}
 
 	public MorphScriptBuilder apply(final Transformation transformation) throws DMPConverterException {
-		
+
 		return apply(Lists.newArrayList(transformation));
 	}
 }

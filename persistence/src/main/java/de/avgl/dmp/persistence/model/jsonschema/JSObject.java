@@ -14,23 +14,23 @@ public class JSObject extends JSElement implements Iterable<JSElement> {
 
 	private final List<JSElement> list;
 
-	public JSObject(String name, List<JSElement> elements) {
+	public JSObject(final String name, final List<JSElement> elements) {
 		super(name);
 		this.list = checkNotNull(elements);
 	}
 
-	public JSObject(String name) {
+	public JSObject(final String name) {
 		super(name);
 		this.list = new ArrayList<JSElement>();
 	}
 
-	public JSObject add(JSElement element) {
+	public JSObject add(final JSElement element) {
 		this.list.add(element);
 
 		return this;
 	}
 
-	public boolean addAll(Collection<? extends JSElement> c) {
+	public boolean addAll(final Collection<? extends JSElement> c) {
 		return list.addAll(c);
 	}
 
@@ -50,22 +50,21 @@ public class JSObject extends JSElement implements Iterable<JSElement> {
 	}
 
 	@Override
-	public JSElement withName(String newName) {
+	public JSElement withName(final String newName) {
 		return new JSObject(newName, list);
 	}
 
 	@Override
-	protected void renderInternal(JsonGenerator jgen) throws IOException {
+	protected void renderInternal(final JsonGenerator jgen) throws IOException {
 		final List<JSElement> properties = getProperties();
-		if (!properties.isEmpty()) {
-			jgen.writeObjectFieldStart("properties");
 
-			for (JSElement property : properties) {
+		jgen.writeObjectFieldStart("properties");
 
-				property.render(jgen);
-			}
+		for (final JSElement property : properties) {
 
-			jgen.writeEndObject();
+			property.render(jgen);
 		}
+
+		jgen.writeEndObject();
 	}
 }

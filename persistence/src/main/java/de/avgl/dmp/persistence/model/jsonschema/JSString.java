@@ -4,7 +4,7 @@ import java.util.List;
 
 public class JSString extends JSElement {
 
-	public JSString(String name) {
+	public JSString(final String name) {
 		super(name);
 	}
 
@@ -19,7 +19,7 @@ public class JSString extends JSElement {
 	}
 
 	@Override
-	public JSElement withName(String newName) {
+	public JSElement withName(final String newName) {
 		return new JSString(newName);
 	}
 }

@@ -7,11 +7,11 @@ import com.fasterxml.jackson.core.JsonGenerator;
 
 public abstract class JSElement {
 
-	final String name;
+	private final String name;
 
-	String description = null;
+	private String description = null;
 
-	protected JSElement(String name) {
+	protected JSElement(final String name) {
 		this.name = name;
 	}
 
@@ -23,7 +23,7 @@ public abstract class JSElement {
 		return description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
 	}
 
@@ -31,9 +31,9 @@ public abstract class JSElement {
 
 	public abstract List<JSElement> getProperties();
 
-	public abstract JSElement withName(String newName);
+	public abstract JSElement withName(final String newName);
 
-	protected void render(JsonGenerator jgen) throws IOException {
+	protected void render(final JsonGenerator jgen) throws IOException {
 
 		jgen.writeObjectFieldStart(getName());
 
@@ -44,11 +44,11 @@ public abstract class JSElement {
 		jgen.writeEndObject();
 	}
 
-	protected void renderDescription(JsonGenerator jgen) throws IOException {
+	protected void renderDescription(final JsonGenerator jgen) throws IOException {
 		if (getDescription() != null) {
 			jgen.writeStringField("description", getDescription());
 		}
 	}
 
-	protected void renderInternal(JsonGenerator jgen) throws IOException {}
+	protected void renderInternal(final JsonGenerator jgen) throws IOException {}
 }

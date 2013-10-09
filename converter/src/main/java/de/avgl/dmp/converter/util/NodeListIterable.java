@@ -13,6 +13,16 @@ import java.util.Iterator;
 public class NodeListIterable implements Iterable<Node> {
 	private final NodeList ns;
 
+	public NodeListIterable(final NodeList ns) {
+		this.ns = ns;
+	}
+
+	@Override
+	public Iterator<Node> iterator() {
+		return new NodeListIterator();
+	}
+
+
 	private class NodeListIterator extends AbstractIterator<Node> {
 		private int i = 0;
 		private final int l = ns.getLength();
@@ -27,14 +37,5 @@ public class NodeListIterable implements Iterable<Node> {
 			}
 			return endOfData();
 		}
-	}
-
-	public NodeListIterable(NodeList ns) {
-		this.ns = ns;
-	}
-
-	@Override
-	public Iterator<Node> iterator() {
-		return new NodeListIterator();
 	}
 }

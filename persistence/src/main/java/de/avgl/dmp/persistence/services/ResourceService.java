@@ -22,7 +22,7 @@ public class ResourceService extends BasicJPAService<Resource> {
 
 	@Override
 	protected void prepareObjectForRemoval(final Resource object) {
-		
+
 		object.setConfigurations(null);
 	}
 
@@ -33,17 +33,17 @@ public class ResourceService extends BasicJPAService<Resource> {
 		final Set<Configuration> configurations = object.getConfigurations();
 
 		updateObject.setConfigurations(configurations);
-		
+
 		final String description = object.getDescription();
-		
+
 		updateObject.setDescription(description);
-		
+
 		final ResourceType type = object.getType();
-		
+
 		updateObject.setType(type);
-		
+
 		final ObjectNode attributes = object.getAttributes();
-		
+
 		updateObject.setAttributes(attributes);
 
 		if (object.getName() != null) {
@@ -53,14 +53,14 @@ public class ResourceService extends BasicJPAService<Resource> {
 	}
 
 	@Override
-	public Resource getObject(Long id) {
-		
-		ConfigurationService cS = new ConfigurationService();
-		
-		
-		
+	public Resource getObject(final Long id) {
+
+		final ConfigurationService cS = new ConfigurationService();
+
+
+
 		System.out.println("all objects: " + ToStringBuilder.reflectionToString(cS.getObjects()));
-		
+
 		return super.getObject(id);
 	}
 }

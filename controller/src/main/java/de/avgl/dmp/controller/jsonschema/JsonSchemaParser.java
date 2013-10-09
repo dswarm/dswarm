@@ -41,7 +41,7 @@ public class JsonSchemaParser {
 
 	private final XSOMParser parser = new XSOMParser();
 
-	private List<JSElement> iterateParticle(XSParticle particle) {
+	private List<JSElement> iterateParticle(final XSParticle particle) {
 
 		final XSTerm term = particle.getTerm();
 
@@ -57,7 +57,7 @@ public class JsonSchemaParser {
 		return jsElements;
 	}
 
-	private JSElement iterateSingleParticle(XSParticle particle) {
+	private JSElement iterateSingleParticle(final XSParticle particle) {
 
 		final XSTerm term = particle.getTerm();
 		if (term.isElementDecl()) {
@@ -86,11 +86,11 @@ public class JsonSchemaParser {
 		return new JSNull("null");
 	}
 
-	private List<JSElement> iterateModelGroup(XSModelGroup modelGroup) {
+	private List<JSElement> iterateModelGroup(final XSModelGroup modelGroup) {
 
-		List<JSElement> list = new ArrayList<JSElement>();
+		final List<JSElement> list = new ArrayList<JSElement>();
 
-		for (XSParticle xsParticle : modelGroup) {
+		for (final XSParticle xsParticle : modelGroup) {
 			if (xsParticle.getTerm().isModelGroup()) {
 
 				list.addAll(iterateParticle(xsParticle));
@@ -103,7 +103,7 @@ public class JsonSchemaParser {
 		return list;
 	}
 
-	private JSElement iterateElement(XSElementDecl elementDecl) {
+	private JSElement iterateElement(final XSElementDecl elementDecl) {
 
 		final XSType xsElementDeclType = elementDecl.getType();
 
@@ -137,7 +137,7 @@ public class JsonSchemaParser {
 		return new JSNull(elementDecl.getName());
 	}
 
-	private List<JSElement> iterateComplexType(XSComplexType complexType) {
+	private List<JSElement> iterateComplexType(final XSComplexType complexType) {
 
 		final ArrayList<JSElement> result = new ArrayList<JSElement>();
 
@@ -157,7 +157,7 @@ public class JsonSchemaParser {
 
 		final Collection<? extends XSAttributeUse> attributeUses = complexType.getAttributeUses();
 
-		for (XSAttributeUse attributeUse : attributeUses) {
+		for (final XSAttributeUse attributeUse : attributeUses) {
 			final XSAttributeDecl attributeUseDecl = attributeUse.getDecl();
 			final XSSimpleType type = attributeUseDecl.getType();
 
@@ -167,7 +167,7 @@ public class JsonSchemaParser {
 		return result;
 	}
 
-	private JSElement iterateSimpleType(XSSimpleType simpleType) {
+	private JSElement iterateSimpleType(final XSSimpleType simpleType) {
 
 //		if (simpleType.isUnion()) {
 //			final XSUnionSimpleType xsSimpleTypes = simpleType.asUnion();
@@ -206,31 +206,31 @@ public class JsonSchemaParser {
 		return new JSString(simpleType.getName());
 	}
 
-	public void parse(InputStream is) throws SAXException {
+	public void parse(final InputStream is) throws SAXException {
 		parser.parse(is);
 	}
 
-	public void parse(Reader reader) throws SAXException {
+	public void parse(final Reader reader) throws SAXException {
 		parser.parse(reader);
 	}
 
-	public void parse(File schema) throws SAXException, IOException {
+	public void parse(final File schema) throws SAXException, IOException {
 		parser.parse(schema);
 	}
 
-	public void parse(URL url) throws SAXException {
+	public void parse(final URL url) throws SAXException {
 		parser.parse(url);
 	}
 
-	public void parse(String systemId) throws SAXException {
+	public void parse(final String systemId) throws SAXException {
 		parser.parse(systemId);
 	}
 
-	public void parse(InputSource source) throws SAXException {
+	public void parse(final InputSource source) throws SAXException {
 		parser.parse(source);
 	}
 
-	public JSRoot apply(String rootName) throws IOException, SAXException {
+	public JSRoot apply(final String rootName) throws IOException, SAXException {
 
 		final XSSchemaSet result = parser.getResult();
 

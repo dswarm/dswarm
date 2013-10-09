@@ -12,31 +12,31 @@ import de.avgl.dmp.persistence.model.internal.MemoryDb;
 
 public class MemoryDbImpl<A, B, C> implements MemoryDb<A, B, C> {
 
-	protected Table<A, B, C> table = HashBasedTable.create();
+	private Table<A, B, C> table = HashBasedTable.create();
 
 	@Override
-	public void put(A resourceId, B configurationId, C value) {
+	public void put(final A resourceId, final B configurationId, final C value) {
 		synchronized (this) {
 			table.put(resourceId, configurationId, value);
 		}
 	}
 
 	@Override
-	public Map<B, C> get(A resourceId) {
+	public Map<B, C> get(final A resourceId) {
 		synchronized (this) {
 			return table.row(resourceId);
 		}
 	}
 
 	@Override
-	public Optional<C> get(A resourceId, B configurationId) {
+	public Optional<C> get(final A resourceId, final B configurationId) {
 		synchronized (this) {
 			return Optional.fromNullable(table.get(resourceId, configurationId));
 		}
 	}
 
 	@Override
-	public void delete(A resourceId, B configurationId) {
+	public void delete(final A resourceId, final B configurationId) {
 		synchronized (this) {
 			table.remove(resourceId, configurationId);
 		}
@@ -46,15 +46,15 @@ public class MemoryDbImpl<A, B, C> implements MemoryDb<A, B, C> {
 	public Table<A, B, C> underlying() {
 		final ImmutableTable.Builder<A, B, C> builder = ImmutableTable.builder();
 
-		for (Table.Cell<A, B, C> cell : table.cellSet()) {
-			C underlyingC = underlyingC(cell.getValue());
+		for (final Table.Cell<A, B, C> cell : table.cellSet()) {
+			final C underlyingC = underlyingC(cell.getValue());
 			builder.put(cell.getRowKey(), cell.getColumnKey(), underlyingC);
 		}
 
 		return builder.build();
 	}
 
-	protected C underlyingC(C rowValue) {
+	protected C underlyingC(final C rowValue) {
 		return rowValue;
 	}
 

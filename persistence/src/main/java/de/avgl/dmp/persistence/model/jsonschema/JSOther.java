@@ -10,7 +10,7 @@ public class JSOther extends JSElement {
 
 	private final String nameSpace;
 
-	public JSOther(String name, String nameSpace) {
+	public JSOther(final String name, final String nameSpace) {
 		super(name);
 		this.nameSpace = nameSpace;
 	}
@@ -26,7 +26,7 @@ public class JSOther extends JSElement {
 	}
 
 	@Override
-	public JSElement withName(String newName) {
+	public JSElement withName(final String newName) {
 		return new JSOther(newName, nameSpace);
 	}
 
@@ -35,7 +35,7 @@ public class JSOther extends JSElement {
 	}
 
 	@Override
-	protected void renderInternal(JsonGenerator jgen) throws IOException {
+	protected void renderInternal(final JsonGenerator jgen) throws IOException {
 		jgen.writeStringField("namespace", getNameSpace());
 	}
 }

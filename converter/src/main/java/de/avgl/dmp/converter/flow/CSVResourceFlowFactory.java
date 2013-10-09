@@ -10,9 +10,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class CSVResourceFlowFactory {
 
-	public static <T, U extends CSVResourceFlow<T>> U fromConfiguration(
+	public static <T, U extends AbstractCSVResourceFlow<T>> U fromConfiguration(
 			final Configuration configuration,
-			Class<U> clazz) throws DMPConverterException {
+			final Class<U> clazz) throws DMPConverterException {
 
 		final Constructor<U> constructor;
 		try {
@@ -38,11 +38,11 @@ public class CSVResourceFlowFactory {
 
 		return checkNotNull(flow, "something went wrong while apply configuration to resource");
 	}
-	public static <T, U extends CSVResourceFlow<T>> U fromConfigurationParameters(
+	public static <T, U extends AbstractCSVResourceFlow<T>> U fromConfigurationParameters(
 			final String encoding, final Character escapeCharacter,
 			final Character quoteCharacter, final Character columnDelimiter,
 			final String rowDelimiter,
-			Class<U> clazz) throws DMPConverterException {
+			final Class<U> clazz) throws DMPConverterException {
 
 
 		final Constructor<U> constructor;

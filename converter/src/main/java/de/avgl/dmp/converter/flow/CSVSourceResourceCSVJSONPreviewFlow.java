@@ -11,21 +11,23 @@ import de.avgl.dmp.converter.mf.stream.source.CSVJSONEncoder;
 import de.avgl.dmp.converter.mf.stream.source.CSVJSONWriter;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 
-public class CSVSourceResourceCSVJSONPreviewFlow extends CSVResourceFlow<String> {
+public class CSVSourceResourceCSVJSONPreviewFlow extends AbstractCSVResourceFlow<String> {
 
 	private boolean withLimit = false;
 	private int limit = -1;
 
-	public CSVSourceResourceCSVJSONPreviewFlow(String encoding, Character escapeCharacter, Character quoteCharacter, Character columnDelimiter, String rowDelimiter) {
+	public CSVSourceResourceCSVJSONPreviewFlow(final String encoding, final Character escapeCharacter,
+											   final Character quoteCharacter, final Character columnDelimiter,
+											   final String rowDelimiter) {
 		super(encoding, escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter);
 	}
 
-	public CSVSourceResourceCSVJSONPreviewFlow(Configuration configuration) throws DMPConverterException {
+	public CSVSourceResourceCSVJSONPreviewFlow(final Configuration configuration) throws DMPConverterException {
 		super(configuration);
 	}
 
 	@Override
-	protected String process(ObjectPipe<String, ObjectReceiver<Reader>> opener, String obj, CsvReader pipe) {
+	protected String process(final ObjectPipe<String, ObjectReceiver<Reader>> opener, final String obj, final CsvReader pipe) {
 
 
 		if(withLimit) {
