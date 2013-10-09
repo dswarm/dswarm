@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--		
+		MABxml - Level  1
+		
+		version: 1.2		
+		date: 2004-05-04 
+		description: Einfaches XML Schema zur Abbildung eines MAB2-Satzes auf XML. 
+		author: JÃ¼rgen Kett, Deutsche Nationalbibliothek
+		identifier: http://www.ddb.de/professionell/mabxml/mabxml-1.xsd 
+			
+-->
+<xsd:schema targetNamespace="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.1" xml:lang="de">
+	<xsd:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/03/xml.xsd"/>
+	<!-- elements: -->
+	<xsd:element name="datei" type="dateiType" nillable="true" id="datei.e">
+		<xsd:annotation>
+			<xsd:documentation>Wurzelelement einer Sammlung von MABXML-DatensÃ¤tzen</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="datensatz" type="datensatzType" nillable="true" id="datensatz.e">
+		<xsd:annotation>
+			<xsd:documentation>Wurzelelement eines jeden MABXML Datensatzes. </xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<!-- element types: -->
+	<xsd:complexType name="dateiType" id="datei.ct">
+		<xsd:annotation>
+			<xsd:documentation>Typ Datei</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence maxOccurs="unbounded">
+			<xsd:element ref="datensatz"/>
+		</xsd:sequence>
+		<xsd:attribute name="id" type="idType" use="optional"/>
+		<xsd:attribute name="typ" type="dateitypType" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="datensatzType" id="datensatz.ct">
+		<xsd:annotation>
+			<xsd:documentation>Typ Datensatz</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+			<xsd:element name="feld" type="feldType" id="feld.e">
+				<xsd:annotation>
+					<xsd:documentation>Standard MAB-Feld</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="id" type="idType" use="optional"/>
+		<xsd:attribute name="typ" type="satztypType" use="required"/>
+		<xsd:attribute name="status" type="satzstatusType" use="required"/>
+		<xsd:attribute name="mabVersion" type="mabVersionType" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="feldType" id="feld.ct" mixed="true">
+		<xsd:annotation>
+			<xsd:documentation>Typ Feld</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+			<xsd:group ref="basisElemente" minOccurs="0"/>
+			<xsd:element name="uf" type="ufType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Unterfeld</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="id" type="idType" use="optional"/>
+		<xsd:attribute name="nr" type="feldnummerType" use="required"/>
+		<xsd:attribute name="ind" type="indikatorType" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="ufType" id="uf.st" mixed="true">
+		<xsd:annotation>
+			<xsd:documentation>Typ Unterfeld</xsd:documentation>
+		</xsd:annotation>
+		<xsd:group ref="basisElemente" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:attribute name="id" type="idType" use="optional"/>
+		<xsd:attribute name="code" type="codeType" use="required"/>
+	</xsd:complexType>
+	<xsd:simpleType name="nsType" id="ns.st">
+		<xsd:annotation>
+			<xsd:documentation>Typ Nicht-Sortieren</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="collapse"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="stwType" id="stw.st">
+		<xsd:annotation>
+			<xsd:documentation>Typ Stichwort</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="collapse"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="tfType" id="tf.ct">
+		<xsd:annotation>
+			<xsd:documentation>Typ Teilfeld</xsd:documentation>
+		</xsd:annotation>
+	</xsd:complexType>
+	<xsd:group name="basisElemente">
+		<xsd:annotation>
+			<xsd:documentation>Gruppe Basiselemente</xsd:documentation>
+		</xsd:annotation>
+		<xsd:choice>
+			<xsd:element name="tf" type="tfType">
+				<xsd:annotation>
+					<xsd:documentation>Teilfeld</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="stw" type="stwType">
+				<xsd:annotation>
+					<xsd:documentation>Stichwort</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ns" type="nsType">
+				<xsd:annotation>
+					<xsd:documentation>Nicht-Sortieren</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:choice>
+	</xsd:group>
+	<!-- attribute types: -->
+	<xsd:simpleType name="feldnummerType" id="feldnummer.st">
+		<xsd:annotation>
+			<xsd:documentation>Typ Feldnummer</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:positiveInteger">
+			<xsd:minInclusive value="001" fixed="false"/>
+			<xsd:maxInclusive value="999" fixed="false"/>
+			<xsd:pattern value="[0-9][0-9][0-9]"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="indikatorType" id="indikator.st">
+		<xsd:annotation>
+			<xsd:documentation>Typ Feldindikator</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[a-z]"/>
+			<xsd:pattern value="\s"/>
+			<xsd:pattern value="[0-9]"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="codeType" id="code.st">
+		<xsd:annotation>
+			<xsd:documentation>Typ Unterfeldcode</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:length value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="dateitypType" id="dateityp.st">
+		<xsd:annotation>
+			<xsd:documentation>Typ Dateityp</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="TITEL"/>
+			<xsd:enumeration value="PND"/>
+			<xsd:enumeration value="GKD"/>
+			<xsd:enumeration value="SWD"/>
+			<xsd:enumeration value="NOTAT"/>
+			<xsd:enumeration value="LOKAL"/>
+			<xsd:enumeration value="ADRESS"/>
+			<xsd:enumeration value="REDAKTION"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="satzstatusType" id="satzstatus.st">
+		<xsd:annotation>
+			<xsd:documentation>Typ Satzstatus (Satzkennung)</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="c"/>
+			<xsd:enumeration value="d"/>
+			<xsd:enumeration value="n"/>
+			<xsd:enumeration value="p"/>
+			<xsd:enumeration value="u"/>
+			<xsd:enumeration value="v"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="satztypType" id="satztyp.st">
+		<xsd:annotation>
+			<xsd:documentation>Typ Satztyp (Satzkennung)</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="h"/>
+			<xsd:enumeration value="y"/>
+			<xsd:enumeration value="u"/>
+			<xsd:enumeration value="v"/>
+			<xsd:enumeration value="p"/>
+			<xsd:enumeration value="t"/>
+			<xsd:enumeration value="k"/>
+			<xsd:enumeration value="w"/>
+			<xsd:enumeration value="r"/>
+			<xsd:enumeration value="s"/>
+			<xsd:enumeration value="x"/>
+			<xsd:enumeration value="q"/>
+			<xsd:enumeration value="l"/>
+			<xsd:enumeration value="e"/>
+			<xsd:enumeration value="m"/>
+			<xsd:enumeration value="c"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="mabVersionType" id="mabVersion.st">
+		<xsd:annotation>
+			<xsd:documentation>Typ MAB-Version (Satzkennung)</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="M2.0"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="idType" id="id.st">
+		<xsd:annotation>
+			<xsd:documentation>Typ id</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:ID"/>
+	</xsd:simpleType>
+</xsd:schema>
