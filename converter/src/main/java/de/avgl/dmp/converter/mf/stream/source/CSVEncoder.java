@@ -18,7 +18,7 @@ import com.google.common.collect.Lists;
 
 /**
  * Serialises an object as CSV. Records and entities are represented as objects.
- * 
+ *
  * @author tgaengler
  */
 @Description("Serialises an object as CSV")
@@ -28,10 +28,6 @@ public final class CSVEncoder extends DefaultStreamPipe<ObjectReceiver<String>> 
 
 	private List<String>		header					= null;
 	private List<String>		values					= null;
-	private static char			escapeCharacter;
-	private static char			quoteCharacter;
-	private static char			columnSeparator;
-	private static String		lineEnding;
 
 	private final CSVFormat		csvFormat;
 	private CSVPrinter			csvPrinter				= null;
@@ -43,10 +39,10 @@ public final class CSVEncoder extends DefaultStreamPipe<ObjectReceiver<String>> 
 
 	public CSVEncoder() {
 
-		escapeCharacter = '\\';
-		quoteCharacter = '"';
-		columnSeparator = ';';
-		lineEnding = "\n";
+		final char escapeCharacter = '\\';
+		final char quoteCharacter = '"';
+		final char columnSeparator = ';';
+		final String lineEnding = "\n";
 
 		csvFormat = CSVFormat.newFormat(columnSeparator).withCommentStart('#').withQuoteChar(quoteCharacter).withEscape(escapeCharacter)
 				.withRecordSeparator(lineEnding);
@@ -60,13 +56,13 @@ public final class CSVEncoder extends DefaultStreamPipe<ObjectReceiver<String>> 
 			firstLine = false;
 		}
 
-		if (firstLineInitialized == false) {
+		if (!firstLineInitialized) {
 
 			firstLine = true;
 			firstLineInitialized = true;
-			
+
 			if(withHeader) {
-				
+
 				header = Lists.newLinkedList();
 			}
 		}

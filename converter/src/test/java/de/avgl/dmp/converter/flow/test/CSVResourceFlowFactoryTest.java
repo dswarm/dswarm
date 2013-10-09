@@ -8,7 +8,7 @@ import org.culturegraph.mf.framework.ObjectReceiver;
 import org.junit.Test;
 
 import de.avgl.dmp.converter.DMPConverterException;
-import de.avgl.dmp.converter.flow.CSVResourceFlow;
+import de.avgl.dmp.converter.flow.AbstractCSVResourceFlow;
 import de.avgl.dmp.converter.flow.CSVResourceFlowFactory;
 import de.avgl.dmp.converter.mf.stream.reader.CsvReader;
 import de.avgl.dmp.persistence.model.resource.Configuration;
@@ -16,7 +16,7 @@ import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
 
 public class CSVResourceFlowFactoryTest {
 
-	private class TestFlow extends CSVResourceFlow<String> {
+	private class TestFlow extends AbstractCSVResourceFlow<String> {
 		@Override
 		protected String process(ObjectPipe<String, ObjectReceiver<Reader>> opener, String obj, CsvReader pipe) {
 			return null;

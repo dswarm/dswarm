@@ -1,7 +1,6 @@
 package de.avgl.dmp.controller.eventbus;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -18,7 +17,7 @@ import de.avgl.dmp.persistence.services.InternalService;
 @Singleton
 public class ConverterEventRecorder {
 
-	private InternalService internalService;
+	private final InternalService internalService;
 
 	@Inject
 	public ConverterEventRecorder(final InternalService internalService, final EventBus eventBus) {
@@ -27,7 +26,7 @@ public class ConverterEventRecorder {
 		eventBus.register(this);
 	}
 
-	@Subscribe public void convertConfiguration(ConverterEvent event) {
+	@Subscribe public void convertConfiguration(final ConverterEvent event) {
 		final Configuration configuration = event.getConfiguration();
 		final Resource resource = event.getResource();
 
@@ -45,7 +44,7 @@ public class ConverterEventRecorder {
 		}
 
 		if (result != null) {
-			for (org.culturegraph.mf.types.Triple triple : result) {
+			for (final org.culturegraph.mf.types.Triple triple : result) {
 				internalService.createObject(resource.getId(), configuration.getId(), triple.getSubject(), triple.getPredicate(), triple.getObject());
 			}
 		}

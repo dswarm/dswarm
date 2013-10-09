@@ -37,7 +37,7 @@ public class EmbeddedServer {
 		return start(false);
 	}
 
-	public HttpServer start(boolean skipStart) throws IOException {
+	public HttpServer start(final boolean skipStart) throws IOException {
 		log.info("Starting grizzly");
 
 		final HttpServer server = GrizzlyHttpServerFactory
@@ -50,7 +50,7 @@ public class EmbeddedServer {
 
 		context.addListener(DMPInjector.class);
 
-		ServletRegistration servletRegistration =
+		final ServletRegistration servletRegistration =
 				context.addServlet("ServletContainer", ServletContainer.class);
 		servletRegistration.addMapping("/*");
 		servletRegistration.setInitParameter("javax.ws.rs.Application",
@@ -128,7 +128,7 @@ public class EmbeddedServer {
 		return DEFAULT_PORT;
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(final String[] args) throws IOException {
 		final EmbeddedServer main = new EmbeddedServer();
 		main.start();
 

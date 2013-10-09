@@ -7,7 +7,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 
 public class JSNull extends JSElement {
 
-	public JSNull(String name) {
+	public JSNull(final String name) {
 		super(name);
 	}
 
@@ -22,12 +22,12 @@ public class JSNull extends JSElement {
 	}
 
 	@Override
-	public JSElement withName(String newName) {
+	public JSElement withName(final String newName) {
 		return new JSNull(newName);
 	}
 
 	@Override
-	protected void render(JsonGenerator jgen) throws IOException {
+	protected void render(final JsonGenerator jgen) throws IOException {
 		jgen.writeNullField(getName());
 	}
 }

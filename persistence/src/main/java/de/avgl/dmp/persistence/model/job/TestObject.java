@@ -4,14 +4,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class TestObject {
-	
+
 	private String message = "Hello World";
 
 	public String getMessage() {
 		return message;
 	}
 
-	public void setMessage(String message) {
+	public void setMessage(final String message) {
 		this.message = message;
 	}
 }

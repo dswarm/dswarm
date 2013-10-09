@@ -30,7 +30,7 @@ public class DMPStatus {
 
 
 	@Inject
-	public DMPStatus(MetricRegistry registry) {
+	public DMPStatus(final MetricRegistry registry) {
 		allRequestsMeter = registry.meter(name(ResourcesResource.class, "requests", "all"));
 
 		createNewResourceTimer = registry.timer(name(ResourcesResource.class, "post-requests", "resources", "create"));
@@ -91,7 +91,7 @@ public class DMPStatus {
 	}
 
 
-	public long stop(Timer.Context context) {
+	public long stop(final Timer.Context context) {
 		return context.stop();
 	}
 

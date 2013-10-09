@@ -175,7 +175,7 @@ public abstract class BasicJPAService<POJOCLASS extends DMPJPAObject> {
 	 */
 	public POJOCLASS getObject(final Long id) {
 		final EntityManager entityManager = JPAUtil.getEntityManager();
-		POJOCLASS entity = getObject(entityManager, id);
+		final POJOCLASS entity = getObject(entityManager, id);
 
 		if (entity != null) {
 

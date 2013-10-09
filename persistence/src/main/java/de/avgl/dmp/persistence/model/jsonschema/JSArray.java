@@ -9,7 +9,7 @@ public class JSArray extends JSElement {
 
 	private final JSElement item;
 
-	public JSArray(JSElement item) {
+	public JSArray(final JSElement item) {
 
 		super(item.getName());
 		this.item = item;
@@ -26,7 +26,7 @@ public class JSArray extends JSElement {
 	}
 
 	@Override
-	public JSElement withName(String newName) {
+	public JSElement withName(final String newName) {
 		return new JSArray(item.withName(newName));
 	}
 
@@ -35,7 +35,7 @@ public class JSArray extends JSElement {
 	}
 
 	@Override
-	protected void renderInternal(JsonGenerator jgen) throws IOException {
+	protected void renderInternal(final JsonGenerator jgen) throws IOException {
 
 		renderDescription(jgen);
 

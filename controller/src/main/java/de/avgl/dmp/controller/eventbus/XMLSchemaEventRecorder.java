@@ -30,7 +30,7 @@ public class XMLSchemaEventRecorder {
 		eventBus.register(this);
 	}
 
-	@Subscribe public void convertConfiguration(XMLSchemaEvent event) {
+	@Subscribe public void convertConfiguration(final XMLSchemaEvent event) {
 		final Configuration configuration = event.getConfiguration();
 		final Resource resource = event.getResource();
 

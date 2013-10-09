@@ -7,7 +7,7 @@ public class XMLSchemaEvent {
 	private final Configuration configuration;
 	private final Resource resource;
 
-	public XMLSchemaEvent(Configuration configuration, Resource resource) {
+	public XMLSchemaEvent(final Configuration configuration, final Resource resource) {
 		this.configuration = configuration;
 		this.resource = resource;
 	}

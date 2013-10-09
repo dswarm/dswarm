@@ -25,13 +25,13 @@ public class HeartbeatServlet extends HttpServlet {
 	private final String allowedOrigin;
 
 	@Inject
-	public HeartbeatServlet(@Named("AllowedOrigin") String allowedOrigin) {
+	public HeartbeatServlet(@Named("AllowedOrigin") final String allowedOrigin) {
 
 		this.allowedOrigin = allowedOrigin;
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
 		resp.setContentType(CONTENT_TYPE);
 		resp.setCharacterEncoding("UTF-8");
 

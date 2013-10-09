@@ -11,7 +11,7 @@ import de.avgl.dmp.persistence.services.SchemaService;
 public class SchemaServiceImpl extends BaseMemoryServiceImpl<Long, Long, JSRoot> implements SchemaService {
 
 	@Override
-	public Optional<JSRoot> getSchema(Long id, Long configurationId) {
+	public Optional<JSRoot> getSchema(final Long id, final Long configurationId) {
 		return getObjects(id, configurationId);
 	}
 }

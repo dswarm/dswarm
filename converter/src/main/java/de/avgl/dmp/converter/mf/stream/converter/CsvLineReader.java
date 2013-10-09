@@ -16,7 +16,7 @@ import org.culturegraph.mf.framework.annotations.Out;
 
 /**
  * Processes input from a reader line by line. Inspired by org.culturegraph.mf.stream.converter.LineReader
- * 
+ *
  * @author tgaengler
  */
 @Description("Emits each line read as a CSVRecord.")
@@ -58,7 +58,7 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 				.withEscape(escapeCharacter).withRecordSeparator(lineEnding);
 
 		CSVParser csvParser = null;
-		
+
 		try {
 
 			csvParser = new CSVParser(reader, csvFormat);
@@ -67,7 +67,7 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 			throw new MetafactureException(e);
 		}
 
-		Iterator<CSVRecord> csvIter = csvParser.iterator();
+		final Iterator<CSVRecord> csvIter = csvParser.iterator();
 
 		while (csvIter.hasNext()) {
 

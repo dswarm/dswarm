@@ -11,14 +11,11 @@ public class Parameter extends DMPObject {
 	private Map<String, Parameter> parameters;
 
 
-	public Parameter() {
-	}
-
 	public String getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(final String type) {
 		this.type = type;
 	}
 
@@ -26,7 +23,7 @@ public class Parameter extends DMPObject {
 		return repeat;
 	}
 
-	public void setRepeat(boolean repeat) {
+	public void setRepeat(final boolean repeat) {
 		this.repeat = repeat;
 	}
 
@@ -34,7 +31,7 @@ public class Parameter extends DMPObject {
 		return data;
 	}
 
-	public void setData(String data) {
+	public void setData(final String data) {
 		this.data = data;
 	}
 
@@ -42,17 +39,17 @@ public class Parameter extends DMPObject {
 		return parameters;
 	}
 
-	public void setParameters(Map<String, Parameter> parameters) {
+	public void setParameters(final Map<String, Parameter> parameters) {
 		this.parameters = parameters;
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		if (!super.equals(o)) return false;
 
-		Parameter parameter = (Parameter) o;
+		final Parameter parameter = (Parameter) o;
 
 		if (parameters != null ? !parameters.equals(parameter.parameters) : parameter.parameters != null)
 			return false;

@@ -23,7 +23,7 @@ public class Component extends DMPObject {
 		return payload;
 	}
 
-	public void setPayload(Payload payload) {
+	public void setPayload(final Payload payload) {
 		this.payload = payload;
 	}
 

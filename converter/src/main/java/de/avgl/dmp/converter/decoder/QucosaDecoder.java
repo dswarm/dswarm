@@ -19,6 +19,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
+import java.util.Iterator;
 
 import static de.avgl.dmp.converter.util.NodeListOps.getChildrenFor;
 
@@ -45,14 +46,14 @@ public class QucosaDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
 	private final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
 
-	private void emit(Iterable<Node> nodes, String section) {
-		Iterable<String> sections = Splitter.on(ENTITY_MARKER).split(section);
+	private void emit(final Iterable<Node> nodes, final String section) {
+		final Iterable<String> sections = Splitter.on(ENTITY_MARKER).split(section);
 
-		for (String s : sections) {
+		for (final String s : sections) {
 			getReceiver().startEntity(s);
 		}
 
-		for (Node node : nodes) {
+		for (final Node node : nodes) {
 			getReceiver().literal(node.getNodeName(), node.getTextContent());
 		}
 
@@ -130,7 +131,7 @@ public class QucosaDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
 
 		doc.getDocumentElement().normalize();
 
-		for (Node node : new NodeListIterable(doc.getElementsByTagName(RECORD_TAG))) {
+		for (final Node node : new NodeListIterable(doc.getElementsByTagName(RECORD_TAG))) {
 			getReceiver().startRecord("");
 			processOneRecord(node);
 			getReceiver().endRecord();
@@ -162,7 +163,7 @@ public class QucosaDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
 	 */
 	@Override
 	public void process(final Reader reader) {
-		InputSource in = new InputSource(reader);
+		final InputSource in = new InputSource(reader);
 		process(in);
 	}
 }

@@ -24,7 +24,7 @@ import de.avgl.dmp.persistence.model.job.Transformation;
 @Path("transformations")
 public class TransformationsResource {
 
-	private Response buildResponse(String responseContent) {
+	private Response buildResponse(final String responseContent) {
 		return Response.ok(responseContent).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 	}
 
@@ -40,11 +40,11 @@ public class TransformationsResource {
 
 		responseJSON.put("response_message", "this is your response message");
 
-		ObjectMapper mapper = new ObjectMapper();
+		final ObjectMapper mapper = new ObjectMapper();
 		final JaxbAnnotationModule module = new JaxbAnnotationModule();
 		// configure as necessary
 		mapper.registerModule(module);
-		ObjectNode json = mapper.readValue(jsonObjectString, ObjectNode.class);
+		final ObjectNode json = mapper.readValue(jsonObjectString, ObjectNode.class);
 
 		if (json != null) {
 			responseJSON.put("request_message", json);

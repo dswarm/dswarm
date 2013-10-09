@@ -15,22 +15,22 @@ import com.fasterxml.jackson.databind.deser.SettableBeanProperty;
 import com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap;
 
 public class BeanReferenceDeserializer extends BeanDeserializer {
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long	serialVersionUID	= 1L;
 
 	/**
 	 * Constructor used by {@link BeanDeserializerBuilder}.
 	 */
-	public BeanReferenceDeserializer(BeanDeserializerBuilder builder, BeanDescription beanDesc, BeanPropertyMap properties,
-			Map<String, SettableBeanProperty> backRefs, HashSet<String> ignorableProps, boolean ignoreAllUnknown, boolean hasViews) {
-		
+	public BeanReferenceDeserializer(final BeanDeserializerBuilder builder, final BeanDescription beanDesc, final BeanPropertyMap properties,
+			final Map<String, SettableBeanProperty> backRefs, final HashSet<String> ignorableProps, final boolean ignoreAllUnknown, final boolean hasViews) {
+
 		super(builder, beanDesc, properties, backRefs, ignorableProps, ignoreAllUnknown, hasViews);
 	}
 
-	protected BeanReferenceDeserializer(BeanDeserializerBase src) {
+	protected BeanReferenceDeserializer(final BeanDeserializerBase src) {
 
 		super(src);
 	}

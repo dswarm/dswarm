@@ -66,13 +66,13 @@ public class StreamJsonCollapser extends DefaultStreamPipe<StreamReceiver> {
 	}
 
 	private void flushValues() {
-		for (Map.Entry<String, Collection<String>> entry : valueMap.asMap().entrySet()) {
+		for (final Map.Entry<String, Collection<String>> entry : valueMap.asMap().entrySet()) {
 			final String name = entry.getKey();
 			final boolean isMulti = entry.getValue().size() > 1;
 			if (isMulti) {
 				getReceiver().startEntity(name + ARRAY_MARKER);
 			}
-			for (String value : entry.getValue()) {
+			for (final String value : entry.getValue()) {
 				getReceiver().literal(name, value);
 			}
 			if (isMulti) {

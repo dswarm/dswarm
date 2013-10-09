@@ -1,8 +1,6 @@
 package de.avgl.dmp.persistence.model.job;
 
 import java.util.List;
-import java.util.Set;
-
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
@@ -22,7 +20,7 @@ public class Transformation extends DMPObject {
 		this.components = components;
 	}
 
-	public void setSource(Component source) {
+	public void setSource(final Component source) {
 		this.source = source;
 	}
 
@@ -30,7 +28,7 @@ public class Transformation extends DMPObject {
 		return source;
 	}
 
-	public void setTarget(Component target) {
+	public void setTarget(final Component target) {
 		this.target = target;
 	}
 

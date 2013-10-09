@@ -41,7 +41,7 @@ public class ConfigurationsResource {
 	@Context
 	UriInfo											uri;
 
-	private Response buildResponse(String responseContent) {
+	private Response buildResponse(final String responseContent) {
 		return Response.ok(responseContent).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 	}
 
@@ -64,7 +64,7 @@ public class ConfigurationsResource {
 
 		LOG.debug("got configurations = '" + ToStringBuilder.reflectionToString(configurations) + "'");
 
-		Set<Configuration> configurationsSet = Sets.newHashSet();
+		final Set<Configuration> configurationsSet = Sets.newHashSet();
 		configurationsSet.addAll(configurations);
 
 		String configurationsJSON = null;
@@ -118,8 +118,8 @@ public class ConfigurationsResource {
 			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
 		}
 
-		URI baseURI = uri.getRequestUri();
-		URI configurationURI = URI.create(baseURI.toString() + "/" + configuration.getId());
+		final URI baseURI = uri.getRequestUri();
+		final URI configurationURI = URI.create(baseURI.toString() + "/" + configuration.getId());
 
 		LOG.debug("return new configuration at '" + configurationURI.toString() + "' with content '" + configurationJSON + "'");
 
@@ -129,7 +129,7 @@ public class ConfigurationsResource {
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResourceConfiguration(@PathParam("id") Long id) throws DMPControllerException {
+	public Response getResourceConfiguration(@PathParam("id") final Long id) throws DMPControllerException {
 
 		LOG.debug("try to get configuration with id '" + id + "'");
 

@@ -31,11 +31,11 @@ public class MetricsServlet extends HttpServlet {
 	private final ObjectMapper mapper;
 
 	@Inject
-	public MetricsServlet(MetricRegistry registry,
-						  @Named("RateUnit") TimeUnit rateUnit,
-						  @Named("DurationUnit") TimeUnit durationUnit,
-						  @Named("AllowedOrigin") String allowedOrigin,
-						  @Named("ShowSamples") Boolean showSamples) {
+	public MetricsServlet(final MetricRegistry registry,
+						  @Named("RateUnit") final TimeUnit rateUnit,
+						  @Named("DurationUnit") final TimeUnit durationUnit,
+						  @Named("AllowedOrigin") final String allowedOrigin,
+						  @Named("ShowSamples") final Boolean showSamples) {
 
 		this.registry = registry;
 		this.allowedOrigin = allowedOrigin;
@@ -45,8 +45,8 @@ public class MetricsServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest req,
-						 HttpServletResponse resp) throws ServletException, IOException {
+	protected void doGet(final HttpServletRequest req,
+						 final HttpServletResponse resp) throws ServletException, IOException {
 		resp.setContentType(CONTENT_TYPE);
 		resp.setCharacterEncoding("UTF-8");
 
@@ -64,7 +64,7 @@ public class MetricsServlet extends HttpServlet {
 		}
 	}
 
-	private ObjectWriter getWriter(HttpServletRequest request) {
+	private ObjectWriter getWriter(final HttpServletRequest request) {
 		final boolean prettyPrint = Boolean.parseBoolean(request.getParameter("pretty"));
 		if (prettyPrint) {
 			return mapper.writerWithDefaultPrettyPrinter();

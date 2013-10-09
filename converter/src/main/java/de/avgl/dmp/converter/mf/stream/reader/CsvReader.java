@@ -71,12 +71,12 @@ public final class CsvReader implements Reader<CSVRecord> {
 		this.withLimit = true;
 	}
 
-	public final CsvDecoder getDecoder() {
+	public CsvDecoder getDecoder() {
 
 		return decoder;
 	}
 
-	public final CsvReader withLimit(final int limit) {
+	public CsvReader withLimit(final int limit) {
 		this.limit = limit;
 		this.withLimit = true;
 
@@ -84,7 +84,7 @@ public final class CsvReader implements Reader<CSVRecord> {
 	}
 
 	@Override
-	public final <R extends StreamReceiver> R setReceiver(final R receiver) {
+	public <R extends StreamReceiver> R setReceiver(final R receiver) {
 
 		decoder.setReceiver(receiver);
 
@@ -92,13 +92,13 @@ public final class CsvReader implements Reader<CSVRecord> {
 	}
 
 	@Override
-	public final void process(final java.io.Reader reader) {
+	public void process(final java.io.Reader reader) {
 
 		lineReader.process(reader);
 	}
 
 	@Override
-	public final void read(final CSVRecord entry) {
+	public void read(final CSVRecord entry) {
 
 		if (withLimit) {
 
@@ -114,13 +114,13 @@ public final class CsvReader implements Reader<CSVRecord> {
 	}
 
 	@Override
-	public final void resetStream() {
+	public void resetStream() {
 
 		lineReader.resetStream();
 	}
 
 	@Override
-	public final void closeStream() {
+	public void closeStream() {
 
 		lineReader.closeStream();
 	}

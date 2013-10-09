@@ -15,12 +15,12 @@ import com.google.common.base.Optional;
  *
  * @author Paul Horn <phorn@avantgarde-labs.de>
  */
-public class NodeListOps {
+final public class NodeListOps {
 	private NodeListOps() {}
 
 	private final static Function<Node, Iterable<Node>> childrens = new Function<Node, Iterable<Node>>() {
 		@Override
-		public Iterable<Node> apply(@Nullable org.w3c.dom.Node input) {
+		public Iterable<Node> apply(@Nullable final org.w3c.dom.Node input) {
 			assert input != null;
 			return new NodeListIterable(input.getChildNodes());
 		}
@@ -46,8 +46,8 @@ public class NodeListOps {
 	 * @return the first node that matches the given tag name, wrapped in an
 	 * {@link Optional}
 	 */
-	public static Optional<Node> getElementByTagName(Iterable<Node> nodes, String tag) {
-		for (Node node : nodes) {
+	public static Optional<Node> getElementByTagName(final Iterable<Node> nodes, final String tag) {
+		for (final Node node : nodes) {
 			if (Objects.equal(node.getNodeName(), tag)) {
 				return Optional.of(node);
 			}
@@ -63,7 +63,7 @@ public class NodeListOps {
 	 * @return all children of the first node that matches the given tag name,
 	 * wrapped in an {@link Optional}
 	 */
-	public static Optional<Iterable<Node>> getChildrenFor(Iterable<Node> nodes, String tag) {
+	public static Optional<Iterable<Node>> getChildrenFor(final Iterable<Node> nodes, final String tag) {
 		return getElementByTagName(nodes, tag).transform(childrens);
 	}
 }

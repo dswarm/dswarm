@@ -17,7 +17,7 @@ import de.avgl.dmp.persistence.services.BasicJPAService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
- * 
+ *
  * @author tgaengler
  *
  * @param <DMPJPAOBJECTIMPL> the concrete model class
@@ -25,8 +25,8 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 public abstract class ReferenceDeserializer<DMPJPAOBJECTIMPL extends DMPJPAObject> extends JsonDeserializer<Set<DMPJPAOBJECTIMPL>> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ReferenceDeserializer.class);
-	
-	private BasicJPAService<DMPJPAOBJECTIMPL>	jpaService;
+
+	private final BasicJPAService<DMPJPAOBJECTIMPL>	jpaService;
 
 	public ReferenceDeserializer(final BasicJPAService<DMPJPAOBJECTIMPL> jpaServiceArg) {
 
@@ -55,32 +55,32 @@ public abstract class ReferenceDeserializer<DMPJPAOBJECTIMPL extends DMPJPAObjec
 		while (arrayIter.hasNext()) {
 
 			final JsonNode reference = arrayIter.next();
-			
+
 			if(reference == null) {
-				
+
 				LOG.debug("reference node is null");
-				
+
 				continue;
 			}
-			
+
 			final JsonNode idNode = reference.get("id");
-			
+
 			if(idNode == null) {
-				
+
 				LOG.debug("id node is null");
 			}
-			
+
 			final Long id = Long.valueOf(idNode.asLong());
 
 			final DMPJPAOBJECTIMPL object = jpaService.getObject(id);
-			
+
 			if (object == null) {
 
 				LOG.debug("couldn't find " + jpaService.getClasz().getSimpleName() + " with id '" + id + "'");
-				
+
 				continue;
 			}
-			
+
 			set.add(object);
 		}
 

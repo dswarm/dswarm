@@ -20,12 +20,12 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
 
 		final StackTraceElement[] stacktrace = exception.getStackTrace();
 		final StringBuffer stacktraceString = new StringBuffer();
-		
+
 		for(final StackTraceElement stacktraceElement : stacktrace) {
-			
+
 			stacktraceString.append("\n\t").append(stacktraceElement);
 		}
-		
+
 		LOG.error("exception was thrown:\ntype = '" + exception.getClass().getCanonicalName() + "'\nmessage = " + exception.getMessage()
 				+ "\nstacktrace = " + stacktraceString.toString());
 
@@ -42,15 +42,13 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
 
 		if (WebApplicationException.class.isInstance(exception)) {
 
-			WebApplicationException webApplicationException = (WebApplicationException) exception;
+			final WebApplicationException webApplicationException = (WebApplicationException) exception;
 
 			final Response response = webApplicationException.getResponse();
 
 			if (response != null) {
 
-				final int statusInt = response.getStatus();
-
-				status = Integer.valueOf(statusInt);
+				status = response.getStatus();
 			}
 		}
 
@@ -58,7 +56,7 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
 
 		if (status != null) {
 
-			responseStatus = status.intValue();
+			responseStatus = status;
 		} else {
 
 			responseStatus = 500;

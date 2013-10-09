@@ -29,8 +29,8 @@ public class DMPPersistenceUtil {
 			.setSerializationInclusion(Include.NON_EMPTY);
 	}
 
-	public static String getResourceAsString(String resource) throws IOException {
-		URL url = Resources.getResource(resource);
+	public static String getResourceAsString(final String resource) throws IOException {
+		final URL url = Resources.getResource(resource);
 		return Resources.toString(url, Charsets.UTF_8);
 	}
 

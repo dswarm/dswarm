@@ -18,7 +18,7 @@ import de.avgl.dmp.persistence.services.InternalService;
 public class InternalServiceImpl extends BaseMemoryServiceImpl<Long, Long, Table<String, String, String>> implements InternalService {
 
 	@Override
-	public void createObject(Long id, Long id1, String subject, String predicate, String object) {
+	public void createObject(final Long id, final Long id1, final String subject, final String predicate, final String object) {
 		synchronized (this) {
 			final Optional<Table<String, String, String>> tableOptional = getObjects(id, id1);
 			final Table<String, String, String> tab = tableOptional.or(HashBasedTable.<String, String, String>create());
@@ -29,7 +29,7 @@ public class InternalServiceImpl extends BaseMemoryServiceImpl<Long, Long, Table
 	}
 
 	@Override
-	public Optional<Map<String, Map<String, String>>> getObjects(Long id, Long configurationId, Optional<Integer> atMost) {
+	public Optional<Map<String, Map<String, String>>> getObjects(final Long id, final Long configurationId, final Optional<Integer> atMost) {
 		final Optional<Table<String, String, String>> maybeTable = getObjects(id, configurationId);
 
 		if (maybeTable.isPresent()) {
@@ -39,7 +39,7 @@ public class InternalServiceImpl extends BaseMemoryServiceImpl<Long, Long, Table
 
 			final Map<String, Map<String, String>> finalMap = Maps.newHashMap();
 
-			for (String row : rows) {
+			for (final String row : rows) {
 				final Map<String, String> recordMap = table.row(row);
 				finalMap.put(row, recordMap);
 			}
@@ -51,12 +51,12 @@ public class InternalServiceImpl extends BaseMemoryServiceImpl<Long, Long, Table
 	}
 
 	@Override
-	public Optional<Set<String>> getSchema(Long id, Long configurationId) {
+	public Optional<Set<String>> getSchema(final Long id, final Long configurationId) {
 		synchronized (this) {
 			final Optional<Table<String, String, String>> tab = getObjects(id, configurationId);
 			return tab.transform(new Function<Table<String, String, String>, Set<String>>() {
 				@Override
-				public Set<String> apply(Table<String, String, String> input) {
+				public Set<String> apply(final Table<String, String, String> input) {
 					return input.columnKeySet();
 				}
 			});

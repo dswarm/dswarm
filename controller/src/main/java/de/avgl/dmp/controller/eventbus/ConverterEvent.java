@@ -7,7 +7,7 @@ public class ConverterEvent {
 	private final Configuration configuration;
 	private final Resource resource;
 
-	public ConverterEvent(Configuration configuration, Resource resource) {
+	public ConverterEvent(final Configuration configuration, final Resource resource) {
 		this.configuration = configuration;
 		this.resource = resource;
 	}

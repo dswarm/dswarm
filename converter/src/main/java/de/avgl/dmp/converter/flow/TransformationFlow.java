@@ -28,7 +28,7 @@ import de.avgl.dmp.persistence.model.job.Transformation;
 
 public class TransformationFlow {
 
-	public static String	DEFAULT_RESOURCE_PATH	= "qucosa_record.xml";
+	public final static String	DEFAULT_RESOURCE_PATH	= "qucosa_record.xml";
 
 	private final Metamorph	transformer;
 
@@ -38,14 +38,14 @@ public class TransformationFlow {
 
 	public String applyRecord(final String record) {
 
-		StringReader opener = new StringReader();
+		final StringReader opener = new StringReader();
 
 		return apply(record, opener);
 	}
 
 	public String applyResource(final String resourcePath) {
 
-		ResourceOpener opener = new ResourceOpener();
+		final ResourceOpener opener = new ResourceOpener();
 
 		return apply(resourcePath, opener);
 	}
@@ -89,7 +89,7 @@ public class TransformationFlow {
 		return new TransformationFlow(transformer);
 	}
 
-	public static TransformationFlow fromFile(String resourcePath) {
+	public static TransformationFlow fromFile(final String resourcePath) {
 		final InputStream morph = TransformationFlow.class.getClassLoader().getResourceAsStream(resourcePath);
 		final Metamorph transformer = new Metamorph(morph);
 
