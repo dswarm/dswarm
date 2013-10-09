@@ -10,6 +10,7 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
+import de.avgl.dmp.controller.guice.DMPServletModule;
 import de.avgl.dmp.controller.servlet.DMPInjector;
 import de.avgl.dmp.controller.guice.DMPModule;
 import de.avgl.dmp.controller.EmbeddedServer;
@@ -41,7 +42,7 @@ public class ResourceTest {
 			}
 		}
 
-		DMPInjector.injector = Guice.createInjector(new TestModule());
+		DMPInjector.injector = Guice.createInjector(new TestModule(), new DMPServletModule());
 
 		grizzlyServer = new EmbeddedServer();
 		grizzlyServer.start();

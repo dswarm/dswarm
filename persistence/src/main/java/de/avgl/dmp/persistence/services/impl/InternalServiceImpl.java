@@ -3,32 +3,34 @@ package de.avgl.dmp.persistence.services.impl;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Table;
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import de.avgl.dmp.persistence.model.internal.InternalMemoryDb;
 import de.avgl.dmp.persistence.services.InternalService;
 
+
 @Singleton
-public class InternalServiceImpl implements InternalService {
+public class InternalServiceImpl extends BaseMemoryServiceImpl<Long, Long, Table<String, String, String>> implements InternalService {
 
-	private InternalMemoryDb memoryDb;
+	@Override
+	public void createObject(Long id, Long id1, String subject, String predicate, String object) {
+		synchronized (this) {
+			final Optional<Table<String, String, String>> tableOptional = getObjects(id, id1);
+			final Table<String, String, String> tab = tableOptional.or(HashBasedTable.<String, String, String>create());
 
-	@Inject
-	public InternalServiceImpl(final InternalMemoryDb memoryDb) {
-		this.memoryDb = memoryDb;
+			tab.put(subject, predicate, object);
+			createObject(id, id1, tab);
+		}
 	}
 
-	@Override public void createObject(Long id, Long id1, String subject, String predicate, String object) {
-		memoryDb.put(id, id1, subject, predicate, object);
-	}
-
-	@Override public Optional<Map<String, Map<String, String>>> getObjects(Long id, Long configurationId, Optional<Integer> atMost) {
-		final Optional<Table<String, String, String>> maybeTable = memoryDb.get(id, configurationId);
+	@Override
+	public Optional<Map<String, Map<String, String>>> getObjects(Long id, Long configurationId, Optional<Integer> atMost) {
+		final Optional<Table<String, String, String>> maybeTable = getObjects(id, configurationId);
 
 		if (maybeTable.isPresent()) {
 
@@ -48,15 +50,16 @@ public class InternalServiceImpl implements InternalService {
 		return Optional.absent();
 	}
 
-	@Override public void deleteObject(Long id, Long configurationId) {
-		memoryDb.delete(id, configurationId);
-	}
-
-	@Override public Optional<Set<String>> getSchema(Long id, Long configurationId) {
-		return memoryDb.schema(id, configurationId);
-	}
-
-	public InternalMemoryDb getMemoryDb() {
-		return memoryDb;
+	@Override
+	public Optional<Set<String>> getSchema(Long id, Long configurationId) {
+		synchronized (this) {
+			final Optional<Table<String, String, String>> tab = getObjects(id, configurationId);
+			return tab.transform(new Function<Table<String, String, String>, Set<String>>() {
+				@Override
+				public Set<String> apply(Table<String, String, String> input) {
+					return input.columnKeySet();
+				}
+			});
+		}
 	}
 }
