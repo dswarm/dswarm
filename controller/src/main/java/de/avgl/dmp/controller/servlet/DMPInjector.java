@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 
 import de.avgl.dmp.controller.guice.DMPModule;
+import de.avgl.dmp.controller.guice.DMPServletModule;
 
 public class DMPInjector extends GuiceServletContextListener {
 
@@ -15,7 +16,8 @@ public class DMPInjector extends GuiceServletContextListener {
 
 		if (injector == null) {
 
-			injector = Guice.createInjector(new DMPModule());
+			injector = Guice.createInjector(
+					new DMPModule(), new DMPServletModule());
 		}
 
 		return injector;

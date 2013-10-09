@@ -143,12 +143,7 @@
 		<!-- Other Dependencies -->
 		<dependency>
 			<groupId>com.codahale.metrics</groupId>
-			<artifactId>metrics-servlet</artifactId>
-			<version>${metrics.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.codahale.metrics</groupId>
-			<artifactId>metrics-servlets</artifactId>
+			<artifactId>metrics-json</artifactId>
 			<version>${metrics.version}</version>
 			<exclusions>
 				<exclusion>
@@ -156,6 +151,13 @@
 					<groupId>com.fasterxml.jackson.core</groupId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+
+		<!-- XSD parser XSOM -->
+		<dependency>
+			<groupId>com.sun.xsom</groupId>
+			<artifactId>xsom</artifactId>
+			<version>20110809</version>
 		</dependency>
 	</dependencies>
 

@@ -1,5 +1,6 @@
 package de.avgl.dmp.controller.resources;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,6 +43,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.eventbus.ConverterEvent;
+import de.avgl.dmp.controller.eventbus.XMLSchemaEvent;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.controller.utils.DMPControllerUtils;
 import de.avgl.dmp.converter.DMPConverterException;
@@ -49,12 +51,14 @@ import de.avgl.dmp.converter.flow.CSVResourceFlowFactory;
 import de.avgl.dmp.converter.flow.CSVSourceResourceCSVJSONPreviewFlow;
 import de.avgl.dmp.converter.flow.CSVSourceResourceCSVPreviewFlow;
 import de.avgl.dmp.persistence.DMPPersistenceException;
+import de.avgl.dmp.persistence.model.jsonschema.JSRoot;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
 import de.avgl.dmp.persistence.services.ConfigurationService;
 import de.avgl.dmp.persistence.services.InternalService;
 import de.avgl.dmp.persistence.services.ResourceService;
+import de.avgl.dmp.persistence.services.SchemaService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 @RequestScoped
@@ -75,6 +79,8 @@ public class ResourcesResource {
 
 	private final Provider<InternalService>			internalServiceProvider;
 
+	private final Provider<SchemaService>			schemaServiceProvider;
+
 	private final EntityManager						entityManager;
 
 	private final DMPStatus							dmpStatus;
@@ -85,11 +91,13 @@ public class ResourcesResource {
 							 Provider<ResourceService> resourceServiceProvider,
 							 Provider<ConfigurationService> configurationServiceProvider,
 							 Provider<InternalService> internalServiceProvider,
+							 Provider<SchemaService> schemaServiceProvider,
 							 Provider<EventBus> eventBusProvider) {
 		this.eventBusProvider = eventBusProvider;
 		this.resourceServiceProvider = resourceServiceProvider;
 		this.configurationServiceProvider = configurationServiceProvider;
 		this.internalServiceProvider = internalServiceProvider;
+		this.schemaServiceProvider = schemaServiceProvider;
 		this.entityManager = entityManager;
 		this.dmpStatus = dmpStatus;
 	}
@@ -303,7 +311,16 @@ public class ResourcesResource {
 
 		LOG.debug("added new configuration to resource with id '" + id + "' = '" + ToStringBuilder.reflectionToString(configuration) + "'");
 
-		eventBusProvider.get().post(new ConverterEvent(configuration, resource));
+		final JsonNode storageType = configuration.getParameters().get("storage_type");
+		if (storageType != null) {
+			if ("schema".equals(storageType.asText())) {
+
+				eventBusProvider.get().post(new XMLSchemaEvent(configuration, resource));
+			} else if ("csv".equals(storageType.asText())) {
+
+				eventBusProvider.get().post(new ConverterEvent(configuration, resource));
+			}
+		}
 
 		String configurationJSON = null;
 
@@ -375,45 +392,64 @@ public class ResourcesResource {
 			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 		}
 
-		final Optional<Set<String>> schemaOptional = internalServiceProvider.get().getSchema(id, configurationId);
+		String schemaJSON;
 
-		if (!schemaOptional.isPresent()) {
+		final Optional<JSRoot> rootOptional = schemaServiceProvider.get().getSchema(id, configurationId);
+		if (rootOptional.isPresent()) {
 
-			LOG.debug("couldn't find schema");
+			final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-			dmpStatus.stop(context);
-			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+			try {
+
+				rootOptional.get().render(DMPPersistenceUtil.getJSONObjectMapper(), outputStream);
+				schemaJSON = outputStream.toString("UTF-8");
+
+			} catch (IOException e) {
+
+				dmpStatus.stop(context);
+				throw new DMPControllerException("couldn't transform resource configuration schema to JSON string.\n" + e.getMessage());
+			}
+
+		} else {
+
+			final Optional<Set<String>> schemaOptional = internalServiceProvider.get().getSchema(id, configurationId);
+
+			if (!schemaOptional.isPresent()) {
+
+				LOG.debug("couldn't find schema");
+
+				dmpStatus.stop(context);
+				return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+			}
+
+			//TODO: wouldn't work with XML
+			final Map<String, Map<String, String>> schema = Maps.newHashMap();
+			final Map jsonMap = Maps.newHashMap();
+
+			for (String schemaProp : schemaOptional.get()) {
+				Map<String, String> schemaPropMap = Maps.newHashMap();
+				schemaPropMap.put("type", "string");
+				schema.put(schemaProp, schemaPropMap);
+			}
+
+			jsonMap.put("title", configurationOptional.get().getName());
+			jsonMap.put("type", "object");
+			jsonMap.put("properties", schema);
+
+			try {
+
+				schemaJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(jsonMap);
+			} catch (final JsonProcessingException e) {
+
+				dmpStatus.stop(context);
+				throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
+			}
 		}
 
-		//TODO: wouldn't work with XML
-		final Map<String, Map<String, String>> schema = Maps.newHashMap();
-		final Map jsonMap = Maps.newHashMap();
-
-		for (String schemaProp : schemaOptional.get()) {
-			Map<String, String> schemaPropMap = Maps.newHashMap();
-			schemaPropMap.put("type", "string");
-			schema.put(schemaProp, schemaPropMap);
-		}
-
-		jsonMap.put("title", configurationOptional.get().getName());
-		jsonMap.put("type", "object");
-		jsonMap.put("properties", schema);
-
-		String configurationJSON = null;
-
-		try {
-
-			configurationJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(jsonMap);
-		} catch (final JsonProcessingException e) {
-
-			dmpStatus.stop(context);
-			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
-		}
-
-		LOG.debug("return schema for configuration with id '" + configurationId + "' for resource with id '" + id + "' and content '" + configurationJSON + "'");
+		LOG.debug("return schema for configuration with id '" + configurationId + "' for resource with id '" + id + "' and content '" + schemaJSON + "'");
 
 		dmpStatus.stop(context);
-		return buildResponse(configurationJSON);
+		return buildResponse(schemaJSON);
 	}
 
 	@GET

@@ -1,65 +1,20 @@
 package de.avgl.dmp.persistence.model.internal;
 
 import java.util.Map;
-import java.util.Set;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table;
 
 
-public abstract class MemoryDb<A, B, S, P, O> {
+public interface MemoryDb<A, B, C> {
 
-	private Table<A, B, Table<S, P, O>> table = HashBasedTable.create();
+	public void put(A resourceId, B configurationId, C value);
 
-	public void put(A resourceId, B configurationId, S subject, P predicate, O object) {
-		synchronized (this) {
-			Table<S, P, O> tab = table.get(resourceId, configurationId);
-			if (tab == null) {
-				tab = HashBasedTable.create();
-			}
-			tab.put(subject, predicate, object);
-			table.put(resourceId, configurationId, tab);
-		}
-	}
+	public Map<B, C> get(A resourceId);
 
-	public Map<B, Table<S, P, O>> get(A resourceId) {
-		synchronized (this) {
-			return table.row(resourceId);
-		}
-	}
+	public Optional<C> get(A resourceId, B configurationId);
 
-	public Optional<Table<S, P, O>> get(A resourceId, B configurationId) {
-		synchronized (this) {
-			return Optional.fromNullable(table.get(resourceId, configurationId));
-		}
-	}
+	public void delete(A resourceId, B configurationId);
 
-	public Optional<Set<P>> schema(A resourceId, B configurationId) {
-		synchronized (this) {
-			final Table<S, P, O> tab = table.get(resourceId, configurationId);
-			if (tab != null) {
-				return Optional.of(tab.columnKeySet());
-			}
-			return Optional.absent();
-		}
-	}
-
-	public void delete(A resourceId, B configurationId) {
-		synchronized (this) {
-			table.remove(resourceId, configurationId);
-		}
-	}
-
-	public Table<A, B, Table<S, P, O>> underlying() {
-		final ImmutableTable.Builder<A, B, Table<S, P, O>> builder = ImmutableTable.builder();
-
-		for (Table.Cell<A, B, Table<S, P, O>> cell : table.cellSet()) {
-			final ImmutableTable<S, P, O> innerTable = ImmutableTable.copyOf(cell.getValue());
-			builder.put(cell.getRowKey(), cell.getColumnKey(), innerTable);
-		}
-
-		return builder.build();
-	}
+	public Table<A, B, C> underlying();
 }
