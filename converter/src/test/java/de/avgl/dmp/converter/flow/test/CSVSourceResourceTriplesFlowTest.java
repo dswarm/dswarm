@@ -29,7 +29,7 @@ import static org.junit.Assert.assertFalse;
 
 public class CSVSourceResourceTriplesFlowTest {
 
-	private void testFlow(CSVSourceResourceTriplesFlow flow) {
+	private void testFlow(CSVSourceResourceTriplesFlow flow) throws DMPConverterException {
 		final ResourceOpener opener = new ResourceOpener();
 
 		@SuppressWarnings("unchecked") final Matcher<String> predicateMatcher = anyOf(

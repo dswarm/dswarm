@@ -1,6 +1,8 @@
 package de.avgl.dmp.converter.flow;
 
 import java.io.Reader;
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Charsets;
@@ -70,7 +72,12 @@ public abstract class AbstractCSVResourceFlow<T> {
 			return Optional.absent();
 		}
 
-		return Optional.of(jsonNode.asText().charAt(0));
+		final String text = jsonNode.asText();
+		if (text.length() != 1) {
+			throw new DMPConverterException(String.format("The field [%s] must be a single character only, got '%s' instead", key, text));
+		}
+
+		return Optional.of(text.charAt(0));
 	}
 
 	protected AbstractCSVResourceFlow() {
@@ -114,9 +121,15 @@ public abstract class AbstractCSVResourceFlow<T> {
 		this.quoteCharacter = quoteCharacterOptional.or(defaultQuoteCharacter);
 		this.columnDelimiter = columnDelimiterOptional.or(defaultColumnDelimiter);
 		this.rowDelimiter = rowDelimiterOptional.or(defaultRowDelimiter);
+
+		try {
+			Charset.forName(this.encoding);
+		} catch (UnsupportedCharsetException e) {
+			throw new DMPConverterException(String.format("Unsupported Encoding - [%s]", e.getCharsetName()));
+		}
 	}
 
-	public T applyFile(final String filePath) {
+	public T applyFile(final String filePath) throws DMPConverterException {
 
 		final FileOpener opener = new FileOpener();
 
@@ -127,7 +140,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 		return apply(filePath, opener);
 	}
 
-	public T apply(final String obj, final ObjectPipe<String, ObjectReceiver<Reader>> opener) {
+	public T apply(final String obj, final ObjectPipe<String, ObjectReceiver<Reader>> opener) throws DMPConverterException {
 
 		// set parsing attributes
 		final CsvReader reader = new CsvReader(escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter);
@@ -138,7 +151,13 @@ public abstract class AbstractCSVResourceFlow<T> {
 
 		final CsvReader pipe = opener.setReceiver(reader);
 
-		return process(opener, obj, pipe);
+		try {
+
+			return process(opener, obj, pipe);
+		} catch (RuntimeException e) {
+			throw new DMPConverterException(e.getMessage());
+		}
+
 	}
 
 	protected abstract T process(ObjectPipe<String, ObjectReceiver<Reader>> opener, String obj, CsvReader pipe);
