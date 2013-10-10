@@ -26,12 +26,12 @@ import org.culturegraph.mf.framework.annotations.Out;
 @Out(CSVRecord.class)
 public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceiver<CSVRecord>> {
 
-	private static char		escapeCharacter;
-	private static char		quoteCharacter;
-	private static char		columnSeparator;
-	private static String	lineEnding;
-	private static int		ignoreLines;
-	private static int		discardRows;
+	private char		escapeCharacter;
+	private char		quoteCharacter;
+	private char		columnSeparator;
+	private String	lineEnding;
+	private int		ignoreLines;
+	private int		discardRows;
 
 	private boolean			hasHeader = false;
 
@@ -74,7 +74,7 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 
 	public void process(final Reader reader, final ObjectReceiver<CSVRecord> receiver) {
 
-		final CSVFormat csvFormat = CSVFormat.newFormat(columnSeparator).withCommentStart('#').withQuoteChar(quoteCharacter)
+		final CSVFormat csvFormat = CSVFormat.newFormat(columnSeparator).withQuoteChar(quoteCharacter)
 				.withEscape(escapeCharacter).withRecordSeparator(lineEnding);
 
 		CSVParser csvParser;
@@ -87,7 +87,7 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 				for (; i --> 0 ;) {
 					final String line = bufferedReader.readLine();
 					if (line == null) {
-						throw new MetafactureException(String.format("cannot ignore [%d] lines, file is probably empty", i = 1));
+						throw new MetafactureException(String.format("cannot ignore [%d] lines, file is probably empty", i + 1));
 					}
 				}
 			} catch (IOException e) {
