@@ -86,6 +86,10 @@ public abstract class AbstractCSVResourceFlow<T> {
 
 		final String text = jsonNode.asText();
 		if (text.length() != 1) {
+			if (text.matches("^\\\\t$")) {
+				return Optional.of('\t');
+			}
+
 			throw new DMPConverterException(String.format("The field [%s] must be a single character only, got '%s' instead", key, text));
 		}
 
