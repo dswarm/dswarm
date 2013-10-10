@@ -29,12 +29,10 @@ import com.google.inject.servlet.RequestScoped;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import de.avgl.dmp.controller.DMPControllerException;
-import de.avgl.dmp.controller.services.PersistenceServices;
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.services.ConfigurationService;
-import de.avgl.dmp.persistence.services.ResourceService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 @RequestScoped
