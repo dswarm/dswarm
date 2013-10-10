@@ -71,6 +71,14 @@ public final class CsvReader implements Reader<CSVRecord> {
 		this.withLimit = true;
 	}
 
+	public CsvReader(final Character escapeCharacter, final Character quoteCharacter, final Character columnDelimiter,
+					 final String rowDelimiter, final int ignoreLines, final int discardRows) {
+
+		this.decoder = new CsvDecoder();
+		lineReader = new CsvLineReader(escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter, ignoreLines, discardRows);
+		lineReader.setReceiver(this.decoder);
+	}
+
 	public CsvDecoder getDecoder() {
 
 		return decoder;
@@ -132,6 +140,7 @@ public final class CsvReader implements Reader<CSVRecord> {
 			limit++;
 		}
 
+		lineReader.setHeader(hasHeader);
 		decoder.setHeader(hasHeader);
 	}
 }
