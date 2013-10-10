@@ -88,6 +88,8 @@ public final class CsvReader implements Reader<CSVRecord> {
 		this.limit = limit;
 		this.withLimit = true;
 
+		getDecoder().withLimit(limit);
+
 		return this;
 	}
 

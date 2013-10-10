@@ -113,37 +113,39 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 
 		boolean hasRecord = false;
 
-		while (csvIter.hasNext()) {
+		try {
+			while (csvIter.hasNext()) {
 
-			if (!managedDiscards && headersRemaining <= 0) {
+				if (!managedDiscards && headersRemaining <= 0) {
 
-				int i = discardRows;
-				try {
+					int i = discardRows;
+					try {
 
-					for (; i --> 0 ;) {
-						csvIter.next();
+						for (; i --> 0 ;) {
+							csvIter.next();
+						}
+					} catch (NoSuchElementException e) {
+
+						throw new MetafactureException(String.format("there is nothing left to discard [%d] more rows", i + 1), e);
 					}
-				} catch (NoSuchElementException e) {
 
-					throw new MetafactureException(String.format("there is nothing left to discard [%d] more rows", i + 1), e);
+					managedDiscards = true;
+					continue;
 				}
 
-				managedDiscards = true;
-				continue;
-			}
+				final CSVRecord record = csvIter.next();
 
-			final CSVRecord record = csvIter.next();
+				if (record != null) {
+					if (headersRemaining > 0) {
+						headersRemaining -= 1;
+					} else {
+						hasRecord = true;
+					}
 
-			if (record != null) {
-				if (headersRemaining > 0) {
-					headersRemaining -= 1;
-				} else {
-					hasRecord = true;
+					receiver.process(record);
 				}
-
-				receiver.process(record);
 			}
-		}
+		} catch (NoSuchElementException ignored) {}
 
 		if (!hasRecord) {
 

@@ -1,6 +1,7 @@
 package de.avgl.dmp.converter.mf.stream.converter;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import org.apache.commons.csv.CSVRecord;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
@@ -32,9 +33,7 @@ public final class CsvDecoder extends DefaultObjectPipe<CSVRecord, StreamReceive
 
 	public CsvDecoder(final int limit) {
 		super();
-
-		this.limit = limit;
-		this.withLimit = true;
+		withLimit(limit);
 	}
 
 	@Override
@@ -46,7 +45,7 @@ public final class CsvDecoder extends DefaultObjectPipe<CSVRecord, StreamReceive
 
 			if (limitCount == limit) {
 
-				return;
+				throw new NoSuchElementException("Reached max lines limit");
 			}
 
 			limitCount++;
@@ -120,5 +119,11 @@ public final class CsvDecoder extends DefaultObjectPipe<CSVRecord, StreamReceive
 		}
 
 		hasHeader = hasHeaderArg;
+	}
+
+	public void withLimit(final int limit) {
+
+		this.limit = limit;
+		this.withLimit = true;
 	}
 }
