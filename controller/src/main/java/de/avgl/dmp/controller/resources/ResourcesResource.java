@@ -852,10 +852,14 @@ public class ResourcesResource {
 			flow = CSVResourceFlowFactory.fromConfiguration(configurationFromJSON, CSVSourceResourceCSVPreviewFlow.class);
 		} catch (DMPConverterException e) {
 
-			throw new DMPControllerException("something went wrong while apply configuration to resource");
+			throw new DMPControllerException(e.getMessage());
 		}
 
-		return flow.applyFile(filePathNode.asText());
+		try {
+			return flow.applyFile(filePathNode.asText());
+		} catch (DMPConverterException e) {
+			throw new DMPControllerException(e.getMessage());
+		}
 	}
 
 	private String applyConfigurationForCSVJSONPreview(final Resource resource, final String configurationJSONString) throws DMPControllerException {
@@ -880,12 +884,17 @@ public class ResourcesResource {
 			flow = CSVResourceFlowFactory.fromConfiguration(configurationFromJSON, CSVSourceResourceCSVJSONPreviewFlow.class);
 		} catch (DMPConverterException e) {
 
-			throw new DMPControllerException("something went wrong while apply configuration to resource");
+			throw new DMPControllerException(e.getMessage());
 		}
 
 		flow.withLimit(50);
 
-		return flow.applyFile(filePathNode.asText());
+		try {
+			return flow.applyFile(filePathNode.asText());
+		} catch (DMPConverterException e) {
+
+			throw new DMPControllerException(e.getMessage());
+		}
 	}
 
 	private Configuration getConfiguration(final String configurationJSONString) throws DMPControllerException {

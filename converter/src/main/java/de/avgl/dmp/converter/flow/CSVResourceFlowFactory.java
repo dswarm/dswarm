@@ -33,7 +33,7 @@ public class CSVResourceFlowFactory {
 			throw new DMPConverterException("Error while accessing Configuration constructor for class " + clazz.getSimpleName());
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
-			throw new DMPConverterException("Error while invoking Configuration constructor for class " + clazz.getSimpleName());
+			throw new DMPConverterException(e.getCause().getMessage());
 		}
 
 		return checkNotNull(flow, "something went wrong while apply configuration to resource");
@@ -65,7 +65,7 @@ public class CSVResourceFlowFactory {
 			throw new DMPConverterException("Error while accessing Configuration constructor for class " + clazz.getSimpleName());
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
-			throw new DMPConverterException("Error while invoking Configuration constructor for class " + clazz.getSimpleName());
+			throw new DMPConverterException(e.getCause().getMessage());
 		}
 
 		return checkNotNull(flow, "something went wrong while apply configuration to resource");

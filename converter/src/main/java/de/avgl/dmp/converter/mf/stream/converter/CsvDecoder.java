@@ -11,7 +11,7 @@ import org.culturegraph.mf.framework.annotations.Out;
 
 /**
  * Decodes lines of CSV files.
- * 
+ *
  * @author tgaengler
  */
 @Description("Decodes lines of CSV files.")
@@ -87,10 +87,12 @@ public final class CsvDecoder extends DefaultObjectPipe<CSVRecord, StreamReceive
 
 				getReceiver().endRecord();
 			} else {
-				throw new IllegalArgumentException("wrong number of columns in input line: " + record.toString());
+
+				throw new IllegalArgumentException(String.format(
+						"wrong number of columns in input line %d - expected [%d] but found [%d] instead, line was %s",
+						count, header.length, record.size(), record.toString()));
 			}
 		} else {
-
 			// utilise column number as default for schema property
 
 			getReceiver().startRecord(String.valueOf(++count));
