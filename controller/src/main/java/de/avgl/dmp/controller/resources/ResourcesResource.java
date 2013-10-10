@@ -5,12 +5,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
@@ -32,9 +34,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.eventbus.EventBus;
+import com.google.common.io.Files;
+import com.google.common.io.LineProcessor;
 import com.google.common.net.HttpHeaders;
 import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
@@ -233,6 +238,85 @@ public class ResourcesResource {
 
 		dmpStatus.stop(context);
 		return buildResponse(resourceJSON);
+	}
+
+
+	@GET
+	@Path("/{id}/lines")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getResourcePlain(@PathParam("id") final Long id,
+									 @DefaultValue("50") @QueryParam("atMost") final int atMost,
+									 @DefaultValue("UTF-8") @QueryParam("encoding") final String encoding)
+			throws DMPControllerException {
+		final Timer.Context context = dmpStatus.getSingleResource();
+
+		final Optional<Resource> resourceOptional = fetchResource(id);
+
+		if (!resourceOptional.isPresent()) {
+
+			dmpStatus.stop(context);
+			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		}
+
+		final Resource resource = resourceOptional.get();
+
+		final JsonNode path = resource.getAttributes().get("path");
+
+		if (path == null) {
+
+			dmpStatus.stop(context);
+			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		}
+
+		final String filePath = path.asText();
+
+		final List<String> lines;
+		try {
+			lines = Files.readLines(new File(filePath), Charset.forName(encoding), new LineProcessor<List<String>>() {
+				private final ImmutableList.Builder<String> lines = ImmutableList.builder();
+				private int linesProcessed = 1;
+
+				@Override
+				public boolean processLine(String line) throws IOException {
+					if (linesProcessed ++> atMost) {
+
+						return false;
+					}
+
+					lines.add(line);
+					return true;
+				}
+
+				@Override
+				public List<String> getResult() {
+					return lines.build();
+				}
+			});
+		} catch (IOException e) {
+
+			dmpStatus.stop(context);
+			throw new DMPControllerException("couldn't read file contents.\n" + e.getMessage());
+		}
+
+		Map<String, Object> jsonMap = new HashMap<String, Object>(1);
+		jsonMap.put("lines", lines);
+		jsonMap.put("name", resource.getName());
+		jsonMap.put("description", resource.getDescription());
+
+		final String plainJson;
+		try {
+
+			plainJson = objectMapper.writeValueAsString(jsonMap);
+		} catch (final JsonProcessingException e) {
+
+			dmpStatus.stop(context);
+			throw new DMPControllerException("couldn't transform resource contents to JSON array.\n" + e.getMessage());
+		}
+
+
+
+		dmpStatus.stop(context);
+		return buildResponse(plainJson);
 	}
 
 	@GET
