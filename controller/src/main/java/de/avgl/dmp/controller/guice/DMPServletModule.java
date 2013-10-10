@@ -3,6 +3,8 @@ package de.avgl.dmp.controller.guice;
 import java.util.concurrent.TimeUnit;
 
 import com.google.inject.name.Names;
+import com.google.inject.persist.PersistFilter;
+import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.ServletModule;
 
 import de.avgl.dmp.controller.servlet.HeartbeatServlet;
@@ -13,6 +15,10 @@ public class DMPServletModule extends ServletModule {
 
 	@Override
 	protected void configureServlets() {
+
+		install(new JpaPersistModule("DMPApp"));
+
+		filter("/*").through(PersistFilter.class);
 
 		bind(TimeUnit.class).annotatedWith(Names.named("RateUnit")).toInstance(TimeUnit.SECONDS);
 		bind(TimeUnit.class).annotatedWith(Names.named("DurationUnit")).toInstance(TimeUnit.MILLISECONDS);

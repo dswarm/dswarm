@@ -14,12 +14,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.io.Resources;
+import com.google.inject.Key;
+import com.google.inject.name.Names;
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
@@ -27,9 +30,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.avgl.dmp.controller.servlet.DMPInjector;
 import de.avgl.dmp.controller.resources.test.utils.ResourceTestUtils;
-import de.avgl.dmp.controller.services.PersistenceServices;
+import de.avgl.dmp.controller.servlet.DMPInjector;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
@@ -56,7 +58,13 @@ public class ResourcesResourceTest extends ResourceTest {
 	private Resource								expectedResource		= null;
 	private Resource								actualResource			= null;
 	private Set<Configuration>						exceptedConfigurations	= null;
-	private ConfigurationService					configurationService	= null;
+
+	private final ConfigurationService				configurationService = injector.getInstance(ConfigurationService.class);
+
+	private final ResourceService					resourceService = injector.getInstance(ResourceService.class);
+
+	private final ObjectMapper						objectMapper = injector.getInstance(ObjectMapper.class);
+
 
 	public ResourcesResourceTest() {
 		super("resources");
@@ -65,7 +73,8 @@ public class ResourcesResourceTest extends ResourceTest {
 	@Before
 	public void prepare() throws IOException {
 		resourceJSONString = DMPPersistenceUtil.getResourceAsString("resource.json");
-		expectedResource = DMPPersistenceUtil.getJSONObjectMapper().readValue(resourceJSONString, Resource.class);
+
+		expectedResource = injector.getInstance(ObjectMapper.class).readValue(resourceJSONString, Resource.class);
 
 		final URL fileURL = Resources.getResource("test_csv.csv");
 		resourceFile = FileUtils.toFile(fileURL);
@@ -78,7 +87,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		LOG.debug("created resource = '" + resourceJSON + "'");
 
-		final Resource resource = DMPPersistenceUtil.getJSONObjectMapper().readValue(resourceJSON, Resource.class);
+		final Resource resource = objectMapper.readValue(resourceJSON, Resource.class);
 
 		cleanUpDB(resource);
 	}
@@ -87,7 +96,7 @@ public class ResourcesResourceTest extends ResourceTest {
 	public void testResourceUpload2() throws Exception {
 
 		resourceJSONString = DMPPersistenceUtil.getResourceAsString("resource2.json");
-		expectedResource = DMPPersistenceUtil.getJSONObjectMapper().readValue(resourceJSONString, Resource.class);
+		expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
 
 		final URL fileURL = Resources.getResource("utf8dmpf04.n3");
 		resourceFile = FileUtils.toFile(fileURL);
@@ -96,7 +105,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		LOG.debug("created resource = '" + resourceJSON + "'");
 
-		final Resource resource = DMPPersistenceUtil.getJSONObjectMapper().readValue(resourceJSON, Resource.class);
+		final Resource resource = objectMapper.readValue(resourceJSON, Resource.class);
 
 		cleanUpDB(resource);
 	}
@@ -108,7 +117,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		LOG.debug("created resource = '" + resourceJSON + "'");
 
-		final Resource resource = DMPPersistenceUtil.getJSONObjectMapper().readValue(resourceJSON, Resource.class);
+		final Resource resource = objectMapper.readValue(resourceJSON, Resource.class);
 
 		Assert.assertNotNull("resource shouldn't be null", resource);
 		Assert.assertNotNull("resource id shouldn't be null", resource.getId());
@@ -131,30 +140,33 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		prepareGetResourceConfigurations();
 
+		final int numberOfIterations = injector.getInstance(Key.get(Integer.class, Names.named("NumberOfIterations")));
+		final int sleepTime = injector.getInstance(Key.get(Integer.class, Names.named("SleepingTime")));
+
 		// check idempotency of GET
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < numberOfIterations; i++) {
 
 			getResourceConfigurationsInternal(actualResource);
 		}
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < numberOfIterations; i++) {
 
 			getResourcesInternal(actualResource.getId(), expectedResource);
 		}
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < numberOfIterations; i++) {
 
 			getResourceConfigurationsInternal(actualResource);
 
-			Thread.sleep(2000);
+			Thread.sleep(sleepTime);
 		}
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < numberOfIterations; i++) {
 
 			getResourcesInternal(actualResource.getId(), expectedResource);
 
-			Thread.sleep(2000);
+			Thread.sleep(sleepTime);
 		}
 
 		finalizeGetResourceConfigurations();
@@ -165,30 +177,33 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		prepareGetResourceConfigurations();
 
+		final int numberOfIterations = injector.getInstance(Key.get(Integer.class, Names.named("NumberOfIterations")));
+		final int sleepTime = injector.getInstance(Key.get(Integer.class, Names.named("SleepingTime")));
+
 		// check idempotency of GET
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < numberOfIterations; i++) {
 
 			curlGetResourceConfigurationsInternal(actualResource);
 		}
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < numberOfIterations; i++) {
 
 			curlGetResourcesInternal(actualResource.getId(), expectedResource);
 		}
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < numberOfIterations; i++) {
 
 			curlGetResourceConfigurationsInternal(actualResource);
 
-			Thread.sleep(2000);
+			Thread.sleep(sleepTime);
 		}
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < numberOfIterations; i++) {
 
 			curlGetResourcesInternal(actualResource.getId(), expectedResource);
 
-			Thread.sleep(2000);
+			Thread.sleep(sleepTime);
 		}
 
 		finalizeGetResourceConfigurations();
@@ -201,7 +216,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		LOG.debug("created resource = '" + resourceJSON + "'");
 
-		final Resource resource = DMPPersistenceUtil.getJSONObjectMapper().readValue(resourceJSON, Resource.class);
+		final Resource resource = objectMapper.readValue(resourceJSON, Resource.class);
 
 		Assert.assertNotNull("resource shouldn't be null", resource);
 		Assert.assertNotNull("resource id shouldn't be null", resource.getId());
@@ -222,8 +237,6 @@ public class ResourcesResourceTest extends ResourceTest {
 		final Resource resource = addResourceConfigurationInternal();
 
 		// clean up
-
-		final ConfigurationService configurationService = PersistenceServices.getInstance().getConfigurationService();
 
 		for (final Configuration configuration : resource.getConfigurations()) {
 
@@ -251,14 +264,12 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		Assert.assertNotNull("response resource configuration JSON shouldn't be null", responseResourceConfigurationJSON);
 
-		final Configuration responseResourceConfiguration = DMPPersistenceUtil.getJSONObjectMapper().readValue(responseResourceConfigurationJSON,
+		final Configuration responseResourceConfiguration = objectMapper.readValue(responseResourceConfigurationJSON,
 				Configuration.class);
 
 		Assert.assertNotNull("response resource configuration shoudln't be null", responseResourceConfiguration);
 
 		ResourceTestUtils.compareConfigurations(configuration, responseResourceConfiguration);
-
-		final ConfigurationService configurationService = PersistenceServices.getInstance().getConfigurationService();
 
 		configurationService.deleteObject(configuration.getId());
 
@@ -290,7 +301,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final String responseSchemaJsonString = response.readEntity(String.class);
 
-		final JsonNode json = DMPPersistenceUtil.getJSONObjectMapper().readValue(
+		final JsonNode json = objectMapper.readValue(
 				responseSchemaJsonString, JsonNode.class);
 
 		assertThat(json.get("title").asText(), equalTo(config.getName()));
@@ -307,8 +318,6 @@ public class ResourcesResourceTest extends ResourceTest {
 		}
 
 		// clean up
-
-		final ConfigurationService configurationService = PersistenceServices.getInstance().getConfigurationService();
 
 		for (final Configuration configuration : resource.getConfigurations()) {
 
@@ -374,8 +383,6 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		// clean up
 
-		final ConfigurationService configurationService = PersistenceServices.getInstance().getConfigurationService();
-
 		for (final Configuration configuration : resource.getConfigurations()) {
 
 			configurationService.deleteObject(configuration.getId());
@@ -402,8 +409,6 @@ public class ResourcesResourceTest extends ResourceTest {
 	private void cleanUpDB(Resource resource, boolean withConfigurations) {
 		if (withConfigurations) {
 
-			final ConfigurationService configurationService = PersistenceServices.getInstance().getConfigurationService();
-
 			for (final Configuration configuration : resource.getConfigurations()) {
 
 				configurationService.deleteObject(configuration.getId());
@@ -420,7 +425,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		LOG.debug("created resource = '" + resourceJSON + "'");
 
-		final Resource resource = DMPPersistenceUtil.getJSONObjectMapper().readValue(resourceJSON, Resource.class);
+		final Resource resource = objectMapper.readValue(resourceJSON, Resource.class);
 
 		Assert.assertNotNull("resource shouldn't be null", resource);
 		Assert.assertNotNull("resource id shouldn't be null", resource.getId());
@@ -429,15 +434,15 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		LOG.debug("created resource = '" + resource2JSON + "'");
 
-		final Resource resource2 = DMPPersistenceUtil.getJSONObjectMapper().readValue(resource2JSON, Resource.class);
+		final Resource resource2 = objectMapper.readValue(resource2JSON, Resource.class);
 
 		Assert.assertNotNull("resource shouldn't be null", resource2);
 		Assert.assertNotNull("resource id shouldn't be null", resource2.getId());
 
-		final ArrayNode resourcesJSONArray = DMPPersistenceUtil.getJSONObjectMapper().createArrayNode();
+		final ArrayNode resourcesJSONArray = objectMapper.createArrayNode();
 
-		final ObjectNode resourceJSONObject = DMPPersistenceUtil.getJSONObjectMapper().readValue(resourceJSON, ObjectNode.class);
-		final ObjectNode resource2JSONObject = DMPPersistenceUtil.getJSONObjectMapper().readValue(resource2JSON, ObjectNode.class);
+		final ObjectNode resourceJSONObject = objectMapper.readValue(resourceJSON, ObjectNode.class);
+		final ObjectNode resource2JSONObject = objectMapper.readValue(resource2JSON, ObjectNode.class);
 
 		resourcesJSONArray.add(resourceJSONObject).add(resource2JSONObject);
 
@@ -461,7 +466,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		LOG.debug("created resource = '" + resourceJSON + "'");
 
-		final Resource resource = DMPPersistenceUtil.getJSONObjectMapper().readValue(resourceJSON, Resource.class);
+		final Resource resource = objectMapper.readValue(resourceJSON, Resource.class);
 
 		Assert.assertNotNull("resource shouldn't be null", resource);
 
@@ -485,7 +490,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		LOG.debug("created resource = '" + resourceJSON + "'");
 
-		final Resource resource = DMPPersistenceUtil.getJSONObjectMapper().readValue(resourceJSON, Resource.class);
+		final Resource resource = objectMapper.readValue(resourceJSON, Resource.class);
 
 		Assert.assertNotNull("resource shouldn't be null", resource);
 
@@ -519,7 +524,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		Assert.assertNotNull("resource shouldn't be null", responseResourceString);
 
-		final Resource responseResource = DMPPersistenceUtil.getJSONObjectMapper().readValue(responseResourceString, Resource.class);
+		final Resource responseResource = objectMapper.readValue(responseResourceString, Resource.class);
 
 		compareResource(expectedResource, responseResource);
 
@@ -532,7 +537,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		LOG.debug("created resource = '" + resourceJSON + "'");
 
-		final Resource resource = DMPPersistenceUtil.getJSONObjectMapper().readValue(resourceJSON, Resource.class);
+		final Resource resource = objectMapper.readValue(resourceJSON, Resource.class);
 
 		Assert.assertNotNull("resource shouldn't be null", resource);
 		Assert.assertNotNull("resource id shouldn't be null", resource.getId());
@@ -540,7 +545,7 @@ public class ResourcesResourceTest extends ResourceTest {
 		LOG.debug("try to add configuration to resource '" + resource.getId() + "'");
 
 		final String configurationJSON = DMPPersistenceUtil.getResourceAsString("configuration.json");
-		final Configuration configuration = DMPPersistenceUtil.getJSONObjectMapper().readValue(configurationJSON, Configuration.class);
+		final Configuration configuration = objectMapper.readValue(configurationJSON, Configuration.class);
 
 		final Response response = target(String.valueOf(resource.getId()), "/configurations")
 				.request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(configurationJSON));
@@ -550,7 +555,7 @@ public class ResourcesResourceTest extends ResourceTest {
 		Assert.assertEquals("201 Created was expected", 201, response.getStatus());
 		Assert.assertNotNull("response configuration JSON shouldn't be null", responseConfigurationJSON);
 
-		final Configuration responseConfiguration = DMPPersistenceUtil.getJSONObjectMapper()
+		final Configuration responseConfiguration = objectMapper
 				.readValue(responseConfigurationJSON, Configuration.class);
 
 		Assert.assertNotNull("response configuration shouldn't be null", responseConfiguration);
@@ -571,7 +576,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		// clean-up DB
 
-		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
+		final ResourceService resourceService = injector.getInstance(ResourceService.class);
 
 		Assert.assertNotNull("resource service shouldn't be null", resourceService);
 
@@ -652,7 +657,7 @@ public class ResourcesResourceTest extends ResourceTest {
 	private void prepareGetResourceConfigurations() throws Exception {
 
 		final String complexResourceJSONString = DMPPersistenceUtil.getResourceAsString("complex_resource.json");
-		final Resource expectedComplexResource = DMPPersistenceUtil.getJSONObjectMapper().readValue(complexResourceJSONString, Resource.class);
+		final Resource expectedComplexResource = objectMapper.readValue(complexResourceJSONString, Resource.class);
 
 		Assert.assertNotNull("the complex resource shouldn't be null", expectedComplexResource);
 		Assert.assertNotNull("the name of the complex resource shouldn't be null", expectedComplexResource.getName());
@@ -661,8 +666,6 @@ public class ResourcesResourceTest extends ResourceTest {
 		Assert.assertNotNull("the attributes of the complex resource shouldn't be null", expectedComplexResource.getAttributes());
 		Assert.assertNotNull("the configurations of the complex resource shouldn't be null", expectedComplexResource.getConfigurations());
 		Assert.assertFalse("the configurations of the complex resource shouldn't be empty", expectedComplexResource.getConfigurations().isEmpty());
-
-		final ResourceService resourceService = PersistenceServices.getInstance().getResourceService();
 
 		Resource complexResource = null;
 
@@ -684,7 +687,6 @@ public class ResourcesResourceTest extends ResourceTest {
 		complexResource.setType(expectedComplexResource.getType());
 		complexResource.setAttributes(expectedComplexResource.getAttributes());
 
-		configurationService = PersistenceServices.getInstance().getConfigurationService();
 		final Set<Configuration> createdConfigurations = Sets.newLinkedHashSet();
 
 		for (final Configuration expectedConfiguration : expectedComplexResource.getConfigurations()) {
@@ -745,7 +747,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		Assert.assertNotNull("response resource JSON shouldn't be null", responseResourceJSON);
 
-		final Resource responseResource = DMPPersistenceUtil.getJSONObjectMapper().readValue(responseResourceJSON, Resource.class);
+		final Resource responseResource = objectMapper.readValue(responseResourceJSON, Resource.class);
 
 		Assert.assertNotNull("the response resource shouldn't be null", responseResource);
 

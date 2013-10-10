@@ -29,6 +29,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
@@ -59,7 +60,7 @@ import de.avgl.dmp.persistence.services.ConfigurationService;
 import de.avgl.dmp.persistence.services.InternalService;
 import de.avgl.dmp.persistence.services.ResourceService;
 import de.avgl.dmp.persistence.services.SchemaService;
-import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
+
 
 @RequestScoped
 @Path("resources")
@@ -81,31 +82,37 @@ public class ResourcesResource {
 
 	private final Provider<SchemaService>			schemaServiceProvider;
 
-	private final EntityManager						entityManager;
-
 	private final DMPStatus							dmpStatus;
+
+	private final ObjectMapper						objectMapper;
 
 
 	@Inject
-	public ResourcesResource(final EntityManager entityManager,
-							 final DMPStatus dmpStatus,
+	public ResourcesResource(final DMPStatus dmpStatus,
+							 final ObjectMapper objectMapper,
 							 final Provider<ResourceService> resourceServiceProvider,
 							 final Provider<ConfigurationService> configurationServiceProvider,
 							 final Provider<InternalService> internalServiceProvider,
 							 final Provider<SchemaService> schemaServiceProvider,
 							 final Provider<EventBus> eventBusProvider) {
+
 		this.eventBusProvider = eventBusProvider;
 		this.resourceServiceProvider = resourceServiceProvider;
 		this.configurationServiceProvider = configurationServiceProvider;
 		this.internalServiceProvider = internalServiceProvider;
 		this.schemaServiceProvider = schemaServiceProvider;
-		this.entityManager = entityManager;
 		this.dmpStatus = dmpStatus;
+		this.objectMapper = objectMapper;
 	}
 
 	private Response buildResponse(final String responseContent) {
 
 		return Response.ok(responseContent).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+	}
+
+	private Response buildResponseCreated(final String responseContent, final URI responseURI) {
+
+		return Response.created(responseURI).entity(responseContent).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 	}
 
 	@POST
@@ -133,7 +140,7 @@ public class ResourcesResource {
 
 		try {
 
-			resourceJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(resource);
+			resourceJSON = objectMapper.writeValueAsString(resource);
 		} catch (final JsonProcessingException e) {
 
 			dmpStatus.stop(context);
@@ -146,7 +153,7 @@ public class ResourcesResource {
 		LOG.debug("created new resource at '" + resourceURI.toString() + "' with content '" + resourceJSON + "'");
 
 		dmpStatus.stop(context);
-		return Response.created(resourceURI).entity(resourceJSON).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		return buildResponseCreated(resourceJSON, resourceURI);
 	}
 
 	@GET
@@ -158,7 +165,7 @@ public class ResourcesResource {
 
 		final ResourceService resourceService = resourceServiceProvider.get();
 
-		final List<Resource> resources = resourceService.getObjects(entityManager);
+		final List<Resource> resources = resourceService.getObjects();
 
 		if (resources == null) {
 
@@ -182,7 +189,7 @@ public class ResourcesResource {
 
 		try {
 
-			resourcesJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(resources);
+			resourcesJSON = objectMapper.writeValueAsString(resources);
 		} catch (final JsonProcessingException e) {
 
 			dmpStatus.stop(context);
@@ -215,7 +222,7 @@ public class ResourcesResource {
 
 		try {
 
-			resourceJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(resource);
+			resourceJSON = objectMapper.writeValueAsString(resource);
 		} catch (final JsonProcessingException e) {
 
 			dmpStatus.stop(context);
@@ -266,7 +273,7 @@ public class ResourcesResource {
 
 		try {
 
-			configurationsJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(resource.getConfigurations());
+			configurationsJSON = objectMapper.writeValueAsString(resource.getConfigurations());
 		} catch (final JsonProcessingException e) {
 
 			dmpStatus.stop(context);
@@ -327,7 +334,7 @@ public class ResourcesResource {
 
 		try {
 
-			configurationJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(configuration);
+			configurationJSON = objectMapper.writeValueAsString(configuration);
 		} catch (final JsonProcessingException e) {
 
 			dmpStatus.stop(context);
@@ -340,8 +347,7 @@ public class ResourcesResource {
 		LOG.debug("return new configuration at '" + configurationURI.toString() + "' with content '" + configurationJSON + "'");
 
 		dmpStatus.stop(context);
-		return Response.created(configurationURI).entity(configurationJSON).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
-
+		return buildResponseCreated(configurationJSON, configurationURI);
 	}
 
 	@GET
@@ -363,7 +369,7 @@ public class ResourcesResource {
 
 		try {
 
-			configurationJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(configurationOptional.get());
+			configurationJSON = objectMapper.writeValueAsString(configurationOptional.get());
 		} catch (final JsonProcessingException e) {
 
 			dmpStatus.stop(context);
@@ -402,7 +408,7 @@ public class ResourcesResource {
 
 			try {
 
-				rootOptional.get().render(DMPPersistenceUtil.getJSONObjectMapper(), outputStream);
+				rootOptional.get().render(objectMapper, outputStream);
 				schemaJSON = outputStream.toString("UTF-8");
 
 			} catch (IOException e) {
@@ -439,7 +445,7 @@ public class ResourcesResource {
 
 			try {
 
-				schemaJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(jsonMap);
+				schemaJSON = objectMapper.writeValueAsString(jsonMap);
 			} catch (final JsonProcessingException e) {
 
 				dmpStatus.stop(context);
@@ -494,7 +500,7 @@ public class ResourcesResource {
 
 		try {
 
-			configurationJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(jsonList);
+			configurationJSON = objectMapper.writeValueAsString(jsonList);
 		} catch (final JsonProcessingException e) {
 
 			dmpStatus.stop(context);
@@ -543,7 +549,7 @@ public class ResourcesResource {
 		LOG.debug("applied configuration to resource with id '" + id + "'");
 
 		dmpStatus.stop(context);
-		return Response.ok().entity(result).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		return buildResponse(result);
 	}
 
 	@POST
@@ -582,7 +588,7 @@ public class ResourcesResource {
 		LOG.debug("applied configuration to resource with id '" + id + "'");
 
 		dmpStatus.stop(context);
-		return Response.ok().entity(result).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		return buildResponse(result);
 	}
 
 	@OPTIONS
@@ -635,7 +641,7 @@ public class ResourcesResource {
 
 		final ResourceService resourceService = resourceServiceProvider.get();
 
-		final Resource resource = resourceService.getObject(entityManager, resourceId);
+		final Resource resource = resourceService.getObject(resourceId);
 
 		if (resource == null) {
 
@@ -696,7 +702,7 @@ public class ResourcesResource {
 
 		try {
 
-			resource = resourceService.createObject(entityManager);
+			resource = resourceService.createObject();
 		} catch (final DMPPersistenceException e) {
 
 			LOG.debug("something went wrong while resource creation");
@@ -729,7 +735,7 @@ public class ResourcesResource {
 		// LOG.debug("couldn't determine file type from file '" + file.getAbsolutePath() + "'");
 		// }
 
-		final ObjectNode attributes = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
+		final ObjectNode attributes = new ObjectNode(objectMapper.getNodeFactory());
 		attributes.put("path", file.getAbsolutePath());
 
 		// if (fileType != null) {
@@ -760,11 +766,10 @@ public class ResourcesResource {
 
 		final ConfigurationService configurationService = configurationServiceProvider.get();
 
-		Configuration configuration = null;
-
+		final Configuration configuration;
 		try {
 
-			configuration = configurationService.createObject(entityManager);
+			configuration = configurationService.createObject();
 		} catch (final DMPPersistenceException e) {
 
 			LOG.debug("something went wrong while configuration creation");
@@ -802,7 +807,7 @@ public class ResourcesResource {
 
 		try {
 
-			configurationService.updateObjectTransactional(entityManager, configuration);
+			configurationService.updateObjectTransactional(configuration);
 		} catch (final DMPPersistenceException e) {
 
 			LOG.debug("something went wrong while configuration updating");
@@ -814,7 +819,7 @@ public class ResourcesResource {
 
 		try {
 
-			resourceService.updateObjectTransactional(entityManager, resource);
+			resourceService.updateObjectTransactional(resource);
 		} catch (final DMPPersistenceException e) {
 
 			LOG.debug("something went wrong while resource updating for configuration");
@@ -889,7 +894,7 @@ public class ResourcesResource {
 
 		try {
 
-			configurationFromJSON = DMPPersistenceUtil.getJSONObjectMapper().readValue(configurationJSONString, Configuration.class);
+			configurationFromJSON = objectMapper.readValue(configurationJSONString, Configuration.class);
 		} catch (final JsonParseException e) {
 
 			LOG.debug("something went wrong while deserializing the configuration JSON string");

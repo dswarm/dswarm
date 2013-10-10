@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
+import com.google.inject.Injector;
 
 import de.avgl.dmp.init.DMPException;
 
@@ -20,6 +21,8 @@ public class DMPPersistenceUtil {
 
 	private static final JsonNodeFactory	factory	= JsonNodeFactory.instance;
 	private static final ObjectMapper		mapper;
+
+	public static transient Injector		injector;
 
 	static {
 		mapper = new ObjectMapper();
@@ -58,6 +61,14 @@ public class DMPPersistenceUtil {
 	public static JsonNodeFactory getJSONFactory() {
 
 		return factory;
+	}
+
+	public static Injector getInjector() throws DMPException {
+		if (injector == null) {
+			throw new DMPException("you should not use getInjector without providing ist first. Try to use @Inject first.");
+		}
+
+		return injector;
 	}
 
 }
