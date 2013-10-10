@@ -2,6 +2,7 @@ package de.avgl.dmp.converter.flow;
 
 import java.io.Reader;
 
+import com.google.common.base.Optional;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 
@@ -29,18 +30,32 @@ public class CSVSourceResourceCSVJSONPreviewFlow extends AbstractCSVResourceFlow
 	@Override
 	protected String process(final ObjectPipe<String, ObjectReceiver<Reader>> opener, final String obj, final CsvReader pipe) {
 
+		final Optional<Integer> newLimit;
 
-		if(withLimit) {
+		if (atMost.isPresent()) {
+			if (withLimit && atMost.get() > limit) {
+				newLimit = Optional.of(limit);
+			} else {
+				newLimit = atMost;
+			}
 
-			pipe.withLimit(limit);
+		} else if (withLimit) {
+			newLimit = Optional.of(limit);
+		} else {
+			newLimit = Optional.absent();
+		}
+
+		if (newLimit.isPresent()) {
+
+			pipe.withLimit(newLimit.get());
 		}
 
 		// TODO: process header from configuration
 		final CSVJSONEncoder encoder;
 
-		if(withLimit) {
+		if(newLimit.isPresent()) {
 
-			encoder = new CSVJSONEncoder(limit);
+			encoder = new CSVJSONEncoder(newLimit.get());
 		} else {
 			encoder = new CSVJSONEncoder();
 		}

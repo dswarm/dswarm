@@ -30,6 +30,13 @@ public abstract class AbstractCSVResourceFlow<T> {
 
 	private final String							rowDelimiter;
 
+	private final int								ignoreLines;
+
+	private final int								discardRows;
+
+	protected final Optional<Integer> 				atMost;
+
+
 	private static final String						defaultEncoding			= Charsets.UTF_8.name();
 
 	private static final Character					defaultEscapeCharacter	= '\\';
@@ -39,6 +46,11 @@ public abstract class AbstractCSVResourceFlow<T> {
 	private static final Character					defaultColumnDelimiter	= ';';
 
 	private static final String						defaultRowDelimiter		= "\n";
+
+	public static final int							defaultIgnoreLines = 0;
+
+	public static final int							defaultDiscardRows = 0;
+
 
 	private JsonNode getParameterValue(final Configuration configuration, final String key) throws DMPConverterException {
 
@@ -80,12 +92,37 @@ public abstract class AbstractCSVResourceFlow<T> {
 		return Optional.of(text.charAt(0));
 	}
 
+	private Optional<Integer> getNumberParameter(final Configuration configuration, final String key) throws DMPConverterException {
+		final JsonNode jsonNode = getParameterValue(configuration, key);
+		if (jsonNode == null) {
+			return Optional.absent();
+		}
+
+		if (!jsonNode.isNumber()) {
+			return Optional.of(jsonNode.asInt());
+		}
+
+		final String text = jsonNode.asText();
+
+		final int intValue;
+		try {
+			intValue = Integer.valueOf(text);
+		} catch (NumberFormatException e) {
+			throw new DMPConverterException(String.format("The field [%s] must be numeric or a numeric string, got '%s' instead", key, text));
+		}
+
+		return Optional.of(intValue);
+	}
+
 	protected AbstractCSVResourceFlow() {
 		this.encoding = defaultEncoding;
 		this.escapeCharacter = defaultEscapeCharacter;
 		this.quoteCharacter = defaultQuoteCharacter;
 		this.columnDelimiter = defaultColumnDelimiter;
 		this.rowDelimiter = defaultRowDelimiter;
+		this.ignoreLines = defaultIgnoreLines;
+		this.discardRows = defaultDiscardRows;
+		this.atMost = Optional.absent();
 	}
 
 	public AbstractCSVResourceFlow(final String encoding, final Character escapeCharacter, final Character quoteCharacter,
@@ -96,6 +133,10 @@ public abstract class AbstractCSVResourceFlow<T> {
 		this.quoteCharacter = quoteCharacter;
 		this.columnDelimiter = columnDelimiter;
 		this.rowDelimiter = rowDelimiter;
+
+		this.ignoreLines = defaultIgnoreLines;
+		this.discardRows = defaultDiscardRows;
+		this.atMost = Optional.absent();
 	}
 
 	public AbstractCSVResourceFlow(final Configuration configuration) throws DMPConverterException {
@@ -115,12 +156,18 @@ public abstract class AbstractCSVResourceFlow<T> {
 		final Optional<Character> quoteCharacterOptional = getCharParameter(configuration, ConfigurationStatics.QUOTE_CHARACTER);
 		final Optional<Character> columnDelimiterOptional = getCharParameter(configuration, ConfigurationStatics.COLUMN_DELIMITER);
 		final Optional<String> rowDelimiterOptional = getStringParameter(configuration, ConfigurationStatics.ROW_DELIMITER);
+		final Optional<Integer> ignoreLinesOptional = getNumberParameter(configuration, ConfigurationStatics.IGNORE_LINES);
+		final Optional<Integer> discardRowsOptional = getNumberParameter(configuration, ConfigurationStatics.DISCARD_ROWS);
+		final Optional<Integer> atMostOptional = getNumberParameter(configuration, ConfigurationStatics.AT_MOST);
 
 		this.encoding = encodingOptional.or(defaultEncoding);
 		this.escapeCharacter = escapeCharacterOptional.or(defaultEscapeCharacter);
 		this.quoteCharacter = quoteCharacterOptional.or(defaultQuoteCharacter);
 		this.columnDelimiter = columnDelimiterOptional.or(defaultColumnDelimiter);
 		this.rowDelimiter = rowDelimiterOptional.or(defaultRowDelimiter);
+		this.ignoreLines = ignoreLinesOptional.or(defaultIgnoreLines);
+		this.discardRows = discardRowsOptional.or(defaultDiscardRows);
+		this.atMost = atMostOptional;
 
 		try {
 			Charset.forName(this.encoding);
@@ -143,7 +190,8 @@ public abstract class AbstractCSVResourceFlow<T> {
 	public T apply(final String obj, final ObjectPipe<String, ObjectReceiver<Reader>> opener) throws DMPConverterException {
 
 		// set parsing attributes
-		final CsvReader reader = new CsvReader(escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter);
+		final CsvReader reader = new CsvReader(escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter,
+				ignoreLines, discardRows);
 
 		// TODO: process header from configuration
 		reader.setHeader(true);

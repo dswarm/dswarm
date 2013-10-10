@@ -27,6 +27,12 @@ public class CSVSourceResourceTriplesFlow extends AbstractCSVResourceFlow<Immuta
 	@Override
 	protected ImmutableList<Triple> process(final ObjectPipe<String, ObjectReceiver<Reader>> opener, final String obj,
 											final CsvReader pipe) {
+
+		if (atMost.isPresent()) {
+
+			pipe.withLimit(atMost.get());
+		}
+
 		final ListTripleReceiver tripleReceiver = new ListTripleReceiver();
 		pipe.setReceiver(new StreamToTriples()).setReceiver(tripleReceiver);
 
