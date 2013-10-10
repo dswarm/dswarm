@@ -4,18 +4,14 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
-import com.google.common.eventbus.EventBus;
-import com.google.inject.Guice;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
-import de.avgl.dmp.controller.guice.DMPServletModule;
-import de.avgl.dmp.controller.servlet.DMPInjector;
-import de.avgl.dmp.controller.guice.DMPModule;
 import de.avgl.dmp.controller.EmbeddedServer;
+import de.avgl.dmp.controller.servlet.DMPInjector;
 
-public class ResourceTest {
+public class ResourceTest extends GuicedTest {
 
 	private static final org.apache.log4j.Logger	LOG		= org.apache.log4j.Logger.getLogger(ResourceTest.class);
 
@@ -31,18 +27,13 @@ public class ResourceTest {
 
 	@BeforeClass
 	public static void startUp() throws Exception {
+		GuicedTest.startUp();
+
 		System.setProperty(EmbeddedServer.CONTEXT_PATH_PROPERTY, "/test");
 		System.setProperty(EmbeddedServer.HTTP_HOST_PROPERTY, "127.0.0.1");
 		System.setProperty(EmbeddedServer.HTTP_PORT_PROPERTY, String.valueOf(port));
 
-		class TestModule extends DMPModule {
-			@Override
-			protected EventBus provideEventBus() {
-				return new EventBus();
-			}
-		}
-
-		DMPInjector.injector = Guice.createInjector(new TestModule());
+		DMPInjector.injector = injector;
 
 		grizzlyServer = new EmbeddedServer();
 		grizzlyServer.start();
@@ -51,6 +42,7 @@ public class ResourceTest {
 	@AfterClass
 	public static void tearDown() throws Exception {
 
+		GuicedTest.tearDown();
 		grizzlyServer.stop();
 	}
 

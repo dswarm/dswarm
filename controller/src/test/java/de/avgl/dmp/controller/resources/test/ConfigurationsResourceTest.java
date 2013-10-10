@@ -3,6 +3,7 @@ package de.avgl.dmp.controller.resources.test;
 import java.io.IOException;
 import java.util.Set;
 
+import javax.persistence.EntityManager;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -11,12 +12,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
 
 import de.avgl.dmp.controller.resources.test.utils.ResourceTestUtils;
-import de.avgl.dmp.controller.services.PersistenceServices;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.services.ConfigurationService;
+import de.avgl.dmp.persistence.services.ResourceService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public class ConfigurationsResourceTest extends ResourceTest {
@@ -26,6 +28,11 @@ public class ConfigurationsResourceTest extends ResourceTest {
 	private String									configurationJSONString	= null;
 	private Configuration							expectedConfiguration	= null;
 	private Set<Configuration>						expectedConfigurations	= null;
+
+	private final ConfigurationService				configurationService = injector.getInstance(ConfigurationService.class);
+
+	private final ObjectMapper						objectMapper = injector.getInstance(ObjectMapper.class);
+
 
 	public ConfigurationsResourceTest() {
 		super("configurations");
@@ -82,7 +89,7 @@ public class ConfigurationsResourceTest extends ResourceTest {
 
 		Assert.assertNotNull("response configuration JSON shouldn't be null", responseConfigurationJSON);
 
-		final Configuration responseConfiguration = DMPPersistenceUtil.getJSONObjectMapper()
+		final Configuration responseConfiguration = objectMapper
 				.readValue(responseConfigurationJSON, Configuration.class);
 
 		Assert.assertNotNull("response configuration shouldn't be null", responseConfiguration);
@@ -103,7 +110,7 @@ public class ConfigurationsResourceTest extends ResourceTest {
 
 		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
 
-		final Configuration actualConfiguration = DMPPersistenceUtil.getJSONObjectMapper().readValue(responseString, Configuration.class);
+		final Configuration actualConfiguration = objectMapper.readValue(responseString, Configuration.class);
 
 		ResourceTestUtils.compareConfigurations(expectedConfiguration, actualConfiguration);
 
@@ -114,7 +121,6 @@ public class ConfigurationsResourceTest extends ResourceTest {
 
 		// clean-up DB
 
-		final ConfigurationService configurationService = PersistenceServices.getInstance().getConfigurationService();
 		final Long configurationId = configuration.getId();
 
 		configurationService.deleteObject(configurationId);

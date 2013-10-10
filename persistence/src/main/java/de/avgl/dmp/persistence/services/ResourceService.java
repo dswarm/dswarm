@@ -7,6 +7,8 @@ import javax.persistence.EntityManager;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
@@ -15,9 +17,13 @@ import de.avgl.dmp.persistence.model.resource.ResourceType;
 
 public class ResourceService extends BasicJPAService<Resource> {
 
-	public ResourceService() {
+	private final Provider<ConfigurationService> configurationServiceProvider;
 
-		super(Resource.class);
+	@Inject
+	public ResourceService(Provider<EntityManager> entityManagerProvider, Provider<ConfigurationService> configurationServiceProvider) {
+
+		super(Resource.class, entityManagerProvider);
+		this.configurationServiceProvider = configurationServiceProvider;
 	}
 
 	@Override
@@ -55,7 +61,7 @@ public class ResourceService extends BasicJPAService<Resource> {
 	@Override
 	public Resource getObject(final Long id) {
 
-		final ConfigurationService cS = new ConfigurationService();
+		final ConfigurationService cS = configurationServiceProvider.get();
 
 
 

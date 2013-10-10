@@ -5,13 +5,13 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.common.collect.Sets;
 
+import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.persistence.model.DMPJPAObject;
 import de.avgl.dmp.persistence.services.BasicJPAService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
@@ -26,15 +26,10 @@ public abstract class ReferenceDeserializer<DMPJPAOBJECTIMPL extends DMPJPAObjec
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ReferenceDeserializer.class);
 
-	private final BasicJPAService<DMPJPAOBJECTIMPL>	jpaService;
-
-	public ReferenceDeserializer(final BasicJPAService<DMPJPAOBJECTIMPL> jpaServiceArg) {
-
-		jpaService = jpaServiceArg;
-	}
+	abstract BasicJPAService<DMPJPAOBJECTIMPL> getJpaService() throws DMPException;
 
 	@Override
-	public Set<DMPJPAOBJECTIMPL> deserialize(final JsonParser jp, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public Set<DMPJPAOBJECTIMPL> deserialize(final JsonParser jp, final DeserializationContext ctxt) throws IOException {
 
 		final ArrayNode arrayNode = DMPPersistenceUtil.getJSONObjectMapper().readValue(jp, ArrayNode.class);
 
@@ -72,7 +67,17 @@ public abstract class ReferenceDeserializer<DMPJPAOBJECTIMPL extends DMPJPAObjec
 
 			final Long id = Long.valueOf(idNode.asLong());
 
-			final DMPJPAOBJECTIMPL object = jpaService.getObject(id);
+			final BasicJPAService<DMPJPAOBJECTIMPL> jpaService;
+			try {
+				jpaService = getJpaService();
+			} catch (DMPException e) {
+				LOG.error("Couldn't get JPAService", e);
+				continue;
+			}
+
+
+			final DMPJPAOBJECTIMPL object;
+			object = jpaService.getObject(id);
 
 			if (object == null) {
 

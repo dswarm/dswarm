@@ -47,7 +47,7 @@ public class ResourceServiceTest extends BasicJPAServiceTest<Resource, ResourceS
 
 		final Resource resource = createSimpleResource();
 
-		final ConfigurationService configurationService = new ConfigurationService();
+		final ConfigurationService configurationService = injector.getInstance(ConfigurationService.class);
 
 		Assert.assertNotNull("configuration service shouldn't be null", configurationService);
 
@@ -146,7 +146,7 @@ public class ResourceServiceTest extends BasicJPAServiceTest<Resource, ResourceS
 		checkSimpleResource(updatedResource2, updatedResource3);
 
 		checkComplexResource(updatedResource2, updatedResource3);
-		
+
 		String resourceJSON = null;
 
 		try {
@@ -156,7 +156,7 @@ public class ResourceServiceTest extends BasicJPAServiceTest<Resource, ResourceS
 
 			LOG.debug("couldn't transform resource object to JSON string.\n" + e.getMessage());
 		}
-		
+
 		System.out.println("resource configurations size: " + updatedResource3.getConfigurations().size());
 		System.out.println("resource JSON: " + resourceJSON);
 
@@ -168,7 +168,7 @@ public class ResourceServiceTest extends BasicJPAServiceTest<Resource, ResourceS
 		final Configuration deletedConfiguration = configurationService.getObject(configurationId);
 
 		Assert.assertNull("the deleted configuration shouldn't exist any more", deletedConfiguration);
-		
+
 		final Configuration deletedConfiguration2 = configurationService.getObject(configuration2Id);
 
 		Assert.assertNull("the deleted configuration shouldn't exist any more", deletedConfiguration2);
@@ -207,7 +207,7 @@ public class ResourceServiceTest extends BasicJPAServiceTest<Resource, ResourceS
 	private void checkComplexResource(final Resource resource, final Resource updatedResource, final String parameterKey, final String parameterValue) {
 
 		checkComplexResource(resource, updatedResource);
-		
+
 		Assert.assertEquals("the configuration of the resource is not equal", resource.getConfigurations().iterator().next(), resource
 				.getConfigurations().iterator().next());
 		Assert.assertEquals("the configuration parameter '" + parameterKey + "' of the resource is not equal", resource.getConfigurations()
@@ -216,9 +216,9 @@ public class ResourceServiceTest extends BasicJPAServiceTest<Resource, ResourceS
 				.iterator().next().getParameter(parameterKey).asText(), resource.getConfigurations().iterator().next().getParameter(parameterKey)
 				.asText());
 	}
-	
+
 	private void checkComplexResource(final Resource resource, final Resource updatedResource) {
-		
+
 		Assert.assertNotNull("the configurations of the updated resource shouldn't be null", updatedResource.getConfigurations());
 		Assert.assertEquals("the configurations of the resource are not equal", resource.getConfigurations(), updatedResource.getConfigurations());
 		Assert.assertEquals("the configurations' size of the resource are not equal", resource.getConfigurations().size(), updatedResource.getConfigurations().size());

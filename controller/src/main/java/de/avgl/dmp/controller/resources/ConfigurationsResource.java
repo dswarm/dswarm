@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Set;
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.OPTIONS;
@@ -23,6 +24,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
 import com.google.common.net.HttpHeaders;
+import com.google.inject.Provider;
+import com.google.inject.servlet.RequestScoped;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import de.avgl.dmp.controller.DMPControllerException;
@@ -31,15 +34,24 @@ import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.services.ConfigurationService;
+import de.avgl.dmp.persistence.services.ResourceService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
+@RequestScoped
 @Path("configurations")
 public class ConfigurationsResource {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ConfigurationsResource.class);
 
+	private final Provider<ConfigurationService>	configurationServiceProvider;
+
 	@Context
 	UriInfo											uri;
+
+	@Inject
+	public ConfigurationsResource(Provider<ConfigurationService> configurationServiceProvider) {
+		this.configurationServiceProvider = configurationServiceProvider;
+	}
 
 	private Response buildResponse(final String responseContent) {
 		return Response.ok(responseContent).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
@@ -51,7 +63,7 @@ public class ConfigurationsResource {
 
 		LOG.debug("try to get configurations");
 
-		final ConfigurationService configurationService = PersistenceServices.getInstance().getConfigurationService();
+		final ConfigurationService configurationService = configurationServiceProvider.get();
 
 		final List<Configuration> configurations = configurationService.getObjects();
 
@@ -133,7 +145,7 @@ public class ConfigurationsResource {
 
 		LOG.debug("try to get configuration with id '" + id + "'");
 
-		final ConfigurationService configurationService = PersistenceServices.getInstance().getConfigurationService();
+		final ConfigurationService configurationService = configurationServiceProvider.get();
 
 		final Configuration configuration = configurationService.getObject(id);
 
@@ -207,7 +219,7 @@ public class ConfigurationsResource {
 			throw new DMPControllerException("deserialized configuration is null");
 		}
 
-		final ConfigurationService configurationService = PersistenceServices.getInstance().getConfigurationService();
+		final ConfigurationService configurationService = configurationServiceProvider.get();
 
 		Configuration configuration = null;
 

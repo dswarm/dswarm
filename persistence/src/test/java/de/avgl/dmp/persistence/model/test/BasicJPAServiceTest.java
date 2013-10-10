@@ -8,10 +8,11 @@ import org.junit.Test;
 import com.google.common.collect.Sets;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
+import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.DMPJPAObject;
 import de.avgl.dmp.persistence.services.BasicJPAService;
 
-public abstract class BasicJPAServiceTest<POJOCLASS extends DMPJPAObject, JPASERVICEIMPL extends BasicJPAService<POJOCLASS>> {
+public abstract class BasicJPAServiceTest<POJOCLASS extends DMPJPAObject, JPASERVICEIMPL extends BasicJPAService<POJOCLASS>> extends GuicedTest {
 
 	private static final org.apache.log4j.Logger	LOG			= org.apache.log4j.Logger.getLogger(BasicJPAServiceTest.class);
 
@@ -24,19 +25,7 @@ public abstract class BasicJPAServiceTest<POJOCLASS extends DMPJPAObject, JPASER
 		this.type = type;
 		this.jpaServiceClass = jpaServiceClass;
 
-		try {
-			jpaService = this.jpaServiceClass.newInstance();
-		} catch (InstantiationException e1) {
-
-			LOG.error("something went wrong while " + type + " service creation.\n" + e1.getMessage());
-
-			Assert.assertTrue("something went wrong while " + type + " service creation.\n" + e1.getMessage(), false);
-		} catch (IllegalAccessException e1) {
-
-			LOG.error("something went wrong while " + type + " service creation.\n" + e1.getMessage());
-
-			Assert.assertTrue("something went wrong while " + type + " service creation.\n" + e1.getMessage(), false);
-		}
+		jpaService = injector.getInstance(jpaServiceClass);
 
 		Assert.assertNotNull(type + " service shouldn't be null", jpaService);
 	}
@@ -90,7 +79,7 @@ public abstract class BasicJPAServiceTest<POJOCLASS extends DMPJPAObject, JPASER
 	protected POJOCLASS updateObjectTransactional(final POJOCLASS object) {
 
 		POJOCLASS updatedObject = null;
-		
+
 		try {
 
 			updatedObject = jpaService.updateObjectTransactional(object);
@@ -98,19 +87,19 @@ public abstract class BasicJPAServiceTest<POJOCLASS extends DMPJPAObject, JPASER
 
 			Assert.assertTrue("something went wrong while updaging the " + type, false);
 		}
-		
+
 		return updatedObject;
 	}
-	
+
 	protected POJOCLASS getUpdatedObject(final POJOCLASS object) {
-		
+
 		POJOCLASS updatedObject = null;
-		
+
 		updatedObject = jpaService.getObject(object.getId());
-		
+
 		Assert.assertNotNull("the updated " + type + " shoudln't be null", updatedObject);
 		Assert.assertEquals("the " + type + "s are not equal", object, updatedObject);
-		
+
 		return updatedObject;
 	}
 
