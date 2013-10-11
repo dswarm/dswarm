@@ -566,7 +566,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("test_csv.json");
 
-		Assert.assertEquals("POST responses are not equal", expected, responseString);
+		Assert.assertEquals("POST responses are not equal", expected.trim(), responseString.trim());
 	}
 
 	private String testResourceUploadInteral() throws Exception {
