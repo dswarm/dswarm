@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -18,8 +20,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.google.common.io.Files;
 import com.google.common.io.Resources;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
@@ -131,6 +135,64 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
 		Assert.assertEquals("resource JSONs are not equal", resourceJSON, responseResource);
+
+		cleanUpDB(resource);
+	}
+
+	@Test
+	public void testGetResourceLines() throws Exception {
+
+		final String resourceJSON = testResourceUploadInteral();
+
+		LOG.debug("created resource = '" + resourceJSON + "'");
+
+		final Resource resource = objectMapper.readValue(resourceJSON, Resource.class);
+
+		Assert.assertNotNull("resource shouldn't be null", resource);
+		Assert.assertNotNull("resource id shouldn't be null", resource.getId());
+
+		LOG.debug("try to retrieve resource '" + resource.getId() + "'");
+
+		final List<String> expectedLines = Files.readLines(resourceFile, Charset.forName("UTF-8"));
+
+		Response response = target(String.valueOf(resource.getId()), "lines").request().accept(MediaType.APPLICATION_JSON_TYPE)
+				.get(Response.class);
+
+		Iterator<String> expectedIter = expectedLines.iterator();
+
+		JsonNode responseResource = response.readEntity(JsonNode.class);
+		Iterator<JsonNode> actualIter = responseResource.get("lines").elements();
+
+		while (actualIter.hasNext()) {
+			String expected = expectedIter.next();
+			String actual = actualIter.next().asText();
+
+			assertThat(actual, equalTo(expected));
+		}
+
+		assertThat(responseResource.get("name").asText(), equalTo(resource.getName()));
+		assertThat(responseResource.get("description").asText(), equalTo(resource.getDescription()));
+
+
+		response = target(String.valueOf(resource.getId()), "lines")
+				.queryParam("atMost", 3)
+				.request().accept(MediaType.APPLICATION_JSON_TYPE)
+				.get(Response.class);
+
+		expectedIter = Iterables.limit(expectedLines, 3).iterator();
+
+		responseResource = response.readEntity(JsonNode.class);
+		actualIter = responseResource.get("lines").elements();
+
+		while (actualIter.hasNext()) {
+			String expected = expectedIter.next();
+			String actual = actualIter.next().asText();
+
+			assertThat(actual, equalTo(expected));
+		}
+
+		assertThat(responseResource.get("name").asText(), equalTo(resource.getName()));
+		assertThat(responseResource.get("description").asText(), equalTo(resource.getDescription()));
 
 		cleanUpDB(resource);
 	}

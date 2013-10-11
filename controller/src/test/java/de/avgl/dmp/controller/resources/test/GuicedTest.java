@@ -25,7 +25,7 @@ public class GuicedTest {
 				super.configure();
 
 				bind(Integer.class).annotatedWith(Names.named("NumberOfIterations")).toInstance(10);
-				bind(Integer.class).annotatedWith(Names.named("SleepingTime")).toInstance(2000);
+				bind(Integer.class).annotatedWith(Names.named("SleepingTime")).toInstance(1000);
 			}
 
 			@Override
