@@ -30,6 +30,6 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 
 		final String actual = flow.applyFile(file.getAbsolutePath());
 
-		assertEquals(expected, actual);
+		assertEquals(expected.trim(), actual.trim());
 	}
 }
