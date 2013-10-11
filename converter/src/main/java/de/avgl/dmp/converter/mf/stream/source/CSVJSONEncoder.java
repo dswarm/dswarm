@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 
+import de.avgl.dmp.persistence.model.types.Tuple;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -29,7 +30,7 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 public final class CSVJSONEncoder extends DefaultStreamPipe<ObjectReceiver<JsonNode>> {
 
 	private List<String>	header					= null;
-	private List<String>	values					= null;
+	private List<Tuple<String, String>>	values		= null;
 	private ArrayNode		schemaJSON				= null;
 	private ObjectNode		dataJSON				= null;
 
@@ -171,7 +172,7 @@ public final class CSVJSONEncoder extends DefaultStreamPipe<ObjectReceiver<JsonN
 		// collect values
 		if (value != null) {
 
-			values.add(value);
+			values.add(Tuple.tuple(name, value));
 		} else {
 
 			throw new MetafactureException("name and value are null");
@@ -204,18 +205,8 @@ public final class CSVJSONEncoder extends DefaultStreamPipe<ObjectReceiver<JsonN
 
 		dataJSON = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
 
-		final int i = 0;
-
-		for (final String headerField : header) {
-
-			final String value = values.get(i);
-
-			if (value == null) {
-
-				continue;
-			}
-
-			dataJSON.put(headerField, value);
+		for (Tuple<String, String> value : values) {
+			dataJSON.put(value.v1(), value.v2());
 		}
 	}
 }
