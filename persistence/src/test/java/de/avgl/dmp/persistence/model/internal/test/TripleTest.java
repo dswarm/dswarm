@@ -3,7 +3,7 @@ package de.avgl.dmp.persistence.model.internal.test;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.avgl.dmp.persistence.model.internal.Triple;
+import de.avgl.dmp.persistence.model.types.Triple;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.sameInstance;

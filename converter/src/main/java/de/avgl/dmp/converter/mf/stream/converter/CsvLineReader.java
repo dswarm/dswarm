@@ -77,9 +77,9 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 		final CSVFormat csvFormat = CSVFormat.newFormat(columnSeparator).withQuoteChar(quoteCharacter)
 				.withEscape(escapeCharacter).withRecordSeparator(lineEnding);
 
-		CSVParser csvParser;
+		final CSVParser csvParser;
 
-		Reader actualReader;
+		final Reader actualReader;
 		if (ignoreLines > 0) {
 			final BufferedReader bufferedReader = new BufferedReader(reader);
 			int i = ignoreLines;
