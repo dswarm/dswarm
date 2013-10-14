@@ -15,18 +15,18 @@ import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.services.InternalService;
 
 @Singleton
-public class ConverterEventRecorder {
+public class CSVConverterEventRecorder {
 
 	private final InternalService internalService;
 
 	@Inject
-	public ConverterEventRecorder(final InternalService internalService, final EventBus eventBus) {
+	public CSVConverterEventRecorder(final InternalService internalService, final EventBus eventBus) {
 
 		this.internalService = internalService;
 		eventBus.register(this);
 	}
 
-	@Subscribe public void convertConfiguration(final ConverterEvent event) {
+	@Subscribe public void convertConfiguration(final CSVConverterEvent event) {
 		final Configuration configuration = event.getConfiguration();
 		final Resource resource = event.getResource();
 

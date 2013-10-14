@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -25,6 +26,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import com.codahale.metrics.Timer;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -43,12 +48,10 @@ import com.google.common.io.LineProcessor;
 import com.google.common.net.HttpHeaders;
 import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
-import de.avgl.dmp.controller.eventbus.ConverterEvent;
+import de.avgl.dmp.controller.eventbus.CSVConverterEvent;
+import de.avgl.dmp.controller.eventbus.XMLConverterEvent;
 import de.avgl.dmp.controller.eventbus.XMLSchemaEvent;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.controller.utils.DMPControllerUtils;
@@ -410,7 +413,10 @@ public class ResourcesResource {
 				eventBusProvider.get().post(new XMLSchemaEvent(configuration, resource));
 			} else if ("csv".equals(storageType.asText())) {
 
-				eventBusProvider.get().post(new ConverterEvent(configuration, resource));
+				eventBusProvider.get().post(new CSVConverterEvent(configuration, resource));
+			} else if ("xml".equals(storageType.asText())) {
+
+				eventBusProvider.get().post(new XMLConverterEvent(configuration, resource));
 			}
 		}
 
