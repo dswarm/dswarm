@@ -6,6 +6,8 @@ import java.io.Reader;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import com.google.common.base.Optional;
+import com.google.common.collect.Iterators;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -26,36 +28,32 @@ import org.culturegraph.mf.framework.annotations.Out;
 @Out(CSVRecord.class)
 public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceiver<CSVRecord>> {
 
-	private char		escapeCharacter;
-	private char		quoteCharacter;
-	private char		columnSeparator;
-	private String	lineEnding;
-	private int		ignoreLines;
-	private int		discardRows;
+	private char					escapeCharacter;
+	private char					quoteCharacter;
+	private char					columnSeparator;
+	private String					lineEnding;
+	private int						ignoreLines;
+	private int						discardRows;
+	private final Optional<Integer>	atMost;
 
-	private boolean			hasHeader = false;
+	private final boolean			hasHeader;
 
 	public CsvLineReader() {
-
-		escapeCharacter = '\\';
-		quoteCharacter = '"';
-		columnSeparator = ';';
-		lineEnding = "\n";
-		ignoreLines = 0;
-		discardRows = 0;
+		this('\\', '"', ',', "\r\n");
 	}
 
-	public CsvLineReader(final char escapeCharacteArg, final char quoteCharacterArg, final char columnSeparatorArg, final String lineEndingArg) {
-
-		escapeCharacter = escapeCharacteArg;
-		quoteCharacter = quoteCharacterArg;
-		columnSeparator = columnSeparatorArg;
-		lineEnding = lineEndingArg;
-		ignoreLines = 0;
-		discardRows = 0;
+	public CsvLineReader(final Character escapeCharacterArg, final Character quoteCharacterArg, final Character columnDelimiter, final String rowDelimiter) {
+		this(escapeCharacterArg, quoteCharacterArg, columnDelimiter, rowDelimiter, 0, 0, Optional.<Integer>absent());
 	}
 
-	public CsvLineReader(final Character escapeCharacterArg, final Character quoteCharacterArg, final Character columnDelimiter, final String rowDelimiter, final int ignoreLinesArg, final int discardRowsArg) {
+	public CsvLineReader(final Character escapeCharacterArg, final Character quoteCharacterArg, final Character columnDelimiter, final String rowDelimiter,
+						 final int ignoreLinesArg, final int discardRowsArg, final Optional<Integer> atMostArg) {
+
+		this(escapeCharacterArg, quoteCharacterArg, columnDelimiter, rowDelimiter,ignoreLinesArg, discardRowsArg, atMostArg, false);
+	}
+
+	public CsvLineReader(final Character escapeCharacterArg, final Character quoteCharacterArg, final Character columnDelimiter, final String rowDelimiter,
+						 final int ignoreLinesArg, final int discardRowsArg, final Optional<Integer> atMostArg, final boolean hasHeaderArg) {
 
 		escapeCharacter = escapeCharacterArg;
 		quoteCharacter = quoteCharacterArg;
@@ -63,6 +61,9 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 		lineEnding = rowDelimiter;
 		ignoreLines = ignoreLinesArg;
 		discardRows = discardRowsArg;
+		atMost = atMostArg;
+
+		hasHeader = hasHeaderArg;
 	}
 
 	@Override
@@ -72,17 +73,13 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 		process(reader, getReceiver());
 	}
 
-	public void process(final Reader reader, final ObjectReceiver<CSVRecord> receiver) {
+	private Reader getInternalReader(Reader reader) {
 
-		final CSVFormat csvFormat = CSVFormat.newFormat(columnSeparator).withQuoteChar(quoteCharacter)
-				.withEscape(escapeCharacter).withRecordSeparator(lineEnding);
-
-		final CSVParser csvParser;
-
-		final Reader actualReader;
 		if (ignoreLines > 0) {
+
 			final BufferedReader bufferedReader = new BufferedReader(reader);
 			int i = ignoreLines;
+
 			try {
 				for (; i --> 0 ;) {
 					final String line = bufferedReader.readLine();
@@ -93,59 +90,84 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 			} catch (IOException e) {
 				throw new MetafactureException(String.format("cannot ignore [%d] lines, file is probably empty", i + 1), e);
 			}
-			actualReader = bufferedReader;
-		} else {
-			actualReader = reader;
+
+			return bufferedReader;
 		}
+
+		return reader;
+	}
+
+	private CSVParser getInternalParser(Reader reader) {
+		final CSVFormat csvFormat = CSVFormat.newFormat(columnSeparator).withQuoteChar(quoteCharacter)
+				.withEscape(escapeCharacter).withRecordSeparator(lineEnding);
 
 		try {
 
-			csvParser = new CSVParser(actualReader, csvFormat);
+			return new CSVParser(reader, csvFormat);
 		} catch (IOException e) {
 
 			throw new MetafactureException(e);
 		}
+	}
 
-		final Iterator<CSVRecord> csvIter = csvParser.iterator();
+	private Iterator<CSVRecord> getInternalCSVIter(CSVParser parser) {
+		final Iterator<CSVRecord> csvIter = parser.iterator();
 
-		boolean managedDiscards = discardRows <= 0;
-		int headersRemaining = hasHeader ? 1 : 0;
+		if (atMost.isPresent()) {
+
+			int headerRows = hasHeader ? 1 : 0;
+			return Iterators.limit(csvIter, atMost.get() + headerRows + discardRows);
+		}
+
+		return csvIter;
+	}
+
+	private void processHeaders(Iterator<CSVRecord> iterator, final ObjectReceiver<CSVRecord> receiver) {
+		if (hasHeader) {
+			if (!iterator.hasNext()) {
+				throw new MetafactureException("cannot find any rows to use as header row");
+			}
+
+			receiver.process(iterator.next());
+		}
+	}
+
+	private void processDiscardRows(Iterator<CSVRecord> iterator) {
+		int i = discardRows;
+		try {
+
+			for (; i --> 0 ;) {
+				iterator.next();
+			}
+
+		} catch (NoSuchElementException e) {
+
+			throw new MetafactureException(String.format("there is nothing left to discard [%d] more rows", i + 1), e);
+		}
+	}
+
+	public void process(final Reader reader, final ObjectReceiver<CSVRecord> receiver) {
+
+		final Reader actualReader = getInternalReader(reader);
+		final CSVParser csvParser = getInternalParser(actualReader);
+
+		final Iterator<CSVRecord> csvIter = getInternalCSVIter(csvParser);
+
+		processHeaders(csvIter, receiver);
+		processDiscardRows(csvIter);
 
 		boolean hasRecord = false;
 
-		try {
-			while (csvIter.hasNext()) {
+		while (csvIter.hasNext()) {
 
-				if (!managedDiscards && headersRemaining <= 0) {
+			final CSVRecord record = csvIter.next();
 
-					int i = discardRows;
-					try {
+			if (record != null) {
+				hasRecord = true;
 
-						for (; i --> 0 ;) {
-							csvIter.next();
-						}
-					} catch (NoSuchElementException e) {
-
-						throw new MetafactureException(String.format("there is nothing left to discard [%d] more rows", i + 1), e);
-					}
-
-					managedDiscards = true;
-					continue;
-				}
-
-				final CSVRecord record = csvIter.next();
-
-				if (record != null) {
-					if (headersRemaining > 0) {
-						headersRemaining -= 1;
-					} else {
-						hasRecord = true;
-					}
-
-					receiver.process(record);
-				}
+				receiver.process(record);
 			}
-		} catch (NoSuchElementException ignored) {}
+		}
 
 		if (!hasRecord) {
 
@@ -155,13 +177,22 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 		try {
 
 			csvParser.close();
+			receiver.closeStream();
 		} catch (IOException e) {
 
 			throw new MetafactureException(e);
 		}
 	}
 
-	public void setHeader(boolean hasHeader) {
-		this.hasHeader = hasHeader;
+	public CsvLineReader withHeader(boolean hasHeaderArg) {
+		return new CsvLineReader(
+				escapeCharacter, quoteCharacter, columnSeparator, lineEnding, ignoreLines, discardRows, atMost, hasHeaderArg
+		);
+	}
+
+	public CsvLineReader withLimit(final int limit) {
+		return new CsvLineReader(
+				escapeCharacter, quoteCharacter, columnSeparator, lineEnding, ignoreLines, discardRows, Optional.of(limit) , hasHeader
+		);
 	}
 }

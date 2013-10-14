@@ -34,7 +34,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 
 	private final int								discardRows;
 
-	protected final Optional<Integer> 				atMost;
+	protected Optional<Integer> 					atMost;
 
 
 	private static final String						defaultEncoding			= Charsets.UTF_8.name();
@@ -195,11 +195,10 @@ public abstract class AbstractCSVResourceFlow<T> {
 
 		// set parsing attributes
 		final CsvReader reader = new CsvReader(escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter,
-				ignoreLines, discardRows);
+				ignoreLines, discardRows, atMost);
 
 		// TODO: process header from configuration
 		reader.setHeader(true);
-
 
 		final CsvReader pipe = opener.setReceiver(reader);
 

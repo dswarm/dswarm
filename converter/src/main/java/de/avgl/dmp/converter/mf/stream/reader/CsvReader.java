@@ -1,6 +1,8 @@
 package de.avgl.dmp.converter.mf.stream.reader;
 
+import com.google.common.base.Optional;
 import org.apache.commons.csv.CSVRecord;
+import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
@@ -9,6 +11,7 @@ import org.culturegraph.mf.framework.annotations.Out;
 import de.avgl.dmp.converter.mf.framework.annotations.Record;
 import de.avgl.dmp.converter.mf.stream.converter.CsvDecoder;
 import de.avgl.dmp.converter.mf.stream.converter.CsvLineReader;
+import de.avgl.dmp.converter.mf.stream.source.CSVJSONEncoder;
 
 /**
  * Reads Csv files. First line can be interpreted as header.<br>
@@ -22,61 +25,34 @@ import de.avgl.dmp.converter.mf.stream.converter.CsvLineReader;
 @Out(StreamReceiver.class)
 public final class CsvReader implements Reader<CSVRecord> {
 
-	private final CsvLineReader	lineReader;
+	private CsvLineReader	lineReader;
 	private final CsvDecoder	decoder;
-	private boolean				withLimit	= false;
-	private int					limit		= -1;
-	private int					count		= 0;
+
+	private void setLineReader(CsvLineReader reader) {
+		lineReader = reader;
+		lineReader.setReceiver(this.decoder);
+	}
+
+	private CsvReader(final CsvLineReader lineReaderArg) {
+		super();
+
+		decoder = new CsvDecoder();
+		setLineReader(lineReaderArg);
+	}
 
 	public CsvReader() {
 
-		super();
-
-		this.decoder = new CsvDecoder();
-		lineReader = new CsvLineReader();
-		lineReader.setReceiver(this.decoder);
+		this(new CsvLineReader());
 	}
 
-	public CsvReader(final int limit) {
+	public CsvReader(final char escapeCharacter, final char quoteCharacter, final char columnSeparator, final String lineEnding) {
 
-		super();
-
-		this.decoder = new CsvDecoder();
-		lineReader = new CsvLineReader();
-		lineReader.setReceiver(this.decoder);
-
-		this.limit = limit;
-		this.withLimit = true;
+		this(new CsvLineReader(escapeCharacter, quoteCharacter, columnSeparator, lineEnding));
 	}
 
-	public CsvReader(final char escapeCharacteArg, final char quoteCharacterArg, final char columnSeparatorArg, final String lineEnding) {
+	public CsvReader(final char escapeCharacter, final char quoteCharacter, final char columnDelimiter, final String rowDelimiter, final int ignoreLines, final int discardRows, final Optional<Integer> atMost) {
 
-		super();
-
-		this.decoder = new CsvDecoder();
-		lineReader = new CsvLineReader(escapeCharacteArg, quoteCharacterArg, columnSeparatorArg, lineEnding);
-		lineReader.setReceiver(this.decoder);
-	}
-
-	public CsvReader(final char escapeCharacteArg, final char quoteCharacterArg, final char columnSeparatorArg, final String lineEnding,
-			final int limit) {
-
-		super();
-
-		this.decoder = new CsvDecoder();
-		lineReader = new CsvLineReader(escapeCharacteArg, quoteCharacterArg, columnSeparatorArg, lineEnding);
-		lineReader.setReceiver(this.decoder);
-
-		this.limit = limit;
-		this.withLimit = true;
-	}
-
-	public CsvReader(final Character escapeCharacter, final Character quoteCharacter, final Character columnDelimiter,
-					 final String rowDelimiter, final int ignoreLines, final int discardRows) {
-
-		this.decoder = new CsvDecoder();
-		lineReader = new CsvLineReader(escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter, ignoreLines, discardRows);
-		lineReader.setReceiver(this.decoder);
+		this(new CsvLineReader(escapeCharacter, quoteCharacter, columnDelimiter , rowDelimiter, ignoreLines, discardRows, atMost));
 	}
 
 	public CsvDecoder getDecoder() {
@@ -85,10 +61,8 @@ public final class CsvReader implements Reader<CSVRecord> {
 	}
 
 	public CsvReader withLimit(final int limit) {
-		this.limit = limit;
-		this.withLimit = true;
 
-		getDecoder().withLimit(limit);
+		setLineReader(lineReader.withLimit(limit));
 
 		return this;
 	}
@@ -110,16 +84,6 @@ public final class CsvReader implements Reader<CSVRecord> {
 	@Override
 	public void read(final CSVRecord entry) {
 
-		if (withLimit) {
-
-			if (count == limit) {
-
-				return;
-			}
-
-			count++;
-		}
-
 		decoder.process(entry);
 	}
 
@@ -135,14 +99,11 @@ public final class CsvReader implements Reader<CSVRecord> {
 		lineReader.closeStream();
 	}
 
-	public void setHeader(final boolean hasHeader) {
+	public CsvReader setHeader(final boolean hasHeader) {
 
-		if(hasHeader) {
-
-			limit++;
-		}
-
-		lineReader.setHeader(hasHeader);
+		setLineReader(lineReader.withHeader(hasHeader));
 		decoder.setHeader(hasHeader);
+
+		return this;
 	}
 }

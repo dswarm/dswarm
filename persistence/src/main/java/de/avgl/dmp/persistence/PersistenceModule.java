@@ -1,9 +1,13 @@
 package de.avgl.dmp.persistence;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
+import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -48,14 +52,11 @@ public class PersistenceModule extends AbstractModule {
 
 	@Provides @Singleton
 	protected EventBus provideEventBus() {
-//		final ThreadPoolExecutor executor = new ThreadPoolExecutor(
-//				2, 10, 1, TimeUnit.MINUTES,
-//				new LinkedBlockingQueue<Runnable>()
-//		);
+		final ExecutorService executorService = Executors.newCachedThreadPool();
 
-//		return new AsyncEventBus(executor);
+		return new AsyncEventBus(executorService);
 
-		//	synchronous event bus
-		return new EventBus();
+//		//	synchronous event bus
+//		return new EventBus();
 	}
 }

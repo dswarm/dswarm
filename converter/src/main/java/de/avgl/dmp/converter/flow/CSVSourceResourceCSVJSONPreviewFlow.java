@@ -14,9 +14,6 @@ import de.avgl.dmp.persistence.model.resource.Configuration;
 
 public class CSVSourceResourceCSVJSONPreviewFlow extends AbstractCSVResourceFlow<String> {
 
-	private boolean withLimit = false;
-	private int limit = -1;
-
 	public CSVSourceResourceCSVJSONPreviewFlow(final String encoding, final Character escapeCharacter,
 											   final Character quoteCharacter, final Character columnDelimiter,
 											   final String rowDelimiter) {
@@ -30,39 +27,9 @@ public class CSVSourceResourceCSVJSONPreviewFlow extends AbstractCSVResourceFlow
 	@Override
 	protected String process(final ObjectPipe<String, ObjectReceiver<Reader>> opener, final String obj, final CsvReader pipe) {
 
-		final Optional<Integer> newLimit;
-
-		if (atMost.isPresent()) {
-			if (withLimit && atMost.get() > limit) {
-				newLimit = Optional.of(limit);
-			} else {
-				newLimit = atMost;
-			}
-
-		} else if (withLimit) {
-			newLimit = Optional.of(limit);
-		} else {
-			newLimit = Optional.absent();
-		}
-
-		if (newLimit.isPresent()) {
-
-			pipe.withLimit(newLimit.get());
-		}
-
 		// TODO: process header from configuration
-		final CSVJSONEncoder encoder;
-
-		if(newLimit.isPresent()) {
-
-			encoder = new CSVJSONEncoder(newLimit.get());
-		} else {
-			encoder = new CSVJSONEncoder();
-		}
+		final CSVJSONEncoder encoder = new CSVJSONEncoder();
 		encoder.withHeader();
-
-		// TODO: process header from configuration
-		pipe.getDecoder().setHeader(true);
 
 		final CSVJSONWriter writer = new CSVJSONWriter();
 
@@ -75,8 +42,7 @@ public class CSVSourceResourceCSVJSONPreviewFlow extends AbstractCSVResourceFlow
 
 	public CSVSourceResourceCSVJSONPreviewFlow withLimit(final int limit) {
 
-		this.limit = limit;
-		withLimit = true;
+		atMost = Optional.of(limit);
 
 		return this;
 	}
