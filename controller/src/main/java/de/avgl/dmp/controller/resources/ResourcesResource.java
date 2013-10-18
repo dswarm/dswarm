@@ -14,7 +14,6 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
-import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -40,7 +39,6 @@ import com.google.common.collect.Maps;
 import com.google.common.eventbus.EventBus;
 import com.google.common.io.Files;
 import com.google.common.io.LineProcessor;
-import com.google.common.net.HttpHeaders;
 import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -112,12 +110,12 @@ public class ResourcesResource {
 
 	private Response buildResponse(final String responseContent) {
 
-		return Response.ok(responseContent).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		return Response.ok(responseContent).build();
 	}
 
 	private Response buildResponseCreated(final String responseContent, final URI responseURI) {
 
-		return Response.created(responseURI).entity(responseContent).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		return Response.created(responseURI).entity(responseContent).build();
 	}
 
 	@POST
@@ -141,7 +139,7 @@ public class ResourcesResource {
 		LOG.debug("created new resource '" + name + "' for file '" + fileDetail.getFileName() + "' = '"
 				+ ToStringBuilder.reflectionToString(resource) + "'");
 
-		String resourceJSON = null;
+		String resourceJSON;
 
 		try {
 
@@ -177,7 +175,7 @@ public class ResourcesResource {
 			LOG.debug("couldn't find resources");
 
 			dmpStatus.stop(context);
-			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+			return Response.status(Status.NOT_FOUND).build();
 		}
 
 		if (resources.isEmpty()) {
@@ -185,12 +183,12 @@ public class ResourcesResource {
 			LOG.debug("there are no resources");
 
 			dmpStatus.stop(context);
-			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+			return Response.status(Status.NOT_FOUND).build();
 		}
 
 		LOG.debug("got all resources = ' = '" + ToStringBuilder.reflectionToString(resources) + "'");
 
-		String resourcesJSON = null;
+		String resourcesJSON;
 
 		try {
 
@@ -218,12 +216,12 @@ public class ResourcesResource {
 		if (!resourceOptional.isPresent()) {
 
 			dmpStatus.stop(context);
-			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+			return Response.status(Status.NOT_FOUND).build();
 		}
 
 		final Resource resource = resourceOptional.get();
 
-		String resourceJSON = null;
+		String resourceJSON;
 
 		try {
 
@@ -255,7 +253,7 @@ public class ResourcesResource {
 		if (!resourceOptional.isPresent()) {
 
 			dmpStatus.stop(context);
-			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+			return Response.status(Status.NOT_FOUND).build();
 		}
 
 		final Resource resource = resourceOptional.get();
@@ -265,7 +263,7 @@ public class ResourcesResource {
 		if (path == null) {
 
 			dmpStatus.stop(context);
-			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+			return Response.status(Status.NOT_FOUND).build();
 		}
 
 		final String filePath = path.asText();
@@ -332,7 +330,7 @@ public class ResourcesResource {
 		if (!resourceOptional.isPresent()) {
 
 			dmpStatus.stop(context);
-			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+			return Response.status(Status.NOT_FOUND).build();
 		}
 
 		final Resource resource = resourceOptional.get();
@@ -347,13 +345,13 @@ public class ResourcesResource {
 			LOG.debug("couldn't find configurations for resource '" + id + "'; or there are no configurations for this resource");
 
 			dmpStatus.stop(context);
-			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+			return Response.status(Status.NOT_FOUND).build();
 		}
 
 		LOG.debug("got resource configurations for resource with id '" + id.toString() + "' = '" + ToStringBuilder.reflectionToString(configurations)
 				+ "'");
 
-		String configurationsJSON = null;
+		String configurationsJSON;
 
 		try {
 
@@ -384,7 +382,7 @@ public class ResourcesResource {
 		if (!resourceOptional.isPresent()) {
 
 			dmpStatus.stop(context);
-			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+			return Response.status(Status.NOT_FOUND).build();
 		}
 
 		LOG.debug("try to add new configuration to resource with id '" + id + "'");
@@ -414,7 +412,7 @@ public class ResourcesResource {
 			}
 		}
 
-		String configurationJSON = null;
+		String configurationJSON;
 
 		try {
 
@@ -446,10 +444,10 @@ public class ResourcesResource {
 		if (!configurationOptional.isPresent()) {
 
 			dmpStatus.stop(context);
-			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		String configurationJSON = null;
+		String configurationJSON;
 
 		try {
 
@@ -480,7 +478,7 @@ public class ResourcesResource {
 		if (!configurationOptional.isPresent()) {
 
 			dmpStatus.stop(context);
-			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+			return Response.status(Status.NOT_FOUND).build();
 		}
 
 		String schemaJSON;
@@ -510,12 +508,12 @@ public class ResourcesResource {
 				LOG.debug("couldn't find schema");
 
 				dmpStatus.stop(context);
-				return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+				return Response.status(Status.NOT_FOUND).build();
 			}
 
 			//TODO: wouldn't work with XML
 			final Map<String, Map<String, String>> schema = Maps.newHashMap();
-			final Map jsonMap = Maps.newHashMap();
+			final Map<String, Object> jsonMap = Maps.newHashMap();
 
 			for (final String schemaProp : schemaOptional.get()) {
 				final Map<String, String> schemaPropMap = Maps.newHashMap();
@@ -558,7 +556,7 @@ public class ResourcesResource {
 		if (!configurationOptional.isPresent()) {
 
 			dmpStatus.stop(context);
-			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+			return Response.status(Status.NOT_FOUND).build();
 		}
 
 		final Optional<Map<String, Map<String, String>>> maybeTriples = internalServiceProvider.get().getObjects(id, configurationId, Optional.fromNullable(atMost));
@@ -568,7 +566,7 @@ public class ResourcesResource {
 			LOG.debug("couldn't find data");
 
 			dmpStatus.stop(context);
-			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+			return Response.status(Status.NOT_FOUND).build();
 		}
 
 		final Map<String, Map<String, String>> triples = maybeTriples.get();
@@ -580,7 +578,7 @@ public class ResourcesResource {
 			jsonList.add(tableRow);
 		}
 
-		String configurationJSON = null;
+		String configurationJSON;
 
 		try {
 
@@ -612,7 +610,7 @@ public class ResourcesResource {
 		if (!resourceOptional.isPresent()) {
 
 			dmpStatus.stop(context);
-			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+			return Response.status(Status.NOT_FOUND).build();
 		}
 
 		final Resource resource = resourceOptional.get();
@@ -651,7 +649,7 @@ public class ResourcesResource {
 		if (!resourceOptional.isPresent()) {
 
 			dmpStatus.stop(context);
-			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+			return Response.status(Status.NOT_FOUND).build();
 		}
 
 		final Resource resource = resourceOptional.get();
@@ -673,50 +671,6 @@ public class ResourcesResource {
 
 		dmpStatus.stop(context);
 		return buildResponse(result);
-	}
-
-	@OPTIONS
-	public Response getOptions() {
-
-		return Response.ok().header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
-				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, POST, OPTIONS, HEAD")
-				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Accept, Origin, X-Requested-With, Content-Type").build();
-	}
-
-	@OPTIONS
-	@Path("/{id}")
-	public Response getResourceOptions() {
-
-		return Response.ok().header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
-				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, OPTIONS, HEAD")
-				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Accept, Origin, X-Requested-With, Content-Type").build();
-	}
-
-	@OPTIONS
-	@Path("/{id}/configurations")
-	public Response getConfigurationsOptions() {
-
-		return Response.ok().header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
-				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, POST, OPTIONS, HEAD")
-				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Accept, Origin, X-Requested-With, Content-Type").build();
-	}
-
-	@OPTIONS
-	@Path("/{id}/configurations/{configurationid}")
-	public Response getConfigurationOptions() {
-
-		return Response.ok().header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
-				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, OPTIONS, HEAD")
-				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Accept, Origin, X-Requested-With, Content-Type").build();
-	}
-
-	@Path("/{id}/configurationpreview")
-	@OPTIONS
-	public Response getConfigurationPreviewOptions() {
-
-		return Response.ok().header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
-				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "POST, OPTIONS, HEAD")
-				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Accept, Origin, X-Requested-With, Content-Type").build();
 	}
 
 	private Optional<Resource> fetchResource(final long resourceId) {
@@ -782,7 +736,7 @@ public class ResourcesResource {
 
 		final ResourceService resourceService = resourceServiceProvider.get();
 
-		Resource resource = null;
+		Resource resource;
 
 		try {
 
@@ -983,7 +937,7 @@ public class ResourcesResource {
 
 	private Configuration getConfiguration(final String configurationJSONString) throws DMPControllerException {
 
-		Configuration configurationFromJSON = null;
+		Configuration configurationFromJSON;
 
 		try {
 
