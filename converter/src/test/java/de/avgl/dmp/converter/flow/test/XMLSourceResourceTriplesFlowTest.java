@@ -13,9 +13,9 @@ import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
 
 public class XMLSourceResourceTriplesFlowTest {
 
-	private void testFlow(final XMLSourceResourceTriplesFlow flow) throws DMPConverterException {
+	private void testFlow(final XMLSourceResourceTriplesFlow flow, final String fileName) throws DMPConverterException {
 
-		final ImmutableList<Triple> triples = flow.applyResource("test-mabxml.xml");
+		final ImmutableList<Triple> triples = flow.applyResource(fileName);
 
 		for (final Triple triple : triples) {
 
@@ -43,7 +43,19 @@ public class XMLSourceResourceTriplesFlowTest {
 
 		final XMLSourceResourceTriplesFlow flow = new XMLSourceResourceTriplesFlow(configuration);
 
-		testFlow(flow);
+		testFlow(flow, "test-mabxml.xml");
+	}
+	
+	@Test
+	public void testFromConfiguration2() throws Exception {
+		final Configuration configuration = new Configuration();
+
+		configuration.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("datensatz"));
+		configuration.addParameter(ConfigurationStatics.XML_NAMESPACE, new TextNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd"));
+
+		final XMLSourceResourceTriplesFlow flow = new XMLSourceResourceTriplesFlow(configuration);
+
+		testFlow(flow, "test-complex-xml.xml");
 	}
 
 	// @Test(expected = DMPConverterException.class)

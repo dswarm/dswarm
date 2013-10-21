@@ -112,6 +112,7 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<Model>
 	}
 
 	public void startRecord(final String identifier) {
+
 		assert !isClosed();
 
 		model = ModelFactory.createDefaultModel();
@@ -133,6 +134,7 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<Model>
 	}
 
 	public void endRecord() {
+
 		assert !isClosed();
 
 		// write triples
@@ -140,6 +142,7 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<Model>
 	}
 
 	public void startEntity(final String name) {
+
 		assert !isClosed();
 
 		// bnode or url
@@ -152,21 +155,32 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<Model>
 	}
 
 	public void endEntity() {
+
 		assert !isClosed();
 
 		// write sub resource
 		final Tuple<Resource, Property> entityTuple = entityStack.pop();
-		// TODO: handle nested entities
-		recordResource.addProperty(entityTuple.v2(), entityTuple.v1());
+		
+
+		// add entity resource to parent entity resource (or to record resource, if there is no parent entity)
+		if (!entityStack.isEmpty()) {
+
+			final Tuple<Resource, Property> parentEntityTuple = entityStack.peek();
+			
+			parentEntityTuple.v1().addProperty(entityTuple.v2(), entityTuple.v1());
+		} else {
+			recordResource.addProperty(entityTuple.v2(), entityTuple.v1());
+		}
 	}
 
 	public void literal(final String name, final String value) {
+
 		assert !isClosed();
 
 		// create triple
 		// name = predicate (without namespace)
 		// value = literal or object
-		// TODO: only literals atm
+		// TODO: only literals atm, i.e., how to determine other resources?
 		if (value != null && !value.trim().isEmpty()) {
 			final Property attributeProperty = model.createProperty(name);
 
