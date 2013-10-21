@@ -12,15 +12,15 @@ import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.XMLSourceResourceTriplesFlow;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
-import de.avgl.dmp.persistence.services.InternalService;
+import de.avgl.dmp.persistence.services.impl.InternalTripleService;
 
 @Singleton
 public class XMLConverterEventRecorder {
 
-	private final InternalService	internalService;
+	private final InternalTripleService	internalService;
 
 	@Inject
-	public XMLConverterEventRecorder(final InternalService internalService, final EventBus eventBus) {
+	public XMLConverterEventRecorder(final InternalTripleService internalService, final EventBus eventBus) {
 
 		this.internalService = internalService;
 		eventBus.register(this);
