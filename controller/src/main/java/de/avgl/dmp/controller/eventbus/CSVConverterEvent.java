@@ -3,11 +3,11 @@ package de.avgl.dmp.controller.eventbus;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 
-public class ConverterEvent {
+public class CSVConverterEvent {
 	private final Configuration configuration;
 	private final Resource resource;
 
-	public ConverterEvent(final Configuration configuration, final Resource resource) {
+	public CSVConverterEvent(final Configuration configuration, final Resource resource) {
 		this.configuration = configuration;
 		this.resource = resource;
 	}

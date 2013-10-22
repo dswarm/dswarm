@@ -19,4 +19,8 @@ public class ConfigurationStatics {
 	public static final String DISCARD_ROWS = "discard_rows";
 
 	public static final String AT_MOST = "at_most_rows";
+	
+	public static final String RECORD_TAG = "record_tag";
+	
+	public static final String XML_NAMESPACE = "xml_namespace";
 }

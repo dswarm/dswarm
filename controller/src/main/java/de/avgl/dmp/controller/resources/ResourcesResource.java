@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -25,6 +26,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+
 import com.codahale.metrics.Timer;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -34,19 +39,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.eventbus.EventBus;
 import com.google.common.io.Files;
 import com.google.common.io.LineProcessor;
 import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
-import de.avgl.dmp.controller.eventbus.ConverterEvent;
+import de.avgl.dmp.controller.eventbus.CSVConverterEvent;
+import de.avgl.dmp.controller.eventbus.XMLConverterEvent;
 import de.avgl.dmp.controller.eventbus.XMLSchemaEvent;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.controller.utils.DMPControllerUtils;
@@ -55,6 +57,7 @@ import de.avgl.dmp.converter.flow.CSVResourceFlowFactory;
 import de.avgl.dmp.converter.flow.CSVSourceResourceCSVJSONPreviewFlow;
 import de.avgl.dmp.converter.flow.CSVSourceResourceCSVPreviewFlow;
 import de.avgl.dmp.persistence.DMPPersistenceException;
+import de.avgl.dmp.persistence.model.internal.Model;
 import de.avgl.dmp.persistence.model.jsonschema.JSRoot;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
@@ -81,7 +84,7 @@ public class ResourcesResource {
 
 	private final Provider<ConfigurationService>	configurationServiceProvider;
 
-	private final Provider<InternalService>			internalServiceProvider;
+	private final Provider<InternalService<Model>>			internalServiceProvider;
 
 	private final Provider<SchemaService>			schemaServiceProvider;
 
@@ -95,7 +98,7 @@ public class ResourcesResource {
 							 final ObjectMapper objectMapper,
 							 final Provider<ResourceService> resourceServiceProvider,
 							 final Provider<ConfigurationService> configurationServiceProvider,
-							 final Provider<InternalService> internalServiceProvider,
+							 final Provider<InternalService<Model>> internalServiceProvider,
 							 final Provider<SchemaService> schemaServiceProvider,
 							 final Provider<EventBus> eventBusProvider) {
 
@@ -408,7 +411,10 @@ public class ResourcesResource {
 				eventBusProvider.get().post(new XMLSchemaEvent(configuration, resource));
 			} else if ("csv".equals(storageType.asText())) {
 
-				eventBusProvider.get().post(new ConverterEvent(configuration, resource));
+				eventBusProvider.get().post(new CSVConverterEvent(configuration, resource));
+			} else if ("xml".equals(storageType.asText())) {
+
+				eventBusProvider.get().post(new XMLConverterEvent(configuration, resource));
 			}
 		}
 
@@ -559,7 +565,7 @@ public class ResourcesResource {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		final Optional<Map<String, Map<String, String>>> maybeTriples = internalServiceProvider.get().getObjects(id, configurationId, Optional.fromNullable(atMost));
+		final Optional<Map<String, Model>> maybeTriples = internalServiceProvider.get().getObjects(id, configurationId, Optional.fromNullable(atMost));
 
 		if (!maybeTriples.isPresent()) {
 
@@ -569,13 +575,12 @@ public class ResourcesResource {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		final Map<String, Map<String, String>> triples = maybeTriples.get();
-		final List<Map<String, String>> jsonList = Lists.newArrayList();
+		final Map<String, Model> triples = maybeTriples.get();
+		final ObjectNode jsonList = objectMapper.createObjectNode();
 
-		for (final Map.Entry<String, Map<String, String>> record : triples.entrySet()) {
-			final Map<String, String> tableRow = record.getValue();
-			tableRow.put("recordId", record.getKey());
-			jsonList.add(tableRow);
+		for (final Map.Entry<String, Model> record : triples.entrySet()) {
+			final Model model = record.getValue();
+			jsonList.put(record.getKey(), model.toJSON());
 		}
 
 		String configurationJSON;
