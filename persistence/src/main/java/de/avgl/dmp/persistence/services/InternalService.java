@@ -8,11 +8,11 @@ import com.google.common.base.Optional;
 import de.avgl.dmp.persistence.model.internal.Model;
 
 
-public interface InternalService<MODELIMPL extends Model> {
+public interface InternalService {
 
 	void createObject(Long id, Long id1, String subject, String predicate, String object);
 
-	Optional<Map<String, MODELIMPL>> getObjects(Long id, Long configurationId, Optional<Integer> atMost);
+	Optional<Map<String, Model>> getObjects(Long id, Long configurationId, Optional<Integer> atMost);
 
 	void deleteObject(Long id, Long configurationId);
 

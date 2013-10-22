@@ -1,5 +1,13 @@
 package de.avgl.dmp.controller.resources.test;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.hasItem;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -11,9 +19,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.apache.commons.io.FileUtils;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,30 +43,17 @@ import com.google.common.io.Files;
 import com.google.common.io.Resources;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
-import org.apache.commons.io.FileUtils;
-import org.glassfish.jersey.media.multipart.FormDataMultiPart;
-import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 import de.avgl.dmp.controller.resources.test.utils.ResourceTestUtils;
 import de.avgl.dmp.controller.servlet.DMPInjector;
 import de.avgl.dmp.persistence.DMPPersistenceException;
+import de.avgl.dmp.persistence.model.internal.Model;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.services.ConfigurationService;
 import de.avgl.dmp.persistence.services.InternalService;
 import de.avgl.dmp.persistence.services.ResourceService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.anyOf;
-import static org.hamcrest.Matchers.hasItem;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 
 public class ResourcesResourceTest extends ResourceTest {
@@ -345,7 +348,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final Configuration config = resource.getConfigurations().iterator().next();
 
-		InternalService service = DMPInjector.injector.getInstance(InternalService.class);
+		InternalService service = DMPInjector.injector.getInstance(Key.get(InternalService.class, Names.named("MemoryDb")));
 		final Optional<Set<String>> schema = service.getSchema(resource.getId(), config.getId());
 
 		assertTrue(schema.isPresent());
@@ -413,8 +416,8 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final int atMost = 1;
 
-		InternalService service = DMPInjector.injector.getInstance(InternalService.class);
-		final Optional<Map<String, Map<String, String>>> data = service.getObjects(resource.getId(), config.getId(), Optional.of(atMost));
+		InternalService service = DMPInjector.injector.getInstance(Key.get(InternalService.class, Names.named("MemoryDb")));
+		final Optional<Map<String, Model>> data = service.getObjects(resource.getId(), config.getId(), Optional.of(atMost));
 
 		assertTrue(data.isPresent());
 		assertFalse(data.get().isEmpty());
@@ -430,18 +433,17 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
 
-		final ArrayNode jsonArray = response.readEntity(ArrayNode.class);
+		final ObjectNode assoziativeJsonArray = response.readEntity(ObjectNode.class);
 
-		assertThat(jsonArray.size(), equalTo(atMost));
+		assertThat(assoziativeJsonArray.size(), equalTo(atMost));
 
-		final JsonNode json = jsonArray.get(0);
+		final JsonNode json = assoziativeJsonArray.get(recordId);
 
-		assertThat(json.get("recordId").asText(), equalTo(recordId));
-		assertThat(json.get("id").asText(), equalTo(data.get().get(recordId).get("id")));
-		assertThat(json.get("year").asText(), equalTo(data.get().get(recordId).get("year")));
-		assertThat(json.get("description").asText(), equalTo(data.get().get(recordId).get("description")));
-		assertThat(json.get("name").asText(), equalTo(data.get().get(recordId).get("name")));
-		assertThat(json.get("isbn").asText(), equalTo(data.get().get(recordId).get("isbn")));
+		assertThat(json.get("id").asText(), equalTo(data.get().get(recordId).toJSON().get("id").asText()));
+		assertThat(json.get("year").asText(), equalTo(data.get().get(recordId).toJSON().get("year").asText()));
+		assertThat(json.get("description").asText(), equalTo(data.get().get(recordId).toJSON().get("description").asText()));
+		assertThat(json.get("name").asText(), equalTo(data.get().get(recordId).toJSON().get("name").asText()));
+		assertThat(json.get("isbn").asText(), equalTo(data.get().get(recordId).toJSON().get("isbn").asText()));
 
 		// clean up
 

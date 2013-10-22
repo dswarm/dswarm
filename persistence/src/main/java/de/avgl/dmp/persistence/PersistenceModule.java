@@ -13,12 +13,16 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
+import com.google.inject.name.Names;
 
 import de.avgl.dmp.persistence.services.ConfigurationService;
 import de.avgl.dmp.persistence.services.InternalService;
+import de.avgl.dmp.persistence.services.InternalServiceFactory;
 import de.avgl.dmp.persistence.services.ResourceService;
 import de.avgl.dmp.persistence.services.SchemaService;
+import de.avgl.dmp.persistence.services.impl.InternalServiceFactoryImpl;
 import de.avgl.dmp.persistence.services.impl.InternalServiceImpl;
+import de.avgl.dmp.persistence.services.impl.InternalTripleService;
 import de.avgl.dmp.persistence.services.impl.SchemaServiceImpl;
 
 public class PersistenceModule extends AbstractModule {
@@ -29,34 +33,38 @@ public class PersistenceModule extends AbstractModule {
 		bind(ResourceService.class).in(Scopes.SINGLETON);
 		bind(ConfigurationService.class).in(Scopes.SINGLETON);
 
-		bind(InternalService.class).to(InternalServiceImpl.class);
+		bind(InternalServiceFactory.class).to(InternalServiceFactoryImpl.class).in(Scopes.SINGLETON);
+		bind(InternalService.class).annotatedWith(Names.named("MemoryDb")).to(InternalServiceImpl.class).in(Scopes.SINGLETON);
+		bind(InternalService.class).annotatedWith(Names.named("Triple")).to(InternalTripleService.class).in(Scopes.SINGLETON);
 		bind(SchemaService.class).to(SchemaServiceImpl.class);
 	}
 
-	@Provides @Singleton
+	@Provides
+	@Singleton
 	protected ObjectMapper provideObjectMapper() {
 		final ObjectMapper mapper = new ObjectMapper();
 		final JaxbAnnotationModule module = new JaxbAnnotationModule();
 
-		mapper.registerModule(module)
-				.setSerializationInclusion(JsonInclude.Include.NON_NULL)
+		mapper.registerModule(module).setSerializationInclusion(JsonInclude.Include.NON_NULL)
 				.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
 
 		return mapper;
 	}
 
-	@Provides @Singleton
+	@Provides
+	@Singleton
 	protected MetricRegistry provideMetricRegistry() {
 		return new MetricRegistry();
 	}
 
-	@Provides @Singleton
+	@Provides
+	@Singleton
 	protected EventBus provideEventBus() {
 		final ExecutorService executorService = Executors.newCachedThreadPool();
 
 		return new AsyncEventBus(executorService);
 
-//		//	synchronous event bus
-//		return new EventBus();
+		// // synchronous event bus
+		// return new EventBus();
 	}
 }

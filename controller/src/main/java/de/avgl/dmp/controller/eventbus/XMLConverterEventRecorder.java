@@ -6,21 +6,22 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import com.hp.hpl.jena.graph.Triple;
 
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.XMLSourceResourceTriplesFlow;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
-import de.avgl.dmp.persistence.services.impl.InternalTripleService;
+import de.avgl.dmp.persistence.services.InternalService;
 
 @Singleton
 public class XMLConverterEventRecorder {
 
-	private final InternalTripleService	internalService;
+	private final InternalService	internalService;
 
 	@Inject
-	public XMLConverterEventRecorder(final InternalTripleService internalService, final EventBus eventBus) {
+	public XMLConverterEventRecorder(@Named("Triple") final InternalService internalService, final EventBus eventBus) {
 
 		this.internalService = internalService;
 		eventBus.register(this);

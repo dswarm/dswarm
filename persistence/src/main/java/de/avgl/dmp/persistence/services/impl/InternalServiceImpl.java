@@ -11,12 +11,13 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Table;
 import com.google.inject.Singleton;
 
+import de.avgl.dmp.persistence.model.internal.Model;
 import de.avgl.dmp.persistence.model.internal.impl.MemoryDbModel;
 import de.avgl.dmp.persistence.services.InternalService;
 
 @Singleton
 public class InternalServiceImpl extends BaseMemoryServiceImpl<Long, Long, Table<String, String, String>> implements
-		InternalService<MemoryDbModel> {
+		InternalService {
 
 	@Override
 	public void createObject(final Long id, final Long id1, final String subject, final String predicate, final String object) {
@@ -30,23 +31,23 @@ public class InternalServiceImpl extends BaseMemoryServiceImpl<Long, Long, Table
 	}
 
 	@Override
-	public Optional<Map<String, MemoryDbModel>> getObjects(final Long id, final Long configurationId, final Optional<Integer> atMost) {
+	public Optional<Map<String, Model>> getObjects(final Long id, final Long configurationId, final Optional<Integer> atMost) {
 		final Optional<Table<String, String, String>> maybeTable = getObjects(id, configurationId);
-
+		
 		if (maybeTable.isPresent()) {
 
 			final Table<String, String, String> table = maybeTable.get();
 			final Iterable<String> rows = atMost.isPresent() ? Iterables.limit(table.rowKeySet(), atMost.get()) : table.rowKeySet();
 
-			final Map<String, MemoryDbModel> finalMap = Maps.newHashMap();
+			final Map<String, Model> finalMap = Maps.newHashMap();
 
 			for (final String row : rows) {
 				final Map<String, String> recordMap = table.row(row);
 				final MemoryDbModel model = new MemoryDbModel(recordMap);
 				finalMap.put(row, model);
 			}
-
-			return Optional.of(finalMap);
+			
+			return Optional.fromNullable(finalMap);
 		}
 
 		return Optional.absent();

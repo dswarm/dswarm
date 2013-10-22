@@ -66,16 +66,15 @@ import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
 import de.avgl.dmp.persistence.services.ConfigurationService;
 import de.avgl.dmp.persistence.services.InternalService;
+import de.avgl.dmp.persistence.services.InternalServiceFactory;
 import de.avgl.dmp.persistence.services.ResourceService;
 import de.avgl.dmp.persistence.services.SchemaService;
-
 
 @RequestScoped
 @Path("resources")
 public class ResourcesResource {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ResourcesResource.class);
-
 
 	@Context
 	UriInfo											uri;
@@ -86,7 +85,7 @@ public class ResourcesResource {
 
 	private final Provider<ConfigurationService>	configurationServiceProvider;
 
-	private final Provider<InternalService<Model>>			internalServiceProvider;
+	private final Provider<InternalServiceFactory>	internalServiceFactoryProvider;
 
 	private final Provider<SchemaService>			schemaServiceProvider;
 
@@ -94,20 +93,15 @@ public class ResourcesResource {
 
 	private final ObjectMapper						objectMapper;
 
-
 	@Inject
-	public ResourcesResource(final DMPStatus dmpStatus,
-							 final ObjectMapper objectMapper,
-							 final Provider<ResourceService> resourceServiceProvider,
-							 final Provider<ConfigurationService> configurationServiceProvider,
-							 final Provider<InternalService<Model>> internalServiceProvider,
-							 final Provider<SchemaService> schemaServiceProvider,
-							 final Provider<EventBus> eventBusProvider) {
+	public ResourcesResource(final DMPStatus dmpStatus, final ObjectMapper objectMapper, final Provider<ResourceService> resourceServiceProvider,
+			final Provider<ConfigurationService> configurationServiceProvider, final Provider<InternalServiceFactory> internalServiceFactoryProvider,
+			final Provider<SchemaService> schemaServiceProvider, final Provider<EventBus> eventBusProvider) {
 
 		this.eventBusProvider = eventBusProvider;
 		this.resourceServiceProvider = resourceServiceProvider;
 		this.configurationServiceProvider = configurationServiceProvider;
-		this.internalServiceProvider = internalServiceProvider;
+		this.internalServiceFactoryProvider = internalServiceFactoryProvider;
 		this.schemaServiceProvider = schemaServiceProvider;
 		this.dmpStatus = dmpStatus;
 		this.objectMapper = objectMapper;
@@ -243,14 +237,11 @@ public class ResourcesResource {
 		return buildResponse(resourceJSON);
 	}
 
-
 	@GET
 	@Path("/{id}/lines")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResourcePlain(@PathParam("id") final Long id,
-									 @DefaultValue("50") @QueryParam("atMost") final int atMost,
-									 @DefaultValue("UTF-8") @QueryParam("encoding") final String encoding)
-			throws DMPControllerException {
+	public Response getResourcePlain(@PathParam("id") final Long id, @DefaultValue("50") @QueryParam("atMost") final int atMost,
+			@DefaultValue("UTF-8") @QueryParam("encoding") final String encoding) throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getSingleResource();
 
 		final Optional<Resource> resourceOptional = fetchResource(id);
@@ -276,12 +267,13 @@ public class ResourcesResource {
 		final List<String> lines;
 		try {
 			lines = Files.readLines(new File(filePath), Charset.forName(encoding), new LineProcessor<List<String>>() {
-				private final ImmutableList.Builder<String> lines = ImmutableList.builder();
-				private int linesProcessed = 1;
+
+				private final ImmutableList.Builder<String>	lines			= ImmutableList.builder();
+				private int									linesProcessed	= 1;
 
 				@Override
 				public boolean processLine(String line) throws IOException {
-					if (linesProcessed ++> atMost) {
+					if (linesProcessed++ > atMost) {
 
 						return false;
 					}
@@ -315,8 +307,6 @@ public class ResourcesResource {
 			dmpStatus.stop(context);
 			throw new DMPControllerException("couldn't transform resource contents to JSON array.\n" + e.getMessage());
 		}
-
-
 
 		dmpStatus.stop(context);
 		return buildResponse(plainJson);
@@ -509,7 +499,9 @@ public class ResourcesResource {
 
 		} else {
 
-			final Optional<Set<String>> schemaOptional = internalServiceProvider.get().getSchema(id, configurationId);
+			final InternalService internalService = determineInternalService(configurationOptional.get(), context);
+
+			final Optional<Set<String>> schemaOptional = internalService.getSchema(id, configurationId);
 
 			if (!schemaOptional.isPresent()) {
 
@@ -519,7 +511,7 @@ public class ResourcesResource {
 				return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 			}
 
-			//TODO: wouldn't work with XML
+			// TODO: wouldn't work with XML
 			final Map<String, Map<String, String>> schema = Maps.newHashMap();
 			final Map jsonMap = Maps.newHashMap();
 
@@ -543,7 +535,8 @@ public class ResourcesResource {
 			}
 		}
 
-		LOG.debug("return schema for configuration with id '" + configurationId + "' for resource with id '" + id + "' and content '" + schemaJSON + "'");
+		LOG.debug("return schema for configuration with id '" + configurationId + "' for resource with id '" + id + "' and content '" + schemaJSON
+				+ "'");
 
 		dmpStatus.stop(context);
 		return buildResponse(schemaJSON);
@@ -553,8 +546,7 @@ public class ResourcesResource {
 	@Path("/{id}/configurations/{configurationid}/data")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getResourceConfigurationData(@PathParam("id") final Long id, @PathParam("configurationid") final Long configurationId,
-		@QueryParam("atMost") final Integer atMost)
-			throws DMPControllerException {
+			@QueryParam("atMost") final Integer atMost) throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getConfigurationData();
 
 		LOG.debug("try to get schema for configuration with id '" + configurationId + "' for resource with id '" + id + "'");
@@ -567,8 +559,10 @@ public class ResourcesResource {
 			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 		}
 
-		final Optional<Map<String, Model>> maybeTriples = internalServiceProvider.get().getObjects(id, configurationId, Optional.fromNullable(atMost));
+		final InternalService internalService = determineInternalService(configurationOptional.get(), context);
 
+		final Optional<Map<String, Model>> maybeTriples = internalService.getObjects(id, configurationId, Optional.fromNullable(atMost));
+		
 		if (!maybeTriples.isPresent()) {
 
 			LOG.debug("couldn't find data");
@@ -596,7 +590,8 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
 		}
 
-		LOG.debug("return data for configuration with id '" + configurationId + "' for resource with id '" + id + "' and content '" + configurationJSON + "'");
+		LOG.debug("return data for configuration with id '" + configurationId + "' for resource with id '" + id + "' and content '"
+				+ configurationJSON + "'");
 
 		dmpStatus.stop(context);
 		return buildResponse(configurationJSON);
@@ -1016,5 +1011,39 @@ public class ResourcesResource {
 		}
 
 		return configurationFromJSON;
+	}
+
+	private InternalService determineInternalService(final Configuration configuration, final Timer.Context context)
+			throws DMPControllerException {
+
+		final JsonNode storageType = configuration.getParameters().get("storage_type");
+		InternalService internalService = null;
+
+		if (storageType != null) {
+
+			if ("schema".equals(storageType.asText())) {
+
+				// ??
+				internalService = internalServiceFactoryProvider.get().getMemoryDbInternalService();
+			} else if ("csv".equals(storageType.asText())) {
+
+				internalService = internalServiceFactoryProvider.get().getMemoryDbInternalService();
+			} else if ("xml".equals(storageType.asText())) {
+
+				internalService = internalServiceFactoryProvider.get().getInternalTripleService();
+			}
+		} else {
+
+			dmpStatus.stop(context);
+			throw new DMPControllerException("couldn't determine storage type from configuration");
+		}
+
+		if (internalService == null) {
+
+			dmpStatus.stop(context);
+			throw new DMPControllerException("couldn't determine internal service type from storage type = '" + storageType.asText() + "'");
+		}
+
+		return internalService;
 	}
 }

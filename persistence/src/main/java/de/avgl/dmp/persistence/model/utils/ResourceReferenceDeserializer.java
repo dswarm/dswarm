@@ -6,14 +6,16 @@ import de.avgl.dmp.persistence.services.BasicJPAService;
 import de.avgl.dmp.persistence.services.ResourceService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-
 public class ResourceReferenceDeserializer extends ReferenceDeserializer<Resource> {
-
 
 	public ResourceReferenceDeserializer() {
 		super();
 	}
 
+	/**
+	 * TODO: @tgaengler the injector is not available at this point here; however, why do we need to utilise the injector here? -
+	 * can't we retrieve the service directly?
+	 */
 	@Override
 	BasicJPAService<Resource> getJpaService() throws DMPException {
 		return DMPPersistenceUtil.getInjector().getInstance(ResourceService.class);
