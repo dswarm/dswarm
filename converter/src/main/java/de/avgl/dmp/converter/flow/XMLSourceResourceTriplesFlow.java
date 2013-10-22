@@ -10,10 +10,7 @@ import org.culturegraph.mf.stream.source.StringReader;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
-import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.mf.stream.source.XMLTripleEncoder;
@@ -42,21 +39,21 @@ public class XMLSourceResourceTriplesFlow {
 		xmlNameSpace = getStringParameter(configuration, "xml_namespace");
 	}
 
-	public ImmutableList<Triple> applyRecord(final String record) {
+	public Model applyRecord(final String record) {
 
 		final StringReader opener = new StringReader();
 
 		return apply(record, opener);
 	}
 
-	public ImmutableList<Triple> applyResource(final String resourcePath) {
+	public Model applyResource(final String resourcePath) {
 
 		final ResourceOpener opener = new ResourceOpener();
 
 		return apply(resourcePath, opener);
 	}
 
-	public ImmutableList<Triple> apply(final String object, final DefaultObjectPipe<String, ObjectReceiver<Reader>> opener) {
+	public Model apply(final String object, final DefaultObjectPipe<String, ObjectReceiver<Reader>> opener) {
 
 		final XmlDecoder decoder = new XmlDecoder();
 
@@ -69,13 +66,13 @@ public class XMLSourceResourceTriplesFlow {
 
 			encoder = new XMLTripleEncoder();
 		}
-		final ListModelReceiver writer = new ListModelReceiver();
+		final ModelReceiver writer = new ModelReceiver();
 
 		opener.setReceiver(decoder).setReceiver(encoder).setReceiver(writer);
 
 		opener.process(object);
 
-		return writer.getCollection();
+		return writer.buildModel();
 	}
 
 	private Optional<String> getStringParameter(final Configuration configuration, final String key) throws DMPConverterException {
@@ -104,41 +101,29 @@ public class XMLSourceResourceTriplesFlow {
 		return valueNode;
 	}
 
-	private static class ListModelReceiver implements ObjectReceiver<Model> {
+	private static class ModelReceiver implements ObjectReceiver<Model> {
 
-		private ImmutableList.Builder<Triple>	builder		= ImmutableList.builder();
-		private ImmutableList<Triple>			collection	= null;
+		private Model			model	= null;
 
 		@Override
 		public void process(final Model model) {
 
-			final StmtIterator iter = model.listStatements();
-
-			while (iter.hasNext()) {
-
-				builder.add(iter.next().asTriple());
-			}
+			this.model = model;
 		}
 
 		@Override
 		public void resetStream() {
-			builder = ImmutableList.builder();
+			model = null;
 		}
 
 		@Override
 		public void closeStream() {
-			buildCollection();
+			buildModel();
 		}
 
-		public ImmutableList<Triple> getCollection() {
-			if (collection == null) {
-				buildCollection();
-			}
-			return collection;
-		}
-
-		private void buildCollection() {
-			collection = builder.build();
+		private Model buildModel() {
+			
+			return model;
 		}
 	}
 }

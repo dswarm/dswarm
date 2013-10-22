@@ -1,16 +1,15 @@
 package de.avgl.dmp.controller.eventbus;
 
-import java.util.List;
-
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.rdf.model.Model;
 
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.XMLSourceResourceTriplesFlow;
+import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.services.InternalService;
@@ -32,7 +31,7 @@ public class XMLConverterEventRecorder {
 		final Configuration configuration = event.getConfiguration();
 		final Resource resource = event.getResource();
 
-		List<Triple> result = null;
+		Model result = null;
 		try {
 			final XMLSourceResourceTriplesFlow flow = new XMLSourceResourceTriplesFlow(configuration);
 
@@ -46,10 +45,12 @@ public class XMLConverterEventRecorder {
 		}
 
 		if (result != null) {
-			for (final Triple triple : result) {
-				internalService.createObject(resource.getId(), configuration.getId(), triple.getSubject().toString(), triple.getPredicate()
-						.toString(), triple.getObject().toString());
-			}
+				try {
+					internalService.createObject(resource.getId(), configuration.getId(), result);
+				} catch (DMPPersistenceException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		}
 	}
 }

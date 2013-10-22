@@ -10,38 +10,38 @@ import de.avgl.dmp.persistence.model.internal.Model;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public class MemoryDbModel implements Model {
-	
-	private Map<String, String> keyValueMap;
-	
+
+	private Map<String, String>	keyValueMap;
+
 	public MemoryDbModel(final Map<String, String> keyValueMapArg) {
-		
+
 		keyValueMap = keyValueMapArg;
 	}
 
 	@Override
 	public JsonNode toJSON() {
-		
-		if(keyValueMap == null) {
-			
+
+		if (keyValueMap == null) {
+
 			// TODO: log
-			
+
 			return null;
 		}
-		
-		if(keyValueMap.isEmpty()) {
-			
+
+		if (keyValueMap.isEmpty()) {
+
 			// TODO: log
-			
+
 			return null;
 		}
-		
+
 		final ObjectNode json = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
-		
-		for(final Entry<String, String> keyValueEntry : keyValueMap.entrySet()) {
-			
+
+		for (final Entry<String, String> keyValueEntry : keyValueMap.entrySet()) {
+
 			json.put(keyValueEntry.getKey(), keyValueEntry.getValue());
 		}
-		
+
 		return json;
 	}
 }

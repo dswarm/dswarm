@@ -3,7 +3,6 @@ package de.avgl.dmp.controller.resources.test;
 import java.io.IOException;
 import java.util.Set;
 
-import javax.persistence.EntityManager;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -18,7 +17,6 @@ import com.google.common.collect.Sets;
 import de.avgl.dmp.controller.resources.test.utils.ResourceTestUtils;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.services.ConfigurationService;
-import de.avgl.dmp.persistence.services.ResourceService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public class ConfigurationsResourceTest extends ResourceTest {

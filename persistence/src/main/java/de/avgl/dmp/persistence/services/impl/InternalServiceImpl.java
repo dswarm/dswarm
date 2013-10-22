@@ -3,6 +3,8 @@ package de.avgl.dmp.persistence.services.impl;
 import java.util.Map;
 import java.util.Set;
 
+import org.culturegraph.mf.types.Triple;
+
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.HashBasedTable;
@@ -11,7 +13,9 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Table;
 import com.google.inject.Singleton;
 
+import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.internal.Model;
+import de.avgl.dmp.persistence.model.internal.impl.MemoryDBInputModel;
 import de.avgl.dmp.persistence.model.internal.impl.MemoryDbModel;
 import de.avgl.dmp.persistence.services.InternalService;
 
@@ -20,12 +24,27 @@ public class InternalServiceImpl extends BaseMemoryServiceImpl<Long, Long, Table
 		InternalService {
 
 	@Override
-	public void createObject(final Long id, final Long id1, final String subject, final String predicate, final String object) {
+	public void createObject(final Long id, final Long id1, final Object model) throws DMPPersistenceException {
+		
+		if(model == null) {
+			
+			throw new DMPPersistenceException("model that should be added to DB shouldn't be null");
+		}
+		
+		if(!MemoryDBInputModel.class.isInstance(model)) {
+			
+			throw new DMPPersistenceException("this service can only process memory DB input models");
+		}
+		
+		final MemoryDBInputModel mdbim = (MemoryDBInputModel) model;
+		
 		synchronized (this) {
 			final Optional<Table<String, String, String>> tableOptional = getObjects(id, id1);
 			final Table<String, String, String> tab = tableOptional.or(HashBasedTable.<String, String, String> create());
 
-			tab.put(subject, predicate, object);
+			final Triple triple = mdbim.getTriple();
+			
+			tab.put(triple.getSubject(), triple.getPredicate(), triple.getObject());
 			createObject(id, id1, tab);
 		}
 	}

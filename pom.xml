@@ -53,6 +53,7 @@
 		<commons-io.version>2.4</commons-io.version>
 		<guice.version>3.0</guice.version>
 		<metrics.version>3.0.1</metrics.version>
+		<metafacture-core.version>1.1.0-SNAPSHOT</metafacture-core.version>
 	</properties>
 
 	<repositories>

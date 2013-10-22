@@ -3,8 +3,7 @@ package de.avgl.dmp.converter.flow.test;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.node.TextNode;
-import com.google.common.collect.ImmutableList;
-import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.rdf.model.Model;
 
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.XMLSourceResourceTriplesFlow;
@@ -15,12 +14,11 @@ public class XMLSourceResourceTriplesFlowTest {
 
 	private void testFlow(final XMLSourceResourceTriplesFlow flow, final String fileName) throws DMPConverterException {
 
-		final ImmutableList<Triple> triples = flow.applyResource(fileName);
+		final Model triples = flow.applyResource(fileName);
 
-		for (final Triple triple : triples) {
-
-			System.out.println("subject = '" + triple.getSubject().toString() + "' :: predicate = '" + triple.getPredicate().toString()
-					+ "' :: object = '" + triple.getObject().toString() + "'");
+		if(triples != null) {
+			
+			triples.write(System.out, "N3");
 		}
 	}
 
