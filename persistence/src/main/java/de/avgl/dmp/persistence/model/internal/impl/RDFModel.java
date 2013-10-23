@@ -1,6 +1,7 @@
 package de.avgl.dmp.persistence.model.internal.impl;
 
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -16,6 +17,9 @@ import de.avgl.dmp.persistence.model.internal.rdf.helper.ConverterHelperHelper;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public class RDFModel implements Model {
+	
+	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(RDFModel.class);
+
 
 	private final com.hp.hpl.jena.rdf.model.Model	model;
 	private final String							resourceURI;
@@ -40,12 +44,18 @@ public class RDFModel implements Model {
 	public JsonNode toJSON() {
 
 		if (model == null) {
-
+			
+			LOG.debug("model is null, can't convert model to JSON");
+			
 			return null;
 		}
+		
+		model.write(System.out, "N3");
 
 		if (resourceURI == null) {
 
+			LOG.debug("resource URI is null, can't convert model to JSON");
+			
 			return null;
 		}
 
@@ -53,17 +63,19 @@ public class RDFModel implements Model {
 
 		if (resource == null) {
 
+			LOG.debug("couldn't find resource for resource uri '" + resourceURI + "' in model");
+			
 			return null;
 		}
 
 		final ObjectNode json = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
 
-		convertRDFToJSON(resource, json);
+		convertRDFToJSON(resource, json, json);
 
 		return json;
 	}
 
-	private JsonNode convertRDFToJSON(final Resource resource, final ObjectNode json) {
+	private JsonNode convertRDFToJSON(final Resource resource, final ObjectNode rootJson, final ObjectNode json) {
 
 		final StmtIterator iter = resource.listProperties();
 		final Map<String, ConverterHelper> converterHelpers = Maps.newHashMap();
@@ -81,9 +93,44 @@ public class RDFModel implements Model {
 				continue;
 			}
 
-			// TODO: continue here: how to handle mixed object types (e.g. resource URI vs. resource object or literal vs.
-			// resource object) => solution combine ResourceConverterHelper + LiteralConverterHelper into one class with two lists
-			// (one for Strings and one for JsonNode objects)
+			if (rdfNode.asNode().isBlank()) {
+
+				final ObjectNode objectNode = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
+
+				final JsonNode jsonNode = convertRDFToJSON(rdfNode.asResource(), rootJson, objectNode);
+
+				ConverterHelperHelper.addBNodeToConverterHelper(converterHelpers, propertyURI, jsonNode);
+
+				continue;
+			}
+
+			if (rdfNode.isURIResource()) {
+
+				final Resource object = rdfNode.asResource();
+
+				final StmtIterator objectIter = object.listProperties();
+
+				if (objectIter == null || !objectIter.hasNext()) {
+
+					ConverterHelperHelper.addURIResourceToConverterHelper(converterHelpers, propertyURI, rdfNode);
+
+					continue;
+				}
+
+				// resource has an uri, but is deeper in the hierarchy -> it will be attached to the root json node as separate
+				// entry
+
+				final ObjectNode objectNode = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
+
+				final JsonNode jsonNode = convertRDFToJSON(rdfNode.asResource(), rootJson, objectNode);
+
+				rootJson.put(rdfNode.asResource().getURI(), jsonNode);
+			}
+		}
+		
+		for(final Entry<String, ConverterHelper> converterHelperEntry : converterHelpers.entrySet()) {
+			
+			converterHelperEntry.getValue().build(json);
 		}
 
 		return json;

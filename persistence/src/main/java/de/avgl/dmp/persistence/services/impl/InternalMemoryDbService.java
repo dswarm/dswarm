@@ -20,39 +20,40 @@ import de.avgl.dmp.persistence.model.internal.impl.MemoryDbModel;
 import de.avgl.dmp.persistence.services.InternalService;
 
 @Singleton
-public class InternalServiceImpl extends BaseMemoryServiceImpl<Long, Long, Table<String, String, String>> implements
-		InternalService {
+public class InternalMemoryDbService extends BaseMemoryServiceImpl<Long, Long, Table<String, String, String>> implements InternalService {
 
 	@Override
 	public void createObject(final Long id, final Long id1, final Object model) throws DMPPersistenceException {
-		
-		if(model == null) {
-			
+
+		if (model == null) {
+
 			throw new DMPPersistenceException("model that should be added to DB shouldn't be null");
 		}
-		
-		if(!MemoryDBInputModel.class.isInstance(model)) {
-			
+
+		if (!MemoryDBInputModel.class.isInstance(model)) {
+
 			throw new DMPPersistenceException("this service can only process memory DB input models");
 		}
-		
+
 		final MemoryDBInputModel mdbim = (MemoryDBInputModel) model;
-		
+
 		synchronized (this) {
 			final Optional<Table<String, String, String>> tableOptional = getObjects(id, id1);
 			final Table<String, String, String> tab = tableOptional.or(HashBasedTable.<String, String, String> create());
 
 			final Triple triple = mdbim.getTriple();
-			
+
 			tab.put(triple.getSubject(), triple.getPredicate(), triple.getObject());
 			createObject(id, id1, tab);
 		}
 	}
 
 	@Override
-	public Optional<Map<String, Model>> getObjects(final Long id, final Long configurationId, final Optional<Integer> atMost) {
+	public Optional<Map<String, Model>> getObjects(final Long id, final Long configurationId, final Optional<Integer> atMost)
+			throws DMPPersistenceException {
+
 		final Optional<Table<String, String, String>> maybeTable = getObjects(id, configurationId);
-		
+
 		if (maybeTable.isPresent()) {
 
 			final Table<String, String, String> table = maybeTable.get();
@@ -65,7 +66,7 @@ public class InternalServiceImpl extends BaseMemoryServiceImpl<Long, Long, Table
 				final MemoryDbModel model = new MemoryDbModel(recordMap);
 				finalMap.put(row, model);
 			}
-			
+
 			return Optional.fromNullable(finalMap);
 		}
 

@@ -10,11 +10,11 @@ import de.avgl.dmp.persistence.services.InternalServiceFactory;
 @Singleton
 public class InternalServiceFactoryImpl implements InternalServiceFactory {
 	
-	private final InternalServiceImpl internalMemoryDbService;
+	private final InternalMemoryDbService internalMemoryDbService;
 	private final InternalTripleService internalTripleService;
 	
 	@Inject
-	public InternalServiceFactoryImpl(final InternalServiceImpl internalMemoryDbService, final InternalTripleService internalTripleService) {
+	public InternalServiceFactoryImpl(final InternalMemoryDbService internalMemoryDbService, final InternalTripleService internalTripleService) {
 		
 		this.internalMemoryDbService = internalMemoryDbService;
 		this.internalTripleService = internalTripleService;

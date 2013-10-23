@@ -33,8 +33,8 @@ import static org.hamcrest.Matchers.equalTo;
 
 @XmlRootElement
 @Entity
-//@Cacheable(true)
-//@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+// @Cacheable(true)
+// @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "RESOURCE")
 public class Resource extends DMPJPAObject {
 
@@ -60,7 +60,7 @@ public class Resource extends DMPJPAObject {
 
 	@Lob
 	@Access(AccessType.FIELD)
-	@Column(name = "attributes", columnDefinition = "VARCHAR(4000)", length=4000)
+	@Column(name = "attributes", columnDefinition = "VARCHAR(4000)", length = 4000)
 	private String									attributesString;
 
 	@Transient
@@ -113,6 +113,13 @@ public class Resource extends DMPJPAObject {
 
 		if (attributes == null && !attributesInitialized) {
 
+			if (attributesString == null) {
+
+				LOG.debug("attributes JSON string is null");
+
+				return null;
+			}
+
 			try {
 
 				attributes = DMPPersistenceUtil.getJSON(attributesString);
@@ -134,25 +141,38 @@ public class Resource extends DMPJPAObject {
 		refreshAttributesString();
 	}
 
-	public void addAttribute(final String key, final JsonNode value) {
+	public void addAttribute(final String key, final String value) {
 
 		if (attributes == null) {
 
 			attributes = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
 		}
 
-		attributes.set(key, value);
+		attributes.put(key, value);
 
 		refreshAttributesString();
 	}
 
 	public JsonNode getAttribute(final String key) {
 
-		if (attributes == null) {
+		if (attributes == null && !attributesInitialized) {
 
-			LOG.debug("attributes JSON is null");
+			if (attributesString == null) {
 
-			return null;
+				LOG.debug("attributes JSON string is null");
+
+				return null;
+			}
+
+			try {
+
+				attributes = DMPPersistenceUtil.getJSON(attributesString);
+			} catch (DMPException e) {
+
+				LOG.debug("couldn't parse attributes JSON string for resource '" + getId() + "'");
+			}
+
+			attributesInitialized = true;
 		}
 
 		return attributes.get(key);
@@ -160,7 +180,7 @@ public class Resource extends DMPJPAObject {
 
 	/**
 	 * Gets all configurations of the resource.
-	 *
+	 * 
 	 * @return all configurations of the resource
 	 */
 	public Set<Configuration> getConfigurations() {
@@ -170,7 +190,7 @@ public class Resource extends DMPJPAObject {
 
 	/**
 	 * Sets all configurations of the resource.
-	 *
+	 * 
 	 * @param configurationsArg all configurations of the resource
 	 */
 	public void setConfigurations(final Set<Configuration> configurationsArg) {
@@ -223,7 +243,7 @@ public class Resource extends DMPJPAObject {
 	/**
 	 * Adds a new configuration to the collection of configurations of this resource.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param configuration a new export definition revision
 	 */
 	public void addConfiguration(final Configuration configuration) {
@@ -246,7 +266,7 @@ public class Resource extends DMPJPAObject {
 	/**
 	 * Replaces an existing configuration, i.e., the configuration with the same identifier will be replaced.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param configuration an existing, updated configuration
 	 */
 	public void replaceConfiguration(final Configuration configuration) {
@@ -273,7 +293,7 @@ public class Resource extends DMPJPAObject {
 	/**
 	 * Removes an existing configuration from the collection of configurations of this export resource.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param configuration an existing configuration that should be removed
 	 */
 	public void removeConfiguration(final Configuration configuration) {

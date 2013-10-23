@@ -5,11 +5,11 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import com.hp.hpl.jena.rdf.model.Model;
 
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.XMLSourceResourceTriplesFlow;
 import de.avgl.dmp.persistence.DMPPersistenceException;
+import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.services.InternalService;
@@ -31,9 +31,9 @@ public class XMLConverterEventRecorder {
 		final Configuration configuration = event.getConfiguration();
 		final Resource resource = event.getResource();
 
-		Model result = null;
+		RDFModel result = null;
 		try {
-			final XMLSourceResourceTriplesFlow flow = new XMLSourceResourceTriplesFlow(configuration);
+			final XMLSourceResourceTriplesFlow flow = new XMLSourceResourceTriplesFlow(configuration, resource);
 
 			final String path = resource.getAttribute("path").asText();
 			result = flow.applyResource(path);

@@ -561,7 +561,18 @@ public class ResourcesResource {
 
 		final InternalService internalService = determineInternalService(configurationOptional.get(), context);
 
-		final Optional<Map<String, Model>> maybeTriples = internalService.getObjects(id, configurationId, Optional.fromNullable(atMost));
+		Optional<Map<String, Model>> maybeTriples = null;
+		
+		try {
+			
+			maybeTriples = internalService.getObjects(id, configurationId, Optional.fromNullable(atMost));
+		} catch (final DMPPersistenceException e1) {
+			
+			LOG.debug("couldn't find data", e1);
+			
+			dmpStatus.stop(context);
+			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		}
 		
 		if (!maybeTriples.isPresent()) {
 

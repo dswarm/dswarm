@@ -12,7 +12,7 @@ public interface InternalService {
 
 	void createObject(Long id, Long id1, Object model) throws DMPPersistenceException;
 
-	Optional<Map<String, Model>> getObjects(Long id, Long configurationId, Optional<Integer> atMost);
+	Optional<Map<String, Model>> getObjects(Long id, Long configurationId, Optional<Integer> atMost) throws DMPPersistenceException;
 
 	void deleteObject(Long id, Long configurationId);
 

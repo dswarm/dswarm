@@ -3,10 +3,10 @@ package de.avgl.dmp.converter.flow.test;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.node.TextNode;
-import com.hp.hpl.jena.rdf.model.Model;
 
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.XMLSourceResourceTriplesFlow;
+import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
 
@@ -14,11 +14,11 @@ public class XMLSourceResourceTriplesFlowTest {
 
 	private void testFlow(final XMLSourceResourceTriplesFlow flow, final String fileName) throws DMPConverterException {
 
-		final Model triples = flow.applyResource(fileName);
+		final RDFModel rdfModel = flow.applyResource(fileName);
 
-		if(triples != null) {
-			
-			triples.write(System.out, "N3");
+		if (rdfModel != null && rdfModel.getModel() != null) {
+
+			rdfModel.getModel().write(System.out, "N3");
 		}
 	}
 
@@ -39,11 +39,11 @@ public class XMLSourceResourceTriplesFlowTest {
 		configuration.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("datensatz"));
 		configuration.addParameter(ConfigurationStatics.XML_NAMESPACE, new TextNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd"));
 
-		final XMLSourceResourceTriplesFlow flow = new XMLSourceResourceTriplesFlow(configuration);
+		final XMLSourceResourceTriplesFlow flow = new XMLSourceResourceTriplesFlow(configuration, null);
 
 		testFlow(flow, "test-mabxml.xml");
 	}
-	
+
 	@Test
 	public void testFromConfiguration2() throws Exception {
 		final Configuration configuration = new Configuration();
@@ -51,7 +51,7 @@ public class XMLSourceResourceTriplesFlowTest {
 		configuration.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("datensatz"));
 		configuration.addParameter(ConfigurationStatics.XML_NAMESPACE, new TextNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd"));
 
-		final XMLSourceResourceTriplesFlow flow = new XMLSourceResourceTriplesFlow(configuration);
+		final XMLSourceResourceTriplesFlow flow = new XMLSourceResourceTriplesFlow(configuration, null);
 
 		testFlow(flow, "test-complex-xml.xml");
 	}
