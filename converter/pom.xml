@@ -16,7 +16,6 @@
 	<name>DMP - Transformations Converter</name>
 
 	<properties>
-		<metafacture-core.version>1.1.0-SNAPSHOT</metafacture-core.version>
 		<commons-csv.version>1.0-SNAPSHOT</commons-csv.version>
 	</properties>
 

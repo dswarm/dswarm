@@ -6,11 +6,13 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.CSVResourceFlowFactory;
 import de.avgl.dmp.converter.flow.CSVSourceResourceTriplesFlow;
-import de.avgl.dmp.persistence.model.internal.Model;
+import de.avgl.dmp.persistence.DMPPersistenceException;
+import de.avgl.dmp.persistence.model.internal.impl.MemoryDBInputModel;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.services.InternalService;
@@ -18,16 +20,17 @@ import de.avgl.dmp.persistence.services.InternalService;
 @Singleton
 public class CSVConverterEventRecorder {
 
-	private final InternalService<Model> internalService;
+	private final InternalService	internalService;
 
 	@Inject
-	public CSVConverterEventRecorder(final InternalService<Model> internalService, final EventBus eventBus) {
+	public CSVConverterEventRecorder(@Named("MemoryDb") final InternalService internalService, final EventBus eventBus) {
 
 		this.internalService = internalService;
 		eventBus.register(this);
 	}
 
-	@Subscribe public void convertConfiguration(final CSVConverterEvent event) {
+	@Subscribe
+	public void convertConfiguration(final CSVConverterEvent event) {
 		final Configuration configuration = event.getConfiguration();
 		final Resource resource = event.getResource();
 
@@ -46,7 +49,16 @@ public class CSVConverterEventRecorder {
 
 		if (result != null) {
 			for (final org.culturegraph.mf.types.Triple triple : result) {
-				internalService.createObject(resource.getId(), configuration.getId(), triple.getSubject(), triple.getPredicate(), triple.getObject());
+
+				final MemoryDBInputModel mdbim = new MemoryDBInputModel(triple);
+
+				try {
+
+					internalService.createObject(resource.getId(), configuration.getId(), mdbim);
+				} catch (DMPPersistenceException e) {
+
+					e.printStackTrace();
+				}
 			}
 		}
 	}

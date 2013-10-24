@@ -63,6 +63,8 @@ public abstract class ReferenceDeserializer<DMPJPAOBJECTIMPL extends DMPJPAObjec
 			if(idNode == null) {
 
 				LOG.debug("id node is null");
+				
+				continue;
 			}
 
 			final Long id = Long.valueOf(idNode.asLong());

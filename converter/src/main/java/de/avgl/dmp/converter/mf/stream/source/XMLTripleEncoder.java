@@ -1,6 +1,8 @@
 package de.avgl.dmp.converter.mf.stream.source;
 
+import java.net.URI;
 import java.util.Stack;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 import org.culturegraph.mf.exceptions.MetafactureException;
@@ -13,12 +15,14 @@ import org.culturegraph.mf.framework.annotations.Out;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import com.google.common.base.Optional;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
 
+import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
 import de.avgl.dmp.persistence.model.types.Tuple;
 
 /**
@@ -26,8 +30,8 @@ import de.avgl.dmp.persistence.model.types.Tuple;
  */
 @Description("triplifies records")
 @In(XmlReceiver.class)
-@Out(Model.class)
-public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<Model>> {
+@Out(RDFModel.class)
+public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFModel>> {
 
 	private String						currentId;
 	private Model						model			= null;
@@ -42,17 +46,27 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<Model>
 	private String						uri;
 	private Resource					recordType		= null;
 
-	public XMLTripleEncoder() {
+	private final Optional<String>		resourceId;
+	private final Optional<String>		configurationId;
+
+	public XMLTripleEncoder(final Optional<String> resourceId, final Optional<String> configurationId) {
 		super();
+
+		this.resourceId = resourceId;
+		this.configurationId = configurationId;
+
 		this.recordTagName = System.getProperty("org.culturegraph.metamorph.xml.recordtag");
 		if (recordTagName == null) {
 			throw new MetafactureException("Missing name for the tag marking a record.");
 		}
 	}
 
-	public XMLTripleEncoder(final String recordTagName, final String xmlNameSpace) {
+	public XMLTripleEncoder(final String recordTagName, final String xmlNameSpace, final Optional<String> resourceId,
+			final Optional<String> configurationId) {
 		super();
 		this.recordTagName = recordTagName;
+		this.resourceId = resourceId;
+		this.configurationId = configurationId;
 	}
 
 	@Override
@@ -117,14 +131,74 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<Model>
 
 		model = ModelFactory.createDefaultModel();
 
-		currentId = identifier;
+		// determine record id and create uri from it
+		if (identifier != null) {
 
-		// TODO: determine record id and create uri from it
+			URI uri = null;
+
+			try {
+
+				uri = URI.create(identifier);
+			} catch (final Exception e) {
+
+				e.printStackTrace();
+			}
+
+			if (uri != null) {
+
+				// identifier could act as resource uri
+
+				currentId = identifier;
+			} else {
+
+				// create uri with help of given record id
+
+				final StringBuffer sb = new StringBuffer();
+
+				if (resourceId.isPresent() && configurationId.isPresent()) {
+
+					// create uri from resource id and configuration id and identifier
+
+					sb.append("http://data.slub-dresden.de/resources/").append(resourceId.get()).append("/configurations/")
+							.append(configurationId.get()).append("/records/").append(identifier);
+				} else {
+
+					// create uri from identifier
+
+					sb.append("http://data.slub-dresden.de/records/").append(identifier);
+				}
+
+				currentId = sb.toString();
+			}
+		}
+
+		if (currentId == null) {
+
+			// mint completely new uri
+
+			final StringBuffer sb = new StringBuffer();
+
+			if (resourceId.isPresent() && configurationId.isPresent()) {
+
+				// create uri from resource id and configuration id and random uuid
+
+				sb.append("http://data.slub-dresden.de/resources/").append(resourceId.get()).append("/configurations/").append(configurationId.get())
+						.append("/records/").append(UUID.randomUUID());
+			} else {
+
+				// create uri from random uuid
+
+				sb.append("http://data.slub-dresden.de/records/").append(UUID.randomUUID());
+			}
+			
+			currentId = sb.toString();
+		}
+
 		recordResource = model.createResource(currentId);
 		// TODO: determine record type and create type triple with it
 		if (recordType == null) {
 
-			recordType = model.createResource(uri + "#" + recordTagName);
+			recordType = model.createResource(uri + "#" + recordTagName + "Type");
 		}
 
 		recordResource.addProperty(RDF.type, recordType);
@@ -138,7 +212,7 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<Model>
 		assert !isClosed();
 
 		// write triples
-		getReceiver().process(model);
+		getReceiver().process(new RDFModel(model, currentId));
 	}
 
 	public void startEntity(final String name) {
@@ -160,13 +234,12 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<Model>
 
 		// write sub resource
 		final Tuple<Resource, Property> entityTuple = entityStack.pop();
-		
 
 		// add entity resource to parent entity resource (or to record resource, if there is no parent entity)
 		if (!entityStack.isEmpty()) {
 
 			final Tuple<Resource, Property> parentEntityTuple = entityStack.peek();
-			
+
 			parentEntityTuple.v1().addProperty(entityTuple.v2(), entityTuple.v1());
 		} else {
 			recordResource.addProperty(entityTuple.v2(), entityTuple.v1());
