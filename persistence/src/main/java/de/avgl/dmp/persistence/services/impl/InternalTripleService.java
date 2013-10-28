@@ -3,6 +3,8 @@ package de.avgl.dmp.persistence.services.impl;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.NotImplementedException;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
@@ -19,6 +21,11 @@ import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.services.InternalService;
 import de.avgl.dmp.persistence.services.ResourceService;
 
+/**
+ * 
+ * @author tgaengler
+ *
+ */
 @Singleton
 public class InternalTripleService implements InternalService {
 
@@ -73,7 +80,7 @@ public class InternalTripleService implements InternalService {
 			throw new DMPPersistenceException("real model that should be added to DB shouldn't be null");
 		}
 
-		final String resourceGraphURI = resourceGraphURIPattern.replace("{resourceid}", id.toString()).replace("[configurationid}", id1.toString());
+		final String resourceGraphURI = resourceGraphURIPattern.replace("{resourceid}", id.toString()).replace("{configurationid}", id1.toString());
 
 		// add resource uri to resource attributes (maybe to resource directly later)
 		final Resource resource = resourceService.getObject(id);
@@ -100,7 +107,7 @@ public class InternalTripleService implements InternalService {
 
 		if (dataset == null) {
 
-			throw new DMPPersistenceException("couldn't establish connection to DB, i.e., cannot add new model to DB");
+			throw new DMPPersistenceException("couldn't establish connection to DB, i.e., cannot retrieve model from DB");
 		}
 
 		if (id == null) {
@@ -113,7 +120,7 @@ public class InternalTripleService implements InternalService {
 			throw new DMPPersistenceException("configuration id shouldn't be null");
 		}
 
-		final String resourceGraphURI = resourceGraphURIPattern.replace("{resourceid}", id.toString()).replace("[configurationid}",
+		final String resourceGraphURI = resourceGraphURIPattern.replace("{resourceid}", id.toString()).replace("{configurationid}",
 				configurationId.toString());
 
 		dataset.begin(ReadWrite.READ);
@@ -127,7 +134,7 @@ public class InternalTripleService implements InternalService {
 			return Optional.absent();
 		}
 
-		// retrieve resource uri from resource attributes (maybe from resource directly later)
+		// retrieve resource uri(s) from resource attributes (maybe from resource directly later)
 		final Resource resource = resourceService.getObject(id);
 
 		if (resource == null) {
@@ -146,7 +153,7 @@ public class InternalTripleService implements InternalService {
 			throw new DMPPersistenceException("couldn't find resource uri in resource '" + id + "'");
 		}
 
-		final String resourceURI = valueNode.toString();
+		final String resourceURI = valueNode.asText();
 
 		final Model rdfModel = new RDFModel(model, resourceURI);
 
@@ -158,14 +165,35 @@ public class InternalTripleService implements InternalService {
 	}
 
 	@Override
-	public void deleteObject(final Long id, final Long configurationId) {
-		// TODO Auto-generated method stub
+	public void deleteObject(final Long id, final Long configurationId) throws DMPPersistenceException {
+		
+		if (dataset == null) {
 
+			throw new DMPPersistenceException("couldn't establish connection to DB, i.e., cannot remove model from DB");
+		}
+
+		if (id == null) {
+
+			throw new DMPPersistenceException("resource id shouldn't be null");
+		}
+
+		if (configurationId == null) {
+
+			throw new DMPPersistenceException("configuration id shouldn't be null");
+		}
+
+		final String resourceGraphURI = resourceGraphURIPattern.replace("{resourceid}", id.toString()).replace("{configurationid}",
+				configurationId.toString());
+		
+		dataset.begin(ReadWrite.WRITE);
+		dataset.removeNamedModel(resourceGraphURI);
+		dataset.commit();
+		dataset.end();
 	}
 
 	@Override
 	public Optional<Set<String>> getSchema(final Long id, final Long configurationId) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		throw new NotImplementedException("schema storage is not implemented yet");
 	}
 }

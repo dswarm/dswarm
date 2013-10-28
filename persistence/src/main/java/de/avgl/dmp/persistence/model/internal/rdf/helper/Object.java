@@ -2,7 +2,11 @@ package de.avgl.dmp.persistence.model.internal.rdf.helper;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-
+/**
+ * 
+ * @author tgaengler
+ *
+ */
 public class Object {
 	
 	private final String literalOrURI;

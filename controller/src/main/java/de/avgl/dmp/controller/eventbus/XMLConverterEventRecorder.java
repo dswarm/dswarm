@@ -4,7 +4,6 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.XMLSourceResourceTriplesFlow;
@@ -12,17 +11,17 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
-import de.avgl.dmp.persistence.services.InternalService;
+import de.avgl.dmp.persistence.services.InternalServiceFactory;
 
 @Singleton
 public class XMLConverterEventRecorder {
 
-	private final InternalService	internalService;
+	private final InternalServiceFactory	internalServiceFactory;
 
 	@Inject
-	public XMLConverterEventRecorder(@Named("Triple") final InternalService internalService, final EventBus eventBus) {
+	public XMLConverterEventRecorder(final InternalServiceFactory internalServiceFactory, final EventBus eventBus) {
 
-		this.internalService = internalService;
+		this.internalServiceFactory = internalServiceFactory;
 		eventBus.register(this);
 	}
 
@@ -45,12 +44,12 @@ public class XMLConverterEventRecorder {
 		}
 
 		if (result != null) {
-				try {
-					internalService.createObject(resource.getId(), configuration.getId(), result);
-				} catch (DMPPersistenceException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			try {
+				internalServiceFactory.getInternalTripleService().createObject(resource.getId(), configuration.getId(), result);
+			} catch (DMPPersistenceException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }

@@ -14,7 +14,7 @@ public interface InternalService {
 
 	Optional<Map<String, Model>> getObjects(Long id, Long configurationId, Optional<Integer> atMost) throws DMPPersistenceException;
 
-	void deleteObject(Long id, Long configurationId);
+	void deleteObject(Long id, Long configurationId) throws DMPPersistenceException;
 
 	Optional<Set<String>> getSchema(Long id, Long configurationId);
 }

@@ -34,8 +34,6 @@ public class PersistenceModule extends AbstractModule {
 		bind(ConfigurationService.class).in(Scopes.SINGLETON);
 
 		bind(InternalServiceFactory.class).to(InternalServiceFactoryImpl.class).in(Scopes.SINGLETON);
-		bind(InternalService.class).annotatedWith(Names.named("MemoryDb")).to(InternalMemoryDbService.class).in(Scopes.SINGLETON);
-		bind(InternalService.class).annotatedWith(Names.named("Triple")).to(InternalTripleService.class).in(Scopes.SINGLETON);
 		bind(SchemaService.class).to(SchemaServiceImpl.class);
 	}
 

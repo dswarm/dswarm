@@ -6,7 +6,6 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.CSVResourceFlowFactory;
@@ -15,17 +14,17 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.internal.impl.MemoryDBInputModel;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
-import de.avgl.dmp.persistence.services.InternalService;
+import de.avgl.dmp.persistence.services.InternalServiceFactory;
 
 @Singleton
 public class CSVConverterEventRecorder {
 
-	private final InternalService	internalService;
+	private final InternalServiceFactory	internalServiceFactory;
 
 	@Inject
-	public CSVConverterEventRecorder(@Named("MemoryDb") final InternalService internalService, final EventBus eventBus) {
+	public CSVConverterEventRecorder(final InternalServiceFactory internalServiceFactory, final EventBus eventBus) {
 
-		this.internalService = internalService;
+		this.internalServiceFactory = internalServiceFactory;
 		eventBus.register(this);
 	}
 
@@ -54,7 +53,7 @@ public class CSVConverterEventRecorder {
 
 				try {
 
-					internalService.createObject(resource.getId(), configuration.getId(), mdbim);
+					internalServiceFactory.getMemoryDbInternalService().createObject(resource.getId(), configuration.getId(), mdbim);
 				} catch (DMPPersistenceException e) {
 
 					e.printStackTrace();
