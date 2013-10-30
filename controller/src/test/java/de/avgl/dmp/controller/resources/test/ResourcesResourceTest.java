@@ -52,6 +52,7 @@ import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.services.ConfigurationService;
 import de.avgl.dmp.persistence.services.InternalService;
+import de.avgl.dmp.persistence.services.InternalServiceFactory;
 import de.avgl.dmp.persistence.services.ResourceService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
@@ -405,7 +406,8 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final int atMost = 1;
 
-		InternalService service = DMPInjector.injector.getInstance(Key.get(InternalService.class, Names.named("MemoryDb")));
+		final InternalServiceFactory serviceFactory = DMPInjector.injector.getInstance(Key.get(InternalServiceFactory.class));
+		final InternalService service = serviceFactory.getMemoryDbInternalService();
 		final Optional<Map<String, Model>> data = service.getObjects(resource.getId(), config.getId(), Optional.of(atMost));
 
 		assertTrue(data.isPresent());
@@ -460,7 +462,8 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final int atMost = 1;
 
-		InternalService service = DMPInjector.injector.getInstance(Key.get(InternalService.class, Names.named("Triple")));
+		final InternalServiceFactory serviceFactory = DMPInjector.injector.getInstance(Key.get(InternalServiceFactory.class));
+		final InternalService service = serviceFactory.getInternalTripleService();
 		final Optional<Map<String, Model>> data = service.getObjects(resource.getId(), config.getId(), Optional.of(atMost));
 
 		assertTrue(data.isPresent());
@@ -475,24 +478,18 @@ public class ResourcesResourceTest extends ResourceTest {
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
 
 		final ObjectNode assoziativeJsonArray = response.readEntity(ObjectNode.class);
-		
-		final String assoziativeJsonArrayString = objectMapper.writeValueAsString(assoziativeJsonArray);
-		
-		System.out.println("result:\n" + assoziativeJsonArrayString);
 
 		assertThat(assoziativeJsonArray.size(), equalTo(atMost));
 
 		final JsonNode json = assoziativeJsonArray.get(recordId);
 		
-		final String jsonString = objectMapper.writeValueAsString(json);
-		
-		System.out.println("record result:\n" + jsonString);
+		final JsonNode expectedJson = data.get().get(recordId).toJSON();
 
-		assertThat(json.get("id").asText(), equalTo(data.get().get(recordId).toJSON().get("id").asText()));
-		assertThat(json.get("year").asText(), equalTo(data.get().get(recordId).toJSON().get("year").asText()));
-		assertThat(json.get("description").asText(), equalTo(data.get().get(recordId).toJSON().get("description").asText()));
-		assertThat(json.get("name").asText(), equalTo(data.get().get(recordId).toJSON().get("name").asText()));
-		assertThat(json.get("isbn").asText(), equalTo(data.get().get(recordId).toJSON().get("isbn").asText()));
+		assertThat(json.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status").asText(), equalTo(expectedJson.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status").asText()));
+		assertThat(json.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion").asText(), equalTo(expectedJson.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion").asText()));
+		assertThat(json.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ").asText(), equalTo(expectedJson.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ").asText()));
+		assertThat(json.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ").asText(), equalTo(expectedJson.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ").asText()));
+		assertThat(json.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld").size(), equalTo(expectedJson.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld").size()));
 
 		// clean up
 
@@ -500,6 +497,8 @@ public class ResourcesResourceTest extends ResourceTest {
 
 			configurationService.deleteObject(configuration.getId());
 		}
+		
+		service.deleteObject(resource.getId(), config.getId());
 
 		cleanUpDB(resource);
 

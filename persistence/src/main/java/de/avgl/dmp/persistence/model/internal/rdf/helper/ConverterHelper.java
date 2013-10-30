@@ -62,9 +62,10 @@ public class ConverterHelper {
 			if (object.isJsonNode()) {
 
 				json.put(property, object.getJsonNode());
-			}
+			} else {
 
-			json.put(property, object.getLiteralOrURI());
+				json.put(property, object.getLiteralOrURI());
+			}
 		}
 
 		return json;

@@ -1,5 +1,6 @@
 package de.avgl.dmp.persistence.model.internal.impl;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -16,6 +17,11 @@ import de.avgl.dmp.persistence.model.internal.rdf.helper.ConverterHelper;
 import de.avgl.dmp.persistence.model.internal.rdf.helper.ConverterHelperHelper;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
+/**
+ * 
+ * @author tgaengler
+ *
+ */
 public class RDFModel implements Model {
 	
 	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(RDFModel.class);
@@ -49,8 +55,6 @@ public class RDFModel implements Model {
 			
 			return null;
 		}
-		
-		model.write(System.out, "N3");
 
 		if (resourceURI == null) {
 
@@ -79,10 +83,10 @@ public class RDFModel implements Model {
 
 		final StmtIterator iter = resource.listProperties();
 		final Map<String, ConverterHelper> converterHelpers = Maps.newHashMap();
+		final List<Statement> statements = iter.toList();
 
-		while (iter.hasNext()) {
-
-			final Statement statement = iter.next();
+		for(final Statement statement : statements) {
+			
 			final String propertyURI = statement.getPredicate().getURI();
 			final RDFNode rdfNode = statement.getObject();
 

@@ -1,0 +1,89 @@
+{
+    "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status": "n",
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType",
+    "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion": "M2.0",
+    "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+        "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterfeld": [{
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterfeldType",
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterunterfeldrec": [{
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterunterfeldrecType",
+                "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#foo": "2245435",
+                "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterunterfeldred": {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterunterfeldredType",
+                    "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#foo": "226548",
+                    "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterunterfeldrec": {
+                        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterunterfeldrecType",
+                        "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#foo": "224385",
+                        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "goal"
+                    }
+                }
+            }, {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterunterfeldrecType",
+                "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#foo": "1145435",
+                "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterunterfeldred": {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterunterfeldredType",
+                    "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#foo": "116548",
+                    "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterunterfeldrec": {
+                        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterunterfeldrecType",
+                        "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#foo": "114385",
+                        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "goal"
+                    }
+                }
+            }],
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id": "11583"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterunterfeld": [{
+                "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#no": "456556",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterunterfeldType",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "blub"
+            }, {
+                "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#no": "65767",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterunterfeldType",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "blug"
+            }],
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterfeldType",
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id": "456"
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterfeldType",
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterunterfeldrec": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterunterfeldrecType",
+                "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#foo": "45435",
+                "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterunterfeldred": {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterunterfeldredType",
+                    "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#foo": "6548",
+                    "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterunterfeldrec": {
+                        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterunterfeldrecType",
+                        "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#foo": "4385",
+                        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "goal"
+                    }
+                }
+            },
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id": "583"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterunterfeld": {
+                "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#no": "3456",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterunterfeldType",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "bla"
+            },
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#unterfeldType",
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id": "123"
+        }],
+        "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "005",
+        "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind": "n"
+    }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+        "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "003",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "20010620"
+    }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+        "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "002",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "19981028",
+        "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind": "a"
+    }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+        "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "001",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "06978834"
+    }],
+    "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ": "h"
+}

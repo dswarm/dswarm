@@ -5,6 +5,11 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 
+/**
+ * 
+ * @author tgaengler
+ *
+ */
 public class ConverterHelperHelper {
 
 	public static Map<String, ConverterHelper> addLiteralToConverterHelper(final Map<String, ConverterHelper> converterHelpers,
