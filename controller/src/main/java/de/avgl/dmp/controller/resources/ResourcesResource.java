@@ -43,6 +43,7 @@ import com.google.common.collect.Maps;
 import com.google.common.eventbus.EventBus;
 import com.google.common.io.Files;
 import com.google.common.io.LineProcessor;
+import com.google.common.net.HttpHeaders;
 import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 
@@ -479,7 +480,38 @@ public class ResourcesResource {
 
 		String schemaJSON;
 
-		final Optional<JSRoot> rootOptional = schemaServiceProvider.get().getSchema(id, configurationId);
+		Optional<JSRoot> rootOptional = schemaServiceProvider.get().getSchema(id, configurationId);
+
+		if (!rootOptional.isPresent()) {
+
+			final ObjectNode parameters = configurationOptional.get().getParameters();
+			final JsonNode storageType = parameters.get("storage_type");
+			if ("xml".equals(storageType.asText())) {
+
+				final JsonNode schemaFile = parameters.get("schema_file");
+				if (schemaFile != null) {
+					final long schemaId = Long.valueOf(schemaFile.get("id").asText());
+					final Optional<Resource> schemaOptional = fetchResource(schemaId);
+					if (schemaOptional.isPresent()) {
+
+						long latestConfigId = Integer.MIN_VALUE;
+
+						for (Configuration schemaConfiguration : schemaOptional.get().getConfigurations()) {
+
+							if (schemaConfiguration.getId() > latestConfigId) {
+								latestConfigId = schemaConfiguration.getId();
+							}
+						}
+
+						if (latestConfigId != Integer.MIN_VALUE) {
+
+							rootOptional = schemaServiceProvider.get().getSchema(schemaId, latestConfigId);
+						}
+					}
+				}
+			}
+		}
+
 		if (rootOptional.isPresent()) {
 
 			final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -559,19 +591,19 @@ public class ResourcesResource {
 
 		final InternalService internalService = determineInternalService(configurationOptional.get(), context);
 
-		Optional<Map<String, Model>> maybeTriples = null;
-		
+		Optional<Map<String, Model>> maybeTriples;
+
 		try {
-			
+
 			maybeTriples = internalService.getObjects(id, configurationId, Optional.fromNullable(atMost));
 		} catch (final DMPPersistenceException e1) {
-			
+
 			LOG.debug("couldn't find data", e1);
-			
+
 			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
 		}
-		
+
 		if (!maybeTriples.isPresent()) {
 
 			LOG.debug("couldn't find data");

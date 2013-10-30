@@ -49,6 +49,10 @@ public class JsonSchemaParser {
 
 			final XSModelGroup modelGroup = term.asModelGroup();
 			return iterateModelGroup(modelGroup);
+		} else if (term.isModelGroupDecl()) {
+
+			final XSModelGroupDecl xsModelGroupDecl = term.asModelGroupDecl();
+			return iterateModelGroup(xsModelGroupDecl.getModelGroup());
 		}
 
 		final ArrayList<JSElement> jsElements = new ArrayList<JSElement>(1);
@@ -91,9 +95,14 @@ public class JsonSchemaParser {
 		final List<JSElement> list = new ArrayList<JSElement>();
 
 		for (final XSParticle xsParticle : modelGroup) {
-			if (xsParticle.getTerm().isModelGroup()) {
+
+			final XSTerm term = xsParticle.getTerm();
+			if (term.isModelGroup()) {
 
 				list.addAll(iterateParticle(xsParticle));
+			} else if (term.isModelGroupDecl()) {
+
+				list.addAll(iterateModelGroup(term.asModelGroupDecl().getModelGroup()));
 			} else {
 
 				list.add(iterateSingleParticle(xsParticle));

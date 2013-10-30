@@ -18,12 +18,12 @@ import de.avgl.dmp.persistence.model.internal.rdf.helper.ConverterHelperHelper;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
- * 
+ *
  * @author tgaengler
  *
  */
 public class RDFModel implements Model {
-	
+
 	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(RDFModel.class);
 
 
@@ -50,16 +50,16 @@ public class RDFModel implements Model {
 	public JsonNode toJSON() {
 
 		if (model == null) {
-			
+
 			LOG.debug("model is null, can't convert model to JSON");
-			
+
 			return null;
 		}
 
 		if (resourceURI == null) {
 
 			LOG.debug("resource URI is null, can't convert model to JSON");
-			
+
 			return null;
 		}
 
@@ -68,7 +68,7 @@ public class RDFModel implements Model {
 		if (resource == null) {
 
 			LOG.debug("couldn't find resource for resource uri '" + resourceURI + "' in model");
-			
+
 			return null;
 		}
 
@@ -86,13 +86,18 @@ public class RDFModel implements Model {
 		final List<Statement> statements = iter.toList();
 
 		for(final Statement statement : statements) {
-			
+
 			final String propertyURI = statement.getPredicate().getURI();
 			final RDFNode rdfNode = statement.getObject();
 
 			if (rdfNode.isLiteral()) {
 
-				ConverterHelperHelper.addLiteralToConverterHelper(converterHelpers, propertyURI, rdfNode);
+
+				String propName = "@" + propertyURI.substring(propertyURI.lastIndexOf('#') + 1);
+				if (propName.equals("@value")) {
+					propName = "#text";
+				}
+				ConverterHelperHelper.addLiteralToConverterHelper(converterHelpers, propName, rdfNode);
 
 				continue;
 			}
@@ -103,7 +108,8 @@ public class RDFModel implements Model {
 
 				final JsonNode jsonNode = convertRDFToJSON(rdfNode.asResource(), rootJson, objectNode);
 
-				ConverterHelperHelper.addBNodeToConverterHelper(converterHelpers, propertyURI, jsonNode);
+				String propName = propertyURI.substring(propertyURI.lastIndexOf('#') + 1);
+				ConverterHelperHelper.addBNodeToConverterHelper(converterHelpers, propName, jsonNode);
 
 				continue;
 			}
@@ -131,9 +137,9 @@ public class RDFModel implements Model {
 				rootJson.put(rdfNode.asResource().getURI(), jsonNode);
 			}
 		}
-		
+
 		for(final Entry<String, ConverterHelper> converterHelperEntry : converterHelpers.entrySet()) {
-			
+
 			converterHelperEntry.getValue().build(json);
 		}
 

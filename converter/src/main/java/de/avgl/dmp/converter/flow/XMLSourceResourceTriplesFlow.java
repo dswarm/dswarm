@@ -22,7 +22,6 @@ public class XMLSourceResourceTriplesFlow {
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(XMLSourceResourceTriplesFlow.class);
 
 	final Optional<String>							recordTagName;
-	final Optional<String>							xmlNameSpace;
 	final Optional<String> configurationId;
 	final Optional<String> resourceId;
 
@@ -37,25 +36,24 @@ public class XMLSourceResourceTriplesFlow {
 
 			throw new DMPConverterException("the configuration parameters shouldn't be null");
 		}
-		
+
 		if(configuration.getId() != null) {
-			
+
 			configurationId = Optional.of(configuration.getId().toString());
 		} else {
-			
+
 			configurationId = Optional.absent();
 		}
-		
+
 		if(resource != null && resource.getId() != null) {
-			
+
 			this.resourceId = Optional.of(resource.getId().toString());
 		} else {
-			
+
 			this.resourceId = Optional.absent();
 		}
 
 		recordTagName = getStringParameter(configuration, "record_tag");
-		xmlNameSpace = getStringParameter(configuration, "xml_namespace");
 	}
 
 	public RDFModel applyRecord(final String record) {
@@ -78,9 +76,9 @@ public class XMLSourceResourceTriplesFlow {
 
 		final XMLTripleEncoder encoder;
 
-		if (recordTagName.isPresent() && xmlNameSpace.isPresent()) {
+		if (recordTagName.isPresent()) {
 
-			encoder = new XMLTripleEncoder(recordTagName.get(), xmlNameSpace.get(), configurationId, resourceId);
+			encoder = new XMLTripleEncoder(recordTagName.get(), configurationId, resourceId);
 		} else {
 
 			encoder = new XMLTripleEncoder(configurationId, resourceId);
@@ -141,7 +139,7 @@ public class XMLSourceResourceTriplesFlow {
 		}
 
 		private RDFModel buildRDFModel() {
-			
+
 			return rdfModel;
 		}
 	}

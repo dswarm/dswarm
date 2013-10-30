@@ -61,8 +61,8 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 		}
 	}
 
-	public XMLTripleEncoder(final String recordTagName, final String xmlNameSpace, final Optional<String> resourceId,
-			final Optional<String> configurationId) {
+	public XMLTripleEncoder(final String recordTagName, final Optional<String> resourceId,
+							final Optional<String> configurationId) {
 		super();
 		this.recordTagName = recordTagName;
 		this.resourceId = resourceId;
@@ -153,7 +153,7 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 
 				// create uri with help of given record id
 
-				final StringBuffer sb = new StringBuffer();
+				final StringBuilder sb = new StringBuilder();
 
 				if (resourceId.isPresent() && configurationId.isPresent()) {
 
@@ -176,7 +176,7 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 
 			// mint completely new uri
 
-			final StringBuffer sb = new StringBuffer();
+			final StringBuilder sb = new StringBuilder();
 
 			if (resourceId.isPresent() && configurationId.isPresent()) {
 
@@ -190,26 +190,32 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 
 				sb.append("http://data.slub-dresden.de/records/").append(UUID.randomUUID());
 			}
-			
+
 			currentId = sb.toString();
 		}
 
 		recordResource = model.createResource(currentId);
-		// TODO: determine record type and create type triple with it
-		if (recordType == null) {
-
-			recordType = model.createResource(uri + "#" + recordTagName + "Type");
-		}
-
-		recordResource.addProperty(RDF.type, recordType);
 
 		// init
 		entityStack = new Stack<Tuple<Resource, Property>>();
+
+		// TODO: determine record type and create type triple with it
+		if (recordType == null) {
+
+			final String recordTypeUri = uri + "#" + recordTagName;
+
+			startEntity(recordTypeUri);
+			recordType = model.createResource(recordTypeUri + "Type");
+		}
+
+//		recordResource.addProperty(RDF.type, recordType);
 	}
 
 	public void endRecord() {
 
 		assert !isClosed();
+
+		endEntity();
 
 		// write triples
 		getReceiver().process(new RDFModel(model, currentId));

@@ -341,7 +341,8 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final Configuration config = resource.getConfigurations().iterator().next();
 
-		InternalService service = DMPInjector.injector.getInstance(Key.get(InternalService.class, Names.named("MemoryDb")));
+		final InternalServiceFactory internalServiceFactory = DMPInjector.injector.getInstance(InternalServiceFactory.class);
+		InternalService service = internalServiceFactory.getMemoryDbInternalService();
 		final Optional<Set<String>> schema = service.getSchema(resource.getId(), config.getId());
 
 		assertTrue(schema.isPresent());
@@ -443,10 +444,10 @@ public class ResourcesResourceTest extends ResourceTest {
 		cleanUpDB(resource);
 
 	}
-	
+
 	@Test
 	public void testXMLResourceConfigurationData() throws Exception {
-		
+
 		//prepare resource
 		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("test-mabxml-resource.json");
 
@@ -481,15 +482,15 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		assertThat(assoziativeJsonArray.size(), equalTo(atMost));
 
-		final JsonNode json = assoziativeJsonArray.get(recordId);
-		
-		final JsonNode expectedJson = data.get().get(recordId).toJSON();
+		final JsonNode json = assoziativeJsonArray.get(recordId).get("datensatz");
 
-		assertThat(json.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status").asText(), equalTo(expectedJson.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status").asText()));
-		assertThat(json.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion").asText(), equalTo(expectedJson.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion").asText()));
-		assertThat(json.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ").asText(), equalTo(expectedJson.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ").asText()));
-		assertThat(json.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ").asText(), equalTo(expectedJson.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ").asText()));
-		assertThat(json.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld").size(), equalTo(expectedJson.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld").size()));
+		final JsonNode expectedJson = data.get().get(recordId).toJSON().get("datensatz");
+
+		assertThat(json.get("@status").asText(), equalTo(expectedJson.get("@status").asText()));
+		assertThat(json.get("@mabVersion").asText(), equalTo(expectedJson.get("@mabVersion").asText()));
+		assertThat(json.get("@typ").asText(), equalTo(expectedJson.get("@typ").asText()));
+		assertThat(json.get("@typ").asText(), equalTo(expectedJson.get("@typ").asText()));
+		assertThat(json.get("feld").size(), equalTo(expectedJson.get("feld").size()));
 
 		// clean up
 
@@ -497,7 +498,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 			configurationService.deleteObject(configuration.getId());
 		}
-		
+
 		service.deleteObject(resource.getId(), config.getId());
 
 		cleanUpDB(resource);
