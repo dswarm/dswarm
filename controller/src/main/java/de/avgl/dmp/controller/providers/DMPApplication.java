@@ -19,6 +19,7 @@ public class DMPApplication extends ResourceConfig {
 		packages("de.avgl.dmp.controller.resources");
 		register(MultiPartFeature.class);
 		register(ExceptionHandler.class);
+		register(CorsResponseFilter.class);
 
 		// initialize injectors...
 		GuiceBridge.getGuiceBridge().initializeGuiceBridge(serviceLocator);

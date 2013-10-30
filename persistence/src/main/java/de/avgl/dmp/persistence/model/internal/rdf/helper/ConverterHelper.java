@@ -33,7 +33,7 @@ public class ConverterHelper {
 
 	public boolean isArray() {
 
-		return objects.size() > 1 ? true : false;
+		return objects.size() > 1;
 	}
 
 	public ObjectNode build(final ObjectNode json) {
