@@ -10,6 +10,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.tdb.TDBFactory;
@@ -22,7 +23,7 @@ import de.avgl.dmp.persistence.services.InternalService;
 import de.avgl.dmp.persistence.services.ResourceService;
 
 /**
- * 
+ *
  * @author tgaengler
  *
  */
@@ -36,9 +37,7 @@ public class InternalTripleService implements InternalService {
 	private static final String						resourceGraphURIPattern	= "http://data.slub-dresden.de/resource/{resourceid}/configurations/{configurationid}/data";
 
 	@Inject
-	public InternalTripleService(final ResourceService resourceService) {
-
-		String directory = "target/h2";
+	public InternalTripleService(final ResourceService resourceService, @Named("TdbPath") final String directory) {
 		dataset = TDBFactory.createDataset(directory);
 		this.resourceService = resourceService;
 	}
@@ -166,7 +165,7 @@ public class InternalTripleService implements InternalService {
 
 	@Override
 	public void deleteObject(final Long id, final Long configurationId) throws DMPPersistenceException {
-		
+
 		if (dataset == null) {
 
 			throw new DMPPersistenceException("couldn't establish connection to DB, i.e., cannot remove model from DB");
@@ -184,7 +183,7 @@ public class InternalTripleService implements InternalService {
 
 		final String resourceGraphURI = resourceGraphURIPattern.replace("{resourceid}", id.toString()).replace("{configurationid}",
 				configurationId.toString());
-		
+
 		dataset.begin(ReadWrite.WRITE);
 		dataset.removeNamedModel(resourceGraphURI);
 		dataset.commit();
@@ -193,7 +192,7 @@ public class InternalTripleService implements InternalService {
 
 	@Override
 	public Optional<Set<String>> getSchema(final Long id, final Long configurationId) {
-		
+
 		throw new NotImplementedException("schema storage is not implemented yet");
 	}
 }

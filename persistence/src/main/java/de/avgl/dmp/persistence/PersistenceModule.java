@@ -1,5 +1,8 @@
 package de.avgl.dmp.persistence;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -9,6 +12,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
+import com.google.common.io.Files;
+import com.google.common.io.Resources;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
@@ -27,8 +32,21 @@ import de.avgl.dmp.persistence.services.impl.SchemaServiceImpl;
 
 public class PersistenceModule extends AbstractModule {
 
+	private static final org.apache.log4j.Logger	log	= org.apache.log4j.Logger.getLogger(PersistenceModule.class);
+
 	@Override
 	protected void configure() {
+		final URL resource = Resources.getResource("dmp.properties");
+		final Properties properties = new Properties();
+		try {
+			properties.load(resource.openStream());
+		} catch (IOException e) {
+			log.error("Could not load dmp.properties", e);
+		}
+
+		final String tdbPath = properties.getProperty("tdb_path", "target/h2");
+
+		bind(String.class).annotatedWith(Names.named("TdbPath")).toInstance(tdbPath);
 
 		bind(ResourceService.class).in(Scopes.SINGLETON);
 		bind(ConfigurationService.class).in(Scopes.SINGLETON);
