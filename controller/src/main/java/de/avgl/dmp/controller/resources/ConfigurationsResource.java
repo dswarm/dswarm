@@ -52,7 +52,7 @@ public class ConfigurationsResource {
 	}
 
 	private Response buildResponse(final String responseContent) {
-		return Response.ok(responseContent).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		return Response.ok(responseContent).build();
 	}
 
 	@GET
@@ -69,7 +69,7 @@ public class ConfigurationsResource {
 
 			LOG.debug("couldn't find configurations or there are no configurations");
 
-			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+			return Response.status(Status.NOT_FOUND).build();
 		}
 
 		LOG.debug("got configurations = '" + ToStringBuilder.reflectionToString(configurations) + "'");
@@ -133,7 +133,7 @@ public class ConfigurationsResource {
 
 		LOG.debug("return new configuration at '" + configurationURI.toString() + "' with content '" + configurationJSON + "'");
 
-		return Response.created(configurationURI).entity(configurationJSON).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		return Response.created(configurationURI).entity(configurationJSON).build();
 	}
 
 	@GET
@@ -151,7 +151,7 @@ public class ConfigurationsResource {
 
 			LOG.debug("couldn't find configuration '" + id + "'");
 
-			return Response.status(Status.NOT_FOUND).header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+			return Response.status(Status.NOT_FOUND).build();
 		}
 
 		LOG.debug("got configuration with id '" + id + "' = '" + ToStringBuilder.reflectionToString(configuration) + "'");

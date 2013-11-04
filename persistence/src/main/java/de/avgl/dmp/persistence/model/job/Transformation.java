@@ -7,8 +7,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Transformation extends DMPObject {
 
 	private List<Component> components;
-	private Component source;
-	private Component target;
+	private EndpointComponent source;
+	private EndpointComponent target;
 
 	public List<Component> getComponents() {
 
@@ -20,19 +20,19 @@ public class Transformation extends DMPObject {
 		this.components = components;
 	}
 
-	public void setSource(final Component source) {
+	public void setSource(final EndpointComponent source) {
 		this.source = source;
 	}
 
-	public Component getSource() {
+	public EndpointComponent getSource() {
 		return source;
 	}
 
-	public void setTarget(final Component target) {
+	public void setTarget(final EndpointComponent target) {
 		this.target = target;
 	}
 
-	public Component getTarget() {
+	public EndpointComponent getTarget() {
 		return target;
 	}
 }

@@ -11,6 +11,7 @@ import org.junit.Test;
 import com.google.common.collect.Lists;
 import com.google.common.io.ByteStreams;
 
+import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.ComponentType;
@@ -19,7 +20,7 @@ import de.avgl.dmp.persistence.model.job.Parameter;
 import de.avgl.dmp.persistence.model.job.Payload;
 import de.avgl.dmp.persistence.model.job.Transformation;
 
-public class JsonToPojoMapperTest {
+public class JsonToPojoMapperTest extends GuicedTest {
 
 	private Transformation	transformation	= null;
 
@@ -133,7 +134,7 @@ public class JsonToPojoMapperTest {
 	@Test
 	public void testApply() throws Exception {
 
-		final Job job = new JsonToPojoMapper().toJob(jsonInput);
+		final Job job = injector.getInstance(JsonToPojoMapper.class).toJob(jsonInput);
 
 		Assert.assertEquals("There should only be one transformation", 1, job.getTransformations().size());
 

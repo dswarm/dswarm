@@ -1,6 +1,7 @@
 package de.avgl.dmp.persistence.model.jsonschema;
 
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -10,7 +11,9 @@ import java.io.Writer;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class JSRoot extends JSObject {
 
@@ -44,6 +47,16 @@ public class JSRoot extends JSObject {
 
 		jgen.flush();
 		jgen.close();
+	}
+
+	public ObjectNode toJson(final ObjectMapper mapper) throws IOException {
+		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		render(mapper, outputStream);
+
+		final ObjectNode jsonNode = mapper.readValue(outputStream.toByteArray(), ObjectNode.class);
+		outputStream.close();
+
+		return jsonNode;
 	}
 
 	public void render(final ObjectMapper mapper, final OutputStream out) throws IOException {

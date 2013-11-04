@@ -16,13 +16,14 @@ import org.junit.Test;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 
+import de.avgl.dmp.converter.GuicedTest;
 import de.avgl.dmp.converter.flow.TransformationFlow;
 import de.avgl.dmp.converter.mf.stream.reader.CsvReader;
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
 import de.avgl.dmp.persistence.model.job.Job;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class TransformationFlowTest {
+public class TransformationFlowTest extends GuicedTest {
 
 	@Test
 	public void testEndToEnd() throws Exception {
@@ -30,7 +31,7 @@ public class TransformationFlowTest {
 		final String request = DMPPersistenceUtil.getResourceAsString("complex-request.json");
 		final String expected = DMPPersistenceUtil.getResourceAsString("complex-result.json");
 
-		final Job job = new JsonToPojoMapper().toJob(request);
+		final Job job = injector.getInstance(JsonToPojoMapper.class).toJob(request);
 		final TransformationFlow flow = TransformationFlow.fromJob(job);
 
 		final String actual = flow.apply();

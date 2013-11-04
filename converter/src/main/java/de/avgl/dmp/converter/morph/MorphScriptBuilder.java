@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -128,6 +129,25 @@ public class MorphScriptBuilder {
 		return data;
 	}
 
+	private Iterable<Element> createVarDefinitions(final Transformation transformation) {
+		final ArrayList<Element> vars = Lists.newArrayListWithCapacity(4);
+
+		vars.add(varDefinition("source.resource.id", String.valueOf(transformation.getSource().getResourceId())));
+		vars.add(varDefinition("source.configuration.id", String.valueOf(transformation.getSource().getConfigurationId())));
+		vars.add(varDefinition("target.resource.id", String.valueOf(transformation.getTarget().getResourceId())));
+		vars.add(varDefinition("target.configuration.id", String.valueOf(transformation.getTarget().getConfigurationId())));
+
+		return vars;
+	}
+
+	private Element varDefinition(String key, String value) {
+		final Element var = doc.createElement("var");
+		var.setAttribute("name", key);
+		var.setAttribute("value", value);
+
+		return var;
+	}
+
 	public String render(final boolean indent, final Charset encoding) {
 		final String defaultEncoding = encoding.name();
 		final Transformer transformer;
@@ -213,6 +233,9 @@ public class MorphScriptBuilder {
 		final Element metaName = doc.createElement("name");
 		meta.appendChild(metaName);
 
+//		final Element vars = doc.createElement("vars");
+//		rootElement.appendChild(vars);
+
 		final Element rules = doc.createElement("rules");
 		rootElement.appendChild(rules);
 
@@ -220,6 +243,11 @@ public class MorphScriptBuilder {
 
 		for (final Transformation transformation : transformations) {
 			metas.add(transformation.getName());
+
+//			for (final Element var: createVarDefinitions(transformation)) {
+//				vars.appendChild(var);
+//			}
+
 			final Element data = createTransformation(transformation);
 
 			rules.appendChild(data);

@@ -8,7 +8,6 @@ import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.net.HttpHeaders;
 
 @Provider
 public class ExceptionHandler implements ExceptionMapper<Exception> {
@@ -19,7 +18,7 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
 	public Response toResponse(final Exception exception) {
 
 		final StackTraceElement[] stacktrace = exception.getStackTrace();
-		final StringBuffer stacktraceString = new StringBuffer();
+		final StringBuilder stacktraceString = new StringBuilder();
 
 		for(final StackTraceElement stacktraceElement : stacktrace) {
 
@@ -62,7 +61,7 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
 			responseStatus = 500;
 		}
 
-		return Response.status(responseStatus).entity(responseJSON.toString()).type(MediaType.APPLICATION_JSON_TYPE)
-				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*").build();
+		return Response.status(responseStatus).entity(responseJSON.toString())
+				.type(MediaType.APPLICATION_JSON_TYPE).build();
 	}
 }

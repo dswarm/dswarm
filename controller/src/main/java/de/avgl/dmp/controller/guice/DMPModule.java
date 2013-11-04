@@ -6,6 +6,7 @@ import de.avgl.dmp.controller.eventbus.CSVConverterEventRecorder;
 import de.avgl.dmp.controller.eventbus.XMLConverterEventRecorder;
 import de.avgl.dmp.controller.eventbus.XMLSchemaEventRecorder;
 import de.avgl.dmp.controller.status.DMPStatus;
+import de.avgl.dmp.controller.utils.InternalSchemaDataUtil;
 
 public class DMPModule extends AbstractModule {
 
@@ -14,6 +15,8 @@ public class DMPModule extends AbstractModule {
 		bind(CSVConverterEventRecorder.class).asEagerSingleton();
 		bind(XMLConverterEventRecorder.class).asEagerSingleton();
 		bind(XMLSchemaEventRecorder.class).asEagerSingleton();
+
+		bind(InternalSchemaDataUtil.class);
 
 		bind(DMPStatus.class);
 	}

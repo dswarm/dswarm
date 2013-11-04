@@ -6,13 +6,14 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
+import com.google.inject.Inject;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.ComponentType;
+import de.avgl.dmp.persistence.model.job.EndpointComponent;
 import de.avgl.dmp.persistence.model.job.Job;
 import de.avgl.dmp.persistence.model.job.Parameter;
 import de.avgl.dmp.persistence.model.job.Payload;
@@ -20,15 +21,11 @@ import de.avgl.dmp.persistence.model.job.Transformation;
 
 public class JsonToPojoMapper {
 
-	private static final ObjectMapper	mapper;
+	private final ObjectMapper objectMapper;
 
-	static {
-		// create once, reuse
-		mapper = new ObjectMapper();
-
-		final JaxbAnnotationModule module = new JaxbAnnotationModule();
-		// configure as necessary
-		mapper.registerModule(module);
+	@Inject
+	public JsonToPojoMapper(final ObjectMapper objectMapper) {
+		this.objectMapper = objectMapper;
 	}
 
 	private Map<String, Parameter> extractParameters(final JsonNode root) {
@@ -104,9 +101,25 @@ public class JsonToPojoMapper {
 		return component;
 	}
 
-	public Job toJob(final String json) throws IOException {
+	private EndpointComponent extractEndpointComponent(final JsonNode jsComponent) throws DMPPersistenceException {
+		final Component regularComponent = extractComponent(jsComponent);
+		final EndpointComponent component = new EndpointComponent(regularComponent);
 
-		final JsonNode root = mapper.readTree(json);
+		final JsonNode jsPayload = jsComponent.get("payload");
+
+		if (!jsPayload.hasNonNull("resourceId") || !jsPayload.hasNonNull("configurationId")) {
+			throw new DMPPersistenceException(String.format("The component [%s] down not seem to be a proper endpoint component (source|target)", jsComponent));
+		}
+
+		component.setResourceId(jsPayload.get("resourceId").asLong());
+		component.setConfigurationId(jsPayload.get("configurationId").asLong());
+
+		return component;
+	}
+
+	public Job toJob(final String json) throws IOException, DMPPersistenceException {
+
+		final JsonNode root = objectMapper.readTree(json);
 
 		final ImmutableList.Builder<Transformation> transformationsBuilder = ImmutableList.builder();
 
@@ -126,14 +139,14 @@ public class JsonToPojoMapper {
 		return job;
 	}
 
-	public Transformation toTransformation(final String json) throws IOException {
+	public Transformation toTransformation(final String json) throws IOException, DMPPersistenceException {
 
-		final JsonNode root = mapper.readTree(json);
+		final JsonNode root = objectMapper.readTree(json);
 
 		return toTransformation(root);
 	}
 
-	private Transformation toTransformation(final JsonNode transformationJsonNode) {
+	private Transformation toTransformation(final JsonNode transformationJsonNode) throws DMPPersistenceException {
 
 		final Transformation transformation = new Transformation();
 
@@ -142,8 +155,8 @@ public class JsonToPojoMapper {
 
 		final JsonNode jsSource = transformationJsonNode.get("source");
 		final JsonNode jsTarget = transformationJsonNode.get("target");
-		final Component source = extractComponent(jsSource);
-		final Component target = extractComponent(jsTarget);
+		final EndpointComponent source = extractEndpointComponent(jsSource);
+		final EndpointComponent target = extractEndpointComponent(jsTarget);
 
 		transformation.setSource(source);
 		transformation.setTarget(target);

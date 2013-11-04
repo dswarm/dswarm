@@ -61,11 +61,11 @@ public class ResourceService extends BasicJPAService<Resource> {
 	@Override
 	public Resource getObject(final Long id) {
 
-		final ConfigurationService cS = configurationServiceProvider.get();
-
-
-
-		System.out.println("all objects: " + ToStringBuilder.reflectionToString(cS.getObjects()));
+//		final ConfigurationService cS = configurationServiceProvider.get();
+//
+//
+//
+//		System.out.println("all objects: " + ToStringBuilder.reflectionToString(cS.getObjects()));
 
 		return super.getObject(id);
 	}
