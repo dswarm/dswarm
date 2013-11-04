@@ -1,17 +1,15 @@
 package de.avgl.dmp.controller.resources;
 
 import java.io.IOException;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.net.HttpHeaders;
 import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 
@@ -37,10 +35,11 @@ public class JobsResource {
 		return Response.ok(responseContent).build();
 	}
 
+	@Path("/demo")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response executeJob(final String jsonObjectString) throws IOException, DMPConverterException {
+	public Response executeJobDemo(final String jsonObjectString) throws IOException, DMPConverterException {
 
 		final Job job;
 		try {
@@ -50,7 +49,7 @@ public class JobsResource {
 		}
 
 		final TransformationFlow flow = TransformationFlow.fromJob(job);
-		final String result = flow.applyResource(TransformationFlow.DEFAULT_RESOURCE_PATH);
+		final String result = flow.applyResourceDemo(TransformationFlow.DEFAULT_RESOURCE_PATH);
 
 		return buildResponse(result);
 	}

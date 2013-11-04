@@ -42,14 +42,28 @@ public class TransformationFlow {
 		this.transformer = transformer;
 	}
 
-	public String applyRecord(final String record) {
+//	public String applyRecord(final String record) {
+//
+//		final StringReader opener = new StringReader();
+//
+//		return apply(record, opener);
+//	}
+	
+	public String applyRecordDemo(final String record) {
 
 		final StringReader opener = new StringReader();
 
 		return applyDemo(record, opener);
 	}
 
-	public String applyResource(final String resourcePath) {
+//	public String applyResource(final String resourcePath) {
+//
+//		final ResourceOpener opener = new ResourceOpener();
+//
+//		return apply(resourcePath, opener);
+//	}
+	
+	public String applyResourceDemo(final String resourcePath) {
 
 		final ResourceOpener opener = new ResourceOpener();
 
@@ -66,7 +80,7 @@ public class TransformationFlow {
 		final StringWriter stringWriter = new StringWriter();
 		stringWriter.append('[');
 
-		final ObjectReceiver objectReceiver = new ObjectReceiver<String>() {
+		final ObjectReceiver<String> objectReceiver = new ObjectReceiver<String>() {
 			@Override
 			public void process(String obj) {
 				stringWriter.append(obj);
@@ -128,8 +142,8 @@ public class TransformationFlow {
 		return stringWriter.toString();
 	}
 
-	public String apply() {
-		return applyResource(DEFAULT_RESOURCE_PATH);
+	public String applyDemo() {
+		return applyResourceDemo(DEFAULT_RESOURCE_PATH);
 	}
 
 	public static TransformationFlow fromString(final String morphScriptString) throws FileNotFoundException {

@@ -26,7 +26,7 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 public class TransformationFlowTest extends GuicedTest {
 
 	@Test
-	public void testEndToEnd() throws Exception {
+	public void testEndToEndDemo() throws Exception {
 
 		final String request = DMPPersistenceUtil.getResourceAsString("complex-request.json");
 		final String expected = DMPPersistenceUtil.getResourceAsString("complex-result.json");
@@ -34,32 +34,32 @@ public class TransformationFlowTest extends GuicedTest {
 		final Job job = injector.getInstance(JsonToPojoMapper.class).toJob(request);
 		final TransformationFlow flow = TransformationFlow.fromJob(job);
 
-		final String actual = flow.apply();
+		final String actual = flow.applyDemo();
 
 		assertEquals(expected, actual);
 	}
 
 	@Test
-	public void testMorphToEnd() throws Exception {
+	public void testMorphToEndDemo() throws Exception {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("complex-result.json");
 
 		final TransformationFlow flow = TransformationFlow.fromFile("complex-metamorph.xml");
 
-		final String actual = flow.apply();
+		final String actual = flow.applyDemo();
 
 		assertEquals(expected, actual);
 	}
 
 	@Test
-	public void testEndToEndByRecordStringExample() throws Exception {
+	public void testEndToEndByRecordStringExampleDemo() throws Exception {
 
 		final String request = DMPPersistenceUtil.getResourceAsString("qucosa_record.xml");
 		final String expected = DMPPersistenceUtil.getResourceAsString("complex-result.json");
 
 		final TransformationFlow flow = TransformationFlow.fromFile("complex-metamorph.xml");
 
-		final String actual = flow.applyRecord(request);
+		final String actual = flow.applyRecordDemo(request);
 
 		assertEquals(expected, actual);
 	}

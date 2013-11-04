@@ -13,9 +13,9 @@ import org.culturegraph.mf.framework.annotations.Out;
 @Out(String.class)
 public class RecordAwareJsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
 
-	private final StreamPipe delegate;
+	private final StreamPipe<ObjectReceiver<String>> delegate;
 
-	public RecordAwareJsonEncoder(StreamPipe delegate) {
+	public RecordAwareJsonEncoder(StreamPipe<ObjectReceiver<String>> delegate) {
 		this.delegate = delegate;
 	}
 

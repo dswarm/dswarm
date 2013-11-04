@@ -21,6 +21,8 @@
         "payload": {
           "name": "identifier",
           "path": "header.identifier",
+          "resourceId" : "1",
+          "configurationId" : "1",
           "show": true
         }
       },
@@ -30,6 +32,8 @@
         "payload": {
           "name": "dc:identifier",
           "path": "OAI-PMH.dc:identifier",
+          "resourceId" : "1",
+          "configurationId" : "1",
           "show": true
         }
       }
@@ -55,6 +59,8 @@
         "payload": {
           "name": "dc:title",
           "path": "metadata.oai_dc:dc.dc:title",
+          "resourceId" : "1",
+          "configurationId" : "1",
           "show": true
         }
       },
@@ -64,6 +70,8 @@
         "payload": {
           "name": "dc:title",
           "path": "OAI-PMH.dc:title",
+          "resourceId" : "1",
+          "configurationId" : "1",
           "show": true
         }
       }
@@ -89,6 +97,8 @@
         "payload": {
           "name": "dc:identifier",
           "path": "metadata.oai_dc:dc.dc:identifier",
+          "resourceId" : "1",
+          "configurationId" : "1",
           "show": true
         }
       },
@@ -98,6 +108,8 @@
         "payload": {
           "name": "dc:identifier",
           "path": "OAI-PMH.dc:identifier",
+          "resourceId" : "1",
+          "configurationId" : "1",
           "show": true
         }
       }
@@ -123,6 +135,8 @@
         "payload": {
           "name": "dc:creator",
           "path": "metadata.oai_dc:dc.dc:creator",
+          "resourceId" : "1",
+          "configurationId" : "1",
           "show": true
         }
       },
@@ -132,6 +146,8 @@
         "payload": {
           "name": "dc:creator",
           "path": "OAI-PMH.dc:creator",
+          "resourceId" : "1",
+          "configurationId" : "1",
           "show": true
         }
       }
@@ -157,6 +173,8 @@
         "payload": {
           "name": "dc:contributor",
           "path": "metadata.oai_dc:dc.dc:contributor",
+          "resourceId" : "1",
+          "configurationId" : "1",
           "show": true
         }
       },
@@ -166,6 +184,8 @@
         "payload": {
           "name": "dc:creator",
           "path": "OAI-PMH.dc:creator",
+          "resourceId" : "1",
+          "configurationId" : "1",
           "show": true
         }
       }
@@ -351,6 +371,8 @@
         "payload": {
           "name": "dc:subject",
           "path": "metadata.oai_dc:dc.dc:subject",
+          "resourceId" : "1",
+          "configurationId" : "1",
           "show": true
         }
       },
@@ -360,6 +382,8 @@
         "payload": {
           "name": "dc:subject",
           "path": "OAI-PMH.dc:subject",
+          "resourceId" : "1",
+          "configurationId" : "1",
           "show": true
         }
       }
