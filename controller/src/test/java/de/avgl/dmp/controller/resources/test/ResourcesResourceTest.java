@@ -485,6 +485,8 @@ public class ResourcesResourceTest extends ResourceTest {
 		final JsonNode json = assoziativeJsonArray.get(recordId).get("datensatz");
 
 		final JsonNode expectedJson = data.get().get(recordId).toJSON().get("datensatz");
+		
+		// System.out.println(objectMapper.writeValueAsString(expectedJson));
 
 		assertThat(json.get("@status").asText(), equalTo(expectedJson.get("@status").asText()));
 		assertThat(json.get("@mabVersion").asText(), equalTo(expectedJson.get("@mabVersion").asText()));

@@ -72,6 +72,8 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 	@Override
 	public void startElement(final String uri, final String localName, final String qName, final Attributes attributes) throws SAXException {
 
+		// System.out.println("in start element with: uri = '" + uri + "' :: local name = '" + localName + "'");
+		
 		this.uri = uri;
 
 		if (inRecord) {
@@ -89,6 +91,9 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 
 	@Override
 	public void endElement(final String uri, final String localName, final String qName) throws SAXException {
+		
+		// System.out.println("in end element with: uri = '" + uri + "' :: local name = '" + localName + "'");
+		
 		if (inRecord) {
 			writeValue();
 			if (localName.equals(recordTagName)) {
@@ -126,6 +131,8 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 	}
 
 	public void startRecord(final String identifier) {
+		
+		// System.out.println("in start record with: identifier = '" + identifier + "'");
 
 		assert !isClosed();
 
@@ -147,6 +154,8 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 			if (uri != null) {
 
 				// identifier could act as resource uri
+				
+				// note: @tgaengler this is maybe suboptimal
 
 				currentId = identifier;
 			} else {
@@ -208,10 +217,13 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 			recordType = model.createResource(recordTypeUri + "Type");
 		}
 
+		// TODO: @tgaengler re-enable typing later
 //		recordResource.addProperty(RDF.type, recordType);
 	}
 
 	public void endRecord() {
+		
+		// System.out.println("in end record");
 
 		assert !isClosed();
 
@@ -222,6 +234,8 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 	}
 
 	public void startEntity(final String name) {
+		
+		// System.out.println("in start entity with name = '" + name + "'");
 
 		assert !isClosed();
 
@@ -229,12 +243,18 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 		entityResource = model.createResource();
 		// sub resource type
 		final Resource entityType = model.createResource(name + "Type");
-		entityResource.addProperty(RDF.type, entityType);
+		
+		// TODO: @tgaengler re-enable typing later
+		//entityResource.addProperty(RDF.type, entityType);
+		
 		final Property entityProperty = model.createProperty(name);
+		
 		entityStack.push(new Tuple<Resource, Property>(entityResource, entityProperty));
 	}
 
 	public void endEntity() {
+		
+		// System.out.println("in end entity");
 
 		assert !isClosed();
 
@@ -243,6 +263,8 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 
 		// add entity resource to parent entity resource (or to record resource, if there is no parent entity)
 		if (!entityStack.isEmpty()) {
+			
+			entityResource = entityStack.peek().v1();
 
 			final Tuple<Resource, Property> parentEntityTuple = entityStack.peek();
 
@@ -253,6 +275,8 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 	}
 
 	public void literal(final String name, final String value) {
+		
+		// System.out.println("in literal with name = '" + name + "' :: value = '" + value + "'");
 
 		assert !isClosed();
 
