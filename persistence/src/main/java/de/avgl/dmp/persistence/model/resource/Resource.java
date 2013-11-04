@@ -101,6 +101,7 @@ public class Resource extends DMPJPAObject {
 	}
 
 	public String getDescription() {
+		
 		return description;
 	}
 
@@ -111,25 +112,7 @@ public class Resource extends DMPJPAObject {
 
 	public ObjectNode getAttributes() {
 
-		if (attributes == null && !attributesInitialized) {
-
-			if (attributesString == null) {
-
-				LOG.debug("attributes JSON string is null");
-
-				return null;
-			}
-
-			try {
-
-				attributes = DMPPersistenceUtil.getJSON(attributesString);
-			} catch (DMPException e) {
-
-				LOG.debug("couldn't parse attributes JSON string for resource '" + getId() + "'");
-			}
-
-			attributesInitialized = true;
-		}
+		initAttributes(false);
 
 		return attributes;
 	}
@@ -145,7 +128,7 @@ public class Resource extends DMPJPAObject {
 
 		if (attributes == null) {
 
-			attributes = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
+			initAttributes(true);
 		}
 
 		attributes.put(key, value);
@@ -155,25 +138,7 @@ public class Resource extends DMPJPAObject {
 
 	public JsonNode getAttribute(final String key) {
 
-		if (attributes == null && !attributesInitialized) {
-
-			if (attributesString == null) {
-
-				LOG.debug("attributes JSON string is null");
-
-				return null;
-			}
-
-			try {
-
-				attributes = DMPPersistenceUtil.getJSON(attributesString);
-			} catch (DMPException e) {
-
-				LOG.debug("couldn't parse attributes JSON string for resource '" + getId() + "'");
-			}
-
-			attributesInitialized = true;
-		}
+		initAttributes(false);
 
 		return attributes.get(key);
 	}
@@ -309,6 +274,35 @@ public class Resource extends DMPJPAObject {
 	private void refreshAttributesString() {
 
 		attributesString = attributes.toString();
+	}
+	
+	private void initAttributes(boolean fromScratch) {
+		
+		if (attributes == null && !attributesInitialized) {
+
+			if (attributesString == null) {
+
+				LOG.debug("attributes JSON string is null");
+				
+				if(fromScratch) {
+
+					attributes = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
+				} else {
+					
+					return;
+				}
+			}
+
+			try {
+
+				attributes = DMPPersistenceUtil.getJSON(attributesString);
+			} catch (DMPException e) {
+
+				LOG.debug("couldn't parse attributes JSON string for resource '" + getId() + "'");
+			}
+
+			attributesInitialized = true;
+		}
 	}
 
 	@Override

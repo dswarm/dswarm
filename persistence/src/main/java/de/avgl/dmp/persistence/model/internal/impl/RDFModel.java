@@ -55,6 +55,8 @@ public class RDFModel implements Model {
 
 			return null;
 		}
+		
+		// model.write(System.out, "N3");
 
 		if (resourceURI == null) {
 
