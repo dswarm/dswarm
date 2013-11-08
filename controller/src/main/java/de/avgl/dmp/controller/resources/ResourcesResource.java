@@ -521,7 +521,7 @@ public class ResourcesResource {
 
 		try {
 
-			jsonString = objectMapper.writeValueAsString(data.get());
+			jsonString = objectMapper.writeValueAsString(json);
 		} catch (final JsonProcessingException e) {
 
 			dmpStatus.stop(context);

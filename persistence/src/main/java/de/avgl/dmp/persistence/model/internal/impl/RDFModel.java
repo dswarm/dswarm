@@ -56,7 +56,6 @@ public class RDFModel implements Model {
 			return null;
 		}
 		
-		// model.write(System.out, "N3");
 
 		if (resourceURI == null) {
 
@@ -64,6 +63,9 @@ public class RDFModel implements Model {
 
 			return null;
 		}
+		
+//		System.out.println("write rdf model '" + resourceURI + "' in n3");
+//		model.write(System.out, "N3");
 
 		final Resource resource = model.getResource(resourceURI);
 

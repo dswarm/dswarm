@@ -477,20 +477,23 @@ public class ResourcesResourceTest extends ResourceTest {
 				.queryParam("atMost", atMost).request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
 
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+		
+//		final String assoziativeJsonArrayString = response.readEntity(String.class);
+//		
+//		System.out.println("result = '" + assoziativeJsonArrayString + "'");
 
 		final ObjectNode assoziativeJsonArray = response.readEntity(ObjectNode.class);
 
 		assertThat(assoziativeJsonArray.size(), equalTo(atMost));
 
-		final JsonNode json = assoziativeJsonArray.get(recordId).get("datensatz");
+		final JsonNode json = assoziativeJsonArray.get(recordId);
 
-		final JsonNode expectedJson = data.get().get(recordId).toJSON().get("datensatz");
+		final JsonNode expectedJson = data.get().get(recordId).toJSON();
 		
 		// System.out.println(objectMapper.writeValueAsString(expectedJson));
 
 		assertThat(json.get("@status").asText(), equalTo(expectedJson.get("@status").asText()));
 		assertThat(json.get("@mabVersion").asText(), equalTo(expectedJson.get("@mabVersion").asText()));
-		assertThat(json.get("@typ").asText(), equalTo(expectedJson.get("@typ").asText()));
 		assertThat(json.get("@typ").asText(), equalTo(expectedJson.get("@typ").asText()));
 		assertThat(json.get("feld").size(), equalTo(expectedJson.get("feld").size()));
 
