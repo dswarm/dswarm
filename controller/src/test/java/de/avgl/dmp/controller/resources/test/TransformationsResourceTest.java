@@ -77,15 +77,18 @@ public class TransformationsResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testTransformation() throws Exception {
-		Response response = target().request(MediaType.APPLICATION_JSON_TYPE)
+	public void testTransformationDemo() throws Exception {
+		
+		final Response response = target("/demo").request(MediaType.APPLICATION_JSON_TYPE)
 				.accept(MediaType.APPLICATION_JSON_TYPE)
 				.post(Entity.json(transformationJSONString));
-		String responseString = response.readEntity(String.class);
+		
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+		
+		final String responseString = response.readEntity(String.class);
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("transformations-post-result.json");
 
 		Assert.assertEquals("POST responses are not equal", expected, responseString);
-		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
 	}
 }

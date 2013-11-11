@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -13,7 +14,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.inject.Provider;
@@ -114,6 +114,34 @@ public class TransformationsResource {
 		final Iterator<Tuple<String, JsonNode>> tupleIterator = inputData.get();
 
 		final String result = flow.apply(tupleIterator, new JsonNodeReader(recordPrefix));
+
+		return buildResponse(result);
+	}
+	
+	/**
+	 * this endpoint consumes a transformation as JSON representation
+	 *
+	 * @param jsonObjectString a JSON representation of one transformation
+	 * @return
+	 * @throws IOException
+	 * @throws DMPConverterException
+	 */
+	@Path("/demo")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response runWithMetamorphDemo(final String jsonObjectString) throws IOException, DMPConverterException {
+
+		final Transformation transformation;
+		try {
+			transformation = pojoMapperProvider.get().toTransformation(jsonObjectString);
+		} catch (DMPPersistenceException e) {
+			throw new DMPConverterException(e.getMessage());
+		}
+
+		final TransformationFlow flow = TransformationFlow.fromTransformation(transformation);
+
+		final String result = flow.applyResourceDemo(TransformationFlow.DEFAULT_RESOURCE_PATH);
 
 		return buildResponse(result);
 	}
