@@ -1,5 +1,7 @@
 package de.avgl.dmp.persistence.model.job;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -7,7 +9,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.google.common.base.Objects;
 
 @XmlRootElement
-public class DMPObject {
+public class DMPObject implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
 
 	private String	id;
 

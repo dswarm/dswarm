@@ -1,14 +1,31 @@
 package de.avgl.dmp.persistence.model.job;
 
 import java.util.List;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ * @author tgaengler
+ */
 @XmlRootElement
-public class Transformation extends DMPObject {
+@Entity
+//@Cacheable(true)
+//@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Table(name = "TRANSFORMATION")
+public class Transformation extends Function {
 
-	private List<Component> components;
-	private EndpointComponent source;
-	private EndpointComponent target;
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+
+	private List<Component>		components;
+
+	private Component			inputComponent;
+
+	private Component			outputComponent;
 
 	public List<Component> getComponents() {
 
@@ -20,19 +37,23 @@ public class Transformation extends DMPObject {
 		this.components = components;
 	}
 
-	public void setSource(final EndpointComponent source) {
-		this.source = source;
+	public Component getInputComponent() {
+		
+		return inputComponent;
 	}
 
-	public EndpointComponent getSource() {
-		return source;
+	public void setInputComponent(final Component inputComponent) {
+		
+		this.inputComponent = inputComponent;
 	}
 
-	public void setTarget(final EndpointComponent target) {
-		this.target = target;
+	public Component getOutputComponent() {
+		
+		return outputComponent;
 	}
 
-	public EndpointComponent getTarget() {
-		return target;
+	public void setOutputComponent(final Component outputComponent) {
+		
+		this.outputComponent = outputComponent;
 	}
 }
