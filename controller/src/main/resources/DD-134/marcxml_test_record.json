@@ -1,0 +1,368 @@
+{
+    "http://data.slub-dresden.de/resources/1/configurations/1/records/eb29a378-6743-4e64-bef1-0727b7d1d540": {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#recordType",
+        "@schemaLocation": "http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd",
+        "leader": {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#leaderType",
+            "#text": "     nam  2200457 a 4500"
+        },
+        "controlfield": [{
+            "@tag": "001",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#controlfieldType",
+            "#text": "003404590"
+        }, {
+            "@tag": "005",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#controlfieldType",
+            "#text": "20091106150915.0"
+        }, {
+            "@tag": "006",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#controlfieldType",
+            "#text": "m        d"
+        }, {
+            "@tag": "007",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#controlfieldType",
+            "#text": "cr bn|||||||||"
+        }, {
+            "@tag": "008",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#controlfieldType",
+            "#text": "091028s2008    caua          000 p eng d"
+        }],
+        "datafield": [{
+            "@tag": "710",
+            "@ind1": "2",
+            "@ind2": " ",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": [{
+                "@code": "b",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "Early Modern Center."
+            }, {
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "University of California, Santa Barbara."
+            }]
+        }, {
+            "@tag": "500",
+            "@ind1": " ",
+            "@ind2": " ",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": {
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "EMC no. 21085."
+            }
+        }, {
+            "@tag": "500",
+            "@ind1": " ",
+            "@ind2": " ",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": {
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "Reference: Wing B3604[B]; Rollins (2) ?222 (March 1, 1675, ii, 499)."
+            }
+        }, {
+            "@tag": "536",
+            "@ind1": " ",
+            "@ind2": " ",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": {
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "Sponsored by the University of California, Santa Barbara and The Early Modern Center."
+            }
+        }, {
+            "@tag": "500",
+            "@ind1": " ",
+            "@ind2": " ",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": {
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "Title from English Broadside Ballad Archive (queried 2008 Nov 07)."
+            }
+        }, {
+            "@tag": "024",
+            "@ind1": "8",
+            "@ind2": " ",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": {
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "3.84"
+            }
+        }, {
+            "@tag": "040",
+            "@ind1": " ",
+            "@ind2": " ",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": [{
+                "@code": "c",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "CUT"
+            }, {
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "CUT"
+            }]
+        }, {
+            "@tag": "650",
+            "@ind1": " ",
+            "@ind2": "0",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": [{
+                "@code": "y",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "17th century."
+            }, {
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "Broadside"
+            }]
+        }, {
+            "@tag": "246",
+            "@ind1": "1",
+            "@ind2": " ",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": [{
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "AS I sate at my Spinning=Wheel"
+            }, {
+                "@code": "i",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "First line:"
+            }]
+        }, {
+            "@tag": "534",
+            "@ind1": " ",
+            "@ind2": " ",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": [{
+                "@code": "c",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "Cambridge [England] : The Pepys Library, Magdalene College, 2003."
+            }, {
+                "@code": "t",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "The Pepys ballads"
+            }, {
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "Magdalene College (University of Cambridge)."
+            }, {
+                "@code": "p",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "Reproduction of Microfilm :"
+            }]
+        }, {
+            "@tag": "516",
+            "@ind1": " ",
+            "@ind2": " ",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": {
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "Text (XML)."
+            }
+        }, {
+            "@tag": "049",
+            "@ind1": " ",
+            "@ind2": " ",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": {
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "CUTM"
+            }
+        }, {
+            "@tag": "540",
+            "@ind1": " ",
+            "@ind2": " ",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": {
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "The University of California makes a claim of copyright only to original contributions made by Early Modern Center participants and other members of the university community. The University of California makes no claim of copyright to the original text. Permission is granted to download, transmit or otherwise reproduce, distribute or display the contributions to this work claimed by The University of California for non-profit educational purposes, provided that this header is included in its entirety. For inquiries about commercial uses, please contact: Early Modern Center - English Department, University of California, Santa Barbara, CA 93105, United States of America, Email: http://ebba.english.ucsb.edu/contact/."
+            }
+        }, {
+            "@tag": "500",
+            "@ind1": " ",
+            "@ind2": " ",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": {
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "Pepys 3.84."
+            }
+        }, {
+            "@tag": "500",
+            "@ind1": " ",
+            "@ind2": " ",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": {
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "Original Publication Date: c. 1664-1696."
+            }
+        }, {
+            "@tag": "024",
+            "@ind1": "8",
+            "@ind2": " ",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": {
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "R219235"
+            }
+        }, {
+            "@tag": "245",
+            "@ind1": "0",
+            "@ind2": "4",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": [{
+                "@code": "b",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "or, the yielding lass."
+            }, {
+                "@code": "h",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "[electronic resource] :"
+            }, {
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "The bonny scot"
+            }]
+        }, {
+            "@tag": "740",
+            "@ind1": "0",
+            "@ind2": " ",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": {
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "English Broadside Ballad Archive."
+            }
+        }, {
+            "@tag": "260",
+            "@ind1": " ",
+            "@ind2": " ",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": [{
+                "@code": "c",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "2008."
+            }, {
+                "@code": "b",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "University of California, Santa Barbara, The Early Modern Center,"
+            }, {
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "Santa Barbara, CA :"
+            }]
+        }, {
+            "@tag": "655",
+            "@ind1": " ",
+            "@ind2": "7",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": [{
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "Ballads"
+            }, {
+                "@code": "2",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "aat"
+            }]
+        }, {
+            "@tag": "538",
+            "@ind1": " ",
+            "@ind2": " ",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": {
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "System requirements: Web browser for the XML and HTML files."
+            }
+        }, {
+            "@tag": "024",
+            "@ind1": "8",
+            "@ind2": " ",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": {
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "21085"
+            }
+        }, {
+            "@tag": "650",
+            "@ind1": " ",
+            "@ind2": "0",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": [{
+                "@code": "y",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "17th century."
+            }, {
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "Ballads, English"
+            }]
+        }, {
+            "@tag": "500",
+            "@ind1": " ",
+            "@ind2": " ",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": {
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "ESTC no. R219235."
+            }
+        }, {
+            "@tag": "856",
+            "@ind1": "4",
+            "@ind2": "0",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": [{
+                "@code": "z",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "English Broadside Ballad Archive."
+            }, {
+                "@code": "u",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "http://ebba.english.ucsb.edu/ballad/21085/"
+            }]
+        }, {
+            "@tag": "538",
+            "@ind1": " ",
+            "@ind2": " ",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": {
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "Mode of access: Internet; host: ebba.english.ucsb.edu."
+            }
+        }, {
+            "@tag": "500",
+            "@ind1": " ",
+            "@ind2": " ",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": {
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "TEI file encoded by the English Broadside Ballad Archive Editorial Team."
+            }
+        }, {
+            "@tag": "035",
+            "@ind1": " ",
+            "@ind2": " ",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType",
+            "subfield": {
+                "@code": "a",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType",
+                "#text": "(OCoLC)ocn460736493"
+            }
+        }]
+    }
+}

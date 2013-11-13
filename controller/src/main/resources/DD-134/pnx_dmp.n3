@@ -1,0 +1,344 @@
+<http://data.slub-dresden.de/resources/1/configurations/1/records/0c3718f4-7ac3-46a8-8cb7-6ad4f8816330>
+        a            <#recordType> ;
+        <#addata>    [ a            <#addataType> ;
+                       <#addtitle>  [ a       <#addtitleType> ;
+                                      <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                              "Sacra anniversaria illustris Gymnasii Fridericiani Altenburgensis ... rite celebranda indicit ; 1844"
+                                    ] ;
+                       <#btitle>    [ a       <#btitleType> ;
+                                      <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                              "Apel, Heinrich Eduard: Disputationes de iis, quae Carolus Miltitius cum Luthero, inprimis Altenburgi in aedibus Spalatini, egerit - 1"
+                                    ] ;
+                       <#cop>       [ a       <#copType> ;
+                                      <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                              "Altenburgi"
+                                    ] ;
+                       <#format>    [ a       <#formatType> ;
+                                      <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                              "book"
+                                    ] ;
+                       <#genre>     [ a       <#genreType> ;
+                                      <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                              "book"
+                                    ] ;
+                       <#lad04>     [ a       <#lad04Type> ;
+                                      <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                              "dbodproxy_du"
+                                    ] ;
+                       <#lad05>     [ a       <#lad05Type> ;
+                                      <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                              "dbodproxy_du"
+                                    ] ;
+                       <#pub>       [ a       <#pubType> ;
+                                      <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                              "Typogr. Aulico"
+                                    ]
+                     ] ;
+        <#control>   [ a                  <#controlType> ;
+                       <#addsrcrecordid>  [ a       <#addsrcrecordidType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "63275"
+                                          ] ;
+                       <#ilsapiid>        [ a       <#ilsapiidType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "63275"
+                                          ] ;
+                       <#recordid>        [ a       <#recordidType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "libero_mab263275"
+                                          ] ;
+                       <#sourceformat>    [ a       <#sourceformatType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "MAB"
+                                          ] ;
+                       <#sourceid>        [ a       <#sourceidType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "libero_mab2"
+                                          ] ;
+                       <#sourcerecordid>  [ a       <#sourcerecordidType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "63275"
+                                          ] ;
+                       <#sourcesystem>    [ a       <#sourcesystemType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "Other"
+                                          ]
+                     ] ;
+        <#dedup>     [ a       <#dedupType> ;
+                       <#c1>   [ a       <#c1Type> ;
+                                 <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                         "032431201"
+                               ] ;
+                       <#c4>   [ a       <#c4Type> ;
+                                 <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                         "1844"
+                               ] ;
+                       <#f1>   [ a       <#f1Type> ;
+                                 <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                         "032431201"
+                               ] ;
+                       <#f10>  [ a       <#f10Type> ;
+                                 <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                         "typog"
+                               ] ;
+                       <#f6>   [ a       <#f6Type> ;
+                                 <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                         "1844"
+                               ] ;
+                       <#t>    [ a       <#tType> ;
+                                 <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                         "99"
+                               ]
+                     ] ;
+        <#delivery>  [ a               <#deliveryType> ;
+                       <#delcategory>  [ a       <#delcategoryType> ;
+                                         <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                 "Physical Item"
+                                       ] ;
+                       <#institution>  [ a       <#institutionType> ;
+                                         <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                 "EXL"
+                                       ]
+                     ] ;
+        <#display>   [ a                    <#displayType> ;
+                       <#availinstitution>  [ a       <#availinstitutionType> ;
+                                              <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                      "$$ISLUB$$Savailable"
+                                            ] ;
+                       <#availlibrary>      [ a       <#availlibraryType> ;
+                                              <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                      "$$ISLUB$$Lzell1$$1Magazin$$Savailable$$3MAG$$X32515514$$Yzell1 "
+                                            ] ;
+                       <#availpnx>          [ a       <#availpnxType> ;
+                                              <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                      "available"
+                                            ] ;
+                       <#creationdate>      [ a       <#creationdateType> ;
+                                              <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                      "1844"
+                                            ] ;
+                       <#format>            [ a       <#formatType> ;
+                                              <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                      "18 S."
+                                            ] ;
+                       <#ispartof>          [ a       <#ispartofType> ;
+                                              <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                      "Sacra anniversaria illustris Gymnasii Fridericiani Altenburgensis ... rite celebranda indicit ; 1844"
+                                            ] ;
+                       <#language>          [ a       <#languageType> ;
+                                              <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                      "lat"
+                                            ] ;
+                       <#lds12>             [ a       <#lds12Type> ;
+                                              <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                      "Apel, Heinrich Eduard: Disputationes de iis, quae Carolus Miltitius cum Luthero, inprimis Altenburgi in aedibus Spalatini, egerit - 1"
+                                            ] ;
+                       <#lds17>             [ a       <#lds17Type> ;
+                                              <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                      "Buch"
+                                            ] ;
+                       <#lds18>             [ a       <#lds18Type> ;
+                                              <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                      "Typogr. Aulico"
+                                            ] ;
+                       <#lds21>             [ a       <#lds21Type> ;
+                                              <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                      "032431163"
+                                            ] ;
+                       <#lds22>             [ a       <#lds22Type> ;
+                                              <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                      "074958739"
+                                            ] ;
+                       <#lds28>             [ a       <#lds28Type> ;
+                                              <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                      "Altenburgi :"
+                                            ] ;
+                       <#lds31>             [ a       <#lds31Type> ;
+                                              <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                      "Apel, Heinrich Eduard: Disputationes de iis, quae Carolus Miltitius cum Luthero, inprimis Altenburgi in aedibus Spalatini, egerit"
+                                            ] ;
+                       <#lds32>             [ a       <#lds32Type> ;
+                                              <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                      "Friedrichs-Gymnasium &lt;Altenburg, Leipzig&gt;: Sacra anniversaria illustris Gymnasii Fridericiani Altenburgensis ... rite celebranda indicit"
+                                            ] ;
+                       <#lds39>             [ a       <#lds39Type> ;
+                                              <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                      "Sacra anniversaria illustris Gymnasii Fridericiani Altenburgensis ... rite celebranda indicit ; 1844"
+                                            ] ;
+                       <#publisher>         [ a       <#publisherType> ;
+                                              <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                      "Typogr. Aulico"
+                                            ] ;
+                       <#relation>          [ a       <#relationType> ;
+                                              <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                      "Sacra anniversaria illustris Gymnasii Fridericiani Altenburgensis ... rite celebranda indicit ; 1844"
+                                            ] ;
+                       <#title>             [ a       <#titleType> ;
+                                              <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                      "Apel, Heinrich Eduard: Disputationes de iis, quae Carolus Miltitius cum Luthero, inprimis Altenburgi in aedibus Spalatini, egerit - 1"
+                                            ] ;
+                       <#type>              [ a       <#typeType> ;
+                                              <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                      "book"
+                                            ]
+                     ] ;
+        <#facets>    [ a                <#facetsType> ;
+                       <#creationdate>  [ a       <#creationdateType> ;
+                                          <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                  "1844"
+                                        ] ;
+                       <#language>      [ a       <#languageType> ;
+                                          <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                  "lat"
+                                        ] ;
+                       <#lfc01>         [ a       <#lfc01Type> ;
+                                          <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                  "available"
+                                        ] ;
+                       <#lfc02>         [ a       <#lfc02Type> ;
+                                          <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                  "zell1"
+                                        ] ;
+                       <#prefilter>     [ a       <#prefilterType> ;
+                                          <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                  "books"
+                                        ] ;
+                       <#rsrctype>      [ a       <#rsrctypeType> ;
+                                          <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                  "books"
+                                        ] ;
+                       <#toplevel>      [ a       <#toplevelType> ;
+                                          <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                  "available"
+                                        ]
+                     ] ;
+        <#frbr>      [ a       <#frbrType> ;
+                       <#t>    [ a       <#tType> ;
+                                 <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                         "99"
+                               ]
+                     ] ;
+        <#links>     [ a                  <#linksType> ;
+                       <#linktoholdings>  [ a       <#linktoholdingsType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "$$Tlibero_holdings"
+                                          ]
+                     ] ;
+        <#ranking>   [ a            <#rankingType> ;
+                       <#booster2>  [ a       <#booster2Type> ;
+                                      <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                              "1"
+                                    ]
+                     ] ;
+        <#search>    [ a                  <#searchType> ;
+                       <#addsrcrecordid>  [ a       <#addsrcrecordidType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "63275"
+                                          ] ;
+                       <#addtitle>        [ a       <#addtitleType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "Friedrichs-Gymnasium &lt;Altenburg, Leipzig&gt;: Sacra anniversaria illustris Gymnasii Fridericiani Altenburgensis ... rite celebranda indicit"
+                                          ] ;
+                       <#addtitle>        [ a       <#addtitleType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "Sacra anniversaria illustris Gymnasii Fridericiani Altenburgensis ... rite celebranda indicit ; 1844"
+                                          ] ;
+                       <#creationdate>    [ a       <#creationdateType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "1844"
+                                          ] ;
+                       <#lsr01>           [ a       <#lsr01Type> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "32515514"
+                                          ] ;
+                       <#lsr04>           [ a       <#lsr04Type> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "Hist.Sax.D.527,1.m-1"
+                                          ] ;
+                       <#lsr05>           [ a       <#lsr05Type> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "Typogr. Aulico"
+                                          ] ;
+                       <#lsr06>           [ a       <#lsr06Type> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "MAG"
+                                          ] ;
+                       <#lsr20>           [ a       <#lsr20Type> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "032431201"
+                                          ] ;
+                       <#lsr21>           [ a       <#lsr21Type> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "032431163"
+                                          ] ;
+                       <#lsr21>           [ a       <#lsr21Type> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "074958739"
+                                          ] ;
+                       <#recordid>        [ a       <#recordidType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "libero_mab263275"
+                                          ] ;
+                       <#recordid>        [ a       <#recordidType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "032431201"
+                                          ] ;
+                       <#recordid>        [ a       <#recordidType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "63275"
+                                          ] ;
+                       <#recordid>        [ a       <#recordidType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "311720309"
+                                          ] ;
+                       <#rsrctype>        [ a       <#rsrctypeType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "book"
+                                          ] ;
+                       <#scope>           [ a       <#scopeType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "EXL"
+                                          ] ;
+                       <#scope>           [ a       <#scopeType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "SC_SLUB-ZB"
+                                          ] ;
+                       <#scope>           [ a       <#scopeType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "libero_mab2"
+                                          ] ;
+                       <#searchscope>     [ a       <#searchscopeType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "libero_mab2"
+                                          ] ;
+                       <#searchscope>     [ a       <#searchscopeType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "SC_SLUB-ZB"
+                                          ] ;
+                       <#searchscope>     [ a       <#searchscopeType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "EXL"
+                                          ] ;
+                       <#sourceid>        [ a       <#sourceidType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "libero_mab2"
+                                          ] ;
+                       <#title>           [ a       <#titleType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "Apel, Heinrich Eduard: Disputationes de iis, quae Carolus Miltitius cum Luthero, inprimis Altenburgi in aedibus Spalatini, egerit"
+                                          ] ;
+                       <#title>           [ a       <#titleType> ;
+                                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                    "1"
+                                          ]
+                     ] ;
+        <#sort>      [ a                <#sortType> ;
+                       <#creationdate>  [ a       <#creationdateType> ;
+                                          <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                  "1844"
+                                        ] ;
+                       <#title>         [ a       <#titleType> ;
+                                          <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                                  "Apel, Heinrich Eduard: Disputationes de iis, quae Carolus Miltitius cum Luthero, inprimis Altenburgi in aedibus Spalatini, egerit - 1"
+                                        ]
+                     ] .

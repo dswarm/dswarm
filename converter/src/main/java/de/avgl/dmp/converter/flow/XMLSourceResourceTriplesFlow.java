@@ -5,13 +5,13 @@ import java.io.Reader;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.stream.converter.xml.XmlDecoder;
-import org.culturegraph.mf.stream.source.ResourceOpener;
 import org.culturegraph.mf.stream.source.StringReader;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Optional;
 
 import de.avgl.dmp.converter.DMPConverterException;
+import de.avgl.dmp.converter.mf.stream.source.BOMResourceOpener;
 import de.avgl.dmp.converter.mf.stream.source.XMLTripleEncoder;
 import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
 import de.avgl.dmp.persistence.model.resource.Configuration;
@@ -65,7 +65,7 @@ public class XMLSourceResourceTriplesFlow {
 
 	public RDFModel applyResource(final String resourcePath) {
 
-		final ResourceOpener opener = new ResourceOpener();
+		final BOMResourceOpener opener = new BOMResourceOpener();
 
 		return apply(resourcePath, opener);
 	}

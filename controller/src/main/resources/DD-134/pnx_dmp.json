@@ -1,0 +1,348 @@
+{
+    "http://data.slub-dresden.de/resources/1/configurations/1/records/0c3718f4-7ac3-46a8-8cb7-6ad4f8816330": {
+        "control": {
+            "ilsapiid": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#ilsapiidType",
+                "#text": "63275"
+            },
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#controlType",
+            "sourceid": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#sourceidType",
+                "#text": "libero_mab2"
+            },
+            "addsrcrecordid": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#addsrcrecordidType",
+                "#text": "63275"
+            },
+            "sourceformat": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#sourceformatType",
+                "#text": "MAB"
+            },
+            "sourcesystem": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#sourcesystemType",
+                "#text": "Other"
+            },
+            "recordid": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#recordidType",
+                "#text": "libero_mab263275"
+            },
+            "sourcerecordid": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#sourcerecordidType",
+                "#text": "63275"
+            }
+        },
+        "sort": {
+            "title": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#titleType",
+                "#text": "Apel, Heinrich Eduard: Disputationes de iis, quae Carolus Miltitius cum Luthero, inprimis Altenburgi in aedibus Spalatini, egerit - 1"
+            },
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#sortType",
+            "creationdate": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#creationdateType",
+                "#text": "1844"
+            }
+        },
+        "addata": {
+            "addtitle": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#addtitleType",
+                "#text": "Sacra anniversaria illustris Gymnasii Fridericiani Altenburgensis ... rite celebranda indicit ; 1844"
+            },
+            "genre": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#genreType",
+                "#text": "book"
+            },
+            "cop": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#copType",
+                "#text": "Altenburgi"
+            },
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#addataType",
+            "btitle": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#btitleType",
+                "#text": "Apel, Heinrich Eduard: Disputationes de iis, quae Carolus Miltitius cum Luthero, inprimis Altenburgi in aedibus Spalatini, egerit - 1"
+            },
+            "lad05": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#lad05Type",
+                "#text": "dbodproxy_du"
+            },
+            "format": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#formatType",
+                "#text": "book"
+            },
+            "pub": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#pubType",
+                "#text": "Typogr. Aulico"
+            },
+            "lad04": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#lad04Type",
+                "#text": "dbodproxy_du"
+            }
+        },
+        "frbr": {
+            "t": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#tType",
+                "#text": "99"
+            },
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#frbrType"
+        },
+        "search": {
+            "addtitle": [{
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#addtitleType",
+                "#text": "Friedrichs-Gymnasium &lt;Altenburg, Leipzig&gt;: Sacra anniversaria illustris Gymnasii Fridericiani Altenburgensis ... rite celebranda indicit"
+            }, {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#addtitleType",
+                "#text": "Sacra anniversaria illustris Gymnasii Fridericiani Altenburgensis ... rite celebranda indicit ; 1844"
+            }],
+            "lsr04": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#lsr04Type",
+                "#text": "Hist.Sax.D.527,1.m-1"
+            },
+            "lsr21": [{
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#lsr21Type",
+                "#text": "032431163"
+            }, {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#lsr21Type",
+                "#text": "074958739"
+            }],
+            "lsr20": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#lsr20Type",
+                "#text": "032431201"
+            },
+            "lsr01": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#lsr01Type",
+                "#text": "32515514"
+            },
+            "scope": [{
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#scopeType",
+                "#text": "EXL"
+            }, {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#scopeType",
+                "#text": "SC_SLUB-ZB"
+            }, {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#scopeType",
+                "#text": "libero_mab2"
+            }],
+            "addsrcrecordid": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#addsrcrecordidType",
+                "#text": "63275"
+            },
+            "creationdate": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#creationdateType",
+                "#text": "1844"
+            },
+            "title": [{
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#titleType",
+                "#text": "Apel, Heinrich Eduard: Disputationes de iis, quae Carolus Miltitius cum Luthero, inprimis Altenburgi in aedibus Spalatini, egerit"
+            }, {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#titleType",
+                "#text": "1"
+            }],
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#searchType",
+            "searchscope": [{
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#searchscopeType",
+                "#text": "libero_mab2"
+            }, {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#searchscopeType",
+                "#text": "SC_SLUB-ZB"
+            }, {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#searchscopeType",
+                "#text": "EXL"
+            }],
+            "sourceid": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#sourceidType",
+                "#text": "libero_mab2"
+            },
+            "recordid": [{
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#recordidType",
+                "#text": "libero_mab263275"
+            }, {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#recordidType",
+                "#text": "032431201"
+            }, {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#recordidType",
+                "#text": "63275"
+            }, {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#recordidType",
+                "#text": "311720309"
+            }],
+            "lsr05": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#lsr05Type",
+                "#text": "Typogr. Aulico"
+            },
+            "lsr06": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#lsr06Type",
+                "#text": "MAG"
+            },
+            "rsrctype": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#rsrctypeType",
+                "#text": "book"
+            }
+        },
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#recordType",
+        "facets": {
+            "prefilter": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#prefilterType",
+                "#text": "books"
+            },
+            "toplevel": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#toplevelType",
+                "#text": "available"
+            },
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#facetsType",
+            "lfc01": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#lfc01Type",
+                "#text": "available"
+            },
+            "lfc02": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#lfc02Type",
+                "#text": "zell1"
+            },
+            "language": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#languageType",
+                "#text": "lat"
+            },
+            "creationdate": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#creationdateType",
+                "#text": "1844"
+            },
+            "rsrctype": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#rsrctypeType",
+                "#text": "books"
+            }
+        },
+        "dedup": {
+            "f6": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#f6Type",
+                "#text": "1844"
+            },
+            "t": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#tType",
+                "#text": "99"
+            },
+            "c1": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#c1Type",
+                "#text": "032431201"
+            },
+            "f10": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#f10Type",
+                "#text": "typog"
+            },
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#dedupType",
+            "c4": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#c4Type",
+                "#text": "1844"
+            },
+            "f1": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#f1Type",
+                "#text": "032431201"
+            }
+        },
+        "display": {
+            "lds39": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#lds39Type",
+                "#text": "Sacra anniversaria illustris Gymnasii Fridericiani Altenburgensis ... rite celebranda indicit ; 1844"
+            },
+            "lds28": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#lds28Type",
+                "#text": "Altenburgi :"
+            },
+            "availinstitution": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#availinstitutionType",
+                "#text": "$$ISLUB$$Savailable"
+            },
+            "relation": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#relationType",
+                "#text": "Sacra anniversaria illustris Gymnasii Fridericiani Altenburgensis ... rite celebranda indicit ; 1844"
+            },
+            "availpnx": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#availpnxType",
+                "#text": "available"
+            },
+            "format": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#formatType",
+                "#text": "18 S."
+            },
+            "ispartof": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#ispartofType",
+                "#text": "Sacra anniversaria illustris Gymnasii Fridericiani Altenburgensis ... rite celebranda indicit ; 1844"
+            },
+            "type": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#typeType",
+                "#text": "book"
+            },
+            "availlibrary": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#availlibraryType",
+                "#text": "$$ISLUB$$Lzell1$$1Magazin$$Savailable$$3MAG$$X32515514$$Yzell1 "
+            },
+            "lds17": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#lds17Type",
+                "#text": "Buch"
+            },
+            "creationdate": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#creationdateType",
+                "#text": "1844"
+            },
+            "lds18": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#lds18Type",
+                "#text": "Typogr. Aulico"
+            },
+            "publisher": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#publisherType",
+                "#text": "Typogr. Aulico"
+            },
+            "title": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#titleType",
+                "#text": "Apel, Heinrich Eduard: Disputationes de iis, quae Carolus Miltitius cum Luthero, inprimis Altenburgi in aedibus Spalatini, egerit - 1"
+            },
+            "lds12": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#lds12Type",
+                "#text": "Apel, Heinrich Eduard: Disputationes de iis, quae Carolus Miltitius cum Luthero, inprimis Altenburgi in aedibus Spalatini, egerit - 1"
+            },
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#displayType",
+            "lds22": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#lds22Type",
+                "#text": "074958739"
+            },
+            "lds21": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#lds21Type",
+                "#text": "032431163"
+            },
+            "lds32": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#lds32Type",
+                "#text": "Friedrichs-Gymnasium &lt;Altenburg, Leipzig&gt;: Sacra anniversaria illustris Gymnasii Fridericiani Altenburgensis ... rite celebranda indicit"
+            },
+            "language": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#languageType",
+                "#text": "lat"
+            },
+            "lds31": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#lds31Type",
+                "#text": "Apel, Heinrich Eduard: Disputationes de iis, quae Carolus Miltitius cum Luthero, inprimis Altenburgi in aedibus Spalatini, egerit"
+            }
+        },
+        "links": {
+            "linktoholdings": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#linktoholdingsType",
+                "#text": "$$Tlibero_holdings"
+            },
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#linksType"
+        },
+        "delivery": {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#deliveryType",
+            "delcategory": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#delcategoryType",
+                "#text": "Physical Item"
+            },
+            "institution": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#institutionType",
+                "#text": "EXL"
+            }
+        },
+        "ranking": {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#rankingType",
+            "booster2": {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "#booster2Type",
+                "#text": "1"
+            }
+        }
+    }
+}

@@ -3,13 +3,19 @@ package de.avgl.dmp.controller.utils;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
+
+import javax.annotation.Nullable;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
 import com.google.common.collect.AbstractIterator;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.UnmodifiableIterator;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -224,11 +230,41 @@ public class InternalSchemaDataUtil {
 
 	private Iterator<Tuple<String, JsonNode>> dataIterator(final Iterator<Map.Entry<String, Model>> triples) {
 		return new AbstractIterator<Tuple<String, JsonNode>>() {
+
+			//TODO: where to to this?
+			private JsonNode injectDataType(final JsonNode jsonNode) {
+				final UnmodifiableIterator<String> typeKeys = Iterators.filter(jsonNode.fieldNames(), new Predicate<String>() {
+					@Override
+					public boolean apply(@Nullable String input) {
+						return input != null && input.endsWith("#type");
+					}
+				});
+				final String typeKey;
+				try {
+					typeKey = Iterators.getOnlyElement(typeKeys);
+				} catch (IllegalArgumentException e) {
+					return jsonNode;
+				} catch (NoSuchElementException e) {
+					return jsonNode;
+				}
+
+				final JsonNode typeNode = jsonNode.get(typeKey);
+				final String longTypeName = typeNode.textValue();
+				final String typeName = longTypeName.substring(longTypeName.lastIndexOf('#') + 1, longTypeName.lastIndexOf("Type"));
+
+				final ObjectNode objectNode = objectMapper.createObjectNode();
+				objectNode.put(typeName, jsonNode);
+
+				return objectNode;
+			}
+
 			@Override
 			protected Tuple<String, JsonNode> computeNext() {
 				if (triples.hasNext()) {
 					final Map.Entry<String, Model> nextTriple = triples.next();
-					return Tuple.tuple(nextTriple.getKey(), nextTriple.getValue().toJSON());
+					final String recordId = nextTriple.getKey();
+					final JsonNode jsonNode = nextTriple.getValue().toJSON();
+					return Tuple.tuple(recordId, injectDataType(jsonNode));
 				}
 				return endOfData();
 			}
