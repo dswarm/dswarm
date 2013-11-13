@@ -14,7 +14,7 @@ public class ConfigurationReferenceDeserializer extends ReferenceDeserializer<Co
 	}
 
 	@Override
-	BasicJPAService<Configuration> getJpaService() throws DMPException {
+	BasicJPAService<Configuration, Long> getJpaService() throws DMPException {
 		return DMPPersistenceUtil.getInjector().getInstance(ConfigurationService.class);
 	}
 

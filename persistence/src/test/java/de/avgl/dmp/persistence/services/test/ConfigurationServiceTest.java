@@ -10,10 +10,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.test.BasicJPAServiceTest;
 import de.avgl.dmp.persistence.services.ConfigurationService;
-import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 
-public class ConfigurationServiceTest extends BasicJPAServiceTest<Configuration, ConfigurationService> {
+public class ConfigurationServiceTest extends BasicJPAServiceTest<Configuration, ConfigurationService, Long> {
 
 	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(ConfigurationServiceTest.class);
 

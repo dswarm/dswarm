@@ -10,8 +10,12 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  */
 @XmlRootElement
-public class Job extends DMPObject {
+public class Job extends BasicDMPObject {
 
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
 	private List<Transformation>	transformations;
 
 	public List<Transformation> getTransformations() {

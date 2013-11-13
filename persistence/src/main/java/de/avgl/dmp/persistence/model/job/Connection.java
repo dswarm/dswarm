@@ -5,7 +5,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement
-public class Connection extends DMPObject {
+public class Connection extends BasicDMPObject {
+
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
 
 	private ConnectionType	type;
 

@@ -15,7 +15,7 @@ import de.avgl.dmp.persistence.services.ConfigurationService;
 import de.avgl.dmp.persistence.services.ResourceService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class ResourceServiceTest extends BasicJPAServiceTest<Resource, ResourceService> {
+public class ResourceServiceTest extends BasicJPAServiceTest<Resource, ResourceService, Long> {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(ResourceServiceTest.class);
 

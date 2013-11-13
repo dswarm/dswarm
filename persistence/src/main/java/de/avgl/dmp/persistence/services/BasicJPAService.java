@@ -2,18 +2,20 @@ package de.avgl.dmp.persistence.services;
 
 import java.util.Collections;
 import java.util.List;
+
 import javax.persistence.CacheRetrieveMode;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-import com.google.inject.Provider;
-import com.google.inject.persist.Transactional;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import de.avgl.dmp.persistence.DMPPersistenceException;
-import de.avgl.dmp.persistence.model.DMPJPAObject;
+import com.google.inject.Provider;
+import com.google.inject.persist.Transactional;
 
-public abstract class BasicJPAService<POJOCLASS extends DMPJPAObject> {
+import de.avgl.dmp.persistence.DMPPersistenceException;
+import de.avgl.dmp.persistence.model.job.DMPObject;
+
+public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(BasicJPAService.class);
 
@@ -151,7 +153,7 @@ public abstract class BasicJPAService<POJOCLASS extends DMPJPAObject> {
 	 * @param id the idenfier of the requested instance of a specific class
 	 * @return the instance for the identifier of the specific class
 	 */
-	public POJOCLASS getObject(final Long id) {
+	public POJOCLASS getObject(final POJOCLASSIDTYPE id) {
 
 		final EntityManager entityManager = entityManagerProvider.get();
 		LOG.debug("try to find " + className + " with id '" + id + "' in the database");
@@ -178,7 +180,7 @@ public abstract class BasicJPAService<POJOCLASS extends DMPJPAObject> {
 	 * @param id the identifier of the to be deleted instance of the specific class
 	 */
 	@Transactional(rollbackOn = DMPPersistenceException.class)
-	public void deleteObject(final Long id) {
+	public void deleteObject(final POJOCLASSIDTYPE id) {
 
 		final EntityManager entityManager = entityManagerProvider.get();
 		final POJOCLASS updateObject = entityManager.find(clasz, id);

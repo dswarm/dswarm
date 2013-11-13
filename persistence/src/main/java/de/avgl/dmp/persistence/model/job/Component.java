@@ -6,7 +6,7 @@ import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class Component extends DMPObject {
+public class Component extends BasicDMPObject {
 
 	/**
 	 * 

@@ -10,10 +10,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author tgaengler
  */
 @XmlRootElement
-@Entity
+//@Entity
 //@Cacheable(true)
 //@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(name = "TRANSFORMATION")
+//@Table(name = "TRANSFORMATION")
 public class Transformation extends Function {
 
 	/**

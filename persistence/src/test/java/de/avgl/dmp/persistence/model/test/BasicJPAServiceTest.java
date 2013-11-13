@@ -9,10 +9,10 @@ import com.google.common.collect.Sets;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.GuicedTest;
-import de.avgl.dmp.persistence.model.DMPJPAObject;
+import de.avgl.dmp.persistence.model.job.DMPObject;
 import de.avgl.dmp.persistence.services.BasicJPAService;
 
-public abstract class BasicJPAServiceTest<POJOCLASS extends DMPJPAObject, JPASERVICEIMPL extends BasicJPAService<POJOCLASS>> extends GuicedTest {
+public abstract class BasicJPAServiceTest<POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, JPASERVICEIMPL extends BasicJPAService<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSIDTYPE> extends GuicedTest {
 
 	private static final org.apache.log4j.Logger	LOG			= org.apache.log4j.Logger.getLogger(BasicJPAServiceTest.class);
 
@@ -103,7 +103,7 @@ public abstract class BasicJPAServiceTest<POJOCLASS extends DMPJPAObject, JPASER
 		return updatedObject;
 	}
 
-	protected void deletedObject(final Long id) {
+	protected void deletedObject(final POJOCLASSIDTYPE id) {
 
 		jpaService.deleteObject(id);
 

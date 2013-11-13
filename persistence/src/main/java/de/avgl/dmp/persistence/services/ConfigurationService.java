@@ -11,7 +11,7 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 
-public class ConfigurationService extends BasicJPAService<Configuration> {
+public class ConfigurationService extends BasicJPAService<Configuration, Long> {
 
 	@Inject
 	public ConfigurationService(Provider<EntityManager> entityManagerProvider) {

@@ -15,7 +15,7 @@ import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
 
-public class ResourceService extends BasicJPAService<Resource> {
+public class ResourceService extends BasicJPAService<Resource, Long> {
 
 	private final Provider<ConfigurationService> configurationServiceProvider;
 
