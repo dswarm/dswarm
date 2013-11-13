@@ -1,0 +1,590 @@
+<http://data.slub-dresden.de/resources/1/configurations/1/records/eb29a378-6743-4e64-bef1-0727b7d1d540>
+        a       <http://www.loc.gov/MARC21/slim#recordType> ;
+        <http://www.loc.gov/MARC21/slim#controlfield>
+                [ a       <http://www.loc.gov/MARC21/slim#controlfieldType> ;
+                  <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                          "003404590" ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "001"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#controlfield>
+                [ a       <http://www.loc.gov/MARC21/slim#controlfieldType> ;
+                  <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                          "20091106150915.0" ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "005"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#controlfield>
+                [ a       <http://www.loc.gov/MARC21/slim#controlfieldType> ;
+                  <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                          "m        d" ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "006"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#controlfield>
+                [ a       <http://www.loc.gov/MARC21/slim#controlfieldType> ;
+                  <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                          "cr bn|||||||||" ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "007"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#controlfield>
+                [ a       <http://www.loc.gov/MARC21/slim#controlfieldType> ;
+                  <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                          "091028s2008    caua          000 p eng d" ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "008"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          "2" ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "Early Modern Center." ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "b"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "University of California, Santa Barbara." ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "710"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "EMC no. 21085." ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "500"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "Reference: Wing B3604[B]; Rollins (2) ?222 (March 1, 1675, ii, 499)." ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "500"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "Sponsored by the University of California, Santa Barbara and The Early Modern Center." ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "536"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "Title from English Broadside Ballad Archive (queried 2008 Nov 07)." ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "500"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          "8" ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "3.84" ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "024"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "CUT" ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "c"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "CUT" ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "040"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          "0" ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "17th century." ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "y"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "Broadside" ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "650"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          "1" ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "AS I sate at my Spinning=Wheel" ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "First line:" ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "i"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "246"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "Cambridge [England] : The Pepys Library, Magdalene College, 2003." ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "c"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "The Pepys ballads" ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "t"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "Magdalene College (University of Cambridge)." ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "Reproduction of Microfilm :" ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "p"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "534"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "Text (XML)." ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "516"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "CUTM" ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "049"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "The University of California makes a claim of copyright only to original contributions made by Early Modern Center participants and other members of the university community. The University of California makes no claim of copyright to the original text. Permission is granted to download, transmit or otherwise reproduce, distribute or display the contributions to this work claimed by The University of California for non-profit educational purposes, provided that this header is included in its entirety. For inquiries about commercial uses, please contact: Early Modern Center - English Department, University of California, Santa Barbara, CA 93105, United States of America, Email: http://ebba.english.ucsb.edu/contact/." ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "540"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "Pepys 3.84." ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "500"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "Original Publication Date: c. 1664-1696." ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "500"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          "8" ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "R219235" ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "024"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          "0" ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          "4" ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "or, the yielding lass." ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "b"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "[electronic resource] :" ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "h"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "The bonny scot" ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "245"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          "0" ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "English Broadside Ballad Archive." ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "740"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "2008." ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "c"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "University of California, Santa Barbara, The Early Modern Center," ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "b"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "Santa Barbara, CA :" ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "260"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          "7" ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "Ballads" ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "aat" ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "2"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "655"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "System requirements: Web browser for the XML and HTML files." ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "538"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          "8" ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "21085" ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "024"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          "0" ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "17th century." ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "y"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "Ballads, English" ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "650"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "ESTC no. R219235." ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "500"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          "4" ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          "0" ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "English Broadside Ballad Archive." ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "z"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "http://ebba.english.ucsb.edu/ballad/21085/" ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "u"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "856"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "Mode of access: Internet; host: ebba.english.ucsb.edu." ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "538"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "TEI file encoded by the English Broadside Ballad Archive Editorial Team." ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "500"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#datafield>
+                [ a       <http://www.loc.gov/MARC21/slim#datafieldType> ;
+                  <http://www.loc.gov/MARC21/slim#ind1>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#ind2>
+                          " " ;
+                  <http://www.loc.gov/MARC21/slim#subfield>
+                          [ a       <http://www.loc.gov/MARC21/slim#subfieldType> ;
+                            <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                    "(OCoLC)ocn460736493" ;
+                            <http://www.loc.gov/MARC21/slim#code>
+                                    "a"
+                          ] ;
+                  <http://www.loc.gov/MARC21/slim#tag>
+                          "035"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#leader>
+                [ a       <http://www.loc.gov/MARC21/slim#leaderType> ;
+                  <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                          "     nam  2200457 a 4500"
+                ] ;
+        <http://www.loc.gov/MARC21/slim#schemaLocation>
+                "http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd" .

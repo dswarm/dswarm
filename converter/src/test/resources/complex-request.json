@@ -19,6 +19,8 @@
         "componentType": "source",
         "id": "con_99:source",
         "payload": {
+          "resourceId" : "1",
+          "configurationId" : "1",
           "name": "identifier",
           "path": "header.identifier",
           "show": true
@@ -28,6 +30,8 @@
         "componentType": "target",
         "id": "con_99:source",
         "payload": {
+          "resourceId" : "1",
+          "configurationId" : "1",
           "name": "dc:identifier",
           "path": "OAI-PMH.dc:identifier",
           "show": true
@@ -53,6 +57,8 @@
         "componentType": "source",
         "id": "con_125:source",
         "payload": {
+          "resourceId" : "1",
+          "configurationId" : "1",
           "name": "dc:title",
           "path": "metadata.oai_dc:dc.dc:title",
           "show": true
@@ -62,6 +68,8 @@
         "componentType": "target",
         "id": "con_125:source",
         "payload": {
+          "resourceId" : "1",
+          "configurationId" : "1",
           "name": "dc:title",
           "path": "OAI-PMH.dc:title",
           "show": true
@@ -87,6 +95,8 @@
         "componentType": "source",
         "id": "con_141:source",
         "payload": {
+          "resourceId" : "1",
+          "configurationId" : "1",
           "name": "dc:identifier",
           "path": "metadata.oai_dc:dc.dc:identifier",
           "show": true
@@ -96,6 +106,8 @@
         "componentType": "target",
         "id": "con_141:source",
         "payload": {
+          "resourceId" : "1",
+          "configurationId" : "1",
           "name": "dc:identifier",
           "path": "OAI-PMH.dc:identifier",
           "show": true
@@ -121,6 +133,8 @@
         "componentType": "source",
         "id": "con_165:source",
         "payload": {
+          "resourceId" : "1",
+          "configurationId" : "1",
           "name": "dc:creator",
           "path": "metadata.oai_dc:dc.dc:creator",
           "show": true
@@ -130,6 +144,8 @@
         "componentType": "target",
         "id": "con_165:source",
         "payload": {
+          "resourceId" : "1",
+          "configurationId" : "1",
           "name": "dc:creator",
           "path": "OAI-PMH.dc:creator",
           "show": true
@@ -155,6 +171,8 @@
         "componentType": "source",
         "id": "con_179:source",
         "payload": {
+          "resourceId" : "1",
+          "configurationId" : "1",
           "name": "dc:contributor",
           "path": "metadata.oai_dc:dc.dc:contributor",
           "show": true
@@ -164,6 +182,8 @@
         "componentType": "target",
         "id": "con_179:source",
         "payload": {
+          "resourceId" : "1",
+          "configurationId" : "1",
           "name": "dc:creator",
           "path": "OAI-PMH.dc:creator",
           "show": true
@@ -349,6 +369,8 @@
         "componentType": "source",
         "id": "con_193:source",
         "payload": {
+          "resourceId" : "1",
+          "configurationId" : "1",
           "name": "dc:subject",
           "path": "metadata.oai_dc:dc.dc:subject",
           "show": true
@@ -358,6 +380,8 @@
         "componentType": "target",
         "id": "con_193:source",
         "payload": {
+          "resourceId" : "1",
+          "configurationId" : "1",
           "name": "dc:subject",
           "path": "OAI-PMH.dc:subject",
           "show": true

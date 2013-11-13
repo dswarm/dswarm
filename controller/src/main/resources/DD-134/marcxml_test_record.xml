@@ -1,0 +1,116 @@
+﻿<?xml version = "1.0" encoding = "UTF-8"?>
+  <collection xmlns="http://www.loc.gov/MARC21/slim"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.loc.gov/MARC21/slim
+http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+    <record xmlns="http://www.loc.gov/MARC21/slim"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.loc.gov/MARC21/slim
+http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+      <leader>     nam  2200457 a 4500</leader>
+      <controlfield tag="001">003404590</controlfield>
+      <controlfield tag="005">20091106150915.0</controlfield>
+      <controlfield tag="006">m        d</controlfield>
+      <controlfield tag="007">cr bn|||||||||</controlfield>
+      <controlfield tag="008">091028s2008    caua          000 p eng d</controlfield>
+      <datafield tag="024" ind1="8" ind2=" ">
+        <subfield code="a">21085</subfield>
+      </datafield>
+      <datafield tag="024" ind1="8" ind2=" ">
+        <subfield code="a">3.84</subfield>
+      </datafield>
+      <datafield tag="024" ind1="8" ind2=" ">
+        <subfield code="a">R219235</subfield>
+      </datafield>
+      <datafield tag="035" ind1=" " ind2=" ">
+        <subfield code="a">(OCoLC)ocn460736493</subfield>
+      </datafield>
+      <datafield tag="040" ind1=" " ind2=" ">
+        <subfield code="a">CUT</subfield>
+        <subfield code="c">CUT</subfield>
+      </datafield>
+      <datafield tag="245" ind1="0" ind2="4">
+        <subfield code="a">The bonny scot</subfield>
+        <subfield code="h">[electronic resource] :</subfield>
+        <subfield code="b">or, the yielding lass.</subfield>
+      </datafield>
+      <datafield tag="246" ind1="1" ind2=" ">
+        <subfield code="i">First line:</subfield>
+        <subfield code="a">AS I sate at my Spinning=Wheel</subfield>
+      </datafield>
+      <datafield tag="260" ind1=" " ind2=" ">
+        <subfield code="a">Santa Barbara, CA :</subfield>
+        <subfield code="b">University of California, Santa Barbara, The Early Modern Center,</subfield>
+        <subfield code="c">2008.</subfield>
+      </datafield>
+      <datafield tag="516" ind1=" " ind2=" ">
+        <subfield code="a">Text (XML).</subfield>
+      </datafield>
+      <datafield tag="538" ind1=" " ind2=" ">
+        <subfield code="a">System requirements: Web browser for the XML and HTML files.</subfield>
+      </datafield>
+      <datafield tag="538" ind1=" " ind2=" ">
+        <subfield code="a">Mode of access: Internet; host: ebba.english.ucsb.edu.</subfield>
+      </datafield>
+      <datafield tag="500" ind1=" " ind2=" ">
+        <subfield code="a">Title from English Broadside Ballad Archive (queried 2008 Nov 07).</subfield>
+      </datafield>
+      <datafield tag="500" ind1=" " ind2=" ">
+        <subfield code="a">Original Publication Date: c. 1664-1696.</subfield>
+      </datafield>
+      <datafield tag="500" ind1=" " ind2=" ">
+        <subfield code="a">TEI file encoded by the English Broadside Ballad Archive Editorial Team.</subfield>
+      </datafield>
+      <datafield tag="500" ind1=" " ind2=" ">
+        <subfield code="a">EMC no. 21085.</subfield>
+      </datafield>
+      <datafield tag="500" ind1=" " ind2=" ">
+        <subfield code="a">Pepys 3.84.</subfield>
+      </datafield>
+      <datafield tag="500" ind1=" " ind2=" ">
+        <subfield code="a">ESTC no. R219235.</subfield>
+      </datafield>
+      <datafield tag="500" ind1=" " ind2=" ">
+        <subfield code="a">Reference: Wing B3604[B]; Rollins (2) ?222 (March 1, 1675, ii, 499).</subfield>
+      </datafield>
+      <datafield tag="534" ind1=" " ind2=" ">
+        <subfield code="p">Reproduction of Microfilm :</subfield>
+        <subfield code="a">Magdalene College (University of Cambridge).</subfield>
+        <subfield code="t">The Pepys ballads</subfield>
+        <subfield code="c">Cambridge [England] : The Pepys Library, Magdalene College, 2003.</subfield>
+      </datafield>
+      <datafield tag="536" ind1=" " ind2=" ">
+        <subfield code="a">Sponsored by the University of California, Santa Barbara and The Early Modern Center.</subfield>
+      </datafield>
+      <datafield tag="540" ind1=" " ind2=" ">
+        <subfield code="a">The University of California makes a claim of copyright only to original contributions made by Early Modern Center participants and other members of the university community. The University of California makes no claim of copyright to the original text. Permission is granted to download, transmit or otherwise reproduce, distribute or display the contributions to this work claimed by The University of California for non-profit educational purposes, provided that this header is included in its entirety. For inquiries about commercial uses, please contact: Early Modern Center - English Department, University of California, Santa Barbara, CA 93105, United States of America, Email: http://ebba.english.ucsb.edu/contact/.</subfield>
+      </datafield>
+      <datafield tag="650" ind1=" " ind2="0">
+        <subfield code="a">Ballads, English</subfield>
+        <subfield code="y">17th century.</subfield>
+      </datafield>
+      <datafield tag="650" ind1=" " ind2="0">
+        <subfield code="a">Broadside</subfield>
+        <subfield code="y">17th century.</subfield>
+      </datafield>
+      <datafield tag="655" ind1=" " ind2="7">
+        <subfield code="a">Ballads</subfield>
+        <subfield code="2">aat</subfield>
+      </datafield>
+      <datafield tag="710" ind1="2" ind2=" ">
+        <subfield code="a">University of California, Santa Barbara.</subfield>
+        <subfield code="b">Early Modern Center.</subfield>
+      </datafield>
+      <datafield tag="740" ind1="0" ind2=" ">
+        <subfield code="a">English Broadside Ballad Archive.</subfield>
+      </datafield>
+      <datafield tag="856" ind1="4" ind2="0">
+        <subfield code="u">http://ebba.english.ucsb.edu/ballad/21085/</subfield>
+        <subfield code="z">English Broadside Ballad Archive.</subfield>
+      </datafield>
+      <datafield tag="049" ind1=" " ind2=" ">
+        <subfield code="a">CUTM</subfield>
+      </datafield>
+    </record>
+
+</collection> 

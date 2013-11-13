@@ -126,6 +126,8 @@
       "source": {
         "componentType": "source",
         "payload": {
+          "resourceId" : "1",
+          "configurationId" : "1",
           "name": "dc:subject",
           "show": true,
           "path": "metadata.oai_dc:dc.dc:subject"
@@ -135,6 +137,8 @@
       "target": {
         "componentType": "target",
         "payload": {
+          "resourceId" : "1",
+          "configurationId" : "1",
           "name": "dc:subject",
           "show": true,
           "path": "OAI-PMH.dc:subject"
