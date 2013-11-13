@@ -19,11 +19,10 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(BasicJPAService.class);
 
-	private final Class<POJOCLASS>					clasz;
-	private final String							className;
+	protected final Class<POJOCLASS>					clasz;
+	protected final String							className;
 
-	private final Provider<EntityManager>			entityManagerProvider;
-
+	protected final Provider<EntityManager>			entityManagerProvider;
 
 	public BasicJPAService(final Class<POJOCLASS> clasz, Provider<EntityManager> entityManagerProvider) {
 
@@ -40,35 +39,15 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 
 	/**
 	 * Create and persist an object of the specific class.<br>
-	 *
+	 * 
 	 * @return the persisted object of the specific class
 	 */
 	@Transactional(rollbackOn = DMPPersistenceException.class)
 	public POJOCLASS createObject() throws DMPPersistenceException {
-		final EntityManager entityManager = entityManagerProvider.get();
+		
+		final POJOCLASS object = createNewObject();
 
-		final POJOCLASS object;
-
-		try {
-
-			object = clasz.newInstance();
-		} catch (InstantiationException e) {
-
-			e.printStackTrace();
-
-			throw new DMPPersistenceException(e.getMessage());
-		} catch (IllegalAccessException e) {
-
-			e.printStackTrace();
-
-			throw new DMPPersistenceException(e.getMessage());
-		}
-
-		LOG.debug("try to create new " + className);
-
-		entityManager.persist(object);
-
-		LOG.debug("created new " + className + " with id '" + object.getId() + "'");
+		persistObject(object);
 
 		return object;
 	}
@@ -76,11 +55,12 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 	/**
 	 * Updates a given instance of the specific class and writes this object persistent to the DB afterwards.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param object the to be updated instance of the specific class
 	 */
 	@Transactional(rollbackOn = DMPPersistenceException.class)
 	public POJOCLASS updateObjectTransactional(final POJOCLASS object) throws DMPPersistenceException {
+		
 		final EntityManager entityManager = entityManagerProvider.get();
 
 		final POJOCLASS updateObject = getObject(object, entityManager);
@@ -99,10 +79,10 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 	 * Updates a given instance of the specific class without writing this object persistent right now, i.e., the process that
 	 * calls this method needs to ensure that the update will be written persistent.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param object the to be updated instance of the specific class
 	 */
-	//@Transactional(rollbackOn = DMPPersistenceException.class)
+	// @Transactional(rollbackOn = DMPPersistenceException.class)
 	public POJOCLASS updateObject(final POJOCLASS object) throws DMPPersistenceException {
 
 		final EntityManager entityManager = entityManagerProvider.get();
@@ -122,7 +102,7 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 	 * and {@link BasicJPAService#updateObjectTransactional(POJOCLASS)}, i.e., this method includes the real update logic of this
 	 * service.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param object the instance of the specific class with the update data
 	 * @param updateObject the to be updated instance of the specific class
 	 * @param entityManager the {@link EntityManager} instance for managing the update process
@@ -134,7 +114,7 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 	/**
 	 * Generic 'find all instances of a specific class' method.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @return the instance list of the specific class
 	 */
 	public List<POJOCLASS> getObjects() {
@@ -148,8 +128,7 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 	/**
 	 * Generic 'exist instance for identifier of a specific class' method.<br>
 	 * Created by: tgaengler
-	 *
-	 *
+	 * 
 	 * @param id the idenfier of the requested instance of a specific class
 	 * @return the instance for the identifier of the specific class
 	 */
@@ -176,7 +155,7 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 	/**
 	 * Deletes an instance of the specific class permanently from the DB by a given identifier.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param id the identifier of the to be deleted instance of the specific class
 	 */
 	@Transactional(rollbackOn = DMPPersistenceException.class)
@@ -199,11 +178,11 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 	/**
 	 * Tries to retrieve a POJOCLASS instance or will create a new one, if the identifier is null.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @return the requested POJOCLASS instance fresh from the DB or a new POJOCLASS instance
 	 * @throws DMPPersistenceException
 	 */
-	private POJOCLASS getObject(final POJOCLASS object, final EntityManager entityManager) throws DMPPersistenceException {
+	protected POJOCLASS getObject(final POJOCLASS object, final EntityManager entityManager) throws DMPPersistenceException {
 
 		final POJOCLASS updateObject;
 
@@ -218,5 +197,38 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 		}
 
 		return updateObject;
+	}
+
+	protected void persistObject(final POJOCLASS object) {
+
+		final EntityManager entityManager = entityManagerProvider.get();
+
+		LOG.debug("try to create new " + className);
+
+		entityManager.persist(object);
+
+		LOG.debug("created new " + className + " with id '" + object.getId() + "'");
+	}
+
+	protected POJOCLASS createNewObject() throws DMPPersistenceException {
+
+		final POJOCLASS object;
+
+		try {
+
+			object = clasz.newInstance();
+		} catch (InstantiationException e) {
+
+			e.printStackTrace();
+
+			throw new DMPPersistenceException(e.getMessage());
+		} catch (IllegalAccessException e) {
+
+			e.printStackTrace();
+
+			throw new DMPPersistenceException(e.getMessage());
+		}
+
+		return object;
 	}
 }

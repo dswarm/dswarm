@@ -1,11 +1,6 @@
 package de.avgl.dmp.persistence.model.test;
 
-import java.util.Set;
-
 import org.junit.Assert;
-import org.junit.Test;
-
-import com.google.common.collect.Sets;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.GuicedTest;
@@ -30,32 +25,6 @@ public abstract class BasicJPAServiceTest<POJOCLASS extends DMPObject<POJOCLASSI
 		Assert.assertNotNull(type + " service shouldn't be null", jpaService);
 	}
 
-	/**
-	 * Test for identifier generation: Creates ten instances (incl. identifier generation) of the specific class, writes them to
-	 * the databases and check the size of the set afterwards.<br>
-	 * Created by: tgaengler
-	 */
-	@Test
-	public void idGenerationTest() {
-
-		final Set<POJOCLASS> objectes = Sets.newLinkedHashSet();
-
-		for (int i = 0; i < 10; i++) {
-
-			POJOCLASS object = createObject();
-
-			objectes.add(object);
-		}
-
-		Assert.assertEquals(type + "s set size should be 10", 10, objectes.size());
-
-		// clean-up DB table
-		for (final POJOCLASS object : objectes) {
-
-			jpaService.deleteObject(object.getId());
-		}
-	}
-
 	protected POJOCLASS createObject() {
 
 		POJOCLASS object = null;
@@ -71,7 +40,9 @@ public abstract class BasicJPAServiceTest<POJOCLASS extends DMPObject<POJOCLASSI
 		Assert.assertNotNull(type + " shouldn't be null", object);
 		Assert.assertNotNull(type + " id shouldn't be null", object.getId());
 
-		LOG.debug("create new " + type + " with id = '" + object.getId() + "'");
+		LOG.debug("created new " + type + " with id = '" + object.getId() + "'");
+		
+		getObject(object);
 
 		return object;
 	}
@@ -91,16 +62,16 @@ public abstract class BasicJPAServiceTest<POJOCLASS extends DMPObject<POJOCLASSI
 		return updatedObject;
 	}
 
-	protected POJOCLASS getUpdatedObject(final POJOCLASS object) {
+	protected POJOCLASS getObject(final POJOCLASS object) {
 
-		POJOCLASS updatedObject = null;
+		POJOCLASS bbject = null;
 
-		updatedObject = jpaService.getObject(object.getId());
+		bbject = jpaService.getObject(object.getId());
 
-		Assert.assertNotNull("the updated " + type + " shoudln't be null", updatedObject);
-		Assert.assertEquals("the " + type + "s are not equal", object, updatedObject);
+		Assert.assertNotNull("the updated " + type + " shoudln't be null", bbject);
+		Assert.assertEquals("the " + type + "s are not equal", object, bbject);
 
-		return updatedObject;
+		return bbject;
 	}
 
 	protected void deletedObject(final POJOCLASSIDTYPE id) {

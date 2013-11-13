@@ -8,11 +8,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import de.avgl.dmp.persistence.model.resource.Configuration;
-import de.avgl.dmp.persistence.model.test.BasicJPAServiceTest;
+import de.avgl.dmp.persistence.model.test.IDBasicJPAServiceTest;
 import de.avgl.dmp.persistence.services.ConfigurationService;
 
 
-public class ConfigurationServiceTest extends BasicJPAServiceTest<Configuration, ConfigurationService, Long> {
+public class ConfigurationServiceTest extends IDBasicJPAServiceTest<Configuration, ConfigurationService, Long> {
 
 	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(ConfigurationServiceTest.class);
 
@@ -40,7 +40,7 @@ public class ConfigurationServiceTest extends BasicJPAServiceTest<Configuration,
 
 		updateObjectTransactional(configuration);
 
-		Configuration updatedConfiguration = getUpdatedObject(configuration);
+		Configuration updatedConfiguration = getObject(configuration);
 
 		Assert.assertNotNull("the configuration name of the updated resource shouldn't be null", updatedConfiguration.getName());
 		Assert.assertEquals("the configuration' names of the resource are not equal", configuration.getName(), updatedConfiguration.getName());

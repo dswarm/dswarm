@@ -21,6 +21,11 @@ public class Component extends BasicDMPObject {
 
 	Map<String, String>			parameterMappings	= null;
 
+	public Component(final String id) {
+
+		super(id);
+	}
+
 	public Set<Component> getInputComponents() {
 
 		return inputComponents;

@@ -19,6 +19,11 @@ public class Connection extends BasicDMPObject {
 
 	@XmlTransient
 	private Component		target;
+	
+	public Connection(final String id) {
+
+		super(id);
+	}
 
 	public ConnectionType getType() {
 
