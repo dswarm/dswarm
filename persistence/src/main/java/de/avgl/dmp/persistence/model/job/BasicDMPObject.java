@@ -1,8 +1,5 @@
 package de.avgl.dmp.persistence.model.job;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.xml.bind.annotation.XmlID;
@@ -19,11 +16,11 @@ public abstract class BasicDMPObject extends DMPObject<String> {
 
 	@Id
 	@XmlID
-	@Access(AccessType.FIELD)
-	@Column(name = "ID")
+	//@Access(AccessType.FIELD)
+	//@Column(name = "ID")
 	private String	id;
 
-	@Column(name = "NAME")
+	//@Column(name = "NAME")
 	private String	name;
 	
 	public BasicDMPObject(final String idArg) {

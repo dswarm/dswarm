@@ -23,7 +23,7 @@ public class AttributeService extends AdvancedJPAService<Attribute> {
 	protected void prepareObjectForRemoval(final Attribute object) {
 
 		// should clear the relationship to the attribute paths
-		object.setAttributePaths(null);
+		// object.setAttributePaths(null);
 	}
 
 	@Override
@@ -31,10 +31,10 @@ public class AttributeService extends AdvancedJPAService<Attribute> {
 			throws DMPPersistenceException {
 
 		final String name = object.getName();
-		final Set<AttributePath> attributePaths = object.getAttributePaths();
+		// final Set<AttributePath> attributePaths = object.getAttributePaths();
 
 		updateObject.setName(name);
-		updateObject.setAttributePaths(attributePaths);
+		// updateObject.setAttributePaths(attributePaths);
 	}
 
 }

@@ -4,29 +4,22 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import de.avgl.dmp.persistence.model.DMPJPAObject;
+import de.avgl.dmp.persistence.model.DMPUUIDObject;
 
 /**
  * @author tgaengler
  */
 @XmlRootElement
-@Entity
+//@Entity
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(name = "ATTRIBUTE_PATH")
-public class AttributePath extends DMPJPAObject {
+//@Table(name = "ATTRIBUTE_PATH")
+public class AttributePath extends DMPUUIDObject {
 
 	/**
 	 * 
@@ -36,14 +29,14 @@ public class AttributePath extends DMPJPAObject {
 	/**
 	 * All attributes of the attribute path as ordered list
 	 */
-	@ManyToMany(mappedBy = "attributePaths", fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	//@ManyToMany(mappedBy = "attributePaths", fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	private List<Attribute>		attributes			= null;
 
 	/**
 	 * All schemas that utilise this attribute path
 	 */
-	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinTable(name = "SCHEMAS_ATTRIBUTE_PATHS", joinColumns = { @JoinColumn(name = "ATTRIBUTE_PATH_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "SCHEMA_ID", referencedColumnName = "ID") })
+	//@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	//@JoinTable(name = "SCHEMAS_ATTRIBUTE_PATHS", joinColumns = { @JoinColumn(name = "ATTRIBUTE_PATH_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "SCHEMA_ID", referencedColumnName = "ID") })
 	private Set<Schema>			schemas				= null;
 
 	public AttributePath() {
@@ -68,21 +61,21 @@ public class AttributePath extends DMPJPAObject {
 
 			// remove attribute path from attribute, if attribute path will be prepared for removal
 
-			for (final Attribute attribute : attributes) {
-
-				attribute.removeAttributePath(this);
-			}
+//			for (final Attribute attribute : attributes) {
+//
+//				attribute.removeAttributePath(this);
+//			}
 		}
 
 		attributes = attributesArg;
 
-		if (attributesArg != null) {
-
-			for (final Attribute attribute : attributesArg) {
-
-				attribute.addAttributePath(this);
-			}
-		}
+//		if (attributesArg != null) {
+//
+//			for (final Attribute attribute : attributesArg) {
+//
+//				attribute.addAttributePath(this);
+//			}
+//		}
 	}
 
 	/**
@@ -104,9 +97,9 @@ public class AttributePath extends DMPJPAObject {
 
 			attributes.add(attributeArg);
 
-			final int attributeIndex = attributes.lastIndexOf(attributeArg);
-
-			attributeArg.addAttributePath(this, attributeIndex);
+//			final int attributeIndex = attributes.lastIndexOf(attributeArg);
+//
+//			attributeArg.addAttributePath(this, attributeIndex);
 			// }
 		}
 	}
@@ -130,9 +123,9 @@ public class AttributePath extends DMPJPAObject {
 
 				attributes.add(attributeArg);
 
-				final int attributeIndex2 = attributes.lastIndexOf(attributeArg);
-
-				attributeArg.addAttributePath(this, attributeIndex2);
+//				final int attributeIndex2 = attributes.lastIndexOf(attributeArg);
+//
+//				attributeArg.addAttributePath(this, attributeIndex2);
 			}
 		}
 	}
@@ -152,7 +145,7 @@ public class AttributePath extends DMPJPAObject {
 				attributes.remove(attribute);
 			}
 
-			attribute.removeAttributePath(this);
+//			attribute.removeAttributePath(this);
 		}
 	}
 

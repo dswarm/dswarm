@@ -8,12 +8,6 @@ import static org.hamcrest.Matchers.equalTo;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.collect.Sets;
@@ -24,10 +18,10 @@ import de.avgl.dmp.persistence.model.DMPJPAObject;
  * @author tgaengler
  */
 @XmlRootElement
-@Entity
+// @Entity
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(name = "SCHEMA")
+// @Table(name = "SCHEMA")
 public class Schema extends DMPJPAObject {
 
 	/**
@@ -35,13 +29,13 @@ public class Schema extends DMPJPAObject {
 	 */
 	private static final long	serialVersionUID	= 1L;
 
-	@Column(name = "NAME")
+	// @Column(name = "NAME")
 	private String				name				= null;
 	
 	/**
 	 * All attributes of the attribute path
 	 */
-	@ManyToMany(mappedBy = "schemas", fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	// @ManyToMany(mappedBy = "schemas", fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	private Set<AttributePath>			attributePaths		= null;
 
 	public String getName() {
