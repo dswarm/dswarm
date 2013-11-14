@@ -1,0 +1,4 @@
+{
+    "id": "836dabe0-5349-430f-878b-679b968ac61c",
+    "expression": "SELECT ?identifier ?url\nWHERE {\n    ?record custmabxml:metadata ?metadata ;\n            custmabxml:header ?header .\n    ?header custmabxml:identifier ?identifier .\n    ?metadata m:record ?mabrecord .\n    ?mabrecord m:datafield ?dataField .\n    ?dataField m:tag \"088\" ;\n               m:ind1 \"a\" ;\n               m:subfield ?subField .\n    ?subField rdf:value ?url .\n}"
+}
