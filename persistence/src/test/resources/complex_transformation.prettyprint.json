@@ -1,0 +1,40 @@
+{
+    "id": "b53633bc-4997-4c90-b7be-a83d519a0dc6",
+    "name": "my transformation",
+    "description": "transformation which just makes use of one function",
+    "parameters": ["transformationInputString"],
+    "components": [{
+        "id": "f8331a8a-d9ec-4b49-bc10-6ac418652bca",
+        "name": "my replace component",
+        "function": {
+            "id": "bcc08a47-4eab-430f-97e0-e1c630f9493a"
+        },
+        "parameter_mappings": {
+            "inputString": "previousComponent.outputString",
+            "regex": "\\.",
+            "replaceString": ":"
+        }
+    }, {
+        "id": "57f63ed8-e5d9-4f5e-94c8-5fedc6d45d64",
+        "name": "my trim component",
+        "function": {
+            "id": "9b3653ab-1036-45e3-a8d4-e1a642f69fca"
+        },
+        "input_components": [{
+            "id": "f8331a8a-d9ec-4b49-bc10-6ac418652bca"
+        }],
+        "output_components": [{
+            "id": "fca1d1da-7a8d-405a-954f-e31ff9df8bac"
+        }],
+        "parameter_mappings": {
+            "inputString": "previousComponent.outputString"
+        }
+    }, {
+        "id": "fca1d1da-7a8d-405a-954f-e31ff9df8bac",
+        "name": "my lower case component",
+        "function": {
+            "id": "5a79e158-9987-48f2-842f-a05bbf024147"
+        },
+        "parameter_mappings": {}
+    }]
+}

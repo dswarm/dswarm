@@ -1,6 +1,6 @@
 package de.avgl.dmp.persistence.model.job;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -19,18 +19,18 @@ public class Transformation extends Function {
 	 */
 	private static final long	serialVersionUID	= 1L;
 
-	private List<Component>		components;
+	private Set<Component>		components;
 
 	//private Component			inputComponent;
 
 	//private Component			outputComponent;
 
-	public List<Component> getComponents() {
+	public Set<Component> getComponents() {
 
 		return components;
 	}
 
-	public void setComponents(final List<Component> components) {
+	public void setComponents(final Set<Component> components) {
 
 		this.components = components;
 	}
