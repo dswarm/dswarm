@@ -1,7 +1,7 @@
 {
-    "id": "799db756-7932-45a0-95a7-a02826c96ccd",
-    "attributePaths": [{
-        "id": "de130985-bf66-468f-bc01-e33fe0aa4dc3",
+    "id": "b2611b33-a447-4d58-ab5a-21b368d8017f",
+    "attribute_paths": [{
+        "id": "cbd48e76-32d5-4b37-bd7c-69fe0678b8fb",
         "attributes": [{
             "id": "http://purl.org/dc/terms/title",
             "name": "title"
@@ -13,7 +13,7 @@
             "name": "title"
         }]
     }, {
-        "id": "1691bbd9-3b3b-472b-9310-823c94b264ac",
+        "id": "986c63bc-e365-42e2-b34c-2128a011bb08",
         "attributes": [{
             "id": "http://purl.org/dc/terms/creator",
             "name": "creator"
@@ -22,10 +22,14 @@
             "name": "name"
         }]
     }, {
-        "id": "a72ad4f9-eaab-45bc-9029-54a9b87131ab",
+        "id": "f6e32dc9-53c9-46ca-a922-b7c3b77e1179",
         "attributes": [{
             "id": "http://purl.org/dc/terms/created",
             "name": "created"
         }]
-    }]
+    }],
+    "record_class": {
+        "id": "http://purl.org/ontology/bibo/Document",
+        "name": "document"
+    }
 }

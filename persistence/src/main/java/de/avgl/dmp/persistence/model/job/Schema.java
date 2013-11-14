@@ -8,6 +8,7 @@ import static org.hamcrest.Matchers.equalTo;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.collect.Sets;
@@ -36,7 +37,11 @@ public class Schema extends DMPUUIDObject {
 	 * All attributes of the attribute path
 	 */
 	// @ManyToMany(mappedBy = "schemas", fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@XmlElement(name = "attribute_paths")
 	private Set<AttributePath>			attributePaths		= null;
+	
+	@XmlElement(name = "record_class")
+	private Clasz recordClass = null;
 
 	public String getName() {
 		
@@ -145,5 +150,17 @@ public class Schema extends DMPUUIDObject {
 
 			//attributePath.removeSchema(this);
 		}
+	}
+
+	
+	public Clasz getRecordClass() {
+		
+		return recordClass;
+	}
+
+	
+	public void setRecordClass(final Clasz recordClassArg) {
+		
+		this.recordClass = recordClassArg;
 	}
 }

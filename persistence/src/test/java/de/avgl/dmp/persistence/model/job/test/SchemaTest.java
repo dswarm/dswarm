@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.job.Attribute;
 import de.avgl.dmp.persistence.model.job.AttributePath;
+import de.avgl.dmp.persistence.model.job.Clasz;
 import de.avgl.dmp.persistence.model.job.Schema;
 
 public class SchemaTest extends GuicedTest {
@@ -71,6 +72,13 @@ public class SchemaTest extends GuicedTest {
 
 		attributePath3.addAttribute(dctermsCreated);
 		
+		// record class
+		
+		final String biboDocumentId = "http://purl.org/ontology/bibo/Document";
+		final String biboDocumentName = "document";
+		
+		final Clasz biboDocument = new Clasz(biboDocumentId, biboDocumentName);
+		
 		// schema
 		
 		final Schema schema = new Schema();
@@ -79,6 +87,7 @@ public class SchemaTest extends GuicedTest {
 		schema.addAttributePath(attributePath1);
 		schema.addAttributePath(attributePath2);
 		schema.addAttributePath(attributePath3);
+		schema.setRecordClass(biboDocument);
 
 		String json = null;
 
