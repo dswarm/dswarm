@@ -2,8 +2,6 @@ package de.avgl.dmp.persistence.model.job;
 
 import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.collect.Sets;
@@ -14,10 +12,10 @@ import de.avgl.dmp.persistence.model.DMPJPAObject;
  * @author tgaengler
  */
 @XmlRootElement
-//@Entity
+// @Entity
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-//@Table(name = "MAPPING")
+// @Table(name = "MAPPING")
 public class Mapping extends DMPJPAObject {
 
 	/**
@@ -29,25 +27,25 @@ public class Mapping extends DMPJPAObject {
 
 	Set<AttributePath>			outputAttributePaths	= null;
 
-	Transformation				transformation			= null;
+	Component					transformation			= null;
 
 	public Set<AttributePath> getInputAttributePaths() {
 
 		return inputAttributePaths;
 	}
 
-	public void setInputAttributePaths(final Set<AttributePath> inputAttributePaths) {
+	public void setInputAttributePaths(final Set<AttributePath> inputAttributePathsArg) {
 
-		this.inputAttributePaths = inputAttributePaths;
+		inputAttributePaths = inputAttributePathsArg;
 	}
-	
+
 	public void addInputAttributePath(final AttributePath inputAttributePath) {
-		
-		if(null == inputAttributePaths) {
-			
+
+		if (null == inputAttributePaths) {
+
 			inputAttributePaths = Sets.newLinkedHashSet();
 		}
-		
+
 		inputAttributePaths.add(inputAttributePath);
 	}
 
@@ -56,28 +54,28 @@ public class Mapping extends DMPJPAObject {
 		return outputAttributePaths;
 	}
 
-	public void setOutputAttributePaths(final Set<AttributePath> outputAttributePaths) {
+	public void setOutputAttributePaths(final Set<AttributePath> outputAttributePathsArg) {
 
-		this.outputAttributePaths = outputAttributePaths;
+		outputAttributePaths = outputAttributePathsArg;
 	}
-	
+
 	public void addOutputAttributePath(final AttributePath outputAttributePath) {
-		
-		if(null == outputAttributePaths) {
-			
+
+		if (null == outputAttributePaths) {
+
 			outputAttributePaths = Sets.newLinkedHashSet();
 		}
-		
+
 		outputAttributePaths.add(outputAttributePath);
 	}
 
-	public Transformation getTransformation() {
+	public Component getTransformation() {
 
 		return transformation;
 	}
 
-	public void setTransformation(final Transformation transformation) {
+	public void setTransformation(final Component transformationArg) {
 
-		this.transformation = transformation;
+		transformation = transformationArg;
 	}
 }

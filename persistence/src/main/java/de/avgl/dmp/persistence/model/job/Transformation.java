@@ -2,8 +2,6 @@ package de.avgl.dmp.persistence.model.job;
 
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -23,9 +21,9 @@ public class Transformation extends Function {
 
 	private List<Component>		components;
 
-	private Component			inputComponent;
+	//private Component			inputComponent;
 
-	private Component			outputComponent;
+	//private Component			outputComponent;
 
 	public List<Component> getComponents() {
 
@@ -37,23 +35,23 @@ public class Transformation extends Function {
 		this.components = components;
 	}
 
-	public Component getInputComponent() {
-		
-		return inputComponent;
-	}
-
-	public void setInputComponent(final Component inputComponent) {
-		
-		this.inputComponent = inputComponent;
-	}
-
-	public Component getOutputComponent() {
-		
-		return outputComponent;
-	}
-
-	public void setOutputComponent(final Component outputComponent) {
-		
-		this.outputComponent = outputComponent;
-	}
+//	public Component getInputComponent() {
+//		
+//		return inputComponent;
+//	}
+//
+//	public void setInputComponent(final Component inputComponent) {
+//		
+//		this.inputComponent = inputComponent;
+//	}
+//
+//	public Component getOutputComponent() {
+//		
+//		return outputComponent;
+//	}
+//
+//	public void setOutputComponent(final Component outputComponent) {
+//		
+//		this.outputComponent = outputComponent;
+//	}
 }

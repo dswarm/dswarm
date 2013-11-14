@@ -1,7 +1,6 @@
 package de.avgl.dmp.persistence.model.job;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

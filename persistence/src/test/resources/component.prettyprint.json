@@ -1,0 +1,10 @@
+{
+    "id": "8430cb5f-8058-40c2-845e-5469d73d5df5",
+    "name": "my trim component",
+    "function": {
+        "id": "dc7c7b83-d62f-41f7-91ed-eb867afcffcc"
+    },
+    "parameter_mappings": {
+        "inputString": "previousComponent.outputString"
+    }
+}
