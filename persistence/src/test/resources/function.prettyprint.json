@@ -1,0 +1,6 @@
+{
+    "id": "b37a3ac4-c4b5-43f1-9c07-fa8fd8773261",
+    "name": "trim",
+    "description": "trims leading and trailing whitespaces from a given string",
+    "parameters": ["inputString"]
+}

@@ -1,0 +1,20 @@
+{
+    "id": "1234bla",
+    "name": "Hi my name is ...",
+    "components": [{
+        "id": "bliblablub123",
+        "name": "Component 1",
+        "type": "EXTENDED"
+    }, {
+        "id": "bliblablub1245",
+        "name": "Component 2",
+        "type": "EXTENDED"
+    }],
+    "connection": [{
+        "id": "345345gfdfg",
+        "name": "Connection 1",
+        "type": "DEFAULT",
+        "source": "bliblablub123",
+        "target": "bliblablub1245"
+    }]
+}
