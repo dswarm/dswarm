@@ -30,14 +30,14 @@ public class AttributePath extends DMPUUIDObject {
 	 * All attributes of the attribute path as ordered list
 	 */
 	//@ManyToMany(mappedBy = "attributePaths", fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	private List<Attribute>		attributes			= null;
+	private LinkedList<Attribute>		attributes			= null;
 
 	/**
 	 * All schemas that utilise this attribute path
 	 */
 	//@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	//@JoinTable(name = "SCHEMAS_ATTRIBUTE_PATHS", joinColumns = { @JoinColumn(name = "ATTRIBUTE_PATH_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "SCHEMA_ID", referencedColumnName = "ID") })
-	private Set<Schema>			schemas				= null;
+	//private Set<Schema>			schemas				= null;
 
 	public AttributePath() {
 
@@ -53,7 +53,7 @@ public class AttributePath extends DMPUUIDObject {
 		return attributes;
 	}
 
-	public void setAttributes(final List<Attribute> attributesArg) {
+	public void setAttributes(final LinkedList<Attribute> attributesArg) {
 
 		attributes = attributesArg;
 
@@ -149,72 +149,72 @@ public class AttributePath extends DMPUUIDObject {
 		}
 	}
 
-	public Set<Schema> getSchemas() {
-
-		return schemas;
-	}
-
-	public void setSchemas(final Set<Schema> schemasArg) {
-
-		if (schemasArg == null && schemas != null) {
-
-			// remove attribute path from schema, if attribute path, will be prepared for removal
-
-			for (final Schema schema : schemas) {
-
-				schema.removeAttributePath(this);
-			}
-		}
-
-		schemas = schemasArg;
-
-		if (schemasArg != null) {
-
-			for (final Schema schema : schemasArg) {
-
-				schema.addAttributePath(this);
-			}
-		}
-	}
-
-	/**
-	 * Adds a new schema to the collection of schemas of this attribute path.<br>
-	 * Created by: tgaengler
-	 * 
-	 * @param schema a new schema
-	 */
-	public void addSchema(final Schema schema) {
-
-		if (schema != null) {
-
-			if (schemas == null) {
-
-				schemas = Sets.newLinkedHashSet();
-			}
-
-			if (!schemas.contains(schema)) {
-
-				schemas.add(schema);
-				schema.addAttributePath(this);
-			}
-		}
-	}
-
-	/**
-	 * Removes an existing schema from the collection of schemas of this attribute path.<br>
-	 * Created by: tgaengler
-	 * 
-	 * @param schema an existing schema that should be removed
-	 */
-	public void removeSchema(final Schema schema) {
-
-		if (schemas != null && schema != null && schemas.contains(schema)) {
-
-			schemas.remove(schema);
-
-			schema.removeAttributePath(this);
-		}
-	}
+//	public Set<Schema> getSchemas() {
+//
+//		return schemas;
+//	}
+//
+//	public void setSchemas(final Set<Schema> schemasArg) {
+//
+//		if (schemasArg == null && schemas != null) {
+//
+//			// remove attribute path from schema, if attribute path, will be prepared for removal
+//
+//			for (final Schema schema : schemas) {
+//
+//				schema.removeAttributePath(this);
+//			}
+//		}
+//
+//		schemas = schemasArg;
+//
+//		if (schemasArg != null) {
+//
+//			for (final Schema schema : schemasArg) {
+//
+//				schema.addAttributePath(this);
+//			}
+//		}
+//	}
+//
+//	/**
+//	 * Adds a new schema to the collection of schemas of this attribute path.<br>
+//	 * Created by: tgaengler
+//	 * 
+//	 * @param schema a new schema
+//	 */
+//	public void addSchema(final Schema schema) {
+//
+//		if (schema != null) {
+//
+//			if (schemas == null) {
+//
+//				schemas = Sets.newLinkedHashSet();
+//			}
+//
+//			if (!schemas.contains(schema)) {
+//
+//				schemas.add(schema);
+//				schema.addAttributePath(this);
+//			}
+//		}
+//	}
+//
+//	/**
+//	 * Removes an existing schema from the collection of schemas of this attribute path.<br>
+//	 * Created by: tgaengler
+//	 * 
+//	 * @param schema an existing schema that should be removed
+//	 */
+//	public void removeSchema(final Schema schema) {
+//
+//		if (schemas != null && schema != null && schemas.contains(schema)) {
+//
+//			schemas.remove(schema);
+//
+//			schema.removeAttributePath(this);
+//		}
+//	}
 
 	public String toAttributePath() {
 

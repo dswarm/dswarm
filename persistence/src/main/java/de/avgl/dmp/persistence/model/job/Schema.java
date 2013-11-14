@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.collect.Sets;
 
-import de.avgl.dmp.persistence.model.DMPJPAObject;
+import de.avgl.dmp.persistence.model.DMPUUIDObject;
 
 /**
  * @author tgaengler
@@ -22,7 +22,7 @@ import de.avgl.dmp.persistence.model.DMPJPAObject;
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 // @Table(name = "SCHEMA")
-public class Schema extends DMPJPAObject {
+public class Schema extends DMPUUIDObject {
 
 	/**
 	 * 
@@ -69,21 +69,21 @@ public class Schema extends DMPJPAObject {
 
 			// remove schema from attribute paths, if schema will be prepared for removal
 
-			for (final AttributePath attributePath : attributePaths) {
-
-				attributePath.removeSchema(this);
-			}
+//			for (final AttributePath attributePath : attributePaths) {
+//
+//				attributePath.removeSchema(this);
+//			}
 		}
 
 		attributePaths = attributePathsArg;
 
-		if (attributePathsArg != null) {
-
-			for (final AttributePath attributePath : attributePathsArg) {
-
-				attributePath.addSchema(this);
-			}
-		}
+//		if (attributePathsArg != null) {
+//
+//			for (final AttributePath attributePath : attributePathsArg) {
+//
+//				attributePath.addSchema(this);
+//			}
+//		}
 	}
 
 	public AttributePath getAttributePath(final String id) {
@@ -126,7 +126,7 @@ public class Schema extends DMPJPAObject {
 			if (!attributePaths.contains(attributePath)) {
 
 				attributePaths.add(attributePath);
-				attributePath.addSchema(this);
+				//attributePath.addSchema(this);
 			}
 		}
 	}
@@ -143,7 +143,7 @@ public class Schema extends DMPJPAObject {
 
 			attributePaths.remove(attributePath);
 
-			attributePath.removeSchema(this);
+			//attributePath.removeSchema(this);
 		}
 	}
 }

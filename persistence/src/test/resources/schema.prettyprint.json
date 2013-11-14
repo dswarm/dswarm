@@ -1,0 +1,31 @@
+{
+    "id": "799db756-7932-45a0-95a7-a02826c96ccd",
+    "attributePaths": [{
+        "id": "de130985-bf66-468f-bc01-e33fe0aa4dc3",
+        "attributes": [{
+            "id": "http://purl.org/dc/terms/title",
+            "name": "title"
+        }, {
+            "id": "http://purl.org/dc/terms/hasPart",
+            "name": "hasPart"
+        }, {
+            "id": "http://purl.org/dc/terms/title",
+            "name": "title"
+        }]
+    }, {
+        "id": "1691bbd9-3b3b-472b-9310-823c94b264ac",
+        "attributes": [{
+            "id": "http://purl.org/dc/terms/creator",
+            "name": "creator"
+        }, {
+            "id": "http://xmlns.com/foaf/0.1/name",
+            "name": "name"
+        }]
+    }, {
+        "id": "a72ad4f9-eaab-45bc-9029-54a9b87131ab",
+        "attributes": [{
+            "id": "http://purl.org/dc/terms/created",
+            "name": "created"
+        }]
+    }]
+}
