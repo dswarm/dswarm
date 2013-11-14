@@ -19,12 +19,12 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(BasicJPAService.class);
 
-	protected final Class<POJOCLASS>					clasz;
+	protected final Class<POJOCLASS>				clasz;
 	protected final String							className;
 
 	protected final Provider<EntityManager>			entityManagerProvider;
 
-	public BasicJPAService(final Class<POJOCLASS> clasz, Provider<EntityManager> entityManagerProvider) {
+	public BasicJPAService(final Class<POJOCLASS> clasz, final Provider<EntityManager> entityManagerProvider) {
 
 		this.clasz = clasz;
 		this.className = clasz.getSimpleName();
@@ -44,7 +44,7 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 	 */
 	@Transactional(rollbackOn = DMPPersistenceException.class)
 	public POJOCLASS createObject() throws DMPPersistenceException {
-		
+
 		final POJOCLASS object = createNewObject();
 
 		persistObject(object);
@@ -60,17 +60,20 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 	 */
 	@Transactional(rollbackOn = DMPPersistenceException.class)
 	public POJOCLASS updateObjectTransactional(final POJOCLASS object) throws DMPPersistenceException {
-		
+
 		final EntityManager entityManager = entityManagerProvider.get();
 
 		final POJOCLASS updateObject = getObject(object, entityManager);
 
-		LOG.debug("try to update " + className + " with id '" + object.getId() + "' transactional");
+		BasicJPAService.LOG.debug("try to update " + className + " with id '" + object.getId() + "' transactional");
 
 		updateObjectInternal(object, updateObject, entityManager);
+
+		BasicJPAService.LOG.debug("passed internal object update");
+
 		entityManager.merge(updateObject);
 
-		LOG.debug("updated " + className + " with id '" + object.getId() + "' transactional");
+		BasicJPAService.LOG.debug("updated " + className + " with id '" + object.getId() + "' transactional");
 
 		return updateObject;
 	}
@@ -88,11 +91,11 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 		final EntityManager entityManager = entityManagerProvider.get();
 		final POJOCLASS updateObject = getObject(object, entityManager);
 
-		LOG.debug("try to update " + className + " with id '" + object.getId() + "' non-transactional");
+		BasicJPAService.LOG.debug("try to update " + className + " with id '" + object.getId() + "' non-transactional");
 
 		updateObjectInternal(object, updateObject, entityManager);
 
-		LOG.debug("updated " + className + " with id '" + object.getId() + "' non-transactional");
+		BasicJPAService.LOG.debug("updated " + className + " with id '" + object.getId() + "' non-transactional");
 
 		return updateObject;
 	}
@@ -135,18 +138,19 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 	public POJOCLASS getObject(final POJOCLASSIDTYPE id) {
 
 		final EntityManager entityManager = entityManagerProvider.get();
-		LOG.debug("try to find " + className + " with id '" + id + "' in the database");
+		BasicJPAService.LOG.debug("try to find " + className + " with id '" + id + "' in the database");
 
 		final POJOCLASS entity = entityManager.find(clasz, id,
 				Collections.<String, Object> singletonMap("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS));
 
 		if (entity != null) {
 
-			LOG.debug("found " + className + " with id '" + id + "' in the database = '" + ToStringBuilder.reflectionToString(entity) + "'");
+			BasicJPAService.LOG.debug("found " + className + " with id '" + id + "' in the database = '" + ToStringBuilder.reflectionToString(entity)
+					+ "'");
 
 		} else {
 
-			LOG.debug("couldn't find " + className + " with id '" + id + "' in the database");
+			BasicJPAService.LOG.debug("couldn't find " + className + " with id '" + id + "' in the database");
 		}
 
 		return entity;
@@ -164,13 +168,13 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 		final EntityManager entityManager = entityManagerProvider.get();
 		final POJOCLASS updateObject = entityManager.find(clasz, id);
 
-		LOG.debug("try to delete " + className + " with id '" + id + "' from the database");
+		BasicJPAService.LOG.debug("try to delete " + className + " with id '" + id + "' from the database");
 
 		prepareObjectForRemoval(updateObject);
 
 		entityManager.remove(updateObject);
 
-		LOG.debug("deleted " + className + " with id '" + id + "' from the database");
+		BasicJPAService.LOG.debug("deleted " + className + " with id '" + id + "' from the database");
 	}
 
 	protected abstract void prepareObjectForRemoval(final POJOCLASS object);
@@ -188,12 +192,26 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 
 		if (object.getId() == null) {
 
+			BasicJPAService.LOG.debug(className + " id is null, will create a new " + className);
+
 			updateObject = this.createObject();
 
 		} else {
 
 			updateObject = entityManager.find(clasz, object.getId(),
 					Collections.<String, Object> singletonMap("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS));
+
+			if (updateObject != null) {
+
+				BasicJPAService.LOG.debug("found " + className + " with id '" + updateObject.getId() + "' in the database = '"
+						+ ToStringBuilder.reflectionToString(updateObject) + "'");
+
+				// entityManager.refresh(updateObject);
+
+			} else {
+
+				BasicJPAService.LOG.debug("couldn't find " + className + " with id '" + object.getId() + "' in the database");
+			}
 		}
 
 		return updateObject;
@@ -203,11 +221,11 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 
 		final EntityManager entityManager = entityManagerProvider.get();
 
-		LOG.debug("try to create new " + className);
+		BasicJPAService.LOG.debug("try to create new " + className);
 
 		entityManager.persist(object);
 
-		LOG.debug("created new " + className + " with id '" + object.getId() + "'");
+		BasicJPAService.LOG.debug("created new " + className + " with id '" + object.getId() + "'");
 	}
 
 	protected POJOCLASS createNewObject() throws DMPPersistenceException {
@@ -217,12 +235,12 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 		try {
 
 			object = clasz.newInstance();
-		} catch (InstantiationException e) {
+		} catch (final InstantiationException e) {
 
 			e.printStackTrace();
 
 			throw new DMPPersistenceException(e.getMessage());
-		} catch (IllegalAccessException e) {
+		} catch (final IllegalAccessException e) {
 
 			e.printStackTrace();
 

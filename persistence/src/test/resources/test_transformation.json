@@ -1,0 +1,82 @@
+{
+    "id": "trans_124",
+    "name": "Publisher Mapping",
+    "components": [{
+            "id": "comp_1",
+            "function": "trim",
+            "parameter_mappings": [{
+                "func_var1", "input_var1"
+            }],
+            "input_components": [
+                "input_comp_1"
+            ],
+            "output_components": [
+                "comp_2"
+            ]
+        }
+    },
+    {
+        "id": "comp_1",
+        "function": "unique",
+        "parameter_mappings": [{
+            "func_var1", "comp_1.var1"
+        }],
+        "input_components": [
+            "comp_1"
+        ],
+        "output_components": [
+            "comp_3"
+        ]
+    },
+    {
+        "id": "comp_3",
+        "function": "replace",
+        "parameter_mappings": [{
+            "input_string", "comp_2.var1"
+        }, {
+            "matcher", "regex"
+        }, {
+            "replace_string", "bla"
+        }],
+        "input_components": [
+            "comp_2"
+        ],
+        "output_components": [
+            "comp_4"
+        ]
+    },
+    {
+        "id": "comp_4",
+        "function": "lookup",
+        "parameter_mappings": [{
+            "input_string", "comp_3.var1"
+        }],
+        "input_components": [
+            "comp_3"
+        ],
+        "output_components": [
+            "output_comp_1"
+        ]
+    }
+    ],
+    "input_component": {
+        "id": "input_comp_1",
+        "function": "map",
+        "parameter_mappings": [{
+            "input_var1", "dc:publisher"
+        }],
+        "output_components": [
+            "comp_1"
+        ]
+},
+"output_component": {
+    "id": "output_comp_1",
+    "function": "map",
+    "parameter_mappings": [{
+        "output_var1", "dc:publisher"
+    }],
+    "input_components": [
+        "comp_4"
+    ]
+}
+}

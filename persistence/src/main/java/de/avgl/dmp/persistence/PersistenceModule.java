@@ -20,6 +20,7 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
+import de.avgl.dmp.persistence.services.AttributePathService;
 import de.avgl.dmp.persistence.services.AttributeService;
 import de.avgl.dmp.persistence.services.ConfigurationService;
 import de.avgl.dmp.persistence.services.InternalServiceFactory;
@@ -51,6 +52,7 @@ public class PersistenceModule extends AbstractModule {
 		bind(ResourceService.class).in(Scopes.SINGLETON);
 		bind(ConfigurationService.class).in(Scopes.SINGLETON);
 		bind(AttributeService.class).in(Scopes.SINGLETON);
+		bind(AttributePathService.class).in(Scopes.SINGLETON);
 
 		bind(InternalServiceFactory.class).to(InternalServiceFactoryImpl.class).in(Scopes.SINGLETON);
 		bind(SchemaService.class).to(SchemaServiceImpl.class);
