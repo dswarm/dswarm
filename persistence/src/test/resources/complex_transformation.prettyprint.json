@@ -1,40 +1,42 @@
 {
-    "id": "b53633bc-4997-4c90-b7be-a83d519a0dc6",
+    "id": "5d66ebb8-4aec-4c5c-b40d-7eb08c41dc96",
     "name": "my transformation",
     "description": "transformation which just makes use of one function",
     "parameters": ["transformationInputString"],
     "components": [{
-        "id": "f8331a8a-d9ec-4b49-bc10-6ac418652bca",
+        "id": "24fd8f31-bad6-4c6f-88fe-2dafb646c1d7",
         "name": "my replace component",
         "function": {
-            "id": "bcc08a47-4eab-430f-97e0-e1c630f9493a"
+            "id": "ef761849-9283-49b6-86e0-ee18eee943ea"
         },
         "parameter_mappings": {
-            "inputString": "previousComponent.outputString",
+            "inputString": "transformationInputString",
             "regex": "\\.",
             "replaceString": ":"
         }
     }, {
-        "id": "57f63ed8-e5d9-4f5e-94c8-5fedc6d45d64",
+        "id": "d0740fda-8bb7-42de-b1e0-9503604ad153",
         "name": "my trim component",
         "function": {
-            "id": "9b3653ab-1036-45e3-a8d4-e1a642f69fca"
+            "id": "76f38a3b-8de4-4d0f-85f3-28c144e4eeaf"
         },
         "input_components": [{
-            "id": "f8331a8a-d9ec-4b49-bc10-6ac418652bca"
+            "id": "24fd8f31-bad6-4c6f-88fe-2dafb646c1d7"
         }],
         "output_components": [{
-            "id": "fca1d1da-7a8d-405a-954f-e31ff9df8bac"
+            "id": "a7ac207f-f2d4-4915-9284-84344d877a36"
         }],
         "parameter_mappings": {
             "inputString": "previousComponent.outputString"
         }
     }, {
-        "id": "fca1d1da-7a8d-405a-954f-e31ff9df8bac",
+        "id": "a7ac207f-f2d4-4915-9284-84344d877a36",
         "name": "my lower case component",
         "function": {
-            "id": "5a79e158-9987-48f2-842f-a05bbf024147"
+            "id": "35ffa903-15c7-4a60-a7db-36bc6ef58958"
         },
-        "parameter_mappings": {}
+        "parameter_mappings": {
+            "inputString": "previousComponent.outputString"
+        }
     }]
 }

@@ -2,11 +2,18 @@ package de.avgl.dmp.persistence.model.job;
 
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.collect.Sets;
 
-import de.avgl.dmp.persistence.model.DMPJPAObject;
+import de.avgl.dmp.persistence.model.DMPUUIDObject;
+import de.avgl.dmp.persistence.model.utils.AttributePathReferenceSerializer;
+import de.avgl.dmp.persistence.model.utils.SetAttributePathReferenceSerializer;
 
 /**
  * @author tgaengler
@@ -16,18 +23,43 @@ import de.avgl.dmp.persistence.model.DMPJPAObject;
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 // @Table(name = "MAPPING")
-public class Mapping extends DMPJPAObject {
+public class Mapping extends DMPUUIDObject {
 
 	/**
 	 * 
 	 */
-	private static final long	serialVersionUID		= 1L;
+	private static final long	serialVersionUID	= 1L;
 
-	Set<AttributePath>			inputAttributePaths		= null;
+	private String				name				= null;
 
-	Set<AttributePath>			outputAttributePaths	= null;
+	@XmlElement(name = "input_attribute_paths")
+	@JsonSerialize(using = SetAttributePathReferenceSerializer.class)
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	@XmlList
+	private Set<AttributePath>	inputAttributePaths	= null;
 
-	Component					transformation			= null;
+	@XmlElement(name = "output_attribute_path")
+	@JsonSerialize(using = AttributePathReferenceSerializer.class)
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private AttributePath		outputAttributePath	= null;
+
+	private Component			transformation		= null;
+
+	@XmlElement(name = "input_filter")
+	private Filter				inputFilter			= null;
+
+	@XmlElement(name = "output_filter")
+	private Filter				outputFilter		= null;
+
+	public String getName() {
+
+		return name;
+	}
+
+	public void setName(final String nameArg) {
+
+		name = nameArg;
+	}
 
 	public Set<AttributePath> getInputAttributePaths() {
 
@@ -49,24 +81,14 @@ public class Mapping extends DMPJPAObject {
 		inputAttributePaths.add(inputAttributePath);
 	}
 
-	public Set<AttributePath> getOutputAttributePaths() {
+	public AttributePath getOutputAttributePath() {
 
-		return outputAttributePaths;
+		return outputAttributePath;
 	}
 
-	public void setOutputAttributePaths(final Set<AttributePath> outputAttributePathsArg) {
+	public void setOutputAttributePath(final AttributePath outputAttributePathArg) {
 
-		outputAttributePaths = outputAttributePathsArg;
-	}
-
-	public void addOutputAttributePath(final AttributePath outputAttributePath) {
-
-		if (null == outputAttributePaths) {
-
-			outputAttributePaths = Sets.newLinkedHashSet();
-		}
-
-		outputAttributePaths.add(outputAttributePath);
+		outputAttributePath = outputAttributePathArg;
 	}
 
 	public Component getTransformation() {
@@ -77,5 +99,25 @@ public class Mapping extends DMPJPAObject {
 	public void setTransformation(final Component transformationArg) {
 
 		transformation = transformationArg;
+	}
+
+	public Filter getInputFilter() {
+
+		return inputFilter;
+	}
+
+	public void setInputFilter(final Filter inputFilterArg) {
+
+		inputFilter = inputFilterArg;
+	}
+
+	public Filter getOutputFilter() {
+
+		return outputFilter;
+	}
+
+	public void setOutputFilter(final Filter outputFilterArg) {
+
+		outputFilter = outputFilterArg;
 	}
 }

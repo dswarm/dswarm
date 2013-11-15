@@ -1,0 +1,46 @@
+{
+    "id": "b8dcd18e-319d-43d6-b581-f1f8ed880e98",
+    "name": "my transformation",
+    "description": "transformation which makes use of three functions (two transformations and one funcion)",
+    "parameters": ["firstName", "familyName"],
+    "components": [{
+        "id": "04c7ac35-76d0-4d6a-badb-835266543239",
+        "name": "prepare first name",
+        "function": {
+            "id": "a6efa606-1876-4b18-8574-e2ce336e4ae1"
+        },
+        "output_components": [{
+            "id": "de2e1b31-35b1-467e-9c64-cb2c93f24a22"
+        }],
+        "parameter_mappings": {
+            "transformationInputString": "firstName"
+        }
+    }, {
+        "id": "266d5b30-6078-4dfc-a8db-b56fb7b276c8",
+        "name": "prepare family name",
+        "function": {
+            "id": "a6efa606-1876-4b18-8574-e2ce336e4ae1"
+        },
+        "output_components": [{
+            "id": "de2e1b31-35b1-467e-9c64-cb2c93f24a22"
+        }],
+        "parameter_mappings": {
+            "transformationInputString": "familyName"
+        }
+    }, {
+        "id": "de2e1b31-35b1-467e-9c64-cb2c93f24a22",
+        "name": "full name",
+        "function": {
+            "id": "6f2a65c4-f390-4ab6-aa1b-30733b575329"
+        },
+        "input_components": [{
+            "id": "04c7ac35-76d0-4d6a-badb-835266543239"
+        }, {
+            "id": "266d5b30-6078-4dfc-a8db-b56fb7b276c8"
+        }],
+        "parameter_mappings": {
+            "firstString": "04c7ac35-76d0-4d6a-badb-835266543239.outputVariable",
+            "secondString": "266d5b30-6078-4dfc-a8db-b56fb7b276c8.outputVariable"
+        }
+    }]
+}

@@ -1,0 +1,27 @@
+{
+    "id": "372661b1-5c4f-4734-9f2d-52fe21e5d8dc",
+    "name": "my mapping",
+    "transformation": {
+        "id": "27264783-2512-4cb3-868b-ea4a34d987ad",
+        "name": "my transformation (component)",
+        "function": {
+            "id": "a1433de8-c292-4ce3-a9f4-73012d45f386"
+        },
+        "parameter_mappings": {
+            "firstName": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/firstName",
+            "familyName": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/familyName",
+            "transformationOutputVariable": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/name"
+        }
+    },
+    "input_attribute_paths": [{
+        "id": "0859d8d3-b4fa-4e06-b064-40e76d7c4279",
+        "attribute_path": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/firstName"
+    }, {
+        "id": "d280476c-88c4-48c9-9cb2-4ba8dca82dd8",
+        "attribute_path": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/familyName"
+    }],
+    "output_attribute_path": {
+        "id": "31cd42e1-b0d9-4415-b8d9-e1e6eb43ce5c",
+        "attribute_path": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/name"
+    }
+}
