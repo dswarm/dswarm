@@ -13,22 +13,21 @@ public class Job extends BasicDMPObject {
 	/**
 	 * 
 	 */
-	private static final long		serialVersionUID	= 1L;
-	private List<Transformation>	transformations;
+	private static final long	serialVersionUID	= 1L;
+	private List<Mapping>		mappings;
 
 	public Job(final String id) {
 
 		super(id);
 	}
 
-	public List<Transformation> getTransformations() {
+	public List<Mapping> getMappings() {
 
-		return transformations;
+		return mappings;
 	}
 
-	public void setTransformations(final List<Transformation> transformations) {
+	public void setMappings(final List<Mapping> mappingsArg) {
 
-		this.transformations = transformations;
+		mappings = mappingsArg;
 	}
-
 }
