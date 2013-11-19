@@ -1,7 +1,5 @@
 package de.avgl.dmp.persistence.model.job.test;
 
-import java.util.UUID;
-
 import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,7 +23,7 @@ public class FilterTest extends GuicedTest {
 				+ "               m:ind1 \"a\" ;\n" + "               m:subfield ?subField .\n" + "    ?subField rdf:value ?url .\n" + "}";
 
 		final Filter filter = new Filter();
-		filter.setId(UUID.randomUUID().toString());
+		//filter.setId(UUID.randomUUID().toString());
 
 		filter.setExpression(expression);
 
