@@ -122,16 +122,34 @@ public class JsonSchemaParser {
 
 		} else if (xsElementDeclType.isComplexType()) {
 
-			final XSSimpleType type = xsElementDeclType.asComplexType().getContentType().asSimpleType();
+			final XSComplexType xsComplexType = xsElementDeclType.asComplexType();
+			final XSSimpleType type = xsComplexType.getContentType().asSimpleType();
 
 			if (type != null) {
+				final JSElement simpleJsElement = iterateSimpleType(type).withName(elementDecl.getName());
 
-				return iterateSimpleType(type).withName(elementDecl.getName());
+				final int numAttributes = xsComplexType.getAttributeUses().size();
+				if (numAttributes > 0) {
+					final List<JSElement> elements = new ArrayList<JSElement>(numAttributes);
+					final JSObject jsElements = new JSObject(elementDecl.getName());
+
+					jsElements.add(simpleJsElement);
+
+					iterateComplexAttributes(xsComplexType, elements);
+
+					jsElements.addAll(elements);
+
+					return jsElements;
+				} else {
+
+					return simpleJsElement;
+				}
+
 			}
 
 			final JSObject jsElements = new JSObject(elementDecl.getName());
 
-			final List<JSElement> elements = iterateComplexType(xsElementDeclType.asComplexType());
+			final List<JSElement> elements = iterateComplexType(xsComplexType);
 
 			if (elements.size() == 1 && elements.get(0) instanceof JSOther) {
 
@@ -164,6 +182,13 @@ public class JsonSchemaParser {
 			}
 		}
 
+		iterateComplexAttributes(complexType, result);
+
+		return result;
+	}
+
+	private void iterateComplexAttributes(XSComplexType complexType, List<JSElement> result) {
+
 		final Collection<? extends XSAttributeUse> attributeUses = complexType.getAttributeUses();
 
 		for (final XSAttributeUse attributeUse : attributeUses) {
@@ -172,45 +197,9 @@ public class JsonSchemaParser {
 
 			result.add(iterateSimpleType(type).withName("@" + attributeUseDecl.getName()));
 		}
-
-		return result;
 	}
 
 	private JSElement iterateSimpleType(final XSSimpleType simpleType) {
-
-//		if (simpleType.isUnion()) {
-//			final XSUnionSimpleType xsSimpleTypes = simpleType.asUnion();
-//
-//			final JSObject jsElements = new JSObject(simpleType.getName());
-//
-//			for (XSSimpleType xsSimpleType : xsSimpleTypes) {
-//
-//				jsElements.add(iterateSimpleType(xsSimpleType));
-//			}
-//
-////			return jsElements;
-//		}
-
-//		if (simpleType.isList()) {
-//
-//			final XSListSimpleType xsListSimpleType = simpleType.asList();
-//
-//			final XSSimpleType itemType = xsListSimpleType.getItemType();
-//
-////			return iterateSimpleType(itemType).withName(xsListSimpleType.getName());
-//		}
-
-//		if (simpleType.getPrimitiveType() != null) {
-//
-//			final XSSimpleType primitiveType = checkNotNull(simpleType.getPrimitiveType());
-//
-//			System.out.println(String.format("Primitive type [%s] for element [%s]", primitiveType.getName(), simpleType.getName()));
-//
-////			return new JSString(simpleType.getName());
-//		} else {
-//
-//			System.out.println("simpleType = " + simpleType);
-//		}
 
 		return new JSString(simpleType.getName());
 	}
