@@ -1,10 +1,10 @@
 {
-    "id": "a63c0c68-abb6-4763-82f0-90816f81aa0e",
+    "id": 1,
     "attributes": [{
-        "id": "http://purl.org/dc/terms/title",
-        "name": "title"
-    }, {
         "id": "http://purl.org/dc/terms/hasPart",
         "name": "hasPart"
+    }, {
+        "id": "http://purl.org/dc/terms/title",
+        "name": "title"
     }]
 }

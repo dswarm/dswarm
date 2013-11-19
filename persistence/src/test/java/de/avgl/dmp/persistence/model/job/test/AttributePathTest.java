@@ -1,7 +1,5 @@
 package de.avgl.dmp.persistence.model.job.test;
 
-import java.util.UUID;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -34,10 +32,10 @@ public class AttributePathTest extends GuicedTest {
 		final Attribute dctermsHasPart = createAttribute(dctermsHasPartId, dctermsHasPartName);
 		
 		final AttributePath attributePath = new AttributePath();
-		attributePath.setId(UUID.randomUUID().toString());
+		//attributePath.setId(UUID.randomUUID().toString());
 		
-		attributePath.addAttribute(dctermsTitle);
 		attributePath.addAttribute(dctermsHasPart);
+		attributePath.addAttribute(dctermsTitle);
 
 		String json = null;
 

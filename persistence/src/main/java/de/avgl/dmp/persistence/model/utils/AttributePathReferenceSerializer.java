@@ -37,18 +37,18 @@ public class AttributePathReferenceSerializer extends JsonSerializer<AttributePa
 	static class AttributePathReference {
 
 		@XmlID
-		private final String	id;
+		private final Long	id;
 		
 		@XmlElement(name = "attribute_path")
 		private final String attributePath;
 
-		AttributePathReference(final String idArg, final String attributePathArg) {
+		AttributePathReference(final Long idArg, final String attributePathArg) {
 
 			id = idArg;
 			attributePath = attributePathArg;
 		}
 
-		String getId() {
+		Long getId() {
 
 			return id;
 		}

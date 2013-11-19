@@ -1,7 +1,5 @@
 package de.avgl.dmp.persistence.services;
 
-import java.util.Set;
-
 import javax.persistence.EntityManager;
 
 import com.google.inject.Inject;
@@ -9,7 +7,6 @@ import com.google.inject.Provider;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.job.Attribute;
-import de.avgl.dmp.persistence.model.job.AttributePath;
 
 public class AttributeService extends AdvancedJPAService<Attribute> {
 

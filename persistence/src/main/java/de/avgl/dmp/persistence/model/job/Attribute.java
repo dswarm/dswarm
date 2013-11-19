@@ -1,24 +1,17 @@
 package de.avgl.dmp.persistence.model.job;
 
-import java.util.List;
-import java.util.Set;
-
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import org.hamcrest.Matchers;
-
-import ch.lambdaj.Lambda;
-
-import com.google.common.collect.Sets;
 
 /**
  * @author tgaengler
  */
 @XmlRootElement
-//@Entity
+@Entity
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-//@Table(name = "ATTRIBUTE")
+@Table(name = "ATTRIBUTE")
 public class Attribute extends BasicDMPObject {
 
 	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(Attribute.class);
