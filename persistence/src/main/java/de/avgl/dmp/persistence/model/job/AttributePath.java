@@ -164,7 +164,12 @@ public class AttributePath extends DMPJPAObject {
 
 			if (orderedAttributes == null) {
 
-				orderedAttributes = Lists.newLinkedList();
+				initAttributePath(false);
+
+				if (orderedAttributes == null) {
+
+					orderedAttributes = Lists.newLinkedList();
+				}
 			}
 
 			// if (!attributes.contains(attributeArg)) {
@@ -371,13 +376,13 @@ public class AttributePath extends DMPJPAObject {
 		}
 	}
 
-	private void initAttributePath(boolean fromScratch) {
+	private void initAttributePath(final boolean fromScratch) {
 
 		if (orderedAttributesJSON == null && !orderedAttributesInitialized) {
 
 			if (attributePath == null) {
 
-				LOG.debug("attributes path JSON is null for '" + getId() + "'");
+				AttributePath.LOG.debug("attributes path JSON is null for '" + getId() + "'");
 
 				if (fromScratch) {
 
@@ -411,7 +416,7 @@ public class AttributePath extends DMPJPAObject {
 				}
 			} catch (final DMPException e) {
 
-				LOG.debug("couldn't parse attribute path JSON for attribute path '" + getId() + "'");
+				AttributePath.LOG.debug("couldn't parse attribute path JSON for attribute path '" + getId() + "'");
 			}
 
 			orderedAttributesInitialized = true;

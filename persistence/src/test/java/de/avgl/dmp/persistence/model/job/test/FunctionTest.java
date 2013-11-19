@@ -1,7 +1,5 @@
 package de.avgl.dmp.persistence.model.job.test;
 
-import java.util.UUID;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,19 +18,19 @@ public class FunctionTest extends GuicedTest {
 	@Test
 	public void simpleFunctionTest() {
 
-		final String functionId = UUID.randomUUID().toString();
+		//final String functionId = UUID.randomUUID().toString();
 		final String functionName = "trim";
 		final String functionDescription = "trims leading and trailing whitespaces from a given string";
 		final String functionParameter = "inputString";
 
 		final Function function = new Function();
-		function.setId(functionId);
+		//function.setId(functionId);
 		function.setName(functionName);
 		function.setDescription(functionDescription);
 		function.addParameter(functionParameter);
 
-		Assert.assertNotNull("the function id shouldn't be null", function.getId());
-		Assert.assertEquals("the function ids are not equal", functionId, function.getId());
+		//Assert.assertNotNull("the function id shouldn't be null", function.getId());
+		//Assert.assertEquals("the function ids are not equal", functionId, function.getId());
 		Assert.assertNotNull("the function name shouldn't be null", function.getName());
 		Assert.assertEquals("the function names are not equal", functionName, function.getName());
 		Assert.assertNotNull("the function description shouldn't be null", function.getDescription());
