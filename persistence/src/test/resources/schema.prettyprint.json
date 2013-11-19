@@ -1,7 +1,14 @@
 {
-    "id": "b2611b33-a447-4d58-ab5a-21b368d8017f",
+    "id": 1,
+    "name": "my schema",
     "attribute_paths": [{
-        "id": "cbd48e76-32d5-4b37-bd7c-69fe0678b8fb",
+        "id": 3,
+        "attributes": [{
+            "id": "http://purl.org/dc/terms/created",
+            "name": "created"
+        }]
+    }, {
+        "id": 1,
         "attributes": [{
             "id": "http://purl.org/dc/terms/title",
             "name": "title"
@@ -13,19 +20,13 @@
             "name": "title"
         }]
     }, {
-        "id": "986c63bc-e365-42e2-b34c-2128a011bb08",
+        "id": 2,
         "attributes": [{
             "id": "http://purl.org/dc/terms/creator",
             "name": "creator"
         }, {
             "id": "http://xmlns.com/foaf/0.1/name",
             "name": "name"
-        }]
-    }, {
-        "id": "f6e32dc9-53c9-46ca-a922-b7c3b77e1179",
-        "attributes": [{
-            "id": "http://purl.org/dc/terms/created",
-            "name": "created"
         }]
     }],
     "record_class": {

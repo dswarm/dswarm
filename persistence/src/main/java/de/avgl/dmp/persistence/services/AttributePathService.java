@@ -11,7 +11,7 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.job.Attribute;
 import de.avgl.dmp.persistence.model.job.AttributePath;
 
-public class AttributePathService extends BasicJPAService<AttributePath, Long> {
+public class AttributePathService extends BasicIDJPAService<AttributePath> {
 
 	@Inject
 	public AttributePathService(final Provider<EntityManager> entityManagerProvider) {

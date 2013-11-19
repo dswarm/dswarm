@@ -22,7 +22,7 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<AttributePat
 
 	public AttributePathServiceTest() {
 
-		super("attribute", AttributePathService.class);
+		super("attribute path", AttributePathService.class);
 	}
 
 	@Test

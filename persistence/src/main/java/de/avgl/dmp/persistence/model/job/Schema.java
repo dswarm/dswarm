@@ -8,51 +8,49 @@ import static org.hamcrest.Matchers.equalTo;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.collect.Sets;
 
-import de.avgl.dmp.persistence.model.DMPUUIDObject;
-
 /**
  * @author tgaengler
  */
 @XmlRootElement
-// @Entity
+@Entity
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-// @Table(name = "SCHEMA")
-public class Schema extends DMPUUIDObject {
+@Table(name = "SCHEMA")
+public class Schema extends BasicDMPJPAObject {
 
 	/**
 	 * 
 	 */
 	private static final long	serialVersionUID	= 1L;
 
-	// @Column(name = "NAME")
-	private String				name				= null;
-	
 	/**
 	 * All attributes of the attribute path
 	 */
-	// @ManyToMany(mappedBy = "schemas", fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	// @ManyToMany(mappedBy = "schemas", fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE,
+	// CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@JoinTable(name = "ATTRIBUTE_PATHS_SCHEMAS", joinColumns = { @JoinColumn(name = "SCHEMA_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "ATTRIBUTE_PATH_ID", referencedColumnName = "ID") })
 	@XmlElement(name = "attribute_paths")
-	private Set<AttributePath>			attributePaths		= null;
-	
+	private Set<AttributePath>	attributePaths		= null;
+
+	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@JoinColumn(name = "RECORD_CLASS")
 	@XmlElement(name = "record_class")
-	private Clasz recordClass = null;
+	private Clasz				recordClass			= null;
 
-	public String getName() {
-		
-		return name;
-	}
-
-	public void setName(final String nameArg) {
-		
-		name = nameArg;
-	}
-	
 	/**
 	 * Gets all attribute paths of the schema.
 	 * 
@@ -74,24 +72,24 @@ public class Schema extends DMPUUIDObject {
 
 			// remove schema from attribute paths, if schema will be prepared for removal
 
-//			for (final AttributePath attributePath : attributePaths) {
-//
-//				attributePath.removeSchema(this);
-//			}
+			// for (final AttributePath attributePath : attributePaths) {
+			//
+			// attributePath.removeSchema(this);
+			// }
 		}
 
 		attributePaths = attributePathsArg;
 
-//		if (attributePathsArg != null) {
-//
-//			for (final AttributePath attributePath : attributePathsArg) {
-//
-//				attributePath.addSchema(this);
-//			}
-//		}
+		// if (attributePathsArg != null) {
+		//
+		// for (final AttributePath attributePath : attributePathsArg) {
+		//
+		// attributePath.addSchema(this);
+		// }
+		// }
 	}
 
-	public AttributePath getAttributePath(final String id) {
+	public AttributePath getAttributePath(final Long id) {
 
 		if (id == null) {
 
@@ -131,7 +129,7 @@ public class Schema extends DMPUUIDObject {
 			if (!attributePaths.contains(attributePath)) {
 
 				attributePaths.add(attributePath);
-				//attributePath.addSchema(this);
+				// attributePath.addSchema(this);
 			}
 		}
 	}
@@ -148,19 +146,28 @@ public class Schema extends DMPUUIDObject {
 
 			attributePaths.remove(attributePath);
 
-			//attributePath.removeSchema(this);
+			// attributePath.removeSchema(this);
 		}
 	}
 
-	
 	public Clasz getRecordClass() {
-		
+
 		return recordClass;
 	}
 
-	
 	public void setRecordClass(final Clasz recordClassArg) {
-		
+
 		this.recordClass = recordClassArg;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+
+		if (!Schema.class.isInstance(obj)) {
+
+			return false;
+		}
+
+		return super.equals(obj);
 	}
 }

@@ -1,7 +1,5 @@
 package de.avgl.dmp.persistence.model.job.test;
 
-import java.util.UUID;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -36,7 +34,7 @@ public class SchemaTest extends GuicedTest {
 		final Attribute dctermsHasPart = createAttribute(dctermsHasPartId, dctermsHasPartName);
 
 		final AttributePath attributePath1 = new AttributePath();
-		attributePath1.setId(UUID.randomUUID().toString());
+		//attributePath1.setId(UUID.randomUUID().toString());
 
 		attributePath1.addAttribute(dctermsTitle);
 		attributePath1.addAttribute(dctermsHasPart);
@@ -55,7 +53,7 @@ public class SchemaTest extends GuicedTest {
 		final Attribute foafName = createAttribute(foafNameId, foafNameName);
 
 		final AttributePath attributePath2 = new AttributePath();
-		attributePath2.setId(UUID.randomUUID().toString());
+		//attributePath2.setId(UUID.randomUUID().toString());
 
 		attributePath2.addAttribute(dctermsCreator);
 		attributePath2.addAttribute(foafName);
@@ -68,7 +66,7 @@ public class SchemaTest extends GuicedTest {
 		final Attribute dctermsCreated = createAttribute(dctermsCreatedId, dctermsCreatedName);
 
 		final AttributePath attributePath3 = new AttributePath();
-		attributePath3.setId(UUID.randomUUID().toString());
+		//attributePath3.setId(UUID.randomUUID().toString());
 
 		attributePath3.addAttribute(dctermsCreated);
 		
@@ -82,7 +80,7 @@ public class SchemaTest extends GuicedTest {
 		// schema
 		
 		final Schema schema = new Schema();
-		schema.setId(UUID.randomUUID().toString());
+		//schema.setId(UUID.randomUUID().toString());
 		
 		schema.addAttributePath(attributePath1);
 		schema.addAttributePath(attributePath2);

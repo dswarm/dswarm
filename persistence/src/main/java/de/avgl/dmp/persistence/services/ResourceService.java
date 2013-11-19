@@ -4,8 +4,6 @@ import java.util.Set;
 
 import javax.persistence.EntityManager;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -15,9 +13,9 @@ import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
 
-public class ResourceService extends BasicJPAService<Resource, Long> {
+public class ResourceService extends BasicIDJPAService<Resource> {
 
-	private final Provider<ConfigurationService> configurationServiceProvider;
+	private final Provider<ConfigurationService>	configurationServiceProvider;
 
 	@Inject
 	public ResourceService(Provider<EntityManager> entityManagerProvider, Provider<ConfigurationService> configurationServiceProvider) {
@@ -61,11 +59,11 @@ public class ResourceService extends BasicJPAService<Resource, Long> {
 	@Override
 	public Resource getObject(final Long id) {
 
-//		final ConfigurationService cS = configurationServiceProvider.get();
-//
-//
-//
-//		System.out.println("all objects: " + ToStringBuilder.reflectionToString(cS.getObjects()));
+		// final ConfigurationService cS = configurationServiceProvider.get();
+		//
+		//
+		//
+		// System.out.println("all objects: " + ToStringBuilder.reflectionToString(cS.getObjects()));
 
 		return super.getObject(id);
 	}

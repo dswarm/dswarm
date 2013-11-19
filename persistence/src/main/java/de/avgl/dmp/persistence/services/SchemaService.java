@@ -1,18 +1,44 @@
 package de.avgl.dmp.persistence.services;
 
+import java.util.Set;
 
-import com.google.common.base.Optional;
+import javax.persistence.EntityManager;
 
-import de.avgl.dmp.persistence.model.jsonschema.JSRoot;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
+import de.avgl.dmp.persistence.DMPPersistenceException;
+import de.avgl.dmp.persistence.model.job.AttributePath;
+import de.avgl.dmp.persistence.model.job.Clasz;
+import de.avgl.dmp.persistence.model.job.Schema;
 
-public interface SchemaService {
+public class SchemaService extends BasicDMPJPAService<Schema> {
 
-	void createObject(Long id, Long id1, JSRoot schema);
+	@Inject
+	public SchemaService(final Provider<EntityManager> entityManagerProvider) {
 
-	Optional<JSRoot> getObjects(Long id, Long configurationId);
+		super(Schema.class, entityManagerProvider);
+	}
 
-	void deleteObject(Long id, Long configurationId);
+	@Override
+	protected void prepareObjectForRemoval(final Schema object) {
 
-	Optional<JSRoot> getSchema(Long id, Long configurationId);
+		// should clear the relationship to the attribute paths + record class
+		object.setAttributePaths(null);
+		object.setRecordClass(null);
+	}
+
+	@Override
+	protected void updateObjectInternal(final Schema object, final Schema updateObject, final EntityManager entityManager)
+			throws DMPPersistenceException {
+
+		final Set<AttributePath> attributePaths = object.getAttributePaths();
+		final Clasz recordClass = object.getRecordClass();
+
+		updateObject.setAttributePaths(attributePaths);
+		updateObject.setRecordClass(recordClass);
+
+		super.updateObjectInternal(object, updateObject, entityManager);
+	}
+
 }

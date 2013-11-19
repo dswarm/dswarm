@@ -56,11 +56,11 @@ public class AttributePath extends DMPJPAObject {
 	// @ManyToMany(mappedBy = "attributePaths", fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE,
 	// CascadeType.PERSIST, CascadeType.REFRESH })
 	@JsonIgnore
+	@Access(AccessType.FIELD)
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "ATTRIBUTES_ATTRIBUTE_PATHS", joinColumns = { @JoinColumn(name = "ATTRIBUTE_PATH_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "ATTRIBUTE_ID", referencedColumnName = "ID") })
 	private Set<Attribute>							attributes						= null;
 
-	@XmlElement(name = "attributes")
 	@Transient
 	private LinkedList<Attribute>					orderedAttributes				= null;
 
@@ -96,6 +96,8 @@ public class AttributePath extends DMPJPAObject {
 		if (null != attributesArg) {
 
 			attributes = Sets.newLinkedHashSet(orderedAttributes);
+
+			initAttributePath(false);
 		}
 	}
 
@@ -104,6 +106,7 @@ public class AttributePath extends DMPJPAObject {
 		return attributes;
 	}
 
+	@XmlElement(name = "attributes")
 	public LinkedList<Attribute> getAttributePath() {
 
 		initAttributePath(false);
@@ -140,7 +143,7 @@ public class AttributePath extends DMPJPAObject {
 				attributes.add(attribute);
 			}
 		}
-		
+
 		refreshAttributePathString();
 	}
 
@@ -173,7 +176,7 @@ public class AttributePath extends DMPJPAObject {
 			//
 			// attributeArg.addAttributePath(this, attributeIndex);
 			// }
-			
+
 			refreshAttributePathString();
 		}
 	}
@@ -206,7 +209,7 @@ public class AttributePath extends DMPJPAObject {
 				// final int attributeIndex2 = attributes.lastIndexOf(attributeArg);
 				//
 				// attributeArg.addAttributePath(this, attributeIndex2);
-				
+
 				refreshAttributePathString();
 			}
 		}
@@ -232,7 +235,7 @@ public class AttributePath extends DMPJPAObject {
 			}
 
 			// attribute.removeAttributePath(this);
-			
+
 			refreshAttributePathString();
 		}
 	}
@@ -363,7 +366,7 @@ public class AttributePath extends DMPJPAObject {
 
 			attributePath = orderedAttributesJSON.toString();
 		} else {
-			
+
 			attributePath = null;
 		}
 	}
@@ -374,7 +377,7 @@ public class AttributePath extends DMPJPAObject {
 
 			if (attributePath == null) {
 
-				LOG.debug("attributes path JSON is null");
+				LOG.debug("attributes path JSON is null for '" + getId() + "'");
 
 				if (fromScratch) {
 
