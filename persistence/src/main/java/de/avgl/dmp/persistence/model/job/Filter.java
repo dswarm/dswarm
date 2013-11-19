@@ -32,4 +32,15 @@ public class Filter extends BasicDMPJPAObject {
 
 		this.expression = expressionArg;
 	}
+
+	@Override
+	public boolean equals(final Object obj) {
+
+		if (!Filter.class.isInstance(obj)) {
+
+			return false;
+		}
+
+		return super.equals(obj);
+	}
 }

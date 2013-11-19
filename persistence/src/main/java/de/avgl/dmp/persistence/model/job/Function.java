@@ -52,7 +52,7 @@ public class Function extends BasicDMPJPAObject {
 	@JsonIgnore
 	@Lob
 	@Access(AccessType.FIELD)
-	@Column(name = "ATTRIBUTE_PATH", columnDefinition = "VARCHAR(4000)", length = 4000)
+	@Column(name = "PARAMETERS", columnDefinition = "VARCHAR(4000)", length = 4000)
 	private String									parametersString		= null;
 
 	public String getDescription() {
@@ -98,6 +98,17 @@ public class Function extends BasicDMPJPAObject {
 
 			refreshParametersString();
 		}
+	}
+	
+	@Override
+	public boolean equals(final Object obj) {
+
+		if (!Function.class.isInstance(obj)) {
+
+			return false;
+		}
+
+		return super.equals(obj);
 	}
 
 	private void refreshParametersString() {
