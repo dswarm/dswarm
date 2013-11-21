@@ -33,7 +33,7 @@ public class TransformationTest extends GuicedTest {
 		final String functionParameter = "inputString";
 
 		final Function function = new Function();
-		function.setId(functionId);
+		//function.setId(functionId);
 		function.setName(functionName);
 		function.setDescription(functionDescription);
 		function.addParameter(functionParameter);
@@ -48,7 +48,7 @@ public class TransformationTest extends GuicedTest {
 		parameterMapping.put(functionParameterName, componentVariableName);
 
 		final Component component = new Component();
-		component.setId(componentId);
+		//component.setId(componentId);
 		component.setName(componentName);
 		component.setFunction(function);
 		component.setParameterMapping(parameterMapping);
@@ -65,7 +65,7 @@ public class TransformationTest extends GuicedTest {
 		components.add(component);
 
 		final Transformation transformation = new Transformation();
-		transformation.setId(transformationId);
+		//transformation.setId(transformationId);
 		transformation.setName(transformationName);
 		transformation.setDescription(transformationDescription);
 		transformation.setComponents(components);
@@ -123,7 +123,7 @@ public class TransformationTest extends GuicedTest {
 		final String function3Parameter = "replaceString";
 
 		final Function function1 = new Function();
-		function1.setId(function1Id);
+		//function1.setId(function1Id);
 		function1.setName(function1Name);
 		function1.setDescription(function1Description);
 		function1.addParameter(function1Parameter);
@@ -146,7 +146,7 @@ public class TransformationTest extends GuicedTest {
 		parameterMapping1.put(functionParameterName3, componentVariableName3);
 
 		final Component component1 = new Component();
-		component1.setId(component1Id);
+		//component1.setId(component1Id);
 		component1.setName(component1Name);
 		component1.setFunction(function1);
 		component1.setParameterMapping(parameterMapping1);
@@ -159,7 +159,7 @@ public class TransformationTest extends GuicedTest {
 		final String function4Parameter = "inputString";
 
 		final Function function2 = new Function();
-		function2.setId(function2Id);
+		//function2.setId(function2Id);
 		function2.setName(function2Name);
 		function2.setDescription(function2Description);
 		function2.addParameter(function4Parameter);
@@ -174,7 +174,7 @@ public class TransformationTest extends GuicedTest {
 		parameterMapping2.put(functionParameterName4, componentVariableName4);
 
 		final Component component2 = new Component();
-		component2.setId(component2Id);
+		//component2.setId(component2Id);
 		component2.setName(component2Name);
 		component2.setFunction(function2);
 		component2.setParameterMapping(parameterMapping2);
@@ -187,7 +187,7 @@ public class TransformationTest extends GuicedTest {
 		final String functionParameter = "inputString";
 
 		final Function function = new Function();
-		function.setId(functionId);
+		//function.setId(functionId);
 		function.setName(functionName);
 		function.setDescription(functionDescription);
 		function.addParameter(functionParameter);
@@ -210,7 +210,7 @@ public class TransformationTest extends GuicedTest {
 		outputComponents.add(component2);
 
 		final Component component = new Component();
-		component.setId(componentId);
+		//component.setId(componentId);
 		component.setName(componentName);
 		component.setFunction(function);
 		component.setParameterMapping(parameterMapping);
@@ -231,7 +231,7 @@ public class TransformationTest extends GuicedTest {
 		components.add(component2);
 
 		final Transformation transformation = new Transformation();
-		transformation.setId(transformationId);
+		//transformation.setId(transformationId);
 		transformation.setName(transformationName);
 		transformation.setDescription(transformationDescription);
 		transformation.setComponents(components);

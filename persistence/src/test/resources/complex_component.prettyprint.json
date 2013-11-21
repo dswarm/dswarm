@@ -1,14 +1,14 @@
 {
-    "id": "ed7500e1-0a20-419e-94ea-d7ff2a9b6085",
+    "id": 3,
     "name": "my trim component",
     "function": {
-        "id": "1e000179-d7f7-4f20-b766-7a848d5f7fe6"
+        "id": 3
     },
     "input_components": [{
-        "id": "84fb5fb5-486d-4588-a998-bb7dea0661e7"
+        "id": 1
     }],
     "output_components": [{
-        "id": "1692a255-6840-48a1-b2dd-4b68eb38708e"
+        "id": 2
     }],
     "parameter_mappings": {
         "inputString": "previousComponent.outputString"

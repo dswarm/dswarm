@@ -58,7 +58,7 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 	 * 
 	 * @param object the to be updated instance of the specific class
 	 */
-	@Transactional(rollbackOn = DMPPersistenceException.class)
+	@Transactional(rollbackOn = Exception.class)
 	public POJOCLASS updateObjectTransactional(final POJOCLASS object) throws DMPPersistenceException {
 
 		final EntityManager entityManager = entityManagerProvider.get();
@@ -69,11 +69,18 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 
 		updateObjectInternal(object, updateObject, entityManager);
 
-		BasicJPAService.LOG.debug("passed internal object update");
-
 		entityManager.merge(updateObject);
 
 		BasicJPAService.LOG.debug("updated " + className + " with id '" + object.getId() + "' transactional");
+		
+		if (updateObject != null) {
+
+			BasicJPAService.LOG.debug("updated " + className + " with id '" + updateObject.getId() + "' in the database = '"
+					+ ToStringBuilder.reflectionToString(updateObject) + "'");
+		} else {
+
+			BasicJPAService.LOG.debug("couldn't updated " + className + " with id '" + object.getId() + "' in the database");
+		}
 
 		return updateObject;
 	}

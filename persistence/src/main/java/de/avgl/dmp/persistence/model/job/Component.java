@@ -32,7 +32,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import de.avgl.dmp.init.DMPException;
-import de.avgl.dmp.persistence.model.utils.DMPUUIDObjectReferenceSerializer;
+import de.avgl.dmp.persistence.model.utils.DMPJPAObjectReferenceSerializer;
 import de.avgl.dmp.persistence.model.utils.SetComponentReferenceSerializer;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
@@ -59,7 +59,7 @@ public class Component extends BasicDMPJPAObject {
 	@XmlList
 	private Set<Component>							inputComponents					= null;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "OUTPUT_COMPONENTS_INPUT_COMPONENTS", joinColumns = { @JoinColumn(name = "INPUT_COMPONENT_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "OUTPUT_COMPONENT_ID", referencedColumnName = "ID") })
 	@XmlElement(name = "output_components")
 	@JsonSerialize(using = SetComponentReferenceSerializer.class)
@@ -71,7 +71,7 @@ public class Component extends BasicDMPJPAObject {
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "FUNCTION")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	@JsonSerialize(using = DMPUUIDObjectReferenceSerializer.class)
+	@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
 	@XmlIDREF
 	private Function								function						= null;
 
