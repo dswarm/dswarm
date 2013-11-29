@@ -7,6 +7,11 @@ import com.google.inject.Provider;
 
 import de.avgl.dmp.persistence.model.job.Function;
 
+/**
+ * 
+ * @author tgaengler
+ *
+ */
 public class FunctionService extends BasicFunctionService<Function> {
 
 	@Inject

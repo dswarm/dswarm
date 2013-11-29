@@ -8,6 +8,11 @@ import com.google.inject.Provider;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.job.Attribute;
 
+/**
+ * 
+ * @author tgaengler
+ *
+ */
 public class AttributeService extends AdvancedJPAService<Attribute> {
 
 	@Inject

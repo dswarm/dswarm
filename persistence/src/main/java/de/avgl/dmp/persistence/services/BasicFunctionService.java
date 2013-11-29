@@ -9,12 +9,16 @@ import com.google.inject.Provider;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.job.Function;
 
-public abstract class BasicFunctionService<FUNCTIONIMPL extends Function> extends BasicDMPJPAService<FUNCTIONIMPL> {
-
-
+/**
+ * 
+ * @author tgaengler
+ *
+ * @param <FUNCTIONIMPL>
+ */
+public abstract class BasicFunctionService<FUNCTIONIMPL extends Function> extends ExtendedBasicDMPJPAService<FUNCTIONIMPL> {
 
 	public BasicFunctionService(final Class<FUNCTIONIMPL> clasz, final Provider<EntityManager> entityManagerProvider) {
-		
+
 		super(clasz, entityManagerProvider);
 	}
 
@@ -27,10 +31,8 @@ public abstract class BasicFunctionService<FUNCTIONIMPL extends Function> extend
 	protected void updateObjectInternal(final FUNCTIONIMPL object, final FUNCTIONIMPL updateObject, final EntityManager entityManager)
 			throws DMPPersistenceException {
 
-		final String description = object.getDescription();
 		final LinkedList<String> parameters = object.getParameters();
 
-		updateObject.setDescription(description);
 		updateObject.setParameters(parameters);
 
 		super.updateObjectInternal(object, updateObject, entityManager);

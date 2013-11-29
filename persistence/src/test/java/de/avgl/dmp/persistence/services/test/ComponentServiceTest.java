@@ -137,7 +137,7 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<Component, Compo
 		final String functionParameterName4 = "inputString";
 		final String componentVariableName4 = "previousComponent.outputString";
 
-		parameterMapping1.put(functionParameterName4, componentVariableName4);
+		parameterMapping2.put(functionParameterName4, componentVariableName4);
 
 		final Component component2 = createComponent(component2Name, parameterMapping2, function2);
 

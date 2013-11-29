@@ -11,6 +11,11 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 
+/**
+ * 
+ * @author tgaengler
+ *
+ */
 public class ConfigurationService extends BasicIDJPAService<Configuration> {
 
 	@Inject

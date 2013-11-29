@@ -11,6 +11,12 @@ import com.google.inject.persist.Transactional;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.job.BasicDMPObject;
 
+/**
+ * 
+ * @author tgaengler
+ *
+ * @param <POJOCLASS>
+ */
 public abstract class AdvancedJPAService<POJOCLASS extends BasicDMPObject> extends BasicJPAService<POJOCLASS, String> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AdvancedJPAService.class);

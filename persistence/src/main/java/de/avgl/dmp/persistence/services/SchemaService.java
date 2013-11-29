@@ -12,6 +12,11 @@ import de.avgl.dmp.persistence.model.job.AttributePath;
 import de.avgl.dmp.persistence.model.job.Clasz;
 import de.avgl.dmp.persistence.model.job.Schema;
 
+/**
+ * 
+ * @author tgaengler
+ *
+ */
 public class SchemaService extends BasicDMPJPAService<Schema> {
 
 	@Inject

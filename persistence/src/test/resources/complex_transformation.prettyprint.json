@@ -1,42 +1,48 @@
 {
-    "id": "5d66ebb8-4aec-4c5c-b40d-7eb08c41dc96",
+    "id": 6,
     "name": "my transformation",
     "description": "transformation which just makes use of one function",
     "parameters": ["transformationInputString"],
     "components": [{
-        "id": "24fd8f31-bad6-4c6f-88fe-2dafb646c1d7",
-        "name": "my replace component",
-        "function": {
-            "id": "ef761849-9283-49b6-86e0-ee18eee943ea"
-        },
-        "parameter_mappings": {
-            "inputString": "transformationInputString",
-            "regex": "\\.",
-            "replaceString": ":"
-        }
-    }, {
-        "id": "d0740fda-8bb7-42de-b1e0-9503604ad153",
-        "name": "my trim component",
-        "function": {
-            "id": "76f38a3b-8de4-4d0f-85f3-28c144e4eeaf"
-        },
-        "input_components": [{
-            "id": "24fd8f31-bad6-4c6f-88fe-2dafb646c1d7"
-        }],
-        "output_components": [{
-            "id": "a7ac207f-f2d4-4915-9284-84344d877a36"
-        }],
-        "parameter_mappings": {
-            "inputString": "previousComponent.outputString"
-        }
-    }, {
-        "id": "a7ac207f-f2d4-4915-9284-84344d877a36",
+        "id": 3,
         "name": "my lower case component",
         "function": {
-            "id": "35ffa903-15c7-4a60-a7db-36bc6ef58958"
+            "id": 4
         },
+        "input_components": [{
+            "id": 4
+        }],
         "parameter_mappings": {
             "inputString": "previousComponent.outputString"
+        }
+    }, {
+        "id": 4,
+        "name": "my trim component",
+        "function": {
+            "id": 5
+        },
+        "input_components": [{
+            "id": 2
+        }],
+        "output_components": [{
+            "id": 3
+        }],
+        "parameter_mappings": {
+            "inputString": "previousComponent.outputString"
+        }
+    }, {
+        "id": 2,
+        "name": "my replace component",
+        "function": {
+            "id": 3
+        },
+        "output_components": [{
+            "id": 4
+        }],
+        "parameter_mappings": {
+            "inputString": "previousComponent.outputString",
+            "regex": "\\.",
+            "replaceString": ":"
         }
     }]
 }

@@ -89,6 +89,11 @@ public class Component extends BasicDMPJPAObject {
 	@Access(AccessType.FIELD)
 	@Column(name = "PARAMETER_MAPPINGS", columnDefinition = "VARCHAR(4000)", length = 4000)
 	private String									parameterMappingsString			= null;
+	
+//	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH })
+//	@JoinColumn(name = "transformation")
+//	@JsonIgnore
+//	private Transformation transformation = null;
 
 	public Set<Component> getInputComponents() {
 
@@ -105,11 +110,21 @@ public class Component extends BasicDMPJPAObject {
 
 				inputComponent.removeOutputComponent(this);
 			}
+			
+//			inputComponents.clear();
 		}
-
+		
 		inputComponents = inputComponentsArg;
 
 		if (inputComponentsArg != null) {
+			
+//			if(inputComponents == null) {
+//				
+//				inputComponents = Sets.newLinkedHashSet();
+//			}
+//			
+//			inputComponents.clear();
+//			inputComponents.addAll(inputComponentsArg);
 
 			for (final Component inputComponent : inputComponentsArg) {
 
@@ -172,11 +187,21 @@ public class Component extends BasicDMPJPAObject {
 
 				outputComponent.removeInputComponent(this);
 			}
+			
+//			outputComponents.clear();
 		}
-
+		
 		outputComponents = outputComponentsArg;
 
 		if (outputComponentsArg != null) {
+			
+//			if(outputComponents == null) {
+//				
+//				outputComponents = Sets.newLinkedHashSet();
+//			}
+//			
+//			outputComponents.clear();
+//			outputComponents.addAll(outputComponentsArg);
 
 			for (final Component outputComponent : outputComponentsArg) {
 
@@ -243,7 +268,7 @@ public class Component extends BasicDMPJPAObject {
 	}
 
 	public void setParameterMapping(final Map<String, String> parameterMappingsArg) {
-
+		
 		parameterMappings = parameterMappingsArg;
 
 		refreshParameterMappingsString();
@@ -268,6 +293,38 @@ public class Component extends BasicDMPJPAObject {
 			refreshParameterMappingsString();
 		}
 	}
+	
+//	/**
+//	 * Gets the related transformation.
+//	 * 
+//	 * @return the related transformation
+//	 */
+//	public Transformation getTransformation() {
+//
+//		return transformation;
+//	}
+//
+//	/**
+//	 * Sets the related transformation.
+//	 * 
+//	 * @param transformationArg the related transformation
+//	 */
+//	public void setTransformation(final Transformation transformationArg) {
+//
+//		if (transformationArg == null && transformation != null) {
+//
+//			// remove component from transformation when component, will be prepared for removal
+//
+//			transformation.removeComponent(this);
+//		}
+//
+//		transformation = transformationArg;
+//
+//		if (transformationArg != null) {
+//
+//			transformationArg.addComponent(this);
+//		}
+//	}
 
 	@Override
 	public boolean equals(final Object obj) {

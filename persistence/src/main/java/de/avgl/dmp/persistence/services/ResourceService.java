@@ -13,6 +13,11 @@ import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
 
+/**
+ * 
+ * @author tgaengler
+ *
+ */
 public class ResourceService extends BasicIDJPAService<Resource> {
 
 	private final Provider<ConfigurationService>	configurationServiceProvider;

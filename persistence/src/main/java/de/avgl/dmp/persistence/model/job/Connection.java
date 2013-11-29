@@ -56,7 +56,7 @@ public class Connection extends BasicDMPObject {
 	}
 
 	@XmlElement(name = "source")
-	public String getSourceId() {
+	public Long getSourceId() {
 
 		if (this.source == null) {
 
@@ -67,7 +67,7 @@ public class Connection extends BasicDMPObject {
 	}
 
 	@XmlElement(name = "target")
-	public String getTargetId() {
+	public Long getTargetId() {
 
 		if (this.target == null) {
 

@@ -27,6 +27,8 @@ public abstract class IDBasicJPAServiceTest<POJOCLASS extends DMPObject<POJOCLAS
 	 */
 	@Test
 	public void idGenerationTest() {
+		
+		LOG.debug("start id generation test for " + type);
 
 		final Set<POJOCLASS> objectes = Sets.newLinkedHashSet();
 
@@ -44,5 +46,7 @@ public abstract class IDBasicJPAServiceTest<POJOCLASS extends DMPObject<POJOCLAS
 
 			jpaService.deleteObject(object.getId());
 		}
+		
+		LOG.debug("end id generation test for " + type);
 	}
 }

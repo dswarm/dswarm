@@ -11,6 +11,11 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.job.Attribute;
 import de.avgl.dmp.persistence.model.job.AttributePath;
 
+/**
+ * 
+ * @author tgaengler
+ *
+ */
 public class AttributePathService extends BasicIDJPAService<AttributePath> {
 
 	@Inject

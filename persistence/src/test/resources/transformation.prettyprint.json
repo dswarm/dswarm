@@ -1,16 +1,18 @@
 {
-    "id": "1daed667-4a88-44be-87b4-dd4295c1e4a7",
+    "id": 2,
     "name": "my transformation",
     "description": "transformation which just makes use of one function",
     "parameters": ["transformationInputString"],
     "components": [{
-        "id": "4d07359e-29af-4958-96cc-1ba669d34090",
+        "id": 1,
         "name": "my trim component",
         "function": {
-            "id": "3286e23c-227b-484c-ae2a-18b70f05cf8f"
+            "id": 1
         },
+        "input_components": null,
+        "output_components": null,
         "parameter_mappings": {
-            "inputString": "transformationInputString"
+            "inputString": "previousComponent.outputString"
         }
     }]
 }
