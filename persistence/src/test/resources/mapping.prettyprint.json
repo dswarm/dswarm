@@ -1,11 +1,11 @@
 {
-    "id": "ea27284d-f846-4cb0-86a2-472e03a179c0",
+    "id": 1,
     "name": "my mapping",
     "transformation": {
-        "id": "8c71d249-7e8a-4c73-86bd-b3843210d1e9",
+        "id": 2,
         "name": "my transformation (component)",
         "function": {
-            "id": "8c8a8248-bca8-41e4-bcbd-a8b4488193d7"
+            "id": 2
         },
         "parameter_mappings": {
             "transformationInputString": "http://purl.org/dc/terms/title",
@@ -13,11 +13,11 @@
         }
     },
     "input_attribute_paths": [{
-        "id": "a6007cf7-9c6a-4f7e-a74d-441b4d5e9712",
+        "id": 1,
         "attribute_path": "http://purl.org/dc/terms/title"
     }],
     "output_attribute_path": {
-        "id": "dbb755a4-04cd-4d57-ba5c-239fa12570fc",
+        "id": 2,
         "attribute_path": "http://www.w3.org/2000/01/rdf-schema#label"
     }
 }

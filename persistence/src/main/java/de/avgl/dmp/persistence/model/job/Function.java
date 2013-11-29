@@ -86,7 +86,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 			refreshParametersString();
 		}
 	}
-	
+
 	@Override
 	public boolean equals(final Object obj) {
 
@@ -133,33 +133,36 @@ public class Function extends ExtendedBasicDMPJPAObject {
 					parameters = Lists.newLinkedList();
 
 					parametersInitialized = true;
-				}
 
-				return;
+					return;
+				}
 			}
 
-			try {
+			parameters = Lists.newLinkedList();
 
-				parameters = Lists.newLinkedList();
+			if (parametersString != null) {
 
-				// parse parameters string
-				parametersJSON = DMPPersistenceUtil.getJSONArray(parametersString);
+				try {
 
-				if (null != parametersJSON) {
+					// parse parameters string
+					parametersJSON = DMPPersistenceUtil.getJSONArray(parametersString);
 
-					for (final JsonNode parameterNode : parametersJSON) {
+					if (null != parametersJSON) {
 
-						final String parameter = parameterNode.asText();
+						for (final JsonNode parameterNode : parametersJSON) {
 
-						if (null != parameter) {
+							final String parameter = parameterNode.asText();
 
-							parameters.add(parameter);
+							if (null != parameter) {
+
+								parameters.add(parameter);
+							}
 						}
 					}
-				}
-			} catch (final DMPException e) {
+				} catch (final DMPException e) {
 
-				Function.LOG.debug("couldn't parse parameters JSON for function '" + getId() + "'");
+					Function.LOG.debug("couldn't parse parameters JSON for function '" + getId() + "'");
+				}
 			}
 
 			parametersInitialized = true;

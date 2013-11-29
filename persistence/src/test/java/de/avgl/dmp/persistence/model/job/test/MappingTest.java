@@ -29,13 +29,12 @@ public class MappingTest extends GuicedTest {
 	@Test
 	public void simpleMappingTest() {
 
-		final String functionId = UUID.randomUUID().toString();
 		final String functionName = "trim";
 		final String functionDescription = "trims leading and trailing whitespaces from a given string";
 		final String functionParameter = "inputString";
 
 		final Function function = new Function();
-		function.setId(functionId);
+		// function.setId(functionId);
 		function.setName(functionName);
 		function.setDescription(functionDescription);
 		function.addParameter(functionParameter);
@@ -50,7 +49,7 @@ public class MappingTest extends GuicedTest {
 		parameterMappings.put(functionParameterName, componentVariableName);
 
 		final Component component = new Component();
-		component.setId(componentId);
+		// component.setId(componentId);
 		component.setName(componentName);
 		component.setFunction(function);
 		component.setParameterMapping(parameterMappings);
@@ -67,7 +66,7 @@ public class MappingTest extends GuicedTest {
 		components.add(component);
 
 		final Transformation transformation = new Transformation();
-		transformation.setId(transformationId);
+		// transformation.setId(transformationId);
 		transformation.setName(transformationName);
 		transformation.setDescription(transformationDescription);
 		transformation.setComponents(components);
@@ -83,7 +82,7 @@ public class MappingTest extends GuicedTest {
 		final Attribute dctermsTitle = createAttribute(dctermsTitleId, dctermsTitleName);
 
 		final AttributePath inputAttributePath = new AttributePath();
-		inputAttributePath.setId(UUID.randomUUID().toString());
+		// inputAttributePath.setId(UUID.randomUUID().toString());
 
 		inputAttributePath.addAttribute(dctermsTitle);
 
@@ -95,43 +94,35 @@ public class MappingTest extends GuicedTest {
 		final Attribute rdfsLabel = createAttribute(rdfsLabelId, rdfsLabelName);
 
 		final AttributePath outputAttributePath = new AttributePath();
-		outputAttributePath.setId(UUID.randomUUID().toString());
+		// outputAttributePath.setId(UUID.randomUUID().toString());
 
 		outputAttributePath.addAttribute(rdfsLabel);
 
 		// transformation component
 
-		final String transformationComponentId = UUID.randomUUID().toString();
 		final Map<String, String> transformationComponentParameterMappings = Maps.newLinkedHashMap();
 
 		transformationComponentParameterMappings.put(transformation.getParameters().get(0), inputAttributePath.toAttributePath());
 		transformationComponentParameterMappings.put("transformationOutputVariable", outputAttributePath.toAttributePath());
 
 		final Component transformationComponent = new Component();
-		transformationComponent.setId(transformationComponentId);
+		// transformationComponent.setId(transformationComponentId);
 		transformationComponent.setName(transformation.getName() + " (component)");
 		transformationComponent.setFunction(transformation);
 		transformationComponent.setParameterMapping(transformationComponentParameterMappings);
 
 		// mapping
 
-		final String mappingId = UUID.randomUUID().toString();
 		final String mappingName = "my mapping";
 
 		final Mapping mapping = new Mapping();
-		mapping.setId(mappingId);
 		mapping.setName(mappingName);
 		mapping.addInputAttributePath(inputAttributePath);
 		mapping.setOutputAttributePath(outputAttributePath);
 		mapping.setTransformation(transformationComponent);
 
-		Assert.assertNotNull("the mapping id shouldn't be null", mapping.getId());
-		Assert.assertEquals("the mapping ids are not equal", mappingId, mapping.getId());
 		Assert.assertNotNull("the mapping name shouldn't be null", mapping.getName());
-		Assert.assertEquals("the mapping names are not equal", mappingName, mapping.getName());
-		Assert.assertNotNull("the transformation component id shouldn't be null", mapping.getTransformation().getId());
-		Assert.assertEquals("the transformation component ids are not equal", transformationComponent.getId(), mapping.getTransformation().getId());
-		Assert.assertNotNull("the transformation component parameter mappings shouldn't be null", mapping.getTransformation().getParameterMappings());
+		Assert.assertEquals("the mapping names are not equal", mappingName, mapping.getName());Assert.assertNotNull("the transformation component parameter mappings shouldn't be null", mapping.getTransformation().getParameterMappings());
 		Assert.assertEquals("the transformation component parameter mappings' size are not equal", 2, mapping.getTransformation()
 				.getParameterMappings().size());
 		Assert.assertTrue("the transformation component parameter mappings doesn't contain a mapping for function parameter '"
@@ -140,8 +131,6 @@ public class MappingTest extends GuicedTest {
 		Assert.assertEquals("the transformation component parameter mapping for '" + transformation.getParameters().get(0) + "' are not equal",
 				inputAttributePath.toAttributePath(), mapping.getTransformation().getParameterMappings().get(transformation.getParameters().get(0)));
 		Assert.assertNotNull("the transformation shouldn't be null", mapping.getTransformation().getFunction());
-		Assert.assertNotNull("the transformation id shouldn't be null", mapping.getTransformation().getFunction().getId());
-		Assert.assertEquals("the transformation ids are not equal", transformationId, mapping.getTransformation().getFunction().getId());
 		Assert.assertNotNull("the transformation name shouldn't be null", mapping.getTransformation().getFunction().getName());
 		Assert.assertEquals("the transformation names are not equal", transformationName, mapping.getTransformation().getFunction().getName());
 		Assert.assertNotNull("the transformation description shouldn't be null", mapping.getTransformation().getFunction().getDescription());
@@ -156,10 +145,6 @@ public class MappingTest extends GuicedTest {
 				((Transformation) mapping.getTransformation().getFunction()).getComponents());
 		Assert.assertEquals("the transformation component sets are not equal", components, ((Transformation) mapping.getTransformation()
 				.getFunction()).getComponents());
-		Assert.assertNotNull("the component id shouldn't be null", ((Transformation) mapping.getTransformation().getFunction()).getComponents()
-				.iterator().next().getId());
-		Assert.assertEquals("the component ids are not equal", componentId, ((Transformation) mapping.getTransformation().getFunction())
-				.getComponents().iterator().next().getId());
 		Assert.assertNotNull("the component name shouldn't be null", ((Transformation) mapping.getTransformation().getFunction()).getComponents()
 				.iterator().next().getName());
 		Assert.assertEquals("the component names are not equal", componentName, ((Transformation) mapping.getTransformation().getFunction())
@@ -196,7 +181,6 @@ public class MappingTest extends GuicedTest {
 
 		// previous component
 
-		final String function1Id = UUID.randomUUID().toString();
 		final String function1Name = "replace";
 		final String function1Description = "replace certain parts of a given string that matches a certain regex";
 		final String function1Parameter = "inputString";
@@ -204,14 +188,13 @@ public class MappingTest extends GuicedTest {
 		final String function3Parameter = "replaceString";
 
 		final Function function1 = new Function();
-		function1.setId(function1Id);
+		// function1.setId(function1Id);
 		function1.setName(function1Name);
 		function1.setDescription(function1Description);
 		function1.addParameter(function1Parameter);
 		function1.addParameter(function2Parameter);
 		function1.addParameter(function3Parameter);
 
-		final String component1Id = UUID.randomUUID().toString();
 		final String component1Name = "my replace component";
 		final Map<String, String> parameterMapping1 = Maps.newLinkedHashMap();
 
@@ -227,25 +210,23 @@ public class MappingTest extends GuicedTest {
 		parameterMapping1.put(functionParameterName3, componentVariableName3);
 
 		final Component component1 = new Component();
-		component1.setId(component1Id);
+		// component1.setId(component1Id);
 		component1.setName(component1Name);
 		component1.setFunction(function1);
 		component1.setParameterMapping(parameterMapping1);
 
 		// next component
 
-		final String function2Id = UUID.randomUUID().toString();
 		final String function2Name = "lower_case";
 		final String function2Description = "lower cases all characters of a given string";
 		final String function4Parameter = "inputString";
 
 		final Function function2 = new Function();
-		function2.setId(function2Id);
+		// function2.setId(function2Id);
 		function2.setName(function2Name);
 		function2.setDescription(function2Description);
 		function2.addParameter(function4Parameter);
 
-		final String component2Id = UUID.randomUUID().toString();
 		final String component2Name = "my lower case component";
 		final Map<String, String> parameterMapping2 = Maps.newLinkedHashMap();
 
@@ -255,25 +236,23 @@ public class MappingTest extends GuicedTest {
 		parameterMapping2.put(functionParameterName4, componentVariableName4);
 
 		final Component component2 = new Component();
-		component2.setId(component2Id);
+		// component2.setId(component2Id);
 		component2.setName(component2Name);
 		component2.setFunction(function2);
 		component2.setParameterMapping(parameterMapping2);
 
 		// main component
 
-		final String functionId = UUID.randomUUID().toString();
 		final String functionName = "trim";
 		final String functionDescription = "trims leading and trailing whitespaces from a given string";
 		final String functionParameter = "inputString";
 
 		final Function function = new Function();
-		function.setId(functionId);
+		// function.setId(functionId);
 		function.setName(functionName);
 		function.setDescription(functionDescription);
 		function.addParameter(functionParameter);
 
-		final String componentId = UUID.randomUUID().toString();
 		final String componentName = "my trim component";
 		final Map<String, String> parameterMapping = Maps.newLinkedHashMap();
 
@@ -291,7 +270,7 @@ public class MappingTest extends GuicedTest {
 		outputComponents.add(component2);
 
 		final Component component = new Component();
-		component.setId(componentId);
+		// component.setId(componentId);
 		component.setName(componentName);
 		component.setFunction(function);
 		component.setParameterMapping(parameterMapping);
@@ -300,7 +279,6 @@ public class MappingTest extends GuicedTest {
 
 		// transformation
 
-		final String transformationId = UUID.randomUUID().toString();
 		final String transformationName = "my clean up transformation";
 		final String transformationDescription = "transformation which makes use of three functions";
 		final String transformationParameter = "transformationInputString";
@@ -312,7 +290,7 @@ public class MappingTest extends GuicedTest {
 		components.add(component2);
 
 		final Transformation transformation = new Transformation();
-		transformation.setId(transformationId);
+		// transformation.setId(transformationId);
 		transformation.setName(transformationName);
 		transformation.setDescription(transformationDescription);
 		transformation.setComponents(components);
@@ -326,7 +304,7 @@ public class MappingTest extends GuicedTest {
 		transformationComponentParameterMappings.put("transformationInputString", "firstName");
 
 		final Component transformationComponent = new Component();
-		transformationComponent.setId(transformationComponentId);
+		// transformationComponent.setId(transformationComponentId);
 		transformationComponent.setName("prepare first name");
 		transformationComponent.setFunction(transformation);
 		transformationComponent.setParameterMapping(transformationComponentParameterMappings);
@@ -339,27 +317,25 @@ public class MappingTest extends GuicedTest {
 		transformationComponentParameterMappings2.put("transformationInputString", "familyName");
 
 		final Component transformationComponent2 = new Component();
-		transformationComponent2.setId(transformationComponentId2);
+		// transformationComponent2.setId(transformationComponentId2);
 		transformationComponent2.setName("prepare family name");
 		transformationComponent2.setFunction(transformation);
 		transformationComponent2.setParameterMapping(transformationComponentParameterMappings2);
 
 		// concat component -> full name
 
-		final String function4Id = UUID.randomUUID().toString();
 		final String function4Name = "concat";
 		final String function4Description = "concatenates two given string";
 		final String function5Parameter = "firstString";
 		final String function6Parameter = "secondString";
 
 		final Function function4 = new Function();
-		function4.setId(function4Id);
+		// function4.setId(function4Id);
 		function4.setName(function4Name);
 		function4.setDescription(function4Description);
 		function4.addParameter(function5Parameter);
 		function4.addParameter(function6Parameter);
 
-		final String component4Id = UUID.randomUUID().toString();
 		final String component4Name = "full name";
 		final Map<String, String> parameterMapping4 = Maps.newLinkedHashMap();
 
@@ -372,7 +348,7 @@ public class MappingTest extends GuicedTest {
 		parameterMapping4.put(functionParameterName6, componentVariableName6);
 
 		final Component component4 = new Component();
-		component4.setId(component4Id);
+		// component4.setId(component4Id);
 		component4.setName(component4Name);
 		component4.setFunction(function4);
 		component4.setParameterMapping(parameterMapping4);
@@ -400,7 +376,6 @@ public class MappingTest extends GuicedTest {
 
 		// transformation
 
-		final String transformation2Id = UUID.randomUUID().toString();
 		final String transformation2Name = "my transformation";
 		final String transformation2Description = "transformation which makes use of three functions (two transformations and one funcion)";
 		final String transformation2Parameter = "firstName";
@@ -413,7 +388,7 @@ public class MappingTest extends GuicedTest {
 		components2.add(component4);
 
 		final Transformation transformation2 = new Transformation();
-		transformation2.setId(transformation2Id);
+		// transformation2.setId(transformation2Id);
 		transformation2.setName(transformation2Name);
 		transformation2.setDescription(transformation2Description);
 		transformation2.setComponents(components2);
@@ -437,7 +412,7 @@ public class MappingTest extends GuicedTest {
 		final Attribute firstName = createAttribute(firstNameId, firstNameName);
 
 		final AttributePath firstNameAttributePath = new AttributePath();
-		firstNameAttributePath.setId(UUID.randomUUID().toString());
+		// firstNameAttributePath.setId(UUID.randomUUID().toString());
 
 		firstNameAttributePath.addAttribute(dctermsCreator);
 		firstNameAttributePath.addAttribute(firstName);
@@ -450,7 +425,7 @@ public class MappingTest extends GuicedTest {
 		final Attribute familyName = createAttribute(familyNameId, familyNameName);
 
 		final AttributePath familyNameAttributePath = new AttributePath();
-		familyNameAttributePath.setId(UUID.randomUUID().toString());
+		// familyNameAttributePath.setId(UUID.randomUUID().toString());
 
 		familyNameAttributePath.addAttribute(dctermsCreator);
 		familyNameAttributePath.addAttribute(familyName);
@@ -463,14 +438,13 @@ public class MappingTest extends GuicedTest {
 		final Attribute foafName = createAttribute(foafNameId, foafNameName);
 
 		final AttributePath nameAttributePath = new AttributePath();
-		nameAttributePath.setId(UUID.randomUUID().toString());
+		// nameAttributePath.setId(UUID.randomUUID().toString());
 
 		nameAttributePath.addAttribute(dctermsCreator);
 		nameAttributePath.addAttribute(foafName);
 
 		// transformation component
 
-		final String transformationComponent3Id = UUID.randomUUID().toString();
 		final Map<String, String> transformationComponent3ParameterMappings = Maps.newLinkedHashMap();
 
 		transformationComponent3ParameterMappings.put(transformation2Parameter, firstNameAttributePath.toAttributePath());
@@ -478,77 +452,94 @@ public class MappingTest extends GuicedTest {
 		transformationComponent3ParameterMappings.put("transformationOutputVariable", nameAttributePath.toAttributePath());
 
 		final Component transformationComponent3 = new Component();
-		transformationComponent3.setId(transformationComponent3Id);
+		// transformationComponent3.setId(transformationComponent3Id);
 		transformationComponent3.setName(transformation2.getName() + " (component)");
 		transformationComponent3.setFunction(transformation2);
 		transformationComponent3.setParameterMapping(transformationComponent3ParameterMappings);
 
 		// mapping
 
-		final String mappingId = UUID.randomUUID().toString();
 		final String mappingName = "my mapping";
 
 		final Mapping mapping = new Mapping();
-		mapping.setId(mappingId);
+		// mapping.setId(mappingId);
 		mapping.setName(mappingName);
 		mapping.addInputAttributePath(firstNameAttributePath);
 		mapping.addInputAttributePath(familyNameAttributePath);
 		mapping.setOutputAttributePath(nameAttributePath);
 		mapping.setTransformation(transformationComponent3);
 
-//		Assert.assertNotNull("the mapping id shouldn't be null", mapping.getId());
-//		Assert.assertEquals("the mapping ids are not equal", mappingId, mapping.getId());
-//		Assert.assertNotNull("the mapping name shouldn't be null", mapping.getName());
-//		Assert.assertEquals("the mapping names are not equal", mappingName, mapping.getName());
-//		Assert.assertNotNull("the transformation component id shouldn't be null", mapping.getTransformation().getId());
-//		Assert.assertEquals("the transformation component ids are not equal", transformationComponent.getId(), mapping.getTransformation().getId());
-//		Assert.assertNotNull("the transformation component parameter mappings shouldn't be null", mapping.getTransformation().getParameterMappings());
-//		Assert.assertEquals("the transformation component parameter mappings' size are not equal", 2, mapping.getTransformation()
-//				.getParameterMappings().size());
-//		Assert.assertTrue("the transformation component parameter mappings doesn't contain a mapping for function parameter '"
-//				+ transformation.getParameters().get(0) + "'",
-//				mapping.getTransformation().getParameterMappings().containsKey(transformation.getParameters().get(0)));
-//		Assert.assertEquals("the transformation component parameter mapping for '" + transformation.getParameters().get(0) + "' are not equal",
-//				firstNameAttributePath.toAttributePath(),
-//				mapping.getTransformation().getParameterMappings().get(transformation.getParameters().get(0)));
-//		Assert.assertNotNull("the transformation shouldn't be null", mapping.getTransformation().getFunction());
-//		Assert.assertNotNull("the transformation id shouldn't be null", mapping.getTransformation().getFunction().getId());
-//		Assert.assertEquals("the transformation ids are not equal", transformationId, mapping.getTransformation().getFunction().getId());
-//		Assert.assertNotNull("the transformation name shouldn't be null", mapping.getTransformation().getFunction().getName());
-//		Assert.assertEquals("the transformation names are not equal", transformationName, mapping.getTransformation().getFunction().getName());
-//		Assert.assertNotNull("the transformation description shouldn't be null", mapping.getTransformation().getFunction().getDescription());
-//		Assert.assertEquals("the transformation descriptions are not equal", transformationDescription, mapping.getTransformation().getFunction()
-//				.getDescription());
-//		Assert.assertEquals("the transformation parameters' size are not equal", 1, mapping.getTransformation().getFunction().getParameters().size());
-//		Assert.assertTrue("the transformation parameters doesn't contain transformation parameter '" + transformationParameter + "'", mapping
-//				.getTransformation().getFunction().getParameters().contains(transformationParameter));
-//		Assert.assertEquals("the transformation parameter for '" + transformationParameter + "' are not equal", transformationParameter, mapping
-//				.getTransformation().getFunction().getParameters().iterator().next());
-//		Assert.assertNotNull("the transformation components set shouldn't be null",
-//				((Transformation) mapping.getTransformation().getFunction()).getComponents());
-//		Assert.assertEquals("the transformation component sets are not equal", components, ((Transformation) mapping.getTransformation()
-//				.getFunction()).getComponents());
-//		Assert.assertNotNull("the component id shouldn't be null", ((Transformation) mapping.getTransformation().getFunction()).getComponents()
-//				.iterator().next().getId());
-//		Assert.assertEquals("the component ids are not equal", componentId, ((Transformation) mapping.getTransformation().getFunction())
-//				.getComponents().iterator().next().getId());
-//		Assert.assertNotNull("the component name shouldn't be null", ((Transformation) mapping.getTransformation().getFunction()).getComponents()
-//				.iterator().next().getName());
-//		Assert.assertEquals("the component names are not equal", componentName, ((Transformation) mapping.getTransformation().getFunction())
-//				.getComponents().iterator().next().getName());
-//		Assert.assertNotNull("the component parameter mappings shouldn't be null", ((Transformation) mapping.getTransformation().getFunction())
-//				.getComponents().iterator().next().getParameterMappings());
-//		Assert.assertEquals("the component parameter mappings' size are not equal", 1, ((Transformation) mapping.getTransformation().getFunction())
-//				.getComponents().iterator().next().getParameterMappings().size());
-//		Assert.assertTrue(
-//				"the component parameter mappings doesn't contain a mapping for function parameter '" + functionParameterName + "'",
-//				((Transformation) mapping.getTransformation().getFunction()).getComponents().iterator().next().getParameterMappings()
-//						.containsKey(functionParameterName));
-//		Assert.assertEquals(
-//				"the component parameter mapping for '" + functionParameterName + "' are not equal",
-//				componentVariableName,
-//				((Transformation) mapping.getTransformation().getFunction()).getComponents().iterator().next().getParameterMappings()
-//						.get(functionParameterName));
+		// Assert.assertNotNull("the mapping id shouldn't be null", mapping.getId());
+		// Assert.assertEquals("the mapping ids are not equal", mappingId, mapping.getId());
+		// Assert.assertNotNull("the mapping name shouldn't be null", mapping.getName());
+		// Assert.assertEquals("the mapping names are not equal", mappingName, mapping.getName());
+		// Assert.assertNotNull("the transformation component id shouldn't be null", mapping.getTransformation().getId());
+		// Assert.assertEquals("the transformation component ids are not equal", transformationComponent.getId(),
+		// mapping.getTransformation().getId());
+		// Assert.assertNotNull("the transformation component parameter mappings shouldn't be null",
+		// mapping.getTransformation().getParameterMappings());
+		// Assert.assertEquals("the transformation component parameter mappings' size are not equal", 2,
+		// mapping.getTransformation()
+		// .getParameterMappings().size());
+		// Assert.assertTrue("the transformation component parameter mappings doesn't contain a mapping for function parameter '"
+		// + transformation.getParameters().get(0) + "'",
+		// mapping.getTransformation().getParameterMappings().containsKey(transformation.getParameters().get(0)));
+		// Assert.assertEquals("the transformation component parameter mapping for '" + transformation.getParameters().get(0) +
+		// "' are not equal",
+		// firstNameAttributePath.toAttributePath(),
+		// mapping.getTransformation().getParameterMappings().get(transformation.getParameters().get(0)));
+		// Assert.assertNotNull("the transformation shouldn't be null", mapping.getTransformation().getFunction());
+		// Assert.assertNotNull("the transformation id shouldn't be null", mapping.getTransformation().getFunction().getId());
+		// Assert.assertEquals("the transformation ids are not equal", transformationId,
+		// mapping.getTransformation().getFunction().getId());
+		// Assert.assertNotNull("the transformation name shouldn't be null", mapping.getTransformation().getFunction().getName());
+		// Assert.assertEquals("the transformation names are not equal", transformationName,
+		// mapping.getTransformation().getFunction().getName());
+		// Assert.assertNotNull("the transformation description shouldn't be null",
+		// mapping.getTransformation().getFunction().getDescription());
+		// Assert.assertEquals("the transformation descriptions are not equal", transformationDescription,
+		// mapping.getTransformation().getFunction()
+		// .getDescription());
+		// Assert.assertEquals("the transformation parameters' size are not equal", 1,
+		// mapping.getTransformation().getFunction().getParameters().size());
+		// Assert.assertTrue("the transformation parameters doesn't contain transformation parameter '" + transformationParameter
+		// + "'", mapping
+		// .getTransformation().getFunction().getParameters().contains(transformationParameter));
+		// Assert.assertEquals("the transformation parameter for '" + transformationParameter + "' are not equal",
+		// transformationParameter, mapping
+		// .getTransformation().getFunction().getParameters().iterator().next());
+		// Assert.assertNotNull("the transformation components set shouldn't be null",
+		// ((Transformation) mapping.getTransformation().getFunction()).getComponents());
+		// Assert.assertEquals("the transformation component sets are not equal", components, ((Transformation)
+		// mapping.getTransformation()
+		// .getFunction()).getComponents());
+		// Assert.assertNotNull("the component id shouldn't be null", ((Transformation)
+		// mapping.getTransformation().getFunction()).getComponents()
+		// .iterator().next().getId());
+		// Assert.assertEquals("the component ids are not equal", componentId, ((Transformation)
+		// mapping.getTransformation().getFunction())
+		// .getComponents().iterator().next().getId());
+		// Assert.assertNotNull("the component name shouldn't be null", ((Transformation)
+		// mapping.getTransformation().getFunction()).getComponents()
+		// .iterator().next().getName());
+		// Assert.assertEquals("the component names are not equal", componentName, ((Transformation)
+		// mapping.getTransformation().getFunction())
+		// .getComponents().iterator().next().getName());
+		// Assert.assertNotNull("the component parameter mappings shouldn't be null", ((Transformation)
+		// mapping.getTransformation().getFunction())
+		// .getComponents().iterator().next().getParameterMappings());
+		// Assert.assertEquals("the component parameter mappings' size are not equal", 1, ((Transformation)
+		// mapping.getTransformation().getFunction())
+		// .getComponents().iterator().next().getParameterMappings().size());
+		// Assert.assertTrue(
+		// "the component parameter mappings doesn't contain a mapping for function parameter '" + functionParameterName + "'",
+		// ((Transformation) mapping.getTransformation().getFunction()).getComponents().iterator().next().getParameterMappings()
+		// .containsKey(functionParameterName));
+		// Assert.assertEquals(
+		// "the component parameter mapping for '" + functionParameterName + "' are not equal",
+		// componentVariableName,
+		// ((Transformation) mapping.getTransformation().getFunction()).getComponents().iterator().next().getParameterMappings()
+		// .get(functionParameterName));
 
 		String json = null;
 
@@ -561,7 +552,7 @@ public class MappingTest extends GuicedTest {
 		}
 
 		LOG.debug("mapping json: " + json);
-		
+
 		try {
 
 			json = objectMapper.writeValueAsString(transformation2);
