@@ -28,7 +28,7 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "FUNCTION")
-public class Function extends BasicDMPJPAObject {
+public class Function extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * 
@@ -36,9 +36,6 @@ public class Function extends BasicDMPJPAObject {
 	private static final long						serialVersionUID		= 1L;
 
 	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(AttributePath.class);
-
-	@Column(name = "DESCRIPTION", columnDefinition = "VARCHAR(4000)", length = 4000)
-	private String									description				= null;
 
 	@Transient
 	private LinkedList<String>						parameters				= null;
@@ -54,16 +51,6 @@ public class Function extends BasicDMPJPAObject {
 	@Access(AccessType.FIELD)
 	@Column(name = "PARAMETERS", columnDefinition = "VARCHAR(4000)", length = 4000)
 	private String									parametersString		= null;
-
-	public String getDescription() {
-
-		return description;
-	}
-
-	public void setDescription(final String description) {
-
-		this.description = description;
-	}
 
 	@XmlElement(name = "parameters")
 	public LinkedList<String> getParameters() {
