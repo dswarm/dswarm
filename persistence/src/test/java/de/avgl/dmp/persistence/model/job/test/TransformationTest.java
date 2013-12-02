@@ -51,7 +51,7 @@ public class TransformationTest extends GuicedTest {
 		//component.setId(componentId);
 		component.setName(componentName);
 		component.setFunction(function);
-		component.setParameterMapping(parameterMapping);
+		component.setParameterMappings(parameterMapping);
 
 		// transformation
 
@@ -149,7 +149,7 @@ public class TransformationTest extends GuicedTest {
 		//component1.setId(component1Id);
 		component1.setName(component1Name);
 		component1.setFunction(function1);
-		component1.setParameterMapping(parameterMapping1);
+		component1.setParameterMappings(parameterMapping1);
 
 		// next component
 
@@ -177,7 +177,7 @@ public class TransformationTest extends GuicedTest {
 		//component2.setId(component2Id);
 		component2.setName(component2Name);
 		component2.setFunction(function2);
-		component2.setParameterMapping(parameterMapping2);
+		component2.setParameterMappings(parameterMapping2);
 
 		// main component
 
@@ -213,7 +213,7 @@ public class TransformationTest extends GuicedTest {
 		//component.setId(componentId);
 		component.setName(componentName);
 		component.setFunction(function);
-		component.setParameterMapping(parameterMapping);
+		component.setParameterMappings(parameterMapping);
 		component.setInputComponents(inputComponents);
 		component.setOutputComponents(outputComponents);
 

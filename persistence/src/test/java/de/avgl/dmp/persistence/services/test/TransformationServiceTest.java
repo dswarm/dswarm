@@ -401,7 +401,7 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<Transformat
 
 		component.setName(name);
 		component.setFunction(function);
-		component.setParameterMapping(parameterMappings);
+		component.setParameterMappings(parameterMappings);
 
 		if (inputComponents != null) {
 			component.setInputComponents(inputComponents);

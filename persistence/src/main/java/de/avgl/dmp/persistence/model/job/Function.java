@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
@@ -61,8 +62,25 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	}
 
 	public void setParameters(final LinkedList<String> parametersArg) {
+		
+		if (parametersArg == null && parameters != null) {
 
-		parameters = parametersArg;
+			parameters.clear();
+		}
+
+		if (parametersArg != null) {
+
+			if (parameters == null) {
+
+				parameters = Lists.newLinkedList();
+			}
+
+			if (!parameters.equals(parametersArg)) {
+
+				parameters.clear();
+				parameters.addAll(parametersArg);
+			}
+		}
 
 		refreshParametersString();
 	}
@@ -123,7 +141,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 		if (parametersJSON == null && !parametersInitialized) {
 
-			if (parameters == null) {
+			if (parametersString == null) {
 
 				Function.LOG.debug("parameters JSON is null for '" + getId() + "'");
 
@@ -133,36 +151,33 @@ public class Function extends ExtendedBasicDMPJPAObject {
 					parameters = Lists.newLinkedList();
 
 					parametersInitialized = true;
-
-					return;
 				}
+				
+				return;
 			}
 
-			parameters = Lists.newLinkedList();
+			try {
 
-			if (parametersString != null) {
+				parameters = Lists.newLinkedList();
 
-				try {
+				// parse parameters string
+				parametersJSON = DMPPersistenceUtil.getJSONArray(parametersString);
 
-					// parse parameters string
-					parametersJSON = DMPPersistenceUtil.getJSONArray(parametersString);
+				if (null != parametersJSON) {
 
-					if (null != parametersJSON) {
+					for (final JsonNode parameterNode : parametersJSON) {
 
-						for (final JsonNode parameterNode : parametersJSON) {
+						final String parameter = parameterNode.asText();
 
-							final String parameter = parameterNode.asText();
+						if (null != parameter) {
 
-							if (null != parameter) {
-
-								parameters.add(parameter);
-							}
+							parameters.add(parameter);
 						}
 					}
-				} catch (final DMPException e) {
-
-					Function.LOG.debug("couldn't parse parameters JSON for function '" + getId() + "'");
 				}
+			} catch (final DMPException e) {
+
+				Function.LOG.debug("couldn't parse parameters JSON for function '" + getId() + "'");
 			}
 
 			parametersInitialized = true;

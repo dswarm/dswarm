@@ -54,7 +54,7 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<Component, Compo
 		final Component component = createObject();
 		component.setName(componentName);
 		component.setFunction(function);
-		component.setParameterMapping(parameterMapping);
+		component.setParameterMappings(parameterMapping);
 
 		final Component updatedComponent = updateObjectTransactional(component);
 
@@ -172,7 +172,7 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<Component, Compo
 		final Component component = createObject();
 		component.setName(componentName);
 		component.setFunction(function);
-		component.setParameterMapping(parameterMapping);
+		component.setParameterMappings(parameterMapping);
 		component.setInputComponents(inputComponents);
 		component.setOutputComponents(outputComponents);
 
@@ -289,7 +289,7 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<Component, Compo
 
 		component.setName(name);
 		component.setFunction(function);
-		component.setParameterMapping(parameterMappings);
+		component.setParameterMappings(parameterMappings);
 
 		Component updatedComponent = null;
 

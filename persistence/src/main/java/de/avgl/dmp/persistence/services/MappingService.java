@@ -46,6 +46,8 @@ public class MappingService extends BasicDMPJPAService<Mapping> {
 	protected void updateObjectInternal(final Mapping object, final Mapping updateObject, final EntityManager entityManager)
 			throws DMPPersistenceException {
 
+		super.updateObjectInternal(object, updateObject, entityManager);
+		
 		final Set<AttributePath> inputAttributePaths = object.getInputAttributePaths();
 		final AttributePath outputAttributePath = object.getOutputAttributePath();
 		final Filter inputFilter = object.getInputFilter();
@@ -57,8 +59,6 @@ public class MappingService extends BasicDMPJPAService<Mapping> {
 		updateObject.setInputFilter(inputFilter);
 		updateObject.setOutputFilter(outputFilter);
 		updateObject.setTransformation(transformation);
-
-		super.updateObjectInternal(object, updateObject, entityManager);
 	}
 
 }

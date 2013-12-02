@@ -83,7 +83,7 @@ public class JobTest extends GuicedTest {
 		component.setId(componentId);
 		component.setName(componentName);
 		component.setFunction(function);
-		component.setParameterMapping(parameterMappings);
+		component.setParameterMappings(parameterMappings);
 
 		// transformation
 
@@ -141,7 +141,7 @@ public class JobTest extends GuicedTest {
 		transformationComponent.setId(transformationComponentId);
 		transformationComponent.setName(transformation.getName() + " (component)");
 		transformationComponent.setFunction(transformation);
-		transformationComponent.setParameterMapping(transformationComponentParameterMappings);
+		transformationComponent.setParameterMappings(transformationComponentParameterMappings);
 
 		// mapping
 
@@ -261,7 +261,7 @@ public class JobTest extends GuicedTest {
 		component1.setId(component1Id);
 		component1.setName(component1Name);
 		component1.setFunction(function1);
-		component1.setParameterMapping(parameterMapping1);
+		component1.setParameterMappings(parameterMapping1);
 
 		// next component
 
@@ -289,7 +289,7 @@ public class JobTest extends GuicedTest {
 		component2.setId(component2Id);
 		component2.setName(component2Name);
 		component2.setFunction(function2);
-		component2.setParameterMapping(parameterMapping2);
+		component2.setParameterMappings(parameterMapping2);
 
 		// main component
 
@@ -325,7 +325,7 @@ public class JobTest extends GuicedTest {
 		component.setId(componentId);
 		component.setName(componentName);
 		component.setFunction(function);
-		component.setParameterMapping(parameterMapping);
+		component.setParameterMappings(parameterMapping);
 		component.setInputComponents(inputComponents);
 		component.setOutputComponents(outputComponents);
 
@@ -360,7 +360,7 @@ public class JobTest extends GuicedTest {
 		transformationComponent.setId(transformationComponentId);
 		transformationComponent.setName("prepare first name");
 		transformationComponent.setFunction(transformation);
-		transformationComponent.setParameterMapping(transformationComponentParameterMappings);
+		transformationComponent.setParameterMappings(transformationComponentParameterMappings);
 
 		// transformation component 1 (in main transformation) -> clean family name
 
@@ -373,7 +373,7 @@ public class JobTest extends GuicedTest {
 		transformationComponent2.setId(transformationComponentId2);
 		transformationComponent2.setName("prepare family name");
 		transformationComponent2.setFunction(transformation);
-		transformationComponent2.setParameterMapping(transformationComponentParameterMappings2);
+		transformationComponent2.setParameterMappings(transformationComponentParameterMappings2);
 
 		// concat component -> full name
 
@@ -406,7 +406,7 @@ public class JobTest extends GuicedTest {
 		component4.setId(component4Id);
 		component4.setName(component4Name);
 		component4.setFunction(function4);
-		component4.setParameterMapping(parameterMapping4);
+		component4.setParameterMappings(parameterMapping4);
 
 		final Set<Component> transformationComponentOutputComponents = Sets.newLinkedHashSet();
 
@@ -512,7 +512,7 @@ public class JobTest extends GuicedTest {
 		transformationComponent3.setId(transformationComponent3Id);
 		transformationComponent3.setName(transformation2.getName() + " (component)");
 		transformationComponent3.setFunction(transformation2);
-		transformationComponent3.setParameterMapping(transformationComponent3ParameterMappings);
+		transformationComponent3.setParameterMappings(transformationComponent3ParameterMappings);
 
 		// mapping
 
