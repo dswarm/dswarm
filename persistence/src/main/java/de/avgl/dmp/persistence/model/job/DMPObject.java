@@ -1,5 +1,8 @@
 package de.avgl.dmp.persistence.model.job;
 
+import java.io.Serializable;
+
+import javax.persistence.MappedSuperclass;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -7,31 +10,15 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.google.common.base.Objects;
 
 @XmlRootElement
-public class DMPObject {
+@MappedSuperclass
+public abstract class DMPObject<IDTYPE> implements Serializable {
 
-	private String	id;
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
 
-	private String	name;
-
-	public String getId() {
-
-		return id;
-	}
-
-	public void setId(final String id) {
-
-		this.id = id;
-	}
-
-	public String getName() {
-
-		return name;
-	}
-
-	public void setName(final String name) {
-
-		this.name = name;
-	}
+	public abstract IDTYPE getId();
 
 	@Override
 	public int hashCode() {
@@ -47,7 +34,7 @@ public class DMPObject {
 			return false;
 		}
 
-		return Objects.equal(((DMPObject) obj).getId(), getId());
+		return Objects.equal(((DMPObject<?>) obj).getId(), getId());
 	}
 
 	@Override

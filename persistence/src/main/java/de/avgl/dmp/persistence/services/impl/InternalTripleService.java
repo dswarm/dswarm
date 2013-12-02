@@ -23,9 +23,7 @@ import de.avgl.dmp.persistence.services.InternalService;
 import de.avgl.dmp.persistence.services.ResourceService;
 
 /**
- *
  * @author tgaengler
- *
  */
 @Singleton
 public class InternalTripleService implements InternalService {
@@ -101,7 +99,7 @@ public class InternalTripleService implements InternalService {
 	}
 
 	@Override
-	public Optional<Map<String, Model>> getObjects(final Long id, final Long configurationId, final Optional<Integer> atMost)
+	public Optional<Map<String, Model>> getObjects(final Long resourceId, final Long configurationId, final Optional<Integer> atMost)
 			throws DMPPersistenceException {
 
 		if (dataset == null) {
@@ -109,7 +107,7 @@ public class InternalTripleService implements InternalService {
 			throw new DMPPersistenceException("couldn't establish connection to DB, i.e., cannot retrieve model from DB");
 		}
 
-		if (id == null) {
+		if (resourceId == null) {
 
 			throw new DMPPersistenceException("resource id shouldn't be null");
 		}
@@ -119,7 +117,7 @@ public class InternalTripleService implements InternalService {
 			throw new DMPPersistenceException("configuration id shouldn't be null");
 		}
 
-		final String resourceGraphURI = resourceGraphURIPattern.replace("{resourceid}", id.toString()).replace("{configurationid}",
+		final String resourceGraphURI = resourceGraphURIPattern.replace("{resourceid}", resourceId.toString()).replace("{configurationid}",
 				configurationId.toString());
 
 		dataset.begin(ReadWrite.READ);
@@ -128,28 +126,28 @@ public class InternalTripleService implements InternalService {
 
 		if (model == null) {
 
-			LOG.debug("couldn't find model for resource '" + id + "' and configuration id '" + configurationId + " in dataset");
+			LOG.debug("couldn't find model for resource '" + resourceId + "' and configuration id '" + configurationId + " in dataset");
 
 			return Optional.absent();
 		}
 
 		// retrieve resource uri(s) from resource attributes (maybe from resource directly later)
-		final Resource resource = resourceService.getObject(id);
+		final Resource resource = resourceService.getObject(resourceId);
 
 		if (resource == null) {
 
-			LOG.debug("couldn't find resource '" + id + "' to retrieve resource uri from");
+			LOG.debug("couldn't find resource '" + resourceId + "' to retrieve resource uri from");
 
-			throw new DMPPersistenceException("couldn't find resource '" + id + "' to retrieve resource uri from");
+			throw new DMPPersistenceException("couldn't find resource '" + resourceId + "' to retrieve resource uri from");
 		}
 
 		final JsonNode valueNode = resource.getAttribute("uri");
 
 		if (valueNode == null) {
 
-			LOG.debug("couldn't find resource uri in resource '" + id + "'");
+			LOG.debug("couldn't find resource uri in resource '" + resourceId + "'");
 
-			throw new DMPPersistenceException("couldn't find resource uri in resource '" + id + "'");
+			throw new DMPPersistenceException("couldn't find resource uri in resource '" + resourceId + "'");
 		}
 
 		final String resourceURI = valueNode.asText();
@@ -164,14 +162,14 @@ public class InternalTripleService implements InternalService {
 	}
 
 	@Override
-	public void deleteObject(final Long id, final Long configurationId) throws DMPPersistenceException {
+	public void deleteObject(final Long resourceId, final Long configurationId) throws DMPPersistenceException {
 
 		if (dataset == null) {
 
 			throw new DMPPersistenceException("couldn't establish connection to DB, i.e., cannot remove model from DB");
 		}
 
-		if (id == null) {
+		if (resourceId == null) {
 
 			throw new DMPPersistenceException("resource id shouldn't be null");
 		}
@@ -181,7 +179,7 @@ public class InternalTripleService implements InternalService {
 			throw new DMPPersistenceException("configuration id shouldn't be null");
 		}
 
-		final String resourceGraphURI = resourceGraphURIPattern.replace("{resourceid}", id.toString()).replace("{configurationid}",
+		final String resourceGraphURI = resourceGraphURIPattern.replace("{resourceid}", resourceId.toString()).replace("{configurationid}",
 				configurationId.toString());
 
 		dataset.begin(ReadWrite.WRITE);
@@ -191,7 +189,7 @@ public class InternalTripleService implements InternalService {
 	}
 
 	@Override
-	public Optional<Set<String>> getSchema(final Long id, final Long configurationId) {
+	public Optional<Set<String>> getSchema(final Long resourceId, final Long configurationId) {
 
 		throw new NotImplementedException("schema storage is not implemented yet");
 	}

@@ -10,11 +10,11 @@ import de.avgl.dmp.persistence.model.internal.Model;
 
 public interface InternalService {
 
-	void createObject(Long id, Long id1, Object model) throws DMPPersistenceException;
+	void createObject(Long resourceId, Long configurationId, Object model) throws DMPPersistenceException;
 
-	Optional<Map<String, Model>> getObjects(Long id, Long configurationId, Optional<Integer> atMost) throws DMPPersistenceException;
+	Optional<Map<String, Model>> getObjects(Long resourceId, Long configurationId, Optional<Integer> atMost) throws DMPPersistenceException;
 
-	void deleteObject(Long id, Long configurationId) throws DMPPersistenceException;
+	void deleteObject(Long resourceId, Long configurationId) throws DMPPersistenceException;
 
-	Optional<Set<String>> getSchema(Long id, Long configurationId);
+	Optional<Set<String>> getSchema(Long resourceId, Long configurationId);
 }

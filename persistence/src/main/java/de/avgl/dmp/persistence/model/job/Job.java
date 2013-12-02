@@ -5,23 +5,29 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * 
  * @author tgaengler
- *
  */
 @XmlRootElement
-public class Job extends DMPObject {
+public class Job extends BasicDMPObject {
 
-	private List<Transformation>	transformations;
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+	private List<Mapping>		mappings;
 
-	public List<Transformation> getTransformations() {
+	public Job(final String id) {
 
-		return transformations;
+		super(id);
 	}
 
-	public void setTransformations(final List<Transformation> transformations) {
+	public List<Mapping> getMappings() {
 
-		this.transformations = transformations;
+		return mappings;
 	}
 
+	public void setMappings(final List<Mapping> mappingsArg) {
+
+		mappings = mappingsArg;
+	}
 }

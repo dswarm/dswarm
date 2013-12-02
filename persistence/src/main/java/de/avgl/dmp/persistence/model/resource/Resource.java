@@ -73,7 +73,7 @@ public class Resource extends DMPJPAObject {
 	 * All configurations of the resource.
 	 */
 	// TODO set correct casacade type
-	@ManyToMany(mappedBy = "resources", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(mappedBy = "resources", fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	// @JsonSerialize(using = ConfigurationReferenceSerializer.class)
 	// @JsonDeserialize(using = ConfigurationReferenceDeserializer.class)
 	@XmlIDREF
@@ -159,8 +159,6 @@ public class Resource extends DMPJPAObject {
 	 * @param configurationsArg all configurations of the resource
 	 */
 	public void setConfigurations(final Set<Configuration> configurationsArg) {
-
-		this.configurations = configurationsArg;
 
 		if (configurationsArg == null && configurations != null) {
 

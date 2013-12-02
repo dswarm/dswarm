@@ -17,7 +17,7 @@ public class ResourceReferenceDeserializer extends ReferenceDeserializer<Resourc
 	 * can't we retrieve the service directly?
 	 */
 	@Override
-	BasicJPAService<Resource> getJpaService() throws DMPException {
+	BasicJPAService<Resource, Long> getJpaService() throws DMPException {
 		return DMPPersistenceUtil.getInjector().getInstance(ResourceService.class);
 	}
 }
