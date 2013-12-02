@@ -1,0 +1,46 @@
+{
+    "id": 8,
+    "name": "my transformation 2",
+    "description": "transformation which makes use of three functions (two transformations and one funcion)",
+    "parameters": ["firstName", "familyName"],
+    "components": [{
+        "id": 7,
+        "name": "prepare family name",
+        "function": {
+            "id": 6
+        },
+        "output_components": [{
+            "id": 8
+        }],
+        "parameter_mappings": {
+            "transformationInputString": "familyName"
+        }
+    }, {
+        "id": 8,
+        "name": "full name",
+        "function": {
+            "id": 7
+        },
+        "input_components": [{
+            "id": 6
+        }, {
+            "id": 7
+        }],
+        "parameter_mappings": {
+            "firstString": "6.outputVariable",
+            "secondString": "7.outputVariable"
+        }
+    }, {
+        "id": 6,
+        "name": "prepare first name",
+        "function": {
+            "id": 6
+        },
+        "output_components": [{
+            "id": 8
+        }],
+        "parameter_mappings": {
+            "transformationInputString": "firstName"
+        }
+    }]
+}

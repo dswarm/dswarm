@@ -1,0 +1,29 @@
+{
+    "id": 1,
+    "name": "my mapping",
+    "transformation": {
+        "id": 7,
+        "name": "my transformation 2 (component)",
+        "function": {
+            "id": 6
+        },
+        "input_components": null,
+        "output_components": null,
+        "parameter_mappings": {
+            "firstName": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/firstName",
+            "familyName": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/familyName",
+            "transformationOutputVariable": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/name"
+        }
+    },
+    "input_attribute_paths": [{
+        "id": 2,
+        "attribute_path": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/familyName"
+    }, {
+        "id": 1,
+        "attribute_path": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/firstName"
+    }],
+    "output_attribute_path": {
+        "id": 3,
+        "attribute_path": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/name"
+    }
+}

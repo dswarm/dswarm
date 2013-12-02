@@ -5,7 +5,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement
-public class Connection extends DMPObject {
+public class Connection extends BasicDMPObject {
+
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
 
 	private ConnectionType	type;
 
@@ -14,6 +19,11 @@ public class Connection extends DMPObject {
 
 	@XmlTransient
 	private Component		target;
+	
+	public Connection(final String id) {
+
+		super(id);
+	}
 
 	public ConnectionType getType() {
 
@@ -46,7 +56,7 @@ public class Connection extends DMPObject {
 	}
 
 	@XmlElement(name = "source")
-	public String getSourceId() {
+	public Long getSourceId() {
 
 		if (this.source == null) {
 
@@ -57,7 +67,7 @@ public class Connection extends DMPObject {
 	}
 
 	@XmlElement(name = "target")
-	public String getTargetId() {
+	public Long getTargetId() {
 
 		if (this.target == null) {
 

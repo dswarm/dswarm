@@ -166,13 +166,15 @@ public class TransformationFlow {
 
 		return new TransformationFlow(transformer);
 	}
+	
+	// TODO:
 
-	public static TransformationFlow fromJob(final Job job) throws IOException, DMPConverterException {
-
-		final String morphScriptString = new MorphScriptBuilder().apply(job.getTransformations()).toString();
-
-		return fromString(morphScriptString);
-	}
+//	public static TransformationFlow fromJob(final Job job) throws IOException, DMPConverterException {
+//
+//		final String morphScriptString = new MorphScriptBuilder().apply(job.getTransformations()).toString();
+//
+//		return fromString(morphScriptString);
+//	}
 
 	public static TransformationFlow fromTransformation(final Transformation transformation) throws IOException, DMPConverterException {
 
@@ -180,7 +182,9 @@ public class TransformationFlow {
 
 		transformationsBuilder.add(transformation);
 
-		final String morphScriptString = new MorphScriptBuilder().apply(transformationsBuilder.build()).toString();
+		final String morphScriptString = null;
+				
+				//new MorphScriptBuilder().apply(transformationsBuilder.build()).toString();
 
 		return fromString(morphScriptString);
 	}

@@ -8,9 +8,8 @@ import de.avgl.dmp.persistence.services.SchemaService;
 
 
 @Singleton
-public class SchemaServiceImpl extends BaseMemoryServiceImpl<Long, Long, JSRoot> implements SchemaService {
+public class SchemaServiceImpl extends BaseMemoryServiceImpl<Long, Long, JSRoot> {
 
-	@Override
 	public Optional<JSRoot> getSchema(final Long id, final Long configurationId) {
 		return getObjects(id, configurationId);
 	}

@@ -10,12 +10,12 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
-import de.avgl.dmp.persistence.model.test.BasicJPAServiceTest;
+import de.avgl.dmp.persistence.model.test.IDBasicJPAServiceTest;
 import de.avgl.dmp.persistence.services.ConfigurationService;
 import de.avgl.dmp.persistence.services.ResourceService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class ResourceServiceTest extends BasicJPAServiceTest<Resource, ResourceService> {
+public class ResourceServiceTest extends IDBasicJPAServiceTest<Resource, ResourceService, Long> {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(ResourceServiceTest.class);
 
@@ -34,7 +34,7 @@ public class ResourceServiceTest extends BasicJPAServiceTest<Resource, ResourceS
 
 		updateObjectTransactional(resource);
 
-		Resource updatedResource = getUpdatedObject(resource);
+		Resource updatedResource = getObject(resource);
 
 		checkSimpleResource(resource, updatedResource);
 
@@ -82,7 +82,7 @@ public class ResourceServiceTest extends BasicJPAServiceTest<Resource, ResourceS
 
 		updateObjectTransactional(resource);
 
-		final Resource updatedResource = getUpdatedObject(resource);
+		final Resource updatedResource = getObject(resource);
 
 		checkSimpleResource(resource, updatedResource);
 
@@ -104,7 +104,7 @@ public class ResourceServiceTest extends BasicJPAServiceTest<Resource, ResourceS
 
 		updateObjectTransactional(updatedResource);
 
-		final Resource updatedResource2 = getUpdatedObject(updatedResource);
+		final Resource updatedResource2 = getObject(updatedResource);
 
 		checkSimpleResource(updatedResource, updatedResource2);
 
@@ -141,7 +141,7 @@ public class ResourceServiceTest extends BasicJPAServiceTest<Resource, ResourceS
 
 		updateObjectTransactional(updatedResource2);
 
-		final Resource updatedResource3 = getUpdatedObject(updatedResource2);
+		final Resource updatedResource3 = getObject(updatedResource2);
 
 		checkSimpleResource(updatedResource2, updatedResource3);
 

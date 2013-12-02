@@ -27,7 +27,7 @@ import com.google.common.collect.Sets;
 import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.persistence.model.DMPJPAObject;
 import de.avgl.dmp.persistence.model.utils.ResourceReferenceDeserializer;
-import de.avgl.dmp.persistence.model.utils.ResourceReferenceSerializer;
+import de.avgl.dmp.persistence.model.utils.SetResourceReferenceSerializer;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 @XmlRootElement
@@ -53,9 +53,9 @@ public class Configuration extends DMPJPAObject {
 	/**
 	 * The related resources.
 	 */
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade ={ CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "RESOURCES_CONFIGURATIONS", joinColumns = { @JoinColumn(name = "CONFIGURATION_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "RESOURCE_ID", referencedColumnName = "ID") })
-	@JsonSerialize(using = ResourceReferenceSerializer.class)
+	@JsonSerialize(using = SetResourceReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@JsonDeserialize(using = ResourceReferenceDeserializer.class)
 	@XmlIDREF
