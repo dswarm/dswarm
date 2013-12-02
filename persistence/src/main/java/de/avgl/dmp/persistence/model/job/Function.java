@@ -5,7 +5,14 @@ import java.util.LinkedList;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -16,7 +23,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
@@ -28,6 +34,9 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 @Entity
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "FUNCTION_TYPE", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("Function")
 @Table(name = "FUNCTION")
 public class Function extends ExtendedBasicDMPJPAObject {
 
@@ -53,6 +62,24 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	@Column(name = "PARAMETERS", columnDefinition = "VARCHAR(4000)", length = 4000)
 	private String									parametersString		= null;
 
+	/**
+	 * The function type, e.g., function ({@link FunctionType#Function}) or transformation ({@link FunctionType#Transformation}).
+	 */
+	@XmlElement(name = "type")
+	@Column(name = "FUNCTION_TYPE")
+	@Enumerated(EnumType.STRING)
+	protected final FunctionType					functionType;
+
+	public Function() {
+
+		functionType = FunctionType.Function;
+	}
+
+	public Function(final FunctionType functionTypeArg) {
+
+		functionType = functionTypeArg;
+	}
+
 	@XmlElement(name = "parameters")
 	public LinkedList<String> getParameters() {
 
@@ -62,7 +89,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	}
 
 	public void setParameters(final LinkedList<String> parametersArg) {
-		
+
 		if (parametersArg == null && parameters != null) {
 
 			parameters.clear();
@@ -103,6 +130,17 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 			refreshParametersString();
 		}
+	}
+
+	/**
+	 * Gets the function type, e.g., function ({@link FunctionType#Function}) or transformation (
+	 * {@link FunctionType#Transformation}).
+	 * 
+	 * @return the function type
+	 */
+	public FunctionType getFunctionType() {
+
+		return functionType;
 	}
 
 	@Override
@@ -152,7 +190,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 					parametersInitialized = true;
 				}
-				
+
 				return;
 			}
 

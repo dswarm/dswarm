@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.job.Function;
+import de.avgl.dmp.persistence.model.job.FunctionType;
 import de.avgl.dmp.persistence.model.test.IDBasicJPAServiceTest;
 import de.avgl.dmp.persistence.services.FunctionService;
 
@@ -45,6 +46,7 @@ public class FunctionServiceTest extends IDBasicJPAServiceTest<Function, Functio
 		Assert.assertNotNull("the function parameters shouldn't be null", function.getParameters());
 		Assert.assertEquals("the function parameters' size are not equal", 2, function.getParameters().size());
 		Assert.assertEquals("the function parameter '" + functionParameter1 + "' are not equal", functionParameter1, function.getParameters().get(0));
+		Assert.assertEquals("the function type is not '" + FunctionType.Function + "'", FunctionType.Function, function.getFunctionType());
 
 		String json = null;
 

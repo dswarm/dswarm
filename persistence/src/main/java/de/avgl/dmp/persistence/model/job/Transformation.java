@@ -3,6 +3,7 @@ package de.avgl.dmp.persistence.model.job;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -24,6 +25,7 @@ import com.google.common.collect.Sets;
 @Entity
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@DiscriminatorValue("Transformation")
 @Table(name = "TRANSFORMATION")
 public class Transformation extends Function {
 
@@ -41,6 +43,11 @@ public class Transformation extends Function {
 	@XmlIDREF
 	@XmlList
 	private Set<Component>							components;
+	
+	public Transformation() {
+		
+		super(FunctionType.Transformation);
+	}
 
 	public Set<Component> getComponents() {
 

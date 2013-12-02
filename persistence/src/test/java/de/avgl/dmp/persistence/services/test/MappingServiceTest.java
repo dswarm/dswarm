@@ -20,6 +20,7 @@ import de.avgl.dmp.persistence.model.job.Attribute;
 import de.avgl.dmp.persistence.model.job.AttributePath;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Function;
+import de.avgl.dmp.persistence.model.job.FunctionType;
 import de.avgl.dmp.persistence.model.job.Mapping;
 import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.model.test.IDBasicJPAServiceTest;
@@ -384,17 +385,17 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<Mapping, MappingSe
 
 		final Component component4 = createComponent(component4Name, parameterMapping4, function4, component4InputComponents, null);
 
-		final Set<Component> transformationComponentOutputComponents = Sets.newLinkedHashSet();
-
-		transformationComponentOutputComponents.add(component4);
-
-		transformationComponent.setOutputComponents(transformationComponentOutputComponents);
-
-		final Set<Component> transformationComponent2OutputComponents = Sets.newLinkedHashSet();
-
-		transformationComponent2OutputComponents.add(component4);
-
-		transformationComponent2.setOutputComponents(transformationComponent2OutputComponents);
+//		final Set<Component> transformationComponentOutputComponents = Sets.newLinkedHashSet();
+//
+//		transformationComponentOutputComponents.add(component4);
+//
+//		transformationComponent.setOutputComponents(transformationComponentOutputComponents);
+//
+//		final Set<Component> transformationComponent2OutputComponents = Sets.newLinkedHashSet();
+//
+//		transformationComponent2OutputComponents.add(component4);
+//
+//		transformationComponent2.setOutputComponents(transformationComponent2OutputComponents);
 
 		// TODO: update transformation component 1 + 2 (?)
 
@@ -520,6 +521,9 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<Mapping, MappingSe
 				.getTransformation().getFunction().getParameters().contains(transformation2Parameter));
 		Assert.assertEquals("the transformation parameter for '" + transformation2Parameter + "' are not equal", transformation2Parameter,
 				updatedMapping.getTransformation().getFunction().getParameters().iterator().next());
+		Assert.assertEquals("the function type is not '" + FunctionType.Transformation + "'", FunctionType.Transformation, updatedMapping.getTransformation()
+				.getFunction().getFunctionType());
+		Assert.assertTrue("mapping transformation is not a '" + FunctionType.Transformation + "'", Transformation.class.isInstance(updatedMapping.getTransformation().getFunction()));
 		Assert.assertNotNull("the transformation components set shouldn't be null", ((Transformation) updatedMapping.getTransformation()
 				.getFunction()).getComponents());
 		Assert.assertEquals("the transformation component sets are not equal", components2, ((Transformation) updatedMapping.getTransformation()
@@ -696,6 +700,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<Mapping, MappingSe
 		Assert.assertNotNull("the function description shouldn't be null", function.getDescription());
 		Assert.assertEquals("the function descriptions are not equal", functionDescription, function.getDescription());
 		Assert.assertNotNull("the function parameters shouldn't be null", function.getParameters());
+		Assert.assertEquals("the function type is not '" + FunctionType.Function + "'", FunctionType.Function, function.getFunctionType());
 
 		functions.put(updatedFunction.getId(), updatedFunction);
 
@@ -747,6 +752,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<Mapping, MappingSe
 		Assert.assertNotNull("the component name shouldn't be null", updatedComponent.getName());
 		Assert.assertEquals("the component names are not equal", name, updatedComponent.getName());
 		Assert.assertNotNull("the component parameter mappings shouldn't be null", updatedComponent.getParameterMappings());
+		Assert.assertEquals("the function type is not '" + function.getFunctionType() + "'", function.getFunctionType(), updatedComponent.getFunction().getFunctionType());
 
 		components.put(updatedComponent.getId(), updatedComponent);
 
