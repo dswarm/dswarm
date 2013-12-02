@@ -9,14 +9,9 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -27,19 +22,11 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
-
-import de.avgl.dmp.converter.DMPConverterException;
-import de.avgl.dmp.persistence.model.job.Component;
-import de.avgl.dmp.persistence.model.job.Parameter;
-import de.avgl.dmp.persistence.model.job.Transformation;
 
 public class MorphScriptBuilder {
 
@@ -95,50 +82,52 @@ public class MorphScriptBuilder {
 	}
 
 	private Document							doc;
+	
+	// TODO:
 
-	private void createParameters(final Map<String, Parameter> parameters, final Element component) {
-		if (parameters != null) {
-			for (final Parameter parameter : parameters.values()) {
-				if (parameter.getName() != null) {
-					if (parameter.getData() != null) {
-						final Attr param = doc.createAttribute(parameter.getName());
-						param.setValue(parameter.getData());
-						component.setAttributeNode(param);
-					} else if (parameter.isRepeat()) {
-						final Element subEl = doc.createElement(parameter.getName());
-						component.appendChild(subEl);
-						createParameters(parameter.getParameters(), subEl);
-					}
-				}
-			}
-		}
-	}
-
-	private Element createTransformation(final Transformation transformation) {
-		final Element data = doc.createElement("data");
-		data.setAttribute("source", "record." + transformation.getSource().getName());
-		data.setAttribute("name", "record." + transformation.getTarget().getName());
-
-		for (final Component component : transformation.getComponents()) {
-			final Element comp = doc.createElement(component.getName());
-
-			createParameters(component.getPayload().getParameters(), comp);
-			data.appendChild(comp);
-		}
-
-		return data;
-	}
-
-	private Iterable<Element> createVarDefinitions(final Transformation transformation) {
-		final ArrayList<Element> vars = Lists.newArrayListWithCapacity(4);
-
-		vars.add(varDefinition("source.resource.id", String.valueOf(transformation.getSource().getResourceId())));
-		vars.add(varDefinition("source.configuration.id", String.valueOf(transformation.getSource().getConfigurationId())));
-		vars.add(varDefinition("target.resource.id", String.valueOf(transformation.getTarget().getResourceId())));
-		vars.add(varDefinition("target.configuration.id", String.valueOf(transformation.getTarget().getConfigurationId())));
-
-		return vars;
-	}
+//	private void createParameters(final Map<String, Parameter> parameters, final Element component) {
+//		if (parameters != null) {
+//			for (final Parameter parameter : parameters.values()) {
+//				if (parameter.getName() != null) {
+//					if (parameter.getData() != null) {
+//						final Attr param = doc.createAttribute(parameter.getName());
+//						param.setValue(parameter.getData());
+//						component.setAttributeNode(param);
+//					} else if (parameter.isRepeat()) {
+//						final Element subEl = doc.createElement(parameter.getName());
+//						component.appendChild(subEl);
+//						createParameters(parameter.getParameters(), subEl);
+//					}
+//				}
+//			}
+//		}
+//	}
+//
+//	private Element createTransformation(final Transformation transformation) {
+//		final Element data = doc.createElement("data");
+//		data.setAttribute("source", "record." + transformation.getSource().getName());
+//		data.setAttribute("name", "record." + transformation.getTarget().getName());
+//
+//		for (final Component component : transformation.getComponents()) {
+//			final Element comp = doc.createElement(component.getName());
+//
+//			createParameters(component.getPayload().getParameters(), comp);
+//			data.appendChild(comp);
+//		}
+//
+//		return data;
+//	}
+//
+//	private Iterable<Element> createVarDefinitions(final Transformation transformation) {
+//		final ArrayList<Element> vars = Lists.newArrayListWithCapacity(4);
+//
+//		vars.add(varDefinition("source.resource.id", String.valueOf(transformation.getSource().getResourceId())));
+//		vars.add(varDefinition("source.configuration.id", String.valueOf(transformation.getSource().getConfigurationId())));
+//		vars.add(varDefinition("target.resource.id", String.valueOf(transformation.getTarget().getResourceId())));
+//		vars.add(varDefinition("target.configuration.id", String.valueOf(transformation.getTarget().getConfigurationId())));
+//
+//		return vars;
+//	}
 
 	private Element varDefinition(String key, String value) {
 		final Element var = doc.createElement("var");
@@ -208,58 +197,58 @@ public class MorphScriptBuilder {
 		return file;
 	}
 
-	public MorphScriptBuilder apply(final List<Transformation> transformations) throws DMPConverterException {
-		final DocumentBuilder docBuilder;
-		try {
-			docBuilder = docFactory.newDocumentBuilder();
-		} catch (ParserConfigurationException e) {
-			throw new DMPConverterException(e.getMessage());
-		}
+//	public MorphScriptBuilder apply(final List<Transformation> transformations) throws DMPConverterException {
+//		final DocumentBuilder docBuilder;
+//		try {
+//			docBuilder = docFactory.newDocumentBuilder();
+//		} catch (ParserConfigurationException e) {
+//			throw new DMPConverterException(e.getMessage());
+//		}
+//
+//		doc = docBuilder.newDocument();
+//		doc.setXmlVersion("1.0");
+//
+//		final Element rootElement = doc.createElement("metamorph");
+//		rootElement.setAttribute("xmlns", "http://www.culturegraph.org/metamorph");
+//		rootElement.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+//		rootElement.setAttribute("xsi:schemaLocation", "http://www.culturegraph.org/metamorph metamorph.xsd");
+//		rootElement.setAttribute("entityMarker", ".");
+//		rootElement.setAttribute("version", "1");
+//		doc.appendChild(rootElement);
+//
+//		final Element meta = doc.createElement("meta");
+//		rootElement.appendChild(meta);
+//
+//		final Element metaName = doc.createElement("name");
+//		meta.appendChild(metaName);
+//
+////		final Element vars = doc.createElement("vars");
+////		rootElement.appendChild(vars);
+//
+//		final Element rules = doc.createElement("rules");
+//		rootElement.appendChild(rules);
+//
+//		final List<String> metas = Lists.newArrayList();
+//
+//		for (final Transformation transformation : transformations) {
+//			metas.add(transformation.getName());
+//
+////			for (final Element var: createVarDefinitions(transformation)) {
+////				vars.appendChild(var);
+////			}
+//
+//			final Element data = createTransformation(transformation);
+//
+//			rules.appendChild(data);
+//		}
+//
+//		metaName.setTextContent(Joiner.on(", ").join(metas));
+//
+//		return this;
+//	}
 
-		doc = docBuilder.newDocument();
-		doc.setXmlVersion("1.0");
-
-		final Element rootElement = doc.createElement("metamorph");
-		rootElement.setAttribute("xmlns", "http://www.culturegraph.org/metamorph");
-		rootElement.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-		rootElement.setAttribute("xsi:schemaLocation", "http://www.culturegraph.org/metamorph metamorph.xsd");
-		rootElement.setAttribute("entityMarker", ".");
-		rootElement.setAttribute("version", "1");
-		doc.appendChild(rootElement);
-
-		final Element meta = doc.createElement("meta");
-		rootElement.appendChild(meta);
-
-		final Element metaName = doc.createElement("name");
-		meta.appendChild(metaName);
-
-//		final Element vars = doc.createElement("vars");
-//		rootElement.appendChild(vars);
-
-		final Element rules = doc.createElement("rules");
-		rootElement.appendChild(rules);
-
-		final List<String> metas = Lists.newArrayList();
-
-		for (final Transformation transformation : transformations) {
-			metas.add(transformation.getName());
-
-//			for (final Element var: createVarDefinitions(transformation)) {
-//				vars.appendChild(var);
-//			}
-
-			final Element data = createTransformation(transformation);
-
-			rules.appendChild(data);
-		}
-
-		metaName.setTextContent(Joiner.on(", ").join(metas));
-
-		return this;
-	}
-
-	public MorphScriptBuilder apply(final Transformation transformation) throws DMPConverterException {
-
-		return apply(Lists.newArrayList(transformation));
-	}
+//	public MorphScriptBuilder apply(final Transformation transformation) throws DMPConverterException {
+//
+//		return apply(Lists.newArrayList(transformation));
+//	}
 }
