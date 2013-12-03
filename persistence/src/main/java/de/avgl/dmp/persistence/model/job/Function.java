@@ -37,6 +37,9 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(AttributePath.class);
 
+	@Column(name = "FUNCTIONDESCRIPTION")
+	private String									functionDescription		= null;
+	
 	@Transient
 	private LinkedList<String>						parameters				= null;
 
@@ -58,6 +61,14 @@ public class Function extends ExtendedBasicDMPJPAObject {
 		initParameters(false);
 
 		return parameters;
+	}
+	
+	public void setFunctionDescription(final String functionDescription) {
+		this.functionDescription = functionDescription;
+	}
+	
+	public String getFunctionDescription() {
+		return functionDescription;
 	}
 
 	public void setParameters(final LinkedList<String> parametersArg) {
