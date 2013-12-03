@@ -130,6 +130,26 @@
 			<artifactId>jersey-media-multipart</artifactId>
 		</dependency>
 
+		<!-- swagger for API docu -->
+		<dependency>
+			<groupId>com.wordnik</groupId>
+			<artifactId>swagger-core_2.10</artifactId>
+			<version>${swagger.version}</version>
+			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-simple</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.wordnik</groupId>
+			<artifactId>swagger-jersey2-jaxrs_2.10</artifactId>
+			<scope>compile</scope>
+			<version>${swagger.version}</version>
+		</dependency>
+
 		<!-- DI Guice Dependencies -->
 		<dependency>
 			<groupId>org.glassfish.hk2</groupId>

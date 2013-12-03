@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Set;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -26,6 +27,9 @@ import com.google.common.collect.Sets;
 import com.google.common.net.HttpHeaders;
 import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import de.avgl.dmp.controller.DMPControllerException;
@@ -36,6 +40,7 @@ import de.avgl.dmp.persistence.services.ConfigurationService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 @RequestScoped
+@Api(value = "/configurations", description = "Operations about configurations")
 @Path("configurations")
 public class ConfigurationsResource {
 
@@ -56,6 +61,7 @@ public class ConfigurationsResource {
 	}
 
 	@GET
+	@ApiOperation(value = "get all configurations ", notes = "Returns a list of Configuration objects.")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getResourceConfigurations() throws DMPControllerException {
 

@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -24,6 +25,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import com.codahale.metrics.Timer;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -40,9 +45,9 @@ import com.google.common.io.Files;
 import com.google.common.io.LineProcessor;
 import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataParam;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.eventbus.CSVConverterEvent;
@@ -64,7 +69,8 @@ import de.avgl.dmp.persistence.services.ConfigurationService;
 import de.avgl.dmp.persistence.services.ResourceService;
 
 @RequestScoped
-@Path("resources")
+@Api(value = "/resources", description = "Operations about resources")
+@Path("/resources")
 public class ResourcesResource {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ResourcesResource.class);
@@ -85,8 +91,8 @@ public class ResourcesResource {
 
 	@Inject
 	public ResourcesResource(final DMPStatus dmpStatus, final ObjectMapper objectMapper, final Provider<ResourceService> resourceServiceProvider,
-							 final Provider<ConfigurationService> configurationServiceProvider,
-							 final Provider<EventBus> eventBusProvider, final InternalSchemaDataUtil schemaDataUtil) {
+			final Provider<ConfigurationService> configurationServiceProvider, final Provider<EventBus> eventBusProvider,
+			final InternalSchemaDataUtil schemaDataUtil) {
 
 		this.eventBusProvider = eventBusProvider;
 		this.resourceServiceProvider = resourceServiceProvider;
@@ -107,11 +113,13 @@ public class ResourcesResource {
 	}
 
 	@POST
+	@ApiOperation(value = "upload new resource", notes = "Returns a new Resource object, when upload was successfully.", response = Resource.class)
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response uploadResource(@FormDataParam("file") final InputStream uploadedInputStream,
-			@FormDataParam("file") final FormDataContentDisposition fileDetail, @FormDataParam("name") final String name,
-			@FormDataParam("description") final String description) throws DMPControllerException {
+			@FormDataParam("file") final FormDataContentDisposition fileDetail,
+			@ApiParam(value = "resource name", required = true) @FormDataParam("name") final String name,
+			@ApiParam(value = "resource description") @FormDataParam("description") final String description) throws DMPControllerException {
 		final Timer.Context context = dmpStatus.createNewResource();
 
 		LOG.debug("try to create new resource '" + name + "' for file '" + fileDetail.getFileName() + "'");
@@ -477,8 +485,8 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
 		}
 
-		LOG.debug(String.format("return schema for configuration with id [%d] for resource with id [%d] and content [%s...]",
-				configurationId, id, jsonString.substring(0, 30)));
+		LOG.debug(String.format("return schema for configuration with id [%d] for resource with id [%d] and content [%s...]", configurationId, id,
+				jsonString.substring(0, 30)));
 
 		dmpStatus.stop(context);
 		return buildResponse(jsonString);
@@ -493,7 +501,7 @@ public class ResourcesResource {
 
 		LOG.debug("try to get schema for configuration with id '" + configurationId + "' for resource with id '" + id + "'");
 
-		final Optional<Iterator<Tuple<String,JsonNode>>> data = schemaDataUtil.getData(id, configurationId, Optional.fromNullable(atMost));
+		final Optional<Iterator<Tuple<String, JsonNode>>> data = schemaDataUtil.getData(id, configurationId, Optional.fromNullable(atMost));
 
 		if (!data.isPresent()) {
 
@@ -504,7 +512,7 @@ public class ResourcesResource {
 		}
 
 		// temp
-		final Iterator<Tuple<String,JsonNode>> tupleIterator;
+		final Iterator<Tuple<String, JsonNode>> tupleIterator;
 		if (atMost != null) {
 			tupleIterator = Iterators.limit(data.get(), atMost);
 		} else {
@@ -528,8 +536,8 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
 		}
 
-		LOG.debug("return data for configuration with id '" + configurationId + "' for resource with id '" + id + "' and content '"
-				+ jsonString + "'");
+		LOG.debug("return data for configuration with id '" + configurationId + "' for resource with id '" + id + "' and content '" + jsonString
+				+ "'");
 
 		dmpStatus.stop(context);
 		return buildResponse(jsonString);
