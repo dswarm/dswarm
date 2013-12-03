@@ -1,12 +1,14 @@
 {
-    "id": "372661b1-5c4f-4734-9f2d-52fe21e5d8dc",
+    "id": 1,
     "name": "my mapping",
     "transformation": {
-        "id": "27264783-2512-4cb3-868b-ea4a34d987ad",
-        "name": "my transformation (component)",
+        "id": 7,
+        "name": "my transformation 2 (component)",
         "function": {
-            "id": "a1433de8-c292-4ce3-a9f4-73012d45f386"
+            "id": 6
         },
+        "input_components": null,
+        "output_components": null,
         "parameter_mappings": {
             "firstName": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/firstName",
             "familyName": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/familyName",
@@ -14,14 +16,14 @@
         }
     },
     "input_attribute_paths": [{
-        "id": "0859d8d3-b4fa-4e06-b064-40e76d7c4279",
-        "attribute_path": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/firstName"
-    }, {
-        "id": "d280476c-88c4-48c9-9cb2-4ba8dca82dd8",
+        "id": 2,
         "attribute_path": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/familyName"
+    }, {
+        "id": 1,
+        "attribute_path": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/firstName"
     }],
     "output_attribute_path": {
-        "id": "31cd42e1-b0d9-4415-b8d9-e1e6eb43ce5c",
+        "id": 3,
         "attribute_path": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/name"
     }
 }

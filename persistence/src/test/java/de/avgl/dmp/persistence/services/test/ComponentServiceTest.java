@@ -17,6 +17,7 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Function;
+import de.avgl.dmp.persistence.model.job.FunctionType;
 import de.avgl.dmp.persistence.model.test.IDBasicJPAServiceTest;
 import de.avgl.dmp.persistence.services.ComponentService;
 import de.avgl.dmp.persistence.services.FunctionService;
@@ -54,7 +55,7 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<Component, Compo
 		final Component component = createObject();
 		component.setName(componentName);
 		component.setFunction(function);
-		component.setParameterMapping(parameterMapping);
+		component.setParameterMappings(parameterMapping);
 
 		final Component updatedComponent = updateObjectTransactional(component);
 
@@ -68,6 +69,7 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<Component, Compo
 				updatedComponent.getParameterMappings().containsKey(functionParameterName));
 		Assert.assertEquals("the component parameter mapping for '" + functionParameterName + "' are not equal", componentVariableName,
 				updatedComponent.getParameterMappings().get(functionParameterName));
+		Assert.assertEquals("the function type is not '" + FunctionType.Function + "'", FunctionType.Function, updatedComponent.getFunction().getFunctionType());
 
 		String json = null;
 
@@ -172,7 +174,7 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<Component, Compo
 		final Component component = createObject();
 		component.setName(componentName);
 		component.setFunction(function);
-		component.setParameterMapping(parameterMapping);
+		component.setParameterMappings(parameterMapping);
 		component.setInputComponents(inputComponents);
 		component.setOutputComponents(outputComponents);
 
@@ -199,6 +201,7 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<Component, Compo
 				.getOutputComponents().contains(component2));
 		Assert.assertEquals("the component output component '" + component2.getId() + "' are not equal", component2, updatedComponent
 				.getOutputComponents().iterator().next());
+		Assert.assertEquals("the function type is not '" + FunctionType.Function + "'", FunctionType.Function, updatedComponent.getFunction().getFunctionType());
 
 		String json = null;
 
@@ -266,6 +269,7 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<Component, Compo
 		Assert.assertNotNull("the function description shouldn't be null", function.getDescription());
 		Assert.assertEquals("the function descriptions are not equal", functionDescription, function.getDescription());
 		Assert.assertNotNull("the function parameters shouldn't be null", function.getParameters());
+		Assert.assertEquals("the function type is not '" + FunctionType.Function + "'", FunctionType.Function, function.getFunctionType());
 
 		functions.put(updatedFunction.getId(), updatedFunction);
 
@@ -289,7 +293,7 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<Component, Compo
 
 		component.setName(name);
 		component.setFunction(function);
-		component.setParameterMapping(parameterMappings);
+		component.setParameterMappings(parameterMappings);
 
 		Component updatedComponent = null;
 
@@ -305,6 +309,7 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<Component, Compo
 		Assert.assertNotNull("the component name shouldn't be null", updatedComponent.getName());
 		Assert.assertEquals("the component names are not equal", name, updatedComponent.getName());
 		Assert.assertNotNull("the component parameter mappings shouldn't be null", updatedComponent.getParameterMappings());
+		Assert.assertEquals("the function type is not '" + FunctionType.Function + "'", FunctionType.Function, updatedComponent.getFunction().getFunctionType());
 
 		return updatedComponent;
 	}

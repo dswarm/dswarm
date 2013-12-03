@@ -3,6 +3,7 @@ package de.avgl.dmp.persistence.model.job;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -24,6 +25,7 @@ import com.google.common.collect.Sets;
 @Entity
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@DiscriminatorValue("Transformation")
 @Table(name = "TRANSFORMATION")
 public class Transformation extends Function {
 
@@ -34,13 +36,18 @@ public class Transformation extends Function {
 	 */
 	private static final long						serialVersionUID	= 1L;
 
-	@OneToMany(/* mappedBy = "transformation", */fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH,
+	@OneToMany(/* mappedBy = "transformation", */fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH,
 			CascadeType.REMOVE }, orphanRemoval = true)
 	@JoinColumn(name = "TRANSFORMATION", referencedColumnName = "ID")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@XmlIDREF
 	@XmlList
 	private Set<Component>							components;
+	
+	public Transformation() {
+		
+		super(FunctionType.Transformation);
+	}
 
 	public Set<Component> getComponents() {
 

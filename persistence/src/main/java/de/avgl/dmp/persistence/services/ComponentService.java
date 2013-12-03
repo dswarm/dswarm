@@ -34,19 +34,19 @@ public class ComponentService extends BasicDMPJPAService<Component> {
 	protected void updateObjectInternal(final Component object, final Component updateObject, final EntityManager entityManager)
 			throws DMPPersistenceException {
 
+		super.updateObjectInternal(object, updateObject, entityManager);
+
 		final Function function = object.getFunction();
 		final Set<Component> inputComponents = object.getInputComponents();
 		final Set<Component> outputComponents = object.getOutputComponents();
 		final Map<String, String> parameterMappings = object.getParameterMappings();
-//		final Transformation transformation = object.getTransformation();
+		// final Transformation transformation = object.getTransformation();
 
 		updateObject.setFunction(function);
 		updateObject.setInputComponents(inputComponents);
 		updateObject.setOutputComponents(outputComponents);
-		updateObject.setParameterMapping(parameterMappings);
-//		updateObject.setTransformation(transformation);
-
-		super.updateObjectInternal(object, updateObject, entityManager);
+		updateObject.setParameterMappings(parameterMappings);
+		// updateObject.setTransformation(transformation);
 	}
 
 }

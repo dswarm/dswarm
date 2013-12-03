@@ -18,6 +18,7 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Function;
+import de.avgl.dmp.persistence.model.job.FunctionType;
 import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.model.test.IDBasicJPAServiceTest;
 import de.avgl.dmp.persistence.services.ComponentService;
@@ -99,6 +100,7 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<Transformat
 				updatedTransformation.getComponents().iterator().next().getParameterMappings().containsKey(functionParameterName));
 		Assert.assertEquals("the component parameter mapping for '" + functionParameterName + "' are not equal", componentVariableName,
 				updatedTransformation.getComponents().iterator().next().getParameterMappings().get(functionParameterName));
+		Assert.assertEquals("the function type is not '" + FunctionType.Transformation + "'", FunctionType.Transformation, updatedTransformation.getFunctionType());
 
 		String json = null;
 
@@ -242,6 +244,7 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<Transformat
 				updatedTransformation.getParameters().iterator().next());
 		Assert.assertNotNull("the transformation components set shouldn't be null", updatedTransformation.getComponents());
 		Assert.assertEquals("the transformation components sizes are not equal", 3, updatedTransformation.getComponents().size());
+		Assert.assertEquals("the function type is not '" + FunctionType.Transformation + "'", FunctionType.Transformation, updatedTransformation.getFunctionType());
 
 		final Iterator<Component> iter = updatedTransformation.getComponents().iterator();
 
@@ -279,6 +282,7 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<Transformat
 				.getOutputComponents().contains(component2));
 		Assert.assertEquals("the component output component '" + component2.getId() + "' are not equal", component2, mainComponent
 				.getOutputComponents().iterator().next());
+		Assert.assertEquals("the function type is not '" + FunctionType.Function + "'", FunctionType.Function, mainComponent.getFunction().getFunctionType());
 
 		String json = null;
 
@@ -375,6 +379,7 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<Transformat
 		Assert.assertNotNull("the function description shouldn't be null", function.getDescription());
 		Assert.assertEquals("the function descriptions are not equal", functionDescription, function.getDescription());
 		Assert.assertNotNull("the function parameters shouldn't be null", function.getParameters());
+		Assert.assertEquals("the function type is not '" + FunctionType.Function + "'", FunctionType.Function, function.getFunctionType());
 
 		functions.put(updatedFunction.getId(), updatedFunction);
 
@@ -401,7 +406,7 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<Transformat
 
 		component.setName(name);
 		component.setFunction(function);
-		component.setParameterMapping(parameterMappings);
+		component.setParameterMappings(parameterMappings);
 
 		if (inputComponents != null) {
 			component.setInputComponents(inputComponents);
@@ -426,6 +431,7 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<Transformat
 		Assert.assertNotNull("the component name shouldn't be null", updatedComponent.getName());
 		Assert.assertEquals("the component names are not equal", name, updatedComponent.getName());
 		Assert.assertNotNull("the component parameter mappings shouldn't be null", updatedComponent.getParameterMappings());
+		Assert.assertEquals("the function type is not '" + FunctionType.Function + "'", FunctionType.Function, updatedComponent.getFunction().getFunctionType());
 
 		return updatedComponent;
 	}

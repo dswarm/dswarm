@@ -30,11 +30,14 @@ public class TransformationFlowTest extends GuicedTest {
 
 		final String request = DMPPersistenceUtil.getResourceAsString("complex-request.json");
 		final String expected = DMPPersistenceUtil.getResourceAsString("complex-result.json");
+		
+		// TODO:
 
-		final Job job = injector.getInstance(JsonToPojoMapper.class).toJob(request);
-		final TransformationFlow flow = TransformationFlow.fromJob(job);
+//		final Job job = injector.getInstance(JsonToPojoMapper.class).toJob(request);
+//		final TransformationFlow flow = TransformationFlow.fromJob(job);
 
-		final String actual = flow.applyDemo();
+		final String actual = null;
+				//flow.applyDemo();
 
 		assertEquals(expected, actual);
 	}

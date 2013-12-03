@@ -58,7 +58,7 @@ public class Mapping extends BasicDMPJPAObject {
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private AttributePath		outputAttributePath	= null;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH }, orphanRemoval = true)
+	@OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE }, orphanRemoval = true)
 	@JoinColumn(name = "TRANSFORMATION")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private Component			transformation		= null;

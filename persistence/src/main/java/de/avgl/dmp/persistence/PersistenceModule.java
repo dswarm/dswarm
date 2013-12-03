@@ -31,6 +31,7 @@ import de.avgl.dmp.persistence.services.ResourceService;
 import de.avgl.dmp.persistence.services.SchemaService;
 import de.avgl.dmp.persistence.services.TransformationService;
 import de.avgl.dmp.persistence.services.impl.InternalServiceFactoryImpl;
+import de.avgl.dmp.persistence.services.impl.SchemaServiceImpl;
 
 public class PersistenceModule extends AbstractModule {
 
@@ -63,6 +64,9 @@ public class PersistenceModule extends AbstractModule {
 		bind(TransformationService.class).in(Scopes.SINGLETON);
 
 		bind(InternalServiceFactory.class).to(InternalServiceFactoryImpl.class).in(Scopes.SINGLETON);
+		
+		// TODO: remove this later
+		bind(SchemaServiceImpl.class).in(Scopes.SINGLETON);
 	}
 
 	@Provides
