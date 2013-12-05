@@ -178,6 +178,7 @@ public class TransformationsResource {
 	 * @throws IOException
 	 * @throws DMPConverterException
 	 */
+	/*
 	@POST
 	@Path("/demo")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -197,4 +198,5 @@ public class TransformationsResource {
 
 		return buildResponse(result);
 	}
+	*/
 }

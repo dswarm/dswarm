@@ -11,7 +11,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
-import de.avgl.dmp.persistence.model.job.AttributePath;
+import de.avgl.dmp.persistence.model.schema.AttributePath;
 
 public class AttributePathReferenceSerializer extends JsonSerializer<AttributePath> {
 

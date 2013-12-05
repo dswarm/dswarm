@@ -1,6 +1,7 @@
 package de.avgl.dmp.persistence.model.resource;
 
 import java.util.Set;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
@@ -16,6 +17,8 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.hibernate.annotations.Cascade;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -53,13 +56,14 @@ public class Configuration extends DMPJPAObject {
 	/**
 	 * The related resources.
 	 */
-	@ManyToMany(fetch = FetchType.EAGER, cascade ={ CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "RESOURCES_CONFIGURATIONS", joinColumns = { @JoinColumn(name = "CONFIGURATION_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "RESOURCE_ID", referencedColumnName = "ID") })
 	@JsonSerialize(using = SetResourceReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@JsonDeserialize(using = ResourceReferenceDeserializer.class)
 	@XmlIDREF
 	@XmlList
+	//@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	private Set<Resource>							resources;
 
 	@Lob
@@ -156,11 +160,25 @@ public class Configuration extends DMPJPAObject {
 
 				resource.removeConfiguration(this);
 			}
+
+			resources.clear();
 		}
 
-		resources = resourcesArg;
+		// resources = resourcesArg;
 
 		if (resourcesArg != null) {
+
+			if (!resourcesArg.equals(resources)) {
+
+				if (resources != null) {
+
+					resources.clear();
+					resources.addAll(resourcesArg);
+				} else {
+
+					resources = resourcesArg;
+				}
+			}
 
 			for (final Resource resource : resourcesArg) {
 
@@ -172,7 +190,7 @@ public class Configuration extends DMPJPAObject {
 	/**
 	 * Adds a new resource to the collection of resources of this configuration.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param resource a new export definition revision
 	 */
 	public void addResource(final Resource resource) {
@@ -195,7 +213,7 @@ public class Configuration extends DMPJPAObject {
 	/**
 	 * Replaces an existing resource, i.e., the resource with the same identifier will be replaced.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param resource an existing, updated resource
 	 */
 	public void replaceResource(final Resource resource) {
@@ -222,7 +240,7 @@ public class Configuration extends DMPJPAObject {
 	/**
 	 * Removes an existing resource from the collection of resources of this configuration.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param resource an existing resource that should be removed
 	 */
 	public void removeResource(final Resource resource) {

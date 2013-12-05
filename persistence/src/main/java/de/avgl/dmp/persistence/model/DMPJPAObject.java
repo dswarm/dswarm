@@ -9,8 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.xml.bind.annotation.XmlID;
 
-import de.avgl.dmp.persistence.model.job.DMPObject;
-
 @MappedSuperclass
 // @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 public abstract class DMPJPAObject extends DMPObject<Long> {

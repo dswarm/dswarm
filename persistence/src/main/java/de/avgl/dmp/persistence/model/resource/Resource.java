@@ -1,7 +1,13 @@
 package de.avgl.dmp.persistence.model.resource;
 
+import static ch.lambdaj.Lambda.filter;
+import static ch.lambdaj.Lambda.having;
+import static ch.lambdaj.Lambda.on;
+import static org.hamcrest.Matchers.equalTo;
+
 import java.util.List;
 import java.util.Set;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
@@ -18,19 +24,18 @@ import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.hibernate.annotations.Cascade;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
+import com.wordnik.swagger.annotations.ApiModel;
 
 import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.persistence.model.DMPJPAObject;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-import static ch.lambdaj.Lambda.filter;
-import static ch.lambdaj.Lambda.having;
-import static ch.lambdaj.Lambda.on;
-import static org.hamcrest.Matchers.equalTo;
-
+@ApiModel(value = "A data resource, e.g., an XML or CSV document, a SQL database, or an RDF graph. A data resource can consist of several records.")
 @XmlRootElement
 @Entity
 // @Cacheable(true)
@@ -73,11 +78,13 @@ public class Resource extends DMPJPAObject {
 	 * All configurations of the resource.
 	 */
 	// TODO set correct casacade type
-	@ManyToMany(mappedBy = "resources", fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToMany(mappedBy = "resources", fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+			CascadeType.REFRESH })
 	// @JsonSerialize(using = ConfigurationReferenceSerializer.class)
 	// @JsonDeserialize(using = ConfigurationReferenceDeserializer.class)
 	@XmlIDREF
 	@XmlList
+	//@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	private Set<Configuration>						configurations;
 
 	public String getName() {
@@ -101,7 +108,7 @@ public class Resource extends DMPJPAObject {
 	}
 
 	public String getDescription() {
-		
+
 		return description;
 	}
 
@@ -168,11 +175,25 @@ public class Resource extends DMPJPAObject {
 
 				configuration.removeResource(this);
 			}
+			
+			configurations.clear();
 		}
 
-		configurations = configurationsArg;
+		//configurations = configurationsArg;
 
 		if (configurationsArg != null) {
+			
+			if (!configurationsArg.equals(configurations)) {
+
+				if(configurations != null) {
+				
+				configurations.clear();
+				configurations.addAll(configurationsArg);
+				} else {
+					
+					configurations = configurationsArg;
+				}
+			}
 
 			for (final Configuration configuration : configurationsArg) {
 
@@ -273,20 +294,20 @@ public class Resource extends DMPJPAObject {
 
 		attributesString = attributes.toString();
 	}
-	
+
 	private void initAttributes(boolean fromScratch) {
-		
+
 		if (attributes == null && !attributesInitialized) {
 
 			if (attributesString == null) {
 
 				LOG.debug("attributes JSON string is null");
-				
-				if(fromScratch) {
+
+				if (fromScratch) {
 
 					attributes = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
 				} else {
-					
+
 					return;
 				}
 			}

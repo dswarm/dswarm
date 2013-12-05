@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -24,6 +25,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import com.codahale.metrics.Timer;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -40,9 +45,9 @@ import com.google.common.io.Files;
 import com.google.common.io.LineProcessor;
 import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataParam;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.eventbus.CSVConverterEvent;
@@ -60,11 +65,12 @@ import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
 import de.avgl.dmp.persistence.model.types.Tuple;
-import de.avgl.dmp.persistence.services.ConfigurationService;
-import de.avgl.dmp.persistence.services.ResourceService;
+import de.avgl.dmp.persistence.service.resource.ConfigurationService;
+import de.avgl.dmp.persistence.service.resource.ResourceService;
 
 @RequestScoped
-@Path("resources")
+@Api(value = "/resources", description = "Operations about data resources.")
+@Path("/resources")
 public class ResourcesResource {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ResourcesResource.class);
@@ -85,8 +91,8 @@ public class ResourcesResource {
 
 	@Inject
 	public ResourcesResource(final DMPStatus dmpStatus, final ObjectMapper objectMapper, final Provider<ResourceService> resourceServiceProvider,
-							 final Provider<ConfigurationService> configurationServiceProvider,
-							 final Provider<EventBus> eventBusProvider, final InternalSchemaDataUtil schemaDataUtil) {
+			final Provider<ConfigurationService> configurationServiceProvider, final Provider<EventBus> eventBusProvider,
+			final InternalSchemaDataUtil schemaDataUtil) {
 
 		this.eventBusProvider = eventBusProvider;
 		this.resourceServiceProvider = resourceServiceProvider;
@@ -107,11 +113,14 @@ public class ResourcesResource {
 	}
 
 	@POST
+	@ApiOperation(value = "upload new data resource", notes = "Returns a new Resource object, when upload was successfully.", response = Resource.class)
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response uploadResource(@FormDataParam("file") final InputStream uploadedInputStream,
-			@FormDataParam("file") final FormDataContentDisposition fileDetail, @FormDataParam("name") final String name,
-			@FormDataParam("description") final String description) throws DMPControllerException {
+	public Response uploadResource(
+			@ApiParam(value = "file input stream", required = true) @FormDataParam("file") final InputStream uploadedInputStream,
+			@ApiParam(value = "file metadata") @FormDataParam("file") final FormDataContentDisposition fileDetail,
+			@ApiParam(value = "resource name", required = true) @FormDataParam("name") final String name,
+			@ApiParam(value = "resource description") @FormDataParam("description") final String description) throws DMPControllerException {
 		final Timer.Context context = dmpStatus.createNewResource();
 
 		LOG.debug("try to create new resource '" + name + "' for file '" + fileDetail.getFileName() + "'");
@@ -147,6 +156,7 @@ public class ResourcesResource {
 		return buildResponseCreated(resourceJSON, resourceURI);
 	}
 
+	@ApiOperation(value = "get all data resources", notes = "Returns a list of Resource objects.")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getResources() throws DMPControllerException {
@@ -193,10 +203,12 @@ public class ResourcesResource {
 		return buildResponse(resourcesJSON);
 	}
 
+	@ApiOperation(value = "get the data resource that matches the given id", notes = "Returns the Resource object that matches the given id.")
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResource(@PathParam("id") final Long id) throws DMPControllerException {
+	public Response getResource(@ApiParam(value = "data resource identifier", required = true) @PathParam("id") final Long id)
+			throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getSingleResource();
 
 		final Optional<Resource> resourceOptional = schemaDataUtil.fetchResource(id);
@@ -226,11 +238,14 @@ public class ResourcesResource {
 		return buildResponse(resourceJSON);
 	}
 
+	@ApiOperation(value = "get the lines of the data resource that matches the given id", notes = "Returns the lines of the data resource that matches the given id. The number of lines can be limited via the 'atMost' parameter. The encoding can be set via the 'encoding' parameter.")
 	@GET
 	@Path("/{id}/lines")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResourcePlain(@PathParam("id") final Long id, @DefaultValue("50") @QueryParam("atMost") final int atMost,
-			@DefaultValue("UTF-8") @QueryParam("encoding") final String encoding) throws DMPControllerException {
+	public Response getResourcePlain(@ApiParam(value = "data resource identifier", required = true) @PathParam("id") final Long id,
+			@ApiParam(value = "number of lines limit", defaultValue = "50") @DefaultValue("50") @QueryParam("atMost") final int atMost,
+			@ApiParam(value = "data resource encoding", defaultValue = "50") @DefaultValue("UTF-8") @QueryParam("encoding") final String encoding)
+			throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getSingleResource();
 
 		final Optional<Resource> resourceOptional = schemaDataUtil.fetchResource(id);
@@ -301,10 +316,12 @@ public class ResourcesResource {
 		return buildResponse(plainJson);
 	}
 
+	@ApiOperation(value = "get all configurations of the data resource that matches the given id", notes = "Returns the configurations of the data resource that matches the given id.")
 	@GET
 	@Path("/{id}/configurations")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResourceConfigurations(@PathParam("id") final Long id) throws DMPControllerException {
+	public Response getResourceConfigurations(@ApiParam(value = "data resource identifier", required = true) @PathParam("id") final Long id)
+			throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getAllConfigurations();
 
 		LOG.debug("try to get resource configurations for resource with id '" + id.toString() + "'");
@@ -352,11 +369,13 @@ public class ResourcesResource {
 		return buildResponse(configurationsJSON);
 	}
 
+	@ApiOperation(value = "add a new configuration to the data resource that matches the given id", notes = "Returns the new configuration of that was added to the data resource that matches the given id.")
 	@POST
 	@Path("/{id}/configurations")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addConfiguration(@PathParam("id") final Long id, final String jsonObjectString) throws DMPControllerException {
+	public Response addConfiguration(@ApiParam(value = "data resource identifier", required = true) @PathParam("id") final Long id,
+			@ApiParam(value = "configuration (as JSON)", required = true) final String jsonObjectString) throws DMPControllerException {
 		final Timer.Context context = dmpStatus.createNewConfiguration();
 
 		LOG.debug("try to create new configuration for resource with id '" + id + "'");
@@ -419,10 +438,12 @@ public class ResourcesResource {
 		return buildResponseCreated(configurationJSON, configurationURI);
 	}
 
+	@ApiOperation(value = "get the configuration of the data resource that matches the given data resource id and the given configuration id", notes = "Returns the configuration of the data resource that matches the given data resource id and the given configuration id.")
 	@GET
 	@Path("/{id}/configurations/{configurationid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResourceConfiguration(@PathParam("id") final Long id, @PathParam("configurationid") final Long configurationId)
+	public Response getResourceConfiguration(@ApiParam(value = "data resource identifier", required = true) @PathParam("id") final Long id,
+			@ApiParam(value = "configuration identifier", required = true) @PathParam("configurationid") final Long configurationId)
 			throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getSingleConfiguration();
 
@@ -451,10 +472,12 @@ public class ResourcesResource {
 		return buildResponse(configurationJSON);
 	}
 
+	@ApiOperation(value = "get the schema of the data resource and configuration (= data model) that matches the given data resource id and the given configuration id", notes = "Returns the schema of the data resource and configuration (= data model) that matches the given data resource id and the given configuration id.")
 	@GET
 	@Path("/{id}/configurations/{configurationid}/schema")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResourceConfigurationSchema(@PathParam("id") final Long id, @PathParam("configurationid") final Long configurationId)
+	public Response getResourceConfigurationSchema(@ApiParam(value = "data resource identifier", required = true) @PathParam("id") final Long id,
+			@ApiParam(value = "configuration identifier", required = true) @PathParam("configurationid") final Long configurationId)
 			throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getConfigurationSchema();
 
@@ -477,23 +500,25 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
 		}
 
-		LOG.debug(String.format("return schema for configuration with id [%d] for resource with id [%d] and content [%s...]",
-				configurationId, id, jsonString.substring(0, 30)));
+		LOG.debug(String.format("return schema for configuration with id [%d] for resource with id [%d] and content [%s...]", configurationId, id,
+				jsonString.substring(0, 30)));
 
 		dmpStatus.stop(context);
 		return buildResponse(jsonString);
 	}
 
+	@ApiOperation(value = "get the data of the data resource and configuration (= data model) that matches the given data resource id and the given configuration id", notes = "Returns the data of the data resource and configuration (= data model) that matches the given data resource id and the given configuration id.")
 	@GET
 	@Path("/{id}/configurations/{configurationid}/data")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResourceConfigurationData(@PathParam("id") final Long id, @PathParam("configurationid") final Long configurationId,
-			@QueryParam("atMost") final Integer atMost) throws DMPControllerException {
+	public Response getResourceConfigurationData(@ApiParam(value = "data resource identifier", required = true) @PathParam("id") final Long id,
+			@ApiParam(value = "configuration identifier", required = true) @PathParam("configurationid") final Long configurationId,
+			@ApiParam(value = "number of records limit") @QueryParam("atMost") final Integer atMost) throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getConfigurationData();
 
 		LOG.debug("try to get schema for configuration with id '" + configurationId + "' for resource with id '" + id + "'");
 
-		final Optional<Iterator<Tuple<String,JsonNode>>> data = schemaDataUtil.getData(id, configurationId, Optional.fromNullable(atMost));
+		final Optional<Iterator<Tuple<String, JsonNode>>> data = schemaDataUtil.getData(id, configurationId, Optional.fromNullable(atMost));
 
 		if (!data.isPresent()) {
 
@@ -504,7 +529,7 @@ public class ResourcesResource {
 		}
 
 		// temp
-		final Iterator<Tuple<String,JsonNode>> tupleIterator;
+		final Iterator<Tuple<String, JsonNode>> tupleIterator;
 		if (atMost != null) {
 			tupleIterator = Iterators.limit(data.get(), atMost);
 		} else {
@@ -528,18 +553,20 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
 		}
 
-		LOG.debug("return data for configuration with id '" + configurationId + "' for resource with id '" + id + "' and content '"
-				+ jsonString + "'");
+		LOG.debug("return data for configuration with id '" + configurationId + "' for resource with id '" + id + "' and content '" + jsonString
+				+ "'");
 
 		dmpStatus.stop(context);
 		return buildResponse(jsonString);
 	}
 
+	@ApiOperation(value = "get a CSV data preview of the data resource that matches the given id and where the given configuration will be applied to ( = data model)", notes = "Returns a CSV data preview of the data resource that matches the given id and where the given configuration will be applied to ( = data model).")
 	@POST
 	@Path("/{id}/configurationpreview")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response csvPreviewConfiguration(@PathParam("id") final Long id, final String jsonObjectString) throws DMPControllerException {
+	public Response csvPreviewConfiguration(@ApiParam(value = "data resource identifier", required = true) @PathParam("id") final Long id,
+			@ApiParam(value = "configuration (as JSON)", required = true) final String jsonObjectString) throws DMPControllerException {
 		final Timer.Context context = dmpStatus.configurationsPreview();
 
 		LOG.debug("try to apply configuration for resource with id '" + id + "'");
@@ -574,11 +601,13 @@ public class ResourcesResource {
 		return buildResponse(result);
 	}
 
+	@ApiOperation(value = "get a CSV JSON data preview of the data resource that matches the given id and where the given configuration will be applied to ( = data model)", notes = "Returns a CSV JSON data preview of the data resource that matches the given id and where the given configuration will be applied to ( = data model).")
 	@POST
 	@Path("/{id}/configurationpreview")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response csvJSONPreviewConfiguration(@PathParam("id") final Long id, final String jsonObjectString) throws DMPControllerException {
+	public Response csvJSONPreviewConfiguration(@ApiParam(value = "data resource identifier", required = true) @PathParam("id") final Long id,
+			@ApiParam(value = "configuration (as JSON)", required = true) final String jsonObjectString) throws DMPControllerException {
 		final Timer.Context context = dmpStatus.configurationsPreview();
 
 		LOG.debug("try to apply configuration for resource with id '" + id + "'");

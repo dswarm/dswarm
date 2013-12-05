@@ -8,13 +8,14 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+
 import org.xml.sax.SAXException;
 
 import de.avgl.dmp.controller.jsonschema.JsonSchemaParser;
 import de.avgl.dmp.persistence.model.jsonschema.JSRoot;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
-import de.avgl.dmp.persistence.services.SchemaService;
+import de.avgl.dmp.persistence.service.schema.SchemaService;
 
 @Singleton
 public class XMLSchemaEventRecorder {

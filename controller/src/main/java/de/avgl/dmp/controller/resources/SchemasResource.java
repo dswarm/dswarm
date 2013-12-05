@@ -2,9 +2,6 @@ package de.avgl.dmp.controller.resources;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -16,34 +13,21 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 
 import de.avgl.dmp.controller.DMPControllerException;
-import de.avgl.dmp.controller.utils.InternalSchemaDataUtil;
-import de.avgl.dmp.converter.DMPConverterException;
-import de.avgl.dmp.converter.flow.TransformationFlow;
-import de.avgl.dmp.converter.mf.stream.reader.JsonNodeReader;
 import de.avgl.dmp.persistence.DMPPersistenceException;
-import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
-import de.avgl.dmp.persistence.model.job.Job;
-import de.avgl.dmp.persistence.model.job.Schema;
-import de.avgl.dmp.persistence.model.job.Transformation;
-import de.avgl.dmp.persistence.model.resource.Configuration;
-import de.avgl.dmp.persistence.model.types.Tuple;
-import de.avgl.dmp.persistence.services.ConfigurationService;
-import de.avgl.dmp.persistence.services.SchemaService;
+import de.avgl.dmp.persistence.model.schema.Schema;
+import de.avgl.dmp.persistence.service.schema.SchemaService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /*

@@ -1,0 +1,46 @@
+{
+    "name": "my data model",
+    "description": "my data model description",
+    "configuration": {
+        "name": "my configuration",
+        "description": "configuration description",
+        "resources": [{}],
+        "parameters": {
+            "fileseparator": ";"
+        }
+    },
+    "schema": {
+        "attribute_paths": [{
+            "attributes": [{
+                "id": "http://purl.org/dc/terms/title",
+                "name": "title"
+            }, {
+                "id": "http://purl.org/dc/terms/hasPart",
+                "name": "hasPart"
+            }, {
+                "id": "http://purl.org/dc/terms/title",
+                "name": "title"
+            }]
+        }],
+        "record_class": {
+            "id": "http://purl.org/ontology/bibo/Document",
+            "name": "document"
+        }
+    },
+    "data_resource": {
+        "name": "bla",
+        "type": "FILE",
+        "description": "blubblub",
+        "attributes": {
+            "path": "/path/to/file.end"
+        },
+        "configurations": [{
+            "name": "my configuration",
+            "description": "configuration description",
+            "resources": [{}],
+            "parameters": {
+                "fileseparator": ";"
+            }
+        }]
+    }
+}

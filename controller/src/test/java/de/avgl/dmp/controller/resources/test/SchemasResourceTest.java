@@ -15,9 +15,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
 
 import de.avgl.dmp.controller.resources.test.utils.ResourceTestUtils;
-import de.avgl.dmp.persistence.model.job.Schema;
-import de.avgl.dmp.persistence.model.resource.Configuration;
-import de.avgl.dmp.persistence.services.SchemaService;
+import de.avgl.dmp.persistence.model.schema.Schema;
+import de.avgl.dmp.persistence.service.schema.SchemaService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public class SchemasResourceTest extends ResourceTest {
@@ -51,7 +50,7 @@ public class SchemasResourceTest extends ResourceTest {
 		cleanUpDB(actualSchema);
 	}
 	
-	
+	/*
 	@Test
 		public void testGETSchemas() throws Exception {
 	
@@ -72,33 +71,34 @@ public class SchemasResourceTest extends ResourceTest {
 	
 			cleanUpDB(actualSchema);
 		}
+	*/
 	
-	/*
+	
 	@Test
-	public void testGETConfiguration() throws Exception {
+	public void testGETSchema() throws Exception {
 
-		final Configuration actualConfiguration = createConfigurationInternal();
+		final Schema actualSchema = createSchemaInternal();
 
-		LOG.debug("try to retrieve configurations");
+		LOG.debug("try to retrieve schema");
 
-		final Response response = target(String.valueOf(actualConfiguration.getId())).request()
+		final Response response = target(String.valueOf(actualSchema.getId())).request()
 				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
 
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
 
-		final String responseConfigurationJSON = response.readEntity(String.class);
+		final String responseSchemaJSON = response.readEntity(String.class);
 
-		Assert.assertNotNull("response configuration JSON shouldn't be null", responseConfigurationJSON);
+		Assert.assertNotNull("response schema JSON shouldn't be null", responseSchemaJSON);
 
-		final Configuration responseConfiguration = objectMapper
-				.readValue(responseConfigurationJSON, Configuration.class);
+		final Schema responseSchema = objectMapper
+				.readValue(responseSchemaJSON, Schema.class);
 
-		Assert.assertNotNull("response configuration shouldn't be null", responseConfiguration);
+		Assert.assertNotNull("response schema shouldn't be null", responseSchema);
 
-		ResourceTestUtils.compareConfigurations(actualConfiguration, responseConfiguration);
+		ResourceTestUtils.compareSchemas(actualSchema, responseSchema);
 
-		cleanUpDB(responseConfiguration);
-	}*/
+		cleanUpDB(responseSchema);
+	}
 	
 	
 	private Schema createSchemaInternal() throws Exception {
