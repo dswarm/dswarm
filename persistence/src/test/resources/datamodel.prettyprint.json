@@ -1,13 +1,14 @@
 {
+    "id": 1,
     "name": "my data model",
     "description": "my data model description",
     "configuration": {
-        "id": "034225ac-1124-4986-b3b7-df12898f1a29"
+        "id": 1
     },
     "schema": {
-        "id": "4be3ef85-d75e-4b7b-b37b-daaf91fd6aa7"
+        "id": 1
     },
     "data_resource": {
-        "id": "afd3bb02-a833-4b07-89d0-db8c2b1c83f3"
+        "id": 1
     }
 }

@@ -54,8 +54,8 @@ public class PersistenceModule extends AbstractModule {
 
 		bind(JsonToPojoMapper.class);
 
-		bind(ResourceService.class).in(Scopes.SINGLETON);
-		bind(ConfigurationService.class).in(Scopes.SINGLETON);
+		bind(ResourceService.class); //.in(Scopes.SINGLETON);
+		bind(ConfigurationService.class); //.in(Scopes.SINGLETON);
 		bind(AttributeService.class).in(Scopes.SINGLETON);
 		bind(AttributePathService.class).in(Scopes.SINGLETON);
 		bind(ClaszService.class).in(Scopes.SINGLETON);

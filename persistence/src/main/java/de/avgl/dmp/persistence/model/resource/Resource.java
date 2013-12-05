@@ -24,6 +24,8 @@ import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.hibernate.annotations.Cascade;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
@@ -82,6 +84,7 @@ public class Resource extends DMPJPAObject {
 	// @JsonDeserialize(using = ConfigurationReferenceDeserializer.class)
 	@XmlIDREF
 	@XmlList
+	//@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	private Set<Configuration>						configurations;
 
 	public String getName() {
@@ -172,11 +175,25 @@ public class Resource extends DMPJPAObject {
 
 				configuration.removeResource(this);
 			}
+			
+			configurations.clear();
 		}
 
-		configurations = configurationsArg;
+		//configurations = configurationsArg;
 
 		if (configurationsArg != null) {
+			
+			if (!configurationsArg.equals(configurations)) {
+
+				if(configurations != null) {
+				
+				configurations.clear();
+				configurations.addAll(configurationsArg);
+				} else {
+					
+					configurations = configurationsArg;
+				}
+			}
 
 			for (final Configuration configuration : configurationsArg) {
 
