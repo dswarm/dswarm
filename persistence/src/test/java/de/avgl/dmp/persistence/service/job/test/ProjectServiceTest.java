@@ -124,7 +124,144 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 
 		final Project updatedProject = updateObjectTransactional(project);
 
-		// TODO: comparison
+		Assert.assertNotNull("the update project shouldn't be null", updatedProject);
+		Assert.assertNotNull("the id of the updated project shouldn't be null", updatedProject.getId());
+		Assert.assertEquals("the id of the updated project isn't the same as of project", project.getId(), updatedProject.getId());
+		Assert.assertNotNull("the name of the updated project shouldn't be null", updatedProject.getName());
+		Assert.assertEquals("the name of the updated project isn't the same as of project", project.getName(), updatedProject.getName());
+		Assert.assertNotNull("the description of the updated project shouldn't be null", updatedProject.getDescription());
+		Assert.assertEquals("the description of the updated project isn't the same as of project", project.getDescription(),
+				updatedProject.getDescription());
+
+		// input data model
+
+		Assert.assertNotNull("the input data model of the updated project shouldn't be null", updatedProject.getInputDataModel());
+		Assert.assertEquals("the input data model of the updated project isn't the same as of project", project.getInputDataModel(),
+				updatedProject.getInputDataModel());
+		Assert.assertNotNull("the input data model id of the updated project shouldn't be null", updatedProject.getInputDataModel().getId());
+		Assert.assertEquals("the input data model id of the updated project isn't the same as of project", project.getInputDataModel().getId(),
+				updatedProject.getInputDataModel().getId());
+		Assert.assertNotNull("the input data model name of the updated project shouldn't be null", updatedProject.getInputDataModel().getName());
+		Assert.assertEquals("the input data model name of the updated project isn't the same as of project", project.getInputDataModel().getName(),
+				updatedProject.getInputDataModel().getName());
+		Assert.assertNotNull("the input data model data resource of the updated project shouldn't be null", updatedProject.getInputDataModel()
+				.getDataResource());
+		Assert.assertEquals("the input data model data resource of the updated project isn't the same as of project", project.getInputDataModel()
+				.getDataResource(), updatedProject.getInputDataModel().getDataResource());
+		Assert.assertNotNull("the input data model data resource id of the updated project shouldn't be null", updatedProject.getInputDataModel()
+				.getDataResource().getId());
+		Assert.assertEquals("the input data model data resource id of the updated project isn't the same as of project", project.getInputDataModel()
+				.getDataResource().getId(), updatedProject.getInputDataModel().getDataResource().getId());
+		Assert.assertNotNull("the input data model data resource name of the updated project shouldn't be null", updatedProject.getInputDataModel()
+				.getDataResource().getName());
+		Assert.assertEquals("the input data model data resource name of the updated project isn't the same as of project", project
+				.getInputDataModel().getDataResource().getName(), updatedProject.getInputDataModel().getDataResource().getName());
+		Assert.assertNotNull("the input data model configuration of the updated project shouldn't be null", updatedProject.getInputDataModel()
+				.getConfiguration());
+		Assert.assertEquals("the input data model configuration of the updated project isn't the same as of project", project.getInputDataModel()
+				.getConfiguration(), updatedProject.getInputDataModel().getConfiguration());
+		Assert.assertNotNull("the input data model configuration id of the updated project shouldn't be null", updatedProject.getInputDataModel()
+				.getConfiguration().getId());
+		Assert.assertEquals("the input data model configuration id of the updated project isn't the same as of project", project.getInputDataModel()
+				.getConfiguration().getId(), updatedProject.getInputDataModel().getConfiguration().getId());
+		Assert.assertNotNull("the input data model configuration name of the updated project shouldn't be null", updatedProject.getInputDataModel()
+				.getConfiguration().getName());
+		Assert.assertEquals("the input data model configuration name of the updated project isn't the same as of project", project
+				.getInputDataModel().getConfiguration().getName(), updatedProject.getInputDataModel().getConfiguration().getName());
+		Assert.assertNotNull("the input data model schema of the updated project shouldn't be null", updatedProject.getInputDataModel().getSchema());
+		Assert.assertEquals("the input data model schema of the updated project isn't the same as of project", project.getInputDataModel()
+				.getSchema(), updatedProject.getInputDataModel().getSchema());
+		Assert.assertNotNull("the input data model schema id of the updated project shouldn't be null", updatedProject.getInputDataModel()
+				.getSchema().getId());
+		Assert.assertEquals("the input data model schema id of the updated project isn't the same as of project", project.getInputDataModel()
+				.getSchema().getId(), updatedProject.getInputDataModel().getSchema().getId());
+		Assert.assertNotNull("the input data model schema name of the updated project shouldn't be null", updatedProject.getInputDataModel()
+				.getSchema().getName());
+		Assert.assertEquals("the input data model schema name of the updated project isn't the same as of project", project.getInputDataModel()
+				.getSchema().getName(), updatedProject.getInputDataModel().getSchema().getName());
+
+		// output data model
+
+		Assert.assertNotNull("the output data model of the updated project shouldn't be null", updatedProject.getOutputDataModel());
+		Assert.assertEquals("the output data model of the updated project isn't the same as of project", project.getOutputDataModel(),
+				updatedProject.getOutputDataModel());
+		Assert.assertNotNull("the output data model id of the updated project shouldn't be null", updatedProject.getOutputDataModel().getId());
+		Assert.assertEquals("the output data model id of the updated project isn't the same as of project", project.getOutputDataModel().getId(),
+				updatedProject.getOutputDataModel().getId());
+		Assert.assertNotNull("the output data model name of the updated project shouldn't be null", updatedProject.getOutputDataModel().getName());
+		Assert.assertEquals("the output data model name of the updated project isn't the same as of project", project.getOutputDataModel().getName(),
+				updatedProject.getOutputDataModel().getName());
+		Assert.assertNotNull("the output data model schema of the updated project shouldn't be null", updatedProject.getOutputDataModel().getSchema());
+		Assert.assertEquals("the output data model schema of the updated project isn't the same as of project", project.getOutputDataModel()
+				.getSchema(), updatedProject.getOutputDataModel().getSchema());
+		Assert.assertNotNull("the output data model schema id of the updated project shouldn't be null", updatedProject.getOutputDataModel()
+				.getSchema().getId());
+		Assert.assertEquals("the output data model schema id of the updated project isn't the same as of project", project.getOutputDataModel()
+				.getSchema().getId(), updatedProject.getOutputDataModel().getSchema().getId());
+		Assert.assertNotNull("the output data model schema name of the updated project shouldn't be null", updatedProject.getOutputDataModel()
+				.getSchema().getName());
+		Assert.assertEquals("the output data model schema name of the updated project isn't the same as of project", project.getOutputDataModel()
+				.getSchema().getName(), updatedProject.getOutputDataModel().getSchema().getName());
+
+		// project mappings
+
+		Assert.assertNotNull("the mappings of the updated project shouldn't be null", updatedProject.getMappings());
+		Assert.assertEquals("the size of the mappings collection of the updated project isn't the same as of project", project.getMappings().size(),
+				updatedProject.getMappings().size());
+		Assert.assertNotNull("the mapping of the updated project shouldn't be null", updatedProject.getMappings().iterator().next());
+
+		final Iterator<Mapping> mappingIter = updatedProject.getMappings().iterator();
+
+		Mapping updatedComplexMapping = null;
+
+		while (mappingIter.hasNext()) {
+
+			final Mapping iterMapping = mappingIter.next();
+
+			if (complexMapping.getId().equals(iterMapping.getId())) {
+
+				updatedComplexMapping = iterMapping;
+
+				break;
+			}
+		}
+
+		Assert.assertNotNull("the updated complex mapping of the updated project shouldn't be null", updatedComplexMapping);
+		Assert.assertNotNull("the mapping name shouldn't be null", updatedComplexMapping.getName());
+		Assert.assertEquals("the mapping names are not equal", complexMapping.getName(), updatedComplexMapping.getName());
+		Assert.assertNotNull("the mapping transformation component shouldn't be null", updatedComplexMapping.getTransformation());
+		Assert.assertEquals("the mapping transformation components are not equal", complexMapping.getTransformation(),
+				updatedComplexMapping.getTransformation());
+		Assert.assertNotNull("the transformation component id shouldn't be null", updatedComplexMapping.getTransformation().getId());
+		Assert.assertEquals("the mapping transformation components' ids are not equal", complexMapping.getTransformation().getId(),
+				updatedComplexMapping.getTransformation().getId());
+		Assert.assertNotNull("the transformation component name shouldn't be null", updatedComplexMapping.getTransformation().getName());
+		Assert.assertEquals("the mapping transformation components' names are not equal", complexMapping.getTransformation().getName(),
+				updatedComplexMapping.getTransformation().getName());
+		Assert.assertNotNull("the transformation component function shouldn't be null", updatedComplexMapping.getTransformation().getFunction());
+		Assert.assertEquals("the mapping transformation components' functions are not equal", complexMapping.getTransformation().getFunction(),
+				updatedComplexMapping.getTransformation().getFunction());
+		Assert.assertNotNull("the transformation component function id shouldn't be null", updatedComplexMapping.getTransformation().getFunction()
+				.getId());
+		Assert.assertEquals("the mapping transformation components' functions' ids are not equal", complexMapping.getTransformation().getFunction()
+				.getId(), updatedComplexMapping.getTransformation().getFunction().getId());
+		Assert.assertNotNull("the transformation component function name shouldn't be null", updatedComplexMapping.getTransformation().getFunction()
+				.getName());
+		Assert.assertEquals("the mapping transformation components' functions' names are not equal", complexMapping.getTransformation().getFunction()
+				.getName(), updatedComplexMapping.getTransformation().getFunction().getName());
+
+		// project functions
+
+		Assert.assertNotNull("the functions of the updated project shouldn't be null", updatedProject.getFunctions());
+		Assert.assertEquals("the size of the functions collection of the updated project isn't the same as of project",
+				project.getFunctions().size(), updatedProject.getFunctions().size());
+		Assert.assertNotNull("the function of the updated project shouldn't be null", updatedProject.getFunctions().iterator().next());
+		Assert.assertEquals("the function of the updated project isn't the same as of project", function1, updatedProject.getFunctions().iterator()
+				.next());
+		Assert.assertEquals("the function id of the updated project isn't the same as of project", function1.getId(), updatedProject.getFunctions()
+				.iterator().next().getId());
+		Assert.assertEquals("the function name of the updated project isn't the same as of project", function1.getName(), updatedProject
+				.getFunctions().iterator().next().getName());
 
 		String json = null;
 
