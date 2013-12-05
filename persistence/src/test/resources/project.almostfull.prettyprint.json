@@ -1,0 +1,41 @@
+{
+    "name": "my project",
+    "description": "my description",
+    "mappings": [{
+        "name": "my simple mapping",
+        "transformation": {
+            "name": "my transformation (component)",
+            "function": {},
+            "parameter_mappings": {
+                "transformationInputString": "http://purl.org/dc/terms/title",
+                "transformationOutputVariable": "http://www.w3.org/2000/01/rdf-schema#label"
+            }
+        },
+        "input_attribute_paths": [{
+            "attribute_path": "http://purl.org/dc/terms/title"
+        }],
+        "output_attribute_path": {
+            "attribute_path": "http://www.w3.org/2000/01/rdf-schema#label"
+        }
+    }],
+    "functions": [{
+        "name": "trim",
+        "description": "trims leading and trailing whitespaces from a given string",
+        "parameters": ["inputString"],
+        "type": "Function"
+    }],
+    "input_data_model": {
+        "name": "my data model",
+        "description": "my data model description",
+        "configuration": {},
+        "schema": {},
+        "data_resource": {}
+    },
+    "output_data_model": {
+        "name": "my data model",
+        "description": "my data model description",
+        "configuration": {},
+        "schema": {},
+        "data_resource": {}
+    }
+}
