@@ -53,7 +53,7 @@ public class Component extends BasicDMPJPAObject {
 
 	private static final org.apache.log4j.Logger	LOG								= org.apache.log4j.Logger.getLogger(Component.class);
 
-	@ManyToMany(mappedBy = "outputComponents", fetch = FetchType.EAGER, cascade = { /*CascadeType.DETACH, CascadeType.MERGE,*/ CascadeType.PERSIST,
+	@ManyToMany(mappedBy = "outputComponents", fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
 			CascadeType.REFRESH })
 	@XmlElement(name = "input_components")
 	@JsonSerialize(using = SetComponentReferenceSerializer.class)
@@ -71,13 +71,14 @@ public class Component extends BasicDMPJPAObject {
 	@XmlList
 	private Set<Component>							outputComponents				= null;
 
-	//@ManyToOne(fetch = FetchType.LAZY/*, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH }*/)
+	// @ManyToOne(fetch = FetchType.LAZY/*, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+	// CascadeType.REFRESH }*/)
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "FUNCTION")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
 	@XmlIDREF
-	//@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+	// @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	private Function								function						= null;
 
 	@Transient
@@ -131,6 +132,7 @@ public class Component extends BasicDMPJPAObject {
 				inputComponents.clear();
 				inputComponents.addAll(inputComponentsArg);
 			}
+
 			for (final Component inputComponent : inputComponentsArg) {
 
 				inputComponent.addOutputComponent(this);
@@ -208,7 +210,7 @@ public class Component extends BasicDMPJPAObject {
 				outputComponents.clear();
 				outputComponents.addAll(outputComponentsArg);
 			}
-			
+
 			for (final Component outputComponent : outputComponentsArg) {
 
 				outputComponent.addInputComponent(this);
@@ -274,7 +276,6 @@ public class Component extends BasicDMPJPAObject {
 	}
 
 	public void setParameterMappings(final Map<String, String> parameterMappingsArg) {
-		
 
 		if (parameterMappingsArg == null && parameterMappings != null) {
 

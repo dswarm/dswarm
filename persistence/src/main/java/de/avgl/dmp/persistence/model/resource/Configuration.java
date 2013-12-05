@@ -88,6 +88,7 @@ public class Configuration extends DMPJPAObject {
 	}
 
 	public String getDescription() {
+		
 		return description;
 	}
 
@@ -98,18 +99,7 @@ public class Configuration extends DMPJPAObject {
 
 	public ObjectNode getParameters() {
 
-		if (parameters == null && !parametersInitialized) {
-
-			try {
-
-				parameters = DMPPersistenceUtil.getJSON(parametersString);
-			} catch (DMPException e) {
-
-				LOG.debug("couldn't parse parameters JSON string for resource '" + getId() + "'");
-			}
-
-			parametersInitialized = true;
-		}
+		initParameters(false);
 
 		return parameters;
 	}
@@ -125,7 +115,7 @@ public class Configuration extends DMPJPAObject {
 
 		if (parameters == null) {
 
-			parameters = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
+			initParameters(false);
 		}
 
 		parameters.set(key, value);
@@ -134,13 +124,8 @@ public class Configuration extends DMPJPAObject {
 	}
 
 	public JsonNode getParameter(final String key) {
-
-		if (parameters == null) {
-
-			LOG.debug("attributes JSON is null");
-
-			return null;
-		}
+		
+		initParameters(false);
 
 		return parameters.get(key);
 	}
@@ -256,6 +241,35 @@ public class Configuration extends DMPJPAObject {
 	private void refreshParametersString() {
 
 		parametersString = parameters.toString();
+	}
+	
+	private void initParameters(boolean fromScratch) {
+
+		if (parameters == null && !parametersInitialized) {
+
+			if (parametersString == null) {
+
+				LOG.debug("parameters JSON string is null");
+
+				if (fromScratch) {
+
+					parameters = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
+				} else {
+
+					return;
+				}
+			}
+
+			try {
+
+				parameters = DMPPersistenceUtil.getJSON(parametersString);
+			} catch (DMPException e) {
+
+				LOG.debug("couldn't parse parameters JSON string for configuration '" + getId() + "'");
+			}
+
+			parametersInitialized = true;
+		}
 	}
 
 	@Override
