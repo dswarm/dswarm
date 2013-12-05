@@ -3,6 +3,9 @@ package de.avgl.dmp.persistence.model.job;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import de.avgl.dmp.persistence.model.BasicDMPObject;
+import de.avgl.dmp.persistence.model.resource.DataModel;
+
 /**
  * @author tgaengler
  */

@@ -2,8 +2,8 @@ package de.avgl.dmp.persistence.model.utils;
 
 import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
-import de.avgl.dmp.persistence.services.BasicJPAService;
-import de.avgl.dmp.persistence.services.ConfigurationService;
+import de.avgl.dmp.persistence.service.BasicJPAService;
+import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 
