@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
+import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.model.utils.DMPJPAObjectReferenceSerializer;
 
@@ -82,5 +83,16 @@ public class DataModel extends ExtendedBasicDMPJPAObject {
 	public void setSchema(final Schema schemaArg) {
 
 		schema = schemaArg;
+	}
+	
+	@Override
+	public boolean equals(final Object obj) {
+
+		if (!DataModel.class.isInstance(obj)) {
+
+			return false;
+		}
+
+		return super.equals(obj);
 	}
 }

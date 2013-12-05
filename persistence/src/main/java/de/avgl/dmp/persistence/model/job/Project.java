@@ -43,31 +43,31 @@ public class Project extends ExtendedBasicDMPJPAObject {
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "INPUT_DATA_MODEL")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	//@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
-	//@XmlIDREF
+	@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
+	@XmlIDREF
 	private DataModel			inputDataModel;
 
 	@XmlElement(name = "output_data_model")
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "OUTPUT_DATA_MODEL")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	//@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
-	//@XmlIDREF
+	@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
+	@XmlIDREF
 	private DataModel			outputDataModel;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "PROJECTS_MAPPINGS", joinColumns = { @JoinColumn(name = "MAPPING_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "PROJECT_ID", referencedColumnName = "ID") })
-	//@JsonSerialize(using = SetMappingReferenceSerializer.class)
+	@JsonSerialize(using = SetMappingReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	//@XmlIDREF
+	@XmlIDREF
 	@XmlList
 	private Set<Mapping>		mappings;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "PROJECTS_FUNCTIONS", joinColumns = { @JoinColumn(name = "FUNCTION_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "PROJECT_ID", referencedColumnName = "ID") })
-	//@JsonSerialize(using = SetFunctionReferenceSerializer.class)
+	@JsonSerialize(using = SetFunctionReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	//@XmlIDREF
+	@XmlIDREF
 	@XmlList
 	private Set<Function>		functions;
 

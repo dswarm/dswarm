@@ -1,16 +1,19 @@
 {
+    "id": 1,
     "name": "my project",
-    "description": "my description",
+    "description": "my project description",
     "mappings": [{
-        "id": "034225ac-1124-4986-b3b7-df12898f1a29"
+        "id": 1
+    }, {
+        "id": 2
     }],
     "functions": [{
-        "id": "afd3bb02-a833-4b07-89d0-db8c2b1c83f3"
+        "id": 9
     }],
     "input_data_model": {
-        "id": "236ccbcb-7ab5-4e79-976f-5d579f9288a5"
+        "id": 1
     },
     "output_data_model": {
-        "id": "3a123040-4a35-49c5-bbcf-c9f9a3b0fa2b"
+        "id": 2
     }
 }
