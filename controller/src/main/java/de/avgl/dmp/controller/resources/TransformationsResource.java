@@ -49,7 +49,7 @@ public class TransformationsResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_XML)
 	public Response runToXML(final String jsonObjectString) throws IOException, DMPConverterException {
-		
+
 		// TODO: fixme
 
 //		final Transformation transformation;
@@ -60,7 +60,7 @@ public class TransformationsResource {
 //		}
 
 		final String xml = null;
-				
+
 				//new MorphScriptBuilder().apply(transformation).toString();
 
 		return buildResponse(xml);
@@ -68,7 +68,7 @@ public class TransformationsResource {
 
 	/**
 	 * this endpoint consumes a transformation as JSON representation
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one transformation
 	 * @return
 	 * @throws IOException
@@ -82,7 +82,7 @@ public class TransformationsResource {
 			@QueryParam("configurationId") final Long configurationId) throws IOException, DMPConverterException, DMPControllerException {
 
 		// TODO: fixme
-		
+
 //		final Transformation transformation;
 //
 //		try {
@@ -100,7 +100,7 @@ public class TransformationsResource {
 
 			throw new DMPControllerException("No configuration id defined for this transformation task. Please set a configuration id.");
 		}
-		
+
 		// TODO: fixme
 
 //		final TransformationFlow flow = TransformationFlow.fromTransformation(transformation);
@@ -125,47 +125,16 @@ public class TransformationsResource {
 		final Optional<Iterator<Tuple<String, JsonNode>>> inputData = schemaDataUtil.getData(resourceId, configurationId);
 
 		if (!inputData.isPresent()) {
-			
+
 			throw new DMPConverterException("couldn't find input data for transformation");
 		}
 
 		final Iterator<Tuple<String, JsonNode>> tupleIterator = inputData.get();
-		
+
 		// TODO: fime
 
 		final String result = null;
 				//flow.apply(tupleIterator, new JsonNodeReader());
-
-		return buildResponse(result);
-	}
-
-	/**
-	 * this endpoint consumes a transformation as JSON representation
-	 * 
-	 * @param jsonObjectString a JSON representation of one transformation
-	 * @return
-	 * @throws IOException
-	 * @throws DMPConverterException
-	 */
-	@Path("/demo")
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response runWithMetamorphDemo(final String jsonObjectString) throws IOException, DMPConverterException {
-
-		// TODO: fixme
-		
-//		final Transformation transformation;
-//		try {
-//			transformation = pojoMapperProvider.get().toTransformation(jsonObjectString);
-//		} catch (DMPPersistenceException e) {
-//			throw new DMPConverterException(e.getMessage());
-//		}
-
-		final TransformationFlow flow = null;
-				//TransformationFlow.fromTransformation(transformation);
-
-		final String result = flow.applyResourceDemo(TransformationFlow.DEFAULT_RESOURCE_PATH);
 
 		return buildResponse(result);
 	}
@@ -178,23 +147,59 @@ public class TransformationsResource {
 	 * @throws IOException
 	 * @throws DMPConverterException
 	 */
-	@POST
 	@Path("/demo")
+	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response runDemoWithMetamorph(final String jsonObjectString) throws IOException, DMPConverterException {
+	public Response runWithMetamorphDemo(final String jsonObjectString) throws IOException, DMPConverterException {
 
-		final Transformation transformation;
-		try {
-			transformation = pojoMapperProvider.get().toTransformation(jsonObjectString);
-		} catch (DMPPersistenceException e) {
-			throw new DMPConverterException(e.getMessage());
-		}
+		// TODO: fixme
 
-		final TransformationFlow flow = TransformationFlow.fromTransformation(transformation);
+//		final Transformation transformation;
+//		try {
+//			transformation = pojoMapperProvider.get().toTransformation(jsonObjectString);
+//		} catch (DMPPersistenceException e) {
+//			throw new DMPConverterException(e.getMessage());
+//		}
 
-		final String result = flow.applyDemo();
+		final TransformationFlow flow = null;
+				//TransformationFlow.fromTransformation(transformation);
+
+//		final String result = flow.applyResourceDemo(TransformationFlow.DEFAULT_RESOURCE_PATH);
+		final String result = "{\"status\":\"nok\",\"reason\":\"not implemented / in transition\"}";
 
 		return buildResponse(result);
 	}
+
+//	/**
+//	 * this endpoint consumes a transformation as JSON representation
+//	 *
+//	 * @param jsonObjectString a JSON representation of one transformation
+//	 * @return
+//	 * @throws IOException
+//	 * @throws DMPConverterException
+//	 */
+//	@POST
+//	@Path("/demo")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Response runDemoWithMetamorph(final String jsonObjectString) throws IOException, DMPConverterException {
+//
+//		// TODO: fixme
+//
+//		final String result = "{\"status\":\"nok\",\"reason\":\"not implemented / in transition\"}";
+//
+////		final Transformation transformation;
+////		try {
+////			transformation = pojoMapperProvider.get().toTransformation(jsonObjectString);
+////		} catch (DMPPersistenceException e) {
+////			throw new DMPConverterException(e.getMessage());
+////		}
+////
+////		final TransformationFlow flow = TransformationFlow.fromTransformation(transformation);
+////
+////		final String result = flow.applyDemo();
+//
+//		return buildResponse(result);
+//	}
 }

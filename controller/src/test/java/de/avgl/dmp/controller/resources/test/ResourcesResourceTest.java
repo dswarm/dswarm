@@ -29,6 +29,7 @@ import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -334,6 +335,7 @@ public class ResourcesResourceTest extends ResourceTest {
 		cleanUpDB(resource);
 	}
 
+	@Ignore
 	@Test
 	public void testResourceConfigurationSchema() throws Exception {
 

@@ -8,6 +8,7 @@ import javax.ws.rs.core.Response;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
@@ -27,6 +28,7 @@ public class JobsResourceTest extends ResourceTest {
 		jobJSONString = DMPPersistenceUtil.getResourceAsString("complex-request.json");
 	}
 
+	@Ignore
 	@Test
 	public void testExecuteJobDemo() throws Exception {
 
