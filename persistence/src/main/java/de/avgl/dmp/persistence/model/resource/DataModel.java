@@ -49,7 +49,7 @@ public class DataModel extends ExtendedBasicDMPJPAObject {
 	private Configuration		configuration		= null;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinColumn(name = "SCHEMA")
+	@JoinColumn(name = "DATA_SCHEMA")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
 	@XmlIDREF

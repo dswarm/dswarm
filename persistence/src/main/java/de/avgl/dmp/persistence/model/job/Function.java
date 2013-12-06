@@ -120,7 +120,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 			if (parameters == null) {
 
-				initParameters(false);
+				initParameters(true);
 
 				if (null == parameters) {
 
@@ -189,9 +189,9 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 					parametersJSON = new ArrayNode(DMPPersistenceUtil.getJSONFactory());
 					parameters = Lists.newLinkedList();
-
-					parametersInitialized = true;
 				}
+				
+				parametersInitialized = true;
 
 				return;
 			}

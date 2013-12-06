@@ -30,7 +30,7 @@ import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 @Entity
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(name = "SCHEMA")
+@Table(name = "DATA_SCHEMA")
 public class Schema extends BasicDMPJPAObject {
 
 	/**

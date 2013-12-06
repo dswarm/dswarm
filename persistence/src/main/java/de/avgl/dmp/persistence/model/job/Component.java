@@ -23,8 +23,6 @@ import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.hibernate.annotations.Cascade;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -395,9 +393,9 @@ public class Component extends BasicDMPJPAObject {
 
 					parameterMappingsJSON = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
 					parameterMappings = Maps.newLinkedHashMap();
-
-					parameterMappingsInitialized = true;
 				}
+				
+				parameterMappingsInitialized = true;
 
 				return;
 			}
