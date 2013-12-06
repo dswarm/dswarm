@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+		xmlns="http://maven.apache.org/POM/4.0.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>de.avgl.dmp</groupId>
@@ -15,8 +16,8 @@
 	<url>http://avantgarde-labs.de</url>
 
 	<properties>
-		<jersey.version>2.3</jersey.version>
-		<h2k.version>2.2.0-b14</h2k.version>
+		<jersey.version>2.4</jersey.version>
+		<h2k.version>2.2.0-b21</h2k.version>
 	</properties>
 
 	<build>
@@ -115,7 +116,7 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>3.0.1</version>
+			<version>3.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.jaxrs</groupId>
@@ -138,6 +139,42 @@
 					<groupId>org.slf4j</groupId>
 					<artifactId>slf4j-simple</artifactId>
 				</exclusion>
+				<exclusion>
+					<artifactId>jackson-jaxrs-json-provider</artifactId>
+					<groupId>com.fasterxml.jackson.jaxrs</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jackson-jaxrs-json-provider</artifactId>
+					<groupId>com.fasterxml.jackson.jaxrs</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jackson-databind</artifactId>
+					<groupId>com.fasterxml.jackson.core</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>paranamer</artifactId>
+					<groupId>com.thoughtworks.paranamer</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jackson-annotations</artifactId>
+					<groupId>com.fasterxml.jackson.core</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jackson-core</artifactId>
+					<groupId>com.fasterxml.jackson.core</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>guava</artifactId>
+					<groupId>com.google.guava</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>commons-lang</artifactId>
+					<groupId>commons-lang</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -145,6 +182,16 @@
 			<artifactId>swagger-jersey2-jaxrs_2.10</artifactId>
 			<scope>compile</scope>
 			<version>${swagger.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.ws.rs</groupId>
+					<artifactId>jsr311-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>guava</artifactId>
+					<groupId>com.google.guava</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- DI Guice Dependencies -->
