@@ -54,12 +54,6 @@ public class EmbeddedServer {
 		servletRegistration.addMapping("/*");
 		servletRegistration.setInitParameter("javax.ws.rs.Application", "de.avgl.dmp.controller.providers.DMPApplication");
 
-		
-		final ServletRegistration swaggerServletRegistration = context.addServlet("SwaggerServlet", SwaggerConfig.class);
-		swaggerServletRegistration.setLoadOnStartup(2);
-		swaggerServletRegistration.setInitParameter("api.version", API_VERSION);
-		swaggerServletRegistration.setInitParameter("swagger.api.basepath", getBaseUri().toString());
-
 		final FilterRegistration registration = context.addFilter("GuiceFilter", GuiceFilter.class);
 		registration.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), "/*");
 

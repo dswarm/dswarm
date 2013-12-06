@@ -3,12 +3,6 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
 	<servlet>
-		<servlet-name>SwaggerServlet</servlet-name>
-		<servlet-class>de.avgl.dmp.controller.doc.SwaggerConfig</servlet-class>
-		<load-on-startup>2</load-on-startup>
-	</servlet>
-
-	<servlet>
 		<servlet-name>de.avgl.dmp.Application</servlet-name>
 		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
 		<init-param>

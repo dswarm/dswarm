@@ -20,11 +20,11 @@ public class DMPApplication extends ResourceConfig {
 	@Inject
 	public DMPApplication(final ServiceLocator serviceLocator) {
 
-		packages("de.avgl.dmp.controller.resources", "com.wordnik.swagger.jersey.listing");
+		packages("de.avgl.dmp.controller.resources", "com.wordnik.swagger.jersey.listing", "com.wordnik.swagger.jaxrs.listing");
 		register(MultiPartFeature.class);
 		register(ExceptionHandler.class);
 		register(CorsResponseFilter.class);
-		
+
 		// swagger
 		register(ApiListingResourceJSON.class);
 		register(JerseyApiDeclarationProvider.class);
