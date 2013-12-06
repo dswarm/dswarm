@@ -60,7 +60,7 @@ public class Component extends BasicDMPJPAObject {
 	@XmlList
 	private Set<Component>							inputComponents					= null;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = { /*CascadeType.DETACH, CascadeType.MERGE,*/ CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { /* CascadeType.DETACH, CascadeType.MERGE, */CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "OUTPUT_COMPONENTS_INPUT_COMPONENTS", joinColumns = { @JoinColumn(name = "INPUT_COMPONENT_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "OUTPUT_COMPONENT_ID", referencedColumnName = "ID") })
 	@XmlElement(name = "output_components")
 	@JsonSerialize(using = SetComponentReferenceSerializer.class)
@@ -110,7 +110,9 @@ public class Component extends BasicDMPJPAObject {
 
 			// remove component from input components, if component will be prepared for removal
 
-			for (final Component inputComponent : inputComponents) {
+			final Set<Component> componentsToBeDeleted = Sets.newCopyOnWriteArraySet(inputComponents);
+
+			for (final Component inputComponent : componentsToBeDeleted) {
 
 				inputComponent.removeOutputComponent(this);
 			}
@@ -188,7 +190,9 @@ public class Component extends BasicDMPJPAObject {
 
 			// remove component from output component, if component will be prepared for removal
 
-			for (final Component outputComponent : outputComponents) {
+			final Set<Component> componentsToBeDeleted = Sets.newCopyOnWriteArraySet(outputComponents);
+
+			for (final Component outputComponent : componentsToBeDeleted) {
 
 				outputComponent.removeInputComponent(this);
 			}
@@ -394,7 +398,7 @@ public class Component extends BasicDMPJPAObject {
 					parameterMappingsJSON = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
 					parameterMappings = Maps.newLinkedHashMap();
 				}
-				
+
 				parameterMappingsInitialized = true;
 
 				return;
