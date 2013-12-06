@@ -11,6 +11,7 @@ import java.io.Writer;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -95,7 +96,10 @@ public class JSRoot extends JSObject {
 		final JsonFactory jsonFactory = new JsonFactory();
 		final StringWriter writer = new StringWriter();
 
-		render(jsonFactory, writer);
+		final JsonGenerator generator = jsonFactory.createGenerator(writer);
+		generator.setPrettyPrinter(new DefaultPrettyPrinter());
+
+		render(generator);
 
 		return writer.getBuffer().toString();
 	}

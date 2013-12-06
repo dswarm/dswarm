@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datei xmlns="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://files.dnb.de/standards/formate/mabxml-1.xsd">
+    <datensatz typ="h" status="n" mabVersion="M2.0">
+        <feld nr="001" ind=" ">06978834</feld>
+        <feld nr="002" ind="a">19981028</feld>
+        <feld nr="003" ind=" ">20010620</feld>
+        <feld nr="005" ind="n">20011121</feld>
+        <feld nr="029" ind="m">MB</feld>
+        <feld nr="030" ind=" ">az1dcr|||||37</feld>
+        <feld nr="037" ind="z">dt.</feld>
+        <feld nr="050" ind=" ">|||||c||||||||</feld>
+        <feld nr="051" ind=" ">n||||||</feld>
+        <feld nr="070" ind=" ">KNUB</feld>
+        <feld nr="070" ind="b">FRhk</feld>
+        <feld nr="076" ind="n">098301</feld>
+        <feld nr="076" ind="k">101171</feld>
+        <feld nr="076" ind="v">5</feld>
+        <feld nr="077" ind="p">00872805<tf/>Roll, Gernot</feld>
+        <feld nr="077" ind="p">00872284<tf/>Thomas, Eugen</feld>
+        <feld nr="100" ind="b">Wirth, Franz Peter</feld>
+        <feld nr="102" ind=" ">00412254</feld>
+        <feld nr="104" ind="b">Mann, Golo</feld>
+        <feld nr="106" ind=" ">00243077</feld>
+        <feld nr="108" ind="b">Ahlsen, Leopold</feld>
+        <feld nr="110" ind=" ">00004514</feld>
+        <feld nr="112" ind="b">Boysen, Rolf</feld>
+        <feld nr="114" ind=" ">00045374</feld>
+        <feld nr="116" ind="b">Pekny, Romuald</feld>
+        <feld nr="118" ind=" ">00465696</feld>
+        <feld nr="120" ind="b">Kreindl, Werner</feld>
+        <feld nr="122" ind=" ">00209123</feld>
+        <feld nr="331" ind=" ">Wallenstein</feld>
+        <feld nr="334" ind=" ">Bildtonträger</feld>
+        <feld nr="335" ind=" ">nach der Biographie von Golo Mann für das Fernsehen erzählt von Leopold Ahlsen</feld>
+        <feld nr="359" ind=" ">[Darsteller:] Rolf Boysen, Romuald Pekny, Werner Kreindl ... Kamera: Gernot Roll ... Musik: Eugen Thomas. Regie: Franz Peter Wirth</feld>
+        <feld nr="410" ind=" ">[Mainz]</feld>
+        <feld nr="412" ind=" ">ZDF [u.a.]</feld>
+        <feld nr="433" ind=" ">Videokassetten</feld>
+        <feld nr="501" ind=" ">Fernsehfilm, BRD 1978</feld>
+    </datensatz>
+
+</datei>

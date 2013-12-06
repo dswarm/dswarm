@@ -41,25 +41,6 @@ public class TransformationsResourceTest extends ResourceTest {
 		transformationJSON = mapper.readValue(transformationJSONString, ObjectNode.class);
 	}
 
-	/**
-	 * test post of transformations
-	 */
-	@Test
-	public void testEchoJSON() {
-		Response response = target("echo").request(MediaType.APPLICATION_JSON_TYPE)
-				.accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(Entity.json(transformationJSONString));
-		String responseString = response.readEntity(String.class);
-
-		final ObjectNode expected = new ObjectNode(factory);
-
-		expected.put("response_message", "this is your response message");
-		expected.put("request_message", transformationJSON);
-
-		Assert.assertEquals("POST responses are not equal", expected.toString(), responseString);
-		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
-	}
-
 	@Test
 	public void testXML() throws Exception {
 
