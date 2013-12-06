@@ -170,36 +170,4 @@ public class TransformationsResource {
 
 		return buildResponse(result);
 	}
-
-//	/**
-//	 * this endpoint consumes a transformation as JSON representation
-//	 *
-//	 * @param jsonObjectString a JSON representation of one transformation
-//	 * @return
-//	 * @throws IOException
-//	 * @throws DMPConverterException
-//	 */
-//	@POST
-//	@Path("/demo")
-//	@Consumes(MediaType.APPLICATION_JSON)
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public Response runDemoWithMetamorph(final String jsonObjectString) throws IOException, DMPConverterException {
-//
-//		// TODO: fixme
-//
-//		final String result = "{\"status\":\"nok\",\"reason\":\"not implemented / in transition\"}";
-//
-////		final Transformation transformation;
-////		try {
-////			transformation = pojoMapperProvider.get().toTransformation(jsonObjectString);
-////		} catch (DMPPersistenceException e) {
-////			throw new DMPConverterException(e.getMessage());
-////		}
-////
-////		final TransformationFlow flow = TransformationFlow.fromTransformation(transformation);
-////
-////		final String result = flow.applyDemo();
-//
-//		return buildResponse(result);
-//	}
 }
