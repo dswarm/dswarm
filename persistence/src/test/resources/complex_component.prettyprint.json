@@ -1,0 +1,16 @@
+{
+    "id": 3,
+    "name": "my trim component",
+    "function": {
+        "id": 3
+    },
+    "input_components": [{
+        "id": 1
+    }],
+    "output_components": [{
+        "id": 2
+    }],
+    "parameter_mappings": {
+        "inputString": "previousComponent.outputString"
+    }
+}

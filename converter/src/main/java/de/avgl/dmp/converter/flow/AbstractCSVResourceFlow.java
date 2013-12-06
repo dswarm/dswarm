@@ -130,7 +130,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 	}
 
 	public AbstractCSVResourceFlow(final String encoding, final Character escapeCharacter, final Character quoteCharacter,
-								   final Character columnDelimiter, final String rowDelimiter) {
+	                               final Character columnDelimiter, final String rowDelimiter) {
 
 		this.encoding = encoding;
 		this.escapeCharacter = escapeCharacter;

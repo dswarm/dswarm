@@ -11,7 +11,7 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
-import de.avgl.dmp.persistence.services.InternalServiceFactory;
+import de.avgl.dmp.persistence.service.InternalServiceFactory;
 
 @Singleton
 public class XMLConverterEventRecorder {

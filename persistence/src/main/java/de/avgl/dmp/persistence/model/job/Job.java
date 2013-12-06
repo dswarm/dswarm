@@ -1,27 +1,41 @@
 package de.avgl.dmp.persistence.model.job;
 
-import java.util.List;
+import java.util.Set;
 
+import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
+import de.avgl.dmp.persistence.model.utils.SetMappingReferenceSerializer;
+
 /**
- * 
  * @author tgaengler
- *
  */
 @XmlRootElement
-public class Job extends DMPObject {
+public class Job extends ExtendedBasicDMPJPAObject {
 
-	private List<Transformation>	transformations;
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
 
-	public List<Transformation> getTransformations() {
+	@JsonSerialize(using = SetMappingReferenceSerializer.class)
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	@XmlIDREF
+	@XmlList
+	private Set<Mapping>		mappings;
 
-		return transformations;
+	public Set<Mapping> getMappings() {
+
+		return mappings;
 	}
 
-	public void setTransformations(final List<Transformation> transformations) {
+	public void setMappings(final Set<Mapping> mappingsArg) {
 
-		this.transformations = transformations;
+		mappings = mappingsArg;
 	}
-
 }

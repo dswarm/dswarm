@@ -21,6 +21,8 @@
           "configurationId" : "1",
             "name": "identifier",
             "path": "header.identifier",
+          "resourceId" : "1",
+          "configurationId" : "1",
             "show": true
         }
     },
@@ -32,6 +34,8 @@
           "configurationId" : "1",
             "name": "dc:identifier",
             "path": "OAI-PMH.dc:identifier",
+          "resourceId" : "1",
+          "configurationId" : "1",
             "show": true
         }
     }

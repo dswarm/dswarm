@@ -1,0 +1,6 @@
+{
+    "id": 1,
+    "name": "trim",
+    "description": "trims leading and trailing whitespaces from a given string",
+    "parameters": ["inputString", "parameter2"]
+}

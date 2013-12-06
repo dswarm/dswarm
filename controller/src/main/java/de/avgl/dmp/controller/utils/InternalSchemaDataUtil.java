@@ -27,10 +27,10 @@ import de.avgl.dmp.persistence.model.jsonschema.JSRoot;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.types.Tuple;
-import de.avgl.dmp.persistence.services.InternalService;
-import de.avgl.dmp.persistence.services.InternalServiceFactory;
-import de.avgl.dmp.persistence.services.ResourceService;
-import de.avgl.dmp.persistence.services.SchemaService;
+import de.avgl.dmp.persistence.service.InternalService;
+import de.avgl.dmp.persistence.service.InternalServiceFactory;
+import de.avgl.dmp.persistence.service.resource.ResourceService;
+import de.avgl.dmp.persistence.service.schema.SchemaService;
 
 @Singleton
 public class InternalSchemaDataUtil {
@@ -107,8 +107,12 @@ public class InternalSchemaDataUtil {
 
 		final Configuration configuration = configurationOptional.get();
 
-		final Optional<JSRoot> rootOptional = schemaServiceProvider.get().getSchema(resourceId, configurationId)
-				.or(getConfiguredSchema(configuration));
+		// TODO: fixme
+		
+		final Optional<JSRoot> rootOptional = null;
+				
+//				schemaServiceProvider.get().getSchema(resourceId, configurationId)
+//				.or(getConfiguredSchema(configuration));
 
 		if (rootOptional.isPresent()) {
 
@@ -218,8 +222,10 @@ public class InternalSchemaDataUtil {
 					}
 
 					if (latestConfigId != Integer.MIN_VALUE) {
+						
+						// TODO: fixme
 
-						return schemaServiceProvider.get().getSchema(schemaId, latestConfigId);
+						// return schemaServiceProvider.get().getSchema(schemaId, latestConfigId);
 					}
 				}
 			}

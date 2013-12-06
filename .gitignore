@@ -61,7 +61,7 @@ atlassian-ide-plugin.xml
 *.sublime-workspace
 
 # VIM
-*.s[a-w][a-z]
+*.swp
 *.un~
 Session.vim
 .netrwhist

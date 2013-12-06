@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Set;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -26,16 +27,22 @@ import com.google.common.collect.Sets;
 import com.google.common.net.HttpHeaders;
 import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
-import de.avgl.dmp.persistence.services.ConfigurationService;
+import de.avgl.dmp.persistence.model.resource.Resource;
+import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 @RequestScoped
+@Api(value = "/configurations", description = "Operations about configurations")
 @Path("configurations")
 public class ConfigurationsResource {
 
@@ -55,6 +62,7 @@ public class ConfigurationsResource {
 		return Response.ok(responseContent).build();
 	}
 
+	@ApiOperation(value = "get all configurations ", notes = "Returns a list of Configuration objects.")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getResourceConfigurations() throws DMPControllerException {
@@ -94,16 +102,18 @@ public class ConfigurationsResource {
 
 	/**
 	 * this endpoint consumes a configuration as JSON representation and writes this configuration persistent to the database
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one configuration
 	 * @return
 	 * @throws IOException
 	 * @throws DMPConverterException
 	 */
+	@ApiOperation(value = "create a new configuration", notes = "Returns a new Configuration object.", response = Configuration.class)
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response createConfiguration(final String jsonObjectString) throws DMPControllerException {
+	public Response createConfiguration(@ApiParam(value = "configuration (as JSON)", required = true) final String jsonObjectString)
+			throws DMPControllerException {
 
 		LOG.debug("try to create new configuration");
 
@@ -136,10 +146,12 @@ public class ConfigurationsResource {
 		return Response.created(configurationURI).entity(configurationJSON).build();
 	}
 
+	@ApiOperation(value = "get the configuration that matches the given id", notes = "Returns the Configuration object that matches the given id.")
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResourceConfiguration(@PathParam("id") final Long id) throws DMPControllerException {
+	public Response getResourceConfiguration(@ApiParam(value = "configuration identifier", required = true) @PathParam("id") final Long id)
+			throws DMPControllerException {
 
 		LOG.debug("try to get configuration with id '" + id + "'");
 

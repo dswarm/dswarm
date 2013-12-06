@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
@@ -41,6 +42,22 @@ public class DMPPersistenceUtil {
 
 		try {
 			return mapper.readValue(jsonString, ObjectNode.class);
+		} catch (JsonParseException e) {
+
+			throw new DMPException("something went wrong while parsing the JSON string '" + jsonString + "'\n" + e.getMessage());
+		} catch (JsonMappingException e) {
+
+			throw new DMPException("something went wrong while parsing the JSON string '" + jsonString + "'\n" + e.getMessage());
+		} catch (IOException e) {
+
+			throw new DMPException("something went wrong while parsing the JSON string '" + jsonString + "'\n" + e.getMessage());
+		}
+	}
+	
+	public static ArrayNode getJSONArray(final String jsonString) throws DMPException {
+
+		try {
+			return mapper.readValue(jsonString, ArrayNode.class);
 		} catch (JsonParseException e) {
 
 			throw new DMPException("something went wrong while parsing the JSON string '" + jsonString + "'\n" + e.getMessage());

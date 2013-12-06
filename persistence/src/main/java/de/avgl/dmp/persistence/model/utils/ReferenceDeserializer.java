@@ -13,7 +13,7 @@ import com.google.common.collect.Sets;
 
 import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.persistence.model.DMPJPAObject;
-import de.avgl.dmp.persistence.services.BasicJPAService;
+import de.avgl.dmp.persistence.service.BasicJPAService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -26,7 +26,7 @@ public abstract class ReferenceDeserializer<DMPJPAOBJECTIMPL extends DMPJPAObjec
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ReferenceDeserializer.class);
 
-	abstract BasicJPAService<DMPJPAOBJECTIMPL> getJpaService() throws DMPException;
+	abstract BasicJPAService<DMPJPAOBJECTIMPL, Long> getJpaService() throws DMPException;
 
 	@Override
 	public Set<DMPJPAOBJECTIMPL> deserialize(final JsonParser jp, final DeserializationContext ctxt) throws IOException {
@@ -69,7 +69,7 @@ public abstract class ReferenceDeserializer<DMPJPAOBJECTIMPL extends DMPJPAObjec
 
 			final Long id = Long.valueOf(idNode.asLong());
 
-			final BasicJPAService<DMPJPAOBJECTIMPL> jpaService;
+			final BasicJPAService<DMPJPAOBJECTIMPL, Long> jpaService;
 			try {
 				jpaService = getJpaService();
 			} catch (DMPException e) {

@@ -1,0 +1,54 @@
+{
+    "id": "8103a07f-f1a5-4cfc-9614-00065f22bdbd",
+    "name": "my special mapping group",
+    "mappings": [{
+        "id": "a0b059e2-d5cd-4ed9-a515-9025652eb8b7",
+        "name": "my simple mapping",
+        "transformation": {
+            "id": "466287ab-c94c-47c8-8471-13ae03a306ac",
+            "name": "my transformation (component)",
+            "function": {
+                "id": "f0009312-77b8-452f-836a-141277a4fa1c"
+            },
+            "parameter_mappings": {
+                "transformationInputString": "http://purl.org/dc/terms/title",
+                "transformationOutputVariable": "http://www.w3.org/2000/01/rdf-schema#label"
+            }
+        },
+        "input_attribute_paths": [{
+            "id": "209088fa-ad9c-4dbd-a835-bfbb5cb0fe86",
+            "attribute_path": "http://purl.org/dc/terms/title"
+        }],
+        "output_attribute_path": {
+            "id": "5a5a3fd2-dd23-4053-9246-485e0399f554",
+            "attribute_path": "http://www.w3.org/2000/01/rdf-schema#label"
+        }
+    }, {
+        "id": "f5de4b06-38f9-4bd7-8654-9b0da3aecbdb",
+        "name": "my complex mapping",
+        "transformation": {
+            "id": "933c8d50-b7a2-4a79-9e9e-1eed9392981c",
+            "name": "my complex transformation (component)",
+            "function": {
+                "id": "57038b6e-f3e4-47be-91b9-223930d83c0a"
+            },
+            "parameter_mappings": {
+                "firstName": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/firstName",
+                "familyName": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/familyName",
+                "transformationOutputVariable": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/name"
+            }
+        },
+        "input_attribute_paths": [{
+            "id": "73b0408d-4562-4f12-bc84-bdbece73b56d",
+            "attribute_path": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/familyName"
+        }, {
+            "id": "95e52c60-39e0-464c-a81e-4023bfea70c5",
+            "attribute_path": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/firstName"
+        }],
+        "output_attribute_path": {
+            "id": "6983bc6e-deef-4dd0-8216-a113d9c427f0",
+            "attribute_path": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/name"
+        }
+    }],
+    "description": "includes two mappings"
+}

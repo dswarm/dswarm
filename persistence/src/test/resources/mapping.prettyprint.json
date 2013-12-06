@@ -1,0 +1,23 @@
+{
+    "id": 1,
+    "name": "my mapping",
+    "transformation": {
+        "id": 2,
+        "name": "my transformation (component)",
+        "function": {
+            "id": 2
+        },
+        "parameter_mappings": {
+            "transformationInputString": "http://purl.org/dc/terms/title",
+            "transformationOutputVariable": "http://www.w3.org/2000/01/rdf-schema#label"
+        }
+    },
+    "input_attribute_paths": [{
+        "id": 1,
+        "attribute_path": "http://purl.org/dc/terms/title"
+    }],
+    "output_attribute_path": {
+        "id": 2,
+        "attribute_path": "http://www.w3.org/2000/01/rdf-schema#label"
+    }
+}

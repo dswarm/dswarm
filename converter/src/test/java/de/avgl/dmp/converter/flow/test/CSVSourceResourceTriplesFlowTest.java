@@ -4,11 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.core.ObjectCodec;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.collect.ImmutableList;
 import org.culturegraph.mf.stream.source.ResourceOpener;
@@ -84,7 +79,7 @@ public class CSVSourceResourceTriplesFlowTest {
 		@SuppressWarnings("UnusedDeclaration") final CSVSourceResourceTriplesFlow flow = new CSVSourceResourceTriplesFlow(configuration);
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test(expected = DMPConverterException.class)
 	public void testNullConfigurationParameter() throws Exception {
 		final Configuration configuration = new Configuration();
 		@SuppressWarnings("UnusedDeclaration") final CSVSourceResourceTriplesFlow flow = new CSVSourceResourceTriplesFlow(configuration);

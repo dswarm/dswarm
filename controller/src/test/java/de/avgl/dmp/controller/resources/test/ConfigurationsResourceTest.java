@@ -16,7 +16,7 @@ import com.google.common.collect.Sets;
 
 import de.avgl.dmp.controller.resources.test.utils.ResourceTestUtils;
 import de.avgl.dmp.persistence.model.resource.Configuration;
-import de.avgl.dmp.persistence.services.ConfigurationService;
+import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public class ConfigurationsResourceTest extends ResourceTest {
