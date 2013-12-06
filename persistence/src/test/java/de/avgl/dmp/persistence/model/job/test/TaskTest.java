@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
@@ -17,30 +18,188 @@ import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.Job;
 import de.avgl.dmp.persistence.model.job.Mapping;
+import de.avgl.dmp.persistence.model.job.Task;
 import de.avgl.dmp.persistence.model.job.Transformation;
+import de.avgl.dmp.persistence.model.resource.Configuration;
+import de.avgl.dmp.persistence.model.resource.DataModel;
+import de.avgl.dmp.persistence.model.resource.Resource;
+import de.avgl.dmp.persistence.model.resource.ResourceType;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
+import de.avgl.dmp.persistence.model.schema.Clasz;
+import de.avgl.dmp.persistence.model.schema.Schema;
+import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class JobTest extends GuicedTest {
+public class TaskTest extends GuicedTest {
 
-	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(JobTest.class);
+	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(TaskTest.class);
 
 	private final ObjectMapper						objectMapper	= injector.getInstance(ObjectMapper.class);
 
 	@Test
-	public void simpleJobTest() {
-		
+	public void simpleTaskTest() {
+
+		final Job job = createJob();
+
+		final DataModel inputDataModel = createDataModel();
+		final DataModel outputDataModel = createDataModel();
+
+		final Task task = new Task();
+		task.setName("my task");
+		task.setDescription("my task description");
+		task.setJob(job);
+		task.setInputDataModel(inputDataModel);
+		task.setOutputDataModel(outputDataModel);
+
+		String json = null;
+
+		try {
+
+			json = objectMapper.writeValueAsString(task);
+		} catch (JsonProcessingException e) {
+
+			e.printStackTrace();
+		}
+
+		LOG.debug("task json: " + json);
+	}
+
+	private DataModel createDataModel() {
+
+		// first attribute path
+
+		final String dctermsTitleId = "http://purl.org/dc/terms/title";
+		final String dctermsTitleName = "title";
+
+		final Attribute dctermsTitle = createAttribute(dctermsTitleId, dctermsTitleName);
+
+		final String dctermsHasPartId = "http://purl.org/dc/terms/hasPart";
+		final String dctermsHasPartName = "hasPart";
+
+		final Attribute dctermsHasPart = createAttribute(dctermsHasPartId, dctermsHasPartName);
+
+		final AttributePath attributePath1 = new AttributePath();
+		// attributePath1.setId(UUID.randomUUID().toString());
+
+		attributePath1.addAttribute(dctermsTitle);
+		attributePath1.addAttribute(dctermsHasPart);
+		attributePath1.addAttribute(dctermsTitle);
+
+		// second attribute path
+
+		final String dctermsCreatorId = "http://purl.org/dc/terms/creator";
+		final String dctermsCreatorName = "creator";
+
+		final Attribute dctermsCreator = createAttribute(dctermsCreatorId, dctermsCreatorName);
+
+		final String foafNameId = "http://xmlns.com/foaf/0.1/name";
+		final String foafNameName = "name";
+
+		final Attribute foafName = createAttribute(foafNameId, foafNameName);
+
+		final AttributePath attributePath2 = new AttributePath();
+		// attributePath2.setId(UUID.randomUUID().toString());
+
+		attributePath2.addAttribute(dctermsCreator);
+		attributePath2.addAttribute(foafName);
+
+		// third attribute path
+
+		final String dctermsCreatedId = "http://purl.org/dc/terms/created";
+		final String dctermsCreatedName = "created";
+
+		final Attribute dctermsCreated = createAttribute(dctermsCreatedId, dctermsCreatedName);
+
+		final AttributePath attributePath3 = new AttributePath();
+		// attributePath3.setId(UUID.randomUUID().toString());
+
+		attributePath3.addAttribute(dctermsCreated);
+
+		// record class
+
+		final String biboDocumentId = "http://purl.org/ontology/bibo/Document";
+		final String biboDocumentName = "document";
+
+		final Clasz biboDocument = new Clasz(biboDocumentId, biboDocumentName);
+
+		// schema
+
+		final Schema schema = new Schema();
+		// schema.setId(UUID.randomUUID().toString());
+
+		schema.addAttributePath(attributePath1);
+		schema.addAttributePath(attributePath2);
+		schema.addAttributePath(attributePath3);
+		schema.setRecordClass(biboDocument);
+
+		// data resource
+		final Resource resource = new Resource();
+
+		resource.setName("bla");
+		resource.setDescription("blubblub");
+		resource.setType(ResourceType.FILE);
+
+		final String attributeKey = "path";
+		final String attributeValue = "/path/to/file.end";
+
+		final ObjectNode attributes = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
+		attributes.put(attributeKey, attributeValue);
+
+		resource.setAttributes(attributes);
+
+		// configuration
+		final Configuration configuration = new Configuration();
+
+		configuration.setName("my configuration");
+		configuration.setDescription("configuration description");
+
+		final ObjectNode parameters = new ObjectNode(objectMapper.getNodeFactory());
+		final String parameterKey = "fileseparator";
+		final String parameterValue = ";";
+		parameters.put(parameterKey, parameterValue);
+
+		configuration.setParameters(parameters);
+
+		resource.addConfiguration(configuration);
+
+		// data model
+		final DataModel dataModel = new DataModel();
+		dataModel.setName("my data model");
+		dataModel.setDescription("my data model description");
+		dataModel.setDataResource(resource);
+		dataModel.setConfiguration(configuration);
+		dataModel.setSchema(schema);
+
+		String json = null;
+
+		try {
+
+			json = objectMapper.writeValueAsString(dataModel);
+		} catch (JsonProcessingException e) {
+
+			e.printStackTrace();
+		}
+
+		LOG.debug("data model json: " + json);
+
+		return dataModel;
+	}
+
+	public Job createJob() {
+
 		final Set<Mapping> mappings = Sets.newLinkedHashSet();
-		
+
 		final Mapping simpleMapping = simpleMapping();
 		final Mapping complexMapping = complexMapping();
-		
+
 		mappings.add(simpleMapping);
 		mappings.add(complexMapping);
-		
+
 		final Job job = new Job();
+		job.setName("my job");
+		job.setDescription("my job description");
 		job.setMappings(mappings);
-		
+
 		String json = null;
 
 		try {
@@ -52,8 +211,10 @@ public class JobTest extends GuicedTest {
 		}
 
 		LOG.debug("job json: " + json);
+
+		return job;
 	}
-	
+
 	private Mapping simpleMapping() {
 
 		final String functionName = "trim";
@@ -104,7 +265,7 @@ public class JobTest extends GuicedTest {
 		final Attribute dctermsTitle = createAttribute(dctermsTitleId, dctermsTitleName);
 
 		final AttributePath inputAttributePath = new AttributePath();
-		
+
 		inputAttributePath.addAttribute(dctermsTitle);
 
 		// output attribute path
@@ -115,7 +276,7 @@ public class JobTest extends GuicedTest {
 		final Attribute rdfsLabel = createAttribute(rdfsLabelId, rdfsLabelName);
 
 		final AttributePath outputAttributePath = new AttributePath();
-		
+
 		outputAttributePath.addAttribute(rdfsLabel);
 
 		// transformation component
@@ -195,7 +356,7 @@ public class JobTest extends GuicedTest {
 		}
 
 		LOG.debug("simple mapping json: " + json);
-		
+
 		return mapping;
 	}
 
@@ -422,7 +583,7 @@ public class JobTest extends GuicedTest {
 		final Attribute firstName = createAttribute(firstNameId, firstNameName);
 
 		final AttributePath firstNameAttributePath = new AttributePath();
-		
+
 		firstNameAttributePath.addAttribute(dctermsCreator);
 		firstNameAttributePath.addAttribute(firstName);
 
@@ -434,7 +595,7 @@ public class JobTest extends GuicedTest {
 		final Attribute familyName = createAttribute(familyNameId, familyNameName);
 
 		final AttributePath familyNameAttributePath = new AttributePath();
-		
+
 		familyNameAttributePath.addAttribute(dctermsCreator);
 		familyNameAttributePath.addAttribute(familyName);
 
@@ -446,7 +607,7 @@ public class JobTest extends GuicedTest {
 		final Attribute foafName = createAttribute(foafNameId, foafNameName);
 
 		final AttributePath nameAttributePath = new AttributePath();
-		
+
 		nameAttributePath.addAttribute(dctermsCreator);
 		nameAttributePath.addAttribute(foafName);
 
@@ -485,7 +646,7 @@ public class JobTest extends GuicedTest {
 		}
 
 		LOG.debug("complex mapping json: " + json);
-		
+
 		try {
 
 			json = objectMapper.writeValueAsString(transformation2);
@@ -535,7 +696,7 @@ public class JobTest extends GuicedTest {
 		}
 
 		LOG.debug("clean-up next component json: " + json);
-		
+
 		return mapping;
 	}
 
