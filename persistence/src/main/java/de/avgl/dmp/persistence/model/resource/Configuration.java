@@ -115,7 +115,7 @@ public class Configuration extends DMPJPAObject {
 
 		if (parameters == null) {
 
-			initParameters(false);
+			initParameters(true);
 		}
 
 		parameters.set(key, value);
@@ -254,10 +254,11 @@ public class Configuration extends DMPJPAObject {
 				if (fromScratch) {
 
 					parameters = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
-				} else {
-
-					return;
 				}
+				
+				parametersInitialized = true;
+
+				return;
 			}
 
 			try {
