@@ -5,6 +5,7 @@ import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -22,10 +23,10 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
-import com.google.inject.spi.LinkedKeyBinding;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.persistence.DMPPersistenceException;
@@ -34,18 +35,19 @@ import de.avgl.dmp.persistence.services.FunctionService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 @RequestScoped
+@Api(value = "/functions", description = "Operations about functions.")
 @Path("functions")
 public class FunctionsResource {
 
 	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger
 			.getLogger(FunctionsResource.class);
 
-	@Context
-	UriInfo uri;
-	
 	private final Provider<FunctionService> functionServiceProvider;
 
 	private final ObjectMapper objectMapper;
+	
+	@Context
+	UriInfo uri;
 
 	@Inject
 	public FunctionsResource(
@@ -58,11 +60,12 @@ public class FunctionsResource {
 	private Response buildResponse(final String responseContent) {
 		return Response.ok(responseContent).build();
 	}
-
+	
+	@ApiOperation(value = "get all functions/transformations", notes = "returns json of all functions")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAllFunctions() throws DMPControllerException {
-
+		
 		LOG.debug("try to get functions");
 
 		final FunctionService functionService = functionServiceProvider.get();
@@ -104,6 +107,7 @@ public class FunctionsResource {
 	/**
 	 * this endpoint consumes a function as JSON and writes this to the database
 	 */
+	@ApiOperation(value = "writes function given by json to db", notes = "returns the stored function in json")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -187,7 +191,7 @@ public class FunctionsResource {
 		}
 		
 		try {
-			function = functionService.updateObject(function);
+			function = functionService.updateObjectTransactional(function);
 		} catch(DMPPersistenceException e) {
 			LOG.debug("something went wrong while function update");
 			throw new DMPControllerException("something went wrong while function update\n" + e.getMessage());

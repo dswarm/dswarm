@@ -22,12 +22,14 @@ public class FunctionTest extends GuicedTest {
 		final String functionName = "trim";
 		final String functionDescription = "trims leading and trailing whitespaces from a given string";
 		final String functionParameter = "inputString";
+		final String functionFunctionDescription = "machine readable description";
 
 		final Function function = new Function();
 		//function.setId(functionId);
 		function.setName(functionName);
 		function.setDescription(functionDescription);
 		function.addParameter(functionParameter);
+		function.setFunctionDescription(functionFunctionDescription);
 
 		//Assert.assertNotNull("the function id shouldn't be null", function.getId());
 		//Assert.assertEquals("the function ids are not equal", functionId, function.getId());

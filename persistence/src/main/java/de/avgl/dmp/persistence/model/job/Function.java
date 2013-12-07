@@ -20,7 +20,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.common.collect.Lists;
 
@@ -38,6 +40,7 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 @DiscriminatorColumn(name = "FUNCTION_TYPE", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("Function")
 @Table(name = "FUNCTION")
+@JsonIgnoreProperties({"functionDescription"})
 public class Function extends ExtendedBasicDMPJPAObject {
 
 	/**
@@ -47,7 +50,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(AttributePath.class);
 
-	@Column(name = "FUNCTIONDESCRIPTION")
+	@Column(name = "FUNCTIONDESCRIPTION", columnDefinition = "VARCHAR(4000)", length = 4000)
 	private String									functionDescription		= null;
 	
 	@Transient
@@ -95,6 +98,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 		this.functionDescription = functionDescription;
 	}
 	
+	@XmlElement(name = "functionDescription")
 	public String getFunctionDescription() {
 		return functionDescription;
 	}
