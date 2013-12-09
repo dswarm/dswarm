@@ -15,6 +15,7 @@ import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.status.DMPStatus;
+import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
 
@@ -41,7 +42,9 @@ public class AttributesResource extends BasicResource<AttributeService, Attribut
 	@Override
 	public Response getObject(@ApiParam(value = "attribute identifier", required = true) final String id) throws DMPControllerException {
 
-		return super.getObject(id);
+		//return super.getObject(id);
+		
+		return Response.status(505).build();
 	}
 
 	@ApiOperation(value = "create a new attribute", notes = "Returns a new Attribute object.", response = Attribute.class)
@@ -66,4 +69,11 @@ public class AttributesResource extends BasicResource<AttributeService, Attribut
 
 		return object;
 	}
+
+	@Override
+	protected Attribute createObject(Attribute objectFromJSON, AttributeService persistenceService) throws DMPPersistenceException {
+
+		return persistenceService.createObject(objectFromJSON.getId());
+	}
+
 }

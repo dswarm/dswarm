@@ -12,9 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Sets;
 
-import de.avgl.dmp.controller.resources.test.utils.ResourceTestUtils;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
