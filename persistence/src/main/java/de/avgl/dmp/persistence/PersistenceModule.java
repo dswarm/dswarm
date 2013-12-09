@@ -20,18 +20,19 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
-import de.avgl.dmp.persistence.services.AttributePathService;
-import de.avgl.dmp.persistence.services.AttributeService;
-import de.avgl.dmp.persistence.services.ClaszService;
-import de.avgl.dmp.persistence.services.ComponentService;
-import de.avgl.dmp.persistence.services.ConfigurationService;
-import de.avgl.dmp.persistence.services.FunctionService;
-import de.avgl.dmp.persistence.services.InternalServiceFactory;
-import de.avgl.dmp.persistence.services.ResourceService;
-import de.avgl.dmp.persistence.services.SchemaService;
-import de.avgl.dmp.persistence.services.TransformationService;
-import de.avgl.dmp.persistence.services.impl.InternalServiceFactoryImpl;
-import de.avgl.dmp.persistence.services.impl.SchemaServiceImpl;
+import de.avgl.dmp.persistence.service.InternalServiceFactory;
+import de.avgl.dmp.persistence.service.impl.InternalServiceFactoryImpl;
+import de.avgl.dmp.persistence.service.impl.SchemaServiceImpl;
+import de.avgl.dmp.persistence.service.job.ComponentService;
+import de.avgl.dmp.persistence.service.job.FunctionService;
+import de.avgl.dmp.persistence.service.job.TransformationService;
+import de.avgl.dmp.persistence.service.resource.ConfigurationService;
+import de.avgl.dmp.persistence.service.resource.DataModelService;
+import de.avgl.dmp.persistence.service.resource.ResourceService;
+import de.avgl.dmp.persistence.service.schema.AttributePathService;
+import de.avgl.dmp.persistence.service.schema.AttributeService;
+import de.avgl.dmp.persistence.service.schema.ClaszService;
+import de.avgl.dmp.persistence.service.schema.SchemaService;
 
 public class PersistenceModule extends AbstractModule {
 
@@ -53,8 +54,8 @@ public class PersistenceModule extends AbstractModule {
 
 		bind(JsonToPojoMapper.class);
 
-		bind(ResourceService.class).in(Scopes.SINGLETON);
-		bind(ConfigurationService.class).in(Scopes.SINGLETON);
+		bind(ResourceService.class); //.in(Scopes.SINGLETON);
+		bind(ConfigurationService.class); //.in(Scopes.SINGLETON);
 		bind(AttributeService.class).in(Scopes.SINGLETON);
 		bind(AttributePathService.class).in(Scopes.SINGLETON);
 		bind(ClaszService.class).in(Scopes.SINGLETON);
@@ -62,9 +63,10 @@ public class PersistenceModule extends AbstractModule {
 		bind(FunctionService.class).in(Scopes.SINGLETON);
 		bind(ComponentService.class).in(Scopes.SINGLETON);
 		bind(TransformationService.class).in(Scopes.SINGLETON);
+		bind(DataModelService.class).in(Scopes.SINGLETON);
 
 		bind(InternalServiceFactory.class).to(InternalServiceFactoryImpl.class).in(Scopes.SINGLETON);
-		
+
 		// TODO: remove this later
 		bind(SchemaServiceImpl.class).in(Scopes.SINGLETON);
 	}

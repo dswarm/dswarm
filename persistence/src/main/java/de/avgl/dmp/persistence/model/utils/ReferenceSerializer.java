@@ -10,7 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
-import de.avgl.dmp.persistence.model.job.DMPObject;
+import de.avgl.dmp.persistence.model.DMPObject;
 
 public abstract class ReferenceSerializer<DMPOBJECTIMPL extends DMPObject<DMPOBJECTIDTYPE>, DMPOBJECTIDTYPE> extends
 		JsonSerializer<DMPOBJECTIMPL> {

@@ -1,0 +1,87 @@
+{
+    "id": 1,
+    "name": "my project",
+    "description": "my project description",
+    "mappings": [{
+        "id": 1,
+        "name": "my mapping",
+        "transformation": {
+            "id": 2,
+            "name": "my transformation (component)",
+            "function": {
+                "id": 2
+            },
+            "input_components": null,
+            "output_components": null,
+            "parameter_mappings": {
+                "transformationInputString": "http://purl.org/dc/terms/title",
+                "transformationOutputVariable": "http://www.w3.org/2000/01/rdf-schema#label"
+            }
+        },
+        "input_attribute_paths": [{
+            "id": 1,
+            "attribute_path": "http://purl.org/dc/terms/title"
+        }],
+        "output_attribute_path": {
+            "id": 2,
+            "attribute_path": "http://www.w3.org/2000/01/rdf-schema#label"
+        }
+    }, {
+        "id": 2,
+        "name": "my mapping",
+        "transformation": {
+            "id": 9,
+            "name": "my transformation 2 (component)",
+            "function": {
+                "id": 8
+            },
+            "input_components": null,
+            "output_components": null,
+            "parameter_mappings": {
+                "firstName": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/firstName",
+                "familyName": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/familyName",
+                "transformationOutputVariable": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/name"
+            }
+        },
+        "input_attribute_paths": [{
+            "id": 3,
+            "attribute_path": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/firstName"
+        }, {
+            "id": 4,
+            "attribute_path": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/familyName"
+        }],
+        "output_attribute_path": {
+            "id": 5,
+            "attribute_path": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/name"
+        }
+    }],
+    "functions": [{
+        "id": 9,
+        "name": "trim",
+        "description": "trims leading and trailing whitespaces from a given string",
+        "parameters": ["inputString"],
+        "type": "Function"
+    }],
+    "input_data_model": {
+        "id": 1,
+        "name": "my data model",
+        "description": "my data model description",
+        "configuration": {
+            "id": 1
+        },
+        "schema": {
+            "id": 1
+        },
+        "data_resource": {
+            "id": 1
+        }
+    },
+    "output_data_model": {
+        "id": 2,
+        "name": "my output data model",
+        "description": "my output data model description",
+        "schema": {
+            "id": 2
+        }
+    }
+}

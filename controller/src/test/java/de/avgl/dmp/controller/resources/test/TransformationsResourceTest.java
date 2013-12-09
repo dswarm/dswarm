@@ -8,6 +8,7 @@ import javax.ws.rs.core.Response;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,6 +45,7 @@ public class TransformationsResourceTest extends ResourceTest {
 	/**
 	 * test post of transformations
 	 */
+	@Ignore
 	@Test
 	public void testEchoJSON() {
 		Response response = target("echo").request(MediaType.APPLICATION_JSON_TYPE)
@@ -60,6 +62,7 @@ public class TransformationsResourceTest extends ResourceTest {
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
 	}
 
+	@Ignore
 	@Test
 	public void testXML() throws Exception {
 
@@ -76,15 +79,16 @@ public class TransformationsResourceTest extends ResourceTest {
 		Assert.assertEquals("POST responses are not equal", expected, responseString);
 	}
 
+	@Ignore
 	@Test
 	public void testTransformationDemo() throws Exception {
-		
+
 		final Response response = target("/demo").request(MediaType.APPLICATION_JSON_TYPE)
 				.accept(MediaType.APPLICATION_JSON_TYPE)
 				.post(Entity.json(transformationJSONString));
-		
+
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
-		
+
 		final String responseString = response.readEntity(String.class);
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("transformations-post-result.json");

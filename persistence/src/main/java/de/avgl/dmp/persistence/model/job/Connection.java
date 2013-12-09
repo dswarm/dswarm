@@ -4,6 +4,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import de.avgl.dmp.persistence.model.BasicDMPObject;
+
 @XmlRootElement
 public class Connection extends BasicDMPObject {
 

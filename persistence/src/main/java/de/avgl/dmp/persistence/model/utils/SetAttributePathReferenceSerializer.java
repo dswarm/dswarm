@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.google.common.collect.Sets;
 
-import de.avgl.dmp.persistence.model.job.AttributePath;
+import de.avgl.dmp.persistence.model.schema.AttributePath;
 
 public class SetAttributePathReferenceSerializer extends JsonSerializer<Set<AttributePath>> {
 

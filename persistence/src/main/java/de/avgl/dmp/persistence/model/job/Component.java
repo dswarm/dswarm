@@ -23,8 +23,6 @@ import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.hibernate.annotations.Cascade;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -34,6 +32,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import de.avgl.dmp.init.DMPException;
+import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.utils.DMPJPAObjectReferenceSerializer;
 import de.avgl.dmp.persistence.model.utils.SetComponentReferenceSerializer;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
@@ -52,7 +51,7 @@ public class Component extends BasicDMPJPAObject {
 
 	private static final org.apache.log4j.Logger	LOG								= org.apache.log4j.Logger.getLogger(Component.class);
 
-	@ManyToMany(mappedBy = "outputComponents", fetch = FetchType.EAGER, cascade = { /*CascadeType.DETACH, CascadeType.MERGE,*/ CascadeType.PERSIST,
+	@ManyToMany(mappedBy = "outputComponents", fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
 			CascadeType.REFRESH })
 	@XmlElement(name = "input_components")
 	@JsonSerialize(using = SetComponentReferenceSerializer.class)
@@ -61,7 +60,7 @@ public class Component extends BasicDMPJPAObject {
 	@XmlList
 	private Set<Component>							inputComponents					= null;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = { /*CascadeType.DETACH, CascadeType.MERGE,*/ CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { /* CascadeType.DETACH, CascadeType.MERGE, */CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "OUTPUT_COMPONENTS_INPUT_COMPONENTS", joinColumns = { @JoinColumn(name = "INPUT_COMPONENT_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "OUTPUT_COMPONENT_ID", referencedColumnName = "ID") })
 	@XmlElement(name = "output_components")
 	@JsonSerialize(using = SetComponentReferenceSerializer.class)
@@ -70,13 +69,14 @@ public class Component extends BasicDMPJPAObject {
 	@XmlList
 	private Set<Component>							outputComponents				= null;
 
-	//@ManyToOne(fetch = FetchType.LAZY/*, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH }*/)
+	// @ManyToOne(fetch = FetchType.LAZY/*, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+	// CascadeType.REFRESH }*/)
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "FUNCTION")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
 	@XmlIDREF
-	//@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+	// @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	private Function								function						= null;
 
 	@Transient
@@ -110,7 +110,9 @@ public class Component extends BasicDMPJPAObject {
 
 			// remove component from input components, if component will be prepared for removal
 
-			for (final Component inputComponent : inputComponents) {
+			final Set<Component> componentsToBeDeleted = Sets.newCopyOnWriteArraySet(inputComponents);
+
+			for (final Component inputComponent : componentsToBeDeleted) {
 
 				inputComponent.removeOutputComponent(this);
 			}
@@ -122,7 +124,7 @@ public class Component extends BasicDMPJPAObject {
 
 			if (inputComponents == null) {
 
-				inputComponents = Sets.newLinkedHashSet();
+				inputComponents = Sets.newCopyOnWriteArraySet();
 			}
 
 			if (!inputComponents.equals(inputComponentsArg)) {
@@ -130,6 +132,7 @@ public class Component extends BasicDMPJPAObject {
 				inputComponents.clear();
 				inputComponents.addAll(inputComponentsArg);
 			}
+
 			for (final Component inputComponent : inputComponentsArg) {
 
 				inputComponent.addOutputComponent(this);
@@ -149,7 +152,7 @@ public class Component extends BasicDMPJPAObject {
 
 			if (inputComponents == null) {
 
-				inputComponents = Sets.newLinkedHashSet();
+				inputComponents = Sets.newCopyOnWriteArraySet();
 			}
 
 			if (!inputComponents.contains(inputComponent)) {
@@ -187,7 +190,9 @@ public class Component extends BasicDMPJPAObject {
 
 			// remove component from output component, if component will be prepared for removal
 
-			for (final Component outputComponent : outputComponents) {
+			final Set<Component> componentsToBeDeleted = Sets.newCopyOnWriteArraySet(outputComponents);
+
+			for (final Component outputComponent : componentsToBeDeleted) {
 
 				outputComponent.removeInputComponent(this);
 			}
@@ -199,7 +204,7 @@ public class Component extends BasicDMPJPAObject {
 
 			if (outputComponents == null) {
 
-				outputComponents = Sets.newLinkedHashSet();
+				outputComponents = Sets.newCopyOnWriteArraySet();
 			}
 
 			if (!outputComponents.equals(outputComponentsArg)) {
@@ -207,7 +212,7 @@ public class Component extends BasicDMPJPAObject {
 				outputComponents.clear();
 				outputComponents.addAll(outputComponentsArg);
 			}
-			
+
 			for (final Component outputComponent : outputComponentsArg) {
 
 				outputComponent.addInputComponent(this);
@@ -227,7 +232,7 @@ public class Component extends BasicDMPJPAObject {
 
 			if (outputComponents == null) {
 
-				outputComponents = Sets.newLinkedHashSet();
+				outputComponents = Sets.newCopyOnWriteArraySet();
 			}
 
 			if (!outputComponents.contains(outputComponent)) {
@@ -273,7 +278,6 @@ public class Component extends BasicDMPJPAObject {
 	}
 
 	public void setParameterMappings(final Map<String, String> parameterMappingsArg) {
-		
 
 		if (parameterMappingsArg == null && parameterMappings != null) {
 
@@ -393,9 +397,9 @@ public class Component extends BasicDMPJPAObject {
 
 					parameterMappingsJSON = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
 					parameterMappings = Maps.newLinkedHashMap();
-
-					parameterMappingsInitialized = true;
 				}
+
+				parameterMappingsInitialized = true;
 
 				return;
 			}

@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Maps;
 
+import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
@@ -103,5 +104,16 @@ public class ResourceTestUtils {
 
 			ResourceTestUtils.compareConfigurations(expectedConfiguration, actualConfiguration);
 		}
+	}
+
+	public static void compareSchemas(Schema expectedSchema, Schema actualSchema) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public static void evaluateSchemas(String responseSchemas,
+			Set<Schema> expectedSchemas) {
+		// TODO Auto-generated method stub
+		
 	}
 }

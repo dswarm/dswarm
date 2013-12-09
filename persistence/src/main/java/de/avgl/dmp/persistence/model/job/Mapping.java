@@ -25,6 +25,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.collect.Sets;
 
+import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
+import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.utils.AttributePathReferenceSerializer;
 import de.avgl.dmp.persistence.model.utils.SetAttributePathReferenceSerializer;
 
@@ -181,5 +183,16 @@ public class Mapping extends BasicDMPJPAObject {
 	public void setOutputFilter(final Filter outputFilterArg) {
 
 		outputFilter = outputFilterArg;
+	}
+	
+	@Override
+	public boolean equals(final Object obj) {
+
+		if (!Mapping.class.isInstance(obj)) {
+
+			return false;
+		}
+
+		return super.equals(obj);
 	}
 }

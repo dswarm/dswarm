@@ -61,7 +61,7 @@ atlassian-ide-plugin.xml
 *.sublime-workspace
 
 # VIM
-*.s[a-w][a-z]
+*.swp
 *.un~
 Session.vim
 .netrwhist
@@ -128,6 +128,8 @@ lib_managed/
 src_managed/
 project/boot/
 project/plugins/project/
+logs/
+tdb/
 
 # Numerous always-ignore extensions
 *.gz
