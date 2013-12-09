@@ -9,7 +9,7 @@ public class AttributesResourceTestUtils extends BasicResourceTestUtils<Attribut
 
 	public AttributesResourceTestUtils() {
 
-		super(Attribute.class);
+		super("attributes", Attribute.class, AttributeService.class);
 	}
 
 	@Override

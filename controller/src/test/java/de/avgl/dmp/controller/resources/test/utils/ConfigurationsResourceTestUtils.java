@@ -15,7 +15,7 @@ public class ConfigurationsResourceTestUtils extends BasicResourceTestUtils<Conf
 
 	public ConfigurationsResourceTestUtils() {
 
-		super(Configuration.class);
+		super("configurations", Configuration.class, ConfigurationService.class);
 	}
 
 	@Override

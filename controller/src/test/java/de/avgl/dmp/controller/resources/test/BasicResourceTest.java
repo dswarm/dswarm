@@ -5,7 +5,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Set;
 
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -16,17 +15,21 @@ import org.junit.Test;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
 
+import de.avgl.dmp.controller.resources.test.utils.BasicResourceTestUtils;
 import de.avgl.dmp.persistence.model.DMPObject;
 import de.avgl.dmp.persistence.service.BasicJPAService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
+ * 
  * @author tgaengler
+ *
+ * @param <POJOCLASSRESOURCETESTUTILS>
  * @param <POJOCLASSPERSISTENCESERVICE>
  * @param <POJOCLASS>
  * @param <POJOCLASSIDTYPE>
  */
-public abstract class BasicResourceTest<POJOCLASSPERSISTENCESERVICE extends BasicJPAService<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE>
+public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICE, POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSPERSISTENCESERVICE extends BasicJPAService<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE>
 		extends ResourceTest {
 
 	private static final org.apache.log4j.Logger		LOG					= org.apache.log4j.Logger.getLogger(BasicResourceTest.class);
@@ -46,9 +49,11 @@ public abstract class BasicResourceTest<POJOCLASSPERSISTENCESERVICE extends Basi
 	private final Class<POJOCLASSPERSISTENCESERVICE>	persistenceServiceClass;
 
 	private final String								pojoClassName;
+	
+	protected final POJOCLASSRESOURCETESTUTILS pojoClassResourceTestUtils;
 
 	public BasicResourceTest(final Class<POJOCLASS> pojoClassArg, final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg,
-			final String resourceIdentifier, final String objectJSONFileNameArg) {
+			final String resourceIdentifier, final String objectJSONFileNameArg, final POJOCLASSRESOURCETESTUTILS pojoClassResourceTestUtilsArg) {
 
 		super(resourceIdentifier);
 
@@ -59,6 +64,8 @@ public abstract class BasicResourceTest<POJOCLASSPERSISTENCESERVICE extends Basi
 
 		persistenceService = injector.getInstance(persistenceServiceClass);
 		objectJSONFileName = objectJSONFileNameArg;
+		
+		pojoClassResourceTestUtils = pojoClassResourceTestUtilsArg;
 	}
 
 	@Before
@@ -125,7 +132,7 @@ public abstract class BasicResourceTest<POJOCLASSPERSISTENCESERVICE extends Basi
 		}
 
 		Assert.assertNotNull("the id shouldn't be null", idEncoded);
-		
+
 		LOG.debug("try to retrieve " + pojoClassName + " with id '" + idEncoded + "'");
 
 		final Response response = target(idEncoded).request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
@@ -152,33 +159,12 @@ public abstract class BasicResourceTest<POJOCLASSPERSISTENCESERVICE extends Basi
 	protected abstract boolean evaluateObjects(final Set<POJOCLASS> expectedObjects, final String actualObjects) throws Exception;
 
 	private POJOCLASS createObjectInternal() throws Exception {
-
-		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(Entity.json(objectJSONString));
-
-		Assert.assertEquals("201 Created was expected", 201, response.getStatus());
-
-		final String responseString = response.readEntity(String.class);
-
-		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
-
-		final POJOCLASS actualObject = objectMapper.readValue(responseString, pojoClass);
-
-		compareObjects(expectedObject, actualObject);
-
-		return actualObject;
+		
+		return pojoClassResourceTestUtils.createObject(objectJSONString, expectedObject);
 	}
 
 	private void cleanUpDB(final POJOCLASS object) {
 
-		// clean-up DB
-
-		final POJOCLASSIDTYPE objectId = object.getId();
-
-		persistenceService.deleteObject(objectId);
-
-		final POJOCLASS deletedObject = persistenceService.getObject(objectId);
-
-		Assert.assertNull("the deleted " + pojoClassName + " should be null", deletedObject);
+		pojoClassResourceTestUtils.deleteObject(object);
 	}
 }
