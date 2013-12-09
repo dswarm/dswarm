@@ -1,7 +1,5 @@
 package de.avgl.dmp.controller.resources.test;
 
-import java.util.Set;
-
 import org.junit.Ignore;
 
 import de.avgl.dmp.controller.resources.test.utils.AttributesResourceTestUtils;
@@ -25,21 +23,5 @@ public class AttributesResourceTest extends BasicResourceTest<AttributesResource
 	public void testGETObject() throws Exception {
 
 		//super.testGETObject();
-	}
-
-	@Override
-	protected boolean compareObjects(final Attribute expectedObject, final Attribute actualObject) {
-
-		pojoClassResourceTestUtils.compareObjects(expectedObject, actualObject);
-
-		return true;
-	}
-
-	@Override
-	protected boolean evaluateObjects(final Set<Attribute> expectedObjects, final String actualObjects) throws Exception {
-
-		pojoClassResourceTestUtils.evaluateObjects(actualObjects, expectedObjects);
-
-		return true;
 	}
 }

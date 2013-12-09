@@ -17,13 +17,12 @@ import com.google.common.collect.Sets;
 
 import de.avgl.dmp.controller.resources.test.utils.BasicResourceTestUtils;
 import de.avgl.dmp.persistence.model.DMPObject;
+import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.service.BasicJPAService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
- * 
  * @author tgaengler
- *
  * @param <POJOCLASSRESOURCETESTUTILS>
  * @param <POJOCLASSPERSISTENCESERVICE>
  * @param <POJOCLASS>
@@ -40,7 +39,7 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 
 	private final POJOCLASSPERSISTENCESERVICE			persistenceService;
 
-	private final ObjectMapper							objectMapper		= injector.getInstance(ObjectMapper.class);
+	protected final ObjectMapper							objectMapper		= injector.getInstance(ObjectMapper.class);
 
 	private final String								objectJSONFileName;
 
@@ -49,8 +48,8 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 	private final Class<POJOCLASSPERSISTENCESERVICE>	persistenceServiceClass;
 
 	private final String								pojoClassName;
-	
-	protected final POJOCLASSRESOURCETESTUTILS pojoClassResourceTestUtils;
+
+	protected final POJOCLASSRESOURCETESTUTILS			pojoClassResourceTestUtils;
 
 	public BasicResourceTest(final Class<POJOCLASS> pojoClassArg, final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg,
 			final String resourceIdentifier, final String objectJSONFileNameArg, final POJOCLASSRESOURCETESTUTILS pojoClassResourceTestUtilsArg) {
@@ -64,12 +63,12 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 
 		persistenceService = injector.getInstance(persistenceServiceClass);
 		objectJSONFileName = objectJSONFileNameArg;
-		
+
 		pojoClassResourceTestUtils = pojoClassResourceTestUtilsArg;
 	}
 
 	@Before
-	public void prepare() throws IOException {
+	public void prepare() throws Exception {
 
 		objectJSONString = DMPPersistenceUtil.getResourceAsString(objectJSONFileName);
 		expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
@@ -154,16 +153,26 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 		LOG.debug("end GET " + pojoClassName);
 	}
 
-	protected abstract boolean compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject);
+	protected boolean compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) {
 
-	protected abstract boolean evaluateObjects(final Set<POJOCLASS> expectedObjects, final String actualObjects) throws Exception;
+		pojoClassResourceTestUtils.compareObjects(expectedObject, actualObject);
 
-	private POJOCLASS createObjectInternal() throws Exception {
-		
+		return true;
+	}
+
+	protected boolean evaluateObjects(final Set<POJOCLASS> expectedObjects, final String actualObjects) throws Exception {
+
+		pojoClassResourceTestUtils.evaluateObjects(actualObjects, expectedObjects);
+
+		return true;
+	}
+
+	protected POJOCLASS createObjectInternal() throws Exception {
+
 		return pojoClassResourceTestUtils.createObject(objectJSONString, expectedObject);
 	}
 
-	private void cleanUpDB(final POJOCLASS object) {
+	protected void cleanUpDB(final POJOCLASS object) {
 
 		pojoClassResourceTestUtils.deleteObject(object);
 	}

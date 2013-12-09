@@ -1,7 +1,5 @@
 package de.avgl.dmp.controller.resources.test;
 
-import java.util.Set;
-
 import de.avgl.dmp.controller.resources.test.utils.ConfigurationsResourceTestUtils;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
@@ -13,21 +11,5 @@ public class ConfigurationsResourceTest extends BasicResourceTest<Configurations
 	public ConfigurationsResourceTest() {
 
 		super(Configuration.class, ConfigurationService.class, "configurations", "configuration.json", new ConfigurationsResourceTestUtils());
-	}
-
-	@Override
-	protected boolean compareObjects(final Configuration expectedObject, final Configuration actualObject) {
-
-		pojoClassResourceTestUtils.compareObjects(expectedObject, actualObject);
-
-		return true;
-	}
-
-	@Override
-	protected boolean evaluateObjects(final Set<Configuration> expectedObjects, final String actualObjects) throws Exception {
-
-		pojoClassResourceTestUtils.evaluateObjects(actualObjects, expectedObjects);
-
-		return true;
 	}
 }
