@@ -9,6 +9,7 @@ import javax.servlet.DispatcherType;
 import javax.ws.rs.core.UriBuilder;
 
 import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.grizzly.http.server.StaticHttpHandler;
 import org.glassfish.grizzly.servlet.FilterRegistration;
 import org.glassfish.grizzly.servlet.ServletRegistration;
 import org.glassfish.grizzly.servlet.WebappContext;
@@ -17,7 +18,6 @@ import org.glassfish.jersey.servlet.ServletContainer;
 
 import com.google.inject.servlet.GuiceFilter;
 
-import de.avgl.dmp.controller.doc.SwaggerConfig;
 import de.avgl.dmp.controller.servlet.DMPInjector;
 
 public class EmbeddedServer {
@@ -31,8 +31,6 @@ public class EmbeddedServer {
 	protected static final int						DEFAULT_PORT			= 8087;
 	protected static final String					DEFAULT_HOST			= "127.0.0.1";
 	protected static final String					DEFAULT_CONTEXT_PATH	= "/dmp";
-
-	protected static final String					API_VERSION				= "1.0.0";
 
 	private HttpServer								httpServer;
 
@@ -56,6 +54,9 @@ public class EmbeddedServer {
 
 		final FilterRegistration registration = context.addFilter("GuiceFilter", GuiceFilter.class);
 		registration.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), "/*");
+
+		server.getServerConfiguration().addHttpHandler(
+				new StaticHttpHandler("src/docs/ui/docs/"), "/docs");
 
 		context.deploy(server);
 
