@@ -59,6 +59,10 @@ public class ComponentsResource extends BasicResource<ComponentService, Componen
 	protected Component prepareObjectForUpdate(final Component objectFromJSON, final Component object) {
 
 		object.setName(objectFromJSON.getName());
+		object.setFunction(objectFromJSON.getFunction());
+		object.setParameterMappings(objectFromJSON.getParameterMappings());
+		object.setInputComponents(objectFromJSON.getInputComponents());
+		object.setOutputComponents(objectFromJSON.getOutputComponents());
 
 		return object;
 	}

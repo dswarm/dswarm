@@ -59,6 +59,7 @@ public class FiltersResource extends BasicResource<FilterService, Filter, Long> 
 	protected Filter prepareObjectForUpdate(final Filter objectFromJSON, final Filter object) {
 
 		object.setName(objectFromJSON.getName());
+		object.setExpression(objectFromJSON.getExpression());
 
 		return object;
 	}
