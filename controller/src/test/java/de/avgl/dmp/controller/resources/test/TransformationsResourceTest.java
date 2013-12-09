@@ -45,6 +45,7 @@ public class TransformationsResourceTest extends ResourceTest {
 	/**
 	 * test post of transformations
 	 */
+	@Ignore
 	@Test
 	public void testEchoJSON() {
 		Response response = target("echo").request(MediaType.APPLICATION_JSON_TYPE)
