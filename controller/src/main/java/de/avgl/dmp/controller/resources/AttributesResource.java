@@ -1,8 +1,14 @@
 package de.avgl.dmp.controller.resources;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -39,8 +45,11 @@ public class AttributesResource extends BasicResource<AttributeService, Attribut
 	}
 
 	@ApiOperation(value = "get the attribute that matches the given id", notes = "Returns the Attribute object that matches the given id.")
+	@GET
+	@Path("/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "attribute identifier", required = true) final String id) throws DMPControllerException {
+	public Response getObject(@ApiParam(value = "attribute identifier", required = true) @PathParam("id") final String id) throws DMPControllerException {
 
 		//return super.getObject(id);
 		
@@ -48,6 +57,9 @@ public class AttributesResource extends BasicResource<AttributeService, Attribut
 	}
 
 	@ApiOperation(value = "create a new attribute", notes = "Returns a new Attribute object.", response = Attribute.class)
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public Response createObject(@ApiParam(value = "attribute (as JSON)", required = true) final String jsonObjectString)
 			throws DMPControllerException {
@@ -56,6 +68,8 @@ public class AttributesResource extends BasicResource<AttributeService, Attribut
 	}
 
 	@ApiOperation(value = "get all attributes ", notes = "Returns a list of Attribute objects.")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public Response getObjects() throws DMPControllerException {
 
