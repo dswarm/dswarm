@@ -306,10 +306,11 @@ public class Resource extends DMPJPAObject {
 				if (fromScratch) {
 
 					attributes = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
-				} else {
-
-					return;
 				}
+				
+				attributesInitialized = true;
+				
+				return;
 			}
 
 			try {

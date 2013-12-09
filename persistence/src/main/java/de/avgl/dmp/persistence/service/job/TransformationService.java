@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -33,7 +34,9 @@ public class TransformationService extends BasicFunctionService<Transformation> 
 
 		if (components != null) {
 
-			for (final Component component : components) {
+			final Set<Component> componentsToBeDeleted = Sets.newCopyOnWriteArraySet(components);
+
+			for (final Component component : componentsToBeDeleted) {
 
 				// release functions from components of a transformation
 				// and disconnect components from each other

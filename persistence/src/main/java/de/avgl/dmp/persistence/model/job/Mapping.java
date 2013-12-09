@@ -184,4 +184,15 @@ public class Mapping extends BasicDMPJPAObject {
 
 		outputFilter = outputFilterArg;
 	}
+	
+	@Override
+	public boolean equals(final Object obj) {
+
+		if (!Mapping.class.isInstance(obj)) {
+
+			return false;
+		}
+
+		return super.equals(obj);
+	}
 }

@@ -60,7 +60,7 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 	}
 
 	/**
-	 * Updates a given instance of the specific class and writes this object persistent to the DB afterwards.<br>
+	 * Creates (if it doesn't exist before) or updates a given instance of the specific class and writes this object persistent to the DB afterwards.<br>
 	 * Created by: tgaengler
 	 * 
 	 * @param object the to be updated instance of the specific class

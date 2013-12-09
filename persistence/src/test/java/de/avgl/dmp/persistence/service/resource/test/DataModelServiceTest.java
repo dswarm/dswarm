@@ -160,7 +160,42 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<DataModel, DataM
 
 		final DataModel updatedDataModel = updateObjectTransactional(dataModel);
 
-		// TODO:
+		Assert.assertNotNull("the updated data model shouldn't be null", updatedDataModel);
+		Assert.assertNotNull("the update data model id shouldn't be null", updatedDataModel.getId());
+		Assert.assertNotNull("the schema of the updated data model shouldn't be null", updatedDataModel.getSchema());
+		Assert.assertNotNull("the schema's attribute paths of the updated schema shouldn't be null", updatedDataModel.getSchema().getAttributePaths());
+		Assert.assertEquals("the schema's attribute paths size are not equal", schema.getAttributePaths(), updatedDataModel.getSchema()
+				.getAttributePaths());
+		Assert.assertEquals("the attribute path '" + attributePath1.getId() + "' of the schema are not equal",
+				schema.getAttributePath(attributePath1.getId()), updatedDataModel.getSchema().getAttributePath(attributePath1.getId()));
+		Assert.assertNotNull("the attribute path's attributes of the attribute path '" + attributePath1.getId()
+				+ "' of the updated schema shouldn't be null", updatedDataModel.getSchema().getAttributePath(attributePath1.getId()).getAttributes());
+		Assert.assertEquals("the attribute path's attributes size of attribute path '" + attributePath1.getId() + "' are not equal",
+				attributePath1.getAttributes(), updatedDataModel.getSchema().getAttributePath(attributePath1.getId()).getAttributes());
+		Assert.assertEquals("the first attributes of attribute path '" + attributePath1.getId() + "' are not equal", attributePath1
+				.getAttributePath().get(0), updatedDataModel.getSchema().getAttributePath(attributePath1.getId()).getAttributePath().get(0));
+		Assert.assertNotNull("the attribute path string of attribute path '" + attributePath1.getId() + "' of the update schema shouldn't be null",
+				updatedDataModel.getSchema().getAttributePath(attributePath1.getId()).toAttributePath());
+		Assert.assertEquals("the attribute path's strings attribute path '" + attributePath1.getId() + "' are not equal",
+				attributePath1.toAttributePath(), updatedDataModel.getSchema().getAttributePath(attributePath1.getId()).toAttributePath());
+		Assert.assertNotNull("the record class of the updated schema shouldn't be null", updatedDataModel.getSchema().getRecordClass());
+		Assert.assertEquals("the recod classes are not equal", schema.getRecordClass(), updatedDataModel.getSchema().getRecordClass());
+		Assert.assertNotNull("the resource of the updated data model shouddn't be null", updatedDataModel.getDataResource());
+
+		checkSimpleResource(resource, updatedDataModel.getDataResource(), attributeKey, attributeValue);
+		checkComplexResource(resource, updatedDataModel.getDataResource());
+		checkComplexResource(resource, updatedDataModel.getDataResource(), parameterKey, parameterValue);
+		
+		Assert.assertNotNull("the configuration of the updated data model shouldn't be null", updatedDataModel.getConfiguration());
+		Assert.assertNotNull("the configuration name of the updated resource shouldn't be null", updatedDataModel.getConfiguration().getName());
+		Assert.assertEquals("the configuration' names of the resource are not equal", configuration.getName(), updatedDataModel.getConfiguration().getName());
+		Assert.assertNotNull("the configuration description of the updated resource shouldn't be null", updatedDataModel.getConfiguration().getDescription());
+		Assert.assertEquals("the configuration descriptions of the resource are not equal", configuration.getDescription(), updatedDataModel.getConfiguration().getDescription());
+		Assert.assertNotNull("the configuration parameters of the updated resource shouldn't be null", updatedDataModel.getConfiguration().getParameters());
+		Assert.assertEquals("the configurations parameters of the resource are not equal", configuration.getParameters(), updatedDataModel.getConfiguration().getParameters());
+		Assert.assertNotNull("the parameter value shouldn't be null", configuration.getParameter(parameterKey));
+		Assert.assertEquals("the parameter value should be equal", configuration.getParameter(parameterKey).asText(), parameterValue);
+
 
 		String json = null;
 
@@ -579,5 +614,40 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<DataModel, DataM
 		final Configuration deletedConfiguration = configurationService.getObject(configurationId);
 
 		Assert.assertNull("deleted configuration shouldn't exist any more", deletedConfiguration);
+	}
+
+	private void checkSimpleResource(final Resource resource, final Resource updatedResource, final String attributeKey, final String attributeValue) {
+
+		Assert.assertNotNull("the name of the updated resource shouldn't be null", updatedResource.getName());
+		Assert.assertEquals("the names of the resource are not equal", resource.getName(), updatedResource.getName());
+		Assert.assertNotNull("the description of the updated resource shouldn't be null", updatedResource.getDescription());
+		Assert.assertEquals("the descriptions of the resource are not equal", resource.getDescription(), updatedResource.getDescription());
+		Assert.assertNotNull("the type of the updated resource shouldn't be null", updatedResource.getType());
+		Assert.assertEquals("the types of the resource are not equal", resource.getType(), updatedResource.getType());
+		Assert.assertNotNull("the attributes of the updated resource shouldn't be null", updatedResource.getAttributes());
+		Assert.assertEquals("the attributes of the resource are not equal", resource.getAttributes(), updatedResource.getAttributes());
+		Assert.assertNotNull("the attribute value shouldn't be null", resource.getAttribute(attributeKey));
+		Assert.assertEquals("the attribute value should be equal", resource.getAttribute(attributeKey).asText(), attributeValue);
+	}
+
+	private void checkComplexResource(final Resource resource, final Resource updatedResource, final String parameterKey, final String parameterValue) {
+
+		checkComplexResource(resource, updatedResource);
+
+		Assert.assertEquals("the configuration of the resource is not equal", resource.getConfigurations().iterator().next(), resource
+				.getConfigurations().iterator().next());
+		Assert.assertEquals("the configuration parameter '" + parameterKey + "' of the resource is not equal", resource.getConfigurations()
+				.iterator().next().getParameter(parameterKey), resource.getConfigurations().iterator().next().getParameter(parameterKey));
+		Assert.assertEquals("the configuration parameter value for '" + parameterKey + "' of the resource is not equal", resource.getConfigurations()
+				.iterator().next().getParameter(parameterKey).asText(), resource.getConfigurations().iterator().next().getParameter(parameterKey)
+				.asText());
+	}
+
+	private void checkComplexResource(final Resource resource, final Resource updatedResource) {
+
+		Assert.assertNotNull("the configurations of the updated resource shouldn't be null", updatedResource.getConfigurations());
+		Assert.assertEquals("the configurations of the resource are not equal", resource.getConfigurations(), updatedResource.getConfigurations());
+		Assert.assertEquals("the configurations' size of the resource are not equal", resource.getConfigurations().size(), updatedResource
+				.getConfigurations().size());
 	}
 }

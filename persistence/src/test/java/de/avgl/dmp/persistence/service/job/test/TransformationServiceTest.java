@@ -1,4 +1,4 @@
-package de.avgl.dmp.persistence.service.test;
+package de.avgl.dmp.persistence.service.job.test;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -23,6 +23,7 @@ import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.service.job.ComponentService;
 import de.avgl.dmp.persistence.service.job.FunctionService;
 import de.avgl.dmp.persistence.service.job.TransformationService;
+import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
 
 public class TransformationServiceTest extends IDBasicJPAServiceTest<Transformation, TransformationService, Long> {
 

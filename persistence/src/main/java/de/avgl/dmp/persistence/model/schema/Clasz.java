@@ -13,7 +13,7 @@ import de.avgl.dmp.persistence.model.BasicDMPObject;
 @Entity
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(name = "Class")
+@Table(name = "CLASS")
 public class Clasz extends BasicDMPObject {
 
 	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(Clasz.class);
