@@ -1,0 +1,72 @@
+{
+	"id": "76",
+	"name": "Nr->Nr",
+	"transformation": {
+		"id": "86",
+		"name": "Nr->Nr",
+		"components": [	
+			{
+				"id": "2145",
+				"name": "substring",
+				"description": "Returns a substring",
+				"function": {
+					"id": "97"
+				},
+				"parameterMappings": {
+					"start": 2,
+					"end": 1,
+					"inputString": "transformationInputString"
+				},
+				"outputComponents": [	{
+					"id": "5432"
+				}
+				]
+			},
+			{
+				"id": "7856",
+				"name": "normalize-utf8",
+				"function": {
+					"id": "786"
+				},
+				"inputComponents": [	{
+					"id": "785634"
+				}
+				],
+				"parameterMappings": {
+					"inputString": "previousComponent.outputString"
+				},
+				"outputComponents": [{
+					"id": "564"
+				}
+				]
+			},
+			{
+				"id": "976",
+				"name": "htmlanchor",
+				"description": "Create an HTML anchor.",
+				"function": {
+					"id": "2135"
+				},
+				"inputComponents": [{
+					"id": "67543"
+				}
+				],
+				"parameterMappings": {
+				"prefix": "http://av.gl/dmp",
+				"postfix": "?foo",
+				"title": "Lorem Ipsum",
+				"inputString": "previousComponent.outputString"
+				}
+			}
+		]
+	},
+	"inputAttributePath": [		{
+		"id": "mabxml-1.xsd.datei.datensatz.feld.@nr",
+		"name": "@nr"
+	}
+	],
+	"outputAttributePath": {
+		"id": "mabxml-1.xsd.datei.datensatz.feld.@nr",
+		"name": "@nr"
+	}
+}
