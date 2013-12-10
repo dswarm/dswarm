@@ -29,7 +29,7 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
 @RequestScoped
 @Api(value = "/schemas", description = "Operations about schemas")
 @Path("schemas")
-public class SchemasResource extends BasicResource<SchemaService, Schema, Long> {
+public class SchemasResource extends BasicDMPResource<SchemaService, Schema> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(SchemasResource.class);
 
@@ -71,12 +71,7 @@ public class SchemasResource extends BasicResource<SchemaService, Schema, Long> 
 	@Override
 	protected Schema prepareObjectForUpdate(final Schema objectFromJSON, final Schema object) {
 
-		final String name = objectFromJSON.getName();
-
-		if (name != null) {
-
-			object.setName(name);
-		}
+		super.prepareObjectForUpdate(objectFromJSON, object);
 
 		final Set<AttributePath> attributePaths = objectFromJSON.getAttributePaths();
 

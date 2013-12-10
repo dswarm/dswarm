@@ -369,7 +369,7 @@ public class ResourcesResource {
 		return buildResponse(configurationsJSON);
 	}
 
-	@ApiOperation(value = "add a new configuration to the data resource that matches the given id", notes = "Returns the new configuration of that was added to the data resource that matches the given id.")
+	@ApiOperation(value = "add a new configuration to the data resource that matches the given id", notes = "Returns the new configuration that was added to the data resource that matches the given id.")
 	@POST
 	@Path("/{id}/configurations")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -717,20 +717,25 @@ public class ResourcesResource {
 
 		final ConfigurationService configurationService = configurationServiceProvider.get();
 
-		final Configuration configuration;
-		try {
+		Configuration configuration = null;
 
-			configuration = configurationService.createObject();
-		} catch (final DMPPersistenceException e) {
+		if (configurationFromJSON.getId() == null) {
 
-			LOG.debug("something went wrong while configuration creation");
-
-			throw new DMPControllerException("something went wrong while configuration creation\n" + e.getMessage());
-		}
-
-		if (configuration == null) {
-
-			throw new DMPControllerException("fresh configuration shouldn't be null");
+			// create new configuration, since it has no id
+			
+			configuration = createNewConfiguration(configurationService);
+		} else {
+			
+			// try to retrieve configuration via id from "configuration from JSON"
+			
+			configuration = configurationService.getObject(configurationFromJSON.getId());
+			
+			if(configuration == null) {
+				
+				// if the id is not in the DB, also create a new object
+				
+				configuration = createNewConfiguration(configurationService);
+			}
 		}
 
 		final String name = configurationFromJSON.getName();
@@ -778,6 +783,28 @@ public class ResourcesResource {
 			throw new DMPControllerException("something went wrong while resource updating for configuration\n" + e.getMessage());
 		}
 
+		return configuration;
+	}
+	
+	private Configuration createNewConfiguration(final ConfigurationService configurationService) throws DMPControllerException {
+		
+		final Configuration configuration;
+		
+		try {
+
+			configuration = configurationService.createObject();
+		} catch (final DMPPersistenceException e) {
+
+			LOG.debug("something went wrong while configuration creation");
+
+			throw new DMPControllerException("something went wrong while configuration creation\n" + e.getMessage());
+		}
+		
+		if (configuration == null) {
+
+			throw new DMPControllerException("fresh configuration shouldn't be null");
+		}
+		
 		return configuration;
 	}
 

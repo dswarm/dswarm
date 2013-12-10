@@ -11,7 +11,7 @@ import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
 
-public class SchemasResourceTestUtils extends BasicResourceTestUtils<SchemaService, Schema, Long> {
+public class SchemasResourceTestUtils extends BasicDMPResourceTestUtils<SchemaService, Schema> {
 
 	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
 
@@ -34,12 +34,6 @@ public class SchemasResourceTestUtils extends BasicResourceTestUtils<SchemaServi
 	}
 
 	private void compareSchemas(final Schema expectedSchema, final Schema actualSchema) {
-
-		if (expectedSchema.getName() != null) {
-
-			Assert.assertNotNull("the schema name shouldn't be null", actualSchema.getName());
-			Assert.assertEquals("the schema names should be equal", expectedSchema.getName(), actualSchema.getName());
-		}
 
 		if (expectedSchema.getAttributePaths() != null && !expectedSchema.getAttributePaths().isEmpty()) {
 

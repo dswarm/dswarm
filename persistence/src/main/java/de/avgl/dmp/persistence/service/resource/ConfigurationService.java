@@ -11,14 +11,12 @@ import com.google.inject.Provider;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
-import de.avgl.dmp.persistence.service.BasicIDJPAService;
+import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
 
 /**
- * 
  * @author tgaengler
- *
  */
-public class ConfigurationService extends BasicIDJPAService<Configuration> {
+public class ConfigurationService extends ExtendedBasicDMPJPAService<Configuration> {
 
 	@Inject
 	public ConfigurationService(Provider<EntityManager> entityManagerProvider) {
@@ -34,15 +32,14 @@ public class ConfigurationService extends BasicIDJPAService<Configuration> {
 	}
 
 	@Override
-	protected void updateObjectInternal(final Configuration object, final Configuration updateObject, final EntityManager entityManager) throws DMPPersistenceException {
+	protected void updateObjectInternal(final Configuration object, final Configuration updateObject, final EntityManager entityManager)
+			throws DMPPersistenceException {
 
-		final String description = object.getDescription();
-		final String name = object.getName();
+		super.updateObjectInternal(object, updateObject, entityManager);
+
 		final Set<Resource> resources = object.getResources();
 		final ObjectNode parameters = object.getParameters();
 
-		updateObject.setDescription(description);
-		updateObject.setName(name);
 		updateObject.setResources(resources);
 		updateObject.setParameters(parameters);
 	}

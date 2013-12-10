@@ -30,7 +30,7 @@ import com.google.common.collect.Sets;
 import com.wordnik.swagger.annotations.ApiModel;
 
 import de.avgl.dmp.init.DMPException;
-import de.avgl.dmp.persistence.model.DMPJPAObject;
+import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 @ApiModel(value = "A data resource, e.g., an XML or CSV document, a SQL database, or an RDF graph. A data resource can consist of several records.")
@@ -39,7 +39,7 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "RESOURCE")
-public class Resource extends DMPJPAObject {
+public class Resource extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 *
@@ -48,18 +48,12 @@ public class Resource extends DMPJPAObject {
 
 	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(Resource.class);
 
-	@Column(name = "NAME")
-	private String									name					= null;
-
 	/**
 	 * The type of the resource.
 	 */
 	@Column(name = "TYPE")
 	@Enumerated(EnumType.STRING)
 	private ResourceType							type;
-
-	@Column(name = "DESCRIPTION")
-	private String									description				= null;
 
 	@Lob
 	@Access(AccessType.FIELD)
@@ -85,16 +79,6 @@ public class Resource extends DMPJPAObject {
 	// @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	private Set<Configuration>						configurations;
 
-	public String getName() {
-
-		return name;
-	}
-
-	public void setName(final String name) {
-
-		this.name = name;
-	}
-
 	public ResourceType getType() {
 
 		return type;
@@ -103,16 +87,6 @@ public class Resource extends DMPJPAObject {
 	public void setType(final ResourceType type) {
 
 		this.type = type;
-	}
-
-	public String getDescription() {
-
-		return description;
-	}
-
-	public void setDescription(final String description) {
-
-		this.description = description;
 	}
 
 	public ObjectNode getAttributes() {

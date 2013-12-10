@@ -26,7 +26,7 @@ import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 @RequestScoped
 @Api(value = "/configurations", description = "Operations about configurations")
 @Path("configurations")
-public class ConfigurationsResource extends BasicResource<ConfigurationService, Configuration, Long> {
+public class ConfigurationsResource extends ExtendedBasicDMPResource<ConfigurationService, Configuration> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ConfigurationsResource.class);
 
@@ -42,7 +42,8 @@ public class ConfigurationsResource extends BasicResource<ConfigurationService, 
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "configuration identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+	public Response getObject(@ApiParam(value = "configuration identifier", required = true) @PathParam("id") final Long id)
+			throws DMPControllerException {
 
 		return super.getObject(id);
 	}
@@ -69,19 +70,8 @@ public class ConfigurationsResource extends BasicResource<ConfigurationService, 
 
 	@Override
 	protected Configuration prepareObjectForUpdate(final Configuration objectFromJSON, final Configuration object) {
-		final String name = objectFromJSON.getName();
 
-		if (name != null) {
-
-			object.setName(name);
-		}
-
-		final String description = objectFromJSON.getDescription();
-
-		if (description != null) {
-
-			object.setDescription(description);
-		}
+		super.prepareObjectForUpdate(objectFromJSON, object);
 
 		final ObjectNode parameters = objectFromJSON.getParameters();
 
@@ -89,6 +79,9 @@ public class ConfigurationsResource extends BasicResource<ConfigurationService, 
 
 			object.setParameters(parameters);
 		}
+
+		object.setResources(objectFromJSON.getResources());
+
 		return object;
 	}
 }

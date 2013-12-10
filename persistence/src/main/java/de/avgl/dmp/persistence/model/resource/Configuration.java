@@ -26,7 +26,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
 
 import de.avgl.dmp.init.DMPException;
-import de.avgl.dmp.persistence.model.DMPJPAObject;
+import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.utils.ResourceReferenceDeserializer;
 import de.avgl.dmp.persistence.model.utils.SetResourceReferenceSerializer;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
@@ -36,7 +36,7 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "CONFIGURATION")
-public class Configuration extends DMPJPAObject {
+public class Configuration extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 *
@@ -44,12 +44,6 @@ public class Configuration extends DMPJPAObject {
 	private static final long						serialVersionUID		= 1L;
 
 	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(Configuration.class);
-
-	@Column(name = "NAME")
-	private String									name					= null;
-
-	@Column(name = "DESCRIPTION")
-	private String									description				= null;
 
 	/**
 	 * The related resources.
@@ -74,26 +68,6 @@ public class Configuration extends DMPJPAObject {
 
 	@Transient
 	private boolean									parametersInitialized	= false;
-
-	public String getName() {
-
-		return name;
-	}
-
-	public void setName(final String name) {
-
-		this.name = name;
-	}
-
-	public String getDescription() {
-
-		return description;
-	}
-
-	public void setDescription(final String description) {
-
-		this.description = description;
-	}
 
 	public ObjectNode getParameters() {
 
