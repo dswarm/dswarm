@@ -1,32 +1,38 @@
 package de.avgl.dmp.controller.resources.test.utils;
 
-import java.util.Iterator;
-import java.util.Map.Entry;
+import java.util.Map;
+import java.util.Set;
 
 import org.junit.Assert;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Maps;
 
+import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
 
 public class SchemasResourceTestUtils extends BasicResourceTestUtils<SchemaService, Schema, Long> {
 
+	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
+
+	private final ClaszesResourceTestUtils			claszesResourceTestUtils;
+
 	public SchemasResourceTestUtils() {
 
 		super("schemas", Schema.class, SchemaService.class);
+
+		attributePathsResourceTestUtils = new AttributePathsResourceTestUtils();
+		claszesResourceTestUtils = new ClaszesResourceTestUtils();
 	}
-	
+
 	@Override
 	public void compareObjects(final Schema expectedObject, final Schema actualObject) {
-		
+
 		super.compareObjects(expectedObject, actualObject);
-		
+
 		compareSchemas(expectedObject, actualObject);
 	}
 
-	
 	private void compareSchemas(final Schema expectedSchema, final Schema actualSchema) {
 
 		if (expectedSchema.getName() != null) {
@@ -35,45 +41,26 @@ public class SchemasResourceTestUtils extends BasicResourceTestUtils<SchemaServi
 			Assert.assertEquals("the schema names should be equal", expectedSchema.getName(), actualSchema.getName());
 		}
 
-		/*
-		if (expectedSchema.getDescription() != null) {
+		if (expectedSchema.getAttributePaths() != null && !expectedSchema.getAttributePaths().isEmpty()) {
 
-			Assert.assertNotNull("the configuration description shouldn't be null", actualSchema.getDescription());
-			Assert.assertEquals("the configuration descriptions should be equal", expectedSchema.getDescription(),
-					actualSchema.getDescription());
-		}*/
-		
-		/*
-		
-		// TODO: do a similar comparison for the attributepaths
-		
-		Assert.assertNotNull("parameters are null", actualConfiguration.getParameters());
-		Assert.assertEquals("parameters are not equal", expectedConfiguration.getParameters(), actualConfiguration.getParameters());
+			final Set<AttributePath> actualAttributePaths = actualSchema.getAttributePaths();
 
-		final ObjectNode parameters = expectedConfiguration.getParameters();
+			Assert.assertNotNull("attribute paths of actual schema '" + actualSchema.getId() + "' shouldn't be null", actualAttributePaths);
+			Assert.assertFalse("attribute paths of actual schema '" + actualSchema.getId() + "' shouldn't be empty", actualAttributePaths.isEmpty());
 
-		final Iterator<Entry<String, JsonNode>> parameterEntriesIter = parameters.fields();
+			final Map<Long, AttributePath> actualAttributePathsMap = Maps.newHashMap();
 
-		final ObjectNode responseParameters = actualConfiguration.getParameters();
+			for (final AttributePath actualAttributePath : actualAttributePaths) {
 
-		Assert.assertNotNull("response parameters shoudln't be null", responseParameters);
+				actualAttributePathsMap.put(actualAttributePath.getId(), actualAttributePath);
+			}
 
-		while (parameterEntriesIter.hasNext()) {
-
-			final Entry<String, JsonNode> parameterEntry = parameterEntriesIter.next();
-
-			final String parameterKey = parameterEntry.getKey();
-
-			final JsonNode parameterValueNode = responseParameters.get(parameterKey);
-
-			Assert.assertNotNull("parameter '" + parameterKey + "' is not part of the response configuration parameters", parameterValueNode);
-
-			final String parameterValue = parameterEntry.getValue().asText();
-
-			Assert.assertTrue("the parameter values of '" + parameterKey + "' are not equal. expected = '" + parameterValue + "'; was = '"
-					+ parameterValueNode.asText() + "'", parameterValue.equals(parameterValueNode.asText()));
+			attributePathsResourceTestUtils.compareObjects(expectedSchema.getAttributePaths(), actualAttributePathsMap);
 		}
-		*/
+
+		if (expectedSchema.getRecordClass() != null) {
+
+			claszesResourceTestUtils.compareObjects(expectedSchema.getRecordClass(), actualSchema.getRecordClass());
+		}
 	}
 }
-

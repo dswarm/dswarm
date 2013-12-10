@@ -1,0 +1,10 @@
+{
+        "id": 2,
+        "attributes": [{
+            "id": "http://purl.org/dc/terms/creator",
+            "name": "creator"
+        }, {
+            "id": "http://xmlns.com/foaf/0.1/name",
+            "name": "name"
+        }]
+}

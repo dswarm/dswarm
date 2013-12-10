@@ -1,0 +1,13 @@
+{
+        "id": 1,
+        "attributes": [{
+            "id": "http://purl.org/dc/terms/title",
+            "name": "title"
+        }, {
+            "id": "http://purl.org/dc/terms/hasPart",
+            "name": "hasPart"
+        }, {
+            "id": "http://purl.org/dc/terms/title",
+            "name": "title"
+        }]
+}
