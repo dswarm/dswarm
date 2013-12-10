@@ -33,10 +33,7 @@ import de.avgl.dmp.persistence.service.schema.AttributePathService;
 public class AttributePathsResource extends BasicResource<AttributePathService, AttributePath, Long> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributePathsResource.class);
-
-	@Context
-	UriInfo											uri;
-
+	
 	@Inject
 	public AttributePathsResource(final Provider<AttributePathService> attributePathServiceProviderArg, final ObjectMapper objectMapper,
 			final DMPStatus dmpStatus) {

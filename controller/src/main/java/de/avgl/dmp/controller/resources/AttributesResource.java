@@ -35,9 +35,6 @@ public class AttributesResource extends BasicResource<AttributeService, Attribut
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributesResource.class);
 
-	@Context
-	UriInfo											uri;
-
 	@Inject
 	public AttributesResource(final Provider<AttributeService> attributeServiceProviderArg, final ObjectMapper objectMapper, final DMPStatus dmpStatus) {
 

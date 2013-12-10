@@ -1,5 +1,7 @@
 package de.avgl.dmp.controller.resources;
 
+import java.util.Set;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -7,10 +9,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Provider;
@@ -21,6 +21,8 @@ import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.status.DMPStatus;
+import de.avgl.dmp.persistence.model.schema.AttributePath;
+import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
 
@@ -29,12 +31,10 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
 @Path("schemas")
 public class SchemasResource extends BasicResource<SchemaService, Schema, Long> {
 
-	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger
-			.getLogger(SchemasResource.class);
+	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(SchemasResource.class);
 
 	@Inject
-	public SchemasResource(final Provider<SchemaService> schemaServiceProviderArg, final ObjectMapper objectMapper,
-			final DMPStatus dmpStatus) {
+	public SchemasResource(final Provider<SchemaService> schemaServiceProviderArg, final ObjectMapper objectMapper, final DMPStatus dmpStatus) {
 
 		super(Schema.class, schemaServiceProviderArg, objectMapper, dmpStatus);
 	}
@@ -48,21 +48,17 @@ public class SchemasResource extends BasicResource<SchemaService, Schema, Long> 
 
 		return super.getObject(id);
 	}
-	
+
 	@ApiOperation(value = "create a new schema", notes = "Returns a new Schema object.", response = Schema.class)
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response createObject(@ApiParam(value = "schema identifier", required = true) final String jsonObjectString)
-			throws DMPControllerException {
+	public Response createObject(@ApiParam(value = "schema (as JSON)", required = true) final String jsonObjectString) throws DMPControllerException {
 
 		return super.createObject(jsonObjectString);
 	}
 
-	/* 
-	//  not requested so far:
-	
 	@ApiOperation(value = "get all schemas ", notes = "Returns a list of Schema objects.")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -71,10 +67,10 @@ public class SchemasResource extends BasicResource<SchemaService, Schema, Long> 
 
 		return super.getObjects();
 	}
-	*/
-	
+
 	@Override
 	protected Schema prepareObjectForUpdate(final Schema objectFromJSON, final Schema object) {
+
 		final String name = objectFromJSON.getName();
 
 		if (name != null) {
@@ -82,16 +78,21 @@ public class SchemasResource extends BasicResource<SchemaService, Schema, Long> 
 			object.setName(name);
 		}
 
-		/*
-		final String description = objectFromJSON.getDescription();
+		final Set<AttributePath> attributePaths = objectFromJSON.getAttributePaths();
 
-		if (description != null) {
+		if (attributePaths != null && !attributePaths.isEmpty()) {
 
-			object.setDescription(description);
-		} */
+			object.setAttributePaths(attributePaths);
+		}
+
+		final Clasz recordClass = objectFromJSON.getRecordClass();
+
+		if (recordClass != null) {
+
+			object.setRecordClass(recordClass);
+		}
 
 		return object;
-
 	}
-	
+
 }
