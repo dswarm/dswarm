@@ -18,8 +18,6 @@ import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.hibernate.annotations.Cascade;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -56,14 +54,14 @@ public class Configuration extends DMPJPAObject {
 	/**
 	 * The related resources.
 	 */
-	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToMany(fetch = FetchType.EAGER, cascade = { /* CascadeType.DETACH, CascadeType.MERGE, */CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "RESOURCES_CONFIGURATIONS", joinColumns = { @JoinColumn(name = "CONFIGURATION_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "RESOURCE_ID", referencedColumnName = "ID") })
 	@JsonSerialize(using = SetResourceReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@JsonDeserialize(using = ResourceReferenceDeserializer.class)
 	@XmlIDREF
 	@XmlList
-	//@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+	// @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	private Set<Resource>							resources;
 
 	@Lob
@@ -88,7 +86,7 @@ public class Configuration extends DMPJPAObject {
 	}
 
 	public String getDescription() {
-		
+
 		return description;
 	}
 
@@ -124,7 +122,7 @@ public class Configuration extends DMPJPAObject {
 	}
 
 	public JsonNode getParameter(final String key) {
-		
+
 		initParameters(false);
 
 		return parameters.get(key);
@@ -141,7 +139,9 @@ public class Configuration extends DMPJPAObject {
 
 			// remove configuration from resources, if configuration, will be prepared for removal
 
-			for (final Resource resource : resources) {
+			final Set<Resource> resourcesToBeDeleted = Sets.newCopyOnWriteArraySet(resources);
+
+			for (final Resource resource : resourcesToBeDeleted) {
 
 				resource.removeConfiguration(this);
 			}
@@ -149,20 +149,17 @@ public class Configuration extends DMPJPAObject {
 			resources.clear();
 		}
 
-		// resources = resourcesArg;
-
 		if (resourcesArg != null) {
 
 			if (!resourcesArg.equals(resources)) {
 
-				if (resources != null) {
+				if (resources == null) {
 
-					resources.clear();
-					resources.addAll(resourcesArg);
-				} else {
-
-					resources = resourcesArg;
+					resources = Sets.newCopyOnWriteArraySet();
 				}
+
+				resources.clear();
+				resources.addAll(resourcesArg);
 			}
 
 			for (final Resource resource : resourcesArg) {
@@ -184,7 +181,7 @@ public class Configuration extends DMPJPAObject {
 
 			if (resources == null) {
 
-				resources = Sets.newLinkedHashSet();
+				resources = Sets.newCopyOnWriteArraySet();
 			}
 
 			if (!resources.contains(resource)) {
@@ -207,7 +204,7 @@ public class Configuration extends DMPJPAObject {
 
 			if (resources == null) {
 
-				resources = Sets.newLinkedHashSet();
+				resources = Sets.newCopyOnWriteArraySet();
 			}
 
 			if (resources.contains(resource)) {
@@ -242,7 +239,7 @@ public class Configuration extends DMPJPAObject {
 
 		parametersString = parameters.toString();
 	}
-	
+
 	private void initParameters(boolean fromScratch) {
 
 		if (parameters == null && !parametersInitialized) {
@@ -255,7 +252,7 @@ public class Configuration extends DMPJPAObject {
 
 					parameters = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
 				}
-				
+
 				parametersInitialized = true;
 
 				return;

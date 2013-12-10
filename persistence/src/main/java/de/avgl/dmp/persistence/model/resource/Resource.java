@@ -24,8 +24,6 @@ import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.hibernate.annotations.Cascade;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
@@ -84,7 +82,7 @@ public class Resource extends DMPJPAObject {
 	// @JsonDeserialize(using = ConfigurationReferenceDeserializer.class)
 	@XmlIDREF
 	@XmlList
-	//@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+	// @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	private Set<Configuration>						configurations;
 
 	public String getName() {
@@ -171,28 +169,27 @@ public class Resource extends DMPJPAObject {
 
 			// remove resource from configurations, if resource, will be prepared for removal
 
-			for (final Configuration configuration : configurations) {
+			final Set<Configuration> configurationsToBeDeleted = Sets.newCopyOnWriteArraySet(configurations);
+
+			for (final Configuration configuration : configurationsToBeDeleted) {
 
 				configuration.removeResource(this);
 			}
-			
+
 			configurations.clear();
 		}
 
-		//configurations = configurationsArg;
-
 		if (configurationsArg != null) {
-			
+
 			if (!configurationsArg.equals(configurations)) {
 
-				if(configurations != null) {
-				
+				if (configurations == null) {
+
+					configurations = Sets.newCopyOnWriteArraySet();
+				}
+
 				configurations.clear();
 				configurations.addAll(configurationsArg);
-				} else {
-					
-					configurations = configurationsArg;
-				}
 			}
 
 			for (final Configuration configuration : configurationsArg) {
@@ -236,7 +233,7 @@ public class Resource extends DMPJPAObject {
 
 			if (configurations == null) {
 
-				configurations = Sets.newLinkedHashSet();
+				configurations = Sets.newCopyOnWriteArraySet();
 			}
 
 			if (!configurations.contains(configuration)) {
@@ -259,7 +256,7 @@ public class Resource extends DMPJPAObject {
 
 			if (configurations == null) {
 
-				configurations = Sets.newLinkedHashSet();
+				configurations = Sets.newCopyOnWriteArraySet();
 			}
 
 			if (configurations.contains(configuration)) {
@@ -307,9 +304,9 @@ public class Resource extends DMPJPAObject {
 
 					attributes = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
 				}
-				
+
 				attributesInitialized = true;
-				
+
 				return;
 			}
 

@@ -94,6 +94,8 @@ public class ResourcesResourceTest extends ResourceTest {
 	@Test
 	public void testResourceUpload() throws Exception {
 
+		LOG.debug("start resource upload test");
+
 		final String resourceJSON = testResourceUploadInteral(resourceFile, expectedResource);
 
 		LOG.debug("created resource = '" + resourceJSON + "'");
@@ -101,10 +103,14 @@ public class ResourcesResourceTest extends ResourceTest {
 		final Resource resource = objectMapper.readValue(resourceJSON, Resource.class);
 
 		cleanUpDB(resource);
+
+		LOG.debug("end resource upload test");
 	}
 
 	@Test
 	public void testResourceUpload2() throws Exception {
+
+		LOG.debug("start resource upload test 2");
 
 		resourceJSONString = DMPPersistenceUtil.getResourceAsString("resource2.json");
 		expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
@@ -119,10 +125,14 @@ public class ResourcesResourceTest extends ResourceTest {
 		final Resource resource = objectMapper.readValue(resourceJSON, Resource.class);
 
 		cleanUpDB(resource);
+
+		LOG.debug("end resource upload test 2");
 	}
 
 	@Test
 	public void getResource() throws Exception {
+
+		LOG.debug("start get resource test");
 
 		final String resourceJSON = testResourceUploadInteral(resourceFile, expectedResource);
 
@@ -143,10 +153,14 @@ public class ResourcesResourceTest extends ResourceTest {
 		Assert.assertEquals("resource JSONs are not equal", resourceJSON, responseResource);
 
 		cleanUpDB(resource);
+
+		LOG.debug("end get resource test");
 	}
 
 	@Test
 	public void testGetResourceLines() throws Exception {
+
+		LOG.debug("start get resource lines test");
 
 		final String resourceJSON = testResourceUploadInteral(resourceFile, expectedResource);
 
@@ -197,11 +211,15 @@ public class ResourcesResourceTest extends ResourceTest {
 		assertThat(responseResource.get("description").asText(), equalTo(resource.getDescription()));
 
 		cleanUpDB(resource);
+
+		LOG.debug("end resource lines test");
 	}
 
 	@Test
 	public void getResourceConfigurations() throws Exception {
 
+		LOG.debug("start get resource configurations test");
+
 		prepareGetResourceConfigurations();
 
 		final int numberOfIterations = injector.getInstance(Key.get(Integer.class, Names.named("NumberOfIterations")));
@@ -234,11 +252,15 @@ public class ResourcesResourceTest extends ResourceTest {
 		}
 
 		finalizeGetResourceConfigurations();
+
+		LOG.debug("end get resource configurations test");
 	}
 
 	@Test
 	public void curlGetResourceConfigurations() throws Exception {
 
+		LOG.debug("start curl get resource configurations test");
+
 		prepareGetResourceConfigurations();
 
 		final int numberOfIterations = injector.getInstance(Key.get(Integer.class, Names.named("NumberOfIterations")));
@@ -271,10 +293,14 @@ public class ResourcesResourceTest extends ResourceTest {
 		}
 
 		finalizeGetResourceConfigurations();
+
+		LOG.debug("end curl get resource configurations test");
 	}
 
 	@Test
 	public void getResourceConfigurations2() throws Exception {
+
+		LOG.debug("start get resource configurations test 2");
 
 		final String resourceJSON = testResourceUploadInteral(resourceFile, expectedResource);
 
@@ -293,10 +319,14 @@ public class ResourcesResourceTest extends ResourceTest {
 		Assert.assertEquals("404 NOT FOUND was expected", 404, response.getStatus());
 
 		cleanUpDB(resource);
+
+		LOG.debug("end get resource configurations test 2");
 	}
 
 	@Test
 	public void addResourceConfiguration() throws Exception {
+
+		LOG.debug("start add resource configuration test");
 
 		final Resource resource = addResourceConfigurationInternal(resourceFile, "configuration.json", expectedResource);
 
@@ -308,10 +338,14 @@ public class ResourcesResourceTest extends ResourceTest {
 		}
 
 		cleanUpDB(resource);
+
+		LOG.debug("end add resource configuration test");
 	}
 
 	@Test
 	public void getResourceConfiguration() throws Exception {
+
+		LOG.debug("start get resource configuration test");
 
 		final Resource resource = addResourceConfigurationInternal(resourceFile, "configuration.json", expectedResource);
 
@@ -337,11 +371,15 @@ public class ResourcesResourceTest extends ResourceTest {
 		configurationService.deleteObject(configuration.getId());
 
 		cleanUpDB(resource);
+
+		LOG.debug("end get resource configuration test");
 	}
 
 	@Ignore
 	@Test
 	public void testResourceConfigurationSchema() throws Exception {
+
+		LOG.debug("start get resource configuration schema test");
 
 		final Resource resource = addResourceConfigurationInternal(resourceFile, "configuration.json", expectedResource);
 
@@ -388,10 +426,13 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		cleanUpDB(resource);
 
+		LOG.debug("end get resource configuration schema test");
 	}
 
 	@Test
 	public void testResourceConfigurationSchemaMissing() throws Exception {
+
+		LOG.debug("start get resource configuration schema missing test");
 
 		final Resource resource = addResourceConfigurationInternal(resourceFile, "configuration.json", expectedResource);
 
@@ -402,10 +443,14 @@ public class ResourcesResourceTest extends ResourceTest {
 		assertThat(response.hasEntity(), equalTo(false));
 
 		cleanUpDB(resource, true);
+
+		LOG.debug("end get resource configuration schema missing test");
 	}
 
 	@Test
 	public void testCSVResourceConfigurationData() throws Exception {
+
+		LOG.debug("start get CSV resource configuration data test");
 
 		final Resource resource = addResourceConfigurationInternal(resourceFile, "configuration.json", expectedResource);
 
@@ -449,10 +494,13 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		cleanUpDB(resource);
 
+		LOG.debug("end get CSV resource configuration data test");
 	}
 
 	@Test
 	public void testXMLResourceConfigurationData() throws Exception {
+
+		LOG.debug("start get XML resource configuration data test");
 
 		// prepare resource
 		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("test-mabxml-resource.json");
@@ -516,10 +564,13 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		cleanUpDB(resource);
 
+		LOG.debug("end get XML resource configuration data test");
 	}
 
 	@Test
 	public void testResourceConfigurationDataMissing() throws Exception {
+
+		LOG.debug("start get resource configuration data missing test");
 
 		final Resource resource = addResourceConfigurationInternal(resourceFile, "configuration.json", expectedResource);
 
@@ -529,22 +580,14 @@ public class ResourcesResourceTest extends ResourceTest {
 		assertThat(response.hasEntity(), equalTo(false));
 
 		cleanUpDB(resource, true);
-	}
 
-	private void cleanUpDB(Resource resource, boolean withConfigurations) {
-		if (withConfigurations) {
-
-			for (final Configuration configuration : resource.getConfigurations()) {
-
-				configurationService.deleteObject(configuration.getId());
-			}
-		}
-
-		cleanUpDB(resource);
+		LOG.debug("end get resource configuration data missing test");
 	}
 
 	@Test
 	public void getResources() throws Exception {
+
+		LOG.debug("start get resources test");
 
 		final String resourceJSON = testResourceUploadInteral(resourceFile, expectedResource);
 
@@ -582,10 +625,14 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		cleanUpDB(resource);
 		cleanUpDB(resource2);
+
+		LOG.debug("end get resources test");
 	}
 
 	@Test
 	public void testPOSTConfigurationCSVPreview() throws Exception {
+
+		LOG.debug("start post configuration CSV preview test");
 
 		final String resourceJSON = testResourceUploadInteral(resourceFile, expectedResource);
 
@@ -606,10 +653,16 @@ public class ResourcesResourceTest extends ResourceTest {
 		final String expected = DMPPersistenceUtil.getResourceAsString("test_csv.csv");
 
 		Assert.assertEquals("POST responses are not equal", expected, responseString);
+
+		cleanUpDB(resource);
+
+		LOG.debug("end post configuration CSV preview test");
 	}
 
 	@Test
 	public void testPOSTConfigurationCSVJSONPreview() throws Exception {
+
+		LOG.debug("start post configuration CSV JSON preview test");
 
 		final String resourceJSON = testResourceUploadInteral(resourceFile, expectedResource);
 
@@ -630,6 +683,22 @@ public class ResourcesResourceTest extends ResourceTest {
 		final String expected = DMPPersistenceUtil.getResourceAsString("test_csv.json");
 
 		Assert.assertEquals("POST responses are not equal", expected.trim(), responseString.trim());
+
+		cleanUpDB(resource);
+
+		LOG.debug("start post configuration CSV JSON preview test");
+	}
+
+	private void cleanUpDB(Resource resource, boolean withConfigurations) {
+		if (withConfigurations) {
+
+			for (final Configuration configuration : resource.getConfigurations()) {
+
+				configurationService.deleteObject(configuration.getId());
+			}
+		}
+
+		cleanUpDB(resource);
 	}
 
 	private String testResourceUploadInteral(final File resourceFile, final Resource expectedResource) throws Exception {
