@@ -1,7 +1,10 @@
-[{
+{
+  "functions": [{
     "name": "blacklist",
+    "dsl": "metafacture",
+    "reference": "blacklist",
     "description": "Blacklist filter",
-    "functionDescription": {
+    "parameters": {
       "entry": {
         "repeat": true,
         "type": "repeat",
@@ -18,8 +21,10 @@
     }
   }, {
     "name": "case",
+    "dsl": "metafacture",
+    "reference": "case",
     "description": "Upper/lower-case transformation.",
-    "functionDescription": {
+    "parameters": {
       "to": {
         "type": "radio",
         "choices": ["upper", "lower"]
@@ -31,8 +36,10 @@
     }
   }, {
     "name": "compose",
+    "dsl": "metafacture",
+    "reference": "compose",
     "description": "Add pre- or postfix to a string.",
-    "functionDescription": {
+    "parameters": {
       "prefix": {
         "type": "text",
         "optional": true
@@ -44,27 +51,35 @@
     }
   }, {
     "name": "constant",
+    "dsl": "metafacture",
+    "reference": "constant",
     "description": "Sets literal value to a constant.",
-    "functionDescription": {
+    "parameters": {
       "value": {
         "type": "text"
       }
     }
   }, {
     "name": "count",
+    "dsl": "metafacture",
+    "reference": "count",
     "description": "Returns the an increasing count for each received literal."
   }, {
     "name": "equals",
+    "dsl": "metafacture",
+    "reference": "equals",
     "description": "Returns the value only if equality holds.",
-    "functionDescription": {
+    "parameters": {
       "string": {
         "type": "text"
       }
     }
   }, {
     "name": "htmlanchor",
+    "dsl": "metafacture",
+    "reference": "htmlanchor",
     "description": "Create an HTML anchor.",
-    "functionDescription": {
+    "parameters": {
       "prefix": {
         "type": "text"
       },
@@ -79,8 +94,10 @@
     }
   }, {
     "name": "isbn",
+    "dsl": "metafacture",
+    "reference": "isbn",
     "description": "ISBN conversion and verification.",
-    "functionDescription": {
+    "parameters": {
       "to": {
         "type": "radio",
         "choices": ["isbn13", "isbn10", "clean"]
@@ -92,8 +109,10 @@
     }
   }, {
     "name": "lookup",
+    "dsl": "metafacture",
+    "reference": "lookup",
     "description": "Performs a table lookup",
-    "functionDescription": {
+    "parameters": {
       "in": {
         "type": "text",
         "optional": true,
@@ -119,19 +138,25 @@
       }
     }
   }, {
-    "name": "normalize-utf8"
+    "name": "normalize-utf8",
+    "dsl": "metafacture",
+    "reference": "normalize-utf8"
   }, {
     "name": "not-equals",
+    "dsl": "metafacture",
+    "reference": "not-equals",
     "description": "Returns value only if equality does not hold.",
-    "functionDescription": {
+    "parameters": {
       "string": {
         "type": "text"
       }
     }
   }, {
     "name": "occurrence",
+    "dsl": "metafacture",
+    "reference": "occurrence",
     "description": "Filter by number of occurrence.",
-    "functionDescription": {
+    "parameters": {
       "only": {
         "type": "text",
         "pattern": "(lessThen |moreThen )?\\d+"
@@ -143,8 +168,10 @@
     }
   }, {
     "name": "regexp",
+    "dsl": "metafacture",
+    "reference": "regexp",
     "description": "Extract data based on a regular expression. Syntax corresponds to Java Regular Expressions.",
-    "functionDescription": {
+    "parameters": {
       "match": {
         "type": "text"
       },
@@ -155,8 +182,10 @@
     }
   }, {
     "name": "replace",
+    "dsl": "metafacture",
+    "reference": "replace",
     "description": "String replace based on a regular expression. Pattern syntax corresponds to Java Regular Expressions.",
-    "functionDescription": {
+    "parameters": {
       "pattern": {
         "type": "regexp"
       },
@@ -167,8 +196,10 @@
     }
   }, {
     "name": "setreplace",
+    "dsl": "metafacture",
+    "reference": "setreplace",
     "description": "Relace strings based on a replacement table.",
-    "functionDescription": {
+    "parameters": {
       "map": {
         "type": "text",
         "optional": true,
@@ -190,8 +221,10 @@
     }
   }, {
     "name": "split",
+    "dsl": "metafacture",
+    "reference": "split",
     "description": "Split string based on a regular expression. Pattern syntax corresponds to Java Regular Expressions.",
-    "functionDescription": {
+    "parameters": {
       "delimiter": {
         "type": "text",
         "description": "Regular expression, defining the split"
@@ -199,8 +232,10 @@
     }
   }, {
     "name": "substring",
+    "dsl": "metafacture",
+    "reference": "substring",
     "description": "Returns a substring",
-    "functionDescription": {
+    "parameters": {
       "start": {
         "type": "number",
         "optional": true
@@ -212,14 +247,20 @@
     }
   }, {
     "name": "switch-name-value",
+    "dsl": "metafacture",
+    "reference": "switch-name-value",
     "description": "Switches name and value."
   }, {
     "name": "trim",
+    "dsl": "metafacture",
+    "reference": "trim",
     "description": "Trimms the value"
   }, {
     "name": "unique",
+    "dsl": "metafacture",
+    "reference": "unique",
     "description": "Filters out dublicate literals",
-    "functionDescription": {
+    "parameters": {
       "in": {
         "type": "select",
         "choices": ["record", "entity"],
@@ -235,11 +276,15 @@
     }
   }, {
     "name": "urlencode",
+    "dsl": "metafacture",
+    "reference": "urlencode",
     "description": "Escapes value according to URL encoding rules."
   }, {
     "name": "whitelist",
+    "dsl": "metafacture",
+    "reference": "whitelist",
     "description": "Whitelist filter.",
-    "functionDescription": {
+    "parameters": {
       "map": {
         "type": "text",
         "optional": true,
@@ -248,7 +293,7 @@
       "entry": {
         "repeat": true,
         "type": "repeat",
-        "functionDescription": {
+        "parameters": {
           "name": {
             "type": "text"
           },
@@ -260,3 +305,4 @@
       }
     }
   }]
+}
