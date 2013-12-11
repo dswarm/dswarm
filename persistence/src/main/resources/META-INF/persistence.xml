@@ -39,7 +39,7 @@ http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
 			<!-- <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect" 
 				/> -->
 			<property name="hibernate.connection.shutdown" value="true" />
-			<property name="hibernate.hbm2ddl.auto" value="none" />
+			<property name="hibernate.hbm2ddl.auto" value="update" />
 
 			<!-- Echo all executed SQL to stdout -->
 			<property name="hibernate.show_sql" value="true" />

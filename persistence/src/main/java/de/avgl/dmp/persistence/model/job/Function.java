@@ -254,6 +254,13 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	}
 
 	private void refreshFunctionDescriptionString() {
+		
+		if(functionDescription == null) {
+			
+			functionDescriptionString = null;
+			
+			return;
+		}
 
 		functionDescriptionString = functionDescription.toString();
 	}
