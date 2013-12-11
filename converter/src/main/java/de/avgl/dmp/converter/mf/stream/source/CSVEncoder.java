@@ -26,16 +26,16 @@ import com.google.common.collect.Lists;
 @Out(String.class)
 public final class CSVEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
 
-	private List<String>		header					= null;
-	private List<String>		values					= null;
+	private List<String>		header;
+	private List<String>		values;
 
 	private final CSVFormat		csvFormat;
-	private CSVPrinter			csvPrinter				= null;
+	private CSVPrinter			csvPrinter;
 	private final StringWriter	writer					= new StringWriter();
 
-	private boolean				withHeader				= false;
-	private boolean				firstLine				= false;
-	private boolean				firstLineInitialized	= false;
+	private boolean				withHeader;
+	private boolean				firstLine;
+	private boolean				firstLineInitialized;
 
 	public CSVEncoder() {
 
@@ -109,7 +109,7 @@ public final class CSVEncoder extends DefaultStreamPipe<ObjectReceiver<String>> 
 
 				try {
 					csvPrinter.printRecord(header);
-				} catch (IOException e) {
+				} catch (final IOException e) {
 
 					throw new MetafactureException("couldn't write CSV header line");
 				}
@@ -120,7 +120,7 @@ public final class CSVEncoder extends DefaultStreamPipe<ObjectReceiver<String>> 
 
 		try {
 			csvPrinter.printRecord(values);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 
 			throw new MetafactureException("couldn't write CSV line");
 		}

@@ -8,14 +8,14 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
 
 /**
- * 
+ *
  * @author tgaengler
  *
  * @param <POJOCLASS>
  */
 public abstract class ExtendedBasicDMPJPAService<POJOCLASS extends ExtendedBasicDMPJPAObject> extends BasicDMPJPAService<POJOCLASS> {
 
-	public ExtendedBasicDMPJPAService(final Class<POJOCLASS> clasz, final Provider<EntityManager> entityManagerProvider) {
+	protected ExtendedBasicDMPJPAService(final Class<POJOCLASS> clasz, final Provider<EntityManager> entityManagerProvider) {
 
 		super(clasz, entityManagerProvider);
 	}
@@ -27,7 +27,7 @@ public abstract class ExtendedBasicDMPJPAService<POJOCLASS extends ExtendedBasic
 		final String description = object.getDescription();
 
 		updateObject.setDescription(description);
-		
+
 		super.updateObjectInternal(object, updateObject, entityManager);
 	}
 }

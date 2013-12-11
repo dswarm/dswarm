@@ -14,7 +14,7 @@ import com.google.common.base.Objects;
 public abstract class DMPObject<IDTYPE> implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long	serialVersionUID	= 1L;
 
@@ -29,12 +29,8 @@ public abstract class DMPObject<IDTYPE> implements Serializable {
 	@Override
 	public boolean equals(final Object obj) {
 
-		if (!DMPObject.class.isInstance(obj)) {
+		return DMPObject.class.isInstance(obj) && Objects.equal(((DMPObject<?>) obj).getId(), getId());
 
-			return false;
-		}
-
-		return Objects.equal(((DMPObject<?>) obj).getId(), getId());
 	}
 
 	@Override

@@ -22,13 +22,10 @@ import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.collect.Sets;
 
 import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
-import de.avgl.dmp.persistence.model.utils.AttributePathReferenceSerializer;
-import de.avgl.dmp.persistence.model.utils.SetAttributePathReferenceSerializer;
 
 /**
  * @author tgaengler
@@ -41,7 +38,7 @@ import de.avgl.dmp.persistence.model.utils.SetAttributePathReferenceSerializer;
 public class Mapping extends BasicDMPJPAObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long	serialVersionUID	= 1L;
 
@@ -51,31 +48,31 @@ public class Mapping extends BasicDMPJPAObject {
 	//@JsonSerialize(using = SetAttributePathReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@XmlList
-	private Set<AttributePath>	inputAttributePaths	= null;
+	private Set<AttributePath>	inputAttributePaths;
 
 	@XmlElement(name = "output_attribute_path")
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "OUTPUT_ATTRIBUTE_PATH")
 	//@JsonSerialize(using = AttributePathReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private AttributePath		outputAttributePath	= null;
+	private AttributePath		outputAttributePath;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE }, orphanRemoval = true)
 	@JoinColumn(name = "TRANSFORMATION")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private Component			transformation		= null;
+	private Component			transformation;
 
 	@XmlElement(name = "input_filter")
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "INPUT_FILTER")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private Filter				inputFilter			= null;
+	private Filter				inputFilter;
 
 	@XmlElement(name = "output_filter")
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "OUTPUT_FILTER")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private Filter				outputFilter		= null;
+	private Filter				outputFilter;
 
 	public Set<AttributePath> getInputAttributePaths() {
 
@@ -112,7 +109,7 @@ public class Mapping extends BasicDMPJPAObject {
 	/**
 	 * Adds a new input attribute path to the collection of input attribute paths of this mapping.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param inputAttributePath a new input attribute path
 	 */
 	public void addInputAttributePath(final AttributePath inputAttributePath) {
@@ -134,7 +131,7 @@ public class Mapping extends BasicDMPJPAObject {
 	/**
 	 * Removes an existing input attribute path from the collection of input attribute paths of this mapping.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param inputAttributePath an existing input attribute path that should be removed
 	 */
 	public void removeInputAttributePath(final AttributePath inputAttributePath) {
@@ -184,15 +181,11 @@ public class Mapping extends BasicDMPJPAObject {
 
 		outputFilter = outputFilterArg;
 	}
-	
+
 	@Override
 	public boolean equals(final Object obj) {
 
-		if (!Mapping.class.isInstance(obj)) {
+		return Mapping.class.isInstance(obj) && super.equals(obj);
 
-			return false;
-		}
-
-		return super.equals(obj);
 	}
 }

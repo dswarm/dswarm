@@ -45,7 +45,6 @@ public class SchemasResource extends BasicDMPResource<SchemaService, Schema> {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public Response getObject(@ApiParam(value = "schema identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
-
 		return super.getObject(id);
 	}
 

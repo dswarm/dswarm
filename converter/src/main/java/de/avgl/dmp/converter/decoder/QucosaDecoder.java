@@ -19,7 +19,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
-import java.util.Iterator;
 
 import static de.avgl.dmp.converter.util.NodeListOps.getChildrenFor;
 
@@ -39,7 +38,7 @@ public class QucosaDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
 	public static final String OAI_DATA_TAG = "oai_dc:dc";
 	public static final char ENTITY_MARKER = '.';
 
-	static final String DEFAULT_RECORD_PREFIX = "record";
+	private static final String DEFAULT_RECORD_PREFIX = "record";
 
 	private final String recordPrefix;
 
@@ -57,7 +56,7 @@ public class QucosaDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
 			getReceiver().literal(node.getNodeName(), node.getTextContent());
 		}
 
-		for (String ignored : sections) {
+		for (final String ignored : sections) {
 			getReceiver().endEntity();
 		}
 	}
@@ -111,20 +110,18 @@ public class QucosaDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
 	 * <code>recordPrefix</code>, send a new record downstream.
 	 * @param in  The {@link InputSource}  for the XML file.
 	 */
-	public void process(final InputSource in) {
+	void process(final InputSource in) {
 		final DocumentBuilder documentBuilder;
 		try {
 			documentBuilder = documentBuilderFactory.newDocumentBuilder();
-		} catch (ParserConfigurationException e) {
+		} catch (final ParserConfigurationException e) {
 			throw new MetafactureException(e);
 		}
 
 		final Document doc;
 		try {
 			doc = documentBuilder.parse(in);
-		} catch (SAXException e) {
-			throw new MetafactureException(e);
-		} catch (IOException e) {
+		} catch (final SAXException | IOException e) {
 			throw new MetafactureException(e);
 		}
 
@@ -144,10 +141,10 @@ public class QucosaDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
 	 * @param content  The textual content of the Qucosa file
 	 */
 	public void process(final String content) {
-		InputStream is;
+		final InputStream is;
 		try {
 			is = new ByteArrayInputStream(content.getBytes("UTF-8"));
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			throw new MetafactureException(e);
 		}
 

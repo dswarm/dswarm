@@ -24,7 +24,7 @@ public class NodeListIterable implements Iterable<Node> {
 
 
 	private class NodeListIterator extends AbstractIterator<Node> {
-		private int i = 0;
+		private int i;
 		private final int l = ns.getLength();
 
 		@Override

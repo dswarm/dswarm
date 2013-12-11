@@ -56,11 +56,8 @@ public class MetricsServlet extends HttpServlet {
 		resp.setHeader("Cache-Control", "must-revalidate,no-cache,no-store");
 		resp.setStatus(HttpServletResponse.SC_OK);
 
-		final OutputStream output = resp.getOutputStream();
-		try {
+		try (final OutputStream output = resp.getOutputStream()) {
 			getWriter(req).writeValue(output, registry);
-		} finally {
-			output.close();
 		}
 	}
 

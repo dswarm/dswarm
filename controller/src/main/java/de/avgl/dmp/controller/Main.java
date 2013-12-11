@@ -11,11 +11,11 @@ import org.glassfish.grizzly.http.server.HttpServer;
  */
 public class Main {
 
-	private static final org.apache.log4j.Logger	log	= org.apache.log4j.Logger.getLogger(Main.class);
+	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(Main.class);
 
 	private EmbeddedServer server;
 
-	public Main(final Properties properties) {
+	private Main(final Properties properties) {
 		final String host = properties.getProperty("backend_http_server_host");
 		final String port = properties.getProperty("backend_http_server_port");
 
@@ -34,9 +34,9 @@ public class Main {
 		try {
 
 			properties.load(inStream);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 
-			log.debug("could not load properties");
+			LOG.debug("could not load properties");
 		}
 
 		return properties;
@@ -56,7 +56,7 @@ public class Main {
 
 		try {
 			return server.start();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 

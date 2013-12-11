@@ -8,7 +8,7 @@ import org.apache.commons.io.FileUtils;
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.init.util.DMPUtil;
 
-public class DMPControllerUtils {
+public final class DMPControllerUtils {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(DMPControllerUtils.class);
 
@@ -21,7 +21,7 @@ public class DMPControllerUtils {
 			FileUtils.copyInputStreamToFile(source, file);
 
 			return file;
-		} catch (Exception e) {
+		} catch (final Exception e) {
 
 			LOG.debug("couldn't write input stream to file '" + fileName + "'");
 

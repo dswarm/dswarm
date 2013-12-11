@@ -20,7 +20,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -45,7 +44,7 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 public class Function extends ExtendedBasicDMPJPAObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long						serialVersionUID				= 1L;
 
@@ -60,22 +59,22 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	private ObjectNode								functionDescription;
 
 	@Transient
-	private boolean									functionDescriptionInitialized	= false;
+	private boolean									functionDescriptionInitialized;
 
 	@Transient
-	private LinkedList<String>						parameters						= null;
+	private LinkedList<String>						parameters;
 
 	@Transient
 	private ArrayNode								parametersJSON;
 
 	@Transient
-	private boolean									parametersInitialized			= false;
+	private boolean									parametersInitialized;
 
 	@JsonIgnore
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "PARAMETERS", columnDefinition = "VARCHAR(4000)", length = 4000)
-	private String									parametersString				= null;
+	private String									parametersString;
 
 	/**
 	 * The function type, e.g., function ({@link FunctionType#Function}) or transformation ({@link FunctionType#Transformation}).
@@ -83,7 +82,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	@XmlElement(name = "type")
 	@Column(name = "FUNCTION_TYPE")
 	@Enumerated(EnumType.STRING)
-	protected final FunctionType					functionType;
+	private final FunctionType					functionType;
 
 	public Function() {
 
@@ -165,7 +164,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Gets the function type, e.g., function ({@link FunctionType#Function}) or transformation (
 	 * {@link FunctionType#Transformation}).
-	 * 
+	 *
 	 * @return the function type
 	 */
 	public FunctionType getFunctionType() {
@@ -176,12 +175,8 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	@Override
 	public boolean equals(final Object obj) {
 
-		if (!Function.class.isInstance(obj)) {
+		return Function.class.isInstance(obj) && super.equals(obj);
 
-			return false;
-		}
-
-		return super.equals(obj);
 	}
 
 	private void refreshParametersString() {
@@ -253,18 +248,18 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	}
 
 	private void refreshFunctionDescriptionString() {
-		
+
 		if(functionDescription == null) {
-			
+
 			functionDescriptionString = null;
-			
+
 			return;
 		}
 
 		functionDescriptionString = functionDescription.toString();
 	}
 
-	private void initFunctionDescription(boolean fromScratch) {
+	private void initFunctionDescription(final boolean fromScratch) {
 
 		if (functionDescription == null && !functionDescriptionInitialized) {
 
@@ -285,7 +280,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 			try {
 
 				functionDescription = DMPPersistenceUtil.getJSON(functionDescriptionString);
-			} catch (DMPException e) {
+			} catch (final DMPException e) {
 
 				LOG.debug("couldn't parse function description JSON string for function '" + getId() + "'");
 			}

@@ -21,16 +21,12 @@ import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.utils.InternalSchemaDataUtil;
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.TransformationFlow;
-import de.avgl.dmp.converter.mf.stream.reader.JsonNodeReader;
-import de.avgl.dmp.converter.morph.MorphScriptBuilder;
-import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
-import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.model.types.Tuple;
 
 @RequestScoped
 @Path("transformations")
-public class TransformationsResource {
+class TransformationsResource {
 
 	private final Provider<JsonToPojoMapper>	pojoMapperProvider;
 	private final InternalSchemaDataUtil		schemaDataUtil;

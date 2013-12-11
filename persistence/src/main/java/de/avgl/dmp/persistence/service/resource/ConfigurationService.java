@@ -19,7 +19,7 @@ import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
 public class ConfigurationService extends ExtendedBasicDMPJPAService<Configuration> {
 
 	@Inject
-	public ConfigurationService(Provider<EntityManager> entityManagerProvider) {
+	public ConfigurationService(final Provider<EntityManager> entityManagerProvider) {
 
 		super(Configuration.class, entityManagerProvider);
 	}

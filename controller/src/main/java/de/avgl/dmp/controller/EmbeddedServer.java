@@ -22,7 +22,7 @@ import de.avgl.dmp.controller.servlet.DMPInjector;
 
 public class EmbeddedServer {
 
-	private static final org.apache.log4j.Logger	log						= org.apache.log4j.Logger.getLogger(EmbeddedServer.class);
+	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(EmbeddedServer.class);
 
 	public static final String						CONTEXT_PATH_PROPERTY	= "dmp.http.context_path";
 	public static final String						HTTP_PORT_PROPERTY		= "dmp.http.port";
@@ -39,7 +39,7 @@ public class EmbeddedServer {
 	}
 
 	public HttpServer start(final boolean skipStart) throws IOException {
-		log.info("Starting grizzly");
+		LOG.info("Starting grizzly");
 
 		final HttpServer server = GrizzlyHttpServerFactory.createHttpServer(getBaseUri(), false);
 		server.getListener("grizzly").setMaxFormPostSize(Integer.MAX_VALUE);
@@ -68,7 +68,7 @@ public class EmbeddedServer {
 		return server;
 	}
 
-	public void stop() throws Exception {
+	public void stop() {
 		httpServer.stop();
 	}
 
@@ -76,7 +76,7 @@ public class EmbeddedServer {
 		return UriBuilder.fromUri("http://0.0.0.0/").host(getHost()).port(getPort()).path(getContextPath()).build();
 	}
 
-	public String getHost() {
+	String getHost() {
 		final String value = System.getProperty(HTTP_HOST_PROPERTY);
 		if (value != null) {
 			return value;
@@ -85,22 +85,22 @@ public class EmbeddedServer {
 		return DEFAULT_HOST;
 	}
 
-	public String getContextPath() {
+	String getContextPath() {
 		final String value = System.getProperty(CONTEXT_PATH_PROPERTY);
 		if (value != null) {
 
-			if (value.substring(0, 1).equals("/")) {
+			if ("/".equals(value.substring(0, 1))) {
 				return value;
 			}
 
-			log.warn("Value of " + CONTEXT_PATH_PROPERTY + " property must start with a '/' [" + value + "]." + " Using default ["
+			LOG.warn("Value of " + CONTEXT_PATH_PROPERTY + " property must start with a '/' [" + value + "]." + " Using default ["
 					+ DEFAULT_CONTEXT_PATH + "].");
 		}
 
 		return DEFAULT_CONTEXT_PATH;
 	}
 
-	public int getPort() {
+	int getPort() {
 		final String value = System.getProperty(HTTP_PORT_PROPERTY);
 		if (value != null) {
 
@@ -111,8 +111,8 @@ public class EmbeddedServer {
 				}
 
 				return port;
-			} catch (NumberFormatException e) {
-				log.warn("Value of " + HTTP_PORT_PROPERTY + " property is not a  valid positive integer [" + value + "]." + " Using default ["
+			} catch (final NumberFormatException e) {
+				LOG.warn("Value of " + HTTP_PORT_PROPERTY + " property is not a  valid positive integer [" + value + "]." + " Using default ["
 						+ DEFAULT_PORT + "].", e);
 			}
 		}
@@ -133,7 +133,7 @@ public class EmbeddedServer {
 			public void run() {
 				try {
 					main.stop();
-				} catch (Exception e) {
+				} catch (final Exception e) {
 					e.printStackTrace();
 				} finally {
 					keepAliveLatch.countDown();
@@ -147,7 +147,7 @@ public class EmbeddedServer {
 			public void run() {
 				try {
 					keepAliveLatch.await();
-				} catch (InterruptedException ignore) {
+				} catch (final InterruptedException ignore) {
 				}
 			}
 		}, "dmp/grizzly");

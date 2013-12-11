@@ -47,7 +47,7 @@ public class AttributesResource extends BasicResource<AttributeService, Attribut
 	public Response getObject(@ApiParam(value = "attribute identifier", required = true) @PathParam("id") final String id) throws DMPControllerException {
 
 		//return super.getObject(id);
-		
+
 		return Response.status(505).build();
 	}
 
@@ -80,7 +80,7 @@ public class AttributesResource extends BasicResource<AttributeService, Attribut
 	}
 
 	@Override
-	protected Attribute createObject(Attribute objectFromJSON, AttributeService persistenceService) throws DMPPersistenceException {
+	protected Attribute createObject(final Attribute objectFromJSON, final AttributeService persistenceService) throws DMPPersistenceException {
 
 		return persistenceService.createObject(objectFromJSON.getId());
 	}

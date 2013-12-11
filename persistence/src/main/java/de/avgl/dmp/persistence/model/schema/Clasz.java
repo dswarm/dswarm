@@ -19,7 +19,7 @@ public class Clasz extends BasicDMPObject {
 	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(Clasz.class);
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long						serialVersionUID	= 1L;
 
@@ -42,11 +42,7 @@ public class Clasz extends BasicDMPObject {
 	@Override
 	public boolean equals(final Object obj) {
 
-		if (!Clasz.class.isInstance(obj)) {
+		return Clasz.class.isInstance(obj) && super.equals(obj);
 
-			return false;
-		}
-
-		return super.equals(obj);
 	}
 }

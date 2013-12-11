@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.nio.charset.Charset;
 
 import javax.xml.XMLConstants;
@@ -26,63 +27,58 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
+import com.google.common.io.InputSupplier;
 import com.google.common.io.Resources;
 
 public class MorphScriptBuilder {
 
 	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(MorphScriptBuilder.class);
 
-	private static final DocumentBuilderFactory	docFactory					= DocumentBuilderFactory.newInstance();
+	private static final DocumentBuilderFactory DOC_FACTORY = DocumentBuilderFactory.newInstance();
 
 	private static final String					SCHEMA_PATH					= "schemata/metamorph.xsd";
 
-	private static final TransformerFactory		transformerFactory;
+	private static final TransformerFactory     TRANSFORMER_FACTORY;
 
 	private static final String					TRANSFORMER_FACTORY_CLASS	= "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl";
 
 	static {
 		System.setProperty("javax.xml.transform.TransformerFactory", TRANSFORMER_FACTORY_CLASS);
-		transformerFactory = TransformerFactory.newInstance();
-		transformerFactory.setAttribute("indent-number", 4);
+		TRANSFORMER_FACTORY = TransformerFactory.newInstance();
+		TRANSFORMER_FACTORY.setAttribute("indent-number", 4);
 
-		InputStream schemaStream = null;
+		final URL resource = Resources.getResource(SCHEMA_PATH);
+		final InputSupplier<InputStream> inputStreamInputSupplier = Resources.newInputStreamSupplier(resource);
 
-		try {
+		try(final InputStream schemaStream = inputStreamInputSupplier.getInput()) {
 
-			schemaStream = Resources.newInputStreamSupplier(Resources.getResource(SCHEMA_PATH)).getInput();
+//			final StreamSource SCHEMA_SOURCE = new StreamSource(schemaStream);
+			final SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			Schema schema = null;
+
+			try {
+
+				// TODO: dummy schema right now, since it couldn't parse the metamorph schema for some reason
+				schema = sf.newSchema();
+			} catch (final SAXException e) {
+
+				e.printStackTrace();
+			}
+
+			if(schema == null) {
+
+				LOG.error("couldn't parse schema");
+			}
+
+			DOC_FACTORY.setSchema(schema);
+
 		} catch (final IOException e1) {
-
-			e1.printStackTrace();
+			LOG.error("couldn't read schema resource", e1);
 		}
-
-		if(schemaStream == null) {
-
-			LOG.error("couldn't read schema resource");
-		}
-
-		// final StreamSource SCHEMA_SOURCE = new StreamSource(schemaStream);
-		final SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-		Schema schema = null;
-
-		try {
-
-			// TODO: dummy schema right now, since it couldn't parse the metamorph schema for some reason
-			schema = sf.newSchema();
-		} catch (final SAXException e) {
-
-			e.printStackTrace();
-		}
-
-		if(schema == null) {
-
-			LOG.error("couldn't parse schema");
-		}
-
-		docFactory.setSchema(schema);
 	}
 
-	private Document							doc;
-	
+	private final Document							doc = null;
+
 	// TODO:
 
 //	private void createParameters(final Map<String, Parameter> parameters, final Element component) {
@@ -129,7 +125,7 @@ public class MorphScriptBuilder {
 //		return vars;
 //	}
 
-	private Element varDefinition(String key, String value) {
+	private Element varDefinition(final String key, final String value) {
 		final Element var = doc.createElement("var");
 		var.setAttribute("name", key);
 		var.setAttribute("value", value);
@@ -141,8 +137,8 @@ public class MorphScriptBuilder {
 		final String defaultEncoding = encoding.name();
 		final Transformer transformer;
 		try {
-			transformer = transformerFactory.newTransformer();
-		} catch (TransformerConfigurationException e) {
+			transformer = TRANSFORMER_FACTORY.newTransformer();
+		} catch (final TransformerConfigurationException e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -156,21 +152,21 @@ public class MorphScriptBuilder {
 		final StreamResult result;
 		try {
 			result = new StreamResult(new OutputStreamWriter(stream, defaultEncoding));
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return null;
 		}
 
 		try {
 			transformer.transform(new DOMSource(doc), result);
-		} catch (TransformerException e) {
+		} catch (final TransformerException e) {
 			e.printStackTrace();
 			return null;
 		}
 
 		try {
 			return stream.toString(defaultEncoding);
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -200,7 +196,7 @@ public class MorphScriptBuilder {
 //	public MorphScriptBuilder apply(final List<Transformation> transformations) throws DMPConverterException {
 //		final DocumentBuilder docBuilder;
 //		try {
-//			docBuilder = docFactory.newDocumentBuilder();
+//			docBuilder = DOC_FACTORY.newDocumentBuilder();
 //		} catch (ParserConfigurationException e) {
 //			throw new DMPConverterException(e.getMessage());
 //		}

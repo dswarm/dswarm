@@ -12,7 +12,7 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.BasicDMPObject;
 
 /**
- * 
+ *
  * @author tgaengler
  *
  * @param <POJOCLASS>
@@ -21,14 +21,14 @@ public abstract class AdvancedJPAService<POJOCLASS extends BasicDMPObject> exten
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AdvancedJPAService.class);
 
-	public AdvancedJPAService(final Class<POJOCLASS> clasz, final Provider<EntityManager> entityManagerProvider) {
+	protected AdvancedJPAService(final Class<POJOCLASS> clasz, final Provider<EntityManager> entityManagerProvider) {
 
 		super(clasz, entityManagerProvider);
 	}
 
 	/**
 	 * Create and persist an object of the specific class.<br>
-	 * 
+	 *
 	 * @return the persisted object of the specific class
 	 */
 	@Transactional(rollbackOn = DMPPersistenceException.class)
@@ -54,7 +54,7 @@ public abstract class AdvancedJPAService<POJOCLASS extends BasicDMPObject> exten
 		return object;
 	}
 
-	protected POJOCLASS createNewObject(final String id) throws DMPPersistenceException {
+	POJOCLASS createNewObject(final String id) throws DMPPersistenceException {
 
 		final POJOCLASS object;
 
@@ -62,12 +62,8 @@ public abstract class AdvancedJPAService<POJOCLASS extends BasicDMPObject> exten
 
 		try {
 			constructor = clasz.getConstructor(String.class);
-		} catch (final SecurityException e1) {
+		} catch (final SecurityException | NoSuchMethodException e1) {
 
-			e1.printStackTrace();
-
-			throw new DMPPersistenceException(e1.getMessage());
-		} catch (final NoSuchMethodException e1) {
 			e1.printStackTrace();
 
 			throw new DMPPersistenceException(e1.getMessage());
@@ -81,22 +77,7 @@ public abstract class AdvancedJPAService<POJOCLASS extends BasicDMPObject> exten
 		try {
 
 			object = constructor.newInstance(id);
-		} catch (final InstantiationException e) {
-
-			e.printStackTrace();
-
-			throw new DMPPersistenceException(e.getMessage());
-		} catch (final IllegalAccessException e) {
-
-			e.printStackTrace();
-
-			throw new DMPPersistenceException(e.getMessage());
-		} catch (final IllegalArgumentException e) {
-
-			e.printStackTrace();
-
-			throw new DMPPersistenceException(e.getMessage());
-		} catch (final InvocationTargetException e) {
+		} catch (final InstantiationException | InvocationTargetException | IllegalArgumentException | IllegalAccessException e) {
 
 			e.printStackTrace();
 

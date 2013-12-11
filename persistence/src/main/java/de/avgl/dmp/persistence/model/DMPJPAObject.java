@@ -14,10 +14,10 @@ import javax.xml.bind.annotation.XmlID;
 public abstract class DMPJPAObject extends DMPObject<Long> {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long	serialVersionUID	= 1L;
-	
+
 	@Id
 	@XmlID
 	@Access(AccessType.FIELD)

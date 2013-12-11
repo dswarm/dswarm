@@ -22,7 +22,6 @@ import com.google.inject.name.Names;
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
 import de.avgl.dmp.persistence.service.InternalServiceFactory;
 import de.avgl.dmp.persistence.service.impl.InternalServiceFactoryImpl;
-import de.avgl.dmp.persistence.service.impl.SchemaServiceImpl;
 import de.avgl.dmp.persistence.service.job.ComponentService;
 import de.avgl.dmp.persistence.service.job.FunctionService;
 import de.avgl.dmp.persistence.service.job.TransformationService;
@@ -36,7 +35,7 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
 
 public class PersistenceModule extends AbstractModule {
 
-	private static final org.apache.log4j.Logger	log	= org.apache.log4j.Logger.getLogger(PersistenceModule.class);
+	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(PersistenceModule.class);
 
 	@Override
 	protected void configure() {
@@ -44,8 +43,8 @@ public class PersistenceModule extends AbstractModule {
 		final Properties properties = new Properties();
 		try {
 			properties.load(resource.openStream());
-		} catch (IOException e) {
-			log.error("Could not load dmp.properties", e);
+		} catch (final IOException e) {
+			LOG.error("Could not load dmp.properties", e);
 		}
 
 		final String tdbPath = properties.getProperty("tdb_path", "target/h2");
@@ -66,9 +65,6 @@ public class PersistenceModule extends AbstractModule {
 		bind(DataModelService.class).in(Scopes.SINGLETON);
 
 		bind(InternalServiceFactory.class).to(InternalServiceFactoryImpl.class).in(Scopes.SINGLETON);
-
-		// TODO: remove this later
-		bind(SchemaServiceImpl.class).in(Scopes.SINGLETON);
 	}
 
 	@Provides

@@ -42,14 +42,12 @@ public class XMLSchemaEventRecorder {
 		try {
 			schemaParser.parse(new File(filename));
 			final JSRoot root = schemaParser.apply(resource.getName());
-			
+
 			// TODO: fixme
 
 			//schemaService.createObject(resource.getId(), configuration.getId(), root);
 
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (final SAXException | IOException e) {
 			e.printStackTrace();
 		}
 	}

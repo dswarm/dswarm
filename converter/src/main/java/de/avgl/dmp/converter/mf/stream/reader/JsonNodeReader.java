@@ -30,10 +30,10 @@ public class JsonNodeReader extends DefaultObjectPipe<Iterator<Tuple<String,Json
 	}
 
 	@Override
-	public void process(Iterator<Tuple<String, JsonNode>> obj) {
+	public void process(final Iterator<Tuple<String, JsonNode>> obj) {
 		final StreamReceiver receiver = getReceiver();
 		while (obj.hasNext()) {
-			Tuple<String, JsonNode> tuple = obj.next();
+			final Tuple<String, JsonNode> tuple = obj.next();
 
 			receiver.startRecord(tuple.v1());
 			if (recordPrefix.isPresent()) {
@@ -42,7 +42,7 @@ public class JsonNodeReader extends DefaultObjectPipe<Iterator<Tuple<String,Json
 
 			try {
 				processObjectNode(receiver, tuple.v2());
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				LOG.error(e.getMessage(), e);
 			}
 
@@ -75,7 +75,7 @@ public class JsonNodeReader extends DefaultObjectPipe<Iterator<Tuple<String,Json
 				break;
 
 			case ARRAY:
-				for (JsonNode arrayNode : node) {
+				for (final JsonNode arrayNode : node) {
 					processNode(receiver, fieldName, arrayNode);
 				}
 

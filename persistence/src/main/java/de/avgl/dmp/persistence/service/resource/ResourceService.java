@@ -22,7 +22,7 @@ public class ResourceService extends ExtendedBasicDMPJPAService<Resource> {
 	private final Provider<ConfigurationService>	configurationServiceProvider;
 
 	@Inject
-	public ResourceService(Provider<EntityManager> entityManagerProvider, Provider<ConfigurationService> configurationServiceProvider) {
+	public ResourceService(final Provider<EntityManager> entityManagerProvider, final Provider<ConfigurationService> configurationServiceProvider) {
 
 		super(Resource.class, entityManagerProvider);
 		this.configurationServiceProvider = configurationServiceProvider;

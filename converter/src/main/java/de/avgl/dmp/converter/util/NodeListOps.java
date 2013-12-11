@@ -15,10 +15,10 @@ import com.google.common.base.Optional;
  *
  * @author Paul Horn <phorn@avantgarde-labs.de>
  */
-final public class NodeListOps {
+public final class NodeListOps {
 	private NodeListOps() {}
 
-	private final static Function<Node, Iterable<Node>> childrens = new Function<Node, Iterable<Node>>() {
+	private static final Function<Node, Iterable<Node>> CHILDRENS = new Function<Node, Iterable<Node>>() {
 		@Override
 		public Iterable<Node> apply(@Nullable final org.w3c.dom.Node input) {
 			assert input != null;
@@ -64,6 +64,6 @@ final public class NodeListOps {
 	 * wrapped in an {@link Optional}
 	 */
 	public static Optional<Iterable<Node>> getChildrenFor(final Iterable<Node> nodes, final String tag) {
-		return getElementByTagName(nodes, tag).transform(childrens);
+		return getElementByTagName(nodes, tag).transform(CHILDRENS);
 	}
 }

@@ -67,7 +67,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	private ObjectNode								parameters;
 
 	@Transient
-	private boolean									parametersInitialized	= false;
+	private boolean									parametersInitialized;
 
 	public ObjectNode getParameters() {
 
@@ -146,7 +146,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Adds a new resource to the collection of resources of this configuration.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param resource a new export definition revision
 	 */
 	public void addResource(final Resource resource) {
@@ -169,7 +169,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Replaces an existing resource, i.e., the resource with the same identifier will be replaced.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param resource an existing, updated resource
 	 */
 	public void replaceResource(final Resource resource) {
@@ -196,7 +196,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Removes an existing resource from the collection of resources of this configuration.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param resource an existing resource that should be removed
 	 */
 	public void removeResource(final Resource resource) {
@@ -214,7 +214,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 		parametersString = parameters.toString();
 	}
 
-	private void initParameters(boolean fromScratch) {
+	private void initParameters(final boolean fromScratch) {
 
 		if (parameters == null && !parametersInitialized) {
 
@@ -235,7 +235,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 			try {
 
 				parameters = DMPPersistenceUtil.getJSON(parametersString);
-			} catch (DMPException e) {
+			} catch (final DMPException e) {
 
 				LOG.debug("couldn't parse parameters JSON string for configuration '" + getId() + "'");
 			}
@@ -247,11 +247,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	@Override
 	public boolean equals(final Object obj) {
 
-		if (!Configuration.class.isInstance(obj)) {
+		return Configuration.class.isInstance(obj) && super.equals(obj);
 
-			return false;
-		}
-
-		return super.equals(obj);
 	}
 }

@@ -13,7 +13,7 @@ public enum ConnectionType {
 
 	/**
 	 * Creates a new connection with the given name.
-	 * 
+	 *
 	 * @param name the name of the connection type
 	 */
 	private ConnectionType(final String name) {
@@ -24,10 +24,10 @@ public enum ConnectionType {
 	/**
 	 * Gets the name of the connection type.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @return the name of the connection type
 	 */
-	public String getName() {
+	String getName() {
 
 		return ctName;
 	}
@@ -35,7 +35,7 @@ public enum ConnectionType {
 	/**
 	 * Tries to get a connection type by its name.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param name the name of the connection type
 	 * @return the connection type that matches the given name
 	 * @throws DMPPersistenceException if the connection type by the given name is not part of this enumeration, i.e., this

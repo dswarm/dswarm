@@ -1,7 +1,6 @@
 package de.avgl.dmp.persistence.model.utils;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Set;
 
 import com.fasterxml.jackson.core.JsonParser;
@@ -22,7 +21,7 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
  *
  * @param <DMPJPAOBJECTIMPL> the concrete model class
  */
-public abstract class ReferenceDeserializer<DMPJPAOBJECTIMPL extends DMPJPAObject> extends JsonDeserializer<Set<DMPJPAOBJECTIMPL>> {
+abstract class ReferenceDeserializer<DMPJPAOBJECTIMPL extends DMPJPAObject> extends JsonDeserializer<Set<DMPJPAOBJECTIMPL>> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ReferenceDeserializer.class);
 
@@ -45,13 +44,9 @@ public abstract class ReferenceDeserializer<DMPJPAOBJECTIMPL extends DMPJPAObjec
 
 		final Set<DMPJPAOBJECTIMPL> set = Sets.newHashSet();
 
-		final Iterator<JsonNode> arrayIter = arrayNode.iterator();
+		for (final JsonNode reference : arrayNode) {
 
-		while (arrayIter.hasNext()) {
-
-			final JsonNode reference = arrayIter.next();
-
-			if(reference == null) {
+			if (reference == null) {
 
 				LOG.debug("reference node is null");
 
@@ -60,19 +55,19 @@ public abstract class ReferenceDeserializer<DMPJPAOBJECTIMPL extends DMPJPAObjec
 
 			final JsonNode idNode = reference.get("id");
 
-			if(idNode == null) {
+			if (idNode == null) {
 
 				LOG.debug("id node is null");
-				
+
 				continue;
 			}
 
-			final Long id = Long.valueOf(idNode.asLong());
+			final Long id = idNode.asLong();
 
 			final BasicJPAService<DMPJPAOBJECTIMPL, Long> jpaService;
 			try {
 				jpaService = getJpaService();
-			} catch (DMPException e) {
+			} catch (final DMPException e) {
 				LOG.error("Couldn't get JPAService", e);
 				continue;
 			}

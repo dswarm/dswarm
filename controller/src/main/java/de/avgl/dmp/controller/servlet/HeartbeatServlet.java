@@ -41,11 +41,8 @@ public class HeartbeatServlet extends HttpServlet {
 		resp.setHeader("Cache-Control", "must-revalidate,no-cache,no-store");
 		resp.setStatus(HttpServletResponse.SC_OK);
 
-		final PrintWriter writer = resp.getWriter();
-		try {
+		try (final PrintWriter writer = resp.getWriter()) {
 			writer.print(CONTENT);
-		} finally {
-			writer.close();
 		}
 	}
 }

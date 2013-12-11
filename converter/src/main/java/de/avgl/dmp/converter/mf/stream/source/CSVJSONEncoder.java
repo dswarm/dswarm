@@ -28,18 +28,14 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 @Out(JsonNode.class)
 public final class CSVJSONEncoder extends DefaultStreamPipe<ObjectReceiver<JsonNode>> {
 
-	private List<String>	header					= null;
-	private List<Tuple<String, String>>	values		= null;
-	private ArrayNode		schemaJSON				= null;
-	private ObjectNode		dataJSON				= null;
+	private List<String>	header;
+	private List<Tuple<String, String>>	values;
+	private ArrayNode		schemaJSON;
+	private ObjectNode		dataJSON;
 
-	private boolean			withHeader				= false;
-	private boolean			firstLine				= false;
-	private boolean			firstLineInitialized	= false;
-
-	public CSVJSONEncoder() {
-
-	}
+	private boolean			withHeader;
+	private boolean			firstLine;
+	private boolean			firstLineInitialized;
 
 	@Override
 	public void startRecord(final String id) {
@@ -170,7 +166,7 @@ public final class CSVJSONEncoder extends DefaultStreamPipe<ObjectReceiver<JsonN
 
 		dataJSON = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
 
-		for (Tuple<String, String> value : values) {
+		for (final Tuple<String, String> value : values) {
 			dataJSON.put(value.v1(), value.v2());
 		}
 	}

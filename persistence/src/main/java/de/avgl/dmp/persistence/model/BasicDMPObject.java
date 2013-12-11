@@ -13,7 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public abstract class BasicDMPObject extends DMPObject<String> {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long	serialVersionUID	= 1L;
 
@@ -21,13 +21,13 @@ public abstract class BasicDMPObject extends DMPObject<String> {
 	@XmlID
 	@Access(AccessType.FIELD)
 	@Column(name = "ID", columnDefinition = "VARCHAR(100)", length = 100)
-	private String	id;
+	private final String	id;
 
 	@Column(name = "NAME")
 	private String	name;
-	
-	public BasicDMPObject(final String idArg) {
-		
+
+	protected BasicDMPObject(final String idArg) {
+
 		id = idArg;
 	}
 

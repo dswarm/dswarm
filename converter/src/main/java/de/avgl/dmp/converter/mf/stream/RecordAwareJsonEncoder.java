@@ -15,12 +15,12 @@ public class RecordAwareJsonEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 
 	private final StreamPipe<ObjectReceiver<String>> delegate;
 
-	public RecordAwareJsonEncoder(StreamPipe<ObjectReceiver<String>> delegate) {
+	public RecordAwareJsonEncoder(final StreamPipe<ObjectReceiver<String>> delegate) {
 		this.delegate = delegate;
 	}
 
 	@Override
-	public void startRecord(String id) {
+	public void startRecord(final String id) {
 		delegate.startRecord("");
 		delegate.literal("record_id", id);
 		delegate.startEntity("record_data");
@@ -33,7 +33,7 @@ public class RecordAwareJsonEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 	}
 
 	@Override
-	public void startEntity(String name) {
+	public void startEntity(final String name) {
 		delegate.startEntity(name);
 	}
 
@@ -43,7 +43,7 @@ public class RecordAwareJsonEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 	}
 
 	@Override
-	public void literal(String name, String value) {
+	public void literal(final String name, final String value) {
 		delegate.literal(name, value);
 	}
 }

@@ -34,7 +34,7 @@ import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 public class Schema extends BasicDMPJPAObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long	serialVersionUID	= 1L;
 
@@ -46,16 +46,16 @@ public class Schema extends BasicDMPJPAObject {
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "ATTRIBUTE_PATHS_SCHEMAS", joinColumns = { @JoinColumn(name = "SCHEMA_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "ATTRIBUTE_PATH_ID", referencedColumnName = "ID") })
 	@XmlElement(name = "attribute_paths")
-	private Set<AttributePath>	attributePaths		= null;
+	private Set<AttributePath>	attributePaths;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "RECORD_CLASS")
 	@XmlElement(name = "record_class")
-	private Clasz				recordClass			= null;
+	private Clasz				recordClass;
 
 	/**
 	 * Gets all attribute paths of the schema.
-	 * 
+	 *
 	 * @return all attribute paths of the schema
 	 */
 	public Set<AttributePath> getAttributePaths() {
@@ -65,7 +65,7 @@ public class Schema extends BasicDMPJPAObject {
 
 	/**
 	 * Sets all attribute paths of the schema.
-	 * 
+	 *
 	 * @param attributePathsArg all attribute paths of the schema
 	 */
 	public void setAttributePaths(final Set<AttributePath> attributePathsArg) {
@@ -116,7 +116,7 @@ public class Schema extends BasicDMPJPAObject {
 	/**
 	 * Adds a new attribute path to the collection of attribute paths of this schema.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param attributePath a new attribute path
 	 */
 	public void addAttributePath(final AttributePath attributePath) {
@@ -139,7 +139,7 @@ public class Schema extends BasicDMPJPAObject {
 	/**
 	 * Removes an existing attribute path from the collection of attribute paths of this export schema.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param attributePath an existing attribute path that should be removed
 	 */
 	public void removeAttributePath(final AttributePath attributePath) {
@@ -165,11 +165,7 @@ public class Schema extends BasicDMPJPAObject {
 	@Override
 	public boolean equals(final Object obj) {
 
-		if (!Schema.class.isInstance(obj)) {
+		return Schema.class.isInstance(obj) && super.equals(obj);
 
-			return false;
-		}
-
-		return super.equals(obj);
 	}
 }
