@@ -1,10 +1,14 @@
 package de.avgl.dmp.controller.resources;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Provider;
@@ -18,14 +22,10 @@ import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.service.job.ComponentService;
 
-
 @RequestScoped
 @Api(value = "/components", description = "Operations about components.")
 @Path("components")
-public class ComponentsResource extends BasicResource<ComponentService, Component, Long> {
-
-	@Context
-	UriInfo											uri;
+public class ComponentsResource extends BasicDMPResource<ComponentService, Component> {
 
 	@Inject
 	public ComponentsResource(final Provider<ComponentService> componentServiceProviderArg, final ObjectMapper objectMapper, final DMPStatus dmpStatus) {
@@ -34,13 +34,20 @@ public class ComponentsResource extends BasicResource<ComponentService, Componen
 	}
 
 	@ApiOperation(value = "get the component that matches the given id", notes = "Returns the Component object that matches the given id.")
+	@GET
+	@Path("/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "component identifier", required = true) final Long id) throws DMPControllerException {
+	public Response getObject(@ApiParam(value = "component identifier", required = true) @PathParam("id") final Long id)
+			throws DMPControllerException {
 
 		return super.getObject(id);
 	}
 
 	@ApiOperation(value = "create a new component", notes = "Returns a new Component object.", response = Component.class)
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public Response createObject(@ApiParam(value = "component (as JSON)", required = true) final String jsonObjectString)
 			throws DMPControllerException {
@@ -49,6 +56,8 @@ public class ComponentsResource extends BasicResource<ComponentService, Componen
 	}
 
 	@ApiOperation(value = "get all components ", notes = "Returns a list of Component objects.")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public Response getObjects() throws DMPControllerException {
 
@@ -58,7 +67,8 @@ public class ComponentsResource extends BasicResource<ComponentService, Componen
 	@Override
 	protected Component prepareObjectForUpdate(final Component objectFromJSON, final Component object) {
 
-		object.setName(objectFromJSON.getName());
+		super.prepareObjectForUpdate(objectFromJSON, object);
+
 		object.setFunction(objectFromJSON.getFunction());
 		object.setParameterMappings(objectFromJSON.getParameterMappings());
 		object.setInputComponents(objectFromJSON.getInputComponents());

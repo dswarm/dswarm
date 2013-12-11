@@ -9,6 +9,7 @@ import java.util.concurrent.Executors;
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
@@ -54,8 +55,8 @@ public class PersistenceModule extends AbstractModule {
 
 		bind(JsonToPojoMapper.class);
 
-		bind(ResourceService.class); //.in(Scopes.SINGLETON);
-		bind(ConfigurationService.class); //.in(Scopes.SINGLETON);
+		bind(ResourceService.class); // .in(Scopes.SINGLETON);
+		bind(ConfigurationService.class); // .in(Scopes.SINGLETON);
 		bind(AttributeService.class).in(Scopes.SINGLETON);
 		bind(AttributePathService.class).in(Scopes.SINGLETON);
 		bind(ClaszService.class).in(Scopes.SINGLETON);
@@ -77,7 +78,7 @@ public class PersistenceModule extends AbstractModule {
 		final ObjectMapper mapper = new ObjectMapper();
 		final JaxbAnnotationModule module = new JaxbAnnotationModule();
 
-		mapper.registerModule(module).setSerializationInclusion(JsonInclude.Include.NON_NULL)
+		mapper.registerModule(module).registerModule(new Hibernate4Module()).setSerializationInclusion(JsonInclude.Include.NON_NULL)
 				.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
 
 		return mapper;

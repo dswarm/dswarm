@@ -10,13 +10,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import com.google.inject.Injector;
 
 import de.avgl.dmp.init.DMPException;
-
 
 public class DMPPersistenceUtil {
 
@@ -28,9 +28,8 @@ public class DMPPersistenceUtil {
 	static {
 		mapper = new ObjectMapper();
 		final JaxbAnnotationModule module = new JaxbAnnotationModule();
-		mapper.registerModule(module)
-			.setSerializationInclusion(Include.NON_NULL)
-			.setSerializationInclusion(Include.NON_EMPTY);
+		mapper.registerModule(module).registerModule(new Hibernate4Module()).setSerializationInclusion(Include.NON_NULL)
+				.setSerializationInclusion(Include.NON_EMPTY);
 	}
 
 	public static String getResourceAsString(final String resource) throws IOException {
@@ -53,7 +52,7 @@ public class DMPPersistenceUtil {
 			throw new DMPException("something went wrong while parsing the JSON string '" + jsonString + "'\n" + e.getMessage());
 		}
 	}
-	
+
 	public static ArrayNode getJSONArray(final String jsonString) throws DMPException {
 
 		try {
