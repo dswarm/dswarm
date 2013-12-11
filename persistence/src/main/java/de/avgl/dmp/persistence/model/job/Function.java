@@ -42,7 +42,6 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 @DiscriminatorColumn(name = "FUNCTION_TYPE", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("Function")
 @Table(name = "FUNCTION")
-@JsonIgnoreProperties({ "functionDescription" })
 public class Function extends ExtendedBasicDMPJPAObject {
 
 	/**
