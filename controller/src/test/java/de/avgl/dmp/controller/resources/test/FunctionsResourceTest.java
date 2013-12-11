@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.avgl.dmp.persistence.model.job.Function;
-import de.avgl.dmp.persistence.services.FunctionService;
+import de.avgl.dmp.persistence.service.job.FunctionService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public class FunctionsResourceTest extends ResourceTest {

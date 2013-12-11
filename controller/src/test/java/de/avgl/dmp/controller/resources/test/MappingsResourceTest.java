@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.avgl.dmp.persistence.model.job.Mapping;
-import de.avgl.dmp.persistence.services.MappingService;
+import de.avgl.dmp.persistence.service.job.MappingService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public class MappingsResourceTest extends ResourceTest {
