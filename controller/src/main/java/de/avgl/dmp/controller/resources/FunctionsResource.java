@@ -1,7 +1,13 @@
 package de.avgl.dmp.controller.resources;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,13 +34,19 @@ public class FunctionsResource extends ExtendedBasicDMPResource<FunctionService,
 	}
 
 	@ApiOperation(value = "get the function that matches the given id", notes = "Returns the Function object that matches the given id.")
+	@GET
+	@Path("/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "function identifier", required = true) final Long id) throws DMPControllerException {
+	public Response getObject(@ApiParam(value = "function identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
 
 		return super.getObject(id);
 	}
 
 	@ApiOperation(value = "create a new function", notes = "Returns a new Function object.", response = Function.class)
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public Response createObject(@ApiParam(value = "function (as JSON)", required = true) final String jsonObjectString)
 			throws DMPControllerException {
@@ -43,6 +55,8 @@ public class FunctionsResource extends ExtendedBasicDMPResource<FunctionService,
 	}
 
 	@ApiOperation(value = "get all functions ", notes = "Returns a list of Function objects.")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public Response getObjects() throws DMPControllerException {
 
@@ -53,7 +67,7 @@ public class FunctionsResource extends ExtendedBasicDMPResource<FunctionService,
 	protected Function prepareObjectForUpdate(final Function objectFromJSON, final Function object) {
 
 		super.prepareObjectForUpdate(objectFromJSON, object);
-		
+
 		object.setFunctionDescription(objectFromJSON.getFunctionDescription());
 		object.setParameters(objectFromJSON.getParameters());
 
