@@ -2,9 +2,7 @@ package de.avgl.dmp.controller.resources;
 
 import javax.inject.Inject;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Provider;
@@ -18,14 +16,10 @@ import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.service.job.FunctionService;
 
-
 @RequestScoped
-@Api(value = "/filters", description = "Operations about filters.")
-@Path("filters")
-public class FunctionsResource extends BasicResource<FunctionService, Function, Long> {
-
-	@Context
-	UriInfo											uri;
+@Api(value = "/functions", description = "Operations about functions.")
+@Path("functions")
+public class FunctionsResource extends ExtendedBasicDMPResource<FunctionService, Function> {
 
 	@Inject
 	public FunctionsResource(final Provider<FunctionService> functionServiceProviderArg, final ObjectMapper objectMapper, final DMPStatus dmpStatus) {
@@ -58,8 +52,8 @@ public class FunctionsResource extends BasicResource<FunctionService, Function, 
 	@Override
 	protected Function prepareObjectForUpdate(final Function objectFromJSON, final Function object) {
 
-		object.setName(objectFromJSON.getName());
-		object.setDescription(objectFromJSON.getDescription());
+		super.prepareObjectForUpdate(objectFromJSON, object);
+		
 		object.setFunctionDescription(objectFromJSON.getFunctionDescription());
 		object.setParameters(objectFromJSON.getParameters());
 
