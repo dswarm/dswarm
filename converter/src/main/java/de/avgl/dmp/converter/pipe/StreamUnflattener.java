@@ -40,7 +40,7 @@ public class StreamUnflattener extends DefaultStreamPipe<StreamReceiver> {
 	public static final String DEFAULT_INITIAL_DISCARD = "";
 
 	private final Map<Integer, String> openEntities = Maps.newHashMap();
-	private int currentLevel = 0;
+	private int currentLevel;
 
 	private final char entityMarker;
 	private final String initialDiscard;

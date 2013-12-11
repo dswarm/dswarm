@@ -37,7 +37,7 @@ public class CSVSourceResourceTriplesFlow extends AbstractCSVResourceFlow<Immuta
 
 	private static class ListTripleReceiver implements ObjectReceiver<Triple> {
 		private ImmutableList.Builder<Triple> builder = ImmutableList.builder();
-		private ImmutableList<Triple> collection = null;
+		private ImmutableList<Triple> collection;
 
 		@Override
 		public void process(final Triple obj) {

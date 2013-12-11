@@ -26,7 +26,7 @@ public class DMPServletModule extends ServletModule {
 		bind(String.class).annotatedWith(Names.named("AllowedOrigin")).toInstance("*");
 		bind(Boolean.class).annotatedWith(Names.named("ShowSamples")).toInstance(false);
 
-		bind(String.class).annotatedWith(Names.named("ApiVersion")).toInstance("1.0.0");
+		bind(String.class).annotatedWith(Names.named("ApiVersion")).toInstance("1.0.1");
 		bind(String.class).annotatedWith(Names.named("ApiBaseUrl")).toInstance("http://localhost:8087/dmp");
 
 		serve("/_stats").with(MetricsServlet.class);

@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.BeanDescription;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.BeanDeserializer;
@@ -14,7 +13,7 @@ import com.fasterxml.jackson.databind.deser.BeanDeserializerBuilder;
 import com.fasterxml.jackson.databind.deser.SettableBeanProperty;
 import com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap;
 
-public class BeanReferenceDeserializer extends BeanDeserializer {
+class BeanReferenceDeserializer extends BeanDeserializer {
 
 	/**
 	 *
@@ -36,7 +35,7 @@ public class BeanReferenceDeserializer extends BeanDeserializer {
 	}
 
 	@Override
-	public Object deserialize(final JsonParser jp, final DeserializationContext ctxt, final Object bean) throws IOException, JsonProcessingException {
+	public Object deserialize(final JsonParser jp, final DeserializationContext ctxt, final Object bean) throws IOException {
 		// TODO Auto-generated method stub
 		return super.deserialize(jp, ctxt, bean);
 	}

@@ -12,7 +12,7 @@ import de.avgl.dmp.persistence.model.internal.MemoryDb;
 
 public class MemoryDbImpl<A, B, C> implements MemoryDb<A, B, C> {
 
-	private Table<A, B, C> table = HashBasedTable.create();
+	private final Table<A, B, C> table = HashBasedTable.create();
 
 	@Override
 	public void put(final A resourceId, final B configurationId, final C value) {

@@ -34,17 +34,17 @@ import de.avgl.dmp.persistence.model.types.Tuple;
 public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFModel>> {
 
 	private String						currentId;
-	private Model						model			= null;
-	private Resource					recordResource	= null;
-	private Resource					entityResource	= null;
-	Stack<Tuple<Resource, Property>>	entityStack		= null;
+	private Model						model;
+	private Resource					recordResource;
+	private Resource					entityResource;
+	Stack<Tuple<Resource, Property>>	entityStack;
 
 	private static final Pattern		TABS			= Pattern.compile("\t+");
 	private final String				recordTagName;
 	private boolean						inRecord;
 	private StringBuilder				valueBuffer		= new StringBuilder();
 	private String						uri;
-	private Resource					recordType		= null;
+	private Resource					recordType;
 
 	private final Optional<String>		resourceId;
 	private final Optional<String>		configurationId;
@@ -205,7 +205,7 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 		recordResource = model.createResource(currentId);
 
 		// init
-		entityStack = new Stack<Tuple<Resource, Property>>();
+		entityStack = new Stack<>();
 
 		// TODO: determine record type and create type triple with it
 		if (recordType == null) {
@@ -223,7 +223,7 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 		// System.out.println("in end record");
 
 		assert !isClosed();
-		
+
 		inRecord = false;
 
 		// write triples
@@ -245,7 +245,7 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 
 		final Property entityProperty = model.createProperty(name);
 
-		entityStack.push(new Tuple<Resource, Property>(entityResource, entityProperty));
+		entityStack.push(new Tuple<>(entityResource, entityProperty));
 
 		// System.out.println("in start entity with entity stact size: '" + entityStack.size() + "'");
 	}

@@ -8,7 +8,7 @@ import de.avgl.dmp.persistence.model.resource.Configuration;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class CSVResourceFlowFactory {
+public final class CSVResourceFlowFactory {
 
 	public static <T, U extends AbstractCSVResourceFlow<T>> U fromConfiguration(
 			final Configuration configuration,
@@ -17,7 +17,7 @@ public class CSVResourceFlowFactory {
 		final Constructor<U> constructor;
 		try {
 			constructor = clazz.getConstructor(Configuration.class);
-		} catch (NoSuchMethodException e) {
+		} catch (final NoSuchMethodException e) {
 			e.printStackTrace();
 			throw new DMPConverterException("no Configuration constructor for class " + clazz.getSimpleName());
 		}
@@ -25,13 +25,13 @@ public class CSVResourceFlowFactory {
 		final U flow;
 		try {
 			flow = constructor.newInstance(configuration);
-		} catch (InstantiationException e) {
+		} catch (final InstantiationException e) {
 			e.printStackTrace();
 			throw new DMPConverterException("Error while instantiating Configuration constructor class " + clazz.getSimpleName());
-		} catch (IllegalAccessException e) {
+		} catch (final IllegalAccessException e) {
 			e.printStackTrace();
 			throw new DMPConverterException("Error while accessing Configuration constructor for class " + clazz.getSimpleName());
-		} catch (InvocationTargetException e) {
+		} catch (final InvocationTargetException e) {
 			e.printStackTrace();
 			throw new DMPConverterException(e.getCause().getMessage());
 		}
@@ -48,22 +48,22 @@ public class CSVResourceFlowFactory {
 		final Constructor<U> constructor;
 		try {
 			constructor = clazz.getConstructor(String.class, Character.class, Character.class, Character.class, String.class);
-		} catch (NoSuchMethodException e) {
+		} catch (final NoSuchMethodException e) {
 			e.printStackTrace();
 			throw new DMPConverterException("no Configuration constructor for class " + clazz.getSimpleName());
 		}
 
 
-		U flow;
+		final U flow;
 		try {
 			flow = constructor.newInstance(encoding, escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter);
-		} catch (InstantiationException e) {
+		} catch (final InstantiationException e) {
 			e.printStackTrace();
 			throw new DMPConverterException("Error while instantiating Configuration constructor class " + clazz.getSimpleName());
-		} catch (IllegalAccessException e) {
+		} catch (final IllegalAccessException e) {
 			e.printStackTrace();
 			throw new DMPConverterException("Error while accessing Configuration constructor for class " + clazz.getSimpleName());
-		} catch (InvocationTargetException e) {
+		} catch (final InvocationTargetException e) {
 			e.printStackTrace();
 			throw new DMPConverterException(e.getCause().getMessage());
 		}

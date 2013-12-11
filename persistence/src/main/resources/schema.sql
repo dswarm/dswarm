@@ -1,110 +1,110 @@
 
-    alter table ATTRIBUTES_ATTRIBUTE_PATHS 
+    alter table ATTRIBUTES_ATTRIBUTE_PATHS
         drop 
         foreign key FK_c0tpxqimg4bfkv8j62bcxkxyc;
 
     alter table ATTRIBUTES_ATTRIBUTE_PATHS 
-        drop 
+        drop
         foreign key FK_qp5h79t2qm3x9dt0bvab84nwq;
 
-    alter table ATTRIBUTE_PATHS_SCHEMAS 
-        drop 
+    alter table ATTRIBUTE_PATHS_SCHEMAS
+        drop
         foreign key FK_5b237a3jiliubkbk3b4w625r4;
 
-    alter table ATTRIBUTE_PATHS_SCHEMAS 
-        drop 
+    alter table ATTRIBUTE_PATHS_SCHEMAS
+        drop
         foreign key FK_c5gir0ri2spql32cyff3tttst;
 
-    alter table COMPONENT 
-        drop 
+    alter table COMPONENT
+        drop
         foreign key FK_ag5gnetntolrsj5c8x1pk0mbu;
 
-    alter table COMPONENT 
-        drop 
+    alter table COMPONENT
+        drop
         foreign key FK_g82elj4ech037bcca6vqmufm1;
 
-    alter table DATA_MODEL 
-        drop 
+    alter table DATA_MODEL
+        drop
         foreign key FK_hpe71t1t2cy8817cq6jcval7v;
 
-    alter table DATA_MODEL 
-        drop 
+    alter table DATA_MODEL
+        drop
         foreign key FK_ixk5hb4bkl3vhu6agjra7mkr8;
 
-    alter table DATA_MODEL 
-        drop 
+    alter table DATA_MODEL
+        drop
         foreign key FK_id7ig90c37glf3njn0928o0v0;
 
     alter table DATA_SCHEMA 
         drop 
         foreign key FK_67hdhd4o40jypqxwdcq7tai28;
 
-    alter table INPUT_ATTRIBUTE_PATHS_MAPPINGS 
-        drop 
+    alter table INPUT_ATTRIBUTE_PATHS_MAPPINGS
+        drop
         foreign key FK_6c4ofueeyb3hbmv2wboyqw7n1;
 
-    alter table INPUT_ATTRIBUTE_PATHS_MAPPINGS 
-        drop 
+    alter table INPUT_ATTRIBUTE_PATHS_MAPPINGS
+        drop
         foreign key FK_e46064nsbvmdxm74jg1yhlouk;
 
-    alter table MAPPING 
-        drop 
+    alter table MAPPING
+        drop
         foreign key FK_1fdjucib6chk55t2evxrw6ugk;
 
-    alter table MAPPING 
-        drop 
+    alter table MAPPING
+        drop
         foreign key FK_h0b70ivxm1byvbabn6ic3slrp;
 
-    alter table MAPPING 
-        drop 
+    alter table MAPPING
+        drop
         foreign key FK_shvy8f39jmeyjgne94ntkyysn;
 
-    alter table MAPPING 
-        drop 
+    alter table MAPPING
+        drop
         foreign key FK_y31lfpmsdwyyjjubvff2p2tw;
 
-    alter table OUTPUT_COMPONENTS_INPUT_COMPONENTS 
-        drop 
+    alter table OUTPUT_COMPONENTS_INPUT_COMPONENTS
+        drop
         foreign key FK_f27jrrca3kaj4k5gkph7cmfhb;
 
-    alter table OUTPUT_COMPONENTS_INPUT_COMPONENTS 
-        drop 
+    alter table OUTPUT_COMPONENTS_INPUT_COMPONENTS
+        drop
         foreign key FK_evs3264hua8pae1hgl2g4fa4x;
 
-    alter table PROJECT 
-        drop 
+    alter table PROJECT
+        drop
         foreign key FK_nswwcscg2guqjctk1omny3loj;
 
-    alter table PROJECT 
-        drop 
+    alter table PROJECT
+        drop
         foreign key FK_6unsgihaswor2ftvtcwmwg4nc;
 
-    alter table PROJECTS_FUNCTIONS 
-        drop 
+    alter table PROJECTS_FUNCTIONS
+        drop
         foreign key FK_nx7uw5jry35jr2rxhngkypf8;
 
-    alter table PROJECTS_FUNCTIONS 
-        drop 
+    alter table PROJECTS_FUNCTIONS
+        drop
         foreign key FK_6ja5bqjo5suu7p0wa0ac1cxa8;
 
-    alter table PROJECTS_MAPPINGS 
-        drop 
+    alter table PROJECTS_MAPPINGS
+        drop
         foreign key FK_8qrhjdabvk1ty4s9wuikcun2h;
 
-    alter table PROJECTS_MAPPINGS 
-        drop 
+    alter table PROJECTS_MAPPINGS
+        drop
         foreign key FK_qhq2xm12uixmdqfaq1y3w8nht;
 
-    alter table RESOURCES_CONFIGURATIONS 
-        drop 
+    alter table RESOURCES_CONFIGURATIONS
+        drop
         foreign key FK_317homsxkat6e9lcmhs056nid;
 
-    alter table RESOURCES_CONFIGURATIONS 
-        drop 
+    alter table RESOURCES_CONFIGURATIONS
+        drop
         foreign key FK_ba7nn2952k54vm2rbd2k5gd42;
 
-    alter table TRANSFORMATION 
-        drop 
+    alter table TRANSFORMATION
+        drop
         foreign key FK_qk4t8c3cucrxqguipv9emdxpm;
 
     drop table if exists ATTRIBUTE;

@@ -21,7 +21,7 @@ public class JSObject extends JSElement implements Iterable<JSElement> {
 
 	public JSObject(final String name) {
 		super(name);
-		this.list = new ArrayList<JSElement>();
+		this.list = new ArrayList<>();
 	}
 
 	public JSObject add(final JSElement element) {

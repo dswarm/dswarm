@@ -55,7 +55,7 @@ public class JsonSchemaParser {
 			return iterateModelGroup(xsModelGroupDecl.getModelGroup());
 		}
 
-		final ArrayList<JSElement> jsElements = new ArrayList<JSElement>(1);
+		final ArrayList<JSElement> jsElements = new ArrayList<>(1);
 		jsElements.add(iterateSingleParticle(particle));
 
 		return jsElements;
@@ -92,7 +92,7 @@ public class JsonSchemaParser {
 
 	private List<JSElement> iterateModelGroup(final XSModelGroup modelGroup) {
 
-		final List<JSElement> list = new ArrayList<JSElement>();
+		final List<JSElement> list = new ArrayList<>();
 
 		for (final XSParticle xsParticle : modelGroup) {
 
@@ -130,7 +130,7 @@ public class JsonSchemaParser {
 
 				final int numAttributes = xsComplexType.getAttributeUses().size();
 				if (numAttributes > 0) {
-					final List<JSElement> elements = new ArrayList<JSElement>(numAttributes);
+					final List<JSElement> elements = new ArrayList<>(numAttributes);
 					final JSObject jsElements = new JSObject(elementDecl.getName());
 
 					jsElements.add(simpleJsElement);
@@ -166,7 +166,7 @@ public class JsonSchemaParser {
 
 	private List<JSElement> iterateComplexType(final XSComplexType complexType) {
 
-		final ArrayList<JSElement> result = new ArrayList<JSElement>();
+		final ArrayList<JSElement> result = new ArrayList<>();
 
 		final XSContentType contentType = complexType.getContentType();
 
@@ -187,7 +187,7 @@ public class JsonSchemaParser {
 		return result;
 	}
 
-	private void iterateComplexAttributes(XSComplexType complexType, List<JSElement> result) {
+	private void iterateComplexAttributes(final XSComplexType complexType, final List<JSElement> result) {
 
 		final Collection<? extends XSAttributeUse> attributeUses = complexType.getAttributeUses();
 
@@ -228,7 +228,7 @@ public class JsonSchemaParser {
 		parser.parse(source);
 	}
 
-	public JSRoot apply(final String rootName) throws IOException, SAXException {
+	public JSRoot apply(final String rootName) throws SAXException {
 
 		final XSSchemaSet result = parser.getResult();
 

@@ -11,18 +11,13 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.resource.DataModel;
-import de.avgl.dmp.persistence.model.utils.DMPJPAObjectReferenceSerializer;
-import de.avgl.dmp.persistence.model.utils.SetFunctionReferenceSerializer;
-import de.avgl.dmp.persistence.model.utils.SetMappingReferenceSerializer;
 
 /**
  * @author tgaengler
@@ -35,7 +30,7 @@ import de.avgl.dmp.persistence.model.utils.SetMappingReferenceSerializer;
 public class Project extends ExtendedBasicDMPJPAObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long	serialVersionUID	= 1L;
 

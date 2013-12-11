@@ -55,7 +55,7 @@ public class RDFModel implements Model {
 
 			return null;
 		}
-		
+
 
 		if (resourceURI == null) {
 
@@ -63,7 +63,7 @@ public class RDFModel implements Model {
 
 			return null;
 		}
-		
+
 //		System.out.println("write rdf model '" + resourceURI + "' in n3");
 //		model.write(System.out, "N3");
 
@@ -98,7 +98,7 @@ public class RDFModel implements Model {
 
 
 				String propName = "@" + propertyURI.substring(propertyURI.lastIndexOf('#') + 1);
-				if (propName.equals("@value")) {
+				if ("@value".equals(propName)) {
 					propName = "#text";
 				}
 				ConverterHelperHelper.addLiteralToConverterHelper(converterHelpers, propName, rdfNode);
@@ -112,7 +112,7 @@ public class RDFModel implements Model {
 
 				final JsonNode jsonNode = convertRDFToJSON(rdfNode.asResource(), rootJson, objectNode);
 
-				String propName = propertyURI.substring(propertyURI.lastIndexOf('#') + 1);
+				final String propName = propertyURI.substring(propertyURI.lastIndexOf('#') + 1);
 				ConverterHelperHelper.addBNodeToConverterHelper(converterHelpers, propName, jsonNode);
 
 				continue;

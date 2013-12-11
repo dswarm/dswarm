@@ -30,9 +30,6 @@ import de.avgl.dmp.persistence.service.job.FilterService;
 @Path("filters")
 public class FiltersResource extends BasicDMPResource<FilterService, Filter> {
 
-	@Context
-	UriInfo											uri;
-
 	@Inject
 	public FiltersResource(final Provider<FilterService> filterServiceProviderArg, final ObjectMapper objectMapper, final DMPStatus dmpStatus) {
 

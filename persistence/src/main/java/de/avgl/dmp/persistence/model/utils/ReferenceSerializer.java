@@ -6,7 +6,6 @@ import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
@@ -16,8 +15,7 @@ public abstract class ReferenceSerializer<DMPOBJECTIMPL extends DMPObject<DMPOBJ
 		JsonSerializer<DMPOBJECTIMPL> {
 
 	@Override
-	public void serialize(final DMPOBJECTIMPL object, final JsonGenerator generator, final SerializerProvider provider) throws IOException,
-			JsonProcessingException {
+	public void serialize(final DMPOBJECTIMPL object, final JsonGenerator generator, final SerializerProvider provider) throws IOException {
 
 		if (object == null) {
 
@@ -26,7 +24,7 @@ public abstract class ReferenceSerializer<DMPOBJECTIMPL extends DMPObject<DMPOBJ
 			return;
 		}
 
-		final Reference<DMPOBJECTIDTYPE> reference = new Reference<DMPOBJECTIDTYPE>(object.getId());
+		final Reference<DMPOBJECTIDTYPE> reference = new Reference<>(object.getId());
 
 		generator.writeObject(reference);
 	}

@@ -19,7 +19,7 @@ public class CSVResourceFlowFactoryTest {
 	private class TestFlow extends AbstractCSVResourceFlow<String> {
 		@Override
 		protected String process(ObjectPipe<String, ObjectReceiver<Reader>> opener, String obj, CsvReader pipe) {
-			return null;
+			return "";
 		}
 	}
 

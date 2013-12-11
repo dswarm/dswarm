@@ -1,19 +1,7 @@
 package de.avgl.dmp.persistence.mapping;
 
-import java.io.IOException;
-
-import javax.validation.Payload;
-
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
-
-import de.avgl.dmp.persistence.DMPPersistenceException;
-import de.avgl.dmp.persistence.model.job.Component;
-import de.avgl.dmp.persistence.model.job.ComponentType;
-import de.avgl.dmp.persistence.model.job.Job;
-import de.avgl.dmp.persistence.model.job.Transformation;
 
 public class JsonToPojoMapper {
 

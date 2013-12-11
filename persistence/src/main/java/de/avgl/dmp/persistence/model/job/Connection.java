@@ -10,7 +10,7 @@ import de.avgl.dmp.persistence.model.BasicDMPObject;
 public class Connection extends BasicDMPObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long	serialVersionUID	= 1L;
 
@@ -21,7 +21,7 @@ public class Connection extends BasicDMPObject {
 
 	@XmlTransient
 	private Component		target;
-	
+
 	public Connection(final String id) {
 
 		super(id);

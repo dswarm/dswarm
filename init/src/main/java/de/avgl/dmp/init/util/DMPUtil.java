@@ -6,16 +6,16 @@ import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
 
-public class DMPUtil {
+public final class DMPUtil {
 
 	/**
 	 * Determines the temporary directory that should be utilised to store processed files temporarily for further utilisation.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @return the temporary directory
 	 * @throws Exception
 	 */
-	public static String getTmpDir(final String postfix) throws Exception {
+	private static String getTmpDir(final String postfix) throws Exception {
 
 		final InputStream inStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("dmp.properties");
 		final Properties properties = new Properties();
@@ -49,7 +49,7 @@ public class DMPUtil {
 	/**
 	 * Creates a new file with the given file name in the temporary directory.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param fileName the file name
 	 * @param directoryPostFix a postfix for the directory
 	 * @return a new {@link File} instance with the given file name.
@@ -59,8 +59,6 @@ public class DMPUtil {
 
 		final String javaIOTmpDir = DMPUtil.getTmpDir(directoryPostFix);
 
-		final File file = FileUtils.getFile(javaIOTmpDir, fileName);
-
-		return file;
+		return FileUtils.getFile(javaIOTmpDir, fileName);
 	}
 }

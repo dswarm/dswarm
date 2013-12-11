@@ -8,10 +8,10 @@ import javax.xml.bind.annotation.XmlID;
 public abstract class DMPUUIDObject extends DMPObject<String> {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long	serialVersionUID	= 1L;
-	
+
 	@Id
 	@XmlID
 	private String	id;
@@ -21,9 +21,9 @@ public abstract class DMPUUIDObject extends DMPObject<String> {
 
 		return id;
 	}
-	
+
 	public void setId(final String idArg) {
-		
+
 		id = idArg;
 	}
 }

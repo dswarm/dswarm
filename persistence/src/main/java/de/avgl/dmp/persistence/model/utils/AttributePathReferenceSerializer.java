@@ -7,7 +7,6 @@ import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
@@ -16,8 +15,7 @@ import de.avgl.dmp.persistence.model.schema.AttributePath;
 public class AttributePathReferenceSerializer extends JsonSerializer<AttributePath> {
 
 	@Override
-	public void serialize(final AttributePath object, final JsonGenerator generator, final SerializerProvider provider) throws IOException,
-			JsonProcessingException {
+	public void serialize(final AttributePath object, final JsonGenerator generator, final SerializerProvider provider) throws IOException {
 
 		if (object == null) {
 
@@ -25,7 +23,7 @@ public class AttributePathReferenceSerializer extends JsonSerializer<AttributePa
 
 			return;
 		}
-		
+
 		System.out.println("attribute path = '" + object.toAttributePath() + "'");
 
 		final AttributePathReference reference = new AttributePathReference(object.getId(), object.toAttributePath());
@@ -38,7 +36,7 @@ public class AttributePathReferenceSerializer extends JsonSerializer<AttributePa
 
 		@XmlID
 		private final Long	id;
-		
+
 		@XmlElement(name = "attribute_path")
 		private final String attributePath;
 
@@ -52,9 +50,9 @@ public class AttributePathReferenceSerializer extends JsonSerializer<AttributePa
 
 			return id;
 		}
-		
+
 		String getAttributePath() {
-			
+
 			return attributePath;
 		}
 	}

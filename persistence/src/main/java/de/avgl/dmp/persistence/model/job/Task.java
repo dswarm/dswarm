@@ -1,15 +1,12 @@
 package de.avgl.dmp.persistence.model.job;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.resource.DataModel;
-import de.avgl.dmp.persistence.model.utils.DMPJPAObjectReferenceSerializer;
 
 /**
  * @author tgaengler
@@ -18,7 +15,7 @@ import de.avgl.dmp.persistence.model.utils.DMPJPAObjectReferenceSerializer;
 public class Task extends ExtendedBasicDMPJPAObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long	serialVersionUID	= 1L;
 
@@ -26,21 +23,21 @@ public class Task extends ExtendedBasicDMPJPAObject {
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	//@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
 	//@XmlIDREF
-	private DataModel			inputDataModel		= null;
+	private DataModel			inputDataModel;
 
 	@XmlElement(name = "output_data_model")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	//@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
 	//@XmlIDREF
-	private DataModel			outputDataModel		= null;
+	private DataModel			outputDataModel;
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	//@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
 	//@XmlIDREF
-	private Job					job					= null;
+	private Job					job;
 
 	public DataModel getInputDataModel() {
-		
+
 		return inputDataModel;
 	}
 

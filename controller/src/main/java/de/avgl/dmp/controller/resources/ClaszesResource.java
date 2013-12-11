@@ -79,7 +79,7 @@ public class ClaszesResource extends BasicResource<ClaszService, Clasz, String> 
 	}
 
 	@Override
-	protected Clasz createObject(Clasz objectFromJSON, ClaszService persistenceService) throws DMPPersistenceException {
+	protected Clasz createObject(final Clasz objectFromJSON, final ClaszService persistenceService) throws DMPPersistenceException {
 
 		return persistenceService.createObject(objectFromJSON.getId());
 	}

@@ -20,14 +20,10 @@ import org.culturegraph.mf.framework.annotations.Out;
 @Out(StreamReceiver.class)
 public final class CsvDecoder extends DefaultObjectPipe<CSVRecord, StreamReceiver> {
 
-	private boolean		hasHeader	= false;
-	private boolean		hasHeadersProcessed = false;
+	private boolean		hasHeader;
+	private boolean		hasHeadersProcessed;
 	private String[]	header		= new String[0];
 	private int			count;
-
-	public CsvDecoder() {
-		super();
-	}
 
 	@Override
 	public void process(final CSVRecord record) {

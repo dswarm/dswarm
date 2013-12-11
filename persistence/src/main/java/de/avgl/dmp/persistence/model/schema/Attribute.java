@@ -26,7 +26,7 @@ public class Attribute extends BasicDMPObject {
 	// private Set<AttributePath>						attributePaths		= null;
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long						serialVersionUID	= 1L;
 
@@ -100,7 +100,7 @@ public class Attribute extends BasicDMPObject {
 //	/**
 //	 * Adds a new resource to the collection of resources of this configuration.<br>
 //	 * Created by: tgaengler
-//	 * 
+//	 *
 //	 * @param resource a new export definition revision
 //	 */
 //	public void addAttributePath(final AttributePath attributePath) {
@@ -123,7 +123,7 @@ public class Attribute extends BasicDMPObject {
 //	/**
 //	 * Adds a new resource to the collection of resources of this configuration.<br>
 //	 * Created by: tgaengler
-//	 * 
+//	 *
 //	 * @param resource a new export definition revision
 //	 */
 //	protected void addAttributePath(final AttributePath attributePath, final int attributeIndex) {
@@ -146,7 +146,7 @@ public class Attribute extends BasicDMPObject {
 //	/**
 //	 * Removes an existing resource from the collection of resources of this configuration.<br>
 //	 * Created by: tgaengler
-//	 * 
+//	 *
 //	 * @param resource an existing resource that should be removed
 //	 */
 //	public void removeAttributePath(final AttributePath attributePath) {

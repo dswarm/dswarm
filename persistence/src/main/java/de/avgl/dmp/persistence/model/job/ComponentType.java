@@ -27,7 +27,7 @@ public enum ComponentType {
 	 *
 	 * @return the name of the component type
 	 */
-	public String getName() {
+	String getName() {
 
 		return ctName;
 	}

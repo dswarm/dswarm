@@ -33,7 +33,7 @@ import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-@ApiModel(value = "A data resource, e.g., an XML or CSV document, a SQL database, or an RDF graph. A data resource can consist of several records.")
+@ApiModel("A data resource, e.g., an XML or CSV document, a SQL database, or an RDF graph. A data resource can consist of several records.")
 @XmlRootElement
 @Entity
 // @Cacheable(true)
@@ -64,7 +64,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 	private ObjectNode								attributes;
 
 	@Transient
-	private boolean									attributesInitialized	= false;
+	private boolean									attributesInitialized;
 
 	/**
 	 * All configurations of the resource.
@@ -124,7 +124,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets all configurations of the resource.
-	 * 
+	 *
 	 * @return all configurations of the resource
 	 */
 	public Set<Configuration> getConfigurations() {
@@ -134,7 +134,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets all configurations of the resource.
-	 * 
+	 *
 	 * @param configurationsArg all configurations of the resource
 	 */
 	public void setConfigurations(final Set<Configuration> configurationsArg) {
@@ -198,7 +198,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Adds a new configuration to the collection of configurations of this resource.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param configuration a new export definition revision
 	 */
 	public void addConfiguration(final Configuration configuration) {
@@ -221,7 +221,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Replaces an existing configuration, i.e., the configuration with the same identifier will be replaced.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param configuration an existing, updated configuration
 	 */
 	public void replaceConfiguration(final Configuration configuration) {
@@ -248,7 +248,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Removes an existing configuration from the collection of configurations of this export resource.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param configuration an existing configuration that should be removed
 	 */
 	public void removeConfiguration(final Configuration configuration) {
@@ -266,7 +266,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 		attributesString = attributes.toString();
 	}
 
-	private void initAttributes(boolean fromScratch) {
+	private void initAttributes(final boolean fromScratch) {
 
 		if (attributes == null && !attributesInitialized) {
 
@@ -287,7 +287,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 			try {
 
 				attributes = DMPPersistenceUtil.getJSON(attributesString);
-			} catch (DMPException e) {
+			} catch (final DMPException e) {
 
 				LOG.debug("couldn't parse attributes JSON string for resource '" + getId() + "'");
 			}
@@ -299,11 +299,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 	@Override
 	public boolean equals(final Object obj) {
 
-		if (!Resource.class.isInstance(obj)) {
+		return Resource.class.isInstance(obj) && super.equals(obj);
 
-			return false;
-		}
-
-		return super.equals(obj);
 	}
 }

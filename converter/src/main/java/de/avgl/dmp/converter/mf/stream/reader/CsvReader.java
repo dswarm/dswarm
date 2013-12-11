@@ -2,7 +2,6 @@ package de.avgl.dmp.converter.mf.stream.reader;
 
 import com.google.common.base.Optional;
 import org.apache.commons.csv.CSVRecord;
-import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
@@ -11,7 +10,6 @@ import org.culturegraph.mf.framework.annotations.Out;
 import de.avgl.dmp.converter.mf.framework.annotations.Record;
 import de.avgl.dmp.converter.mf.stream.converter.CsvDecoder;
 import de.avgl.dmp.converter.mf.stream.converter.CsvLineReader;
-import de.avgl.dmp.converter.mf.stream.source.CSVJSONEncoder;
 
 /**
  * Reads Csv files. First line can be interpreted as header.<br>
@@ -28,7 +26,7 @@ public final class CsvReader implements Reader<CSVRecord> {
 	private CsvLineReader	lineReader;
 	private final CsvDecoder	decoder;
 
-	private void setLineReader(CsvLineReader reader) {
+	private void setLineReader(final CsvLineReader reader) {
 		lineReader = reader;
 		lineReader.setReceiver(this.decoder);
 	}
