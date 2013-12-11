@@ -40,7 +40,6 @@ public class Transformation extends Function {
 			CascadeType.REMOVE }, orphanRemoval = true)
 	@JoinColumn(name = "TRANSFORMATION", referencedColumnName = "ID")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	@XmlIDREF
 	@XmlList
 	private Set<Component>							components;
 	

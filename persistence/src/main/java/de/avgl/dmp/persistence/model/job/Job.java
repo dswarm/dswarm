@@ -23,9 +23,9 @@ public class Job extends ExtendedBasicDMPJPAObject {
 	 */
 	private static final long	serialVersionUID	= 1L;
 
-	@JsonSerialize(using = SetMappingReferenceSerializer.class)
+	//@JsonSerialize(using = SetMappingReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	@XmlIDREF
+	//@XmlIDREF
 	@XmlList
 	private Set<Mapping>		mappings;
 

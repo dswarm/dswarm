@@ -74,8 +74,8 @@ public class Component extends BasicDMPJPAObject {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "FUNCTION")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
-	@XmlIDREF
+	//@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
+	//@XmlIDREF
 	// @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	private Function								function						= null;
 

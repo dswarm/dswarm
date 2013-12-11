@@ -24,19 +24,19 @@ public class Task extends ExtendedBasicDMPJPAObject {
 
 	@XmlElement(name = "input_data_model")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
-	@XmlIDREF
+	//@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
+	//@XmlIDREF
 	private DataModel			inputDataModel		= null;
 
 	@XmlElement(name = "output_data_model")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
-	@XmlIDREF
+	//@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
+	//@XmlIDREF
 	private DataModel			outputDataModel		= null;
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
-	@XmlIDREF
+	//@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
+	//@XmlIDREF
 	private Job					job					= null;
 
 	public DataModel getInputDataModel() {

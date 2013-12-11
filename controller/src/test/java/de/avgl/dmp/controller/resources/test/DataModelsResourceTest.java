@@ -83,19 +83,15 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 		// prepare resource json for configuration ids manipulation
 		String resourceJSONString = DMPPersistenceUtil.getResourceAsString("resource1.json");
 		final ObjectNode resourceJSON = objectMapper.readValue(resourceJSONString, ObjectNode.class);
-
-		// manipulate configuration ids
-		ArrayNode configurationsArray = (ArrayNode) resourceJSON.get("configurations");
-
-		for (final JsonNode configurationJsonNode : configurationsArray) {
-
-			if (((ObjectNode) configurationJsonNode).get("id").asInt() == 1) {
-
-				((ObjectNode) configurationJsonNode).put("id", configuration.getId());
-
-				break;
-			}
-		}
+		
+		final ArrayNode configurationsArray = objectMapper.createArrayNode();
+		
+		final String persistedConfigurationJSONString = objectMapper.writeValueAsString(configuration);
+		final ObjectNode persistedConfigurationJSON = objectMapper.readValue(persistedConfigurationJSONString, ObjectNode.class);
+		
+		configurationsArray.add(persistedConfigurationJSON);
+		
+		resourceJSON.put("configurations", configurationsArray);
 
 		// re-init expect resource
 		resourceJSONString = objectMapper.writeValueAsString(resourceJSON);
@@ -103,11 +99,7 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 
 		Assert.assertNotNull("expected resource shouldn't be null", expectedResource);
 
-		System.out.println("resource JSON = '" + resourceJSONString + "'");
-
 		resource = resourcesResourceTestUtils.createObject(resourceJSONString, expectedResource);
-		
-		System.out.println("final resource JSON = '" + objectMapper.writeValueAsString(resource) + "'");
 
 		// END resource preparation
 
@@ -160,18 +152,27 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 
 		// START data model preparation
 
-		// prepare data model json for resource id, configuration id and schema id manipulation
+		// prepare data model json for resource, configuration and schema manipulation
 		final ObjectNode objectJSON = objectMapper.readValue(objectJSONString, ObjectNode.class);
-
-		((ObjectNode) objectJSON.get("data_resource")).put("id", resource.getId());
-		((ObjectNode) objectJSON.get("configuration")).put("id", configuration.getId());
-		((ObjectNode) objectJSON.get("schema")).put("id", schema.getId());
+		
+		final String finalResourceJSONString = objectMapper.writeValueAsString(resource);
+		final ObjectNode finalResourceJSON = objectMapper.readValue(finalResourceJSONString, ObjectNode.class);
+		
+		objectJSON.put("data_resource", finalResourceJSON);
+		
+		final String finalConfigurationJSONString = objectMapper.writeValueAsString(resource.getConfigurations().iterator().next());
+		final ObjectNode finalConfigurationJSON = objectMapper.readValue(finalConfigurationJSONString, ObjectNode.class);
+		
+		objectJSON.put("configuration", finalConfigurationJSON);
+		
+		final String finalSchemaJSONString = objectMapper.writeValueAsString(schema);
+		final ObjectNode finalSchemaJSON = objectMapper.readValue(finalSchemaJSONString, ObjectNode.class);
+		
+		objectJSON.put("schema", finalSchemaJSON);
 
 		// re-init expect object
 		objectJSONString = objectMapper.writeValueAsString(objectJSON);
 		expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
-
-		System.out.println("data model JSON = '" + objectJSONString + "'");
 
 		// END data model preparation
 	}
@@ -188,6 +189,8 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 		configurationsResourceTestUtils.deleteObject(configuration);
 
 		// START schema clean-up
+		
+		schemasResourceTestUtils.deleteObject(schema);
 
 		for (final AttributePath attributePath : attributePaths.values()) {
 
@@ -200,8 +203,6 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 		}
 
 		claszesResourceTestUtils.deleteObject(recordClass);
-
-		schemasResourceTestUtils.deleteObject(schema);
 
 		// END schema clean-up
 	}

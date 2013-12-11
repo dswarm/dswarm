@@ -37,22 +37,22 @@ public class DataModel extends ExtendedBasicDMPJPAObject {
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "DATA_RESOURCE")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
-	@XmlIDREF
+	//@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
+	//@XmlIDREF
 	private Resource			dataResource		= null;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "CONFIGURATION")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
-	@XmlIDREF
+	//@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
+	//@XmlIDREF
 	private Configuration		configuration		= null;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "DATA_SCHEMA")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
-	@XmlIDREF
+	//@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
+	//@XmlIDREF
 	private Schema				schema				= null;
 
 	public Resource getDataResource() {

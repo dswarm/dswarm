@@ -48,7 +48,7 @@ public class Mapping extends BasicDMPJPAObject {
 	@XmlElement(name = "input_attribute_paths")
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "INPUT_ATTRIBUTE_PATHS_MAPPINGS", joinColumns = { @JoinColumn(name = "MAPPING_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "INPUT_ATTRIBUTE_PATH_ID", referencedColumnName = "ID") })
-	@JsonSerialize(using = SetAttributePathReferenceSerializer.class)
+	//@JsonSerialize(using = SetAttributePathReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@XmlList
 	private Set<AttributePath>	inputAttributePaths	= null;
@@ -56,7 +56,7 @@ public class Mapping extends BasicDMPJPAObject {
 	@XmlElement(name = "output_attribute_path")
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "OUTPUT_ATTRIBUTE_PATH")
-	@JsonSerialize(using = AttributePathReferenceSerializer.class)
+	//@JsonSerialize(using = AttributePathReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private AttributePath		outputAttributePath	= null;
 
