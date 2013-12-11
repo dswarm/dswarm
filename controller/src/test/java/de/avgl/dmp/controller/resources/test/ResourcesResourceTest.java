@@ -45,7 +45,7 @@ import com.google.common.io.Resources;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
 
-import de.avgl.dmp.controller.resources.test.utils.ResourceTestUtils;
+import de.avgl.dmp.controller.resources.test.utils.ConfigurationsResourceTestUtils;
 import de.avgl.dmp.controller.servlet.DMPInjector;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.internal.Model;
@@ -73,8 +73,12 @@ public class ResourcesResourceTest extends ResourceTest {
 
 	private final ObjectMapper						objectMapper			= injector.getInstance(ObjectMapper.class);
 
+	private final ConfigurationsResourceTestUtils	configurationsResourceTestUtils;
+
 	public ResourcesResourceTest() {
 		super("resources");
+
+		configurationsResourceTestUtils = new ConfigurationsResourceTestUtils();
 	}
 
 	@Before
@@ -328,7 +332,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		Assert.assertNotNull("response resource configuration shoudln't be null", responseResourceConfiguration);
 
-		ResourceTestUtils.compareConfigurations(configuration, responseResourceConfiguration);
+		configurationsResourceTestUtils.compareObjects(configuration, responseResourceConfiguration);
 
 		configurationService.deleteObject(configuration.getId());
 
@@ -450,7 +454,7 @@ public class ResourcesResourceTest extends ResourceTest {
 	@Test
 	public void testXMLResourceConfigurationData() throws Exception {
 
-		//prepare resource
+		// prepare resource
 		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("test-mabxml-resource.json");
 
 		final Resource expectedResource = injector.getInstance(ObjectMapper.class).readValue(resourceJSONString, Resource.class);
@@ -480,9 +484,9 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
 
-//		final String assoziativeJsonArrayString = response.readEntity(String.class);
-//
-//		System.out.println("result = '" + assoziativeJsonArrayString + "'");
+		// final String assoziativeJsonArrayString = response.readEntity(String.class);
+		//
+		// System.out.println("result = '" + assoziativeJsonArrayString + "'");
 
 		final ObjectNode assoziativeJsonArray = response.readEntity(ObjectNode.class);
 
@@ -574,7 +578,7 @@ public class ResourcesResourceTest extends ResourceTest {
 		String responseResources = response.readEntity(String.class);
 
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
-//		Assert.assertEquals("resources JSONs are not equal", resourcesJSONArray.toString(), responseResources);
+		// Assert.assertEquals("resources JSONs are not equal", resourcesJSONArray.toString(), responseResources);
 
 		cleanUpDB(resource);
 		cleanUpDB(resource2);
@@ -681,7 +685,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		Assert.assertNotNull("response configuration shouldn't be null", responseConfiguration);
 
-		ResourceTestUtils.compareConfigurations(configuration, responseConfiguration);
+		configurationsResourceTestUtils.compareObjects(configuration, responseConfiguration);
 
 		resource.addConfiguration(responseConfiguration);
 
@@ -716,7 +720,7 @@ public class ResourcesResourceTest extends ResourceTest {
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
 		final String resourceConfigurationsJSON = response.readEntity(String.class);
 
-		ResourceTestUtils.evaluateConfigurations(resourceConfigurationsJSON, exceptedConfigurations);
+		configurationsResourceTestUtils.evaluateObjects(resourceConfigurationsJSON, exceptedConfigurations);
 	}
 
 	private void curlGetResourceConfigurationsInternal(final Resource resource) throws Exception {
@@ -724,7 +728,7 @@ public class ResourcesResourceTest extends ResourceTest {
 		final String resourceConfigurationsJSON = executeCommand("curl -G -H \"Content-Type: application/json\" -H \"Accepted: application/json\" "
 				+ baseUri() + "/resources/" + resource.getId().toString() + "/configurations");
 
-		ResourceTestUtils.evaluateConfigurations(resourceConfigurationsJSON, exceptedConfigurations);
+		configurationsResourceTestUtils.evaluateObjects(resourceConfigurationsJSON, exceptedConfigurations);
 	}
 
 	private void getResourcesInternal(final Long resourceId, final Resource expectedResource) throws Exception {
@@ -882,7 +886,7 @@ public class ResourcesResourceTest extends ResourceTest {
 			actualConfigurations.put(configuration.getId(), configuration);
 		}
 
-		ResourceTestUtils.compareConfigurations(exceptedConfigurations, actualConfigurations);
+		configurationsResourceTestUtils.compareObjects(exceptedConfigurations, actualConfigurations);
 	}
 
 	private String executeCommand(final String command) throws Exception {
