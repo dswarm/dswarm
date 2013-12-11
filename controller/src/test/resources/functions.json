@@ -1,0 +1,262 @@
+[{
+    "name": "blacklist",
+    "description": "Blacklist filter",
+    "functionDescription": {
+      "entry": {
+        "repeat": true,
+        "type": "repeat",
+        "parameters": {
+          "name": {
+            "type": "text"
+          },
+          "value": {
+            "type": "text",
+            "optional": true
+          }
+        }
+      }
+    }
+  }, {
+    "name": "case",
+    "description": "Upper/lower-case transformation.",
+    "functionDescription": {
+      "to": {
+        "type": "radio",
+        "choices": ["upper", "lower"]
+      },
+      "language": {
+        "type": "text",
+        "optional": true
+      }
+    }
+  }, {
+    "name": "compose",
+    "description": "Add pre- or postfix to a string.",
+    "functionDescription": {
+      "prefix": {
+        "type": "text",
+        "optional": true
+      },
+      "postfix": {
+        "type": "text",
+        "optional": true
+      }
+    }
+  }, {
+    "name": "constant",
+    "description": "Sets literal value to a constant.",
+    "functionDescription": {
+      "value": {
+        "type": "text"
+      }
+    }
+  }, {
+    "name": "count",
+    "description": "Returns the an increasing count for each received literal."
+  }, {
+    "name": "equals",
+    "description": "Returns the value only if equality holds.",
+    "functionDescription": {
+      "string": {
+        "type": "text"
+      }
+    }
+  }, {
+    "name": "htmlanchor",
+    "description": "Create an HTML anchor.",
+    "functionDescription": {
+      "prefix": {
+        "type": "text"
+      },
+      "postfix": {
+        "type": "text",
+        "optional": true
+      },
+      "title": {
+        "type": "text",
+        "optional": true
+      }
+    }
+  }, {
+    "name": "isbn",
+    "description": "ISBN conversion and verification.",
+    "functionDescription": {
+      "to": {
+        "type": "radio",
+        "choices": ["isbn13", "isbn10", "clean"]
+      },
+      "verifyCheckDigit": {
+        "type": "checkbox",
+        "optional": true
+      }
+    }
+  }, {
+    "name": "lookup",
+    "description": "Performs a table lookup",
+    "functionDescription": {
+      "in": {
+        "type": "text",
+        "optional": true,
+        "description": "Unique name of the lookup table"
+      },
+      "default": {
+        "type": "text",
+        "optional": true,
+        "description": "Value used if no corresponding key is found."
+      },
+      "entry": {
+        "repeat": true,
+        "type": "repeat",
+        "parameters": {
+          "name": {
+            "type": "text"
+          },
+          "value": {
+            "type": "text",
+            "optional": true
+          }
+        }
+      }
+    }
+  }, {
+    "name": "normalize-utf8"
+  }, {
+    "name": "not-equals",
+    "description": "Returns value only if equality does not hold.",
+    "functionDescription": {
+      "string": {
+        "type": "text"
+      }
+    }
+  }, {
+    "name": "occurrence",
+    "description": "Filter by number of occurrence.",
+    "functionDescription": {
+      "only": {
+        "type": "text",
+        "pattern": "(lessThen |moreThen )?\\d+"
+      },
+      "sameEntity": {
+        "type": "checkbox",
+        "optional": true
+      }
+    }
+  }, {
+    "name": "regexp",
+    "description": "Extract data based on a regular expression. Syntax corresponds to Java Regular Expressions.",
+    "functionDescription": {
+      "match": {
+        "type": "text"
+      },
+      "format": {
+        "type": "text",
+        "optional": true
+      }
+    }
+  }, {
+    "name": "replace",
+    "description": "String replace based on a regular expression. Pattern syntax corresponds to Java Regular Expressions.",
+    "functionDescription": {
+      "pattern": {
+        "type": "regexp"
+      },
+      "with": {
+        "type": "text",
+        "description": "The replacement"
+      }
+    }
+  }, {
+    "name": "setreplace",
+    "description": "Relace strings based on a replacement table.",
+    "functionDescription": {
+      "map": {
+        "type": "text",
+        "optional": true,
+        "description": "Unique name of the replacement table."
+      },
+      "entry": {
+        "repeat": true,
+        "type": "repeat",
+        "parameters": {
+          "name": {
+            "type": "text"
+          },
+          "value": {
+            "type": "text",
+            "optional": true
+          }
+        }
+      }
+    }
+  }, {
+    "name": "split",
+    "description": "Split string based on a regular expression. Pattern syntax corresponds to Java Regular Expressions.",
+    "functionDescription": {
+      "delimiter": {
+        "type": "text",
+        "description": "Regular expression, defining the split"
+      }
+    }
+  }, {
+    "name": "substring",
+    "description": "Returns a substring",
+    "functionDescription": {
+      "start": {
+        "type": "number",
+        "optional": true
+      },
+      "end": {
+        "type": "number",
+        "optional": true
+      }
+    }
+  }, {
+    "name": "switch-name-value",
+    "description": "Switches name and value."
+  }, {
+    "name": "trim",
+    "description": "Trimms the value"
+  }, {
+    "name": "unique",
+    "description": "Filters out dublicate literals",
+    "functionDescription": {
+      "in": {
+        "type": "select",
+        "choices": ["record", "entity"],
+        "optional": true,
+        "description": "Scope of 'sameness' (experimental)"
+      },
+      "part": {
+        "type": "select",
+        "choices": ["value", "name", "name-value"],
+        "optional": true,
+        "description": "Part of the literal is tested for equality"
+      }
+    }
+  }, {
+    "name": "urlencode",
+    "description": "Escapes value according to URL encoding rules."
+  }, {
+    "name": "whitelist",
+    "description": "Whitelist filter.",
+    "functionDescription": {
+      "map": {
+        "type": "text",
+        "optional": true,
+        "description": "Unique name of the replacement table."
+      },
+      "entry": {
+        "repeat": true,
+        "type": "repeat",
+        "functionDescription": {
+          "name": {
+            "type": "text"
+          },
+          "value": {
+            "type": "text",
+            "optional": true
+          }
+        }
+      }
+    }
+  }]
