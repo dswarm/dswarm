@@ -22,8 +22,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 
 import de.avgl.dmp.init.DMPException;
@@ -42,33 +42,41 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 @DiscriminatorColumn(name = "FUNCTION_TYPE", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("Function")
 @Table(name = "FUNCTION")
-@JsonIgnoreProperties({"functionDescription"})
+@JsonIgnoreProperties({ "functionDescription" })
 public class Function extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * 
 	 */
-	private static final long						serialVersionUID		= 1L;
+	private static final long						serialVersionUID				= 1L;
 
-	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(AttributePath.class);
+	private static final org.apache.log4j.Logger	LOG								= org.apache.log4j.Logger.getLogger(AttributePath.class);
 
-	@Column(name = "FUNCTIONDESCRIPTION", columnDefinition = "VARCHAR(4000)", length = 4000)
-	private String									functionDescription		= null;
-	
+	@Lob
+	@Access(AccessType.FIELD)
+	@Column(name = "FUNCTION_DESCRIPTION", columnDefinition = "VARCHAR(4000)", length = 4000)
+	private String									functionDescriptionString;
+
 	@Transient
-	private LinkedList<String>						parameters				= null;
+	private ObjectNode								functionDescription;
+
+	@Transient
+	private boolean									functionDescriptionInitialized	= false;
+
+	@Transient
+	private LinkedList<String>						parameters						= null;
 
 	@Transient
 	private ArrayNode								parametersJSON;
 
 	@Transient
-	private boolean									parametersInitialized	= false;
+	private boolean									parametersInitialized			= false;
 
 	@JsonIgnore
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "PARAMETERS", columnDefinition = "VARCHAR(4000)", length = 4000)
-	private String									parametersString		= null;
+	private String									parametersString				= null;
 
 	/**
 	 * The function type, e.g., function ({@link FunctionType#Function}) or transformation ({@link FunctionType#Transformation}).
@@ -95,14 +103,20 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 		return parameters;
 	}
-	
-	public void setFunctionDescription(final String functionDescription) {
-		this.functionDescription = functionDescription;
-	}
-	
-	@XmlElement(name = "functionDescription")
-	public String getFunctionDescription() {
+
+	@XmlElement(name = "function_description")
+	public ObjectNode getFunctionDescription() {
+
+		initFunctionDescription(false);
+
 		return functionDescription;
+	}
+
+	public void setFunctionDescription(final ObjectNode functionDescriptionArg) {
+
+		functionDescription = functionDescriptionArg;
+
+		refreshFunctionDescriptionString();
 	}
 
 	public void setParameters(final LinkedList<String> parametersArg) {
@@ -205,7 +219,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 					parametersJSON = new ArrayNode(DMPPersistenceUtil.getJSONFactory());
 					parameters = Lists.newLinkedList();
 				}
-				
+
 				parametersInitialized = true;
 
 				return;
@@ -236,6 +250,41 @@ public class Function extends ExtendedBasicDMPJPAObject {
 			}
 
 			parametersInitialized = true;
+		}
+	}
+
+	private void refreshFunctionDescriptionString() {
+
+		functionDescriptionString = functionDescription.toString();
+	}
+
+	private void initFunctionDescription(boolean fromScratch) {
+
+		if (functionDescription == null && !functionDescriptionInitialized) {
+
+			if (functionDescriptionString == null) {
+
+				LOG.debug("function description JSON string is null");
+
+				if (fromScratch) {
+
+					functionDescription = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
+				}
+
+				functionDescriptionInitialized = true;
+
+				return;
+			}
+
+			try {
+
+				functionDescription = DMPPersistenceUtil.getJSON(functionDescriptionString);
+			} catch (DMPException e) {
+
+				LOG.debug("couldn't parse function description JSON string for function '" + getId() + "'");
+			}
+
+			functionDescriptionInitialized = true;
 		}
 	}
 }

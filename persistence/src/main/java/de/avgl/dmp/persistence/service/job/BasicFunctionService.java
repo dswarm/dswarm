@@ -35,6 +35,8 @@ public abstract class BasicFunctionService<FUNCTIONIMPL extends Function> extend
 		final LinkedList<String> parameters = object.getParameters();
 
 		updateObject.setParameters(parameters);
+		
+		updateObject.setFunctionDescription(object.getFunctionDescription());
 
 		super.updateObjectInternal(object, updateObject, entityManager);
 	}
