@@ -9,7 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.service.job.BasicFunctionService;
 
-public class BasicFunctionsResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends BasicFunctionService<POJOCLASS>, POJOCLASS extends Function> extends
+public abstract class BasicFunctionsResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends BasicFunctionService<POJOCLASS>, POJOCLASS extends Function> extends
 		BasicDMPResourceTestUtils<POJOCLASSPERSISTENCESERVICE, POJOCLASS> {
 
 	public BasicFunctionsResourceTestUtils(final String resourceIdentifier, final Class<POJOCLASS> pojoClassArg,

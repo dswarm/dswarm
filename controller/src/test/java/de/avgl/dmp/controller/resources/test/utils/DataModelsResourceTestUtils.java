@@ -47,4 +47,12 @@ public class DataModelsResourceTestUtils extends ExtendedBasicDMPResourceTestUti
 			schemasResourceTestUtils.compareObjects(expectedDataModel.getSchema(), actualDataModel.getSchema());
 		}
 	}
+
+	@Override
+	public void reset() {
+		
+		schemasResourceTestUtils.reset();
+		resourcesResourceTestUtils.reset();
+		configurationsResourceTestUtils.reset();
+	}
 }

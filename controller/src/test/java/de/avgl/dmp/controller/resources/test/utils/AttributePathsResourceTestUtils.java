@@ -44,4 +44,10 @@ public class AttributePathsResourceTestUtils extends BasicResourceTestUtils<Attr
 			attributeResourceTestUtils.compareObjects(expectedObject.getAttributes(), actualAttributesMap);
 		}
 	}
+
+	@Override
+	public void reset() {
+		
+		attributeResourceTestUtils.reset();
+	}
 }

@@ -28,4 +28,9 @@ public class FiltersResourceTestUtils extends BasicDMPResourceTestUtils<FilterSe
 			Assert.assertEquals(expectedFilter.getExpression(), actualFilter.getExpression());
 		}
 	}
+
+	@Override
+	public void reset() {
+		
+	}
 }

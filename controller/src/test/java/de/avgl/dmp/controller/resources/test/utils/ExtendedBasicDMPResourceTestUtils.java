@@ -5,7 +5,7 @@ import org.junit.Assert;
 import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
 import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
 
-public class ExtendedBasicDMPResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends ExtendedBasicDMPJPAService<POJOCLASS>, POJOCLASS extends ExtendedBasicDMPJPAObject>
+public abstract class ExtendedBasicDMPResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends ExtendedBasicDMPJPAService<POJOCLASS>, POJOCLASS extends ExtendedBasicDMPJPAObject>
 		extends BasicDMPResourceTestUtils<POJOCLASSPERSISTENCESERVICE, POJOCLASS> {
 
 	public ExtendedBasicDMPResourceTestUtils(final String resourceIdentifier, final Class<POJOCLASS> pojoClassArg,

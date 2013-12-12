@@ -55,7 +55,7 @@ public class Schema extends BasicDMPJPAObject {
 
 	/**
 	 * Gets all attribute paths of the schema.
-	 *
+	 * 
 	 * @return all attribute paths of the schema
 	 */
 	public Set<AttributePath> getAttributePaths() {
@@ -65,7 +65,7 @@ public class Schema extends BasicDMPJPAObject {
 
 	/**
 	 * Sets all attribute paths of the schema.
-	 *
+	 * 
 	 * @param attributePathsArg all attribute paths of the schema
 	 */
 	public void setAttributePaths(final Set<AttributePath> attributePathsArg) {
@@ -78,17 +78,30 @@ public class Schema extends BasicDMPJPAObject {
 			//
 			// attributePath.removeSchema(this);
 			// }
+
+			attributePaths.clear();
 		}
 
-		attributePaths = attributePathsArg;
+		// attributePaths = attributePathsArg;
 
-		// if (attributePathsArg != null) {
-		//
-		// for (final AttributePath attributePath : attributePathsArg) {
-		//
-		// attributePath.addSchema(this);
-		// }
-		// }
+		if (attributePathsArg != null) {
+
+			if (attributePaths == null) {
+
+				attributePaths = Sets.newLinkedHashSet();
+			}
+
+			if (!attributePaths.equals(attributePathsArg)) {
+
+				attributePaths.clear();
+				attributePaths.addAll(attributePathsArg);
+			}
+			//
+			// for (final AttributePath attributePath : attributePathsArg) {
+			//
+			// attributePath.addSchema(this);
+			// }
+		}
 	}
 
 	public AttributePath getAttributePath(final Long id) {
@@ -116,7 +129,7 @@ public class Schema extends BasicDMPJPAObject {
 	/**
 	 * Adds a new attribute path to the collection of attribute paths of this schema.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param attributePath a new attribute path
 	 */
 	public void addAttributePath(final AttributePath attributePath) {
@@ -139,7 +152,7 @@ public class Schema extends BasicDMPJPAObject {
 	/**
 	 * Removes an existing attribute path from the collection of attribute paths of this export schema.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param attributePath an existing attribute path that should be removed
 	 */
 	public void removeAttributePath(final AttributePath attributePath) {

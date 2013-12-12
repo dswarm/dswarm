@@ -130,4 +130,6 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends
 
 		Assert.assertNull("the deleted " + pojoClassName + " should be null", deletedObject);
 	}
+	
+	public abstract void reset();
 }

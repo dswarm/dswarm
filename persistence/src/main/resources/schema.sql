@@ -1,8 +1,4 @@
 
-    alter table ATTRIBUTES_ATTRIBUTE_PATHS
-        drop 
-        foreign key FK_c0tpxqimg4bfkv8j62bcxkxyc;
-
     alter table ATTRIBUTES_ATTRIBUTE_PATHS 
         drop
         foreign key FK_qp5h79t2qm3x9dt0bvab84nwq;
@@ -292,10 +288,7 @@
     ) ENGINE=InnoDB;
 
     alter table ATTRIBUTES_ATTRIBUTE_PATHS 
-        add index FK_c0tpxqimg4bfkv8j62bcxkxyc (ATTRIBUTE_ID), 
-        add constraint FK_c0tpxqimg4bfkv8j62bcxkxyc 
-        foreign key (ATTRIBUTE_ID) 
-        references ATTRIBUTE (ID);
+        add index FK_c0tpxqimg4bfkv8j62bcxkxyc (ATTRIBUTE_ID);
 
     alter table ATTRIBUTES_ATTRIBUTE_PATHS 
         add index FK_qp5h79t2qm3x9dt0bvab84nwq (ATTRIBUTE_PATH_ID), 

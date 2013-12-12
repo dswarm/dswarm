@@ -29,4 +29,9 @@ public class ClaszesResourceTestUtils extends BasicResourceTestUtils<ClaszServic
 			Assert.assertEquals("the class names should be equal", expectedObject.getName(), actualObject.getName());
 		}
 	}
+
+	@Override
+	public void reset() {
+		
+	}
 }

@@ -174,4 +174,10 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 			configurationsResourceTestUtils.compareObjects(expectedResource.getConfigurations(), actualConfigurationsMap);
 		}
 	}
+
+	@Override
+	public void reset() {
+		
+		configurationsResourceTestUtils.reset();
+	}
 }

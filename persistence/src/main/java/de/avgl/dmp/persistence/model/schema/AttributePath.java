@@ -124,12 +124,29 @@ public class AttributePath extends DMPJPAObject {
 			//
 			// attribute.removeAttributePath(this);
 			// }
-			attributes = null;
+			
+			if(attributes != null) {
+				
+				attributes.clear();
+			}
+			
+			orderedAttributes.clear();
 		}
 
-		orderedAttributes = attributesArg;
+		//orderedAttributes = attributesArg;
 
 		if (attributesArg != null) {
+			
+			if (orderedAttributes == null) {
+
+				orderedAttributes = Lists.newLinkedList();
+			}
+
+			if (!orderedAttributes.equals(attributesArg)) {
+
+				orderedAttributes.clear();
+				orderedAttributes.addAll(attributesArg);
+			}
 
 			if (null == attributes) {
 

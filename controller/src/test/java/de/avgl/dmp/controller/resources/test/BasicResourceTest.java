@@ -104,6 +104,7 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 		expectedObjects = Sets.newHashSet();
 		expectedObjects.add(actualObject);
 
+		pojoClassResourceTestUtils.reset();
 		evaluateObjects(expectedObjects, responseObjects);
 
 		cleanUpDB(actualObject);
@@ -146,6 +147,7 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 
 		Assert.assertNotNull("response " + pojoClassName + " shouldn't be null", responseObject);
 
+		pojoClassResourceTestUtils.reset();
 		compareObjects(actualObject, responseObject);
 
 		cleanUpDB(responseObject);

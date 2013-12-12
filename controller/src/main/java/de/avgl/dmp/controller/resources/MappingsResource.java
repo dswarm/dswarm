@@ -5,6 +5,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -37,7 +38,7 @@ public class MappingsResource extends BasicDMPResource<MappingService, Mapping> 
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "mapping identifier", required = true) final Long id) throws DMPControllerException {
+	public Response getObject(@ApiParam(value = "mapping identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
 
 		return super.getObject(id);
 	}

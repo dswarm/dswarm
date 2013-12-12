@@ -73,6 +73,8 @@ public class ComponentsResourceTestUtils extends BasicDMPResourceTestUtils<Compo
 					break;
 				case Transformation:
 
+					Assert.assertNotNull("the function shouldn't be null", actualComponent.getFunction());
+
 					Assert.assertEquals("the function types are not equal", FunctionType.Transformation, actualComponent.getFunction()
 							.getFunctionType());
 
@@ -134,5 +136,14 @@ public class ComponentsResourceTestUtils extends BasicDMPResourceTestUtils<Compo
 		}
 
 		compareObjects(expectedComponents, actualComponentsMap);
+	}
+
+	@Override
+	public void reset() {
+
+		checkedActualComponents.clear();
+		checkedExpectedComponents.clear();
+
+		functionsResourceTestUtils.reset();
 	}
 }

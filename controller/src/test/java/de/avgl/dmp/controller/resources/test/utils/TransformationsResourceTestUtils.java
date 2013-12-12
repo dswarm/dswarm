@@ -51,4 +51,10 @@ public class TransformationsResourceTestUtils extends BasicFunctionsResourceTest
 			componentsResourceTestUtils.compareObjects(expectedObject.getComponents(), actualComponentsMap);
 		}
 	}
+
+	@Override
+	public void reset() {
+		
+		componentsResourceTestUtils.reset();
+	}
 }

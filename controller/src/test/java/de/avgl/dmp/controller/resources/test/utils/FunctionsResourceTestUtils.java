@@ -9,4 +9,9 @@ public class FunctionsResourceTestUtils extends BasicFunctionsResourceTestUtils<
 
 		super("functions", Function.class, FunctionService.class);
 	}
+
+	@Override
+	public void reset() {
+		
+	}
 }

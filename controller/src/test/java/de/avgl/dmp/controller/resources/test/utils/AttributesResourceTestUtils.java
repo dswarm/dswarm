@@ -29,4 +29,9 @@ public class AttributesResourceTestUtils extends BasicResourceTestUtils<Attribut
 			Assert.assertEquals("the attribute names should be equal", expectedObject.getName(), actualObject.getName());
 		}
 	}
+
+	@Override
+	public void reset() {
+		
+	}
 }

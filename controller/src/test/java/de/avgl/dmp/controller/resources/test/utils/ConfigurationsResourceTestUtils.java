@@ -55,4 +55,9 @@ public class ConfigurationsResourceTestUtils extends ExtendedBasicDMPResourceTes
 					+ parameterValueNode.asText() + "'", parameterValue.equals(parameterValueNode.asText()));
 		}
 	}
+
+	@Override
+	public void reset() {
+		
+	}
 }

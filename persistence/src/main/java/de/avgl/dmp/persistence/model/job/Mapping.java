@@ -80,8 +80,25 @@ public class Mapping extends BasicDMPJPAObject {
 	}
 
 	public void setInputAttributePaths(final Set<AttributePath> inputAttributePathsArg) {
+		
+		if (inputAttributePathsArg == null && inputAttributePaths != null) {
 
-		inputAttributePaths = inputAttributePathsArg;
+			inputAttributePaths.clear();
+		}
+
+		if (inputAttributePathsArg != null) {
+
+			if (inputAttributePaths == null) {
+
+				inputAttributePaths = Sets.newLinkedHashSet();
+			}
+
+			if (!inputAttributePaths.equals(inputAttributePathsArg)) {
+
+				inputAttributePaths.clear();
+				inputAttributePaths.addAll(inputAttributePathsArg);
+			}
+		}
 	}
 
 	public AttributePath getInputAttributePath(final Long id) {

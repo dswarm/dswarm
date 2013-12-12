@@ -20,6 +20,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -33,6 +36,8 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 /**
  * @author tgaengler
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = true, defaultImpl = Function.class)
+@JsonSubTypes({ @Type(value = Function.class, name = "Function"), @Type(value = Transformation.class, name = "Transformation") })
 @XmlRootElement
 @Entity
 // @Cacheable(true)
@@ -46,9 +51,9 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	/**
 	 *
 	 */
-	private static final long						serialVersionUID				= 1L;
+	private static final long						serialVersionUID	= 1L;
 
-	private static final org.apache.log4j.Logger	LOG								= org.apache.log4j.Logger.getLogger(AttributePath.class);
+	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(AttributePath.class);
 
 	@Lob
 	@Access(AccessType.FIELD)
@@ -82,7 +87,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	@XmlElement(name = "type")
 	@Column(name = "FUNCTION_TYPE")
 	@Enumerated(EnumType.STRING)
-	private final FunctionType					functionType;
+	private final FunctionType						functionType;
 
 	public Function() {
 
@@ -164,7 +169,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Gets the function type, e.g., function ({@link FunctionType#Function}) or transformation (
 	 * {@link FunctionType#Transformation}).
-	 *
+	 * 
 	 * @return the function type
 	 */
 	public FunctionType getFunctionType() {
@@ -249,7 +254,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 	private void refreshFunctionDescriptionString() {
 
-		if(functionDescription == null) {
+		if (functionDescription == null) {
 
 			functionDescriptionString = null;
 

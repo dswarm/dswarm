@@ -57,4 +57,11 @@ public class SchemasResourceTestUtils extends BasicDMPResourceTestUtils<SchemaSe
 			claszesResourceTestUtils.compareObjects(expectedSchema.getRecordClass(), actualSchema.getRecordClass());
 		}
 	}
+
+	@Override
+	public void reset() {
+		
+		attributePathsResourceTestUtils.reset();
+		claszesResourceTestUtils.reset();
+	}
 }
