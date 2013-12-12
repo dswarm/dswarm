@@ -25,7 +25,7 @@ import de.avgl.dmp.persistence.service.job.FunctionService;
 @RequestScoped
 @Api(value = "/functions", description = "Operations about functions.")
 @Path("functions")
-public class FunctionsResource extends ExtendedBasicDMPResource<FunctionService, Function> {
+public class FunctionsResource extends BasicFunctionsResource<FunctionService, Function> {
 
 	@Inject
 	public FunctionsResource(final Provider<FunctionService> functionServiceProviderArg, final ObjectMapper objectMapper, final DMPStatus dmpStatus) {
@@ -61,16 +61,5 @@ public class FunctionsResource extends ExtendedBasicDMPResource<FunctionService,
 	public Response getObjects() throws DMPControllerException {
 
 		return super.getObjects();
-	}
-
-	@Override
-	protected Function prepareObjectForUpdate(final Function objectFromJSON, final Function object) {
-
-		super.prepareObjectForUpdate(objectFromJSON, object);
-
-		object.setFunctionDescription(objectFromJSON.getFunctionDescription());
-		object.setParameters(objectFromJSON.getParameters());
-
-		return object;
 	}
 }
