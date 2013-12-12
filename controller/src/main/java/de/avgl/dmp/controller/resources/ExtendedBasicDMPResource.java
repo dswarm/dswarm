@@ -15,10 +15,10 @@ public abstract class ExtendedBasicDMPResource<POJOCLASSPERSISTENCESERVICE exten
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ExtendedBasicDMPResource.class);
 
-	public ExtendedBasicDMPResource(final Class<POJOCLASS> clasz, final Provider<POJOCLASSPERSISTENCESERVICE> dataModelServiceProviderArg,
+	public ExtendedBasicDMPResource(final Class<POJOCLASS> clasz, final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
 			final ObjectMapper objectMapper, final DMPStatus dmpStatus) {
 
-		super(clasz, dataModelServiceProviderArg, objectMapper, dmpStatus);
+		super(clasz, persistenceServiceProviderArg, objectMapper, dmpStatus);
 	}
 
 	@Override
