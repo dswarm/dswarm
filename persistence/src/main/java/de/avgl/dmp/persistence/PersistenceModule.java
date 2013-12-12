@@ -24,7 +24,10 @@ import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
 import de.avgl.dmp.persistence.service.InternalServiceFactory;
 import de.avgl.dmp.persistence.service.impl.InternalServiceFactoryImpl;
 import de.avgl.dmp.persistence.service.job.ComponentService;
+import de.avgl.dmp.persistence.service.job.FilterService;
 import de.avgl.dmp.persistence.service.job.FunctionService;
+import de.avgl.dmp.persistence.service.job.MappingService;
+import de.avgl.dmp.persistence.service.job.ProjectService;
 import de.avgl.dmp.persistence.service.job.TransformationService;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
@@ -36,7 +39,7 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
 
 public class PersistenceModule extends AbstractModule {
 
-	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(PersistenceModule.class);
+	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(PersistenceModule.class);
 
 	@Override
 	protected void configure() {
@@ -54,16 +57,20 @@ public class PersistenceModule extends AbstractModule {
 
 		bind(JsonToPojoMapper.class);
 
+		// those bindings below are not really necessary
 		bind(ResourceService.class); // .in(Scopes.SINGLETON);
 		bind(ConfigurationService.class); // .in(Scopes.SINGLETON);
-		bind(AttributeService.class).in(Scopes.SINGLETON);
-		bind(AttributePathService.class).in(Scopes.SINGLETON);
-		bind(ClaszService.class).in(Scopes.SINGLETON);
-		bind(SchemaService.class).in(Scopes.SINGLETON);
-		bind(FunctionService.class).in(Scopes.SINGLETON);
-		bind(ComponentService.class).in(Scopes.SINGLETON);
-		bind(TransformationService.class).in(Scopes.SINGLETON);
-		bind(DataModelService.class).in(Scopes.SINGLETON);
+		bind(AttributeService.class);// .in(Scopes.SINGLETON);
+		bind(AttributePathService.class);// .in(Scopes.SINGLETON);
+		bind(ClaszService.class);// .in(Scopes.SINGLETON);
+		bind(SchemaService.class);// .in(Scopes.SINGLETON);
+		bind(FunctionService.class);// .in(Scopes.SINGLETON);
+		bind(ComponentService.class);// .in(Scopes.SINGLETON);
+		bind(TransformationService.class);// .in(Scopes.SINGLETON);
+		bind(DataModelService.class);// .in(Scopes.SINGLETON);
+		bind(MappingService.class);// .in(Scopes.SINGLETON);
+		bind(FilterService.class);// .in(Scopes.SINGLETON);
+		bind(ProjectService.class);// .in(Scopes.SINGLETON);
 
 		bind(InternalServiceFactory.class).to(InternalServiceFactoryImpl.class).in(Scopes.SINGLETON);
 	}

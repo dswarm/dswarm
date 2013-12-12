@@ -49,8 +49,6 @@ public class ComponentsResourceTest extends BasicResourceTest<ComponentsResource
 		// re-init expect object
 		objectJSONString = objectMapper.writeValueAsString(objectJSON);
 		expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
-
-		System.out.println("component json = '" + objectJSONString + "'");
 	}
 
 	@After

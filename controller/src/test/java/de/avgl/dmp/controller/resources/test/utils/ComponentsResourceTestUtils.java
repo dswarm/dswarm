@@ -10,21 +10,26 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import de.avgl.dmp.persistence.model.job.Component;
+import de.avgl.dmp.persistence.model.job.FunctionType;
+import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.service.job.ComponentService;
 
 public class ComponentsResourceTestUtils extends BasicDMPResourceTestUtils<ComponentService, Component> {
 
-	private final FunctionsResourceTestUtils	functionsResourceTestUtils;
+	private final FunctionsResourceTestUtils		functionsResourceTestUtils;
 
-	private final Set<Long>						checkedExpectedComponents	= Sets.newHashSet();
+	private final TransformationsResourceTestUtils	transformationsResourceTestUtils;
 
-	private final Set<Long>						checkedActualComponents		= Sets.newHashSet();
+	private final Set<Long>							checkedExpectedComponents	= Sets.newHashSet();
+
+	private final Set<Long>							checkedActualComponents		= Sets.newHashSet();
 
 	public ComponentsResourceTestUtils() {
 
 		super("components", Component.class, ComponentService.class);
 
 		functionsResourceTestUtils = new FunctionsResourceTestUtils();
+		transformationsResourceTestUtils = new TransformationsResourceTestUtils(this);
 	}
 
 	@Override
@@ -59,7 +64,24 @@ public class ComponentsResourceTestUtils extends BasicDMPResourceTestUtils<Compo
 
 		if (expectedComponent.getFunction() != null) {
 
-			functionsResourceTestUtils.compareObjects(expectedComponent.getFunction(), actualComponent.getFunction());
+			switch (expectedComponent.getFunction().getFunctionType()) {
+
+				case Function:
+
+					functionsResourceTestUtils.compareObjects(expectedComponent.getFunction(), actualComponent.getFunction());
+
+					break;
+				case Transformation:
+
+					Assert.assertEquals("the function types are not equal", FunctionType.Transformation, actualComponent.getFunction()
+							.getFunctionType());
+
+					transformationsResourceTestUtils.compareObjects((Transformation) expectedComponent.getFunction(),
+							(Transformation) actualComponent.getFunction());
+
+					break;
+			}
+
 		}
 
 		if (expectedComponent.getInputComponents() != null && !expectedComponent.getInputComponents().isEmpty()) {

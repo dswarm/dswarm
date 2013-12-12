@@ -1,0 +1,21 @@
+{
+    "id": 286,
+    "name": "my transformation",
+    "description": "transformation which just makes use of one function",
+    "parameters": ["transformationInputString"],
+    "components": [{
+        "id": 7,
+        "name": "my trim component",
+        "function": {
+            "id": 285,
+            "name": "trim",
+            "description": "trims leading and trailing whitespaces from a given string",
+            "parameters": ["inputString"],
+            "type": "Function"
+        },
+        "parameter_mappings": {
+            "inputString": "previousComponent.outputString"
+        }
+    }],
+    "type": "Transformation"
+}
