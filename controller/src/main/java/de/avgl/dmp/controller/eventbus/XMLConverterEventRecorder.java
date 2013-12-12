@@ -37,16 +37,14 @@ public class XMLConverterEventRecorder {
 			final String path = resource.getAttribute("path").asText();
 			result = flow.applyResource(path);
 
-		} catch (final DMPConverterException e) {
-			e.printStackTrace();
-		} catch (final NullPointerException e) {
+		} catch (final DMPConverterException | NullPointerException e) {
 			e.printStackTrace();
 		}
 
 		if (result != null) {
 			try {
 				internalServiceFactory.getInternalTripleService().createObject(resource.getId(), configuration.getId(), result);
-			} catch (DMPPersistenceException e) {
+			} catch (final DMPPersistenceException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

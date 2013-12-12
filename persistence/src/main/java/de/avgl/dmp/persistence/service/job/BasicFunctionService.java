@@ -11,14 +11,14 @@ import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
 
 /**
- * 
+ *
  * @author tgaengler
  *
  * @param <FUNCTIONIMPL>
  */
 public abstract class BasicFunctionService<FUNCTIONIMPL extends Function> extends ExtendedBasicDMPJPAService<FUNCTIONIMPL> {
 
-	public BasicFunctionService(final Class<FUNCTIONIMPL> clasz, final Provider<EntityManager> entityManagerProvider) {
+	BasicFunctionService(final Class<FUNCTIONIMPL> clasz, final Provider<EntityManager> entityManagerProvider) {
 
 		super(clasz, entityManagerProvider);
 	}
@@ -35,6 +35,8 @@ public abstract class BasicFunctionService<FUNCTIONIMPL extends Function> extend
 		final LinkedList<String> parameters = object.getParameters();
 
 		updateObject.setParameters(parameters);
+		
+		updateObject.setFunctionDescription(object.getFunctionDescription());
 
 		super.updateObjectInternal(object, updateObject, entityManager);
 	}

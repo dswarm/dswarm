@@ -5,7 +5,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
@@ -34,22 +33,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 
 	private final int								discardRows;
 
-	protected Optional<Integer> 					atMost;
-
-
-	private static final String						defaultEncoding			= Charsets.UTF_8.name();
-
-	private static final Character					defaultEscapeCharacter	= '\\';
-
-	private static final Character					defaultQuoteCharacter	= '"';
-
-	private static final Character					defaultColumnDelimiter	= ';';
-
-	private static final String						defaultRowDelimiter		= "\n";
-
-	public static final int							defaultIgnoreLines = 0;
-
-	public static final int							defaultDiscardRows = 0;
+	Optional<Integer> 					atMost;
 
 
 	private JsonNode getParameterValue(final Configuration configuration, final String key) throws DMPConverterException {
@@ -111,7 +95,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 		final int intValue;
 		try {
 			intValue = Integer.valueOf(text);
-		} catch (NumberFormatException e) {
+		} catch (final NumberFormatException e) {
 			throw new DMPConverterException(String.format("The field [%s] must be numeric or a numeric string, got '%s' instead", key, text));
 		}
 
@@ -119,18 +103,18 @@ public abstract class AbstractCSVResourceFlow<T> {
 	}
 
 	protected AbstractCSVResourceFlow() {
-		this.encoding = defaultEncoding;
-		this.escapeCharacter = defaultEscapeCharacter;
-		this.quoteCharacter = defaultQuoteCharacter;
-		this.columnDelimiter = defaultColumnDelimiter;
-		this.rowDelimiter = defaultRowDelimiter;
-		this.ignoreLines = defaultIgnoreLines;
-		this.discardRows = defaultDiscardRows;
+		this.encoding = ConfigurationStatics.DEFAULT_ENCODING;
+		this.escapeCharacter = ConfigurationStatics.DEFAULT_ESCAPE_CHARACTER;
+		this.quoteCharacter = ConfigurationStatics.DEFAULT_QUOTE_CHARACTER;
+		this.columnDelimiter = ConfigurationStatics.DEFAULT_COLUMN_DELIMITER;
+		this.rowDelimiter = ConfigurationStatics.DEFAULT_ROW_DELIMITER;
+		this.ignoreLines = ConfigurationStatics.DEFAULT_IGNORE_LINES;
+		this.discardRows = ConfigurationStatics.DEFAULT_DISCARD_ROWS;
 		this.atMost = Optional.absent();
 	}
 
-	public AbstractCSVResourceFlow(final String encoding, final Character escapeCharacter, final Character quoteCharacter,
-	                               final Character columnDelimiter, final String rowDelimiter) {
+	AbstractCSVResourceFlow(final String encoding, final Character escapeCharacter, final Character quoteCharacter,
+	                        final Character columnDelimiter, final String rowDelimiter) {
 
 		this.encoding = encoding;
 		this.escapeCharacter = escapeCharacter;
@@ -138,12 +122,12 @@ public abstract class AbstractCSVResourceFlow<T> {
 		this.columnDelimiter = columnDelimiter;
 		this.rowDelimiter = rowDelimiter;
 
-		this.ignoreLines = defaultIgnoreLines;
-		this.discardRows = defaultDiscardRows;
+		this.ignoreLines = ConfigurationStatics.DEFAULT_IGNORE_LINES;
+		this.discardRows = ConfigurationStatics.DEFAULT_DISCARD_ROWS;
 		this.atMost = Optional.absent();
 	}
 
-	public AbstractCSVResourceFlow(final Configuration configuration) throws DMPConverterException {
+	AbstractCSVResourceFlow(final Configuration configuration) throws DMPConverterException {
 
 		if (configuration == null) {
 
@@ -164,18 +148,18 @@ public abstract class AbstractCSVResourceFlow<T> {
 		final Optional<Integer> discardRowsOptional = getNumberParameter(configuration, ConfigurationStatics.DISCARD_ROWS);
 		final Optional<Integer> atMostOptional = getNumberParameter(configuration, ConfigurationStatics.AT_MOST);
 
-		this.encoding = encodingOptional.or(defaultEncoding);
-		this.escapeCharacter = escapeCharacterOptional.or(defaultEscapeCharacter);
-		this.quoteCharacter = quoteCharacterOptional.or(defaultQuoteCharacter);
-		this.columnDelimiter = columnDelimiterOptional.or(defaultColumnDelimiter);
-		this.rowDelimiter = rowDelimiterOptional.or(defaultRowDelimiter);
-		this.ignoreLines = ignoreLinesOptional.or(defaultIgnoreLines);
-		this.discardRows = discardRowsOptional.or(defaultDiscardRows);
+		this.encoding = encodingOptional.or(ConfigurationStatics.DEFAULT_ENCODING);
+		this.escapeCharacter = escapeCharacterOptional.or(ConfigurationStatics.DEFAULT_ESCAPE_CHARACTER);
+		this.quoteCharacter = quoteCharacterOptional.or(ConfigurationStatics.DEFAULT_QUOTE_CHARACTER);
+		this.columnDelimiter = columnDelimiterOptional.or(ConfigurationStatics.DEFAULT_COLUMN_DELIMITER);
+		this.rowDelimiter = rowDelimiterOptional.or(ConfigurationStatics.DEFAULT_ROW_DELIMITER);
+		this.ignoreLines = ignoreLinesOptional.or(ConfigurationStatics.DEFAULT_IGNORE_LINES);
+		this.discardRows = discardRowsOptional.or(ConfigurationStatics.DEFAULT_DISCARD_ROWS);
 		this.atMost = atMostOptional;
 
 		try {
 			Charset.forName(this.encoding);
-		} catch (UnsupportedCharsetException e) {
+		} catch (final UnsupportedCharsetException e) {
 			throw new DMPConverterException(String.format("Unsupported Encoding - [%s]", e.getCharsetName()));
 		}
 	}
@@ -185,7 +169,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 		final FileOpener opener = new FileOpener();
 
 		// set encoding
-		final String finalEncoding = encoding != null ? encoding : defaultEncoding;
+		final String finalEncoding = encoding != null ? encoding : ConfigurationStatics.DEFAULT_ENCODING;
 		opener.setEncoding(finalEncoding);
 
 		return apply(filePath, opener);
@@ -205,7 +189,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 		try {
 
 			return process(opener, obj, pipe);
-		} catch (RuntimeException e) {
+		} catch (final RuntimeException e) {
 			throw new DMPConverterException(e.getMessage());
 		}
 

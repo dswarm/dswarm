@@ -1,6 +1,5 @@
 package de.avgl.dmp.controller.utils;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -56,7 +55,7 @@ public class InternalSchemaDataUtil {
 		return getData(resourceId, configurationId, Optional.<Integer>absent());
 	}
 
-	public Optional<Iterator<Tuple<String, JsonNode>>> getData(long resourceId, long configurationId, Optional<Integer> atMost) {
+	public Optional<Iterator<Tuple<String, JsonNode>>> getData(final long resourceId, final long configurationId, final Optional<Integer> atMost) {
 
 		LOG.debug(String.format("try to get data for configuration with id [%d] for resource with id [%d]", configurationId, resourceId));
 
@@ -70,11 +69,11 @@ public class InternalSchemaDataUtil {
 		final InternalService internalService;
 		try {
 			internalService = determineInternalService(configurationOptional.get());
-		} catch (DMPControllerException e) {
+		} catch (final DMPControllerException e) {
 			return Optional.absent();
 		}
 
-		Optional<Map<String, Model>> maybeTriples;
+		final Optional<Map<String, Model>> maybeTriples;
 
 		try {
 
@@ -96,7 +95,7 @@ public class InternalSchemaDataUtil {
 		return Optional.of(dataIterator(iterator));
 	}
 
-	public Optional<ObjectNode> getSchema(long resourceId, long configurationId) {
+	public Optional<ObjectNode> getSchema(final long resourceId, final long configurationId) {
 
 		final Optional<Configuration> configurationOptional = fetchConfiguration(resourceId, configurationId);
 
@@ -108,28 +107,28 @@ public class InternalSchemaDataUtil {
 		final Configuration configuration = configurationOptional.get();
 
 		// TODO: fixme
-		
+
 		final Optional<JSRoot> rootOptional = null;
-				
+
 //				schemaServiceProvider.get().getSchema(resourceId, configurationId)
 //				.or(getConfiguredSchema(configuration));
 
-		if (rootOptional.isPresent()) {
-
-			final JSRoot jsElements = rootOptional.get();
-
-			try {
-				return Optional.of(jsElements.toJson(objectMapper));
-			} catch (IOException e) {
-				LOG.warn(e.getMessage(), e);
-				return Optional.absent();
-			}
-		}
+//		if (rootOptional.isPresent()) {
+//
+//			final JSRoot jsElements = rootOptional.get();
+//
+//			try {
+//				return Optional.of(jsElements.toJson(objectMapper));
+//			} catch (final IOException e) {
+//				LOG.warn(e.getMessage(), e);
+//				return Optional.absent();
+//			}
+//		}
 
 		final InternalService internalService;
 		try {
 			internalService = determineInternalService(configurationOptional.get());
-		} catch (DMPControllerException e) {
+		} catch (final DMPControllerException e) {
 
 			return Optional.absent();
 		}
@@ -201,7 +200,7 @@ public class InternalSchemaDataUtil {
 		}
 	}
 
-	private Optional<JSRoot> getConfiguredSchema(Configuration configuration) {
+	private Optional<JSRoot> getConfiguredSchema(final Configuration configuration) {
 		final ObjectNode parameters = configuration.getParameters();
 		final JsonNode storageType = parameters.get("storage_type");
 		if ("xml".equals(storageType.asText())) {
@@ -214,7 +213,7 @@ public class InternalSchemaDataUtil {
 
 					long latestConfigId = Integer.MIN_VALUE;
 
-					for (Configuration schemaConfiguration : schemaOptional.get().getConfigurations()) {
+					for (final Configuration schemaConfiguration : schemaOptional.get().getConfigurations()) {
 
 						if (schemaConfiguration.getId() > latestConfigId) {
 							latestConfigId = schemaConfiguration.getId();
@@ -222,7 +221,7 @@ public class InternalSchemaDataUtil {
 					}
 
 					if (latestConfigId != Integer.MIN_VALUE) {
-						
+
 						// TODO: fixme
 
 						// return schemaServiceProvider.get().getSchema(schemaId, latestConfigId);
@@ -241,16 +240,14 @@ public class InternalSchemaDataUtil {
 			private JsonNode injectDataType(final JsonNode jsonNode) {
 				final UnmodifiableIterator<String> typeKeys = Iterators.filter(jsonNode.fieldNames(), new Predicate<String>() {
 					@Override
-					public boolean apply(@Nullable String input) {
+					public boolean apply(@Nullable final String input) {
 						return input != null && input.endsWith("#type");
 					}
 				});
 				final String typeKey;
 				try {
 					typeKey = Iterators.getOnlyElement(typeKeys);
-				} catch (IllegalArgumentException e) {
-					return jsonNode;
-				} catch (NoSuchElementException e) {
+				} catch (final IllegalArgumentException | NoSuchElementException e) {
 					return jsonNode;
 				}
 

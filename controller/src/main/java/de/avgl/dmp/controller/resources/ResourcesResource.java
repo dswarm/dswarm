@@ -31,9 +31,7 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import com.codahale.metrics.Timer;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -118,9 +116,9 @@ public class ResourcesResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response uploadResource(
 			@ApiParam(value = "file input stream", required = true) @FormDataParam("file") final InputStream uploadedInputStream,
-			@ApiParam(value = "file metadata") @FormDataParam("file") final FormDataContentDisposition fileDetail,
+			@ApiParam("file metadata") @FormDataParam("file") final FormDataContentDisposition fileDetail,
 			@ApiParam(value = "resource name", required = true) @FormDataParam("name") final String name,
-			@ApiParam(value = "resource description") @FormDataParam("description") final String description) throws DMPControllerException {
+			@ApiParam("resource description") @FormDataParam("description") final String description) throws DMPControllerException {
 		final Timer.Context context = dmpStatus.createNewResource();
 
 		LOG.debug("try to create new resource '" + name + "' for file '" + fileDetail.getFileName() + "'");
@@ -136,7 +134,7 @@ public class ResourcesResource {
 		LOG.debug("created new resource '" + name + "' for file '" + fileDetail.getFileName() + "' = '"
 				+ ToStringBuilder.reflectionToString(resource) + "'");
 
-		String resourceJSON;
+		final String resourceJSON;
 
 		try {
 
@@ -186,7 +184,7 @@ public class ResourcesResource {
 
 		LOG.debug("got all resources = ' = '" + ToStringBuilder.reflectionToString(resources) + "'");
 
-		String resourcesJSON;
+		final String resourcesJSON;
 
 		try {
 
@@ -221,7 +219,7 @@ public class ResourcesResource {
 
 		final Resource resource = resourceOptional.get();
 
-		String resourceJSON;
+		final String resourceJSON;
 
 		try {
 
@@ -276,7 +274,7 @@ public class ResourcesResource {
 				private int									linesProcessed	= 1;
 
 				@Override
-				public boolean processLine(String line) throws IOException {
+				public boolean processLine(final String line) throws IOException {
 					if (linesProcessed++ > atMost) {
 
 						return false;
@@ -291,13 +289,13 @@ public class ResourcesResource {
 					return lines.build();
 				}
 			});
-		} catch (IOException e) {
+		} catch (final IOException e) {
 
 			dmpStatus.stop(context);
 			throw new DMPControllerException("couldn't read file contents.\n" + e.getMessage());
 		}
 
-		Map<String, Object> jsonMap = new HashMap<String, Object>(1);
+		final Map<String, Object> jsonMap = new HashMap<>(1);
 		jsonMap.put("lines", lines);
 		jsonMap.put("name", resource.getName());
 		jsonMap.put("description", resource.getDescription());
@@ -352,7 +350,7 @@ public class ResourcesResource {
 		LOG.debug("got resource configurations for resource with id '" + id.toString() + "' = '" + ToStringBuilder.reflectionToString(configurations)
 				+ "'");
 
-		String configurationsJSON;
+		final String configurationsJSON;
 
 		try {
 
@@ -369,7 +367,7 @@ public class ResourcesResource {
 		return buildResponse(configurationsJSON);
 	}
 
-	@ApiOperation(value = "add a new configuration to the data resource that matches the given id", notes = "Returns the new configuration of that was added to the data resource that matches the given id.")
+	@ApiOperation(value = "add a new configuration to the data resource that matches the given id", notes = "Returns the new configuration that was added to the data resource that matches the given id.")
 	@POST
 	@Path("/{id}/configurations")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -418,7 +416,7 @@ public class ResourcesResource {
 			}
 		}
 
-		String configurationJSON;
+		final String configurationJSON;
 
 		try {
 
@@ -455,7 +453,7 @@ public class ResourcesResource {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		String configurationJSON;
+		final String configurationJSON;
 
 		try {
 
@@ -494,7 +492,7 @@ public class ResourcesResource {
 		final String jsonString;
 		try {
 			jsonString = objectMapper.writeValueAsString(schema.get());
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			dmpStatus.stop(context);
 			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
@@ -513,7 +511,7 @@ public class ResourcesResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getResourceConfigurationData(@ApiParam(value = "data resource identifier", required = true) @PathParam("id") final Long id,
 			@ApiParam(value = "configuration identifier", required = true) @PathParam("configurationid") final Long configurationId,
-			@ApiParam(value = "number of records limit") @QueryParam("atMost") final Integer atMost) throws DMPControllerException {
+			@ApiParam("number of records limit") @QueryParam("atMost") final Integer atMost) throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getConfigurationData();
 
 		LOG.debug("try to get schema for configuration with id '" + configurationId + "' for resource with id '" + id + "'");
@@ -538,11 +536,11 @@ public class ResourcesResource {
 
 		final ObjectNode json = objectMapper.createObjectNode();
 		while (tupleIterator.hasNext()) {
-			Tuple<String, JsonNode> tuple = data.get().next();
+			final Tuple<String, JsonNode> tuple = data.get().next();
 			json.put(tuple.v1(), tuple.v2());
 		}
 
-		String jsonString;
+		final String jsonString;
 
 		try {
 
@@ -649,7 +647,7 @@ public class ResourcesResource {
 
 		final ResourceService resourceService = resourceServiceProvider.get();
 
-		Resource resource;
+		final Resource resource;
 
 		try {
 
@@ -717,20 +715,25 @@ public class ResourcesResource {
 
 		final ConfigurationService configurationService = configurationServiceProvider.get();
 
-		final Configuration configuration;
-		try {
+		Configuration configuration = null;
 
-			configuration = configurationService.createObject();
-		} catch (final DMPPersistenceException e) {
+		if (configurationFromJSON.getId() == null) {
 
-			LOG.debug("something went wrong while configuration creation");
-
-			throw new DMPControllerException("something went wrong while configuration creation\n" + e.getMessage());
-		}
-
-		if (configuration == null) {
-
-			throw new DMPControllerException("fresh configuration shouldn't be null");
+			// create new configuration, since it has no id
+			
+			configuration = createNewConfiguration(configurationService);
+		} else {
+			
+			// try to retrieve configuration via id from "configuration from JSON"
+			
+			configuration = configurationService.getObject(configurationFromJSON.getId());
+			
+			if(configuration == null) {
+				
+				// if the id is not in the DB, also create a new object
+				
+				configuration = createNewConfiguration(configurationService);
+			}
 		}
 
 		final String name = configurationFromJSON.getName();
@@ -780,6 +783,28 @@ public class ResourcesResource {
 
 		return configuration;
 	}
+	
+	private Configuration createNewConfiguration(final ConfigurationService configurationService) throws DMPControllerException {
+		
+		final Configuration configuration;
+		
+		try {
+
+			configuration = configurationService.createObject();
+		} catch (final DMPPersistenceException e) {
+
+			LOG.debug("something went wrong while configuration creation");
+
+			throw new DMPControllerException("something went wrong while configuration creation\n" + e.getMessage());
+		}
+		
+		if (configuration == null) {
+
+			throw new DMPControllerException("fresh configuration shouldn't be null");
+		}
+		
+		return configuration;
+	}
 
 	private String applyConfigurationForCSVPreview(final Resource resource, final String configurationJSONString) throws DMPControllerException {
 
@@ -797,18 +822,18 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't determine file path");
 		}
 
-		CSVSourceResourceCSVPreviewFlow flow;
+		final CSVSourceResourceCSVPreviewFlow flow;
 
 		try {
 			flow = CSVResourceFlowFactory.fromConfiguration(configurationFromJSON, CSVSourceResourceCSVPreviewFlow.class);
-		} catch (DMPConverterException e) {
+		} catch (final DMPConverterException e) {
 
 			throw new DMPControllerException(e.getMessage());
 		}
 
 		try {
 			return flow.applyFile(filePathNode.asText());
-		} catch (DMPConverterException e) {
+		} catch (final DMPConverterException e) {
 			throw new DMPControllerException(e.getMessage());
 		}
 	}
@@ -829,11 +854,11 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't determine file path");
 		}
 
-		CSVSourceResourceCSVJSONPreviewFlow flow;
+		final CSVSourceResourceCSVJSONPreviewFlow flow;
 
 		try {
 			flow = CSVResourceFlowFactory.fromConfiguration(configurationFromJSON, CSVSourceResourceCSVJSONPreviewFlow.class);
-		} catch (DMPConverterException e) {
+		} catch (final DMPConverterException e) {
 
 			throw new DMPControllerException(e.getMessage());
 		}
@@ -842,7 +867,7 @@ public class ResourcesResource {
 
 		try {
 			return flow.applyFile(filePathNode.asText());
-		} catch (DMPConverterException e) {
+		} catch (final DMPConverterException e) {
 
 			throw new DMPControllerException(e.getMessage());
 		}
@@ -850,21 +875,11 @@ public class ResourcesResource {
 
 	private Configuration getConfiguration(final String configurationJSONString) throws DMPControllerException {
 
-		Configuration configurationFromJSON;
+		final Configuration configurationFromJSON;
 
 		try {
 
 			configurationFromJSON = objectMapper.readValue(configurationJSONString, Configuration.class);
-		} catch (final JsonParseException e) {
-
-			LOG.debug("something went wrong while deserializing the configuration JSON string");
-
-			throw new DMPControllerException("something went wrong while deserializing the configuration JSON string.\n" + e.getMessage());
-		} catch (final JsonMappingException e) {
-
-			LOG.debug("something went wrong while deserializing the configuration JSON string");
-
-			throw new DMPControllerException("something went wrong while deserializing the configuration JSON string.\n" + e.getMessage());
 		} catch (final IOException e) {
 
 			LOG.debug("something went wrong while deserializing the configuration JSON string");

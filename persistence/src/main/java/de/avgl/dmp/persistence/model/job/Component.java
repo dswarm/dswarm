@@ -33,7 +33,6 @@ import com.google.common.collect.Sets;
 
 import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
-import de.avgl.dmp.persistence.model.utils.DMPJPAObjectReferenceSerializer;
 import de.avgl.dmp.persistence.model.utils.SetComponentReferenceSerializer;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
@@ -45,7 +44,7 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 public class Component extends BasicDMPJPAObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long						serialVersionUID				= 1L;
 
@@ -58,7 +57,7 @@ public class Component extends BasicDMPJPAObject {
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@XmlIDREF
 	@XmlList
-	private Set<Component>							inputComponents					= null;
+	private Set<Component>							inputComponents;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { /* CascadeType.DETACH, CascadeType.MERGE, */CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "OUTPUT_COMPONENTS_INPUT_COMPONENTS", joinColumns = { @JoinColumn(name = "INPUT_COMPONENT_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "OUTPUT_COMPONENT_ID", referencedColumnName = "ID") })
@@ -67,32 +66,32 @@ public class Component extends BasicDMPJPAObject {
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@XmlIDREF
 	@XmlList
-	private Set<Component>							outputComponents				= null;
+	private Set<Component>							outputComponents;
 
 	// @ManyToOne(fetch = FetchType.LAZY/*, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
 	// CascadeType.REFRESH }*/)
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "FUNCTION")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
-	@XmlIDREF
+	//@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
+	//@XmlIDREF
 	// @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
-	private Function								function						= null;
+	private Function								function;
 
 	@Transient
-	private Map<String, String>						parameterMappings				= null;
+	private Map<String, String>						parameterMappings;
 
 	@Transient
 	private ObjectNode								parameterMappingsJSON;
 
 	@Transient
-	private boolean									parameterMappingsInitialized	= false;
+	private boolean									parameterMappingsInitialized;
 
 	@JsonIgnore
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "PARAMETER_MAPPINGS", columnDefinition = "VARCHAR(4000)", length = 4000)
-	private String									parameterMappingsString			= null;
+	private String									parameterMappingsString;
 
 	// @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH })
 	// @JoinColumn(name = "transformation")
@@ -143,10 +142,10 @@ public class Component extends BasicDMPJPAObject {
 	/**
 	 * Adds a new input component to the collection of input components of this component.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param inputComponent a new input component
 	 */
-	public void addInputComponent(final Component inputComponent) {
+	void addInputComponent(final Component inputComponent) {
 
 		if (inputComponent != null) {
 
@@ -166,10 +165,10 @@ public class Component extends BasicDMPJPAObject {
 	/**
 	 * Removes an existing input component from the collection of input components of this component.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param inputComponent an existing input component that should be removed
 	 */
-	public void removeInputComponent(final Component inputComponent) {
+	void removeInputComponent(final Component inputComponent) {
 
 		if (inputComponents != null && inputComponent != null && inputComponents.contains(inputComponent)) {
 
@@ -223,10 +222,10 @@ public class Component extends BasicDMPJPAObject {
 	/**
 	 * Adds a new output component to the collection of output components of this component.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param outputComponent a new output component
 	 */
-	public void addOutputComponent(final Component outputComponent) {
+	void addOutputComponent(final Component outputComponent) {
 
 		if (outputComponent != null) {
 
@@ -246,10 +245,10 @@ public class Component extends BasicDMPJPAObject {
 	/**
 	 * Removes an existing output component from the collection of output components of this component.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param outputComponent an existing output component that should be removed
 	 */
-	public void removeOutputComponent(final Component outputComponent) {
+	void removeOutputComponent(final Component outputComponent) {
 
 		if (outputComponents != null && outputComponent != null && outputComponents.contains(outputComponent)) {
 
@@ -356,12 +355,8 @@ public class Component extends BasicDMPJPAObject {
 	@Override
 	public boolean equals(final Object obj) {
 
-		if (!Component.class.isInstance(obj)) {
+		return Component.class.isInstance(obj) && super.equals(obj);
 
-			return false;
-		}
-
-		return super.equals(obj);
 	}
 
 	private void refreshParameterMappingsString() {
@@ -412,7 +407,7 @@ public class Component extends BasicDMPJPAObject {
 
 				if (null != parameterMappingsJSON) {
 
-					Iterator<Entry<String, JsonNode>> iter = parameterMappingsJSON.fields();
+					final Iterator<Entry<String, JsonNode>> iter = parameterMappingsJSON.fields();
 
 					while (iter.hasNext()) {
 

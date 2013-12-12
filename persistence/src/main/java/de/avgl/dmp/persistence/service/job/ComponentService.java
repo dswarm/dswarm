@@ -11,7 +11,6 @@ import com.google.inject.Provider;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Function;
-import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.service.BasicDMPJPAService;
 
 public class ComponentService extends BasicDMPJPAService<Component> {

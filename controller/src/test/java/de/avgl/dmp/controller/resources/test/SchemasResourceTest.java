@@ -1,132 +1,108 @@
 package de.avgl.dmp.controller.resources.test;
 
-import java.io.IOException;
-import java.util.Set;
+import java.util.Map;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import org.junit.After;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Maps;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import de.avgl.dmp.controller.resources.test.utils.AttributePathsResourceTestUtils;
+import de.avgl.dmp.controller.resources.test.utils.AttributesResourceTestUtils;
+import de.avgl.dmp.controller.resources.test.utils.ClaszesResourceTestUtils;
+import de.avgl.dmp.controller.resources.test.utils.SchemasResourceTestUtils;
+import de.avgl.dmp.persistence.model.schema.Attribute;
+import de.avgl.dmp.persistence.model.schema.AttributePath;
+import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
-import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class SchemasResourceTest extends ResourceTest {
+public class SchemasResourceTest extends BasicResourceTest<SchemasResourceTestUtils, SchemaService, Schema, Long> {
 
-	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(SchemasResourceTest.class);
+	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(SchemasResourceTest.class);
 
-	private String									schemaJSONString	= null;
-	private Schema									expectedSchema	= null;
-	private Set<Schema>								expectedSchemas	= null;
+	private final AttributesResourceTestUtils		attributesResourceTestUtils;
 
-	private final SchemaService						schemaService = injector.getInstance(SchemaService.class);
+	private final ClaszesResourceTestUtils			claszesResourceTestUtils;
 
-	private final ObjectMapper						objectMapper = injector.getInstance(ObjectMapper.class);
+	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
 
+	final Map<String, Attribute>					attributes		= Maps.newHashMap();
+
+	final Map<Long, AttributePath>					attributePaths	= Maps.newLinkedHashMap();
+
+	private Clasz									recordClass;
 
 	public SchemasResourceTest() {
-		super("schemas");
+
+		super(Schema.class, SchemaService.class, "schemas", "schema.json", new SchemasResourceTestUtils());
+
+		attributesResourceTestUtils = new AttributesResourceTestUtils();
+		claszesResourceTestUtils = new ClaszesResourceTestUtils();
+		attributePathsResourceTestUtils = new AttributePathsResourceTestUtils();
 	}
 
-	@Before
-	public void prepare() throws IOException {
-		schemaJSONString = DMPPersistenceUtil.getResourceAsString("schema.json");
-		expectedSchema = DMPPersistenceUtil.getJSONObjectMapper().readValue(schemaJSONString, Schema.class);
-	}
+	@Override
+	public void prepare() throws Exception {
 
-	@Test
-	public void testPOSTSchemas() throws Exception {
+		super.prepare();
 
-		final Schema actualSchema = createSchemaInternal();
+		for (int i = 1; i < 6; i++) {
 
-		cleanUpDB(actualSchema);
-	}
+			final String attributeJSONFileName = "attribute" + i + ".json";
 
-	/*
-	@Test
-		public void testGETSchemas() throws Exception {
+			final Attribute actualAttribute = attributesResourceTestUtils.createObject(attributeJSONFileName);
 
-			final Schema actualSchema = createSchemaInternal();
-
-			LOG.debug("try to retrieve schemas");
-
-			final Response response = target().request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
-
-			Assert.assertEquals("200 OK was expected", 200, response.getStatus());
-
-			final String responseSchemas = response.readEntity(String.class);
-
-			expectedSchemas = Sets.newHashSet();
-			expectedSchemas.add(actualSchema);
-
-			ResourceTestUtils.evaluateSchemas(responseSchemas, expectedSchemas);
-
-			cleanUpDB(actualSchema);
+			attributes.put(actualAttribute.getId(), actualAttribute);
 		}
-	*/
 
+		recordClass = claszesResourceTestUtils.createObject("clasz.json");
 
-	@Test
-	public void testGETSchema() throws Exception {
+		// prepare schema json for attribute path ids manipulation
+		final ObjectNode objectJSON = objectMapper.readValue(objectJSONString, ObjectNode.class);
 
-		final Schema actualSchema = createSchemaInternal();
+		for (int j = 1; j < 4; j++) {
 
-		LOG.debug("try to retrieve schema");
+			final String attributePathJSONFileName = "attribute_path" + j + ".json";
 
-		final Response response = target(String.valueOf(actualSchema.getId())).request()
-				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+			final AttributePath actualAttributePath = attributePathsResourceTestUtils.createObject(attributePathJSONFileName);
 
-		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+			attributePaths.put(actualAttributePath.getId(), actualAttributePath);
 
-		final String responseSchemaJSON = response.readEntity(String.class);
+			// manipulate attribute path ids
+			ArrayNode attributePathsArray = (ArrayNode) objectJSON.get("attribute_paths");
 
-		Assert.assertNotNull("response schema JSON shouldn't be null", responseSchemaJSON);
+			for (final JsonNode attributePathJsonNode : attributePathsArray) {
 
-		final Schema responseSchema = objectMapper
-				.readValue(responseSchemaJSON, Schema.class);
+				if (((ObjectNode) attributePathJsonNode).get("id").asInt() == j) {
 
-		Assert.assertNotNull("response schema shouldn't be null", responseSchema);
+					((ObjectNode) attributePathJsonNode).put("id", actualAttributePath.getId());
 
-//		ResourceTestUtils.compareSchemas(actualSchema, responseSchema);
+					break;
+				}
+			}
+		}
 
-		cleanUpDB(responseSchema);
+		// re-init expect object
+		objectJSONString = objectMapper.writeValueAsString(objectJSON);
+		expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
 	}
 
+	@After
+	public void tearDown2() throws Exception {
 
-	private Schema createSchemaInternal() throws Exception {
+		for (final AttributePath attributePath : attributePaths.values()) {
 
-		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(Entity.json(schemaJSONString));
+			attributePathsResourceTestUtils.deleteObject(attributePath);
+		}
 
-		Assert.assertEquals("201 Created was expected", 201, response.getStatus());
+		for (final Attribute attribute : attributes.values()) {
 
-		final String responseString = response.readEntity(String.class);
+			attributesResourceTestUtils.deleteObject(attribute);
+		}
 
-		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
-
-		final Schema actualSchema = objectMapper.readValue(responseString, Schema.class);
-
-//		ResourceTestUtils.compareSchemas(expectedSchema, actualSchema);
-
-		return actualSchema;
+		claszesResourceTestUtils.deleteObject(recordClass);
 	}
-
-
-	private void cleanUpDB(final Schema schema) {
-
-		final Long schemaId = schema.getId();
-
-		schemaService.deleteObject(schemaId);
-
-		final Schema deletedSchema = schemaService.getObject(schemaId);
-
-		Assert.assertNull("the deleted schema should be null", deletedSchema);
-	}
-
 }

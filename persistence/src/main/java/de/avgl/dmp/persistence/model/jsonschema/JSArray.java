@@ -30,7 +30,7 @@ public class JSArray extends JSElement {
 		return new JSArray(item.withName(newName));
 	}
 
-	public JSElement getItem() {
+	JSElement getItem() {
 		return item;
 	}
 

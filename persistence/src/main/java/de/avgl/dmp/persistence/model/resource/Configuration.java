@@ -18,8 +18,6 @@ import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.hibernate.annotations.Cascade;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -28,7 +26,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
 
 import de.avgl.dmp.init.DMPException;
-import de.avgl.dmp.persistence.model.DMPJPAObject;
+import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.utils.ResourceReferenceDeserializer;
 import de.avgl.dmp.persistence.model.utils.SetResourceReferenceSerializer;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
@@ -38,7 +36,7 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "CONFIGURATION")
-public class Configuration extends DMPJPAObject {
+public class Configuration extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 *
@@ -47,23 +45,17 @@ public class Configuration extends DMPJPAObject {
 
 	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(Configuration.class);
 
-	@Column(name = "NAME")
-	private String									name					= null;
-
-	@Column(name = "DESCRIPTION")
-	private String									description				= null;
-
 	/**
 	 * The related resources.
 	 */
-	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToMany(fetch = FetchType.EAGER, cascade = { /* CascadeType.DETACH, CascadeType.MERGE, */CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "RESOURCES_CONFIGURATIONS", joinColumns = { @JoinColumn(name = "CONFIGURATION_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "RESOURCE_ID", referencedColumnName = "ID") })
 	@JsonSerialize(using = SetResourceReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@JsonDeserialize(using = ResourceReferenceDeserializer.class)
 	@XmlIDREF
 	@XmlList
-	//@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+	// @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	private Set<Resource>							resources;
 
 	@Lob
@@ -75,27 +67,7 @@ public class Configuration extends DMPJPAObject {
 	private ObjectNode								parameters;
 
 	@Transient
-	private boolean									parametersInitialized	= false;
-
-	public String getName() {
-
-		return name;
-	}
-
-	public void setName(final String name) {
-
-		this.name = name;
-	}
-
-	public String getDescription() {
-		
-		return description;
-	}
-
-	public void setDescription(final String description) {
-
-		this.description = description;
-	}
+	private boolean									parametersInitialized;
 
 	public ObjectNode getParameters() {
 
@@ -124,7 +96,7 @@ public class Configuration extends DMPJPAObject {
 	}
 
 	public JsonNode getParameter(final String key) {
-		
+
 		initParameters(false);
 
 		return parameters.get(key);
@@ -141,7 +113,9 @@ public class Configuration extends DMPJPAObject {
 
 			// remove configuration from resources, if configuration, will be prepared for removal
 
-			for (final Resource resource : resources) {
+			final Set<Resource> resourcesToBeDeleted = Sets.newCopyOnWriteArraySet(resources);
+
+			for (final Resource resource : resourcesToBeDeleted) {
 
 				resource.removeConfiguration(this);
 			}
@@ -149,20 +123,17 @@ public class Configuration extends DMPJPAObject {
 			resources.clear();
 		}
 
-		// resources = resourcesArg;
-
 		if (resourcesArg != null) {
 
 			if (!resourcesArg.equals(resources)) {
 
-				if (resources != null) {
+				if (resources == null) {
 
-					resources.clear();
-					resources.addAll(resourcesArg);
-				} else {
-
-					resources = resourcesArg;
+					resources = Sets.newCopyOnWriteArraySet();
 				}
+
+				resources.clear();
+				resources.addAll(resourcesArg);
 			}
 
 			for (final Resource resource : resourcesArg) {
@@ -175,7 +146,7 @@ public class Configuration extends DMPJPAObject {
 	/**
 	 * Adds a new resource to the collection of resources of this configuration.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param resource a new export definition revision
 	 */
 	public void addResource(final Resource resource) {
@@ -184,7 +155,7 @@ public class Configuration extends DMPJPAObject {
 
 			if (resources == null) {
 
-				resources = Sets.newLinkedHashSet();
+				resources = Sets.newCopyOnWriteArraySet();
 			}
 
 			if (!resources.contains(resource)) {
@@ -198,7 +169,7 @@ public class Configuration extends DMPJPAObject {
 	/**
 	 * Replaces an existing resource, i.e., the resource with the same identifier will be replaced.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param resource an existing, updated resource
 	 */
 	public void replaceResource(final Resource resource) {
@@ -207,7 +178,7 @@ public class Configuration extends DMPJPAObject {
 
 			if (resources == null) {
 
-				resources = Sets.newLinkedHashSet();
+				resources = Sets.newCopyOnWriteArraySet();
 			}
 
 			if (resources.contains(resource)) {
@@ -225,7 +196,7 @@ public class Configuration extends DMPJPAObject {
 	/**
 	 * Removes an existing resource from the collection of resources of this configuration.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param resource an existing resource that should be removed
 	 */
 	public void removeResource(final Resource resource) {
@@ -242,8 +213,8 @@ public class Configuration extends DMPJPAObject {
 
 		parametersString = parameters.toString();
 	}
-	
-	private void initParameters(boolean fromScratch) {
+
+	private void initParameters(final boolean fromScratch) {
 
 		if (parameters == null && !parametersInitialized) {
 
@@ -255,7 +226,7 @@ public class Configuration extends DMPJPAObject {
 
 					parameters = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
 				}
-				
+
 				parametersInitialized = true;
 
 				return;
@@ -264,7 +235,7 @@ public class Configuration extends DMPJPAObject {
 			try {
 
 				parameters = DMPPersistenceUtil.getJSON(parametersString);
-			} catch (DMPException e) {
+			} catch (final DMPException e) {
 
 				LOG.debug("couldn't parse parameters JSON string for configuration '" + getId() + "'");
 			}
@@ -276,11 +247,7 @@ public class Configuration extends DMPJPAObject {
 	@Override
 	public boolean equals(final Object obj) {
 
-		if (!Configuration.class.isInstance(obj)) {
+		return Configuration.class.isInstance(obj) && super.equals(obj);
 
-			return false;
-		}
-
-		return super.equals(obj);
 	}
 }

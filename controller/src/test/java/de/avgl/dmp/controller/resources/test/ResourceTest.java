@@ -15,7 +15,7 @@ public class ResourceTest extends GuicedTest {
 
 	private static final org.apache.log4j.Logger	LOG		= org.apache.log4j.Logger.getLogger(ResourceTest.class);
 
-	protected static EmbeddedServer 				grizzlyServer;
+	protected static EmbeddedServer                 grizzlyServer;
 
 	protected String								resourceIdentifier;
 	protected static final int						port	= 9998;

@@ -35,19 +35,19 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 
 	protected String									objectJSONString	= null;
 	protected POJOCLASS									expectedObject		= null;
-	private Set<POJOCLASS>								expectedObjects		= null;
+	protected Set<POJOCLASS>							expectedObjects		= null;
 
-	private final POJOCLASSPERSISTENCESERVICE			persistenceService;
+	protected final POJOCLASSPERSISTENCESERVICE			persistenceService;
 
-	protected final ObjectMapper							objectMapper		= injector.getInstance(ObjectMapper.class);
+	protected final ObjectMapper						objectMapper		= injector.getInstance(ObjectMapper.class);
 
-	private final String								objectJSONFileName;
+	protected final String								objectJSONFileName;
 
-	private final Class<POJOCLASS>						pojoClass;
+	protected final Class<POJOCLASS>					pojoClass;
 
-	private final Class<POJOCLASSPERSISTENCESERVICE>	persistenceServiceClass;
+	protected final Class<POJOCLASSPERSISTENCESERVICE>	persistenceServiceClass;
 
-	private final String								pojoClassName;
+	protected final String								pojoClassName;
 
 	protected final POJOCLASSRESOURCETESTUTILS			pojoClassResourceTestUtils;
 

@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public abstract class BasicDMPJPAObject extends DMPJPAObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long	serialVersionUID	= 1L;
 

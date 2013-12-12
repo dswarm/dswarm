@@ -32,7 +32,7 @@ public class InternalTripleService implements InternalService {
 
 	private final Dataset							dataset;
 	private final ResourceService					resourceService;
-	private static final String						resourceGraphURIPattern	= "http://data.slub-dresden.de/resource/{resourceid}/configurations/{configurationid}/data";
+	private static final String RESOURCE_GRAPH_URI_PATTERN = "http://data.slub-dresden.de/resource/{resourceid}/configurations/{configurationid}/data";
 
 	@Inject
 	public InternalTripleService(final ResourceService resourceService, @Named("TdbPath") final String directory) {
@@ -41,7 +41,7 @@ public class InternalTripleService implements InternalService {
 	}
 
 	@Override
-	public void createObject(final Long id, final Long id1, Object model) throws DMPPersistenceException {
+	public void createObject(final Long id, final Long id1, final Object model) throws DMPPersistenceException {
 
 		if (dataset == null) {
 
@@ -77,7 +77,7 @@ public class InternalTripleService implements InternalService {
 			throw new DMPPersistenceException("real model that should be added to DB shouldn't be null");
 		}
 
-		final String resourceGraphURI = resourceGraphURIPattern.replace("{resourceid}", id.toString()).replace("{configurationid}", id1.toString());
+		final String resourceGraphURI = RESOURCE_GRAPH_URI_PATTERN.replace("{resourceid}", id.toString()).replace("{configurationid}", id1.toString());
 
 		// add resource uri to resource attributes (maybe to resource directly later)
 		final Resource resource = resourceService.getObject(id);
@@ -117,7 +117,7 @@ public class InternalTripleService implements InternalService {
 			throw new DMPPersistenceException("configuration id shouldn't be null");
 		}
 
-		final String resourceGraphURI = resourceGraphURIPattern.replace("{resourceid}", resourceId.toString()).replace("{configurationid}",
+		final String resourceGraphURI = RESOURCE_GRAPH_URI_PATTERN.replace("{resourceid}", resourceId.toString()).replace("{configurationid}",
 				configurationId.toString());
 
 		dataset.begin(ReadWrite.READ);
@@ -179,7 +179,7 @@ public class InternalTripleService implements InternalService {
 			throw new DMPPersistenceException("configuration id shouldn't be null");
 		}
 
-		final String resourceGraphURI = resourceGraphURIPattern.replace("{resourceid}", resourceId.toString()).replace("{configurationid}",
+		final String resourceGraphURI = RESOURCE_GRAPH_URI_PATTERN.replace("{resourceid}", resourceId.toString()).replace("{configurationid}",
 				configurationId.toString());
 
 		dataset.begin(ReadWrite.WRITE);

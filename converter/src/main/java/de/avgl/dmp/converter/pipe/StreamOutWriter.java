@@ -17,10 +17,6 @@ import org.culturegraph.mf.framework.annotations.Out;
 @Out(StreamReceiver.class)
 public final class StreamOutWriter extends DefaultStreamPipe<StreamReceiver> {
 
-	public StreamOutWriter() {
-		super();
-	}
-
 	@Override
 	public void startRecord(final String identifier) {
 		assert !isClosed();

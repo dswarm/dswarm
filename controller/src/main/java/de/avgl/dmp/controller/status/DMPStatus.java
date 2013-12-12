@@ -35,7 +35,7 @@ public class DMPStatus {
 	private final Map<String, Timer>	createNewObjectTimers	= Maps.newHashMap();
 	private final Map<String, Timer>	getObjectTimers			= Maps.newHashMap();
 
-	private MetricRegistry				registry;
+	private final MetricRegistry				registry;
 
 	@Inject
 	public DMPStatus(final MetricRegistry registryArg) {
@@ -55,7 +55,7 @@ public class DMPStatus {
 		getConfigurationsSchemaTimer = registry.timer(name(ResourcesResource.class, "get-requests", "configurations", "schema"));
 		getConfigurationsDataTimer = registry.timer(name(ResourcesResource.class, "get-requests", "configurations", "data"));
 	}
-	
+
 	public Timer.Context createNewResource() {
 		allRequestsMeter.mark();
 		return createNewResourceTimer.time();
@@ -141,8 +141,8 @@ public class DMPStatus {
 		return getConfigurationsDataTimer.time();
 	}
 
-	public long stop(final Timer.Context context) {
-		return context.stop();
+	public void stop(final Timer.Context context) {
+		context.stop();
 	}
 
 	public long getUptime() {

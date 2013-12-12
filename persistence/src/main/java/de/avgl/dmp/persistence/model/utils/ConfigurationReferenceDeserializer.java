@@ -9,10 +9,6 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public class ConfigurationReferenceDeserializer extends ReferenceDeserializer<Configuration> {
 
-	public ConfigurationReferenceDeserializer() {
-		super();
-	}
-
 	@Override
 	BasicJPAService<Configuration, Long> getJpaService() throws DMPException {
 		return DMPPersistenceUtil.getInjector().getInstance(ConfigurationService.class);

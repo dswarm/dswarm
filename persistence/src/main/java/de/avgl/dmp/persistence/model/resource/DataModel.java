@@ -7,16 +7,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
-import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.schema.Schema;
-import de.avgl.dmp.persistence.model.utils.DMPJPAObjectReferenceSerializer;
 
 /**
  * @author tgaengler
@@ -29,7 +25,7 @@ import de.avgl.dmp.persistence.model.utils.DMPJPAObjectReferenceSerializer;
 public class DataModel extends ExtendedBasicDMPJPAObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long	serialVersionUID	= 1L;
 
@@ -37,23 +33,23 @@ public class DataModel extends ExtendedBasicDMPJPAObject {
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "DATA_RESOURCE")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
-	@XmlIDREF
-	private Resource			dataResource		= null;
+	//@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
+	//@XmlIDREF
+	private Resource			dataResource;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "CONFIGURATION")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
-	@XmlIDREF
-	private Configuration		configuration		= null;
+	//@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
+	//@XmlIDREF
+	private Configuration		configuration;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "DATA_SCHEMA")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
-	@XmlIDREF
-	private Schema				schema				= null;
+	//@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
+	//@XmlIDREF
+	private Schema				schema;
 
 	public Resource getDataResource() {
 
@@ -84,15 +80,11 @@ public class DataModel extends ExtendedBasicDMPJPAObject {
 
 		schema = schemaArg;
 	}
-	
+
 	@Override
 	public boolean equals(final Object obj) {
 
-		if (!DataModel.class.isInstance(obj)) {
+		return DataModel.class.isInstance(obj) && super.equals(obj);
 
-			return false;
-		}
-
-		return super.equals(obj);
 	}
 }

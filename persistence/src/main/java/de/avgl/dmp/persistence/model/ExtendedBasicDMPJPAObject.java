@@ -9,12 +9,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 public abstract class ExtendedBasicDMPJPAObject extends BasicDMPJPAObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long	serialVersionUID	= 1L;
 
 	@Column(name = "DESCRIPTION", columnDefinition = "VARCHAR(4000)", length = 4000)
-	private String				description			= null;
+	private String				description;
 
 	public String getDescription() {
 

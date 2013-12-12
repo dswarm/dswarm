@@ -44,7 +44,7 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 public class AttributePath extends DMPJPAObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long						serialVersionUID				= 1L;
 
@@ -59,22 +59,22 @@ public class AttributePath extends DMPJPAObject {
 	@Access(AccessType.FIELD)
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "ATTRIBUTES_ATTRIBUTE_PATHS", joinColumns = { @JoinColumn(name = "ATTRIBUTE_PATH_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "ATTRIBUTE_ID", referencedColumnName = "ID") })
-	private Set<Attribute>							attributes						= null;
+	private Set<Attribute>							attributes;
 
 	@Transient
-	private LinkedList<Attribute>					orderedAttributes				= null;
+	private LinkedList<Attribute>					orderedAttributes;
 
 	@Transient
 	private ArrayNode								orderedAttributesJSON;
 
 	@Transient
-	private boolean									orderedAttributesInitialized	= false;
+	private boolean									orderedAttributesInitialized;
 
 	@JsonIgnore
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "ATTRIBUTE_PATH", columnDefinition = "VARCHAR(4000)", length = 4000)
-	private String									attributePath					= null;
+	private String									attributePath;
 
 	/**
 	 * All schemas that utilise this attribute path
@@ -93,7 +93,7 @@ public class AttributePath extends DMPJPAObject {
 
 		orderedAttributes = attributesArg;
 
-		if (null != attributesArg) {
+		if (null != orderedAttributes) {
 
 			attributes = Sets.newLinkedHashSet(orderedAttributes);
 
@@ -150,7 +150,7 @@ public class AttributePath extends DMPJPAObject {
 	/**
 	 * Adds a new attribute to the end of this attribute path.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param attributeArg a new attribute
 	 */
 	public void addAttribute(final Attribute attributeArg) {
@@ -189,7 +189,7 @@ public class AttributePath extends DMPJPAObject {
 	/**
 	 * Adds a new attribute to the end of this attribute path.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param attributeArg a new attribute
 	 */
 	protected void addAttribute(final Attribute attributeArg, final int attributeIndex) {
@@ -228,7 +228,7 @@ public class AttributePath extends DMPJPAObject {
 	/**
 	 * Removes an existing attribute from this attribute path.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param attribute an existing attribute that should be removed
 	 * @param attributeIndex the position of the attribute in the attribute path
 	 */
@@ -352,12 +352,8 @@ public class AttributePath extends DMPJPAObject {
 	@Override
 	public boolean equals(final Object obj) {
 
-		if (!AttributePath.class.isInstance(obj)) {
+		return AttributePath.class.isInstance(obj) && super.equals(obj);
 
-			return false;
-		}
-
-		return super.equals(obj);
 	}
 
 	private void refreshAttributePathString() {

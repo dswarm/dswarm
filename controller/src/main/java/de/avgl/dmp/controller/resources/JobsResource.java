@@ -1,9 +1,6 @@
 package de.avgl.dmp.controller.resources;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -13,26 +10,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 
 import de.avgl.dmp.controller.utils.InternalSchemaDataUtil;
 import de.avgl.dmp.converter.DMPConverterException;
-import de.avgl.dmp.converter.flow.TransformationFlow;
-import de.avgl.dmp.converter.mf.stream.reader.JsonNodeReader;
-import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
-import de.avgl.dmp.persistence.model.job.Job;
-import de.avgl.dmp.persistence.model.job.Transformation;
-import de.avgl.dmp.persistence.model.resource.Configuration;
-import de.avgl.dmp.persistence.model.types.Tuple;
 
 @RequestScoped
 @Path("jobs")
-public class JobsResource {
+class JobsResource {
 
 	private final Provider<JsonToPojoMapper> pojoMapperProvider;
 	private final InternalSchemaDataUtil schemaDataUtil;
@@ -56,28 +43,28 @@ public class JobsResource {
 
 //		final Job job;
 //		try {
-			
+
 			// TODO: fixme
-			
+
 			//job = pojoMapperProvider.get().toJob(jsonObjectString);
 //		} catch (final DMPPersistenceException e) {
 //			throw new DMPConverterException(e.getMessage());
 //		}
-//		
+//
 //		if(job == null) {
-//			
+//
 //			throw new DMPConverterException("couldn't JSON to Job");
 //		}
-		
+
 //		if(job.getTransformations() == null || job.getTransformations().isEmpty()) {
-//			
+//
 //			throw new DMPConverterException("there no transformations for this job");
 //		}
 
 //		final TransformationFlow flow = TransformationFlow.fromJob(job);
-//		
+//
 //		final Transformation transformation = job.getTransformations().get(0);
-//		
+//
 //		final long resourceId = transformation.getSource().getResourceId();
 //		final long configurationId = transformation.getSource().getConfigurationId();
 
@@ -104,18 +91,18 @@ public class JobsResource {
 //		final Iterator<Tuple<String, JsonNode>> tupleIterator = inputData.get();
 
 		final String result = null;
-				
+
 				//flow.apply(tupleIterator, new JsonNodeReader(recordPrefix));
 
 		return buildResponse(result);
 	}
-	
+
 	@Path("/demo")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response executeJobDemo(final String jsonObjectString) throws IOException, DMPConverterException {
-		
+
 		// TODO: fixme
 
 //		final Job job;

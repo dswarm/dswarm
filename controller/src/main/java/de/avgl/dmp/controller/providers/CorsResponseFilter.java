@@ -14,10 +14,10 @@ import static com.google.common.net.HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN;
 import static com.google.common.net.HttpHeaders.X_POWERED_BY;
 
 @Priority(Priorities.HEADER_DECORATOR)
-public class CorsResponseFilter implements ContainerResponseFilter {
+class CorsResponseFilter implements ContainerResponseFilter {
 
 	@Override
-	public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
+	public void filter(final ContainerRequestContext requestContext, final ContainerResponseContext responseContext) throws IOException {
 		final MultivaluedMap<String,Object> headers = responseContext.getHeaders();
 
 		headers.add(ACCESS_CONTROL_ALLOW_ORIGIN, "*");

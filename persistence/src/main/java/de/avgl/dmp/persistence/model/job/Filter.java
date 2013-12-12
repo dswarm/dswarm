@@ -18,12 +18,12 @@ import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 public class Filter extends BasicDMPJPAObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long	serialVersionUID	= 1L;
 
 	@Column(name = "EXPRESSION", columnDefinition = "VARCHAR(4000)", length = 4000)
-	private String				expression			= null;
+	private String				expression;
 
 	public String getExpression() {
 
@@ -38,11 +38,7 @@ public class Filter extends BasicDMPJPAObject {
 	@Override
 	public boolean equals(final Object obj) {
 
-		if (!Filter.class.isInstance(obj)) {
+		return Filter.class.isInstance(obj) && super.equals(obj);
 
-			return false;
-		}
-
-		return super.equals(obj);
 	}
 }

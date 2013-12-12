@@ -13,13 +13,13 @@ import de.avgl.dmp.persistence.model.BasicDMPObject;
 public class MappingGroup extends BasicDMPObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long	serialVersionUID	= 1L;
 
 	private List<Mapping>		mappings;
 
-	private String				description			= null;
+	private String				description;
 
 	public MappingGroup(final String id) {
 

@@ -15,7 +15,7 @@ import com.wordnik.swagger.jersey.listing.JerseyResourceListingProvider;
 import de.avgl.dmp.controller.servlet.DMPInjector;
 
 @SuppressWarnings("UnusedDeclaration")
-public class DMPApplication extends ResourceConfig {
+class DMPApplication extends ResourceConfig {
 
 	@Inject
 	public DMPApplication(final ServiceLocator serviceLocator) {

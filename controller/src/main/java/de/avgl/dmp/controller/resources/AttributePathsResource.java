@@ -7,10 +7,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Provider;
@@ -33,10 +31,7 @@ import de.avgl.dmp.persistence.service.schema.AttributePathService;
 public class AttributePathsResource extends BasicResource<AttributePathService, AttributePath, Long> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributePathsResource.class);
-
-	@Context
-	UriInfo											uri;
-
+	
 	@Inject
 	public AttributePathsResource(final Provider<AttributePathService> attributePathServiceProviderArg, final ObjectMapper objectMapper,
 			final DMPStatus dmpStatus) {

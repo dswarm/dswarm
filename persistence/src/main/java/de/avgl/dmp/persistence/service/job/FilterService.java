@@ -10,7 +10,7 @@ import de.avgl.dmp.persistence.model.job.Filter;
 import de.avgl.dmp.persistence.service.BasicDMPJPAService;
 
 /**
- * 
+ *
  * @author tgaengler
  *
  */
@@ -34,7 +34,7 @@ public class FilterService extends BasicDMPJPAService<Filter> {
 		final String expression = object.getExpression();
 
 		updateObject.setExpression(expression);
-		
+
 		super.updateObjectInternal(object, updateObject, entityManager);
 	}
 

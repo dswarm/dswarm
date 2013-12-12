@@ -27,6 +27,8 @@ import org.culturegraph.mf.util.ResourceUtil;
 @Out(java.io.Reader.class)
 public class BOMResourceOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> implements Opener {
 
+	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(BOMResourceOpener.class);
+
 	private String encoding = "UTF-8";
 
 	/**
@@ -62,17 +64,15 @@ public class BOMResourceOpener extends DefaultObjectPipe<String, ObjectReceiver<
 			getReceiver().process(reader);
 
 
-		} catch (FileNotFoundException e) {
-			throw new MetafactureException(e);
-		} catch (UnsupportedEncodingException e) {
+		} catch (final FileNotFoundException | UnsupportedEncodingException e) {
 			throw new MetafactureException(e);
 		} finally {
 			try {
 				if (is != null) {
 					is.close();
 				}
-			} catch (IOException e) {
-				throw new MetafactureException(e);
+			} catch (final IOException e) {
+				LOG.error("IO error while closing file inputstream", e);
 			}
 		}
 	}

@@ -11,7 +11,7 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public class MemoryDbModel implements Model {
 
-	private Map<String, String>	keyValueMap;
+	private final Map<String, String>	keyValueMap;
 
 	public MemoryDbModel(final Map<String, String> keyValueMapArg) {
 

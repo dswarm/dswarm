@@ -12,7 +12,7 @@ public class AttributesResourceTest extends BasicResourceTest<AttributesResource
 
 	public AttributesResourceTest() {
 
-		super(Attribute.class, AttributeService.class, "attributes", "attribute.json", new AttributesResourceTestUtils());
+		super(Attribute.class, AttributeService.class, "attributes", "attribute1.json", new AttributesResourceTestUtils());
 	}
 
 	/**

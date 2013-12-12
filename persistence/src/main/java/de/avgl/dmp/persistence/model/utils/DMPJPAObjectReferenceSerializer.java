@@ -6,7 +6,6 @@ import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
@@ -15,8 +14,7 @@ import de.avgl.dmp.persistence.model.DMPJPAObject;
 public class DMPJPAObjectReferenceSerializer extends JsonSerializer<DMPJPAObject> {
 
 	@Override
-	public void serialize(final DMPJPAObject object, final JsonGenerator generator, final SerializerProvider provider) throws IOException,
-			JsonProcessingException {
+	public void serialize(final DMPJPAObject object, final JsonGenerator generator, final SerializerProvider provider) throws IOException {
 
 		if (object == null) {
 

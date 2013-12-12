@@ -1,16 +1,38 @@
 {
+    "id": 42,
     "name": "my data model",
     "description": "my data model description",
     "configuration": {
+        "id": 269,
         "name": "my configuration",
         "description": "configuration description",
-        "resources": [{}],
+        "resources": [{
+            "id": 350
+        }],
         "parameters": {
             "fileseparator": ";"
         }
     },
     "schema": {
+        "id": 81,
+        "name": "my schema",
         "attribute_paths": [{
+            "id": 243,
+            "attributes": [{
+                "id": "http://purl.org/dc/terms/created",
+                "name": "created"
+            }]
+        }, {
+            "id": 242,
+            "attributes": [{
+                "id": "http://purl.org/dc/terms/creator",
+                "name": "creator"
+            }, {
+                "id": "http://xmlns.com/foaf/0.1/name",
+                "name": "name"
+            }]
+        }, {
+            "id": 241,
             "attributes": [{
                 "id": "http://purl.org/dc/terms/title",
                 "name": "title"
@@ -28,16 +50,20 @@
         }
     },
     "data_resource": {
+        "id": 350,
         "name": "bla",
-        "type": "FILE",
         "description": "blubblub",
+        "type": "FILE",
         "attributes": {
             "path": "/path/to/file.end"
         },
         "configurations": [{
+            "id": 269,
             "name": "my configuration",
             "description": "configuration description",
-            "resources": [{}],
+            "resources": [{
+                "id": 350
+            }],
             "parameters": {
                 "fileseparator": ";"
             }

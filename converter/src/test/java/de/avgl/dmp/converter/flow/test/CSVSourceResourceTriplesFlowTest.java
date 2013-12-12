@@ -30,7 +30,7 @@ public class CSVSourceResourceTriplesFlowTest {
 		@SuppressWarnings("unchecked") final Matcher<String> predicateMatcher = anyOf(
 				equalTo("id"), equalTo("name"), equalTo("description"), equalTo("isbn"), equalTo("year"));
 
-		List<String> subjects = new ArrayList<String>();
+		final List<String> subjects = new ArrayList<String>();
 		for (int i = 1; i <= 19; i++) {
 			for (int j = 0; j < 5; j++) {
 				subjects.add(String.valueOf(i));
@@ -39,7 +39,7 @@ public class CSVSourceResourceTriplesFlowTest {
 		final Iterator<String> subjectsIterator = subjects.iterator();
 
 		final ImmutableList<Triple> triples = flow.apply("test_csv.csv", opener);
-		for (Triple triple : triples) {
+		for (final Triple triple : triples) {
 			assertThat(triple.getSubject(), equalTo(subjectsIterator.next()));
 			assertThat(triple.getPredicate(), predicateMatcher);
 			assertThat(triple.getObjectType(), equalTo(Triple.ObjectType.STRING));

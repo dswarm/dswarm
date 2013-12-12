@@ -7,7 +7,6 @@ import de.avgl.dmp.controller.resources.test.utils.AttributesResourceTestUtils;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.service.schema.AttributePathService;
-import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public class AttributePathsResourceTest extends BasicResourceTest<AttributePathsResourceTestUtils, AttributePathService, AttributePath, Long> {
 
@@ -29,15 +28,8 @@ public class AttributePathsResourceTest extends BasicResourceTest<AttributePaths
 	@Override
 	public void prepare() throws Exception {
 
-		final String attribute1JSONString = DMPPersistenceUtil.getResourceAsString("attribute.json");
-		final Attribute expectedAttribute1 = objectMapper.readValue(attribute1JSONString, Attribute.class);
-
-		actualAttribute1 = attributeResourceTestUtils.createObject(attribute1JSONString, expectedAttribute1);
-
-		final String attribute2JSONString = DMPPersistenceUtil.getResourceAsString("attribute2.json");
-		final Attribute expectedAttribute2 = objectMapper.readValue(attribute2JSONString, Attribute.class);
-
-		actualAttribute2 = attributeResourceTestUtils.createObject(attribute2JSONString, expectedAttribute2);
+		actualAttribute1 = attributeResourceTestUtils.createObject("attribute1.json");
+		actualAttribute2 = attributeResourceTestUtils.createObject("attribute2.json");
 
 		super.prepare();
 	}

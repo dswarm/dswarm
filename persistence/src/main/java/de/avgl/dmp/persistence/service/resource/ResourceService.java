@@ -12,19 +12,17 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
-import de.avgl.dmp.persistence.service.BasicIDJPAService;
+import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
 
 /**
- * 
  * @author tgaengler
- *
  */
-public class ResourceService extends BasicIDJPAService<Resource> {
+public class ResourceService extends ExtendedBasicDMPJPAService<Resource> {
 
 	private final Provider<ConfigurationService>	configurationServiceProvider;
 
 	@Inject
-	public ResourceService(Provider<EntityManager> entityManagerProvider, Provider<ConfigurationService> configurationServiceProvider) {
+	public ResourceService(final Provider<EntityManager> entityManagerProvider, final Provider<ConfigurationService> configurationServiceProvider) {
 
 		super(Resource.class, entityManagerProvider);
 		this.configurationServiceProvider = configurationServiceProvider;
@@ -40,13 +38,11 @@ public class ResourceService extends BasicIDJPAService<Resource> {
 	protected void updateObjectInternal(final Resource object, final Resource updateObject, final EntityManager entityManager)
 			throws DMPPersistenceException {
 
+		super.updateObjectInternal(object, updateObject, entityManager);
+
 		final Set<Configuration> configurations = object.getConfigurations();
 
 		updateObject.setConfigurations(configurations);
-
-		final String description = object.getDescription();
-
-		updateObject.setDescription(description);
 
 		final ResourceType type = object.getType();
 
@@ -55,11 +51,6 @@ public class ResourceService extends BasicIDJPAService<Resource> {
 		final ObjectNode attributes = object.getAttributes();
 
 		updateObject.setAttributes(attributes);
-
-		if (object.getName() != null) {
-
-			updateObject.setName(object.getName());
-		}
 	}
 
 	@Override

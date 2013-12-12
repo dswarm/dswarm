@@ -90,6 +90,16 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends
 		}
 	}
 	
+	public POJOCLASS createObject(final String objectJSONFileName) throws Exception {
+		
+		final String objectJSONString = DMPPersistenceUtil.getResourceAsString(objectJSONFileName);
+		final POJOCLASS expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
+
+		final POJOCLASS actualObject = createObject(objectJSONString, expectedObject);
+		
+		return actualObject;
+	}
+	
 	public POJOCLASS createObject(final String objectJSONString, final POJOCLASS expectedObject) throws Exception {
 
 		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)

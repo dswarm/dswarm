@@ -5,7 +5,7 @@ import org.culturegraph.mf.framework.StreamReceiver;
 
 
 public interface Reader<RECORDTYPE> extends ObjectPipe<java.io.Reader, StreamReceiver>  {
-	
+
 	/**
 	 * Reads a single record
 	 * @param entry one record

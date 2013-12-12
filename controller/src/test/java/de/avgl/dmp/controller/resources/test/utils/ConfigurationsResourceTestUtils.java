@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 
-public class ConfigurationsResourceTestUtils extends BasicResourceTestUtils<ConfigurationService, Configuration, Long> {
+public class ConfigurationsResourceTestUtils extends ExtendedBasicDMPResourceTestUtils<ConfigurationService, Configuration> {
 
 	public ConfigurationsResourceTestUtils() {
 
@@ -20,27 +20,14 @@ public class ConfigurationsResourceTestUtils extends BasicResourceTestUtils<Conf
 
 	@Override
 	public void compareObjects(final Configuration expectedObject, final Configuration actualObject) {
-		
+
 		super.compareObjects(expectedObject, actualObject);
-		
+
 		compareConfigurations(expectedObject, actualObject);
 	}
-	
+
 	private void compareConfigurations(final Configuration expectedConfiguration, final Configuration actualConfiguration) {
 
-		if (expectedConfiguration.getName() != null) {
-
-			Assert.assertNotNull("the configuration name shouldn't be null", actualConfiguration.getName());
-			Assert.assertEquals("the configuration names should be equal", expectedConfiguration.getName(), actualConfiguration.getName());
-		}
-
-		if (expectedConfiguration.getDescription() != null) {
-
-			Assert.assertNotNull("the configuration description shouldn't be null", actualConfiguration.getDescription());
-			Assert.assertEquals("the configuration descriptions should be equal", expectedConfiguration.getDescription(),
-					actualConfiguration.getDescription());
-		}
-		
 		Assert.assertNotNull("parameters are null", actualConfiguration.getParameters());
 		Assert.assertEquals("parameters are not equal", expectedConfiguration.getParameters(), actualConfiguration.getParameters());
 
@@ -50,7 +37,7 @@ public class ConfigurationsResourceTestUtils extends BasicResourceTestUtils<Conf
 
 		final ObjectNode responseParameters = actualConfiguration.getParameters();
 
-		Assert.assertNotNull("response parameters shoudln't be null", responseParameters);
+		Assert.assertNotNull("response parameters shouldn't be null", responseParameters);
 
 		while (parameterEntriesIter.hasNext()) {
 

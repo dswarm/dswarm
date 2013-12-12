@@ -1,7 +1,5 @@
 package de.avgl.dmp.persistence.service;
 
-import com.google.inject.name.Named;
-
 /**
  * @author tgaengler
  */

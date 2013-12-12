@@ -7,10 +7,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Provider;
@@ -35,9 +33,6 @@ public class AttributesResource extends BasicResource<AttributeService, Attribut
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributesResource.class);
 
-	@Context
-	UriInfo											uri;
-
 	@Inject
 	public AttributesResource(final Provider<AttributeService> attributeServiceProviderArg, final ObjectMapper objectMapper, final DMPStatus dmpStatus) {
 
@@ -52,7 +47,7 @@ public class AttributesResource extends BasicResource<AttributeService, Attribut
 	public Response getObject(@ApiParam(value = "attribute identifier", required = true) @PathParam("id") final String id) throws DMPControllerException {
 
 		//return super.getObject(id);
-		
+
 		return Response.status(505).build();
 	}
 
@@ -85,7 +80,7 @@ public class AttributesResource extends BasicResource<AttributeService, Attribut
 	}
 
 	@Override
-	protected Attribute createObject(Attribute objectFromJSON, AttributeService persistenceService) throws DMPPersistenceException {
+	protected Attribute createObject(final Attribute objectFromJSON, final AttributeService persistenceService) throws DMPPersistenceException {
 
 		return persistenceService.createObject(objectFromJSON.getId());
 	}

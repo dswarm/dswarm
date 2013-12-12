@@ -10,7 +10,7 @@ public class BaseMemoryServiceImpl<A, B, C> {
 	private final MemoryDb<A, B, C> db;
 
 	protected BaseMemoryServiceImpl() {
-		db = new MemoryDbImpl<A, B, C>();
+		db = new MemoryDbImpl<>();
 	}
 
 	public void createObject(final A id1, final B id2, final C schema) {
