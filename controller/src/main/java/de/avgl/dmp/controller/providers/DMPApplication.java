@@ -12,6 +12,9 @@ import com.wordnik.swagger.jersey.listing.ApiListingResourceJSON;
 import com.wordnik.swagger.jersey.listing.JerseyApiDeclarationProvider;
 import com.wordnik.swagger.jersey.listing.JerseyResourceListingProvider;
 
+import de.avgl.dmp.controller.providers.filter.CorsResponseFilter;
+import de.avgl.dmp.controller.providers.handler.ExceptionHandler;
+import de.avgl.dmp.controller.providers.handler.WebApplicationExceptionHandler;
 import de.avgl.dmp.controller.servlet.DMPInjector;
 
 @SuppressWarnings("UnusedDeclaration")
@@ -21,9 +24,11 @@ class DMPApplication extends ResourceConfig {
 	public DMPApplication(final ServiceLocator serviceLocator) {
 
 		packages("de.avgl.dmp.controller.resources", "com.wordnik.swagger.jersey.listing");
+		registerClasses(
+				ExceptionHandler.class,
+				WebApplicationExceptionHandler.class,
+				CorsResponseFilter.class);
 		register(MultiPartFeature.class);
-		register(ExceptionHandler.class);
-		register(CorsResponseFilter.class);
 
 		// swagger
 		register(ApiListingResourceJSON.class);

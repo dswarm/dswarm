@@ -1,4 +1,4 @@
-package de.avgl.dmp.controller.providers;
+package de.avgl.dmp.controller.providers.filter;
 
 import java.io.IOException;
 import javax.annotation.Priority;
@@ -14,7 +14,7 @@ import static com.google.common.net.HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN;
 import static com.google.common.net.HttpHeaders.X_POWERED_BY;
 
 @Priority(Priorities.HEADER_DECORATOR)
-class CorsResponseFilter implements ContainerResponseFilter {
+public class CorsResponseFilter implements ContainerResponseFilter {
 
 	@Override
 	public void filter(final ContainerRequestContext requestContext, final ContainerResponseContext responseContext) throws IOException {
