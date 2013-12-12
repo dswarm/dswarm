@@ -14,11 +14,14 @@ import javax.ws.rs.core.UriInfo;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.codahale.metrics.Timer;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Provider;
 
 import de.avgl.dmp.controller.DMPControllerException;
+import de.avgl.dmp.controller.DMPJsonException;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.DMPObject;
@@ -247,6 +250,9 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 		try {
 
 			objectFromJSON = objectMapper.readValue(objectJSONString, clasz);
+		} catch (final JsonMappingException je) {
+
+			throw new DMPJsonException("something went wrong while deserializing the " + className + " JSON string", je);
 		} catch (final IOException e) {
 
 			LOG.debug("something went wrong while deserializing the " + className + " JSON string");
