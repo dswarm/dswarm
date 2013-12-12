@@ -24,4 +24,14 @@ public class DMPControllerException extends DMPException {
 		super(exception);
 	}
 
+	/**
+	 * Creates a new DMP exception with the given exception message
+	 * and a cause.
+	 *
+	 * @param message the exception message
+	 * @param cause   a previously thrown exception, causing this one
+	 */
+	public DMPControllerException(final String message, final Throwable cause) {
+		super(message, cause);
+	}
 }

@@ -13,6 +13,7 @@ import com.wordnik.swagger.jersey.listing.JerseyApiDeclarationProvider;
 import com.wordnik.swagger.jersey.listing.JerseyResourceListingProvider;
 
 import de.avgl.dmp.controller.providers.filter.CorsResponseFilter;
+import de.avgl.dmp.controller.providers.handler.DMPJsonExceptionHandler;
 import de.avgl.dmp.controller.providers.handler.ExceptionHandler;
 import de.avgl.dmp.controller.providers.handler.WebApplicationExceptionHandler;
 import de.avgl.dmp.controller.servlet.DMPInjector;
@@ -25,6 +26,7 @@ class DMPApplication extends ResourceConfig {
 
 		packages("de.avgl.dmp.controller.resources", "com.wordnik.swagger.jersey.listing");
 		registerClasses(
+				DMPJsonExceptionHandler.class,
 				ExceptionHandler.class,
 				WebApplicationExceptionHandler.class,
 				CorsResponseFilter.class);
