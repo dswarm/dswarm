@@ -9,7 +9,29 @@
             "id": 2,
             "name": "my transformation (component)",
             "function": {
-                "id": 2
+                "type": "Transformation",
+                "id": 274,
+                "name": "my transformation",
+                "description": "transformation which just makes use of one function",
+                "parameters": ["transformationInputString"],
+                "components": [{
+                    "id": 1,
+                    "name": "my trim component",
+                    "function": {
+                        "type": "Function",
+                        "id": 273,
+                        "name": "trim",
+                        "description": "trims leading and trailing whitespaces from a given string",
+                        "parameters": ["inputString"],
+                        "type": "Function"
+                    },
+                    "input_components": null,
+                    "output_components": null,
+                    "parameter_mappings": {
+                        "inputString": "previousComponent.outputString"
+                    }
+                }],
+                "type": "Transformation"
             },
             "input_components": null,
             "output_components": null,
@@ -20,11 +42,17 @@
         },
         "input_attribute_paths": [{
             "id": 1,
-            "attribute_path": "http://purl.org/dc/terms/title"
+            "attributes": [{
+                "id": "http://purl.org/dc/terms/title",
+                "name": "title"
+            }]
         }],
         "output_attribute_path": {
             "id": 2,
-            "attribute_path": "http://www.w3.org/2000/01/rdf-schema#label"
+            "attributes": [{
+                "id": "http://www.w3.org/2000/01/rdf-schema#label",
+                "name": "label"
+            }]
         }
     }, {
         "id": 2,
@@ -33,7 +61,188 @@
             "id": 9,
             "name": "my transformation 2 (component)",
             "function": {
-                "id": 8
+                "type": "Transformation",
+                "id": 280,
+                "name": "my transformation 2",
+                "description": "transformation which makes use of three functions (two transformations and one funcion)",
+                "parameters": ["firstName", "familyName"],
+                "components": [{
+                    "id": 7,
+                    "name": "prepare family name",
+                    "function": {
+                        "type": "Transformation",
+                        "id": 278,
+                        "name": "my transformation",
+                        "description": "transformation which makes use of three functions",
+                        "parameters": ["transformationInputString"],
+                        "components": [{
+                            "id": 3,
+                            "name": "my replace component",
+                            "function": {
+                                "type": "Function",
+                                "id": 275,
+                                "name": "replace",
+                                "description": "replace certain parts of a given string that matches a certain regex",
+                                "parameters": ["inputString", "regex", "replaceString"],
+                                "type": "Function"
+                            },
+                            "input_components": null,
+                            "output_components": [{
+                                "id": 5
+                            }],
+                            "parameter_mappings": {
+                                "inputString": "previousComponent.outputString",
+                                "regex": "\\.",
+                                "replaceString": ":"
+                            }
+                        }, {
+                            "id": 4,
+                            "name": "my lower case component",
+                            "function": {
+                                "type": "Function",
+                                "id": 276,
+                                "name": "lower_case",
+                                "description": "lower cases all characters of a given string",
+                                "parameters": ["inputString"],
+                                "type": "Function"
+                            },
+                            "input_components": [{
+                                "id": 5
+                            }],
+                            "output_components": null,
+                            "parameter_mappings": {
+                                "inputString": "previousComponent.outputString"
+                            }
+                        }, {
+                            "id": 5,
+                            "name": "my trim component",
+                            "function": {
+                                "type": "Function",
+                                "id": 277,
+                                "name": "trim",
+                                "description": "trims leading and trailing whitespaces from a given string",
+                                "parameters": ["inputString"],
+                                "type": "Function"
+                            },
+                            "input_components": [{
+                                "id": 3
+                            }],
+                            "output_components": [{
+                                "id": 4
+                            }],
+                            "parameter_mappings": {
+                                "inputString": "previousComponent.outputString"
+                            }
+                        }],
+                        "type": "Transformation"
+                    },
+                    "input_components": null,
+                    "output_components": [{
+                        "id": 8
+                    }],
+                    "parameter_mappings": {
+                        "transformationInputString": "familyName"
+                    }
+                }, {
+                    "id": 8,
+                    "name": "full name",
+                    "function": {
+                        "type": "Function",
+                        "id": 279,
+                        "name": "concat",
+                        "description": "concatenates two given string",
+                        "parameters": ["firstString", "secondString"],
+                        "type": "Function"
+                    },
+                    "input_components": [{
+                        "id": 6
+                    }, {
+                        "id": 7
+                    }],
+                    "output_components": null,
+                    "parameter_mappings": {
+                        "firstString": "6.outputVariable",
+                        "secondString": "7.outputVariable"
+                    }
+                }, {
+                    "id": 6,
+                    "name": "prepare first name",
+                    "function": {
+                        "type": "Transformation",
+                        "id": 278,
+                        "name": "my transformation",
+                        "description": "transformation which makes use of three functions",
+                        "parameters": ["transformationInputString"],
+                        "components": [{
+                            "id": 3,
+                            "name": "my replace component",
+                            "function": {
+                                "type": "Function",
+                                "id": 275,
+                                "name": "replace",
+                                "description": "replace certain parts of a given string that matches a certain regex",
+                                "parameters": ["inputString", "regex", "replaceString"],
+                                "type": "Function"
+                            },
+                            "input_components": null,
+                            "output_components": [{
+                                "id": 5
+                            }],
+                            "parameter_mappings": {
+                                "inputString": "previousComponent.outputString",
+                                "regex": "\\.",
+                                "replaceString": ":"
+                            }
+                        }, {
+                            "id": 4,
+                            "name": "my lower case component",
+                            "function": {
+                                "type": "Function",
+                                "id": 276,
+                                "name": "lower_case",
+                                "description": "lower cases all characters of a given string",
+                                "parameters": ["inputString"],
+                                "type": "Function"
+                            },
+                            "input_components": [{
+                                "id": 5
+                            }],
+                            "output_components": null,
+                            "parameter_mappings": {
+                                "inputString": "previousComponent.outputString"
+                            }
+                        }, {
+                            "id": 5,
+                            "name": "my trim component",
+                            "function": {
+                                "type": "Function",
+                                "id": 277,
+                                "name": "trim",
+                                "description": "trims leading and trailing whitespaces from a given string",
+                                "parameters": ["inputString"],
+                                "type": "Function"
+                            },
+                            "input_components": [{
+                                "id": 3
+                            }],
+                            "output_components": [{
+                                "id": 4
+                            }],
+                            "parameter_mappings": {
+                                "inputString": "previousComponent.outputString"
+                            }
+                        }],
+                        "type": "Transformation"
+                    },
+                    "input_components": null,
+                    "output_components": [{
+                        "id": 8
+                    }],
+                    "parameter_mappings": {
+                        "transformationInputString": "firstName"
+                    }
+                }],
+                "type": "Transformation"
             },
             "input_components": null,
             "output_components": null,
@@ -45,18 +254,37 @@
         },
         "input_attribute_paths": [{
             "id": 3,
-            "attribute_path": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/firstName"
+            "attributes": [{
+                "id": "http://purl.org/dc/terms/creator",
+                "name": "creator"
+            }, {
+                "id": "http://xmlns.com/foaf/0.1/firstName",
+                "name": "firstName"
+            }]
         }, {
             "id": 4,
-            "attribute_path": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/familyName"
+            "attributes": [{
+                "id": "http://purl.org/dc/terms/creator",
+                "name": "creator"
+            }, {
+                "id": "http://xmlns.com/foaf/0.1/familyName",
+                "name": "familyName"
+            }]
         }],
         "output_attribute_path": {
             "id": 5,
-            "attribute_path": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/name"
+            "attributes": [{
+                "id": "http://purl.org/dc/terms/creator",
+                "name": "creator"
+            }, {
+                "id": "http://xmlns.com/foaf/0.1/name",
+                "name": "name"
+            }]
         }
     }],
     "functions": [{
-        "id": 9,
+        "type": "Function",
+        "id": 281,
         "name": "trim",
         "description": "trims leading and trailing whitespaces from a given string",
         "parameters": ["inputString"],
@@ -67,13 +295,71 @@
         "name": "my data model",
         "description": "my data model description",
         "configuration": {
-            "id": 1
+            "id": 1,
+            "name": "my configuration",
+            "description": "configuration description",
+            "resources": [{
+                "id": 1
+            }],
+            "parameters": {
+                "fileseparator": ";"
+            }
         },
         "schema": {
-            "id": 1
+            "id": 1,
+            "name": "my schema",
+            "attribute_paths": [{
+                "id": 7,
+                "attributes": [{
+                    "id": "http://purl.org/dc/terms/creator",
+                    "name": "creator"
+                }, {
+                    "id": "http://xmlns.com/foaf/0.1/name",
+                    "name": "name"
+                }]
+            }, {
+                "id": 8,
+                "attributes": [{
+                    "id": "http://purl.org/dc/terms/created",
+                    "name": "created"
+                }]
+            }, {
+                "id": 6,
+                "attributes": [{
+                    "id": "http://purl.org/dc/terms/title",
+                    "name": "title"
+                }, {
+                    "id": "http://purl.org/dc/terms/hasPart",
+                    "name": "hasPart"
+                }, {
+                    "id": "http://purl.org/dc/terms/title",
+                    "name": "title"
+                }]
+            }],
+            "record_class": {
+                "id": "http://purl.org/ontology/bibo/Document",
+                "name": "document"
+            }
         },
         "data_resource": {
-            "id": 1
+            "id": 1,
+            "name": "bla",
+            "description": "blubblub",
+            "type": "FILE",
+            "attributes": {
+                "path": "/path/to/file.end"
+            },
+            "configurations": [{
+                "id": 1,
+                "name": "my configuration",
+                "description": "configuration description",
+                "resources": [{
+                    "id": 1
+                }],
+                "parameters": {
+                    "fileseparator": ";"
+                }
+            }]
         }
     },
     "output_data_model": {
@@ -81,7 +367,40 @@
         "name": "my output data model",
         "description": "my output data model description",
         "schema": {
-            "id": 2
+            "id": 2,
+            "name": "my schema",
+            "attribute_paths": [{
+                "id": 11,
+                "attributes": [{
+                    "id": "http://purl.org/dc/terms/created",
+                    "name": "created"
+                }]
+            }, {
+                "id": 9,
+                "attributes": [{
+                    "id": "http://purl.org/dc/terms/title",
+                    "name": "title"
+                }, {
+                    "id": "http://purl.org/dc/terms/hasPart",
+                    "name": "hasPart"
+                }, {
+                    "id": "http://purl.org/dc/terms/title",
+                    "name": "title"
+                }]
+            }, {
+                "id": 10,
+                "attributes": [{
+                    "id": "http://purl.org/dc/terms/creator",
+                    "name": "creator"
+                }, {
+                    "id": "http://xmlns.com/foaf/0.1/name",
+                    "name": "name"
+                }]
+            }],
+            "record_class": {
+                "id": "http://purl.org/ontology/bibo/Document",
+                "name": "document"
+            }
         }
     }
 }

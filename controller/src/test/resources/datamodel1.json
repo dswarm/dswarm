@@ -1,0 +1,8 @@
+{
+    "id": 1,
+    "name": "my output data model",
+    "description": "my output data model description",
+    "schema": {
+        "id": 1
+    }
+}
