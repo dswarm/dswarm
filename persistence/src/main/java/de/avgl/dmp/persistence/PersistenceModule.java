@@ -57,20 +57,19 @@ public class PersistenceModule extends AbstractModule {
 
 		bind(JsonToPojoMapper.class);
 
-		// those bindings below are not really necessary
-		bind(ResourceService.class); // .in(Scopes.SINGLETON);
-		bind(ConfigurationService.class); // .in(Scopes.SINGLETON);
-		bind(AttributeService.class);// .in(Scopes.SINGLETON);
-		bind(AttributePathService.class);// .in(Scopes.SINGLETON);
-		bind(ClaszService.class);// .in(Scopes.SINGLETON);
-		bind(SchemaService.class);// .in(Scopes.SINGLETON);
-		bind(FunctionService.class);// .in(Scopes.SINGLETON);
-		bind(ComponentService.class);// .in(Scopes.SINGLETON);
-		bind(TransformationService.class);// .in(Scopes.SINGLETON);
-		bind(DataModelService.class);// .in(Scopes.SINGLETON);
-		bind(MappingService.class);// .in(Scopes.SINGLETON);
-		bind(FilterService.class);// .in(Scopes.SINGLETON);
-		bind(ProjectService.class);// .in(Scopes.SINGLETON);
+		bind(ResourceService.class).in(Scopes.SINGLETON);
+		bind(ConfigurationService.class).in(Scopes.SINGLETON);
+		bind(AttributeService.class).in(Scopes.SINGLETON);
+		bind(AttributePathService.class).in(Scopes.SINGLETON);
+		bind(ClaszService.class).in(Scopes.SINGLETON);
+		bind(SchemaService.class).in(Scopes.SINGLETON);
+		bind(FunctionService.class).in(Scopes.SINGLETON);
+		bind(ComponentService.class).in(Scopes.SINGLETON);
+		bind(TransformationService.class).in(Scopes.SINGLETON);
+		bind(DataModelService.class).in(Scopes.SINGLETON);
+		bind(MappingService.class).in(Scopes.SINGLETON);
+		bind(FilterService.class).in(Scopes.SINGLETON);
+		bind(ProjectService.class).in(Scopes.SINGLETON);
 
 		bind(InternalServiceFactory.class).to(InternalServiceFactoryImpl.class).in(Scopes.SINGLETON);
 	}

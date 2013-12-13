@@ -20,6 +20,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.collect.Sets;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
 import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 

@@ -1,0 +1,13 @@
+{
+    "name": "my task",
+    "description": "my task description",
+    "job": {
+        "id": 1
+    },
+    "input_data_model": {
+        "id": 1
+    },
+    "output_data_model": {
+        "id": 2
+    }
+}

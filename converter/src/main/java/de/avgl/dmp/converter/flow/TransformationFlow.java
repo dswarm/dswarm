@@ -3,14 +3,11 @@ package de.avgl.dmp.converter.flow;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.util.Iterator;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.collect.ImmutableList;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
@@ -21,11 +18,17 @@ import org.culturegraph.mf.stream.sink.ObjectJavaIoWriter;
 import org.culturegraph.mf.stream.source.ResourceOpener;
 import org.culturegraph.mf.stream.source.StringReader;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.ImmutableList;
+
+import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.mf.stream.RecordAwareJsonEncoder;
 import de.avgl.dmp.converter.mf.stream.reader.JsonNodeReader;
+import de.avgl.dmp.converter.morph.MorphScriptBuilder;
 import de.avgl.dmp.converter.pipe.StreamJsonCollapser;
 import de.avgl.dmp.converter.pipe.StreamUnflattener;
 import de.avgl.dmp.converter.reader.QucosaReader;
+import de.avgl.dmp.persistence.model.job.Task;
 import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.model.types.Tuple;
 
@@ -182,7 +185,7 @@ public class TransformationFlow {
 //		return fromString(morphScriptString);
 //	}
 
-	public static TransformationFlow fromTransformation(final Transformation transformation) throws IOException {
+	public static TransformationFlow fromTransformation(final Transformation transformation) {
 
 		final ImmutableList.Builder<Transformation> transformationsBuilder = ImmutableList.builder();
 
@@ -191,6 +194,13 @@ public class TransformationFlow {
 		final String morphScriptString = null;
 
 				//new MorphScriptBuilder().apply(transformationsBuilder.build()).toString();
+
+		return fromString(morphScriptString);
+	}
+	
+	public static TransformationFlow fromTask(final Task task) throws DMPConverterException {
+		
+		final String morphScriptString = new MorphScriptBuilder().apply(task).toString();
 
 		return fromString(morphScriptString);
 	}
