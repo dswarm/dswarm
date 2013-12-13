@@ -13,6 +13,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -28,6 +29,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -318,15 +320,38 @@ public class MorphScriptBuilder {
 
 				break;
 			case Transformation:
+				
+				// TODO: process simple input -> output mapping
 
 				final Transformation transformation = (Transformation) transformationFunction;
 
-				for (final Component component : transformation.getComponents()) {
+				// determine start component(s) ( = a component that has the input variable as value of a parameter mapping) and
+				// follow the output components
+				final Set<Component> components = transformation.getComponents();
 
-					final Element comp = doc.createElement(component.getFunction().getName());
+				Component sourceComponent = null;
 
-					createParameters(component.getParameterMappings(), comp);
+				for (final Component component : components) {
+
+					if (component.getParameterMappings().containsValue(inputVariable)) {
+
+						sourceComponent = component;
+					}
+				}
+
+				Component processingComponent = sourceComponent;
+				Component previousProcessingComponent = null;
+
+				while (processingComponent != null) {
+
+					final Element comp = doc.createElement(processingComponent.getFunction().getName());
+
+					createParameters(processingComponent.getParameterMappings(), comp);
 					data.appendChild(comp);
+
+					previousProcessingComponent = processingComponent;
+					// TODO: only one output component for now
+					processingComponent = previousProcessingComponent.getOutputComponents().iterator().next();
 				}
 
 				break;
@@ -335,36 +360,51 @@ public class MorphScriptBuilder {
 		return data;
 	}
 
-	private void createParameters(final Map<String, String> parameterMapping, final Element component) {
-		
-//		if (parameters != null) {
-//			for (final Parameter parameter : parameters.values()) {
-//				if (parameter.getName() != null) {
-//					if (parameter.getData() != null) {
-//						final Attr param = doc.createAttribute(parameter.getName());
-//						param.setValue(parameter.getData());
-//						component.setAttributeNode(param);
-//					} else if (parameter.isRepeat()) {
-//						final Element subEl = doc.createElement(parameter.getName());
-//						component.appendChild(subEl);
-//						createParameters(parameter.getParameters(), subEl);
-//					}
-//				}
-//			}
-//		}
-		
-		// TODO:
+	private void createParameters(final Map<String, String> parameterMappings, final Element component) {
+
+		// TODO: parse parameter values that can be simple string values, JSON objects or JSON arrays (?)
+		// => for now we expect only simple string values
+
+		if (parameterMappings != null) {
+
+			for (final Entry<String, String> parameterMapping : parameterMappings.entrySet()) {
+
+				if (parameterMapping.getKey() != null) {
+
+					if (parameterMapping.getValue() != null) {
+
+						final Attr param = doc.createAttribute(parameterMapping.getKey());
+						param.setValue(parameterMapping.getValue());
+						component.setAttributeNode(param);
+					}
+				}
+			}
+
+			// for (final Parameter parameter : parameters.values()) {
+			// if (parameter.getName() != null) {
+			// if (parameter.getData() != null) {
+			// final Attr param = doc.createAttribute(parameter.getName());
+			// param.setValue(parameter.getData());
+			// component.setAttributeNode(param);
+			// } else if (parameter.isRepeat()) {
+			// final Element subEl = doc.createElement(parameter.getName());
+			// component.appendChild(subEl);
+			// createParameters(parameter.getParameters(), subEl);
+			// }
+			// }
+			// }
+		}
 	}
 
-//	private Iterable<Element> createVarDefinitions(final Transformation transformation) {
-//		
-//		final ArrayList<Element> vars = Lists.newArrayListWithCapacity(4);
-//
-//		vars.add(varDefinition("source.resource.id", String.valueOf(transformation.getSource().getResourceId())));
-//		vars.add(varDefinition("source.configuration.id", String.valueOf(transformation.getSource().getConfigurationId())));
-//		vars.add(varDefinition("target.resource.id", String.valueOf(transformation.getTarget().getResourceId())));
-//		vars.add(varDefinition("target.configuration.id", String.valueOf(transformation.getTarget().getConfigurationId())));
-//
-//		return vars;
-//	}
+	// private Iterable<Element> createVarDefinitions(final Transformation transformation) {
+	//
+	// final ArrayList<Element> vars = Lists.newArrayListWithCapacity(4);
+	//
+	// vars.add(varDefinition("source.resource.id", String.valueOf(transformation.getSource().getResourceId())));
+	// vars.add(varDefinition("source.configuration.id", String.valueOf(transformation.getSource().getConfigurationId())));
+	// vars.add(varDefinition("target.resource.id", String.valueOf(transformation.getTarget().getResourceId())));
+	// vars.add(varDefinition("target.configuration.id", String.valueOf(transformation.getTarget().getConfigurationId())));
+	//
+	// return vars;
+	// }
 }
