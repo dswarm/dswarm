@@ -176,6 +176,7 @@
     create table COMPONENT (
         ID bigint not null auto_increment,
         NAME varchar(255),
+        DESCRIPTION VARCHAR(4000),
         PARAMETER_MAPPINGS VARCHAR(4000),
         FUNCTION bigint,
         TRANSFORMATION bigint,

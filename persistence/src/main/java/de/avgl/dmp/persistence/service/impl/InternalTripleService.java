@@ -141,6 +141,7 @@ public class InternalTripleService implements InternalService {
 			throw new DMPPersistenceException("couldn't find resource '" + resourceId + "' to retrieve resource uri from");
 		}
 
+		// TODO: this needs to be refactored to "retrieve records by record class (from data model -> schema)"
 		final JsonNode valueNode = resource.getAttribute("uri");
 
 		if (valueNode == null) {

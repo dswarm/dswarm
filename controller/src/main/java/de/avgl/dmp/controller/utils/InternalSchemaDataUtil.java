@@ -236,7 +236,7 @@ public class InternalSchemaDataUtil {
 	private Iterator<Tuple<String, JsonNode>> dataIterator(final Iterator<Map.Entry<String, Model>> triples) {
 		return new AbstractIterator<Tuple<String, JsonNode>>() {
 
-			//TODO: where to to this?
+			//TODO: where to to this? => [@tgaengler]: In my opinion, this needs to be done, when the input data model will created, i.e., that you will only have valid data models here
 			private JsonNode injectDataType(final JsonNode jsonNode) {
 				final UnmodifiableIterator<String> typeKeys = Iterators.filter(jsonNode.fieldNames(), new Predicate<String>() {
 					@Override

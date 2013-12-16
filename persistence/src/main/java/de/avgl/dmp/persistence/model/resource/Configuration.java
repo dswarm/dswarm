@@ -41,9 +41,9 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	/**
 	 *
 	 */
-	private static final long						serialVersionUID		= 1L;
+	private static final long						serialVersionUID	= 1L;
 
-	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(Configuration.class);
+	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(Configuration.class);
 
 	/**
 	 * The related resources.
@@ -146,7 +146,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Adds a new resource to the collection of resources of this configuration.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param resource a new export definition revision
 	 */
 	public void addResource(final Resource resource) {
@@ -169,7 +169,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Replaces an existing resource, i.e., the resource with the same identifier will be replaced.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param resource an existing, updated resource
 	 */
 	public void replaceResource(final Resource resource) {
@@ -196,7 +196,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Removes an existing resource from the collection of resources of this configuration.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param resource an existing resource that should be removed
 	 */
 	public void removeResource(final Resource resource) {
@@ -211,7 +211,10 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 
 	private void refreshParametersString() {
 
-		parametersString = parameters.toString();
+		if (parameters != null) {
+
+			parametersString = parameters.toString();
+		}
 	}
 
 	private void initParameters(final boolean fromScratch) {

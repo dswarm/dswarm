@@ -81,9 +81,9 @@ public class TransformationFlow {
 
 	public String apply(final Iterator<Tuple<String,JsonNode>> tuples, final ObjectPipe<Iterator<Tuple<String,JsonNode>>, StreamReceiver> opener) {
 
-		final String recordDummy = "record";
+		//final String recordDummy = "record";
 
-		final StreamUnflattener unflattener = new StreamUnflattener(recordDummy);
+		final StreamUnflattener unflattener = new StreamUnflattener();
 		final StreamJsonCollapser collapser = new StreamJsonCollapser();
 
 		final StringWriter stringWriter = new StringWriter();

@@ -141,27 +141,27 @@ public class TasksResource {
 		return buildResponse(result);
 	}
 
-	@Path("/demo")
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response executeJobDemo(final String jsonObjectString) throws IOException, DMPConverterException {
-
-		// TODO: fixme
-
-		// final Job job;
-		// try {
-		// job = pojoMapperProvider.get().toJob(jsonObjectString);
-		// } catch (DMPPersistenceException e) {
-		// throw new DMPConverterException(e.getMessage());
-		// }
-		//
-		// final TransformationFlow flow = TransformationFlow.fromJob(job);
-		final String result = null;
-		// flow.applyResourceDemo(TransformationFlow.DEFAULT_RESOURCE_PATH);
-
-		return buildResponse(result);
-	}
+//	@Path("/demo")
+//	@POST
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Response executeJobDemo(final String jsonObjectString) throws IOException, DMPConverterException {
+//
+//		// TODO: fixme
+//
+//		// final Job job;
+//		// try {
+//		// job = pojoMapperProvider.get().toJob(jsonObjectString);
+//		// } catch (DMPPersistenceException e) {
+//		// throw new DMPConverterException(e.getMessage());
+//		// }
+//		//
+//		// final TransformationFlow flow = TransformationFlow.fromJob(job);
+//		final String result = null;
+//		// flow.applyResourceDemo(TransformationFlow.DEFAULT_RESOURCE_PATH);
+//
+//		return buildResponse(result);
+//	}
 
 	// END FROM JobsResource
 

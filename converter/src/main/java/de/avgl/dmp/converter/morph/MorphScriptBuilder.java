@@ -283,32 +283,33 @@ public class MorphScriptBuilder {
 		final String inputAttributePath = mapping.getInputAttributePaths().iterator().next().toAttributePath();
 		final String outputAttributePath = mapping.getOutputAttributePath().toAttributePath();
 
-		final Map<String, String> parameterMappings = mapping.getTransformation().getParameterMappings();
-
-		String inputVariable = null;
-		String outputVariable = null;
-
-		// determine input and output variables from parameter mappings
-		for (final Entry<String, String> parameterMapping : parameterMappings.entrySet()) {
-
-			if (inputAttributePath.equals(parameterMapping.getValue())) {
-
-				inputVariable = parameterMapping.getKey();
-			}
-
-			if (outputAttributePath.equals(parameterMapping.getValue())) {
-
-				outputVariable = parameterMapping.getKey();
-			}
-		}
+		// TODO: this is for the processing algorithm later
+		// final Map<String, String> parameterMappings = mapping.getTransformation().getParameterMappings();
+		//
+		// String inputVariable = null;
+		// String outputVariable = null;
+		//
+		// // determine input and output variables from parameter mappings
+		// for (final Entry<String, String> parameterMapping : parameterMappings.entrySet()) {
+		//
+		// if (inputAttributePath.equals(parameterMapping.getValue())) {
+		//
+		// inputVariable = parameterMapping.getKey();
+		// }
+		//
+		// if (outputAttributePath.equals(parameterMapping.getValue())) {
+		//
+		// outputVariable = parameterMapping.getKey();
+		// }
+		// }
 
 		// data.setAttribute("source", "record." + transformation.getSource().getName());
 
 		// TODO: maybe declare variables as metamorph variables (?) -> the format was something like ${variablename}
 		// TODO: maybe remove this "record" identifier or determine it via input_data_model -> schema -> record_class
-		data.setAttribute("source", inputVariable);
+		data.setAttribute("source", inputAttributePath);
 		// data.setAttribute("name", "record." + transformation.getTarget().getName());
-		data.setAttribute("name", outputVariable);
+		data.setAttribute("name", outputAttributePath);
 
 		final Function transformationFunction = mapping.getTransformation().getFunction();
 
@@ -320,8 +321,8 @@ public class MorphScriptBuilder {
 
 				break;
 			case Transformation:
-				
-				// TODO: process simple input -> output mapping
+
+				// TODO: process simple input -> output mapping (?)
 
 				final Transformation transformation = (Transformation) transformationFunction;
 
@@ -333,9 +334,24 @@ public class MorphScriptBuilder {
 
 				for (final Component component : components) {
 
-					if (component.getParameterMappings().containsValue(inputVariable)) {
+					// TODO: this is for the processing algorithm later
+					// if (component.getParameterMappings().containsValue(inputVariable)) {
+					//
+					// sourceComponent = component;
+					// }
+
+					if (component.getInputComponents() == null) {
 
 						sourceComponent = component;
+
+						break;
+					}
+
+					if (component.getInputComponents().isEmpty()) {
+
+						sourceComponent = component;
+
+						break;
 					}
 				}
 
@@ -350,8 +366,17 @@ public class MorphScriptBuilder {
 					data.appendChild(comp);
 
 					previousProcessingComponent = processingComponent;
-					// TODO: only one output component for now
-					processingComponent = previousProcessingComponent.getOutputComponents().iterator().next();
+					
+					final Set<Component> outputComponents = previousProcessingComponent.getOutputComponents();
+
+					if (outputComponents != null && !outputComponents.isEmpty()) {
+						
+						// TODO: only one output component for now
+						processingComponent = outputComponents.iterator().next();
+					} else {
+						
+						processingComponent = null;
+					}
 				}
 
 				break;

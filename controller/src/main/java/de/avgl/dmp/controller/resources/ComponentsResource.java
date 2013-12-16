@@ -25,7 +25,7 @@ import de.avgl.dmp.persistence.service.job.ComponentService;
 @RequestScoped
 @Api(value = "/components", description = "Operations about components.")
 @Path("components")
-public class ComponentsResource extends BasicDMPResource<ComponentService, Component> {
+public class ComponentsResource extends ExtendedBasicDMPResource<ComponentService, Component> {
 
 	@Inject
 	public ComponentsResource(final Provider<ComponentService> componentServiceProviderArg, final ObjectMapper objectMapper, final DMPStatus dmpStatus) {

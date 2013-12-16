@@ -14,7 +14,7 @@ import de.avgl.dmp.persistence.model.job.FunctionType;
 import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.service.job.ComponentService;
 
-public class ComponentsResourceTestUtils extends BasicDMPResourceTestUtils<ComponentService, Component> {
+public class ComponentsResourceTestUtils extends ExtendedBasicDMPResourceTestUtils<ComponentService, Component> {
 
 	private final FunctionsResourceTestUtils		functionsResourceTestUtils;
 
