@@ -118,6 +118,65 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 		return responseResource;
 	}
 
+	public String processResource(final Long resourceId, final Long configurationId, final int atMost) {
+
+		final Response response1 = target(String.valueOf(resourceId), "/configurations/", String.valueOf(configurationId), "data")
+				.queryParam("atMost", atMost).request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+
+		Assert.assertEquals("200 OK was expected", 200, response1.getStatus());
+
+		final String responseString = response1.readEntity(String.class);
+
+		return responseString;
+	}
+
+	public Resource uploadResource(final File resourceFile, final Resource expectedResource) throws Exception {
+
+		final FormDataMultiPart form = new FormDataMultiPart();
+		form.field("name", resourceFile.getName());
+		form.field("filename", resourceFile.getName());
+		form.field("description", "this is a description");
+		form.bodyPart(new FileDataBodyPart("file", resourceFile, MediaType.MULTIPART_FORM_DATA_TYPE));
+
+		final Response response = target().request(MediaType.MULTIPART_FORM_DATA_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+				.post(Entity.entity(form, MediaType.MULTIPART_FORM_DATA));
+
+		Assert.assertEquals("200 OK was expected", 201, response.getStatus());
+
+		String responseResourceString = response.readEntity(String.class);
+
+		Assert.assertNotNull("resource shouldn't be null", responseResourceString);
+
+		final Resource responseResource = objectMapper.readValue(responseResourceString, Resource.class);
+
+		compareResources(expectedResource, responseResource);
+
+		return responseResource;
+	}
+
+	public Configuration addResourceConfiguration(final Resource resource, final String configurationJSON) throws Exception {
+
+		final Response response = target(String.valueOf(resource.getId()), "/configurations").request(MediaType.APPLICATION_JSON_TYPE)
+				.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(configurationJSON));
+
+		final String responseConfigurationJSON = response.readEntity(String.class);
+
+		Assert.assertEquals("201 Created was expected", 201, response.getStatus());
+		Assert.assertNotNull("response configuration JSON shouldn't be null", responseConfigurationJSON);
+
+		final Configuration responseConfiguration = objectMapper.readValue(responseConfigurationJSON, Configuration.class);
+
+		Assert.assertNotNull("response configuration shouldn't be null", responseConfiguration);
+
+		final Configuration configuration = objectMapper.readValue(configurationJSON, Configuration.class);
+
+		configurationsResourceTestUtils.compareObjects(configuration, responseConfiguration);
+
+		resource.addConfiguration(responseConfiguration);
+
+		return responseConfiguration;
+	}
+
 	private void compareResources(final Resource expectedResource, final Resource actualResource) {
 
 		if (expectedResource.getAttributes() != null) {
@@ -177,7 +236,7 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 
 	@Override
 	public void reset() {
-		
+
 		configurationsResourceTestUtils.reset();
 	}
 }

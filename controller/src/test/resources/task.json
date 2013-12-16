@@ -2,12 +2,349 @@
     "name": "my task",
     "description": "my task description",
     "job": {
-        "id": 1
+        "id": 1,
+        "mappings": [{
+            "id": 1,
+            "name": "Nr->Nr",
+            "transformation": {
+                "id": 1,
+                "name": "Nr->Nr transformation component",
+                "description": "Nr->Nr",
+                "function": {
+                    "id": 4,
+                    "name": "transformation",
+                    "type": "Transformation",
+                    "components": [{
+                        "id": 1,
+                        "name": "substring",
+                        "description": "Returns a substring",
+                        "function": {
+                            "type": "Function",
+                            "id": 267,
+                            "name": "substring",
+                            "description": "Returns a substring",
+                            "parameters": [
+                                "start",
+                                "end"
+                            ],
+                            "function_description": {
+                                "name": "substring",
+                                "dsl": "metafacture",
+                                "reference": "substring",
+                                "description": "Returns a substring",
+                                "parameters": {
+                                    "start": {
+                                        "type": "number",
+                                        "optional": true
+                                    },
+                                    "end": {
+                                        "type": "number",
+                                        "optional": true
+                                    }
+                                }
+                            }
+                        },
+                        "parameter_mappings": {
+                            "start": "1",
+                            "end": "2"
+                        },
+                        "output_components": [{
+                            "id": 2,
+                            "name": "normalize-utf8",
+                            "function": {
+                                "type": "Function",
+                                "id": 260,
+                                "name": "normalize-utf8",
+                                "function_description": {
+                                    "name": "normalize-utf8",
+                                    "dsl": "metafacture",
+                                    "reference": "normalize-utf8"
+                                }
+                            },
+                            "input_components": [{
+                                "id": 1
+                            }],
+                            "output_components": [{
+                                "id": 3,
+                                "name": "htmlanchor",
+                                "description": "Create an HTML anchor.",
+                                "function": {
+                                    "type": "Function",
+                                    "id": 257,
+                                    "name": "htmlanchor",
+                                    "description": "Create an HTML anchor.",
+                                    "parameters": [
+                                        "prefix",
+                                        "postfix",
+                                        "title"
+                                    ],
+                                    "function_description": {
+                                        "name": "htmlanchor",
+                                        "dsl": "metafacture",
+                                        "reference": "htmlanchor",
+                                        "description": "Create an HTML anchor.",
+                                        "parameters": {
+                                            "prefix": {
+                                                "type": "text"
+                                            },
+                                            "postfix": {
+                                                "type": "text",
+                                                "optional": true
+                                            },
+                                            "title": {
+                                                "type": "text",
+                                                "optional": true
+                                            }
+                                        }
+                                    }
+                                },
+                                "input_components": [{
+                                    "id": 2
+                                }],
+                                "parameter_mappings": {
+                                    "prefix": "http://av.gl/dmp",
+                                    "postfix": "?foo",
+                                    "title": "Lorem Ipsum"
+                                }
+                            }]
+                        }]
+                    }, {
+                        "id": 2,
+                        "name": "normalize-utf8",
+                        "function": {
+                            "type": "Function",
+                            "id": 260,
+                            "name": "normalize-utf8",
+                            "function_description": {
+                                "name": "normalize-utf8",
+                                "dsl": "metafacture",
+                                "reference": "normalize-utf8"
+                            }
+                        },
+                        "input_components": [{
+                            "id": 1
+                        }],
+                        "output_components": [{
+                            "id": 3,
+                            "name": "htmlanchor",
+                            "description": "Create an HTML anchor.",
+                            "function": {
+                                "type": "Function",
+                                "id": 257,
+                                "name": "htmlanchor",
+                                "description": "Create an HTML anchor.",
+                                "parameters": [
+                                    "prefix",
+                                    "postfix",
+                                    "title"
+                                ],
+                                "function_description": {
+                                    "name": "htmlanchor",
+                                    "dsl": "metafacture",
+                                    "reference": "htmlanchor",
+                                    "description": "Create an HTML anchor.",
+                                    "parameters": {
+                                        "prefix": {
+                                            "type": "text"
+                                        },
+                                        "postfix": {
+                                            "type": "text",
+                                            "optional": true
+                                        },
+                                        "title": {
+                                            "type": "text",
+                                            "optional": true
+                                        }
+                                    }
+                                }
+                            },
+                            "input_components": [{
+                                "id": 2
+                            }],
+                            "parameter_mappings": {
+                                "prefix": "http://av.gl/dmp",
+                                "postfix": "?foo",
+                                "title": "Lorem Ipsum"
+                            }
+                        }]
+                    }, {
+                        "id": 3,
+                        "name": "htmlanchor",
+                        "description": "Create an HTML anchor.",
+                        "function": {
+                            "type": "Function",
+                            "id": 257,
+                            "name": "htmlanchor",
+                            "description": "Create an HTML anchor.",
+                            "parameters": [
+                                "prefix",
+                                "postfix",
+                                "title"
+                            ],
+                            "function_description": {
+                                "name": "htmlanchor",
+                                "dsl": "metafacture",
+                                "reference": "htmlanchor",
+                                "description": "Create an HTML anchor.",
+                                "parameters": {
+                                    "prefix": {
+                                        "type": "text"
+                                    },
+                                    "postfix": {
+                                        "type": "text",
+                                        "optional": true
+                                    },
+                                    "title": {
+                                        "type": "text",
+                                        "optional": true
+                                    }
+                                }
+                            }
+                        },
+                        "input_components": [{
+                            "id": 2
+                        }],
+                        "parameter_mappings": {
+                            "prefix": "http://av.gl/dmp",
+                            "postfix": "?foo",
+                            "title": "Lorem Ipsum"
+                        }
+                    }]
+                }
+            },
+            "input_attribute_paths": [{
+                "id": 11,
+                "attributes": [{
+                    "id": "feld",
+                    "name": "feld"
+                }, {
+                    "id": "@nr",
+                    "name": "nr"
+                }]
+            }],
+            "output_attribute_path": {
+                "id": 11,
+                "attributes": [{
+                    "id": "feld",
+                    "name": "feld"
+                }, {
+                    "id": "@nr",
+                    "name": "nr"
+                }]
+            }
+        }]
     },
     "input_data_model": {
-        "id": 1
+        "id": 42,
+        "name": "my data model",
+        "description": "my data model description",
+        "configuration": {
+            "id": 269,
+            "name": "my configuration",
+            "description": "configuration description",
+            "resources": [{
+                "id": 350
+            }],
+            "parameters": {
+                "fileseparator": ";"
+            }
+        },
+        "schema": {
+            "id": 81,
+            "name": "my schema",
+            "attribute_paths": [{
+                "id": 243,
+                "attributes": [{
+                    "id": "http://purl.org/dc/terms/created",
+                    "name": "created"
+                }]
+            }, {
+                "id": 242,
+                "attributes": [{
+                    "id": "http://purl.org/dc/terms/creator",
+                    "name": "creator"
+                }, {
+                    "id": "http://xmlns.com/foaf/0.1/name",
+                    "name": "name"
+                }]
+            }, {
+                "id": 241,
+                "attributes": [{
+                    "id": "http://purl.org/dc/terms/title",
+                    "name": "title"
+                }, {
+                    "id": "http://purl.org/dc/terms/hasPart",
+                    "name": "hasPart"
+                }, {
+                    "id": "http://purl.org/dc/terms/title",
+                    "name": "title"
+                }]
+            }],
+            "record_class": {
+                "id": "http://purl.org/ontology/bibo/Document",
+                "name": "document"
+            }
+        },
+        "data_resource": {
+            "id": 350,
+            "name": "bla",
+            "description": "blubblub",
+            "type": "FILE",
+            "attributes": {
+                "path": "/path/to/file.end"
+            },
+            "configurations": [{
+                "id": 269,
+                "name": "my configuration",
+                "description": "configuration description",
+                "resources": [{
+                    "id": 350
+                }],
+                "parameters": {
+                    "fileseparator": ";"
+                }
+            }]
+        }
     },
     "output_data_model": {
-        "id": 2
+        "id": 2,
+        "name": "my output data model",
+        "description": "my output data model description",
+        "schema": {
+            "id": 2,
+            "name": "my schema",
+            "attribute_paths": [{
+                "id": 11,
+                "attributes": [{
+                    "id": "http://purl.org/dc/terms/created",
+                    "name": "created"
+                }]
+            }, {
+                "id": 9,
+                "attributes": [{
+                    "id": "http://purl.org/dc/terms/title",
+                    "name": "title"
+                }, {
+                    "id": "http://purl.org/dc/terms/hasPart",
+                    "name": "hasPart"
+                }, {
+                    "id": "http://purl.org/dc/terms/title",
+                    "name": "title"
+                }]
+            }, {
+                "id": 10,
+                "attributes": [{
+                    "id": "http://purl.org/dc/terms/creator",
+                    "name": "creator"
+                }, {
+                    "id": "http://xmlns.com/foaf/0.1/name",
+                    "name": "name"
+                }]
+            }],
+            "record_class": {
+                "id": "http://purl.org/ontology/bibo/Document",
+                "name": "document"
+            }
+        }
     }
 }

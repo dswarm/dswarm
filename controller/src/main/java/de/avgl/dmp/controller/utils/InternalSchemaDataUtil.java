@@ -34,25 +34,23 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
 @Singleton
 public class InternalSchemaDataUtil {
 
-	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(InternalSchemaDataUtil.class);
-	private final ObjectMapper objectMapper;
-	private final Provider<ResourceService> resourceServiceProvider;
-	private final Provider<InternalServiceFactory> internalServiceFactoryProvider;
-	private final Provider<SchemaService> schemaServiceProvider;
+	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(InternalSchemaDataUtil.class);
+	private final ObjectMapper						objectMapper;
+	private final Provider<ResourceService>			resourceServiceProvider;
+	private final Provider<InternalServiceFactory>	internalServiceFactoryProvider;
+	private final Provider<SchemaService>			schemaServiceProvider;
 
 	@Inject
 	public InternalSchemaDataUtil(final ObjectMapper objectMapper, final Provider<ResourceService> resourceServiceProvider,
-								  final Provider<InternalServiceFactory> internalServiceFactoryProvider,
-								  final Provider<SchemaService> schemaServiceProvider) {
+			final Provider<InternalServiceFactory> internalServiceFactoryProvider, final Provider<SchemaService> schemaServiceProvider) {
 		this.objectMapper = objectMapper;
 		this.resourceServiceProvider = resourceServiceProvider;
 		this.internalServiceFactoryProvider = internalServiceFactoryProvider;
 		this.schemaServiceProvider = schemaServiceProvider;
 	}
 
-
 	public Optional<Iterator<Tuple<String, JsonNode>>> getData(final long resourceId, final long configurationId) {
-		return getData(resourceId, configurationId, Optional.<Integer>absent());
+		return getData(resourceId, configurationId, Optional.<Integer> absent());
 	}
 
 	public Optional<Iterator<Tuple<String, JsonNode>>> getData(final long resourceId, final long configurationId, final Optional<Integer> atMost) {
@@ -110,20 +108,20 @@ public class InternalSchemaDataUtil {
 
 		final Optional<JSRoot> rootOptional = null;
 
-//				schemaServiceProvider.get().getSchema(resourceId, configurationId)
-//				.or(getConfiguredSchema(configuration));
+		// schemaServiceProvider.get().getSchema(resourceId, configurationId)
+		// .or(getConfiguredSchema(configuration));
 
-//		if (rootOptional.isPresent()) {
-//
-//			final JSRoot jsElements = rootOptional.get();
-//
-//			try {
-//				return Optional.of(jsElements.toJson(objectMapper));
-//			} catch (final IOException e) {
-//				LOG.warn(e.getMessage(), e);
-//				return Optional.absent();
-//			}
-//		}
+		// if (rootOptional.isPresent()) {
+		//
+		// final JSRoot jsElements = rootOptional.get();
+		//
+		// try {
+		// return Optional.of(jsElements.toJson(objectMapper));
+		// } catch (final IOException e) {
+		// LOG.warn(e.getMessage(), e);
+		// return Optional.absent();
+		// }
+		// }
 
 		final InternalService internalService;
 		try {
@@ -236,30 +234,32 @@ public class InternalSchemaDataUtil {
 	private Iterator<Tuple<String, JsonNode>> dataIterator(final Iterator<Map.Entry<String, Model>> triples) {
 		return new AbstractIterator<Tuple<String, JsonNode>>() {
 
-			//TODO: where to to this? => [@tgaengler]: In my opinion, this needs to be done, when the input data model will created, i.e., that you will only have valid data models here
-			private JsonNode injectDataType(final JsonNode jsonNode) {
-				final UnmodifiableIterator<String> typeKeys = Iterators.filter(jsonNode.fieldNames(), new Predicate<String>() {
-					@Override
-					public boolean apply(@Nullable final String input) {
-						return input != null && input.endsWith("#type");
-					}
-				});
-				final String typeKey;
-				try {
-					typeKey = Iterators.getOnlyElement(typeKeys);
-				} catch (final IllegalArgumentException | NoSuchElementException e) {
-					return jsonNode;
-				}
-
-				final JsonNode typeNode = jsonNode.get(typeKey);
-				final String longTypeName = typeNode.textValue();
-				final String typeName = longTypeName.substring(longTypeName.lastIndexOf('#') + 1, longTypeName.lastIndexOf("Type"));
-
-				final ObjectNode objectNode = objectMapper.createObjectNode();
-				objectNode.put(typeName, jsonNode);
-
-				return objectNode;
-			}
+			// TODO: where to to this? => [@tgaengler]: In my opinion, this needs to be done, when the input data model will
+			// created, i.e., that you will only have valid data models here
+			// private JsonNode injectDataType(final JsonNode jsonNode) {
+			// final UnmodifiableIterator<String> typeKeys = Iterators.filter(jsonNode.fieldNames(), new Predicate<String>() {
+			// @Override
+			// public boolean apply(@Nullable final String input) {
+			// return input != null && input.endsWith("#type");
+			// }
+			// });
+			// final String typeKey;
+			// try {
+			// typeKey = Iterators.getOnlyElement(typeKeys);
+			// } catch (final IllegalArgumentException | NoSuchElementException e) {
+			// return jsonNode;
+			// }
+			//
+			// final JsonNode typeNode = jsonNode.get(typeKey);
+			// final String longTypeName = typeNode.textValue();
+			// final String typeName = longTypeName.substring(longTypeName.lastIndexOf('#') + 1,
+			// longTypeName.lastIndexOf("Type"));
+			//
+			// final ObjectNode objectNode = objectMapper.createObjectNode();
+			// objectNode.put(typeName, jsonNode);
+			//
+			// return objectNode;
+			// }
 
 			@Override
 			protected Tuple<String, JsonNode> computeNext() {
@@ -267,7 +267,8 @@ public class InternalSchemaDataUtil {
 					final Map.Entry<String, Model> nextTriple = triples.next();
 					final String recordId = nextTriple.getKey();
 					final JsonNode jsonNode = nextTriple.getValue().toJSON();
-					return Tuple.tuple(recordId, injectDataType(jsonNode));
+					// return Tuple.tuple(recordId, injectDataType(jsonNode));
+					return Tuple.tuple(recordId, jsonNode);
 				}
 				return endOfData();
 			}
