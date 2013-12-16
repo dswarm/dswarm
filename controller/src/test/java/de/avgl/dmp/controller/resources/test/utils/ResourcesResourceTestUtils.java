@@ -118,7 +118,7 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 		return responseResource;
 	}
 
-	public String processResource(final Long resourceId, final Long configurationId, final int atMost) {
+	public String getData(final Long resourceId, final Long configurationId, final int atMost) {
 
 		final Response response1 = target(String.valueOf(resourceId), "/configurations/", String.valueOf(configurationId), "data")
 				.queryParam("atMost", atMost).request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);

@@ -87,11 +87,11 @@ public class TasksResourceTest extends ResourceTest {
 
 		final String configurationJSONString = objectMapper.writeValueAsString(conf1);
 
-		// create configuration
+		// create configuration + process data resource with this configuration to data model
 		configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
 
-		// process data resource to data model
-		final String data = resourcesResourceTestUtils.processResource(resource.getId(), configuration.getId(), 1);
+		// check processed data
+		final String data = resourcesResourceTestUtils.getData(resource.getId(), configuration.getId(), 1);
 
 		Assert.assertNotNull("the data shouldn't be null", data);
 
