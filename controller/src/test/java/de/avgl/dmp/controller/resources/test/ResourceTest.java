@@ -9,6 +9,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 import de.avgl.dmp.controller.EmbeddedServer;
+import de.avgl.dmp.controller.providers.handler.ExceptionHandler;
 import de.avgl.dmp.controller.servlet.DMPInjector;
 
 public class ResourceTest extends GuicedTest {
@@ -54,7 +55,7 @@ public class ResourceTest extends GuicedTest {
 
 		return builder
 				.register(MultiPartFeature.class)
-				.register(de.avgl.dmp.controller.providers.ExceptionHandler.class)
+				.register(ExceptionHandler.class)
 				.build();
 	}
 
