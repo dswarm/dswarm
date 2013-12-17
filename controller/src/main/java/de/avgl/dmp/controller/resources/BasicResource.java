@@ -14,7 +14,6 @@ import javax.ws.rs.core.UriInfo;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.codahale.metrics.Timer;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,14 +34,14 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 
 	private static final org.apache.log4j.Logger		LOG	= org.apache.log4j.Logger.getLogger(BasicResource.class);
 
-	private final Class<POJOCLASS>					clasz;
-	private final String								className;
+	protected final Class<POJOCLASS>					clasz;
+	protected final String								className;
 
-	private final Provider<POJOCLASSPERSISTENCESERVICE>	persistenceServiceProvider;
+	protected final Provider<POJOCLASSPERSISTENCESERVICE>	persistenceServiceProvider;
 
-	private final DMPStatus								dmpStatus;
+	protected final DMPStatus								dmpStatus;
 
-	private final ObjectMapper							objectMapper;
+	protected final ObjectMapper							objectMapper;
 
 	@Context
 	UriInfo												uri;
@@ -64,7 +63,7 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 		return clasz;
 	}
 
-	private Response buildResponse(final String responseContent) {
+	protected Response buildResponse(final String responseContent) {
 
 		return Response.ok(responseContent).build();
 	}
@@ -241,7 +240,7 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 		return persistenceService.createObject();
 	}
 
-	private POJOCLASS addObject(final String objectJSONString) throws DMPControllerException {
+	protected POJOCLASS addObject(final String objectJSONString) throws DMPControllerException {
 
 		final POJOCLASS objectFromJSON;
 

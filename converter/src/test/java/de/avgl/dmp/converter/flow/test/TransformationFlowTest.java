@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
@@ -25,6 +26,7 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
 import com.google.common.collect.AbstractIterator;
 import com.google.common.io.Resources;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 import de.avgl.dmp.converter.GuicedTest;
 import de.avgl.dmp.converter.flow.TransformationFlow;
@@ -34,12 +36,14 @@ import de.avgl.dmp.persistence.model.internal.Model;
 import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
 import de.avgl.dmp.persistence.model.job.Task;
 import de.avgl.dmp.persistence.model.resource.Configuration;
+import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
 import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
 import de.avgl.dmp.persistence.model.types.Tuple;
 import de.avgl.dmp.persistence.service.impl.InternalTripleService;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
+import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
@@ -89,24 +93,52 @@ public class TransformationFlowTest extends GuicedTest {
 
 		Resource updatedResource = resourceService.updateObjectTransactional(resource);
 
-		final XMLSourceResourceTriplesFlow flow2 = new XMLSourceResourceTriplesFlow(updatedConfiguration, updatedResource);
+		final DataModelService dataModelService = injector.getInstance(DataModelService.class);
+		final DataModel dataModel = dataModelService.createObject();
 
-		final RDFModel rdfModel = flow2.applyResource("test-mabxml.xml");
+		dataModel.setDataResource(updatedResource);
+		dataModel.setConfiguration(updatedConfiguration);
+
+		DataModel updatedDataModel = dataModelService.updateObjectTransactional(dataModel);
+		
+		final XMLSourceResourceTriplesFlow flow2 = new XMLSourceResourceTriplesFlow(updatedDataModel);
+
+		final List<RDFModel> rdfModels = flow2.applyResource("test-mabxml.xml");
+
+		Assert.assertNotNull("RDF model list shouldn't be null", rdfModels);
+		Assert.assertFalse("RDF model list shouldn't be empty", rdfModels.isEmpty());
+
+		// write RDF models at once
+		final com.hp.hpl.jena.rdf.model.Model model = ModelFactory.createDefaultModel();
+		String recordClassUri = null;
+
+		for (final RDFModel rdfModel : rdfModels) {
+
+			Assert.assertNotNull("the RDF triples of the RDF model shouldn't be null", rdfModel.getModel());
+
+			model.add(rdfModel.getModel());
+
+			if (recordClassUri == null) {
+
+				recordClassUri = rdfModel.getRecordClassURI();
+			}
+		}
+
+		final RDFModel rdfModel = new RDFModel(model, null, recordClassUri);
 
 		// write model and retrieve tuples
 		final InternalTripleService tripleService = injector.getInstance(InternalTripleService.class);
-		tripleService.createObject(updatedResource.getId(), updatedConfiguration.getId(), rdfModel);
-		final Optional<Map<String, Model>> optionalModelMap = tripleService.getObjects(updatedResource.getId(), updatedConfiguration.getId(),
-				Optional.of(1));
+		tripleService.createObject(updatedDataModel.getId(), rdfModel);
+		final Optional<Map<String, Model>> optionalModelMap = tripleService.getObjects(updatedDataModel.getId(), Optional.of(1));
 
 		final Iterator<Tuple<String, JsonNode>> tuples = dataIterator(optionalModelMap.get().entrySet().iterator());
 
-		// manipulate data resource + configuration id
+		final String dataModelJSONString = objectMapper.writeValueAsString(updatedDataModel);
+		final ObjectNode dataModelJSON = objectMapper.readValue(dataModelJSONString, ObjectNode.class);
+
+		// manipulate input data model
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
-		final JsonNode dataResourceNode = taskJSON.get("input_data_model").get("data_resource");
-		((ObjectNode) dataResourceNode).put("id", updatedResource.getId());
-		final JsonNode configurationResourceNode = taskJSON.get("input_data_model").get("configuration");
-		((ObjectNode) configurationResourceNode).put("id", updatedConfiguration.getId());
+		((ObjectNode) taskJSON).put("input_data_model", dataModelJSON);
 
 		final String finalTaskJSONString = objectMapper.writeValueAsString(taskJSON);
 
@@ -126,6 +158,7 @@ public class TransformationFlowTest extends GuicedTest {
 		assertEquals(finalExpectedJSONString.length(), finalActualJSONString.length());
 
 		// clean-up
+		dataModelService.deleteObject(updatedDataModel.getId());
 		configurationService.deleteObject(updatedConfiguration.getId());
 		resourceService.deleteObject(updatedResource.getId());
 	}

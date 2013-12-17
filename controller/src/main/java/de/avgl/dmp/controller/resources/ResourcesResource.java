@@ -50,7 +50,6 @@ import com.wordnik.swagger.annotations.ApiParam;
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.eventbus.CSVConverterEvent;
 import de.avgl.dmp.controller.eventbus.SchemaEvent;
-import de.avgl.dmp.controller.eventbus.XMLConverterEvent;
 import de.avgl.dmp.controller.eventbus.XMLSchemaEvent;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.controller.utils.DMPControllerUtils;
@@ -89,7 +88,7 @@ public class ResourcesResource {
 	private final DMPStatus							dmpStatus;
 
 	private final ObjectMapper						objectMapper;
-	private final DataModelService                  modelService;
+	private final DataModelService					modelService;
 	private final InternalSchemaDataUtil			schemaDataUtil;
 
 	@Inject
@@ -373,6 +372,19 @@ public class ResourcesResource {
 		return buildResponse(configurationsJSON);
 	}
 
+	/**
+	 * This operation is deprecated. Please utilise DataModelsResource#createObject instead.
+	 * 
+	 * note: [@tgaengler] the processing of a given data resource with a given configuration has been moved to {@link DataModelsResource}, i.e.,
+	 * the result of this operation should only be the addition of the given configuration, however, not the processing of this
+	 * combination.
+	 * 
+	 * @param id
+	 * @param jsonObjectString
+	 * @return
+	 * @throws DMPControllerException
+	 */
+	@Deprecated
 	@ApiOperation(value = "add a new configuration to the data resource that matches the given id", notes = "Returns the new configuration that was added to the data resource that matches the given id.")
 	@POST
 	@Path("/{id}/configurations")
@@ -427,10 +439,10 @@ public class ResourcesResource {
 
 					eventBusProvider.get().post(new CSVConverterEvent(configuration, resource));
 					break;
-				case "xml":
-
-					eventBusProvider.get().post(new XMLConverterEvent(configuration, resource));
-					break;
+//				case "xml":
+//
+//					eventBusProvider.get().post(new XMLConverterEvent(configuration, resource));
+//					break;
 			}
 		}
 
@@ -488,6 +500,14 @@ public class ResourcesResource {
 		return buildResponse(configurationJSON);
 	}
 
+	/**
+	 * note: [@tgaengler] this operation should be moved to {@link DataModelsResource}
+	 * 
+	 * @param id
+	 * @param configurationId
+	 * @return
+	 * @throws DMPControllerException
+	 */
 	@ApiOperation(value = "get the schema of the data resource and configuration (= data model) that matches the given data resource id and the given configuration id", notes = "Returns the schema of the data resource and configuration (= data model) that matches the given data resource id and the given configuration id.")
 	@GET
 	@Path("/{id}/configurations/{configurationid}/schema")
@@ -532,6 +552,18 @@ public class ResourcesResource {
 		return buildResponse(jsonString);
 	}
 
+	/**
+	 * This operation is deprecated. Please utilise DataModelsResource#getData instead.
+	 * 
+	 * note: [@tgaengler] this operation has been moved to {@link DataModelsResource}
+	 * 
+	 * @param id
+	 * @param configurationId
+	 * @param atMost
+	 * @return
+	 * @throws DMPControllerException
+	 */
+	@Deprecated
 	@ApiOperation(value = "get the data of the data resource and configuration (= data model) that matches the given data resource id and the given configuration id", notes = "Returns the data of the data resource and configuration (= data model) that matches the given data resource id and the given configuration id.")
 	@GET
 	@Path("/{id}/configurations/{configurationid}/data")
@@ -585,6 +617,14 @@ public class ResourcesResource {
 		return buildResponse(jsonString);
 	}
 
+	/**
+	 * note: [@tgaengler] this operation should be moved to {@link DataModelsResource} and there should be a generic preview operation
+	 * 
+	 * @param id
+	 * @param jsonObjectString
+	 * @return
+	 * @throws DMPControllerException
+	 */
 	@ApiOperation(value = "get a CSV data preview of the data resource that matches the given id and where the given configuration will be applied to ( = data model)", notes = "Returns a CSV data preview of the data resource that matches the given id and where the given configuration will be applied to ( = data model).")
 	@POST
 	@Path("/{id}/configurationpreview")
@@ -626,6 +666,14 @@ public class ResourcesResource {
 		return buildResponse(result);
 	}
 
+	/**
+	 * note: [@tgaengler] this operation should be moved to {@link DataModelsResource} and there should be a generic preview operation
+	 * 
+	 * @param id
+	 * @param jsonObjectString
+	 * @return
+	 * @throws DMPControllerException
+	 */
 	@ApiOperation(value = "get a CSV JSON data preview of the data resource that matches the given id and where the given configuration will be applied to ( = data model)", notes = "Returns a CSV JSON data preview of the data resource that matches the given id and where the given configuration will be applied to ( = data model).")
 	@POST
 	@Path("/{id}/configurationpreview")
@@ -755,7 +803,7 @@ public class ResourcesResource {
 
 			configuration = configurationService.getObject(configurationFromJSON.getId());
 
-			if(configuration == null) {
+			if (configuration == null) {
 
 				// if the id is not in the DB, also create a new object
 

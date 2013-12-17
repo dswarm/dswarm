@@ -3,6 +3,7 @@ package de.avgl.dmp.persistence.service.impl;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.culturegraph.mf.types.Triple;
 
 import com.google.common.base.Function;
@@ -17,11 +18,13 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.internal.Model;
 import de.avgl.dmp.persistence.model.internal.impl.MemoryDBInputModel;
 import de.avgl.dmp.persistence.model.internal.impl.MemoryDbModel;
+import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.service.InternalService;
 
 @Singleton
 public class InternalMemoryDbService extends BaseMemoryServiceImpl<Long, Long, Table<String, String, String>> implements InternalService {
 
+	@Deprecated
 	@Override
 	public void createObject(final Long id, final Long id1, final Object model) throws DMPPersistenceException {
 
@@ -48,6 +51,7 @@ public class InternalMemoryDbService extends BaseMemoryServiceImpl<Long, Long, T
 		}
 	}
 
+	@Deprecated
 	@Override
 	public Optional<Map<String, Model>> getObjects(final Long id, final Long configurationId, final Optional<Integer> atMost)
 			throws DMPPersistenceException {
@@ -73,6 +77,7 @@ public class InternalMemoryDbService extends BaseMemoryServiceImpl<Long, Long, T
 		return Optional.absent();
 	}
 
+	@Deprecated
 	@Override
 	public Optional<Set<String>> getSchema(final Long id, final Long configurationId) {
 		synchronized (this) {
@@ -85,5 +90,34 @@ public class InternalMemoryDbService extends BaseMemoryServiceImpl<Long, Long, T
 				}
 			});
 		}
+	}
+
+	@Override
+	public void createObject(final Long dataModelId, final Object model) throws DMPPersistenceException {
+
+		throw new NotImplementedException(
+				"object creation via this method is not implemented yet, please utilise #createObject(resourceId, configurationId, model) instead.");
+
+	}
+
+	@Override
+	public Optional<Map<String, Model>> getObjects(final Long dataModelId, final Optional<Integer> atMost) throws DMPPersistenceException {
+
+		throw new NotImplementedException(
+				"object retrieval via this method is not implemented yet, please utilise #getObjects(resourcelId, configurationId, atMost) instead.");
+	}
+
+	@Override
+	public void deleteObject(final Long dataModelId) throws DMPPersistenceException {
+
+		throw new NotImplementedException(
+				"object deletion via this method is not implemented yet, please utilise #deleteObject(resourceId, configurationId) instead.");
+	}
+
+	@Override
+	public Optional<Schema> getSchema(final Long dataModelId) throws DMPPersistenceException {
+
+		throw new NotImplementedException(
+				"schema retrieval via this method is not implemented yet, please utilise #getSchema(resourceId, configurationId) instead.");
 	}
 }

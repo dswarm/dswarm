@@ -23,8 +23,10 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.io.Resources;
 
 import de.avgl.dmp.controller.resources.test.utils.ConfigurationsResourceTestUtils;
+import de.avgl.dmp.controller.resources.test.utils.DataModelsResourceTestUtils;
 import de.avgl.dmp.controller.resources.test.utils.ResourcesResourceTestUtils;
 import de.avgl.dmp.persistence.model.resource.Configuration;
+import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
 import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
@@ -39,12 +41,16 @@ public class TasksResourceTest extends ResourceTest {
 	private final ResourcesResourceTestUtils		resourcesResourceTestUtils;
 
 	private final ConfigurationsResourceTestUtils	configurationsResourceTestUtils;
+	
+	private final DataModelsResourceTestUtils	dataModelsResourceTestUtils;
 
 	private final ObjectMapper						objectMapper	= injector.getInstance(ObjectMapper.class);
 
 	private Configuration							configuration;
 
 	private Resource								resource;
+	
+	private DataModel dataModel;
 
 	public TasksResourceTest() {
 
@@ -52,6 +58,7 @@ public class TasksResourceTest extends ResourceTest {
 
 		resourcesResourceTestUtils = new ResourcesResourceTestUtils();
 		configurationsResourceTestUtils = new ConfigurationsResourceTestUtils();
+		dataModelsResourceTestUtils = new DataModelsResourceTestUtils();
 	}
 
 	@Before
@@ -81,30 +88,37 @@ public class TasksResourceTest extends ResourceTest {
 		// process input data model
 		final Configuration conf1 = new Configuration();
 
+		conf1.setName("configuration 1");
 		conf1.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("datensatz"));
 		conf1.addParameter(ConfigurationStatics.XML_NAMESPACE, new TextNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd"));
 		conf1.addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode("xml"));
 
 		final String configurationJSONString = objectMapper.writeValueAsString(conf1);
 
-		// create configuration + process data resource with this configuration to data model
+		// create configuration
 		configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
+		
+		final DataModel data1 = new DataModel();
+		data1.setName("'" + res1.getName() +"' + '" + conf1.getName() + "' data model");
+		data1.setDescription("data model of resource '" + res1.getName() +"' and configuration '" + conf1.getName() + "'");
+		data1.setDataResource(resource);
+		data1.setConfiguration(configuration);
+		
+		final String dataModelJSONString = objectMapper.writeValueAsString(data1);
+		
+		dataModel = dataModelsResourceTestUtils.createObject(dataModelJSONString, data1);
 
 		// check processed data
-		final String data = resourcesResourceTestUtils.getData(resource.getId(), configuration.getId(), 1);
+		final String data = dataModelsResourceTestUtils.getData(dataModel.getId(), 1);
 
 		Assert.assertNotNull("the data shouldn't be null", data);
 
-		final String resourceJSONString = objectMapper.writeValueAsString(resource);
-		final ObjectNode resourceJSON = objectMapper.readValue(resourceJSONString, ObjectNode.class);
-
-		final String finalConfigurationJSONString = objectMapper.writeValueAsString(configuration);
-		final ObjectNode configurationJSON = objectMapper.readValue(finalConfigurationJSONString, ObjectNode.class);
-
-		// manipulate data resource + configuration id
+		// manipulate input data model
+		final String finalDataModelJSONString = objectMapper.writeValueAsString(dataModel);
+		final ObjectNode finalDataModelJSON = objectMapper.readValue(finalDataModelJSONString, ObjectNode.class);
+		
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
-		((ObjectNode) taskJSON.get("input_data_model")).put("data_resource", resourceJSON);
-		((ObjectNode) taskJSON.get("input_data_model")).put("configuration", configurationJSON);
+		((ObjectNode) taskJSON).put("input_data_model", finalDataModelJSON);
 
 		final String finalTaskJSONString = objectMapper.writeValueAsString(taskJSON);
 
@@ -137,6 +151,7 @@ public class TasksResourceTest extends ResourceTest {
 	@After
 	public void cleanUp() {
 
+		dataModelsResourceTestUtils.deleteObject(dataModel);
 		resourcesResourceTestUtils.deleteObject(resource);
 		configurationsResourceTestUtils.deleteObject(configuration);
 	}

@@ -497,6 +497,12 @@ public class ResourcesResourceTest extends ResourceTest {
 		LOG.debug("end get CSV resource configuration data test");
 	}
 
+	/**
+	 * TODO: add test to DataModelsResourceTest for DataModelsResource#getData
+	 * 
+	 * @throws Exception
+	 */
+	@Ignore
 	@Test
 	public void testXMLResourceConfigurationData() throws Exception {
 

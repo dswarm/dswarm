@@ -18,22 +18,35 @@ import de.avgl.dmp.persistence.model.internal.rdf.helper.ConverterHelperHelper;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
- *
  * @author tgaengler
- *
  */
 public class RDFModel implements Model {
 
-	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(RDFModel.class);
-
+	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(RDFModel.class);
 
 	private final com.hp.hpl.jena.rdf.model.Model	model;
-	private final String							resourceURI;
+	private final String							recordURI;
+	private final String							recordClassURI;
 
-	public RDFModel(final com.hp.hpl.jena.rdf.model.Model modelArg, final String resourceURIArg) {
+	public RDFModel(final com.hp.hpl.jena.rdf.model.Model modelArg) {
 
 		model = modelArg;
-		resourceURI = resourceURIArg;
+		recordURI = null;
+		recordClassURI = null;
+	}
+	
+	public RDFModel(final com.hp.hpl.jena.rdf.model.Model modelArg, final String recordURIArg) {
+
+		model = modelArg;
+		recordURI = recordURIArg;
+		recordClassURI = null;
+	}
+	
+	public RDFModel(final com.hp.hpl.jena.rdf.model.Model modelArg, final String recordURIArg, final String recordClassURIArg) {
+
+		model = modelArg;
+		recordURI = recordURIArg;
+		recordClassURI = recordClassURIArg;
 	}
 
 	public com.hp.hpl.jena.rdf.model.Model getModel() {
@@ -41,9 +54,14 @@ public class RDFModel implements Model {
 		return model;
 	}
 
-	public String getResourceURI() {
-
-		return resourceURI;
+//	public String getRecordURI() {
+//
+//		return recordURI;
+//	}
+	
+	public String getRecordClassURI() {
+		
+		return recordClassURI;
 	}
 
 	@Override
@@ -56,29 +74,28 @@ public class RDFModel implements Model {
 			return null;
 		}
 
-
-		if (resourceURI == null) {
+		if (recordURI == null) {
 
 			LOG.debug("resource URI is null, can't convert model to JSON");
 
 			return null;
 		}
 
-//		System.out.println("write rdf model '" + resourceURI + "' in n3");
-//		model.write(System.out, "N3");
+		// System.out.println("write rdf model '" + resourceURI + "' in n3");
+		// model.write(System.out, "N3");
 
-		final Resource resource = model.getResource(resourceURI);
+		final Resource recordResource = model.getResource(recordURI);
 
-		if (resource == null) {
+		if (recordResource == null) {
 
-			LOG.debug("couldn't find resource for resource uri '" + resourceURI + "' in model");
+			LOG.debug("couldn't find record resource for record  uri '" + recordURI + "' in model");
 
 			return null;
 		}
 
 		final ObjectNode json = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
 
-		convertRDFToJSON(resource, json, json);
+		convertRDFToJSON(recordResource, json, json);
 
 		return json;
 	}
@@ -89,13 +106,12 @@ public class RDFModel implements Model {
 		final Map<String, ConverterHelper> converterHelpers = Maps.newHashMap();
 		final List<Statement> statements = iter.toList();
 
-		for(final Statement statement : statements) {
+		for (final Statement statement : statements) {
 
 			final String propertyURI = statement.getPredicate().getURI();
 			final RDFNode rdfNode = statement.getObject();
 
 			if (rdfNode.isLiteral()) {
-
 
 				String propName = "@" + propertyURI.substring(propertyURI.lastIndexOf('#') + 1);
 				if ("@value".equals(propName)) {
@@ -142,7 +158,7 @@ public class RDFModel implements Model {
 			}
 		}
 
-		for(final Entry<String, ConverterHelper> converterHelperEntry : converterHelpers.entrySet()) {
+		for (final Entry<String, ConverterHelper> converterHelperEntry : converterHelpers.entrySet()) {
 
 			converterHelperEntry.getValue().build(json);
 		}

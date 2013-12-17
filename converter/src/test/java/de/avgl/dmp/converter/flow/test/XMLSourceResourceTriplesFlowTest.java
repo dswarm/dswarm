@@ -1,5 +1,7 @@
 package de.avgl.dmp.converter.flow.test;
 
+import java.util.List;
+
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.node.TextNode;
@@ -8,17 +10,21 @@ import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.XMLSourceResourceTriplesFlow;
 import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
 import de.avgl.dmp.persistence.model.resource.Configuration;
+import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
 
 public class XMLSourceResourceTriplesFlowTest {
 
 	private void testFlow(final XMLSourceResourceTriplesFlow flow, final String fileName) throws DMPConverterException {
 
-		final RDFModel rdfModel = flow.applyResource(fileName);
+		final List<RDFModel> rdfModels = flow.applyResource(fileName);
 
-		if (rdfModel != null && rdfModel.getModel() != null) {
+		if (rdfModels != null && !rdfModels.isEmpty()) {
 
-			rdfModel.getModel().write(System.out, "N3");
+			for (final RDFModel rdfModel : rdfModels) {
+
+				rdfModel.getModel().write(System.out, "N3");
+			}
 		}
 	}
 
@@ -34,24 +40,34 @@ public class XMLSourceResourceTriplesFlowTest {
 
 	@Test
 	public void testFromConfiguration() throws Exception {
+
 		final Configuration configuration = new Configuration();
 
 		configuration.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("datensatz"));
 		configuration.addParameter(ConfigurationStatics.XML_NAMESPACE, new TextNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd"));
 
-		final XMLSourceResourceTriplesFlow flow = new XMLSourceResourceTriplesFlow(configuration, null);
+		final DataModel dataModel = new DataModel();
+
+		dataModel.setConfiguration(configuration);
+
+		final XMLSourceResourceTriplesFlow flow = new XMLSourceResourceTriplesFlow(dataModel);
 
 		testFlow(flow, "test-mabxml.xml");
 	}
 
 	@Test
 	public void testFromConfiguration2() throws Exception {
+		
 		final Configuration configuration = new Configuration();
 
 		configuration.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("datensatz"));
 		configuration.addParameter(ConfigurationStatics.XML_NAMESPACE, new TextNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd"));
 
-		final XMLSourceResourceTriplesFlow flow = new XMLSourceResourceTriplesFlow(configuration, null);
+		final DataModel dataModel = new DataModel();
+
+		dataModel.setConfiguration(configuration);
+
+		final XMLSourceResourceTriplesFlow flow = new XMLSourceResourceTriplesFlow(dataModel);
 
 		testFlow(flow, "test-complex-xml.xml");
 	}
