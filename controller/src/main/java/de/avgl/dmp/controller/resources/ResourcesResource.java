@@ -49,6 +49,7 @@ import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.eventbus.CSVConverterEvent;
+import de.avgl.dmp.controller.eventbus.SchemaEvent;
 import de.avgl.dmp.controller.eventbus.XMLConverterEvent;
 import de.avgl.dmp.controller.eventbus.XMLSchemaEvent;
 import de.avgl.dmp.controller.status.DMPStatus;
@@ -60,10 +61,13 @@ import de.avgl.dmp.converter.flow.CSVSourceResourceCSVJSONPreviewFlow;
 import de.avgl.dmp.converter.flow.CSVSourceResourceCSVPreviewFlow;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
+import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
+import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.model.types.Tuple;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
+import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
 
 @RequestScoped
@@ -85,18 +89,20 @@ public class ResourcesResource {
 	private final DMPStatus							dmpStatus;
 
 	private final ObjectMapper						objectMapper;
+	private final DataModelService                  modelService;
 	private final InternalSchemaDataUtil			schemaDataUtil;
 
 	@Inject
 	public ResourcesResource(final DMPStatus dmpStatus, final ObjectMapper objectMapper, final Provider<ResourceService> resourceServiceProvider,
 			final Provider<ConfigurationService> configurationServiceProvider, final Provider<EventBus> eventBusProvider,
-			final InternalSchemaDataUtil schemaDataUtil) {
+			final DataModelService modelService, final InternalSchemaDataUtil schemaDataUtil) {
 
 		this.eventBusProvider = eventBusProvider;
 		this.resourceServiceProvider = resourceServiceProvider;
 		this.configurationServiceProvider = configurationServiceProvider;
 		this.dmpStatus = dmpStatus;
 		this.objectMapper = objectMapper;
+		this.modelService = modelService;
 		this.schemaDataUtil = schemaDataUtil;
 	}
 
@@ -402,17 +408,29 @@ public class ResourcesResource {
 
 		LOG.debug("added new configuration to resource with id '" + id + "' = '" + ToStringBuilder.reflectionToString(configuration) + "'");
 
-		final JsonNode storageType = configuration.getParameters().get("storage_type");
-		if (storageType != null) {
-			if ("schema".equals(storageType.asText())) {
+		final JsonNode jsStorageType = configuration.getParameters().get("storage_type");
+		if (jsStorageType != null) {
+			final String storageType = jsStorageType.asText();
+			try {
+				final SchemaEvent.SchemaType type = SchemaEvent.SchemaType.fromString(storageType);
+				eventBusProvider.get().post(new SchemaEvent(resource, configuration, type));
+			} catch (final IllegalArgumentException e) {
+				LOG.warn("could not determine schema type", e);
+			}
 
-				eventBusProvider.get().post(new XMLSchemaEvent(configuration, resource));
-			} else if ("csv".equals(storageType.asText())) {
+			switch (storageType) {
+				case "schema":
 
-				eventBusProvider.get().post(new CSVConverterEvent(configuration, resource));
-			} else if ("xml".equals(storageType.asText())) {
+					eventBusProvider.get().post(new XMLSchemaEvent(configuration, resource));
+					break;
+				case "csv":
 
-				eventBusProvider.get().post(new XMLConverterEvent(configuration, resource));
+					eventBusProvider.get().post(new CSVConverterEvent(configuration, resource));
+					break;
+				case "xml":
+
+					eventBusProvider.get().post(new XMLConverterEvent(configuration, resource));
+					break;
 			}
 		}
 
@@ -481,17 +499,26 @@ public class ResourcesResource {
 
 		LOG.debug("try to get schema for configuration with id '" + configurationId + "' for resource with id '" + id + "'");
 
-		final Optional<ObjectNode> schema = schemaDataUtil.getSchema(id, configurationId);
+		final List<DataModel> models = modelService.getObjects();
 
-		if (!schema.isPresent()) {
+		Schema schema = null;
+		for (final DataModel model : models) {
+			if (model.getDataResource().getId().equals(id) && model.getConfiguration().getId().equals(configurationId)) {
 
+				schema = model.getSchema();
+				break;
+			}
+		}
+
+		if (schema == null) {
+			LOG.info("could not find schema for resource=" + id + " and configuration=" + configurationId);
 			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
 		final String jsonString;
 		try {
-			jsonString = objectMapper.writeValueAsString(schema.get());
+			jsonString = objectMapper.writeValueAsString(schema);
 		} catch (final JsonProcessingException e) {
 
 			dmpStatus.stop(context);
@@ -720,18 +747,18 @@ public class ResourcesResource {
 		if (configurationFromJSON.getId() == null) {
 
 			// create new configuration, since it has no id
-			
+
 			configuration = createNewConfiguration(configurationService);
 		} else {
-			
+
 			// try to retrieve configuration via id from "configuration from JSON"
-			
+
 			configuration = configurationService.getObject(configurationFromJSON.getId());
-			
+
 			if(configuration == null) {
-				
+
 				// if the id is not in the DB, also create a new object
-				
+
 				configuration = createNewConfiguration(configurationService);
 			}
 		}
@@ -783,11 +810,11 @@ public class ResourcesResource {
 
 		return configuration;
 	}
-	
+
 	private Configuration createNewConfiguration(final ConfigurationService configurationService) throws DMPControllerException {
-		
+
 		final Configuration configuration;
-		
+
 		try {
 
 			configuration = configurationService.createObject();
@@ -797,12 +824,12 @@ public class ResourcesResource {
 
 			throw new DMPControllerException("something went wrong while configuration creation\n" + e.getMessage());
 		}
-		
+
 		if (configuration == null) {
 
 			throw new DMPControllerException("fresh configuration shouldn't be null");
 		}
-		
+
 		return configuration;
 	}
 
