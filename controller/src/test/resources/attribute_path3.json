@@ -1,0 +1,7 @@
+{
+        "id": 3,
+        "attributes": [{
+            "id": "http://purl.org/dc/terms/created",
+            "name": "created"
+        }]
+}

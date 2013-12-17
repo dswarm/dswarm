@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.net.URL;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
@@ -17,17 +17,18 @@ import com.google.inject.Injector;
 import de.avgl.dmp.init.DMPException;
 
 
-public class DMPPersistenceUtil {
+public final class DMPPersistenceUtil {
 
-	private static final JsonNodeFactory	factory	= JsonNodeFactory.instance;
-	private static final ObjectMapper		mapper;
+	private static final JsonNodeFactory FACTORY = JsonNodeFactory.instance;
+	private static final ObjectMapper MAPPER;
 
+	@SuppressWarnings("StaticNonFinalField")
 	public static transient Injector		injector;
 
 	static {
-		mapper = new ObjectMapper();
+		MAPPER = new ObjectMapper();
 		final JaxbAnnotationModule module = new JaxbAnnotationModule();
-		mapper.registerModule(module)
+		MAPPER.registerModule(module).registerModule(new Hibernate4Module())
 			.setSerializationInclusion(Include.NON_NULL)
 			.setSerializationInclusion(Include.NON_EMPTY);
 	}
@@ -40,14 +41,18 @@ public class DMPPersistenceUtil {
 	public static ObjectNode getJSON(final String jsonString) throws DMPException {
 
 		try {
-			return mapper.readValue(jsonString, ObjectNode.class);
-		} catch (JsonParseException e) {
+			return MAPPER.readValue(jsonString, ObjectNode.class);
+		} catch (final IOException e) {
 
 			throw new DMPException("something went wrong while parsing the JSON string '" + jsonString + "'\n" + e.getMessage());
-		} catch (JsonMappingException e) {
+		}
+	}
 
-			throw new DMPException("something went wrong while parsing the JSON string '" + jsonString + "'\n" + e.getMessage());
-		} catch (IOException e) {
+	public static ArrayNode getJSONArray(final String jsonString) throws DMPException {
+
+		try {
+			return MAPPER.readValue(jsonString, ArrayNode.class);
+		} catch (final IOException e) {
 
 			throw new DMPException("something went wrong while parsing the JSON string '" + jsonString + "'\n" + e.getMessage());
 		}
@@ -55,12 +60,12 @@ public class DMPPersistenceUtil {
 
 	public static ObjectMapper getJSONObjectMapper() {
 
-		return mapper;
+		return MAPPER;
 	}
 
 	public static JsonNodeFactory getJSONFactory() {
 
-		return factory;
+		return FACTORY;
 	}
 
 	public static Injector getInjector() throws DMPException {

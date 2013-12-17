@@ -1,0 +1,1 @@
+{"name":"case","dsl":"metafacture","reference":"case","description":"Upper/lower-case transformation.","parameters":{"to":{"type":"radio","choices":["upper","lower"]},"language":{"type":"text","optional":true}}}

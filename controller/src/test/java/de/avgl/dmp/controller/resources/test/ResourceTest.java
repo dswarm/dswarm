@@ -9,13 +9,14 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 import de.avgl.dmp.controller.EmbeddedServer;
+import de.avgl.dmp.controller.providers.handler.ExceptionHandler;
 import de.avgl.dmp.controller.servlet.DMPInjector;
 
 public class ResourceTest extends GuicedTest {
 
 	private static final org.apache.log4j.Logger	LOG		= org.apache.log4j.Logger.getLogger(ResourceTest.class);
 
-	protected static EmbeddedServer 				grizzlyServer;
+	protected static EmbeddedServer                 grizzlyServer;
 
 	protected String								resourceIdentifier;
 	protected static final int						port	= 9998;
@@ -54,7 +55,7 @@ public class ResourceTest extends GuicedTest {
 
 		return builder
 				.register(MultiPartFeature.class)
-				.register(de.avgl.dmp.controller.providers.ExceptionHandler.class)
+				.register(ExceptionHandler.class)
 				.build();
 	}
 

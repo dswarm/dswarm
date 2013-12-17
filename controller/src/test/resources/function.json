@@ -1,0 +1,23 @@
+{
+    "id": 176,
+    "name": "trim",
+    "description": "trims leading and trailing whitespaces from a given string",
+    "parameters": ["inputString", "parameter2"],
+    "function_description": {
+        "name": "case",
+        "dsl": "metafacture",
+        "reference": "case",
+        "description": "Upper/lower-case transformation.",
+        "parameters": {
+            "to": {
+                "type": "radio",
+                "choices": ["upper", "lower"]
+            },
+            "language": {
+                "type": "text",
+                "optional": true
+            }
+        }
+    },
+    "type": "Function"
+}

@@ -1,0 +1,47 @@
+{
+    "id": 1,
+    "name": "my mapping",
+    "transformation": {
+        "id": 25,
+        "name": "my transformation (component)",
+        "function": {
+            "id": 320,
+            "name": "my transformation",
+            "description": "transformation which just makes use of one function",
+            "parameters": ["transformationInputString"],
+            "components": [{
+                "id": 24,
+                "name": "my trim component",
+                "function": {
+                    "id": 319,
+                    "name": "trim",
+                    "description": "trims leading and trailing whitespaces from a given string",
+                    "parameters": ["inputString"],
+                    "type": "Function"
+                },
+                "parameter_mappings": {
+                    "inputString": "previousComponent.outputString"
+                }
+            }],
+            "type": "Transformation"
+        },
+        "parameter_mappings": {
+            "transformationInputString": "http://purl.org/dc/terms/title",
+            "transformationOutputVariable": "http://www.w3.org/2000/01/rdf-schema#label"
+        }
+    },
+    "input_attribute_paths": [{
+        "id": 43,
+        "attributes": [{
+            "id": "http://purl.org/dc/terms/title",
+            "name": "title"
+        }]
+    }],
+    "output_attribute_path": {
+        "id": 44,
+        "attributes": [{
+            "id": "http://www.w3.org/2000/01/rdf-schema#label",
+            "name": "label"
+        }]
+    }
+}

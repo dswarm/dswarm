@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -25,10 +26,12 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+
 import com.codahale.metrics.Timer;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -40,12 +43,13 @@ import com.google.common.io.Files;
 import com.google.common.io.LineProcessor;
 import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataParam;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.eventbus.CSVConverterEvent;
+import de.avgl.dmp.controller.eventbus.SchemaEvent;
 import de.avgl.dmp.controller.eventbus.XMLConverterEvent;
 import de.avgl.dmp.controller.eventbus.XMLSchemaEvent;
 import de.avgl.dmp.controller.status.DMPStatus;
@@ -57,14 +61,18 @@ import de.avgl.dmp.converter.flow.CSVSourceResourceCSVJSONPreviewFlow;
 import de.avgl.dmp.converter.flow.CSVSourceResourceCSVPreviewFlow;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
+import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
+import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.model.types.Tuple;
-import de.avgl.dmp.persistence.services.ConfigurationService;
-import de.avgl.dmp.persistence.services.ResourceService;
+import de.avgl.dmp.persistence.service.resource.ConfigurationService;
+import de.avgl.dmp.persistence.service.resource.DataModelService;
+import de.avgl.dmp.persistence.service.resource.ResourceService;
 
 @RequestScoped
-@Path("resources")
+@Api(value = "/resources", description = "Operations about data resources.")
+@Path("/resources")
 public class ResourcesResource {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ResourcesResource.class);
@@ -81,18 +89,20 @@ public class ResourcesResource {
 	private final DMPStatus							dmpStatus;
 
 	private final ObjectMapper						objectMapper;
+	private final DataModelService                  modelService;
 	private final InternalSchemaDataUtil			schemaDataUtil;
 
 	@Inject
 	public ResourcesResource(final DMPStatus dmpStatus, final ObjectMapper objectMapper, final Provider<ResourceService> resourceServiceProvider,
-							 final Provider<ConfigurationService> configurationServiceProvider,
-							 final Provider<EventBus> eventBusProvider, final InternalSchemaDataUtil schemaDataUtil) {
+			final Provider<ConfigurationService> configurationServiceProvider, final Provider<EventBus> eventBusProvider,
+			final DataModelService modelService, final InternalSchemaDataUtil schemaDataUtil) {
 
 		this.eventBusProvider = eventBusProvider;
 		this.resourceServiceProvider = resourceServiceProvider;
 		this.configurationServiceProvider = configurationServiceProvider;
 		this.dmpStatus = dmpStatus;
 		this.objectMapper = objectMapper;
+		this.modelService = modelService;
 		this.schemaDataUtil = schemaDataUtil;
 	}
 
@@ -107,11 +117,14 @@ public class ResourcesResource {
 	}
 
 	@POST
+	@ApiOperation(value = "upload new data resource", notes = "Returns a new Resource object, when upload was successfully.", response = Resource.class)
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response uploadResource(@FormDataParam("file") final InputStream uploadedInputStream,
-			@FormDataParam("file") final FormDataContentDisposition fileDetail, @FormDataParam("name") final String name,
-			@FormDataParam("description") final String description) throws DMPControllerException {
+	public Response uploadResource(
+			@ApiParam(value = "file input stream", required = true) @FormDataParam("file") final InputStream uploadedInputStream,
+			@ApiParam("file metadata") @FormDataParam("file") final FormDataContentDisposition fileDetail,
+			@ApiParam(value = "resource name", required = true) @FormDataParam("name") final String name,
+			@ApiParam("resource description") @FormDataParam("description") final String description) throws DMPControllerException {
 		final Timer.Context context = dmpStatus.createNewResource();
 
 		LOG.debug("try to create new resource '" + name + "' for file '" + fileDetail.getFileName() + "'");
@@ -127,7 +140,7 @@ public class ResourcesResource {
 		LOG.debug("created new resource '" + name + "' for file '" + fileDetail.getFileName() + "' = '"
 				+ ToStringBuilder.reflectionToString(resource) + "'");
 
-		String resourceJSON;
+		final String resourceJSON;
 
 		try {
 
@@ -147,6 +160,7 @@ public class ResourcesResource {
 		return buildResponseCreated(resourceJSON, resourceURI);
 	}
 
+	@ApiOperation(value = "get all data resources", notes = "Returns a list of Resource objects.")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getResources() throws DMPControllerException {
@@ -176,7 +190,7 @@ public class ResourcesResource {
 
 		LOG.debug("got all resources = ' = '" + ToStringBuilder.reflectionToString(resources) + "'");
 
-		String resourcesJSON;
+		final String resourcesJSON;
 
 		try {
 
@@ -193,10 +207,12 @@ public class ResourcesResource {
 		return buildResponse(resourcesJSON);
 	}
 
+	@ApiOperation(value = "get the data resource that matches the given id", notes = "Returns the Resource object that matches the given id.")
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResource(@PathParam("id") final Long id) throws DMPControllerException {
+	public Response getResource(@ApiParam(value = "data resource identifier", required = true) @PathParam("id") final Long id)
+			throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getSingleResource();
 
 		final Optional<Resource> resourceOptional = schemaDataUtil.fetchResource(id);
@@ -209,7 +225,7 @@ public class ResourcesResource {
 
 		final Resource resource = resourceOptional.get();
 
-		String resourceJSON;
+		final String resourceJSON;
 
 		try {
 
@@ -226,11 +242,14 @@ public class ResourcesResource {
 		return buildResponse(resourceJSON);
 	}
 
+	@ApiOperation(value = "get the lines of the data resource that matches the given id", notes = "Returns the lines of the data resource that matches the given id. The number of lines can be limited via the 'atMost' parameter. The encoding can be set via the 'encoding' parameter.")
 	@GET
 	@Path("/{id}/lines")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResourcePlain(@PathParam("id") final Long id, @DefaultValue("50") @QueryParam("atMost") final int atMost,
-			@DefaultValue("UTF-8") @QueryParam("encoding") final String encoding) throws DMPControllerException {
+	public Response getResourcePlain(@ApiParam(value = "data resource identifier", required = true) @PathParam("id") final Long id,
+			@ApiParam(value = "number of lines limit", defaultValue = "50") @DefaultValue("50") @QueryParam("atMost") final int atMost,
+			@ApiParam(value = "data resource encoding", defaultValue = "50") @DefaultValue("UTF-8") @QueryParam("encoding") final String encoding)
+			throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getSingleResource();
 
 		final Optional<Resource> resourceOptional = schemaDataUtil.fetchResource(id);
@@ -261,7 +280,7 @@ public class ResourcesResource {
 				private int									linesProcessed	= 1;
 
 				@Override
-				public boolean processLine(String line) throws IOException {
+				public boolean processLine(final String line) throws IOException {
 					if (linesProcessed++ > atMost) {
 
 						return false;
@@ -276,13 +295,13 @@ public class ResourcesResource {
 					return lines.build();
 				}
 			});
-		} catch (IOException e) {
+		} catch (final IOException e) {
 
 			dmpStatus.stop(context);
 			throw new DMPControllerException("couldn't read file contents.\n" + e.getMessage());
 		}
 
-		Map<String, Object> jsonMap = new HashMap<String, Object>(1);
+		final Map<String, Object> jsonMap = new HashMap<>(1);
 		jsonMap.put("lines", lines);
 		jsonMap.put("name", resource.getName());
 		jsonMap.put("description", resource.getDescription());
@@ -301,10 +320,12 @@ public class ResourcesResource {
 		return buildResponse(plainJson);
 	}
 
+	@ApiOperation(value = "get all configurations of the data resource that matches the given id", notes = "Returns the configurations of the data resource that matches the given id.")
 	@GET
 	@Path("/{id}/configurations")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResourceConfigurations(@PathParam("id") final Long id) throws DMPControllerException {
+	public Response getResourceConfigurations(@ApiParam(value = "data resource identifier", required = true) @PathParam("id") final Long id)
+			throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getAllConfigurations();
 
 		LOG.debug("try to get resource configurations for resource with id '" + id.toString() + "'");
@@ -335,7 +356,7 @@ public class ResourcesResource {
 		LOG.debug("got resource configurations for resource with id '" + id.toString() + "' = '" + ToStringBuilder.reflectionToString(configurations)
 				+ "'");
 
-		String configurationsJSON;
+		final String configurationsJSON;
 
 		try {
 
@@ -352,11 +373,13 @@ public class ResourcesResource {
 		return buildResponse(configurationsJSON);
 	}
 
+	@ApiOperation(value = "add a new configuration to the data resource that matches the given id", notes = "Returns the new configuration that was added to the data resource that matches the given id.")
 	@POST
 	@Path("/{id}/configurations")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addConfiguration(@PathParam("id") final Long id, final String jsonObjectString) throws DMPControllerException {
+	public Response addConfiguration(@ApiParam(value = "data resource identifier", required = true) @PathParam("id") final Long id,
+			@ApiParam(value = "configuration (as JSON)", required = true) final String jsonObjectString) throws DMPControllerException {
 		final Timer.Context context = dmpStatus.createNewConfiguration();
 
 		LOG.debug("try to create new configuration for resource with id '" + id + "'");
@@ -385,21 +408,33 @@ public class ResourcesResource {
 
 		LOG.debug("added new configuration to resource with id '" + id + "' = '" + ToStringBuilder.reflectionToString(configuration) + "'");
 
-		final JsonNode storageType = configuration.getParameters().get("storage_type");
-		if (storageType != null) {
-			if ("schema".equals(storageType.asText())) {
+		final JsonNode jsStorageType = configuration.getParameters().get("storage_type");
+		if (jsStorageType != null) {
+			final String storageType = jsStorageType.asText();
+			try {
+				final SchemaEvent.SchemaType type = SchemaEvent.SchemaType.fromString(storageType);
+				eventBusProvider.get().post(new SchemaEvent(resource, configuration, type));
+			} catch (final IllegalArgumentException e) {
+				LOG.warn("could not determine schema type", e);
+			}
 
-				eventBusProvider.get().post(new XMLSchemaEvent(configuration, resource));
-			} else if ("csv".equals(storageType.asText())) {
+			switch (storageType) {
+				case "schema":
 
-				eventBusProvider.get().post(new CSVConverterEvent(configuration, resource));
-			} else if ("xml".equals(storageType.asText())) {
+					eventBusProvider.get().post(new XMLSchemaEvent(configuration, resource));
+					break;
+				case "csv":
 
-				eventBusProvider.get().post(new XMLConverterEvent(configuration, resource));
+					eventBusProvider.get().post(new CSVConverterEvent(configuration, resource));
+					break;
+				case "xml":
+
+					eventBusProvider.get().post(new XMLConverterEvent(configuration, resource));
+					break;
 			}
 		}
 
-		String configurationJSON;
+		final String configurationJSON;
 
 		try {
 
@@ -419,10 +454,12 @@ public class ResourcesResource {
 		return buildResponseCreated(configurationJSON, configurationURI);
 	}
 
+	@ApiOperation(value = "get the configuration of the data resource that matches the given data resource id and the given configuration id", notes = "Returns the configuration of the data resource that matches the given data resource id and the given configuration id.")
 	@GET
 	@Path("/{id}/configurations/{configurationid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResourceConfiguration(@PathParam("id") final Long id, @PathParam("configurationid") final Long configurationId)
+	public Response getResourceConfiguration(@ApiParam(value = "data resource identifier", required = true) @PathParam("id") final Long id,
+			@ApiParam(value = "configuration identifier", required = true) @PathParam("configurationid") final Long configurationId)
 			throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getSingleConfiguration();
 
@@ -434,7 +471,7 @@ public class ResourcesResource {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		String configurationJSON;
+		final String configurationJSON;
 
 		try {
 
@@ -451,49 +488,62 @@ public class ResourcesResource {
 		return buildResponse(configurationJSON);
 	}
 
+	@ApiOperation(value = "get the schema of the data resource and configuration (= data model) that matches the given data resource id and the given configuration id", notes = "Returns the schema of the data resource and configuration (= data model) that matches the given data resource id and the given configuration id.")
 	@GET
 	@Path("/{id}/configurations/{configurationid}/schema")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResourceConfigurationSchema(@PathParam("id") final Long id, @PathParam("configurationid") final Long configurationId)
+	public Response getResourceConfigurationSchema(@ApiParam(value = "data resource identifier", required = true) @PathParam("id") final Long id,
+			@ApiParam(value = "configuration identifier", required = true) @PathParam("configurationid") final Long configurationId)
 			throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getConfigurationSchema();
 
 		LOG.debug("try to get schema for configuration with id '" + configurationId + "' for resource with id '" + id + "'");
 
-		final Optional<ObjectNode> schema = schemaDataUtil.getSchema(id, configurationId);
+		final List<DataModel> models = modelService.getObjects();
 
-		if (!schema.isPresent()) {
+		Schema schema = null;
+		for (final DataModel model : models) {
+			if (model.getDataResource().getId().equals(id) && model.getConfiguration().getId().equals(configurationId)) {
 
+				schema = model.getSchema();
+				break;
+			}
+		}
+
+		if (schema == null) {
+			LOG.info("could not find schema for resource=" + id + " and configuration=" + configurationId);
 			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
 		final String jsonString;
 		try {
-			jsonString = objectMapper.writeValueAsString(schema.get());
-		} catch (JsonProcessingException e) {
+			jsonString = objectMapper.writeValueAsString(schema);
+		} catch (final JsonProcessingException e) {
 
 			dmpStatus.stop(context);
 			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
 		}
 
-		LOG.debug(String.format("return schema for configuration with id [%d] for resource with id [%d] and content [%s...]",
-				configurationId, id, jsonString.substring(0, 30)));
+		LOG.debug(String.format("return schema for configuration with id [%d] for resource with id [%d] and content [%s...]", configurationId, id,
+				jsonString.substring(0, 30)));
 
 		dmpStatus.stop(context);
 		return buildResponse(jsonString);
 	}
 
+	@ApiOperation(value = "get the data of the data resource and configuration (= data model) that matches the given data resource id and the given configuration id", notes = "Returns the data of the data resource and configuration (= data model) that matches the given data resource id and the given configuration id.")
 	@GET
 	@Path("/{id}/configurations/{configurationid}/data")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResourceConfigurationData(@PathParam("id") final Long id, @PathParam("configurationid") final Long configurationId,
-			@QueryParam("atMost") final Integer atMost) throws DMPControllerException {
+	public Response getResourceConfigurationData(@ApiParam(value = "data resource identifier", required = true) @PathParam("id") final Long id,
+			@ApiParam(value = "configuration identifier", required = true) @PathParam("configurationid") final Long configurationId,
+			@ApiParam("number of records limit") @QueryParam("atMost") final Integer atMost) throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getConfigurationData();
 
 		LOG.debug("try to get schema for configuration with id '" + configurationId + "' for resource with id '" + id + "'");
 
-		final Optional<Iterator<Tuple<String,JsonNode>>> data = schemaDataUtil.getData(id, configurationId, Optional.fromNullable(atMost));
+		final Optional<Iterator<Tuple<String, JsonNode>>> data = schemaDataUtil.getData(id, configurationId, Optional.fromNullable(atMost));
 
 		if (!data.isPresent()) {
 
@@ -504,7 +554,7 @@ public class ResourcesResource {
 		}
 
 		// temp
-		final Iterator<Tuple<String,JsonNode>> tupleIterator;
+		final Iterator<Tuple<String, JsonNode>> tupleIterator;
 		if (atMost != null) {
 			tupleIterator = Iterators.limit(data.get(), atMost);
 		} else {
@@ -513,11 +563,11 @@ public class ResourcesResource {
 
 		final ObjectNode json = objectMapper.createObjectNode();
 		while (tupleIterator.hasNext()) {
-			Tuple<String, JsonNode> tuple = data.get().next();
+			final Tuple<String, JsonNode> tuple = data.get().next();
 			json.put(tuple.v1(), tuple.v2());
 		}
 
-		String jsonString;
+		final String jsonString;
 
 		try {
 
@@ -528,18 +578,20 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
 		}
 
-		LOG.debug("return data for configuration with id '" + configurationId + "' for resource with id '" + id + "' and content '"
-				+ jsonString + "'");
+		LOG.debug("return data for configuration with id '" + configurationId + "' for resource with id '" + id + "' and content '" + jsonString
+				+ "'");
 
 		dmpStatus.stop(context);
 		return buildResponse(jsonString);
 	}
 
+	@ApiOperation(value = "get a CSV data preview of the data resource that matches the given id and where the given configuration will be applied to ( = data model)", notes = "Returns a CSV data preview of the data resource that matches the given id and where the given configuration will be applied to ( = data model).")
 	@POST
 	@Path("/{id}/configurationpreview")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response csvPreviewConfiguration(@PathParam("id") final Long id, final String jsonObjectString) throws DMPControllerException {
+	public Response csvPreviewConfiguration(@ApiParam(value = "data resource identifier", required = true) @PathParam("id") final Long id,
+			@ApiParam(value = "configuration (as JSON)", required = true) final String jsonObjectString) throws DMPControllerException {
 		final Timer.Context context = dmpStatus.configurationsPreview();
 
 		LOG.debug("try to apply configuration for resource with id '" + id + "'");
@@ -574,11 +626,13 @@ public class ResourcesResource {
 		return buildResponse(result);
 	}
 
+	@ApiOperation(value = "get a CSV JSON data preview of the data resource that matches the given id and where the given configuration will be applied to ( = data model)", notes = "Returns a CSV JSON data preview of the data resource that matches the given id and where the given configuration will be applied to ( = data model).")
 	@POST
 	@Path("/{id}/configurationpreview")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response csvJSONPreviewConfiguration(@PathParam("id") final Long id, final String jsonObjectString) throws DMPControllerException {
+	public Response csvJSONPreviewConfiguration(@ApiParam(value = "data resource identifier", required = true) @PathParam("id") final Long id,
+			@ApiParam(value = "configuration (as JSON)", required = true) final String jsonObjectString) throws DMPControllerException {
 		final Timer.Context context = dmpStatus.configurationsPreview();
 
 		LOG.debug("try to apply configuration for resource with id '" + id + "'");
@@ -620,7 +674,7 @@ public class ResourcesResource {
 
 		final ResourceService resourceService = resourceServiceProvider.get();
 
-		Resource resource;
+		final Resource resource;
 
 		try {
 
@@ -688,20 +742,25 @@ public class ResourcesResource {
 
 		final ConfigurationService configurationService = configurationServiceProvider.get();
 
-		final Configuration configuration;
-		try {
+		Configuration configuration = null;
 
-			configuration = configurationService.createObject();
-		} catch (final DMPPersistenceException e) {
+		if (configurationFromJSON.getId() == null) {
 
-			LOG.debug("something went wrong while configuration creation");
+			// create new configuration, since it has no id
 
-			throw new DMPControllerException("something went wrong while configuration creation\n" + e.getMessage());
-		}
+			configuration = createNewConfiguration(configurationService);
+		} else {
 
-		if (configuration == null) {
+			// try to retrieve configuration via id from "configuration from JSON"
 
-			throw new DMPControllerException("fresh configuration shouldn't be null");
+			configuration = configurationService.getObject(configurationFromJSON.getId());
+
+			if(configuration == null) {
+
+				// if the id is not in the DB, also create a new object
+
+				configuration = createNewConfiguration(configurationService);
+			}
 		}
 
 		final String name = configurationFromJSON.getName();
@@ -752,6 +811,28 @@ public class ResourcesResource {
 		return configuration;
 	}
 
+	private Configuration createNewConfiguration(final ConfigurationService configurationService) throws DMPControllerException {
+
+		final Configuration configuration;
+
+		try {
+
+			configuration = configurationService.createObject();
+		} catch (final DMPPersistenceException e) {
+
+			LOG.debug("something went wrong while configuration creation");
+
+			throw new DMPControllerException("something went wrong while configuration creation\n" + e.getMessage());
+		}
+
+		if (configuration == null) {
+
+			throw new DMPControllerException("fresh configuration shouldn't be null");
+		}
+
+		return configuration;
+	}
+
 	private String applyConfigurationForCSVPreview(final Resource resource, final String configurationJSONString) throws DMPControllerException {
 
 		final Configuration configurationFromJSON = getConfiguration(configurationJSONString);
@@ -768,18 +849,18 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't determine file path");
 		}
 
-		CSVSourceResourceCSVPreviewFlow flow;
+		final CSVSourceResourceCSVPreviewFlow flow;
 
 		try {
 			flow = CSVResourceFlowFactory.fromConfiguration(configurationFromJSON, CSVSourceResourceCSVPreviewFlow.class);
-		} catch (DMPConverterException e) {
+		} catch (final DMPConverterException e) {
 
 			throw new DMPControllerException(e.getMessage());
 		}
 
 		try {
 			return flow.applyFile(filePathNode.asText());
-		} catch (DMPConverterException e) {
+		} catch (final DMPConverterException e) {
 			throw new DMPControllerException(e.getMessage());
 		}
 	}
@@ -800,11 +881,11 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't determine file path");
 		}
 
-		CSVSourceResourceCSVJSONPreviewFlow flow;
+		final CSVSourceResourceCSVJSONPreviewFlow flow;
 
 		try {
 			flow = CSVResourceFlowFactory.fromConfiguration(configurationFromJSON, CSVSourceResourceCSVJSONPreviewFlow.class);
-		} catch (DMPConverterException e) {
+		} catch (final DMPConverterException e) {
 
 			throw new DMPControllerException(e.getMessage());
 		}
@@ -813,7 +894,7 @@ public class ResourcesResource {
 
 		try {
 			return flow.applyFile(filePathNode.asText());
-		} catch (DMPConverterException e) {
+		} catch (final DMPConverterException e) {
 
 			throw new DMPControllerException(e.getMessage());
 		}
@@ -821,21 +902,11 @@ public class ResourcesResource {
 
 	private Configuration getConfiguration(final String configurationJSONString) throws DMPControllerException {
 
-		Configuration configurationFromJSON;
+		final Configuration configurationFromJSON;
 
 		try {
 
 			configurationFromJSON = objectMapper.readValue(configurationJSONString, Configuration.class);
-		} catch (final JsonParseException e) {
-
-			LOG.debug("something went wrong while deserializing the configuration JSON string");
-
-			throw new DMPControllerException("something went wrong while deserializing the configuration JSON string.\n" + e.getMessage());
-		} catch (final JsonMappingException e) {
-
-			LOG.debug("something went wrong while deserializing the configuration JSON string");
-
-			throw new DMPControllerException("something went wrong while deserializing the configuration JSON string.\n" + e.getMessage());
 		} catch (final IOException e) {
 
 			LOG.debug("something went wrong while deserializing the configuration JSON string");

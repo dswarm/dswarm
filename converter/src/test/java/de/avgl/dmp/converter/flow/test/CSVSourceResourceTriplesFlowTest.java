@@ -4,11 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.core.ObjectCodec;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.collect.ImmutableList;
 import org.culturegraph.mf.stream.source.ResourceOpener;
@@ -35,7 +30,7 @@ public class CSVSourceResourceTriplesFlowTest {
 		@SuppressWarnings("unchecked") final Matcher<String> predicateMatcher = anyOf(
 				equalTo("id"), equalTo("name"), equalTo("description"), equalTo("isbn"), equalTo("year"));
 
-		List<String> subjects = new ArrayList<String>();
+		final List<String> subjects = new ArrayList<String>();
 		for (int i = 1; i <= 19; i++) {
 			for (int j = 0; j < 5; j++) {
 				subjects.add(String.valueOf(i));
@@ -44,7 +39,7 @@ public class CSVSourceResourceTriplesFlowTest {
 		final Iterator<String> subjectsIterator = subjects.iterator();
 
 		final ImmutableList<Triple> triples = flow.apply("test_csv.csv", opener);
-		for (Triple triple : triples) {
+		for (final Triple triple : triples) {
 			assertThat(triple.getSubject(), equalTo(subjectsIterator.next()));
 			assertThat(triple.getPredicate(), predicateMatcher);
 			assertThat(triple.getObjectType(), equalTo(Triple.ObjectType.STRING));
@@ -84,7 +79,7 @@ public class CSVSourceResourceTriplesFlowTest {
 		@SuppressWarnings("UnusedDeclaration") final CSVSourceResourceTriplesFlow flow = new CSVSourceResourceTriplesFlow(configuration);
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test(expected = DMPConverterException.class)
 	public void testNullConfigurationParameter() throws Exception {
 		final Configuration configuration = new Configuration();
 		@SuppressWarnings("UnusedDeclaration") final CSVSourceResourceTriplesFlow flow = new CSVSourceResourceTriplesFlow(configuration);

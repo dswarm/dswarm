@@ -12,7 +12,6 @@ import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -34,7 +33,7 @@ public class JSRoot extends JSObject {
 	}
 
 	@Override
-	protected void render(final JsonGenerator jgen) throws IOException {
+	void render(final JsonGenerator jgen) throws IOException {
 		jgen.writeStartObject();
 
 		jgen.writeStringField("title", getName());
@@ -60,7 +59,7 @@ public class JSRoot extends JSObject {
 		return jsonNode;
 	}
 
-	public void render(final ObjectMapper mapper, final OutputStream out) throws IOException {
+	void render(final ObjectMapper mapper, final OutputStream out) throws IOException {
 		render(mapper.getFactory(), out);
 
 	}
@@ -76,19 +75,19 @@ public class JSRoot extends JSObject {
 		render(mapper.getFactory(), file, encoding);
 	}
 
-	public void render(final JsonFactory jsonFactory, final OutputStream out) throws IOException {
+	void render(final JsonFactory jsonFactory, final OutputStream out) throws IOException {
 		render(jsonFactory.createGenerator(out));
 
 	}
-	public void render(final JsonFactory jsonFactory, final OutputStream out, final JsonEncoding encoding) throws IOException {
+	void render(final JsonFactory jsonFactory, final OutputStream out, final JsonEncoding encoding) throws IOException {
 		render(jsonFactory.createGenerator(out, encoding));
 
 	}
-	public void render(final JsonFactory jsonFactory, final Writer writer) throws IOException {
+	void render(final JsonFactory jsonFactory, final Writer writer) throws IOException {
 		render(jsonFactory.createGenerator(writer));
 
 	}
-	public void render(final JsonFactory jsonFactory, final File file, final JsonEncoding encoding) throws IOException {
+	void render(final JsonFactory jsonFactory, final File file, final JsonEncoding encoding) throws IOException {
 		render(jsonFactory.createGenerator(file, encoding));
 	}
 

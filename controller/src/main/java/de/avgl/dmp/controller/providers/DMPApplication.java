@@ -8,18 +8,34 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.jvnet.hk2.guice.bridge.api.GuiceBridge;
 import org.jvnet.hk2.guice.bridge.api.GuiceIntoHK2Bridge;
 
+import com.wordnik.swagger.jersey.listing.ApiListingResourceJSON;
+import com.wordnik.swagger.jersey.listing.JerseyApiDeclarationProvider;
+import com.wordnik.swagger.jersey.listing.JerseyResourceListingProvider;
+
+import de.avgl.dmp.controller.providers.filter.CorsResponseFilter;
+import de.avgl.dmp.controller.providers.handler.DMPJsonExceptionHandler;
+import de.avgl.dmp.controller.providers.handler.ExceptionHandler;
+import de.avgl.dmp.controller.providers.handler.WebApplicationExceptionHandler;
 import de.avgl.dmp.controller.servlet.DMPInjector;
 
 @SuppressWarnings("UnusedDeclaration")
-public class DMPApplication extends ResourceConfig {
+class DMPApplication extends ResourceConfig {
 
 	@Inject
 	public DMPApplication(final ServiceLocator serviceLocator) {
 
-		packages("de.avgl.dmp.controller.resources");
+		packages("de.avgl.dmp.controller.resources", "com.wordnik.swagger.jersey.listing");
+		registerClasses(
+				DMPJsonExceptionHandler.class,
+				ExceptionHandler.class,
+				WebApplicationExceptionHandler.class,
+				CorsResponseFilter.class);
 		register(MultiPartFeature.class);
-		register(ExceptionHandler.class);
-		register(CorsResponseFilter.class);
+
+		// swagger
+		register(ApiListingResourceJSON.class);
+		register(JerseyApiDeclarationProvider.class);
+		register(JerseyResourceListingProvider.class);
 
 		// initialize injectors...
 		GuiceBridge.getGuiceBridge().initializeGuiceBridge(serviceLocator);

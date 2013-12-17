@@ -30,7 +30,7 @@ public class JSOther extends JSElement {
 		return new JSOther(newName, nameSpace);
 	}
 
-	public String getNameSpace() {
+	String getNameSpace() {
 		return nameSpace;
 	}
 

@@ -34,13 +34,14 @@ public class MetricsFilter implements Filter {
 	/**
 	 * Creates a new instance of the filter.
 	 */
+	@SuppressWarnings("StringConcatenationMissingWhitespace")
 	@Inject
 	protected MetricsFilter(final MetricRegistry metricRegistry) {
 
 		final String namePrefix = "responseCodes.";
 		final String otherMetricName = namePrefix + "other";
 
-		final Map<Integer, String> meterNamesByStatusCode = new HashMap<Integer, String>(13);
+		final Map<Integer, String> meterNamesByStatusCode = new HashMap<>(13);
 
 		meterNamesByStatusCode.put(HttpServletResponse.SC_OK, namePrefix + "ok");
 		meterNamesByStatusCode.put(HttpServletResponse.SC_CREATED, namePrefix + "created");
@@ -59,7 +60,7 @@ public class MetricsFilter implements Filter {
 		meterNamesByStatusCode.put(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, namePrefix + "serverError");
 
 
-		final ConcurrentMap<Integer, Meter> metersByStatusCode = new ConcurrentHashMap<Integer, Meter>(meterNamesByStatusCode.size());
+		final ConcurrentMap<Integer, Meter> metersByStatusCode = new ConcurrentHashMap<>(meterNamesByStatusCode.size());
 		for (final Map.Entry<Integer, String> entry : meterNamesByStatusCode.entrySet()) {
 			metersByStatusCode.put(entry.getKey(),
 					metricRegistry.meter(name(MetricsFilter.class, entry.getValue())));

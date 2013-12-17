@@ -8,7 +8,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class Tuple<V1, V2> {
 
 	public static <V1, V2, V3> Tuple<V1, V2> tuple(final V1 v1, final V2 v2) {
-		return new Tuple<V1, V2>(v1, v2);
+		return new Tuple<>(v1, v2);
 	}
 
 	private final V1 v1;
@@ -29,19 +29,17 @@ public class Tuple<V1, V2> {
 
 	@Override
 	public boolean equals(final Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
 		final Tuple tuple = (Tuple) o;
 
-		if (!v1.equals(tuple.v1)) {
-			return false;
-		}
-		if (!v2.equals(tuple.v2)) {
-			return false;
-		}
+		return v1.equals(tuple.v1) && v2.equals(tuple.v2);
 
-		return true;
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package de.avgl.dmp.controller.utils;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -27,36 +26,34 @@ import de.avgl.dmp.persistence.model.jsonschema.JSRoot;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.types.Tuple;
-import de.avgl.dmp.persistence.services.InternalService;
-import de.avgl.dmp.persistence.services.InternalServiceFactory;
-import de.avgl.dmp.persistence.services.ResourceService;
-import de.avgl.dmp.persistence.services.SchemaService;
+import de.avgl.dmp.persistence.service.InternalService;
+import de.avgl.dmp.persistence.service.InternalServiceFactory;
+import de.avgl.dmp.persistence.service.resource.ResourceService;
+import de.avgl.dmp.persistence.service.schema.SchemaService;
 
 @Singleton
 public class InternalSchemaDataUtil {
 
-	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(InternalSchemaDataUtil.class);
-	private final ObjectMapper objectMapper;
-	private final Provider<ResourceService> resourceServiceProvider;
-	private final Provider<InternalServiceFactory> internalServiceFactoryProvider;
-	private final Provider<SchemaService> schemaServiceProvider;
+	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(InternalSchemaDataUtil.class);
+	private final ObjectMapper						objectMapper;
+	private final Provider<ResourceService>			resourceServiceProvider;
+	private final Provider<InternalServiceFactory>	internalServiceFactoryProvider;
+	private final Provider<SchemaService>			schemaServiceProvider;
 
 	@Inject
 	public InternalSchemaDataUtil(final ObjectMapper objectMapper, final Provider<ResourceService> resourceServiceProvider,
-								  final Provider<InternalServiceFactory> internalServiceFactoryProvider,
-								  final Provider<SchemaService> schemaServiceProvider) {
+			final Provider<InternalServiceFactory> internalServiceFactoryProvider, final Provider<SchemaService> schemaServiceProvider) {
 		this.objectMapper = objectMapper;
 		this.resourceServiceProvider = resourceServiceProvider;
 		this.internalServiceFactoryProvider = internalServiceFactoryProvider;
 		this.schemaServiceProvider = schemaServiceProvider;
 	}
 
-
 	public Optional<Iterator<Tuple<String, JsonNode>>> getData(final long resourceId, final long configurationId) {
-		return getData(resourceId, configurationId, Optional.<Integer>absent());
+		return getData(resourceId, configurationId, Optional.<Integer> absent());
 	}
 
-	public Optional<Iterator<Tuple<String, JsonNode>>> getData(long resourceId, long configurationId, Optional<Integer> atMost) {
+	public Optional<Iterator<Tuple<String, JsonNode>>> getData(final long resourceId, final long configurationId, final Optional<Integer> atMost) {
 
 		LOG.debug(String.format("try to get data for configuration with id [%d] for resource with id [%d]", configurationId, resourceId));
 
@@ -70,11 +67,11 @@ public class InternalSchemaDataUtil {
 		final InternalService internalService;
 		try {
 			internalService = determineInternalService(configurationOptional.get());
-		} catch (DMPControllerException e) {
+		} catch (final DMPControllerException e) {
 			return Optional.absent();
 		}
 
-		Optional<Map<String, Model>> maybeTriples;
+		final Optional<Map<String, Model>> maybeTriples;
 
 		try {
 
@@ -96,7 +93,7 @@ public class InternalSchemaDataUtil {
 		return Optional.of(dataIterator(iterator));
 	}
 
-	public Optional<ObjectNode> getSchema(long resourceId, long configurationId) {
+	public Optional<ObjectNode> getSchema(final long resourceId, final long configurationId) {
 
 		final Optional<Configuration> configurationOptional = fetchConfiguration(resourceId, configurationId);
 
@@ -107,25 +104,29 @@ public class InternalSchemaDataUtil {
 
 		final Configuration configuration = configurationOptional.get();
 
-		final Optional<JSRoot> rootOptional = schemaServiceProvider.get().getSchema(resourceId, configurationId)
-				.or(getConfiguredSchema(configuration));
+		// TODO: fixme
 
-		if (rootOptional.isPresent()) {
+		final Optional<JSRoot> rootOptional = null;
 
-			final JSRoot jsElements = rootOptional.get();
+		// schemaServiceProvider.get().getSchema(resourceId, configurationId)
+		// .or(getConfiguredSchema(configuration));
 
-			try {
-				return Optional.of(jsElements.toJson(objectMapper));
-			} catch (IOException e) {
-				LOG.warn(e.getMessage(), e);
-				return Optional.absent();
-			}
-		}
+		// if (rootOptional.isPresent()) {
+		//
+		// final JSRoot jsElements = rootOptional.get();
+		//
+		// try {
+		// return Optional.of(jsElements.toJson(objectMapper));
+		// } catch (final IOException e) {
+		// LOG.warn(e.getMessage(), e);
+		// return Optional.absent();
+		// }
+		// }
 
 		final InternalService internalService;
 		try {
 			internalService = determineInternalService(configurationOptional.get());
-		} catch (DMPControllerException e) {
+		} catch (final DMPControllerException e) {
 
 			return Optional.absent();
 		}
@@ -197,7 +198,7 @@ public class InternalSchemaDataUtil {
 		}
 	}
 
-	private Optional<JSRoot> getConfiguredSchema(Configuration configuration) {
+	private Optional<JSRoot> getConfiguredSchema(final Configuration configuration) {
 		final ObjectNode parameters = configuration.getParameters();
 		final JsonNode storageType = parameters.get("storage_type");
 		if ("xml".equals(storageType.asText())) {
@@ -210,7 +211,7 @@ public class InternalSchemaDataUtil {
 
 					long latestConfigId = Integer.MIN_VALUE;
 
-					for (Configuration schemaConfiguration : schemaOptional.get().getConfigurations()) {
+					for (final Configuration schemaConfiguration : schemaOptional.get().getConfigurations()) {
 
 						if (schemaConfiguration.getId() > latestConfigId) {
 							latestConfigId = schemaConfiguration.getId();
@@ -219,7 +220,9 @@ public class InternalSchemaDataUtil {
 
 					if (latestConfigId != Integer.MIN_VALUE) {
 
-						return schemaServiceProvider.get().getSchema(schemaId, latestConfigId);
+						// TODO: fixme
+
+						// return schemaServiceProvider.get().getSchema(schemaId, latestConfigId);
 					}
 				}
 			}
@@ -231,32 +234,32 @@ public class InternalSchemaDataUtil {
 	private Iterator<Tuple<String, JsonNode>> dataIterator(final Iterator<Map.Entry<String, Model>> triples) {
 		return new AbstractIterator<Tuple<String, JsonNode>>() {
 
-			//TODO: where to to this?
-			private JsonNode injectDataType(final JsonNode jsonNode) {
-				final UnmodifiableIterator<String> typeKeys = Iterators.filter(jsonNode.fieldNames(), new Predicate<String>() {
-					@Override
-					public boolean apply(@Nullable String input) {
-						return input != null && input.endsWith("#type");
-					}
-				});
-				final String typeKey;
-				try {
-					typeKey = Iterators.getOnlyElement(typeKeys);
-				} catch (IllegalArgumentException e) {
-					return jsonNode;
-				} catch (NoSuchElementException e) {
-					return jsonNode;
-				}
-
-				final JsonNode typeNode = jsonNode.get(typeKey);
-				final String longTypeName = typeNode.textValue();
-				final String typeName = longTypeName.substring(longTypeName.lastIndexOf('#') + 1, longTypeName.lastIndexOf("Type"));
-
-				final ObjectNode objectNode = objectMapper.createObjectNode();
-				objectNode.put(typeName, jsonNode);
-
-				return objectNode;
-			}
+			// TODO: where to to this? => [@tgaengler]: In my opinion, this needs to be done, when the input data model will
+			// created, i.e., that you will only have valid data models here
+			// private JsonNode injectDataType(final JsonNode jsonNode) {
+			// final UnmodifiableIterator<String> typeKeys = Iterators.filter(jsonNode.fieldNames(), new Predicate<String>() {
+			// @Override
+			// public boolean apply(@Nullable final String input) {
+			// return input != null && input.endsWith("#type");
+			// }
+			// });
+			// final String typeKey;
+			// try {
+			// typeKey = Iterators.getOnlyElement(typeKeys);
+			// } catch (final IllegalArgumentException | NoSuchElementException e) {
+			// return jsonNode;
+			// }
+			//
+			// final JsonNode typeNode = jsonNode.get(typeKey);
+			// final String longTypeName = typeNode.textValue();
+			// final String typeName = longTypeName.substring(longTypeName.lastIndexOf('#') + 1,
+			// longTypeName.lastIndexOf("Type"));
+			//
+			// final ObjectNode objectNode = objectMapper.createObjectNode();
+			// objectNode.put(typeName, jsonNode);
+			//
+			// return objectNode;
+			// }
 
 			@Override
 			protected Tuple<String, JsonNode> computeNext() {
@@ -264,7 +267,8 @@ public class InternalSchemaDataUtil {
 					final Map.Entry<String, Model> nextTriple = triples.next();
 					final String recordId = nextTriple.getKey();
 					final JsonNode jsonNode = nextTriple.getValue().toJSON();
-					return Tuple.tuple(recordId, injectDataType(jsonNode));
+					// return Tuple.tuple(recordId, injectDataType(jsonNode));
+					return Tuple.tuple(recordId, jsonNode);
 				}
 				return endOfData();
 			}

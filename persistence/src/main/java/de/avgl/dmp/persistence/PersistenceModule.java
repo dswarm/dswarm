@@ -9,6 +9,7 @@ import java.util.concurrent.Executors;
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
@@ -20,16 +21,25 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
-import de.avgl.dmp.persistence.services.ConfigurationService;
-import de.avgl.dmp.persistence.services.InternalServiceFactory;
-import de.avgl.dmp.persistence.services.ResourceService;
-import de.avgl.dmp.persistence.services.SchemaService;
-import de.avgl.dmp.persistence.services.impl.InternalServiceFactoryImpl;
-import de.avgl.dmp.persistence.services.impl.SchemaServiceImpl;
+import de.avgl.dmp.persistence.service.InternalServiceFactory;
+import de.avgl.dmp.persistence.service.impl.InternalServiceFactoryImpl;
+import de.avgl.dmp.persistence.service.job.ComponentService;
+import de.avgl.dmp.persistence.service.job.FilterService;
+import de.avgl.dmp.persistence.service.job.FunctionService;
+import de.avgl.dmp.persistence.service.job.MappingService;
+import de.avgl.dmp.persistence.service.job.ProjectService;
+import de.avgl.dmp.persistence.service.job.TransformationService;
+import de.avgl.dmp.persistence.service.resource.ConfigurationService;
+import de.avgl.dmp.persistence.service.resource.DataModelService;
+import de.avgl.dmp.persistence.service.resource.ResourceService;
+import de.avgl.dmp.persistence.service.schema.AttributePathService;
+import de.avgl.dmp.persistence.service.schema.AttributeService;
+import de.avgl.dmp.persistence.service.schema.ClaszService;
+import de.avgl.dmp.persistence.service.schema.SchemaService;
 
 public class PersistenceModule extends AbstractModule {
 
-	private static final org.apache.log4j.Logger	log	= org.apache.log4j.Logger.getLogger(PersistenceModule.class);
+	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(PersistenceModule.class);
 
 	@Override
 	protected void configure() {
@@ -37,8 +47,8 @@ public class PersistenceModule extends AbstractModule {
 		final Properties properties = new Properties();
 		try {
 			properties.load(resource.openStream());
-		} catch (IOException e) {
-			log.error("Could not load dmp.properties", e);
+		} catch (final IOException e) {
+			LOG.error("Could not load dmp.properties", e);
 		}
 
 		final String tdbPath = properties.getProperty("tdb_path", "target/h2");
@@ -49,9 +59,19 @@ public class PersistenceModule extends AbstractModule {
 
 		bind(ResourceService.class).in(Scopes.SINGLETON);
 		bind(ConfigurationService.class).in(Scopes.SINGLETON);
+		bind(AttributeService.class).in(Scopes.SINGLETON);
+		bind(AttributePathService.class).in(Scopes.SINGLETON);
+		bind(ClaszService.class).in(Scopes.SINGLETON);
+		bind(SchemaService.class).in(Scopes.SINGLETON);
+		bind(FunctionService.class).in(Scopes.SINGLETON);
+		bind(ComponentService.class).in(Scopes.SINGLETON);
+		bind(TransformationService.class).in(Scopes.SINGLETON);
+		bind(DataModelService.class).in(Scopes.SINGLETON);
+		bind(MappingService.class).in(Scopes.SINGLETON);
+		bind(FilterService.class).in(Scopes.SINGLETON);
+		bind(ProjectService.class).in(Scopes.SINGLETON);
 
 		bind(InternalServiceFactory.class).to(InternalServiceFactoryImpl.class).in(Scopes.SINGLETON);
-		bind(SchemaService.class).to(SchemaServiceImpl.class);
 	}
 
 	@Provides
@@ -60,7 +80,7 @@ public class PersistenceModule extends AbstractModule {
 		final ObjectMapper mapper = new ObjectMapper();
 		final JaxbAnnotationModule module = new JaxbAnnotationModule();
 
-		mapper.registerModule(module).setSerializationInclusion(JsonInclude.Include.NON_NULL)
+		mapper.registerModule(module).registerModule(new Hibernate4Module()).setSerializationInclusion(JsonInclude.Include.NON_NULL)
 				.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
 
 		return mapper;

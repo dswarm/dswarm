@@ -1,7 +1,13 @@
 package de.avgl.dmp.persistence.model.resource;
 
+import static ch.lambdaj.Lambda.filter;
+import static ch.lambdaj.Lambda.having;
+import static ch.lambdaj.Lambda.on;
+import static org.hamcrest.Matchers.equalTo;
+
 import java.util.List;
 import java.util.Set;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
@@ -21,32 +27,26 @@ import javax.xml.bind.annotation.XmlRootElement;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
+import com.wordnik.swagger.annotations.ApiModel;
 
 import de.avgl.dmp.init.DMPException;
-import de.avgl.dmp.persistence.model.DMPJPAObject;
+import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-import static ch.lambdaj.Lambda.filter;
-import static ch.lambdaj.Lambda.having;
-import static ch.lambdaj.Lambda.on;
-import static org.hamcrest.Matchers.equalTo;
-
+@ApiModel("A data resource, e.g., an XML or CSV document, a SQL database, or an RDF graph. A data resource can consist of several records.")
 @XmlRootElement
 @Entity
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "RESOURCE")
-public class Resource extends DMPJPAObject {
+public class Resource extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 *
 	 */
-	private static final long						serialVersionUID		= 1L;
+	private static final long						serialVersionUID	= 1L;
 
-	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(Resource.class);
-
-	@Column(name = "NAME")
-	private String									name					= null;
+	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(Resource.class);
 
 	/**
 	 * The type of the resource.
@@ -54,9 +54,6 @@ public class Resource extends DMPJPAObject {
 	@Column(name = "TYPE")
 	@Enumerated(EnumType.STRING)
 	private ResourceType							type;
-
-	@Column(name = "DESCRIPTION")
-	private String									description				= null;
 
 	@Lob
 	@Access(AccessType.FIELD)
@@ -67,28 +64,20 @@ public class Resource extends DMPJPAObject {
 	private ObjectNode								attributes;
 
 	@Transient
-	private boolean									attributesInitialized	= false;
+	private boolean									attributesInitialized;
 
 	/**
 	 * All configurations of the resource.
 	 */
 	// TODO set correct casacade type
-	@ManyToMany(mappedBy = "resources", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(mappedBy = "resources", fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+			CascadeType.REFRESH })
 	// @JsonSerialize(using = ConfigurationReferenceSerializer.class)
 	// @JsonDeserialize(using = ConfigurationReferenceDeserializer.class)
 	@XmlIDREF
 	@XmlList
+	// @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	private Set<Configuration>						configurations;
-
-	public String getName() {
-
-		return name;
-	}
-
-	public void setName(final String name) {
-
-		this.name = name;
-	}
 
 	public ResourceType getType() {
 
@@ -98,16 +87,6 @@ public class Resource extends DMPJPAObject {
 	public void setType(final ResourceType type) {
 
 		this.type = type;
-	}
-
-	public String getDescription() {
-		
-		return description;
-	}
-
-	public void setDescription(final String description) {
-
-		this.description = description;
 	}
 
 	public ObjectNode getAttributes() {
@@ -160,21 +139,32 @@ public class Resource extends DMPJPAObject {
 	 */
 	public void setConfigurations(final Set<Configuration> configurationsArg) {
 
-		this.configurations = configurationsArg;
-
 		if (configurationsArg == null && configurations != null) {
 
 			// remove resource from configurations, if resource, will be prepared for removal
 
-			for (final Configuration configuration : configurations) {
+			final Set<Configuration> configurationsToBeDeleted = Sets.newCopyOnWriteArraySet(configurations);
+
+			for (final Configuration configuration : configurationsToBeDeleted) {
 
 				configuration.removeResource(this);
 			}
+
+			configurations.clear();
 		}
 
-		configurations = configurationsArg;
-
 		if (configurationsArg != null) {
+
+			if (!configurationsArg.equals(configurations)) {
+
+				if (configurations == null) {
+
+					configurations = Sets.newCopyOnWriteArraySet();
+				}
+
+				configurations.clear();
+				configurations.addAll(configurationsArg);
+			}
 
 			for (final Configuration configuration : configurationsArg) {
 
@@ -217,7 +207,7 @@ public class Resource extends DMPJPAObject {
 
 			if (configurations == null) {
 
-				configurations = Sets.newLinkedHashSet();
+				configurations = Sets.newCopyOnWriteArraySet();
 			}
 
 			if (!configurations.contains(configuration)) {
@@ -240,7 +230,7 @@ public class Resource extends DMPJPAObject {
 
 			if (configurations == null) {
 
-				configurations = Sets.newLinkedHashSet();
+				configurations = Sets.newCopyOnWriteArraySet();
 			}
 
 			if (configurations.contains(configuration)) {
@@ -273,30 +263,34 @@ public class Resource extends DMPJPAObject {
 
 	private void refreshAttributesString() {
 
-		attributesString = attributes.toString();
+		if (attributes != null) {
+
+			attributesString = attributes.toString();
+		}
 	}
-	
-	private void initAttributes(boolean fromScratch) {
-		
+
+	private void initAttributes(final boolean fromScratch) {
+
 		if (attributes == null && !attributesInitialized) {
 
 			if (attributesString == null) {
 
 				LOG.debug("attributes JSON string is null");
-				
-				if(fromScratch) {
+
+				if (fromScratch) {
 
 					attributes = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
-				} else {
-					
-					return;
 				}
+
+				attributesInitialized = true;
+
+				return;
 			}
 
 			try {
 
 				attributes = DMPPersistenceUtil.getJSON(attributesString);
-			} catch (DMPException e) {
+			} catch (final DMPException e) {
 
 				LOG.debug("couldn't parse attributes JSON string for resource '" + getId() + "'");
 			}
@@ -308,11 +302,7 @@ public class Resource extends DMPJPAObject {
 	@Override
 	public boolean equals(final Object obj) {
 
-		if (!Resource.class.isInstance(obj)) {
+		return Resource.class.isInstance(obj) && super.equals(obj);
 
-			return false;
-		}
-
-		return super.equals(obj);
 	}
 }

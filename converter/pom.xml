@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+		xmlns="http://maven.apache.org/POM/4.0.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>de.avgl.dmp</groupId>
@@ -67,6 +68,10 @@
 					<artifactId>slf4j-log4j12</artifactId>
 					<groupId>org.slf4j</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>mysql-connector-java</artifactId>
+					<groupId>mysql</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -95,6 +100,20 @@
 			<groupId>org.apache.jena</groupId>
 			<artifactId>apache-jena-libs</artifactId>
 			<type>pom</type>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-log4j12</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 			<version>2.11.0</version>
 		</dependency>
 	</dependencies>

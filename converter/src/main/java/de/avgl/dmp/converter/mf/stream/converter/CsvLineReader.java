@@ -28,12 +28,12 @@ import org.culturegraph.mf.framework.annotations.Out;
 @Out(CSVRecord.class)
 public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceiver<CSVRecord>> {
 
-	private char					escapeCharacter;
-	private char					quoteCharacter;
-	private char					columnSeparator;
-	private String					lineEnding;
-	private int						ignoreLines;
-	private int						discardRows;
+	private final char					escapeCharacter;
+	private final char					quoteCharacter;
+	private final char					columnSeparator;
+	private final String					lineEnding;
+	private final int						ignoreLines;
+	private final int						discardRows;
 	private final Optional<Integer>	atMost;
 
 	private final boolean			hasHeader;
@@ -52,8 +52,8 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 		this(escapeCharacterArg, quoteCharacterArg, columnDelimiter, rowDelimiter,ignoreLinesArg, discardRowsArg, atMostArg, false);
 	}
 
-	public CsvLineReader(final Character escapeCharacterArg, final Character quoteCharacterArg, final Character columnDelimiter, final String rowDelimiter,
-						 final int ignoreLinesArg, final int discardRowsArg, final Optional<Integer> atMostArg, final boolean hasHeaderArg) {
+	private CsvLineReader(final Character escapeCharacterArg, final Character quoteCharacterArg, final Character columnDelimiter, final String rowDelimiter,
+	                      final int ignoreLinesArg, final int discardRowsArg, final Optional<Integer> atMostArg, final boolean hasHeaderArg) {
 
 		escapeCharacter = escapeCharacterArg;
 		quoteCharacter = quoteCharacterArg;
@@ -73,7 +73,7 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 		process(reader, getReceiver());
 	}
 
-	private Reader getInternalReader(Reader reader) {
+	private Reader getInternalReader(final Reader reader) {
 
 		if (ignoreLines > 0) {
 
@@ -87,7 +87,7 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 						throw new MetafactureException(String.format("cannot ignore [%d] lines, file is probably empty", i + 1));
 					}
 				}
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				throw new MetafactureException(String.format("cannot ignore [%d] lines, file is probably empty", i + 1), e);
 			}
 
@@ -97,32 +97,32 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 		return reader;
 	}
 
-	private CSVParser getInternalParser(Reader reader) {
+	private CSVParser getInternalParser(final Reader reader) {
 		final CSVFormat csvFormat = CSVFormat.newFormat(columnSeparator).withQuoteChar(quoteCharacter)
 				.withEscape(escapeCharacter).withRecordSeparator(lineEnding);
 
 		try {
 
 			return new CSVParser(reader, csvFormat);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 
 			throw new MetafactureException(e);
 		}
 	}
 
-	private Iterator<CSVRecord> getInternalCSVIter(CSVParser parser) {
+	private Iterator<CSVRecord> getInternalCSVIter(final CSVParser parser) {
 		final Iterator<CSVRecord> csvIter = parser.iterator();
 
 		if (atMost.isPresent()) {
 
-			int headerRows = hasHeader ? 1 : 0;
+			final int headerRows = hasHeader ? 1 : 0;
 			return Iterators.limit(csvIter, atMost.get() + headerRows + discardRows);
 		}
 
 		return csvIter;
 	}
 
-	private void processHeaders(Iterator<CSVRecord> iterator, final ObjectReceiver<CSVRecord> receiver) {
+	private void processHeaders(final Iterator<CSVRecord> iterator, final ObjectReceiver<CSVRecord> receiver) {
 		if (hasHeader) {
 			if (!iterator.hasNext()) {
 				throw new MetafactureException("cannot find any rows to use as header row");
@@ -132,7 +132,7 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 		}
 	}
 
-	private void processDiscardRows(Iterator<CSVRecord> iterator) {
+	private void processDiscardRows(final Iterator<CSVRecord> iterator) {
 		int i = discardRows;
 		try {
 
@@ -140,13 +140,13 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 				iterator.next();
 			}
 
-		} catch (NoSuchElementException e) {
+		} catch (final NoSuchElementException e) {
 
 			throw new MetafactureException(String.format("there is nothing left to discard [%d] more rows", i + 1), e);
 		}
 	}
 
-	public void process(final Reader reader, final ObjectReceiver<CSVRecord> receiver) {
+	void process(final Reader reader, final ObjectReceiver<CSVRecord> receiver) {
 
 		final Reader actualReader = getInternalReader(reader);
 		final CSVParser csvParser = getInternalParser(actualReader);
@@ -178,13 +178,13 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 
 			csvParser.close();
 			receiver.closeStream();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 
 			throw new MetafactureException(e);
 		}
 	}
 
-	public CsvLineReader withHeader(boolean hasHeaderArg) {
+	public CsvLineReader withHeader(final boolean hasHeaderArg) {
 		return new CsvLineReader(
 				escapeCharacter, quoteCharacter, columnSeparator, lineEnding, ignoreLines, discardRows, atMost, hasHeaderArg
 		);

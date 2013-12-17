@@ -1,0 +1,35 @@
+{
+    "id": "4be3ef85-d75e-4b7b-b37b-daaf91fd6aa7"
+    "name": "my task",
+    "description": "my task description",
+    "job": {
+        "id": "a94ddb3b-a09c-465f-9f9e-ac853f644a99"
+        "name": "my job",
+        "description": "my job description",
+        "mappings": [{
+            "id": "f255e7e7-dd69-4f36-bb5e-4e47861a49b1"
+        }]
+    },
+    "input_data_model": {
+        "id": "0a201799-60fe-477c-9304-75de1ce10c6c"
+        "name": "my data model",
+        "description": "my data model description",
+        "configuration": {
+            "id": "23887867-7c31-41f8-a95b-e9440dba72b4"
+        },
+        "schema": {
+            "id": "afd3bb02-a833-4b07-89d0-db8c2b1c83f3"
+        },
+        "data_resource": {
+            "id": "6f266794-1dc6-41e6-b94f-0a2a63549ecd"
+        }
+    },
+    "output_data_model": {
+        "id": "0e45ada1-75b2-44be-bc7d-33f81e08c2f4"
+        "name": "my data model",
+        "description": "my data model description",
+        "schema": {
+            "id": "3a123040-4a35-49c5-bbcf-c9f9a3b0fa2b"
+        },
+    }
+}

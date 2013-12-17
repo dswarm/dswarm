@@ -1,148 +1,77 @@
 package de.avgl.dmp.controller.resources;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 
-import de.avgl.dmp.controller.utils.InternalSchemaDataUtil;
-import de.avgl.dmp.converter.DMPConverterException;
-import de.avgl.dmp.converter.flow.TransformationFlow;
-import de.avgl.dmp.converter.mf.stream.reader.JsonNodeReader;
-import de.avgl.dmp.converter.morph.MorphScriptBuilder;
-import de.avgl.dmp.persistence.DMPPersistenceException;
-import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
+import de.avgl.dmp.controller.DMPControllerException;
+import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Transformation;
-import de.avgl.dmp.persistence.model.resource.Configuration;
-import de.avgl.dmp.persistence.model.types.Tuple;
+import de.avgl.dmp.persistence.service.job.TransformationService;
 
 @RequestScoped
+@Api(value = "/transformations", description = "Operations about transformations.")
 @Path("transformations")
-public class TransformationsResource {
-
-	private final Provider<JsonToPojoMapper> pojoMapperProvider;
-	private final InternalSchemaDataUtil schemaDataUtil;
+public class TransformationsResource extends BasicFunctionsResource<TransformationService, Transformation> {
 
 	@Inject
-	public TransformationsResource(final Provider<JsonToPojoMapper> pojoMapperProvider,
-								   final InternalSchemaDataUtil schemaDataUtil) {
-		this.pojoMapperProvider = pojoMapperProvider;
-		this.schemaDataUtil = schemaDataUtil;
+	public TransformationsResource(final Provider<TransformationService> transformationServiceProviderArg, final ObjectMapper objectMapper,
+			final DMPStatus dmpStatus) {
+
+		super(Transformation.class, transformationServiceProviderArg, objectMapper, dmpStatus);
 	}
 
-	private Response buildResponse(final String responseContent) {
-		return Response.ok(responseContent).build();
+	@ApiOperation(value = "get the transformation that matches the given id", notes = "Returns the Transformation object that matches the given id.")
+	@GET
+	@Path("/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Override
+	public Response getObject(@ApiParam(value = "transformation identifier", required = true) @PathParam("id") final Long id)
+			throws DMPControllerException {
+
+		return super.getObject(id);
 	}
 
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_XML)
-	public Response runToXML(final String jsonObjectString) throws IOException, DMPConverterException {
-
-		final Transformation transformation;
-		try {
-			transformation = pojoMapperProvider.get().toTransformation(jsonObjectString);
-		} catch (DMPPersistenceException e) {
-			throw new DMPConverterException(e.getMessage());
-		}
-
-		final String xml = new MorphScriptBuilder().apply(transformation).toString();
-
-		return buildResponse(xml);
-	}
-
-	/**
-	 * this endpoint consumes a transformation as JSON representation
-	 *
-	 * @param jsonObjectString a JSON representation of one transformation
-	 * @return
-	 * @throws IOException
-	 * @throws DMPConverterException
-	 */
+	@ApiOperation(value = "create a new transformation", notes = "Returns a new Transformation object.", response = Transformation.class)
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response runWithMetamorph(final String jsonObjectString) throws IOException, DMPConverterException {
+	@Override
+	public Response createObject(@ApiParam(value = "transformation (as JSON)", required = true) final String jsonObjectString)
+			throws DMPControllerException {
 
-		final Transformation transformation;
-		try {
-			transformation = pojoMapperProvider.get().toTransformation(jsonObjectString);
-		} catch (DMPPersistenceException e) {
-			throw new DMPConverterException(e.getMessage());
-		}
-
-		final TransformationFlow flow = TransformationFlow.fromTransformation(transformation);
-
-
-		final long resourceId = transformation.getSource().getResourceId();
-		final long configurationId = transformation.getSource().getConfigurationId();
-
-		final Optional<Configuration> configurationOptional = schemaDataUtil.fetchConfiguration(resourceId, configurationId);
-
-		final List<String> parts = new ArrayList<String>(2);
-		parts.add("record");
-
-		if (configurationOptional.isPresent()) {
-			final String name = configurationOptional.get().getName();
-			if (name != null && !name.isEmpty()) {
-				parts.add(name);
-			}
-		}
-
-		final String recordPrefix = Joiner.on('.').join(parts);
-
-		final Optional<Iterator<Tuple<String, JsonNode>>> inputData = schemaDataUtil.getData(resourceId, configurationId);
-
-		if (!inputData.isPresent()) {
-			throw new DMPConverterException("couldn't find input data for transformation");
-		}
-
-		final Iterator<Tuple<String, JsonNode>> tupleIterator = inputData.get();
-
-		final String result = flow.apply(tupleIterator, new JsonNodeReader(recordPrefix));
-
-		return buildResponse(result);
+		return super.createObject(jsonObjectString);
 	}
 
-	/**
-	 * this endpoint consumes a transformation as JSON representation
-	 *
-	 * @param jsonObjectString a JSON representation of one transformation
-	 * @return
-	 * @throws IOException
-	 * @throws DMPConverterException
-	 */
-	@POST
-	@Path("/demo")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "get all transformations ", notes = "Returns a list of Transformation objects.")
+	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response runDemoWithMetamorph(final String jsonObjectString) throws IOException, DMPConverterException {
+	@Override
+	public Response getObjects() throws DMPControllerException {
 
-		final Transformation transformation;
-		try {
-			transformation = pojoMapperProvider.get().toTransformation(jsonObjectString);
-		} catch (DMPPersistenceException e) {
-			throw new DMPConverterException(e.getMessage());
-		}
+		return super.getObjects();
+	}
 
-		final TransformationFlow flow = TransformationFlow.fromTransformation(transformation);
+	@Override
+	protected Transformation prepareObjectForUpdate(final Transformation objectFromJSON, final Transformation object) {
 
-		final String result = flow.applyDemo();
+		super.prepareObjectForUpdate(objectFromJSON, object);
 
-		return buildResponse(result);
+		object.setComponents(objectFromJSON.getComponents());
+
+		return object;
 	}
 }

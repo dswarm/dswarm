@@ -21,9 +21,9 @@ public class XMLSourceResourceTriplesFlow {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(XMLSourceResourceTriplesFlow.class);
 
-	final Optional<String>							recordTagName;
-	final Optional<String> configurationId;
-	final Optional<String> resourceId;
+	private final Optional<String>							recordTagName;
+	private final Optional<String> configurationId;
+	private final Optional<String> resourceId;
 
 	public XMLSourceResourceTriplesFlow(final Configuration configuration, final Resource resource) throws DMPConverterException {
 
@@ -70,7 +70,7 @@ public class XMLSourceResourceTriplesFlow {
 		return apply(resourcePath, opener);
 	}
 
-	public RDFModel apply(final String object, final DefaultObjectPipe<String, ObjectReceiver<Reader>> opener) {
+	RDFModel apply(final String object, final DefaultObjectPipe<String, ObjectReceiver<Reader>> opener) {
 
 		final XmlDecoder decoder = new XmlDecoder();
 
@@ -120,7 +120,7 @@ public class XMLSourceResourceTriplesFlow {
 
 	private static class RDFModelReceiver implements ObjectReceiver<RDFModel> {
 
-		private RDFModel			rdfModel	= null;
+		private RDFModel			rdfModel;
 
 		@Override
 		public void process(final RDFModel rdfModel) {

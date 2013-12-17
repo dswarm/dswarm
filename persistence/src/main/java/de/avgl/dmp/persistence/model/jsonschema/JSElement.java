@@ -9,7 +9,7 @@ public abstract class JSElement {
 
 	private final String name;
 
-	private String description = null;
+	private String description;
 
 	protected JSElement(final String name) {
 		this.name = name;
@@ -19,7 +19,7 @@ public abstract class JSElement {
 		return name;
 	}
 
-	public String getDescription() {
+	String getDescription() {
 		return description;
 	}
 
@@ -27,13 +27,13 @@ public abstract class JSElement {
 		this.description = description;
 	}
 
-	public abstract String getType();
+	protected abstract String getType();
 
 	public abstract List<JSElement> getProperties();
 
 	public abstract JSElement withName(final String newName);
 
-	protected void render(final JsonGenerator jgen) throws IOException {
+	void render(final JsonGenerator jgen) throws IOException {
 
 		jgen.writeObjectFieldStart(getName());
 
@@ -44,11 +44,11 @@ public abstract class JSElement {
 		jgen.writeEndObject();
 	}
 
-	protected void renderDescription(final JsonGenerator jgen) throws IOException {
+	void renderDescription(final JsonGenerator jgen) throws IOException {
 		if (getDescription() != null) {
 			jgen.writeStringField("description", getDescription());
 		}
 	}
 
-	protected void renderInternal(final JsonGenerator jgen) throws IOException {}
+	void renderInternal(final JsonGenerator jgen) throws IOException {}
 }

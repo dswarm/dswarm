@@ -30,7 +30,7 @@ public class CSVSourceResourceCSVPreviewFlow extends AbstractCSVResourceFlow<Str
 		converter.withHeader();
 
 		final StringWriter stringWriter = new StringWriter();
-		final ObjectJavaIoWriter<String> writer = new ObjectJavaIoWriter<String>(stringWriter);
+		final ObjectJavaIoWriter<String> writer = new ObjectJavaIoWriter<>(stringWriter);
 
 		pipe.setReceiver(converter).setReceiver(writer);
 

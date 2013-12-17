@@ -10,7 +10,8 @@ import de.avgl.dmp.persistence.PersistenceModule;
 
 public class DMPInjector extends GuiceServletContextListener {
 
-	public static Injector injector = null;
+	@SuppressWarnings("StaticNonFinalField")
+	public static Injector injector;
 
 	@Override
 	protected Injector getInjector() {

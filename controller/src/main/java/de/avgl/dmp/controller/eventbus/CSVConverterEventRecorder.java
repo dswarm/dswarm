@@ -14,7 +14,7 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.internal.impl.MemoryDBInputModel;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
-import de.avgl.dmp.persistence.services.InternalServiceFactory;
+import de.avgl.dmp.persistence.service.InternalServiceFactory;
 
 @Singleton
 public class CSVConverterEventRecorder {
@@ -40,9 +40,7 @@ public class CSVConverterEventRecorder {
 			final String path = resource.getAttribute("path").asText();
 			result = flow.applyFile(path);
 
-		} catch (DMPConverterException e) {
-			e.printStackTrace();
-		} catch (NullPointerException e) {
+		} catch (DMPConverterException | NullPointerException e) {
 			e.printStackTrace();
 		}
 
@@ -54,7 +52,7 @@ public class CSVConverterEventRecorder {
 				try {
 
 					internalServiceFactory.getMemoryDbInternalService().createObject(resource.getId(), configuration.getId(), mdbim);
-				} catch (DMPPersistenceException e) {
+				} catch (final DMPPersistenceException e) {
 
 					e.printStackTrace();
 				}

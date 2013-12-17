@@ -8,7 +8,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class Triple<V1, V2, V3> {
 
 	public static <V1, V2, V3> Triple<V1, V2, V3> triple(final V1 v1, final V2 v2, final V3 v3) {
-		return new Triple<V1, V2, V3>(v1, v2, v3);
+		return new Triple<>(v1, v2, v3);
 	}
 
 	private final V1 v1;
@@ -35,22 +35,17 @@ public class Triple<V1, V2, V3> {
 
 	@Override
 	public boolean equals(final Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
 		final Triple triple = (Triple) o;
 
-		if (!v1.equals(triple.v1)) {
-			return false;
-		}
-		if (!v2.equals(triple.v2)) {
-			return false;
-		}
-		if (!v3.equals(triple.v3)) {
-			return false;
-		}
+		return v1.equals(triple.v1) && v2.equals(triple.v2) && v3.equals(triple.v3);
 
-		return true;
 	}
 
 	@Override

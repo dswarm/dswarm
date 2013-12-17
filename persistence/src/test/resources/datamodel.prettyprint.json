@@ -1,0 +1,14 @@
+{
+    "id": 1,
+    "name": "my data model",
+    "description": "my data model description",
+    "configuration": {
+        "id": 1
+    },
+    "schema": {
+        "id": 1
+    },
+    "data_resource": {
+        "id": 1
+    }
+}
