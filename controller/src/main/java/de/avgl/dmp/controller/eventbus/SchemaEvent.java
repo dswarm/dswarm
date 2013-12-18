@@ -1,9 +1,10 @@
 package de.avgl.dmp.controller.eventbus;
 
 import de.avgl.dmp.persistence.model.resource.Configuration;
+import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
 
-public class SchemaEvent {
+public class SchemaEvent extends DataModelEvent {
 
 	public static enum SchemaType {
 		CSV, XML, XSD;
@@ -22,24 +23,13 @@ public class SchemaEvent {
 		}
 	}
 
-
-	private final Configuration configuration;
 	private final SchemaType schemaType;
-	private final Resource resource;
 
-	public SchemaEvent(final Resource resource, final Configuration configuration, final SchemaType schemaType) {
+	public SchemaEvent(final DataModel dataModel, final SchemaType schemaType) {
 
-		this.resource = resource;
-		this.configuration = configuration;
+		super(dataModel);
+		
 		this.schemaType = schemaType;
-	}
-
-	public Configuration getConfiguration() {
-		return configuration;
-	}
-
-	public Resource getResource() {
-		return resource;
 	}
 
 	public SchemaType getSchemaType() {
