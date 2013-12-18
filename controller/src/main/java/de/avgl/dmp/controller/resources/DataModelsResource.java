@@ -174,7 +174,9 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 
 			// dmpStatus.stop(context);
 
-			throw new DMPControllerException("The data model has no configuration. Hence, the data of the data model cannot be processed.");
+			DataModelsResource.LOG.debug("The data model has no configuration. Hence, the data of the data model cannot be processed.");
+			
+			return dataModel;
 		}
 
 		final JsonNode jsStorageType = configuration.getParameters().get("storage_type");

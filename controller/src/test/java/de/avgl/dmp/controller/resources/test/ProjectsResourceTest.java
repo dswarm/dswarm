@@ -315,6 +315,8 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 		final DataModel dataModel = dataModelsResourceTestUtils.createObject(dataModelJSONString, expectedDataModel);
 
 		dataModels.put(dataModel.getId(), dataModel);
+		
+		System.out.println("data model JSON = '" + dataModelJSONString + "'");
 
 		return dataModel;
 	}
