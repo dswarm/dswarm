@@ -2,17 +2,10 @@ package de.avgl.dmp.controller.eventbus;
 
 import de.avgl.dmp.persistence.model.resource.DataModel;
 
-public class ConverterEvent {
-
-	private final DataModel	dataModel;
+public class ConverterEvent extends DataModelEvent {
 
 	public ConverterEvent(final DataModel dataModel) {
-		
-		this.dataModel = dataModel;
-	}
 
-	public DataModel getDataModel() {
-		
-		return dataModel;
+		super(dataModel);
 	}
 }

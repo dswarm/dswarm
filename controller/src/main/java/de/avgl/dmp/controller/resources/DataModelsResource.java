@@ -184,7 +184,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 			final String storageType = jsStorageType.asText();
 			try {
 				final SchemaEvent.SchemaType type = SchemaEvent.SchemaType.fromString(storageType);
-				eventBusProvider.get().post(new SchemaEvent(dataModel.getDataResource(), configuration, type));
+				eventBusProvider.get().post(new SchemaEvent(dataModel, type));
 			} catch (final IllegalArgumentException e) {
 				DataModelsResource.LOG.warn("could not determine schema type", e);
 			}
@@ -205,6 +205,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 			}
 		}
 
+		// refresh data model
 		final DataModelService persistenceService = persistenceServiceProvider.get();
 		final DataModel freshDataModel = persistenceService.getObject(dataModel.getId());
 
