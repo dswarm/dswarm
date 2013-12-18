@@ -48,8 +48,6 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
-import de.avgl.dmp.controller.eventbus.CSVConverterEvent;
-import de.avgl.dmp.controller.eventbus.SchemaEvent;
 import de.avgl.dmp.controller.eventbus.XMLSchemaEvent;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.controller.utils.DMPControllerUtils;
@@ -373,11 +371,13 @@ public class ResourcesResource {
 	}
 
 	/**
-	 * This operation is deprecated. Please utilise DataModelsResource#createObject instead.
-	 * 
-	 * note: [@tgaengler] the processing of a given data resource with a given configuration has been moved to {@link DataModelsResource}, i.e.,
-	 * the result of this operation should only be the addition of the given configuration, however, not the processing of this
-	 * combination.
+	 * The data processing, which was a step of this operation is deprecated, i.e., only the given configuration will be added to
+	 * this resource. For data processing of a given resource with a given configuration, please utilise
+	 * DataModelsResource#createObject instead.<br/>
+	 * <br/>
+	 * note: [@tgaengler] the processing of a given data resource with a given configuration has been moved to
+	 * {@link DataModelsResource}, i.e., the result of this operation should only be the addition of the given configuration,
+	 * however, not the processing of this combination.
 	 * 
 	 * @param id
 	 * @param jsonObjectString
@@ -385,7 +385,7 @@ public class ResourcesResource {
 	 * @throws DMPControllerException
 	 */
 	@Deprecated
-	@ApiOperation(value = "add a new configuration to the data resource that matches the given id", notes = "Returns the new configuration that was added to the data resource that matches the given id.")
+	@ApiOperation(value = "add a new configuration to the data resource that matches the given id", notes = "Returns the new configuration that was added to the data resource that matches the given id. Note: The data processing, which was a step of this operation is deprecated, i.e., only the given configuration will be added to this resource. For data processing of a given resource with a given configuration, please utilise POST [base uri]/datamodels instead")
 	@POST
 	@Path("/{id}/configurations")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -423,26 +423,26 @@ public class ResourcesResource {
 		final JsonNode jsStorageType = configuration.getParameters().get("storage_type");
 		if (jsStorageType != null) {
 			final String storageType = jsStorageType.asText();
-			try {
-				final SchemaEvent.SchemaType type = SchemaEvent.SchemaType.fromString(storageType);
-				eventBusProvider.get().post(new SchemaEvent(resource, configuration, type));
-			} catch (final IllegalArgumentException e) {
-				LOG.warn("could not determine schema type", e);
-			}
+			// try {
+			// final SchemaEvent.SchemaType type = SchemaEvent.SchemaType.fromString(storageType);
+			// eventBusProvider.get().post(new SchemaEvent(resource, configuration, type));
+			// } catch (final IllegalArgumentException e) {
+			// LOG.warn("could not determine schema type", e);
+			// }
 
 			switch (storageType) {
 				case "schema":
 
 					eventBusProvider.get().post(new XMLSchemaEvent(configuration, resource));
 					break;
-				case "csv":
-
-					eventBusProvider.get().post(new CSVConverterEvent(configuration, resource));
-					break;
-//				case "xml":
-//
-//					eventBusProvider.get().post(new XMLConverterEvent(configuration, resource));
-//					break;
+			// case "csv":
+			//
+			// eventBusProvider.get().post(new CSVConverterEvent(configuration, resource));
+			// break;
+			// case "xml":
+			//
+			// eventBusProvider.get().post(new XMLConverterEvent(configuration, resource));
+			// break;
 			}
 		}
 
@@ -553,8 +553,8 @@ public class ResourcesResource {
 	}
 
 	/**
-	 * This operation is deprecated. Please utilise DataModelsResource#getData instead.
-	 * 
+	 * This operation is deprecated. Please utilise DataModelsResource#getData instead.<br/>
+	 * <br/>
 	 * note: [@tgaengler] this operation has been moved to {@link DataModelsResource}
 	 * 
 	 * @param id
@@ -564,7 +564,7 @@ public class ResourcesResource {
 	 * @throws DMPControllerException
 	 */
 	@Deprecated
-	@ApiOperation(value = "get the data of the data resource and configuration (= data model) that matches the given data resource id and the given configuration id", notes = "Returns the data of the data resource and configuration (= data model) that matches the given data resource id and the given configuration id.")
+	@ApiOperation(value = "get the data of the data resource and configuration (= data model) that matches the given data resource id and the given configuration id", notes = "Returns the data of the data resource and configuration (= data model) that matches the given data resource id and the given configuration id. This operation is deprecated. Please utilise [base uri]/datamodels/{datamodelid}/data instead.")
 	@GET
 	@Path("/{id}/configurations/{configurationid}/data")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -618,7 +618,8 @@ public class ResourcesResource {
 	}
 
 	/**
-	 * note: [@tgaengler] this operation should be moved to {@link DataModelsResource} and there should be a generic preview operation
+	 * note: [@tgaengler] this operation should be moved to {@link DataModelsResource} and there should be a generic preview
+	 * operation
 	 * 
 	 * @param id
 	 * @param jsonObjectString
@@ -667,7 +668,8 @@ public class ResourcesResource {
 	}
 
 	/**
-	 * note: [@tgaengler] this operation should be moved to {@link DataModelsResource} and there should be a generic preview operation
+	 * note: [@tgaengler] this operation should be moved to {@link DataModelsResource} and there should be a generic preview
+	 * operation
 	 * 
 	 * @param id
 	 * @param jsonObjectString

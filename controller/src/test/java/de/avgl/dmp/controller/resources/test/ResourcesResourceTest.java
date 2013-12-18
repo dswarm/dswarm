@@ -447,6 +447,7 @@ public class ResourcesResourceTest extends ResourceTest {
 		LOG.debug("end get resource configuration schema missing test");
 	}
 
+	@Ignore
 	@Test
 	public void testCSVResourceConfigurationData() throws Exception {
 
