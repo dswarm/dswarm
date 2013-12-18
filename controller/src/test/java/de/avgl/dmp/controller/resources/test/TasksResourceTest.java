@@ -22,14 +22,18 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.io.Resources;
 
+import de.avgl.dmp.controller.resources.test.utils.ClaszesResourceTestUtils;
 import de.avgl.dmp.controller.resources.test.utils.ConfigurationsResourceTestUtils;
 import de.avgl.dmp.controller.resources.test.utils.DataModelsResourceTestUtils;
 import de.avgl.dmp.controller.resources.test.utils.ResourcesResourceTestUtils;
+import de.avgl.dmp.controller.resources.test.utils.SchemasResourceTestUtils;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
 import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
+import de.avgl.dmp.persistence.model.schema.Clasz;
+import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public class TasksResourceTest extends ResourceTest {
@@ -41,16 +45,24 @@ public class TasksResourceTest extends ResourceTest {
 	private final ResourcesResourceTestUtils		resourcesResourceTestUtils;
 
 	private final ConfigurationsResourceTestUtils	configurationsResourceTestUtils;
-	
-	private final DataModelsResourceTestUtils	dataModelsResourceTestUtils;
+
+	private final DataModelsResourceTestUtils		dataModelsResourceTestUtils;
+
+	private final SchemasResourceTestUtils			schemasResourceTestUtils;
+
+	private final ClaszesResourceTestUtils			classesResourceTestUtils;
 
 	private final ObjectMapper						objectMapper	= injector.getInstance(ObjectMapper.class);
 
 	private Configuration							configuration;
 
 	private Resource								resource;
-	
-	private DataModel dataModel;
+
+	private DataModel								dataModel;
+
+	private Schema									schema;
+
+	private Clasz									recordClass;
 
 	public TasksResourceTest() {
 
@@ -59,6 +71,8 @@ public class TasksResourceTest extends ResourceTest {
 		resourcesResourceTestUtils = new ResourcesResourceTestUtils();
 		configurationsResourceTestUtils = new ConfigurationsResourceTestUtils();
 		dataModelsResourceTestUtils = new DataModelsResourceTestUtils();
+		schemasResourceTestUtils = new SchemasResourceTestUtils();
+		classesResourceTestUtils = new ClaszesResourceTestUtils();
 	}
 
 	@Before
@@ -97,16 +111,25 @@ public class TasksResourceTest extends ResourceTest {
 
 		// create configuration
 		configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
-		
+
 		final DataModel data1 = new DataModel();
-		data1.setName("'" + res1.getName() +"' + '" + conf1.getName() + "' data model");
-		data1.setDescription("data model of resource '" + res1.getName() +"' and configuration '" + conf1.getName() + "'");
+		data1.setName("'" + res1.getName() + "' + '" + conf1.getName() + "' data model");
+		data1.setDescription("data model of resource '" + res1.getName() + "' and configuration '" + conf1.getName() + "'");
 		data1.setDataResource(resource);
 		data1.setConfiguration(configuration);
-		
+
 		final String dataModelJSONString = objectMapper.writeValueAsString(data1);
-		
+
 		dataModel = dataModelsResourceTestUtils.createObject(dataModelJSONString, data1);
+
+		Assert.assertNotNull("the data model shouldn't be null", dataModel);
+		Assert.assertNotNull("the data model schema shouldn't be null", dataModel.getSchema());
+
+		schema = dataModel.getSchema();
+
+		Assert.assertNotNull("the data model schema record class shouldn't be null", schema.getRecordClass());
+
+		recordClass = schema.getRecordClass();
 
 		// check processed data
 		final String data = dataModelsResourceTestUtils.getData(dataModel.getId(), 1);
@@ -116,7 +139,7 @@ public class TasksResourceTest extends ResourceTest {
 		// manipulate input data model
 		final String finalDataModelJSONString = objectMapper.writeValueAsString(dataModel);
 		final ObjectNode finalDataModelJSON = objectMapper.readValue(finalDataModelJSONString, ObjectNode.class);
-		
+
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
 		((ObjectNode) taskJSON).put("input_data_model", finalDataModelJSON);
 
@@ -130,7 +153,7 @@ public class TasksResourceTest extends ResourceTest {
 		final String responseString = response.readEntity(String.class);
 
 		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
-		
+
 		LOG.debug("task execution response = '" + responseString + "'");
 
 		final String expectedResultString = DMPPersistenceUtil.getResourceAsString("task-result.json");
@@ -152,6 +175,8 @@ public class TasksResourceTest extends ResourceTest {
 	public void cleanUp() {
 
 		dataModelsResourceTestUtils.deleteObject(dataModel);
+		schemasResourceTestUtils.deleteObject(schema);
+		classesResourceTestUtils.deleteObject(recordClass);
 		resourcesResourceTestUtils.deleteObject(resource);
 		configurationsResourceTestUtils.deleteObject(configuration);
 	}

@@ -40,11 +40,15 @@ import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
 import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
+import de.avgl.dmp.persistence.model.schema.Clasz;
+import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.model.types.Tuple;
 import de.avgl.dmp.persistence.service.impl.InternalTripleService;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
+import de.avgl.dmp.persistence.service.schema.ClaszService;
+import de.avgl.dmp.persistence.service.schema.SchemaService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public class TransformationFlowTest extends GuicedTest {
@@ -100,7 +104,7 @@ public class TransformationFlowTest extends GuicedTest {
 		dataModel.setConfiguration(updatedConfiguration);
 
 		DataModel updatedDataModel = dataModelService.updateObjectTransactional(dataModel);
-		
+
 		final XMLSourceResourceTriplesFlow flow2 = new XMLSourceResourceTriplesFlow(updatedDataModel);
 
 		final List<RDFModel> rdfModels = flow2.applyResource("test-mabxml.xml");
@@ -129,6 +133,19 @@ public class TransformationFlowTest extends GuicedTest {
 		// write model and retrieve tuples
 		final InternalTripleService tripleService = injector.getInstance(InternalTripleService.class);
 		tripleService.createObject(updatedDataModel.getId(), rdfModel);
+
+		// retrieve updated fresh data model
+		final DataModel freshDataModel = dataModelService.getObject(updatedDataModel.getId());
+
+		Assert.assertNotNull("the fresh data model shouldn't be null", freshDataModel);
+		Assert.assertNotNull("the schema of the fresh data model shouldn't be null", freshDataModel.getSchema());
+
+		final Schema schema = freshDataModel.getSchema();
+
+		Assert.assertNotNull("the record class of the schema of the fresh data model shouldn't be null", schema.getRecordClass());
+
+		final Clasz recordClass = schema.getRecordClass();
+
 		final Optional<Map<String, Model>> optionalModelMap = tripleService.getObjects(updatedDataModel.getId(), Optional.of(1));
 
 		final Iterator<Tuple<String, JsonNode>> tuples = dataIterator(optionalModelMap.get().entrySet().iterator());
@@ -159,6 +176,15 @@ public class TransformationFlowTest extends GuicedTest {
 
 		// clean-up
 		dataModelService.deleteObject(updatedDataModel.getId());
+
+		final SchemaService schemaService = injector.getInstance(SchemaService.class);
+
+		schemaService.deleteObject(schema.getId());
+
+		final ClaszService claszService = injector.getInstance(ClaszService.class);
+
+		claszService.deleteObject(recordClass.getId());
+
 		configurationService.deleteObject(updatedConfiguration.getId());
 		resourceService.deleteObject(updatedResource.getId());
 	}

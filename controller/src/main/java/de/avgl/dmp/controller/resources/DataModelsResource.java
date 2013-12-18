@@ -175,7 +175,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 			// dmpStatus.stop(context);
 
 			DataModelsResource.LOG.debug("The data model has no configuration. Hence, the data of the data model cannot be processed.");
-			
+
 			return dataModel;
 		}
 
@@ -205,7 +205,10 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 			}
 		}
 
-		return dataModel;
+		final DataModelService persistenceService = persistenceServiceProvider.get();
+		final DataModel freshDataModel = persistenceService.getObject(dataModel.getId());
+
+		return freshDataModel;
 	}
 
 	@Override
