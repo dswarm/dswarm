@@ -37,10 +37,6 @@ public class DMPServletModule extends ServletModule {
 
 		final Properties properties = loadProperties();
 
-		for (final Map.Entry<Object, Object> entry : properties.entrySet()) {
-			System.out.println(entry.getKey() + "=" + entry.getValue());
-		}
-
 		bind(String.class).annotatedWith(Names.named("ApiBaseUrl")).toInstance(properties.getProperty("swagger.base_url", "http://localhost:8087/dmp"));
 
 		serve("/_stats").with(MetricsServlet.class);

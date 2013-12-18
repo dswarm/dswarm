@@ -451,6 +451,15 @@
 			</properties>
 		</profile>
 		<profile>
+			<id>SDVDMPDOCS</id>
+			<properties>
+				<env>sdvdmpdocs</env>
+				<rdb.url>${db.mysql.url}</rdb.url>
+				<rdb.username>${db.mysql.username}</rdb.username>
+				<rdb.password>${db.mysql.password}</rdb.password>
+			</properties>
+		</profile>
+		<profile>
 			<id>DEV</id>
 			<properties>
 				<env>dev</env>
