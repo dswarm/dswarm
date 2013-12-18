@@ -1,12 +1,7 @@
 package de.avgl.dmp.controller.resources.test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.anyOf;
-import static org.hamcrest.Matchers.hasItem;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,14 +24,12 @@ import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -46,13 +39,9 @@ import com.google.inject.Key;
 import com.google.inject.name.Names;
 
 import de.avgl.dmp.controller.resources.test.utils.ConfigurationsResourceTestUtils;
-import de.avgl.dmp.controller.servlet.DMPInjector;
 import de.avgl.dmp.persistence.DMPPersistenceException;
-import de.avgl.dmp.persistence.model.internal.Model;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
-import de.avgl.dmp.persistence.service.InternalService;
-import de.avgl.dmp.persistence.service.InternalServiceFactory;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
@@ -373,215 +362,6 @@ public class ResourcesResourceTest extends ResourceTest {
 		cleanUpDB(resource);
 
 		LOG.debug("end get resource configuration test");
-	}
-
-	@Ignore
-	@Test
-	public void testResourceConfigurationSchema() throws Exception {
-
-		LOG.debug("start get resource configuration schema test");
-
-		final Resource resource = addResourceConfigurationInternal(resourceFile, "configuration.json", expectedResource);
-
-		final Configuration config = resource.getConfigurations().iterator().next();
-
-		final InternalServiceFactory internalServiceFactory = DMPInjector.injector.getInstance(InternalServiceFactory.class);
-		InternalService service = internalServiceFactory.getMemoryDbInternalService();
-		final Optional<Set<String>> schema = service.getSchema(resource.getId(), config.getId());
-
-		assertTrue(schema.isPresent());
-		assertFalse(schema.get().isEmpty());
-		assertThat(schema.get().size(), equalTo(5));
-		// noinspection unchecked
-		assertThat(schema.get(), allOf(hasItem("id"), hasItem("name"), hasItem("description"), hasItem("year"), hasItem("isbn")));
-
-		final Response response = target(String.valueOf(resource.getId()), "/configurations/", String.valueOf(config.getId()), "schema").request()
-				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
-
-		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
-
-		final String responseSchemaJsonString = response.readEntity(String.class);
-
-		final JsonNode json = objectMapper.readValue(responseSchemaJsonString, JsonNode.class);
-
-		assertThat(json.get("title").asText(), equalTo(config.getName()));
-		assertThat(json.get("type").asText(), equalTo("object"));
-
-		final Iterator<Entry<String, JsonNode>> properties = json.get("properties").fields();
-
-		while (properties.hasNext()) {
-
-			Entry<String, JsonNode> property = properties.next();
-			assertThat(property.getValue().get("type").asText(), equalTo("string"));
-			// noinspection unchecked
-			assertThat(property.getKey(), anyOf(equalTo("id"), equalTo("name"), equalTo("description"), equalTo("year"), equalTo("isbn")));
-		}
-
-		// clean up
-
-		for (final Configuration configuration : resource.getConfigurations()) {
-
-			configurationService.deleteObject(configuration.getId());
-		}
-
-		cleanUpDB(resource);
-
-		LOG.debug("end get resource configuration schema test");
-	}
-
-	@Test
-	public void testResourceConfigurationSchemaMissing() throws Exception {
-
-		LOG.debug("start get resource configuration schema missing test");
-
-		final Resource resource = addResourceConfigurationInternal(resourceFile, "configuration.json", expectedResource);
-
-		final Response response = target("42", "configurations", "21", "schema").request().accept(MediaType.APPLICATION_JSON_TYPE)
-				.get(Response.class);
-
-		assertThat("404 Not Found was expected", response.getStatus(), equalTo(404));
-		assertThat(response.hasEntity(), equalTo(false));
-
-		cleanUpDB(resource, true);
-
-		LOG.debug("end get resource configuration schema missing test");
-	}
-
-	@Test
-	public void testCSVResourceConfigurationData() throws Exception {
-
-		LOG.debug("start get CSV resource configuration data test");
-
-		final Resource resource = addResourceConfigurationInternal(resourceFile, "configuration.json", expectedResource);
-
-		final Configuration config = resource.getConfigurations().iterator().next();
-
-		final int atMost = 1;
-
-		final InternalServiceFactory serviceFactory = DMPInjector.injector.getInstance(Key.get(InternalServiceFactory.class));
-		final InternalService service = serviceFactory.getMemoryDbInternalService();
-		final Optional<Map<String, Model>> data = service.getObjects(resource.getId(), config.getId(), Optional.of(atMost));
-
-		assertTrue(data.isPresent());
-		assertFalse(data.get().isEmpty());
-		assertThat(data.get().size(), equalTo(atMost));
-
-		final String recordId = data.get().keySet().iterator().next();
-
-		final Response response = target(String.valueOf(resource.getId()), "/configurations/", String.valueOf(config.getId()), "data")
-				.queryParam("atMost", atMost).request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
-
-		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
-
-		final ObjectNode assoziativeJsonArray = response.readEntity(ObjectNode.class);
-
-		assertThat(assoziativeJsonArray.size(), equalTo(atMost));
-
-		final JsonNode json = assoziativeJsonArray.get(recordId);
-
-		assertThat(json.get("id").asText(), equalTo(data.get().get(recordId).toJSON().get("id").asText()));
-		assertThat(json.get("year").asText(), equalTo(data.get().get(recordId).toJSON().get("year").asText()));
-		assertThat(json.get("description").asText(), equalTo(data.get().get(recordId).toJSON().get("description").asText()));
-		assertThat(json.get("name").asText(), equalTo(data.get().get(recordId).toJSON().get("name").asText()));
-		assertThat(json.get("isbn").asText(), equalTo(data.get().get(recordId).toJSON().get("isbn").asText()));
-
-		// clean up
-
-		for (final Configuration configuration : resource.getConfigurations()) {
-
-			configurationService.deleteObject(configuration.getId());
-		}
-
-		cleanUpDB(resource);
-
-		LOG.debug("end get CSV resource configuration data test");
-	}
-
-	@Test
-	public void testXMLResourceConfigurationData() throws Exception {
-
-		LOG.debug("start get XML resource configuration data test");
-
-		// prepare resource
-		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("test-mabxml-resource.json");
-
-		final Resource expectedResource = injector.getInstance(ObjectMapper.class).readValue(resourceJSONString, Resource.class);
-
-		final URL fileURL = Resources.getResource("test-mabxml.xml");
-		final File resourceFile = FileUtils.toFile(fileURL);
-
-		// add resource and config
-		final Resource resource = addResourceConfigurationInternal(resourceFile, "xml-configuration.json", expectedResource);
-
-		final Configuration config = resource.getConfigurations().iterator().next();
-
-		final int atMost = 1;
-
-		final InternalServiceFactory serviceFactory = DMPInjector.injector.getInstance(Key.get(InternalServiceFactory.class));
-		final InternalService service = serviceFactory.getInternalTripleService();
-		final Optional<Map<String, Model>> data = service.getObjects(resource.getId(), config.getId(), Optional.of(atMost));
-
-		assertTrue(data.isPresent());
-		assertFalse(data.get().isEmpty());
-		assertThat(data.get().size(), equalTo(atMost));
-
-		final String recordId = data.get().keySet().iterator().next();
-
-		final Response response = target(String.valueOf(resource.getId()), "/configurations/", String.valueOf(config.getId()), "data")
-				.queryParam("atMost", atMost).request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
-
-		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
-
-		// final String assoziativeJsonArrayString = response.readEntity(String.class);
-		//
-		// System.out.println("result = '" + assoziativeJsonArrayString + "'");
-
-		final ObjectNode assoziativeJsonArray = response.readEntity(ObjectNode.class);
-
-		assertThat(assoziativeJsonArray.size(), equalTo(atMost));
-
-		JsonNode json = assoziativeJsonArray.get(recordId);
-
-		final JsonNode expectedJson = data.get().get(recordId).toJSON();
-
-		final String s = expectedJson.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#type").asText();
-		final String type = s.substring(s.lastIndexOf('#') + 1, s.lastIndexOf("Type"));
-		json = json.get(type);
-
-		assertThat(json.get("@status").asText(), equalTo(expectedJson.get("@status").asText()));
-		assertThat(json.get("@mabVersion").asText(), equalTo(expectedJson.get("@mabVersion").asText()));
-		assertThat(json.get("@typ").asText(), equalTo(expectedJson.get("@typ").asText()));
-		assertThat(json.get("feld").size(), equalTo(expectedJson.get("feld").size()));
-
-		// clean up
-
-		for (final Configuration configuration : resource.getConfigurations()) {
-
-			configurationService.deleteObject(configuration.getId());
-		}
-
-		service.deleteObject(resource.getId(), config.getId());
-
-		cleanUpDB(resource);
-
-		LOG.debug("end get XML resource configuration data test");
-	}
-
-	@Test
-	public void testResourceConfigurationDataMissing() throws Exception {
-
-		LOG.debug("start get resource configuration data missing test");
-
-		final Resource resource = addResourceConfigurationInternal(resourceFile, "configuration.json", expectedResource);
-
-		final Response response = target("42", "configurations", "21", "data").request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
-
-		assertThat("404 Not Found was expected", response.getStatus(), equalTo(404));
-		assertThat(response.hasEntity(), equalTo(false));
-
-		cleanUpDB(resource, true);
-
-		LOG.debug("end get resource configuration data missing test");
 	}
 
 	@Test

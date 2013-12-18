@@ -1,6 +1,7 @@
 package de.avgl.dmp.converter.flow;
 
 import java.io.Reader;
+import java.util.List;
 
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
@@ -9,68 +10,65 @@ import org.culturegraph.mf.stream.source.StringReader;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.mf.stream.source.BOMResourceOpener;
 import de.avgl.dmp.converter.mf.stream.source.XMLTripleEncoder;
 import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
 import de.avgl.dmp.persistence.model.resource.Configuration;
-import de.avgl.dmp.persistence.model.resource.Resource;
+import de.avgl.dmp.persistence.model.resource.DataModel;
 
 public class XMLSourceResourceTriplesFlow {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(XMLSourceResourceTriplesFlow.class);
 
-	private final Optional<String>							recordTagName;
-	private final Optional<String> configurationId;
-	private final Optional<String> resourceId;
+	private final Optional<String>					recordTagName;
+	private final Optional<String>					dataModelId;
 
-	public XMLSourceResourceTriplesFlow(final Configuration configuration, final Resource resource) throws DMPConverterException {
+	public XMLSourceResourceTriplesFlow(final DataModel dataModel) throws DMPConverterException {
 
-		if (configuration == null) {
+		if (dataModel != null && dataModel.getId() != null) {
 
-			throw new DMPConverterException("the configuration shouldn't be null");
-		}
-
-		if (configuration.getParameters() == null) {
-
-			throw new DMPConverterException("the configuration parameters shouldn't be null");
-		}
-
-		if(configuration.getId() != null) {
-
-			configurationId = Optional.of(configuration.getId().toString());
+			this.dataModelId = Optional.of(dataModel.getId().toString());
 		} else {
 
-			configurationId = Optional.absent();
+			this.dataModelId = Optional.absent();
 		}
 
-		if(resource != null && resource.getId() != null) {
+		if (dataModel == null) {
 
-			this.resourceId = Optional.of(resource.getId().toString());
-		} else {
-
-			this.resourceId = Optional.absent();
+			throw new DMPConverterException("the data model shouldn't be null");
 		}
 
-		recordTagName = getStringParameter(configuration, "record_tag");
+		if (dataModel.getConfiguration() == null) {
+
+			throw new DMPConverterException("the data model configuration shouldn't be null");
+		}
+
+		if (dataModel.getConfiguration().getParameters() == null) {
+
+			throw new DMPConverterException("the data model configuration parameters shouldn't be null");
+		}
+
+		recordTagName = getStringParameter(dataModel.getConfiguration(), "record_tag");
 	}
 
-	public RDFModel applyRecord(final String record) {
+	public List<RDFModel> applyRecord(final String record) {
 
 		final StringReader opener = new StringReader();
 
 		return apply(record, opener);
 	}
 
-	public RDFModel applyResource(final String resourcePath) {
+	public List<RDFModel> applyResource(final String resourcePath) {
 
 		final BOMResourceOpener opener = new BOMResourceOpener();
 
 		return apply(resourcePath, opener);
 	}
 
-	RDFModel apply(final String object, final DefaultObjectPipe<String, ObjectReceiver<Reader>> opener) {
+	List<RDFModel> apply(final String object, final DefaultObjectPipe<String, ObjectReceiver<Reader>> opener) {
 
 		final XmlDecoder decoder = new XmlDecoder();
 
@@ -78,10 +76,10 @@ public class XMLSourceResourceTriplesFlow {
 
 		if (recordTagName.isPresent()) {
 
-			encoder = new XMLTripleEncoder(recordTagName.get(), configurationId, resourceId);
+			encoder = new XMLTripleEncoder(recordTagName.get(), dataModelId);
 		} else {
 
-			encoder = new XMLTripleEncoder(configurationId, resourceId);
+			encoder = new XMLTripleEncoder(dataModelId);
 		}
 		final RDFModelReceiver writer = new RDFModelReceiver();
 
@@ -89,7 +87,7 @@ public class XMLSourceResourceTriplesFlow {
 
 		opener.process(object);
 
-		return writer.buildRDFModel();
+		return writer.getCollection();
 	}
 
 	private Optional<String> getStringParameter(final Configuration configuration, final String key) throws DMPConverterException {
@@ -120,27 +118,40 @@ public class XMLSourceResourceTriplesFlow {
 
 	private static class RDFModelReceiver implements ObjectReceiver<RDFModel> {
 
-		private RDFModel			rdfModel;
+		private ImmutableList.Builder<RDFModel>	builder	= ImmutableList.builder();
+		private ImmutableList<RDFModel>			collection;
 
 		@Override
 		public void process(final RDFModel rdfModel) {
 
-			this.rdfModel = rdfModel;
+			builder.add(rdfModel);
 		}
 
 		@Override
 		public void resetStream() {
-			rdfModel = null;
+
+			builder = ImmutableList.builder();
 		}
 
 		@Override
 		public void closeStream() {
-			buildRDFModel();
+
+			buildCollection();
 		}
 
-		private RDFModel buildRDFModel() {
+		public ImmutableList<RDFModel> getCollection() {
 
-			return rdfModel;
+			if (collection == null) {
+
+				buildCollection();
+			}
+
+			return collection;
+		}
+
+		private void buildCollection() {
+
+			collection = builder.build();
 		}
 	}
 }

@@ -46,14 +46,12 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 	private String						uri;
 	private Resource					recordType;
 
-	private final Optional<String>		resourceId;
-	private final Optional<String>		configurationId;
+	private final Optional<String>		dataModelId;
 
-	public XMLTripleEncoder(final Optional<String> resourceId, final Optional<String> configurationId) {
+	public XMLTripleEncoder(final Optional<String> dataModelId) {
 		super();
 
-		this.resourceId = resourceId;
-		this.configurationId = configurationId;
+		this.dataModelId = dataModelId;
 
 		this.recordTagName = System.getProperty("org.culturegraph.metamorph.xml.recordtag");
 		if (recordTagName == null) {
@@ -61,11 +59,10 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 		}
 	}
 
-	public XMLTripleEncoder(final String recordTagName, final Optional<String> resourceId, final Optional<String> configurationId) {
+	public XMLTripleEncoder(final String recordTagName, final Optional<String> dataModelId) {
 		super();
 		this.recordTagName = recordTagName;
-		this.resourceId = resourceId;
-		this.configurationId = configurationId;
+		this.dataModelId = dataModelId;
 	}
 
 	@Override
@@ -163,12 +160,11 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 
 				final StringBuilder sb = new StringBuilder();
 
-				if (resourceId.isPresent() && configurationId.isPresent()) {
+				if (dataModelId.isPresent()) {
 
 					// create uri from resource id and configuration id and identifier
 
-					sb.append("http://data.slub-dresden.de/resources/").append(resourceId.get()).append("/configurations/")
-							.append(configurationId.get()).append("/records/").append(identifier);
+					sb.append("http://data.slub-dresden.de/datamodels/").append(dataModelId.get()).append("/records/").append(identifier);
 				} else {
 
 					// create uri from identifier
@@ -186,12 +182,11 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 
 			final StringBuilder sb = new StringBuilder();
 
-			if (resourceId.isPresent() && configurationId.isPresent()) {
+			if (dataModelId.isPresent()) {
 
 				// create uri from resource id and configuration id and random uuid
 
-				sb.append("http://data.slub-dresden.de/resources/").append(resourceId.get()).append("/configurations/").append(configurationId.get())
-						.append("/records/").append(UUID.randomUUID());
+				sb.append("http://data.slub-dresden.de/datamodels/").append(dataModelId.get()).append("/records/").append(UUID.randomUUID());
 			} else {
 
 				// create uri from random uuid
@@ -227,7 +222,7 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 		inRecord = false;
 
 		// write triples
-		getReceiver().process(new RDFModel(model, currentId));
+		getReceiver().process(new RDFModel(model, currentId, recordType.getURI()));
 	}
 
 	public void startEntity(final String name) {

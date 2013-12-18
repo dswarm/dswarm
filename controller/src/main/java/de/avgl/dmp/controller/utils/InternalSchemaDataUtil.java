@@ -1,20 +1,16 @@
 package de.avgl.dmp.controller.utils;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
-import javax.annotation.Nullable;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
 import com.google.common.collect.AbstractIterator;
-import com.google.common.collect.Iterators;
-import com.google.common.collect.UnmodifiableIterator;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -24,10 +20,13 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.internal.Model;
 import de.avgl.dmp.persistence.model.jsonschema.JSRoot;
 import de.avgl.dmp.persistence.model.resource.Configuration;
+import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
+import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.model.types.Tuple;
 import de.avgl.dmp.persistence.service.InternalService;
 import de.avgl.dmp.persistence.service.InternalServiceFactory;
+import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
 
@@ -39,23 +38,48 @@ public class InternalSchemaDataUtil {
 	private final Provider<ResourceService>			resourceServiceProvider;
 	private final Provider<InternalServiceFactory>	internalServiceFactoryProvider;
 	private final Provider<SchemaService>			schemaServiceProvider;
+	private final Provider<DataModelService>		dataModelServiceProvider;
 
 	@Inject
 	public InternalSchemaDataUtil(final ObjectMapper objectMapper, final Provider<ResourceService> resourceServiceProvider,
-			final Provider<InternalServiceFactory> internalServiceFactoryProvider, final Provider<SchemaService> schemaServiceProvider) {
+			final Provider<InternalServiceFactory> internalServiceFactoryProvider, final Provider<SchemaService> schemaServiceProvider,
+			final Provider<DataModelService> dataModelServiceProvider) {
 		this.objectMapper = objectMapper;
 		this.resourceServiceProvider = resourceServiceProvider;
 		this.internalServiceFactoryProvider = internalServiceFactoryProvider;
 		this.schemaServiceProvider = schemaServiceProvider;
+		this.dataModelServiceProvider = dataModelServiceProvider;
 	}
 
+	/**
+	 * This method is deprecated. Please utilise {@link InternalSchemaDataUtil#getData(long)} instead.
+	 * 
+	 * @param resourceId
+	 * @param configurationId
+	 * @return
+	 */
+	@Deprecated
 	public Optional<Iterator<Tuple<String, JsonNode>>> getData(final long resourceId, final long configurationId) {
 		return getData(resourceId, configurationId, Optional.<Integer> absent());
 	}
 
+	public Optional<Iterator<Tuple<String, JsonNode>>> getData(final long dataModelId) {
+		return getData(dataModelId, Optional.<Integer> absent());
+	}
+
+	/**
+	 * This method is deprecated. Please utilise {@link InternalSchemaDataUtil#getData(long, Optional)} instead.
+	 * 
+	 * @param resourceId
+	 * @param configurationId
+	 * @param atMost
+	 * @return
+	 */
+	@Deprecated
 	public Optional<Iterator<Tuple<String, JsonNode>>> getData(final long resourceId, final long configurationId, final Optional<Integer> atMost) {
 
-		LOG.debug(String.format("try to get data for configuration with id [%d] for resource with id [%d]", configurationId, resourceId));
+		InternalSchemaDataUtil.LOG.debug(String.format("try to get data for configuration with id [%d] for resource with id [%d]", configurationId,
+				resourceId));
 
 		final Optional<Configuration> configurationOptional = fetchConfiguration(resourceId, configurationId);
 
@@ -78,13 +102,13 @@ public class InternalSchemaDataUtil {
 			maybeTriples = internalService.getObjects(resourceId, configurationId, atMost);
 		} catch (final DMPPersistenceException e1) {
 
-			LOG.debug(e1);
+			InternalSchemaDataUtil.LOG.debug(e1);
 			return Optional.absent();
 		}
 
 		if (!maybeTriples.isPresent()) {
 
-			LOG.debug("couldn't find data");
+			InternalSchemaDataUtil.LOG.debug("couldn't find data");
 			return Optional.absent();
 		}
 
@@ -93,6 +117,54 @@ public class InternalSchemaDataUtil {
 		return Optional.of(dataIterator(iterator));
 	}
 
+	public Optional<Iterator<Tuple<String, JsonNode>>> getData(final long dataModelId, final Optional<Integer> atMost) {
+
+		InternalSchemaDataUtil.LOG.debug(String.format("try to get data for data model with id [%d]", dataModelId));
+
+		final Optional<Configuration> configurationOptional = fetchConfiguration(dataModelId);
+
+		if (!configurationOptional.isPresent()) {
+
+			return Optional.absent();
+		}
+
+		final InternalService internalService;
+		try {
+			internalService = determineInternalService(configurationOptional.get());
+		} catch (final DMPControllerException e) {
+			return Optional.absent();
+		}
+
+		final Optional<Map<String, Model>> maybeTriples;
+
+		try {
+
+			maybeTriples = internalService.getObjects(dataModelId, atMost);
+		} catch (final DMPPersistenceException e1) {
+
+			InternalSchemaDataUtil.LOG.debug(e1);
+			return Optional.absent();
+		}
+
+		if (!maybeTriples.isPresent()) {
+
+			InternalSchemaDataUtil.LOG.debug("couldn't find data");
+			return Optional.absent();
+		}
+
+		final Iterator<Map.Entry<String, Model>> iterator = maybeTriples.get().entrySet().iterator();
+
+		return Optional.of(dataIterator(iterator));
+	}
+
+	/**
+	 * This method is deprecated. Please utilise {@link InternalSchemaDataUtil#getSchema(long)} instead.
+	 * 
+	 * @param resourceId
+	 * @param configurationId
+	 * @return
+	 */
+	@Deprecated
 	public Optional<ObjectNode> getSchema(final long resourceId, final long configurationId) {
 
 		final Optional<Configuration> configurationOptional = fetchConfiguration(resourceId, configurationId);
@@ -135,7 +207,7 @@ public class InternalSchemaDataUtil {
 
 		if (!schemaOptional.isPresent()) {
 
-			LOG.debug("couldn't find schema");
+			InternalSchemaDataUtil.LOG.debug("couldn't find schema");
 			return Optional.absent();
 		}
 
@@ -151,6 +223,85 @@ public class InternalSchemaDataUtil {
 		return Optional.of(node);
 	}
 
+	public Optional<ObjectNode> getSchema(final long dataModelId) {
+
+		final Optional<Configuration> configurationOptional = fetchConfiguration(dataModelId);
+
+		if (!configurationOptional.isPresent()) {
+
+			return Optional.absent();
+		}
+
+		final Configuration configuration = configurationOptional.get();
+
+		// TODO: fixme
+
+		final Optional<JSRoot> rootOptional = null;
+
+		// schemaServiceProvider.get().getSchema(resourceId, configurationId)
+		// .or(getConfiguredSchema(configuration));
+
+		// if (rootOptional.isPresent()) {
+		//
+		// final JSRoot jsElements = rootOptional.get();
+		//
+		// try {
+		// return Optional.of(jsElements.toJson(objectMapper));
+		// } catch (final IOException e) {
+		// LOG.warn(e.getMessage(), e);
+		// return Optional.absent();
+		// }
+		// }
+
+		final InternalService internalService;
+		try {
+			internalService = determineInternalService(configurationOptional.get());
+		} catch (final DMPControllerException e) {
+
+			return Optional.absent();
+		}
+
+		Optional<Schema> schemaOptional = null;
+		try {
+
+			schemaOptional = internalService.getSchema(dataModelId);
+		} catch (final DMPPersistenceException e) {
+
+			InternalSchemaDataUtil.LOG.error("something went wrong while schema retrieval", e);
+
+			return Optional.absent();
+		}
+
+		if (!schemaOptional.isPresent()) {
+
+			InternalSchemaDataUtil.LOG.debug("couldn't find schema");
+			return Optional.absent();
+		}
+
+		String schemaJSONString = null;;
+		try {
+
+			schemaJSONString = objectMapper.writeValueAsString(schemaOptional.get());
+		} catch (final JsonProcessingException e) {
+
+			InternalSchemaDataUtil.LOG.error("something went wrong while schema serialization", e);
+
+			return Optional.absent();
+		}
+
+		ObjectNode node;
+		try {
+			node = objectMapper.readValue(schemaJSONString, ObjectNode.class);
+		} catch (final IOException e) {
+
+			InternalSchemaDataUtil.LOG.error("something went wrong while schema deserialization", e);
+
+			return Optional.absent();
+		}
+
+		return Optional.of(node);
+	}
+
 	public Optional<Resource> fetchResource(final long resourceId) {
 
 		final ResourceService resourceService = resourceServiceProvider.get();
@@ -159,16 +310,38 @@ public class InternalSchemaDataUtil {
 		return Optional.fromNullable(resource);
 	}
 
+	public Optional<DataModel> fetchDataModel(final long dataModelId) {
+
+		final DataModelService dataModelService = dataModelServiceProvider.get();
+		final DataModel dataModel = dataModelService.getObject(dataModelId);
+
+		return Optional.fromNullable(dataModel);
+	}
+
 	public Optional<Configuration> fetchConfiguration(final long resourceId, final long configurationId) {
 		final Optional<Resource> resourceOptional = fetchResource(resourceId);
 
 		if (!resourceOptional.isPresent()) {
 
-			LOG.debug("couldn't find  resource '" + resourceId);
+			InternalSchemaDataUtil.LOG.debug("couldn't find  resource '" + resourceId);
 			return Optional.absent();
 		}
 
 		final Configuration configuration = resourceOptional.get().getConfiguration(configurationId);
+
+		return Optional.fromNullable(configuration);
+	}
+
+	public Optional<Configuration> fetchConfiguration(final long dataModelId) {
+		final Optional<DataModel> dataModelOptional = fetchDataModel(dataModelId);
+
+		if (!dataModelOptional.isPresent()) {
+
+			InternalSchemaDataUtil.LOG.debug("couldn't find data model '" + dataModelId + "'");
+			return Optional.absent();
+		}
+
+		final Configuration configuration = dataModelOptional.get().getConfiguration();
 
 		return Optional.fromNullable(configuration);
 	}

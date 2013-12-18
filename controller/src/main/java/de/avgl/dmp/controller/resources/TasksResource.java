@@ -137,8 +137,8 @@ public class TasksResource {
 		//
 		// final String recordPrefix = Joiner.on('.').join(parts);
 
-		// TODO: refacture the SchemDataUtil class to DataUtil class, where one can receive data by given data model metadata
-		final Optional<Iterator<Tuple<String, JsonNode>>> inputData = schemaDataUtil.getData(dataResource.getId(), configuration.getId());
+		//final Optional<Iterator<Tuple<String, JsonNode>>> inputData = schemaDataUtil.getData(dataResource.getId(), configuration.getId());
+		final Optional<Iterator<Tuple<String, JsonNode>>> inputData = schemaDataUtil.getData(inputDataModel.getId());
 
 		if (!inputData.isPresent()) {
 

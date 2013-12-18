@@ -118,18 +118,6 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 		return responseResource;
 	}
 
-	public String getData(final Long resourceId, final Long configurationId, final int atMost) {
-
-		final Response response1 = target(String.valueOf(resourceId), "/configurations/", String.valueOf(configurationId), "data")
-				.queryParam("atMost", atMost).request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
-
-		Assert.assertEquals("200 OK was expected", 200, response1.getStatus());
-
-		final String responseString = response1.readEntity(String.class);
-
-		return responseString;
-	}
-
 	public Resource uploadResource(final File resourceFile, final Resource expectedResource) throws Exception {
 
 		final FormDataMultiPart form = new FormDataMultiPart();

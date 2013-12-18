@@ -1,14 +1,32 @@
 package de.avgl.dmp.controller.resources.test;
 
-import java.util.Map;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+import java.net.URL;
+import java.util.Map;
+import java.util.Set;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import com.google.common.io.Resources;
+import com.google.inject.Key;
 
 import de.avgl.dmp.controller.resources.test.utils.AttributePathsResourceTestUtils;
 import de.avgl.dmp.controller.resources.test.utils.AttributesResourceTestUtils;
@@ -17,6 +35,8 @@ import de.avgl.dmp.controller.resources.test.utils.ConfigurationsResourceTestUti
 import de.avgl.dmp.controller.resources.test.utils.DataModelsResourceTestUtils;
 import de.avgl.dmp.controller.resources.test.utils.ResourcesResourceTestUtils;
 import de.avgl.dmp.controller.resources.test.utils.SchemasResourceTestUtils;
+import de.avgl.dmp.controller.servlet.DMPInjector;
+import de.avgl.dmp.persistence.model.internal.Model;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
@@ -24,6 +44,8 @@ import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
+import de.avgl.dmp.persistence.service.InternalService;
+import de.avgl.dmp.persistence.service.InternalServiceFactory;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
@@ -83,14 +105,14 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 		// prepare resource json for configuration ids manipulation
 		String resourceJSONString = DMPPersistenceUtil.getResourceAsString("resource1.json");
 		final ObjectNode resourceJSON = objectMapper.readValue(resourceJSONString, ObjectNode.class);
-		
+
 		final ArrayNode configurationsArray = objectMapper.createArrayNode();
-		
+
 		final String persistedConfigurationJSONString = objectMapper.writeValueAsString(configuration);
 		final ObjectNode persistedConfigurationJSON = objectMapper.readValue(persistedConfigurationJSONString, ObjectNode.class);
-		
+
 		configurationsArray.add(persistedConfigurationJSON);
-		
+
 		resourceJSON.put("configurations", configurationsArray);
 
 		// re-init expect resource
@@ -154,20 +176,20 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 
 		// prepare data model json for resource, configuration and schema manipulation
 		final ObjectNode objectJSON = objectMapper.readValue(objectJSONString, ObjectNode.class);
-		
+
 		final String finalResourceJSONString = objectMapper.writeValueAsString(resource);
 		final ObjectNode finalResourceJSON = objectMapper.readValue(finalResourceJSONString, ObjectNode.class);
-		
+
 		objectJSON.put("data_resource", finalResourceJSON);
-		
+
 		final String finalConfigurationJSONString = objectMapper.writeValueAsString(resource.getConfigurations().iterator().next());
 		final ObjectNode finalConfigurationJSON = objectMapper.readValue(finalConfigurationJSONString, ObjectNode.class);
-		
+
 		objectJSON.put("configuration", finalConfigurationJSON);
-		
+
 		final String finalSchemaJSONString = objectMapper.writeValueAsString(schema);
 		final ObjectNode finalSchemaJSON = objectMapper.readValue(finalSchemaJSONString, ObjectNode.class);
-		
+
 		objectJSON.put("schema", finalSchemaJSON);
 
 		// re-init expect object
@@ -175,6 +197,197 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 		expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
 
 		// END data model preparation
+	}
+
+	@Test
+	public void testCSVData() throws Exception {
+
+		LOG.debug("start get CSV data test");
+
+		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("resource.json");
+
+		final Resource expectedResource = injector.getInstance(ObjectMapper.class).readValue(resourceJSONString, Resource.class);
+
+		final URL fileURL = Resources.getResource("test_csv.csv");
+		final File resourceFile = FileUtils.toFile(fileURL);
+
+		final String configurationJSONString = DMPPersistenceUtil.getResourceAsString("configuration.json");
+
+		// add resource and config
+		final Resource resource = resourcesResourceTestUtils.uploadResource(resourceFile, expectedResource);
+
+		final Configuration config = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
+
+		final DataModel dataModel1 = new DataModel();
+		dataModel1.setName("my data model");
+		dataModel1.setDescription("my data model description");
+		dataModel1.setDataResource(resource);
+		dataModel1.setConfiguration(config);
+
+		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
+
+		final DataModel dataModel = pojoClassResourceTestUtils.createObject(dataModelJSONString, dataModel1);
+
+		final int atMost = 1;
+
+		final InternalServiceFactory serviceFactory = DMPInjector.injector.getInstance(Key.get(InternalServiceFactory.class));
+		final InternalService service = serviceFactory.getMemoryDbInternalService();
+		final Optional<Map<String, Model>> data = service.getObjects(resource.getId(), config.getId(), Optional.of(atMost));
+
+		assertTrue(data.isPresent());
+		assertFalse(data.get().isEmpty());
+		assertThat(data.get().size(), equalTo(atMost));
+
+		final String recordId = data.get().keySet().iterator().next();
+
+		final Response response = target(String.valueOf(dataModel.getId()), "data").queryParam("atMost", atMost).request()
+				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+
+		final ObjectNode assoziativeJsonArray = response.readEntity(ObjectNode.class);
+
+		assertThat(assoziativeJsonArray.size(), equalTo(atMost));
+
+		final JsonNode json = assoziativeJsonArray.get(recordId);
+
+		assertThat(json.get("id").asText(), equalTo(data.get().get(recordId).toJSON().get("id").asText()));
+		assertThat(json.get("year").asText(), equalTo(data.get().get(recordId).toJSON().get("year").asText()));
+		assertThat(json.get("description").asText(), equalTo(data.get().get(recordId).toJSON().get("description").asText()));
+		assertThat(json.get("name").asText(), equalTo(data.get().get(recordId).toJSON().get("name").asText()));
+		assertThat(json.get("isbn").asText(), equalTo(data.get().get(recordId).toJSON().get("isbn").asText()));
+
+		// clean up
+
+		final Schema schema = dataModel.getSchema();
+
+		pojoClassResourceTestUtils.deleteObject(dataModel);
+
+		final Set<AttributePath> attributePaths = schema.getAttributePaths();
+		final Clasz recordClasz = schema.getRecordClass();
+
+		schemasResourceTestUtils.deleteObject(schema);
+
+		final Set<Attribute> attributes = Sets.newHashSet();
+
+		if (attributePaths != null && !attributePaths.isEmpty()) {
+
+			for (final AttributePath attributePath : attributePaths) {
+
+				attributes.addAll(attributePath.getAttributePath());
+			}
+		}
+
+		for (final AttributePath attributePath : attributePaths) {
+
+			attributePathsResourceTestUtils.deleteObject(attributePath);
+		}
+
+		for (final Attribute attribute : attributes) {
+
+			attributesResourceTestUtils.deleteObject(attribute);
+		}
+
+		resourcesResourceTestUtils.deleteObject(resource);
+		configurationsResourceTestUtils.deleteObject(config);
+		
+		claszesResourceTestUtils.deleteObject(recordClasz);
+
+		LOG.debug("end get CSV data test");
+	}
+
+	@Test
+	public void testXMLData() throws Exception {
+
+		LOG.debug("start get XML data test");
+
+		// prepare resource
+		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("test-mabxml-resource.json");
+
+		final Resource expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
+
+		final URL fileURL = Resources.getResource("test-mabxml.xml");
+		final File resourceFile = FileUtils.toFile(fileURL);
+
+		final String configurationJSONString = DMPPersistenceUtil.getResourceAsString("xml-configuration.json");
+
+		// add resource and config
+		final Resource resource = resourcesResourceTestUtils.uploadResource(resourceFile, expectedResource);
+
+		final Configuration config = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
+
+		final DataModel dataModel1 = new DataModel();
+		dataModel1.setName("my data model");
+		dataModel1.setDescription("my data model description");
+		dataModel1.setDataResource(resource);
+		dataModel1.setConfiguration(config);
+
+		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
+
+		final DataModel dataModel = pojoClassResourceTestUtils.createObject(dataModelJSONString, dataModel1);
+
+		final int atMost = 1;
+
+		final InternalServiceFactory serviceFactory = DMPInjector.injector.getInstance(Key.get(InternalServiceFactory.class));
+		final InternalService service = serviceFactory.getInternalTripleService();
+		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getId(), Optional.of(atMost));
+
+		assertTrue(data.isPresent());
+		assertFalse(data.get().isEmpty());
+		assertThat(data.get().size(), equalTo(atMost));
+
+		final String recordId = data.get().keySet().iterator().next();
+
+		final Response response = target(String.valueOf(dataModel.getId()), "data").queryParam("atMost", atMost).request()
+				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+
+		// final String assoziativeJsonArrayString = response.readEntity(String.class);
+		//
+		// System.out.println("result = '" + assoziativeJsonArrayString + "'");
+
+		final ObjectNode assoziativeJsonArray = response.readEntity(ObjectNode.class);
+
+		assertThat(assoziativeJsonArray.size(), equalTo(atMost));
+
+		JsonNode json = assoziativeJsonArray.get(recordId);
+
+		final JsonNode expectedJson = data.get().get(recordId).toJSON();
+
+		System.out.println("expected JSON = '" + objectMapper.writeValueAsString(expectedJson) + "'");
+
+		assertThat(json.get("@status").asText(), equalTo(expectedJson.get("@status").asText()));
+		assertThat(json.get("@mabVersion").asText(), equalTo(expectedJson.get("@mabVersion").asText()));
+		assertThat(json.get("@typ").asText(), equalTo(expectedJson.get("@typ").asText()));
+		assertThat(json.get("feld").size(), equalTo(expectedJson.get("feld").size()));
+
+		// clean up
+		service.deleteObject(dataModel.getId());
+
+		final Schema schema = dataModel.getSchema();
+		final Clasz recordClasz = schema.getRecordClass();
+
+		pojoClassResourceTestUtils.deleteObject(dataModel);
+		schemasResourceTestUtils.deleteObject(schema);
+		claszesResourceTestUtils.deleteObject(recordClasz);
+		resourcesResourceTestUtils.deleteObject(resource);
+		configurationsResourceTestUtils.deleteObject(config);
+
+		LOG.debug("end get XML data test");
+	}
+	
+	@Test
+	public void testDataMissing() throws Exception {
+
+		LOG.debug("start get data missing test");
+
+		final Response response = target("42", "data").request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+
+		assertThat("404 Not Found was expected", response.getStatus(), equalTo(404));
+		assertThat(response.hasEntity(), equalTo(false));
+
+		LOG.debug("end get resource configuration data missing test");
 	}
 
 	@After
@@ -189,7 +402,7 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 		configurationsResourceTestUtils.deleteObject(configuration);
 
 		// START schema clean-up
-		
+
 		schemasResourceTestUtils.deleteObject(schema);
 
 		for (final AttributePath attributePath : attributePaths.values()) {
