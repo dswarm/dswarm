@@ -501,6 +501,8 @@ public class ResourcesResource {
 	}
 
 	/**
+	 * This operation is deprecated. Please utilise {@link DataModelsResource#getObject(Long)} instead.<br/>
+	 * <br/>
 	 * note: [@tgaengler] this operation should be moved to {@link DataModelsResource}
 	 * 
 	 * @param id
@@ -508,7 +510,8 @@ public class ResourcesResource {
 	 * @return
 	 * @throws DMPControllerException
 	 */
-	@ApiOperation(value = "get the schema of the data resource and configuration (= data model) that matches the given data resource id and the given configuration id", notes = "Returns the schema of the data resource and configuration (= data model) that matches the given data resource id and the given configuration id.")
+	@Deprecated
+	@ApiOperation(value = "get the schema of the data resource and configuration (= data model) that matches the given data resource id and the given configuration id", notes = "Returns the schema of the data resource and configuration (= data model) that matches the given data resource id and the given configuration id. This operation is deprecated. Please utilise [base uri]/datamodels/{datamodelid} instead. The data model contains its schema.")
 	@GET
 	@Path("/{id}/configurations/{configurationid}/schema")
 	@Produces(MediaType.APPLICATION_JSON)
