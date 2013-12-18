@@ -34,6 +34,7 @@ import de.avgl.dmp.controller.eventbus.SchemaEvent;
 import de.avgl.dmp.controller.eventbus.XMLSchemaEvent;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.controller.utils.InternalSchemaDataUtil;
+import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.types.Tuple;
@@ -157,11 +158,25 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 	@Override
 	protected DataModel addObject(final String objectJSONString) throws DMPControllerException {
 
-		final DataModel dataModel = super.addObject(objectJSONString);
+		DataModel dataModel = super.addObject(objectJSONString);
 
 		if (dataModel == null) {
 
 			return dataModel;
+		}
+
+		if (dataModel.getConfiguration() != null) {
+
+			// add configuration to data resource
+			dataModel.getDataResource().addConfiguration(dataModel.getConfiguration());
+
+			try {
+
+				dataModel = persistenceServiceProvider.get().updateObjectTransactional(dataModel);
+			} catch (DMPPersistenceException e) {
+
+				LOG.error("something went wrong, when trying to add configuration to data resource of data model '" + dataModel.getId() + "'");
+			}
 		}
 
 		// final Timer.Context context = dmpStatus.createNewConfiguration();
