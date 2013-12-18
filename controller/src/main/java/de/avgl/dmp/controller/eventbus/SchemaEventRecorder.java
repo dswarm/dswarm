@@ -88,7 +88,7 @@ public class SchemaEventRecorder {
 
 		final Clasz clasz;
 
-		if (schema.getClass() != null) {
+		if (schema.getRecordClass() != null) {
 
 			clasz = schema.getRecordClass();
 		} else {
