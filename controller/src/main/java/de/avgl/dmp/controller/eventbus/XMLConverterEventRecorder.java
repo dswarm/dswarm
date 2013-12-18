@@ -2,8 +2,6 @@ package de.avgl.dmp.controller.eventbus;
 
 import java.util.List;
 
-import org.junit.Assert;
-
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
@@ -73,13 +71,14 @@ public class XMLConverterEventRecorder {
 
 			for (final RDFModel rdfModel : rdfModels) {
 
-				Assert.assertNotNull("the RDF triples of the RDF model shouldn't be null", rdfModel.getModel());
+				if (rdfModel.getModel() != null) {
 
-				model.add(rdfModel.getModel());
+					model.add(rdfModel.getModel());
 
-				if (recordClassUri == null) {
+					if (recordClassUri == null) {
 
-					recordClassUri = rdfModel.getRecordClassURI();
+						recordClassUri = rdfModel.getRecordClassURI();
+					}
 				}
 			}
 
