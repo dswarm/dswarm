@@ -31,6 +31,11 @@ import de.avgl.dmp.persistence.model.utils.ResourceReferenceDeserializer;
 import de.avgl.dmp.persistence.model.utils.SetResourceReferenceSerializer;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
+/**
+ * A configuration contains information on how to process a given {@link Resource} into a {@link DataModel}, e.g., delimiter etc.
+ * 
+ * @author tgaengler
+ */
 @XmlRootElement
 @Entity
 // @Cacheable(true)
@@ -58,17 +63,31 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	// @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	private Set<Resource>							resources;
 
+	/**
+	 * A string that holds a serialised JSON object of configuration parameters.
+	 */
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "parameters", columnDefinition = "VARCHAR(4000)", length = 4000)
 	private String									parametersString;
 
+	/**
+	 * A JSON object of configuration parameters.
+	 */
 	@Transient
 	private ObjectNode								parameters;
 
+	/**
+	 * A flag that indicates, whether the configuration parameters are initialised or not.
+	 */
 	@Transient
 	private boolean									parametersInitialized;
 
+	/**
+	 * Gets the configuration parameters.
+	 * 
+	 * @return the configuration parameters
+	 */
 	public ObjectNode getParameters() {
 
 		initParameters(false);
@@ -76,6 +95,11 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 		return parameters;
 	}
 
+	/**
+	 * Sets the configuration parameters.
+	 * 
+	 * @param parameters new configuration parameters
+	 */
 	public void setParameters(final ObjectNode parameters) {
 
 		this.parameters = parameters;
@@ -83,6 +107,12 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 		refreshParametersString();
 	}
 
+	/**
+	 * Adds a new configuration parameter.
+	 * 
+	 * @param key the key of the configuration parameter
+	 * @param value the value of the configuration parameter
+	 */
 	public void addParameter(final String key, final JsonNode value) {
 
 		if (parameters == null) {
@@ -95,6 +125,12 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 		refreshParametersString();
 	}
 
+	/**
+	 * Gets the configuration parameter for the given key.
+	 * 
+	 * @param key a configuration parameter key
+	 * @return the value of the matched configuration parameter or null
+	 */
 	public JsonNode getParameter(final String key) {
 
 		initParameters(false);
@@ -102,11 +138,21 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 		return parameters.get(key);
 	}
 
+	/**
+	 * Gets the resources that are related to this configuration
+	 * 
+	 * @return the resources that are related to this configuration
+	 */
 	public Set<Resource> getResources() {
 
 		return resources;
 	}
 
+	/**
+	 * Sets the resources of this configuration
+	 * 
+	 * @param resourcesArg a new collection of resources
+	 */
 	public void setResources(final Set<Resource> resourcesArg) {
 
 		if (resourcesArg == null && resources != null) {
@@ -209,6 +255,10 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 		}
 	}
 
+	/**
+	 * Refreshs the string that holds the serialised JSON object of the configuration parameters. This method should be called
+	 * after every manipulation of the configuration parameters (to keep the states consistent).
+	 */
 	private void refreshParametersString() {
 
 		if (parameters != null) {
@@ -217,6 +267,12 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 		}
 	}
 
+	/**
+	 * Initialises the configuration parameters from the string that holds the serialised JSON object of the
+	 * configuration parameters.
+	 * 
+	 * @param fromScratch flag that indicates, whether the configuration parameters should be initialised from scratch or not
+	 */
 	private void initParameters(final boolean fromScratch) {
 
 		if (parameters == null && !parametersInitialized) {

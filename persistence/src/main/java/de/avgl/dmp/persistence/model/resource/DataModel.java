@@ -15,6 +15,9 @@ import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.schema.Schema;
 
 /**
+ * A (input) data model consists of a {@link Resource} and a {@link Configuration} that has been applied to the data resource to
+ * produce the data model. Thereby, a schema that describes the relationships between the data was derived or manually set.
+ * 
  * @author tgaengler
  */
 @XmlRootElement
@@ -29,53 +32,92 @@ public class DataModel extends ExtendedBasicDMPJPAObject {
 	 */
 	private static final long	serialVersionUID	= 1L;
 
+	/**
+	 * The data resource (origin or raw data).
+	 */
 	@XmlElement(name = "data_resource")
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "DATA_RESOURCE")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	//@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
-	//@XmlIDREF
+	// @JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
+	// @XmlIDREF
 	private Resource			dataResource;
 
+	/**
+	 * The related configuration.
+	 */
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "CONFIGURATION")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	//@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
-	//@XmlIDREF
+	// @JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
+	// @XmlIDREF
 	private Configuration		configuration;
 
+	/**
+	 * The data schema.
+	 */
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "DATA_SCHEMA")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	//@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
-	//@XmlIDREF
+	// @JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
+	// @XmlIDREF
 	private Schema				schema;
 
+	/**
+	 * Gets the data resource.
+	 * 
+	 * @return the data resource
+	 */
 	public Resource getDataResource() {
 
 		return dataResource;
 	}
 
+	/**
+	 * Sets the data resource.
+	 * 
+	 * @param dataResourceArg a new data resource
+	 */
 	public void setDataResource(final Resource dataResourceArg) {
 
 		dataResource = dataResourceArg;
 	}
 
+	/**
+	 * Gets the configuration.
+	 * 
+	 * @return the configuration
+	 */
 	public Configuration getConfiguration() {
 
 		return configuration;
 	}
 
+	/**
+	 * Sets the configuration.
+	 * 
+	 * @param configurationArg a new configuration
+	 */
 	public void setConfiguration(final Configuration configurationArg) {
 
 		configuration = configurationArg;
 	}
 
+	/**
+	 * Gets the data schema.
+	 * 
+	 * @return the data schema
+	 */
 	public Schema getSchema() {
 
 		return schema;
 	}
 
+	/**
+	 * Sets the data schema
+	 * 
+	 * @param schemaArg a new data schema
+	 */
 	public void setSchema(final Schema schemaArg) {
 
 		schema = schemaArg;
