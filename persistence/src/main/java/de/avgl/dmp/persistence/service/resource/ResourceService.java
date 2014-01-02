@@ -15,25 +15,36 @@ import de.avgl.dmp.persistence.model.resource.ResourceType;
 import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
 
 /**
+ * A persistence service for {@link Resource}s.
+ * 
  * @author tgaengler
  */
 public class ResourceService extends ExtendedBasicDMPJPAService<Resource> {
 
-	private final Provider<ConfigurationService>	configurationServiceProvider;
-
+	/**
+	 * Creates a new resource persistence service with the given entity manager provider.
+	 * 
+	 * @param entityManagerProvider an entity manager provider
+	 */
 	@Inject
-	public ResourceService(final Provider<EntityManager> entityManagerProvider, final Provider<ConfigurationService> configurationServiceProvider) {
+	public ResourceService(final Provider<EntityManager> entityManagerProvider) {
 
 		super(Resource.class, entityManagerProvider);
-		this.configurationServiceProvider = configurationServiceProvider;
 	}
 
+	/**
+	 * {@inheritDoc}<br/>
+	 * Clears the relationship to configurations.
+	 */
 	@Override
 	protected void prepareObjectForRemoval(final Resource object) {
 
 		object.setConfigurations(null);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void updateObjectInternal(final Resource object, final Resource updateObject, final EntityManager entityManager)
 			throws DMPPersistenceException {
@@ -55,12 +66,6 @@ public class ResourceService extends ExtendedBasicDMPJPAService<Resource> {
 
 	@Override
 	public Resource getObject(final Long id) {
-
-		// final ConfigurationService cS = configurationServiceProvider.get();
-		//
-		//
-		//
-		// System.out.println("all objects: " + ToStringBuilder.reflectionToString(cS.getObjects()));
 
 		return super.getObject(id);
 	}

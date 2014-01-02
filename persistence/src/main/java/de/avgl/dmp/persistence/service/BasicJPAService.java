@@ -215,6 +215,11 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 		BasicJPAService.LOG.debug("deleted " + className + " with id '" + id + "' from the database");
 	}
 
+	/**
+	 * Prepares the given object for removal, i.e., disconnect the object from all related objects that shouldn't be deleted at this time.
+	 * 
+	 * @param object an object that should be deleted
+	 */
 	protected abstract void prepareObjectForRemoval(final POJOCLASS object);
 
 	/**

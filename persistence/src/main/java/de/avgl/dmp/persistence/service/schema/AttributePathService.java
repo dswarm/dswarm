@@ -13,12 +13,18 @@ import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.service.BasicIDJPAService;
 
 /**
+ * A persistence service for {@link AttributePath}s.
  * 
  * @author tgaengler
  *
  */
 public class AttributePathService extends BasicIDJPAService<AttributePath> {
 
+	/**
+	 * Creates a new attribute path persistence service with the given entity manager provider.
+	 * 
+	 * @param entityManagerProvider an entity manager provider
+	 */
 	@Inject
 	public AttributePathService(final Provider<EntityManager> entityManagerProvider) {
 

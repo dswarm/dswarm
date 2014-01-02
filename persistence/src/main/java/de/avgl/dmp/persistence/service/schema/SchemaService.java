@@ -14,18 +14,28 @@ import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.service.BasicDMPJPAService;
 
 /**
+ * A persistence service for {@link Schema}s.
  * 
  * @author tgaengler
  *
  */
 public class SchemaService extends BasicDMPJPAService<Schema> {
 
+	/**
+	 * Creates a new schema persistence service with the given entity manager provider.
+	 * 
+	 * @param entityManagerProvider an entity manager provider
+	 */
 	@Inject
 	public SchemaService(final Provider<EntityManager> entityManagerProvider) {
 
 		super(Schema.class, entityManagerProvider);
 	}
 
+	/**
+	 * {@inheritDoc}<br>
+	 * Clear the relationship to the attribute paths + record class.
+	 */
 	@Override
 	protected void prepareObjectForRemoval(final Schema object) {
 
@@ -34,6 +44,9 @@ public class SchemaService extends BasicDMPJPAService<Schema> {
 		object.setRecordClass(null);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void updateObjectInternal(final Schema object, final Schema updateObject, final EntityManager entityManager)
 			throws DMPPersistenceException {
