@@ -16,8 +16,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.Sets;
 
 /**
+ * A transformation is a complex {@link Function} that consists of {@link Component}s.<br/>
+ * <br/>
  * TODO: maybe add some methods to retrieve starting and finishing components
- *
+ * 
  * @author tgaengler
  */
 @XmlRootElement
@@ -35,23 +37,39 @@ public class Transformation extends Function {
 	 */
 	private static final long						serialVersionUID	= 1L;
 
-	@OneToMany(/* mappedBy = "transformation", */fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH,
-			CascadeType.REMOVE }, orphanRemoval = true)
+	/**
+	 * The components of the transformation.
+	 */
+	@OneToMany(/* mappedBy = "transformation", */fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+			CascadeType.REFRESH, CascadeType.REMOVE }, orphanRemoval = true)
 	@JoinColumn(name = "TRANSFORMATION", referencedColumnName = "ID")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@XmlList
 	private Set<Component>							components;
 
+	/**
+	 * Creates a new transformation.
+	 */
 	public Transformation() {
 
 		super(FunctionType.Transformation);
 	}
 
+	/**
+	 * Gets the components of the transformation.
+	 * 
+	 * @return the components of the transformation
+	 */
 	public Set<Component> getComponents() {
 
 		return components;
 	}
 
+	/**
+	 * Sets the components of the transformation
+	 * 
+	 * @param componentsArg a new collection of components
+	 */
 	public void setComponents(final Set<Component> componentsArg) {
 
 		if (componentsArg == null && components != null) {
@@ -95,7 +113,7 @@ public class Transformation extends Function {
 	/**
 	 * Adds a new component to the collection of components of this transformation.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param component a new component
 	 */
 	public void addComponent(final Component component) {
@@ -122,7 +140,7 @@ public class Transformation extends Function {
 	/**
 	 * Removes an existing component from the collection of components of this transformation.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param component an existing component that should be removed
 	 */
 	public void removeComponent(final Component component) {
