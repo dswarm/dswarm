@@ -34,6 +34,8 @@ import de.avgl.dmp.persistence.model.DMPJPAObject;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
+ * An attribute path is an ordered list of {@link Attribute}s.
+ * 
  * @author tgaengler
  */
 @XmlRootElement
@@ -46,12 +48,12 @@ public class AttributePath extends DMPJPAObject {
 	/**
 	 *
 	 */
-	private static final long						serialVersionUID				= 1L;
+	private static final long						serialVersionUID	= 1L;
 
-	private static final org.apache.log4j.Logger	LOG								= org.apache.log4j.Logger.getLogger(AttributePath.class);
+	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(AttributePath.class);
 
 	/**
-	 * All attributes of the attribute path as ordered list
+	 * All utilised attributes of this attribute path.
 	 */
 	// @ManyToMany(mappedBy = "attributePaths", fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE,
 	// CascadeType.PERSIST, CascadeType.REFRESH })
@@ -61,15 +63,27 @@ public class AttributePath extends DMPJPAObject {
 	@JoinTable(name = "ATTRIBUTES_ATTRIBUTE_PATHS", joinColumns = { @JoinColumn(name = "ATTRIBUTE_PATH_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "ATTRIBUTE_ID", referencedColumnName = "ID") })
 	private Set<Attribute>							attributes;
 
+	/**
+	 * all attributes of this attribute path as ordered list.
+	 */
 	@Transient
 	private LinkedList<Attribute>					orderedAttributes;
 
+	/**
+	 * A JSON object of the ordered list of attributes.
+	 */
 	@Transient
 	private ArrayNode								orderedAttributesJSON;
 
+	/**
+	 * A flag that indicates, whether the attributes are initialised or not.
+	 */
 	@Transient
 	private boolean									orderedAttributesInitialized;
 
+	/**
+	 * A string that holds the serialised JSON object of the attribute path (ordered list of attributes).
+	 */
 	@JsonIgnore
 	@Lob
 	@Access(AccessType.FIELD)
@@ -85,10 +99,18 @@ public class AttributePath extends DMPJPAObject {
 	// "ID") }, inverseJoinColumns = { @JoinColumn(name = "SCHEMA_ID", referencedColumnName = "ID") })
 	// private Set<Schema> schemas = null;
 
+	/**
+	 * Creates a new attribute path.
+	 */
 	public AttributePath() {
 
 	}
 
+	/**
+	 * Creates a new attribute path with the given ordered list of attributes.
+	 * 
+	 * @param attributesArg an ordered list of attributes
+	 */
 	public AttributePath(final LinkedList<Attribute> attributesArg) {
 
 		orderedAttributes = attributesArg;
@@ -101,11 +123,23 @@ public class AttributePath extends DMPJPAObject {
 		}
 	}
 
+	/**
+	 * Gets the utilised attributes of this attribute path.<br/>
+	 * note: this is not the ordered list of attributes, i.e., the attribute path; these are only the utilised attributes, i.e.,
+	 * an attribute can occur multiple times in an attribute path.
+	 * 
+	 * @return the utilised attributes of this attribute path
+	 */
 	public Set<Attribute> getAttributes() {
 
 		return attributes;
 	}
 
+	/**
+	 * Gets the attribute path, i.e., the ordered list of attributes.
+	 * 
+	 * @return the attribute path
+	 */
 	@XmlElement(name = "attributes")
 	public LinkedList<Attribute> getAttributePath() {
 
@@ -114,6 +148,11 @@ public class AttributePath extends DMPJPAObject {
 		return orderedAttributes;
 	}
 
+	/**
+	 * Sets the attribute path (ordered list of attributes).
+	 * 
+	 * @param attributesArg a new attribute path (ordered list of attributes)
+	 */
 	public void setAttributePath(final LinkedList<Attribute> attributesArg) {
 
 		if (attributesArg == null && orderedAttributes != null) {
@@ -124,19 +163,19 @@ public class AttributePath extends DMPJPAObject {
 			//
 			// attribute.removeAttributePath(this);
 			// }
-			
-			if(attributes != null) {
-				
+
+			if (attributes != null) {
+
 				attributes.clear();
 			}
-			
+
 			orderedAttributes.clear();
 		}
 
-		//orderedAttributes = attributesArg;
+		// orderedAttributes = attributesArg;
 
 		if (attributesArg != null) {
-			
+
 			if (orderedAttributes == null) {
 
 				orderedAttributes = Lists.newLinkedList();
@@ -150,7 +189,7 @@ public class AttributePath extends DMPJPAObject {
 
 			if (null == attributes) {
 
-				attributes = Sets.newLinkedHashSet();
+				attributes = Sets.newCopyOnWriteArraySet();
 			}
 
 			for (final Attribute attribute : attributesArg) {
@@ -167,7 +206,7 @@ public class AttributePath extends DMPJPAObject {
 	/**
 	 * Adds a new attribute to the end of this attribute path.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param attributeArg a new attribute
 	 */
 	public void addAttribute(final Attribute attributeArg) {
@@ -176,7 +215,7 @@ public class AttributePath extends DMPJPAObject {
 
 			if (attributes == null) {
 
-				attributes = Sets.newLinkedHashSet();
+				attributes = Sets.newCopyOnWriteArraySet();
 			}
 
 			if (orderedAttributes == null) {
@@ -206,7 +245,7 @@ public class AttributePath extends DMPJPAObject {
 	/**
 	 * Adds a new attribute to the end of this attribute path.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param attributeArg a new attribute
 	 */
 	protected void addAttribute(final Attribute attributeArg, final int attributeIndex) {
@@ -215,7 +254,7 @@ public class AttributePath extends DMPJPAObject {
 
 			if (attributes == null) {
 
-				attributes = Sets.newLinkedHashSet();
+				attributes = Sets.newCopyOnWriteArraySet();
 			}
 
 			if (orderedAttributes == null) {
@@ -245,7 +284,7 @@ public class AttributePath extends DMPJPAObject {
 	/**
 	 * Removes an existing attribute from this attribute path.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param attribute an existing attribute that should be removed
 	 * @param attributeIndex the position of the attribute in the attribute path
 	 */
@@ -334,6 +373,11 @@ public class AttributePath extends DMPJPAObject {
 	// }
 	// }
 
+	/**
+	 * Builds the ordered list of (identifiers of) attributes as one string, separated by a delimiter character (currently a dot)
+	 * 
+	 * @return ordered list of (identifiers of) attributes as one string
+	 */
 	public String toAttributePath() {
 
 		if (null == getAttributePath()) {
@@ -373,6 +417,10 @@ public class AttributePath extends DMPJPAObject {
 
 	}
 
+	/**
+	 * Refreshs the string that holds the serialised JSON object of the attribute path (ordered list of attributes). This method
+	 * should be called after every manipulation of the attribute path (to keep the states consistent).
+	 */
 	private void refreshAttributePathString() {
 
 		if (orderedAttributes != null) {
@@ -394,6 +442,12 @@ public class AttributePath extends DMPJPAObject {
 		}
 	}
 
+	/**
+	 * Initialises the attribute path, collection of attributes and JSON object from the string that holds the serialised JSON
+	 * object of the attribute path.
+	 * 
+	 * @param fromScratch flag that indicates, whether the attribute path should be initialised from scratch or not
+	 */
 	private void initAttributePath(final boolean fromScratch) {
 
 		if (orderedAttributesJSON == null && !orderedAttributesInitialized) {
@@ -441,6 +495,12 @@ public class AttributePath extends DMPJPAObject {
 		}
 	}
 
+	/**
+	 * Gets the attribute for a given attribute identifier.
+	 * 
+	 * @param id an attribute identifier
+	 * @return the matched attribute or null
+	 */
 	private Attribute getAttribute(final String id) {
 
 		if (null == id) {
