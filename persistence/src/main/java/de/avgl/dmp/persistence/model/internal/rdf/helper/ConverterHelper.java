@@ -9,33 +9,70 @@ import com.google.common.collect.Lists;
 
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
+/**
+ * A converter helper for RDF to JSON transformation.
+ * 
+ * @author tgaengler
+ */
 public class ConverterHelper {
 
+	/**
+	 * The property of this converter helper.
+	 */
 	protected final String		property;
 
+	/**
+	 * The objects of this converter helper.
+	 */
 	private final List<Object>	objects;
 
+	/**
+	 * Creates a new converter helper with the given property.
+	 * 
+	 * @param property a property
+	 */
 	public ConverterHelper(final String property) {
 
 		this.property = property;
 		objects = Lists.newLinkedList();
 	}
 
+	/**
+	 * Adds a literal or URI to the object list.
+	 * 
+	 * @param object a new literal or URI
+	 */
 	public void addLiteralOrURI(final String object) {
 
 		objects.add(new Object(object));
 	}
 
+	/**
+	 * Adds a JSON node to the object list.
+	 * 
+	 * @param jsonNode a JSON node
+	 */
 	public void addJsonNode(final JsonNode jsonNode) {
 
 		objects.add(new Object(jsonNode));
 	}
 
+	/**
+	 * Return true, if the object list consists of more than one object; otherwise false.
+	 * 
+	 * @return true, if the object list consists of more than one object; otherwise false
+	 */
 	public boolean isArray() {
 
 		return objects.size() > 1;
 	}
 
+	/**
+	 * Serialises the property + object list to a JSON object.
+	 * 
+	 * @param json the JSON object that should be filled
+	 * @return the filled JSON object
+	 */
 	public ObjectNode build(final ObjectNode json) {
 
 		if (isArray()) {
