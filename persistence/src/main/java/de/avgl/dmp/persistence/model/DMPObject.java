@@ -14,7 +14,7 @@ import com.google.common.base.Objects;
  * basic #hashCode and #equals implementations (by identifier).
  * 
  * @author tgaengler
- * @param <IDTYPE>
+ * @param <IDTYPE> the identifier type of the object
  */
 @XmlRootElement
 @MappedSuperclass

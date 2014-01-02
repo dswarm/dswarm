@@ -24,8 +24,8 @@ import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.model.types.Tuple;
-import de.avgl.dmp.persistence.service.InternalService;
-import de.avgl.dmp.persistence.service.InternalServiceFactory;
+import de.avgl.dmp.persistence.service.InternalModelService;
+import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
@@ -36,13 +36,13 @@ public class InternalSchemaDataUtil {
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(InternalSchemaDataUtil.class);
 	private final ObjectMapper						objectMapper;
 	private final Provider<ResourceService>			resourceServiceProvider;
-	private final Provider<InternalServiceFactory>	internalServiceFactoryProvider;
+	private final Provider<InternalModelServiceFactory>	internalServiceFactoryProvider;
 	private final Provider<SchemaService>			schemaServiceProvider;
 	private final Provider<DataModelService>		dataModelServiceProvider;
 
 	@Inject
 	public InternalSchemaDataUtil(final ObjectMapper objectMapper, final Provider<ResourceService> resourceServiceProvider,
-			final Provider<InternalServiceFactory> internalServiceFactoryProvider, final Provider<SchemaService> schemaServiceProvider,
+			final Provider<InternalModelServiceFactory> internalServiceFactoryProvider, final Provider<SchemaService> schemaServiceProvider,
 			final Provider<DataModelService> dataModelServiceProvider) {
 		this.objectMapper = objectMapper;
 		this.resourceServiceProvider = resourceServiceProvider;
@@ -88,7 +88,7 @@ public class InternalSchemaDataUtil {
 			return Optional.absent();
 		}
 
-		final InternalService internalService;
+		final InternalModelService internalService;
 		try {
 			internalService = determineInternalService(configurationOptional.get());
 		} catch (final DMPControllerException e) {
@@ -128,7 +128,7 @@ public class InternalSchemaDataUtil {
 			return Optional.absent();
 		}
 
-		final InternalService internalService;
+		final InternalModelService internalService;
 		try {
 			internalService = determineInternalService(configurationOptional.get());
 		} catch (final DMPControllerException e) {
@@ -195,7 +195,7 @@ public class InternalSchemaDataUtil {
 		// }
 		// }
 
-		final InternalService internalService;
+		final InternalModelService internalService;
 		try {
 			internalService = determineInternalService(configurationOptional.get());
 		} catch (final DMPControllerException e) {
@@ -253,7 +253,7 @@ public class InternalSchemaDataUtil {
 		// }
 		// }
 
-		final InternalService internalService;
+		final InternalModelService internalService;
 		try {
 			internalService = determineInternalService(configurationOptional.get());
 		} catch (final DMPControllerException e) {
@@ -346,7 +346,7 @@ public class InternalSchemaDataUtil {
 		return Optional.fromNullable(configuration);
 	}
 
-	private InternalService determineInternalService(final Configuration configuration) throws DMPControllerException {
+	private InternalModelService determineInternalService(final Configuration configuration) throws DMPControllerException {
 
 		final JsonNode storageType = configuration.getParameters().get("storage_type");
 

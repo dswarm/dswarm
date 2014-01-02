@@ -14,15 +14,15 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.internal.impl.MemoryDBInputModel;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
-import de.avgl.dmp.persistence.service.InternalServiceFactory;
+import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 
 @Singleton
 public class CSVConverterEventRecorder {
 
-	private final InternalServiceFactory	internalServiceFactory;
+	private final InternalModelServiceFactory	internalServiceFactory;
 
 	@Inject
-	public CSVConverterEventRecorder(final InternalServiceFactory internalServiceFactory, final EventBus eventBus) {
+	public CSVConverterEventRecorder(final InternalModelServiceFactory internalServiceFactory, final EventBus eventBus) {
 
 		this.internalServiceFactory = internalServiceFactory;
 		eventBus.register(this);

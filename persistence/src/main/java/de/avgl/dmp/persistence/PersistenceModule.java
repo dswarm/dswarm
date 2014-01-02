@@ -21,7 +21,7 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
-import de.avgl.dmp.persistence.service.InternalServiceFactory;
+import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 import de.avgl.dmp.persistence.service.impl.InternalServiceFactoryImpl;
 import de.avgl.dmp.persistence.service.job.ComponentService;
 import de.avgl.dmp.persistence.service.job.FilterService;
@@ -79,7 +79,7 @@ public class PersistenceModule extends AbstractModule {
 		bind(FilterService.class).in(Scopes.SINGLETON);
 		bind(ProjectService.class).in(Scopes.SINGLETON);
 
-		bind(InternalServiceFactory.class).to(InternalServiceFactoryImpl.class).in(Scopes.SINGLETON);
+		bind(InternalModelServiceFactory.class).to(InternalServiceFactoryImpl.class).in(Scopes.SINGLETON);
 	}
 
 	/**

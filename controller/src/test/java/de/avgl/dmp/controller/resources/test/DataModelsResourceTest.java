@@ -44,8 +44,8 @@ import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
-import de.avgl.dmp.persistence.service.InternalService;
-import de.avgl.dmp.persistence.service.InternalServiceFactory;
+import de.avgl.dmp.persistence.service.InternalModelService;
+import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
@@ -230,8 +230,8 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 
 		final int atMost = 1;
 
-		final InternalServiceFactory serviceFactory = DMPInjector.injector.getInstance(Key.get(InternalServiceFactory.class));
-		final InternalService service = serviceFactory.getMemoryDbInternalService();
+		final InternalModelServiceFactory serviceFactory = DMPInjector.injector.getInstance(Key.get(InternalModelServiceFactory.class));
+		final InternalModelService service = serviceFactory.getMemoryDbInternalService();
 		final Optional<Map<String, Model>> data = service.getObjects(resource.getId(), config.getId(), Optional.of(atMost));
 
 		assertTrue(data.isPresent());
@@ -328,8 +328,8 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 
 		final int atMost = 1;
 
-		final InternalServiceFactory serviceFactory = DMPInjector.injector.getInstance(Key.get(InternalServiceFactory.class));
-		final InternalService service = serviceFactory.getInternalTripleService();
+		final InternalModelServiceFactory serviceFactory = DMPInjector.injector.getInstance(Key.get(InternalModelServiceFactory.class));
+		final InternalModelService service = serviceFactory.getInternalTripleService();
 		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getId(), Optional.of(atMost));
 
 		assertTrue(data.isPresent());

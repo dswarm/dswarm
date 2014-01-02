@@ -28,7 +28,7 @@ import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
-import de.avgl.dmp.persistence.service.InternalService;
+import de.avgl.dmp.persistence.service.InternalModelService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
@@ -38,7 +38,7 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
  * @author tgaengler
  */
 @Singleton
-public class InternalTripleService implements InternalService {
+public class InternalTripleService implements InternalModelService {
 
 	private static final org.apache.log4j.Logger	LOG								= org.apache.log4j.Logger.getLogger(InternalTripleService.class);
 

@@ -3,12 +3,12 @@ package de.avgl.dmp.persistence.service.impl;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import de.avgl.dmp.persistence.service.InternalService;
-import de.avgl.dmp.persistence.service.InternalServiceFactory;
+import de.avgl.dmp.persistence.service.InternalModelService;
+import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 
 
 @Singleton
-public class InternalServiceFactoryImpl implements InternalServiceFactory {
+public class InternalServiceFactoryImpl implements InternalModelServiceFactory {
 	
 	private final InternalMemoryDbService internalMemoryDbService;
 	private final InternalTripleService internalTripleService;
@@ -21,13 +21,13 @@ public class InternalServiceFactoryImpl implements InternalServiceFactory {
 	}
 
 	@Override
-	public InternalService getMemoryDbInternalService() {
+	public InternalModelService getMemoryDbInternalService() {
 		
 		return internalMemoryDbService;
 	}
 
 	@Override
-	public InternalService getInternalTripleService() {
+	public InternalModelService getInternalTripleService() {
 		
 		return internalTripleService;
 	}

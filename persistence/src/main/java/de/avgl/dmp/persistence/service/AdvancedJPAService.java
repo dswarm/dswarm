@@ -12,23 +12,31 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.BasicDMPObject;
 
 /**
- *
+ * A generic persistence service implementation for {@link BasicDMPObject}s, i.e., where the identifier will be set on object
+ * creation.
+ * 
  * @author tgaengler
- *
- * @param <POJOCLASS>
+ * @param <POJOCLASS> a concrete POJO class
  */
 public abstract class AdvancedJPAService<POJOCLASS extends BasicDMPObject> extends BasicJPAService<POJOCLASS, String> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AdvancedJPAService.class);
 
+	/**
+	 * Creates a new persistence service for the given concrete POJO class and the entity manager provider.
+	 * 
+	 * @param clasz a concrete POJO class
+	 * @param entityManagerProvider an entity manager provider
+	 */
 	protected AdvancedJPAService(final Class<POJOCLASS> clasz, final Provider<EntityManager> entityManagerProvider) {
 
 		super(clasz, entityManagerProvider);
 	}
 
 	/**
-	 * Create and persist an object of the specific class.<br>
-	 *
+	 * Create and persist an object of the specific class with the given identifier.<br>
+	 * 
+	 * @param id the identifier of the object
 	 * @return the persisted object of the specific class
 	 */
 	@Transactional(rollbackOn = DMPPersistenceException.class)
@@ -54,7 +62,14 @@ public abstract class AdvancedJPAService<POJOCLASS extends BasicDMPObject> exten
 		return object;
 	}
 
-	POJOCLASS createNewObject(final String id) throws DMPPersistenceException {
+	/**
+	 * Creates a new object of the concrete POJO class with the given identifier.
+	 * 
+	 * @param id an object identifier
+	 * @return the new instance of the concrete POJO class
+	 * @throws DMPPersistenceException if something went wrong at object creation
+	 */
+	private POJOCLASS createNewObject(final String id) throws DMPPersistenceException {
 
 		final POJOCLASS object;
 
@@ -79,7 +94,7 @@ public abstract class AdvancedJPAService<POJOCLASS extends BasicDMPObject> exten
 			object = constructor.newInstance(id);
 		} catch (final InstantiationException | InvocationTargetException | IllegalArgumentException | IllegalAccessException e) {
 
-			e.printStackTrace();
+			AdvancedJPAService.LOG.error("something went wrong while " + className + "object creation", e);
 
 			throw new DMPPersistenceException(e.getMessage());
 		}
