@@ -7,10 +7,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Provider;
@@ -25,18 +23,37 @@ import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Filter;
 import de.avgl.dmp.persistence.service.job.FilterService;
 
-
+/**
+ * A resource (controller service) for {@link Filter}s.
+ * 
+ * @author tgaengler
+ * @author fniederlein
+ */
 @RequestScoped
 @Api(value = "/filters", description = "Operations about filters.")
 @Path("filters")
 public class FiltersResource extends BasicDMPResource<FilterService, Filter> {
 
+	/**
+	 * Creates a new resource (controller service) for {@link Filter}s with the provider of the filter persistence service, the
+	 * object mapper and metrics registry.
+	 * 
+	 * @param filterServiceProviderArg the filter persistence service provider
+	 * @param objectMapperArg an object mapper
+	 * @param dmpStatusArg a metrics registry
+	 */
 	@Inject
 	public FiltersResource(final Provider<FilterService> filterServiceProviderArg, final ObjectMapper objectMapper, final DMPStatus dmpStatus) {
 
 		super(Filter.class, filterServiceProviderArg, objectMapper, dmpStatus);
 	}
 
+	/**
+	 * This endpoint returns a filter as JSON representation for the provided filter identifier.
+	 * 
+	 * @param id a filter identifier
+	 * @return a JSON representation of a filter
+	 */
 	@ApiOperation(value = "get the filter that matches the given id", notes = "Returns the Filter object that matches the given id.")
 	@GET
 	@Path("/{id}")
@@ -47,17 +64,29 @@ public class FiltersResource extends BasicDMPResource<FilterService, Filter> {
 		return super.getObject(id);
 	}
 
+	/**
+	 * This endpoint consumes a filter as JSON representation and persists this filter in the database.
+	 * 
+	 * @param jsonObjectString a JSON representation of one filter
+	 * @return the persisted filter as JSON representation
+	 * @throws DMPControllerException
+	 */
 	@ApiOperation(value = "create a new filter", notes = "Returns a new Filter object.", response = Filter.class)
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response createObject(@ApiParam(value = "filter (as JSON)", required = true) final String jsonObjectString)
-			throws DMPControllerException {
+	public Response createObject(@ApiParam(value = "filter (as JSON)", required = true) final String jsonObjectString) throws DMPControllerException {
 
 		return super.createObject(jsonObjectString);
 	}
 
+	/**
+	 * This endpoint returns a list of all filters as JSON representation.
+	 * 
+	 * @return a list of all filters as JSON representation
+	 * @throws DMPControllerException
+	 */
 	@ApiOperation(value = "get all filters ", notes = "Returns a list of Filter objects.")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -67,11 +96,15 @@ public class FiltersResource extends BasicDMPResource<FilterService, Filter> {
 		return super.getObjects();
 	}
 
+	/**
+	 * {@inheritDoc}<br/>
+	 * Updates the name and expression of the filter.
+	 */
 	@Override
 	protected Filter prepareObjectForUpdate(final Filter objectFromJSON, final Filter object) {
 
 		super.prepareObjectForUpdate(objectFromJSON, object);
-		
+
 		object.setExpression(objectFromJSON.getExpression());
 
 		return object;

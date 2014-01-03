@@ -24,6 +24,8 @@ import de.avgl.dmp.persistence.model.job.Project;
 import de.avgl.dmp.persistence.service.job.ProjectService;
 
 /**
+ * A resource (controller service) for {@link Project}s.
+ * 
  * @author tgaengler
  */
 @RequestScoped
@@ -33,12 +35,26 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ProjectsResource.class);
 
+	/**
+	 * Creates a new resource (controller service) for {@link Project}s with the provider of the project persistence service, the
+	 * object mapper and metrics registry.
+	 * 
+	 * @param projectServiceProviderArg the project persistence service provider
+	 * @param objectMapperArg an object mapper
+	 * @param dmpStatusArg a metrics registry
+	 */
 	@Inject
 	public ProjectsResource(final Provider<ProjectService> projectServiceProviderArg, final ObjectMapper objectMapper, final DMPStatus dmpStatus) {
 
 		super(Project.class, projectServiceProviderArg, objectMapper, dmpStatus);
 	}
 
+	/**
+	 * This endpoint returns a project as JSON representation for the provided project identifier.
+	 * 
+	 * @param id a project identifier
+	 * @return a JSON representation of a project
+	 */
 	@ApiOperation(value = "get the project that matches the given id", notes = "Returns the Project object that matches the given id.")
 	@GET
 	@Path("/{id}")
@@ -49,6 +65,13 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 		return super.getObject(id);
 	}
 
+	/**
+	 * This endpoint consumes a project as JSON representation and persists this project in the database.
+	 * 
+	 * @param jsonObjectString a JSON representation of one project
+	 * @return the persisted project as JSON representation
+	 * @throws DMPControllerException
+	 */
 	@ApiOperation(value = "create a new project", notes = "Returns a new Project object.", response = Project.class)
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -59,6 +82,12 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 		return super.createObject(jsonObjectString);
 	}
 
+	/**
+	 * This endpoint returns a list of all projects as JSON representation.
+	 * 
+	 * @return a list of all projects as JSON representation
+	 * @throws DMPControllerException
+	 */
 	@ApiOperation(value = "get all projects ", notes = "Returns a list of Project objects.")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -68,6 +97,10 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 		return super.getObjects();
 	}
 
+	/**
+	 * {@inheritDoc}<br/>
+	 * Updates the name, description, (sample) input data model, output data model, mappings and functions of the project.
+	 */
 	@Override
 	protected Project prepareObjectForUpdate(final Project objectFromJSON, final Project object) {
 

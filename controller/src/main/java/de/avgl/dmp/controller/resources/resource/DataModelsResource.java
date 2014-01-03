@@ -36,13 +36,17 @@ import de.avgl.dmp.controller.resources.ExtendedBasicDMPResource;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.controller.utils.DataModelUtil;
 import de.avgl.dmp.persistence.DMPPersistenceException;
+import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.types.Tuple;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 
 /**
+ * A resource (controller service) for {@link DataModel}s.
+ * 
  * @author tgaengler
+ *
  */
 @RequestScoped
 @Api(value = "/datamodels", description = "Operations about data models.")
@@ -51,20 +55,42 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(DataModelsResource.class);
 
+	/**
+	 * An event bus provider
+	 */
 	private final Provider<EventBus>				eventBusProvider;
 
-	private final DataModelUtil			schemaDataUtil;
-
+	/**
+	 * The data model util
+	 */
+	private final DataModelUtil			dataModelUtil;
+	
+	/**
+	 * Creates a new resource (controller service) for {@link DataModel}s with the provider of the data model persistence
+	 * service, the object mapper, metrics registry, event bus provider and data model util.
+	 * 
+	 * @param dataModelServiceProviderArg the data model persistence service provider
+	 * @param objectMapper an object mapper
+	 * @param dmpStatus an metrics registry
+	 * @param eventBusProviderArg an event bus provider
+	 * @param dataModelUtilArg the data model util
+	 */
 	@Inject
 	public DataModelsResource(final Provider<DataModelService> dataModelServiceProviderArg, final ObjectMapper objectMapper,
-			final DMPStatus dmpStatus, final Provider<EventBus> eventBusProviderArg, final DataModelUtil schemaDataUtilArg) {
+			final DMPStatus dmpStatus, final Provider<EventBus> eventBusProviderArg, final DataModelUtil dataModelUtilArg) {
 
 		super(DataModel.class, dataModelServiceProviderArg, objectMapper, dmpStatus);
 
 		eventBusProvider = eventBusProviderArg;
-		schemaDataUtil = schemaDataUtilArg;
+		dataModelUtil = dataModelUtilArg;
 	}
 
+	/**
+	 * This endpoint returns a data model as JSON representation for the provided data model identifier.
+	 * 
+	 * @param id a data model identifier
+	 * @return a JSON representation of a data model
+	 */
 	@ApiOperation(value = "get the data model that matches the given id", notes = "Returns the DataModel object that matches the given id.")
 	@GET
 	@Path("/{id}")
@@ -76,6 +102,14 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 		return super.getObject(id);
 	}
 
+	/**
+	 * This endpoint consumes a data model as JSON representation and persists this data model in the
+	 * database.
+	 * 
+	 * @param jsonObjectString a JSON representation of one data model
+	 * @return the persisted data model as JSON representation
+	 * @throws DMPControllerException
+	 */
 	@ApiOperation(value = "create a new data model", notes = "Returns a new DataModel object.", response = DataModel.class)
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -87,6 +121,12 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 		return super.createObject(jsonObjectString);
 	}
 
+	/**
+	 * This endpoint returns a list of all data models as JSON representation.
+	 * 
+	 * @return a list of all data models as JSON representation
+	 * @throws DMPControllerException
+	 */
 	@ApiOperation(value = "get all data models ", notes = "Returns a list of DataModel objects.")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -115,7 +155,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 
 		LOG.debug("try to get data for data model with id '" + id + "'");
 
-		final Optional<Iterator<Tuple<String, JsonNode>>> data = schemaDataUtil.getData(id, Optional.fromNullable(atMost));
+		final Optional<Iterator<Tuple<String, JsonNode>>> data = dataModelUtil.getData(id, Optional.fromNullable(atMost));
 
 		if (!data.isPresent()) {
 
@@ -228,6 +268,10 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 		return freshDataModel;
 	}
 
+	/**
+	 * {@inheritDoc}<br/>
+	 * Updates the name, description, resource, configuration and schema of the data model.
+	 */
 	@Override
 	protected DataModel prepareObjectForUpdate(final DataModel objectFromJSON, final DataModel object) {
 

@@ -22,17 +22,37 @@ import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.service.job.FunctionService;
 
+/**
+ * A resource (controller service) for {@link Function}s.
+ * 
+ * @author tgaengler
+ * @author fniederlein
+ */
 @RequestScoped
 @Api(value = "/functions", description = "Operations about functions.")
 @Path("functions")
 public class FunctionsResource extends BasicFunctionsResource<FunctionService, Function> {
 
+	/**
+	 * Creates a new resource (controller service) for {@link Function}s with the provider of the function persistence service,
+	 * the object mapper and metrics registry.
+	 * 
+	 * @param functionServiceProviderArg the function persistence service provider
+	 * @param objectMapperArg an object mapper
+	 * @param dmpStatusArg a metrics registry
+	 */
 	@Inject
 	public FunctionsResource(final Provider<FunctionService> functionServiceProviderArg, final ObjectMapper objectMapper, final DMPStatus dmpStatus) {
 
 		super(Function.class, functionServiceProviderArg, objectMapper, dmpStatus);
 	}
 
+	/**
+	 * This endpoint returns a function as JSON representation for the provided function identifier.
+	 * 
+	 * @param id a function identifier
+	 * @return a JSON representation of a function
+	 */
 	@ApiOperation(value = "get the function that matches the given id", notes = "Returns the Function object that matches the given id.")
 	@GET
 	@Path("/{id}")
@@ -43,6 +63,13 @@ public class FunctionsResource extends BasicFunctionsResource<FunctionService, F
 		return super.getObject(id);
 	}
 
+	/**
+	 * This endpoint consumes a filter as JSON representation and persists this filter in the database.
+	 * 
+	 * @param jsonObjectString a JSON representation of one filter
+	 * @return the persisted filter as JSON representation
+	 * @throws DMPControllerException
+	 */
 	@ApiOperation(value = "create a new function", notes = "Returns a new Function object.", response = Function.class)
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -54,6 +81,12 @@ public class FunctionsResource extends BasicFunctionsResource<FunctionService, F
 		return super.createObject(jsonObjectString);
 	}
 
+	/**
+	 * This endpoint returns a list of all functions as JSON representation.
+	 * 
+	 * @return a list of all functions as JSON representation
+	 * @throws DMPControllerException
+	 */
 	@ApiOperation(value = "get all functions ", notes = "Returns a list of Function objects.")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

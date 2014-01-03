@@ -32,6 +32,12 @@ import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.types.Tuple;
 
+/**
+ * A resource (controller service) for {@link Task}s.
+ * 
+ * @author tgaengler
+ *
+ */
 @RequestScoped
 @Api(value = "/tasks", description = "Operations about tasks.")
 @Path("/tasks")

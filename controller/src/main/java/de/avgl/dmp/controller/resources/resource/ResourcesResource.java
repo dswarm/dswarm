@@ -67,6 +67,12 @@ import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
 
+/**
+ * A resource (controller service) for {@link Resource}s.
+ * 
+ * @author tgaengler
+ * @author phorn
+ */
 @RequestScoped
 @Api(value = "/resources", description = "Operations about data resources.")
 @Path("/resources")
@@ -87,7 +93,7 @@ public class ResourcesResource {
 
 	private final ObjectMapper						objectMapper;
 	private final DataModelService					modelService;
-	private final DataModelUtil			schemaDataUtil;
+	private final DataModelUtil						schemaDataUtil;
 
 	@Inject
 	public ResourcesResource(final DMPStatus dmpStatus, final ObjectMapper objectMapper, final Provider<ResourceService> resourceServiceProvider,
@@ -157,6 +163,12 @@ public class ResourcesResource {
 		return buildResponseCreated(resourceJSON, resourceURI);
 	}
 
+	/**
+	 * This endpoint returns a list of all resources as JSON representation.
+	 * 
+	 * @return a list of all resources as JSON representation
+	 * @throws DMPControllerException
+	 */
 	@ApiOperation(value = "get all data resources", notes = "Returns a list of Resource objects.")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -204,6 +216,12 @@ public class ResourcesResource {
 		return buildResponse(resourcesJSON);
 	}
 
+	/**
+	 * This endpoint returns a resource as JSON representation for the provided resource identifier.
+	 * 
+	 * @param id a resource identifier
+	 * @return a JSON representation of a resource
+	 */
 	@ApiOperation(value = "get the data resource that matches the given id", notes = "Returns the Resource object that matches the given id.")
 	@GET
 	@Path("/{id}")
