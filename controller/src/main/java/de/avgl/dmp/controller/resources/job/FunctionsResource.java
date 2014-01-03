@@ -1,4 +1,4 @@
-package de.avgl.dmp.controller.resources;
+package de.avgl.dmp.controller.resources.job;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;

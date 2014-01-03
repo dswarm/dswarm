@@ -46,7 +46,7 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 	@Context
 	UriInfo													uri;
 
-	BasicResource(final Class<POJOCLASS> clasz, final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
+	protected BasicResource(final Class<POJOCLASS> clasz, final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
 			final ObjectMapper objectMapperArg, final DMPStatus dmpStatusArg) {
 
 		this.clasz = clasz;
@@ -77,7 +77,7 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 	// @GET
 	// @Path("/{id}")
 	// @Produces(MediaType.APPLICATION_JSON)
-	Response getObject(/* @PathParam("id") */final POJOCLASSIDTYPE id) throws DMPControllerException {
+	public Response getObject(/* @PathParam("id") */final POJOCLASSIDTYPE id) throws DMPControllerException {
 
 		final Timer.Context context = dmpStatus.getSingleObject(className, this.getClass());
 
@@ -120,7 +120,7 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 	// @POST
 	// @Consumes(MediaType.APPLICATION_JSON)
 	// @Produces(MediaType.APPLICATION_JSON)
-	Response createObject(final String jsonObjectString) throws DMPControllerException {
+	public Response createObject(final String jsonObjectString) throws DMPControllerException {
 
 		final Timer.Context context = dmpStatus.createNewObject(className, this.getClass());
 
@@ -168,7 +168,7 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 	// @ApiOperation(value = "get all objects ", notes = "Returns a list objects.")
 	// @GET
 	// @Produces(MediaType.APPLICATION_JSON)
-	Response getObjects() throws DMPControllerException {
+	public Response getObjects() throws DMPControllerException {
 
 		final Timer.Context context = dmpStatus.getAllObjects(className, this.getClass());
 
@@ -213,7 +213,7 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 		return buildResponse(objectsJSON);
 	}
 
-	URI createObjectURI(final POJOCLASS object) {
+	public URI createObjectURI(final POJOCLASS object) {
 
 		final URI baseURI = uri.getRequestUri();
 
@@ -234,7 +234,8 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 
 	protected abstract POJOCLASS prepareObjectForUpdate(final POJOCLASS objectFromJSON, final POJOCLASS object);
 
-	POJOCLASS createObject(final POJOCLASS objectFromJSON, final POJOCLASSPERSISTENCESERVICE persistenceService) throws DMPPersistenceException {
+	protected POJOCLASS createObject(final POJOCLASS objectFromJSON, final POJOCLASSPERSISTENCESERVICE persistenceService)
+			throws DMPPersistenceException {
 
 		return persistenceService.createObject();
 	}

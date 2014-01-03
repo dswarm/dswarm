@@ -1,8 +1,9 @@
-package de.avgl.dmp.controller.resources;
+package de.avgl.dmp.controller.resources.job;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Provider;
 
+import de.avgl.dmp.controller.resources.ExtendedBasicDMPResource;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.service.job.BasicFunctionService;

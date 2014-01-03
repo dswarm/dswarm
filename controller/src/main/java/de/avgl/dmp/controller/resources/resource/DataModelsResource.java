@@ -1,4 +1,4 @@
-package de.avgl.dmp.controller.resources;
+package de.avgl.dmp.controller.resources.resource;
 
 import java.util.Iterator;
 
@@ -32,6 +32,7 @@ import de.avgl.dmp.controller.eventbus.CSVConverterEvent;
 import de.avgl.dmp.controller.eventbus.ConverterEvent;
 import de.avgl.dmp.controller.eventbus.SchemaEvent;
 import de.avgl.dmp.controller.eventbus.XMLSchemaEvent;
+import de.avgl.dmp.controller.resources.ExtendedBasicDMPResource;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.controller.utils.DataModelUtil;
 import de.avgl.dmp.persistence.DMPPersistenceException;

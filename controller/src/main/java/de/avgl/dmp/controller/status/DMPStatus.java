@@ -13,7 +13,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import de.avgl.dmp.controller.resources.BasicResource;
-import de.avgl.dmp.controller.resources.ResourcesResource;
+import de.avgl.dmp.controller.resources.resource.ResourcesResource;
 
 /**
  * A metrics registry for the backend API. Every method of every resource can be registered here for statistical purpose.
