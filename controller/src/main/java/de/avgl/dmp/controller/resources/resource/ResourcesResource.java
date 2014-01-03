@@ -93,32 +93,69 @@ public class ResourcesResource {
 
 	private final ObjectMapper						objectMapper;
 	private final DataModelService					modelService;
-	private final DataModelUtil						schemaDataUtil;
+	private final DataModelUtil						dataModelUtil;
 
+	/**
+	 * Creates a new resource (controller service) for {@link Resource}s with the provider of the resource persistence service,
+	 * the provider of configuration persistence service, the provider of data model persistence service, the object mapper,
+	 * metrics registry, event bus provider and data model util.
+	 * 
+	 * @param dmpStatusArg a metrics registry
+	 * @param objectMapperArg an object mapper
+	 * @param resourceServiceProviderArg the provider for the resource persistence service
+	 * @param configurationServiceProviderArg the provider for the configuration persistence service
+	 * @param eventBusProviderArg an event bus provider
+	 * @param dataModelServiceArg the provider for the data model persistence service
+	 * @param dataModelUtilArg the data model util
+	 */
 	@Inject
-	public ResourcesResource(final DMPStatus dmpStatus, final ObjectMapper objectMapper, final Provider<ResourceService> resourceServiceProvider,
-			final Provider<ConfigurationService> configurationServiceProvider, final Provider<EventBus> eventBusProvider,
-			final DataModelService modelService, final DataModelUtil schemaDataUtil) {
+	public ResourcesResource(final DMPStatus dmpStatusArg, final ObjectMapper objectMapperArg,
+			final Provider<ResourceService> resourceServiceProviderArg, final Provider<ConfigurationService> configurationServiceProviderArg,
+			final Provider<EventBus> eventBusProviderArg, final DataModelService dataModelServiceArg, final DataModelUtil dataModelUtilArg) {
 
-		this.eventBusProvider = eventBusProvider;
-		this.resourceServiceProvider = resourceServiceProvider;
-		this.configurationServiceProvider = configurationServiceProvider;
-		this.dmpStatus = dmpStatus;
-		this.objectMapper = objectMapper;
-		this.modelService = modelService;
-		this.schemaDataUtil = schemaDataUtil;
+		this.eventBusProvider = eventBusProviderArg;
+		this.resourceServiceProvider = resourceServiceProviderArg;
+		this.configurationServiceProvider = configurationServiceProviderArg;
+		this.dmpStatus = dmpStatusArg;
+		this.objectMapper = objectMapperArg;
+		this.modelService = dataModelServiceArg;
+		this.dataModelUtil = dataModelUtilArg;
 	}
 
+	/**
+	 * Builds a positive response with the given content.
+	 * 
+	 * @param responseContent a response message
+	 * @return the response
+	 */
 	private Response buildResponse(final String responseContent) {
 
 		return Response.ok(responseContent).build();
 	}
 
+	/**
+	 * Builds a positive "created" response with the given content at the given response URI.
+	 * 
+	 * @param responseContent a response message
+	 * @param responseURI a URI
+	 * @return the response
+	 */
 	private Response buildResponseCreated(final String responseContent, final URI responseURI) {
 
 		return Response.created(responseURI).entity(responseContent).build();
 	}
 
+	/**
+	 * This endpoint processes (uploades) the input stream and creates a new resource object with related metadata that will be
+	 * returned as JSON representation.
+	 * 
+	 * @param uploadedInputStream the input stream that should be uploaded
+	 * @param fileDetail file metadata
+	 * @param name the name of the resource
+	 * @param description an description of the resource
+	 * @return a JSON representation of the created resource
+	 * @throws DMPControllerException
+	 */
 	@POST
 	@ApiOperation(value = "upload new data resource", notes = "Returns a new Resource object, when upload was successfully.", response = Resource.class)
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -230,7 +267,7 @@ public class ResourcesResource {
 			throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getSingleResource();
 
-		final Optional<Resource> resourceOptional = schemaDataUtil.fetchResource(id);
+		final Optional<Resource> resourceOptional = dataModelUtil.fetchResource(id);
 
 		if (!resourceOptional.isPresent()) {
 
@@ -257,6 +294,15 @@ public class ResourcesResource {
 		return buildResponse(resourceJSON);
 	}
 
+	/**
+	 * Returns the content of the uploaded resource line-wise.
+	 * 
+	 * @param id a resource identifier
+	 * @param atMost the number of lines that should be returned at most
+	 * @param encoding the encoding of the uploaded resource
+	 * @return a JSON representation of the content
+	 * @throws DMPControllerException
+	 */
 	@ApiOperation(value = "get the lines of the data resource that matches the given id", notes = "Returns the lines of the data resource that matches the given id. The number of lines can be limited via the 'atMost' parameter. The encoding can be set via the 'encoding' parameter.")
 	@GET
 	@Path("/{id}/lines")
@@ -267,7 +313,7 @@ public class ResourcesResource {
 			throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getSingleResource();
 
-		final Optional<Resource> resourceOptional = schemaDataUtil.fetchResource(id);
+		final Optional<Resource> resourceOptional = dataModelUtil.fetchResource(id);
 
 		if (!resourceOptional.isPresent()) {
 
@@ -335,6 +381,13 @@ public class ResourcesResource {
 		return buildResponse(plainJson);
 	}
 
+	/**
+	 * This endpoint delivers all configurations that are related to this resource.
+	 * 
+	 * @param id a resource identifier
+	 * @return a JSON representation of a list of configurations
+	 * @throws DMPControllerException
+	 */
 	@ApiOperation(value = "get all configurations of the data resource that matches the given id", notes = "Returns the configurations of the data resource that matches the given id.")
 	@GET
 	@Path("/{id}/configurations")
@@ -345,7 +398,7 @@ public class ResourcesResource {
 
 		LOG.debug("try to get resource configurations for resource with id '" + id.toString() + "'");
 
-		final Optional<Resource> resourceOptional = schemaDataUtil.fetchResource(id);
+		final Optional<Resource> resourceOptional = dataModelUtil.fetchResource(id);
 
 		if (!resourceOptional.isPresent()) {
 
@@ -389,6 +442,7 @@ public class ResourcesResource {
 	}
 
 	/**
+	 * This endpoint adds a configuration to the given resource.<br/>
 	 * The data processing, which was a step of this operation is deprecated, i.e., only the given configuration will be added to
 	 * this resource. For data processing of a given resource with a given configuration, please utilise
 	 * DataModelsResource#createObject instead.<br/>
@@ -397,9 +451,9 @@ public class ResourcesResource {
 	 * {@link DataModelsResource}, i.e., the result of this operation should only be the addition of the given configuration,
 	 * however, not the processing of this combination.
 	 * 
-	 * @param id
-	 * @param jsonObjectString
-	 * @return
+	 * @param id a resource identifier
+	 * @param jsonObjectString a JSON representation of a configuration.
+	 * @return a JSON representation of the added configuration
 	 * @throws DMPControllerException
 	 */
 	@Deprecated
@@ -414,7 +468,7 @@ public class ResourcesResource {
 
 		LOG.debug("try to create new configuration for resource with id '" + id + "'");
 
-		final Optional<Resource> resourceOptional = schemaDataUtil.fetchResource(id);
+		final Optional<Resource> resourceOptional = dataModelUtil.fetchResource(id);
 
 		if (!resourceOptional.isPresent()) {
 
@@ -484,6 +538,14 @@ public class ResourcesResource {
 		return buildResponseCreated(configurationJSON, configurationURI);
 	}
 
+	/**
+	 * This endpoint delivers a configuration for the given resource identifier and configuration identifier.
+	 * 
+	 * @param id a resource identifier
+	 * @param configurationId a configuration identifier
+	 * @return a JSON representation of the matched configuration
+	 * @throws DMPControllerException
+	 */
 	@ApiOperation(value = "get the configuration of the data resource that matches the given data resource id and the given configuration id", notes = "Returns the configuration of the data resource that matches the given data resource id and the given configuration id.")
 	@GET
 	@Path("/{id}/configurations/{configurationid}")
@@ -493,7 +555,7 @@ public class ResourcesResource {
 			throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getSingleConfiguration();
 
-		final Optional<Configuration> configurationOptional = schemaDataUtil.fetchConfiguration(id, configurationId);
+		final Optional<Configuration> configurationOptional = dataModelUtil.fetchConfiguration(id, configurationId);
 
 		if (!configurationOptional.isPresent()) {
 
@@ -596,7 +658,7 @@ public class ResourcesResource {
 
 		LOG.debug("try to get schema for configuration with id '" + configurationId + "' for resource with id '" + id + "'");
 
-		final Optional<Iterator<Tuple<String, JsonNode>>> data = schemaDataUtil.getData(id, configurationId, Optional.fromNullable(atMost));
+		final Optional<Iterator<Tuple<String, JsonNode>>> data = dataModelUtil.getData(id, configurationId, Optional.fromNullable(atMost));
 
 		if (!data.isPresent()) {
 
@@ -659,7 +721,7 @@ public class ResourcesResource {
 		LOG.debug("try to apply configuration for resource with id '" + id + "'");
 		LOG.debug("try to recieve resource with id '" + id + "' for csv configuration preview");
 
-		final Optional<Resource> resourceOptional = schemaDataUtil.fetchResource(id);
+		final Optional<Resource> resourceOptional = dataModelUtil.fetchResource(id);
 
 		if (!resourceOptional.isPresent()) {
 
@@ -709,7 +771,7 @@ public class ResourcesResource {
 		LOG.debug("try to apply configuration for resource with id '" + id + "'");
 		LOG.debug("try to recieve resource with id '" + id + "' for csv json configuration preview");
 
-		final Optional<Resource> resourceOptional = schemaDataUtil.fetchResource(id);
+		final Optional<Resource> resourceOptional = dataModelUtil.fetchResource(id);
 
 		if (!resourceOptional.isPresent()) {
 
@@ -738,6 +800,16 @@ public class ResourcesResource {
 		return buildResponse(result);
 	}
 
+	/**
+	 * Process stores the input stream and creates and persists a new resource with the related metadata.
+	 * 
+	 * @param uploadInputedStream an input stream that should be uploaded
+	 * @param fileDetail metadata of the given input stream
+	 * @param name the name of the resource
+	 * @param description an description of the resource
+	 * @return a JSON representation of the new resource
+	 * @throws DMPControllerException
+	 */
 	private Resource createResource(final InputStream uploadInputedStream, final FormDataContentDisposition fileDetail, final String name,
 			final String description) throws DMPControllerException {
 
@@ -807,6 +879,14 @@ public class ResourcesResource {
 		return resource;
 	}
 
+	/**
+	 * Adds and persists a configuration to the given resource.
+	 * 
+	 * @param resource a resource
+	 * @param configurationJSONString a JSON representation of a new configuration
+	 * @return the new configuration
+	 * @throws DMPControllerException
+	 */
 	private Configuration addConfiguration(final Resource resource, final String configurationJSONString) throws DMPControllerException {
 
 		final Configuration configurationFromJSON = getConfiguration(configurationJSONString);
@@ -882,6 +962,13 @@ public class ResourcesResource {
 		return configuration;
 	}
 
+	/**
+	 * Persists a new configuration in the database.
+	 * 
+	 * @param configurationService the configuration persistence service
+	 * @return the new persisted configuration
+	 * @throws DMPControllerException
+	 */
 	private Configuration createNewConfiguration(final ConfigurationService configurationService) throws DMPControllerException {
 
 		final Configuration configuration;
@@ -971,6 +1058,13 @@ public class ResourcesResource {
 		}
 	}
 
+	/**
+	 * Deserializes the given string that holds a JSON object of a configuration.
+	 * 
+	 * @param configurationJSONString a string that holds a JSON object of a configuration
+	 * @return the deserialized configuration
+	 * @throws DMPControllerException
+	 */
 	private Configuration getConfiguration(final String configurationJSONString) throws DMPControllerException {
 
 		final Configuration configurationFromJSON;

@@ -116,6 +116,9 @@ public class AttributesResource extends BasicResource<AttributeService, Attribut
 		return object;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected Attribute createObject(final Attribute objectFromJSON, final AttributeService persistenceService) throws DMPPersistenceException {
 

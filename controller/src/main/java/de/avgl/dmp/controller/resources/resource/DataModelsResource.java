@@ -36,7 +36,6 @@ import de.avgl.dmp.controller.resources.ExtendedBasicDMPResource;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.controller.utils.DataModelUtil;
 import de.avgl.dmp.persistence.DMPPersistenceException;
-import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.types.Tuple;
@@ -46,7 +45,6 @@ import de.avgl.dmp.persistence.service.resource.DataModelService;
  * A resource (controller service) for {@link DataModel}s.
  * 
  * @author tgaengler
- *
  */
 @RequestScoped
 @Api(value = "/datamodels", description = "Operations about data models.")
@@ -63,11 +61,11 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 	/**
 	 * The data model util
 	 */
-	private final DataModelUtil			dataModelUtil;
-	
+	private final DataModelUtil						dataModelUtil;
+
 	/**
-	 * Creates a new resource (controller service) for {@link DataModel}s with the provider of the data model persistence
-	 * service, the object mapper, metrics registry, event bus provider and data model util.
+	 * Creates a new resource (controller service) for {@link DataModel}s with the provider of the data model persistence service,
+	 * the object mapper, metrics registry, event bus provider and data model util.
 	 * 
 	 * @param dataModelServiceProviderArg the data model persistence service provider
 	 * @param objectMapper an object mapper
@@ -103,8 +101,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 	}
 
 	/**
-	 * This endpoint consumes a data model as JSON representation and persists this data model in the
-	 * database.
+	 * This endpoint consumes a data model as JSON representation and persists this data model in the database.
 	 * 
 	 * @param jsonObjectString a JSON representation of one data model
 	 * @return the persisted data model as JSON representation
@@ -140,8 +137,8 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 	 * Returns the data for a given data model.
 	 * 
 	 * @param id the data model identifier
-	 * @param atMost
-	 * @return
+	 * @param atMost the number of records that should be returned at most
+	 * @return the data for a given data model
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "get the data of the data model that matches the given data model id", notes = "Returns the data of the data model that matches the given data model id.")
@@ -196,6 +193,10 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 		return buildResponse(jsonString);
 	}
 
+	/**
+	 * {@inheritDoc}<br/>
+	 * The data of the data model will also be converted and persisted.
+	 */
 	@Override
 	protected DataModel addObject(final String objectJSONString) throws DMPControllerException {
 

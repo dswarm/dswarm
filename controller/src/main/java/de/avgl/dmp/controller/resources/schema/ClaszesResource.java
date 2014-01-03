@@ -115,6 +115,9 @@ public class ClaszesResource extends BasicResource<ClaszService, Clasz, String> 
 		return object;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected Clasz createObject(final Clasz objectFromJSON, final ClaszService persistenceService) throws DMPPersistenceException {
 

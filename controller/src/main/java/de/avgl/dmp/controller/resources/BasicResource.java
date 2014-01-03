@@ -69,7 +69,7 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 	protected final ObjectMapper							objectMapper;
 
 	/**
-	 * The base URI of this resource
+	 * The base URI of this resource.
 	 */
 	@Context
 	UriInfo													uri;
