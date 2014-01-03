@@ -15,51 +15,49 @@ import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 
+/**
+ * An event recorder for converting XML documents.
+ * 
+ * @author phorn
+ * @author tgaengler
+ */
 @Singleton
 public class XMLConverterEventRecorder {
 
-	private final InternalModelServiceFactory	internalServiceFactory;
+	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(XMLConverterEventRecorder.class);
 
+	/**
+	 * The internal model service factory
+	 */
+	private final InternalModelServiceFactory		internalServiceFactory;
+
+	/**
+	 * Creates a new event recorder for converting XML documents with the given internal model service factory and event bus.
+	 * 
+	 * @param internalModelServiceFactory an internal model service factory
+	 * @param eventBus an event bus, where this event record will be registered
+	 */
 	@Inject
-	public XMLConverterEventRecorder(final InternalModelServiceFactory internalServiceFactory, final EventBus eventBus) {
+	public XMLConverterEventRecorder(final InternalModelServiceFactory internalModelServiceFactory, final EventBus eventBus) {
 
-		this.internalServiceFactory = internalServiceFactory;
+		this.internalServiceFactory = internalModelServiceFactory;
 		eventBus.register(this);
 	}
 
-	// @Subscribe
-	// public void convertConfiguration(final XMLConverterEvent event) {
-	// final Configuration configuration = event.getConfiguration();
-	// final Resource resource = event.getResource();
-	//
-	// RDFModel result = null;
-	// try {
-	// final XMLSourceResourceTriplesFlow flow = new XMLSourceResourceTriplesFlow(configuration, resource);
-	//
-	// final String path = resource.getAttribute("path").asText();
-	// result = flow.applyResource(path);
-	//
-	// } catch (final DMPConverterException | NullPointerException e) {
-	// e.printStackTrace();
-	// }
-	//
-	// if (result != null) {
-	// try {
-	// internalServiceFactory.getInternalTripleService().createObject(resource.getId(), configuration.getId(), result);
-	// } catch (final DMPPersistenceException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// }
-	// }
-
+	/**
+	 * Processes the XML document of the data model of the given event and persists the converted data.
+	 * 
+	 * @param event an converter event that provides a data model
+	 */
 	@Subscribe
 	public void processDataModel(final ConverterEvent event) {
 
 		final DataModel dataModel = event.getDataModel();
 
 		RDFModel result = null;
+
 		try {
+
 			final XMLSourceResourceTriplesFlow flow = new XMLSourceResourceTriplesFlow(dataModel);
 
 			final String path = dataModel.getDataResource().getAttribute("path").asText();
@@ -86,15 +84,17 @@ public class XMLConverterEventRecorder {
 
 		} catch (final DMPConverterException | NullPointerException e) {
 
-			e.printStackTrace();
+			LOG.error("couldn't convert the XML data of data model '" + dataModel.getId() + "'", e);
 		}
 
 		if (result != null) {
+
 			try {
+
 				internalServiceFactory.getInternalTripleService().createObject(dataModel.getId(), result);
 			} catch (final DMPPersistenceException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+
+				LOG.error("couldn't persist the converted data of data model '" + dataModel.getId() + "'", e);
 			}
 		}
 	}

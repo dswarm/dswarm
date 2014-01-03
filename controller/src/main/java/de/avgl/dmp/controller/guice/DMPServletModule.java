@@ -12,11 +12,20 @@ import de.avgl.dmp.controller.servlet.HeartbeatServlet;
 import de.avgl.dmp.controller.servlet.MetricsServlet;
 import de.avgl.dmp.controller.servlet.filter.MetricsFilter;
 
+/**
+ * The Guice configuration of the servlet of the backend API. Mainly, servlets, filters and configuration properties are defined here.
+ * 
+ * @author phorn
+ */
 public class DMPServletModule extends ServletModule {
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void configureServlets() {
 
+		// provides and handles the entity manager of the application
 		install(new JpaPersistModule("DMPApp"));
 
 		filter("/*").through(PersistFilter.class);
@@ -37,5 +46,3 @@ public class DMPServletModule extends ServletModule {
 		filter("/*").through(MetricsFilter.class);
 	}
 }
-
-

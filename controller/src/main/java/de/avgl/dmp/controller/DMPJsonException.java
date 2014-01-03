@@ -8,6 +8,11 @@ package de.avgl.dmp.controller;
 public class DMPJsonException extends DMPControllerException {
 
 	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+
+	/**
 	 * Creates a new DMP exception with the given exception message
 	 * and a cause.
 	 *

@@ -41,6 +41,7 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
  * The Guice configuration of the persistence module. Interface/classes that are registered here can be utilised for injection.
  * 
  * @author phorn
+ * @author tgaengler
  */
 public class PersistenceModule extends AbstractModule {
 
