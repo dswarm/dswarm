@@ -15,6 +15,12 @@ import de.avgl.dmp.converter.mf.stream.reader.CsvReader;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
 
+/**
+ * 
+ * @author phorn
+ *
+ * @param <T>
+ */
 public abstract class AbstractCSVResourceFlow<T> {
 
 	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(AbstractCSVResourceFlow.class);

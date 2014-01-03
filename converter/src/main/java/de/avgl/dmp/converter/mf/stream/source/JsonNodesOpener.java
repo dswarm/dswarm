@@ -8,6 +8,11 @@ import org.culturegraph.mf.framework.ObjectReceiver;
 
 import de.avgl.dmp.persistence.model.types.Tuple;
 
+/**
+ * 
+ * @author phorn
+ *
+ */
 public class JsonNodesOpener extends DefaultObjectPipe<String, ObjectReceiver<JsonNode>> {
 
 	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(JsonNodesOpener.class);

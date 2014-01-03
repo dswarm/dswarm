@@ -9,6 +9,8 @@ import java.util.Iterator;
 /**
  * Implement the Iterable/Iterator Interface for a {@link NodeList} (which
  * might as well be a Collection type with _the_ worst API, ever)
+ * 
+ * @author phorn
  */
 public class NodeListIterable implements Iterable<Node> {
 	private final NodeList ns;

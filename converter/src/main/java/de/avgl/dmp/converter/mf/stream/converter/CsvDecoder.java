@@ -12,7 +12,7 @@ import org.culturegraph.mf.framework.annotations.Out;
 
 /**
  * Decodes lines of CSV files.
- *
+ * 
  * @author tgaengler
  */
 @Description("Decodes lines of CSV files.")
@@ -22,7 +22,7 @@ public final class CsvDecoder extends DefaultObjectPipe<CSVRecord, StreamReceive
 
 	private boolean		hasHeader;
 	private boolean		hasHeadersProcessed;
-	private String[]	header		= new String[0];
+	private String[]	header	= new String[0];
 	private int			count;
 
 	@Override
@@ -79,8 +79,8 @@ public final class CsvDecoder extends DefaultObjectPipe<CSVRecord, StreamReceive
 		} else {
 
 			throw new MetafactureException(String.format(
-					"wrong number of columns in input line %d - expected [%d] but found [%d] instead, line was %s",
-					count, header.length, record.size(), record.toString()));
+					"wrong number of columns in input line %d - expected [%d] but found [%d] instead, line was %s", count, header.length,
+					record.size(), record.toString()));
 		}
 	}
 

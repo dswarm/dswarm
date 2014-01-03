@@ -6,7 +6,11 @@ import org.culturegraph.mf.framework.ObjectReceiver;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-
+/**
+ * 
+ * @author tgaengler
+ *
+ */
 public class CSVJSONWriter implements ObjectReceiver<JsonNode> {
 
 	private JsonNode json;

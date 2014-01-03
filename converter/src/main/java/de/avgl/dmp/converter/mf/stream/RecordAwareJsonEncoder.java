@@ -8,6 +8,11 @@ import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
+/**
+ * 
+ * @author phorn
+ *
+ */
 @Description("Serialises an object as JSON")
 @In(StreamReceiver.class)
 @Out(String.class)

@@ -26,7 +26,10 @@ import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
 import de.avgl.dmp.persistence.model.types.Tuple;
 
 /**
+ * Converts XML records to RDF triples.
+ * 
  * @author tgaengler
+ * @author phorn
  */
 @Description("triplifies records")
 @In(XmlReceiver.class)

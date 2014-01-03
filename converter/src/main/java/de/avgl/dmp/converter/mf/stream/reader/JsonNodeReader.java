@@ -15,6 +15,11 @@ import de.avgl.dmp.persistence.model.types.Tuple;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+/**
+ * 
+ * @author phorn
+ *
+ */
 public class JsonNodeReader extends DefaultObjectPipe<Iterator<Tuple<String,JsonNode>>, StreamReceiver> {
 
 	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(JsonNodeReader.class);

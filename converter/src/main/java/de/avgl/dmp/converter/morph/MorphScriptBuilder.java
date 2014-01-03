@@ -46,6 +46,13 @@ import de.avgl.dmp.persistence.model.job.Mapping;
 import de.avgl.dmp.persistence.model.job.Task;
 import de.avgl.dmp.persistence.model.job.Transformation;
 
+/**
+ * Creates a metamorph script from a given {@link Task}.
+ * 
+ * @author phorn
+ * @author tgaengler
+ *
+ */
 public class MorphScriptBuilder {
 
 	private static final org.apache.log4j.Logger	LOG							= org.apache.log4j.Logger.getLogger(MorphScriptBuilder.class);
