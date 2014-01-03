@@ -8,11 +8,20 @@ import javax.ws.rs.ext.Provider;
 import de.avgl.dmp.controller.DMPJsonException;
 import de.avgl.dmp.controller.providers.BaseExceptionHandler;
 
+/**
+ * An exception handler for providing JSON exceptions at client side of the backend API
+ * 
+ * @author phorn
+ *
+ */
 @Provider
 public class DMPJsonExceptionHandler extends BaseExceptionHandler<DMPJsonException> {
 
 	private static final Pattern PATTERN = Pattern.compile("Unrecognized field (\"[^\"]+?\") \\(class [\\S]+?\\), not marked as ignorable \\((\\d+) known properties: , ([^\\)]+?)\\]\\).*", Pattern.DOTALL | Pattern.MULTILINE);
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Response toResponse(final DMPJsonException exception) {
 

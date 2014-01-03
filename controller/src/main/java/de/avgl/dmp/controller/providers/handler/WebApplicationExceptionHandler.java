@@ -6,7 +6,11 @@ import javax.ws.rs.ext.Provider;
 
 import de.avgl.dmp.controller.providers.BaseExceptionHandler;
 
-
+/**
+ * An exception handler for providing web application exceptions at client side of the backend API.
+ * 
+ * @author phorn
+ */
 @Provider
 public class WebApplicationExceptionHandler extends BaseExceptionHandler<WebApplicationException> {
 

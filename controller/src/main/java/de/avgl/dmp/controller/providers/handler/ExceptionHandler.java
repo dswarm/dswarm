@@ -5,9 +5,18 @@ import javax.ws.rs.ext.Provider;
 
 import de.avgl.dmp.controller.providers.BaseExceptionHandler;
 
+/**
+ * A default exception handler for providing exceptions at client side of the backend API.
+ * 
+ * @author phorn
+ *
+ */
 @Provider
 public class ExceptionHandler extends BaseExceptionHandler<Exception> {
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Response toResponse(final Exception exception) {
 

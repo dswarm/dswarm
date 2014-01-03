@@ -51,7 +51,7 @@ import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.eventbus.XMLSchemaEvent;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.controller.utils.DMPControllerUtils;
-import de.avgl.dmp.controller.utils.InternalSchemaDataUtil;
+import de.avgl.dmp.controller.utils.DataModelUtil;
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.CSVResourceFlowFactory;
 import de.avgl.dmp.converter.flow.CSVSourceResourceCSVJSONPreviewFlow;
@@ -87,12 +87,12 @@ public class ResourcesResource {
 
 	private final ObjectMapper						objectMapper;
 	private final DataModelService					modelService;
-	private final InternalSchemaDataUtil			schemaDataUtil;
+	private final DataModelUtil			schemaDataUtil;
 
 	@Inject
 	public ResourcesResource(final DMPStatus dmpStatus, final ObjectMapper objectMapper, final Provider<ResourceService> resourceServiceProvider,
 			final Provider<ConfigurationService> configurationServiceProvider, final Provider<EventBus> eventBusProvider,
-			final DataModelService modelService, final InternalSchemaDataUtil schemaDataUtil) {
+			final DataModelService modelService, final DataModelUtil schemaDataUtil) {
 
 		this.eventBusProvider = eventBusProvider;
 		this.resourceServiceProvider = resourceServiceProvider;

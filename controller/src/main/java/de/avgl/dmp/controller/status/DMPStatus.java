@@ -15,6 +15,12 @@ import com.google.inject.Singleton;
 import de.avgl.dmp.controller.resources.BasicResource;
 import de.avgl.dmp.controller.resources.ResourcesResource;
 
+/**
+ * A metrics registry for the backend API. Every method of every resource can be registered here for statistical purpose.
+ * 
+ * @author phorn
+ * @author tgaengler
+ */
 @Singleton
 public class DMPStatus {
 
@@ -35,8 +41,13 @@ public class DMPStatus {
 	private final Map<String, Timer>	createNewObjectTimers	= Maps.newHashMap();
 	private final Map<String, Timer>	getObjectTimers			= Maps.newHashMap();
 
-	private final MetricRegistry				registry;
+	private final MetricRegistry		registry;
 
+	/**
+	 * Creates a new metrics registry for the backend API.
+	 * 
+	 * @param registryArg a metrics registry (that will be wrapped)
+	 */
 	@Inject
 	public DMPStatus(final MetricRegistry registryArg) {
 
@@ -61,12 +72,18 @@ public class DMPStatus {
 		return createNewResourceTimer.time();
 	}
 
-
+	/**
+	 * A generic create-method-timer creation method. Creates a timer for object creation of the given resource.
+	 * 
+	 * @param objectType the resource type
+	 * @param clasz the resource class
+	 * @return a new timing context (timer)
+	 */
 	public Timer.Context createNewObject(final String objectType, final Class<? extends BasicResource> clasz) {
 
 		if (!createNewObjectTimers.containsKey(objectType)) {
 
-			final Timer createNewObjectTimer = registry.timer(name(clasz, "post-requests", objectType, "specific"));
+			final Timer createNewObjectTimer = registry.timer(name(clasz, "post-requests", objectType, "create"));
 
 			createNewObjectTimers.put(objectType, createNewObjectTimer);
 		}
@@ -90,6 +107,14 @@ public class DMPStatus {
 		return getAllResourcesTimer.time();
 	}
 
+	/**
+	 * A generic retrieve-all-objects-method-timer creation method. Creates a timer for all objects retrieval of the given
+	 * resource.
+	 * 
+	 * @param objectType the resource type
+	 * @param clasz the resource class
+	 * @return a new timing context (timer)
+	 */
 	public Timer.Context getAllObjects(final String objectType, final Class<? extends BasicResource> clasz) {
 
 		if (!getAllObjectsTimers.containsKey(objectType)) {
@@ -108,6 +133,14 @@ public class DMPStatus {
 		return getSingleResourcesTimer.time();
 	}
 
+	/**
+	 * A generic retrieve-specific-object-method-timer creation method. Creates a timer for specific object retrieval of the given
+	 * resource.
+	 * 
+	 * @param objectType the resource type
+	 * @param clasz the resource class
+	 * @return a new timing context (timer)
+	 */
 	public Timer.Context getSingleObject(final String objectType, final Class<? extends BasicResource> clasz) {
 
 		if (!getObjectTimers.containsKey(objectType)) {

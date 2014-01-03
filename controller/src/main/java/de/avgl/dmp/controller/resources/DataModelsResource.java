@@ -33,7 +33,7 @@ import de.avgl.dmp.controller.eventbus.ConverterEvent;
 import de.avgl.dmp.controller.eventbus.SchemaEvent;
 import de.avgl.dmp.controller.eventbus.XMLSchemaEvent;
 import de.avgl.dmp.controller.status.DMPStatus;
-import de.avgl.dmp.controller.utils.InternalSchemaDataUtil;
+import de.avgl.dmp.controller.utils.DataModelUtil;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
@@ -52,11 +52,11 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 
 	private final Provider<EventBus>				eventBusProvider;
 
-	private final InternalSchemaDataUtil			schemaDataUtil;
+	private final DataModelUtil			schemaDataUtil;
 
 	@Inject
 	public DataModelsResource(final Provider<DataModelService> dataModelServiceProviderArg, final ObjectMapper objectMapper,
-			final DMPStatus dmpStatus, final Provider<EventBus> eventBusProviderArg, final InternalSchemaDataUtil schemaDataUtilArg) {
+			final DMPStatus dmpStatus, final Provider<EventBus> eventBusProviderArg, final DataModelUtil schemaDataUtilArg) {
 
 		super(DataModel.class, dataModelServiceProviderArg, objectMapper, dmpStatus);
 

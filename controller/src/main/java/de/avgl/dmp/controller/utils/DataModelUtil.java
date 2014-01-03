@@ -30,18 +30,25 @@ import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
 
+/**
+ * A utility class for working with data ({@link Model}) and {@link Schema} of a {@link DataModel} (and other related parts of a
+ * data model, .e.g, {@link Resource}s).
+ * 
+ * @author phorn
+ * @author tgaengler
+ */
 @Singleton
-public class InternalSchemaDataUtil {
+public class DataModelUtil {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(InternalSchemaDataUtil.class);
-	private final ObjectMapper						objectMapper;
-	private final Provider<ResourceService>			resourceServiceProvider;
+	private static final org.apache.log4j.Logger		LOG	= org.apache.log4j.Logger.getLogger(DataModelUtil.class);
+	private final ObjectMapper							objectMapper;
+	private final Provider<ResourceService>				resourceServiceProvider;
 	private final Provider<InternalModelServiceFactory>	internalServiceFactoryProvider;
-	private final Provider<SchemaService>			schemaServiceProvider;
-	private final Provider<DataModelService>		dataModelServiceProvider;
+	private final Provider<SchemaService>				schemaServiceProvider;
+	private final Provider<DataModelService>			dataModelServiceProvider;
 
 	@Inject
-	public InternalSchemaDataUtil(final ObjectMapper objectMapper, final Provider<ResourceService> resourceServiceProvider,
+	public DataModelUtil(final ObjectMapper objectMapper, final Provider<ResourceService> resourceServiceProvider,
 			final Provider<InternalModelServiceFactory> internalServiceFactoryProvider, final Provider<SchemaService> schemaServiceProvider,
 			final Provider<DataModelService> dataModelServiceProvider) {
 		this.objectMapper = objectMapper;
@@ -52,7 +59,7 @@ public class InternalSchemaDataUtil {
 	}
 
 	/**
-	 * This method is deprecated. Please utilise {@link InternalSchemaDataUtil#getData(long)} instead.
+	 * This method is deprecated. Please utilise {@link DataModelUtil#getData(long)} instead.
 	 * 
 	 * @param resourceId
 	 * @param configurationId
@@ -63,12 +70,18 @@ public class InternalSchemaDataUtil {
 		return getData(resourceId, configurationId, Optional.<Integer> absent());
 	}
 
+	/**
+	 * Gets the data of the given data model.
+	 * 
+	 * @param dataModelId the identifier of the data model.
+	 * @return the data of the given data model
+	 */
 	public Optional<Iterator<Tuple<String, JsonNode>>> getData(final long dataModelId) {
 		return getData(dataModelId, Optional.<Integer> absent());
 	}
 
 	/**
-	 * This method is deprecated. Please utilise {@link InternalSchemaDataUtil#getData(long, Optional)} instead.
+	 * This method is deprecated. Please utilise {@link DataModelUtil#getData(long, Optional)} instead.
 	 * 
 	 * @param resourceId
 	 * @param configurationId
@@ -78,7 +91,7 @@ public class InternalSchemaDataUtil {
 	@Deprecated
 	public Optional<Iterator<Tuple<String, JsonNode>>> getData(final long resourceId, final long configurationId, final Optional<Integer> atMost) {
 
-		InternalSchemaDataUtil.LOG.debug(String.format("try to get data for configuration with id [%d] for resource with id [%d]", configurationId,
+		DataModelUtil.LOG.debug(String.format("try to get data for configuration with id [%d] for resource with id [%d]", configurationId,
 				resourceId));
 
 		final Optional<Configuration> configurationOptional = fetchConfiguration(resourceId, configurationId);
@@ -102,13 +115,13 @@ public class InternalSchemaDataUtil {
 			maybeTriples = internalService.getObjects(resourceId, configurationId, atMost);
 		} catch (final DMPPersistenceException e1) {
 
-			InternalSchemaDataUtil.LOG.debug(e1);
+			DataModelUtil.LOG.debug(e1);
 			return Optional.absent();
 		}
 
 		if (!maybeTriples.isPresent()) {
 
-			InternalSchemaDataUtil.LOG.debug("couldn't find data");
+			DataModelUtil.LOG.debug("couldn't find data");
 			return Optional.absent();
 		}
 
@@ -117,9 +130,16 @@ public class InternalSchemaDataUtil {
 		return Optional.of(dataIterator(iterator));
 	}
 
+	/**
+	 * Gets the data of the given data model and maximum in the given amount.
+	 * 
+	 * @param dataModelId the identifer of the data model
+	 * @param atMost the number of records that should be retrieved
+	 * @return the data of the given data model
+	 */
 	public Optional<Iterator<Tuple<String, JsonNode>>> getData(final long dataModelId, final Optional<Integer> atMost) {
 
-		InternalSchemaDataUtil.LOG.debug(String.format("try to get data for data model with id [%d]", dataModelId));
+		DataModelUtil.LOG.debug(String.format("try to get data for data model with id [%d]", dataModelId));
 
 		final Optional<Configuration> configurationOptional = fetchConfiguration(dataModelId);
 
@@ -142,13 +162,13 @@ public class InternalSchemaDataUtil {
 			maybeTriples = internalService.getObjects(dataModelId, atMost);
 		} catch (final DMPPersistenceException e1) {
 
-			InternalSchemaDataUtil.LOG.debug(e1);
+			DataModelUtil.LOG.debug(e1);
 			return Optional.absent();
 		}
 
 		if (!maybeTriples.isPresent()) {
 
-			InternalSchemaDataUtil.LOG.debug("couldn't find data");
+			DataModelUtil.LOG.debug("couldn't find data");
 			return Optional.absent();
 		}
 
@@ -158,7 +178,7 @@ public class InternalSchemaDataUtil {
 	}
 
 	/**
-	 * This method is deprecated. Please utilise {@link InternalSchemaDataUtil#getSchema(long)} instead.
+	 * This method is deprecated. Please utilise {@link DataModelUtil#getSchema(long)} instead.
 	 * 
 	 * @param resourceId
 	 * @param configurationId
@@ -207,7 +227,7 @@ public class InternalSchemaDataUtil {
 
 		if (!schemaOptional.isPresent()) {
 
-			InternalSchemaDataUtil.LOG.debug("couldn't find schema");
+			DataModelUtil.LOG.debug("couldn't find schema");
 			return Optional.absent();
 		}
 
@@ -267,14 +287,14 @@ public class InternalSchemaDataUtil {
 			schemaOptional = internalService.getSchema(dataModelId);
 		} catch (final DMPPersistenceException e) {
 
-			InternalSchemaDataUtil.LOG.error("something went wrong while schema retrieval", e);
+			DataModelUtil.LOG.error("something went wrong while schema retrieval", e);
 
 			return Optional.absent();
 		}
 
 		if (!schemaOptional.isPresent()) {
 
-			InternalSchemaDataUtil.LOG.debug("couldn't find schema");
+			DataModelUtil.LOG.debug("couldn't find schema");
 			return Optional.absent();
 		}
 
@@ -284,7 +304,7 @@ public class InternalSchemaDataUtil {
 			schemaJSONString = objectMapper.writeValueAsString(schemaOptional.get());
 		} catch (final JsonProcessingException e) {
 
-			InternalSchemaDataUtil.LOG.error("something went wrong while schema serialization", e);
+			DataModelUtil.LOG.error("something went wrong while schema serialization", e);
 
 			return Optional.absent();
 		}
@@ -294,7 +314,7 @@ public class InternalSchemaDataUtil {
 			node = objectMapper.readValue(schemaJSONString, ObjectNode.class);
 		} catch (final IOException e) {
 
-			InternalSchemaDataUtil.LOG.error("something went wrong while schema deserialization", e);
+			DataModelUtil.LOG.error("something went wrong while schema deserialization", e);
 
 			return Optional.absent();
 		}
@@ -302,6 +322,12 @@ public class InternalSchemaDataUtil {
 		return Optional.of(node);
 	}
 
+	/**
+	 * Gets the resource for the given resource identifier.
+	 * 
+	 * @param resourceId a resource identifier
+	 * @return (optional) the matched resource
+	 */
 	public Optional<Resource> fetchResource(final long resourceId) {
 
 		final ResourceService resourceService = resourceServiceProvider.get();
@@ -310,6 +336,12 @@ public class InternalSchemaDataUtil {
 		return Optional.fromNullable(resource);
 	}
 
+	/**
+	 * Gets the data model for the given data model identifier.
+	 * 
+	 * @param dataModelId a data model identifier
+	 * @return (optional) the matched data model
+	 */
 	public Optional<DataModel> fetchDataModel(final long dataModelId) {
 
 		final DataModelService dataModelService = dataModelServiceProvider.get();
@@ -318,12 +350,19 @@ public class InternalSchemaDataUtil {
 		return Optional.fromNullable(dataModel);
 	}
 
+	/**
+	 * Gets the configuration for the given resource identifier and configuration identifier
+	 * 
+	 * @param resourceId a resource identifier
+	 * @param configurationId a configuration identifier
+	 * @return (optional) the matched configuration
+	 */
 	public Optional<Configuration> fetchConfiguration(final long resourceId, final long configurationId) {
 		final Optional<Resource> resourceOptional = fetchResource(resourceId);
 
 		if (!resourceOptional.isPresent()) {
 
-			InternalSchemaDataUtil.LOG.debug("couldn't find  resource '" + resourceId);
+			DataModelUtil.LOG.debug("couldn't find  resource '" + resourceId);
 			return Optional.absent();
 		}
 
@@ -332,12 +371,18 @@ public class InternalSchemaDataUtil {
 		return Optional.fromNullable(configuration);
 	}
 
+	/**
+	 * Gets the related configuration for the given data model identifier.
+	 * 
+	 * @param dataModelId a data model identifier
+	 * @return (optional) the matched configuration
+	 */
 	public Optional<Configuration> fetchConfiguration(final long dataModelId) {
 		final Optional<DataModel> dataModelOptional = fetchDataModel(dataModelId);
 
 		if (!dataModelOptional.isPresent()) {
 
-			InternalSchemaDataUtil.LOG.debug("couldn't find data model '" + dataModelId + "'");
+			DataModelUtil.LOG.debug("couldn't find data model '" + dataModelId + "'");
 			return Optional.absent();
 		}
 

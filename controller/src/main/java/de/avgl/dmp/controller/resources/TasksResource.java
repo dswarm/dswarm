@@ -22,7 +22,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.status.DMPStatus;
-import de.avgl.dmp.controller.utils.InternalSchemaDataUtil;
+import de.avgl.dmp.controller.utils.DataModelUtil;
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.TransformationFlow;
 import de.avgl.dmp.persistence.model.job.Job;
@@ -42,14 +42,14 @@ public class TasksResource {
 	@Context
 	UriInfo											uri;
 
-	private final InternalSchemaDataUtil			schemaDataUtil;
+	private final DataModelUtil			schemaDataUtil;
 
 	private final DMPStatus							dmpStatus;
 
 	private final ObjectMapper						objectMapper;
 
 	@Inject
-	public TasksResource(final InternalSchemaDataUtil schemaDataUtil, final ObjectMapper objectMapperArg, final DMPStatus dmpStatusArg) {
+	public TasksResource(final DataModelUtil schemaDataUtil, final ObjectMapper objectMapperArg, final DMPStatus dmpStatusArg) {
 
 		this.schemaDataUtil = schemaDataUtil;
 

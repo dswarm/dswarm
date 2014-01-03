@@ -23,13 +23,18 @@ import com.google.inject.Singleton;
 
 import static com.codahale.metrics.MetricRegistry.name;
 
+/**
+ * The filter for the metrics measuring.
+ * 
+ * @author phorn
+ */
 @Singleton
 public class MetricsFilter implements Filter {
 
-	private final ConcurrentMap<Integer, Meter> metersByStatusCode;
-	private final Meter otherMeter;
-	private final Counter activeRequests;
-	private final Timer requestTimer;
+	private final ConcurrentMap<Integer, Meter>	metersByStatusCode;
+	private final Meter							otherMeter;
+	private final Counter						activeRequests;
+	private final Timer							requestTimer;
 
 	/**
 	 * Creates a new instance of the filter.
@@ -59,11 +64,9 @@ public class MetricsFilter implements Filter {
 
 		meterNamesByStatusCode.put(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, namePrefix + "serverError");
 
-
 		final ConcurrentMap<Integer, Meter> metersByStatusCode = new ConcurrentHashMap<>(meterNamesByStatusCode.size());
 		for (final Map.Entry<Integer, String> entry : meterNamesByStatusCode.entrySet()) {
-			metersByStatusCode.put(entry.getKey(),
-					metricRegistry.meter(name(MetricsFilter.class, entry.getValue())));
+			metersByStatusCode.put(entry.getKey(), metricRegistry.meter(name(MetricsFilter.class, entry.getValue())));
 		}
 		this.metersByStatusCode = metersByStatusCode;
 
@@ -73,17 +76,16 @@ public class MetricsFilter implements Filter {
 	}
 
 	@Override
-	public void init(final FilterConfig filterConfig) throws ServletException {}
+	public void init(final FilterConfig filterConfig) throws ServletException {
+	}
 
 	@Override
-	public void destroy() {}
+	public void destroy() {
+	}
 
 	@Override
-	public void doFilter(final ServletRequest request,
-						 final ServletResponse response,
-						 final FilterChain chain) throws IOException, ServletException {
-		final StatusExposingServletResponse wrappedResponse =
-				new StatusExposingServletResponse((HttpServletResponse) response);
+	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
+		final StatusExposingServletResponse wrappedResponse = new StatusExposingServletResponse((HttpServletResponse) response);
 		activeRequests.inc();
 		final Timer.Context context = requestTimer.time();
 		try {
@@ -105,8 +107,9 @@ public class MetricsFilter implements Filter {
 	}
 
 	private static class StatusExposingServletResponse extends HttpServletResponseWrapper {
+
 		// The Servlet spec says: calling setStatus is optional, if no status is set, the default is 200.
-		private int httpStatus = 200;
+		private int	httpStatus	= 200;
 
 		public StatusExposingServletResponse(final HttpServletResponse response) {
 			super(response);

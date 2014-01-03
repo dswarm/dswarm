@@ -15,6 +15,8 @@ import com.google.inject.name.Named;
 
 /**
  * An HTTP servlet which outputs a {@code text/plain} {@code "pong"} response.
+ * 
+ * @author phorn
  */
 @Singleton
 public class HeartbeatServlet extends HttpServlet {

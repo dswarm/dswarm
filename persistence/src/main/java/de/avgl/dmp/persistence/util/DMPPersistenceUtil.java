@@ -17,7 +17,7 @@ import com.google.inject.Injector;
 import de.avgl.dmp.init.DMPException;
 
 /**
- * A utility class for the persistence model.
+ * A utility class for the persistence module.
  * 
  * @author tgaengler
  * @author phorn

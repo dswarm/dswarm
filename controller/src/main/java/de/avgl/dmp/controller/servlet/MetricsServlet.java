@@ -19,6 +19,8 @@ import com.google.inject.name.Named;
 
 /**
  * A servlet which returns the metrics in a given registry as an {@code application/json} response.
+ * 
+ * @author phorn
  */
 @Singleton
 public class MetricsServlet extends HttpServlet {
