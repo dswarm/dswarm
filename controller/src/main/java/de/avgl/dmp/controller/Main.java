@@ -1,14 +1,15 @@
 package de.avgl.dmp.controller;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 
+import static de.avgl.dmp.controller.utils.DMPControllerUtils.loadProperties;
+
 /**
  * The main class of the backend API. Wraps the backend web server where the backend API is located.
- * 
+ *
  * @author phorn
  * @author tgaengler
  */
@@ -23,7 +24,7 @@ public class Main {
 
 	/**
 	 * Inits the properties for the backend web server.
-	 * 
+	 *
 	 * @param properties user properties
 	 */
 	private Main(final Properties properties) {
@@ -37,7 +38,7 @@ public class Main {
 
 	/**
 	 * Gets the base URI of the backend API.
-	 * 
+	 *
 	 * @return the base URI of the backend API
 	 */
 	public String getBaseUri() {
@@ -46,40 +47,8 @@ public class Main {
 	}
 
 	/**
-	 * Loads the user properties from the given file path.
-	 * 
-	 * @param propertiesPath the properties file path
-	 * @return the user properties
-	 */
-	private static Properties loadProperties(final String propertiesPath) {
-
-		final InputStream inStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(propertiesPath);
-		final Properties properties = new Properties();
-
-		try {
-
-			properties.load(inStream);
-		} catch (final IOException e) {
-
-			Main.LOG.error("could not load properties");
-		}
-
-		return properties;
-	}
-
-	/**
-	 * Loads the user from the default properties file path.
-	 * 
-	 * @return the user properties.
-	 */
-	private static Properties loadProperties() {
-
-		return Main.loadProperties("dmp.properties");
-	}
-
-	/**
 	 * Starts the (embedded) backend web server exposing resources defined in this application.
-	 * 
+	 *
 	 * @return the (embedded) backend web server
 	 */
 	public HttpServer startServer() {
@@ -99,13 +68,13 @@ public class Main {
 
 	/**
 	 * Creates the backend API (incl. its hosting backend web server at the given port).
-	 * 
+	 *
 	 * @param port the port of the backend web server
 	 * @return the main class of the backend API
 	 */
 	public static Main create(final int port) {
 
-		final Properties properties = Main.loadProperties();
+		final Properties properties = loadProperties();
 		properties.setProperty("backend_http_server_port", String.valueOf(port));
 
 		return new Main(properties);
@@ -113,24 +82,24 @@ public class Main {
 
 	/**
 	 * Creates the backend API (incl. its hosting backend web server).
-	 * 
+	 *
 	 * @return the main class of the backend API
 	 */
 	public static Main create() {
 
-		final Properties properties = Main.loadProperties();
+		final Properties properties = loadProperties();
 
 		return new Main(properties);
 	}
 
 	/**
 	 * Creates and starts the backend API (incl. its hosting backend web server).
-	 * 
+	 *
 	 * @param args main args
 	 * @throws IOException
 	 */
 	public static void main(final String[] args) throws IOException {
-		
+
 		final Main main = Main.create();
 		// not that HotSpot might optimize this away
 		main.toString();
