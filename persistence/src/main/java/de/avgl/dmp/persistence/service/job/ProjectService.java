@@ -15,16 +15,27 @@ import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
 
 /**
+ * A persistence service for {@link Project}s.
+ * 
  * @author tgaengler
  */
 public class ProjectService extends ExtendedBasicDMPJPAService<Project> {
 
+	/**
+	 * Creates a new project persistence service with the given entity manager provider.
+	 * 
+	 * @param entityManagerProvider an entity manager provider
+	 */
 	@Inject
 	public ProjectService(final Provider<EntityManager> entityManagerProvider) {
 
 		super(Project.class, entityManagerProvider);
 	}
 
+	/**
+	 * {@inheritDoc}<br/>
+	 * Clears the relationship to the input data model, output data model, mappings and functions.
+	 */
 	@Override
 	protected void prepareObjectForRemoval(final Project object) {
 
@@ -35,6 +46,9 @@ public class ProjectService extends ExtendedBasicDMPJPAService<Project> {
 		object.setFunctions(null);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void updateObjectInternal(final Project object, final Project updateObject, final EntityManager entityManager)
 			throws DMPPersistenceException {

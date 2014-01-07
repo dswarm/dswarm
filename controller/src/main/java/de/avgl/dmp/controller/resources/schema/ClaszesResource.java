@@ -1,4 +1,4 @@
-package de.avgl.dmp.controller.resources;
+package de.avgl.dmp.controller.resources.schema;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -18,13 +18,17 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
+import de.avgl.dmp.controller.resources.BasicResource;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
 
 /**
+ * A resource (controller service) for {@link Clasz}es.
+ * 
  * @author tgaengler
+ *
  */
 @RequestScoped
 @Api(value = "/classes", description = "Operations about classes.")
@@ -33,12 +37,27 @@ public class ClaszesResource extends BasicResource<ClaszService, Clasz, String> 
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ClaszesResource.class);
 
+	/**
+	 * Creates a new resource (controller service) for {@link Clasz}s with the provider of the class persistence
+	 * service, the object mapper and metrics registry.
+	 * 
+	 * @param claszServiceProviderArg the class persistence service provider
+	 * @param objectMapperArg an object mapper
+	 * @param dmpStatusArg a metrics registry
+	 */
 	@Inject
 	public ClaszesResource(final Provider<ClaszService> claszServiceProviderArg, final ObjectMapper objectMapper, final DMPStatus dmpStatus) {
 
 		super(Clasz.class, claszServiceProviderArg, objectMapper, dmpStatus);
 	}
 
+	/**
+	 * This endpoint returns a class as JSON representation for the provided class identifier.<br/>
+	 * note: currently, this method is not implemented
+	 * 
+	 * @param id a class identifier
+	 * @return a JSON representation of a class
+	 */
 	@ApiOperation(value = "get the class that matches the given id", notes = "Returns the Clasz object that matches the given id.")
 	@GET
 	@Path("/{id}")
@@ -51,6 +70,14 @@ public class ClaszesResource extends BasicResource<ClaszService, Clasz, String> 
 		return Response.status(505).build();
 	}
 
+	/**
+	 * This endpoint consumes a class as JSON representation and persists this class in the
+	 * database.
+	 * 
+	 * @param jsonObjectString a JSON representation of one class
+	 * @return the persisted class as JSON representation
+	 * @throws DMPControllerException
+	 */
 	@ApiOperation(value = "create a new class", notes = "Returns a new Clasz object.", response = Clasz.class)
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -61,6 +88,12 @@ public class ClaszesResource extends BasicResource<ClaszService, Clasz, String> 
 		return super.createObject(jsonObjectString);
 	}
 
+	/**
+	 * This endpoint returns a list of all classes as JSON representation.
+	 * 
+	 * @return a list of all classes as JSON representation
+	 * @throws DMPControllerException
+	 */
 	@ApiOperation(value = "get all classes", notes = "Returns a list of Clasz objects.")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -70,6 +103,10 @@ public class ClaszesResource extends BasicResource<ClaszService, Clasz, String> 
 		return super.getObjects();
 	}
 
+	/**
+	 * {@inheritDoc}<br/>
+	 * Updates the name of the class.
+	 */
 	@Override
 	protected Clasz prepareObjectForUpdate(final Clasz objectFromJSON, final Clasz object) {
 
@@ -78,6 +115,9 @@ public class ClaszesResource extends BasicResource<ClaszService, Clasz, String> 
 		return object;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected Clasz createObject(final Clasz objectFromJSON, final ClaszService persistenceService) throws DMPPersistenceException {
 

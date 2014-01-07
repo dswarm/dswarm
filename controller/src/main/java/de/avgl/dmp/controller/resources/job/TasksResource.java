@@ -1,4 +1,4 @@
-package de.avgl.dmp.controller.resources;
+package de.avgl.dmp.controller.resources.job;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -22,16 +22,23 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.status.DMPStatus;
-import de.avgl.dmp.controller.utils.InternalSchemaDataUtil;
+import de.avgl.dmp.controller.utils.DataModelUtil;
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.TransformationFlow;
 import de.avgl.dmp.persistence.model.job.Job;
 import de.avgl.dmp.persistence.model.job.Task;
+import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.types.Tuple;
 
+/**
+ * A resource (controller service) for {@link Task}s.
+ * 
+ * @author tgaengler
+ *
+ */
 @RequestScoped
 @Api(value = "/tasks", description = "Operations about tasks.")
 @Path("/tasks")
@@ -39,30 +46,64 @@ public class TasksResource {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(TasksResource.class);
 
+	/**
+	 * The base URI of this resource.
+	 */
 	@Context
 	UriInfo											uri;
 
-	private final InternalSchemaDataUtil			schemaDataUtil;
+	/**
+	 * The data model util.
+	 */
+	private final DataModelUtil			dataModelUtil;
 
+	/**
+	 * The metrics registry.
+	 */
 	private final DMPStatus							dmpStatus;
 
+	/**
+	 * The object mapper that can be utilised to de-/serialise JSON nodes.
+	 */
 	private final ObjectMapper						objectMapper;
 
+	/**
+	 * Creates a new resource (controller service) for {@link Transformation}s with the provider of the transformation persistence
+	 * service, the object mapper and metrics registry.
+	 * 
+	 * @param dataModelUtilArg the data model util
+	 * @param objectMapperArg an object mapper
+	 * @param dmpStatusArg a metrics registry
+	 */
 	@Inject
-	public TasksResource(final InternalSchemaDataUtil schemaDataUtil, final ObjectMapper objectMapperArg, final DMPStatus dmpStatusArg) {
+	public TasksResource(final DataModelUtil dataModelUtilArg, final ObjectMapper objectMapperArg, final DMPStatus dmpStatusArg) {
 
-		this.schemaDataUtil = schemaDataUtil;
-
+		dataModelUtil = dataModelUtilArg;
 		dmpStatus = dmpStatusArg;
 		objectMapper = objectMapperArg;
 	}
 
+	/**
+	 * Builds a positive response with the given content.
+	 * 
+	 * @param responseContent a response message
+	 * @return the response
+	 */
 	private Response buildResponse(final String responseContent) {
+		
 		return Response.ok(responseContent).build();
 	}
 
 	// START FROM JobsResource
 
+	/**
+	 * This endpoint executes the task that is given via its JSON representation and returns the result of the task execution.
+	 * 
+	 * @param jsonObjectString a JSON representation of one task
+	 * @return the result of the task execution
+	 * @throws IOException
+	 * @throws DMPConverterException
+	 */
 	@ApiOperation(value = "execute the given task", notes = "Returns the result JSON object fo this task execution.")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -138,7 +179,7 @@ public class TasksResource {
 		// final String recordPrefix = Joiner.on('.').join(parts);
 
 		//final Optional<Iterator<Tuple<String, JsonNode>>> inputData = schemaDataUtil.getData(dataResource.getId(), configuration.getId());
-		final Optional<Iterator<Tuple<String, JsonNode>>> inputData = schemaDataUtil.getData(inputDataModel.getId());
+		final Optional<Iterator<Tuple<String, JsonNode>>> inputData = dataModelUtil.getData(inputDataModel.getId());
 
 		if (!inputData.isPresent()) {
 

@@ -20,11 +20,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.collect.Sets;
-import com.wordnik.swagger.annotations.ApiModelProperty;
 
 import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 
 /**
+ * A data schema is a collection of {@link AttributePath}s and a record class ({@link Clasz}).
+ * 
  * @author tgaengler
  */
 @XmlRootElement
@@ -40,7 +41,7 @@ public class Schema extends BasicDMPJPAObject {
 	private static final long	serialVersionUID	= 1L;
 
 	/**
-	 * All attributes of the attribute path
+	 * All attributes paths of the schema.
 	 */
 	// @ManyToMany(mappedBy = "schemas", fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE,
 	// CascadeType.PERSIST, CascadeType.REFRESH })
@@ -49,6 +50,9 @@ public class Schema extends BasicDMPJPAObject {
 	@XmlElement(name = "attribute_paths")
 	private Set<AttributePath>	attributePaths;
 
+	/**
+	 * The record class of the schema.
+	 */
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "RECORD_CLASS")
 	@XmlElement(name = "record_class")
@@ -89,7 +93,7 @@ public class Schema extends BasicDMPJPAObject {
 
 			if (attributePaths == null) {
 
-				attributePaths = Sets.newLinkedHashSet();
+				attributePaths = Sets.newCopyOnWriteArraySet();
 			}
 
 			if (!attributePaths.equals(attributePathsArg)) {
@@ -105,6 +109,12 @@ public class Schema extends BasicDMPJPAObject {
 		}
 	}
 
+	/**
+	 * Gets the attribute path for the given attribute path identifier.
+	 * 
+	 * @param id an attribute path identifier
+	 * @return that matched attribute path or null
+	 */
 	public AttributePath getAttributePath(final Long id) {
 
 		if (id == null) {
@@ -139,7 +149,7 @@ public class Schema extends BasicDMPJPAObject {
 
 			if (attributePaths == null) {
 
-				attributePaths = Sets.newLinkedHashSet();
+				attributePaths = Sets.newCopyOnWriteArraySet();
 			}
 
 			if (!attributePaths.contains(attributePath)) {
@@ -166,11 +176,21 @@ public class Schema extends BasicDMPJPAObject {
 		}
 	}
 
+	/**
+	 * Gets the record class of the schema.
+	 * 
+	 * @return the record class of the schema
+	 */
 	public Clasz getRecordClass() {
 
 		return recordClass;
 	}
 
+	/**
+	 * Sets the record class of the schema.
+	 * 
+	 * @param recordClassArg a new record class
+	 */
 	public void setRecordClass(final Clasz recordClassArg) {
 
 		this.recordClass = recordClassArg;

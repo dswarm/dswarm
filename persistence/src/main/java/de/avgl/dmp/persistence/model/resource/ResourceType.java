@@ -2,8 +2,17 @@ package de.avgl.dmp.persistence.model.resource;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
 
+/**
+ * An enum for describing resource types, e.g., file.
+ * 
+ * @author tgaengler
+ *
+ */
 public enum ResourceType {
 
+	/**
+	 * Indicates that the data resource is a file.
+	 */
 	FILE("file");
 
 	/**

@@ -6,8 +6,6 @@ import java.io.Reader;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.Iterators;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -18,22 +16,26 @@ import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
+import com.google.common.base.Optional;
+import com.google.common.collect.Iterators;
+
 /**
  * Processes input from a reader line by line. Inspired by org.culturegraph.mf.stream.converter.LineReader
- *
+ * 
  * @author tgaengler
+ * @author phorn
  */
 @Description("Emits each line read as a CSVRecord.")
 @In(Reader.class)
 @Out(CSVRecord.class)
 public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceiver<CSVRecord>> {
 
-	private final char					escapeCharacter;
-	private final char					quoteCharacter;
-	private final char					columnSeparator;
-	private final String					lineEnding;
-	private final int						ignoreLines;
-	private final int						discardRows;
+	private final char				escapeCharacter;
+	private final char				quoteCharacter;
+	private final char				columnSeparator;
+	private final String			lineEnding;
+	private final int				ignoreLines;
+	private final int				discardRows;
 	private final Optional<Integer>	atMost;
 
 	private final boolean			hasHeader;
@@ -42,18 +44,20 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 		this('\\', '"', ',', "\r\n");
 	}
 
-	public CsvLineReader(final Character escapeCharacterArg, final Character quoteCharacterArg, final Character columnDelimiter, final String rowDelimiter) {
-		this(escapeCharacterArg, quoteCharacterArg, columnDelimiter, rowDelimiter, 0, 0, Optional.<Integer>absent());
+	public CsvLineReader(final Character escapeCharacterArg, final Character quoteCharacterArg, final Character columnDelimiter,
+			final String rowDelimiter) {
+		this(escapeCharacterArg, quoteCharacterArg, columnDelimiter, rowDelimiter, 0, 0, Optional.<Integer> absent());
 	}
 
-	public CsvLineReader(final Character escapeCharacterArg, final Character quoteCharacterArg, final Character columnDelimiter, final String rowDelimiter,
-						 final int ignoreLinesArg, final int discardRowsArg, final Optional<Integer> atMostArg) {
+	public CsvLineReader(final Character escapeCharacterArg, final Character quoteCharacterArg, final Character columnDelimiter,
+			final String rowDelimiter, final int ignoreLinesArg, final int discardRowsArg, final Optional<Integer> atMostArg) {
 
-		this(escapeCharacterArg, quoteCharacterArg, columnDelimiter, rowDelimiter,ignoreLinesArg, discardRowsArg, atMostArg, false);
+		this(escapeCharacterArg, quoteCharacterArg, columnDelimiter, rowDelimiter, ignoreLinesArg, discardRowsArg, atMostArg, false);
 	}
 
-	private CsvLineReader(final Character escapeCharacterArg, final Character quoteCharacterArg, final Character columnDelimiter, final String rowDelimiter,
-	                      final int ignoreLinesArg, final int discardRowsArg, final Optional<Integer> atMostArg, final boolean hasHeaderArg) {
+	private CsvLineReader(final Character escapeCharacterArg, final Character quoteCharacterArg, final Character columnDelimiter,
+			final String rowDelimiter, final int ignoreLinesArg, final int discardRowsArg, final Optional<Integer> atMostArg,
+			final boolean hasHeaderArg) {
 
 		escapeCharacter = escapeCharacterArg;
 		quoteCharacter = quoteCharacterArg;
@@ -81,7 +85,7 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 			int i = ignoreLines;
 
 			try {
-				for (; i --> 0 ;) {
+				for (; i-- > 0;) {
 					final String line = bufferedReader.readLine();
 					if (line == null) {
 						throw new MetafactureException(String.format("cannot ignore [%d] lines, file is probably empty", i + 1));
@@ -98,8 +102,8 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 	}
 
 	private CSVParser getInternalParser(final Reader reader) {
-		final CSVFormat csvFormat = CSVFormat.newFormat(columnSeparator).withQuoteChar(quoteCharacter)
-				.withEscape(escapeCharacter).withRecordSeparator(lineEnding);
+		final CSVFormat csvFormat = CSVFormat.newFormat(columnSeparator).withQuoteChar(quoteCharacter).withEscape(escapeCharacter)
+				.withRecordSeparator(lineEnding);
 
 		try {
 
@@ -136,7 +140,7 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 		int i = discardRows;
 		try {
 
-			for (; i --> 0 ;) {
+			for (; i-- > 0;) {
 				iterator.next();
 			}
 
@@ -146,7 +150,7 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 		}
 	}
 
-	void process(final Reader reader, final ObjectReceiver<CSVRecord> receiver) {
+	public void process(final Reader reader, final ObjectReceiver<CSVRecord> receiver) {
 
 		final Reader actualReader = getInternalReader(reader);
 		final CSVParser csvParser = getInternalParser(actualReader);
@@ -171,7 +175,7 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 
 		if (!hasRecord) {
 
-			throw new MetafactureException(String.format("there are no records available, you have to have at least on row"));
+			throw new MetafactureException(String.format("there are no records available, you need to have at least on row"));
 		}
 
 		try {
@@ -185,14 +189,11 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 	}
 
 	public CsvLineReader withHeader(final boolean hasHeaderArg) {
-		return new CsvLineReader(
-				escapeCharacter, quoteCharacter, columnSeparator, lineEnding, ignoreLines, discardRows, atMost, hasHeaderArg
-		);
+		return new CsvLineReader(escapeCharacter, quoteCharacter, columnSeparator, lineEnding, ignoreLines, discardRows, atMost, hasHeaderArg);
 	}
 
 	public CsvLineReader withLimit(final int limit) {
-		return new CsvLineReader(
-				escapeCharacter, quoteCharacter, columnSeparator, lineEnding, ignoreLines, discardRows, Optional.of(limit) , hasHeader
-		);
+		return new CsvLineReader(escapeCharacter, quoteCharacter, columnSeparator, lineEnding, ignoreLines, discardRows, Optional.of(limit),
+				hasHeader);
 	}
 }

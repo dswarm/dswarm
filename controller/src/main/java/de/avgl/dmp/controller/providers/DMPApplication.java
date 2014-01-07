@@ -18,18 +18,26 @@ import de.avgl.dmp.controller.providers.handler.ExceptionHandler;
 import de.avgl.dmp.controller.providers.handler.WebApplicationExceptionHandler;
 import de.avgl.dmp.controller.servlet.DMPInjector;
 
+/**
+ * The configuration for the backend API. Packages with (web) resources, API feature classes (e.g. {@link MultiPartFeature}) etc.
+ * can be registered here.
+ * 
+ * @author phorn
+ * @author tgaengler
+ */
 @SuppressWarnings("UnusedDeclaration")
 class DMPApplication extends ResourceConfig {
 
+	/**
+	 * Creates a new backend API configuration with the given service locator (H2K service registry).
+	 * 
+	 * @param serviceLocator a H2K service registry
+	 */
 	@Inject
 	public DMPApplication(final ServiceLocator serviceLocator) {
 
 		packages("de.avgl.dmp.controller.resources", "com.wordnik.swagger.jersey.listing");
-		registerClasses(
-				DMPJsonExceptionHandler.class,
-				ExceptionHandler.class,
-				WebApplicationExceptionHandler.class,
-				CorsResponseFilter.class);
+		registerClasses(DMPJsonExceptionHandler.class, ExceptionHandler.class, WebApplicationExceptionHandler.class, CorsResponseFilter.class);
 		register(MultiPartFeature.class);
 
 		// swagger
@@ -42,6 +50,5 @@ class DMPApplication extends ResourceConfig {
 
 		final GuiceIntoHK2Bridge guiceBridge = serviceLocator.getService(GuiceIntoHK2Bridge.class);
 		guiceBridge.bridgeGuiceInjector(DMPInjector.injector);
-
 	}
 }

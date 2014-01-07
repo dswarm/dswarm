@@ -1,4 +1,4 @@
-package de.avgl.dmp.controller.resources;
+package de.avgl.dmp.controller.resources.resource;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -19,10 +19,16 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
+import de.avgl.dmp.controller.resources.ExtendedBasicDMPResource;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 
+/**
+ * A resource (controller service) for {@link Configuration}s.
+ * 
+ * @author tgaengler
+ */
 @RequestScoped
 @Api(value = "/configurations", description = "Operations about configurations")
 @Path("configurations")
@@ -30,6 +36,14 @@ public class ConfigurationsResource extends ExtendedBasicDMPResource<Configurati
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ConfigurationsResource.class);
 
+	/**
+	 * Creates a new resource (controller service) for {@link Configuration}s with the provider of the component persistence
+	 * service, the object mapper and metrics registry.
+	 * 
+	 * @param persistenceServiceProviderArg the component persistence service provider
+	 * @param objectMapperArg an object mapper
+	 * @param dmpStatusArg a metrics registry
+	 */
 	@Inject
 	public ConfigurationsResource(final Provider<ConfigurationService> configurationServiceProviderArg, final ObjectMapper objectMapper,
 			final DMPStatus dmpStatus) {
@@ -37,6 +51,12 @@ public class ConfigurationsResource extends ExtendedBasicDMPResource<Configurati
 		super(Configuration.class, configurationServiceProviderArg, objectMapper, dmpStatus);
 	}
 
+	/**
+	 * This endpoint returns a configuration as JSON representation for the provided configuration identifier.
+	 * 
+	 * @param id a configuration identifier
+	 * @return a JSON representation of a configuration
+	 */
 	@ApiOperation(value = "get the configuration that matches the given id", notes = "Returns the Configuration object that matches the given id.")
 	@GET
 	@Path("/{id}")
@@ -48,6 +68,13 @@ public class ConfigurationsResource extends ExtendedBasicDMPResource<Configurati
 		return super.getObject(id);
 	}
 
+	/**
+	 * This endpoint consumes a configuration as JSON representation and persists this configuration in the database.
+	 * 
+	 * @param jsonObjectString a JSON representation of one configuration
+	 * @return the persisted configuration as JSON representation
+	 * @throws DMPControllerException
+	 */
 	@ApiOperation(value = "create a new configuration", notes = "Returns a new Configuration object.", response = Configuration.class)
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -59,6 +86,12 @@ public class ConfigurationsResource extends ExtendedBasicDMPResource<Configurati
 		return super.createObject(jsonObjectString);
 	}
 
+	/**
+	 * This endpoint returns a list of all configurations as JSON representation.
+	 * 
+	 * @return a list of all configurations as JSON representation
+	 * @throws DMPControllerException
+	 */
 	@ApiOperation(value = "get all configurations ", notes = "Returns a list of Configuration objects.")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -68,6 +101,10 @@ public class ConfigurationsResource extends ExtendedBasicDMPResource<Configurati
 		return super.getObjects();
 	}
 
+	/**
+	 * {@inheritDoc}<br/>
+	 * Updates the name, description, resources and parameters of the configuration.
+	 */
 	@Override
 	protected Configuration prepareObjectForUpdate(final Configuration objectFromJSON, final Configuration object) {
 

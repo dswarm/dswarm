@@ -7,18 +7,28 @@ import de.avgl.dmp.controller.eventbus.SchemaEventRecorder;
 import de.avgl.dmp.controller.eventbus.XMLConverterEventRecorder;
 import de.avgl.dmp.controller.eventbus.XMLSchemaEventRecorder;
 import de.avgl.dmp.controller.status.DMPStatus;
-import de.avgl.dmp.controller.utils.InternalSchemaDataUtil;
+import de.avgl.dmp.controller.utils.DataModelUtil;
 
+/**
+ * The Guice configuration of the controller module. Interface/classes that are registered here can be utilised for injection.
+ * Mainly event recorders, e.g., {@link XMLConverterEventRecorder}, are registered here.
+ * 
+ * @author phorn
+ */
 public class DMPModule extends AbstractModule {
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void configure() {
+
 		bind(SchemaEventRecorder.class).asEagerSingleton();
 		bind(CSVConverterEventRecorder.class).asEagerSingleton();
 		bind(XMLConverterEventRecorder.class).asEagerSingleton();
 		bind(XMLSchemaEventRecorder.class).asEagerSingleton();
 
-		bind(InternalSchemaDataUtil.class);
+		bind(DataModelUtil.class);
 
 		bind(DMPStatus.class);
 	}

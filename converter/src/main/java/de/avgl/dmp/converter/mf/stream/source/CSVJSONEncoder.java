@@ -22,6 +22,7 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
  * with [], an array is created.
  *
  * @author tgaengler
+ * @author phorn
  */
 @Description("Serialises an object as JSON")
 @In(StreamReceiver.class)

@@ -8,6 +8,11 @@ import de.avgl.dmp.persistence.model.resource.Configuration;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * 
+ * @author phorn
+ *
+ */
 public final class CSVResourceFlowFactory {
 
 	public static <T, U extends AbstractCSVResourceFlow<T>> U fromConfiguration(

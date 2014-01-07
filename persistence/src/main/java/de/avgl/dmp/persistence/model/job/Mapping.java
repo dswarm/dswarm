@@ -28,6 +28,10 @@ import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 
 /**
+ * A mapping is an instantiation of a {@link Function} or {@link Transformation} with a given collection of input
+ * {@link AttributePath}s and an output {@link AttributePath}. Optionally, a mapping can consist of an input {@link Filter} and an
+ * output {@link Filter}.
+ * 
  * @author tgaengler
  */
 @XmlRootElement
@@ -42,45 +46,71 @@ public class Mapping extends BasicDMPJPAObject {
 	 */
 	private static final long	serialVersionUID	= 1L;
 
+	/**
+	 * The input attribute path collection of the mapping.
+	 */
 	@XmlElement(name = "input_attribute_paths")
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "INPUT_ATTRIBUTE_PATHS_MAPPINGS", joinColumns = { @JoinColumn(name = "MAPPING_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "INPUT_ATTRIBUTE_PATH_ID", referencedColumnName = "ID") })
-	//@JsonSerialize(using = SetAttributePathReferenceSerializer.class)
+	// @JsonSerialize(using = SetAttributePathReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@XmlList
 	private Set<AttributePath>	inputAttributePaths;
 
+	/**
+	 * The output attribute path of the mapping.
+	 */
 	@XmlElement(name = "output_attribute_path")
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "OUTPUT_ATTRIBUTE_PATH")
-	//@JsonSerialize(using = AttributePathReferenceSerializer.class)
+	// @JsonSerialize(using = AttributePathReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private AttributePath		outputAttributePath;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE }, orphanRemoval = true)
+	/**
+	 * The instantiation ({@link Component}) of the function or transformation that should be applied at this mapping.
+	 */
+	@OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH,
+			CascadeType.REMOVE }, orphanRemoval = true)
 	@JoinColumn(name = "TRANSFORMATION")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private Component			transformation;
 
+	/**
+	 * The input filter of this mapping.
+	 */
 	@XmlElement(name = "input_filter")
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "INPUT_FILTER")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private Filter				inputFilter;
 
+	/**
+	 * The output filter of this mapping.
+	 */
 	@XmlElement(name = "output_filter")
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "OUTPUT_FILTER")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private Filter				outputFilter;
 
+	/**
+	 * Gets the input attribute paths of the mapping.
+	 * 
+	 * @return the input attribute paths of the mapping
+	 */
 	public Set<AttributePath> getInputAttributePaths() {
 
 		return inputAttributePaths;
 	}
 
+	/**
+	 * Sets the input attribute paths of the mapping
+	 * 
+	 * @param inputAttributePathsArg a new collection of input attribute paths
+	 */
 	public void setInputAttributePaths(final Set<AttributePath> inputAttributePathsArg) {
-		
+
 		if (inputAttributePathsArg == null && inputAttributePaths != null) {
 
 			inputAttributePaths.clear();
@@ -101,6 +131,12 @@ public class Mapping extends BasicDMPJPAObject {
 		}
 	}
 
+	/**
+	 * Gets an input attribute path by a given identifier
+	 * 
+	 * @param id the input attribute path identifier
+	 * @return the matched input attribute path or null
+	 */
 	public AttributePath getInputAttributePath(final Long id) {
 
 		if (id == null) {
@@ -126,7 +162,7 @@ public class Mapping extends BasicDMPJPAObject {
 	/**
 	 * Adds a new input attribute path to the collection of input attribute paths of this mapping.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param inputAttributePath a new input attribute path
 	 */
 	public void addInputAttributePath(final AttributePath inputAttributePath) {
@@ -148,7 +184,7 @@ public class Mapping extends BasicDMPJPAObject {
 	/**
 	 * Removes an existing input attribute path from the collection of input attribute paths of this mapping.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param inputAttributePath an existing input attribute path that should be removed
 	 */
 	public void removeInputAttributePath(final AttributePath inputAttributePath) {
@@ -159,41 +195,81 @@ public class Mapping extends BasicDMPJPAObject {
 		}
 	}
 
+	/**
+	 * Gets the output attribute path of the mapping.
+	 * 
+	 * @return the output attribute path of the mapping
+	 */
 	public AttributePath getOutputAttributePath() {
 
 		return outputAttributePath;
 	}
 
+	/**
+	 * Sets the output attribute path of the mapping
+	 * 
+	 * @param outputAttributePathArg a new output attribute path
+	 */
 	public void setOutputAttributePath(final AttributePath outputAttributePathArg) {
 
 		outputAttributePath = outputAttributePathArg;
 	}
 
+	/**
+	 * Gets the function or transformation instantiation (component) of the mapping.
+	 * 
+	 * @return the function or transformation instantiation (component) of the mapping
+	 */
 	public Component getTransformation() {
 
 		return transformation;
 	}
 
+	/**
+	 * Sets the function or transformation instantiation (component) of the mapping.
+	 * 
+	 * @param transformationArg a new function or transformation instantiation (component)
+	 */
 	public void setTransformation(final Component transformationArg) {
 
 		transformation = transformationArg;
 	}
 
+	/**
+	 * Gets the input filter of the mapping.
+	 * 
+	 * @return the input filter of the mapping
+	 */
 	public Filter getInputFilter() {
 
 		return inputFilter;
 	}
 
+	/**
+	 * Sets the input filter of the mapping.
+	 * 
+	 * @param inputFilterArg a new input filter
+	 */
 	public void setInputFilter(final Filter inputFilterArg) {
 
 		inputFilter = inputFilterArg;
 	}
 
+	/**
+	 * Gets the output filter of the mapping.
+	 * 
+	 * @return the output filter of the mapping
+	 */
 	public Filter getOutputFilter() {
 
 		return outputFilter;
 	}
 
+	/**
+	 * Sets the output filter of the mapping.
+	 * 
+	 * @param outputFilterArg a new output filter
+	 */
 	public void setOutputFilter(final Filter outputFilterArg) {
 
 		outputFilter = outputFilterArg;

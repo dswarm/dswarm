@@ -19,6 +19,12 @@ import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 
+/**
+ * Flow that transforms a given XML source into RDF triples.
+ * 
+ * @author tgaengler
+ *
+ */
 public class XMLSourceResourceTriplesFlow {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(XMLSourceResourceTriplesFlow.class);

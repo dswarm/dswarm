@@ -21,6 +21,8 @@ import org.culturegraph.mf.util.ResourceUtil;
 /**
  * Opens a file and passes a reader for it to the receiver.
  * It also checks and discards an UTF8 BOM.
+ * 
+ * @author phorn
  */
 @Description("Opens a file and checks for UTF8 BOM.")
 @In(String.class)

@@ -8,12 +8,18 @@ import com.google.inject.Provider;
 import de.avgl.dmp.persistence.model.job.Function;
 
 /**
+ * A persistence service for {@link Function}s.
  * 
  * @author tgaengler
  *
  */
 public class FunctionService extends BasicFunctionService<Function> {
 
+	/**
+	 * Creates a new function persistence service with the given entity manager provider.
+	 * 
+	 * @param entityManagerProvider an entity manager provider
+	 */
 	@Inject
 	public FunctionService(final Provider<EntityManager> entityManagerProvider) {
 

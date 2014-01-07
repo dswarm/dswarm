@@ -15,11 +15,16 @@ import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.google.common.collect.Sets;
 
 import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 
 /**
+ * A project is a container that hold the current working state of a job creation, i.e., it knows all relevant parts of a
+ * {@link Job}, e.g., a collection of {@link Mapping}s, the sample input {@link DataModel}, the output {@link DataModel} and other
+ * related settings.
+ * 
  * @author tgaengler
  */
 @XmlRootElement
@@ -34,63 +39,105 @@ public class Project extends ExtendedBasicDMPJPAObject {
 	 */
 	private static final long	serialVersionUID	= 1L;
 
+	/**
+	 * The sample input data model that will be utilised for demonstration or testing of the mappings of the project.
+	 */
 	@XmlElement(name = "input_data_model")
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "INPUT_DATA_MODEL")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	//@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
-	//@XmlIDREF
+	// @JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
+	// @XmlIDREF
 	private DataModel			inputDataModel;
 
+	/**
+	 * The output data model that contains the output schema.
+	 */
 	@XmlElement(name = "output_data_model")
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "OUTPUT_DATA_MODEL")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	//@JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
-	//@XmlIDREF
+	// @JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
+	// @XmlIDREF
 	private DataModel			outputDataModel;
 
+	/**
+	 * The collection of mappings the project.
+	 */
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "PROJECTS_MAPPINGS", joinColumns = { @JoinColumn(name = "MAPPING_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "PROJECT_ID", referencedColumnName = "ID") })
-	//@JsonSerialize(using = SetMappingReferenceSerializer.class)
+	// @JsonSerialize(using = SetMappingReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	//@XmlIDREF
+	// @XmlIDREF
 	@XmlList
 	private Set<Mapping>		mappings;
 
+	/**
+	 * The collection of functions that are created in this project, i.e., those functions are only visible to this project.
+	 */
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "PROJECTS_FUNCTIONS", joinColumns = { @JoinColumn(name = "FUNCTION_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "PROJECT_ID", referencedColumnName = "ID") })
-	//@JsonSerialize(using = SetFunctionReferenceSerializer.class)
+	// @JsonSerialize(using = SetFunctionReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	//@XmlIDREF
+	// @XmlIDREF
 	@XmlList
 	private Set<Function>		functions;
 
+	/**
+	 * Gets the sample input data model.
+	 * 
+	 * @return the sample input data model
+	 */
 	public DataModel getInputDataModel() {
 
 		return inputDataModel;
 	}
 
+	/**
+	 * Sets the sample input data model
+	 * 
+	 * @param inputDataModel a new sample input data model
+	 */
 	public void setInputDataModel(final DataModel inputDataModel) {
 
 		this.inputDataModel = inputDataModel;
 	}
 
+	/**
+	 * Gets the output data model.
+	 * 
+	 * @return the output data model
+	 */
 	public DataModel getOutputDataModel() {
 
 		return outputDataModel;
 	}
 
+	/**
+	 * Sets the output data model
+	 * 
+	 * @param outputDataModel a new output data model
+	 */
 	public void setOutputDataModel(final DataModel outputDataModel) {
 
 		this.outputDataModel = outputDataModel;
 	}
 
+	/**
+	 * Gets the mappings of the project.
+	 * 
+	 * @return the mappings of the project
+	 */
 	public Set<Mapping> getMappings() {
 
 		return mappings;
 	}
 
+	/**
+	 * Sets the mappings of the project.
+	 * 
+	 * @param mappingsArg a new collection of mappings
+	 */
 	public void setMappings(final Set<Mapping> mappingsArg) {
 
 		if (mappingsArg == null && mappings != null) {
@@ -102,23 +149,32 @@ public class Project extends ExtendedBasicDMPJPAObject {
 
 			if (!mappingsArg.equals(mappings)) {
 
-				if (mappings != null) {
+				if (mappings == null) {
 
-					mappings.clear();
-					mappings.addAll(mappingsArg);
-				} else {
-
-					mappings = mappingsArg;
+					mappings = Sets.newCopyOnWriteArraySet();
 				}
+
+				mappings.clear();
+				mappings.addAll(mappingsArg);
 			}
 		}
 	}
 
+	/**
+	 * Gets the functions of the project.
+	 * 
+	 * @return the functions of the project
+	 */
 	public Set<Function> getFunctions() {
 
 		return functions;
 	}
 
+	/**
+	 * Sets the functions of the
+	 * 
+	 * @param functionsArg
+	 */
 	public void setFunctions(final Set<Function> functionsArg) {
 
 		if (functionsArg == null && functions != null) {
@@ -130,14 +186,13 @@ public class Project extends ExtendedBasicDMPJPAObject {
 
 			if (!functionsArg.equals(functions)) {
 
-				if (functions != null) {
+				if (functions == null) {
 
-					functions.clear();
-					functions.addAll(functionsArg);
-				} else {
-
-					functions = functionsArg;
+					functions = Sets.newCopyOnWriteArraySet();
 				}
+
+				functions.clear();
+				functions.addAll(functionsArg);
 			}
 		}
 	}

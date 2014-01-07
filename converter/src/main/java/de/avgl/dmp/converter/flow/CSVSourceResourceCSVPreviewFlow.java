@@ -12,11 +12,16 @@ import de.avgl.dmp.converter.mf.stream.reader.CsvReader;
 import de.avgl.dmp.converter.mf.stream.source.CSVEncoder;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 
+/**
+ * Flow that reads and parses a given CSV document and returns a preview of its content.
+ * 
+ * @author tgaengler
+ * @author phorn
+ */
 public class CSVSourceResourceCSVPreviewFlow extends AbstractCSVResourceFlow<String> {
 
-	public CSVSourceResourceCSVPreviewFlow(final String encoding, final Character escapeCharacter,
-										   final Character quoteCharacter, final Character columnDelimiter,
-										   final String rowDelimiter) {
+	public CSVSourceResourceCSVPreviewFlow(final String encoding, final Character escapeCharacter, final Character quoteCharacter,
+			final Character columnDelimiter, final String rowDelimiter) {
 		super(encoding, escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter);
 	}
 

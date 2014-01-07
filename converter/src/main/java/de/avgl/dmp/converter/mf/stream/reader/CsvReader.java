@@ -16,6 +16,7 @@ import de.avgl.dmp.converter.mf.stream.converter.CsvLineReader;
  * Inspired by org.culturegraph.mf.stream.reader.CsvReader
  *
  * @author tgaengler
+ * @author phorn
  */
 @Description("reads Csv files. First line can be interpreted as header.")
 @In(java.io.Reader.class)

@@ -13,14 +13,28 @@ import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
 
+/**
+ * A persistence service for {@link Component}s.
+ * 
+ * @author tgaengler
+ */
 public class ComponentService extends ExtendedBasicDMPJPAService<Component> {
 
+	/**
+	 * Creates a new component persistence service with the given entity manager provider.
+	 * 
+	 * @param entityManagerProvider an entity manager provider
+	 */
 	@Inject
 	public ComponentService(final Provider<EntityManager> entityManagerProvider) {
 
 		super(Component.class, entityManagerProvider);
 	}
 
+	/**
+	 * {@inheritDoc}<br/>
+	 * Clears the relationship to the function, input components and output components.
+	 */
 	@Override
 	protected void prepareObjectForRemoval(final Component object) {
 
@@ -30,6 +44,9 @@ public class ComponentService extends ExtendedBasicDMPJPAService<Component> {
 		object.setOutputComponents(null);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void updateObjectInternal(final Component object, final Component updateObject, final EntityManager entityManager)
 			throws DMPPersistenceException {

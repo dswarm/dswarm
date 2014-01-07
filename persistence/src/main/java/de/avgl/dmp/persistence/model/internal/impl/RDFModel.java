@@ -18,6 +18,8 @@ import de.avgl.dmp.persistence.model.internal.rdf.helper.ConverterHelperHelper;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
+ * A {@link Model} implementation for RDF data.
+ * 
  * @author tgaengler
  */
 public class RDFModel implements Model {
@@ -28,20 +30,39 @@ public class RDFModel implements Model {
 	private final String							recordURI;
 	private final String							recordClassURI;
 
+	/**
+	 * Creates a new {@link RDFModel} with a given Jena model instance.
+	 * 
+	 * @param modelArg a Jena model instance that hold the RDF data
+	 */
 	public RDFModel(final com.hp.hpl.jena.rdf.model.Model modelArg) {
 
 		model = modelArg;
 		recordURI = null;
 		recordClassURI = null;
 	}
-	
+
+	/**
+	 * Creates a new {@link RDFModel} with a given Jena model instance and an identifier of the record.
+	 * 
+	 * @param modelArg a Jena model instance that hold the RDF data
+	 * @param recordURIArg the record identifier
+	 */
 	public RDFModel(final com.hp.hpl.jena.rdf.model.Model modelArg, final String recordURIArg) {
 
 		model = modelArg;
 		recordURI = recordURIArg;
 		recordClassURI = null;
 	}
-	
+
+	/**
+	 * Creates a new {@link RDFModel} with a given Jena model instance, an identifier of the record and an identifier of the
+	 * record class.
+	 * 
+	 * @param modelArg a Jena model instance that hold the RDF data
+	 * @param recordURIArg the record identifier
+	 * @param recordClassURIArg the record class identifier
+	 */
 	public RDFModel(final com.hp.hpl.jena.rdf.model.Model modelArg, final String recordURIArg, final String recordClassURIArg) {
 
 		model = modelArg;
@@ -49,21 +70,39 @@ public class RDFModel implements Model {
 		recordClassURI = recordClassURIArg;
 	}
 
+	/**
+	 * Gets the Jena model with the RDF data.
+	 * 
+	 * @return the Jena model with the RDF data
+	 */
 	public com.hp.hpl.jena.rdf.model.Model getModel() {
 
 		return model;
 	}
 
-//	public String getRecordURI() {
-//
-//		return recordURI;
-//	}
-	
+	/**
+	 * Gets the record identifier.
+	 * 
+	 * @return the record identifier
+	 */
+	public String getRecordURI() {
+
+		return recordURI;
+	}
+
+	/**
+	 * Gets the record class identifier.
+	 * 
+	 * @return the record class identifier
+	 */
 	public String getRecordClassURI() {
-		
+
 		return recordClassURI;
 	}
 
+	/**
+	 * TODO: (maybe) implement JSON serialisation for multiple records
+	 */
 	@Override
 	public JsonNode toJSON() {
 
@@ -129,7 +168,7 @@ public class RDFModel implements Model {
 				final JsonNode jsonNode = convertRDFToJSON(rdfNode.asResource(), rootJson, objectNode);
 
 				final String propName = propertyURI.substring(propertyURI.lastIndexOf('#') + 1);
-				ConverterHelperHelper.addBNodeToConverterHelper(converterHelpers, propName, jsonNode);
+				ConverterHelperHelper.addJSONNodeToConverterHelper(converterHelpers, propName, jsonNode);
 
 				continue;
 			}

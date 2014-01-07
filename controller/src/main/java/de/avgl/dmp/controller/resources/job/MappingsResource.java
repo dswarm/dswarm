@@ -1,4 +1,4 @@
-package de.avgl.dmp.controller.resources;
+package de.avgl.dmp.controller.resources.job;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -18,21 +18,41 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
+import de.avgl.dmp.controller.resources.BasicDMPResource;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Mapping;
 import de.avgl.dmp.persistence.service.job.MappingService;
 
+/**
+ * A resource (controller service) for {@link Mapping}s.
+ * 
+ * @author tgaengler
+ */
 @RequestScoped
 @Api(value = "/mappings", description = "Operations about mappings.")
 @Path("mappings")
 public class MappingsResource extends BasicDMPResource<MappingService, Mapping> {
 
+	/**
+	 * Creates a new resource (controller service) for {@link Mapping}s with the provider of the mapping persistence service, the
+	 * object mapper and metrics registry.
+	 * 
+	 * @param mappingServiceProviderArg the mapping persistence service provider
+	 * @param objectMapperArg an object mapper
+	 * @param dmpStatusArg a metrics registry
+	 */
 	@Inject
 	public MappingsResource(final Provider<MappingService> mappingServiceProviderArg, final ObjectMapper objectMapper, final DMPStatus dmpStatus) {
 
 		super(Mapping.class, mappingServiceProviderArg, objectMapper, dmpStatus);
 	}
 
+	/**
+	 * This endpoint returns a mapping as JSON representation for the provided mapping identifier.
+	 * 
+	 * @param id a mapping identifier
+	 * @return a JSON representation of a mapping
+	 */
 	@ApiOperation(value = "get the mapping that matches the given id", notes = "Returns the Mapping object that matches the given id.")
 	@GET
 	@Path("/{id}")
@@ -43,6 +63,13 @@ public class MappingsResource extends BasicDMPResource<MappingService, Mapping> 
 		return super.getObject(id);
 	}
 
+	/**
+	 * This endpoint consumes a mapping as JSON representation and persists this mapping in the database.
+	 * 
+	 * @param jsonObjectString a JSON representation of one mapping
+	 * @return the persisted mapping as JSON representation
+	 * @throws DMPControllerException
+	 */
 	@ApiOperation(value = "create a new mapping", notes = "Returns a new Mapping object.", response = Mapping.class)
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -53,6 +80,12 @@ public class MappingsResource extends BasicDMPResource<MappingService, Mapping> 
 		return super.createObject(jsonObjectString);
 	}
 
+	/**
+	 * This endpoint returns a list of all mappings as JSON representation.
+	 * 
+	 * @return a list of all mappings as JSON representation
+	 * @throws DMPControllerException
+	 */
 	@ApiOperation(value = "get all mappings ", notes = "Returns a list of Mapping objects.")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -62,6 +95,11 @@ public class MappingsResource extends BasicDMPResource<MappingService, Mapping> 
 		return super.getObjects();
 	}
 
+	/**
+	 * {@inheritDoc}<br/>
+	 * Updates the name, transformation (component), input filter, output filter, input attribute paths and output attribute path
+	 * of the mapping.
+	 */
 	@Override
 	protected Mapping prepareObjectForUpdate(final Mapping objectFromJSON, final Mapping object) {
 

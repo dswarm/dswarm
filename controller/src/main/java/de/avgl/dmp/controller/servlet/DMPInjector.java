@@ -8,22 +8,31 @@ import de.avgl.dmp.controller.guice.DMPModule;
 import de.avgl.dmp.controller.guice.DMPServletModule;
 import de.avgl.dmp.persistence.PersistenceModule;
 
+/**
+ * The Guice injector for the backend API. Register here all Guice configuration that should be recognized when the backend API is
+ * running.
+ * 
+ * @author phorn
+ */
 public class DMPInjector extends GuiceServletContextListener {
 
+	/**
+	 * The Guice injector.
+	 */
 	@SuppressWarnings("StaticNonFinalField")
-	public static Injector injector;
+	public static Injector	injector;
 
+	/**
+	 * Gets the Guice injector.
+	 */
 	@Override
 	protected Injector getInjector() {
 
-		if (injector == null) {
+		if (DMPInjector.injector == null) {
 
-			injector = Guice.createInjector(
-					new PersistenceModule(),
-					new DMPModule(),
-					new DMPServletModule());
+			DMPInjector.injector = Guice.createInjector(new PersistenceModule(), new DMPModule(), new DMPServletModule());
 		}
 
-		return injector;
+		return DMPInjector.injector;
 	}
 }

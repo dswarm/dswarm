@@ -21,11 +21,11 @@ import de.avgl.dmp.persistence.model.internal.impl.MemoryDBInputModel;
 import de.avgl.dmp.persistence.model.internal.impl.MemoryDbModel;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.schema.Schema;
-import de.avgl.dmp.persistence.service.InternalService;
+import de.avgl.dmp.persistence.service.InternalModelService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 
 @Singleton
-public class InternalMemoryDbService extends BaseMemoryServiceImpl<Long, Long, Table<String, String, String>> implements InternalService {
+public class InternalMemoryDbService extends BaseMemoryServiceImpl<Long, Long, Table<String, String, String>> implements InternalModelService {
 
 	private DataModelService	dataModelService;
 

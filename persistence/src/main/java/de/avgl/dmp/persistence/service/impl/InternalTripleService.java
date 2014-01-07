@@ -28,33 +28,60 @@ import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
-import de.avgl.dmp.persistence.service.InternalService;
+import de.avgl.dmp.persistence.service.InternalModelService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
-import de.avgl.dmp.persistence.service.resource.ResourceService;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
 
 /**
+ * A internal model service implementation for RDF triples.<br/>
+ * Currently, the Jena TDB triple store is utilised.
+ * 
  * @author tgaengler
  */
 @Singleton
-public class InternalTripleService implements InternalService {
+public class InternalTripleService implements InternalModelService {
 
-	private static final org.apache.log4j.Logger	LOG								= org.apache.log4j.Logger.getLogger(InternalTripleService.class);
+	private static final org.apache.log4j.Logger	LOG							= org.apache.log4j.Logger.getLogger(InternalTripleService.class);
 
+	/**
+	 * The Jena TDB triple store.
+	 */
 	private final Dataset							dataset;
-	private final ResourceService					resourceService;
+	
+	/**
+	 * The data model persistence service.
+	 */
 	private final DataModelService					dataModelService;
+	
+	/**
+	 * The schema persistence service.
+	 */
 	private final SchemaService						schemaService;
+	
+	/**
+	 * The class persistence service.
+	 */
 	private final ClaszService						classService;
-	private static final String						OLD_RESOURCE_GRAPH_URI_PATTERN	= "http://data.slub-dresden.de/resource/{resourceid}/configurations/{configurationid}/data";
-	private static final String						RESOURCE_GRAPH_URI_PATTERN		= "http://data.slub-dresden.de/datamodel/{datamodelid}/data";
+	
+	/**
+	 * The data model graph URI pattern
+	 */
+	private static final String						DATA_MODEL_GRAPH_URI_PATTERN	= "http://data.slub-dresden.de/datamodel/{datamodelid}/data";
 
+	/**
+	 * Creates a new internal triple service with the given data model persistence service, schema persistence service, class persistence service and the directory of
+	 * the Jena TDB triple store.
+	 * 
+	 * @param dataModelService the data model persistence service
+	 * @param schemaService the schema persistence service
+	 * @param classService the class persistence service
+	 * @param directory the directory of the Jena TDB triple store
+	 */
 	@Inject
-	public InternalTripleService(final ResourceService resourceService, final DataModelService dataModelService, final SchemaService schemaService,
-			final ClaszService classService, @Named("TdbPath") final String directory) {
+	public InternalTripleService(final DataModelService dataModelService, final SchemaService schemaService, final ClaszService classService,
+			@Named("TdbPath") final String directory) {
 		dataset = TDBFactory.createDataset(directory);
-		this.resourceService = resourceService;
 		this.dataModelService = dataModelService;
 		this.schemaService = schemaService;
 		this.classService = classService;
@@ -234,6 +261,9 @@ public class InternalTripleService implements InternalService {
 		throw new NotImplementedException("schema retrieval via this method is not implemented yet, please utilise #getSchema(dataModelId) instead.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void createObject(final Long dataModelId, final Object model) throws DMPPersistenceException {
 
@@ -266,7 +296,7 @@ public class InternalTripleService implements InternalService {
 			throw new DMPPersistenceException("real model that should be added to DB shouldn't be null");
 		}
 
-		final String resourceGraphURI = InternalTripleService.RESOURCE_GRAPH_URI_PATTERN.replace("{datamodelid}", dataModelId.toString());
+		final String resourceGraphURI = InternalTripleService.DATA_MODEL_GRAPH_URI_PATTERN.replace("{datamodelid}", dataModelId.toString());
 
 		addRecordClass(dataModelId, rdfModel.getRecordClassURI());
 
@@ -277,6 +307,9 @@ public class InternalTripleService implements InternalService {
 
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Optional<Map<String, Model>> getObjects(final Long dataModelId, final Optional<Integer> atMost) throws DMPPersistenceException {
 
@@ -290,7 +323,7 @@ public class InternalTripleService implements InternalService {
 			throw new DMPPersistenceException("data model id shouldn't be null");
 		}
 
-		final String resourceGraphURI = InternalTripleService.RESOURCE_GRAPH_URI_PATTERN.replace("{datamodelid}", dataModelId.toString());
+		final String resourceGraphURI = InternalTripleService.DATA_MODEL_GRAPH_URI_PATTERN.replace("{datamodelid}", dataModelId.toString());
 
 		dataset.begin(ReadWrite.READ);
 		final com.hp.hpl.jena.rdf.model.Model model = dataset.getNamedModel(resourceGraphURI);
@@ -302,7 +335,7 @@ public class InternalTripleService implements InternalService {
 
 			return Optional.absent();
 		}
-		
+
 		if (model.isEmpty()) {
 
 			InternalTripleService.LOG.debug("model is empty for data model '" + dataModelId + "' in dataset");
@@ -375,6 +408,9 @@ public class InternalTripleService implements InternalService {
 		return Optional.of(modelMap);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void deleteObject(final Long dataModelId) throws DMPPersistenceException {
 
@@ -388,7 +424,7 @@ public class InternalTripleService implements InternalService {
 			throw new DMPPersistenceException("data model id shouldn't be null");
 		}
 
-		final String resourceGraphURI = InternalTripleService.RESOURCE_GRAPH_URI_PATTERN.replace("{datamodelid}", dataModelId.toString());
+		final String resourceGraphURI = InternalTripleService.DATA_MODEL_GRAPH_URI_PATTERN.replace("{datamodelid}", dataModelId.toString());
 
 		// TODO: delete DataModel object from DB here as well?
 
@@ -399,6 +435,9 @@ public class InternalTripleService implements InternalService {
 
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Optional<Schema> getSchema(final Long dataModelId) throws DMPPersistenceException {
 
@@ -428,6 +467,13 @@ public class InternalTripleService implements InternalService {
 		return Optional.of(schema);
 	}
 
+	/**
+	 * Adds the record class to the schema of the data model.
+	 * 
+	 * @param dataModelId the identifier of the data model
+	 * @param recordClassUri the identifier of the record class
+	 * @throws DMPPersistenceException
+	 */
 	private void addRecordClass(final Long dataModelId, final String recordClassUri) throws DMPPersistenceException {
 
 		// (try) add record class uri to schema
@@ -474,6 +520,13 @@ public class InternalTripleService implements InternalService {
 		dataModelService.updateObjectTransactional(dataModel);
 	}
 
+	/**
+	 * Gets all resources for the given record class identifier in the given Jena model.
+	 * 
+	 * @param recordClassURI the record class identifier
+	 * @param model the Jena model
+	 * @return
+	 */
 	private Set<com.hp.hpl.jena.rdf.model.Resource> getRecordResources(final String recordClassURI, final com.hp.hpl.jena.rdf.model.Model model) {
 
 		LOG.debug("start processing all record resources SPARQL query");

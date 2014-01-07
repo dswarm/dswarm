@@ -16,28 +16,58 @@ import com.google.inject.Injector;
 
 import de.avgl.dmp.init.DMPException;
 
-
+/**
+ * A utility class for the persistence module.
+ * 
+ * @author tgaengler
+ * @author phorn
+ */
 public final class DMPPersistenceUtil {
 
-	private static final JsonNodeFactory FACTORY = JsonNodeFactory.instance;
-	private static final ObjectMapper MAPPER;
+	/**
+	 * The JSON node factory that can be utilised to create new JSON nodes (objects or arrays).
+	 */
+	private static final JsonNodeFactory	FACTORY;
 
+	/**
+	 * The object mapper that can be utilised to de-/serialise JSON nodes.
+	 */
+	private static final ObjectMapper		MAPPER;
+
+	/**
+	 * The injector for dependency injection.
+	 */
 	@SuppressWarnings("StaticNonFinalField")
 	public static transient Injector		injector;
 
 	static {
 		MAPPER = new ObjectMapper();
 		final JaxbAnnotationModule module = new JaxbAnnotationModule();
-		MAPPER.registerModule(module).registerModule(new Hibernate4Module())
-			.setSerializationInclusion(Include.NON_NULL)
-			.setSerializationInclusion(Include.NON_EMPTY);
+		MAPPER.registerModule(module).registerModule(new Hibernate4Module()).setSerializationInclusion(Include.NON_NULL)
+				.setSerializationInclusion(Include.NON_EMPTY);
+
+		FACTORY = MAPPER.getNodeFactory();
 	}
 
+	/**
+	 * Retrieves a resource by the give path and converts its content to a string.
+	 * 
+	 * @param resource a resource path
+	 * @return a string representation fo the content of the resource
+	 * @throws IOException
+	 */
 	public static String getResourceAsString(final String resource) throws IOException {
 		final URL url = Resources.getResource(resource);
 		return Resources.toString(url, Charsets.UTF_8);
 	}
 
+	/**
+	 * Gets a JSON object from the given string.
+	 * 
+	 * @param jsonString the string that holds a serialised JSON object.
+	 * @return the deserialised JSON object
+	 * @throws DMPException
+	 */
 	public static ObjectNode getJSON(final String jsonString) throws DMPException {
 
 		try {
@@ -48,6 +78,13 @@ public final class DMPPersistenceUtil {
 		}
 	}
 
+	/**
+	 * Gets a JSON array from the given string.
+	 * 
+	 * @param jsonString the string that holds a serialised JSON array.
+	 * @return the deserialised JSON array
+	 * @throws DMPException
+	 */
 	public static ArrayNode getJSONArray(final String jsonString) throws DMPException {
 
 		try {
@@ -58,19 +95,35 @@ public final class DMPPersistenceUtil {
 		}
 	}
 
+	/**
+	 * Gets the object mapper that can be utilised to de-/serialise JSON nodes.
+	 * 
+	 * @return the object mapper that can be utilised to de-/serialise JSON nodes
+	 */
 	public static ObjectMapper getJSONObjectMapper() {
 
 		return MAPPER;
 	}
 
+	/**
+	 * Gets the JSON node factory that can be utilised to create new JSON nodes (objects or arrays)
+	 * 
+	 * @return JSON node factory that can be utilised to create new JSON nodes (objects or arrays)
+	 */
 	public static JsonNodeFactory getJSONFactory() {
 
 		return FACTORY;
 	}
 
+	/**
+	 * Gets the injector for dependency injection.
+	 * 
+	 * @return the injector for dependency injection
+	 * @throws DMPException
+	 */
 	public static Injector getInjector() throws DMPException {
 		if (injector == null) {
-			throw new DMPException("you should not use getInjector without providing ist first. Try to use @Inject first.");
+			throw new DMPException("you should not use getInjector without providing it first. Try to use @Inject first.");
 		}
 
 		return injector;

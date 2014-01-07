@@ -21,7 +21,7 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
-import de.avgl.dmp.persistence.service.InternalServiceFactory;
+import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 import de.avgl.dmp.persistence.service.impl.InternalServiceFactoryImpl;
 import de.avgl.dmp.persistence.service.job.ComponentService;
 import de.avgl.dmp.persistence.service.job.FilterService;
@@ -37,10 +37,19 @@ import de.avgl.dmp.persistence.service.schema.AttributeService;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
 
+/**
+ * The Guice configuration of the persistence module. Interface/classes that are registered here can be utilised for injection.
+ * 
+ * @author phorn
+ * @author tgaengler
+ */
 public class PersistenceModule extends AbstractModule {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(PersistenceModule.class);
 
+	/**
+	 * registers all persistence services and other related properties etc.
+	 */
 	@Override
 	protected void configure() {
 		final URL resource = Resources.getResource("dmp.properties");
@@ -71,9 +80,14 @@ public class PersistenceModule extends AbstractModule {
 		bind(FilterService.class).in(Scopes.SINGLETON);
 		bind(ProjectService.class).in(Scopes.SINGLETON);
 
-		bind(InternalServiceFactory.class).to(InternalServiceFactoryImpl.class).in(Scopes.SINGLETON);
+		bind(InternalModelServiceFactory.class).to(InternalServiceFactoryImpl.class).in(Scopes.SINGLETON);
 	}
 
+	/**
+	 * Provides the {@link ObjectMapper} instance for JSON de-/serialisation.
+	 * 
+	 * @return a {@link ObjectMapper} instance as singleton
+	 */
 	@Provides
 	@Singleton
 	protected ObjectMapper provideObjectMapper() {
@@ -86,12 +100,22 @@ public class PersistenceModule extends AbstractModule {
 		return mapper;
 	}
 
+	/**
+	 * Provides the metric registry to register objects for metric statistics.
+	 * 
+	 * @return a {@link MetricRegistry} instance as singleton
+	 */
 	@Provides
 	@Singleton
 	protected MetricRegistry provideMetricRegistry() {
 		return new MetricRegistry();
 	}
 
+	/**
+	 * Provides the event bus for event processing.
+	 * 
+	 * @return a {@link EventBus} instance as singleton
+	 */
 	@Provides
 	@Singleton
 	protected EventBus provideEventBus() {

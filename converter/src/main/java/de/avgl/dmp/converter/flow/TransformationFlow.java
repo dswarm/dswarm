@@ -32,22 +32,28 @@ import de.avgl.dmp.persistence.model.job.Task;
 import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.model.types.Tuple;
 
+/**
+ * Flow that executes a given set of transformations on data of a given data model.
+ * 
+ * @author phorn
+ * @author tgaengler
+ */
 public class TransformationFlow {
 
 	public static final String	DEFAULT_RESOURCE_PATH	= "qucosa_record.xml";
 
-	private final Metamorph	transformer;
+	private final Metamorph		transformer;
 
 	public TransformationFlow(final Metamorph transformer) {
 		this.transformer = transformer;
 	}
 
-//	public String applyRecord(final String record) {
-//
-//		final StringReader opener = new StringReader();
-//
-//		return apply(record, opener);
-//	}
+	// public String applyRecord(final String record) {
+	//
+	// final StringReader opener = new StringReader();
+	//
+	// return apply(record, opener);
+	// }
 
 	public String applyRecordDemo(final String record) {
 
@@ -56,21 +62,21 @@ public class TransformationFlow {
 		return applyDemo(record, opener);
 	}
 
-//	public String applyResource(final String resourcePath) {
-//
-////	public String applyResource(final String resourcePath) {
-////
-////		final ResourceOpener opener = new ResourceOpener();
-////
-////		return apply(resourcePath, opener);
-////	}
-//
-//	String applyResourceDemo(final String resourcePath) {
-//
-//		final ResourceOpener opener = new ResourceOpener();
-//
-//		return applyDemo(resourcePath, opener);
-//	}
+	// public String applyResource(final String resourcePath) {
+	//
+	// // public String applyResource(final String resourcePath) {
+	// //
+	// // final ResourceOpener opener = new ResourceOpener();
+	// //
+	// // return apply(resourcePath, opener);
+	// // }
+	//
+	// String applyResourceDemo(final String resourcePath) {
+	//
+	// final ResourceOpener opener = new ResourceOpener();
+	//
+	// return applyDemo(resourcePath, opener);
+	// }
 
 	public String applyResourceDemo(final String resourcePath) {
 
@@ -79,9 +85,9 @@ public class TransformationFlow {
 		return applyDemo(resourcePath, opener);
 	}
 
-	public String apply(final Iterator<Tuple<String,JsonNode>> tuples, final ObjectPipe<Iterator<Tuple<String,JsonNode>>, StreamReceiver> opener) {
+	public String apply(final Iterator<Tuple<String, JsonNode>> tuples, final ObjectPipe<Iterator<Tuple<String, JsonNode>>, StreamReceiver> opener) {
 
-		//final String recordDummy = "record";
+		// final String recordDummy = "record";
 
 		final StreamUnflattener unflattener = new StreamUnflattener();
 		final StreamJsonCollapser collapser = new StreamJsonCollapser();
@@ -90,6 +96,7 @@ public class TransformationFlow {
 		stringWriter.append('[');
 
 		final ObjectReceiver<String> objectReceiver = new ObjectReceiver<String>() {
+
 			@Override
 			public void process(final String obj) {
 				stringWriter.append(obj);
@@ -125,7 +132,7 @@ public class TransformationFlow {
 		return stringWriter.toString();
 	}
 
-	public String apply(final Iterator<Tuple<String,JsonNode>> tuples) {
+	public String apply(final Iterator<Tuple<String, JsonNode>> tuples) {
 		final JsonNodeReader opener = new JsonNodeReader();
 		return apply(tuples, opener);
 	}
@@ -178,12 +185,12 @@ public class TransformationFlow {
 
 	// TODO:
 
-//	public static TransformationFlow fromJob(final Job job) throws IOException, DMPConverterException {
-//
-//		final String morphScriptString = new MorphScriptBuilder().apply(job.getTransformations()).toString();
-//
-//		return fromString(morphScriptString);
-//	}
+	// public static TransformationFlow fromJob(final Job job) throws IOException, DMPConverterException {
+	//
+	// final String morphScriptString = new MorphScriptBuilder().apply(job.getTransformations()).toString();
+	//
+	// return fromString(morphScriptString);
+	// }
 
 	public static TransformationFlow fromTransformation(final Transformation transformation) {
 
@@ -193,13 +200,13 @@ public class TransformationFlow {
 
 		final String morphScriptString = null;
 
-				//new MorphScriptBuilder().apply(transformationsBuilder.build()).toString();
+		// new MorphScriptBuilder().apply(transformationsBuilder.build()).toString();
 
 		return fromString(morphScriptString);
 	}
-	
+
 	public static TransformationFlow fromTask(final Task task) throws DMPConverterException {
-		
+
 		final String morphScriptString = new MorphScriptBuilder().apply(task).toString();
 
 		return fromString(morphScriptString);

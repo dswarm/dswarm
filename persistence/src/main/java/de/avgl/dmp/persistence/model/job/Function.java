@@ -34,6 +34,10 @@ import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
+ * A function is a method that can be executed on data via a {@link Job} execution (i.e. a {@link Task}). A function mainly
+ * consists of a collection of parameters and a machine processable function description. Complex functions are
+ * {@link Transformation}s.
+ * 
  * @author tgaengler
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = true, defaultImpl = Function.class)
@@ -55,26 +59,47 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(AttributePath.class);
 
+	/**
+	 * A string that holds the serialised JSON object of a function description.
+	 */
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "FUNCTION_DESCRIPTION", columnDefinition = "VARCHAR(4000)", length = 4000)
 	private String									functionDescriptionString;
 
+	/**
+	 * A function description as JSON object.
+	 */
 	@Transient
 	private ObjectNode								functionDescription;
 
+	/**
+	 * A flag that indicates, whether the function description is initialised or not.
+	 */
 	@Transient
 	private boolean									functionDescriptionInitialized;
 
+	/**
+	 * A list of parameters.
+	 */
 	@Transient
 	private LinkedList<String>						parameters;
 
+	/**
+	 * A JSON array of the parameter list.
+	 */
 	@Transient
 	private ArrayNode								parametersJSON;
 
+	/**
+	 * A flag that indicates, whether the parameters are initialized or not.
+	 */
 	@Transient
 	private boolean									parametersInitialized;
 
+	/**
+	 * A string that hold the serialised JSON object of the parameters.
+	 */
 	@JsonIgnore
 	@Lob
 	@Access(AccessType.FIELD)
@@ -89,16 +114,29 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	@Enumerated(EnumType.STRING)
 	private final FunctionType						functionType;
 
+	/**
+	 * Creates a new function.
+	 */
 	public Function() {
 
 		functionType = FunctionType.Function;
 	}
 
+	/**
+	 * Creates a new function with the given function type, i.e. function or transformation.
+	 * 
+	 * @param functionTypeArg the type of the function
+	 */
 	public Function(final FunctionType functionTypeArg) {
 
 		functionType = functionTypeArg;
 	}
 
+	/**
+	 * Gets the parameters of the function.
+	 * 
+	 * @return the parameters of the function
+	 */
 	@XmlElement(name = "parameters")
 	public LinkedList<String> getParameters() {
 
@@ -107,21 +145,11 @@ public class Function extends ExtendedBasicDMPJPAObject {
 		return parameters;
 	}
 
-	@XmlElement(name = "function_description")
-	public ObjectNode getFunctionDescription() {
-
-		initFunctionDescription(false);
-
-		return functionDescription;
-	}
-
-	public void setFunctionDescription(final ObjectNode functionDescriptionArg) {
-
-		functionDescription = functionDescriptionArg;
-
-		refreshFunctionDescriptionString();
-	}
-
+	/**
+	 * Sets the parameters of the function.
+	 * 
+	 * @param parametersArg new parameters of the function
+	 */
 	public void setParameters(final LinkedList<String> parametersArg) {
 
 		if (parametersArg == null && parameters != null) {
@@ -146,6 +174,11 @@ public class Function extends ExtendedBasicDMPJPAObject {
 		refreshParametersString();
 	}
 
+	/**
+	 * Adds a new parameter to the parameters lists of the function
+	 * 
+	 * @param parameter a new parameter
+	 */
 	public void addParameter(final String parameter) {
 
 		if (parameter != null) {
@@ -167,6 +200,31 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	}
 
 	/**
+	 * Gets the machine processable function description
+	 * 
+	 * @return the machine processable function description
+	 */
+	@XmlElement(name = "function_description")
+	public ObjectNode getFunctionDescription() {
+
+		initFunctionDescription(false);
+
+		return functionDescription;
+	}
+
+	/**
+	 * Sets the machine processable function description
+	 * 
+	 * @param functionDescriptionArg a new machine processable function description
+	 */
+	public void setFunctionDescription(final ObjectNode functionDescriptionArg) {
+
+		functionDescription = functionDescriptionArg;
+
+		refreshFunctionDescriptionString();
+	}
+
+	/**
 	 * Gets the function type, e.g., function ({@link FunctionType#Function}) or transformation (
 	 * {@link FunctionType#Transformation}).
 	 * 
@@ -184,6 +242,10 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 	}
 
+	/**
+	 * Refreshs the string that holds the serialised JSON object of the parameters list. This method should be called after every
+	 * manipulation of the parameters list (to keep the states consistent).
+	 */
 	private void refreshParametersString() {
 
 		if (parameters != null) {
@@ -205,6 +267,12 @@ public class Function extends ExtendedBasicDMPJPAObject {
 		}
 	}
 
+	/**
+	 * Initialises the parameters list and JSON object from the string that holds the serialised JSON object of the parameters
+	 * list.
+	 * 
+	 * @param fromScratch flag that indicates, whether the parameters should be initialised from scratch or not
+	 */
 	private void initParameters(final boolean fromScratch) {
 
 		if (parametersJSON == null && !parametersInitialized) {
@@ -252,6 +320,10 @@ public class Function extends ExtendedBasicDMPJPAObject {
 		}
 	}
 
+	/**
+	 * Refreshs the string that holds the serialised JSON object of the function description. This method should be called after
+	 * every manipulation of the function description (to keep the states consistent).
+	 */
 	private void refreshFunctionDescriptionString() {
 
 		if (functionDescription == null) {
@@ -264,6 +336,11 @@ public class Function extends ExtendedBasicDMPJPAObject {
 		functionDescriptionString = functionDescription.toString();
 	}
 
+	/**
+	 * Initialises the function description from the string that holds the serialised JSON object of the function description.
+	 * 
+	 * @param fromScratch flag that indicates, whether the function description should be initialised from scratch or not
+	 */
 	private void initFunctionDescription(final boolean fromScratch) {
 
 		if (functionDescription == null && !functionDescriptionInitialized) {

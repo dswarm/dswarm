@@ -10,18 +10,27 @@ import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.service.AdvancedJPAService;
 
 /**
+ * A persistence service for {@link Attribute}s.
  * 
  * @author tgaengler
  *
  */
 public class AttributeService extends AdvancedJPAService<Attribute> {
 
+	/**
+	 * Creates a new attribute persistence service with the given entity manager provider.
+	 * 
+	 * @param entityManagerProvider an entity manager provider
+	 */
 	@Inject
 	public AttributeService(final Provider<EntityManager> entityManagerProvider) {
 
 		super(Attribute.class, entityManagerProvider);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void prepareObjectForRemoval(final Attribute object) {
 
@@ -29,6 +38,9 @@ public class AttributeService extends AdvancedJPAService<Attribute> {
 		// object.setAttributePaths(null);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void updateObjectInternal(final Attribute object, final Attribute updateObject, final EntityManager entityManager)
 			throws DMPPersistenceException {
