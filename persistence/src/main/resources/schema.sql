@@ -31,10 +31,6 @@
         drop
         foreign key FK_id7ig90c37glf3njn0928o0v0;
 
-    alter table DATA_SCHEMA 
-        drop 
-        foreign key FK_67hdhd4o40jypqxwdcq7tai28;
-
     alter table INPUT_ATTRIBUTE_PATHS_MAPPINGS
         drop
         foreign key FK_6c4ofueeyb3hbmv2wboyqw7n1;
@@ -338,12 +334,6 @@
         add constraint FK_id7ig90c37glf3njn0928o0v0 
         foreign key (DATA_SCHEMA) 
         references DATA_SCHEMA (ID);
-
-    alter table DATA_SCHEMA 
-        add index FK_67hdhd4o40jypqxwdcq7tai28 (RECORD_CLASS), 
-        add constraint FK_67hdhd4o40jypqxwdcq7tai28 
-        foreign key (RECORD_CLASS) 
-        references CLASS (ID);
 
     alter table INPUT_ATTRIBUTE_PATHS_MAPPINGS 
         add index FK_6c4ofueeyb3hbmv2wboyqw7n1 (INPUT_ATTRIBUTE_PATH_ID), 
