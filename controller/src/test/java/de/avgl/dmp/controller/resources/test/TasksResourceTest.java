@@ -9,6 +9,9 @@ import java.net.URL;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.validation.SchemaFactory;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -149,6 +152,25 @@ public class TasksResourceTest extends ResourceTest {
 				.post(Entity.json(finalTaskJSONString));
 
 		Assert.assertEquals("200 Created was expected", 200, response.getStatus());
+
+
+		// DD-277
+		final DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+		final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+		final javax.xml.validation.Schema schema = schemaFactory.newSchema();
+
+		System.out.println("DocumentBuilderFactory = " + builderFactory.getClass().getName());
+		try {
+			builderFactory.setSchema(schema);
+		} catch (final UnsupportedOperationException e) {
+			Assert.fail();
+		}
+		Assert.assertNotNull(builderFactory.getSchema());
+		Assert.assertEquals(builderFactory.getSchema(), schema);
+		// END DD-277
+
+
+
 
 		final String responseString = response.readEntity(String.class);
 
