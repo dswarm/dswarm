@@ -12,8 +12,7 @@ import de.avgl.dmp.converter.flow.CSVResourceFlowFactory;
 import de.avgl.dmp.converter.flow.CSVSourceResourceTriplesFlow;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.internal.impl.MemoryDBInputModel;
-import de.avgl.dmp.persistence.model.resource.Configuration;
-import de.avgl.dmp.persistence.model.resource.Resource;
+import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 
 @Singleton
@@ -30,14 +29,13 @@ public class CSVConverterEventRecorder {
 
 	@Subscribe
 	public void convertConfiguration(final CSVConverterEvent event) {
-		final Configuration configuration = event.getConfiguration();
-		final Resource resource = event.getResource();
+		final DataModel dataModel = event.getDataModel();
 
 		List<org.culturegraph.mf.types.Triple> result = null;
 		try {
-			final CSVSourceResourceTriplesFlow flow = CSVResourceFlowFactory.fromConfiguration(configuration, CSVSourceResourceTriplesFlow.class);
+			final CSVSourceResourceTriplesFlow flow = CSVResourceFlowFactory.fromDataModel(dataModel, CSVSourceResourceTriplesFlow.class);
 
-			final String path = resource.getAttribute("path").asText();
+			final String path = dataModel.getDataResource().getAttribute("path").asText();
 			result = flow.applyFile(path);
 
 		} catch (DMPConverterException | NullPointerException e) {
@@ -51,7 +49,7 @@ public class CSVConverterEventRecorder {
 
 				try {
 
-					internalServiceFactory.getMemoryDbInternalService().createObject(resource.getId(), configuration.getId(), mdbim);
+					internalServiceFactory.getMemoryDbInternalService().createObject(dataModel.getId(), mdbim);
 				} catch (final DMPPersistenceException e) {
 
 					e.printStackTrace();

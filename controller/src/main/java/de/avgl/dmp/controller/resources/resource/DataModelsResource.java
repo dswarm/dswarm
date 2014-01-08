@@ -29,8 +29,8 @@ import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.eventbus.CSVConverterEvent;
-import de.avgl.dmp.controller.eventbus.ConverterEvent;
 import de.avgl.dmp.controller.eventbus.SchemaEvent;
+import de.avgl.dmp.controller.eventbus.XMLConverterEvent;
 import de.avgl.dmp.controller.eventbus.XMLSchemaEvent;
 import de.avgl.dmp.controller.resources.ExtendedBasicDMPResource;
 import de.avgl.dmp.controller.status.DMPStatus;
@@ -253,11 +253,11 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 					break;
 				case "csv":
 
-					eventBusProvider.get().post(new CSVConverterEvent(configuration, dataModel.getDataResource()));
+					eventBusProvider.get().post(new CSVConverterEvent(dataModel));
 					break;
 				case "xml":
 
-					eventBusProvider.get().post(new ConverterEvent(dataModel));
+					eventBusProvider.get().post(new XMLConverterEvent(dataModel));
 					break;
 			}
 		}

@@ -1,29 +1,34 @@
 package de.avgl.dmp.converter.flow;
 
 import java.io.Reader;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
+import java.util.List;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.base.Optional;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.stream.source.FileOpener;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.base.Optional;
+
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.mf.stream.reader.CsvReader;
+import de.avgl.dmp.converter.mf.stream.source.BOMResourceOpener;
+import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
 import de.avgl.dmp.persistence.model.resource.Configuration;
+import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
+import de.avgl.dmp.persistence.model.resource.utils.DataModelUtils;
 
 /**
- * 
  * @author phorn
- *
  * @param <T>
  */
 public abstract class AbstractCSVResourceFlow<T> {
 
-	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(AbstractCSVResourceFlow.class);
+	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AbstractCSVResourceFlow.class);
 
 	private final String							encoding;
 
@@ -39,8 +44,140 @@ public abstract class AbstractCSVResourceFlow<T> {
 
 	private final int								discardRows;
 
-	Optional<Integer> 					atMost;
+	private final Optional<String>					dataModelId;
 
+	protected Optional<Integer>						atMost;
+	
+	protected final String									dataResourceBaseURI;
+	protected final String dataResourceSchemaBaseURI;
+
+	public AbstractCSVResourceFlow(final DataModel dataModel) throws DMPConverterException {
+
+		if (dataModel != null && dataModel.getId() != null) {
+
+			this.dataModelId = Optional.of(dataModel.getId().toString());
+		} else {
+
+			this.dataModelId = Optional.absent();
+		}
+
+		if (dataModel == null) {
+
+			throw new DMPConverterException("the data model shouldn't be null");
+		}
+
+		if (dataModel.getConfiguration() == null) {
+
+			throw new DMPConverterException("the data model configuration shouldn't be null");
+		}
+
+		if (dataModel.getConfiguration().getParameters() == null) {
+
+			throw new DMPConverterException("the data model configuration parameters shouldn't be null");
+		}
+
+		final Optional<String> encodingOptional = getStringParameter(dataModel.getConfiguration(), ConfigurationStatics.ENCODING);
+		final Optional<Character> escapeCharacterOptional = getCharParameter(dataModel.getConfiguration(), ConfigurationStatics.ESCAPE_CHARACTER);
+		final Optional<Character> quoteCharacterOptional = getCharParameter(dataModel.getConfiguration(), ConfigurationStatics.QUOTE_CHARACTER);
+		final Optional<Character> columnDelimiterOptional = getCharParameter(dataModel.getConfiguration(), ConfigurationStatics.COLUMN_DELIMITER);
+		final Optional<String> rowDelimiterOptional = getStringParameter(dataModel.getConfiguration(), ConfigurationStatics.ROW_DELIMITER);
+		final Optional<Integer> ignoreLinesOptional = getNumberParameter(dataModel.getConfiguration(), ConfigurationStatics.IGNORE_LINES);
+		final Optional<Integer> discardRowsOptional = getNumberParameter(dataModel.getConfiguration(), ConfigurationStatics.DISCARD_ROWS);
+		final Optional<Integer> atMostOptional = getNumberParameter(dataModel.getConfiguration(), ConfigurationStatics.AT_MOST);
+
+		this.encoding = encodingOptional.or(ConfigurationStatics.DEFAULT_ENCODING);
+		this.escapeCharacter = escapeCharacterOptional.or(ConfigurationStatics.DEFAULT_ESCAPE_CHARACTER);
+		this.quoteCharacter = quoteCharacterOptional.or(ConfigurationStatics.DEFAULT_QUOTE_CHARACTER);
+		this.columnDelimiter = columnDelimiterOptional.or(ConfigurationStatics.DEFAULT_COLUMN_DELIMITER);
+		this.rowDelimiter = rowDelimiterOptional.or(ConfigurationStatics.DEFAULT_ROW_DELIMITER);
+		this.ignoreLines = ignoreLinesOptional.or(ConfigurationStatics.DEFAULT_IGNORE_LINES);
+		this.discardRows = discardRowsOptional.or(ConfigurationStatics.DEFAULT_DISCARD_ROWS);
+		this.atMost = atMostOptional;
+
+		try {
+			Charset.forName(this.encoding);
+		} catch (final UnsupportedCharsetException e) {
+			throw new DMPConverterException(String.format("Unsupported Encoding - [%s]", e.getCharsetName()));
+		}
+		
+		dataResourceBaseURI = DataModelUtils.determineDataResourceBaseURI(dataModel);
+		dataResourceSchemaBaseURI = DataModelUtils.determineDataResourceSchemaBaseURI(dataModel);
+	}
+
+	public AbstractCSVResourceFlow(final String encoding, final Character escapeCharacter, final Character quoteCharacter,
+			final Character columnDelimiter, final String rowDelimiter) {
+
+		this.encoding = encoding;
+		this.escapeCharacter = escapeCharacter;
+		this.quoteCharacter = quoteCharacter;
+		this.columnDelimiter = columnDelimiter;
+		this.rowDelimiter = rowDelimiter;
+
+		this.ignoreLines = ConfigurationStatics.DEFAULT_IGNORE_LINES;
+		this.discardRows = ConfigurationStatics.DEFAULT_DISCARD_ROWS;
+		this.atMost = Optional.absent();
+
+		this.dataModelId = null;
+		this.dataResourceBaseURI = null;
+		this.dataResourceSchemaBaseURI = null;
+	}
+
+	public AbstractCSVResourceFlow(final Configuration configuration) throws DMPConverterException {
+
+		if (configuration == null) {
+
+			throw new DMPConverterException("the configuration shouldn't be null");
+		}
+
+		if (configuration.getParameters() == null) {
+
+			throw new DMPConverterException("the configuration parameters shouldn't be null");
+		}
+
+		final Optional<String> encodingOptional = getStringParameter(configuration, ConfigurationStatics.ENCODING);
+		final Optional<Character> escapeCharacterOptional = getCharParameter(configuration, ConfigurationStatics.ESCAPE_CHARACTER);
+		final Optional<Character> quoteCharacterOptional = getCharParameter(configuration, ConfigurationStatics.QUOTE_CHARACTER);
+		final Optional<Character> columnDelimiterOptional = getCharParameter(configuration, ConfigurationStatics.COLUMN_DELIMITER);
+		final Optional<String> rowDelimiterOptional = getStringParameter(configuration, ConfigurationStatics.ROW_DELIMITER);
+		final Optional<Integer> ignoreLinesOptional = getNumberParameter(configuration, ConfigurationStatics.IGNORE_LINES);
+		final Optional<Integer> discardRowsOptional = getNumberParameter(configuration, ConfigurationStatics.DISCARD_ROWS);
+		final Optional<Integer> atMostOptional = getNumberParameter(configuration, ConfigurationStatics.AT_MOST);
+
+		this.encoding = encodingOptional.or(ConfigurationStatics.DEFAULT_ENCODING);
+		this.escapeCharacter = escapeCharacterOptional.or(ConfigurationStatics.DEFAULT_ESCAPE_CHARACTER);
+		this.quoteCharacter = quoteCharacterOptional.or(ConfigurationStatics.DEFAULT_QUOTE_CHARACTER);
+		this.columnDelimiter = columnDelimiterOptional.or(ConfigurationStatics.DEFAULT_COLUMN_DELIMITER);
+		this.rowDelimiter = rowDelimiterOptional.or(ConfigurationStatics.DEFAULT_ROW_DELIMITER);
+		this.ignoreLines = ignoreLinesOptional.or(ConfigurationStatics.DEFAULT_IGNORE_LINES);
+		this.discardRows = discardRowsOptional.or(ConfigurationStatics.DEFAULT_DISCARD_ROWS);
+		this.atMost = atMostOptional;
+
+		try {
+			Charset.forName(this.encoding);
+		} catch (final UnsupportedCharsetException e) {
+			throw new DMPConverterException(String.format("Unsupported Encoding - [%s]", e.getCharsetName()));
+		}
+
+		this.dataModelId = null;
+		this.dataResourceBaseURI = null;
+		this.dataResourceSchemaBaseURI = null;
+	}
+
+	protected AbstractCSVResourceFlow() {
+
+		this.encoding = ConfigurationStatics.DEFAULT_ENCODING;
+		this.escapeCharacter = ConfigurationStatics.DEFAULT_ESCAPE_CHARACTER;
+		this.quoteCharacter = ConfigurationStatics.DEFAULT_QUOTE_CHARACTER;
+		this.columnDelimiter = ConfigurationStatics.DEFAULT_COLUMN_DELIMITER;
+		this.rowDelimiter = ConfigurationStatics.DEFAULT_ROW_DELIMITER;
+		this.ignoreLines = ConfigurationStatics.DEFAULT_IGNORE_LINES;
+		this.discardRows = ConfigurationStatics.DEFAULT_DISCARD_ROWS;
+		this.atMost = Optional.absent();
+
+		this.dataModelId = null;
+		this.dataResourceBaseURI = null;
+		this.dataResourceSchemaBaseURI = null;
+	}
 
 	private JsonNode getParameterValue(final Configuration configuration, final String key) throws DMPConverterException {
 
@@ -108,68 +245,6 @@ public abstract class AbstractCSVResourceFlow<T> {
 		return Optional.of(intValue);
 	}
 
-	protected AbstractCSVResourceFlow() {
-		this.encoding = ConfigurationStatics.DEFAULT_ENCODING;
-		this.escapeCharacter = ConfigurationStatics.DEFAULT_ESCAPE_CHARACTER;
-		this.quoteCharacter = ConfigurationStatics.DEFAULT_QUOTE_CHARACTER;
-		this.columnDelimiter = ConfigurationStatics.DEFAULT_COLUMN_DELIMITER;
-		this.rowDelimiter = ConfigurationStatics.DEFAULT_ROW_DELIMITER;
-		this.ignoreLines = ConfigurationStatics.DEFAULT_IGNORE_LINES;
-		this.discardRows = ConfigurationStatics.DEFAULT_DISCARD_ROWS;
-		this.atMost = Optional.absent();
-	}
-
-	AbstractCSVResourceFlow(final String encoding, final Character escapeCharacter, final Character quoteCharacter,
-	                        final Character columnDelimiter, final String rowDelimiter) {
-
-		this.encoding = encoding;
-		this.escapeCharacter = escapeCharacter;
-		this.quoteCharacter = quoteCharacter;
-		this.columnDelimiter = columnDelimiter;
-		this.rowDelimiter = rowDelimiter;
-
-		this.ignoreLines = ConfigurationStatics.DEFAULT_IGNORE_LINES;
-		this.discardRows = ConfigurationStatics.DEFAULT_DISCARD_ROWS;
-		this.atMost = Optional.absent();
-	}
-
-	AbstractCSVResourceFlow(final Configuration configuration) throws DMPConverterException {
-
-		if (configuration == null) {
-
-			throw new DMPConverterException("the configuration shouldn't be null");
-		}
-
-		if (configuration.getParameters() == null) {
-
-			throw new DMPConverterException("the configuration parameters shouldn't be null");
-		}
-
-		final Optional<String> encodingOptional = getStringParameter(configuration, ConfigurationStatics.ENCODING);
-		final Optional<Character> escapeCharacterOptional = getCharParameter(configuration, ConfigurationStatics.ESCAPE_CHARACTER);
-		final Optional<Character> quoteCharacterOptional = getCharParameter(configuration, ConfigurationStatics.QUOTE_CHARACTER);
-		final Optional<Character> columnDelimiterOptional = getCharParameter(configuration, ConfigurationStatics.COLUMN_DELIMITER);
-		final Optional<String> rowDelimiterOptional = getStringParameter(configuration, ConfigurationStatics.ROW_DELIMITER);
-		final Optional<Integer> ignoreLinesOptional = getNumberParameter(configuration, ConfigurationStatics.IGNORE_LINES);
-		final Optional<Integer> discardRowsOptional = getNumberParameter(configuration, ConfigurationStatics.DISCARD_ROWS);
-		final Optional<Integer> atMostOptional = getNumberParameter(configuration, ConfigurationStatics.AT_MOST);
-
-		this.encoding = encodingOptional.or(ConfigurationStatics.DEFAULT_ENCODING);
-		this.escapeCharacter = escapeCharacterOptional.or(ConfigurationStatics.DEFAULT_ESCAPE_CHARACTER);
-		this.quoteCharacter = quoteCharacterOptional.or(ConfigurationStatics.DEFAULT_QUOTE_CHARACTER);
-		this.columnDelimiter = columnDelimiterOptional.or(ConfigurationStatics.DEFAULT_COLUMN_DELIMITER);
-		this.rowDelimiter = rowDelimiterOptional.or(ConfigurationStatics.DEFAULT_ROW_DELIMITER);
-		this.ignoreLines = ignoreLinesOptional.or(ConfigurationStatics.DEFAULT_IGNORE_LINES);
-		this.discardRows = discardRowsOptional.or(ConfigurationStatics.DEFAULT_DISCARD_ROWS);
-		this.atMost = atMostOptional;
-
-		try {
-			Charset.forName(this.encoding);
-		} catch (final UnsupportedCharsetException e) {
-			throw new DMPConverterException(String.format("Unsupported Encoding - [%s]", e.getCharsetName()));
-		}
-	}
-
 	public T applyFile(final String filePath) throws DMPConverterException {
 
 		final FileOpener opener = new FileOpener();
@@ -180,15 +255,23 @@ public abstract class AbstractCSVResourceFlow<T> {
 
 		return apply(filePath, opener);
 	}
+	
+	public T applyResource(final String resourcePath) throws DMPConverterException {
+
+		final BOMResourceOpener opener = new BOMResourceOpener();
+
+		return apply(resourcePath, opener);
+	}
 
 	public T apply(final String obj, final ObjectPipe<String, ObjectReceiver<Reader>> opener) throws DMPConverterException {
 
 		// set parsing attributes
-		final CsvReader reader = new CsvReader(escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter,
-				ignoreLines, discardRows, atMost);
+		final CsvReader reader = new CsvReader(escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter, ignoreLines, discardRows, atMost);
 
 		// TODO: process header from configuration
 		reader.setHeader(true);
+		reader.setDataResourceBaseURI(dataResourceBaseURI);
+		reader.setDataResourceSchemaBaseURI(dataResourceSchemaBaseURI);
 
 		final CsvReader pipe = opener.setReceiver(reader);
 

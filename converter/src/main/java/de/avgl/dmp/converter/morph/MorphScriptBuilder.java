@@ -40,6 +40,7 @@ import com.google.common.io.InputSupplier;
 import com.google.common.io.Resources;
 
 import de.avgl.dmp.converter.DMPConverterException;
+import de.avgl.dmp.init.util.DMPStatics;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.Mapping;
@@ -243,7 +244,7 @@ public class MorphScriptBuilder {
 		rootElement.setAttribute("xmlns", "http://www.culturegraph.org/metamorph");
 		rootElement.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
 		rootElement.setAttribute("xsi:schemaLocation", "http://www.culturegraph.org/metamorph metamorph.xsd");
-		rootElement.setAttribute("entityMarker", ".");
+		rootElement.setAttribute("entityMarker", DMPStatics.ATTRIBUTE_DELIMITER.toString());
 		rootElement.setAttribute("version", "1");
 		doc.appendChild(rootElement);
 

@@ -26,8 +26,10 @@ import de.avgl.dmp.converter.mf.stream.RecordAwareJsonEncoder;
 import de.avgl.dmp.converter.mf.stream.reader.JsonNodeReader;
 import de.avgl.dmp.converter.morph.MorphScriptBuilder;
 import de.avgl.dmp.converter.pipe.StreamJsonCollapser;
+import de.avgl.dmp.converter.pipe.StreamOutWriter;
 import de.avgl.dmp.converter.pipe.StreamUnflattener;
 import de.avgl.dmp.converter.reader.QucosaReader;
+import de.avgl.dmp.init.util.DMPStatics;
 import de.avgl.dmp.persistence.model.job.Task;
 import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.model.types.Tuple;
@@ -89,7 +91,7 @@ public class TransformationFlow {
 
 		// final String recordDummy = "record";
 
-		final StreamUnflattener unflattener = new StreamUnflattener();
+		final StreamUnflattener unflattener = new StreamUnflattener("", DMPStatics.ATTRIBUTE_DELIMITER);
 		final StreamJsonCollapser collapser = new StreamJsonCollapser();
 
 		final StringWriter stringWriter = new StringWriter();
@@ -122,6 +124,8 @@ public class TransformationFlow {
 
 		final RecordAwareJsonEncoder converter = new RecordAwareJsonEncoder(jsonEncoder);
 		jsonEncoder.setReceiver(objectReceiver);
+		
+		// final StreamOutWriter streamOutWriter = new StreamOutWriter();
 
 		opener.setReceiver(transformer).setReceiver(unflattener).setReceiver(collapser).setReceiver(converter);
 

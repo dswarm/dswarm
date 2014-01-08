@@ -1,14 +1,25 @@
 package de.avgl.dmp.controller.resources.test;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.apache.commons.io.FileUtils;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,11 +27,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.io.Resources;
-import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 import de.avgl.dmp.controller.resources.test.utils.ClaszesResourceTestUtils;
 import de.avgl.dmp.controller.resources.test.utils.ConfigurationsResourceTestUtils;
@@ -32,14 +38,10 @@ import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
 import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
+import de.avgl.dmp.persistence.model.resource.utils.DataModelUtils;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
 
 public class TasksCsvResourceTest extends ResourceTest {
 
@@ -146,6 +148,25 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
 		taskJSON.put("input_data_model", finalDataModelJSON);
+
+		// manipulate attributes
+		final ObjectNode mappingJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) ((ObjectNode) taskJSON).get("job")).get("mappings")).get(0);
+
+		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataResourceSchemaBaseURI(dataModel);
+
+		final ObjectNode outputAttributePathAttributeJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) mappingJSON.get("output_attribute_path"))
+				.get("attributes")).get(0);
+		final String outputAttributeName = outputAttributePathAttributeJSON.get("name").asText();
+		outputAttributePathAttributeJSON.put("id", dataResourceSchemaBaseURI + outputAttributeName);
+
+		final ArrayNode inputAttributePathsJSON = (ArrayNode) mappingJSON.get("input_attribute_paths");
+
+		for (final JsonNode inputAttributePathsJSONNode : inputAttributePathsJSON) {
+
+			final ObjectNode inputAttributeJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) inputAttributePathsJSONNode).get("attributes")).get(0);
+			final String inputAttributeName = inputAttributeJSON.get("name").asText();
+			inputAttributeJSON.put("id", dataResourceSchemaBaseURI + inputAttributeName);
+		}
 
 		final String finalTaskJSONString = objectMapper.writeValueAsString(taskJSON);
 
