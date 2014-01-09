@@ -240,7 +240,7 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 
 		// START schema preparation
 
-		for (int i = 1; i < 6; i++) {
+		for (int i = 1; i <= 6; i++) {
 
 			final String attributeJSONFileName = "attribute" + i + ".json";
 
@@ -255,7 +255,7 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 		String schemaJSONString = DMPPersistenceUtil.getResourceAsString("schema.json");
 		final ObjectNode schemaJSON = objectMapper.readValue(schemaJSONString, ObjectNode.class);
 
-		for (int j = 1; j < 4; j++) {
+		for (int j = 1; j <= 4; j++) {
 
 			final String attributePathJSONFileName = "attribute_path" + j + ".json";
 
@@ -315,7 +315,7 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 		final DataModel dataModel = dataModelsResourceTestUtils.createObject(dataModelJSONString, expectedDataModel);
 
 		dataModels.put(dataModel.getId(), dataModel);
-		
+
 		System.out.println("data model JSON = '" + dataModelJSONString + "'");
 
 		return dataModel;

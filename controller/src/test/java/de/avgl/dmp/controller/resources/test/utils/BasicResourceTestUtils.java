@@ -1,6 +1,7 @@
 package de.avgl.dmp.controller.resources.test.utils;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,24 +27,24 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends
 	protected final Class<POJOCLASS>	pojoClass;
 
 	protected final String			pojoClassName;
-	
+
 	protected final POJOCLASSPERSISTENCESERVICE			persistenceService;
-	
+
 	protected final Class<POJOCLASSPERSISTENCESERVICE>	persistenceServiceClass;
-	
+
 	protected final ObjectMapper objectMapper;
 
 	public BasicResourceTestUtils(final String resourceIdentifier, final Class<POJOCLASS> pojoClassArg, final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg) {
 
 		super(resourceIdentifier);
-		
+
 		pojoClass = pojoClassArg;
 		pojoClassName = pojoClass.getSimpleName();
-		
+
 		persistenceServiceClass = persistenceServiceClassArg;
-		
+
 		persistenceService = injector.getInstance(persistenceServiceClass);
-		
+
 		objectMapper = injector.getInstance(ObjectMapper.class);
 	}
 
@@ -89,17 +90,22 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends
 			compareObjects(expectedObject, actualObject);
 		}
 	}
-	
+
+	public List<POJOCLASS> getObjects() {
+
+		return persistenceService.getObjects();
+	}
+
 	public POJOCLASS createObject(final String objectJSONFileName) throws Exception {
-		
+
 		final String objectJSONString = DMPPersistenceUtil.getResourceAsString(objectJSONFileName);
 		final POJOCLASS expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
 
 		final POJOCLASS actualObject = createObject(objectJSONString, expectedObject);
-		
+
 		return actualObject;
 	}
-	
+
 	public POJOCLASS createObject(final String objectJSONString, final POJOCLASS expectedObject) throws Exception {
 
 		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
@@ -117,19 +123,22 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends
 
 		return actualObject;
 	}
-	
+
 	public void deleteObject(final POJOCLASS object) {
 
-		// clean-up DB
+		if (object != null) {
 
-		final POJOCLASSIDTYPE objectId = object.getId();
+			// clean-up DB
 
-		persistenceService.deleteObject(objectId);
+			final POJOCLASSIDTYPE objectId = object.getId();
 
-		final POJOCLASS deletedObject = persistenceService.getObject(objectId);
+			persistenceService.deleteObject(objectId);
 
-		Assert.assertNull("the deleted " + pojoClassName + " should be null", deletedObject);
+			final POJOCLASS deletedObject = persistenceService.getObject(objectId);
+
+			Assert.assertNull("the deleted " + pojoClassName + " should be null", deletedObject);
+		}
 	}
-	
+
 	public abstract void reset();
 }

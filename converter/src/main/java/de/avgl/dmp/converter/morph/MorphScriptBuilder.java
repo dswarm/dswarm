@@ -49,7 +49,7 @@ import de.avgl.dmp.persistence.model.job.Transformation;
 
 /**
  * Creates a metamorph script from a given {@link Task}.
- * 
+ *
  * @author phorn
  * @author tgaengler
  *
@@ -374,15 +374,15 @@ public class MorphScriptBuilder {
 					data.appendChild(comp);
 
 					previousProcessingComponent = processingComponent;
-					
+
 					final Set<Component> outputComponents = previousProcessingComponent.getOutputComponents();
 
 					if (outputComponents != null && !outputComponents.isEmpty()) {
-						
+
 						// TODO: only one output component for now
 						processingComponent = outputComponents.iterator().next();
 					} else {
-						
+
 						processingComponent = null;
 					}
 				}
