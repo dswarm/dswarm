@@ -30,6 +30,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import de.avgl.dmp.init.DMPException;
+import de.avgl.dmp.init.util.DMPStatics;
 import de.avgl.dmp.persistence.model.DMPJPAObject;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
@@ -398,7 +399,7 @@ public class AttributePath extends DMPJPAObject {
 
 			if (!first) {
 
-				sb.append(".");
+				sb.append(DMPStatics.ATTRIBUTE_DELIMITER);
 			} else {
 
 				first = false;

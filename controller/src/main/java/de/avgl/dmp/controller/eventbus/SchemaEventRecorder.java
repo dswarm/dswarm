@@ -21,6 +21,7 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
+import de.avgl.dmp.persistence.model.resource.utils.DataModelUtils;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
@@ -34,16 +35,13 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
 @Singleton
 public class SchemaEventRecorder {
 
-	private static final org.apache.log4j.Logger	LOG								= org.apache.log4j.Logger.getLogger(SchemaEventRecorder.class);
+	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(SchemaEventRecorder.class);
 
 	private final AttributePathService				attributePathService;
 	private final AttributeService					attributeService;
 	private final ClaszService						claszService;
 	private final DataModelService					dataModelService;
 	private final SchemaService						schemaService;
-
-	private String									dataResourceBaseURI;
-	private boolean									dataResourceBaseURIInitialized	= false;
 
 	@Inject
 	public SchemaEventRecorder(final AttributePathService attributePathService, final AttributeService attributeService,
@@ -86,6 +84,8 @@ public class SchemaEventRecorder {
 			schema = schemaService.createObject();
 		}
 
+		final String dataResourceBaseSchemaURI = DataModelUtils.determineDataResourceSchemaBaseURI(dataModel);
+
 		final Clasz clasz;
 
 		if (schema.getRecordClass() != null) {
@@ -93,9 +93,7 @@ public class SchemaEventRecorder {
 			clasz = schema.getRecordClass();
 		} else {
 
-			final String recordClassBaseURI = determineDataResourceBaseURI(dataModel);
-
-			final String recordClassURI = recordClassBaseURI + "#RecordType";
+			final String recordClassURI = dataResourceBaseSchemaURI + "RecordType";
 
 			final Clasz newClasz = claszService.createObject(recordClassURI);
 			newClasz.setName("record type");
@@ -109,12 +107,10 @@ public class SchemaEventRecorder {
 			stringAttributes.add(triple.getPredicate());
 		}
 
-		final String dataResourceBaseURI = determineDataResourceBaseURI(dataModel);
-
 		final Set<AttributePath> attributePaths = Sets.newLinkedHashSet();
 
 		for (final String stringAttribute : stringAttributes) {
-			final String attributeId = dataResourceBaseURI + "#" + stringAttribute;
+			final String attributeId = dataResourceBaseSchemaURI + stringAttribute;
 			final Attribute attribute = attributeService.createObject(attributeId);
 
 			attribute.setName(stringAttribute);
@@ -184,70 +180,5 @@ public class SchemaEventRecorder {
 		} catch (final DMPPersistenceException | DMPConverterException e) {
 			LOG.error("could not persist schema", e);
 		}
-	}
-
-	private String determineDataResourceBaseURI(final DataModel dataModel) {
-
-		if (dataResourceBaseURI == null && !dataResourceBaseURIInitialized) {
-
-			// create data resource base uri
-			final String dataResourceFilePath = dataModel.getDataResource().getAttribute("path").asText();
-			final String dataResourceName = dataResourceFilePath.substring(dataResourceFilePath.lastIndexOf("/"), dataResourceFilePath.length());
-
-			String dataResourceBaseURI = null;
-
-			if (dataResourceName != null) {
-
-				URI uri = null;
-
-				try {
-
-					uri = URI.create(dataResourceName);
-				} catch (final Exception e) {
-
-					e.printStackTrace();
-				}
-
-				if (uri != null) {
-
-					// data resource name could act as base uri
-
-					dataResourceBaseURI = dataResourceName;
-				} else {
-
-					// create uri with help of given data resource id
-
-					final StringBuilder sb = new StringBuilder();
-
-					if (dataModel.getDataResource().getId() != null) {
-
-						// create uri from resource id
-
-						sb.append("http://data.slub-dresden.de/resources/").append(dataModel.getDataResource().getId());
-					} else {
-
-						// create uri from data resource name
-
-						sb.append("http://data.slub-dresden.de/resources/").append(dataResourceName);
-					}
-
-					dataResourceBaseURI = sb.toString();
-				}
-			}
-
-			if (dataResourceBaseURI == null) {
-
-				final StringBuilder sb = new StringBuilder();
-
-				sb.append("http://data.slub-dresden.de/datamodels/").append(dataModel.getId());
-
-				dataResourceBaseURI = sb.toString();
-			}
-
-			this.dataResourceBaseURI = dataResourceBaseURI;
-			dataResourceBaseURIInitialized = true;
-		}
-
-		return dataResourceBaseURI;
 	}
 }

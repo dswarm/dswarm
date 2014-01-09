@@ -1,0 +1,78 @@
+[
+  {
+    "record_data": {"http://data.slub-dresden.de/resources/55/schema#description": "foo foo"},
+    "record_id": "3"
+  },
+  {
+    "record_data": {"http://data.slub-dresden.de/resources/55/schema#description": "blub blub"},
+    "record_id": "2"
+  },
+  {
+    "record_data": {"http://data.slub-dresden.de/resources/55/schema#description": "blx blx"},
+    "record_id": "1"
+  },
+  {
+    "record_data": {"http://data.slub-dresden.de/resources/55/schema#description": "plök plök"},
+    "record_id": "10"
+  },
+  {
+    "record_data": {"http://data.slub-dresden.de/resources/55/schema#description": "gluck gluck"},
+    "record_id": "7"
+  },
+  {
+    "record_data": {"http://data.slub-dresden.de/resources/55/schema#description": "möp möp"},
+    "record_id": "6"
+  },
+  {
+    "record_data": {"http://data.slub-dresden.de/resources/55/schema#description": "hup hup"},
+    "record_id": "5"
+  },
+  {
+    "record_data": {"http://data.slub-dresden.de/resources/55/schema#description": "bxr bxr"},
+    "record_id": "4"
+  },
+  {
+    "record_data": {"http://data.slub-dresden.de/resources/55/schema#description": "quxck quxck"},
+    "record_id": "9"
+  },
+  {
+    "record_data": {"http://data.slub-dresden.de/resources/55/schema#description": "quick quick"},
+    "record_id": "8"
+  },
+  {
+    "record_data": {"http://data.slub-dresden.de/resources/55/schema#description": "quietsch quietsch"},
+    "record_id": "11"
+  },
+  {
+    "record_data": {"http://data.slub-dresden.de/resources/55/schema#description": "quäk quäk"},
+    "record_id": "12"
+  },
+  {
+    "record_data": {"http://data.slub-dresden.de/resources/55/schema#description": "piep piep"},
+    "record_id": "13"
+  },
+  {
+    "record_data": {"http://data.slub-dresden.de/resources/55/schema#description": "mäh mäh"},
+    "record_id": "14"
+  },
+  {
+    "record_data": {"http://data.slub-dresden.de/resources/55/schema#description": "muh muh"},
+    "record_id": "15"
+  },
+  {
+    "record_data": {"http://data.slub-dresden.de/resources/55/schema#description": "mixu mixu"},
+    "record_id": "16"
+  },
+  {
+    "record_data": {"http://data.slub-dresden.de/resources/55/schema#description": "wxuwxu wxuwxu"},
+    "record_id": "17"
+  },
+  {
+    "record_data": {"http://data.slub-dresden.de/resources/55/schema#description": "brumm brumm"},
+    "record_id": "18"
+  },
+  {
+    "record_data": {"http://data.slub-dresden.de/resources/55/schema#description": "kikeriki kikeriki"},
+    "record_id": "19"
+  }
+]

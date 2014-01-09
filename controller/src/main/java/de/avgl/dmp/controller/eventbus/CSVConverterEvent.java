@@ -1,22 +1,17 @@
 package de.avgl.dmp.controller.eventbus;
 
-import de.avgl.dmp.persistence.model.resource.Configuration;
-import de.avgl.dmp.persistence.model.resource.Resource;
+import de.avgl.dmp.persistence.model.resource.DataModel;
 
-public class CSVConverterEvent {
-	private final Configuration configuration;
-	private final Resource resource;
+/**
+ * A converter event for CSV data resources that provides a {@link DataModel}.
+ * 
+ * @author tgaengler
+ *
+ */
+public class CSVConverterEvent extends ConverterEvent {
 
-	public CSVConverterEvent(final Configuration configuration, final Resource resource) {
-		this.configuration = configuration;
-		this.resource = resource;
-	}
+	public CSVConverterEvent(final DataModel dataModel) {
 
-	public Configuration getConfiguration() {
-		return configuration;
-	}
-
-	public Resource getResource() {
-		return resource;
+		super(dataModel);
 	}
 }
