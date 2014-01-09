@@ -10,5 +10,5 @@ public interface DMPStatics {
 	/**
 	 * The delimiter of an attribute path.
 	 */
-	public static final Character	ATTRIBUTE_DELIMITER	= '|';
+	public static final Character	ATTRIBUTE_DELIMITER	= '\u001E';
 }

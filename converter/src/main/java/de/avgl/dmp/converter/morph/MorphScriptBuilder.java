@@ -238,7 +238,7 @@ public class MorphScriptBuilder {
 		}
 
 		doc = docBuilder.newDocument();
-		doc.setXmlVersion("1.0");
+		doc.setXmlVersion("1.1");
 
 		final Element rootElement = doc.createElement("metamorph");
 		rootElement.setAttribute("xmlns", "http://www.culturegraph.org/metamorph");
