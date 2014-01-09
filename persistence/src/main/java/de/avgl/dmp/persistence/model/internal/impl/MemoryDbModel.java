@@ -44,4 +44,10 @@ public class MemoryDbModel implements Model {
 
 		return json;
 	}
+
+	@Override
+	public JsonNode getSchema() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

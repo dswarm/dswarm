@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Maps;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -15,6 +16,8 @@ import com.hp.hpl.jena.rdf.model.StmtIterator;
 import de.avgl.dmp.persistence.model.internal.Model;
 import de.avgl.dmp.persistence.model.internal.rdf.helper.ConverterHelper;
 import de.avgl.dmp.persistence.model.internal.rdf.helper.ConverterHelperHelper;
+import de.avgl.dmp.persistence.model.internal.rdf.helper.SchemaHelper;
+import de.avgl.dmp.persistence.model.internal.rdf.helper.SchemaHelperHelper;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -139,10 +142,48 @@ public class RDFModel implements Model {
 		return json;
 	}
 
+	@Override
+	public JsonNode getSchema() {
+
+		if (model == null) {
+
+			LOG.debug("model is null, can't convert model to JSON");
+
+			return null;
+		}
+
+		if (recordURI == null) {
+
+			LOG.debug("resource URI is null, can't convert model to JSON");
+
+			return null;
+		}
+
+		// System.out.println("write rdf model '" + resourceURI + "' in n3");
+		// model.write(System.out, "N3");
+
+		final Resource recordResource = model.getResource(recordURI);
+
+		if (recordResource == null) {
+
+			LOG.debug("couldn't find record resource for record  uri '" + recordURI + "' in model");
+
+			return null;
+		}
+
+		final ObjectNode json = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
+
+		final JsonNode result = determineSchema(recordResource, json, json);
+		
+		// TODO: normalize
+
+		return result;
+	}
+
 	private JsonNode convertRDFToJSON(final Resource resource, final ObjectNode rootJson, final ObjectNode json) {
 
 		final StmtIterator iter = resource.listProperties();
-		final Map<String, ConverterHelper> converterHelpers = Maps.newHashMap();
+		final Map<String, ConverterHelper> converterHelpers = Maps.newLinkedHashMap();
 		final List<Statement> statements = iter.toList();
 
 		for (final Statement statement : statements) {
@@ -200,6 +241,83 @@ public class RDFModel implements Model {
 		for (final Entry<String, ConverterHelper> converterHelperEntry : converterHelpers.entrySet()) {
 
 			converterHelperEntry.getValue().build(json);
+		}
+
+		return json;
+	}
+
+	private JsonNode determineSchema(final Resource resource, final ObjectNode rootJson, final JsonNode json) {
+
+		final StmtIterator iter = resource.listProperties();
+		final Map<String, SchemaHelper> schemaHelpers = Maps.newLinkedHashMap();
+		final List<Statement> statements = iter.toList();
+
+		for (final Statement statement : statements) {
+
+			final String propertyURI = statement.getPredicate().getURI();
+			final RDFNode rdfNode = statement.getObject();
+
+			if (rdfNode.isLiteral()) {
+
+				SchemaHelperHelper.addPropertyToSchemaHelpers(schemaHelpers, propertyURI);
+
+				continue;
+			}
+
+			if (rdfNode.asNode().isBlank()) {
+
+				final ObjectNode objectNode = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
+
+				final JsonNode jsonNode = determineSchema(rdfNode.asResource(), rootJson, objectNode);
+
+				SchemaHelperHelper.addJSONNodeToSchemaHelper(schemaHelpers, propertyURI, jsonNode);
+
+				continue;
+			}
+
+			if (rdfNode.isURIResource()) {
+
+				final Resource object = rdfNode.asResource();
+
+				final StmtIterator objectIter = object.listProperties();
+
+				if (objectIter == null || !objectIter.hasNext()) {
+
+					SchemaHelperHelper.addPropertyToSchemaHelpers(schemaHelpers, propertyURI);
+
+					continue;
+				}
+
+				// resource has an uri, but is deeper in the hierarchy -> it will be attached to the root json node as separate
+				// entry
+
+				final ObjectNode objectNode = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
+
+				final JsonNode jsonNode = determineSchema(rdfNode.asResource(), rootJson, objectNode);
+
+				SchemaHelperHelper.addJSONNodeToSchemaHelper(schemaHelpers, propertyURI, jsonNode);
+			}
+		}
+
+		if (schemaHelpers.size() > 1) {
+			
+			final ArrayNode arrayNode = DMPPersistenceUtil.getJSONObjectMapper().createArrayNode();
+
+			for (final Entry<String, SchemaHelper> schemaHelperEntry : schemaHelpers.entrySet()) {
+
+				final JsonNode result = schemaHelperEntry.getValue().build(DMPPersistenceUtil.getJSONObjectMapper().createObjectNode());
+
+				arrayNode.add(result);
+			}
+			
+			return arrayNode;
+		} else if(schemaHelpers.size() == 1) {
+			
+			final SchemaHelper schemaHelper = schemaHelpers.values().iterator().next();
+			
+			final JsonNode result = schemaHelper.build(DMPPersistenceUtil.getJSONObjectMapper().createObjectNode());
+			
+			return result;
 		}
 
 		return json;
