@@ -445,9 +445,9 @@
 			<id>SDVDMPDEV</id>
 			<properties>
 				<env>sdvdmpdev</env>
-				<rdb.url>${db.mysql.url}</rdb.url>
-				<rdb.username>${db.mysql.username}</rdb.username>
-				<rdb.password>${db.mysql.password}</rdb.password>
+				<rdb.url>jdbc:mysql://localhost:3306/dmp_dev?useUnicode=true&amp;characterEncoding=UTF-8</rdb.url>
+				<rdb.username>dmp</rdb.username>
+				<rdb.password>dmp_mysql</rdb.password>
 			</properties>
 		</profile>
 		<profile>
