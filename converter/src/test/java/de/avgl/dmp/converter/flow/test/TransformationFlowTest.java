@@ -1,6 +1,10 @@
 package de.avgl.dmp.converter.flow.test;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.io.StringWriter;
@@ -176,36 +180,28 @@ public class TransformationFlowTest extends GuicedTest {
 		final String actual = flow.apply(tuples);
 
 		final ArrayNode expectedJSONArray = objectMapper.readValue(expected, ArrayNode.class);
-		final ObjectNode expectedJSON = (ObjectNode) expectedJSONArray.get(0).get("record_data");
-		final String finalExpectedJSONString = objectMapper.writeValueAsString(expectedJSON);
+		final ArrayNode actualNodes = objectMapper.readValue(actual, ArrayNode.class);
+		
+		final String actualDataResourceSchemaBaseURI = DataModelUtils.determineDataResourceSchemaBaseURI(updatedDataModel);
 
-		final String expectedRecordId = expectedJSONArray.get(0).get("record_id").asText();
+		final String expectedRecordDataFieldNameExample = expectedJSONArray.get(0).get("record_data").fieldNames().next();
+		final String expectedDataResourceSchemaBaseURI = expectedRecordDataFieldNameExample.substring(0,
+				expectedRecordDataFieldNameExample.lastIndexOf('#') + 1);
 
-		Assert.assertNotNull("the expected record id shouldn't be null", expectedRecordId);
+		for (final JsonNode expectedNode : expectedJSONArray) {
+			final String recordId = expectedNode.get("record_id").asText();
+			final JsonNode actualNode = getRecord(recordId, actualNodes);
+			 
+			assertThat(actualNode, is(notNullValue()));
 
-		final ArrayNode actualJSONArray = objectMapper.readValue(actual, ArrayNode.class);
+			assertThat(expectedNode.get("record_id").asText(), equalTo(actualNode.get("record_id").asText()));
 
-		ObjectNode actualRecordEntryJSON = null;
+			final ObjectNode expectedRecordData = (ObjectNode) expectedNode.get("record_data");
+			final ObjectNode actualRecordData = (ObjectNode) actualNode.get("record_data");
 
-		for (final JsonNode actualJSONArrayEntryNode : actualJSONArray) {
-
-			final String actualRecordId = ((ObjectNode) actualJSONArrayEntryNode).get("record_id").asText();
-
-			if (expectedRecordId.equals(actualRecordId)) {
-
-				actualRecordEntryJSON = (ObjectNode) actualJSONArrayEntryNode;
-
-				break;
-			}
+			assertThat(expectedRecordData.get(expectedDataResourceSchemaBaseURI + "description").asText(),
+					equalTo(actualRecordData.get(actualDataResourceSchemaBaseURI + "description").asText()));
 		}
-
-		Assert.assertNotNull("the entry for record id '" + expectedRecordId + "' shouldn't be null in the in the actual record JSON array",
-				actualRecordEntryJSON);
-
-		final ObjectNode actualJSON = (ObjectNode) actualRecordEntryJSON.get("record_data");
-		final String finalActualJSONString = objectMapper.writeValueAsString(actualJSON);
-
-		assertEquals(finalExpectedJSONString.length(), finalActualJSONString.length());
 
 		// clean-up
 		dataModelService.deleteObject(updatedDataModel.getId());
@@ -402,5 +398,18 @@ public class TransformationFlowTest extends GuicedTest {
 				return endOfData();
 			}
 		};
+	}
+	
+	private JsonNode getRecord(final String recordId, final ArrayNode jsonArray) {
+		
+		for(final JsonNode jsonEntry : jsonArray) {
+			
+			if(recordId.equals(jsonEntry.get("record_id").asText())) {
+				
+				return jsonEntry;
+			}
+		}
+		
+		return null;
 	}
 }

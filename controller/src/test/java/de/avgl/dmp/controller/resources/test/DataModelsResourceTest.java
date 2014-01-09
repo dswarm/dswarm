@@ -40,6 +40,7 @@ import de.avgl.dmp.persistence.model.internal.Model;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
+import de.avgl.dmp.persistence.model.resource.utils.DataModelUtils;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
@@ -232,7 +233,7 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 
 		final InternalModelServiceFactory serviceFactory = DMPInjector.injector.getInstance(Key.get(InternalModelServiceFactory.class));
 		final InternalModelService service = serviceFactory.getMemoryDbInternalService();
-		final Optional<Map<String, Model>> data = service.getObjects(resource.getId(), config.getId(), Optional.of(atMost));
+		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getId(), Optional.of(atMost));
 
 		assertTrue(data.isPresent());
 		assertFalse(data.get().isEmpty());
@@ -250,12 +251,14 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 		assertThat(assoziativeJsonArray.size(), equalTo(atMost));
 
 		final JsonNode json = assoziativeJsonArray.get(recordId);
+		
+		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataResourceSchemaBaseURI(dataModel);
 
-		assertThat(json.get("id").asText(), equalTo(data.get().get(recordId).toJSON().get("id").asText()));
-		assertThat(json.get("year").asText(), equalTo(data.get().get(recordId).toJSON().get("year").asText()));
-		assertThat(json.get("description").asText(), equalTo(data.get().get(recordId).toJSON().get("description").asText()));
-		assertThat(json.get("name").asText(), equalTo(data.get().get(recordId).toJSON().get("name").asText()));
-		assertThat(json.get("isbn").asText(), equalTo(data.get().get(recordId).toJSON().get("isbn").asText()));
+		assertThat(json.get(dataResourceSchemaBaseURI + "id").asText(), equalTo(data.get().get(recordId).toJSON().get(dataResourceSchemaBaseURI + "id").asText()));
+		assertThat(json.get(dataResourceSchemaBaseURI + "year").asText(), equalTo(data.get().get(recordId).toJSON().get(dataResourceSchemaBaseURI + "year").asText()));
+		assertThat(json.get(dataResourceSchemaBaseURI + "description").asText(), equalTo(data.get().get(recordId).toJSON().get(dataResourceSchemaBaseURI + "description").asText()));
+		assertThat(json.get(dataResourceSchemaBaseURI + "name").asText(), equalTo(data.get().get(recordId).toJSON().get(dataResourceSchemaBaseURI + "name").asText()));
+		assertThat(json.get(dataResourceSchemaBaseURI + "isbn").asText(), equalTo(data.get().get(recordId).toJSON().get(dataResourceSchemaBaseURI + "isbn").asText()));
 
 		// clean up
 

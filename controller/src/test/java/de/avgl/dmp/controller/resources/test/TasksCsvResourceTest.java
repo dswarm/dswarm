@@ -1,9 +1,9 @@
 package de.avgl.dmp.controller.resources.test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -196,6 +196,12 @@ public class TasksCsvResourceTest extends ResourceTest {
 			actualNodes.put(node.get("record_id").asText(), node);
 		}
 
+		final String actualDataResourceSchemaBaseURI = DataModelUtils.determineDataResourceSchemaBaseURI(dataModel);
+
+		final String expectedRecordDataFieldNameExample = expectedJSONArray.get(0).get("record_data").fieldNames().next();
+		final String expectedDataResourceSchemaBaseURI = expectedRecordDataFieldNameExample.substring(0,
+				expectedRecordDataFieldNameExample.lastIndexOf('#') + 1);
+
 		for (final JsonNode expectedNode : expectedJSONArray) {
 			final JsonNode actualNode = actualNodes.get(expectedNode.get("record_id").asText());
 
@@ -203,13 +209,11 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 			assertThat(expectedNode.get("record_id").asText(), equalTo(actualNode.get("record_id").asText()));
 
-			final JsonNode expectedRecordData = expectedNode.get("record_data");
-			final String expectedRecordDataString = objectMapper.writeValueAsString(expectedRecordData);
+			final ObjectNode expectedRecordData = (ObjectNode) expectedNode.get("record_data");
+			final ObjectNode actualRecordData = (ObjectNode) actualNode.get("record_data");
 
-			final JsonNode actualRecordData = actualNode.get("record_data");
-			final String actualRecordDataString = objectMapper.writeValueAsString(actualRecordData);
-
-			assertThat(expectedRecordDataString.length(), equalTo(actualRecordDataString.length()));
+			assertThat(expectedRecordData.get(expectedDataResourceSchemaBaseURI + "description").asText(),
+					equalTo(actualRecordData.get(actualDataResourceSchemaBaseURI + "description").asText()));
 		}
 
 		LOG.debug("end task execution test");
