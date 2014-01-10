@@ -1,19 +1,27 @@
 package de.avgl.dmp.persistence.model.internal.impl;
 
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.TextNode;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 import de.avgl.dmp.persistence.model.internal.Model;
+import de.avgl.dmp.persistence.model.internal.rdf.helper.AttributePathHelper;
+import de.avgl.dmp.persistence.model.internal.rdf.helper.AttributePathHelperHelper;
 import de.avgl.dmp.persistence.model.internal.rdf.helper.ConverterHelper;
 import de.avgl.dmp.persistence.model.internal.rdf.helper.ConverterHelperHelper;
 import de.avgl.dmp.persistence.model.internal.rdf.helper.SchemaHelper;
@@ -145,6 +153,21 @@ public class RDFModel implements Model {
 	@Override
 	public JsonNode getSchema() {
 
+		final Set<AttributePathHelper> attributePaths = getAttributePaths();
+		
+		if(attributePaths == null) {
+			
+			return null;
+		}
+
+		final JsonNode schema = determineSchema(attributePaths);
+
+		return schema;
+	}
+	
+	@Override
+	public Set<AttributePathHelper> getAttributePaths() {
+		
 		if (model == null) {
 
 			LOG.debug("model is null, can't convert model to JSON");
@@ -173,11 +196,13 @@ public class RDFModel implements Model {
 
 		final ObjectNode json = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
 
-		final JsonNode result = determineSchema(recordResource, json, json);
-		
-		// TODO: normalize
+		final JsonNode result = determineUnnormalizedSchema(recordResource, json, json);
 
-		return result;
+		Set<AttributePathHelper> attributePaths = Sets.newCopyOnWriteArraySet();
+
+		attributePaths = determineAttributePaths(result, attributePaths, new AttributePathHelper());
+		
+		return attributePaths;
 	}
 
 	private JsonNode convertRDFToJSON(final Resource resource, final ObjectNode rootJson, final ObjectNode json) {
@@ -246,7 +271,7 @@ public class RDFModel implements Model {
 		return json;
 	}
 
-	private JsonNode determineSchema(final Resource resource, final ObjectNode rootJson, final JsonNode json) {
+	private JsonNode determineUnnormalizedSchema(final Resource resource, final ObjectNode rootJson, final JsonNode json) {
 
 		final StmtIterator iter = resource.listProperties();
 		final Map<String, SchemaHelper> schemaHelpers = Maps.newLinkedHashMap();
@@ -268,7 +293,7 @@ public class RDFModel implements Model {
 
 				final ObjectNode objectNode = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
 
-				final JsonNode jsonNode = determineSchema(rdfNode.asResource(), rootJson, objectNode);
+				final JsonNode jsonNode = determineUnnormalizedSchema(rdfNode.asResource(), rootJson, objectNode);
 
 				SchemaHelperHelper.addJSONNodeToSchemaHelper(schemaHelpers, propertyURI, jsonNode);
 
@@ -293,14 +318,14 @@ public class RDFModel implements Model {
 
 				final ObjectNode objectNode = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
 
-				final JsonNode jsonNode = determineSchema(rdfNode.asResource(), rootJson, objectNode);
+				final JsonNode jsonNode = determineUnnormalizedSchema(rdfNode.asResource(), rootJson, objectNode);
 
 				SchemaHelperHelper.addJSONNodeToSchemaHelper(schemaHelpers, propertyURI, jsonNode);
 			}
 		}
 
 		if (schemaHelpers.size() > 1) {
-			
+
 			final ArrayNode arrayNode = DMPPersistenceUtil.getJSONObjectMapper().createArrayNode();
 
 			for (final Entry<String, SchemaHelper> schemaHelperEntry : schemaHelpers.entrySet()) {
@@ -309,17 +334,189 @@ public class RDFModel implements Model {
 
 				arrayNode.add(result);
 			}
-			
+
 			return arrayNode;
-		} else if(schemaHelpers.size() == 1) {
-			
+		} else if (schemaHelpers.size() == 1) {
+
 			final SchemaHelper schemaHelper = schemaHelpers.values().iterator().next();
-			
+
 			final JsonNode result = schemaHelper.build(DMPPersistenceUtil.getJSONObjectMapper().createObjectNode());
-			
+
 			return result;
 		}
 
 		return json;
+	}
+
+	private Set<AttributePathHelper> determineAttributePaths(final JsonNode unnormalizedSchema, Set<AttributePathHelper> attributePaths,
+			AttributePathHelper attributePath) {
+
+		if (ArrayNode.class.isInstance(unnormalizedSchema)) {
+
+			final ArrayNode jsonArray = (ArrayNode) unnormalizedSchema;
+
+			for (final JsonNode entryNode : jsonArray) {
+
+				final Set<AttributePathHelper> newAttributePaths = determineAttributePaths(entryNode, attributePaths, attributePath);
+				attributePaths.addAll(newAttributePaths);
+			}
+
+		} else if (ObjectNode.class.isInstance(unnormalizedSchema)) {
+
+			final ObjectNode jsonObject = (ObjectNode) unnormalizedSchema;
+
+			Iterator<String> fieldNames = jsonObject.fieldNames();
+
+			while (fieldNames.hasNext()) {
+
+				final String fieldName = fieldNames.next();
+
+				final AttributePathHelper newAttributePath = AttributePathHelperHelper.addAttributePath(fieldName, attributePaths, attributePath);
+
+				final JsonNode valueNode = jsonObject.get(fieldName);
+
+				final Set<AttributePathHelper> newAttributePaths = determineAttributePaths(valueNode, attributePaths, newAttributePath);
+				attributePaths.addAll(newAttributePaths);
+			}
+
+		} else if (TextNode.class.isInstance(unnormalizedSchema)) {
+
+			AttributePathHelperHelper.addAttributePath(unnormalizedSchema, attributePaths, attributePath);
+		}
+
+		return attributePaths;
+	}
+
+	private JsonNode determineSchema(final Set<AttributePathHelper> attributePaths) {
+
+		if (attributePaths.size() > 1) {
+
+			return generateSchema(Lists.newArrayList(attributePaths), 1);
+		} else {
+
+			final AttributePathHelper attributePathHelper = attributePaths.iterator().next();
+
+			if (attributePathHelper.length() > 1) {
+
+				// only one attribute path
+				final LinkedList<String> attributePath = attributePathHelper.getAttributePath();
+
+				boolean deepestAttributeTransformed = false;
+
+				JsonNode previousAttribute = null;
+				ObjectNode currentAttribute = null;
+
+				while (attributePath.size() > 0) {
+
+					final String attribute = attributePath.getLast();
+
+					if (deepestAttributeTransformed) {
+
+						currentAttribute = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
+						currentAttribute.put(attribute, previousAttribute);
+						previousAttribute = currentAttribute;
+					} else {
+
+						previousAttribute = new TextNode(attribute);
+						deepestAttributeTransformed = true;
+					}
+
+					attributePath.removeLast();
+				}
+
+				return currentAttribute;
+			} else {
+
+				// only one attribute
+
+				return new TextNode(attributePathHelper.toString());
+			}
+		}
+	}
+
+	private JsonNode generateSchema(final List<AttributePathHelper> attributePaths, final int level) {
+
+		final List<AttributePathHelper> orderedAttributePaths = AttributePathHelperHelper.prepareAttributePathHelpers(
+				Lists.newArrayList(attributePaths), level);
+
+		if (orderedAttributePaths == null) {
+
+			return null;
+		}
+
+		final boolean hasNextLevel = AttributePathHelperHelper.hasNextLevel(orderedAttributePaths, level);
+
+		final AttributePathHelper firstAttributePathInLevel = orderedAttributePaths.iterator().next();
+		final String firstRootAttributePathInLevel = AttributePathHelperHelper.determineLevelRootAttributePath(firstAttributePathInLevel, level);
+
+		final boolean levelAsArray = AttributePathHelperHelper.levelAsArray(orderedAttributePaths, firstRootAttributePathInLevel);
+
+		if (levelAsArray) {
+
+			final ArrayNode jsonArray = DMPPersistenceUtil.getJSONObjectMapper().createArrayNode();
+
+			// determine level root attribute paths
+			final Map<String, AttributePathHelper> levelRootAttributePaths = Maps.newHashMap();
+
+			for (final AttributePathHelper attributePathHelper : orderedAttributePaths) {
+
+				final String levelRootAttributePath = AttributePathHelperHelper.determineLevelRootAttributePath(attributePathHelper, level);
+
+				if (!levelRootAttributePaths.containsKey(levelRootAttributePath)) {
+
+					levelRootAttributePaths.put(levelRootAttributePath, attributePathHelper);
+				}
+			}
+
+			if (hasNextLevel) {
+
+				for (final Entry<String, AttributePathHelper> levelRootAttributePathEntry : levelRootAttributePaths.entrySet()) {
+
+					final JsonNode nextLevelSchemaJson = generateNextLevelSchemaForRootAttributePath(orderedAttributePaths,
+							levelRootAttributePathEntry.getKey(), levelRootAttributePathEntry.getValue(), level);
+
+					jsonArray.add(nextLevelSchemaJson);
+				}
+			} else {
+
+				for (final AttributePathHelper levelRootAttributePath : levelRootAttributePaths.values()) {
+
+					jsonArray.add(levelRootAttributePath.getAttributePath().getLast());
+				}
+			}
+
+			return jsonArray;
+		} else {
+
+			if (hasNextLevel) {
+
+				return generateNextLevelSchemaForRootAttributePath(orderedAttributePaths, firstRootAttributePathInLevel, firstAttributePathInLevel,
+						level);
+			} else {
+
+				return new TextNode(firstAttributePathInLevel.getAttributePath().getLast());
+			}
+		}
+	}
+
+	private JsonNode generateNextLevelSchemaForRootAttributePath(final List<AttributePathHelper> attributePaths, final String levelRootAttributePath,
+			final AttributePathHelper sampleAttributePath, final int level) {
+
+		final List<AttributePathHelper> nextLevelAttributePathsForRootAttributePath = AttributePathHelperHelper
+				.getNextAttributePathHelpersForLevelRootAttributePath(attributePaths, levelRootAttributePath, level);
+
+		if (nextLevelAttributePathsForRootAttributePath != null) {
+
+			final ObjectNode jsonObject = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
+
+			final JsonNode nextLevelAttributePathJson = generateSchema(nextLevelAttributePathsForRootAttributePath, level + 1);
+
+			jsonObject.put(sampleAttributePath.getAttributePath().get(level - 1), nextLevelAttributePathJson);
+
+			return jsonObject;
+		} else {
+
+			return new TextNode(sampleAttributePath.getAttributePath().get(level - 1));
+		}
 	}
 }
