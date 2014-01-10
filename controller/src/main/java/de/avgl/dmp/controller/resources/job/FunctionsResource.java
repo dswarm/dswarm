@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -94,5 +95,24 @@ public class FunctionsResource extends BasicFunctionsResource<FunctionService, F
 	public Response getObjects() throws DMPControllerException {
 
 		return super.getObjects();
+	}
+	
+	/**
+	 * This endpoint consumes a function as JSON representation and update this function in the database.
+	 * 
+	 * @param jsonObjectString a JSON representation of one function
+	 * @param id a function identifier
+	 * @return the updated function as JSON representation
+	 * @throws DMPControllerException
+	 */
+	@ApiOperation(value = "update function with given id ", notes = "Returns a new Function object.")
+	@PUT
+	@Path("/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateObject(@ApiParam(value = "function (as JSON)", required = true) final String jsonObjectString, 
+			@ApiParam(value = "function identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+
+		return super.updateObject(jsonObjectString, id);
 	}
 }

@@ -36,7 +36,6 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 	protected String									objectJSONString	= null;
 	protected POJOCLASS									expectedObject		= null;
 	protected Set<POJOCLASS>							expectedObjects		= null;
-	//protected POJOCLASSIDTYPE							objectId			= null;
 	protected String									updateObjectJSONFileName	= null;
 
 	protected final POJOCLASSPERSISTENCESERVICE			persistenceService;
@@ -160,11 +159,6 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 	@Test
 	public void testPUTObject() throws Exception {
 		LOG.debug("start PUT " + pojoClassName + " test");
-
-		/*POJOCLASSIDTYPE objectId = pojoClassResourceTestUtils.createObject(updateObjectJSONFileName).getId();
-
-		Assert.assertNotNull("couldn't get object id", objectId);
-		*/
 		
 		POJOCLASS actualObject = createObjectInternal();
 
@@ -201,7 +195,7 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 		pojoClassResourceTestUtils.reset();
 		compareObjects(actualObject, responseObject);
 
-		cleanUpDB(responseObject);
+		//cleanUpDB(responseObject);
 
 		LOG.debug("end PUT " + pojoClassName);
 	}

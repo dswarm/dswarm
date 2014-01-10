@@ -131,9 +131,9 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends
 	public POJOCLASS updateObject(final String objectJSONString, final POJOCLASS expectedObject, final String objectId) throws Exception {
 		
 		final Response response = target(objectId).request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(Entity.json(objectJSONString));
+				.put(Entity.json(objectJSONString));
 
-		Assert.assertEquals("201 Created was expected", 201, response.getStatus());
+		Assert.assertEquals("200 Updated was expected", 200, response.getStatus());
 
 		final String responseString = response.readEntity(String.class);
 

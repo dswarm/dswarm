@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -98,6 +99,25 @@ public class AttributePathsResource extends BasicResource<AttributePathService, 
 	public Response getObjects() throws DMPControllerException {
 
 		return super.getObjects();
+	}
+	
+	/**
+	 * This endpoint consumes a attribute path as JSON representation and update this attribute path in the database.
+	 * 
+	 * @param jsonObjectString a JSON representation of one attribute path
+	 * @param id a attribute path identifier
+	 * @return the updated attribute path as JSON representation
+	 * @throws DMPControllerException
+	 */
+	@ApiOperation(value = "update attribute path with given id ", notes = "Returns a new AttributePath object.")
+	@PUT
+	@Path("/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateObject(@ApiParam(value = "attribute path (as JSON)", required = true) final String jsonObjectString, 
+			@ApiParam(value = "attribute path identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+
+		return super.updateObject(jsonObjectString, id);
 	}
 
 	/**

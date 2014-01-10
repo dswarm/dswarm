@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -95,6 +96,25 @@ public class MappingsResource extends BasicDMPResource<MappingService, Mapping> 
 		return super.getObjects();
 	}
 
+	/**
+	 * This endpoint consumes a mapping as JSON representation and update this mapping in the database.
+	 * 
+	 * @param jsonObjectString a JSON representation of one mapping
+	 * @param id a mapping identifier
+	 * @return the updated mapping as JSON representation
+	 * @throws DMPControllerException
+	 */
+	@ApiOperation(value = "update mapping with given id ", notes = "Returns a new Mapping object.")
+	@PUT
+	@Path("/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateObject(@ApiParam(value = "mapping (as JSON)", required = true) final String jsonObjectString, 
+			@ApiParam(value = "mapping identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+
+		return super.updateObject(jsonObjectString, id);
+	}
+	
 	/**
 	 * {@inheritDoc}<br/>
 	 * Updates the name, transformation (component), input filter, output filter, input attribute paths and output attribute path

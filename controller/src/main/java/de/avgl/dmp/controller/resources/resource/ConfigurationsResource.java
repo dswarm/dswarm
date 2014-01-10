@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -101,6 +102,25 @@ public class ConfigurationsResource extends ExtendedBasicDMPResource<Configurati
 		return super.getObjects();
 	}
 
+	/**
+	 * This endpoint consumes a configuration as JSON representation and update this configuration in the database.
+	 * 
+	 * @param jsonObjectString a JSON representation of one configuration
+	 * @param id a configuration identifier
+	 * @return the updated configuration as JSON representation
+	 * @throws DMPControllerException
+	 */
+	@ApiOperation(value = "update configuration with given id ", notes = "Returns a new Configuration object.")
+	@PUT
+	@Path("/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateObject(@ApiParam(value = "configuration (as JSON)", required = true) final String jsonObjectString, 
+			@ApiParam(value = "configuration identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+
+		return super.updateObject(jsonObjectString, id);
+	}
+	
 	/**
 	 * {@inheritDoc}<br/>
 	 * Updates the name, description, resources and parameters of the configuration.
