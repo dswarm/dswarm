@@ -118,6 +118,34 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends
 		return actualObject;
 	}
 	
+	public POJOCLASS updateObject(final String objectId, final String objectJSONFileName) throws Exception {
+		
+		final String objectJSONString = DMPPersistenceUtil.getResourceAsString(objectJSONFileName);
+		final POJOCLASS expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
+
+		final POJOCLASS actualObject = updateObject(objectJSONString, expectedObject, objectId);
+		
+		return actualObject;
+	}
+	
+	public POJOCLASS updateObject(final String objectJSONString, final POJOCLASS expectedObject, final String objectId) throws Exception {
+		
+		final Response response = target(objectId).request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+				.post(Entity.json(objectJSONString));
+
+		Assert.assertEquals("201 Created was expected", 201, response.getStatus());
+
+		final String responseString = response.readEntity(String.class);
+
+		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
+
+		final POJOCLASS actualObject = objectMapper.readValue(responseString, pojoClass);
+
+		compareObjects(expectedObject, actualObject);
+
+		return actualObject;
+	}
+	
 	public void deleteObject(final POJOCLASS object) {
 
 		// clean-up DB

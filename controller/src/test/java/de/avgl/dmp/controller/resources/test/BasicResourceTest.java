@@ -36,6 +36,8 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 	protected String									objectJSONString	= null;
 	protected POJOCLASS									expectedObject		= null;
 	protected Set<POJOCLASS>							expectedObjects		= null;
+	//protected POJOCLASSIDTYPE							objectId			= null;
+	protected String									updateObjectJSONFileName	= null;
 
 	protected final POJOCLASSPERSISTENCESERVICE			persistenceService;
 
@@ -154,6 +156,55 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 
 		LOG.debug("end GET " + pojoClassName);
 	}
+	
+	@Test
+	public void testPUTObject() throws Exception {
+		LOG.debug("start PUT " + pojoClassName + " test");
+
+		/*POJOCLASSIDTYPE objectId = pojoClassResourceTestUtils.createObject(updateObjectJSONFileName).getId();
+
+		Assert.assertNotNull("couldn't get object id", objectId);
+		*/
+		
+		POJOCLASS actualObject = createObjectInternal();
+
+		String idEncoded = null;
+
+		try {
+
+			idEncoded = URLEncoder.encode(actualObject.getId().toString(), "UTF-8");
+		} catch (final UnsupportedEncodingException e) {
+
+			LOG.debug("couldn't encode id", e);
+
+			Assert.assertTrue(false);
+		}
+
+		Assert.assertNotNull("the id shouldn't be null", idEncoded);
+		
+		actualObject = updateObject(idEncoded);
+		
+		LOG.debug("try to retrieve updated " + pojoClassName + " with id '" + idEncoded + "'");
+
+		final Response response = target(idEncoded).request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+
+		final String responseObjectJSON = response.readEntity(String.class);
+
+		Assert.assertNotNull("response " + pojoClassName + " JSON shouldn't be null", responseObjectJSON);
+
+		final POJOCLASS responseObject = objectMapper.readValue(responseObjectJSON, pojoClass);
+
+		Assert.assertNotNull("response " + pojoClassName + " shouldn't be null", responseObject);
+
+		pojoClassResourceTestUtils.reset();
+		compareObjects(actualObject, responseObject);
+
+		cleanUpDB(responseObject);
+
+		LOG.debug("end PUT " + pojoClassName);
+	}
 
 	protected boolean compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) {
 
@@ -172,6 +223,11 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 	protected POJOCLASS createObjectInternal() throws Exception {
 
 		return pojoClassResourceTestUtils.createObject(objectJSONString, expectedObject);
+	}
+	
+	protected POJOCLASS updateObject(final String objectId) throws Exception {
+
+		return pojoClassResourceTestUtils.updateObject(objectId, updateObjectJSONFileName);
 	}
 
 	protected void cleanUpDB(final POJOCLASS object) {

@@ -11,5 +11,7 @@ public class FiltersResourceTest extends BasicResourceTest<FiltersResourceTestUt
 	public FiltersResourceTest() {
 
 		super(Filter.class, FilterService.class, "filters", "filter.json", new FiltersResourceTestUtils());
+		
+		updateObjectJSONFileName = "filter2.json";
 	}
 }

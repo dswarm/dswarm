@@ -220,6 +220,7 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 	 * database.
 	 * 
 	 * @param jsonObjectString a JSON representation of one object of the type of the POJO class
+	 * @param id an object id
 	 * @return the persisted object as JSON representation
 	 * @throws DMPControllerException
 	 */
