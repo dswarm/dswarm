@@ -420,7 +420,7 @@ public class InternalTripleService implements InternalModelService {
 
 				if (lastPartDelimiter != null) {
 
-					attributeName = attributeString.substring(attributeString.lastIndexOf(lastPartDelimiter), attributeString.length());
+					attributeName = attributeString.substring(attributeString.lastIndexOf(lastPartDelimiter) + 1, attributeString.length());
 				} else {
 
 					attributeName = attributeString;
