@@ -370,6 +370,8 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 
 		final Schema schema = dataModel.getSchema();
 		final Clasz recordClasz = schema.getRecordClass();
+		
+		// TODO: delete attributes and attribute paths from generated schema
 
 		pojoClassResourceTestUtils.deleteObject(dataModel);
 		schemasResourceTestUtils.deleteObject(schema);

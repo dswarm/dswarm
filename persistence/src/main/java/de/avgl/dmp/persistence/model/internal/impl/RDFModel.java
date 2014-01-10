@@ -38,7 +38,7 @@ public class RDFModel implements Model {
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(RDFModel.class);
 
 	private final com.hp.hpl.jena.rdf.model.Model	model;
-	private final String							recordURI;
+	private final Set<String>						recordURIs;
 	private final String							recordClassURI;
 
 	/**
@@ -49,7 +49,7 @@ public class RDFModel implements Model {
 	public RDFModel(final com.hp.hpl.jena.rdf.model.Model modelArg) {
 
 		model = modelArg;
-		recordURI = null;
+		recordURIs = null;
 		recordClassURI = null;
 	}
 
@@ -62,7 +62,13 @@ public class RDFModel implements Model {
 	public RDFModel(final com.hp.hpl.jena.rdf.model.Model modelArg, final String recordURIArg) {
 
 		model = modelArg;
-		recordURI = recordURIArg;
+		recordURIs = Sets.newHashSet();
+
+		if (recordURIArg != null) {
+
+			recordURIs.add(recordURIArg);
+		}
+		
 		recordClassURI = null;
 	}
 
@@ -77,7 +83,13 @@ public class RDFModel implements Model {
 	public RDFModel(final com.hp.hpl.jena.rdf.model.Model modelArg, final String recordURIArg, final String recordClassURIArg) {
 
 		model = modelArg;
-		recordURI = recordURIArg;
+		recordURIs = Sets.newHashSet();
+
+		if (recordURIArg != null) {
+
+			recordURIs.add(recordURIArg);
+		}
+
 		recordClassURI = recordClassURIArg;
 	}
 
@@ -98,7 +110,12 @@ public class RDFModel implements Model {
 	 */
 	public String getRecordURI() {
 
-		return recordURI;
+		if (recordURIs == null || recordURIs.isEmpty()) {
+
+			return null;
+		}
+
+		return recordURIs.iterator().next();
 	}
 
 	/**
@@ -109,6 +126,16 @@ public class RDFModel implements Model {
 	public String getRecordClassURI() {
 
 		return recordClassURI;
+	}
+	
+	public void setRecordURIs(final Set<String> recordURIsArg) {
+		
+		recordURIs.clear();
+		
+		if(recordURIsArg != null) {
+			
+			recordURIs.addAll(recordURIsArg);
+		}
 	}
 
 	/**
@@ -124,7 +151,7 @@ public class RDFModel implements Model {
 			return null;
 		}
 
-		if (recordURI == null) {
+		if (getRecordURI() == null) {
 
 			LOG.debug("resource URI is null, can't convert model to JSON");
 
@@ -134,11 +161,11 @@ public class RDFModel implements Model {
 		// System.out.println("write rdf model '" + resourceURI + "' in n3");
 		// model.write(System.out, "N3");
 
-		final Resource recordResource = model.getResource(recordURI);
+		final Resource recordResource = model.getResource(getRecordURI());
 
 		if (recordResource == null) {
 
-			LOG.debug("couldn't find record resource for record  uri '" + recordURI + "' in model");
+			LOG.debug("couldn't find record resource for record  uri '" + getRecordURI() + "' in model");
 
 			return null;
 		}
@@ -154,9 +181,9 @@ public class RDFModel implements Model {
 	public JsonNode getSchema() {
 
 		final Set<AttributePathHelper> attributePaths = getAttributePaths();
-		
-		if(attributePaths == null) {
-			
+
+		if (attributePaths == null) {
+
 			return null;
 		}
 
@@ -164,20 +191,20 @@ public class RDFModel implements Model {
 
 		return schema;
 	}
-	
+
 	@Override
 	public Set<AttributePathHelper> getAttributePaths() {
-		
+
 		if (model == null) {
 
-			LOG.debug("model is null, can't convert model to JSON");
+			LOG.debug("model is null, can't determine attribute paths from JSON");
 
 			return null;
 		}
 
-		if (recordURI == null) {
+		if (recordURIs == null) {
 
-			LOG.debug("resource URI is null, can't convert model to JSON");
+			LOG.debug("resource URIs are null, can't determine attribute paths from JSON");
 
 			return null;
 		}
@@ -185,11 +212,13 @@ public class RDFModel implements Model {
 		// System.out.println("write rdf model '" + resourceURI + "' in n3");
 		// model.write(System.out, "N3");
 
-		final Resource recordResource = model.getResource(recordURI);
+		// TODO: enable attribute path retrieval from all records
+
+		final Resource recordResource = model.getResource(getRecordURI());
 
 		if (recordResource == null) {
 
-			LOG.debug("couldn't find record resource for record  uri '" + recordURI + "' in model");
+			LOG.debug("couldn't find record resource for record  uri '" + getRecordURI() + "' in model");
 
 			return null;
 		}
@@ -201,7 +230,7 @@ public class RDFModel implements Model {
 		Set<AttributePathHelper> attributePaths = Sets.newCopyOnWriteArraySet();
 
 		attributePaths = determineAttributePaths(result, attributePaths, new AttributePathHelper());
-		
+
 		return attributePaths;
 	}
 
