@@ -360,10 +360,10 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 
 		System.out.println("expected JSON = '" + objectMapper.writeValueAsString(expectedJson) + "'");
 
-		assertThat(json.get("@status").asText(), equalTo(expectedJson.get("@status").asText()));
-		assertThat(json.get("@mabVersion").asText(), equalTo(expectedJson.get("@mabVersion").asText()));
-		assertThat(json.get("@typ").asText(), equalTo(expectedJson.get("@typ").asText()));
-		assertThat(json.get("feld").size(), equalTo(expectedJson.get("feld").size()));
+		assertThat(json.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status").asText(), equalTo(expectedJson.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status").asText()));
+		assertThat(json.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion").asText(), equalTo(expectedJson.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion").asText()));
+		assertThat(json.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ").asText(), equalTo(expectedJson.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ").asText()));
+		assertThat(json.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld").size(), equalTo(expectedJson.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld").size()));
 
 		// clean up
 		

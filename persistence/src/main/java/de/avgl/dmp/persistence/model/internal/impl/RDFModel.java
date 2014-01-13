@@ -212,7 +212,7 @@ public class RDFModel implements Model {
 		// System.out.println("write rdf model '" + resourceURI + "' in n3");
 		// model.write(System.out, "N3");
 
-		// TODO: enable attribute path retrieval from all records
+		// TODO: enable attribute path retrieval from all records, currently, only one record is utilised for schema determination
 
 		final Resource recordResource = model.getResource(getRecordURI());
 
@@ -246,12 +246,8 @@ public class RDFModel implements Model {
 			final RDFNode rdfNode = statement.getObject();
 
 			if (rdfNode.isLiteral()) {
-
-				String propName = "@" + propertyURI.substring(propertyURI.lastIndexOf('#') + 1);
-				if ("@value".equals(propName)) {
-					propName = "#text";
-				}
-				ConverterHelperHelper.addLiteralToConverterHelper(converterHelpers, propName, rdfNode);
+				
+				ConverterHelperHelper.addLiteralToConverterHelper(converterHelpers, propertyURI, rdfNode);
 
 				continue;
 			}
@@ -261,9 +257,8 @@ public class RDFModel implements Model {
 				final ObjectNode objectNode = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
 
 				final JsonNode jsonNode = convertRDFToJSON(rdfNode.asResource(), rootJson, objectNode);
-
-				final String propName = propertyURI.substring(propertyURI.lastIndexOf('#') + 1);
-				ConverterHelperHelper.addJSONNodeToConverterHelper(converterHelpers, propName, jsonNode);
+				
+				ConverterHelperHelper.addJSONNodeToConverterHelper(converterHelpers, propertyURI, jsonNode);
 
 				continue;
 			}
