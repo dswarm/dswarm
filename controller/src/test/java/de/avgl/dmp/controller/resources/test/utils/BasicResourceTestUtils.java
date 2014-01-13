@@ -27,24 +27,24 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends
 	protected final Class<POJOCLASS>	pojoClass;
 
 	protected final String			pojoClassName;
-
+	
 	protected final POJOCLASSPERSISTENCESERVICE			persistenceService;
-
+	
 	protected final Class<POJOCLASSPERSISTENCESERVICE>	persistenceServiceClass;
-
+	
 	protected final ObjectMapper objectMapper;
 
 	public BasicResourceTestUtils(final String resourceIdentifier, final Class<POJOCLASS> pojoClassArg, final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg) {
 
 		super(resourceIdentifier);
-
+		
 		pojoClass = pojoClassArg;
 		pojoClassName = pojoClass.getSimpleName();
-
+		
 		persistenceServiceClass = persistenceServiceClassArg;
-
+		
 		persistenceService = injector.getInstance(persistenceServiceClass);
-
+		
 		objectMapper = injector.getInstance(ObjectMapper.class);
 	}
 
@@ -97,15 +97,15 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends
 	}
 
 	public POJOCLASS createObject(final String objectJSONFileName) throws Exception {
-
+		
 		final String objectJSONString = DMPPersistenceUtil.getResourceAsString(objectJSONFileName);
 		final POJOCLASS expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
 
 		final POJOCLASS actualObject = createObject(objectJSONString, expectedObject);
-
+		
 		return actualObject;
 	}
-
+	
 	public POJOCLASS createObject(final String objectJSONString, final POJOCLASS expectedObject) throws Exception {
 
 		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
@@ -124,6 +124,34 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends
 		return actualObject;
 	}
 
+public POJOCLASS updateObject(final String objectId, final String objectJSONFileName) throws Exception {
+		
+		final String objectJSONString = DMPPersistenceUtil.getResourceAsString(objectJSONFileName);
+		final POJOCLASS expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
+
+		final POJOCLASS actualObject = updateObject(objectJSONString, expectedObject, objectId);
+		
+		return actualObject;
+	}
+	
+	public POJOCLASS updateObject(final String objectJSONString, final POJOCLASS expectedObject, final String objectId) throws Exception {
+		
+		final Response response = target(objectId).request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+				.put(Entity.json(objectJSONString));
+
+		Assert.assertEquals("200 Updated was expected", 200, response.getStatus());
+
+		final String responseString = response.readEntity(String.class);
+
+		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
+
+		final POJOCLASS actualObject = objectMapper.readValue(responseString, pojoClass);
+
+		compareObjects(expectedObject, actualObject);
+
+		return actualObject;
+	}
+	
 	public void deleteObject(final POJOCLASS object) {
 
 		if (object != null) {
@@ -139,6 +167,6 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends
 			Assert.assertNull("the deleted " + pojoClassName + " should be null", deletedObject);
 		}
 	}
-
+	
 	public abstract void reset();
 }
