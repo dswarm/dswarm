@@ -5,6 +5,8 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Map;
+import java.util.Set;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
@@ -23,8 +25,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
+import com.google.common.collect.Maps;
 import com.google.common.io.Resources;
 
+import de.avgl.dmp.controller.resources.test.utils.AttributePathsResourceTestUtils;
+import de.avgl.dmp.controller.resources.test.utils.AttributesResourceTestUtils;
 import de.avgl.dmp.controller.resources.test.utils.ClaszesResourceTestUtils;
 import de.avgl.dmp.controller.resources.test.utils.ConfigurationsResourceTestUtils;
 import de.avgl.dmp.controller.resources.test.utils.DataModelsResourceTestUtils;
@@ -35,6 +40,8 @@ import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
 import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
+import de.avgl.dmp.persistence.model.schema.Attribute;
+import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
@@ -54,6 +61,10 @@ public class TasksResourceTest extends ResourceTest {
 	private final SchemasResourceTestUtils			schemasResourceTestUtils;
 
 	private final ClaszesResourceTestUtils			classesResourceTestUtils;
+	
+	private final AttributesResourceTestUtils		attributesResourceTestUtils;
+
+	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
 
 	private final ObjectMapper						objectMapper	= injector.getInstance(ObjectMapper.class);
 
@@ -76,6 +87,8 @@ public class TasksResourceTest extends ResourceTest {
 		dataModelsResourceTestUtils = new DataModelsResourceTestUtils();
 		schemasResourceTestUtils = new SchemasResourceTestUtils();
 		classesResourceTestUtils = new ClaszesResourceTestUtils();
+		attributePathsResourceTestUtils = new AttributePathsResourceTestUtils();
+		attributesResourceTestUtils = new AttributesResourceTestUtils();
 	}
 
 	@Before
@@ -153,7 +166,6 @@ public class TasksResourceTest extends ResourceTest {
 
 		Assert.assertEquals("200 Created was expected", 200, response.getStatus());
 
-
 		// DD-277
 		final DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 		final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -168,9 +180,6 @@ public class TasksResourceTest extends ResourceTest {
 		Assert.assertNotNull(builderFactory.getSchema());
 		Assert.assertEquals(builderFactory.getSchema(), schema);
 		// END DD-277
-
-
-
 
 		final String responseString = response.readEntity(String.class);
 
@@ -195,9 +204,47 @@ public class TasksResourceTest extends ResourceTest {
 
 	@After
 	public void cleanUp() {
+		
+		final Map<String, Attribute>					attributes		= Maps.newHashMap();
 
+		final Map<Long, AttributePath>					attributePaths	= Maps.newLinkedHashMap();
+		
+		if (schema != null) {
+
+			final Set<AttributePath> attributePathsToDelete = schema.getAttributePaths();
+
+			if (attributePaths != null) {
+
+				for (final AttributePath attributePath : attributePathsToDelete) {
+
+					attributePaths.put(attributePath.getId(), attributePath);
+
+					final Set<Attribute> attributesToDelete = attributePath.getAttributes();
+
+					if (attributes != null) {
+
+						for (final Attribute attribute : attributesToDelete) {
+
+							attributes.put(attribute.getId(), attribute);
+						}
+					}
+				}
+			}
+		}
+		
 		dataModelsResourceTestUtils.deleteObject(dataModel);
 		schemasResourceTestUtils.deleteObject(schema);
+		
+		for (final AttributePath attributePath : attributePaths.values()) {
+
+			attributePathsResourceTestUtils.deleteObject(attributePath);
+		}
+
+		for (final Attribute attribute : attributes.values()) {
+
+			attributesResourceTestUtils.deleteObject(attribute);
+		}
+
 		classesResourceTestUtils.deleteObject(recordClass);
 		resourcesResourceTestUtils.deleteObject(resource);
 		configurationsResourceTestUtils.deleteObject(configuration);
