@@ -20,6 +20,7 @@
 		<jersey.version>2.4</jersey.version>
 		<h2k.version>2.2.0-b21</h2k.version>
 		<jetty.version>9.1.0.v20131115</jetty.version>
+		<maven.tomcat.version>2.2</maven.tomcat.version>
 	</properties>
 
 	<build>
@@ -63,7 +64,32 @@
 						<contextPath>/docs</contextPath>
 					</webApp>
 				</configuration>
-
+			</plugin>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>${maven.tomcat.version}</version>
+				<configuration>
+					<port>8087</port>
+					<path>/dmp</path>
+					<protocol>org.apache.coyote.http11.Http11NioProtocol</protocol>
+				</configuration>
+				<executions>
+					<execution>
+						<id>tomcat-run</id>
+						<goals>
+							<goal>exec-war-only</goal>
+						</goals>
+						<phase>package</phase>
+						<configuration>
+							<!-- optional, needed only if you want to use a preconfigured server.xml file -->
+							<!--<serverXml>src/main/tomcatconf/server.xml</serverXml>-->
+							<!-- optional values which can be configurable -->
+							<!--<attachArtifactClassifier>default value is exec-war but you can customize</attachArtifactClassifier>-->
+							<!--<attachArtifactClassifierType>default value is jar</attachArtifactClassifierType>-->
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -130,6 +156,7 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.jaxrs</groupId>
