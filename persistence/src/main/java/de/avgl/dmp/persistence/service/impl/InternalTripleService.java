@@ -34,6 +34,7 @@ import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
+import de.avgl.dmp.persistence.model.schema.utils.SchemaUtils;
 import de.avgl.dmp.persistence.service.InternalModelService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.schema.AttributePathService;
@@ -157,24 +158,24 @@ public class InternalTripleService implements InternalModelService {
 
 			finalDataModel = getDataModel(dataModelId);
 		}
-		
-		if(dataModel.getSchema() != null) {
-			
-			if(dataModel.getSchema().getRecordClass() != null) {
-				
+
+		if (dataModel.getSchema() != null) {
+
+			if (dataModel.getSchema().getRecordClass() != null) {
+
 				final String recordClassURI = dataModel.getSchema().getRecordClass().getId();
-				
+
 				final Set<com.hp.hpl.jena.rdf.model.Resource> recordResources = getRecordResources(recordClassURI, realModel);
-				
-				if(recordResources != null) {
-					
+
+				if (recordResources != null) {
+
 					final Set<String> recordURIs = Sets.newHashSet();
-					
-					for(final com.hp.hpl.jena.rdf.model.Resource recordResource : recordResources) {
-						
+
+					for (final com.hp.hpl.jena.rdf.model.Resource recordResource : recordResources) {
+
 						recordURIs.add(recordResource.getURI());
 					}
-					
+
 					rdfModel.setRecordURIs(recordURIs);
 				}
 			}
@@ -378,6 +379,11 @@ public class InternalTripleService implements InternalModelService {
 
 			// create new class
 			recordClass = classService.get().createObject(recordClassUri);
+			
+			final String recordClassName = SchemaUtils.determineRelativeURIPart(recordClassUri);
+
+			recordClass.setName(recordClassName);
+			
 			schema.setRecordClass(recordClass);
 		}
 
@@ -403,28 +409,7 @@ public class InternalTripleService implements InternalModelService {
 				final Attribute attribute = attributeService.get().createObject(attributeString);
 				attributes.add(attribute);
 
-				final String lastPartDelimiter;
-
-				if (attributeString.lastIndexOf("#") > 0) {
-
-					lastPartDelimiter = "#";
-				} else if (attributeString.lastIndexOf("/") > 0) {
-
-					lastPartDelimiter = "/";
-				} else {
-
-					lastPartDelimiter = null;
-				}
-
-				final String attributeName;
-
-				if (lastPartDelimiter != null) {
-
-					attributeName = attributeString.substring(attributeString.lastIndexOf(lastPartDelimiter) + 1, attributeString.length());
-				} else {
-
-					attributeName = attributeString;
-				}
+				final String attributeName = SchemaUtils.determineRelativeURIPart(attributeString);
 
 				attribute.setName(attributeName);
 			}
