@@ -1,9 +1,15 @@
 package de.avgl.dmp.controller.resources.test;
 
 import java.util.Map;
+import java.util.Set;
+
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -151,6 +157,205 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 		expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
 
 		// END project preparation
+	}
+
+	@Test
+	public void testPOSTObjectsWithNewEntities() throws Exception {
+
+		LOG.debug("start POST " + pojoClassName + "s with new entities test");
+
+		objectJSONString = DMPPersistenceUtil.getResourceAsString("project.w.new.entities.json");
+		// expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
+
+		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+				.post(Entity.json(objectJSONString));
+
+		Assert.assertEquals("201 Created was expected", 201, response.getStatus());
+
+		final String responseString = response.readEntity(String.class);
+
+		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
+
+		final Project actualObject = objectMapper.readValue(responseString, pojoClass);
+
+		Assert.assertNotNull("the response project shouldn't be null", actualObject);
+
+		// TODO: do comparison/check somehow
+
+		final DataModel inputDataModel = actualObject.getInputDataModel();
+
+		Resource inputDataResource = null;
+		Configuration inputConfiguration = null;
+		Schema inputSchema = null;
+
+		final Map<Long, AttributePath> attributePaths = Maps.newHashMap();
+
+		if (inputDataModel != null) {
+
+			inputDataResource = inputDataModel.getDataResource();
+			inputConfiguration = inputDataModel.getConfiguration();
+			inputSchema = inputDataModel.getSchema();
+
+			if (inputSchema != null) {
+
+				final Set<AttributePath> inputAttributePaths = inputSchema.getAttributePaths();
+
+				if (inputAttributePaths != null) {
+
+					for (final AttributePath inputAttributePath : inputAttributePaths) {
+
+						attributePaths.put(inputAttributePath.getId(), inputAttributePath);
+					}
+				}
+			}
+		}
+
+		final DataModel outputDataModel = actualObject.getOutputDataModel();
+
+		Schema outputSchema = null;
+
+		if (outputDataModel != null) {
+
+			outputSchema = outputDataModel.getSchema();
+
+			if (outputSchema != null) {
+
+				final Set<AttributePath> outputAttributePaths = outputSchema.getAttributePaths();
+
+				if (outputAttributePaths != null) {
+
+					for (final AttributePath outputAttributePath : outputAttributePaths) {
+
+						attributePaths.put(outputAttributePath.getId(), outputAttributePath);
+					}
+				}
+			}
+		}
+
+		final Map<Long, Mapping> mappings = Maps.newHashMap();
+		final Map<Long, Function> functions = Maps.newHashMap();
+		Transformation transformation = null;
+
+		final Set<Mapping> projectMappings = actualObject.getMappings();
+
+		if (projectMappings != null) {
+
+			for (final Mapping projectMapping : projectMappings) {
+
+				mappings.put(projectMapping.getId(), projectMapping);
+
+				final Component transformationComponent = projectMapping.getTransformation();
+
+				if (transformationComponent != null) {
+
+					final Function transformationComponentFunction = transformationComponent.getFunction();
+
+					if (transformationComponentFunction != null) {
+
+						if (Transformation.class.isInstance(transformationComponentFunction)) {
+
+							transformation = (Transformation) transformationComponentFunction;
+							
+							final Set<Component> components = transformation.getComponents();
+							
+							for(final Component component : components) {
+								
+								final Function componentFunction = component.getFunction();
+								
+								if(componentFunction != null) {
+									
+									functions.put(componentFunction.getId(), componentFunction);
+								}
+							}
+						} else {
+
+							functions.put(transformationComponentFunction.getId(), transformationComponentFunction);
+						}
+					}
+				}
+
+				final Set<AttributePath> projectMappingInputAttributePaths = projectMapping.getInputAttributePaths();
+				
+				if (projectMappingInputAttributePaths != null) {
+
+					for (final AttributePath inputAttributePath : projectMappingInputAttributePaths) {
+
+						attributePaths.put(inputAttributePath.getId(), inputAttributePath);
+					}
+				}
+				
+				final AttributePath projectMappingOutputAttributePath = projectMapping.getOutputAttributePath();
+				
+				if(projectMappingOutputAttributePath != null) {
+					
+					attributePaths.put(projectMappingOutputAttributePath.getId(), projectMappingOutputAttributePath);
+				}
+			}
+		}
+
+		final Set<Function> projectFunctions = actualObject.getFunctions();
+
+		if (projectFunctions != null) {
+
+			for (final Function projectFunction : projectFunctions) {
+
+				functions.put(projectFunction.getId(), projectFunction);
+			}
+		}
+
+		cleanUpDB(actualObject);
+
+		if (inputDataModel != null) {
+
+			dataModelsResourceTestUtils.deleteObject(inputDataModel);
+		}
+
+		if (outputDataModel != null) {
+
+			dataModelsResourceTestUtils.deleteObject(outputDataModel);
+		}
+
+		if (inputDataResource != null) {
+
+			resourcesResourceTestUtils.deleteObject(inputDataResource);
+		}
+
+		if (inputConfiguration != null) {
+
+			configurationsResourceTestUtils.deleteObject(inputConfiguration);
+		}
+
+		if (inputSchema != null) {
+
+			schemasResourceTestUtils.deleteObject(inputSchema);
+		}
+
+		if (outputSchema != null) {
+
+			schemasResourceTestUtils.deleteObject(outputSchema);
+		}
+
+		for (final Mapping mapping : mappings.values()) {
+
+			mappingsResourceTestUtils.deleteObject(mapping);
+		}
+
+		for (final AttributePath attributePath : attributePaths.values()) {
+
+			attributePathsResourceTestUtils.deleteObject(attributePath);
+		}
+
+		if (transformation != null) {
+
+			transformationsResourceTestUtils.deleteObject(transformation);
+		}
+
+		for (final Function function : functions.values()) {
+
+			functionsResourceTestUtils.deleteObject(function);
+		}
+
+		LOG.debug("end POST " + pojoClassName + "s with new entities test");
 	}
 
 	@After

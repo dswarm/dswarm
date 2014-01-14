@@ -113,4 +113,12 @@ public class ComponentsResource extends ExtendedBasicDMPResource<ComponentServic
 
 		return object;
 	}
+	
+	@Override
+	protected String prepareObjectJSONString(String objectJSONString) throws DMPControllerException {
+		
+		// TODO: remove id from parameter mappings (?) -> avoid dummy id creation there
+		
+		return objectJSONString;
+	}
 }

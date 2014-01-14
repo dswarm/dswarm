@@ -124,5 +124,13 @@ public class AttributesResource extends BasicResource<AttributeService, Attribut
 
 		return persistenceService.createObject(objectFromJSON.getId());
 	}
+	
+	@Override
+	protected String prepareObjectJSONString(String objectJSONString) throws DMPControllerException {
+		
+		// an attribute is not a complex object
+		
+		return objectJSONString;
+	}
 
 }

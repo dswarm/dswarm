@@ -121,4 +121,12 @@ public class ConfigurationsResource extends ExtendedBasicDMPResource<Configurati
 
 		return object;
 	}
+
+	@Override
+	protected String prepareObjectJSONString(final String objectJSONString) throws DMPControllerException {
+
+		// a configuration is not a complex object
+
+		return objectJSONString;
+	}
 }

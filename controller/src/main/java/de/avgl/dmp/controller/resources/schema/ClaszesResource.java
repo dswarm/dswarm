@@ -28,7 +28,6 @@ import de.avgl.dmp.persistence.service.schema.ClaszService;
  * A resource (controller service) for {@link Clasz}es.
  * 
  * @author tgaengler
- *
  */
 @RequestScoped
 @Api(value = "/classes", description = "Operations about classes.")
@@ -38,8 +37,8 @@ public class ClaszesResource extends BasicResource<ClaszService, Clasz, String> 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ClaszesResource.class);
 
 	/**
-	 * Creates a new resource (controller service) for {@link Clasz}s with the provider of the class persistence
-	 * service, the object mapper and metrics registry.
+	 * Creates a new resource (controller service) for {@link Clasz}s with the provider of the class persistence service, the
+	 * object mapper and metrics registry.
 	 * 
 	 * @param claszServiceProviderArg the class persistence service provider
 	 * @param objectMapperArg an object mapper
@@ -71,8 +70,7 @@ public class ClaszesResource extends BasicResource<ClaszService, Clasz, String> 
 	}
 
 	/**
-	 * This endpoint consumes a class as JSON representation and persists this class in the
-	 * database.
+	 * This endpoint consumes a class as JSON representation and persists this class in the database.
 	 * 
 	 * @param jsonObjectString a JSON representation of one class
 	 * @return the persisted class as JSON representation
@@ -124,4 +122,11 @@ public class ClaszesResource extends BasicResource<ClaszService, Clasz, String> 
 		return persistenceService.createObject(objectFromJSON.getId());
 	}
 
+	@Override
+	protected String prepareObjectJSONString(String objectJSONString) throws DMPControllerException {
+
+		// a class is not a complex object
+
+		return objectJSONString;
+	}
 }

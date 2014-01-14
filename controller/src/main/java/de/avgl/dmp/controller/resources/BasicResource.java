@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -16,7 +19,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.codahale.metrics.Timer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.NullNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Sets;
 import com.google.inject.Provider;
 
 import de.avgl.dmp.controller.DMPControllerException;
@@ -73,6 +81,19 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 	 */
 	@Context
 	UriInfo													uri;
+	
+	// TODO: this might be not the best solution ...
+	protected static final Set<String> toBeSkippedJsonNodes = Sets.newHashSet();
+	
+	static {
+		
+		// add here all identifiers for attributes that bear native JSON objects/arrays
+		
+		toBeSkippedJsonNodes.add("parameters");
+		toBeSkippedJsonNodes.add("attributes");
+		toBeSkippedJsonNodes.add("parameter_mappings");
+		toBeSkippedJsonNodes.add("function_description");
+	}
 
 	/**
 	 * Creates a new resource (controller service) for the given concrete POJO class with the provider of the concrete persistence
@@ -158,7 +179,7 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 		dmpStatus.stop(context);
 		return buildResponse(objectJSON);
 	}
-	
+
 	/**
 	 * This endpoint consumes an object of the type of the POJO class as JSON representation and persists this object in the
 	 * database.
@@ -328,11 +349,13 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 
 		final POJOCLASS objectFromJSON;
 
-		// get the deserialisised object from the JSON string
+		final String enhancedObjectJSONString = prepareObjectJSONString(objectJSONString);
+
+		// get the deserialisised object from the enhanced JSON string
 
 		try {
 
-			objectFromJSON = objectMapper.readValue(objectJSONString, clasz);
+			objectFromJSON = objectMapper.readValue(enhancedObjectJSONString, clasz);
 		} catch (final JsonMappingException je) {
 
 			throw new DMPJsonException("something went wrong while deserializing the " + className + " JSON string", je);
@@ -344,6 +367,7 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 		}
 
 		if (objectFromJSON == null) {
+
 			throw new DMPControllerException("deserialized " + className + " is null");
 		}
 
@@ -373,14 +397,136 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 
 		try {
 
-			persistenceService.updateObjectTransactional(preparedObject);
+			final POJOCLASS updatedObject = persistenceService.updateObjectTransactional(preparedObject);
+
+			return updatedObject;
 		} catch (final DMPPersistenceException e) {
 
 			BasicResource.LOG.debug("something went wrong while " + className + " updating");
 
 			throw new DMPControllerException("something went wrong while " + className + " updating\n" + e.getMessage());
 		}
+	}
 
-		return preparedObject;
+	protected String prepareObjectJSONString(final String objectJSONString) throws DMPControllerException {
+
+		if (objectJSONString == null) {
+
+			BasicResource.LOG.debug("the " + className + " JSON string shouldn't be null");
+
+			throw new DMPControllerException("the " + className + " JSON string shouldn't be null");
+		}
+
+		if (objectJSONString.trim().isEmpty()) {
+
+			BasicResource.LOG.debug("the " + className + " JSON string shouldn't be empty");
+
+			throw new DMPControllerException("the " + className + " JSON string shouldn't be empty");
+		}
+
+		final Class<? extends JsonNode> jsonClasz;
+
+		if (objectJSONString.trim().startsWith("{")) {
+
+			jsonClasz = ObjectNode.class;
+		} else if (objectJSONString.trim().startsWith("[")) {
+
+			jsonClasz = ArrayNode.class;
+		} else {
+
+			BasicResource.LOG.debug("the " + className + " JSON string doesn't starts with '{' or '['");
+
+			throw new DMPControllerException("the " + className + " JSON string doesn't starts with '{' or '['");
+		}
+
+		final JsonNode jsonNode;
+
+		try {
+
+			jsonNode = objectMapper.readValue(objectJSONString, jsonClasz);
+		} catch (final JsonMappingException je) {
+
+			throw new DMPJsonException("something went wrong while deserializing the " + className + " JSON string", je);
+		} catch (final IOException e) {
+
+			BasicResource.LOG.debug("something went wrong while deserializing the " + className + " JSON string");
+
+			throw new DMPControllerException("something went wrong while deserializing the " + className + " JSON string.\n" + e.getMessage());
+		}
+
+		if (jsonNode == null) {
+
+			throw new DMPControllerException("deserialized " + className + " is null");
+		}
+		
+		enhanceJSONNode(jsonNode);
+
+		try {
+
+			final String enhancedObjectJSONString = objectMapper.writeValueAsString(jsonNode);
+
+			return enhancedObjectJSONString;
+		} catch (final JsonProcessingException e) {
+
+			BasicResource.LOG.debug("couldn't serialize enhanced " + className + " JSON.");
+
+			throw new DMPControllerException("couldn't serialize enhanced " + className + " JSON.\n" + e.getMessage());
+		}
+	}
+
+	protected JsonNode enhanceJSONNode(final JsonNode jsonNode) {
+
+		if (jsonNode == null || NullNode.class.isInstance(jsonNode)) {
+
+			return jsonNode;
+		}
+
+		if (ObjectNode.class.isInstance(jsonNode)) {
+
+			final ObjectNode objectNode = (ObjectNode) jsonNode;
+
+			enhanceObjectJSON(objectNode);
+		} else if (ArrayNode.class.isInstance(jsonNode)) {
+
+			final ArrayNode arrayNode = (ArrayNode) jsonNode;
+
+			for (final JsonNode entryNode : arrayNode) {
+				
+				enhanceJSONNode(entryNode);
+			}
+		}
+
+		return jsonNode;
+	}
+
+	protected JsonNode enhanceObjectJSON(final ObjectNode objectJSON) {
+
+		final JsonNode idNode = objectJSON.get("id");
+
+		if (idNode == null || NullNode.class.isInstance(idNode)) {
+
+			final long randomDummyId = DMPPersistenceUtil.generateRandomDummyId();
+
+			// add dummy id to object
+			objectJSON.put("id", randomDummyId);
+		}
+		
+		final Iterator<Entry<String, JsonNode>> iter = objectJSON.fields();
+		
+		while(iter.hasNext()) {
+			
+			final Entry<String, JsonNode> nodeEntry = iter.next();
+			
+			if(toBeSkippedJsonNodes.contains(nodeEntry.getKey())) {
+				
+				// skip such nodes
+				
+				continue;
+			}
+			
+			enhanceJSONNode(nodeEntry.getValue());
+		}
+
+		return objectJSON;
 	}
 }
