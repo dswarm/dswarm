@@ -104,7 +104,8 @@ public class AttributePathService extends BasicIDJPAService<AttributePath> {
 		AttributePath object = null;
 		
 		String queryString = "from " + AttributePath.class.getName() + " where attributePath = '" + jsonPath + "'";
-		final EntityManager entityManager = entityManagerProvider.get();
+		//final EntityManager entityManager = entityManagerProvider.get();
+		final EntityManager entityManager = acquire();
 		final TypedQuery<AttributePath> query = entityManager.createQuery(queryString, AttributePath.class);
 
 		try {
@@ -132,15 +133,10 @@ public class AttributePathService extends BasicIDJPAService<AttributePath> {
 		updateObject.setAttributePath(attributes);
 	}
 	
-	public List<AttributePath> getAllAttributePaths(){
-		final EntityManager entityManager = entityManagerProvider.get();
-		final TypedQuery<AttributePath> query = entityManager.createQuery("from " + AttributePath.class.getName(), AttributePath.class);
-		return query.getResultList();
-	}
 	
 	public List<AttributePath> getAttributePathsWithPath(String jsonPath){
 		String queryString = "from " + AttributePath.class.getName() + " where attributePath = '" + jsonPath + "'";
-		final EntityManager entityManager = entityManagerProvider.get();
+		final EntityManager entityManager = acquire();
 		final TypedQuery<AttributePath> query = entityManager.createQuery(queryString, AttributePath.class);
 		return query.getResultList();
 	}

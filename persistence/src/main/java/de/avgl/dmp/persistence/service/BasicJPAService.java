@@ -41,7 +41,7 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 	/**
 	 * The entity manager provider (powered by Guice).
 	 */
-	protected final Provider<EntityManager>			entityManagerProvider;
+	private final Provider<EntityManager>			entityManagerProvider;
 
 	/**
 	 * Creates a new persistence service for the given concrete POJO class and the entity manager provider.
@@ -62,7 +62,7 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 	 *
 	 * @return the EntityManager
 	 */
-	private EntityManager acquire() {
+	protected EntityManager acquire() {
 		return acquire(true);
 	}
 
