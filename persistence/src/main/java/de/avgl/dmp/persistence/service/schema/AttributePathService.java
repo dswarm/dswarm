@@ -1,7 +1,5 @@
 package de.avgl.dmp.persistence.service.schema;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,7 +13,6 @@ import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
-import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.service.AdvancedJPAService;
@@ -83,7 +80,7 @@ public class AttributePathService extends BasicIDJPAService<AttributePath> {
 			
 		} else {
 
-			AttributePathService.LOG.debug(AttributePath.class.getName() + " with path '" + path
+			AttributePathService.LOG.debug("attribute path with path '" + path
 					+ "' exists already in the database. Will return the existing object, instead of creating a new one");
 
 			object = existingObject;
@@ -104,7 +101,6 @@ public class AttributePathService extends BasicIDJPAService<AttributePath> {
 		AttributePath object = null;
 		
 		String queryString = "from " + AttributePath.class.getName() + " where attributePath = '" + jsonPath + "'";
-		//final EntityManager entityManager = entityManagerProvider.get();
 		final EntityManager entityManager = acquire(true);
 		final TypedQuery<AttributePath> query = entityManager.createQuery(queryString, AttributePath.class);
 

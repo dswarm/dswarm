@@ -110,10 +110,8 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<AttributePat
 		Assert.assertNotNull(type + " shouldn't be null", object);
 		Assert.assertNotNull(type + " id shouldn't be null", object.getId());
 		Assert.assertNotNull(type + " path shouldn't be null", object.getAttributePathAsJSONObject());
-		
-		System.err.println(AttributePath.class.getName());
 
-		LOG.debug("created new " + AttributePath.class.getName() + " with id = '" + object.getId() + "'" + " and path = '" + object.getAttributePathAsJSONObject() + "'");
+		LOG.debug("created new attribute path with id = '" + object.getId() + "'" + " and path = '" + object.getAttributePathAsJSONObject() + "'");
 		
 		// why this?
 		getObject(object);

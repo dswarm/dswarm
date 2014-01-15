@@ -121,8 +121,6 @@ public class AttributePath extends DMPJPAObject {
 			attributes = Sets.newLinkedHashSet(orderedAttributes);
 
 			initAttributePath(false);
-			
-			refreshAttributePathString();
 		}
 	}
 
@@ -159,6 +157,8 @@ public class AttributePath extends DMPJPAObject {
 	public String getAttributePathAsJSONObject() {
 
 		initAttributePath(false);
+		
+		refreshAttributePathString();
 
 		return attributePath;
 	}
