@@ -10,8 +10,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -19,6 +17,7 @@ import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.BasicDMPResource;
+import de.avgl.dmp.controller.resources.job.utils.FiltersResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Filter;
 import de.avgl.dmp.persistence.service.job.FilterService;
@@ -32,7 +31,7 @@ import de.avgl.dmp.persistence.service.job.FilterService;
 @RequestScoped
 @Api(value = "/filters", description = "Operations about filters.")
 @Path("filters")
-public class FiltersResource extends BasicDMPResource<FilterService, Filter> {
+public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, FilterService, Filter> {
 
 	/**
 	 * Creates a new resource (controller service) for {@link Filter}s with the provider of the filter persistence service, the
@@ -43,9 +42,9 @@ public class FiltersResource extends BasicDMPResource<FilterService, Filter> {
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public FiltersResource(final Provider<FilterService> filterServiceProviderArg, final ObjectMapper objectMapper, final DMPStatus dmpStatus) {
+	public FiltersResource(final FiltersResourceUtils pojoClassResourceUtilsArg, final DMPStatus dmpStatusArg) {
 
-		super(Filter.class, filterServiceProviderArg, objectMapper, dmpStatus);
+		super(pojoClassResourceUtilsArg, dmpStatusArg);
 	}
 
 	/**

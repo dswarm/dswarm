@@ -10,14 +10,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
+import de.avgl.dmp.controller.resources.job.utils.FunctionsResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.service.job.FunctionService;
@@ -31,7 +30,7 @@ import de.avgl.dmp.persistence.service.job.FunctionService;
 @RequestScoped
 @Api(value = "/functions", description = "Operations about functions.")
 @Path("functions")
-public class FunctionsResource extends BasicFunctionsResource<FunctionService, Function> {
+public class FunctionsResource extends BasicFunctionsResource<FunctionsResourceUtils, FunctionService, Function> {
 
 	/**
 	 * Creates a new resource (controller service) for {@link Function}s with the provider of the function persistence service,
@@ -42,9 +41,9 @@ public class FunctionsResource extends BasicFunctionsResource<FunctionService, F
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public FunctionsResource(final Provider<FunctionService> functionServiceProviderArg, final ObjectMapper objectMapper, final DMPStatus dmpStatus) {
+	public FunctionsResource(final FunctionsResourceUtils functionsResourceUtilsArg, final DMPStatus dmpStatusArg) {
 
-		super(Function.class, functionServiceProviderArg, objectMapper, dmpStatus);
+		super(functionsResourceUtilsArg, dmpStatusArg);
 	}
 
 	/**

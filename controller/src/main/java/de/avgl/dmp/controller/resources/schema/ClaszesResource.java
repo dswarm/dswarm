@@ -10,17 +10,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
-import de.avgl.dmp.controller.resources.BasicResource;
+import de.avgl.dmp.controller.resources.AdvancedResource;
+import de.avgl.dmp.controller.resources.schema.utils.ClaszesResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
-import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
 
@@ -32,7 +30,7 @@ import de.avgl.dmp.persistence.service.schema.ClaszService;
 @RequestScoped
 @Api(value = "/classes", description = "Operations about classes.")
 @Path("classes")
-public class ClaszesResource extends BasicResource<ClaszService, Clasz, String> {
+public class ClaszesResource extends AdvancedResource<ClaszesResourceUtils, ClaszService, Clasz> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ClaszesResource.class);
 
@@ -45,9 +43,9 @@ public class ClaszesResource extends BasicResource<ClaszService, Clasz, String> 
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public ClaszesResource(final Provider<ClaszService> claszServiceProviderArg, final ObjectMapper objectMapper, final DMPStatus dmpStatus) {
+	public ClaszesResource(final ClaszesResourceUtils pojoClassResourceUtilsArg, final DMPStatus dmpStatusArg) {
 
-		super(Clasz.class, claszServiceProviderArg, objectMapper, dmpStatus);
+		super(pojoClassResourceUtilsArg, dmpStatusArg);
 	}
 
 	/**
@@ -64,9 +62,7 @@ public class ClaszesResource extends BasicResource<ClaszService, Clasz, String> 
 	@Override
 	public Response getObject(@ApiParam(value = "class identifier", required = true) @PathParam("id") final String id) throws DMPControllerException {
 
-		// return super.getObject(id);
-
-		return Response.status(505).build();
+		return super.getObject(id);
 	}
 
 	/**
@@ -99,34 +95,5 @@ public class ClaszesResource extends BasicResource<ClaszService, Clasz, String> 
 	public Response getObjects() throws DMPControllerException {
 
 		return super.getObjects();
-	}
-
-	/**
-	 * {@inheritDoc}<br/>
-	 * Updates the name of the class.
-	 */
-	@Override
-	protected Clasz prepareObjectForUpdate(final Clasz objectFromJSON, final Clasz object) {
-
-		object.setName(objectFromJSON.getName());
-
-		return object;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected Clasz createObject(final Clasz objectFromJSON, final ClaszService persistenceService) throws DMPPersistenceException {
-
-		return persistenceService.createObject(objectFromJSON.getId());
-	}
-
-	@Override
-	protected String prepareObjectJSONString(String objectJSONString) throws DMPControllerException {
-
-		// a class is not a complex object
-
-		return objectJSONString;
 	}
 }
