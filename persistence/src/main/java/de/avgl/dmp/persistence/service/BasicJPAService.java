@@ -72,7 +72,7 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 	 * @param clear  true if the EM's cache should be cleared
 	 * @return the EntityManager
 	 */
-	private EntityManager acquire(final boolean clear) {
+	protected EntityManager acquire(final boolean clear) {
 
 		final EntityManager entityManager = entityManagerProvider.get();
 		if (clear) {
