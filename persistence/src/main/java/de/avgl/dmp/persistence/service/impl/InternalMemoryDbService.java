@@ -35,9 +35,7 @@ public class InternalMemoryDbService extends BaseMemoryServiceImpl<Long, Long, T
 		dataModelService = dataModelServiceArg;
 	}
 
-	@Deprecated
-	@Override
-	public void createObject(final Long id, final Long id1, final Object model) throws DMPPersistenceException {
+	private void createObject(final Long id, final Long id1, final Object model) throws DMPPersistenceException {
 
 		if (model == null) {
 
@@ -62,9 +60,7 @@ public class InternalMemoryDbService extends BaseMemoryServiceImpl<Long, Long, T
 		}
 	}
 
-	@Deprecated
-	@Override
-	public Optional<Map<String, Model>> getObjects(final Long id, final Long configurationId, final Optional<Integer> atMost)
+	private Optional<Map<String, Model>> getObjects(final Long id, final Long configurationId, final Optional<Integer> atMost)
 			throws DMPPersistenceException {
 
 		final Optional<Table<String, String, String>> maybeTable = getObjects(id, configurationId);

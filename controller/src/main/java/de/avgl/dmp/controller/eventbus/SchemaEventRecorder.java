@@ -1,8 +1,9 @@
 package de.avgl.dmp.controller.eventbus;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Set;
+
+import org.culturegraph.mf.types.Triple;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Optional;
@@ -11,8 +12,6 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.culturegraph.mf.types.Triple;
 
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.CSVResourceFlowFactory;

@@ -19,15 +19,6 @@ import de.avgl.dmp.persistence.model.schema.Schema;
 public interface InternalModelService {
 
 	@Deprecated
-	void createObject(Long resourceId, Long configurationId, Object model) throws DMPPersistenceException;
-
-	@Deprecated
-	Optional<Map<String, Model>> getObjects(Long resourceId, Long configurationId, Optional<Integer> atMost) throws DMPPersistenceException;
-
-	@Deprecated
-	void deleteObject(Long resourceId, Long configurationId) throws DMPPersistenceException;
-
-	@Deprecated
 	Optional<Set<String>> getSchema(Long resourceId, Long configurationId);
 
 	/**

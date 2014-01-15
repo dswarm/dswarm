@@ -1,14 +1,17 @@
 package de.avgl.dmp.persistence.service.impl;
 
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.NotImplementedException;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.hp.hpl.jena.query.Dataset;
@@ -25,11 +28,17 @@ import com.hp.hpl.jena.tdb.TDBFactory;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.internal.Model;
 import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
+import de.avgl.dmp.persistence.model.internal.rdf.helper.AttributePathHelper;
 import de.avgl.dmp.persistence.model.resource.DataModel;
+import de.avgl.dmp.persistence.model.schema.Attribute;
+import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
+import de.avgl.dmp.persistence.model.schema.utils.SchemaUtils;
 import de.avgl.dmp.persistence.service.InternalModelService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
+import de.avgl.dmp.persistence.service.schema.AttributePathService;
+import de.avgl.dmp.persistence.service.schema.AttributeService;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
 
@@ -42,36 +51,40 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
 @Singleton
 public class InternalTripleService implements InternalModelService {
 
-	private static final org.apache.log4j.Logger	LOG							= org.apache.log4j.Logger.getLogger(InternalTripleService.class);
+	private static final org.apache.log4j.Logger	LOG								= org.apache.log4j.Logger.getLogger(InternalTripleService.class);
 
 	/**
 	 * The Jena TDB triple store.
 	 */
 	private final Dataset							dataset;
-	
+
 	/**
 	 * The data model persistence service.
 	 */
-	private final DataModelService					dataModelService;
-	
+	private final Provider<DataModelService>		dataModelService;
+
 	/**
 	 * The schema persistence service.
 	 */
-	private final SchemaService						schemaService;
-	
+	private final Provider<SchemaService>			schemaService;
+
 	/**
 	 * The class persistence service.
 	 */
-	private final ClaszService						classService;
-	
+	private final Provider<ClaszService>			classService;
+
+	private final Provider<AttributePathService>	attributePathService;
+
+	private final Provider<AttributeService>		attributeService;
+
 	/**
 	 * The data model graph URI pattern
 	 */
 	private static final String						DATA_MODEL_GRAPH_URI_PATTERN	= "http://data.slub-dresden.de/datamodel/{datamodelid}/data";
 
 	/**
-	 * Creates a new internal triple service with the given data model persistence service, schema persistence service, class persistence service and the directory of
-	 * the Jena TDB triple store.
+	 * Creates a new internal triple service with the given data model persistence service, schema persistence service, class
+	 * persistence service and the directory of the Jena TDB triple store.
 	 * 
 	 * @param dataModelService the data model persistence service
 	 * @param schemaService the schema persistence service
@@ -79,179 +92,15 @@ public class InternalTripleService implements InternalModelService {
 	 * @param directory the directory of the Jena TDB triple store
 	 */
 	@Inject
-	public InternalTripleService(final DataModelService dataModelService, final SchemaService schemaService, final ClaszService classService,
-			@Named("TdbPath") final String directory) {
+	public InternalTripleService(final Provider<DataModelService> dataModelService, final Provider<SchemaService> schemaService,
+			final Provider<ClaszService> classService, final Provider<AttributePathService> attributePathService,
+			final Provider<AttributeService> attributeService, @Named("TdbPath") final String directory) {
 		dataset = TDBFactory.createDataset(directory);
 		this.dataModelService = dataModelService;
 		this.schemaService = schemaService;
 		this.classService = classService;
-	}
-
-	@Deprecated
-	@Override
-	public void createObject(final Long id, final Long id1, final Object model) throws DMPPersistenceException {
-
-		// if (dataset == null) {
-		//
-		// throw new DMPPersistenceException("couldn't establish connection to DB, i.e., cannot add new model to DB");
-		// }
-		//
-		// if (id == null) {
-		//
-		// throw new DMPPersistenceException("resource id shouldn't be null");
-		// }
-		//
-		// if (id1 == null) {
-		//
-		// throw new DMPPersistenceException("configuration id shouldn't be null");
-		// }
-		//
-		// if (model == null) {
-		//
-		// throw new DMPPersistenceException("model that should be added to DB shouldn't be null");
-		// }
-		//
-		// if (!RDFModel.class.isInstance(model)) {
-		//
-		// throw new DMPPersistenceException("this service can only process RDF models");
-		// }
-		//
-		// final RDFModel rdfModel = (RDFModel) model;
-		//
-		// final com.hp.hpl.jena.rdf.model.Model realModel = rdfModel.getModel();
-		//
-		// if (realModel == null) {
-		//
-		// throw new DMPPersistenceException("real model that should be added to DB shouldn't be null");
-		// }
-		//
-		// final String resourceGraphURI = InternalTripleService.OLD_RESOURCE_GRAPH_URI_PATTERN.replace("{resourceid}",
-		// id.toString()).replace(
-		// "{configurationid}", id1.toString());
-		//
-		// // add resource uri to resource attributes (maybe to resource directly later)
-		// final Resource resource = resourceService.getObject(id);
-		//
-		// if (resource != null) {
-		//
-		// resource.addAttribute("uri", rdfModel.getResourceURI());
-		//
-		// resourceService.updateObjectTransactional(resource);
-		// } else {
-		//
-		// InternalTripleService.LOG.debug("couldn't find resource '" + id + "' to add resource uri");
-		// }
-		//
-		// dataset.begin(ReadWrite.WRITE);
-		// dataset.addNamedModel(resourceGraphURI, realModel);
-		// dataset.commit();
-		// dataset.end();
-
-		throw new NotImplementedException(
-				"object creation via this method is not implemented yet, please utilise #createObject(dataModelId, model) instead.");
-	}
-
-	@Deprecated
-	@Override
-	public Optional<Map<String, Model>> getObjects(final Long resourceId, final Long configurationId, final Optional<Integer> atMost)
-			throws DMPPersistenceException {
-
-		// if (dataset == null) {
-		//
-		// throw new DMPPersistenceException("couldn't establish connection to DB, i.e., cannot retrieve model from DB");
-		// }
-		//
-		// if (resourceId == null) {
-		//
-		// throw new DMPPersistenceException("resource id shouldn't be null");
-		// }
-		//
-		// if (configurationId == null) {
-		//
-		// throw new DMPPersistenceException("configuration id shouldn't be null");
-		// }
-		//
-		// final String resourceGraphURI = InternalTripleService.OLD_RESOURCE_GRAPH_URI_PATTERN.replace("{resourceid}",
-		// resourceId.toString()).replace(
-		// "{configurationid}", configurationId.toString());
-		//
-		// dataset.begin(ReadWrite.READ);
-		// final com.hp.hpl.jena.rdf.model.Model model = dataset.getNamedModel(resourceGraphURI);
-		// dataset.end();
-		//
-		// if (model == null) {
-		//
-		// InternalTripleService.LOG.debug("couldn't find model for resource '" + resourceId + "' and configuration id '" +
-		// configurationId
-		// + " in dataset");
-		//
-		// return Optional.absent();
-		// }
-		//
-		// // retrieve resource uri(s) from resource attributes (maybe from resource directly later)
-		// final Resource resource = resourceService.getObject(resourceId);
-		//
-		// if (resource == null) {
-		//
-		// InternalTripleService.LOG.debug("couldn't find resource '" + resourceId + "' to retrieve resource uri from");
-		//
-		// throw new DMPPersistenceException("couldn't find resource '" + resourceId + "' to retrieve resource uri from");
-		// }
-		//
-		// // TODO: this needs to be refactored to "retrieve records by record class (from data model -> schema)"
-		// final JsonNode valueNode = resource.getAttribute("uri");
-		//
-		// if (valueNode == null) {
-		//
-		// InternalTripleService.LOG.debug("couldn't find resource uri in resource '" + resourceId + "'");
-		//
-		// throw new DMPPersistenceException("couldn't find resource uri in resource '" + resourceId + "'");
-		// }
-		//
-		// final String resourceURI = valueNode.asText();
-		//
-		// final Model rdfModel = new RDFModel(model, resourceURI);
-		//
-		// final Map<String, Model> modelMap = Maps.newHashMap();
-		//
-		// modelMap.put(resourceURI, rdfModel);
-		//
-		// return Optional.of(modelMap);
-
-		throw new NotImplementedException(
-				"object retrieval via this method is not implemented yet, please utilise #getObjects(dataModelId, atMost) instead.");
-	}
-
-	@Deprecated
-	@Override
-	public void deleteObject(final Long resourceId, final Long configurationId) throws DMPPersistenceException {
-
-		// if (dataset == null) {
-		//
-		// throw new DMPPersistenceException("couldn't establish connection to DB, i.e., cannot remove model from DB");
-		// }
-		//
-		// if (resourceId == null) {
-		//
-		// throw new DMPPersistenceException("resource id shouldn't be null");
-		// }
-		//
-		// if (configurationId == null) {
-		//
-		// throw new DMPPersistenceException("configuration id shouldn't be null");
-		// }
-		//
-		// final String resourceGraphURI = InternalTripleService.OLD_RESOURCE_GRAPH_URI_PATTERN.replace("{resourceid}",
-		// resourceId.toString()).replace(
-		// "{configurationid}", configurationId.toString());
-		//
-		// dataset.begin(ReadWrite.WRITE);
-		// dataset.removeNamedModel(resourceGraphURI);
-		// dataset.commit();
-		// dataset.end();
-
-		throw new NotImplementedException(
-				"object deletion via this method is not implemented yet, please utilise #deleteObject(dataModelId) instead.");
+		this.attributePathService = attributePathService;
+		this.attributeService = attributeService;
 	}
 
 	@Deprecated
@@ -298,7 +147,41 @@ public class InternalTripleService implements InternalModelService {
 
 		final String resourceGraphURI = InternalTripleService.DATA_MODEL_GRAPH_URI_PATTERN.replace("{datamodelid}", dataModelId.toString());
 
-		addRecordClass(dataModelId, rdfModel.getRecordClassURI());
+		final DataModel dataModel = addRecordClass(dataModelId, rdfModel.getRecordClassURI());
+
+		final DataModel finalDataModel;
+
+		if (dataModel != null) {
+
+			finalDataModel = dataModel;
+		} else {
+
+			finalDataModel = getDataModel(dataModelId);
+		}
+
+		if (dataModel.getSchema() != null) {
+
+			if (dataModel.getSchema().getRecordClass() != null) {
+
+				final String recordClassURI = dataModel.getSchema().getRecordClass().getId();
+
+				final Set<com.hp.hpl.jena.rdf.model.Resource> recordResources = getRecordResources(recordClassURI, realModel);
+
+				if (recordResources != null) {
+
+					final Set<String> recordURIs = Sets.newHashSet();
+
+					for (final com.hp.hpl.jena.rdf.model.Resource recordResource : recordResources) {
+
+						recordURIs.add(recordResource.getURI());
+					}
+
+					rdfModel.setRecordURIs(recordURIs);
+				}
+			}
+		}
+
+		addAttributePaths(finalDataModel, rdfModel.getAttributePaths());
 
 		dataset.begin(ReadWrite.WRITE);
 		dataset.addNamedModel(resourceGraphURI, realModel);
@@ -344,7 +227,7 @@ public class InternalTripleService implements InternalModelService {
 		}
 
 		// retrieve record class uri from data model schema
-		final DataModel dataModel = dataModelService.getObject(dataModelId);
+		final DataModel dataModel = dataModelService.get().getObject(dataModelId);
 
 		if (dataModel == null) {
 
@@ -446,7 +329,7 @@ public class InternalTripleService implements InternalModelService {
 			throw new DMPPersistenceException("data model id shouldn't be null");
 		}
 
-		final DataModel dataModel = dataModelService.getObject(dataModelId);
+		final DataModel dataModel = dataModelService.get().getObject(dataModelId);
 
 		if (dataModel == null) {
 
@@ -474,29 +357,11 @@ public class InternalTripleService implements InternalModelService {
 	 * @param recordClassUri the identifier of the record class
 	 * @throws DMPPersistenceException
 	 */
-	private void addRecordClass(final Long dataModelId, final String recordClassUri) throws DMPPersistenceException {
+	private DataModel addRecordClass(final Long dataModelId, final String recordClassUri) throws DMPPersistenceException {
 
 		// (try) add record class uri to schema
-		final DataModel dataModel = dataModelService.getObject(dataModelId);
-
-		if (dataModel == null) {
-
-			InternalTripleService.LOG.debug("couldn't find data model '" + dataModelId + "' to add the record class to it's schema");
-
-			return;
-		}
-
-		final Schema schema;
-
-		if (dataModel.getSchema() != null) {
-
-			schema = dataModel.getSchema();
-		} else {
-
-			// create new schema
-			schema = schemaService.createObject();
-			dataModel.setSchema(schema);
-		}
+		final DataModel dataModel = getSchemaInternal(dataModelId);
+		final Schema schema = dataModel.getSchema();
 
 		final Clasz recordClass;
 
@@ -506,18 +371,89 @@ public class InternalTripleService implements InternalModelService {
 
 				// nothing to do, record class is already set
 
-				return;
+				return dataModel;
 			}
 
 			recordClass = schema.getRecordClass();
 		} else {
 
 			// create new class
-			recordClass = classService.createObject(recordClassUri);
+			recordClass = classService.get().createObject(recordClassUri);
+			
+			final String recordClassName = SchemaUtils.determineRelativeURIPart(recordClassUri);
+
+			recordClass.setName(recordClassName);
+			
 			schema.setRecordClass(recordClass);
 		}
 
-		dataModelService.updateObjectTransactional(dataModel);
+		return dataModelService.get().updateObjectTransactional(dataModel);
+	}
+
+	private DataModel addAttributePaths(final DataModel dataModel, final Set<AttributePathHelper> attributePathHelpers)
+			throws DMPPersistenceException {
+
+		if (attributePathHelpers == null) {
+
+			InternalTripleService.LOG.debug("couldn't datermine attribute paths from data model '" + dataModel.getId() + "'");
+
+			return dataModel;
+		}
+
+		for (final AttributePathHelper attributePathHelper : attributePathHelpers) {
+
+			final LinkedList<Attribute> attributes = Lists.newLinkedList();
+
+			for (final String attributeString : attributePathHelper.getAttributePath()) {
+
+				final Attribute attribute = attributeService.get().createObject(attributeString);
+				attributes.add(attribute);
+
+				final String attributeName = SchemaUtils.determineRelativeURIPart(attributeString);
+
+				attribute.setName(attributeName);
+			}
+
+			final AttributePath attributePath = attributePathService.get().createObject();
+			attributePath.setAttributePath(attributes);
+
+			dataModel.getSchema().addAttributePath(attributePath);
+		}
+
+		return dataModelService.get().updateObjectTransactional(dataModel);
+	}
+
+	private DataModel getSchemaInternal(final Long dataModelId) throws DMPPersistenceException {
+
+		final DataModel dataModel = getDataModel(dataModelId);
+
+		final Schema schema;
+
+		if (dataModel.getSchema() != null) {
+
+			schema = dataModel.getSchema();
+		} else {
+
+			// create new schema
+			schema = schemaService.get().createObject();
+			dataModel.setSchema(schema);
+		}
+
+		return dataModel;
+	}
+
+	private DataModel getDataModel(final Long dataModelId) {
+
+		final DataModel dataModel = dataModelService.get().getObject(dataModelId);
+
+		if (dataModel == null) {
+
+			InternalTripleService.LOG.debug("couldn't find data model '" + dataModelId + "'");
+
+			return null;
+		}
+
+		return dataModel;
 	}
 
 	/**

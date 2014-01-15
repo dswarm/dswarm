@@ -12,6 +12,7 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.culturegraph.mf.stream.converter.JsonEncoder;
@@ -30,6 +31,7 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
 import com.google.common.collect.AbstractIterator;
+import com.google.common.collect.Maps;
 import com.google.common.io.Resources;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
@@ -48,6 +50,8 @@ import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
 import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
 import de.avgl.dmp.persistence.model.resource.utils.DataModelUtils;
+import de.avgl.dmp.persistence.model.schema.Attribute;
+import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.model.types.Tuple;
@@ -56,6 +60,8 @@ import de.avgl.dmp.persistence.service.impl.InternalTripleService;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
+import de.avgl.dmp.persistence.service.schema.AttributePathService;
+import de.avgl.dmp.persistence.service.schema.AttributeService;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
@@ -181,7 +187,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 		final ArrayNode expectedJSONArray = objectMapper.readValue(expected, ArrayNode.class);
 		final ArrayNode actualNodes = objectMapper.readValue(actual, ArrayNode.class);
-		
+
 		final String actualDataResourceSchemaBaseURI = DataModelUtils.determineDataResourceSchemaBaseURI(updatedDataModel);
 
 		final String expectedRecordDataFieldNameExample = expectedJSONArray.get(0).get("record_data").fieldNames().next();
@@ -191,7 +197,7 @@ public class TransformationFlowTest extends GuicedTest {
 		for (final JsonNode expectedNode : expectedJSONArray) {
 			final String recordId = expectedNode.get("record_id").asText();
 			final JsonNode actualNode = getRecord(recordId, actualNodes);
-			 
+
 			assertThat(actualNode, is(notNullValue()));
 
 			assertThat(expectedNode.get("record_id").asText(), equalTo(actualNode.get("record_id").asText()));
@@ -313,11 +319,52 @@ public class TransformationFlowTest extends GuicedTest {
 		assertEquals(finalExpectedJSONString.length(), finalActualJSONString.length());
 
 		// clean-up
-		dataModelService.deleteObject(updatedDataModel.getId());
 
+		final Map<String, Attribute> attributes = Maps.newHashMap();
+
+		final Map<Long, AttributePath> attributePaths = Maps.newLinkedHashMap();
+
+		if (schema != null) {
+
+			final Set<AttributePath> attributePathsToDelete = schema.getAttributePaths();
+
+			if (attributePaths != null) {
+
+				for (final AttributePath attributePath : attributePathsToDelete) {
+
+					attributePaths.put(attributePath.getId(), attributePath);
+
+					final Set<Attribute> attributesToDelete = attributePath.getAttributes();
+
+					if (attributes != null) {
+
+						for (final Attribute attribute : attributesToDelete) {
+
+							attributes.put(attribute.getId(), attribute);
+						}
+					}
+				}
+			}
+		}
+
+		dataModelService.deleteObject(updatedDataModel.getId());
 		final SchemaService schemaService = injector.getInstance(SchemaService.class);
 
 		schemaService.deleteObject(schema.getId());
+
+		final AttributePathService attributePathService = injector.getInstance(AttributePathService.class);
+
+		for (final AttributePath attributePath : attributePaths.values()) {
+
+			attributePathService.deleteObject(attributePath.getId());
+		}
+
+		final AttributeService attributeService = injector.getInstance(AttributeService.class);
+
+		for (final Attribute attribute : attributes.values()) {
+
+			attributeService.deleteObject(attribute.getId());
+		}
 
 		final ClaszService claszService = injector.getInstance(ClaszService.class);
 
@@ -399,17 +446,17 @@ public class TransformationFlowTest extends GuicedTest {
 			}
 		};
 	}
-	
+
 	private JsonNode getRecord(final String recordId, final ArrayNode jsonArray) {
-		
-		for(final JsonNode jsonEntry : jsonArray) {
-			
-			if(recordId.equals(jsonEntry.get("record_id").asText())) {
-				
+
+		for (final JsonNode jsonEntry : jsonArray) {
+
+			if (recordId.equals(jsonEntry.get("record_id").asText())) {
+
 				return jsonEntry;
 			}
 		}
-		
+
 		return null;
 	}
 }

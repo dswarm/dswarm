@@ -215,20 +215,20 @@
             "input_attribute_paths": [{
                 "id": 11,
                 "attributes": [{
-                    "id": "feld",
+                    "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
                     "name": "feld"
                 }, {
-                    "id": "@nr",
+                    "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
                     "name": "nr"
                 }]
             }],
             "output_attribute_path": {
                 "id": 11,
                 "attributes": [{
-                    "id": "feld",
+                    "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
                     "name": "feld"
                 }, {
-                    "id": "@nr",
+                    "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
                     "name": "nr"
                 }]
             }

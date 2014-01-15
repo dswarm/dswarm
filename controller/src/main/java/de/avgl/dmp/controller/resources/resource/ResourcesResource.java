@@ -456,7 +456,6 @@ public class ResourcesResource {
 	 * @return a JSON representation of the added configuration
 	 * @throws DMPControllerException
 	 */
-	@Deprecated
 	@ApiOperation(value = "add a new configuration to the data resource that matches the given id", notes = "Returns the new configuration that was added to the data resource that matches the given id. Note: The data processing, which was a step of this operation is deprecated, i.e., only the given configuration will be added to this resource. For data processing of a given resource with a given configuration, please utilise POST [base uri]/datamodels instead")
 	@POST
 	@Path("/{id}/configurations")
@@ -654,50 +653,8 @@ public class ResourcesResource {
 	public Response getResourceConfigurationData(@ApiParam(value = "data resource identifier", required = true) @PathParam("id") final Long id,
 			@ApiParam(value = "configuration identifier", required = true) @PathParam("configurationid") final Long configurationId,
 			@ApiParam("number of records limit") @QueryParam("atMost") final Integer atMost) throws DMPControllerException {
-		final Timer.Context context = dmpStatus.getConfigurationData();
-
-		LOG.debug("try to get schema for configuration with id '" + configurationId + "' for resource with id '" + id + "'");
-
-		final Optional<Iterator<Tuple<String, JsonNode>>> data = dataModelUtil.getData(id, configurationId, Optional.fromNullable(atMost));
-
-		if (!data.isPresent()) {
-
-			LOG.debug("couldn't find data");
-
-			dmpStatus.stop(context);
-			return Response.status(Status.NOT_FOUND).build();
-		}
-
-		// temp
-		final Iterator<Tuple<String, JsonNode>> tupleIterator;
-		if (atMost != null) {
-			tupleIterator = Iterators.limit(data.get(), atMost);
-		} else {
-			tupleIterator = data.get();
-		}
-
-		final ObjectNode json = objectMapper.createObjectNode();
-		while (tupleIterator.hasNext()) {
-			final Tuple<String, JsonNode> tuple = data.get().next();
-			json.put(tuple.v1(), tuple.v2());
-		}
-
-		final String jsonString;
-
-		try {
-
-			jsonString = objectMapper.writeValueAsString(json);
-		} catch (final JsonProcessingException e) {
-
-			dmpStatus.stop(context);
-			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
-		}
-
-		LOG.debug("return data for configuration with id '" + configurationId + "' for resource with id '" + id + "' and content '" + jsonString
-				+ "'");
-
-		dmpStatus.stop(context);
-		return buildResponse(jsonString);
+		
+		return Response.status(501).entity("This operation is deprecated. Please utilise [base uri]/datamodels/{datamodelid}/data instead.").build();
 	}
 
 	/**
