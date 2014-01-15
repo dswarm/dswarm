@@ -502,6 +502,8 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 	protected JsonNode enhanceObjectJSON(final ObjectNode objectJSON) {
 
 		final JsonNode idNode = objectJSON.get("id");
+		
+		// TODO: should we mint real ids for already set dummy ids here, i.e., at controller service level?
 
 		if (idNode == null || NullNode.class.isInstance(idNode)) {
 

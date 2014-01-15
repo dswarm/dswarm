@@ -15,7 +15,7 @@
                     "name": "my trim component",
                     "function": {
                         "type": "Function",
-                        "id": 292,
+                        "id": -9034931157289226240,
                         "name": "trim",
                         "description": "trims leading and trailing whitespaces from a given string",
                         "parameters": ["inputString", "parameter2"],
@@ -61,7 +61,7 @@
     }],
     "functions": [{
         "type": "Function",
-        "id": 292,
+        "id": -9034931157289226240,
         "name": "trim",
         "description": "trims leading and trailing whitespaces from a given string",
         "parameters": ["inputString", "parameter2"],
@@ -97,6 +97,7 @@
             }
         },
         "schema": {
+        	"id": -2062991439511256064,
             "name": "my schema",
             "attribute_paths": [{
                 "attributes": [{
@@ -158,6 +159,7 @@
         "name": "my output data model",
         "description": "my output data model description",
         "schema": {
+        	"id": -2062991439511256064,
             "name": "my schema",
             "attribute_paths": [{
                 "attributes": [{
