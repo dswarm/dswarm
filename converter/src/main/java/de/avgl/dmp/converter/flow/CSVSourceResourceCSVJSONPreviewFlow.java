@@ -12,6 +12,7 @@ import de.avgl.dmp.converter.mf.stream.reader.CsvReader;
 import de.avgl.dmp.converter.mf.stream.source.CSVJSONEncoder;
 import de.avgl.dmp.converter.mf.stream.source.CSVJSONWriter;
 import de.avgl.dmp.persistence.model.resource.Configuration;
+import de.avgl.dmp.persistence.model.resource.DataModel;
 
 /**
  * Flow that reads and parses a given CSV document and returns a preview of its content as JSON representation.
@@ -28,6 +29,11 @@ public class CSVSourceResourceCSVJSONPreviewFlow extends AbstractCSVResourceFlow
 
 	public CSVSourceResourceCSVJSONPreviewFlow(final Configuration configuration) throws DMPConverterException {
 		super(configuration);
+	}
+
+	public CSVSourceResourceCSVJSONPreviewFlow(final DataModel dataModel) throws DMPConverterException {
+
+		super(dataModel);
 	}
 
 	@Override

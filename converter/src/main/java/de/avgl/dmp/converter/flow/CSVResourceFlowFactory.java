@@ -1,12 +1,13 @@
 package de.avgl.dmp.converter.flow;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import de.avgl.dmp.persistence.model.resource.DataModel;
 
 /**
  * 
@@ -43,6 +44,36 @@ public final class CSVResourceFlowFactory {
 
 		return checkNotNull(flow, "something went wrong while apply configuration to resource");
 	}
+	
+	public static <T, U extends AbstractCSVResourceFlow<T>> U fromDataModel(
+			final DataModel dataModel,
+			final Class<U> clazz) throws DMPConverterException {
+
+		final Constructor<U> constructor;
+		try {
+			constructor = clazz.getConstructor(DataModel.class);
+		} catch (final NoSuchMethodException e) {
+			e.printStackTrace();
+			throw new DMPConverterException("no DataModel constructor for class " + clazz.getSimpleName());
+		}
+
+		final U flow;
+		try {
+			flow = constructor.newInstance(dataModel);
+		} catch (final InstantiationException e) {
+			e.printStackTrace();
+			throw new DMPConverterException("Error while instantiating DataModel constructor class " + clazz.getSimpleName());
+		} catch (final IllegalAccessException e) {
+			e.printStackTrace();
+			throw new DMPConverterException("Error while accessing DataModel constructor for class " + clazz.getSimpleName());
+		} catch (final InvocationTargetException e) {
+			e.printStackTrace();
+			throw new DMPConverterException(e.getCause().getMessage());
+		}
+
+		return checkNotNull(flow, "something went wrong while apply data model to resource");
+	}
+	
 	public static <T, U extends AbstractCSVResourceFlow<T>> U fromConfigurationParameters(
 			final String encoding, final Character escapeCharacter,
 			final Character quoteCharacter, final Character columnDelimiter,

@@ -1,0 +1,135 @@
+{
+    "id": 47,
+    "name": "my data model",
+    "description": "my data model description",
+    "configuration": {
+        "id": 64,
+        "name": "foo xml",
+        "description": "bar xml",
+        "resources": [{
+            "id": 66
+        }],
+        "parameters": {
+            "storage_type": "xml",
+            "record_tag": "datensatz",
+            "xml_namespace": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd"
+        }
+    },
+    "schema": {
+        "id": 53,
+        "attribute_paths": [{
+            "id": 414,
+            "attributes": [{
+                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion",
+                "name": "#mabVersion"
+            }]
+        }, {
+            "id": 415,
+            "attributes": [{
+                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                "name": "#feld"
+            }]
+        }, {
+            "id": 416,
+            "attributes": [{
+                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                "name": "#feld"
+            }, {
+                "id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                "name": "#type"
+            }]
+        }, {
+            "id": 424,
+            "attributes": [{
+                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status",
+                "name": "#status"
+            }]
+        }, {
+            "id": 423,
+            "attributes": [{
+                "id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                "name": "#type"
+            }]
+        }, {
+            "id": 422,
+            "attributes": [{
+                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ",
+                "name": "#typ"
+            }]
+        }, {
+            "id": 421,
+            "attributes": [{
+                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                "name": "#feld"
+            }, {
+                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
+                "name": "#tf"
+            }, {
+                "id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                "name": "#type"
+            }]
+        }, {
+            "id": 420,
+            "attributes": [{
+                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                "name": "#feld"
+            }, {
+                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
+                "name": "#tf"
+            }]
+        }, {
+            "id": 419,
+            "attributes": [{
+                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                "name": "#feld"
+            }, {
+                "id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+                "name": "#value"
+            }]
+        }, {
+            "id": 418,
+            "attributes": [{
+                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                "name": "#feld"
+            }, {
+                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind",
+                "name": "#ind"
+            }]
+        }, {
+            "id": 417,
+            "attributes": [{
+                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                "name": "#feld"
+            }, {
+                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
+                "name": "#nr"
+            }]
+        }],
+        "record_class": {
+            "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType"
+        }
+    },
+    "data_resource": {
+        "id": 66,
+        "name": "test-mabxml.xml",
+        "description": "this is a description",
+        "type": "FILE",
+        "attributes": {
+            "path": "/home/tgaengler/git/tgaengler/datamanagement-platform/init/../tmp/resources/test-mabxml.xml",
+            "filesize": 2279
+        },
+        "configurations": [{
+            "id": 64,
+            "name": "foo xml",
+            "description": "bar xml",
+            "resources": [{
+                "id": 66
+            }],
+            "parameters": {
+                "storage_type": "xml",
+                "record_tag": "datensatz",
+                "xml_namespace": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd"
+            }
+        }]
+    }
+}

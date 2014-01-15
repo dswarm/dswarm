@@ -3,9 +3,12 @@ package de.avgl.dmp.converter.flow;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 
 import org.culturegraph.mf.framework.DefaultObjectPipe;
@@ -19,7 +22,6 @@ import org.culturegraph.mf.stream.source.ResourceOpener;
 import org.culturegraph.mf.stream.source.StringReader;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.collect.ImmutableList;
 
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.mf.stream.RecordAwareJsonEncoder;
@@ -28,8 +30,8 @@ import de.avgl.dmp.converter.morph.MorphScriptBuilder;
 import de.avgl.dmp.converter.pipe.StreamJsonCollapser;
 import de.avgl.dmp.converter.pipe.StreamUnflattener;
 import de.avgl.dmp.converter.reader.QucosaReader;
+import de.avgl.dmp.init.util.DMPStatics;
 import de.avgl.dmp.persistence.model.job.Task;
-import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.model.types.Tuple;
 
 /**
@@ -40,9 +42,11 @@ import de.avgl.dmp.persistence.model.types.Tuple;
  */
 public class TransformationFlow {
 
-	public static final String	DEFAULT_RESOURCE_PATH	= "qucosa_record.xml";
+	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(TransformationFlow.class);
 
-	private final Metamorph		transformer;
+	public static final String						DEFAULT_RESOURCE_PATH	= "qucosa_record.xml";
+
+	private final Metamorph							transformer;
 
 	public TransformationFlow(final Metamorph transformer) {
 		this.transformer = transformer;
@@ -89,7 +93,7 @@ public class TransformationFlow {
 
 		// final String recordDummy = "record";
 
-		final StreamUnflattener unflattener = new StreamUnflattener();
+		final StreamUnflattener unflattener = new StreamUnflattener("", DMPStatics.ATTRIBUTE_DELIMITER);
 		final StreamJsonCollapser collapser = new StreamJsonCollapser();
 
 		final StringWriter stringWriter = new StringWriter();
@@ -122,6 +126,8 @@ public class TransformationFlow {
 
 		final RecordAwareJsonEncoder converter = new RecordAwareJsonEncoder(jsonEncoder);
 		jsonEncoder.setReceiver(objectReceiver);
+
+		// final StreamOutWriter streamOutWriter = new StreamOutWriter();
 
 		opener.setReceiver(transformer).setReceiver(unflattener).setReceiver(collapser).setReceiver(converter);
 
@@ -159,7 +165,7 @@ public class TransformationFlow {
 	}
 
 	public String applyDemo() {
-		return applyResourceDemo(DEFAULT_RESOURCE_PATH);
+		return applyResourceDemo(TransformationFlow.DEFAULT_RESOURCE_PATH);
 	}
 
 	public static TransformationFlow fromString(final String morphScriptString) {
@@ -169,46 +175,50 @@ public class TransformationFlow {
 		return new TransformationFlow(transformer);
 	}
 
-	public static TransformationFlow fromFile(final File file) throws FileNotFoundException {
+	public static TransformationFlow fromFile(final File file) throws FileNotFoundException, DMPConverterException {
 		final FileInputStream is = new FileInputStream(file);
-		final Metamorph transformer = new Metamorph(is);
+		final Reader inputSource = TransformationFlow.getReader(is);
+
+		final Metamorph transformer = new Metamorph(inputSource);
 
 		return new TransformationFlow(transformer);
 	}
 
-	public static TransformationFlow fromFile(final String resourcePath) {
+	public static TransformationFlow fromFile(final String resourcePath) throws DMPConverterException {
 		final InputStream morph = TransformationFlow.class.getClassLoader().getResourceAsStream(resourcePath);
-		final Metamorph transformer = new Metamorph(morph);
+		final Reader inputSource = TransformationFlow.getReader(morph);
+		final Metamorph transformer = new Metamorph(inputSource);
 
 		return new TransformationFlow(transformer);
-	}
-
-	// TODO:
-
-	// public static TransformationFlow fromJob(final Job job) throws IOException, DMPConverterException {
-	//
-	// final String morphScriptString = new MorphScriptBuilder().apply(job.getTransformations()).toString();
-	//
-	// return fromString(morphScriptString);
-	// }
-
-	public static TransformationFlow fromTransformation(final Transformation transformation) {
-
-		final ImmutableList.Builder<Transformation> transformationsBuilder = ImmutableList.builder();
-
-		transformationsBuilder.add(transformation);
-
-		final String morphScriptString = null;
-
-		// new MorphScriptBuilder().apply(transformationsBuilder.build()).toString();
-
-		return fromString(morphScriptString);
 	}
 
 	public static TransformationFlow fromTask(final Task task) throws DMPConverterException {
 
 		final String morphScriptString = new MorphScriptBuilder().apply(task).toString();
 
-		return fromString(morphScriptString);
+		return TransformationFlow.fromString(morphScriptString);
+	}
+
+	private static Reader getReader(final InputStream is) throws DMPConverterException {
+
+		Reader reader = null;
+
+		try {
+
+			reader = new InputStreamReader(is, "UTF-8");
+		} catch (final UnsupportedEncodingException e) {
+
+			try {
+
+				is.close();
+			} catch (final IOException e1) {
+
+				TransformationFlow.LOG.error("couldn't close file input stream");
+			}
+
+			throw new DMPConverterException("couldn't parse file with UTF-8");
+		}
+
+		return reader;
 	}
 }

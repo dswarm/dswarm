@@ -1,19 +1,20 @@
 package de.avgl.dmp.controller.resources.test;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.validation.SchemaFactory;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -21,6 +22,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -40,17 +42,18 @@ import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
 import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
+import de.avgl.dmp.persistence.model.resource.utils.DataModelUtils;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class TasksResourceTest extends ResourceTest {
+public class TasksCsvResourceTest extends ResourceTest {
 
-	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(TasksResourceTest.class);
+	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(TasksCsvResourceTest.class);
 
-	private String									taskJSONString	= null;
+	private String									taskJSONString;
 
 	private final ResourcesResourceTestUtils		resourcesResourceTestUtils;
 
@@ -78,7 +81,7 @@ public class TasksResourceTest extends ResourceTest {
 
 	private Clasz									recordClass;
 
-	public TasksResourceTest() {
+	public TasksCsvResourceTest() {
 
 		super("tasks");
 
@@ -94,7 +97,7 @@ public class TasksResourceTest extends ResourceTest {
 	@Before
 	public void prepare() throws IOException {
 
-		taskJSONString = DMPPersistenceUtil.getResourceAsString("task.json");
+		taskJSONString = DMPPersistenceUtil.getResourceAsString("task.csv.json");
 	}
 
 	@Test
@@ -102,7 +105,7 @@ public class TasksResourceTest extends ResourceTest {
 
 		LOG.debug("start task execution test");
 
-		final String resourceFileName = "test-mabxml.xml";
+		final String resourceFileName = "test_csv.csv";
 
 		final Resource res1 = new Resource();
 		res1.setName(resourceFileName);
@@ -118,10 +121,9 @@ public class TasksResourceTest extends ResourceTest {
 		// process input data model
 		final Configuration conf1 = new Configuration();
 
-		conf1.setName("configuration 1");
-		conf1.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("datensatz"));
-		conf1.addParameter(ConfigurationStatics.XML_NAMESPACE, new TextNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd"));
-		conf1.addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode("xml"));
+		conf1.setName("config1");
+		conf1.addParameter(ConfigurationStatics.COLUMN_DELIMITER, new TextNode(";"));
+		conf1.addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode("csv"));
 
 		final String configurationJSONString = objectMapper.writeValueAsString(conf1);
 
@@ -157,7 +159,26 @@ public class TasksResourceTest extends ResourceTest {
 		final ObjectNode finalDataModelJSON = objectMapper.readValue(finalDataModelJSONString, ObjectNode.class);
 
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
-		((ObjectNode) taskJSON).put("input_data_model", finalDataModelJSON);
+		taskJSON.put("input_data_model", finalDataModelJSON);
+
+		// manipulate attributes
+		final ObjectNode mappingJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) ((ObjectNode) taskJSON).get("job")).get("mappings")).get(0);
+
+		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataResourceSchemaBaseURI(dataModel);
+
+		final ObjectNode outputAttributePathAttributeJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) mappingJSON.get("output_attribute_path"))
+				.get("attributes")).get(0);
+		final String outputAttributeName = outputAttributePathAttributeJSON.get("name").asText();
+		outputAttributePathAttributeJSON.put("id", dataResourceSchemaBaseURI + outputAttributeName);
+
+		final ArrayNode inputAttributePathsJSON = (ArrayNode) mappingJSON.get("input_attribute_paths");
+
+		for (final JsonNode inputAttributePathsJSONNode : inputAttributePathsJSON) {
+
+			final ObjectNode inputAttributeJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) inputAttributePathsJSONNode).get("attributes")).get(0);
+			final String inputAttributeName = inputAttributeJSON.get("name").asText();
+			inputAttributeJSON.put("id", dataResourceSchemaBaseURI + inputAttributeName);
+		}
 
 		final String finalTaskJSONString = objectMapper.writeValueAsString(taskJSON);
 
@@ -166,45 +187,53 @@ public class TasksResourceTest extends ResourceTest {
 
 		Assert.assertEquals("200 Created was expected", 200, response.getStatus());
 
-		// DD-277
-		final DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-		final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-		final javax.xml.validation.Schema schema = schemaFactory.newSchema();
-
-		System.out.println("DocumentBuilderFactory = " + builderFactory.getClass().getName());
-		try {
-			builderFactory.setSchema(schema);
-		} catch (final UnsupportedOperationException e) {
-			Assert.fail();
-		}
-		Assert.assertNotNull(builderFactory.getSchema());
-		Assert.assertEquals(builderFactory.getSchema(), schema);
-		// END DD-277
-
 		final String responseString = response.readEntity(String.class);
 
 		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
 
 		LOG.debug("task execution response = '" + responseString + "'");
 
-		final String expectedResultString = DMPPersistenceUtil.getResourceAsString("task-result.json");
+		final String expectedResultString = DMPPersistenceUtil.getResourceAsString("task-result.csv.json");
 
 		final ArrayNode expectedJSONArray = objectMapper.readValue(expectedResultString, ArrayNode.class);
-		final ObjectNode expectedJSON = (ObjectNode) expectedJSONArray.get(0).get("record_data");
-		final String finalExpectedJSONString = objectMapper.writeValueAsString(expectedJSON);
-
 		final ArrayNode actualJSONArray = objectMapper.readValue(responseString, ArrayNode.class);
-		final ObjectNode actualJSON = (ObjectNode) actualJSONArray.get(0).get("record_data");
-		final String finalActualJSONString = objectMapper.writeValueAsString(actualJSON);
 
-		assertEquals(finalExpectedJSONString.length(), finalActualJSONString.length());
+		System.out.println("expected=" + objectMapper.writeValueAsString(expectedJSONArray));
+		System.out.println("actual=" + objectMapper.writeValueAsString(actualJSONArray));
+
+		assertThat(expectedJSONArray.size(), equalTo(actualJSONArray.size()));
+
+		final Map<String, JsonNode> actualNodes = new HashMap<>(actualJSONArray.size());
+		for (final JsonNode node : actualJSONArray) {
+			actualNodes.put(node.get("record_id").asText(), node);
+		}
+
+		final String actualDataResourceSchemaBaseURI = DataModelUtils.determineDataResourceSchemaBaseURI(dataModel);
+
+		final String expectedRecordDataFieldNameExample = expectedJSONArray.get(0).get("record_data").fieldNames().next();
+		final String expectedDataResourceSchemaBaseURI = expectedRecordDataFieldNameExample.substring(0,
+				expectedRecordDataFieldNameExample.lastIndexOf('#') + 1);
+
+		for (final JsonNode expectedNode : expectedJSONArray) {
+			final JsonNode actualNode = actualNodes.get(expectedNode.get("record_id").asText());
+
+			assertThat(actualNode, is(notNullValue()));
+
+			assertThat(expectedNode.get("record_id").asText(), equalTo(actualNode.get("record_id").asText()));
+
+			final ObjectNode expectedRecordData = (ObjectNode) expectedNode.get("record_data");
+			final ObjectNode actualRecordData = (ObjectNode) actualNode.get("record_data");
+
+			assertThat(expectedRecordData.get(expectedDataResourceSchemaBaseURI + "description").asText(),
+					equalTo(actualRecordData.get(actualDataResourceSchemaBaseURI + "description").asText()));
+		}
 
 		LOG.debug("end task execution test");
 	}
 
 	@After
 	public void cleanUp() {
-		
+
 		final Map<String, Attribute>					attributes		= Maps.newHashMap();
 
 		final Map<Long, AttributePath>					attributePaths	= Maps.newLinkedHashMap();
@@ -244,7 +273,7 @@ public class TasksResourceTest extends ResourceTest {
 
 			attributesResourceTestUtils.deleteObject(attribute);
 		}
-
+		
 		classesResourceTestUtils.deleteObject(recordClass);
 		resourcesResourceTestUtils.deleteObject(resource);
 		configurationsResourceTestUtils.deleteObject(configuration);

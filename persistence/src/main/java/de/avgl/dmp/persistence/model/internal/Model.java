@@ -1,6 +1,10 @@
 package de.avgl.dmp.persistence.model.internal;
 
+import java.util.Set;
+
 import com.fasterxml.jackson.databind.JsonNode;
+
+import de.avgl.dmp.persistence.model.internal.rdf.helper.AttributePathHelper;
 
 /**
  * The model interface for holding and providing data for further processing.
@@ -15,4 +19,8 @@ public interface Model {
 	 * @return a JSON serialisation of the data of the model
 	 */
 	JsonNode toJSON();
+	
+	JsonNode getSchema();
+	
+	Set<AttributePathHelper> getAttributePaths();
 }

@@ -59,18 +59,6 @@ public class DataModelUtil {
 	}
 
 	/**
-	 * This method is deprecated. Please utilise {@link DataModelUtil#getData(long)} instead.
-	 * 
-	 * @param resourceId
-	 * @param configurationId
-	 * @return
-	 */
-	@Deprecated
-	public Optional<Iterator<Tuple<String, JsonNode>>> getData(final long resourceId, final long configurationId) {
-		return getData(resourceId, configurationId, Optional.<Integer> absent());
-	}
-
-	/**
 	 * Gets the data of the given data model.
 	 * 
 	 * @param dataModelId the identifier of the data model.
@@ -78,56 +66,6 @@ public class DataModelUtil {
 	 */
 	public Optional<Iterator<Tuple<String, JsonNode>>> getData(final long dataModelId) {
 		return getData(dataModelId, Optional.<Integer> absent());
-	}
-
-	/**
-	 * This method is deprecated. Please utilise {@link DataModelUtil#getData(long, Optional)} instead.
-	 * 
-	 * @param resourceId
-	 * @param configurationId
-	 * @param atMost
-	 * @return
-	 */
-	@Deprecated
-	public Optional<Iterator<Tuple<String, JsonNode>>> getData(final long resourceId, final long configurationId, final Optional<Integer> atMost) {
-
-		DataModelUtil.LOG.debug(String.format("try to get data for configuration with id [%d] for resource with id [%d]", configurationId,
-				resourceId));
-
-		final Optional<Configuration> configurationOptional = fetchConfiguration(resourceId, configurationId);
-
-		if (!configurationOptional.isPresent()) {
-
-			return Optional.absent();
-		}
-
-		final InternalModelService internalService;
-		try {
-			internalService = determineInternalService(configurationOptional.get());
-		} catch (final DMPControllerException e) {
-			return Optional.absent();
-		}
-
-		final Optional<Map<String, Model>> maybeTriples;
-
-		try {
-
-			maybeTriples = internalService.getObjects(resourceId, configurationId, atMost);
-		} catch (final DMPPersistenceException e1) {
-
-			DataModelUtil.LOG.debug(e1);
-			return Optional.absent();
-		}
-
-		if (!maybeTriples.isPresent()) {
-
-			DataModelUtil.LOG.debug("couldn't find data");
-			return Optional.absent();
-		}
-
-		final Iterator<Map.Entry<String, Model>> iterator = maybeTriples.get().entrySet().iterator();
-
-		return Optional.of(dataIterator(iterator));
 	}
 
 	/**

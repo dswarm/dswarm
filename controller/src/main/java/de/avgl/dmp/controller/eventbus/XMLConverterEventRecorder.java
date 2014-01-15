@@ -50,7 +50,7 @@ public class XMLConverterEventRecorder {
 	 * @param event an converter event that provides a data model
 	 */
 	@Subscribe
-	public void processDataModel(final ConverterEvent event) {
+	public void processDataModel(final XMLConverterEvent event) {
 
 		final DataModel dataModel = event.getDataModel();
 

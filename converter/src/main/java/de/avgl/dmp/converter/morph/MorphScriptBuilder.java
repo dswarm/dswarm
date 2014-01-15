@@ -40,6 +40,7 @@ import com.google.common.io.InputSupplier;
 import com.google.common.io.Resources;
 
 import de.avgl.dmp.converter.DMPConverterException;
+import de.avgl.dmp.init.util.DMPStatics;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.Mapping;
@@ -48,7 +49,7 @@ import de.avgl.dmp.persistence.model.job.Transformation;
 
 /**
  * Creates a metamorph script from a given {@link Task}.
- * 
+ *
  * @author phorn
  * @author tgaengler
  *
@@ -237,13 +238,13 @@ public class MorphScriptBuilder {
 		}
 
 		doc = docBuilder.newDocument();
-		doc.setXmlVersion("1.0");
+		doc.setXmlVersion("1.1");
 
 		final Element rootElement = doc.createElement("metamorph");
 		rootElement.setAttribute("xmlns", "http://www.culturegraph.org/metamorph");
 		rootElement.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
 		rootElement.setAttribute("xsi:schemaLocation", "http://www.culturegraph.org/metamorph metamorph.xsd");
-		rootElement.setAttribute("entityMarker", ".");
+		rootElement.setAttribute("entityMarker", DMPStatics.ATTRIBUTE_DELIMITER.toString());
 		rootElement.setAttribute("version", "1");
 		doc.appendChild(rootElement);
 
@@ -373,15 +374,15 @@ public class MorphScriptBuilder {
 					data.appendChild(comp);
 
 					previousProcessingComponent = processingComponent;
-					
+
 					final Set<Component> outputComponents = previousProcessingComponent.getOutputComponents();
 
 					if (outputComponents != null && !outputComponents.isEmpty()) {
-						
+
 						// TODO: only one output component for now
 						processingComponent = outputComponents.iterator().next();
 					} else {
-						
+
 						processingComponent = null;
 					}
 				}
