@@ -118,19 +118,29 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends
 		return actualObject;
 	}
 	
-	public POJOCLASS updateObject(final String objectId, final String objectJSONFileName) throws Exception {
+	public POJOCLASS updateObject(final POJOCLASS persistedObject, final String updateObjectJSONFileName) throws Exception {
 		
-		final String objectJSONString = DMPPersistenceUtil.getResourceAsString(objectJSONFileName);
-		final POJOCLASS expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
-
-		final POJOCLASS actualObject = updateObject(objectJSONString, expectedObject, objectId);
+		String updateObjectJSONString = DMPPersistenceUtil.getResourceAsString(updateObjectJSONFileName);
+		
+		final ObjectNode objectJSON = objectMapper.readValue(updateObjectJSONString, ObjectNode.class);
+		objectJSON.put("id", String.valueOf(persistedObject.getId()));
+		
+		updateObjectJSONString = objectMapper.writeValueAsString(objectJSON);
+		
+		final POJOCLASS expectedObject = objectMapper.readValue(updateObjectJSONString, pojoClass);
+		
+		final POJOCLASS actualObject = updateObject(updateObjectJSONString, expectedObject);
 		
 		return actualObject;
 	}
 	
-	public POJOCLASS updateObject(final String objectJSONString, final POJOCLASS expectedObject, final String objectId) throws Exception {
+	public POJOCLASS updateObject(final String objectJSONString, final POJOCLASS expectedObject) throws Exception {
 		
-		final Response response = target(objectId).request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+		POJOCLASSIDTYPE objectId = objectMapper.readValue(objectJSONString, pojoClass).getId();
+		
+		Assert.assertEquals("the id of the updeted object should be equal", objectId, expectedObject.getId());
+		
+		final Response response = target(String.valueOf(objectId)).request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
 				.put(Entity.json(objectJSONString));
 
 		Assert.assertEquals("200 Updated was expected", 200, response.getStatus());

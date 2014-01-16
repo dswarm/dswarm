@@ -11,5 +11,7 @@ public class ConfigurationsResourceTest extends BasicResourceTest<Configurations
 	public ConfigurationsResourceTest() {
 
 		super(Configuration.class, ConfigurationService.class, "configurations", "configuration.json", new ConfigurationsResourceTestUtils());
+		
+		updateObjectJSONFileName = "configuration2.json";
 	}
 }
