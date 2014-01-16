@@ -229,7 +229,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<Schema, SchemaServi
 		Attribute attribute = null;
 
 		try {
-			attribute = attributeService.createObject(id);
+			attribute = attributeService.createObjectTransactional(id);
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while attribute creation.\n" + e.getMessage(), false);
@@ -270,7 +270,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<Schema, SchemaServi
 		Clasz clasz = null;
 
 		try {
-			clasz = classService.createObject(id);
+			clasz = classService.createObjectTransactional(id);
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while class creation.\n" + e.getMessage(), false);

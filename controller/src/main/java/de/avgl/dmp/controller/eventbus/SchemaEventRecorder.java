@@ -94,7 +94,7 @@ public class SchemaEventRecorder {
 
 			final String recordClassURI = dataResourceBaseSchemaURI + "RecordType";
 
-			final Clasz newClasz = claszService.createObject(recordClassURI);
+			final Clasz newClasz = claszService.createObjectTransactional(recordClassURI);
 			newClasz.setName("record type");
 
 			clasz = newClasz;
@@ -110,7 +110,7 @@ public class SchemaEventRecorder {
 
 		for (final String stringAttribute : stringAttributes) {
 			final String attributeId = dataResourceBaseSchemaURI + stringAttribute;
-			final Attribute attribute = attributeService.createObject(attributeId);
+			final Attribute attribute = attributeService.createObjectTransactional(attributeId);
 
 			attribute.setName(stringAttribute);
 

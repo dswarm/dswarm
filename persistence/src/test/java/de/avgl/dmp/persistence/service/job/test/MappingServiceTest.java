@@ -957,7 +957,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<Mapping, MappingSe
 		Attribute attribute = null;
 
 		try {
-			attribute = attributeService.createObject(id);
+			attribute = attributeService.createObjectTransactional(id);
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while attribute creation.\n" + e.getMessage(), false);

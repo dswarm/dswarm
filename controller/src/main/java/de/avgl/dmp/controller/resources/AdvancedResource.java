@@ -62,7 +62,7 @@ public abstract class AdvancedResource<POJOCLASSRESOURCEUTILS extends AdvancedRe
 	protected POJOCLASS createObject(final POJOCLASS objectFromJSON, final POJOCLASSPERSISTENCESERVICE persistenceService)
 			throws DMPPersistenceException {
 
-		return persistenceService.createObject(objectFromJSON.getId());
+		return persistenceService.createObjectTransactional(objectFromJSON.getId());
 	}
 
 	@Override

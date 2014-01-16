@@ -40,6 +40,17 @@ public abstract class AdvancedJPAService<POJOCLASS extends BasicDMPObject> exten
 	 * @return the persisted object of the specific class
 	 */
 	@Transactional(rollbackOn = DMPPersistenceException.class)
+	public POJOCLASS createObjectTransactional(final String id) throws DMPPersistenceException {
+
+		return createObject(id);
+	}
+	
+	/**
+	 * Create and persist an object of the specific class with the given identifier.<br>
+	 * 
+	 * @param id the identifier of the object
+	 * @return the persisted object of the specific class
+	 */
 	public POJOCLASS createObject(final String id) throws DMPPersistenceException {
 
 		final POJOCLASS existingObject = getObject(id);

@@ -114,14 +114,16 @@ public class AttributePath extends DMPJPAObject {
 	 */
 	public AttributePath(final LinkedList<Attribute> attributesArg) {
 
-		orderedAttributes = attributesArg;
-
-		if (null != orderedAttributes) {
-
-			attributes = Sets.newLinkedHashSet(orderedAttributes);
-
-			initAttributePath(false);
-		}
+//		orderedAttributes = attributesArg;
+//
+//		if (null != orderedAttributes) {
+//
+//			attributes = Sets.newLinkedHashSet(orderedAttributes);
+//
+//			initAttributePath(false);
+//		}
+		
+		setAttributePath(attributesArg);
 	}
 
 	/**
@@ -154,11 +156,11 @@ public class AttributePath extends DMPJPAObject {
 	 * 
 	 * @return the attribute path as JSON object
 	 */
-	public String getAttributePathAsJSONObject() {
+	public String getAttributePathAsJSONObjectString() {
 
-		initAttributePath(false);
-		
-		refreshAttributePathString();
+//		initAttributePath(false);
+//		
+//		refreshAttributePathString();
 
 		return attributePath;
 	}

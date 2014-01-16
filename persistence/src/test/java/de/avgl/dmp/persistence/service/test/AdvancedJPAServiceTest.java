@@ -22,7 +22,7 @@ public abstract class AdvancedJPAServiceTest<POJOCLASS extends BasicDMPObject, J
 
 		try {
 
-			object = jpaService.createObject(id);
+			object = jpaService.createObjectTransactional(id);
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong during object creation.\n" + e.getMessage(), false);

@@ -378,7 +378,7 @@ public class InternalTripleService implements InternalModelService {
 		} else {
 
 			// create new class
-			recordClass = classService.get().createObject(recordClassUri);
+			recordClass = classService.get().createObjectTransactional(recordClassUri);
 			
 			final String recordClassName = SchemaUtils.determineRelativeURIPart(recordClassUri);
 
@@ -406,7 +406,7 @@ public class InternalTripleService implements InternalModelService {
 
 			for (final String attributeString : attributePathHelper.getAttributePath()) {
 
-				final Attribute attribute = attributeService.get().createObject(attributeString);
+				final Attribute attribute = attributeService.get().createObjectTransactional(attributeString);
 				attributes.add(attribute);
 
 				final String attributeName = SchemaUtils.determineRelativeURIPart(attributeString);
