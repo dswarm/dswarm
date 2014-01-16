@@ -1,0 +1,127 @@
+<?xml version='1.0'  encoding='UTF-8' ?>
+<record>
+	<control>
+		<sourcerecordid>63275</sourcerecordid>
+		<sourceid>libero_mab2</sourceid>
+		<recordid>libero_mab263275</recordid>
+		<ilsapiid>63275</ilsapiid>
+		<addsrcrecordid>63275</addsrcrecordid>
+		<sourceformat>MAB</sourceformat>
+		<sourcesystem>Other</sourcesystem>
+	</control>
+	<display>
+		<type>book</type>
+		<title>Apel, Heinrich Eduard: Disputationes de iis, quae Carolus
+			Miltitius cum Luthero, inprimis Altenburgi in aedibus Spalatini,
+			egerit - 1</title>
+		<publisher>Typogr. Aulico</publisher>
+		<creationdate>1844</creationdate>
+		<format>18 S.</format>
+		<ispartof>Sacra anniversaria illustris Gymnasii Fridericiani
+			Altenburgensis ... rite celebranda indicit ; 1844</ispartof>
+		<language>lat</language>
+		<relation>Sacra anniversaria illustris Gymnasii Fridericiani
+			Altenburgensis ... rite celebranda indicit ; 1844</relation>
+		<availlibrary>$$ISLUB$$Lzell1$$1Magazin$$Savailable$$3MAG$$X32515514$$Yzell1
+		</availlibrary>
+		<lds12>Apel, Heinrich Eduard: Disputationes de iis, quae Carolus
+			Miltitius cum Luthero, inprimis Altenburgi in aedibus Spalatini,
+			egerit - 1</lds12>
+		<lds17>Buch</lds17>
+		<lds18>Typogr. Aulico</lds18>
+		<lds21>032431163</lds21>
+		<lds22>074958739</lds22>
+		<lds28>Altenburgi :</lds28>
+		<lds31>Apel, Heinrich Eduard: Disputationes de iis, quae Carolus
+			Miltitius cum Luthero, inprimis Altenburgi in aedibus Spalatini,
+			egerit</lds31>
+		<lds32><![CDATA[Friedrichs-Gymnasium &lt;Altenburg, Leipzig&gt;: Sacra
+			anniversaria illustris Gymnasii Fridericiani Altenburgensis ... rite
+			celebranda indicit]]></lds32>
+		<lds39>Sacra anniversaria illustris Gymnasii Fridericiani
+			Altenburgensis ... rite celebranda indicit ; 1844</lds39>
+		<availinstitution>$$ISLUB$$Savailable</availinstitution>
+		<availpnx>available</availpnx>
+	</display>
+	<links>
+		<linktoholdings>$$Tlibero_holdings</linktoholdings>
+	</links>
+	<search>
+		<title>Apel, Heinrich Eduard: Disputationes de iis, quae Carolus
+			Miltitius cum Luthero, inprimis Altenburgi in aedibus Spalatini,
+			egerit</title>
+		<title>1</title>
+		<sourceid>libero_mab2</sourceid>
+		<recordid>libero_mab263275</recordid>
+		<recordid>032431201</recordid>
+		<recordid>63275</recordid>
+		<recordid>311720309</recordid>
+		<rsrctype>book</rsrctype>
+		<creationdate>1844</creationdate>
+		<addtitle>Sacra anniversaria illustris Gymnasii Fridericiani
+			Altenburgensis ... rite celebranda indicit ; 1844</addtitle>
+		<addtitle><![CDATA[Friedrichs-Gymnasium &lt;Altenburg, Leipzig&gt;: Sacra
+			anniversaria illustris Gymnasii Fridericiani Altenburgensis ... rite
+			celebranda indicit]]></addtitle>
+		<addsrcrecordid>63275</addsrcrecordid>
+		<searchscope>libero_mab2</searchscope>
+		<searchscope>SC_SLUB-ZB</searchscope>
+		<searchscope>EXL</searchscope>
+		<scope>libero_mab2</scope>
+		<scope>SC_SLUB-ZB</scope>
+		<scope>EXL</scope>
+		<lsr01>32515514</lsr01>
+		<lsr04>Hist.Sax.D.527,1.m-1</lsr04>
+		<lsr05>Typogr. Aulico</lsr05>
+		<lsr06>MAG</lsr06>
+		<lsr20>032431201</lsr20>
+		<lsr21>032431163</lsr21>
+		<lsr21>074958739</lsr21>
+	</search>
+	<sort>
+		<title>Apel, Heinrich Eduard: Disputationes de iis, quae Carolus
+			Miltitius cum Luthero, inprimis Altenburgi in aedibus Spalatini,
+			egerit - 1</title>
+		<creationdate>1844</creationdate>
+	</sort>
+	<facets>
+		<language>lat</language>
+		<creationdate>1844</creationdate>
+		<prefilter>books</prefilter>
+		<rsrctype>books</rsrctype>
+		<lfc01>available</lfc01>
+		<lfc02>zell1</lfc02>
+		<toplevel>available</toplevel>
+	</facets>
+	<dedup>
+		<t>99</t>
+		<c1>032431201</c1>
+		<c4>1844</c4>
+		<f1>032431201</f1>
+		<f6>1844</f6>
+		<f10>typog</f10>
+	</dedup>
+	<frbr>
+		<t>99</t>
+	</frbr>
+	<delivery>
+		<institution>EXL</institution>
+		<delcategory>Physical Item</delcategory>
+	</delivery>
+	<ranking>
+		<booster2>1</booster2>
+	</ranking>
+	<addata>
+		<btitle>Apel, Heinrich Eduard: Disputationes de iis, quae Carolus
+			Miltitius cum Luthero, inprimis Altenburgi in aedibus Spalatini,
+			egerit - 1</btitle>
+		<addtitle>Sacra anniversaria illustris Gymnasii Fridericiani
+			Altenburgensis ... rite celebranda indicit ; 1844</addtitle>
+		<format>book</format>
+		<genre>book</genre>
+		<cop>Altenburgi</cop>
+		<pub>Typogr. Aulico</pub>
+		<lad04>dbodproxy_du</lad04>
+		<lad05>dbodproxy_du</lad05>
+	</addata>
+</record>
