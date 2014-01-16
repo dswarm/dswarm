@@ -24,6 +24,8 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends BasicJPAService<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE> extends ResourceTest {
 
+	private static final org.apache.log4j.Logger		LOG					= org.apache.log4j.Logger.getLogger(BasicResourceTestUtils.class);
+	
 	protected final Class<POJOCLASS>	pojoClass;
 
 	protected final String			pojoClassName;
@@ -131,6 +133,15 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends
 			// clean-up DB
 
 			final POJOCLASSIDTYPE objectId = object.getId();
+			
+			final POJOCLASS toBeDeletedObject = persistenceService.getObject(objectId);
+			
+			if(toBeDeletedObject == null) {
+				
+				LOG.info(pojoClassName + " with id '" + objectId + "' has already been deleted from DB or never existed there");
+				
+				return;
+			}
 
 			persistenceService.deleteObject(objectId);
 

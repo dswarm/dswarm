@@ -32,7 +32,6 @@ import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.DMPObject;
 import de.avgl.dmp.persistence.service.BasicJPAService;
-import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
  * A generic resource (controller service), whose concrete implementations can be derived with a given implementation of
@@ -314,30 +313,11 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 	 */
 	protected POJOCLASS addObject(final String objectJSONString) throws DMPControllerException {
 
-		final POJOCLASS objectFromJSON;
-
 		final String enhancedObjectJSONString = prepareObjectJSONString(objectJSONString);
 
 		// get the deserialisised object from the enhanced JSON string
 
-		try {
-
-			objectFromJSON = pojoClassResourceUtils.getObjectMapper().readValue(enhancedObjectJSONString, pojoClassResourceUtils.getClasz());
-		} catch (final JsonMappingException je) {
-
-			throw new DMPJsonException("something went wrong while deserializing the " + pojoClassResourceUtils.getClaszName() + " JSON string", je);
-		} catch (final IOException e) {
-
-			BasicResource.LOG.debug("something went wrong while deserializing the " + pojoClassResourceUtils.getClaszName() + " JSON string");
-
-			throw new DMPControllerException("something went wrong while deserializing the " + pojoClassResourceUtils.getClaszName()
-					+ " JSON string.\n" + e.getMessage());
-		}
-
-		if (objectFromJSON == null) {
-
-			throw new DMPControllerException("deserialized " + pojoClassResourceUtils.getClaszName() + " is null");
-		}
+		final POJOCLASS objectFromJSON = pojoClassResourceUtils.deserializeObjectJSONString(enhancedObjectJSONString);
 
 		// create a new persistent object
 
@@ -429,18 +409,15 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 		}
 
 		enhanceJSONNode(jsonNode);
+		
+		final String enhancedObjectJSONString = pojoClassResourceUtils.serializeObject(jsonNode);
 
-		try {
+		final POJOCLASS object = pojoClassResourceUtils.deserializeObjectJSONString(enhancedObjectJSONString);
 
-			final String enhancedObjectJSONString = pojoClassResourceUtils.getObjectMapper().writeValueAsString(jsonNode);
-
-			return enhancedObjectJSONString;
-		} catch (final JsonProcessingException e) {
-
-			BasicResource.LOG.debug("couldn't serialize enhanced " + pojoClassResourceUtils.getClaszName() + " JSON.");
-
-			throw new DMPControllerException("couldn't serialize enhanced " + pojoClassResourceUtils.getClaszName() + " JSON.\n" + e.getMessage());
-		}
+		// mint real ids for already set dummy ids
+		pojoClassResourceUtils.replaceRelevantDummyIds(object, jsonNode, dummyIdCandidates);
+		
+		return pojoClassResourceUtils.serializeObject(jsonNode);
 	}
 
 	protected JsonNode enhanceJSONNode(final JsonNode jsonNode) {
@@ -467,21 +444,23 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 		return jsonNode;
 	}
-	
+
 	protected abstract void checkObjectId(final JsonNode idNode, final ObjectNode objectJSON);
-	
+
 	protected abstract ObjectNode addDummyId(final ObjectNode objectJSON);
 
 	protected JsonNode enhanceObjectJSON(final ObjectNode objectJSON) {
 
 		final JsonNode idNode = objectJSON.get("id");
 
-		// TODO: should we mint real ids for already set dummy ids here, i.e., at controller service level?
-
 		if (idNode == null || NullNode.class.isInstance(idNode)) {
+
+			// add dummy id to object, if it hasn't one before
 
 			addDummyId(objectJSON);
 		} else {
+
+			// check id and add it to the dummy id candidates, if it is a dummy id
 
 			checkObjectId(idNode, objectJSON);
 		}
@@ -504,14 +483,14 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 		return objectJSON;
 	}
-	
+
 	protected void addDummyIdCandidate(final POJOCLASSIDTYPE dummyId) {
-		
-		if(dummyIdCandidates == null) {
-			
+
+		if (dummyIdCandidates == null) {
+
 			dummyIdCandidates = Sets.newCopyOnWriteArraySet();
 		}
-		
+
 		dummyIdCandidates.add(dummyId);
 	}
 }

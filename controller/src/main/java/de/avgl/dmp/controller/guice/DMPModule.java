@@ -1,6 +1,7 @@
 package de.avgl.dmp.controller.guice;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.servlet.ServletScopes;
 
 import de.avgl.dmp.controller.eventbus.CSVConverterEventRecorder;
 import de.avgl.dmp.controller.eventbus.SchemaEventRecorder;
@@ -45,17 +46,17 @@ public class DMPModule extends AbstractModule {
 		bind(DMPStatus.class);
 		
 		// resource utils
-		bind(ComponentsResourceUtils.class);
-		bind(FiltersResourceUtils.class);
-		bind(FunctionsResourceUtils.class);
-		bind(MappingsResourceUtils.class);
-		bind(ProjectsResourceUtils.class);
-		bind(TransformationsResourceUtils.class);
-		bind(ConfigurationsResourceUtils.class);
-		bind(DataModelsResourceUtils.class);
-		bind(AttributePathsResourceUtils.class);
-		bind(AttributesResourceUtils.class);
-		bind(ClaszesResourceUtils.class);
-		bind(SchemasResourceUtils.class);
+		bind(ComponentsResourceUtils.class).in(ServletScopes.REQUEST);
+		bind(FiltersResourceUtils.class).in(ServletScopes.REQUEST);
+		bind(FunctionsResourceUtils.class).in(ServletScopes.REQUEST);
+		bind(MappingsResourceUtils.class).in(ServletScopes.REQUEST);
+		bind(ProjectsResourceUtils.class).in(ServletScopes.REQUEST);
+		bind(TransformationsResourceUtils.class).in(ServletScopes.REQUEST);
+		bind(ConfigurationsResourceUtils.class).in(ServletScopes.REQUEST);
+		bind(DataModelsResourceUtils.class).in(ServletScopes.REQUEST);
+		bind(AttributePathsResourceUtils.class).in(ServletScopes.REQUEST);
+		bind(AttributesResourceUtils.class).in(ServletScopes.REQUEST);
+		bind(ClaszesResourceUtils.class).in(ServletScopes.REQUEST);
+		bind(SchemasResourceUtils.class).in(ServletScopes.REQUEST);
 	}
 }

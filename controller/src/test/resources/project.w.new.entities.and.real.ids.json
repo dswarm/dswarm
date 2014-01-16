@@ -1,25 +1,25 @@
 {
-    "id": 2,
+    "id": 1,
     "name": "my project",
     "description": "my project description",
     "mappings": [{
-        "id": 8,
+        "id": 2,
         "name": "my mapping",
         "transformation": {
-            "id": 18,
+            "id": 4,
             "name": "my transformation (component)",
             "function": {
                 "type": "Transformation",
-                "id": 291,
+                "id": 4,
                 "name": "my transformation",
                 "description": "transformation which just makes use of one function",
                 "parameters": ["transformationInputString"],
                 "components": [{
-                    "id": 17,
+                    "id": 3,
                     "name": "my trim component",
                     "function": {
                         "type": "Function",
-                        "id": 292,
+                        "id": 3,
                         "name": "trim",
                         "description": "trims leading and trailing whitespaces from a given string",
                         "parameters": ["inputString", "parameter2"],
@@ -53,14 +53,14 @@
             }
         },
         "input_attribute_paths": [{
-            "id": 59,
+            "id": 11,
             "attributes": [{
                 "id": "http://purl.org/dc/terms/title",
                 "name": "title"
             }]
         }],
         "output_attribute_path": {
-            "id": 58,
+            "id": 10,
             "attributes": [{
                 "id": "http://www.w3.org/2000/01/rdf-schema#label",
                 "name": "label"
@@ -69,7 +69,7 @@
     }],
     "functions": [{
         "type": "Function",
-        "id": 290,
+        "id": 3,
         "name": "trim",
         "description": "trims leading and trailing whitespaces from a given string",
         "parameters": ["inputString", "parameter2"],
@@ -92,13 +92,16 @@
         "type": "Function"
     }],
     "input_data_model": {
-        "id": 17,
+        "id": 3,
         "name": "my data model",
         "description": "my data model description",
         "configuration": {
-            "id": 12,
+            "id": 2,
             "name": "foo",
             "description": "bar",
+            "resources": [{
+                "id": 2
+            }],
             "parameters": {
                 "encoding": "UTF-8",
                 "escape_character": "\\",
@@ -108,16 +111,16 @@
             }
         },
         "schema": {
-            "id": 11,
+            "id": 2,
             "name": "my schema",
             "attribute_paths": [{
-                "id": 56,
+                "id": 7,
                 "attributes": [{
                     "id": "http://purl.org/dc/terms/created",
                     "name": "created"
                 }]
             }, {
-                "id": 55,
+                "id": 8,
                 "attributes": [{
                     "id": "http://purl.org/dc/terms/creator",
                     "name": "creator"
@@ -126,7 +129,7 @@
                     "name": "name"
                 }]
             }, {
-                "id": 57,
+                "id": 9,
                 "attributes": [{
                     "id": "http://purl.org/dc/terms/title",
                     "name": "title"
@@ -144,7 +147,7 @@
             }
         },
         "data_resource": {
-            "id": 9,
+            "id": 2,
             "name": "test_csv.csv",
             "description": "blubblub",
             "type": "FILE",
@@ -153,11 +156,11 @@
                 "filesize": 766
             },
             "configurations": [{
-                "id": 13,
+                "id": 2,
                 "name": "foo",
                 "description": "bar",
                 "resources": [{
-                    "id": 9
+                    "id": 2
                 }],
                 "parameters": {
                     "encoding": "UTF-8",
@@ -170,20 +173,29 @@
         }
     },
     "output_data_model": {
-        "id": 18,
+        "id": 4,
         "name": "my output data model",
         "description": "my output data model description",
         "schema": {
-            "id": 12,
+            "id": 2,
             "name": "my schema",
             "attribute_paths": [{
-                "id": 62,
+                "id": 7,
                 "attributes": [{
                     "id": "http://purl.org/dc/terms/created",
                     "name": "created"
                 }]
             }, {
-                "id": 61,
+                "id": 8,
+                "attributes": [{
+                    "id": "http://purl.org/dc/terms/creator",
+                    "name": "creator"
+                }, {
+                    "id": "http://xmlns.com/foaf/0.1/name",
+                    "name": "name"
+                }]
+            }, {
+                "id": 9,
                 "attributes": [{
                     "id": "http://purl.org/dc/terms/title",
                     "name": "title"
@@ -193,15 +205,6 @@
                 }, {
                     "id": "http://purl.org/dc/terms/title",
                     "name": "title"
-                }]
-            }, {
-                "id": 60,
-                "attributes": [{
-                    "id": "http://purl.org/dc/terms/creator",
-                    "name": "creator"
-                }, {
-                    "id": "http://xmlns.com/foaf/0.1/name",
-                    "name": "name"
                 }]
             }],
             "record_class": {

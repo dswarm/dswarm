@@ -210,7 +210,7 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 		final ObjectNode finalConfigurationJSON = objectMapper.readValue(finalConfigurationJSONString, ObjectNode.class);
 
 		dataModelJSON.put("configuration", finalConfigurationJSON);
-		
+
 		objectJSONString = objectMapper.writeValueAsString(projectJSON);
 
 		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
@@ -410,6 +410,19 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 		// START data models tear down
 
 		for (final DataModel dataModel : dataModels.values()) {
+
+			if (dataModel.getSchema() != null) {
+
+				final Set<AttributePath> attributePaths = dataModel.getSchema().getAttributePaths();
+
+				if (attributePaths != null) {
+
+					for (final AttributePath attributePath : attributePaths) {
+
+						this.attributePaths.put(attributePath.getId(), attributePath);
+					}
+				}
+			}
 
 			dataModelsResourceTestUtils.deleteObject(dataModel);
 		}

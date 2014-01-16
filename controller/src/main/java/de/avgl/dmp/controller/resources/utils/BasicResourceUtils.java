@@ -1,5 +1,6 @@
 package de.avgl.dmp.controller.resources.utils;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -7,6 +8,8 @@ import java.util.Set;
 
 import javax.inject.Provider;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -15,6 +18,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
 
 import de.avgl.dmp.controller.DMPControllerException;
+import de.avgl.dmp.controller.DMPJsonException;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.DMPObject;
 import de.avgl.dmp.persistence.service.BasicJPAService;
@@ -42,6 +46,8 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 	// TODO: this might be not the best solution ...
 	protected static final Set<String>						toBeSkippedJsonNodes	= Sets.newHashSet();
 
+	private Set<POJOCLASSIDTYPE>							processedObjectIds;
+
 	static {
 
 		// add here all identifiers for attributes that bear native JSON objects/arrays
@@ -64,7 +70,7 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 
 		pojoClassIdType = pojoClassIdTypeArg;
 	}
-	
+
 	/**
 	 * Gets the concrete POJO class of this resource (controller service).
 	 * 
@@ -74,52 +80,65 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 
 		return pojoClass;
 	}
-	
+
 	public String getClaszName() {
-		
+
 		return pojoClassName;
 	}
-	
+
 	public Class<POJOCLASSIDTYPE> getIdType() {
-		
+
 		return pojoClassIdType;
 	}
-	
+
 	public ObjectMapper getObjectMapper() {
-		
+
 		return objectMapperProvider.get();
 	}
-	
+
 	public POJOCLASSPERSISTENCESERVICE getPersistenceService() {
-		
+
 		return persistenceServiceProvider.get();
 	}
-	
+
 	public static Set<String> getToBeSkippedJsonNodes() {
-		
+
 		return toBeSkippedJsonNodes;
 	}
 
-	public ObjectNode replaceRelevantDummyIds(final POJOCLASS object, final ObjectNode objectJSON, final Set<POJOCLASSIDTYPE> dummyIdCandidates)
+	public JsonNode replaceRelevantDummyIds(final POJOCLASS object, final JsonNode jsonNode, final Set<POJOCLASSIDTYPE> dummyIdCandidates)
 			throws DMPControllerException {
 
-		if (dummyIdCandidates == null || dummyIdCandidates.isEmpty()) {
+		if (hasObjectAlreadyBeenProcessed(object.getId())) {
 
-			return objectJSON;
+			return jsonNode;
+		}
+
+		if (areDummyIdCandidatesEmpty(dummyIdCandidates)) {
+
+			addProcessedObjectId(object.getId());
+
+			return jsonNode;
 		}
 
 		if (dummyIdCandidates.contains(object.getId())) {
 
 			final POJOCLASS newObject = createObject();
-			
+
+			final JsonNode enhancedJsonNode = replaceDummyIdInJsonNode(jsonNode, object.getId(), newObject.getId());
+
+			// remove processed dummy id
+
 			dummyIdCandidates.remove(object.getId());
 
-			return replaceDummyIdInObjectJSON(objectJSON, object.getId(), newObject.getId());
+			addProcessedObjectId(object.getId());
+
+			return enhancedJsonNode;
 		}
 
-		// TODO: recursion in concrete pojo class resource utils
+		addProcessedObjectId(object.getId());
 
-		return objectJSON;
+		return jsonNode;
 	}
 
 	public POJOCLASS createObject() throws DMPControllerException {
@@ -139,8 +158,6 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 
 		return persistenceServiceProvider.get().getObjects();
 	}
-	
-	protected abstract ObjectNode replaceDummyId(final JsonNode idNode, final POJOCLASSIDTYPE dummyId, final POJOCLASSIDTYPE realId, final ObjectNode objectJson);
 
 	public void deleteObject(final POJOCLASSIDTYPE id) {
 
@@ -150,6 +167,83 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 
 			persistenceServiceProvider.get().deleteObject(objectId);
 		}
+	}
+
+	public POJOCLASS deserializeObjectJSONString(final String objectJSONString) throws DMPControllerException {
+
+		POJOCLASS objectFromJSON = null;
+
+		try {
+
+			objectFromJSON = objectMapperProvider.get().readValue(objectJSONString, pojoClass);
+		} catch (final JsonMappingException je) {
+
+			throw new DMPJsonException("something went wrong while deserializing the " + pojoClassName + " JSON string", je);
+		} catch (final IOException e) {
+
+			BasicResourceUtils.LOG.debug("something went wrong while deserializing the " + pojoClassName + " JSON string");
+
+			throw new DMPControllerException("something went wrong while deserializing the " + pojoClassName + " JSON string.\n" + e.getMessage());
+		}
+
+		if (objectFromJSON == null) {
+
+			throw new DMPControllerException("deserialized " + pojoClassName + " is null");
+		}
+
+		return objectFromJSON;
+	}
+
+	public String serializeObject(final Object object) throws DMPControllerException {
+
+		String objectJSONString = null;
+
+		try {
+
+			objectJSONString = objectMapperProvider.get().writeValueAsString(object);
+		} catch (final JsonProcessingException e) {
+
+			BasicResourceUtils.LOG.debug("couldn't serialize enhanced " + pojoClassName + " JSON.");
+
+			throw new DMPControllerException("couldn't serialize enhanced " + pojoClassName + " JSON.\n" + e.getMessage());
+		}
+
+		if (objectJSONString == null) {
+
+			BasicResourceUtils.LOG.debug("couldn't serialize enhanced " + pojoClassName + " JSON correctly.");
+
+			throw new DMPControllerException("couldn't serialize enhanced " + pojoClassName + " JSON correctly.\n");
+		}
+
+		return objectJSONString;
+	}
+
+	protected abstract ObjectNode replaceDummyId(final JsonNode idNode, final POJOCLASSIDTYPE dummyId, final POJOCLASSIDTYPE realId,
+			final ObjectNode objectJson);
+
+	protected boolean areDummyIdCandidatesEmpty(final Set<POJOCLASSIDTYPE> dummyIdCandidates) {
+
+		if (dummyIdCandidates == null || dummyIdCandidates.isEmpty()) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+	protected boolean checkObject(final POJOCLASS object, final Set<POJOCLASSIDTYPE> dummyIdCandidates) {
+
+		if (hasObjectAlreadyBeenProcessed(object.getId())) {
+
+			return true;
+		}
+
+		if (areDummyIdCandidatesEmpty(dummyIdCandidates)) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 	private ObjectNode replaceDummyIdInObjectJSON(final ObjectNode objectJSON, final POJOCLASSIDTYPE dummyId, final POJOCLASSIDTYPE realId) {
@@ -203,5 +297,30 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 		}
 
 		return jsonNode;
+	}
+
+	private void addProcessedObjectId(final POJOCLASSIDTYPE objectId) {
+
+		if (processedObjectIds == null) {
+
+			processedObjectIds = Sets.newCopyOnWriteArraySet();
+		}
+
+		processedObjectIds.add(objectId);
+	}
+
+	private boolean hasObjectAlreadyBeenProcessed(final POJOCLASSIDTYPE objectId) {
+
+		if (processedObjectIds == null) {
+
+			return false;
+		}
+
+		if (!processedObjectIds.contains(objectId)) {
+
+			return false;
+		}
+
+		return true;
 	}
 }

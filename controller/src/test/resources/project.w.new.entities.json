@@ -86,8 +86,12 @@
         "name": "my data model",
         "description": "my data model description",
         "configuration": {
+            "id": 2,
             "name": "foo",
             "description": "bar",
+            "resources": [{
+                "id": 2
+            }],
             "parameters": {
                 "encoding": "UTF-8",
                 "escape_character": "\\",
@@ -97,9 +101,10 @@
             }
         },
         "schema": {
-        	"id": -2062991439511256064,
+            "id": -2062991439511256064,
             "name": "my schema",
             "attribute_paths": [{
+                "id": -5644638178432668672,
                 "attributes": [{
                     "id": "http://purl.org/dc/terms/title",
                     "name": "title"
@@ -111,6 +116,7 @@
                     "name": "title"
                 }]
             }, {
+                "id": -654021447403068723,
                 "attributes": [{
                     "id": "http://purl.org/dc/terms/creator",
                     "name": "creator"
@@ -119,6 +125,7 @@
                     "name": "name"
                 }]
             }, {
+                "id": -4869048516968233984,
                 "attributes": [{
                     "id": "http://purl.org/dc/terms/created",
                     "name": "created"
@@ -130,7 +137,7 @@
             }
         },
         "data_resource": {
-            "id": 7,
+            "id": 2,
             "name": "test_csv.csv",
             "description": "blubblub",
             "type": "FILE",
@@ -139,11 +146,11 @@
                 "filesize": 766
             },
             "configurations": [{
-                "id": 7,
+                "id": 2,
                 "name": "foo",
                 "description": "bar",
                 "resources": [{
-                    "id": 7
+                    "id": 2
                 }],
                 "parameters": {
                     "encoding": "UTF-8",
@@ -159,9 +166,10 @@
         "name": "my output data model",
         "description": "my output data model description",
         "schema": {
-        	"id": -2062991439511256064,
+            "id": -2062991439511256064,
             "name": "my schema",
             "attribute_paths": [{
+                "id": -5644638178432668672,
                 "attributes": [{
                     "id": "http://purl.org/dc/terms/title",
                     "name": "title"
@@ -173,6 +181,7 @@
                     "name": "title"
                 }]
             }, {
+                "id": -654021447403068723,
                 "attributes": [{
                     "id": "http://purl.org/dc/terms/creator",
                     "name": "creator"
@@ -181,6 +190,7 @@
                     "name": "name"
                 }]
             }, {
+                "id": -4869048516968233984,
                 "attributes": [{
                     "id": "http://purl.org/dc/terms/created",
                     "name": "created"
