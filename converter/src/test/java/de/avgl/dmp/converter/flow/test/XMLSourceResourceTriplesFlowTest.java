@@ -7,13 +7,17 @@ import org.junit.Test;
 import com.fasterxml.jackson.databind.node.TextNode;
 
 import de.avgl.dmp.converter.DMPConverterException;
+import de.avgl.dmp.converter.GuicedTest;
 import de.avgl.dmp.converter.flow.XMLSourceResourceTriplesFlow;
 import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
+import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
+import de.avgl.dmp.persistence.service.resource.DataModelService;
 
-public class XMLSourceResourceTriplesFlowTest {
+
+public class XMLSourceResourceTriplesFlowTest extends GuicedTest {
 
 	private void testFlow(final XMLSourceResourceTriplesFlow flow, final String fileName) throws DMPConverterException {
 
@@ -57,7 +61,7 @@ public class XMLSourceResourceTriplesFlowTest {
 
 	@Test
 	public void testFromConfiguration2() throws Exception {
-		
+
 		final Configuration configuration = new Configuration();
 
 		configuration.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("datensatz"));
@@ -70,6 +74,26 @@ public class XMLSourceResourceTriplesFlowTest {
 		final XMLSourceResourceTriplesFlow flow = new XMLSourceResourceTriplesFlow(dataModel);
 
 		testFlow(flow, "test-complex-xml.xml");
+	}
+
+	@Test
+	public void testFromConfiguration3() throws Exception {
+
+		final DataModelService dataModelService = injector.getInstance(DataModelService.class);
+		final DataModel dataModel = dataModelService.createObject();
+
+		dataModel.setConfiguration(new Configuration() {{
+			addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("record"));
+		}});
+		dataModel.setDataResource(new Resource() {{
+			addAttribute("path", "/tmp/file.record");
+		}});
+
+		final XMLSourceResourceTriplesFlow flow = new XMLSourceResourceTriplesFlow(dataModel);
+
+		testFlow(flow, "test-pnx.xml");
+
+		dataModelService.deleteObject(dataModel.getId());
 	}
 
 	// @Test(expected = DMPConverterException.class)

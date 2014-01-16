@@ -18,10 +18,11 @@ import de.avgl.dmp.converter.mf.stream.source.XMLTripleEncoder;
 import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
+import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
 
 /**
  * Flow that transforms a given XML source into RDF triples.
- * 
+ *
  * @author tgaengler
  *
  */
@@ -30,17 +31,9 @@ public class XMLSourceResourceTriplesFlow {
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(XMLSourceResourceTriplesFlow.class);
 
 	private final Optional<String>					recordTagName;
-	private final Optional<String>					dataModelId;
+	private final Optional<DataModel>				dataModel;
 
 	public XMLSourceResourceTriplesFlow(final DataModel dataModel) throws DMPConverterException {
-
-		if (dataModel != null && dataModel.getId() != null) {
-
-			this.dataModelId = Optional.of(dataModel.getId().toString());
-		} else {
-
-			this.dataModelId = Optional.absent();
-		}
 
 		if (dataModel == null) {
 
@@ -57,7 +50,15 @@ public class XMLSourceResourceTriplesFlow {
 			throw new DMPConverterException("the data model configuration parameters shouldn't be null");
 		}
 
-		recordTagName = getStringParameter(dataModel.getConfiguration(), "record_tag");
+		if (dataModel.getId() != null) {
+
+			this.dataModel = Optional.of(dataModel);
+		} else {
+
+			this.dataModel = Optional.absent();
+		}
+
+		recordTagName = getStringParameter(dataModel.getConfiguration(), ConfigurationStatics.RECORD_TAG);
 	}
 
 	public List<RDFModel> applyRecord(final String record) {
@@ -82,10 +83,10 @@ public class XMLSourceResourceTriplesFlow {
 
 		if (recordTagName.isPresent()) {
 
-			encoder = new XMLTripleEncoder(recordTagName.get(), dataModelId);
+			encoder = new XMLTripleEncoder(recordTagName.get(), dataModel);
 		} else {
 
-			encoder = new XMLTripleEncoder(dataModelId);
+			encoder = new XMLTripleEncoder(dataModel);
 		}
 		final RDFModelReceiver writer = new RDFModelReceiver();
 
