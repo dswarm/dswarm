@@ -1,8 +1,6 @@
 package de.avgl.dmp.controller.resources;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Provider;
-
+import de.avgl.dmp.controller.resources.utils.ExtendedBasicDMPResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
@@ -17,8 +15,8 @@ import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
  *            class
  * @param <POJOCLASS> the concrete POJO class of the resource
  */
-public abstract class ExtendedBasicDMPResource<POJOCLASSPERSISTENCESERVICE extends ExtendedBasicDMPJPAService<POJOCLASS>, POJOCLASS extends ExtendedBasicDMPJPAObject>
-		extends BasicDMPResource<POJOCLASSPERSISTENCESERVICE, POJOCLASS> {
+public abstract class ExtendedBasicDMPResource<POJOCLASSRESOURCEUTILS extends ExtendedBasicDMPResourceUtils<POJOCLASSPERSISTENCESERVICE, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends ExtendedBasicDMPJPAService<POJOCLASS>, POJOCLASS extends ExtendedBasicDMPJPAObject>
+		extends BasicDMPResource<POJOCLASSRESOURCEUTILS, POJOCLASSPERSISTENCESERVICE, POJOCLASS> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ExtendedBasicDMPResource.class);
 
@@ -31,10 +29,9 @@ public abstract class ExtendedBasicDMPResource<POJOCLASSPERSISTENCESERVICE exten
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
 	 */
-	public ExtendedBasicDMPResource(final Class<POJOCLASS> clasz, final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
-			final ObjectMapper objectMapper, final DMPStatus dmpStatus) {
+	public ExtendedBasicDMPResource(final POJOCLASSRESOURCEUTILS pojoClassResourceUtilsArg, final DMPStatus dmpStatusArg) {
 
-		super(clasz, persistenceServiceProviderArg, objectMapper, dmpStatus);
+		super(pojoClassResourceUtilsArg, dmpStatusArg);
 	}
 
 	/**

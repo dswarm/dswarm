@@ -16,7 +16,6 @@ import javax.ws.rs.core.Response.Status;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterators;
@@ -33,6 +32,7 @@ import de.avgl.dmp.controller.eventbus.SchemaEvent;
 import de.avgl.dmp.controller.eventbus.XMLConverterEvent;
 import de.avgl.dmp.controller.eventbus.XMLSchemaEvent;
 import de.avgl.dmp.controller.resources.ExtendedBasicDMPResource;
+import de.avgl.dmp.controller.resources.resource.utils.DataModelsResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.controller.utils.DataModelUtil;
 import de.avgl.dmp.persistence.DMPPersistenceException;
@@ -49,7 +49,7 @@ import de.avgl.dmp.persistence.service.resource.DataModelService;
 @RequestScoped
 @Api(value = "/datamodels", description = "Operations about data models.")
 @Path("datamodels")
-public class DataModelsResource extends ExtendedBasicDMPResource<DataModelService, DataModel> {
+public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResourceUtils, DataModelService, DataModel> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(DataModelsResource.class);
 
@@ -74,10 +74,10 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 	 * @param dataModelUtilArg the data model util
 	 */
 	@Inject
-	public DataModelsResource(final Provider<DataModelService> dataModelServiceProviderArg, final ObjectMapper objectMapper,
-			final DMPStatus dmpStatus, final Provider<EventBus> eventBusProviderArg, final DataModelUtil dataModelUtilArg) {
+	public DataModelsResource(final DataModelsResourceUtils pojoClassResourceUtilsArg,
+			final DMPStatus dmpStatusArg, final Provider<EventBus> eventBusProviderArg, final DataModelUtil dataModelUtilArg) {
 
-		super(DataModel.class, dataModelServiceProviderArg, objectMapper, dmpStatus);
+		super(pojoClassResourceUtilsArg, dmpStatusArg);
 
 		eventBusProvider = eventBusProviderArg;
 		dataModelUtil = dataModelUtilArg;
@@ -170,7 +170,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 			tupleIterator = data.get();
 		}
 
-		final ObjectNode json = objectMapper.createObjectNode();
+		final ObjectNode json = pojoClassResourceUtils.getObjectMapper().createObjectNode();
 		while (tupleIterator.hasNext()) {
 			final Tuple<String, JsonNode> tuple = data.get().next();
 			json.put(tuple.v1(), tuple.v2());
@@ -180,7 +180,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 
 		try {
 
-			jsonString = objectMapper.writeValueAsString(json);
+			jsonString = pojoClassResourceUtils.getObjectMapper().writeValueAsString(json);
 		} catch (final JsonProcessingException e) {
 
 			// dmpStatus.stop(context);
@@ -214,7 +214,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 
 			try {
 
-				dataModel = persistenceServiceProvider.get().updateObjectTransactional(dataModel);
+				dataModel = pojoClassResourceUtils.getPersistenceService().updateObjectTransactional(dataModel);
 			} catch (DMPPersistenceException e) {
 
 				LOG.error("something went wrong, when trying to add configuration to data resource of data model '" + dataModel.getId() + "'");
@@ -263,7 +263,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 		}
 
 		// refresh data model
-		final DataModelService persistenceService = persistenceServiceProvider.get();
+		final DataModelService persistenceService = pojoClassResourceUtils.getPersistenceService();
 		final DataModel freshDataModel = persistenceService.getObject(dataModel.getId());
 
 		return freshDataModel;

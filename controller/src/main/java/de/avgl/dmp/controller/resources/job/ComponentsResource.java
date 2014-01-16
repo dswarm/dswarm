@@ -10,8 +10,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -19,6 +17,7 @@ import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.ExtendedBasicDMPResource;
+import de.avgl.dmp.controller.resources.job.utils.ComponentsResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.service.job.ComponentService;
@@ -31,7 +30,7 @@ import de.avgl.dmp.persistence.service.job.ComponentService;
 @RequestScoped
 @Api(value = "/components", description = "Operations about components.")
 @Path("components")
-public class ComponentsResource extends ExtendedBasicDMPResource<ComponentService, Component> {
+public class ComponentsResource extends ExtendedBasicDMPResource<ComponentsResourceUtils, ComponentService, Component> {
 
 	/**
 	 * Creates a new resource (controller service) for {@link Component}s with the provider of the component persistence service,
@@ -42,9 +41,9 @@ public class ComponentsResource extends ExtendedBasicDMPResource<ComponentServic
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public ComponentsResource(final Provider<ComponentService> componentServiceProviderArg, final ObjectMapper objectMapper, final DMPStatus dmpStatus) {
+	public ComponentsResource(final ComponentsResourceUtils pojoClassResourceUtilsArg, final DMPStatus dmpStatusArg) {
 
-		super(Component.class, componentServiceProviderArg, objectMapper, dmpStatus);
+		super(pojoClassResourceUtilsArg, dmpStatusArg);
 	}
 
 	/**
@@ -112,5 +111,13 @@ public class ComponentsResource extends ExtendedBasicDMPResource<ComponentServic
 		object.setOutputComponents(objectFromJSON.getOutputComponents());
 
 		return object;
+	}
+	
+	@Override
+	protected String prepareObjectJSONString(String objectJSONString) throws DMPControllerException {
+		
+		// TODO: remove id from parameter mappings (?) -> avoid dummy id creation there
+		
+		return objectJSONString;
 	}
 }

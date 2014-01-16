@@ -10,14 +10,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
+import de.avgl.dmp.controller.resources.job.utils.TransformationsResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.service.job.TransformationService;
@@ -30,7 +29,7 @@ import de.avgl.dmp.persistence.service.job.TransformationService;
 @RequestScoped
 @Api(value = "/transformations", description = "Operations about transformations.")
 @Path("transformations")
-public class TransformationsResource extends BasicFunctionsResource<TransformationService, Transformation> {
+public class TransformationsResource extends BasicFunctionsResource<TransformationsResourceUtils, TransformationService, Transformation> {
 
 	/**
 	 * Creates a new resource (controller service) for {@link Transformation}s with the provider of the transformation persistence
@@ -41,10 +40,9 @@ public class TransformationsResource extends BasicFunctionsResource<Transformati
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public TransformationsResource(final Provider<TransformationService> transformationServiceProviderArg, final ObjectMapper objectMapper,
-			final DMPStatus dmpStatus) {
+	public TransformationsResource(final TransformationsResourceUtils pojoClassResourceUtilsArg, final DMPStatus dmpStatusArg) {
 
-		super(Transformation.class, transformationServiceProviderArg, objectMapper, dmpStatus);
+		super(pojoClassResourceUtilsArg, dmpStatusArg);
 	}
 
 	/**

@@ -10,8 +10,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -19,6 +17,7 @@ import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.BasicDMPResource;
+import de.avgl.dmp.controller.resources.job.utils.MappingsResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Mapping;
 import de.avgl.dmp.persistence.service.job.MappingService;
@@ -31,7 +30,7 @@ import de.avgl.dmp.persistence.service.job.MappingService;
 @RequestScoped
 @Api(value = "/mappings", description = "Operations about mappings.")
 @Path("mappings")
-public class MappingsResource extends BasicDMPResource<MappingService, Mapping> {
+public class MappingsResource extends BasicDMPResource<MappingsResourceUtils, MappingService, Mapping> {
 
 	/**
 	 * Creates a new resource (controller service) for {@link Mapping}s with the provider of the mapping persistence service, the
@@ -42,9 +41,9 @@ public class MappingsResource extends BasicDMPResource<MappingService, Mapping> 
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public MappingsResource(final Provider<MappingService> mappingServiceProviderArg, final ObjectMapper objectMapper, final DMPStatus dmpStatus) {
+	public MappingsResource(final MappingsResourceUtils pojoClassResourceUtilsArg, final DMPStatus dmpStatusArg) {
 
-		super(Mapping.class, mappingServiceProviderArg, objectMapper, dmpStatus);
+		super(pojoClassResourceUtilsArg, dmpStatusArg);
 	}
 
 	/**

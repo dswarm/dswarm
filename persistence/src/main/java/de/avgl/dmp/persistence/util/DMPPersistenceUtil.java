@@ -2,6 +2,8 @@ package de.avgl.dmp.persistence.util;
 
 import java.io.IOException;
 import java.net.URL;
+import java.security.SecureRandom;
+import java.util.Random;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,6 +41,12 @@ public final class DMPPersistenceUtil {
 	 */
 	@SuppressWarnings("StaticNonFinalField")
 	public static transient Injector		injector;
+
+	private static final long				LOWER_RANGE	= Long.valueOf("-9223372036854775808").longValue(); // assign lower range
+																											// value
+	private static final long				UPPER_RANGE	= -1;												// assign upper range
+																											// value
+	private static final Random				random		= new SecureRandom();
 
 	static {
 		MAPPER = new ObjectMapper();
@@ -127,6 +135,13 @@ public final class DMPPersistenceUtil {
 		}
 
 		return injector;
+	}
+
+	public static long generateRandomDummyId() {
+
+		long randomValue = LOWER_RANGE + (long) (random.nextDouble() * (UPPER_RANGE - LOWER_RANGE));
+		
+		return randomValue;
 	}
 
 }
