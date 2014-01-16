@@ -148,6 +148,20 @@ public class AttributePath extends DMPJPAObject {
 
 		return orderedAttributes;
 	}
+	
+	/**
+	 * Gets the attribute path as JSON object (a list of Attributes)
+	 * 
+	 * @return the attribute path as JSON object
+	 */
+	public String getAttributePathAsJSONObject() {
+
+		initAttributePath(false);
+		
+		refreshAttributePathString();
+
+		return attributePath;
+	}
 
 	/**
 	 * Sets the attribute path (ordered list of attributes).
