@@ -10,9 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -20,6 +18,7 @@ import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.ExtendedBasicDMPResource;
+import de.avgl.dmp.controller.resources.resource.utils.ConfigurationsResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
@@ -32,7 +31,7 @@ import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 @RequestScoped
 @Api(value = "/configurations", description = "Operations about configurations")
 @Path("configurations")
-public class ConfigurationsResource extends ExtendedBasicDMPResource<ConfigurationService, Configuration> {
+public class ConfigurationsResource extends ExtendedBasicDMPResource<ConfigurationsResourceUtils, ConfigurationService, Configuration> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ConfigurationsResource.class);
 
@@ -45,10 +44,10 @@ public class ConfigurationsResource extends ExtendedBasicDMPResource<Configurati
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public ConfigurationsResource(final Provider<ConfigurationService> configurationServiceProviderArg, final ObjectMapper objectMapper,
-			final DMPStatus dmpStatus) {
+	public ConfigurationsResource(final ConfigurationsResourceUtils pojoClassResourceUtilsArg,
+			final DMPStatus dmpStatusArg) {
 
-		super(Configuration.class, configurationServiceProviderArg, objectMapper, dmpStatus);
+		super(pojoClassResourceUtilsArg, dmpStatusArg);
 	}
 
 	/**
@@ -120,5 +119,13 @@ public class ConfigurationsResource extends ExtendedBasicDMPResource<Configurati
 		object.setResources(objectFromJSON.getResources());
 
 		return object;
+	}
+
+	@Override
+	protected String prepareObjectJSONString(final String objectJSONString) throws DMPControllerException {
+
+		// a configuration is not a complex object
+
+		return objectJSONString;
 	}
 }

@@ -10,8 +10,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -19,6 +17,7 @@ import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.ExtendedBasicDMPResource;
+import de.avgl.dmp.controller.resources.job.utils.ProjectsResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Project;
 import de.avgl.dmp.persistence.service.job.ProjectService;
@@ -31,7 +30,7 @@ import de.avgl.dmp.persistence.service.job.ProjectService;
 @RequestScoped
 @Api(value = "/projects", description = "Operations about projects.")
 @Path("projects")
-public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, Project> {
+public class ProjectsResource extends ExtendedBasicDMPResource<ProjectsResourceUtils, ProjectService, Project> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ProjectsResource.class);
 
@@ -44,9 +43,9 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public ProjectsResource(final Provider<ProjectService> projectServiceProviderArg, final ObjectMapper objectMapper, final DMPStatus dmpStatus) {
+	public ProjectsResource(final ProjectsResourceUtils pojoClassResourceUtilsArg, final DMPStatus dmpStatusArg) {
 
-		super(Project.class, projectServiceProviderArg, objectMapper, dmpStatus);
+		super(pojoClassResourceUtilsArg, dmpStatusArg);
 	}
 
 	/**

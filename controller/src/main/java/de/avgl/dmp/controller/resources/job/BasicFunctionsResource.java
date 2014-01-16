@@ -1,9 +1,7 @@
 package de.avgl.dmp.controller.resources.job;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Provider;
-
 import de.avgl.dmp.controller.resources.ExtendedBasicDMPResource;
+import de.avgl.dmp.controller.resources.job.utils.BasicFunctionsResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.service.job.BasicFunctionService;
@@ -16,8 +14,8 @@ import de.avgl.dmp.persistence.service.job.BasicFunctionService;
  *            concrete {@link Function} class
  * @param <POJOCLASS> the concrete {@link Function} class
  */
-public abstract class BasicFunctionsResource<POJOCLASSPERSISTENCESERVICE extends BasicFunctionService<POJOCLASS>, POJOCLASS extends Function> extends
-		ExtendedBasicDMPResource<POJOCLASSPERSISTENCESERVICE, POJOCLASS> {
+public abstract class BasicFunctionsResource<POJOCLASSRESOURCEUTILS extends BasicFunctionsResourceUtils<POJOCLASSPERSISTENCESERVICE, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends BasicFunctionService<POJOCLASS>, POJOCLASS extends Function>
+		extends ExtendedBasicDMPResource<POJOCLASSRESOURCEUTILS, POJOCLASSPERSISTENCESERVICE, POJOCLASS> {
 
 	/**
 	 * Creates a new resource (controller service) for the given concrete {@link Function} class with the provider of the concrete
@@ -29,10 +27,9 @@ public abstract class BasicFunctionsResource<POJOCLASSPERSISTENCESERVICE extends
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
 	 */
-	public BasicFunctionsResource(final Class<POJOCLASS> clasz, final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
-			final ObjectMapper objectMapper, final DMPStatus dmpStatus) {
+	public BasicFunctionsResource(final POJOCLASSRESOURCEUTILS pojoClassResourceUtilsArg, final DMPStatus dmpStatusArg) {
 
-		super(clasz, persistenceServiceProviderArg, objectMapper, dmpStatus);
+		super(pojoClassResourceUtilsArg, dmpStatusArg);
 	}
 
 	/**

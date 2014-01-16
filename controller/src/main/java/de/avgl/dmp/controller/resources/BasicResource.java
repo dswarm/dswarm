@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -16,16 +19,19 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.codahale.metrics.Timer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Provider;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.NullNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Sets;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.DMPJsonException;
+import de.avgl.dmp.controller.resources.utils.BasicResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.DMPObject;
 import de.avgl.dmp.persistence.service.BasicJPAService;
-import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
  * A generic resource (controller service), whose concrete implementations can be derived with a given implementation of
@@ -39,40 +45,24 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
  * @param <POJOCLASS> the concrete POJO class of the resource
  * @param <POJOCLASSIDTYPE> the related identifier type of the concrete POJO class of the resource
  */
-public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPAService<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE> {
+public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResourceUtils<POJOCLASSPERSISTENCESERVICE, POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSPERSISTENCESERVICE extends BasicJPAService<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE> {
 
-	private static final org.apache.log4j.Logger			LOG	= org.apache.log4j.Logger.getLogger(BasicResource.class);
+	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(BasicResource.class);
 
-	/**
-	 * The concrete POJO class of this resource.
-	 */
-	protected final Class<POJOCLASS>						clasz;
-
-	/**
-	 * The name of the concrete POJO class this resource.
-	 */
-	protected final String									className;
-
-	/**
-	 * The provider of the concrete persistence service of this resource that is related to the concrete POJO class.
-	 */
-	protected final Provider<POJOCLASSPERSISTENCESERVICE>	persistenceServiceProvider;
+	protected final POJOCLASSRESOURCEUTILS			pojoClassResourceUtils;
 
 	/**
 	 * The metrics registry.
 	 */
-	protected final DMPStatus								dmpStatus;
-
-	/**
-	 * The object mapper that can be utilised to de-/serialise JSON nodes.
-	 */
-	protected final ObjectMapper							objectMapper;
+	protected final DMPStatus						dmpStatus;
 
 	/**
 	 * The base URI of this resource.
 	 */
 	@Context
-	UriInfo													uri;
+	UriInfo											uri;
+
+	private Set<POJOCLASSIDTYPE>					dummyIdCandidates;
 
 	/**
 	 * Creates a new resource (controller service) for the given concrete POJO class with the provider of the concrete persistence
@@ -83,16 +73,10 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
 	 */
-	protected BasicResource(final Class<POJOCLASS> clasz, final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
-			final ObjectMapper objectMapperArg, final DMPStatus dmpStatusArg) {
+	protected BasicResource(final POJOCLASSRESOURCEUTILS pojoClassResourceUtilsArg, final DMPStatus dmpStatusArg) {
 
-		this.clasz = clasz;
-		this.className = clasz.getSimpleName();
-
-		persistenceServiceProvider = persistenceServiceProviderArg;
-
+		pojoClassResourceUtils = pojoClassResourceUtilsArg;
 		dmpStatus = dmpStatusArg;
-		objectMapper = objectMapperArg;
 	}
 
 	/**
@@ -102,7 +86,7 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 	 */
 	public Class<POJOCLASS> getClasz() {
 
-		return clasz;
+		return pojoClassResourceUtils.getClasz();
 	}
 
 	/**
@@ -127,38 +111,39 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 	// @Produces(MediaType.APPLICATION_JSON)
 	public Response getObject(/* @PathParam("id") */final POJOCLASSIDTYPE id) throws DMPControllerException {
 
-		final Timer.Context context = dmpStatus.getSingleObject(className, this.getClass());
+		final Timer.Context context = dmpStatus.getSingleObject(pojoClassResourceUtils.getClaszName(), this.getClass());
 
-		BasicResource.LOG.debug("try to get " + className + " with id '" + id + "'");
+		BasicResource.LOG.debug("try to get " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "'");
 
-		final POJOCLASSPERSISTENCESERVICE persistenceService = persistenceServiceProvider.get();
+		final POJOCLASSPERSISTENCESERVICE persistenceService = pojoClassResourceUtils.getPersistenceService();
 		final POJOCLASS object = persistenceService.getObject(id);
 
 		if (object == null) {
 
-			BasicResource.LOG.debug("couldn't find " + className + " '" + id + "'");
+			BasicResource.LOG.debug("couldn't find " + pojoClassResourceUtils.getClaszName() + " '" + id + "'");
 
 			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
 		}
-		BasicResource.LOG.debug("got " + className + " with id '" + id + "' = '" + ToStringBuilder.reflectionToString(object) + "'");
+		BasicResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "' = '"
+				+ ToStringBuilder.reflectionToString(object) + "'");
 
 		final String objectJSON;
 		try {
 
-			objectJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(object);
+			objectJSON = pojoClassResourceUtils.getObjectMapper().writeValueAsString(object);
 		} catch (final JsonProcessingException e) {
 
 			dmpStatus.stop(context);
-			throw new DMPControllerException("couldn't transform " + className + " to JSON string.\n" + e.getMessage());
+			throw new DMPControllerException("couldn't transform " + pojoClassResourceUtils.getClaszName() + " to JSON string.\n" + e.getMessage());
 		}
 
-		BasicResource.LOG.debug("return " + className + " with id '" + id + "' = '" + objectJSON + "'");
+		BasicResource.LOG.debug("return " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "' = '" + objectJSON + "'");
 
 		dmpStatus.stop(context);
 		return buildResponse(objectJSON);
 	}
-	
+
 	/**
 	 * This endpoint consumes an object of the type of the POJO class as JSON representation and persists this object in the
 	 * database.
@@ -172,44 +157,45 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 	// @Produces(MediaType.APPLICATION_JSON)
 	public Response createObject(final String jsonObjectString) throws DMPControllerException {
 
-		final Timer.Context context = dmpStatus.createNewObject(className, this.getClass());
+		final Timer.Context context = dmpStatus.createNewObject(pojoClassResourceUtils.getClaszName(), this.getClass());
 
-		BasicResource.LOG.debug("try to create new " + className);
+		BasicResource.LOG.debug("try to create new " + pojoClassResourceUtils.getClaszName());
 
 		final POJOCLASS object = addObject(jsonObjectString);
 
 		if (object == null) {
 
-			BasicResource.LOG.debug("couldn't add " + className);
+			BasicResource.LOG.debug("couldn't add " + pojoClassResourceUtils.getClaszName());
 
 			dmpStatus.stop(context);
-			throw new DMPControllerException("couldn't add " + className);
+			throw new DMPControllerException("couldn't add " + pojoClassResourceUtils.getClaszName());
 		}
 
-		BasicResource.LOG.debug("added new " + className + " = '" + ToStringBuilder.reflectionToString(object) + "'");
+		BasicResource.LOG.debug("added new " + pojoClassResourceUtils.getClaszName() + " = '" + ToStringBuilder.reflectionToString(object) + "'");
 
 		final String objectJSON;
 
 		try {
 
-			objectJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(object);
+			objectJSON = pojoClassResourceUtils.getObjectMapper().writeValueAsString(object);
 		} catch (final JsonProcessingException e) {
 
 			dmpStatus.stop(context);
-			throw new DMPControllerException("couldn't transform " + className + " to JSON string.\n" + e.getMessage());
+			throw new DMPControllerException("couldn't transform " + pojoClassResourceUtils.getClaszName() + " to JSON string.\n" + e.getMessage());
 		}
 
 		final URI objectURI = createObjectURI(object);
 
 		if (objectURI == null) {
 
-			BasicResource.LOG.debug("something went wrong, while minting the URL of the new " + className);
+			BasicResource.LOG.debug("something went wrong, while minting the URL of the new " + pojoClassResourceUtils.getClaszName());
 
 			dmpStatus.stop(context);
-			throw new DMPControllerException("something went wrong, while minting the URL of the new " + className);
+			throw new DMPControllerException("something went wrong, while minting the URL of the new " + pojoClassResourceUtils.getClaszName());
 		}
 
-		BasicResource.LOG.debug("return new " + className + " at '" + objectURI.toString() + "' with content '" + objectJSON + "'");
+		BasicResource.LOG.debug("return new " + pojoClassResourceUtils.getClaszName() + " at '" + objectURI.toString() + "' with content '"
+				+ objectJSON + "'");
 
 		dmpStatus.stop(context);
 		return Response.created(objectURI).entity(objectJSON).build();
@@ -226,17 +212,17 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 	// @Produces(MediaType.APPLICATION_JSON)
 	public Response getObjects() throws DMPControllerException {
 
-		final Timer.Context context = dmpStatus.getAllObjects(className, this.getClass());
+		final Timer.Context context = dmpStatus.getAllObjects(pojoClassResourceUtils.getClaszName(), this.getClass());
 
-		BasicResource.LOG.debug("try to get all " + className + "s");
+		BasicResource.LOG.debug("try to get all " + pojoClassResourceUtils.getClaszName() + "s");
 
-		final POJOCLASSPERSISTENCESERVICE persistenceService = persistenceServiceProvider.get();
+		final POJOCLASSPERSISTENCESERVICE persistenceService = pojoClassResourceUtils.getPersistenceService();
 
 		final List<POJOCLASS> objects = persistenceService.getObjects();
 
 		if (objects == null) {
 
-			BasicResource.LOG.debug("couldn't find " + className + "s");
+			BasicResource.LOG.debug("couldn't find " + pojoClassResourceUtils.getClaszName() + "s");
 
 			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
@@ -244,26 +230,27 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 
 		if (objects.isEmpty()) {
 
-			BasicResource.LOG.debug("there are no " + className + "s");
+			BasicResource.LOG.debug("there are no " + pojoClassResourceUtils.getClaszName() + "s");
 
 			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		BasicResource.LOG.debug("got all " + className + "s = ' = '" + ToStringBuilder.reflectionToString(objects) + "'");
+		BasicResource.LOG.debug("got all " + pojoClassResourceUtils.getClaszName() + "s = ' = '" + ToStringBuilder.reflectionToString(objects) + "'");
 
 		final String objectsJSON;
 
 		try {
 
-			objectsJSON = objectMapper.writeValueAsString(objects);
+			objectsJSON = pojoClassResourceUtils.getObjectMapper().writeValueAsString(objects);
 		} catch (final JsonProcessingException e) {
 
 			dmpStatus.stop(context);
-			throw new DMPControllerException("couldn't transform " + className + "s list object to JSON string.\n" + e.getMessage());
+			throw new DMPControllerException("couldn't transform " + pojoClassResourceUtils.getClaszName() + "s list object to JSON string.\n"
+					+ e.getMessage());
 		}
 
-		BasicResource.LOG.debug("return all " + className + "s '" + objectsJSON + "'");
+		BasicResource.LOG.debug("return all " + pojoClassResourceUtils.getClaszName() + "s '" + objectsJSON + "'");
 
 		dmpStatus.stop(context);
 		return buildResponse(objectsJSON);
@@ -326,30 +313,15 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 	 */
 	protected POJOCLASS addObject(final String objectJSONString) throws DMPControllerException {
 
-		final POJOCLASS objectFromJSON;
+		final String enhancedObjectJSONString = prepareObjectJSONString(objectJSONString);
 
-		// get the deserialisised object from the JSON string
+		// get the deserialisised object from the enhanced JSON string
 
-		try {
-
-			objectFromJSON = objectMapper.readValue(objectJSONString, clasz);
-		} catch (final JsonMappingException je) {
-
-			throw new DMPJsonException("something went wrong while deserializing the " + className + " JSON string", je);
-		} catch (final IOException e) {
-
-			BasicResource.LOG.debug("something went wrong while deserializing the " + className + " JSON string");
-
-			throw new DMPControllerException("something went wrong while deserializing the " + className + " JSON string.\n" + e.getMessage());
-		}
-
-		if (objectFromJSON == null) {
-			throw new DMPControllerException("deserialized " + className + " is null");
-		}
+		final POJOCLASS objectFromJSON = pojoClassResourceUtils.deserializeObjectJSONString(enhancedObjectJSONString);
 
 		// create a new persistent object
 
-		final POJOCLASSPERSISTENCESERVICE persistenceService = persistenceServiceProvider.get();
+		final POJOCLASSPERSISTENCESERVICE persistenceService = pojoClassResourceUtils.getPersistenceService();
 		final POJOCLASS object;
 
 		try {
@@ -357,14 +329,14 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 			object = createObject(objectFromJSON, persistenceService);
 		} catch (final DMPPersistenceException e) {
 
-			BasicResource.LOG.debug("something went wrong while " + className + " creation");
+			BasicResource.LOG.debug("something went wrong while " + pojoClassResourceUtils.getClaszName() + " creation");
 
-			throw new DMPControllerException("something went wrong while " + className + " creation\n" + e.getMessage());
+			throw new DMPControllerException("something went wrong while " + pojoClassResourceUtils.getClaszName() + " creation\n" + e.getMessage());
 		}
 
 		if (object == null) {
 
-			throw new DMPControllerException("fresh " + className + " shouldn't be null");
+			throw new DMPControllerException("fresh " + pojoClassResourceUtils.getClaszName() + " shouldn't be null");
 		}
 
 		final POJOCLASS preparedObject = prepareObjectForUpdate(objectFromJSON, object);
@@ -373,14 +345,152 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 
 		try {
 
-			persistenceService.updateObjectTransactional(preparedObject);
+			final POJOCLASS updatedObject = persistenceService.updateObjectTransactional(preparedObject);
+
+			return updatedObject;
 		} catch (final DMPPersistenceException e) {
 
-			BasicResource.LOG.debug("something went wrong while " + className + " updating");
+			BasicResource.LOG.debug("something went wrong while " + pojoClassResourceUtils.getClaszName() + " updating");
 
-			throw new DMPControllerException("something went wrong while " + className + " updating\n" + e.getMessage());
+			throw new DMPControllerException("something went wrong while " + pojoClassResourceUtils.getClaszName() + " updating\n" + e.getMessage());
+		}
+	}
+
+	protected String prepareObjectJSONString(final String objectJSONString) throws DMPControllerException {
+
+		if (objectJSONString == null) {
+
+			BasicResource.LOG.debug("the " + pojoClassResourceUtils.getClaszName() + " JSON string shouldn't be null");
+
+			throw new DMPControllerException("the " + pojoClassResourceUtils.getClaszName() + " JSON string shouldn't be null");
 		}
 
-		return preparedObject;
+		if (objectJSONString.trim().isEmpty()) {
+
+			BasicResource.LOG.debug("the " + pojoClassResourceUtils.getClaszName() + " JSON string shouldn't be empty");
+
+			throw new DMPControllerException("the " + pojoClassResourceUtils.getClaszName() + " JSON string shouldn't be empty");
+		}
+
+		final Class<? extends JsonNode> jsonClasz;
+
+		if (objectJSONString.trim().startsWith("{")) {
+
+			jsonClasz = ObjectNode.class;
+		} else if (objectJSONString.trim().startsWith("[")) {
+
+			jsonClasz = ArrayNode.class;
+		} else {
+
+			BasicResource.LOG.debug("the " + pojoClassResourceUtils.getClaszName() + " JSON string doesn't starts with '{' or '['");
+
+			throw new DMPControllerException("the " + pojoClassResourceUtils.getClaszName() + " JSON string doesn't starts with '{' or '['");
+		}
+
+		final JsonNode jsonNode;
+
+		try {
+
+			jsonNode = pojoClassResourceUtils.getObjectMapper().readValue(objectJSONString, jsonClasz);
+		} catch (final JsonMappingException je) {
+
+			throw new DMPJsonException("something went wrong while deserializing the " + pojoClassResourceUtils.getClaszName() + " JSON string", je);
+		} catch (final IOException e) {
+
+			BasicResource.LOG.debug("something went wrong while deserializing the " + pojoClassResourceUtils.getClaszName() + " JSON string");
+
+			throw new DMPControllerException("something went wrong while deserializing the " + pojoClassResourceUtils.getClaszName()
+					+ " JSON string.\n" + e.getMessage());
+		}
+
+		if (jsonNode == null) {
+
+			throw new DMPControllerException("deserialized " + pojoClassResourceUtils.getClaszName() + " is null");
+		}
+
+		enhanceJSONNode(jsonNode);
+		
+		final String enhancedObjectJSONString = pojoClassResourceUtils.serializeObject(jsonNode);
+
+		final POJOCLASS object = pojoClassResourceUtils.deserializeObjectJSONString(enhancedObjectJSONString);
+
+		// mint real ids for already set dummy ids
+		pojoClassResourceUtils.replaceRelevantDummyIds(object, jsonNode, dummyIdCandidates);
+		
+		return pojoClassResourceUtils.serializeObject(jsonNode);
+	}
+
+	protected JsonNode enhanceJSONNode(final JsonNode jsonNode) {
+
+		if (jsonNode == null || NullNode.class.isInstance(jsonNode)) {
+
+			return jsonNode;
+		}
+
+		if (ObjectNode.class.isInstance(jsonNode)) {
+
+			final ObjectNode objectNode = (ObjectNode) jsonNode;
+
+			enhanceObjectJSON(objectNode);
+		} else if (ArrayNode.class.isInstance(jsonNode)) {
+
+			final ArrayNode arrayNode = (ArrayNode) jsonNode;
+
+			for (final JsonNode entryNode : arrayNode) {
+
+				enhanceJSONNode(entryNode);
+			}
+		}
+
+		return jsonNode;
+	}
+
+	protected abstract void checkObjectId(final JsonNode idNode, final ObjectNode objectJSON);
+
+	protected abstract ObjectNode addDummyId(final ObjectNode objectJSON);
+
+	protected JsonNode enhanceObjectJSON(final ObjectNode objectJSON) {
+
+		final JsonNode idNode = objectJSON.get("id");
+
+		if (idNode == null || NullNode.class.isInstance(idNode)) {
+
+			// add dummy id to object, if it hasn't one before
+
+			addDummyId(objectJSON);
+		} else {
+
+			// check id and add it to the dummy id candidates, if it is a dummy id
+
+			checkObjectId(idNode, objectJSON);
+		}
+
+		final Iterator<Entry<String, JsonNode>> iter = objectJSON.fields();
+
+		while (iter.hasNext()) {
+
+			final Entry<String, JsonNode> nodeEntry = iter.next();
+
+			if (BasicResourceUtils.getToBeSkippedJsonNodes().contains(nodeEntry.getKey())) {
+
+				// skip such nodes
+
+				continue;
+			}
+
+			enhanceJSONNode(nodeEntry.getValue());
+		}
+
+		return objectJSON;
+	}
+
+	protected void addDummyIdCandidate(final POJOCLASSIDTYPE dummyId) {
+
+		if (dummyIdCandidates == null) {
+
+			dummyIdCandidates = Sets.newCopyOnWriteArraySet();
+		}
+
+		dummyIdCandidates.add(dummyId);
 	}
 }
