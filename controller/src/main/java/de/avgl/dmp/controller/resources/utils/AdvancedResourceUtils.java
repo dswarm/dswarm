@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import de.avgl.dmp.persistence.model.BasicDMPObject;
-import de.avgl.dmp.persistence.service.AdvancedJPAService;
+import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
+import de.avgl.dmp.persistence.service.AdvancedJPAService3;
 
 /**
  * @author tgaengler
@@ -15,7 +15,7 @@ import de.avgl.dmp.persistence.service.AdvancedJPAService;
  * @param <POJOCLASS>
  * @param <POJOCLASSIDTYPE>
  */
-public abstract class AdvancedResourceUtils<POJOCLASSPERSISTENCESERVICE extends AdvancedJPAService<POJOCLASS>, POJOCLASS extends BasicDMPObject>
+public abstract class AdvancedResourceUtils<POJOCLASSPERSISTENCESERVICE extends AdvancedJPAService3<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
 		extends BasicResourceUtils<POJOCLASSPERSISTENCESERVICE, POJOCLASS, String> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AdvancedResourceUtils.class);

@@ -7,7 +7,7 @@ import com.google.inject.Provider;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.schema.Clasz;
-import de.avgl.dmp.persistence.service.AdvancedJPAService;
+import de.avgl.dmp.persistence.service.AdvancedDMPJPAService;
 
 /**
  * A persistence service for {@link Clasz}es.
@@ -15,7 +15,7 @@ import de.avgl.dmp.persistence.service.AdvancedJPAService;
  * @author tgaengler
  *
  */
-public class ClaszService extends AdvancedJPAService<Clasz> {
+public class ClaszService extends AdvancedDMPJPAService<Clasz> {
 
 	/**
 	 * Creates a new class persistence service with the given entity manager provider.

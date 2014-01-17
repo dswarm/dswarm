@@ -39,7 +39,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<Mapping, MappingSe
 
 	private final Map<Long, Function>				functions		= Maps.newLinkedHashMap();
 
-	private Map<String, Attribute>					attributes		= Maps.newLinkedHashMap();
+	private Map<Long, Attribute>					attributes		= Maps.newLinkedHashMap();
 
 	private Map<Long, AttributePath>				attributePaths	= Maps.newLinkedHashMap();
 
@@ -863,7 +863,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<Mapping, MappingSe
 
 		Assert.assertNotNull("attribute service shouldn't be null", attributeService);
 
-		final String attributeId = attribute.getId();
+		final Long attributeId = attribute.getId();
 
 		attributeService.deleteObject(attributeId);
 

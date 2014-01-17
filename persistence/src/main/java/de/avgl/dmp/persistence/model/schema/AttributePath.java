@@ -49,9 +49,9 @@ public class AttributePath extends DMPJPAObject {
 	/**
 	 *
 	 */
-	private static final long						serialVersionUID	= 1L;
+	private static final long						serialVersionUID				= 1L;
 
-	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(AttributePath.class);
+	private static final org.apache.log4j.Logger	LOG								= org.apache.log4j.Logger.getLogger(AttributePath.class);
 
 	/**
 	 * All utilised attributes of this attribute path.
@@ -62,7 +62,7 @@ public class AttributePath extends DMPJPAObject {
 	@Access(AccessType.FIELD)
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "ATTRIBUTES_ATTRIBUTE_PATHS", joinColumns = { @JoinColumn(name = "ATTRIBUTE_PATH_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "ATTRIBUTE_ID", referencedColumnName = "ID") })
-	private Set<Attribute>							attributes;
+	private Set<Attribute>							attributes						= Sets.newCopyOnWriteArraySet();
 
 	/**
 	 * all attributes of this attribute path as ordered list.
@@ -80,7 +80,7 @@ public class AttributePath extends DMPJPAObject {
 	 * A flag that indicates, whether the attributes are initialised or not.
 	 */
 	@Transient
-	private boolean									orderedAttributesInitialized;
+	private boolean									orderedAttributesInitialized	= false;
 
 	/**
 	 * A string that holds the serialised JSON object of the attribute path (ordered list of attributes).
@@ -114,15 +114,15 @@ public class AttributePath extends DMPJPAObject {
 	 */
 	public AttributePath(final LinkedList<Attribute> attributesArg) {
 
-//		orderedAttributes = attributesArg;
-//
-//		if (null != orderedAttributes) {
-//
-//			attributes = Sets.newLinkedHashSet(orderedAttributes);
-//
-//			initAttributePath(false);
-//		}
-		
+		// orderedAttributes = attributesArg;
+		//
+		// if (null != orderedAttributes) {
+		//
+		// attributes = Sets.newLinkedHashSet(orderedAttributes);
+		//
+		// initAttributePath(false);
+		// }
+
 		setAttributePath(attributesArg);
 	}
 
@@ -150,7 +150,7 @@ public class AttributePath extends DMPJPAObject {
 
 		return orderedAttributes;
 	}
-	
+
 	/**
 	 * Gets the attribute path as JSON object (a list of Attributes)
 	 * 
@@ -158,9 +158,9 @@ public class AttributePath extends DMPJPAObject {
 	 */
 	public String getAttributePathAsJSONObjectString() {
 
-//		initAttributePath(false);
-//		
-//		refreshAttributePathString();
+		initAttributePath(false);
+
+		refreshAttributePathString();
 
 		return attributePath;
 	}
@@ -202,18 +202,20 @@ public class AttributePath extends DMPJPAObject {
 
 				orderedAttributes.clear();
 				orderedAttributes.addAll(attributesArg);
-			}
 
-			if (null == attributes) {
+				if (null == attributes) {
 
-				attributes = Sets.newCopyOnWriteArraySet();
-			}
+					attributes = Sets.newCopyOnWriteArraySet();
+				}
 
-			for (final Attribute attribute : attributesArg) {
+				attributes.clear();
 
-				// attribute.addAttributePath(this);
+				for (final Attribute attribute : orderedAttributes) {
 
-				attributes.add(attribute);
+					// attribute.addAttributePath(this);
+
+					attributes.add(attribute);
+				}
 			}
 		}
 
@@ -421,7 +423,7 @@ public class AttributePath extends DMPJPAObject {
 				first = false;
 			}
 
-			sb.append(attribute.getId());
+			sb.append(attribute.getUri());
 		}
 
 		return sb.toString();
@@ -495,7 +497,7 @@ public class AttributePath extends DMPJPAObject {
 
 					for (final JsonNode attributeIdNode : orderedAttributesJSON) {
 
-						final Attribute attribute = getAttribute(attributeIdNode.asText());
+						final Attribute attribute = getAttribute(Long.valueOf(attributeIdNode.asLong()));
 
 						if (null != attribute) {
 
@@ -518,7 +520,7 @@ public class AttributePath extends DMPJPAObject {
 	 * @param id an attribute identifier
 	 * @return the matched attribute or null
 	 */
-	private Attribute getAttribute(final String id) {
+	private Attribute getAttribute(final Long id) {
 
 		if (null == id) {
 

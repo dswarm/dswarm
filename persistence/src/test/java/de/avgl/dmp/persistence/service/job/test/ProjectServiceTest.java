@@ -54,9 +54,9 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 
 	private final Map<Long, Function>				functions		= Maps.newLinkedHashMap();
 
-	private Map<String, Attribute>					attributes		= Maps.newLinkedHashMap();
+	private Map<Long, Attribute>					attributes		= Maps.newLinkedHashMap();
 
-	private Map<String, Clasz>						classes			= Maps.newLinkedHashMap();
+	private Map<Long, Clasz>						classes			= Maps.newLinkedHashMap();
 
 	private Map<Long, AttributePath>				attributePaths	= Maps.newLinkedHashMap();
 
@@ -1492,7 +1492,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 
 		Assert.assertNotNull("attribute service shouldn't be null", attributeService);
 
-		final String attributeId = attribute.getId();
+		final Long attributeId = attribute.getId();
 
 		attributeService.deleteObject(attributeId);
 
@@ -1537,7 +1537,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 
 		Assert.assertNotNull("class service shouldn't be null", claszService);
 
-		final String claszId = clasz.getId();
+		final Long claszId = clasz.getId();
 
 		claszService.deleteObject(claszId);
 

@@ -163,7 +163,7 @@ public class InternalTripleService implements InternalModelService {
 
 			if (dataModel.getSchema().getRecordClass() != null) {
 
-				final String recordClassURI = dataModel.getSchema().getRecordClass().getId();
+				final String recordClassURI = dataModel.getSchema().getRecordClass().getUri();
 
 				final Set<com.hp.hpl.jena.rdf.model.Resource> recordResources = getRecordResources(recordClassURI, realModel);
 
@@ -254,7 +254,7 @@ public class InternalTripleService implements InternalModelService {
 			throw new DMPPersistenceException("couldn't find record class in schema '" + schema.getId() + "' of data model '" + dataModelId + "'");
 		}
 
-		final String recordClassUri = recordClass.getId();
+		final String recordClassUri = recordClass.getUri();
 
 		final Set<com.hp.hpl.jena.rdf.model.Resource> recordResources = getRecordResources(recordClassUri, model);
 

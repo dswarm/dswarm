@@ -40,7 +40,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<DataModel, DataM
 
 	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	private Map<String, Attribute>					attributes		= Maps.newLinkedHashMap();
+	private Map<Long, Attribute>					attributes		= Maps.newLinkedHashMap();
 
 	private Map<Long, AttributePath>				attributePaths	= Maps.newLinkedHashMap();
 
@@ -532,7 +532,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<DataModel, DataM
 
 		Assert.assertNotNull("attribute service shouldn't be null", attributeService);
 
-		final String attributeId = attribute.getId();
+		final Long attributeId = attribute.getId();
 
 		attributeService.deleteObject(attributeId);
 
@@ -562,7 +562,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<DataModel, DataM
 
 		Assert.assertNotNull("class service shouldn't be null", claszService);
 
-		final String claszId = clasz.getId();
+		final Long claszId = clasz.getId();
 
 		claszService.deleteObject(claszId);
 

@@ -10,8 +10,8 @@ import de.avgl.dmp.controller.resources.utils.AdvancedResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
-import de.avgl.dmp.persistence.model.BasicDMPObject;
-import de.avgl.dmp.persistence.service.AdvancedJPAService;
+import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
+import de.avgl.dmp.persistence.service.AdvancedJPAService3;
 
 /**
  * A generic resource (controller service) implementation for {@link BasicDMPJPAObject}s, i.e., objects where the identifier will
@@ -22,7 +22,7 @@ import de.avgl.dmp.persistence.service.AdvancedJPAService;
  *            class
  * @param <POJOCLASS> the concrete POJO class of the resource
  */
-public abstract class AdvancedResource<POJOCLASSRESOURCEUTILS extends AdvancedResourceUtils<POJOCLASSPERSISTENCESERVICE, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends AdvancedJPAService<POJOCLASS>, POJOCLASS extends BasicDMPObject>
+public abstract class AdvancedResource<POJOCLASSRESOURCEUTILS extends AdvancedResourceUtils<POJOCLASSPERSISTENCESERVICE, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends AdvancedJPAService3<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
 		extends BasicResource<POJOCLASSRESOURCEUTILS, POJOCLASSPERSISTENCESERVICE, POJOCLASS, String> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AdvancedResource.class);

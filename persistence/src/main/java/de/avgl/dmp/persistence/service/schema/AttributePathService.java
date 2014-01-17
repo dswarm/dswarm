@@ -14,7 +14,6 @@ import com.google.inject.persist.Transactional;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
-import de.avgl.dmp.persistence.service.AdvancedJPAService;
 import de.avgl.dmp.persistence.service.BasicIDJPAService;
 
 /**
@@ -24,12 +23,7 @@ import de.avgl.dmp.persistence.service.BasicIDJPAService;
  */
 public class AttributePathService extends BasicIDJPAService<AttributePath> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AdvancedJPAService.class);
-
-	/**
-	 * The attribute path service provider (powered by Guice).
-	 */
-	private final Provider<AttributeService>		attributeServiceProvider;
+	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributePathService.class);
 
 	/**
 	 * Creates a new attribute path persistence service with the given entity manager provider.
@@ -37,84 +31,101 @@ public class AttributePathService extends BasicIDJPAService<AttributePath> {
 	 * @param entityManagerProvider an entity manager provider
 	 */
 	@Inject
-	public AttributePathService(final Provider<EntityManager> entityManagerProvider, final Provider<AttributeService> attributeServiceProvider) {
+	public AttributePathService(final Provider<EntityManager> entityManagerProvider) {
 
 		super(AttributePath.class, entityManagerProvider);
-		this.attributeServiceProvider = attributeServiceProvider;
 	}
 
 	/**
-	 * Creates a new persistent AttributePath when no identical one already exists (having the same attributePath). Otherwise the
-	 * existing object is returned. (non-Javadoc)
+	 * Persists the given attribute path or returns the existing one from the DB.
 	 * 
-	 * @param path - the path as JSON object string of the AttributePath //TODO remove redundant parameter
-	 * @param attributes - a list of the path Attributes
-	 * @return the persisted AttributePath with the given path
+	 * @param attributePath an attribute path that should be persisted
+	 * @return the persisted or matched attribute path from the DB
+	 * @throws DMPPersistenceException
 	 */
-	@Transactional(rollbackOn = DMPPersistenceException.class)
+	@Transactional(rollbackOn = Exception.class)
+	public AttributePath createObject(final AttributePath attributePath) throws DMPPersistenceException {
+
+		return createObjectInternal(attributePath);
+	}
+
+	/**
+	 * Creates an attribute path with the given ordered list of attributes or returns the existing one from the DB.
+	 * 
+	 * @param attributes an ordered list of attributes
+	 * @return the persisted or matched attribute path from DB
+	 * @throws DMPPersistenceException
+	 */
+	@Transactional(rollbackOn = Exception.class)
 	public AttributePath createObject(final LinkedList<Attribute> attributes) throws DMPPersistenceException {
 
 		final AttributePath tempAttributePath = new AttributePath(attributes);
-		final String path = tempAttributePath.getAttributePathAsJSONObjectString();
 
-		final AttributePath existingObject = getObject(path);
+		return createObjectInternal(tempAttributePath);
+	}
+
+	/**
+	 * Tries to retrieve an attribute path object for the given ordered list of attribute paths
+	 * 
+	 * @param attributePathJSONArrayString
+	 * @return
+	 */
+	public AttributePath getObject(final String attributePathJSONArrayString) {
+
+		final EntityManager entityManager = acquire();
+
+		return getObject(attributePathJSONArrayString, entityManager);
+	}
+
+	private AttributePath createObjectInternal(final AttributePath attributePath) throws DMPPersistenceException {
+
+		final EntityManager em = acquire();
+
+		final AttributePath existingObject = getObject(attributePath.getAttributePathAsJSONObjectString(), em);
 
 		final AttributePath object;
 
 		if (null == existingObject) {
 
-			// final EntityManager em = acquire(false);
-			//
-			// final LinkedList<Attribute> persistentAttributes = new LinkedList<Attribute>();
-			//
-			// // updating all attributes in the list
-			// // TODO: transform to set before to avoid updating attributes that occur multiple times in the list
-			// for (final Iterator<Attribute> iterator = attributes.iterator(); iterator.hasNext();) {
-			//
-			// final Attribute attribute = iterator.next();
-			//
-			// final Attribute persistentAttribute = attributeServiceProvider.get().createObject(attribute.getId());
-			// persistentAttribute.setName(attribute.getName());
-			//
-			// persistentAttributes.add(persistentAttribute);
-			//
-			// em.merge(persistentAttribute);
-			// }
+			final AttributePath tempAttributePath = new AttributePath();
 
-			final AttributePath tempObject = new AttributePath();
+			final LinkedList<Attribute> attributes = attributePath.getAttributePath();
 
-			persistObject(tempObject);
-			tempObject.setAttributePath(attributes);
-			object = updateObject(tempObject);
+			for (final Attribute attribute : attributes) {
 
+				final Attribute managedAttribute = em.merge(attribute);
+				tempAttributePath.addAttribute(managedAttribute);
+			}
+
+			persistObject(tempAttributePath, em);
+
+			object = tempAttributePath;
 		} else {
 
-			AttributePathService.LOG.debug("attribute path with path '" + path
-					+ "' exists already in the database. Will return the existing object, instead of creating a new one");
-
 			object = existingObject;
+
+			AttributePathService.LOG.debug("attribute path with path '" + attributePath.toAttributePath()
+					+ "' exists already in the database. Will return the existing object, instead of creating a new one");
 		}
 
 		return object;
 	}
 
-	/**
-	 * Gets the AttributePath with the given path (as JSON object string)<br>
-	 * Created by: polowins
-	 * 
-	 * @return the AttributePath with the given path (as JSON object string) or null if no such object exists
-	 */
-	public AttributePath getObject(final String jsonPath) {
+	private AttributePath getObject(final String attributePath, final EntityManager entityManager) {
 
-		AttributePath object = null;
+		final AttributePath object;
 
-		final String queryString = "from " + AttributePath.class.getName() + " where attributePath = '" + jsonPath + "'";
-		final EntityManager entityManager = acquire();
-		final TypedQuery<AttributePath> query = entityManager.createQuery(queryString, AttributePath.class);
+		final String queryString = "from " + className + " where attributePath = '" + attributePath + "'";
+		final TypedQuery<AttributePath> query = entityManager.createQuery(queryString, clasz);
 
 		try {
+
 			object = query.getSingleResult();
 		} catch (final NoResultException e) {
+
+			// TODO: maybe log something here
+
+			return null;
 		}
 
 		return object;
@@ -136,10 +147,14 @@ public class AttributePathService extends BasicIDJPAService<AttributePath> {
 		updateObject.setAttributePath(attributes);
 	}
 
-	public List<AttributePath> getAttributePathsWithPath(final String jsonPath) {
-		final String queryString = "from " + AttributePath.class.getName() + " where attributePath = '" + jsonPath + "'";
+	public List<AttributePath> getAttributePathsWithPath(final String attributePathJSONArrayString) {
+		
 		final EntityManager entityManager = acquire(true);
+		
+		final String queryString = "from " + AttributePath.class.getName() + " where attributePath = '" + attributePathJSONArrayString + "'";
+		
 		final TypedQuery<AttributePath> query = entityManager.createQuery(queryString, AttributePath.class);
+		
 		return query.getResultList();
 	}
 

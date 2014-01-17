@@ -31,12 +31,12 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 	/**
 	 * The concrete POJO class of this persistence service.
 	 */
-	final Class<POJOCLASS>							clasz;
+	protected final Class<POJOCLASS>							clasz;
 
 	/**
 	 * The name of the concrete POJO class this persistence service.
 	 */
-	final String									className;
+	protected final String									className;
 
 	/**
 	 * The entity manager provider (powered by Guice).
@@ -152,6 +152,12 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 	public POJOCLASS updateObject(final POJOCLASS object) throws DMPPersistenceException {
 
 		final EntityManager entityManager = acquire(false);
+		
+		return updateObject(object, entityManager);
+	}
+	
+	protected POJOCLASS updateObject(final POJOCLASS object, final EntityManager entityManager) throws DMPPersistenceException {
+		
 		final POJOCLASS updateObject = getObject(object, entityManager);
 
 		BasicJPAService.LOG.debug("try to update " + className + " with id '" + object.getId() + "' non-transactional");
@@ -256,7 +262,7 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 	 * @return the requested POJOCLASS instance fresh from the DB or a new POJOCLASS instance
 	 * @throws DMPPersistenceException
 	 */
-	private POJOCLASS getObject(final POJOCLASS object, final EntityManager entityManager) throws DMPPersistenceException {
+	protected POJOCLASS getObject(final POJOCLASS object, final EntityManager entityManager) throws DMPPersistenceException {
 
 		final POJOCLASS updateObject;
 
@@ -302,6 +308,11 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 
 		final EntityManager entityManager = acquire(false);
 
+		persistObject(object, entityManager);
+	}
+	
+	protected void persistObject(final POJOCLASS object, final EntityManager entityManager) {
+		
 		BasicJPAService.LOG.debug("try to create new " + className);
 
 		entityManager.persist(object);
