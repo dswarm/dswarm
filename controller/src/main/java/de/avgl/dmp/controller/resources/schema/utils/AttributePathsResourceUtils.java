@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 
 import de.avgl.dmp.controller.resources.utils.BasicIDResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.service.schema.AttributePathService;
 
@@ -20,8 +21,10 @@ public class AttributePathsResourceUtils extends BasicIDResourceUtils<AttributeP
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributePathsResourceUtils.class);
 
 	@Inject
-	public AttributePathsResourceUtils(final Provider<AttributePathService> persistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg) {
+	public AttributePathsResourceUtils(final Provider<AttributePathService> persistenceServiceProviderArg,
+	                                   final Provider<ObjectMapper> objectMapperProviderArg,
+	                                   final ResourceUtilsFactory utilsFactory) {
 
-		super(AttributePath.class, persistenceServiceProviderArg, objectMapperProviderArg);
+		super(AttributePath.class, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}
 }

@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.schema.utils.AttributePathsResourceUtils;
 import de.avgl.dmp.controller.resources.utils.BasicDMPResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Filter;
 import de.avgl.dmp.persistence.model.job.Mapping;
@@ -27,23 +28,13 @@ public class MappingsResourceUtils extends BasicDMPResourceUtils<MappingService,
 
 	private static final org.apache.log4j.Logger		LOG	= org.apache.log4j.Logger.getLogger(MappingsResourceUtils.class);
 
-	private final Provider<ComponentsResourceUtils>		componentsResourceUtilsProvider;
-
-	private final Provider<AttributePathsResourceUtils>	attributePathsResourceUtilsProvider;
-
-	private final Provider<FiltersResourceUtils>		filtersResourceUtilsProvider;
-
 	@Inject
-	public MappingsResourceUtils(final Provider<MappingService> persistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg,
-			final Provider<ComponentsResourceUtils> componentsResourceUtilsProviderArg,
-			final Provider<AttributePathsResourceUtils> attributePathsResourceUtilsProviderArg,
-			final Provider<FiltersResourceUtils> filtersResourceUtilsProviderArg) {
+	public MappingsResourceUtils(final Provider<MappingService> persistenceServiceProviderArg,
+	                             final Provider<ObjectMapper> objectMapperProviderArg,
+	                             final ResourceUtilsFactory utilsFactory) {
 
-		super(Mapping.class, persistenceServiceProviderArg, objectMapperProviderArg);
+		super(Mapping.class, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 
-		componentsResourceUtilsProvider = componentsResourceUtilsProviderArg;
-		attributePathsResourceUtilsProvider = attributePathsResourceUtilsProviderArg;
-		filtersResourceUtilsProvider = filtersResourceUtilsProviderArg;
 	}
 
 	@Override
@@ -100,7 +91,7 @@ public class MappingsResourceUtils extends BasicDMPResourceUtils<MappingService,
 				return jsonNode;
 			}
 
-			componentsResourceUtilsProvider.get().replaceRelevantDummyIds(transformationComponent, jsonNode, dummyIdCandidates);
+			utilsFactory.get(ComponentsResourceUtils.class).replaceRelevantDummyIds(transformationComponent, jsonNode, dummyIdCandidates);
 		}
 
 		return jsonNode;
@@ -116,7 +107,7 @@ public class MappingsResourceUtils extends BasicDMPResourceUtils<MappingService,
 				return true;
 			}
 
-			attributePathsResourceUtilsProvider.get().replaceRelevantDummyIds(attributePath, jsonNode, dummyIdCandidates);
+			utilsFactory.get(AttributePathsResourceUtils.class).replaceRelevantDummyIds(attributePath, jsonNode, dummyIdCandidates);
 		}
 
 		return false;
@@ -132,7 +123,7 @@ public class MappingsResourceUtils extends BasicDMPResourceUtils<MappingService,
 				return true;
 			}
 
-			filtersResourceUtilsProvider.get().replaceRelevantDummyIds(filter, jsonNode, dummyIdCandidates);
+			utilsFactory.get(FiltersResourceUtils.class).replaceRelevantDummyIds(filter, jsonNode, dummyIdCandidates);
 		}
 
 		return false;

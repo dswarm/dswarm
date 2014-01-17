@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 
 import de.avgl.dmp.controller.resources.utils.BasicDMPResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.persistence.model.job.Filter;
 import de.avgl.dmp.persistence.service.job.FilterService;
 
@@ -20,8 +21,10 @@ public class FiltersResourceUtils extends BasicDMPResourceUtils<FilterService, F
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(FiltersResourceUtils.class);
 
 	@Inject
-	public FiltersResourceUtils(final Provider<FilterService> persistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg) {
+	public FiltersResourceUtils(final Provider<FilterService> persistenceServiceProviderArg,
+	                            final Provider<ObjectMapper> objectMapperProviderArg,
+	                            final ResourceUtilsFactory utilsFactory) {
 
-		super(Filter.class, persistenceServiceProviderArg, objectMapperProviderArg);
+		super(Filter.class, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}
 }

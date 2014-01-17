@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 
 import de.avgl.dmp.controller.DMPControllerException;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.service.job.FunctionService;
@@ -23,21 +24,18 @@ public class FunctionsResourceUtils extends BasicFunctionsResourceUtils<Function
 
 	private static final org.apache.log4j.Logger			LOG	= org.apache.log4j.Logger.getLogger(FunctionsResourceUtils.class);
 
-	private final Provider<TransformationsResourceUtils>	transformationsResourceUtilsProvider;
-
 	@Inject
 	public FunctionsResourceUtils(final Provider<FunctionService> persistenceServiceProviderArg,
-			final Provider<ObjectMapper> objectMapperProviderArg, final Provider<TransformationsResourceUtils> transformationsResourceUtilsProviderArg) {
+	                              final Provider<ObjectMapper> objectMapperProviderArg,
+	                              final ResourceUtilsFactory utilsFactory) {
 
-		super(Function.class, persistenceServiceProviderArg, objectMapperProviderArg);
-
-		transformationsResourceUtilsProvider = transformationsResourceUtilsProviderArg;
+		super(Function.class, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}
 
 	@Override
 	public JsonNode replaceRelevantDummyIds(final Function object, final JsonNode jsonNode, final Set<Long> dummyIdCandidates)
 			throws DMPControllerException {
-		
+
 		if (checkObject(object, dummyIdCandidates)) {
 
 			return jsonNode;
@@ -45,7 +43,7 @@ public class FunctionsResourceUtils extends BasicFunctionsResourceUtils<Function
 
 		if (Transformation.class.isInstance(object)) {
 
-			transformationsResourceUtilsProvider.get().replaceRelevantDummyIds((Transformation) object, jsonNode, dummyIdCandidates);
+			utilsFactory.get(TransformationsResourceUtils.class).replaceRelevantDummyIds((Transformation) object, jsonNode, dummyIdCandidates);
 		} else {
 
 			super.replaceRelevantDummyIds(object, jsonNode, dummyIdCandidates);
