@@ -18,9 +18,11 @@ public abstract class BasicDMPResourceUtils<POJOCLASSPERSISTENCESERVICE extends 
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(BasicDMPResourceUtils.class);
 
-	public BasicDMPResourceUtils(final Class<POJOCLASS> pojoClassArg, final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
-			final Provider<ObjectMapper> objectMapperProviderArg) {
+	public BasicDMPResourceUtils(final Class<POJOCLASS> pojoClassArg,
+	                             final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
+	                             final Provider<ObjectMapper> objectMapperProviderArg,
+	                             final ResourceUtilsFactory utilsFactory) {
 
-		super(pojoClassArg, persistenceServiceProviderArg, objectMapperProviderArg);
+		super(pojoClassArg, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}
 }

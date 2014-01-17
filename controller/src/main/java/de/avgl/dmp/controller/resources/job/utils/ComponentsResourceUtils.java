@@ -10,6 +10,7 @@ import com.google.inject.Inject;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.utils.ExtendedBasicDMPResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.service.job.ComponentService;
@@ -24,15 +25,12 @@ public class ComponentsResourceUtils extends ExtendedBasicDMPResourceUtils<Compo
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ComponentsResourceUtils.class);
 
-	private final Provider<FunctionsResourceUtils>	functionsResourceUtilsProvider;
-
 	@Inject
 	public ComponentsResourceUtils(final Provider<ComponentService> persistenceServiceProviderArg,
-			final Provider<ObjectMapper> objectMapperProviderArg, final Provider<FunctionsResourceUtils> functionsResourceUtilsProviderArg) {
+	                               final Provider<ObjectMapper> objectMapperProviderArg,
+	                               final ResourceUtilsFactory utilsFactory) {
 
-		super(Component.class, persistenceServiceProviderArg, objectMapperProviderArg);
-
-		functionsResourceUtilsProvider = functionsResourceUtilsProviderArg;
+		super(Component.class, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}
 
 	@Override
@@ -55,7 +53,7 @@ public class ComponentsResourceUtils extends ExtendedBasicDMPResourceUtils<Compo
 				return jsonNode;
 			}
 
-			functionsResourceUtilsProvider.get().replaceRelevantDummyIds(function, jsonNode, dummyIdCandidates);
+			utilsFactory.get(FunctionsResourceUtils.class).replaceRelevantDummyIds(function, jsonNode, dummyIdCandidates);
 		}
 
 		return jsonNode;

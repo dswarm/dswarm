@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.schema.utils.SchemasResourceUtils;
 import de.avgl.dmp.controller.resources.utils.ExtendedBasicDMPResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
@@ -27,23 +28,12 @@ public class DataModelsResourceUtils extends ExtendedBasicDMPResourceUtils<DataM
 
 	private static final org.apache.log4j.Logger		LOG	= org.apache.log4j.Logger.getLogger(DataModelsResourceUtils.class);
 
-	private final Provider<ResourcesResourceUtils>		resourcesResourceUtilsProvider;
-
-	private final Provider<ConfigurationsResourceUtils>	configurationsResourceUtilsProvider;
-
-	private final Provider<SchemasResourceUtils>		schemasResourceUtilsProvider;
-
 	@Inject
 	public DataModelsResourceUtils(final Provider<DataModelService> persistenceServiceProviderArg,
-			final Provider<ObjectMapper> objectMapperProviderArg, final Provider<ResourcesResourceUtils> resourcesResourceUtilsProviderArg,
-			final Provider<ConfigurationsResourceUtils> configurationsResourceUtilsProviderArg,
-			final Provider<SchemasResourceUtils> schemasResourceUtilsProviderArg) {
+	                               final Provider<ObjectMapper> objectMapperProviderArg,
+	                               final ResourceUtilsFactory utilsFactory) {
 
-		super(DataModel.class, persistenceServiceProviderArg, objectMapperProviderArg);
-
-		resourcesResourceUtilsProvider = resourcesResourceUtilsProviderArg;
-		configurationsResourceUtilsProvider = configurationsResourceUtilsProviderArg;
-		schemasResourceUtilsProvider = schemasResourceUtilsProviderArg;
+		super(DataModel.class, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}
 
 	@Override
@@ -66,7 +56,7 @@ public class DataModelsResourceUtils extends ExtendedBasicDMPResourceUtils<DataM
 				return jsonNode;
 			}
 
-			resourcesResourceUtilsProvider.get().replaceRelevantDummyIds(resource, jsonNode, dummyIdCandidates);
+			utilsFactory.get(ResourcesResourceUtils.class).replaceRelevantDummyIds(resource, jsonNode, dummyIdCandidates);
 		}
 
 		final Configuration configuration = object.getConfiguration();
@@ -78,7 +68,7 @@ public class DataModelsResourceUtils extends ExtendedBasicDMPResourceUtils<DataM
 				return jsonNode;
 			}
 
-			configurationsResourceUtilsProvider.get().replaceRelevantDummyIds(configuration, jsonNode, dummyIdCandidates);
+			utilsFactory.get(ConfigurationsResourceUtils.class).replaceRelevantDummyIds(configuration, jsonNode, dummyIdCandidates);
 		}
 
 		final Schema schema = object.getSchema();
@@ -90,7 +80,7 @@ public class DataModelsResourceUtils extends ExtendedBasicDMPResourceUtils<DataM
 				return jsonNode;
 			}
 
-			schemasResourceUtilsProvider.get().replaceRelevantDummyIds(schema, jsonNode, dummyIdCandidates);
+			utilsFactory.get(SchemasResourceUtils.class).replaceRelevantDummyIds(schema, jsonNode, dummyIdCandidates);
 		}
 
 		return jsonNode;

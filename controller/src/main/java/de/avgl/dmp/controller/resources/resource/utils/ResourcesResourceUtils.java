@@ -10,6 +10,7 @@ import com.google.inject.Inject;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.utils.ExtendedBasicDMPResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
@@ -24,40 +25,37 @@ public class ResourcesResourceUtils extends ExtendedBasicDMPResourceUtils<Resour
 
 	private static final org.apache.log4j.Logger		LOG	= org.apache.log4j.Logger.getLogger(ResourcesResourceUtils.class);
 
-	private final Provider<ConfigurationsResourceUtils>	configurationsResourceUtilsProvider;
-
 	@Inject
 	public ResourcesResourceUtils(final Provider<ResourceService> persistenceServiceProviderArg,
-			final Provider<ObjectMapper> objectMapperProviderArg, final Provider<ConfigurationsResourceUtils> configurationsResourceUtilsProviderArg) {
+	                              final Provider<ObjectMapper> objectMapperProviderArg,
+	                              final ResourceUtilsFactory utilsFactory) {
 
-		super(Resource.class, persistenceServiceProviderArg, objectMapperProviderArg);
-
-		configurationsResourceUtilsProvider = configurationsResourceUtilsProviderArg;
+		super(Resource.class, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}
 
 	@Override
 	public JsonNode replaceRelevantDummyIds(final Resource object, final JsonNode jsonNode, final Set<Long> dummyIdCandidates)
 			throws DMPControllerException {
-		
+
 		if(checkObject(object, dummyIdCandidates)) {
-			
+
 			return jsonNode;
 		}
 
 		super.replaceRelevantDummyIds(object, jsonNode, dummyIdCandidates);
-		
+
 		final Set<Configuration> configurations = object.getConfigurations();
-		
+
 		if(configurations != null) {
-			
+
 			for(final Configuration configuration : configurations) {
-				
+
 				if (areDummyIdCandidatesEmpty(dummyIdCandidates)) {
 
 					return jsonNode;
 				}
-				
-				configurationsResourceUtilsProvider.get().replaceRelevantDummyIds(configuration, jsonNode, dummyIdCandidates);
+
+				utilsFactory.get(ConfigurationsResourceUtils.class).replaceRelevantDummyIds(configuration, jsonNode, dummyIdCandidates);
 			}
 		}
 

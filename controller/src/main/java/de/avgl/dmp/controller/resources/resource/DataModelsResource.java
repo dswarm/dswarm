@@ -33,6 +33,7 @@ import de.avgl.dmp.controller.eventbus.XMLConverterEvent;
 import de.avgl.dmp.controller.eventbus.XMLSchemaEvent;
 import de.avgl.dmp.controller.resources.ExtendedBasicDMPResource;
 import de.avgl.dmp.controller.resources.resource.utils.DataModelsResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.controller.utils.DataModelUtil;
 import de.avgl.dmp.persistence.DMPPersistenceException;
@@ -43,7 +44,7 @@ import de.avgl.dmp.persistence.service.resource.DataModelService;
 
 /**
  * A resource (controller service) for {@link DataModel}s.
- * 
+ *
  * @author tgaengler
  */
 @RequestScoped
@@ -66,7 +67,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 	/**
 	 * Creates a new resource (controller service) for {@link DataModel}s with the provider of the data model persistence service,
 	 * the object mapper, metrics registry, event bus provider and data model util.
-	 * 
+	 *
 	 * @param dataModelServiceProviderArg the data model persistence service provider
 	 * @param objectMapper an object mapper
 	 * @param dmpStatus an metrics registry
@@ -74,10 +75,10 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 	 * @param dataModelUtilArg the data model util
 	 */
 	@Inject
-	public DataModelsResource(final DataModelsResourceUtils pojoClassResourceUtilsArg,
-			final DMPStatus dmpStatusArg, final Provider<EventBus> eventBusProviderArg, final DataModelUtil dataModelUtilArg) {
+	public DataModelsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg,
+	                          final Provider<EventBus> eventBusProviderArg, final DataModelUtil dataModelUtilArg) throws DMPControllerException {
 
-		super(pojoClassResourceUtilsArg, dmpStatusArg);
+		super(utilsFactory.reset().get(DataModelsResourceUtils.class), dmpStatusArg);
 
 		eventBusProvider = eventBusProviderArg;
 		dataModelUtil = dataModelUtilArg;
@@ -85,7 +86,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 
 	/**
 	 * This endpoint returns a data model as JSON representation for the provided data model identifier.
-	 * 
+	 *
 	 * @param id a data model identifier
 	 * @return a JSON representation of a data model
 	 */
@@ -102,7 +103,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 
 	/**
 	 * This endpoint consumes a data model as JSON representation and persists this data model in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one data model
 	 * @return the persisted data model as JSON representation
 	 * @throws DMPControllerException
@@ -120,7 +121,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 
 	/**
 	 * This endpoint returns a list of all data models as JSON representation.
-	 * 
+	 *
 	 * @return a list of all data models as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -135,7 +136,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 
 	/**
 	 * Returns the data for a given data model.
-	 * 
+	 *
 	 * @param id the data model identifier
 	 * @param atMost the number of records that should be returned at most
 	 * @return the data for a given data model

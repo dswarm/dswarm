@@ -5,6 +5,7 @@ import javax.inject.Provider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.avgl.dmp.controller.resources.utils.ExtendedBasicDMPResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.service.job.BasicFunctionService;
 
@@ -19,9 +20,11 @@ public abstract class BasicFunctionsResourceUtils<POJOCLASSPERSISTENCESERVICE ex
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(BasicFunctionsResourceUtils.class);
 
-	public BasicFunctionsResourceUtils(final Class<POJOCLASS> pojoClassArg, final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
-			final Provider<ObjectMapper> objectMapperProviderArg) {
+	public BasicFunctionsResourceUtils(final Class<POJOCLASS> pojoClassArg,
+	                                   final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
+	                                   final Provider<ObjectMapper> objectMapperProviderArg,
+	                                   final ResourceUtilsFactory utilsFactory) {
 
-		super(pojoClassArg, persistenceServiceProviderArg, objectMapperProviderArg);
+		super(pojoClassArg, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}
 }

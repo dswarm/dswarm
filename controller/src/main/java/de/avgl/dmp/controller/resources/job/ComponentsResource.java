@@ -18,13 +18,14 @@ import com.wordnik.swagger.annotations.ApiParam;
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.ExtendedBasicDMPResource;
 import de.avgl.dmp.controller.resources.job.utils.ComponentsResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.service.job.ComponentService;
 
 /**
  * A resource (controller service) for {@link Component}s.
- * 
+ *
  * @author tgaengler
  */
 @RequestScoped
@@ -35,20 +36,20 @@ public class ComponentsResource extends ExtendedBasicDMPResource<ComponentsResou
 	/**
 	 * Creates a new resource (controller service) for {@link Component}s with the provider of the component persistence service,
 	 * the object mapper and metrics registry.
-	 * 
+	 *
 	 * @param componentServiceProviderArg the component persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public ComponentsResource(final ComponentsResourceUtils pojoClassResourceUtilsArg, final DMPStatus dmpStatusArg) {
+	public ComponentsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
 
-		super(pojoClassResourceUtilsArg, dmpStatusArg);
+		super(utilsFactory.reset().get(ComponentsResourceUtils.class), dmpStatusArg);
 	}
 
 	/**
 	 * This endpoint returns a component as JSON representation for the provided component identifier.
-	 * 
+	 *
 	 * @param id a component identifier
 	 * @return a JSON representation of a component
 	 */
@@ -65,7 +66,7 @@ public class ComponentsResource extends ExtendedBasicDMPResource<ComponentsResou
 
 	/**
 	 * This endpoint consumes a component as JSON representation and persists this component in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one component
 	 * @return the persisted component as JSON representation
 	 * @throws DMPControllerException
@@ -83,7 +84,7 @@ public class ComponentsResource extends ExtendedBasicDMPResource<ComponentsResou
 
 	/**
 	 * This endpoint returns a list of all components as JSON representation.
-	 * 
+	 *
 	 * @return a list of all components as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -112,12 +113,12 @@ public class ComponentsResource extends ExtendedBasicDMPResource<ComponentsResou
 
 		return object;
 	}
-	
+
 	@Override
 	protected String prepareObjectJSONString(String objectJSONString) throws DMPControllerException {
-		
+
 		// TODO: remove id from parameter mappings (?) -> avoid dummy id creation there
-		
+
 		return objectJSONString;
 	}
 }

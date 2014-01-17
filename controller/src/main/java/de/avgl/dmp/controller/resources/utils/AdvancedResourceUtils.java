@@ -21,9 +21,9 @@ public abstract class AdvancedResourceUtils<POJOCLASSPERSISTENCESERVICE extends 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AdvancedResourceUtils.class);
 
 	public AdvancedResourceUtils(final Class<POJOCLASS> pojoClassArg, final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
-			final Provider<ObjectMapper> objectMapperProviderArg) {
+			final Provider<ObjectMapper> objectMapperProviderArg, final ResourceUtilsFactory utilsFactory) {
 
-		super(pojoClassArg, String.class, persistenceServiceProviderArg, objectMapperProviderArg);
+		super(pojoClassArg, String.class, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}
 
 	@Override

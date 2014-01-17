@@ -19,13 +19,14 @@ import com.wordnik.swagger.annotations.ApiParam;
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.ExtendedBasicDMPResource;
 import de.avgl.dmp.controller.resources.resource.utils.ConfigurationsResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 
 /**
  * A resource (controller service) for {@link Configuration}s.
- * 
+ *
  * @author tgaengler
  */
 @RequestScoped
@@ -38,21 +39,20 @@ public class ConfigurationsResource extends ExtendedBasicDMPResource<Configurati
 	/**
 	 * Creates a new resource (controller service) for {@link Configuration}s with the provider of the component persistence
 	 * service, the object mapper and metrics registry.
-	 * 
+	 *
 	 * @param persistenceServiceProviderArg the component persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public ConfigurationsResource(final ConfigurationsResourceUtils pojoClassResourceUtilsArg,
-			final DMPStatus dmpStatusArg) {
+	public ConfigurationsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
 
-		super(pojoClassResourceUtilsArg, dmpStatusArg);
+		super(utilsFactory.reset().get(ConfigurationsResourceUtils.class), dmpStatusArg);
 	}
 
 	/**
 	 * This endpoint returns a configuration as JSON representation for the provided configuration identifier.
-	 * 
+	 *
 	 * @param id a configuration identifier
 	 * @return a JSON representation of a configuration
 	 */
@@ -69,7 +69,7 @@ public class ConfigurationsResource extends ExtendedBasicDMPResource<Configurati
 
 	/**
 	 * This endpoint consumes a configuration as JSON representation and persists this configuration in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one configuration
 	 * @return the persisted configuration as JSON representation
 	 * @throws DMPControllerException
@@ -87,7 +87,7 @@ public class ConfigurationsResource extends ExtendedBasicDMPResource<Configurati
 
 	/**
 	 * This endpoint returns a list of all configurations as JSON representation.
-	 * 
+	 *
 	 * @return a list of all configurations as JSON representation
 	 * @throws DMPControllerException
 	 */

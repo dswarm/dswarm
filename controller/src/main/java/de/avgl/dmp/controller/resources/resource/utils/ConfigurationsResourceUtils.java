@@ -10,6 +10,7 @@ import com.google.inject.Inject;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.utils.ExtendedBasicDMPResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
@@ -24,23 +25,20 @@ public class ConfigurationsResourceUtils extends ExtendedBasicDMPResourceUtils<C
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ConfigurationsResourceUtils.class);
 
-	private final Provider<ResourcesResourceUtils>	resourcesResourceUtilsProvider;
-
 	@Inject
-	public ConfigurationsResourceUtils(final Provider<ConfigurationService> persistenceServiceProviderArg,
-			final Provider<ObjectMapper> objectMapperProviderArg, final Provider<ResourcesResourceUtils> resourcesResourceUtilsProviderArg) {
+	public ConfigurationsResourceUtils(final ResourceUtilsFactory utilsFactory,
+	                                   final Provider<ConfigurationService> persistenceServiceProviderArg,
+	                                   final Provider<ObjectMapper> objectMapperProviderArg) {
 
-		super(Configuration.class, persistenceServiceProviderArg, objectMapperProviderArg);
-
-		resourcesResourceUtilsProvider = resourcesResourceUtilsProviderArg;
+		super(Configuration.class, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}
 
 	@Override
 	public JsonNode replaceRelevantDummyIds(final Configuration object, final JsonNode jsonNode, final Set<Long> dummyIdCandidates)
 			throws DMPControllerException {
-		
+
 		if(checkObject(object, dummyIdCandidates)) {
-			
+
 			return jsonNode;
 		}
 
@@ -57,7 +55,7 @@ public class ConfigurationsResourceUtils extends ExtendedBasicDMPResourceUtils<C
 					return jsonNode;
 				}
 
-				resourcesResourceUtilsProvider.get().replaceRelevantDummyIds(resource, jsonNode, dummyIdCandidates);
+				utilsFactory.get(ResourcesResourceUtils.class).replaceRelevantDummyIds(resource, jsonNode, dummyIdCandidates);
 			}
 		}
 

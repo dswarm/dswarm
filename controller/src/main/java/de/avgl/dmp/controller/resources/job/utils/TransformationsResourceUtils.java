@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 
 import de.avgl.dmp.controller.DMPControllerException;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.service.job.TransformationService;
@@ -23,15 +24,12 @@ public class TransformationsResourceUtils extends BasicFunctionsResourceUtils<Tr
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(TransformationsResourceUtils.class);
 
-	private final Provider<ComponentsResourceUtils>	componentsResourceUtilsProvider;
-
 	@Inject
 	public TransformationsResourceUtils(final Provider<TransformationService> persistenceServiceProviderArg,
-			final Provider<ObjectMapper> objectMapperProviderArg, final Provider<ComponentsResourceUtils> componentsResourceUtilsProviderArg) {
+	                                    final Provider<ObjectMapper> objectMapperProviderArg,
+	                                    final ResourceUtilsFactory utilsFactory) {
 
-		super(Transformation.class, persistenceServiceProviderArg, objectMapperProviderArg);
-
-		componentsResourceUtilsProvider = componentsResourceUtilsProviderArg;
+		super(Transformation.class, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}
 
 	@Override
@@ -56,7 +54,7 @@ public class TransformationsResourceUtils extends BasicFunctionsResourceUtils<Tr
 					return jsonNode;
 				}
 
-				componentsResourceUtilsProvider.get().replaceRelevantDummyIds(component, jsonNode, dummyIdCandidates);
+				utilsFactory.get(ComponentsResourceUtils.class).replaceRelevantDummyIds(component, jsonNode, dummyIdCandidates);
 			}
 		}
 

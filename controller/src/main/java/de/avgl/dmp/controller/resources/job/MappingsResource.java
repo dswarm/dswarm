@@ -18,13 +18,14 @@ import com.wordnik.swagger.annotations.ApiParam;
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.BasicDMPResource;
 import de.avgl.dmp.controller.resources.job.utils.MappingsResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Mapping;
 import de.avgl.dmp.persistence.service.job.MappingService;
 
 /**
  * A resource (controller service) for {@link Mapping}s.
- * 
+ *
  * @author tgaengler
  */
 @RequestScoped
@@ -35,20 +36,20 @@ public class MappingsResource extends BasicDMPResource<MappingsResourceUtils, Ma
 	/**
 	 * Creates a new resource (controller service) for {@link Mapping}s with the provider of the mapping persistence service, the
 	 * object mapper and metrics registry.
-	 * 
+	 *
 	 * @param mappingServiceProviderArg the mapping persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public MappingsResource(final MappingsResourceUtils pojoClassResourceUtilsArg, final DMPStatus dmpStatusArg) {
+	public MappingsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
 
-		super(pojoClassResourceUtilsArg, dmpStatusArg);
+		super(utilsFactory.reset().get(MappingsResourceUtils.class), dmpStatusArg);
 	}
 
 	/**
 	 * This endpoint returns a mapping as JSON representation for the provided mapping identifier.
-	 * 
+	 *
 	 * @param id a mapping identifier
 	 * @return a JSON representation of a mapping
 	 */
@@ -64,7 +65,7 @@ public class MappingsResource extends BasicDMPResource<MappingsResourceUtils, Ma
 
 	/**
 	 * This endpoint consumes a mapping as JSON representation and persists this mapping in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one mapping
 	 * @return the persisted mapping as JSON representation
 	 * @throws DMPControllerException
@@ -81,7 +82,7 @@ public class MappingsResource extends BasicDMPResource<MappingsResourceUtils, Ma
 
 	/**
 	 * This endpoint returns a list of all mappings as JSON representation.
-	 * 
+	 *
 	 * @return a list of all mappings as JSON representation
 	 * @throws DMPControllerException
 	 */

@@ -18,13 +18,14 @@ import com.wordnik.swagger.annotations.ApiParam;
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.BasicIDResource;
 import de.avgl.dmp.controller.resources.schema.utils.AttributePathsResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.service.schema.AttributePathService;
 
 /**
  * A resource (controller service) for {@link AttributePath}s.
- * 
+ *
  * @author tgaengler
  */
 @RequestScoped
@@ -37,21 +38,20 @@ public class AttributePathsResource extends BasicIDResource<AttributePathsResour
 	/**
 	 * Creates a new resource (controller service) for {@link AttributePath}s with the provider of the attribute path persistence
 	 * service, the object mapper and metrics registry.
-	 * 
+	 *
 	 * @param attributePathServiceProviderArg the attribute path persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public AttributePathsResource(final AttributePathsResourceUtils pojoClassResourceUtilsArg,
-			final DMPStatus dmpStatusArg) {
+	public AttributePathsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
 
-		super(pojoClassResourceUtilsArg, dmpStatusArg);
+		super(utilsFactory.reset().get(AttributePathsResourceUtils.class), dmpStatusArg);
 	}
 
 	/**
 	 * This endpoint returns an attribute path as JSON representation for the provided attribute paths identifier.
-	 * 
+	 *
 	 * @param id an attribute path identifier
 	 * @return a JSON representation of an attribute path
 	 */
@@ -68,7 +68,7 @@ public class AttributePathsResource extends BasicIDResource<AttributePathsResour
 
 	/**
 	 * This endpoint consumes an attribute path as JSON representation and persists this attribute path in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one attribute path
 	 * @return the persisted attribute path as JSON representation
 	 * @throws DMPControllerException
@@ -86,7 +86,7 @@ public class AttributePathsResource extends BasicIDResource<AttributePathsResour
 
 	/**
 	 * This endpoint returns a list of all attribute paths as JSON representation.
-	 * 
+	 *
 	 * @return a list of all attribute paths as JSON representation
 	 * @throws DMPControllerException
 	 */

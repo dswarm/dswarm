@@ -18,13 +18,14 @@ import com.wordnik.swagger.annotations.ApiParam;
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.AdvancedResource;
 import de.avgl.dmp.controller.resources.schema.utils.AttributesResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
 
 /**
  * A resource (controller service) for {@link Attribute}s.
- * 
+ *
  * @author tgaengler
  *
  */
@@ -38,21 +39,21 @@ public class AttributesResource extends AdvancedResource<AttributesResourceUtils
 	/**
 	 * Creates a new resource (controller service) for {@link Attribute}s with the provider of the attribute persistence
 	 * service, the object mapper and metrics registry.
-	 * 
+	 *
 	 * @param attributeServiceProviderArg the attribute persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public AttributesResource(final AttributesResourceUtils pojoClassResourceUtilsArg, final DMPStatus dmpStatusArg) {
+	public AttributesResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
 
-		super(pojoClassResourceUtilsArg, dmpStatusArg);
+		super(utilsFactory.reset().get(AttributesResourceUtils.class), dmpStatusArg);
 	}
 
 	/**
 	 * This endpoint returns an attribute as JSON representation for the provided attribute identifier.<br/>
 	 * note: currently, this method is not implemented
-	 * 
+	 *
 	 * @param id an attribute identifier
 	 * @return a JSON representation of an attribute
 	 */
@@ -69,7 +70,7 @@ public class AttributesResource extends AdvancedResource<AttributesResourceUtils
 	/**
 	 * This endpoint consumes an attribute as JSON representation and persists this attribute in the
 	 * database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one attribute
 	 * @return the persisted attribute as JSON representation
 	 * @throws DMPControllerException
@@ -87,7 +88,7 @@ public class AttributesResource extends AdvancedResource<AttributesResourceUtils
 
 	/**
 	 * This endpoint returns a list of all attributes as JSON representation.
-	 * 
+	 *
 	 * @return a list of all attributes as JSON representation
 	 * @throws DMPControllerException
 	 */
