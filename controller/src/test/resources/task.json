@@ -23,10 +23,7 @@
                             "id": 267,
                             "name": "substring",
                             "description": "Returns a substring",
-                            "parameters": [
-                                "start",
-                                "end"
-                            ],
+                            "parameters": ["start", "end"],
                             "function_description": {
                                 "name": "substring",
                                 "dsl": "metafacture",
@@ -73,11 +70,7 @@
                                     "id": 257,
                                     "name": "htmlanchor",
                                     "description": "Create an HTML anchor.",
-                                    "parameters": [
-                                        "prefix",
-                                        "postfix",
-                                        "title"
-                                    ],
+                                    "parameters": ["prefix", "postfix", "title"],
                                     "function_description": {
                                         "name": "htmlanchor",
                                         "dsl": "metafacture",
@@ -133,11 +126,7 @@
                                 "id": 257,
                                 "name": "htmlanchor",
                                 "description": "Create an HTML anchor.",
-                                "parameters": [
-                                    "prefix",
-                                    "postfix",
-                                    "title"
-                                ],
+                                "parameters": ["prefix", "postfix", "title"],
                                 "function_description": {
                                     "name": "htmlanchor",
                                     "dsl": "metafacture",
@@ -176,11 +165,7 @@
                             "id": 257,
                             "name": "htmlanchor",
                             "description": "Create an HTML anchor.",
-                            "parameters": [
-                                "prefix",
-                                "postfix",
-                                "title"
-                            ],
+                            "parameters": ["prefix", "postfix", "title"],
                             "function_description": {
                                 "name": "htmlanchor",
                                 "dsl": "metafacture",
@@ -215,93 +200,55 @@
             "input_attribute_paths": [{
                 "id": 11,
                 "attributes": [{
-                    "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                    "id": 99,
+                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
                     "name": "feld"
                 }, {
-                    "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
+                    "id": 98,
+                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
                     "name": "nr"
                 }]
             }],
             "output_attribute_path": {
                 "id": 11,
                 "attributes": [{
-                    "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                    "id": 99,
+                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
                     "name": "feld"
                 }, {
-                    "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
+                    "id": 98,
+                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
                     "name": "nr"
                 }]
             }
         }]
     },
     "input_data_model": {
-        "id": 42,
-        "name": "my data model",
-        "description": "my data model description",
+        "id": 1,
         "configuration": {
-            "id": 269,
-            "name": "my configuration",
-            "description": "configuration description",
+            "id": 1,
             "resources": [{
-                "id": 350
+                "id": 1
             }],
             "parameters": {
-                "fileseparator": ";"
-            }
-        },
-        "schema": {
-            "id": 81,
-            "name": "my schema",
-            "attribute_paths": [{
-                "id": 243,
-                "attributes": [{
-                    "id": "http://purl.org/dc/terms/created",
-                    "name": "created"
-                }]
-            }, {
-                "id": 242,
-                "attributes": [{
-                    "id": "http://purl.org/dc/terms/creator",
-                    "name": "creator"
-                }, {
-                    "id": "http://xmlns.com/foaf/0.1/name",
-                    "name": "name"
-                }]
-            }, {
-                "id": 241,
-                "attributes": [{
-                    "id": "http://purl.org/dc/terms/title",
-                    "name": "title"
-                }, {
-                    "id": "http://purl.org/dc/terms/hasPart",
-                    "name": "hasPart"
-                }, {
-                    "id": "http://purl.org/dc/terms/title",
-                    "name": "title"
-                }]
-            }],
-            "record_class": {
-                "id": "http://purl.org/ontology/bibo/Document",
-                "name": "document"
+                "record_tag": "datensatz",
+                "xml_namespace": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd",
+                "storage_type": "xml"
             }
         },
         "data_resource": {
-            "id": 350,
-            "name": "bla",
-            "description": "blubblub",
+            "id": 1,
+            "name": "test-mabxml.xml",
             "type": "FILE",
-            "attributes": {
-                "path": "/path/to/file.end"
-            },
             "configurations": [{
-                "id": 269,
-                "name": "my configuration",
-                "description": "configuration description",
+                "id": 1,
                 "resources": [{
-                    "id": 350
+                    "id": 1
                 }],
                 "parameters": {
-                    "fileseparator": ";"
+                    "record_tag": "datensatz",
+                    "xml_namespace": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd",
+                    "storage_type": "xml"
                 }
             }]
         }
@@ -316,33 +263,40 @@
             "attribute_paths": [{
                 "id": 11,
                 "attributes": [{
-                    "id": "http://purl.org/dc/terms/created",
+                    "id": 90,
+                    "uri": "http://purl.org/dc/terms/created",
                     "name": "created"
                 }]
             }, {
                 "id": 9,
                 "attributes": [{
-                    "id": "http://purl.org/dc/terms/title",
+                    "id": 86,
+                    "uri": "http://purl.org/dc/terms/title",
                     "name": "title"
                 }, {
-                    "id": "http://purl.org/dc/terms/hasPart",
+                    "id": 87,
+                    "uri": "http://purl.org/dc/terms/hasPart",
                     "name": "hasPart"
                 }, {
-                    "id": "http://purl.org/dc/terms/title",
+                    "id": 86,
+                    "uri": "http://purl.org/dc/terms/title",
                     "name": "title"
                 }]
             }, {
                 "id": 10,
                 "attributes": [{
-                    "id": "http://purl.org/dc/terms/creator",
+                    "id": 88,
+                    "uri": "http://purl.org/dc/terms/creator",
                     "name": "creator"
                 }, {
-                    "id": "http://xmlns.com/foaf/0.1/name",
+                    "id": 89,
+                    "uri": "http://xmlns.com/foaf/0.1/name",
                     "name": "name"
                 }]
             }],
             "record_class": {
-                "id": "http://purl.org/ontology/bibo/Document",
+                "id": 21,
+                "uri": "http://purl.org/ontology/bibo/Document",
                 "name": "document"
             }
         }

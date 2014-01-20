@@ -1,5 +1,6 @@
 package de.avgl.dmp.controller.eventbus;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -7,6 +8,7 @@ import org.culturegraph.mf.types.Triple;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -109,13 +111,15 @@ public class SchemaEventRecorder {
 		final Set<AttributePath> attributePaths = Sets.newLinkedHashSet();
 
 		for (final String stringAttribute : stringAttributes) {
-			final String attributeId = dataResourceBaseSchemaURI + stringAttribute;
-			final Attribute attribute = attributeService.createObjectTransactional(attributeId);
+			final String attributeUri = dataResourceBaseSchemaURI + stringAttribute;
+			final Attribute attribute = attributeService.createObjectTransactional(attributeUri);
 
 			attribute.setName(stringAttribute);
+			
+			final LinkedList<Attribute> attributes = Lists.newLinkedList();
+			attributes.add(attribute);
 
-			final AttributePath attributePath = attributePathService.createObject();
-			attributePath.addAttribute(attribute);
+			final AttributePath attributePath = attributePathService.createObject(attributes);
 
 			attributePaths.add(attributePath);
 		}

@@ -1,79 +1,79 @@
 {
-    "id": 27,
+    "id": 1,
     "name": "my data model",
     "description": "my data model description",
     "configuration": {
-        "id": 18,
+        "id": 14,
         "name": "my configuration",
         "description": "configuration description",
         "resources": [{
-            "id": 17
+            "id": 13
         }],
         "parameters": {
             "fileseparator": ";"
         }
     },
     "schema": {
-        "id": 18,
+        "id": 1,
         "name": "my schema",
         "attribute_paths": [{
-            "id": 65,
+            "id": 3,
             "attributes": [{
-                "id": 73,
-                "name": "creator",
-                "uri": "http://purl.org/dc/terms/creator"
-            }, {
-                "id": 74,
-                "name": "name",
-                "uri": "http://xmlns.com/foaf/0.1/name"
-            }]
-        }, {
-            "id": 66,
-            "attributes": [{
-                "id": 75,
+                "id": 5,
                 "name": "created",
                 "uri": "http://purl.org/dc/terms/created"
             }]
         }, {
-            "id": 64,
+            "id": 1,
             "attributes": [{
-                "id": 71,
+                "id": 1,
                 "name": "title",
                 "uri": "http://purl.org/dc/terms/title"
             }, {
-                "id": 72,
+                "id": 2,
                 "name": "hasPart",
                 "uri": "http://purl.org/dc/terms/hasPart"
             }, {
-                "id": 71,
+                "id": 1,
                 "name": "title",
                 "uri": "http://purl.org/dc/terms/title"
             }]
+        }, {
+            "id": 2,
+            "attributes": [{
+                "id": 3,
+                "name": "creator",
+                "uri": "http://purl.org/dc/terms/creator"
+            }, {
+                "id": 4,
+                "name": "name",
+                "uri": "http://xmlns.com/foaf/0.1/name"
+            }]
         }],
         "record_class": {
-            "id": 19,
+            "id": 1,
             "name": "document",
             "uri": "http://purl.org/ontology/bibo/Document"
         }
     },
     "data_resource": {
-        "id": 17,
+        "id": 13,
         "name": "bla",
         "description": "blubblub",
         "type": "FILE",
-        "attributes": {
-            "path": "/path/to/file.end"
-        },
         "configurations": [{
-            "id": 18,
+            "id": 14,
             "name": "my configuration",
             "description": "configuration description",
             "resources": [{
-                "id": 17
+                "id": 13
             }],
             "parameters": {
                 "fileseparator": ";"
             }
-        }]
+        }],
+        "resource_attributes": {
+            "path": "/path/to/file.end"
+        }
     }
 }

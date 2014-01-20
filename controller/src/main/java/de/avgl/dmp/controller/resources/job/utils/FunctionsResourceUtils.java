@@ -32,10 +32,6 @@ public class FunctionsResourceUtils extends BasicFunctionsResourceUtils<Function
 		super(Function.class, persistenceServiceProviderArg, objectMapperProviderArg);
 
 		transformationsResourceUtilsProvider = transformationsResourceUtilsProviderArg;
-
-		// add here all identifiers for attributes that bear native JSON objects/arrays
-
-		toBeSkippedJsonNodes.add("function_description");
 	}
 
 	@Override

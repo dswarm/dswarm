@@ -44,11 +44,11 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 	protected final Provider<ObjectMapper>					objectMapperProvider;
 
 	// TODO: this might be not the best solution ...
-	protected final Set<String>						toBeSkippedJsonNodes	= Sets.newHashSet();
+	protected final Set<String>								toBeSkippedJsonNodes	= Sets.newHashSet();
 
 	private Set<POJOCLASSIDTYPE>							processedObjectIds;
-	
-	private Set<POJOCLASSIDTYPE>					dummyIdCandidates;
+
+	private Set<POJOCLASSIDTYPE>							dummyIdCandidates;
 
 	public BasicResourceUtils(final Class<POJOCLASS> pojoClassArg, final Class<POJOCLASSIDTYPE> pojoClassIdTypeArg,
 			final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg) {
@@ -61,6 +61,13 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 		pojoClassName = pojoClass.getSimpleName();
 
 		pojoClassIdType = pojoClassIdTypeArg;
+
+		// add here all identifiers for attributes that bear native JSON objects/arrays
+
+		toBeSkippedJsonNodes.add("resource_attributes");
+		toBeSkippedJsonNodes.add("parameters");
+		toBeSkippedJsonNodes.add("function_description");
+		toBeSkippedJsonNodes.add("parameter_mappings");
 	}
 
 	/**
@@ -253,8 +260,7 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 
 			BasicResourceUtils.LOG.debug("something went wrong while deserializing the " + pojoClassName + " JSON string");
 
-			throw new DMPControllerException("something went wrong while deserializing the " + pojoClassName
-					+ " JSON string.\n" + e.getMessage());
+			throw new DMPControllerException("something went wrong while deserializing the " + pojoClassName + " JSON string.\n" + e.getMessage());
 		}
 
 		if (jsonNode == null) {
@@ -273,7 +279,7 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 
 		return serializeObject(jsonNode);
 	}
-	
+
 	protected abstract ObjectNode replaceDummyId(final JsonNode idNode, final POJOCLASSIDTYPE dummyId, final POJOCLASSIDTYPE realId,
 			final ObjectNode objectJson);
 

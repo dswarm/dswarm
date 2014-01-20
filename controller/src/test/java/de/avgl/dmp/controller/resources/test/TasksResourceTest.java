@@ -205,7 +205,7 @@ public class TasksResourceTest extends ResourceTest {
 	@After
 	public void cleanUp() {
 		
-		final Map<String, Attribute>					attributes		= Maps.newHashMap();
+		final Map<Long, Attribute>					attributes		= Maps.newHashMap();
 
 		final Map<Long, AttributePath>					attributePaths	= Maps.newLinkedHashMap();
 		

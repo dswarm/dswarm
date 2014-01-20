@@ -33,10 +33,6 @@ public class ComponentsResourceUtils extends ExtendedBasicDMPResourceUtils<Compo
 		super(Component.class, persistenceServiceProviderArg, objectMapperProviderArg);
 
 		functionsResourceUtilsProvider = functionsResourceUtilsProviderArg;
-
-		// add here all identifiers for attributes that bear native JSON objects/arrays
-
-		toBeSkippedJsonNodes.add("parameter_mappings");
 	}
 
 	@Override

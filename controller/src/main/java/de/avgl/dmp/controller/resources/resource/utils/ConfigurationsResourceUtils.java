@@ -33,10 +33,6 @@ public class ConfigurationsResourceUtils extends ExtendedBasicDMPResourceUtils<C
 		super(Configuration.class, persistenceServiceProviderArg, objectMapperProviderArg);
 
 		resourcesResourceUtilsProvider = resourcesResourceUtilsProviderArg;
-
-		// add here all identifiers for attributes that bear native JSON objects/arrays
-
-		toBeSkippedJsonNodes.add("attributes");
 	}
 
 	@Override

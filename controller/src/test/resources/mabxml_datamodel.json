@@ -114,7 +114,7 @@
         "name": "test-mabxml.xml",
         "description": "this is a description",
         "type": "FILE",
-        "attributes": {
+        "resource_attributes": {
             "path": "/home/tgaengler/git/tgaengler/datamanagement-platform/init/../tmp/resources/test-mabxml.xml",
             "filesize": 2279
         },
