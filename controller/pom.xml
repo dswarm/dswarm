@@ -156,6 +156,7 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.jaxrs</groupId>
@@ -281,4 +282,30 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
+	<profiles>
+		<profile>
+			<id>DEV</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>javax.servlet</groupId>
+					<artifactId>javax.servlet-api</artifactId>
+					<version>3.1.0</version>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>TOMCAT</id>
+			<properties>
+				<env>dev</env>
+				<rdb.url>${db.mysql.url}</rdb.url>
+				<rdb.username>${db.mysql.username}</rdb.username>
+				<rdb.password>${db.mysql.password}</rdb.password>
+			</properties>
+		</profile>
+	</profiles>
+
 </project>
