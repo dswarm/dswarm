@@ -414,8 +414,7 @@ public class InternalTripleService implements InternalModelService {
 				attribute.setName(attributeName);
 			}
 
-			final AttributePath attributePath = attributePathService.get().createObject();
-			attributePath.setAttributePath(attributes);
+			final AttributePath attributePath = attributePathService.get().createObject(attributes);
 
 			dataModel.getSchema().addAttributePath(attributePath);
 		}

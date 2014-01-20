@@ -1563,30 +1563,17 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 		final AttributePathService attributePathService = GuicedTest.injector.getInstance(AttributePathService.class);
 
 		Assert.assertNotNull("attribute path service shouldn't be null", attributePathService);
+		
+		final AttributePath attributePath = new AttributePath(attributePathArg);
 
-		AttributePath attributePath = null;
+		AttributePath updatedAttributePath = null;
 
 		try {
 
-			attributePath = attributePathService.createObject();
+			updatedAttributePath = attributePathService.createObject(attributePathArg);
 		} catch (final DMPPersistenceException e1) {
 
 			Assert.assertTrue("something went wrong while attribute path creation.\n" + e1.getMessage(), false);
-		}
-
-		Assert.assertNotNull("attribute path shouldn't be null", attributePath);
-		Assert.assertNotNull("attribute path id shouldn't be null", attributePath.getId());
-
-		attributePath.setAttributePath(attributePathArg);
-
-		System.out.println("attribute path = '" + attributePath.toString());
-
-		AttributePath updatedAttributePath = null;
-		try {
-			updatedAttributePath = attributePathService.updateObjectTransactional(attributePath);
-		} catch (final DMPPersistenceException e1) {
-
-			Assert.assertTrue("something went wrong while updating the attribute path of id = '" + attributePath.getId() + "'", false);
 		}
 
 		Assert.assertNotNull("updated attribute path shouldn't be null", updatedAttributePath);
@@ -1608,8 +1595,8 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 			e.printStackTrace();
 		}
 
-		LOG.debug("attribute path json for attribute path '" + attributePath.getId() + "': " + json);
-
+		LOG.debug("attribute path json for attribute path '" + updatedAttributePath.getId() + "': " + json);
+		
 		attributePaths.put(updatedAttributePath.getId(), updatedAttributePath);
 
 		return updatedAttributePath;
