@@ -64,18 +64,4 @@ public abstract class AdvancedDMPResource<POJOCLASSRESOURCEUTILS extends Advance
 
 		return objectJSONString;
 	}
-
-	@Override
-	protected void checkObjectId(final JsonNode idNode, final ObjectNode objectJSON) {
-
-		// TODO: handle string ids, if necessary
-	}
-
-	@Override
-	protected ObjectNode addDummyId(final ObjectNode objectJSON) {
-
-		// TODO: handle string ids, if necessary
-
-		return objectJSON;
-	}
 }

@@ -5,19 +5,19 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.TypedQuery;
 
 import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
-import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
-import de.avgl.dmp.persistence.model.schema.AttributePath;
+import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 
 /**
- * A generic persistence service implementation for {@link AdvancedDMPJPAObject}s, i.e., where the identifier will be set on object
- * creation.
+ * A generic persistence service implementation for {@link AdvancedDMPJPAObject}s, i.e., where the identifier will be set on
+ * object creation.
  * 
  * @author tgaengler
  * @param <POJOCLASS> a concrete POJO class
@@ -48,7 +48,7 @@ public abstract class AdvancedDMPJPAService<POJOCLASS extends BasicDMPJPAObject>
 
 		return createObject(id);
 	}
-	
+
 	/**
 	 * Create and persist an object of the specific class with the given identifier.<br>
 	 * 
@@ -57,7 +57,9 @@ public abstract class AdvancedDMPJPAService<POJOCLASS extends BasicDMPJPAObject>
 	 */
 	public POJOCLASS createObject(final String uri) throws DMPPersistenceException {
 
-		final POJOCLASS existingObject = getObjectByUri(uri);
+		final EntityManager em = acquire();
+
+		final POJOCLASS existingObject = getObjectByUri(uri, em);
 
 		final POJOCLASS object;
 
@@ -65,7 +67,7 @@ public abstract class AdvancedDMPJPAService<POJOCLASS extends BasicDMPJPAObject>
 
 			object = createNewObject(uri);
 
-			persistObject(object);
+			persistObject(object, em);
 		} else {
 
 			AdvancedDMPJPAService.LOG.debug(className + " with uri '" + uri
@@ -76,31 +78,34 @@ public abstract class AdvancedDMPJPAService<POJOCLASS extends BasicDMPJPAObject>
 
 		return object;
 	}
-	
-	public POJOCLASS getObjectByUri(final String uri) {
-		
+
+	public POJOCLASS getObjectByUri(final String uri) throws DMPPersistenceException {
+
 		final EntityManager entityManager = acquire();
 
 		return getObjectByUri(uri, entityManager);
 	}
-	
-	private POJOCLASS getObjectByUri(final String uri, final EntityManager entityManager) {
-		
+
+	private POJOCLASS getObjectByUri(final String uri, final EntityManager entityManager) throws DMPPersistenceException {
+
 		final POJOCLASS object;
-		
+
 		final String queryString = "from " + className + " where uri = '" + uri + "'";
 		final TypedQuery<POJOCLASS> query = entityManager.createQuery(queryString, clasz);
 
 		try {
-			
+
 			object = query.getSingleResult();
 		} catch (final NoResultException e) {
-			
-			// TODO: maybe log something here
-			
+
+			LOG.debug("couldn't find " + className + " for uri '" + uri + "' in the database");
+
 			return null;
+		} catch (final NonUniqueResultException e) {
+
+			throw new DMPPersistenceException("there is more than one " + className + " in the database for uri '" + uri + "'");
 		}
-		
+
 		return object;
 	}
 
@@ -111,7 +116,7 @@ public abstract class AdvancedDMPJPAService<POJOCLASS extends BasicDMPJPAObject>
 	 * @return the new instance of the concrete POJO class
 	 * @throws DMPPersistenceException if something went wrong at object creation
 	 */
-	private POJOCLASS createNewObject(final String id) throws DMPPersistenceException {
+	private POJOCLASS createNewObject(final String uri) throws DMPPersistenceException {
 
 		final POJOCLASS object;
 
@@ -128,12 +133,12 @@ public abstract class AdvancedDMPJPAService<POJOCLASS extends BasicDMPJPAObject>
 
 		if (null == constructor) {
 
-			throw new DMPPersistenceException("couldn't find constructor to instantiate new '" + className + "' with id '" + id + "'");
+			throw new DMPPersistenceException("couldn't find constructor to instantiate new '" + className + "' with uri '" + uri + "'");
 		}
 
 		try {
 
-			object = constructor.newInstance(id);
+			object = constructor.newInstance(uri);
 		} catch (final InstantiationException | InvocationTargetException | IllegalArgumentException | IllegalAccessException e) {
 
 			AdvancedDMPJPAService.LOG.error("something went wrong while " + className + "object creation", e);

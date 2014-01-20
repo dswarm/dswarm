@@ -1,7 +1,8 @@
 {
     "id": 1,
     "attributes": [{
-        "id": "http://www.w3.org/2000/01/rdf-schema#label",
+        "id": 6,
+        "uri": "http://www.w3.org/2000/01/rdf-schema#label",
         "name": "label"
     }]
 }

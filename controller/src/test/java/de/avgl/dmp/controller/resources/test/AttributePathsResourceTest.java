@@ -1,6 +1,8 @@
 package de.avgl.dmp.controller.resources.test;
 
 import org.junit.After;
+import org.junit.Assert;
+import org.junit.Test;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -9,6 +11,7 @@ import de.avgl.dmp.controller.resources.test.utils.AttributePathsResourceTestUti
 import de.avgl.dmp.controller.resources.test.utils.AttributesResourceTestUtils;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
+import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.service.schema.AttributePathService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
@@ -57,6 +60,46 @@ public class AttributePathsResourceTest extends BasicResourceTest<AttributePaths
 		// re-init expect object
 		objectJSONString = objectMapper.writeValueAsString(attributePathJSON);
 		expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
+	}
+	
+	@Test
+	public void testUniquenessOfAttributePaths() {
+		
+		LOG.debug("start attribute paths uniqueness test");
+
+		AttributePath attributePath1 = null;
+
+		try {
+			
+			attributePath1 = pojoClassResourceTestUtils.createObject(objectJSONString, expectedObject);
+		} catch (Exception e) {
+			
+			LOG.error("coudln't create attribute path 1 for uniqueness test");
+			
+			Assert.assertTrue(false);
+		}
+		
+		Assert.assertNotNull("attribute path 1 shouldn't be null in uniqueness test", attributePath1);
+
+		AttributePath attributePath2 = null;
+
+		try {
+			
+			attributePath2 = pojoClassResourceTestUtils.createObject(objectJSONString, expectedObject);
+		} catch (Exception e) {
+			
+			LOG.error("couldn't create attribute path 2 for uniqueness test");
+			
+			Assert.assertTrue(false);
+		}
+		
+		Assert.assertNotNull("attribute path 2 shouldn't be null in uniqueness test", attributePath2);
+		
+		Assert.assertEquals("the attribute paths should be equal", attributePath1, attributePath2);
+		
+		cleanUpDB(attributePath1);
+		
+		LOG.debug("end attribute paths uniqueness test");
 	}
 
 	@After
