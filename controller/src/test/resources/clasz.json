@@ -1,4 +1,5 @@
 {
-    "id": "http://purl.org/ontology/bibo/Document",
-    "name": "document"
+    "id": 18,
+    "name": "document",
+    "uri": "http://purl.org/ontology/bibo/Document"
 }

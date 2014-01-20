@@ -1,7 +1,5 @@
 package de.avgl.dmp.controller.resources;
 
-import javax.ws.rs.core.Response;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -9,9 +7,9 @@ import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.utils.AdvancedResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.DMPPersistenceException;
-import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
-import de.avgl.dmp.persistence.service.AdvancedJPAService3;
+import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
+import de.avgl.dmp.persistence.service.AdvancedDMPJPAService;
 
 /**
  * A generic resource (controller service) implementation for {@link BasicDMPJPAObject}s, i.e., objects where the identifier will
@@ -22,10 +20,10 @@ import de.avgl.dmp.persistence.service.AdvancedJPAService3;
  *            class
  * @param <POJOCLASS> the concrete POJO class of the resource
  */
-public abstract class AdvancedResource<POJOCLASSRESOURCEUTILS extends AdvancedResourceUtils<POJOCLASSPERSISTENCESERVICE, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends AdvancedJPAService3<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
-		extends BasicResource<POJOCLASSRESOURCEUTILS, POJOCLASSPERSISTENCESERVICE, POJOCLASS, String> {
+public abstract class AdvancedDMPResource<POJOCLASSRESOURCEUTILS extends AdvancedResourceUtils<POJOCLASSPERSISTENCESERVICE, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends AdvancedDMPJPAService<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
+		extends BasicDMPResource<POJOCLASSRESOURCEUTILS, POJOCLASSPERSISTENCESERVICE, POJOCLASS> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AdvancedResource.class);
+	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AdvancedDMPResource.class);
 
 	/**
 	 * Creates a new resource (controller service) for the given concrete POJO class with the provider of the concrete persistence
@@ -36,15 +34,9 @@ public abstract class AdvancedResource<POJOCLASSRESOURCEUTILS extends AdvancedRe
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
 	 */
-	public AdvancedResource(final POJOCLASSRESOURCEUTILS pojoClassResourceUtilsArg, final DMPStatus dmpStatusArg) {
+	public AdvancedDMPResource(final POJOCLASSRESOURCEUTILS pojoClassResourceUtilsArg, final DMPStatus dmpStatusArg) {
 
 		super(pojoClassResourceUtilsArg, dmpStatusArg);
-	}
-
-	@Override
-	public Response getObject(final String id) throws DMPControllerException {
-
-		return Response.status(505).build();
 	}
 
 	@Override
@@ -62,7 +54,7 @@ public abstract class AdvancedResource<POJOCLASSRESOURCEUTILS extends AdvancedRe
 	protected POJOCLASS createObject(final POJOCLASS objectFromJSON, final POJOCLASSPERSISTENCESERVICE persistenceService)
 			throws DMPPersistenceException {
 
-		return persistenceService.createObjectTransactional(objectFromJSON.getId());
+		return persistenceService.createObjectTransactional(objectFromJSON.getUri());
 	}
 
 	@Override

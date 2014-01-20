@@ -16,7 +16,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
-import de.avgl.dmp.controller.resources.AdvancedResource;
+import de.avgl.dmp.controller.resources.AdvancedDMPResource;
 import de.avgl.dmp.controller.resources.schema.utils.AttributesResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.schema.Attribute;
@@ -31,7 +31,7 @@ import de.avgl.dmp.persistence.service.schema.AttributeService;
 @RequestScoped
 @Api(value = "/attributes", description = "Operations about attributes.")
 @Path("attributes")
-public class AttributesResource extends AdvancedResource<AttributesResourceUtils, AttributeService, Attribute> {
+public class AttributesResource extends AdvancedDMPResource<AttributesResourceUtils, AttributeService, Attribute> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributesResource.class);
 
@@ -51,7 +51,6 @@ public class AttributesResource extends AdvancedResource<AttributesResourceUtils
 
 	/**
 	 * This endpoint returns an attribute as JSON representation for the provided attribute identifier.<br/>
-	 * note: currently, this method is not implemented
 	 * 
 	 * @param id an attribute identifier
 	 * @return a JSON representation of an attribute
@@ -61,7 +60,7 @@ public class AttributesResource extends AdvancedResource<AttributesResourceUtils
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "attribute identifier", required = true) @PathParam("id") final String id) throws DMPControllerException {
+	public Response getObject(@ApiParam(value = "attribute identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
 
 		return super.getObject(id);
 	}
