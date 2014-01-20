@@ -24,4 +24,11 @@ public class AttributesResourceTest extends BasicResourceTest<AttributesResource
 
 		//super.testGETObject();
 	}
+	
+	@Ignore
+	@Override
+	public void testDELETEObject() throws Exception {
+
+		//super.testDELETEObject();
+	}
 }

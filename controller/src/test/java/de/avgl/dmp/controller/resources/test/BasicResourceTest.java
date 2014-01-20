@@ -153,6 +153,41 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 		LOG.debug("end GET " + pojoClassName);
 	}
 
+	@Test
+	public void testDELETEObject() throws Exception {
+
+		LOG.debug("start DELETE " + pojoClassName + " test");
+
+		final POJOCLASS actualObject = createObjectInternal();
+
+		final POJOCLASSIDTYPE objectId = actualObject.getId();
+		String idEncoded = null;
+
+		try {
+
+			idEncoded = URLEncoder.encode(actualObject.getId().toString(), "UTF-8");
+		} catch (final UnsupportedEncodingException e) {
+
+			LOG.debug("couldn't encode id", e);
+
+			Assert.assertTrue(false);
+		}
+
+		Assert.assertNotNull("the id shouldn't be null", idEncoded);
+
+		LOG.debug("try to retrieve " + pojoClassName + " with id '" + idEncoded + "'");
+
+		final Response response = target(idEncoded).request().delete();
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+
+		final POJOCLASS deletedObject = persistenceService.getObject(objectId);
+		
+		Assert.assertNull(deletedObject);
+		
+		LOG.debug("end DELETE " + pojoClassName);
+	}
+	
 	protected boolean compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) {
 
 		pojoClassResourceTestUtils.compareObjects(expectedObject, actualObject);

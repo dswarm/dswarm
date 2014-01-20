@@ -24,4 +24,11 @@ public class ClaszesResourceTest extends BasicResourceTest<ClaszesResourceTestUt
 
 		// super.testGETObject();
 	}
+	
+	@Ignore
+	@Override
+	public void testDELETEObject() throws Exception {
+
+		//super.testDELETEObject();
+	}
 }
