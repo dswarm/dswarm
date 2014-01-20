@@ -167,7 +167,7 @@ public class TransformationFlowTest extends GuicedTest {
 		final ObjectNode outputAttributePathAttributeJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) mappingJSON.get("output_attribute_path"))
 				.get("attributes")).get(0);
 		final String outputAttributeName = outputAttributePathAttributeJSON.get("name").asText();
-		outputAttributePathAttributeJSON.put("id", dataResourceSchemaBaseURI + outputAttributeName);
+		outputAttributePathAttributeJSON.put("uri", dataResourceSchemaBaseURI + outputAttributeName);
 
 		final ArrayNode inputAttributePathsJSON = (ArrayNode) mappingJSON.get("input_attribute_paths");
 
@@ -175,7 +175,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 			final ObjectNode inputAttributeJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) inputAttributePathsJSONNode).get("attributes")).get(0);
 			final String inputAttributeName = inputAttributeJSON.get("name").asText();
-			inputAttributeJSON.put("id", dataResourceSchemaBaseURI + inputAttributeName);
+			inputAttributeJSON.put("uri", dataResourceSchemaBaseURI + inputAttributeName);
 		}
 
 		final String finalTaskJSONString = objectMapper.writeValueAsString(taskJSON);
