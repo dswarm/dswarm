@@ -33,14 +33,18 @@ public class ConfigurationsResourceUtils extends ExtendedBasicDMPResourceUtils<C
 		super(Configuration.class, persistenceServiceProviderArg, objectMapperProviderArg);
 
 		resourcesResourceUtilsProvider = resourcesResourceUtilsProviderArg;
+
+		// add here all identifiers for attributes that bear native JSON objects/arrays
+
+		toBeSkippedJsonNodes.add("attributes");
 	}
 
 	@Override
 	public JsonNode replaceRelevantDummyIds(final Configuration object, final JsonNode jsonNode, final Set<Long> dummyIdCandidates)
 			throws DMPControllerException {
-		
-		if(checkObject(object, dummyIdCandidates)) {
-			
+
+		if (checkObject(object, dummyIdCandidates)) {
+
 			return jsonNode;
 		}
 
@@ -62,5 +66,13 @@ public class ConfigurationsResourceUtils extends ExtendedBasicDMPResourceUtils<C
 		}
 
 		return jsonNode;
+	}
+	
+	@Override
+	public String prepareObjectJSONString(final String objectJSONString) throws DMPControllerException {
+
+		// a configuration is not a complex object
+
+		return objectJSONString;
 	}
 }

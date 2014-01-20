@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import de.avgl.dmp.persistence.model.DMPJPAObject;
 import de.avgl.dmp.persistence.service.BasicIDJPAService;
+import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
  * @author tgaengler
@@ -40,6 +41,31 @@ public abstract class BasicIDResourceUtils<POJOCLASSPERSISTENCESERVICE extends B
 				objectJSON.put("id", Long.valueOf(realId.toString()));
 			}
 		}
+
+		return objectJSON;
+	}
+	
+	@Override
+	protected void checkObjectId(final JsonNode idNode, final ObjectNode objectJSON) {
+
+		if (idNode.canConvertToLong()) {
+
+			final long longId = idNode.asLong();
+
+			if (longId < 0) {
+
+				addDummyIdCandidate(Long.valueOf(longId));
+			}
+		}
+	}
+
+	@Override
+	protected ObjectNode addDummyId(final ObjectNode objectJSON) {
+
+		final long randomDummyId = DMPPersistenceUtil.generateRandomDummyId();
+
+		// add dummy id to object
+		objectJSON.put("id", randomDummyId);
 
 		return objectJSON;
 	}

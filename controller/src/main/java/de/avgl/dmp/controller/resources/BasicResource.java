@@ -62,8 +62,6 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 	@Context
 	UriInfo											uri;
 
-	private Set<POJOCLASSIDTYPE>					dummyIdCandidates;
-
 	/**
 	 * Creates a new resource (controller service) for the given concrete POJO class with the provider of the concrete persistence
 	 * service, the object mapper and metrics registry.
@@ -313,7 +311,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 	 */
 	protected POJOCLASS addObject(final String objectJSONString) throws DMPControllerException {
 
-		final String enhancedObjectJSONString = prepareObjectJSONString(objectJSONString);
+		final String enhancedObjectJSONString = pojoClassResourceUtils.prepareObjectJSONString(objectJSONString);
 
 		// get the deserialisised object from the enhanced JSON string
 
@@ -354,143 +352,5 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 			throw new DMPControllerException("something went wrong while " + pojoClassResourceUtils.getClaszName() + " updating\n" + e.getMessage());
 		}
-	}
-
-	protected String prepareObjectJSONString(final String objectJSONString) throws DMPControllerException {
-
-		if (objectJSONString == null) {
-
-			BasicResource.LOG.debug("the " + pojoClassResourceUtils.getClaszName() + " JSON string shouldn't be null");
-
-			throw new DMPControllerException("the " + pojoClassResourceUtils.getClaszName() + " JSON string shouldn't be null");
-		}
-
-		if (objectJSONString.trim().isEmpty()) {
-
-			BasicResource.LOG.debug("the " + pojoClassResourceUtils.getClaszName() + " JSON string shouldn't be empty");
-
-			throw new DMPControllerException("the " + pojoClassResourceUtils.getClaszName() + " JSON string shouldn't be empty");
-		}
-
-		final Class<? extends JsonNode> jsonClasz;
-
-		if (objectJSONString.trim().startsWith("{")) {
-
-			jsonClasz = ObjectNode.class;
-		} else if (objectJSONString.trim().startsWith("[")) {
-
-			jsonClasz = ArrayNode.class;
-		} else {
-
-			BasicResource.LOG.debug("the " + pojoClassResourceUtils.getClaszName() + " JSON string doesn't starts with '{' or '['");
-
-			throw new DMPControllerException("the " + pojoClassResourceUtils.getClaszName() + " JSON string doesn't starts with '{' or '['");
-		}
-
-		final JsonNode jsonNode;
-
-		try {
-
-			jsonNode = pojoClassResourceUtils.getObjectMapper().readValue(objectJSONString, jsonClasz);
-		} catch (final JsonMappingException je) {
-
-			throw new DMPJsonException("something went wrong while deserializing the " + pojoClassResourceUtils.getClaszName() + " JSON string", je);
-		} catch (final IOException e) {
-
-			BasicResource.LOG.debug("something went wrong while deserializing the " + pojoClassResourceUtils.getClaszName() + " JSON string");
-
-			throw new DMPControllerException("something went wrong while deserializing the " + pojoClassResourceUtils.getClaszName()
-					+ " JSON string.\n" + e.getMessage());
-		}
-
-		if (jsonNode == null) {
-
-			throw new DMPControllerException("deserialized " + pojoClassResourceUtils.getClaszName() + " is null");
-		}
-
-		enhanceJSONNode(jsonNode);
-		
-		final String enhancedObjectJSONString = pojoClassResourceUtils.serializeObject(jsonNode);
-
-		final POJOCLASS object = pojoClassResourceUtils.deserializeObjectJSONString(enhancedObjectJSONString);
-
-		// mint real ids for already set dummy ids
-		pojoClassResourceUtils.replaceRelevantDummyIds(object, jsonNode, dummyIdCandidates);
-		
-		return pojoClassResourceUtils.serializeObject(jsonNode);
-	}
-
-	protected JsonNode enhanceJSONNode(final JsonNode jsonNode) {
-
-		if (jsonNode == null || NullNode.class.isInstance(jsonNode)) {
-
-			return jsonNode;
-		}
-
-		if (ObjectNode.class.isInstance(jsonNode)) {
-
-			final ObjectNode objectNode = (ObjectNode) jsonNode;
-
-			enhanceObjectJSON(objectNode);
-		} else if (ArrayNode.class.isInstance(jsonNode)) {
-
-			final ArrayNode arrayNode = (ArrayNode) jsonNode;
-
-			for (final JsonNode entryNode : arrayNode) {
-
-				enhanceJSONNode(entryNode);
-			}
-		}
-
-		return jsonNode;
-	}
-
-	protected abstract void checkObjectId(final JsonNode idNode, final ObjectNode objectJSON);
-
-	protected abstract ObjectNode addDummyId(final ObjectNode objectJSON);
-
-	protected JsonNode enhanceObjectJSON(final ObjectNode objectJSON) {
-
-		final JsonNode idNode = objectJSON.get("id");
-
-		if (idNode == null || NullNode.class.isInstance(idNode)) {
-
-			// add dummy id to object, if it hasn't one before
-
-			addDummyId(objectJSON);
-		} else {
-
-			// check id and add it to the dummy id candidates, if it is a dummy id
-
-			checkObjectId(idNode, objectJSON);
-		}
-
-		final Iterator<Entry<String, JsonNode>> iter = objectJSON.fields();
-
-		while (iter.hasNext()) {
-
-			final Entry<String, JsonNode> nodeEntry = iter.next();
-
-			if (BasicResourceUtils.getToBeSkippedJsonNodes().contains(nodeEntry.getKey())) {
-
-				// skip such nodes
-
-				continue;
-			}
-
-			enhanceJSONNode(nodeEntry.getValue());
-		}
-
-		return objectJSON;
-	}
-
-	protected void addDummyIdCandidate(final POJOCLASSIDTYPE dummyId) {
-
-		if (dummyIdCandidates == null) {
-
-			dummyIdCandidates = Sets.newCopyOnWriteArraySet();
-		}
-
-		dummyIdCandidates.add(dummyId);
 	}
 }

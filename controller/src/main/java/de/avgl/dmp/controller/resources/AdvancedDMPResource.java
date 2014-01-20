@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import de.avgl.dmp.controller.DMPControllerException;
-import de.avgl.dmp.controller.resources.utils.AdvancedResourceUtils;
+import de.avgl.dmp.controller.resources.utils.AdvancedDMPResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
@@ -20,7 +20,7 @@ import de.avgl.dmp.persistence.service.AdvancedDMPJPAService;
  *            class
  * @param <POJOCLASS> the concrete POJO class of the resource
  */
-public abstract class AdvancedDMPResource<POJOCLASSRESOURCEUTILS extends AdvancedResourceUtils<POJOCLASSPERSISTENCESERVICE, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends AdvancedDMPJPAService<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
+public abstract class AdvancedDMPResource<POJOCLASSRESOURCEUTILS extends AdvancedDMPResourceUtils<POJOCLASSPERSISTENCESERVICE, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends AdvancedDMPJPAService<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
 		extends BasicDMPResource<POJOCLASSRESOURCEUTILS, POJOCLASSPERSISTENCESERVICE, POJOCLASS> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AdvancedDMPResource.class);
@@ -55,13 +55,5 @@ public abstract class AdvancedDMPResource<POJOCLASSRESOURCEUTILS extends Advance
 			throws DMPPersistenceException {
 
 		return persistenceService.createObjectTransactional(objectFromJSON.getUri());
-	}
-
-	@Override
-	protected String prepareObjectJSONString(String objectJSONString) throws DMPControllerException {
-
-		// an attribute or clasz is not a complex object
-
-		return objectJSONString;
 	}
 }

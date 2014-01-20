@@ -32,12 +32,16 @@ public class FunctionsResourceUtils extends BasicFunctionsResourceUtils<Function
 		super(Function.class, persistenceServiceProviderArg, objectMapperProviderArg);
 
 		transformationsResourceUtilsProvider = transformationsResourceUtilsProviderArg;
+
+		// add here all identifiers for attributes that bear native JSON objects/arrays
+
+		toBeSkippedJsonNodes.add("function_description");
 	}
 
 	@Override
 	public JsonNode replaceRelevantDummyIds(final Function object, final JsonNode jsonNode, final Set<Long> dummyIdCandidates)
 			throws DMPControllerException {
-		
+
 		if (checkObject(object, dummyIdCandidates)) {
 
 			return jsonNode;
@@ -52,5 +56,13 @@ public class FunctionsResourceUtils extends BasicFunctionsResourceUtils<Function
 		}
 
 		return jsonNode;
+	}
+	
+	@Override
+	public String prepareObjectJSONString(final String objectJSONString) throws DMPControllerException {
+
+		// a function is not a complex object
+
+		return objectJSONString;
 	}
 }

@@ -108,12 +108,4 @@ public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, Filt
 
 		return object;
 	}
-
-	@Override
-	protected String prepareObjectJSONString(final String objectJSONString) throws DMPControllerException {
-
-		// a filter is not a complex object
-
-		return objectJSONString;
-	}
 }

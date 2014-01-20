@@ -1,5 +1,6 @@
 package de.avgl.dmp.controller.resources.test;
 
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
@@ -11,9 +12,9 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import de.avgl.dmp.controller.resources.test.utils.AttributePathsResourceTestUtils;
@@ -77,7 +78,7 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 
 	private Component								transformationComponent;
 
-	final Map<String, Attribute>					attributes		= Maps.newHashMap();
+	final Map<Long, Attribute>						attributes		= Maps.newHashMap();
 
 	final Map<Long, AttributePath>					attributePaths	= Maps.newLinkedHashMap();
 
@@ -157,251 +158,6 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 		expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
 
 		// END project preparation
-	}
-
-	@Test
-	public void testPOSTObjectsWithNewEntities() throws Exception {
-
-		LOG.debug("start POST " + pojoClassName + "s with new entities test");
-
-		objectJSONString = DMPPersistenceUtil.getResourceAsString("project.w.new.entities.json");
-
-		// START configuration preparation
-
-		final Configuration configuration = configurationsResourceTestUtils.createObject("configuration2.json");
-
-		// END configuration preparation
-
-		// START resource preparation
-
-		// prepare resource json for configuration ids manipulation
-		String resourceJSONString = DMPPersistenceUtil.getResourceAsString("resource1.json");
-		final ObjectNode resourceJSON = objectMapper.readValue(resourceJSONString, ObjectNode.class);
-
-		final ArrayNode configurationsArray = objectMapper.createArrayNode();
-
-		final String persistedConfigurationJSONString = objectMapper.writeValueAsString(configuration);
-		final ObjectNode persistedConfigurationJSON = objectMapper.readValue(persistedConfigurationJSONString, ObjectNode.class);
-
-		configurationsArray.add(persistedConfigurationJSON);
-
-		resourceJSON.put("configurations", configurationsArray);
-
-		// re-init expect resource
-		resourceJSONString = objectMapper.writeValueAsString(resourceJSON);
-		final Resource expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
-
-		Assert.assertNotNull("expected resource shouldn't be null", expectedResource);
-
-		final Resource resource = resourcesResourceTestUtils.createObject(resourceJSONString, expectedResource);
-
-		// END resource preparation
-
-		// prepare project json for input data model resource and configuration manipulation
-		final ObjectNode projectJSON = objectMapper.readValue(objectJSONString, ObjectNode.class);
-		final ObjectNode dataModelJSON = (ObjectNode) projectJSON.get("input_data_model");
-
-		final String finalResourceJSONString = objectMapper.writeValueAsString(resource);
-		final ObjectNode finalResourceJSON = objectMapper.readValue(finalResourceJSONString, ObjectNode.class);
-
-		dataModelJSON.put("data_resource", finalResourceJSON);
-
-		final String finalConfigurationJSONString = objectMapper.writeValueAsString(resource.getConfigurations().iterator().next());
-		final ObjectNode finalConfigurationJSON = objectMapper.readValue(finalConfigurationJSONString, ObjectNode.class);
-
-		dataModelJSON.put("configuration", finalConfigurationJSON);
-
-		objectJSONString = objectMapper.writeValueAsString(projectJSON);
-
-		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(Entity.json(objectJSONString));
-
-		Assert.assertEquals("201 Created was expected", 201, response.getStatus());
-
-		final String responseString = response.readEntity(String.class);
-
-		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
-
-		final Project actualObject = objectMapper.readValue(responseString, pojoClass);
-
-		Assert.assertNotNull("the response project shouldn't be null", actualObject);
-
-		// TODO: do comparison/check somehow
-
-		final DataModel inputDataModel = actualObject.getInputDataModel();
-
-		Resource inputDataResource = null;
-		Configuration inputConfiguration = null;
-		Schema inputSchema = null;
-
-		final Map<Long, AttributePath> attributePaths = Maps.newHashMap();
-
-		if (inputDataModel != null) {
-
-			inputDataResource = inputDataModel.getDataResource();
-			inputConfiguration = inputDataModel.getConfiguration();
-			inputSchema = inputDataModel.getSchema();
-
-			if (inputSchema != null) {
-
-				final Set<AttributePath> inputAttributePaths = inputSchema.getAttributePaths();
-
-				if (inputAttributePaths != null) {
-
-					for (final AttributePath inputAttributePath : inputAttributePaths) {
-
-						attributePaths.put(inputAttributePath.getId(), inputAttributePath);
-					}
-				}
-			}
-		}
-
-		final DataModel outputDataModel = actualObject.getOutputDataModel();
-
-		Schema outputSchema = null;
-
-		if (outputDataModel != null) {
-
-			outputSchema = outputDataModel.getSchema();
-
-			if (outputSchema != null) {
-
-				final Set<AttributePath> outputAttributePaths = outputSchema.getAttributePaths();
-
-				if (outputAttributePaths != null) {
-
-					for (final AttributePath outputAttributePath : outputAttributePaths) {
-
-						attributePaths.put(outputAttributePath.getId(), outputAttributePath);
-					}
-				}
-			}
-		}
-
-		final Map<Long, Mapping> mappings = Maps.newHashMap();
-		final Map<Long, Function> functions = Maps.newHashMap();
-		Transformation transformation = null;
-
-		final Set<Mapping> projectMappings = actualObject.getMappings();
-
-		if (projectMappings != null) {
-
-			for (final Mapping projectMapping : projectMappings) {
-
-				mappings.put(projectMapping.getId(), projectMapping);
-
-				final Component transformationComponent = projectMapping.getTransformation();
-
-				if (transformationComponent != null) {
-
-					final Function transformationComponentFunction = transformationComponent.getFunction();
-
-					if (transformationComponentFunction != null) {
-
-						if (Transformation.class.isInstance(transformationComponentFunction)) {
-
-							transformation = (Transformation) transformationComponentFunction;
-
-							final Set<Component> components = transformation.getComponents();
-
-							for (final Component component : components) {
-
-								final Function componentFunction = component.getFunction();
-
-								if (componentFunction != null) {
-
-									functions.put(componentFunction.getId(), componentFunction);
-								}
-							}
-						} else {
-
-							functions.put(transformationComponentFunction.getId(), transformationComponentFunction);
-						}
-					}
-				}
-
-				final Set<AttributePath> projectMappingInputAttributePaths = projectMapping.getInputAttributePaths();
-
-				if (projectMappingInputAttributePaths != null) {
-
-					for (final AttributePath inputAttributePath : projectMappingInputAttributePaths) {
-
-						attributePaths.put(inputAttributePath.getId(), inputAttributePath);
-					}
-				}
-
-				final AttributePath projectMappingOutputAttributePath = projectMapping.getOutputAttributePath();
-
-				if (projectMappingOutputAttributePath != null) {
-
-					attributePaths.put(projectMappingOutputAttributePath.getId(), projectMappingOutputAttributePath);
-				}
-			}
-		}
-
-		final Set<Function> projectFunctions = actualObject.getFunctions();
-
-		if (projectFunctions != null) {
-
-			for (final Function projectFunction : projectFunctions) {
-
-				functions.put(projectFunction.getId(), projectFunction);
-			}
-		}
-
-		cleanUpDB(actualObject);
-
-		if (inputDataModel != null) {
-
-			dataModelsResourceTestUtils.deleteObject(inputDataModel);
-		}
-
-		if (outputDataModel != null) {
-
-			dataModelsResourceTestUtils.deleteObject(outputDataModel);
-		}
-
-		if (inputDataResource != null) {
-
-			resourcesResourceTestUtils.deleteObject(inputDataResource);
-		}
-
-		if (inputConfiguration != null) {
-
-			configurationsResourceTestUtils.deleteObject(inputConfiguration);
-		}
-
-		if (inputSchema != null) {
-
-			schemasResourceTestUtils.deleteObject(inputSchema);
-		}
-
-		if (outputSchema != null) {
-
-			schemasResourceTestUtils.deleteObject(outputSchema);
-		}
-
-		for (final Mapping mapping : mappings.values()) {
-
-			mappingsResourceTestUtils.deleteObject(mapping);
-		}
-
-		for (final AttributePath attributePath : attributePaths.values()) {
-
-			attributePathsResourceTestUtils.deleteObject(attributePath);
-		}
-
-		if (transformation != null) {
-
-			transformationsResourceTestUtils.deleteObject(transformation);
-		}
-
-		for (final Function function : functions.values()) {
-
-			functionsResourceTestUtils.deleteObject(function);
-		}
-
-		LOG.debug("end POST " + pojoClassName + "s with new entities test");
 	}
 
 	@After
@@ -519,27 +275,56 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 		String schemaJSONString = DMPPersistenceUtil.getResourceAsString("schema.json");
 		final ObjectNode schemaJSON = objectMapper.readValue(schemaJSONString, ObjectNode.class);
 
-		for (int j = 1; j <= 4; j++) {
+		for (int j = 1; j < 4; j++) {
 
 			final String attributePathJSONFileName = "attribute_path" + j + ".json";
 
-			final AttributePath actualAttributePath = attributePathsResourceTestUtils.createObject(attributePathJSONFileName);
+			String attributePathJSONString = DMPPersistenceUtil.getResourceAsString(attributePathJSONFileName);
+			final AttributePath attributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
 
-			attributePaths.put(actualAttributePath.getId(), actualAttributePath);
+			final LinkedList<Attribute> attributes = attributePath.getAttributePath();
+			final LinkedList<Attribute> newAttributes = Lists.newLinkedList();
 
-			// manipulate attribute path ids
-			ArrayNode attributePathsArray = (ArrayNode) schemaJSON.get("attribute_paths");
+			for (final Attribute attribute : attributes) {
 
-			for (final JsonNode attributePathJsonNode : attributePathsArray) {
+				for (final Attribute newAttribute : this.attributes.values()) {
 
-				if (((ObjectNode) attributePathJsonNode).get("id").asInt() == j) {
+					if (attribute.getUri().equals(newAttribute.getUri())) {
 
-					((ObjectNode) attributePathJsonNode).put("id", actualAttributePath.getId());
+						newAttributes.add(newAttribute);
 
-					break;
+						break;
+					}
 				}
 			}
+
+			attributePath.setAttributePath(newAttributes);
+
+			attributePathJSONString = objectMapper.writeValueAsString(attributePath);
+			final AttributePath expectedAttributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
+			final AttributePath actualAttributePath = attributePathsResourceTestUtils.createObject(attributePathJSONString, expectedAttributePath);
+
+			attributePaths.put(actualAttributePath.getId(), actualAttributePath);
 		}
+
+		// manipulate attribute paths (incl. their attributes)
+		final ArrayNode attributePathsArray = objectMapper.createArrayNode();
+
+		for (final AttributePath attributePath : attributePaths.values()) {
+
+			final String attributePathJSONString = objectMapper.writeValueAsString(attributePath);
+			final ObjectNode attributePathJSON = objectMapper.readValue(attributePathJSONString, ObjectNode.class);
+
+			attributePathsArray.add(attributePathJSON);
+		}
+
+		schemaJSON.put("attribute_paths", attributePathsArray);
+
+		// manipulate record class
+		final String recordClassJSONString = objectMapper.writeValueAsString(recordClass);
+		final ObjectNode recordClassJSON = objectMapper.readValue(recordClassJSONString, ObjectNode.class);
+
+		schemaJSON.put("record_class", recordClassJSON);
 
 		// re-init expect schema
 		schemaJSONString = objectMapper.writeValueAsString(schemaJSON);
@@ -746,7 +531,30 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 
 	private AttributePath createAttributePath(final String attributePathJSONFileName) throws Exception {
 
-		final AttributePath actualAttributePath = attributePathsResourceTestUtils.createObject(attributePathJSONFileName);
+		String attributePathJSONString = DMPPersistenceUtil.getResourceAsString(attributePathJSONFileName);
+		final AttributePath attributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
+
+		final LinkedList<Attribute> attributes = attributePath.getAttributePath();
+		final LinkedList<Attribute> newAttributes = Lists.newLinkedList();
+
+		for (final Attribute attribute : attributes) {
+
+			for (final Attribute newAttribute : this.attributes.values()) {
+
+				if (attribute.getUri().equals(newAttribute.getUri())) {
+
+					newAttributes.add(newAttribute);
+
+					break;
+				}
+			}
+		}
+
+		attributePath.setAttributePath(newAttributes);
+
+		attributePathJSONString = objectMapper.writeValueAsString(attributePath);
+		final AttributePath expectedAttributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
+		final AttributePath actualAttributePath = attributePathsResourceTestUtils.createObject(attributePathJSONString, expectedAttributePath);
 
 		attributePaths.put(actualAttributePath.getId(), actualAttributePath);
 

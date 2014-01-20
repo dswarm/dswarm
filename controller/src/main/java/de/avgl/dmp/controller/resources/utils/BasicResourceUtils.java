@@ -44,19 +44,11 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 	protected final Provider<ObjectMapper>					objectMapperProvider;
 
 	// TODO: this might be not the best solution ...
-	protected static final Set<String>						toBeSkippedJsonNodes	= Sets.newHashSet();
+	protected final Set<String>						toBeSkippedJsonNodes	= Sets.newHashSet();
 
 	private Set<POJOCLASSIDTYPE>							processedObjectIds;
-
-	static {
-
-		// add here all identifiers for attributes that bear native JSON objects/arrays
-
-		toBeSkippedJsonNodes.add("parameters");
-		toBeSkippedJsonNodes.add("attributes");
-		toBeSkippedJsonNodes.add("parameter_mappings");
-		toBeSkippedJsonNodes.add("function_description");
-	}
+	
+	private Set<POJOCLASSIDTYPE>					dummyIdCandidates;
 
 	public BasicResourceUtils(final Class<POJOCLASS> pojoClassArg, final Class<POJOCLASSIDTYPE> pojoClassIdTypeArg,
 			final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg) {
@@ -101,7 +93,7 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 		return persistenceServiceProvider.get();
 	}
 
-	public static Set<String> getToBeSkippedJsonNodes() {
+	public Set<String> getToBeSkippedJsonNodes() {
 
 		return toBeSkippedJsonNodes;
 	}
@@ -218,6 +210,70 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 		return objectJSONString;
 	}
 
+	public String prepareObjectJSONString(final String objectJSONString) throws DMPControllerException {
+
+		if (objectJSONString == null) {
+
+			BasicResourceUtils.LOG.debug("the " + pojoClassName + " JSON string shouldn't be null");
+
+			throw new DMPControllerException("the " + pojoClassName + " JSON string shouldn't be null");
+		}
+
+		if (objectJSONString.trim().isEmpty()) {
+
+			BasicResourceUtils.LOG.debug("the " + pojoClassName + " JSON string shouldn't be empty");
+
+			throw new DMPControllerException("the " + pojoClassName + " JSON string shouldn't be empty");
+		}
+
+		final Class<? extends JsonNode> jsonClasz;
+
+		if (objectJSONString.trim().startsWith("{")) {
+
+			jsonClasz = ObjectNode.class;
+		} else if (objectJSONString.trim().startsWith("[")) {
+
+			jsonClasz = ArrayNode.class;
+		} else {
+
+			BasicResourceUtils.LOG.debug("the " + pojoClassName + " JSON string doesn't starts with '{' or '['");
+
+			throw new DMPControllerException("the " + pojoClassName + " JSON string doesn't starts with '{' or '['");
+		}
+
+		final JsonNode jsonNode;
+
+		try {
+
+			jsonNode = getObjectMapper().readValue(objectJSONString, jsonClasz);
+		} catch (final JsonMappingException je) {
+
+			throw new DMPJsonException("something went wrong while deserializing the " + pojoClassName + " JSON string", je);
+		} catch (final IOException e) {
+
+			BasicResourceUtils.LOG.debug("something went wrong while deserializing the " + pojoClassName + " JSON string");
+
+			throw new DMPControllerException("something went wrong while deserializing the " + pojoClassName
+					+ " JSON string.\n" + e.getMessage());
+		}
+
+		if (jsonNode == null) {
+
+			throw new DMPControllerException("deserialized " + pojoClassName + " is null");
+		}
+
+		enhanceJSONNode(jsonNode);
+
+		final String enhancedObjectJSONString = serializeObject(jsonNode);
+
+		final POJOCLASS object = deserializeObjectJSONString(enhancedObjectJSONString);
+
+		// mint real ids for already set dummy ids
+		replaceRelevantDummyIds(object, jsonNode, dummyIdCandidates);
+
+		return serializeObject(jsonNode);
+	}
+	
 	protected abstract ObjectNode replaceDummyId(final JsonNode idNode, final POJOCLASSIDTYPE dummyId, final POJOCLASSIDTYPE realId,
 			final ObjectNode objectJson);
 
@@ -244,6 +300,83 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 		}
 
 		return false;
+	}
+
+	protected JsonNode enhanceJSONNode(final JsonNode jsonNode) {
+
+		if (jsonNode == null || NullNode.class.isInstance(jsonNode)) {
+
+			return jsonNode;
+		}
+
+		if (ObjectNode.class.isInstance(jsonNode)) {
+
+			final ObjectNode objectNode = (ObjectNode) jsonNode;
+
+			enhanceObjectJSON(objectNode);
+		} else if (ArrayNode.class.isInstance(jsonNode)) {
+
+			final ArrayNode arrayNode = (ArrayNode) jsonNode;
+
+			for (final JsonNode entryNode : arrayNode) {
+
+				enhanceJSONNode(entryNode);
+			}
+		}
+
+		return jsonNode;
+	}
+
+	protected abstract void checkObjectId(final JsonNode idNode, final ObjectNode objectJSON);
+
+	protected abstract ObjectNode addDummyId(final ObjectNode objectJSON);
+
+	protected JsonNode enhanceObjectJSON(final ObjectNode objectJSON) {
+
+		final JsonNode idNode = objectJSON.get("id");
+
+		if (idNode == null || NullNode.class.isInstance(idNode)) {
+
+			// add dummy id to object, if it hasn't one before
+
+			addDummyId(objectJSON);
+		} else {
+
+			// check id and add it to the dummy id candidates, if it is a dummy id
+
+			checkObjectId(idNode, objectJSON);
+		}
+
+		final Iterator<Entry<String, JsonNode>> iter = objectJSON.fields();
+
+		while (iter.hasNext()) {
+
+			final Entry<String, JsonNode> nodeEntry = iter.next();
+
+			if (toBeSkippedJsonNodes.contains(nodeEntry.getKey())) {
+
+				// TODO: note this still may pick up ids from resource->attributes etc., because those keys are currently not
+				// included in upper object to-be-skipped-nodes
+
+				// skip such nodes
+
+				continue;
+			}
+
+			enhanceJSONNode(nodeEntry.getValue());
+		}
+
+		return objectJSON;
+	}
+
+	protected void addDummyIdCandidate(final POJOCLASSIDTYPE dummyId) {
+
+		if (dummyIdCandidates == null) {
+
+			dummyIdCandidates = Sets.newCopyOnWriteArraySet();
+		}
+
+		dummyIdCandidates.add(dummyId);
 	}
 
 	private ObjectNode replaceDummyIdInObjectJSON(final ObjectNode objectJSON, final POJOCLASSIDTYPE dummyId, final POJOCLASSIDTYPE realId) {

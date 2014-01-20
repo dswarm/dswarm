@@ -5,6 +5,7 @@ import javax.inject.Provider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 
+import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.utils.BasicDMPResourceUtils;
 import de.avgl.dmp.persistence.model.job.Filter;
 import de.avgl.dmp.persistence.service.job.FilterService;
@@ -23,5 +24,13 @@ public class FiltersResourceUtils extends BasicDMPResourceUtils<FilterService, F
 	public FiltersResourceUtils(final Provider<FilterService> persistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg) {
 
 		super(Filter.class, persistenceServiceProviderArg, objectMapperProviderArg);
+	}
+	
+	@Override
+	public String prepareObjectJSONString(final String objectJSONString) throws DMPControllerException {
+
+		// a filter is not a complex object
+
+		return objectJSONString;
 	}
 }

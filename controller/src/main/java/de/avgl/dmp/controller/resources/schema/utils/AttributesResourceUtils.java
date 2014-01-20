@@ -5,7 +5,7 @@ import javax.inject.Provider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 
-import de.avgl.dmp.controller.resources.utils.AdvancedResourceUtils;
+import de.avgl.dmp.controller.resources.utils.AdvancedDMPResourceUtils;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
 
@@ -15,7 +15,7 @@ import de.avgl.dmp.persistence.service.schema.AttributeService;
  * @param <POJOCLASS>
  * @param <POJOCLASSIDTYPE>
  */
-public class AttributesResourceUtils extends AdvancedResourceUtils<AttributeService, Attribute> {
+public class AttributesResourceUtils extends AdvancedDMPResourceUtils<AttributeService, Attribute> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributesResourceUtils.class);
 

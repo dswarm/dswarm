@@ -94,12 +94,4 @@ public class FunctionsResource extends BasicFunctionsResource<FunctionsResourceU
 
 		return super.getObjects();
 	}
-
-	@Override
-	protected String prepareObjectJSONString(final String objectJSONString) throws DMPControllerException {
-
-		// a function is not a complex object
-
-		return objectJSONString;
-	}
 }

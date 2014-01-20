@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.utils.BasicDMPResourceUtils;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
+import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
 
@@ -25,14 +26,16 @@ public class SchemasResourceUtils extends BasicDMPResourceUtils<SchemaService, S
 	private static final org.apache.log4j.Logger		LOG	= org.apache.log4j.Logger.getLogger(SchemasResourceUtils.class);
 
 	private final Provider<AttributePathsResourceUtils>	attributePathsResourceUtilsProvider;
+	private final Provider<ClaszesResourceUtils>	claszesResourceUtilsProvider;
 
 	@Inject
 	public SchemasResourceUtils(final Provider<SchemaService> persistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg,
-			final Provider<AttributePathsResourceUtils> attributePathsResourceUtilsProviderArg) {
+			final Provider<AttributePathsResourceUtils> attributePathsResourceUtilsProviderArg, final Provider<ClaszesResourceUtils> claszesResourceUtilsProviderArg) {
 
 		super(Schema.class, persistenceServiceProviderArg, objectMapperProviderArg);
 
 		attributePathsResourceUtilsProvider = attributePathsResourceUtilsProviderArg;
+		claszesResourceUtilsProvider = claszesResourceUtilsProviderArg;
 	}
 
 	@Override
@@ -59,6 +62,18 @@ public class SchemasResourceUtils extends BasicDMPResourceUtils<SchemaService, S
 
 				attributePathsResourceUtilsProvider.get().replaceRelevantDummyIds(attributePath, jsonNode, dummyIdCandidates);
 			}
+		}
+		
+		final Clasz recordClasz = object.getRecordClass();
+		
+		if(recordClasz != null) {
+			
+			if (areDummyIdCandidatesEmpty(dummyIdCandidates)) {
+
+				return jsonNode;
+			}
+			
+			claszesResourceUtilsProvider.get().replaceRelevantDummyIds(recordClasz, jsonNode, dummyIdCandidates);
 		}
 
 		return jsonNode;

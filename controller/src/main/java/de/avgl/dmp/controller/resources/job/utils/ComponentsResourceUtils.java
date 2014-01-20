@@ -33,6 +33,10 @@ public class ComponentsResourceUtils extends ExtendedBasicDMPResourceUtils<Compo
 		super(Component.class, persistenceServiceProviderArg, objectMapperProviderArg);
 
 		functionsResourceUtilsProvider = functionsResourceUtilsProviderArg;
+
+		// add here all identifiers for attributes that bear native JSON objects/arrays
+
+		toBeSkippedJsonNodes.add("parameter_mappings");
 	}
 
 	@Override
@@ -59,5 +63,13 @@ public class ComponentsResourceUtils extends ExtendedBasicDMPResourceUtils<Compo
 		}
 
 		return jsonNode;
+	}
+	
+	@Override
+	public String prepareObjectJSONString(String objectJSONString) throws DMPControllerException {
+		
+		// TODO: remove id from parameter mappings (?) -> avoid dummy id creation there
+		
+		return objectJSONString;
 	}
 }

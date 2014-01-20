@@ -1,14 +1,10 @@
 package de.avgl.dmp.controller.resources;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import de.avgl.dmp.controller.resources.utils.BasicIDResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.DMPJPAObject;
 import de.avgl.dmp.persistence.service.BasicIDJPAService;
-import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
  * A generic resource (controller service) implementation for {@link BasicDMPJPAObject}s, i.e., objects where the identifier will
@@ -36,30 +32,5 @@ public abstract class BasicIDResource<POJOCLASSRESOURCEUTILS extends BasicIDReso
 	public BasicIDResource(final POJOCLASSRESOURCEUTILS pojoClassResourceUtilsArg, final DMPStatus dmpStatusArg) {
 
 		super(pojoClassResourceUtilsArg, dmpStatusArg);
-	}
-
-	@Override
-	protected void checkObjectId(final JsonNode idNode, final ObjectNode objectJSON) {
-
-		if (idNode.canConvertToLong()) {
-
-			final long longId = idNode.asLong();
-
-			if (longId < 0) {
-
-				addDummyIdCandidate(Long.valueOf(longId));
-			}
-		}
-	}
-
-	@Override
-	protected ObjectNode addDummyId(final ObjectNode objectJSON) {
-
-		final long randomDummyId = DMPPersistenceUtil.generateRandomDummyId();
-
-		// add dummy id to object
-		objectJSON.put("id", randomDummyId);
-
-		return objectJSON;
 	}
 }
