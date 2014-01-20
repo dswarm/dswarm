@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -192,6 +193,22 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 
 		// dmpStatus.stop(context);
 		return buildResponse(jsonString);
+	}
+	
+	/**
+	 * This endpoint delete a data model that matches the given id.
+	 *
+	 * @param id a data model identifier
+	 * @return status 200 if ok or 404 if id not found/invalid
+	 * @throws DMPControllerException
+	 */
+	@ApiOperation(value = "delete data model that matches the given id", notes = "Returns status 200 or 404.")
+	@DELETE
+	@Path("/{id}")
+	@Override
+	public Response deleteObject(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+
+		return super.deleteObject(id);
 	}
 
 	/**

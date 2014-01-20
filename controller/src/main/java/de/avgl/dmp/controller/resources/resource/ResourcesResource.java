@@ -12,6 +12,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -291,6 +292,49 @@ public class ResourcesResource {
 		return buildResponse(resourceJSON);
 	}
 
+	/**
+	 * This endpoint delete a resource that matches the given id.
+	 *
+	 * @param id a resource identifier
+	 * @return status 200 if ok or 404 if id not found/invalid
+	 */
+	@ApiOperation(value = "delete the data resource that matches the given id", notes = "Returns status 200 or 404.")
+	@DELETE
+	@Path("/{id}")
+	public Response deleteResource(@ApiParam(value = "data resource identifier", required = true) @PathParam("id") final Long id)
+			throws DMPControllerException {
+		final Timer.Context context = dmpStatus.deleteResource();
+		
+		LOG.debug("try to delete resource with id '" + id + "'");
+
+		Optional<Resource> resourceOptional = dataModelUtil.fetchResource(id);
+
+		if (!resourceOptional.isPresent()) {
+			
+			LOG.debug("couldn't find resource '" + id + "'");
+
+			dmpStatus.stop(context);
+			return Response.status(Status.NOT_FOUND).build();
+		}
+
+		dataModelUtil.deleteResource(id);
+		
+		resourceOptional = dataModelUtil.fetchResource(id);
+		
+		if (resourceOptional.isPresent()) {
+			
+			LOG.debug("couldn't delete resource '" + id + "'");
+
+			dmpStatus.stop(context);
+			return Response.status(Status.NOT_FOUND).build();
+		}
+
+		LOG.debug("deletion of resourse with id '" + id + "' was successfull");
+
+		dmpStatus.stop(context);
+		return Response.status(Status.OK).build();
+	}
+	
 	/**
 	 * Returns the content of the uploaded resource line-wise.
 	 *
