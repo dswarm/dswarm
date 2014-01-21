@@ -11,17 +11,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
-import de.avgl.dmp.controller.resources.BasicResource;
+import de.avgl.dmp.controller.resources.AdvancedDMPResource;
+import de.avgl.dmp.controller.resources.schema.utils.AttributesResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
-import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
 
@@ -34,7 +33,7 @@ import de.avgl.dmp.persistence.service.schema.AttributeService;
 @RequestScoped
 @Api(value = "/attributes", description = "Operations about attributes.")
 @Path("attributes")
-public class AttributesResource extends BasicResource<AttributeService, Attribute, String> {
+public class AttributesResource extends AdvancedDMPResource<AttributesResourceUtils, AttributeService, Attribute> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributesResource.class);
 
@@ -47,14 +46,13 @@ public class AttributesResource extends BasicResource<AttributeService, Attribut
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public AttributesResource(final Provider<AttributeService> attributeServiceProviderArg, final ObjectMapper objectMapper, final DMPStatus dmpStatus) {
+	public AttributesResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
 
-		super(Attribute.class, attributeServiceProviderArg, objectMapper, dmpStatus);
+		super(utilsFactory.reset().get(AttributesResourceUtils.class), dmpStatusArg);
 	}
 
 	/**
 	 * This endpoint returns an attribute as JSON representation for the provided attribute identifier.<br/>
-	 * note: currently, this method is not implemented
 	 * 
 	 * @param id an attribute identifier
 	 * @return a JSON representation of an attribute
@@ -64,11 +62,9 @@ public class AttributesResource extends BasicResource<AttributeService, Attribut
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "attribute identifier", required = true) @PathParam("id") final String id) throws DMPControllerException {
+	public Response getObject(@ApiParam(value = "attribute identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
 
-		//return super.getObject(id);
-
-		return Response.status(505).build();
+		return super.getObject(id);
 	}
 
 	/**
@@ -104,26 +100,4 @@ public class AttributesResource extends BasicResource<AttributeService, Attribut
 
 		return super.getObjects();
 	}
-	
-	/**
-	 * {@inheritDoc}<br/>
-	 * Updates the name of the attribute.
-	 */
-	@Override
-	protected Attribute prepareObjectForUpdate(final Attribute objectFromJSON, final Attribute object) {
-
-		object.setName(objectFromJSON.getName());
-
-		return object;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected Attribute createObject(final Attribute objectFromJSON, final AttributeService persistenceService) throws DMPPersistenceException {
-
-		return persistenceService.createObject(objectFromJSON.getId());
-	}
-
 }

@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.io.Resources;
@@ -66,9 +68,9 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 
 	private final SchemasResourceTestUtils			schemasResourceTestUtils;
 
-	final Map<String, Attribute>					attributes		= Maps.newHashMap();
+	private final Map<Long, Attribute>					attributes		= Maps.newHashMap();
 
-	final Map<Long, AttributePath>					attributePaths	= Maps.newLinkedHashMap();
+	private final Map<Long, AttributePath>					attributePaths	= Maps.newLinkedHashMap();
 
 	private Clasz									recordClass;
 
@@ -148,24 +150,53 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 		for (int j = 1; j < 4; j++) {
 
 			final String attributePathJSONFileName = "attribute_path" + j + ".json";
+			
+			String attributePathJSONString = DMPPersistenceUtil.getResourceAsString(attributePathJSONFileName);
+			final AttributePath attributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
+			
+			final LinkedList<Attribute> attributes = attributePath.getAttributePath();
+			final LinkedList<Attribute> newAttributes = Lists.newLinkedList();
 
-			final AttributePath actualAttributePath = attributePathsResourceTestUtils.createObject(attributePathJSONFileName);
+			for (final Attribute attribute : attributes) {
 
-			attributePaths.put(actualAttributePath.getId(), actualAttributePath);
+				for (final Attribute newAttribute : this.attributes.values()) {
 
-			// manipulate attribute path ids
-			ArrayNode attributePathsArray = (ArrayNode) schemaJSON.get("attribute_paths");
+					if (attribute.getUri().equals(newAttribute.getUri())) {
 
-			for (final JsonNode attributePathJsonNode : attributePathsArray) {
+						newAttributes.add(newAttribute);
 
-				if (((ObjectNode) attributePathJsonNode).get("id").asInt() == j) {
-
-					((ObjectNode) attributePathJsonNode).put("id", actualAttributePath.getId());
-
-					break;
+						break;
+					}
 				}
 			}
+
+			attributePath.setAttributePath(newAttributes);
+
+			attributePathJSONString = objectMapper.writeValueAsString(attributePath);
+			final AttributePath expectedAttributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
+			final AttributePath actualAttributePath = attributePathsResourceTestUtils.createObject(attributePathJSONString, expectedAttributePath);
+
+			attributePaths.put(actualAttributePath.getId(), actualAttributePath); 
 		}
+
+		// manipulate attribute paths (incl. their attributes)
+		final ArrayNode attributePathsArray = objectMapper.createArrayNode();
+
+		for (final AttributePath attributePath : attributePaths.values()) {
+
+			final String attributePathJSONString = objectMapper.writeValueAsString(attributePath);
+			final ObjectNode attributePathJSON = objectMapper.readValue(attributePathJSONString, ObjectNode.class);
+
+			attributePathsArray.add(attributePathJSON);
+		}
+
+		schemaJSON.put("attribute_paths", attributePathsArray);
+
+		// manipulate record class
+		final String recordClassJSONString = objectMapper.writeValueAsString(recordClass);
+		final ObjectNode recordClassJSON = objectMapper.readValue(recordClassJSONString, ObjectNode.class);
+
+		schemaJSON.put("record_class", recordClassJSON);
 
 		// re-init expect schema
 		schemaJSONString = objectMapper.writeValueAsString(schemaJSON);
@@ -319,13 +350,13 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 		// add resource and config
 		final Resource resource = resourcesResourceTestUtils.uploadResource(resourceFile, expectedResource);
 
-		final Configuration config = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
+		final Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
 
 		final DataModel dataModel1 = new DataModel();
 		dataModel1.setName("my data model");
 		dataModel1.setDescription("my data model description");
 		dataModel1.setDataResource(resource);
-		dataModel1.setConfiguration(config);
+		dataModel1.setConfiguration(configuration);
 
 		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
 
@@ -362,24 +393,45 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 
 		System.out.println("expected JSON = '" + objectMapper.writeValueAsString(expectedJson) + "'");
 
-		assertThat(json.get("@status").asText(), equalTo(expectedJson.get("@status").asText()));
-		assertThat(json.get("@mabVersion").asText(), equalTo(expectedJson.get("@mabVersion").asText()));
-		assertThat(json.get("@typ").asText(), equalTo(expectedJson.get("@typ").asText()));
-		assertThat(json.get("feld").size(), equalTo(expectedJson.get("feld").size()));
+		assertThat(json.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status").asText(), equalTo(expectedJson.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status").asText()));
+		assertThat(json.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion").asText(), equalTo(expectedJson.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion").asText()));
+		assertThat(json.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ").asText(), equalTo(expectedJson.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ").asText()));
+		assertThat(json.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld").size(), equalTo(expectedJson.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld").size()));
 
 		// clean up
-		service.deleteObject(dataModel.getId());
-
-		final Schema schema = dataModel.getSchema();
-		final Clasz recordClasz = schema.getRecordClass();
 		
-		// TODO: delete attributes and attribute paths from generated schema
-
-		pojoClassResourceTestUtils.deleteObject(dataModel);
-		schemasResourceTestUtils.deleteObject(schema);
-		claszesResourceTestUtils.deleteObject(recordClasz);
+		final Schema schema = dataModel.getSchema();
+		final Clasz recordClass = schema.getRecordClass();
+		
+		cleanUpDB(dataModel);
+		
+		if(schema != null) {
+			
+			final Set<AttributePath> attributePaths = schema.getAttributePaths();
+			
+			if(attributePaths != null) {
+				
+				for(final AttributePath attributePath : attributePaths) {
+					
+					this.attributePaths.put(attributePath.getId(), attributePath);
+					
+					final Set<Attribute> attributes = attributePath.getAttributes();
+					
+					if(attributes != null) {
+						
+						for(final Attribute attribute : attributes) {
+							
+							this.attributes.put(attribute.getId(), attribute);
+						}
+					}
+				}
+			}
+		}
+		
 		resourcesResourceTestUtils.deleteObject(resource);
-		configurationsResourceTestUtils.deleteObject(config);
+		configurationsResourceTestUtils.deleteObject(configuration);
+		schemasResourceTestUtils.deleteObject(schema);
+		claszesResourceTestUtils.deleteObject(recordClass);
 
 		LOG.debug("end get XML data test");
 	}

@@ -10,7 +10,7 @@
             "name": "my transformation (component)",
             "function": {
                 "type": "Transformation",
-                "id": 274,
+                "id": 2,
                 "name": "my transformation",
                 "description": "transformation which just makes use of one function",
                 "parameters": ["transformationInputString"],
@@ -19,39 +19,37 @@
                     "name": "my trim component",
                     "function": {
                         "type": "Function",
-                        "id": 273,
+                        "id": 1,
                         "name": "trim",
                         "description": "trims leading and trailing whitespaces from a given string",
                         "parameters": ["inputString"],
                         "type": "Function"
                     },
-                    "input_components": null,
-                    "output_components": null,
                     "parameter_mappings": {
                         "inputString": "previousComponent.outputString"
                     }
                 }],
                 "type": "Transformation"
             },
-            "input_components": null,
-            "output_components": null,
             "parameter_mappings": {
                 "transformationInputString": "http://purl.org/dc/terms/title",
                 "transformationOutputVariable": "http://www.w3.org/2000/01/rdf-schema#label"
             }
         },
         "input_attribute_paths": [{
-            "id": 1,
+            "id": 4,
             "attributes": [{
-                "id": "http://purl.org/dc/terms/title",
-                "name": "title"
+                "id": 6,
+                "name": "title",
+                "uri": "http://purl.org/dc/terms/title"
             }]
         }],
         "output_attribute_path": {
-            "id": 2,
+            "id": 5,
             "attributes": [{
-                "id": "http://www.w3.org/2000/01/rdf-schema#label",
-                "name": "label"
+                "id": 7,
+                "name": "label",
+                "uri": "http://www.w3.org/2000/01/rdf-schema#label"
             }]
         }
     }, {
@@ -62,7 +60,7 @@
             "name": "my transformation 2 (component)",
             "function": {
                 "type": "Transformation",
-                "id": 280,
+                "id": 8,
                 "name": "my transformation 2",
                 "description": "transformation which makes use of three functions (two transformations and one funcion)",
                 "parameters": ["firstName", "familyName"],
@@ -71,7 +69,7 @@
                     "name": "prepare family name",
                     "function": {
                         "type": "Transformation",
-                        "id": 278,
+                        "id": 6,
                         "name": "my transformation",
                         "description": "transformation which makes use of three functions",
                         "parameters": ["transformationInputString"],
@@ -80,13 +78,12 @@
                             "name": "my replace component",
                             "function": {
                                 "type": "Function",
-                                "id": 275,
+                                "id": 3,
                                 "name": "replace",
                                 "description": "replace certain parts of a given string that matches a certain regex",
                                 "parameters": ["inputString", "regex", "replaceString"],
                                 "type": "Function"
                             },
-                            "input_components": null,
                             "output_components": [{
                                 "id": 5
                             }],
@@ -100,7 +97,7 @@
                             "name": "my lower case component",
                             "function": {
                                 "type": "Function",
-                                "id": 276,
+                                "id": 4,
                                 "name": "lower_case",
                                 "description": "lower cases all characters of a given string",
                                 "parameters": ["inputString"],
@@ -109,7 +106,6 @@
                             "input_components": [{
                                 "id": 5
                             }],
-                            "output_components": null,
                             "parameter_mappings": {
                                 "inputString": "previousComponent.outputString"
                             }
@@ -118,7 +114,7 @@
                             "name": "my trim component",
                             "function": {
                                 "type": "Function",
-                                "id": 277,
+                                "id": 5,
                                 "name": "trim",
                                 "description": "trims leading and trailing whitespaces from a given string",
                                 "parameters": ["inputString"],
@@ -136,7 +132,6 @@
                         }],
                         "type": "Transformation"
                     },
-                    "input_components": null,
                     "output_components": [{
                         "id": 8
                     }],
@@ -148,7 +143,7 @@
                     "name": "full name",
                     "function": {
                         "type": "Function",
-                        "id": 279,
+                        "id": 7,
                         "name": "concat",
                         "description": "concatenates two given string",
                         "parameters": ["firstString", "secondString"],
@@ -159,7 +154,6 @@
                     }, {
                         "id": 7
                     }],
-                    "output_components": null,
                     "parameter_mappings": {
                         "firstString": "6.outputVariable",
                         "secondString": "7.outputVariable"
@@ -169,7 +163,7 @@
                     "name": "prepare first name",
                     "function": {
                         "type": "Transformation",
-                        "id": 278,
+                        "id": 6,
                         "name": "my transformation",
                         "description": "transformation which makes use of three functions",
                         "parameters": ["transformationInputString"],
@@ -178,13 +172,12 @@
                             "name": "my replace component",
                             "function": {
                                 "type": "Function",
-                                "id": 275,
+                                "id": 3,
                                 "name": "replace",
                                 "description": "replace certain parts of a given string that matches a certain regex",
                                 "parameters": ["inputString", "regex", "replaceString"],
                                 "type": "Function"
                             },
-                            "input_components": null,
                             "output_components": [{
                                 "id": 5
                             }],
@@ -198,7 +191,7 @@
                             "name": "my lower case component",
                             "function": {
                                 "type": "Function",
-                                "id": 276,
+                                "id": 4,
                                 "name": "lower_case",
                                 "description": "lower cases all characters of a given string",
                                 "parameters": ["inputString"],
@@ -207,7 +200,6 @@
                             "input_components": [{
                                 "id": 5
                             }],
-                            "output_components": null,
                             "parameter_mappings": {
                                 "inputString": "previousComponent.outputString"
                             }
@@ -216,7 +208,7 @@
                             "name": "my trim component",
                             "function": {
                                 "type": "Function",
-                                "id": 277,
+                                "id": 5,
                                 "name": "trim",
                                 "description": "trims leading and trailing whitespaces from a given string",
                                 "parameters": ["inputString"],
@@ -234,7 +226,6 @@
                         }],
                         "type": "Transformation"
                     },
-                    "input_components": null,
                     "output_components": [{
                         "id": 8
                     }],
@@ -244,162 +235,180 @@
                 }],
                 "type": "Transformation"
             },
-            "input_components": null,
-            "output_components": null,
             "parameter_mappings": {
-                "firstName": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/firstName",
-                "familyName": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/familyName",
-                "transformationOutputVariable": "http://purl.org/dc/terms/creator.http://xmlns.com/foaf/0.1/name"
+                "firstName": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/firstName",
+                "familyName": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/familyName",
+                "transformationOutputVariable": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/name"
             }
         },
         "input_attribute_paths": [{
-            "id": 3,
+            "id": 7,
             "attributes": [{
-                "id": "http://purl.org/dc/terms/creator",
-                "name": "creator"
+                "id": 8,
+                "name": "creator",
+                "uri": "http://purl.org/dc/terms/creator"
             }, {
-                "id": "http://xmlns.com/foaf/0.1/firstName",
-                "name": "firstName"
+                "id": 10,
+                "name": "familyName",
+                "uri": "http://xmlns.com/foaf/0.1/familyName"
             }]
         }, {
-            "id": 4,
+            "id": 6,
             "attributes": [{
-                "id": "http://purl.org/dc/terms/creator",
-                "name": "creator"
+                "id": 8,
+                "name": "creator",
+                "uri": "http://purl.org/dc/terms/creator"
             }, {
-                "id": "http://xmlns.com/foaf/0.1/familyName",
-                "name": "familyName"
+                "id": 9,
+                "name": "firstName",
+                "uri": "http://xmlns.com/foaf/0.1/firstName"
             }]
         }],
         "output_attribute_path": {
-            "id": 5,
+            "id": 8,
             "attributes": [{
-                "id": "http://purl.org/dc/terms/creator",
-                "name": "creator"
+                "id": 8,
+                "name": "creator",
+                "uri": "http://purl.org/dc/terms/creator"
             }, {
-                "id": "http://xmlns.com/foaf/0.1/name",
-                "name": "name"
+                "id": 11,
+                "name": "name",
+                "uri": "http://xmlns.com/foaf/0.1/name"
             }]
         }
     }],
     "functions": [{
         "type": "Function",
-        "id": 281,
+        "id": 9,
         "name": "trim",
         "description": "trims leading and trailing whitespaces from a given string",
         "parameters": ["inputString"],
         "type": "Function"
     }],
     "input_data_model": {
-        "id": 1,
+        "id": 12,
         "name": "my data model",
         "description": "my data model description",
         "configuration": {
-            "id": 1,
+            "id": 15,
             "name": "my configuration",
             "description": "configuration description",
             "resources": [{
-                "id": 1
+                "id": 14
             }],
             "parameters": {
                 "fileseparator": ";"
             }
         },
         "schema": {
-            "id": 1,
-            "name": "my schema",
-            "attribute_paths": [{
-                "id": 7,
-                "attributes": [{
-                    "id": "http://purl.org/dc/terms/creator",
-                    "name": "creator"
-                }, {
-                    "id": "http://xmlns.com/foaf/0.1/name",
-                    "name": "name"
-                }]
-            }, {
-                "id": 8,
-                "attributes": [{
-                    "id": "http://purl.org/dc/terms/created",
-                    "name": "created"
-                }]
-            }, {
-                "id": 6,
-                "attributes": [{
-                    "id": "http://purl.org/dc/terms/title",
-                    "name": "title"
-                }, {
-                    "id": "http://purl.org/dc/terms/hasPart",
-                    "name": "hasPart"
-                }, {
-                    "id": "http://purl.org/dc/terms/title",
-                    "name": "title"
-                }]
-            }],
-            "record_class": {
-                "id": "http://purl.org/ontology/bibo/Document",
-                "name": "document"
-            }
-        },
-        "data_resource": {
-            "id": 1,
-            "name": "bla",
-            "description": "blubblub",
-            "type": "FILE",
-            "attributes": {
-                "path": "/path/to/file.end"
-            },
-            "configurations": [{
-                "id": 1,
-                "name": "my configuration",
-                "description": "configuration description",
-                "resources": [{
-                    "id": 1
-                }],
-                "parameters": {
-                    "fileseparator": ";"
-                }
-            }]
-        }
-    },
-    "output_data_model": {
-        "id": 2,
-        "name": "my output data model",
-        "description": "my output data model description",
-        "schema": {
             "id": 2,
             "name": "my schema",
             "attribute_paths": [{
-                "id": 11,
+                "id": 8,
                 "attributes": [{
-                    "id": "http://purl.org/dc/terms/created",
-                    "name": "created"
+                    "id": 8,
+                    "name": "creator",
+                    "uri": "http://purl.org/dc/terms/creator"
+                }, {
+                    "id": 11,
+                    "name": "name",
+                    "uri": "http://xmlns.com/foaf/0.1/name"
                 }]
             }, {
                 "id": 9,
                 "attributes": [{
-                    "id": "http://purl.org/dc/terms/title",
-                    "name": "title"
+                    "id": 6,
+                    "name": "title",
+                    "uri": "http://purl.org/dc/terms/title"
                 }, {
-                    "id": "http://purl.org/dc/terms/hasPart",
-                    "name": "hasPart"
+                    "id": 12,
+                    "name": "hasPart",
+                    "uri": "http://purl.org/dc/terms/hasPart"
                 }, {
-                    "id": "http://purl.org/dc/terms/title",
-                    "name": "title"
+                    "id": 6,
+                    "name": "title",
+                    "uri": "http://purl.org/dc/terms/title"
                 }]
             }, {
                 "id": 10,
                 "attributes": [{
-                    "id": "http://purl.org/dc/terms/creator",
-                    "name": "creator"
-                }, {
-                    "id": "http://xmlns.com/foaf/0.1/name",
-                    "name": "name"
+                    "id": 13,
+                    "name": "created",
+                    "uri": "http://purl.org/dc/terms/created"
                 }]
             }],
             "record_class": {
-                "id": "http://purl.org/ontology/bibo/Document",
-                "name": "document"
+                "id": 2,
+                "name": "document",
+                "uri": "http://purl.org/ontology/bibo/Document"
+            }
+        },
+        "data_resource": {
+            "id": 14,
+            "name": "bla",
+            "description": "blubblub",
+            "type": "FILE",
+            "configurations": [{
+                "id": 15,
+                "name": "my configuration",
+                "description": "configuration description",
+                "resources": [{
+                    "id": 14
+                }],
+                "parameters": {
+                    "fileseparator": ";"
+                }
+            }],
+            "resource_attributes": {
+                "path": "/path/to/file.end"
+            }
+        }
+    },
+    "output_data_model": {
+        "id": 13,
+        "name": "my output data model",
+        "description": "my output data model description",
+        "schema": {
+            "id": 3,
+            "name": "my schema",
+            "attribute_paths": [{
+                "id": 8,
+                "attributes": [{
+                    "id": 8,
+                    "name": "creator",
+                    "uri": "http://purl.org/dc/terms/creator"
+                }, {
+                    "id": 11,
+                    "name": "name",
+                    "uri": "http://xmlns.com/foaf/0.1/name"
+                }]
+            }, {
+                "id": 9,
+                "attributes": [{
+                    "id": 6,
+                    "name": "title",
+                    "uri": "http://purl.org/dc/terms/title"
+                }, {
+                    "id": 12,
+                    "name": "hasPart",
+                    "uri": "http://purl.org/dc/terms/hasPart"
+                }, {
+                    "id": 6,
+                    "name": "title",
+                    "uri": "http://purl.org/dc/terms/title"
+                }]
+            }, {
+                "id": 10,
+                "attributes": [{
+                    "id": 13,
+                    "name": "created",
+                    "uri": "http://purl.org/dc/terms/created"
+                }]
+            }],
+            "record_class": {
+                "id": 2,
+                "name": "document",
+                "uri": "http://purl.org/ontology/bibo/Document"
             }
         }
     }

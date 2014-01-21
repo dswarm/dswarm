@@ -1,0 +1,26 @@
+{
+    "id": 2,
+    "name": "bla",
+    "description": "blubblub",
+    "type": "FILE",
+    "configurations": [{
+        "id": 1,
+        "resources": [{
+            "id": 2
+        }],
+        "parameters": {
+            "fieldseparator": "|"
+        }
+    }, {
+        "id": 2,
+        "resources": [{
+            "id": 2
+        }],
+        "parameters": {
+            "lineseparator": "\n"
+        }
+    }],
+    "resource_attributes": {
+        "path": "/path/to/file.end"
+    }
+}

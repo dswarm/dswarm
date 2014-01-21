@@ -158,8 +158,8 @@ public class ResourceServiceTest extends IDBasicJPAServiceTest<Resource, Resourc
 			LOG.debug("couldn't transform resource object to JSON string.\n" + e.getMessage());
 		}
 
-		System.out.println("resource configurations size: " + updatedResource3.getConfigurations().size());
-		System.out.println("resource JSON: " + resourceJSON);
+		LOG.debug("resource configurations size: " + updatedResource3.getConfigurations().size());
+		LOG.debug("resource JSON: " + resourceJSON);
 
 		// clean up DB
 		configurationService.deleteObject(configurationId);

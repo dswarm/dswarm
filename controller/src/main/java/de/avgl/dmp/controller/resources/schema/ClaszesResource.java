@@ -10,17 +10,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
-import de.avgl.dmp.controller.resources.BasicResource;
+import de.avgl.dmp.controller.resources.AdvancedDMPResource;
+import de.avgl.dmp.controller.resources.schema.utils.ClaszesResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
-import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
 
@@ -28,32 +27,30 @@ import de.avgl.dmp.persistence.service.schema.ClaszService;
  * A resource (controller service) for {@link Clasz}es.
  * 
  * @author tgaengler
- *
  */
 @RequestScoped
 @Api(value = "/classes", description = "Operations about classes.")
 @Path("classes")
-public class ClaszesResource extends BasicResource<ClaszService, Clasz, String> {
+public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, ClaszService, Clasz> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ClaszesResource.class);
 
 	/**
-	 * Creates a new resource (controller service) for {@link Clasz}s with the provider of the class persistence
-	 * service, the object mapper and metrics registry.
+	 * Creates a new resource (controller service) for {@link Clasz}s with the provider of the class persistence service, the
+	 * object mapper and metrics registry.
 	 * 
 	 * @param claszServiceProviderArg the class persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public ClaszesResource(final Provider<ClaszService> claszServiceProviderArg, final ObjectMapper objectMapper, final DMPStatus dmpStatus) {
+	public ClaszesResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
 
-		super(Clasz.class, claszServiceProviderArg, objectMapper, dmpStatus);
+		super(utilsFactory.reset().get(ClaszesResourceUtils.class), dmpStatusArg);
 	}
 
 	/**
 	 * This endpoint returns a class as JSON representation for the provided class identifier.<br/>
-	 * note: currently, this method is not implemented
 	 * 
 	 * @param id a class identifier
 	 * @return a JSON representation of a class
@@ -63,16 +60,13 @@ public class ClaszesResource extends BasicResource<ClaszService, Clasz, String> 
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "class identifier", required = true) @PathParam("id") final String id) throws DMPControllerException {
+	public Response getObject(@ApiParam(value = "class identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
 
-		// return super.getObject(id);
-
-		return Response.status(505).build();
+		return super.getObject(id);
 	}
 
 	/**
-	 * This endpoint consumes a class as JSON representation and persists this class in the
-	 * database.
+	 * This endpoint consumes a class as JSON representation and persists this class in the database.
 	 * 
 	 * @param jsonObjectString a JSON representation of one class
 	 * @return the persisted class as JSON representation
@@ -102,26 +96,4 @@ public class ClaszesResource extends BasicResource<ClaszService, Clasz, String> 
 
 		return super.getObjects();
 	}
-
-	/**
-	 * {@inheritDoc}<br/>
-	 * Updates the name of the class.
-	 */
-	@Override
-	protected Clasz prepareObjectForUpdate(final Clasz objectFromJSON, final Clasz object) {
-
-		object.setName(objectFromJSON.getName());
-
-		return object;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected Clasz createObject(final Clasz objectFromJSON, final ClaszService persistenceService) throws DMPPersistenceException {
-
-		return persistenceService.createObject(objectFromJSON.getId());
-	}
-
 }

@@ -7,7 +7,7 @@ import com.google.inject.Provider;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.schema.Attribute;
-import de.avgl.dmp.persistence.service.AdvancedJPAService;
+import de.avgl.dmp.persistence.service.AdvancedDMPJPAService;
 
 /**
  * A persistence service for {@link Attribute}s.
@@ -15,7 +15,7 @@ import de.avgl.dmp.persistence.service.AdvancedJPAService;
  * @author tgaengler
  *
  */
-public class AttributeService extends AdvancedJPAService<Attribute> {
+public class AttributeService extends AdvancedDMPJPAService<Attribute> {
 
 	/**
 	 * Creates a new attribute persistence service with the given entity manager provider.

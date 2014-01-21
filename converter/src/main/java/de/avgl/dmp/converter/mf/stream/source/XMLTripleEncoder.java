@@ -5,6 +5,9 @@ import java.util.Stack;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang3.StringUtils;
 import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultXmlPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
@@ -15,7 +18,9 @@ import org.culturegraph.mf.framework.annotations.Out;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.google.common.base.Strings;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
@@ -23,11 +28,16 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
+import de.avgl.dmp.persistence.model.resource.DataModel;
+import de.avgl.dmp.persistence.model.resource.utils.DataModelUtils;
 import de.avgl.dmp.persistence.model.types.Tuple;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
 
 /**
  * Converts XML records to RDF triples.
- * 
+ *
  * @author tgaengler
  * @author phorn
  */
@@ -49,35 +59,117 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 	private String						uri;
 	private Resource					recordType;
 
-	private final Optional<String>		dataModelId;
+	private final Optional<DataModel>	dataModel;
+	private final Optional<String>		dataModelUri;
 
-	public XMLTripleEncoder(final Optional<String> dataModelId) {
+	private Optional<String> init(final Optional<DataModel> dataModel) {
+		return dataModel.transform(new Function<DataModel, String>() {
+			@Override
+			public String apply(final DataModel dm) {
+				return StringUtils.stripEnd(DataModelUtils.determineDataResourceSchemaBaseURI(dm), "#");
+			}
+		});
+	}
+
+	private String mintDataModelUri(@Nullable final String uri) {
+		if (Strings.isNullOrEmpty(uri)) {
+			if (dataModelUri.isPresent()) {
+
+				return dataModelUri.get();
+			}
+
+			return String.format("http://data.slub-dresden.de/records/%s", UUID.randomUUID());
+		}
+
+		return uri;
+	}
+
+	private boolean isValidUri(@Nullable final String identifier) {
+		if (identifier != null) {
+			try {
+				final URI _uri = URI.create(identifier);
+
+				return _uri != null && _uri.getScheme() != null;
+			} catch (final IllegalArgumentException e) {
+
+				return false;
+			}
+		}
+
+		return false;
+	}
+
+	private String mintRecordUri(@Nullable final String identifier) {
+
+		if (currentId == null) {
+
+			// mint completely new uri
+
+			final StringBuilder sb = new StringBuilder();
+
+			if (dataModel.isPresent()) {
+
+				// create uri from resource id and configuration id and random uuid
+
+				sb.append("http://data.slub-dresden.de/datamodels/").append(dataModel.get().getId()).append("/records/");
+			} else {
+
+				// create uri from random uuid
+
+				sb.append("http://data.slub-dresden.de/records/");
+			}
+
+			return sb.append(UUID.randomUUID()).toString();
+		}
+
+
+		// create uri with help of given record id
+
+		final StringBuilder sb = new StringBuilder();
+
+		if (dataModel.isPresent()) {
+
+			// create uri from resource id and configuration id and identifier
+
+			sb.append("http://data.slub-dresden.de/datamodels/").append(dataModel.get().getId()).append("/records/").append(identifier);
+		} else {
+
+			// create uri from identifier
+
+			sb.append("http://data.slub-dresden.de/records/").append(identifier);
+		}
+
+		return sb.toString();
+	}
+
+	public XMLTripleEncoder(final Optional<DataModel> dataModel) {
 		super();
-
-		this.dataModelId = dataModelId;
 
 		this.recordTagName = System.getProperty("org.culturegraph.metamorph.xml.recordtag");
 		if (recordTagName == null) {
 			throw new MetafactureException("Missing name for the tag marking a record.");
 		}
+
+		this.dataModel = dataModel;
+		this.dataModelUri = init(dataModel);
 	}
 
-	public XMLTripleEncoder(final String recordTagName, final Optional<String> dataModelId) {
+	public XMLTripleEncoder(final String recordTagName, final Optional<DataModel> dataModel) {
 		super();
-		this.recordTagName = recordTagName;
-		this.dataModelId = dataModelId;
+		this.recordTagName = checkNotNull(recordTagName);
+
+		this.dataModel = dataModel;
+		this.dataModelUri = init(dataModel);
 	}
 
 	@Override
 	public void startElement(final String uri, final String localName, final String qName, final Attributes attributes) throws SAXException {
 
-		// System.out.println("in start element with: uri = '" + uri + "' :: local name = '" + localName + "'");
-
-		this.uri = uri;
+		this.uri = mintDataModelUri(uri);
 
 		if (inRecord) {
 			writeValue();
-			startEntity(uri + "#" + localName);
+			startEntity(this.uri + "#" + localName);
 			writeAttributes(attributes);
 		} else if (localName.equals(recordTagName)) {
 			// TODO: how to determine the id of an record, or should we mint uris?
@@ -137,68 +229,7 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 
 		model = ModelFactory.createDefaultModel();
 
-		// determine record id and create uri from it
-		if (identifier != null) {
-
-			URI uri = null;
-
-			try {
-
-				uri = URI.create(identifier);
-			} catch (final Exception e) {
-
-				e.printStackTrace();
-			}
-
-			if (uri != null) {
-
-				// identifier could act as resource uri
-
-				// note: @tgaengler this is maybe suboptimal
-
-				currentId = identifier;
-			} else {
-
-				// create uri with help of given record id
-
-				final StringBuilder sb = new StringBuilder();
-
-				if (dataModelId.isPresent()) {
-
-					// create uri from resource id and configuration id and identifier
-
-					sb.append("http://data.slub-dresden.de/datamodels/").append(dataModelId.get()).append("/records/").append(identifier);
-				} else {
-
-					// create uri from identifier
-
-					sb.append("http://data.slub-dresden.de/records/").append(identifier);
-				}
-
-				currentId = sb.toString();
-			}
-		}
-
-		if (currentId == null) {
-
-			// mint completely new uri
-
-			final StringBuilder sb = new StringBuilder();
-
-			if (dataModelId.isPresent()) {
-
-				// create uri from resource id and configuration id and random uuid
-
-				sb.append("http://data.slub-dresden.de/datamodels/").append(dataModelId.get()).append("/records/").append(UUID.randomUUID());
-			} else {
-
-				// create uri from random uuid
-
-				sb.append("http://data.slub-dresden.de/records/").append(UUID.randomUUID());
-			}
-
-			currentId = sb.toString();
-		}
+		currentId = isValidUri(identifier) ? identifier : mintRecordUri(identifier);
 
 		recordResource = model.createResource(currentId);
 

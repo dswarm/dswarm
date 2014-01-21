@@ -11,46 +11,46 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
+import de.avgl.dmp.controller.resources.job.utils.FunctionsResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.service.job.FunctionService;
 
 /**
  * A resource (controller service) for {@link Function}s.
- * 
+ *
  * @author tgaengler
  * @author fniederlein
  */
 @RequestScoped
 @Api(value = "/functions", description = "Operations about functions.")
 @Path("functions")
-public class FunctionsResource extends BasicFunctionsResource<FunctionService, Function> {
+public class FunctionsResource extends BasicFunctionsResource<FunctionsResourceUtils, FunctionService, Function> {
 
 	/**
 	 * Creates a new resource (controller service) for {@link Function}s with the provider of the function persistence service,
 	 * the object mapper and metrics registry.
-	 * 
+	 *
 	 * @param functionServiceProviderArg the function persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public FunctionsResource(final Provider<FunctionService> functionServiceProviderArg, final ObjectMapper objectMapper, final DMPStatus dmpStatus) {
+	public FunctionsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
 
-		super(Function.class, functionServiceProviderArg, objectMapper, dmpStatus);
+		super(utilsFactory.reset().get(FunctionsResourceUtils.class), dmpStatusArg);
 	}
 
 	/**
 	 * This endpoint returns a function as JSON representation for the provided function identifier.
-	 * 
+	 *
 	 * @param id a function identifier
 	 * @return a JSON representation of a function
 	 */
@@ -66,7 +66,7 @@ public class FunctionsResource extends BasicFunctionsResource<FunctionService, F
 
 	/**
 	 * This endpoint consumes a filter as JSON representation and persists this filter in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one filter
 	 * @return the persisted filter as JSON representation
 	 * @throws DMPControllerException
@@ -84,7 +84,7 @@ public class FunctionsResource extends BasicFunctionsResource<FunctionService, F
 
 	/**
 	 * This endpoint returns a list of all functions as JSON representation.
-	 * 
+	 *
 	 * @return a list of all functions as JSON representation
 	 * @throws DMPControllerException
 	 */

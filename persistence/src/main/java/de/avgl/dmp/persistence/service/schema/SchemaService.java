@@ -17,7 +17,6 @@ import de.avgl.dmp.persistence.service.BasicDMPJPAService;
  * A persistence service for {@link Schema}s.
  * 
  * @author tgaengler
- *
  */
 public class SchemaService extends BasicDMPJPAService<Schema> {
 
@@ -54,7 +53,19 @@ public class SchemaService extends BasicDMPJPAService<Schema> {
 		final Set<AttributePath> attributePaths = object.getAttributePaths();
 		final Clasz recordClass = object.getRecordClass();
 
-		updateObject.setAttributePaths(attributePaths);
+//		if (attributePaths != null) {
+//
+//			for (final AttributePath attributePath : attributePaths) {
+//
+//				final AttributePath managedAttributePath = entityManager.merge(attributePath);
+//				updateObject.addAttributePath(managedAttributePath);
+//			}
+//
+//		} else {
+//			
+			updateObject.setAttributePaths(attributePaths);
+//		}
+		
 		updateObject.setRecordClass(recordClass);
 
 		super.updateObjectInternal(object, updateObject, entityManager);

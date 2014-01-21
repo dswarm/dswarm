@@ -704,8 +704,8 @@ public class ProjectTest extends GuicedTest {
 		final Attribute attribute = new Attribute(id);
 		attribute.setName(name);
 
-		Assert.assertNotNull("the attribute id shouldn't be null", attribute.getId());
-		Assert.assertEquals("the attribute ids are not equal", id, attribute.getId());
+		Assert.assertNotNull("the attribute id shouldn't be null", attribute.getUri());
+		Assert.assertEquals("the attribute ids are not equal", id, attribute.getUri());
 		Assert.assertNotNull("the attribute name shouldn't be null", attribute.getName());
 		Assert.assertEquals("the attribute names are not equal", name, attribute.getName());
 

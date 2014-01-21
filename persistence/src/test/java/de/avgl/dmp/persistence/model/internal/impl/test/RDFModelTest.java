@@ -63,6 +63,8 @@ public class RDFModelTest {
 		}
 
 		Assert.assertNotNull("the JSON string shouldn't be null", jsonString);
+		
+		// System.out.println(jsonString);
 
 		String expectedJsonString = null;
 

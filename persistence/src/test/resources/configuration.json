@@ -1,0 +1,8 @@
+{
+    "id": 3,
+    "name": "my configuration",
+    "description": "configuration description",
+    "parameters": {
+        "fileseparator": ";"
+    }
+}

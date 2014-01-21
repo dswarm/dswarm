@@ -11,9 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -21,40 +19,41 @@ import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.ExtendedBasicDMPResource;
+import de.avgl.dmp.controller.resources.resource.utils.ConfigurationsResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 
 /**
  * A resource (controller service) for {@link Configuration}s.
- * 
+ *
  * @author tgaengler
  */
 @RequestScoped
 @Api(value = "/configurations", description = "Operations about configurations")
 @Path("configurations")
-public class ConfigurationsResource extends ExtendedBasicDMPResource<ConfigurationService, Configuration> {
+public class ConfigurationsResource extends ExtendedBasicDMPResource<ConfigurationsResourceUtils, ConfigurationService, Configuration> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ConfigurationsResource.class);
 
 	/**
 	 * Creates a new resource (controller service) for {@link Configuration}s with the provider of the component persistence
 	 * service, the object mapper and metrics registry.
-	 * 
+	 *
 	 * @param persistenceServiceProviderArg the component persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public ConfigurationsResource(final Provider<ConfigurationService> configurationServiceProviderArg, final ObjectMapper objectMapper,
-			final DMPStatus dmpStatus) {
+	public ConfigurationsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
 
-		super(Configuration.class, configurationServiceProviderArg, objectMapper, dmpStatus);
+		super(utilsFactory.reset().get(ConfigurationsResourceUtils.class), dmpStatusArg);
 	}
 
 	/**
 	 * This endpoint returns a configuration as JSON representation for the provided configuration identifier.
-	 * 
+	 *
 	 * @param id a configuration identifier
 	 * @return a JSON representation of a configuration
 	 */
@@ -71,7 +70,7 @@ public class ConfigurationsResource extends ExtendedBasicDMPResource<Configurati
 
 	/**
 	 * This endpoint consumes a configuration as JSON representation and persists this configuration in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one configuration
 	 * @return the persisted configuration as JSON representation
 	 * @throws DMPControllerException
@@ -89,7 +88,7 @@ public class ConfigurationsResource extends ExtendedBasicDMPResource<Configurati
 
 	/**
 	 * This endpoint returns a list of all configurations as JSON representation.
-	 * 
+	 *
 	 * @return a list of all configurations as JSON representation
 	 * @throws DMPControllerException
 	 */

@@ -4,13 +4,13 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import de.avgl.dmp.persistence.model.BasicDMPObject;
+import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
 
 /**
  * @author tgaengler
  */
 @XmlRootElement
-public class MappingGroup extends BasicDMPObject {
+public class MappingGroup extends AdvancedDMPJPAObject {
 
 	/**
 	 *

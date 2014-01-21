@@ -11,8 +11,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -20,39 +18,41 @@ import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.ExtendedBasicDMPResource;
+import de.avgl.dmp.controller.resources.job.utils.ProjectsResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Project;
 import de.avgl.dmp.persistence.service.job.ProjectService;
 
 /**
  * A resource (controller service) for {@link Project}s.
- * 
+ *
  * @author tgaengler
  */
 @RequestScoped
 @Api(value = "/projects", description = "Operations about projects.")
 @Path("projects")
-public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, Project> {
+public class ProjectsResource extends ExtendedBasicDMPResource<ProjectsResourceUtils, ProjectService, Project> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ProjectsResource.class);
 
 	/**
 	 * Creates a new resource (controller service) for {@link Project}s with the provider of the project persistence service, the
 	 * object mapper and metrics registry.
-	 * 
+	 *
 	 * @param projectServiceProviderArg the project persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public ProjectsResource(final Provider<ProjectService> projectServiceProviderArg, final ObjectMapper objectMapper, final DMPStatus dmpStatus) {
+	public ProjectsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
 
-		super(Project.class, projectServiceProviderArg, objectMapper, dmpStatus);
+		super(utilsFactory.reset().get(ProjectsResourceUtils.class), dmpStatusArg);
 	}
 
 	/**
 	 * This endpoint returns a project as JSON representation for the provided project identifier.
-	 * 
+	 *
 	 * @param id a project identifier
 	 * @return a JSON representation of a project
 	 */
@@ -68,7 +68,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 	/**
 	 * This endpoint consumes a project as JSON representation and persists this project in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one project
 	 * @return the persisted project as JSON representation
 	 * @throws DMPControllerException
@@ -85,7 +85,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 	/**
 	 * This endpoint returns a list of all projects as JSON representation.
-	 * 
+	 *
 	 * @return a list of all projects as JSON representation
 	 * @throws DMPControllerException
 	 */

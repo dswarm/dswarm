@@ -1,7 +1,8 @@
 {
     "id": 1,
     "attributes": [{
-        "id": "http://purl.org/dc/terms/title",
+        "id": 5,
+        "uri": "http://purl.org/dc/terms/title",
         "name": "title"
     }]
 }

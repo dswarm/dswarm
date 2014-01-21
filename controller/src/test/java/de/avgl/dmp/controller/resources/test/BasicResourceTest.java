@@ -1,6 +1,5 @@
 package de.avgl.dmp.controller.resources.test;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Set;
@@ -17,7 +16,6 @@ import com.google.common.collect.Sets;
 
 import de.avgl.dmp.controller.resources.test.utils.BasicResourceTestUtils;
 import de.avgl.dmp.persistence.model.DMPObject;
-import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.service.BasicJPAService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 

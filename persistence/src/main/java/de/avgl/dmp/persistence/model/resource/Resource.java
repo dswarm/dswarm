@@ -20,6 +20,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -119,6 +120,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 	 * 
 	 * @return all attributes of the data resource
 	 */
+	@XmlElement(name = "resource_attributes")
 	public ObjectNode getAttributes() {
 
 		initAttributes(false);

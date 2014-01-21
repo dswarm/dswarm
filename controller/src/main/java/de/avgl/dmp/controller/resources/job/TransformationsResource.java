@@ -11,46 +11,45 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
+import de.avgl.dmp.controller.resources.job.utils.TransformationsResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.service.job.TransformationService;
 
 /**
  * A resource (controller service) for {@link Transformation}s.
- * 
+ *
  * @author tgaengler
  */
 @RequestScoped
 @Api(value = "/transformations", description = "Operations about transformations.")
 @Path("transformations")
-public class TransformationsResource extends BasicFunctionsResource<TransformationService, Transformation> {
+public class TransformationsResource extends BasicFunctionsResource<TransformationsResourceUtils, TransformationService, Transformation> {
 
 	/**
 	 * Creates a new resource (controller service) for {@link Transformation}s with the provider of the transformation persistence
 	 * service, the object mapper and metrics registry.
-	 * 
+	 *
 	 * @param transformationServiceProviderArg the transformation persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public TransformationsResource(final Provider<TransformationService> transformationServiceProviderArg, final ObjectMapper objectMapper,
-			final DMPStatus dmpStatus) {
+	public TransformationsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
 
-		super(Transformation.class, transformationServiceProviderArg, objectMapper, dmpStatus);
+		super(utilsFactory.reset().get(TransformationsResourceUtils.class), dmpStatusArg);
 	}
 
 	/**
 	 * This endpoint returns a transformation as JSON representation for the provided transformation identifier.
-	 * 
+	 *
 	 * @param id a transformation identifier
 	 * @return a JSON representation of a transformation
 	 */
@@ -67,7 +66,7 @@ public class TransformationsResource extends BasicFunctionsResource<Transformati
 
 	/**
 	 * This endpoint consumes a transformation as JSON representation and persists this transformation in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one transformation
 	 * @return the persisted transformation as JSON representation
 	 * @throws DMPControllerException
@@ -85,7 +84,7 @@ public class TransformationsResource extends BasicFunctionsResource<Transformati
 
 	/**
 	 * This endpoint returns a list of all transformations as JSON representation.
-	 * 
+	 *
 	 * @return a list of all transformations as JSON representation
 	 * @throws DMPControllerException
 	 */

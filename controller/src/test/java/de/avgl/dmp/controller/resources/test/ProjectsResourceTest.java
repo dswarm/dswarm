@@ -1,14 +1,21 @@
 package de.avgl.dmp.controller.resources.test;
 
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
+
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Ignore;
+import org.junit.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import de.avgl.dmp.controller.resources.test.utils.AttributePathsResourceTestUtils;
@@ -72,7 +79,7 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 
 	private Component								transformationComponent;
 
-	final Map<String, Attribute>					attributes		= Maps.newHashMap();
+	final Map<Long, Attribute>						attributes		= Maps.newHashMap();
 
 	final Map<Long, AttributePath>					attributePaths	= Maps.newLinkedHashMap();
 
@@ -153,13 +160,26 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 
 		// END project preparation
 	}
-	
+
 	@After
 	public void tearDown2() throws Exception {
 
 		// START data models tear down
 
 		for (final DataModel dataModel : dataModels.values()) {
+
+			if (dataModel.getSchema() != null) {
+
+				final Set<AttributePath> attributePaths = dataModel.getSchema().getAttributePaths();
+
+				if (attributePaths != null) {
+
+					for (final AttributePath attributePath : attributePaths) {
+
+						this.attributePaths.put(attributePath.getId(), attributePath);
+					}
+				}
+			}
 
 			dataModelsResourceTestUtils.deleteObject(dataModel);
 		}
@@ -263,27 +283,56 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 		String schemaJSONString = DMPPersistenceUtil.getResourceAsString("schema.json");
 		final ObjectNode schemaJSON = objectMapper.readValue(schemaJSONString, ObjectNode.class);
 
-		for (int j = 1; j <= 4; j++) {
+		for (int j = 1; j < 4; j++) {
 
 			final String attributePathJSONFileName = "attribute_path" + j + ".json";
 
-			final AttributePath actualAttributePath = attributePathsResourceTestUtils.createObject(attributePathJSONFileName);
+			String attributePathJSONString = DMPPersistenceUtil.getResourceAsString(attributePathJSONFileName);
+			final AttributePath attributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
 
-			attributePaths.put(actualAttributePath.getId(), actualAttributePath);
+			final LinkedList<Attribute> attributes = attributePath.getAttributePath();
+			final LinkedList<Attribute> newAttributes = Lists.newLinkedList();
 
-			// manipulate attribute path ids
-			ArrayNode attributePathsArray = (ArrayNode) schemaJSON.get("attribute_paths");
+			for (final Attribute attribute : attributes) {
 
-			for (final JsonNode attributePathJsonNode : attributePathsArray) {
+				for (final Attribute newAttribute : this.attributes.values()) {
 
-				if (((ObjectNode) attributePathJsonNode).get("id").asInt() == j) {
+					if (attribute.getUri().equals(newAttribute.getUri())) {
 
-					((ObjectNode) attributePathJsonNode).put("id", actualAttributePath.getId());
+						newAttributes.add(newAttribute);
 
-					break;
+						break;
+					}
 				}
 			}
+
+			attributePath.setAttributePath(newAttributes);
+
+			attributePathJSONString = objectMapper.writeValueAsString(attributePath);
+			final AttributePath expectedAttributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
+			final AttributePath actualAttributePath = attributePathsResourceTestUtils.createObject(attributePathJSONString, expectedAttributePath);
+
+			attributePaths.put(actualAttributePath.getId(), actualAttributePath);
 		}
+
+		// manipulate attribute paths (incl. their attributes)
+		final ArrayNode attributePathsArray = objectMapper.createArrayNode();
+
+		for (final AttributePath attributePath : attributePaths.values()) {
+
+			final String attributePathJSONString = objectMapper.writeValueAsString(attributePath);
+			final ObjectNode attributePathJSON = objectMapper.readValue(attributePathJSONString, ObjectNode.class);
+
+			attributePathsArray.add(attributePathJSON);
+		}
+
+		schemaJSON.put("attribute_paths", attributePathsArray);
+
+		// manipulate record class
+		final String recordClassJSONString = objectMapper.writeValueAsString(recordClass);
+		final ObjectNode recordClassJSON = objectMapper.readValue(recordClassJSONString, ObjectNode.class);
+
+		schemaJSON.put("record_class", recordClassJSON);
 
 		// re-init expect schema
 		schemaJSONString = objectMapper.writeValueAsString(schemaJSON);
@@ -490,7 +539,30 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 
 	private AttributePath createAttributePath(final String attributePathJSONFileName) throws Exception {
 
-		final AttributePath actualAttributePath = attributePathsResourceTestUtils.createObject(attributePathJSONFileName);
+		String attributePathJSONString = DMPPersistenceUtil.getResourceAsString(attributePathJSONFileName);
+		final AttributePath attributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
+
+		final LinkedList<Attribute> attributes = attributePath.getAttributePath();
+		final LinkedList<Attribute> newAttributes = Lists.newLinkedList();
+
+		for (final Attribute attribute : attributes) {
+
+			for (final Attribute newAttribute : this.attributes.values()) {
+
+				if (attribute.getUri().equals(newAttribute.getUri())) {
+
+					newAttributes.add(newAttribute);
+
+					break;
+				}
+			}
+		}
+
+		attributePath.setAttributePath(newAttributes);
+
+		attributePathJSONString = objectMapper.writeValueAsString(attributePath);
+		final AttributePath expectedAttributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
+		final AttributePath actualAttributePath = attributePathsResourceTestUtils.createObject(attributePathJSONString, expectedAttributePath);
 
 		attributePaths.put(actualAttributePath.getId(), actualAttributePath);
 

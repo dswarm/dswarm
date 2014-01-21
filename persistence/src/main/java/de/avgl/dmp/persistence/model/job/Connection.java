@@ -4,10 +4,10 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import de.avgl.dmp.persistence.model.BasicDMPObject;
+import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
 
 @XmlRootElement
-public class Connection extends BasicDMPObject {
+public class Connection extends AdvancedDMPJPAObject {
 
 	/**
 	 *
