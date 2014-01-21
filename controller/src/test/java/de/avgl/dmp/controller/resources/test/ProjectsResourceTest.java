@@ -227,7 +227,7 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 
 		//super.testPUTObject();
 		
-		// TODO: implement test
+		// TODO: [@fniederlein] implement test
 	}
 
 	private DataModel createInputDataModel() throws Exception {

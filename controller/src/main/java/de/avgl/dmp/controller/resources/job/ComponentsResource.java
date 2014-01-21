@@ -99,14 +99,14 @@ public class ComponentsResource extends ExtendedBasicDMPResource<ComponentsResou
 	}
 	
 	/**
-	 * This endpoint consumes a component as JSON representation and update this component in the database.
+	 * This endpoint consumes a component as JSON representation and updates this component in the database.
 	 * 
 	 * @param jsonObjectString a JSON representation of one component
 	 * @param id a component identifier
 	 * @return the updated filter as JSON representation
 	 * @throws DMPControllerException
 	 */
-	@ApiOperation(value = "update component with given id ", notes = "Returns a new Component object.")
+	@ApiOperation(value = "update component with given id ", notes = "Returns an updated Component object.")
 	@PUT
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)

@@ -97,14 +97,14 @@ public class MappingsResource extends BasicDMPResource<MappingsResourceUtils, Ma
 	}
 
 	/**
-	 * This endpoint consumes a mapping as JSON representation and update this mapping in the database.
+	 * This endpoint consumes a mapping as JSON representation and updates this mapping in the database.
 	 * 
 	 * @param jsonObjectString a JSON representation of one mapping
 	 * @param id a mapping identifier
 	 * @return the updated mapping as JSON representation
 	 * @throws DMPControllerException
 	 */
-	@ApiOperation(value = "update mapping with given id ", notes = "Returns a new Mapping object.")
+	@ApiOperation(value = "update mapping with given id ", notes = "Returns an updated Mapping object.")
 	@PUT
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)

@@ -98,7 +98,7 @@ public class FunctionsResource extends BasicFunctionsResource<FunctionsResourceU
 	}
 	
 	/**
-	 * This endpoint consumes a function as JSON representation and update this function in the database.
+	 * This endpoint consumes a function as JSON representation and updates this function in the database.
 	 * 
 	 * @param jsonObjectString a JSON representation of one function
 	 * @param id a function identifier

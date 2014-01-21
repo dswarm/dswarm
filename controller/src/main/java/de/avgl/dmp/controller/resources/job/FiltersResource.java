@@ -98,7 +98,7 @@ public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, Filt
 	}
 
 	/**
-	 * This endpoint consumes a filter as JSON representation and update this filter in the database.
+	 * This endpoint consumes a filter as JSON representation and updates this filter in the database.
 	 * 
 	 * @param jsonObjectString a JSON representation of one filter
 	 * @param id a filter identifier

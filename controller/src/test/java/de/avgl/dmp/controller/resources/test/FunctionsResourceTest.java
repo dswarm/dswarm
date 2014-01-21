@@ -1,6 +1,5 @@
 package de.avgl.dmp.controller.resources.test;
 
-import org.hibernate.tuple.component.PojoComponentTuplizer;
 import org.junit.Assert;
 
 import de.avgl.dmp.controller.resources.test.utils.FunctionsResourceTestUtils;

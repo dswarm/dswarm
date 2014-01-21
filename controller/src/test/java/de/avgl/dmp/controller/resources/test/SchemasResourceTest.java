@@ -143,5 +143,7 @@ public class SchemasResourceTest extends BasicResourceTest<SchemasResourceTestUt
 	public void testPUTObject() throws Exception {
 
 		//super.testPUTObject();
+		
+		// TODO: [@fniederlein] implement test
 	}
 }

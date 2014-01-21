@@ -66,6 +66,6 @@ public class AttributesResourceTest extends BasicResourceTest<AttributesResource
 
 		//super.testPUTObject();
 		
-		// TODO: implement test
+		// TODO: [@fniederlein] implement test
 	}
 }

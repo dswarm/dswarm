@@ -99,14 +99,14 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectsResourceU
 	}
 	
 	/**
-	 * This endpoint consumes a project as JSON representation and update this project in the database.
+	 * This endpoint consumes a project as JSON representation and updates this project in the database.
 	 * 
 	 * @param jsonObjectString a JSON representation of one project
 	 * @param id a project identifier
 	 * @return the updated project as JSON representation
 	 * @throws DMPControllerException
 	 */
-	@ApiOperation(value = "update project with given id ", notes = "Returns a new Project object.")
+	@ApiOperation(value = "update project with given id ", notes = "Returns an updated Project object.")
 	@PUT
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)

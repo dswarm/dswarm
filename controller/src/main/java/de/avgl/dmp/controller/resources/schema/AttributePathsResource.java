@@ -101,14 +101,14 @@ public class AttributePathsResource extends BasicIDResource<AttributePathsResour
 	}
 	
 	/**
-	 * This endpoint consumes a attribute path as JSON representation and update this attribute path in the database.
+	 * This endpoint consumes a attribute path as JSON representation and updates this attribute path in the database.
 	 * 
 	 * @param jsonObjectString a JSON representation of one attribute path
 	 * @param id a attribute path identifier
 	 * @return the updated attribute path as JSON representation
 	 * @throws DMPControllerException
 	 */
-	@ApiOperation(value = "update attribute path with given id ", notes = "Returns a new AttributePath object.")
+	@ApiOperation(value = "update attribute path with given id ", notes = "Returns an updated AttributePath object.")
 	@PUT
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)

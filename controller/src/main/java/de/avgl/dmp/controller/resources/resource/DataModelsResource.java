@@ -136,14 +136,14 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 	}
 	
 	/**
-	 * This endpoint consumes a data model as JSON representation and update this data model in the database.
+	 * This endpoint consumes a data model as JSON representation and updates this data model in the database.
 	 * 
 	 * @param jsonObjectString a JSON representation of one data model
 	 * @param id a data model identifier
 	 * @return the updated data model as JSON representation
 	 * @throws DMPControllerException
 	 */
-	@ApiOperation(value = "update data model with given id ", notes = "Returns a new DataModel object.")
+	@ApiOperation(value = "update data model with given id ", notes = "Returns an updated DataModel object.")
 	@PUT
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)

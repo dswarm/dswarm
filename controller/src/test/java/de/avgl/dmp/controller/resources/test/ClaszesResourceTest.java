@@ -62,6 +62,6 @@ public class ClaszesResourceTest extends BasicResourceTest<ClaszesResourceTestUt
 	@Override
 	public void testPUTObject() throws Exception {
 
-		// TODO: implement test
+		// TODO: [@fniederlein] implement test
 	}
 }

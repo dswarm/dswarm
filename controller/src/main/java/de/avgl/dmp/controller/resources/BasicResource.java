@@ -389,11 +389,13 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 	 */
 	protected POJOCLASS refreshObject(final String objectJSONString, final POJOCLASSIDTYPE id) throws DMPControllerException {
 
-		// TODO: enhance object JSON as necessary
+		// enhance object JSON as necessary
 		
-		// get the deserialisised object from the JSON string
+		final String enhancedObjectJSONString = pojoClassResourceUtils.prepareObjectJSONString(objectJSONString);
+		
+		// get the deserialisised object from the enhanced JSON string
 
-		final POJOCLASS objectFromJSON = pojoClassResourceUtils.deserializeObjectJSONString(objectJSONString);
+		final POJOCLASS objectFromJSON = pojoClassResourceUtils.deserializeObjectJSONString(enhancedObjectJSONString);
 
 		// get persistented object per id
 

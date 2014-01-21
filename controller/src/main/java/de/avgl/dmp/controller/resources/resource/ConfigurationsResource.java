@@ -102,14 +102,14 @@ public class ConfigurationsResource extends ExtendedBasicDMPResource<Configurati
 	}
 
 	/**
-	 * This endpoint consumes a configuration as JSON representation and update this configuration in the database.
+	 * This endpoint consumes a configuration as JSON representation and updates this configuration in the database.
 	 * 
 	 * @param jsonObjectString a JSON representation of one configuration
 	 * @param id a configuration identifier
 	 * @return the updated configuration as JSON representation
 	 * @throws DMPControllerException
 	 */
-	@ApiOperation(value = "update configuration with given id ", notes = "Returns a new Configuration object.")
+	@ApiOperation(value = "update configuration with given id ", notes = "Returns an updated Configuration object.")
 	@PUT
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)

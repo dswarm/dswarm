@@ -103,14 +103,14 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	}
 	
 	/**
-	 * This endpoint consumes a schema as JSON representation and update this schema in the database.
+	 * This endpoint consumes a schema as JSON representation and updates this schema in the database.
 	 * 
 	 * @param jsonObjectString a JSON representation of one schema
 	 * @param id a schema identifier
 	 * @return the updated schema as JSON representation
 	 * @throws DMPControllerException
 	 */
-	@ApiOperation(value = "update schema with given id ", notes = "Returns a new Schema object.")
+	@ApiOperation(value = "update schema with given id ", notes = "Returns an updated Schema object.")
 	@PUT
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
