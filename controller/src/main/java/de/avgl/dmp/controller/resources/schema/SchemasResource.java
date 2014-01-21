@@ -20,6 +20,7 @@ import com.wordnik.swagger.annotations.ApiParam;
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.BasicDMPResource;
 import de.avgl.dmp.controller.resources.schema.utils.SchemasResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
@@ -28,7 +29,7 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
 
 /**
  * A resource (controller service) for {@link Schema}s.
- * 
+ *
  * @author tgaengler
  * @author jpolowinski
  */
@@ -42,20 +43,20 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	/**
 	 * Creates a new resource (controller service) for {@link Schema}s with the provider of the schema persistence service, the
 	 * object mapper and metrics registry.
-	 * 
+	 *
 	 * @param schemaServiceProviderArg the schema persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public SchemasResource(final SchemasResourceUtils pojoClassResourceUtilsArg, final DMPStatus dmpStatusArg) {
+	public SchemasResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
 
-		super(pojoClassResourceUtilsArg, dmpStatusArg);
+		super(utilsFactory.reset().get(SchemasResourceUtils.class), dmpStatusArg);
 	}
 
 	/**
 	 * This endpoint returns a schema as JSON representation for the provided schema identifier.
-	 * 
+	 *
 	 * @param id a schema identifier
 	 * @return a JSON representation of a schema
 	 */
@@ -70,7 +71,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 	/**
 	 * This endpoint consumes a schema as JSON representation and persists this schema in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one schema
 	 * @return the persisted schema as JSON representation
 	 * @throws DMPControllerException
@@ -87,7 +88,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 	/**
 	 * This endpoint returns a list of all schemas as JSON representation.
-	 * 
+	 *
 	 * @return a list of all schemas as JSON representation
 	 * @throws DMPControllerException
 	 */

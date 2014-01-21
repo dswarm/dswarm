@@ -21,10 +21,12 @@ public abstract class BasicIDResourceUtils<POJOCLASSPERSISTENCESERVICE extends B
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(BasicIDResourceUtils.class);
 
-	public BasicIDResourceUtils(final Class<POJOCLASS> pojoClassArg, final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
-			final Provider<ObjectMapper> objectMapperProviderArg) {
+	public BasicIDResourceUtils(final Class<POJOCLASS> pojoClassArg,
+	                            final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
+	                            final Provider<ObjectMapper> objectMapperProviderArg,
+	                            final ResourceUtilsFactory utilsFactory) {
 
-		super(pojoClassArg, Long.class, persistenceServiceProviderArg, objectMapperProviderArg);
+		super(pojoClassArg, Long.class, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}
 
 	@Override

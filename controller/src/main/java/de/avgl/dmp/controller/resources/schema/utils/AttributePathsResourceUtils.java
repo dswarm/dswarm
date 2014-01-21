@@ -14,6 +14,7 @@ import com.google.inject.Inject;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.utils.BasicIDResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
@@ -29,15 +30,12 @@ public class AttributePathsResourceUtils extends BasicIDResourceUtils<AttributeP
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributePathsResourceUtils.class);
 
-	private final Provider<AttributesResourceUtils>	attributesResourceUtilsProvider;
-
 	@Inject
 	public AttributePathsResourceUtils(final Provider<AttributePathService> persistenceServiceProviderArg,
-			final Provider<ObjectMapper> objectMapperProviderArg, final Provider<AttributesResourceUtils> attributesResourceUtilsProviderArg) {
+	                                   final Provider<ObjectMapper> objectMapperProviderArg,
+	                                   final ResourceUtilsFactory utilsFactory) {
 
 		super(AttributePath.class, persistenceServiceProviderArg, objectMapperProviderArg);
-
-		attributesResourceUtilsProvider = attributesResourceUtilsProviderArg;
 	}
 
 	@Override

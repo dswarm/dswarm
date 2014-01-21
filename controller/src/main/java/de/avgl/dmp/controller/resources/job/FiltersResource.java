@@ -18,13 +18,14 @@ import com.wordnik.swagger.annotations.ApiParam;
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.BasicDMPResource;
 import de.avgl.dmp.controller.resources.job.utils.FiltersResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Filter;
 import de.avgl.dmp.persistence.service.job.FilterService;
 
 /**
  * A resource (controller service) for {@link Filter}s.
- * 
+ *
  * @author tgaengler
  * @author fniederlein
  */
@@ -36,20 +37,20 @@ public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, Filt
 	/**
 	 * Creates a new resource (controller service) for {@link Filter}s with the provider of the filter persistence service, the
 	 * object mapper and metrics registry.
-	 * 
+	 *
 	 * @param filterServiceProviderArg the filter persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public FiltersResource(final FiltersResourceUtils pojoClassResourceUtilsArg, final DMPStatus dmpStatusArg) {
+	public FiltersResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
 
-		super(pojoClassResourceUtilsArg, dmpStatusArg);
+		super(utilsFactory.reset().get(FiltersResourceUtils.class), dmpStatusArg);
 	}
 
 	/**
 	 * This endpoint returns a filter as JSON representation for the provided filter identifier.
-	 * 
+	 *
 	 * @param id a filter identifier
 	 * @return a JSON representation of a filter
 	 */
@@ -65,7 +66,7 @@ public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, Filt
 
 	/**
 	 * This endpoint consumes a filter as JSON representation and persists this filter in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one filter
 	 * @return the persisted filter as JSON representation
 	 * @throws DMPControllerException
@@ -82,7 +83,7 @@ public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, Filt
 
 	/**
 	 * This endpoint returns a list of all filters as JSON representation.
-	 * 
+	 *
 	 * @return a list of all filters as JSON representation
 	 * @throws DMPControllerException
 	 */

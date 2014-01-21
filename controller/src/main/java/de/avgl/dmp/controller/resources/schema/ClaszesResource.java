@@ -43,9 +43,9 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public ClaszesResource(final ClaszesResourceUtils pojoClassResourceUtilsArg, final DMPStatus dmpStatusArg) {
+	public ClaszesResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
 
-		super(pojoClassResourceUtilsArg, dmpStatusArg);
+		super(utilsFactory.reset().get(ClaszesResourceUtils.class), dmpStatusArg);
 	}
 
 	/**

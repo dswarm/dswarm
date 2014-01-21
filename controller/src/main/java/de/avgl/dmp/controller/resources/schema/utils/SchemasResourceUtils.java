@@ -10,6 +10,7 @@ import com.google.inject.Inject;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.utils.BasicDMPResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
@@ -25,17 +26,12 @@ public class SchemasResourceUtils extends BasicDMPResourceUtils<SchemaService, S
 
 	private static final org.apache.log4j.Logger		LOG	= org.apache.log4j.Logger.getLogger(SchemasResourceUtils.class);
 
-	private final Provider<AttributePathsResourceUtils>	attributePathsResourceUtilsProvider;
-	private final Provider<ClaszesResourceUtils>	claszesResourceUtilsProvider;
-
 	@Inject
-	public SchemasResourceUtils(final Provider<SchemaService> persistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg,
-			final Provider<AttributePathsResourceUtils> attributePathsResourceUtilsProviderArg, final Provider<ClaszesResourceUtils> claszesResourceUtilsProviderArg) {
+	public SchemasResourceUtils(final Provider<SchemaService> persistenceServiceProviderArg,
+	                            final Provider<ObjectMapper> objectMapperProviderArg,
+	                            final ResourceUtilsFactory utilsFactory) {
 
-		super(Schema.class, persistenceServiceProviderArg, objectMapperProviderArg);
-
-		attributePathsResourceUtilsProvider = attributePathsResourceUtilsProviderArg;
-		claszesResourceUtilsProvider = claszesResourceUtilsProviderArg;
+		super(Schema.class, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}
 
 	@Override
@@ -60,7 +56,7 @@ public class SchemasResourceUtils extends BasicDMPResourceUtils<SchemaService, S
 					return jsonNode;
 				}
 
-				attributePathsResourceUtilsProvider.get().replaceRelevantDummyIds(attributePath, jsonNode, dummyIdCandidates);
+				utilsFactory.get(AttributePathsResourceUtils.class).replaceRelevantDummyIds(attributePath, jsonNode, dummyIdCandidates);
 			}
 		}
 		

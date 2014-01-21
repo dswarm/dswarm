@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.resource.utils.DataModelsResourceUtils;
 import de.avgl.dmp.controller.resources.utils.ExtendedBasicDMPResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.Mapping;
 import de.avgl.dmp.persistence.model.job.Project;
@@ -27,22 +28,11 @@ public class ProjectsResourceUtils extends ExtendedBasicDMPResourceUtils<Project
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ProjectsResourceUtils.class);
 
-	private final Provider<DataModelsResourceUtils>	dataModelsResourceUtilsProvider;
-
-	private final Provider<MappingsResourceUtils>	mappingsResourceUtilsProvider;
-
-	private final Provider<FunctionsResourceUtils>	functionsResourceUtilsProvider;
-
 	@Inject
-	public ProjectsResourceUtils(final Provider<ProjectService> persistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg,
-			final Provider<DataModelsResourceUtils> dataModelsResourceUtilsProviderArg,
-			final Provider<MappingsResourceUtils> mappingsResourceUtilsProviderArg,
-			final Provider<FunctionsResourceUtils> functionsResourceUtilsProviderArg) {
-		super(Project.class, persistenceServiceProviderArg, objectMapperProviderArg);
-
-		dataModelsResourceUtilsProvider = dataModelsResourceUtilsProviderArg;
-		mappingsResourceUtilsProvider = mappingsResourceUtilsProviderArg;
-		functionsResourceUtilsProvider = functionsResourceUtilsProviderArg;
+	public ProjectsResourceUtils(final Provider<ProjectService> persistenceServiceProviderArg,
+	                             final Provider<ObjectMapper> objectMapperProviderArg,
+	                             final ResourceUtilsFactory utilsFactory) {
+		super(Project.class, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}
 
 	@Override
@@ -81,7 +71,7 @@ public class ProjectsResourceUtils extends ExtendedBasicDMPResourceUtils<Project
 					return jsonNode;
 				}
 
-				mappingsResourceUtilsProvider.get().replaceRelevantDummyIds(mapping, jsonNode, dummyIdCandidates);
+				utilsFactory.get(MappingsResourceUtils.class).replaceRelevantDummyIds(mapping, jsonNode, dummyIdCandidates);
 			}
 		}
 
@@ -96,7 +86,7 @@ public class ProjectsResourceUtils extends ExtendedBasicDMPResourceUtils<Project
 					return jsonNode;
 				}
 
-				functionsResourceUtilsProvider.get().replaceRelevantDummyIds(function, jsonNode, dummyIdCandidates);
+				utilsFactory.get(FunctionsResourceUtils.class).replaceRelevantDummyIds(function, jsonNode, dummyIdCandidates);
 			}
 		}
 
@@ -113,7 +103,7 @@ public class ProjectsResourceUtils extends ExtendedBasicDMPResourceUtils<Project
 				return true;
 			}
 
-			dataModelsResourceUtilsProvider.get().replaceRelevantDummyIds(dataModel, jsonNode, dummyIdCandidates);
+			utilsFactory.get(DataModelsResourceUtils.class).replaceRelevantDummyIds(dataModel, jsonNode, dummyIdCandidates);
 		}
 
 		return false;

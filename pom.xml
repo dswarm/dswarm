@@ -461,6 +461,9 @@
 		</profile>
 		<profile>
 			<id>DEV</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 			<properties>
 				<env>dev</env>
 				<!-- MySQL -->

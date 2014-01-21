@@ -18,6 +18,7 @@ import com.wordnik.swagger.annotations.ApiParam;
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.ExtendedBasicDMPResource;
 import de.avgl.dmp.controller.resources.job.utils.ComponentsResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.service.job.ComponentService;
@@ -41,9 +42,9 @@ public class ComponentsResource extends ExtendedBasicDMPResource<ComponentsResou
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public ComponentsResource(final ComponentsResourceUtils pojoClassResourceUtilsArg, final DMPStatus dmpStatusArg) {
+	public ComponentsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
 
-		super(pojoClassResourceUtilsArg, dmpStatusArg);
+		super(utilsFactory.reset().get(ComponentsResourceUtils.class), dmpStatusArg);
 	}
 
 	/**

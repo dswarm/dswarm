@@ -17,13 +17,14 @@ import com.wordnik.swagger.annotations.ApiParam;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.job.utils.FunctionsResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.service.job.FunctionService;
 
 /**
  * A resource (controller service) for {@link Function}s.
- * 
+ *
  * @author tgaengler
  * @author fniederlein
  */
@@ -35,20 +36,20 @@ public class FunctionsResource extends BasicFunctionsResource<FunctionsResourceU
 	/**
 	 * Creates a new resource (controller service) for {@link Function}s with the provider of the function persistence service,
 	 * the object mapper and metrics registry.
-	 * 
+	 *
 	 * @param functionServiceProviderArg the function persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public FunctionsResource(final FunctionsResourceUtils functionsResourceUtilsArg, final DMPStatus dmpStatusArg) {
+	public FunctionsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
 
-		super(functionsResourceUtilsArg, dmpStatusArg);
+		super(utilsFactory.reset().get(FunctionsResourceUtils.class), dmpStatusArg);
 	}
 
 	/**
 	 * This endpoint returns a function as JSON representation for the provided function identifier.
-	 * 
+	 *
 	 * @param id a function identifier
 	 * @return a JSON representation of a function
 	 */
@@ -64,7 +65,7 @@ public class FunctionsResource extends BasicFunctionsResource<FunctionsResourceU
 
 	/**
 	 * This endpoint consumes a filter as JSON representation and persists this filter in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one filter
 	 * @return the persisted filter as JSON representation
 	 * @throws DMPControllerException
@@ -82,7 +83,7 @@ public class FunctionsResource extends BasicFunctionsResource<FunctionsResourceU
 
 	/**
 	 * This endpoint returns a list of all functions as JSON representation.
-	 * 
+	 *
 	 * @return a list of all functions as JSON representation
 	 * @throws DMPControllerException
 	 */

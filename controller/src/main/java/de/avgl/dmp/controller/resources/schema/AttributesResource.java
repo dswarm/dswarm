@@ -18,6 +18,7 @@ import com.wordnik.swagger.annotations.ApiParam;
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.AdvancedDMPResource;
 import de.avgl.dmp.controller.resources.schema.utils.AttributesResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
@@ -44,9 +45,9 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public AttributesResource(final AttributesResourceUtils pojoClassResourceUtilsArg, final DMPStatus dmpStatusArg) {
+	public AttributesResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
 
-		super(pojoClassResourceUtilsArg, dmpStatusArg);
+		super(utilsFactory.reset().get(AttributesResourceUtils.class), dmpStatusArg);
 	}
 
 	/**

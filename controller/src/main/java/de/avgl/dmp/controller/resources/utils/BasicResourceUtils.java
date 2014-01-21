@@ -43,6 +43,8 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 
 	protected final Provider<ObjectMapper>					objectMapperProvider;
 
+	protected final ResourceUtilsFactory                    utilsFactory;
+
 	// TODO: this might be not the best solution ...
 	protected final Set<String>								toBeSkippedJsonNodes	= Sets.newHashSet();
 
@@ -50,12 +52,17 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 
 	private Set<POJOCLASSIDTYPE>							dummyIdCandidates;
 
-	public BasicResourceUtils(final Class<POJOCLASS> pojoClassArg, final Class<POJOCLASSIDTYPE> pojoClassIdTypeArg,
-			final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg) {
+	public BasicResourceUtils(final Class<POJOCLASS> pojoClassArg,
+	                          final Class<POJOCLASSIDTYPE> pojoClassIdTypeArg,
+	                          final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
+	                          final Provider<ObjectMapper> objectMapperProviderArg,
+	                          final ResourceUtilsFactory utilsFactoryArg) {
 
 		persistenceServiceProvider = persistenceServiceProviderArg;
 
 		objectMapperProvider = objectMapperProviderArg;
+
+		utilsFactory = utilsFactoryArg;
 
 		pojoClass = pojoClassArg;
 		pojoClassName = pojoClass.getSimpleName();
@@ -72,7 +79,7 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 
 	/**
 	 * Gets the concrete POJO class of this resource (controller service).
-	 * 
+	 *
 	 * @return the concrete POJO class
 	 */
 	public Class<POJOCLASS> getClasz() {
