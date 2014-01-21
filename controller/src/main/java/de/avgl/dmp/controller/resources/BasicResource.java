@@ -29,6 +29,7 @@ import de.avgl.dmp.persistence.service.BasicJPAService;
  * TODO: implement update an existing object and delete existing objects
  * 
  * @author tgaengler
+ * @author fniederlein
  * @param <POJOCLASSPERSISTENCESERVICE> the concrete persistence service of the resource that is related to the concrete POJO
  *            class
  * @param <POJOCLASS> the concrete POJO class of the resource
@@ -187,6 +188,55 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 		dmpStatus.stop(context);
 		return Response.created(objectURI).entity(objectJSON).build();
 	}
+	
+	/**
+	 * This endpoint consumes an object of the type of the POJO class as JSON representation and update this object in the
+	 * database.
+	 * 
+	 * @param jsonObjectString a JSON representation of one object of the type of the POJO class
+	 * @param id an object id
+	 * @return the persisted object as JSON representation
+	 * @throws DMPControllerException
+	 */
+	// @PUT
+	// @Path("/{id}")
+	// @Consumes(MediaType.APPLICATION_JSON)
+	// @Produces(MediaType.APPLICATION_JSON)
+	public Response updateObject(final String jsonObjectString, /* @PathParam("id") */final POJOCLASSIDTYPE id) throws DMPControllerException {
+		
+		final Timer.Context context = dmpStatus.createNewObject(pojoClassResourceUtils.getClaszName(), this.getClass());
+
+		BasicResource.LOG.debug("try to update " + pojoClassResourceUtils.getClaszName());
+
+		final POJOCLASS object = refreshObject(jsonObjectString, id);
+
+		if (object == null) {
+
+			BasicResource.LOG.debug("couldn't update " + pojoClassResourceUtils.getClaszName());
+
+			dmpStatus.stop(context);
+			throw new DMPControllerException("couldn't update " + pojoClassResourceUtils.getClaszName());
+		}
+
+		BasicResource.LOG.debug("update " + pojoClassResourceUtils.getClaszName() + " = '" + ToStringBuilder.reflectionToString(object) + "'");
+
+		final String objectJSON;
+
+		try {
+
+			objectJSON = pojoClassResourceUtils.getObjectMapper().writeValueAsString(object);
+		} catch (final JsonProcessingException e) {
+
+			dmpStatus.stop(context);
+			throw new DMPControllerException("couldn't transform " + pojoClassResourceUtils.getClaszName() + " to JSON string.\n" + e.getMessage());
+		}
+
+		BasicResource.LOG.debug("return updated " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "' = '" + objectJSON + "'");
+
+		dmpStatus.stop(context);
+		return buildResponse(objectJSON);
+	}
+
 
 	/**
 	 * This endpoint returns a list of all objects of the type of the POJO class as JSON representation.
@@ -339,39 +389,23 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 	 */
 	protected POJOCLASS refreshObject(final String objectJSONString, final POJOCLASSIDTYPE id) throws DMPControllerException {
 
-		final POJOCLASS objectFromJSON;
-
+		// TODO: enhance object JSON as necessary
+		
 		// get the deserialisised object from the JSON string
 
-		try {
-
-			objectFromJSON = objectMapper.readValue(objectJSONString, clasz);
-		} catch (final JsonMappingException je) {
-
-			throw new DMPJsonException("something went wrong while deserializing the " + className	+ " JSON string", je);
-		} catch (final IOException e) {
-
-			BasicResource.LOG.debug("something went wrong while deserializing the "	+ className + " JSON string");
-
-			throw new DMPControllerException("something went wrong while deserializing the " + className
-					+ " JSON string.\n" + e.getMessage());
-		}
-
-		if (objectFromJSON == null) {
-			throw new DMPControllerException("deserialized " + className + " is null");
-		}
+		final POJOCLASS objectFromJSON = pojoClassResourceUtils.deserializeObjectJSONString(objectJSONString);
 
 		// get persistented object per id
 
-		final POJOCLASSPERSISTENCESERVICE persistenceService = persistenceServiceProvider.get();
+		final POJOCLASSPERSISTENCESERVICE persistenceService = pojoClassResourceUtils.getPersistenceService();
 		final POJOCLASS object = persistenceService.getObject(id);
 
 		if (object == null) {
 
-			throw new DMPControllerException("existing " + className + " shouldn't be null");
+			throw new DMPControllerException("existing " + pojoClassResourceUtils.getClaszName() + " shouldn't be null");
 		}
 		
-		BasicResource.LOG.debug("got " + className + " with id '" + id + "' = '" + ToStringBuilder.reflectionToString(object) + "'");
+		BasicResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "' = '" + ToStringBuilder.reflectionToString(object) + "'");
 
 		final POJOCLASS preparedObject = prepareObjectForUpdate(objectFromJSON,	object);
 

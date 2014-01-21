@@ -105,7 +105,7 @@ public class FunctionsResource extends BasicFunctionsResource<FunctionsResourceU
 	 * @return the updated function as JSON representation
 	 * @throws DMPControllerException
 	 */
-	@ApiOperation(value = "update function with given id ", notes = "Returns a new Function object.")
+	@ApiOperation(value = "update function with given id ", notes = "Returns an updated Function object.")
 	@PUT
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)

@@ -4,15 +4,10 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.Ignore;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
@@ -231,6 +226,8 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 	public void testPUTObject() throws Exception {
 
 		//super.testPUTObject();
+		
+		// TODO: implement test
 	}
 
 	private DataModel createInputDataModel() throws Exception {

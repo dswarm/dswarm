@@ -1,6 +1,7 @@
 package de.avgl.dmp.controller.resources.test;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.avgl.dmp.controller.resources.test.utils.AttributesResourceTestUtils;
@@ -64,5 +65,7 @@ public class AttributesResourceTest extends BasicResourceTest<AttributesResource
 	public void testPUTObject() throws Exception {
 
 		//super.testPUTObject();
+		
+		// TODO: implement test
 	}
 }

@@ -105,7 +105,7 @@ public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, Filt
 	 * @return the updated filter as JSON representation
 	 * @throws DMPControllerException
 	 */
-	@ApiOperation(value = "update filter with given id ", notes = "Returns a new Filter object.")
+	@ApiOperation(value = "update filter with given id ", notes = "Returns an updated Filter object.")
 	@PUT
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)

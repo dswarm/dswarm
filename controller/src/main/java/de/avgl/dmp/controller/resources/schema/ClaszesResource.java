@@ -96,4 +96,6 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 
 		return super.getObjects();
 	}
+	
+	// TODO: add put
 }
