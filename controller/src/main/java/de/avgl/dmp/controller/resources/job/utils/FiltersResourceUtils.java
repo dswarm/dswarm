@@ -22,13 +22,12 @@ public class FiltersResourceUtils extends BasicDMPResourceUtils<FilterService, F
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(FiltersResourceUtils.class);
 
 	@Inject
-	public FiltersResourceUtils(final Provider<FilterService> persistenceServiceProviderArg,
-	                            final Provider<ObjectMapper> objectMapperProviderArg,
-	                            final ResourceUtilsFactory utilsFactory) {
+	public FiltersResourceUtils(final Provider<FilterService> persistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg,
+			final ResourceUtilsFactory utilsFactory) {
 
 		super(Filter.class, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}
-	
+
 	@Override
 	public String prepareObjectJSONString(final String objectJSONString) throws DMPControllerException {
 

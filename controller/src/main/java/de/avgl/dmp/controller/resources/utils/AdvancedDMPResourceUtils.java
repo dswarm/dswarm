@@ -21,11 +21,11 @@ public abstract class AdvancedDMPResourceUtils<POJOCLASSPERSISTENCESERVICE exten
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AdvancedDMPResourceUtils.class);
 
 	public AdvancedDMPResourceUtils(final Class<POJOCLASS> pojoClassArg, final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
-			final Provider<ObjectMapper> objectMapperProviderArg) {
+			final Provider<ObjectMapper> objectMapperProviderArg, final ResourceUtilsFactory utilsFactoryArg) {
 
-		super(pojoClassArg, persistenceServiceProviderArg, objectMapperProviderArg);
+		super(pojoClassArg, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactoryArg);
 	}
-	
+
 	@Override
 	public String prepareObjectJSONString(String objectJSONString) throws DMPControllerException {
 
@@ -33,7 +33,7 @@ public abstract class AdvancedDMPResourceUtils<POJOCLASSPERSISTENCESERVICE exten
 
 		return objectJSONString;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

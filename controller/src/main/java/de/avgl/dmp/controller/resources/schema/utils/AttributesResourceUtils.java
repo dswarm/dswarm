@@ -22,8 +22,7 @@ public class AttributesResourceUtils extends AdvancedDMPResourceUtils<AttributeS
 
 	@Inject
 	public AttributesResourceUtils(final Provider<AttributeService> persistenceServiceProviderArg,
-	                               final Provider<ObjectMapper> objectMapperProviderArg,
-	                               final ResourceUtilsFactory utilsFactory) {
+			final Provider<ObjectMapper> objectMapperProviderArg, final ResourceUtilsFactory utilsFactory) {
 
 		super(Attribute.class, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}

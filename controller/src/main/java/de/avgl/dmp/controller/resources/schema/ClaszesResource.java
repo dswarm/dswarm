@@ -18,6 +18,7 @@ import com.wordnik.swagger.annotations.ApiParam;
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.AdvancedDMPResource;
 import de.avgl.dmp.controller.resources.schema.utils.ClaszesResourceUtils;
+import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.service.schema.ClaszService;

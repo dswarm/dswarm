@@ -24,12 +24,11 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
  */
 public class SchemasResourceUtils extends BasicDMPResourceUtils<SchemaService, Schema> {
 
-	private static final org.apache.log4j.Logger		LOG	= org.apache.log4j.Logger.getLogger(SchemasResourceUtils.class);
+	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(SchemasResourceUtils.class);
 
 	@Inject
-	public SchemasResourceUtils(final Provider<SchemaService> persistenceServiceProviderArg,
-	                            final Provider<ObjectMapper> objectMapperProviderArg,
-	                            final ResourceUtilsFactory utilsFactory) {
+	public SchemasResourceUtils(final Provider<SchemaService> persistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg,
+			final ResourceUtilsFactory utilsFactory) {
 
 		super(Schema.class, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}
@@ -59,17 +58,17 @@ public class SchemasResourceUtils extends BasicDMPResourceUtils<SchemaService, S
 				utilsFactory.get(AttributePathsResourceUtils.class).replaceRelevantDummyIds(attributePath, jsonNode, dummyIdCandidates);
 			}
 		}
-		
+
 		final Clasz recordClasz = object.getRecordClass();
-		
-		if(recordClasz != null) {
-			
+
+		if (recordClasz != null) {
+
 			if (areDummyIdCandidatesEmpty(dummyIdCandidates)) {
 
 				return jsonNode;
 			}
-			
-			claszesResourceUtilsProvider.get().replaceRelevantDummyIds(recordClasz, jsonNode, dummyIdCandidates);
+
+			utilsFactory.get(ClaszesResourceUtils.class).replaceRelevantDummyIds(recordClasz, jsonNode, dummyIdCandidates);
 		}
 
 		return jsonNode;

@@ -26,12 +26,11 @@ import de.avgl.dmp.persistence.service.resource.DataModelService;
  */
 public class DataModelsResourceUtils extends ExtendedBasicDMPResourceUtils<DataModelService, DataModel> {
 
-	private static final org.apache.log4j.Logger		LOG	= org.apache.log4j.Logger.getLogger(DataModelsResourceUtils.class);
+	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(DataModelsResourceUtils.class);
 
 	@Inject
 	public DataModelsResourceUtils(final Provider<DataModelService> persistenceServiceProviderArg,
-	                               final Provider<ObjectMapper> objectMapperProviderArg,
-	                               final ResourceUtilsFactory utilsFactory) {
+			final Provider<ObjectMapper> objectMapperProviderArg, final ResourceUtilsFactory utilsFactory) {
 
 		super(DataModel.class, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}

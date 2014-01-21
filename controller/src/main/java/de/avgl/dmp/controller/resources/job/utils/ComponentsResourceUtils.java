@@ -27,8 +27,7 @@ public class ComponentsResourceUtils extends ExtendedBasicDMPResourceUtils<Compo
 
 	@Inject
 	public ComponentsResourceUtils(final Provider<ComponentService> persistenceServiceProviderArg,
-	                               final Provider<ObjectMapper> objectMapperProviderArg,
-	                               final ResourceUtilsFactory utilsFactory) {
+			final Provider<ObjectMapper> objectMapperProviderArg, final ResourceUtilsFactory utilsFactory) {
 
 		super(Component.class, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}
@@ -58,12 +57,12 @@ public class ComponentsResourceUtils extends ExtendedBasicDMPResourceUtils<Compo
 
 		return jsonNode;
 	}
-	
+
 	@Override
 	public String prepareObjectJSONString(String objectJSONString) throws DMPControllerException {
-		
+
 		// TODO: remove id from parameter mappings (?) -> avoid dummy id creation there
-		
+
 		return objectJSONString;
 	}
 }

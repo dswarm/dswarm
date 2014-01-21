@@ -21,9 +21,8 @@ public abstract class BasicFunctionsResourceUtils<POJOCLASSPERSISTENCESERVICE ex
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(BasicFunctionsResourceUtils.class);
 
 	public BasicFunctionsResourceUtils(final Class<POJOCLASS> pojoClassArg,
-	                                   final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
-	                                   final Provider<ObjectMapper> objectMapperProviderArg,
-	                                   final ResourceUtilsFactory utilsFactory) {
+			final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg,
+			final ResourceUtilsFactory utilsFactory) {
 
 		super(pojoClassArg, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}

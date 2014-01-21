@@ -21,9 +21,8 @@ public class ClaszesResourceUtils extends AdvancedDMPResourceUtils<ClaszService,
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ClaszesResourceUtils.class);
 
 	@Inject
-	public ClaszesResourceUtils(final Provider<ClaszService> persistenceServiceProviderArg,
-	                            final Provider<ObjectMapper> objectMapperProviderArg,
-	                            final ResourceUtilsFactory utilsFactory) {
+	public ClaszesResourceUtils(final Provider<ClaszService> persistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg,
+			final ResourceUtilsFactory utilsFactory) {
 
 		super(Clasz.class, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}

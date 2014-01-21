@@ -26,19 +26,18 @@ public class ConfigurationsResourceUtils extends ExtendedBasicDMPResourceUtils<C
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ConfigurationsResourceUtils.class);
 
 	@Inject
-	public ConfigurationsResourceUtils(final ResourceUtilsFactory utilsFactory,
-	                                   final Provider<ConfigurationService> persistenceServiceProviderArg,
-	                                   final Provider<ObjectMapper> objectMapperProviderArg) {
+	public ConfigurationsResourceUtils(final ResourceUtilsFactory utilsFactory, final Provider<ConfigurationService> persistenceServiceProviderArg,
+			final Provider<ObjectMapper> objectMapperProviderArg) {
 
-		super(Configuration.class, persistenceServiceProviderArg, objectMapperProviderArg);
+		super(Configuration.class, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}
 
 	@Override
 	public JsonNode replaceRelevantDummyIds(final Configuration object, final JsonNode jsonNode, final Set<Long> dummyIdCandidates)
 			throws DMPControllerException {
-		
-		if(checkObject(object, dummyIdCandidates)) {
-			
+
+		if (checkObject(object, dummyIdCandidates)) {
+
 			return jsonNode;
 		}
 
@@ -61,7 +60,7 @@ public class ConfigurationsResourceUtils extends ExtendedBasicDMPResourceUtils<C
 
 		return jsonNode;
 	}
-	
+
 	@Override
 	public String prepareObjectJSONString(final String objectJSONString) throws DMPControllerException {
 
