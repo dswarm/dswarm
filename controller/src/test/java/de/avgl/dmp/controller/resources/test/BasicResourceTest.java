@@ -176,7 +176,7 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 
 		Assert.assertNotNull("the id shouldn't be null", idEncoded);
 		
-		actualObject = updateObject(idEncoded);
+		actualObject = updateObject(actualObject);
 		
 		LOG.debug("try to retrieve updated " + pojoClassName + " with id '" + idEncoded + "'");
 
@@ -195,7 +195,7 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 		pojoClassResourceTestUtils.reset();
 		compareObjects(actualObject, responseObject);
 
-		//cleanUpDB(responseObject);
+		cleanUpDB(responseObject);
 
 		LOG.debug("end PUT " + pojoClassName);
 	}
@@ -219,9 +219,9 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 		return pojoClassResourceTestUtils.createObject(objectJSONString, expectedObject);
 	}
 	
-	protected POJOCLASS updateObject(final String objectId) throws Exception {
+	protected POJOCLASS updateObject(final POJOCLASS actualObject) throws Exception {
 
-		return pojoClassResourceTestUtils.updateObject(objectId, updateObjectJSONFileName);
+		return pojoClassResourceTestUtils.updateObject(actualObject, updateObjectJSONFileName);
 	}
 
 	protected void cleanUpDB(final POJOCLASS object) {

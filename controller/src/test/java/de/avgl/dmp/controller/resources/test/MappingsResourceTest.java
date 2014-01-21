@@ -37,6 +37,8 @@ public class MappingsResourceTest extends BasicResourceTest<MappingsResourceTest
 	private final AttributesResourceTestUtils		attributesResourceTestUtils;
 
 	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
+	
+	private final MappingsResourceTestUtils			mappingsResourceTestUtils;
 
 	private Function								function;
 
@@ -59,6 +61,7 @@ public class MappingsResourceTest extends BasicResourceTest<MappingsResourceTest
 		attributesResourceTestUtils = new AttributesResourceTestUtils();
 		attributePathsResourceTestUtils = new AttributePathsResourceTestUtils();
 		transformationsResourceTestUtils = new TransformationsResourceTestUtils();
+		mappingsResourceTestUtils = new MappingsResourceTestUtils();
 	}
 
 	@Override
@@ -198,6 +201,23 @@ public class MappingsResourceTest extends BasicResourceTest<MappingsResourceTest
 		transformationsResourceTestUtils.deleteObject(transformation);
 
 		functionsResourceTestUtils.deleteObject(function);
+	}
+	
+	@Override
+	public Mapping updateObject(final Mapping actualMapping) throws Exception {
+		
+		actualMapping.setName(actualMapping.getName() + " update");
+		
+		final String updateMappingJSONString = objectMapper.writeValueAsString(actualMapping);
+		
+		Assert.assertNotNull("the mapping JSON string shouldn't be null", updateMappingJSONString);
+		
+		final Mapping updateMapping = mappingsResourceTestUtils.updateObject(updateMappingJSONString, actualMapping);
+		
+		Assert.assertNotNull("the mapping JSON string shouldn't be null", updateMapping);
+		Assert.assertEquals("mapping name shoud be equal", updateMapping.getName(), actualMapping.getName());
+		
+		return updateMapping;
 	}
 
 	private Attribute createAttribute(final String attributeJSONFileName) throws Exception {

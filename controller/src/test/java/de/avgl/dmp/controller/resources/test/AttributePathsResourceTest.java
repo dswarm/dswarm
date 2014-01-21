@@ -23,6 +23,8 @@ public class AttributePathsResourceTest extends BasicResourceTest<AttributePaths
 		super(AttributePath.class, AttributePathService.class, "attributepaths", "attribute_path.json", new AttributePathsResourceTestUtils());
 
 		attributeResourceTestUtils = new AttributesResourceTestUtils();
+		
+		updateObjectJSONFileName = "attribute_path1.json";
 	}
 
 	@Override

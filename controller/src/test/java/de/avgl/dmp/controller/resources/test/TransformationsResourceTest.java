@@ -2,6 +2,7 @@ package de.avgl.dmp.controller.resources.test;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Ignore;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -22,6 +23,8 @@ public class TransformationsResourceTest extends BasicResourceTest<Transformatio
 	private final FunctionsResourceTestUtils		functionsResourceTestUtils;
 
 	private final ComponentsResourceTestUtils		componentsResourceTestUtils;
+	
+	private final TransformationsResourceTestUtils	transformationsResourceTestUtils;
 
 	private Function								function;
 
@@ -33,6 +36,7 @@ public class TransformationsResourceTest extends BasicResourceTest<Transformatio
 
 		functionsResourceTestUtils = new FunctionsResourceTestUtils();
 		componentsResourceTestUtils = new ComponentsResourceTestUtils();
+		transformationsResourceTestUtils = new TransformationsResourceTestUtils();
 	}
 
 	@Override
@@ -83,13 +87,31 @@ public class TransformationsResourceTest extends BasicResourceTest<Transformatio
 		objectJSONString = objectMapper.writeValueAsString(objectJSON);
 		expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
 	}
-
+	
+	@Override
+	public Transformation updateObject(final Transformation actualTransformation) throws Exception {
+		
+		actualTransformation.setDescription(actualTransformation.getDescription() + " update");
+		
+		final String updateTransformationJSONString = objectMapper.writeValueAsString(actualTransformation);
+		
+		Assert.assertNotNull("the transformation JSON string shouldn't be null", updateTransformationJSONString);
+		
+		final Transformation updateTransformation = transformationsResourceTestUtils.updateObject(updateTransformationJSONString, actualTransformation);
+		
+		Assert.assertNotNull("the transformation JSON string shouldn't be null", updateTransformation);
+		Assert.assertEquals("transformation name shoud be equal", updateTransformation.getName(), actualTransformation.getName());
+		
+		return updateTransformation;
+	}
+	
 	@After
 	public void tearDown2() throws Exception {
 
 		functionsResourceTestUtils.deleteObject(function);
 	}
 
+	
 	// private static final JsonNodeFactory factory = JsonNodeFactory.instance;
 	// private static final ObjectMapper mapper;
 	//
@@ -165,4 +187,5 @@ public class TransformationsResourceTest extends BasicResourceTest<Transformatio
 	//
 	// Assert.assertEquals("POST responses are not equal", expected, responseString);
 	// }
+	
 }

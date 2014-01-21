@@ -24,4 +24,14 @@ public class AttributesResourceTest extends BasicResourceTest<AttributesResource
 
 		//super.testGETObject();
 	}
+	
+	/**
+	 * note: this operation is not supported right now
+	 */
+	@Ignore
+	@Override
+	public void testPUTObject() throws Exception {
+
+		//super.testPUTObject();
+	}
 }
