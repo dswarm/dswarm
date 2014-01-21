@@ -19,7 +19,6 @@ import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.BasicIDResource;
 import de.avgl.dmp.controller.resources.schema.utils.AttributePathsResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
-import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.service.schema.AttributePathService;
 
@@ -111,11 +110,4 @@ public class AttributePathsResource extends BasicIDResource<AttributePathsResour
 
 		return object;
 	}
-
-	@Override
-	protected AttributePath createObject(AttributePath objectFromJSON, AttributePathService persistenceService) throws DMPPersistenceException {
-		
-		return persistenceService.createObject(objectFromJSON.getAttributePath());
-	}
-
 }

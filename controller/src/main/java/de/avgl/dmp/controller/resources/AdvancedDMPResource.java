@@ -46,14 +46,4 @@ public abstract class AdvancedDMPResource<POJOCLASSRESOURCEUTILS extends Advance
 
 		return object;
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected POJOCLASS createObject(final POJOCLASS objectFromJSON, final POJOCLASSPERSISTENCESERVICE persistenceService)
-			throws DMPPersistenceException {
-
-		return persistenceService.createObjectTransactional(objectFromJSON.getUri());
-	}
 }

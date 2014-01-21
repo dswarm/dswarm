@@ -5,6 +5,7 @@ import javax.inject.Provider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.avgl.dmp.controller.DMPControllerException;
+import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
 import de.avgl.dmp.persistence.service.AdvancedDMPJPAService;
 
@@ -31,5 +32,15 @@ public abstract class AdvancedDMPResourceUtils<POJOCLASSPERSISTENCESERVICE exten
 		// an attribute or clasz is not a complex object
 
 		return objectJSONString;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public POJOCLASS createObject(final POJOCLASS objectFromJSON, final POJOCLASSPERSISTENCESERVICE persistenceService)
+			throws DMPPersistenceException {
+
+		return persistenceService.createObjectTransactional(objectFromJSON.getUri());
 	}
 }

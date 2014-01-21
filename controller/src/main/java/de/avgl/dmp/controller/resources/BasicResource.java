@@ -1,13 +1,9 @@
 package de.avgl.dmp.controller.resources;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -18,15 +14,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.codahale.metrics.Timer;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.NullNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.collect.Sets;
 
 import de.avgl.dmp.controller.DMPControllerException;
-import de.avgl.dmp.controller.DMPJsonException;
 import de.avgl.dmp.controller.resources.utils.BasicResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.DMPPersistenceException;
@@ -289,20 +278,6 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 	protected abstract POJOCLASS prepareObjectForUpdate(final POJOCLASS objectFromJSON, final POJOCLASS object);
 
 	/**
-	 * Creates and persists a new object into the database.
-	 * 
-	 * @param objectFromJSON the new object
-	 * @param persistenceService the related persistence service
-	 * @return the persisted object
-	 * @throws DMPPersistenceException
-	 */
-	protected POJOCLASS createObject(final POJOCLASS objectFromJSON, final POJOCLASSPERSISTENCESERVICE persistenceService)
-			throws DMPPersistenceException {
-
-		return persistenceService.createObject();
-	}
-
-	/**
 	 * Persists a new object that was received via an API request into the database.
 	 * 
 	 * @param objectJSONString
@@ -324,7 +299,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 		try {
 
-			object = createObject(objectFromJSON, persistenceService);
+			object = pojoClassResourceUtils.createObject(objectFromJSON, persistenceService);
 		} catch (final DMPPersistenceException e) {
 
 			BasicResource.LOG.debug("something went wrong while " + pojoClassResourceUtils.getClaszName() + " creation");

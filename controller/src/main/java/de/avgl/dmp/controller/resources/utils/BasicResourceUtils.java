@@ -122,35 +122,12 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 
 		if (dummyIdCandidates.contains(object.getId())) {
 
-			final POJOCLASS newObject = createObject();
-
-			final JsonNode enhancedJsonNode = replaceDummyIdInJsonNode(jsonNode, object.getId(), newObject.getId());
-
-			// remove processed dummy id
-
-			dummyIdCandidates.remove(object.getId());
-
-			addProcessedObjectId(object.getId());
-
-			return enhancedJsonNode;
+			return createNewObjectForDummyId(object, jsonNode, dummyIdCandidates);
 		}
 
 		addProcessedObjectId(object.getId());
 
 		return jsonNode;
-	}
-
-	public POJOCLASS createObject() throws DMPControllerException {
-
-		try {
-
-			return persistenceServiceProvider.get().createObject();
-		} catch (final DMPPersistenceException e) {
-
-			BasicResourceUtils.LOG.debug("something went wrong while " + pojoClassName + " creation");
-
-			throw new DMPControllerException("something went wrong while " + pojoClassName + " creation\n" + e.getMessage());
-		}
 	}
 
 	public List<POJOCLASS> getObjects() {
@@ -280,6 +257,71 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 		return serializeObject(jsonNode);
 	}
 
+	/**
+	 * Creates and persists a new object into the database.
+	 * 
+	 * @param objectFromJSON the new object
+	 * @param persistenceService the related persistence service
+	 * @return the persisted object
+	 * @throws DMPPersistenceException
+	 */
+	public POJOCLASS createObject(final POJOCLASS objectFromJSON, final POJOCLASSPERSISTENCESERVICE persistenceService)
+			throws DMPPersistenceException {
+
+		return persistenceService.createObject();
+	}
+	
+	public POJOCLASS createNewObject(final POJOCLASS object) throws DMPControllerException {
+
+		POJOCLASS newObject = null;
+
+		try {
+
+			newObject = createObject(object, persistenceServiceProvider.get());
+		} catch (final DMPPersistenceException e) {
+
+			BasicResourceUtils.LOG.debug("something went wrong while " + pojoClassName + " creation");
+
+			throw new DMPControllerException("something went wrong while " + pojoClassName + " creation\n" + e.getMessage());
+		}
+
+		if (newObject == null) {
+
+			throw new DMPControllerException("couldn't create new persistent " + pojoClassName + " for '" + object.toString() + "'");
+		}
+
+		return newObject;
+	}
+	
+	public JsonNode processDummyId(final JsonNode jsonNode, final POJOCLASSIDTYPE objectId, final POJOCLASSIDTYPE newObjectId,
+			final Set<POJOCLASSIDTYPE> dummyIdCandidates) {
+
+		final JsonNode enhancedJsonNode = replaceDummyIdInJsonNode(jsonNode, objectId, newObjectId);
+
+		// remove processed dummy id
+
+		dummyIdCandidates.remove(objectId);
+
+		addProcessedObjectId(objectId);
+
+		return enhancedJsonNode;
+	}
+	
+	public boolean hasObjectAlreadyBeenProcessed(final POJOCLASSIDTYPE objectId) {
+
+		if (processedObjectIds == null) {
+
+			return false;
+		}
+
+		if (!processedObjectIds.contains(objectId)) {
+
+			return false;
+		}
+
+		return true;
+	}
+
 	protected abstract ObjectNode replaceDummyId(final JsonNode idNode, final POJOCLASSIDTYPE dummyId, final POJOCLASSIDTYPE realId,
 			final ObjectNode objectJson);
 
@@ -306,6 +348,16 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 		}
 
 		return false;
+	}
+
+	protected JsonNode createNewObjectForDummyId(final POJOCLASS object, final JsonNode jsonNode, final Set<POJOCLASSIDTYPE> dummyIdCandidates)
+			throws DMPControllerException {
+
+		final POJOCLASS newObject = createNewObject(object);
+
+		final JsonNode enhancedJsonNode = processDummyId(jsonNode, object.getId(), newObject.getId(), dummyIdCandidates);
+
+		return enhancedJsonNode;
 	}
 
 	protected JsonNode enhanceJSONNode(final JsonNode jsonNode) {
@@ -385,6 +437,41 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 		dummyIdCandidates.add(dummyId);
 	}
 
+	protected JsonNode replaceDummyIdInJsonNode(final JsonNode jsonNode, final POJOCLASSIDTYPE dummyId, final POJOCLASSIDTYPE realId) {
+
+		if (jsonNode == null || NullNode.class.isInstance(jsonNode)) {
+
+			return jsonNode;
+		}
+
+		if (ObjectNode.class.isInstance(jsonNode)) {
+
+			final ObjectNode objectNode = (ObjectNode) jsonNode;
+
+			replaceDummyIdInObjectJSON(objectNode, dummyId, realId);
+		} else if (ArrayNode.class.isInstance(jsonNode)) {
+
+			final ArrayNode arrayNode = (ArrayNode) jsonNode;
+
+			for (final JsonNode entryNode : arrayNode) {
+
+				replaceDummyIdInJsonNode(entryNode, dummyId, realId);
+			}
+		}
+
+		return jsonNode;
+	}
+
+	protected void addProcessedObjectId(final POJOCLASSIDTYPE objectId) {
+
+		if (processedObjectIds == null) {
+
+			processedObjectIds = Sets.newCopyOnWriteArraySet();
+		}
+
+		processedObjectIds.add(objectId);
+	}
+
 	private ObjectNode replaceDummyIdInObjectJSON(final ObjectNode objectJSON, final POJOCLASSIDTYPE dummyId, final POJOCLASSIDTYPE realId) {
 
 		final JsonNode idNode = objectJSON.get("id");
@@ -411,55 +498,5 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 		}
 
 		return objectJSON;
-	}
-
-	private JsonNode replaceDummyIdInJsonNode(final JsonNode jsonNode, final POJOCLASSIDTYPE dummyId, final POJOCLASSIDTYPE realId) {
-
-		if (jsonNode == null || NullNode.class.isInstance(jsonNode)) {
-
-			return jsonNode;
-		}
-
-		if (ObjectNode.class.isInstance(jsonNode)) {
-
-			final ObjectNode objectNode = (ObjectNode) jsonNode;
-
-			replaceDummyIdInObjectJSON(objectNode, dummyId, realId);
-		} else if (ArrayNode.class.isInstance(jsonNode)) {
-
-			final ArrayNode arrayNode = (ArrayNode) jsonNode;
-
-			for (final JsonNode entryNode : arrayNode) {
-
-				replaceDummyIdInJsonNode(entryNode, dummyId, realId);
-			}
-		}
-
-		return jsonNode;
-	}
-
-	private void addProcessedObjectId(final POJOCLASSIDTYPE objectId) {
-
-		if (processedObjectIds == null) {
-
-			processedObjectIds = Sets.newCopyOnWriteArraySet();
-		}
-
-		processedObjectIds.add(objectId);
-	}
-
-	private boolean hasObjectAlreadyBeenProcessed(final POJOCLASSIDTYPE objectId) {
-
-		if (processedObjectIds == null) {
-
-			return false;
-		}
-
-		if (!processedObjectIds.contains(objectId)) {
-
-			return false;
-		}
-
-		return true;
 	}
 }
