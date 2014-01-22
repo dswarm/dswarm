@@ -64,11 +64,4 @@ public class ClaszesResourceTest extends BasicResourceTest<ClaszesResourceTestUt
 
 		// TODO: [@fniederlein] implement test
 	}
-	
-	@Ignore
-	@Override
-	public void testDELETEObject() throws Exception {
-
-		//super.testDELETEObject();
-	}
 }

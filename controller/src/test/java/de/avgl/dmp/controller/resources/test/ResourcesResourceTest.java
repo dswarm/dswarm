@@ -489,25 +489,13 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final Response response = target(String.valueOf(resource.getId())).request().delete();
 
-		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+		Assert.assertEquals("204 NO CONTENT was expected", 204, response.getStatus());
 
 		final Resource deletedResource = resourceService.getObject(resourceId);
 		
 		Assert.assertNull(deletedResource);
 		
 		LOG.debug("end DELETE resource test");
-	}
-
-	private void cleanUpDB(Resource resource, boolean withConfigurations) {
-		if (withConfigurations) {
-
-			for (final Configuration configuration : resource.getConfigurations()) {
-
-				configurationService.deleteObject(configuration.getId());
-			}
-		}
-
-		cleanUpDB(resource);
 	}
 
 	private String testResourceUploadInteral(final File resourceFile, final Resource expectedResource) throws Exception {

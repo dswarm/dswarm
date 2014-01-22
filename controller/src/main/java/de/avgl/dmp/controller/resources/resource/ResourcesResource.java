@@ -326,13 +326,13 @@ public class ResourcesResource {
 			LOG.debug("couldn't delete resource '" + id + "'");
 
 			dmpStatus.stop(context);
-			return Response.status(Status.NOT_FOUND).build();
+			return Response.status(Status.CONFLICT).build();
 		}
 
 		LOG.debug("deletion of resourse with id '" + id + "' was successfull");
 
 		dmpStatus.stop(context);
-		return Response.status(Status.OK).build();
+		return Response.status(Status.NO_CONTENT).build();
 	}
 	
 	/**
