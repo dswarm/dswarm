@@ -16,6 +16,8 @@ import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.BasicDMPResource;
@@ -27,7 +29,7 @@ import de.avgl.dmp.persistence.service.job.FilterService;
 
 /**
  * A resource (controller service) for {@link Filter}s.
- *
+ * 
  * @author tgaengler
  * @author fniederlein
  */
@@ -39,7 +41,7 @@ public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, Filt
 	/**
 	 * Creates a new resource (controller service) for {@link Filter}s with the provider of the filter persistence service, the
 	 * object mapper and metrics registry.
-	 *
+	 * 
 	 * @param filterServiceProviderArg the filter persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
@@ -52,11 +54,14 @@ public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, Filt
 
 	/**
 	 * This endpoint returns a filter as JSON representation for the provided filter identifier.
-	 *
+	 * 
 	 * @param id a filter identifier
 	 * @return a JSON representation of a filter
 	 */
 	@ApiOperation(value = "get the filter that matches the given id", notes = "Returns the Filter object that matches the given id.")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "returns the filter (as JSON) that matches the given id"),
+			@ApiResponse(code = 404, message = "could not find a filter for the given id"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -68,12 +73,14 @@ public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, Filt
 
 	/**
 	 * This endpoint consumes a filter as JSON representation and persists this filter in the database.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one filter
 	 * @return the persisted filter as JSON representation
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "create a new filter", notes = "Returns a new Filter object.", response = Filter.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "filter was successfully persisted"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -85,11 +92,14 @@ public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, Filt
 
 	/**
 	 * This endpoint returns a list of all filters as JSON representation.
-	 *
+	 * 
 	 * @return a list of all filters as JSON representation
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "get all filters ", notes = "Returns a list of Filter objects.")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "returns all available filters (as JSON)"),
+			@ApiResponse(code = 404, message = "could not find any filter, i.e., there are no filters available"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
@@ -107,11 +117,14 @@ public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, Filt
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "update filter with given id ", notes = "Returns an updated Filter object.")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "filter was successfully updated"),
+			@ApiResponse(code = 404, message = "could not find a filter for the given id"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@PUT
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateObject(@ApiParam(value = "filter (as JSON)", required = true) final String jsonObjectString, 
+	public Response updateObject(@ApiParam(value = "filter (as JSON)", required = true) final String jsonObjectString,
 			@ApiParam(value = "filter identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
 
 		return super.updateObject(jsonObjectString, id);
@@ -119,20 +132,26 @@ public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, Filt
 
 	/**
 	 * This endpoint deletes a filter that matches the given id.
-	 *
+	 * 
 	 * @param id a filter identifier
-	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong
+	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
+	 *         went wrong
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "delete filter that matches the given id", notes = "Returns status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong.")
+	@ApiResponses(value = { @ApiResponse(code = 204, message = "filter was successfully deleted"),
+			@ApiResponse(code = 404, message = "could not find a filter for the given id"),
+			@ApiResponse(code = 409, message = "filter couldn't be deleted (maybe there are some existing constraints to related objects)"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@DELETE
 	@Path("/{id}")
 	@Override
-	public Response deleteObject(@ApiParam(value = "filter identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+	public Response deleteObject(@ApiParam(value = "filter identifier", required = true) @PathParam("id") final Long id)
+			throws DMPControllerException {
 
 		return super.deleteObject(id);
 	}
-	
+
 	/**
 	 * {@inheritDoc}<br/>
 	 * Updates the name and expression of the filter.

@@ -18,6 +18,8 @@ import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.BasicDMPResource;
@@ -31,7 +33,7 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
 
 /**
  * A resource (controller service) for {@link Schema}s.
- *
+ * 
  * @author tgaengler
  * @author jpolowinski
  */
@@ -45,7 +47,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	/**
 	 * Creates a new resource (controller service) for {@link Schema}s with the provider of the schema persistence service, the
 	 * object mapper and metrics registry.
-	 *
+	 * 
 	 * @param schemaServiceProviderArg the schema persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
@@ -58,11 +60,14 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 	/**
 	 * This endpoint returns a schema as JSON representation for the provided schema identifier.
-	 *
+	 * 
 	 * @param id a schema identifier
 	 * @return a JSON representation of a schema
 	 */
 	@ApiOperation(value = "get the schema that matches the given id", notes = "Returns the Schema object that matches the given id.")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "returns the schema (as JSON) that matches the given id"),
+			@ApiResponse(code = 404, message = "could not find a schema for the given id"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -73,12 +78,14 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 	/**
 	 * This endpoint consumes a schema as JSON representation and persists this schema in the database.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one schema
 	 * @return the persisted schema as JSON representation
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "create a new schema", notes = "Returns a new Schema object.", response = Schema.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "schema was successfully persisted"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -90,11 +97,14 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 	/**
 	 * This endpoint returns a list of all schemas as JSON representation.
-	 *
+	 * 
 	 * @return a list of all schemas as JSON representation
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "get all schemas ", notes = "Returns a list of Schema objects.")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "returns all available schemas (as JSON)"),
+			@ApiResponse(code = 404, message = "could not find any schema, i.e., there are no schemas available"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
@@ -112,28 +122,37 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "update schema with given id ", notes = "Returns an updated Schema object.")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "schema was successfully updated"),
+			@ApiResponse(code = 404, message = "could not find a schema for the given id"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@PUT
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateObject(@ApiParam(value = "schema (as JSON)", required = true) final String jsonObjectString, 
+	public Response updateObject(@ApiParam(value = "schema (as JSON)", required = true) final String jsonObjectString,
 			@ApiParam(value = "schema identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
 
 		return super.updateObject(jsonObjectString, id);
 	}
-	
+
 	/**
 	 * This endpoint deletes a schema that matches the given id.
-	 *
+	 * 
 	 * @param id a schema identifier
-	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong
+	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
+	 *         went wrong
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "delete schema that matches the given id", notes = "Returns status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong.")
+	@ApiResponses(value = { @ApiResponse(code = 204, message = "schema was successfully deleted"),
+			@ApiResponse(code = 404, message = "could not find a schema for the given id"),
+			@ApiResponse(code = 409, message = "schema couldn't be deleted (maybe there are some existing constraints to related objects)"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@DELETE
 	@Path("/{id}")
 	@Override
-	public Response deleteObject(@ApiParam(value = "schema identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+	public Response deleteObject(@ApiParam(value = "schema identifier", required = true) @PathParam("id") final Long id)
+			throws DMPControllerException {
 
 		return super.deleteObject(id);
 	}
