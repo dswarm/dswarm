@@ -111,7 +111,7 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 	@DELETE
 	@Path("/{id}")
 	@Override
-	public Response deleteObject(@ApiParam(value = "class identifier", required = true) @PathParam("id") final String id) throws DMPControllerException {
+	public Response deleteObject(@ApiParam(value = "class identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
 
 		return super.deleteObject(id);
 	}

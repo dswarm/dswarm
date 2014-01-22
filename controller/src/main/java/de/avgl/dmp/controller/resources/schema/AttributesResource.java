@@ -62,7 +62,7 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "attribute identifier", required = true) @PathParam("id") final String id) throws DMPControllerException {
+	public Response getObject(@ApiParam(value = "attribute identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
 
 		return super.getObject(id);
 	}
@@ -114,7 +114,7 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 	@DELETE
 	@Path("/{id}")
 	@Override
-	public Response deleteObject(@ApiParam(value = "attribute identifier", required = true) @PathParam("id") final String id) throws DMPControllerException {
+	public Response deleteObject(@ApiParam(value = "attribute identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
 
 		return super.deleteObject(id);
 	}
