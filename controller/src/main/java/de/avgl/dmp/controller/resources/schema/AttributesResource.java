@@ -2,6 +2,7 @@ package de.avgl.dmp.controller.resources.schema;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -25,7 +26,7 @@ import de.avgl.dmp.persistence.service.schema.AttributeService;
 
 /**
  * A resource (controller service) for {@link Attribute}s.
- * 
+ *
  * @author tgaengler
  *
  */
@@ -39,7 +40,7 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 	/**
 	 * Creates a new resource (controller service) for {@link Attribute}s with the provider of the attribute persistence
 	 * service, the object mapper and metrics registry.
-	 * 
+	 *
 	 * @param attributeServiceProviderArg the attribute persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
@@ -52,7 +53,7 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 
 	/**
 	 * This endpoint returns an attribute as JSON representation for the provided attribute identifier.<br/>
-	 * 
+	 *
 	 * @param id an attribute identifier
 	 * @return a JSON representation of an attribute
 	 */
@@ -61,7 +62,7 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "attribute identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+	public Response getObject(@ApiParam(value = "attribute identifier", required = true) @PathParam("id") final String id) throws DMPControllerException {
 
 		return super.getObject(id);
 	}
@@ -69,7 +70,7 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 	/**
 	 * This endpoint consumes an attribute as JSON representation and persists this attribute in the
 	 * database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one attribute
 	 * @return the persisted attribute as JSON representation
 	 * @throws DMPControllerException
@@ -87,7 +88,7 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 
 	/**
 	 * This endpoint returns a list of all attributes as JSON representation.
-	 * 
+	 *
 	 * @return a list of all attributes as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -99,6 +100,22 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 
 		return super.getObjects();
 	}
-	
+
 	// TODO: add put
+	
+	/**
+	 * This endpoint delete a attribute that matches the given id.
+	 *
+	 * @param id an attribute identifier
+	 * @return status 200 if ok or 404 if id not found/invalid
+	 * @throws DMPControllerException
+	 */
+	@ApiOperation(value = "delete attribute that matches the given id", notes = "Returns status 200 or 404.")
+	@DELETE
+	@Path("/{id}")
+	@Override
+	public Response deleteObject(@ApiParam(value = "attribute identifier", required = true) @PathParam("id") final String id) throws DMPControllerException {
+
+		return super.deleteObject(id);
+	}
 }

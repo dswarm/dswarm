@@ -292,7 +292,54 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 		dmpStatus.stop(context);
 		return buildResponse(objectsJSON);
 	}
+	
+	/**
+	 * This endpoint delete an object identified by the id.
+	 * 
+	 * @param id an object id
+	 * @return status 200 if ok or 404 if id not found/invalid
+	 * @throws DMPControllerException
+	 */
+	// @ApiOperation(value = "delete an object by id ", notes = "Returns a status.")
+	// @DELETE
+	// @Path("/{id}")
+	public Response deleteObject(/* @PathParam("id") */final POJOCLASSIDTYPE id) throws DMPControllerException {
 
+		final Timer.Context context = dmpStatus.deleteObject(pojoClassResourceUtils.getClaszName(), this.getClass());
+
+		BasicResource.LOG.debug("try to delete " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "'");
+
+		final POJOCLASSPERSISTENCESERVICE persistenceService = pojoClassResourceUtils.getPersistenceService();
+		POJOCLASS object = persistenceService.getObject(id);
+
+		if (object == null) {
+
+			BasicResource.LOG.debug("couldn't find " + pojoClassResourceUtils.getClaszName() + " '" + id + "'");
+
+			dmpStatus.stop(context);
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		BasicResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "' = '"
+				+ ToStringBuilder.reflectionToString(object) + "'");
+
+		persistenceService.deleteObject(id);
+		
+		object = persistenceService.getObject(id);
+		
+		if (object != null) {
+			
+			BasicResource.LOG.debug("couldn't delete " + pojoClassResourceUtils.getClaszName() + " '" + id + "'");
+			
+			dmpStatus.stop(context);
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		
+		BasicResource.LOG.debug("deletion of " + pojoClassResourceUtils.getClaszName() + " with id '" + id + " was successfull");
+
+		dmpStatus.stop(context);
+		return Response.status(Status.OK).build();
+	}
+	
 	/**
 	 * Creates the resource URI for the given object.
 	 * 

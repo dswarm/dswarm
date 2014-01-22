@@ -2,6 +2,7 @@ package de.avgl.dmp.controller.resources.job;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -94,6 +95,22 @@ public class MappingsResource extends BasicDMPResource<MappingsResourceUtils, Ma
 	public Response getObjects() throws DMPControllerException {
 
 		return super.getObjects();
+	}
+	
+	/**
+	 * This endpoint delete a mapping that matches the given id.
+	 *
+	 * @param id a mapping identifier
+	 * @return status 200 if ok or 404 if id not found/invalid
+	 * @throws DMPControllerException
+	 */
+	@ApiOperation(value = "delete mapping that matches the given id", notes = "Returns status 200 or 404.")
+	@DELETE
+	@Path("/{id}")
+	@Override
+	public Response deleteObject(@ApiParam(value = "mapping identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+
+		return super.deleteObject(id);
 	}
 
 	/**

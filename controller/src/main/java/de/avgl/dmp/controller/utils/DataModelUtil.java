@@ -328,6 +328,18 @@ public class DataModelUtil {
 
 		return Optional.fromNullable(configuration);
 	}
+	
+	/**
+	 * Deletes the resource for the given resource identifier.
+	 * 
+	 * @param resourceId a resource identifier
+	 */
+	public void deleteResource(final long resourceId) {
+
+		final ResourceService resourceService = resourceServiceProvider.get();
+		resourceService.deleteObject(resourceId);
+
+	}
 
 	private InternalModelService determineInternalService(final Configuration configuration) throws DMPControllerException {
 

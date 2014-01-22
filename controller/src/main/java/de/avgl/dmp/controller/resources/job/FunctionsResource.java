@@ -2,6 +2,7 @@ package de.avgl.dmp.controller.resources.job;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -96,7 +97,7 @@ public class FunctionsResource extends BasicFunctionsResource<FunctionsResourceU
 
 		return super.getObjects();
 	}
-	
+
 	/**
 	 * This endpoint consumes a function as JSON representation and updates this function in the database.
 	 * 
@@ -114,5 +115,21 @@ public class FunctionsResource extends BasicFunctionsResource<FunctionsResourceU
 			@ApiParam(value = "function identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
 
 		return super.updateObject(jsonObjectString, id);
+	}
+	
+	/**
+	 * This endpoint delete a function that matches the given id.
+	 *
+	 * @param id a function identifier
+	 * @return status 200 if ok or 404 if id not found/invalid
+	 * @throws DMPControllerException
+	 */
+	@ApiOperation(value = "delete function that matches the given id", notes = "Returns status 200 or 404.")
+	@DELETE
+	@Path("/{id}")
+	@Override
+	public Response deleteObject(@ApiParam(value = "function identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+
+		return super.deleteObject(id);
 	}
 }

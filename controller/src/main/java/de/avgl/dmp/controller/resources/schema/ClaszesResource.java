@@ -2,6 +2,7 @@ package de.avgl.dmp.controller.resources.schema;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -25,7 +26,7 @@ import de.avgl.dmp.persistence.service.schema.ClaszService;
 
 /**
  * A resource (controller service) for {@link Clasz}es.
- * 
+ *
  * @author tgaengler
  */
 @RequestScoped
@@ -38,7 +39,7 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 	/**
 	 * Creates a new resource (controller service) for {@link Clasz}s with the provider of the class persistence service, the
 	 * object mapper and metrics registry.
-	 * 
+	 *
 	 * @param claszServiceProviderArg the class persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
@@ -51,7 +52,7 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 
 	/**
 	 * This endpoint returns a class as JSON representation for the provided class identifier.<br/>
-	 * 
+	 *
 	 * @param id a class identifier
 	 * @return a JSON representation of a class
 	 */
@@ -67,7 +68,7 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 
 	/**
 	 * This endpoint consumes a class as JSON representation and persists this class in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one class
 	 * @return the persisted class as JSON representation
 	 * @throws DMPControllerException
@@ -84,7 +85,7 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 
 	/**
 	 * This endpoint returns a list of all classes as JSON representation.
-	 * 
+	 *
 	 * @return a list of all classes as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -96,6 +97,22 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 
 		return super.getObjects();
 	}
-	
+
 	// TODO: add put
+	
+	/**
+	 * This endpoint delete a class that matches the given id.
+	 *
+	 * @param id a class identifier
+	 * @return status 200 if ok or 404 if id not found/invalid
+	 * @throws DMPControllerException
+	 */
+	@ApiOperation(value = "delete class that matches the given id", notes = "Returns status 200 or 404.")
+	@DELETE
+	@Path("/{id}")
+	@Override
+	public Response deleteObject(@ApiParam(value = "class identifier", required = true) @PathParam("id") final String id) throws DMPControllerException {
+
+		return super.deleteObject(id);
+	}
 }
