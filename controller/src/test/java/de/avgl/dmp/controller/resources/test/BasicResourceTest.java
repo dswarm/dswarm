@@ -224,7 +224,7 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 
 		final Response response = target(idEncoded).request().delete();
 
-		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+		Assert.assertEquals("204 NO CONTENT was expected", 204, response.getStatus());
 
 		final POJOCLASS deletedObject = persistenceService.getObject(objectId);
 		

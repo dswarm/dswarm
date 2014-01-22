@@ -101,13 +101,13 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 	// TODO: add put
 	
 	/**
-	 * This endpoint delete a class that matches the given id.
+	 * This endpoint deletes a class that matches the given id.
 	 *
 	 * @param id a class identifier
-	 * @return status 200 if ok or 404 if id not found/invalid
+	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong
 	 * @throws DMPControllerException
 	 */
-	@ApiOperation(value = "delete class that matches the given id", notes = "Returns status 200 or 404.")
+	@ApiOperation(value = "delete class that matches the given id", notes = "Returns status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong.")
 	@DELETE
 	@Path("/{id}")
 	@Override

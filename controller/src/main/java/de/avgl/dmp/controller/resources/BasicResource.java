@@ -294,10 +294,10 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 	}
 	
 	/**
-	 * This endpoint delete an object identified by the id.
+	 * This endpoint deletes an object identified by the id.
 	 * 
 	 * @param id an object id
-	 * @return status 200 if ok or 404 if id not found/invalid
+	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong
 	 * @throws DMPControllerException
 	 */
 	// @ApiOperation(value = "delete an object by id ", notes = "Returns a status.")
@@ -331,13 +331,13 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			BasicResource.LOG.debug("couldn't delete " + pojoClassResourceUtils.getClaszName() + " '" + id + "'");
 			
 			dmpStatus.stop(context);
-			return Response.status(Status.NOT_FOUND).build();
+			return Response.status(Status.CONFLICT).build();
 		}
 		
 		BasicResource.LOG.debug("deletion of " + pojoClassResourceUtils.getClaszName() + " with id '" + id + " was successfull");
 
 		dmpStatus.stop(context);
-		return Response.status(Status.OK).build();
+		return Response.status(Status.NO_CONTENT).build();
 	}
 	
 	/**
