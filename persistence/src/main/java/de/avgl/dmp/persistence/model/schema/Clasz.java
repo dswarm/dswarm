@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import de.avgl.dmp.persistence.model.BasicDMPObject;
+import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
 
 /**
  * A class is a type. In a graph a node or edge can have a type, e.g., foaf:Document.
@@ -16,7 +16,7 @@ import de.avgl.dmp.persistence.model.BasicDMPObject;
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "CLASS")
-public class Clasz extends BasicDMPObject {
+public class Clasz extends AdvancedDMPJPAObject {
 
 	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(Clasz.class);
 

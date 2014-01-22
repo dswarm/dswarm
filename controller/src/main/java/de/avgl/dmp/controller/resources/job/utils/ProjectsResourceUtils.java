@@ -29,9 +29,8 @@ public class ProjectsResourceUtils extends ExtendedBasicDMPResourceUtils<Project
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ProjectsResourceUtils.class);
 
 	@Inject
-	public ProjectsResourceUtils(final Provider<ProjectService> persistenceServiceProviderArg,
-	                             final Provider<ObjectMapper> objectMapperProviderArg,
-	                             final ResourceUtilsFactory utilsFactory) {
+	public ProjectsResourceUtils(final Provider<ProjectService> persistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg,
+			final ResourceUtilsFactory utilsFactory) {
 		super(Project.class, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}
 

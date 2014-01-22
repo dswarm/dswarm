@@ -145,7 +145,7 @@
             "name": "test_csv.csv",
             "description": "blubblub",
             "type": "FILE",
-            "attributes": {
+            "resource_attributes": {
                 "path": "/home/tgaengler/git/tgaengler/datamanagement-platform/init/../tmp/resources/test_csv.csv",
                 "filesize": 766
             },

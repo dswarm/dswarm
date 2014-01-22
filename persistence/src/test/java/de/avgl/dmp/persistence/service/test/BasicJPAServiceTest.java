@@ -41,8 +41,6 @@ public abstract class BasicJPAServiceTest<POJOCLASS extends DMPObject<POJOCLASSI
 		Assert.assertNotNull(type + " id shouldn't be null", object.getId());
 
 		LOG.debug("created new " + type + " with id = '" + object.getId() + "'");
-		
-		getObject(object);
 
 		return object;
 	}

@@ -112,17 +112,11 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 		final Set<AttributePath> attributePaths = objectFromJSON.getAttributePaths();
 
-		if (attributePaths != null && !attributePaths.isEmpty()) {
-
-			object.setAttributePaths(attributePaths);
-		}
+		object.setAttributePaths(attributePaths);
 
 		final Clasz recordClass = objectFromJSON.getRecordClass();
 
-		if (recordClass != null) {
-
-			object.setRecordClass(recordClass);
-		}
+		object.setRecordClass(recordClass);
 
 		return object;
 	}

@@ -36,20 +36,20 @@ public class ResourcesResourceUtils extends ExtendedBasicDMPResourceUtils<Resour
 	@Override
 	public JsonNode replaceRelevantDummyIds(final Resource object, final JsonNode jsonNode, final Set<Long> dummyIdCandidates)
 			throws DMPControllerException {
-
+		
 		if(checkObject(object, dummyIdCandidates)) {
-
+			
 			return jsonNode;
 		}
 
 		super.replaceRelevantDummyIds(object, jsonNode, dummyIdCandidates);
-
+		
 		final Set<Configuration> configurations = object.getConfigurations();
-
+		
 		if(configurations != null) {
-
+			
 			for(final Configuration configuration : configurations) {
-
+				
 				if (areDummyIdCandidatesEmpty(dummyIdCandidates)) {
 
 					return jsonNode;

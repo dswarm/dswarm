@@ -26,8 +26,8 @@ public class AttributeTest extends GuicedTest {
 		final Attribute dctermsTitle = new Attribute(attributeId);
 		dctermsTitle.setName(attributeName);
 		
-		Assert.assertNotNull("the attribute id shouldn't be null", dctermsTitle.getId());
-		Assert.assertEquals("the attribute ids are not equal", attributeId, dctermsTitle.getId());
+		Assert.assertNotNull("the attribute id shouldn't be null", dctermsTitle.getUri());
+		Assert.assertEquals("the attribute ids are not equal", attributeId, dctermsTitle.getUri());
 		Assert.assertNotNull("the attribute name shouldn't be null", dctermsTitle.getName());
 		Assert.assertEquals("the attribute names are not equal", attributeName, dctermsTitle.getName());
 

@@ -22,12 +22,11 @@ import de.avgl.dmp.persistence.service.job.FunctionService;
  */
 public class FunctionsResourceUtils extends BasicFunctionsResourceUtils<FunctionService, Function> {
 
-	private static final org.apache.log4j.Logger			LOG	= org.apache.log4j.Logger.getLogger(FunctionsResourceUtils.class);
+	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(FunctionsResourceUtils.class);
 
 	@Inject
 	public FunctionsResourceUtils(final Provider<FunctionService> persistenceServiceProviderArg,
-	                              final Provider<ObjectMapper> objectMapperProviderArg,
-	                              final ResourceUtilsFactory utilsFactory) {
+			final Provider<ObjectMapper> objectMapperProviderArg, final ResourceUtilsFactory utilsFactory) {
 
 		super(Function.class, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}
@@ -50,5 +49,13 @@ public class FunctionsResourceUtils extends BasicFunctionsResourceUtils<Function
 		}
 
 		return jsonNode;
+	}
+
+	@Override
+	public String prepareObjectJSONString(final String objectJSONString) throws DMPControllerException {
+
+		// a function is not a complex object
+
+		return objectJSONString;
 	}
 }

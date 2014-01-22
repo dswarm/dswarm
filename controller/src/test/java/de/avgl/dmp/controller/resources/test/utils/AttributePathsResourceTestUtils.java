@@ -34,7 +34,7 @@ public class AttributePathsResourceTestUtils extends BasicResourceTestUtils<Attr
 			Assert.assertNotNull("attributes of actual attribute path '" + actualObject.getId() + "' shouldn't be null", actualAttributes);
 			Assert.assertFalse("attributes of actual attribute path '" + actualObject.getId() + "' shouldn't be empty", actualAttributes.isEmpty());
 
-			final Map<String, Attribute> actualAttributesMap = Maps.newHashMap();
+			final Map<Long, Attribute> actualAttributesMap = Maps.newHashMap();
 
 			for (final Attribute actualAttribute : actualAttributes) {
 

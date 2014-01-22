@@ -1,5 +1,6 @@
 package de.avgl.dmp.controller.resources.test;
 
+import java.util.LinkedList;
 import java.util.Map;
 
 import org.junit.After;
@@ -7,6 +8,7 @@ import org.junit.Assert;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import de.avgl.dmp.controller.resources.test.utils.AttributePathsResourceTestUtils;
@@ -46,7 +48,7 @@ public class MappingsResourceTest extends BasicResourceTest<MappingsResourceTest
 
 	private Component								transformationComponent;
 
-	final Map<String, Attribute>					attributes		= Maps.newHashMap();
+	final Map<Long, Attribute>					attributes		= Maps.newHashMap();
 
 	final Map<Long, AttributePath>					attributePaths	= Maps.newLinkedHashMap();
 
@@ -210,8 +212,31 @@ public class MappingsResourceTest extends BasicResourceTest<MappingsResourceTest
 	}
 
 	private AttributePath createAttributePath(final String attributePathJSONFileName) throws Exception {
+		
+		String attributePathJSONString = DMPPersistenceUtil.getResourceAsString(attributePathJSONFileName);
+		final AttributePath attributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
+		
+		final LinkedList<Attribute> attributes = attributePath.getAttributePath();
+		final LinkedList<Attribute> newAttributes = Lists.newLinkedList();
 
-		final AttributePath actualAttributePath = attributePathsResourceTestUtils.createObject(attributePathJSONFileName);
+		for (final Attribute attribute : attributes) {
+
+			for (final Attribute newAttribute : this.attributes.values()) {
+
+				if (attribute.getUri().equals(newAttribute.getUri())) {
+
+					newAttributes.add(newAttribute);
+
+					break;
+				}
+			}
+		}
+
+		attributePath.setAttributePath(newAttributes);
+
+		attributePathJSONString = objectMapper.writeValueAsString(attributePath);
+		final AttributePath expectedAttributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
+		final AttributePath actualAttributePath = attributePathsResourceTestUtils.createObject(attributePathJSONString, expectedAttributePath);
 
 		attributePaths.put(actualAttributePath.getId(), actualAttributePath);
 

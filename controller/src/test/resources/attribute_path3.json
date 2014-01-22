@@ -1,7 +1,8 @@
 {
-        "id": 3,
-        "attributes": [{
-            "id": "http://purl.org/dc/terms/created",
-            "name": "created"
-        }]
+    "id": 3,
+    "attributes": [{
+        "id": 5,
+        "uri": "http://purl.org/dc/terms/created",
+        "name": "created"
+    }]
 }

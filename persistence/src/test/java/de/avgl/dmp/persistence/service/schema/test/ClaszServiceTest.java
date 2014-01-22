@@ -50,4 +50,43 @@ public class ClaszServiceTest extends AdvancedJPAServiceTest<Clasz, ClaszService
 		// clean up DB
 		deletedObject(clasz.getId());
 	}
+	
+	@Test
+	public void testUniquenessOfClasses() {
+
+		final Clasz clasz1 = createClass();
+		final Clasz clasz2 = createClass();
+
+		Assert.assertNotNull("attribute1 shouldn't be null", clasz1);
+		Assert.assertNotNull("attribute2 shouldn't be null", clasz2);
+		Assert.assertNotNull("attribute1 id shouldn't be null", clasz1.getId());
+		Assert.assertNotNull("attribute2 id shouldn't be null", clasz2.getId());
+		Assert.assertEquals("the attributes should be equal", clasz1, clasz2);
+		Assert.assertNotNull("attribute1 uri shouldn't be null", clasz1.getUri());
+		Assert.assertNotNull("attribute2 uri shouldn't be null", clasz2.getUri());
+		Assert.assertNotNull("attribute1 uri shouldn't be empty", clasz1.getUri().trim().isEmpty());
+		Assert.assertNotNull("attribute2 uri shouldn't be empty", clasz2.getUri().trim().isEmpty());
+		Assert.assertEquals("the attribute uris should be equal", clasz1.getUri(), clasz2.getUri());
+		Assert.assertNotNull("attribute1 uri shouldn't be null", clasz1.getName());
+		Assert.assertNotNull("attribute2 uri shouldn't be null", clasz2.getName());
+		Assert.assertNotNull("attribute1 uri shouldn't be empty", clasz1.getName().trim().isEmpty());
+		Assert.assertNotNull("attribute2 uri shouldn't be empty", clasz2.getName().trim().isEmpty());
+		Assert.assertEquals("the attribute uris should be equal", clasz1.getName(), clasz2.getName());
+
+		// clean up DB
+		deletedObject(clasz1.getId());
+	}
+
+	private Clasz createClass() {
+
+		final Clasz clasz = createObject("http://purl.org/ontology/bibo/Document");
+
+		clasz.setName("document");
+
+		updateObjectTransactional(clasz);
+
+		final Clasz updatedClasz = getObject(clasz);
+
+		return updatedClasz;
+	}
 }

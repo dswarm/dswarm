@@ -24,8 +24,8 @@ public class ClaszTest extends GuicedTest {
 		
 		final Clasz biboDocument = new Clasz(biboDocumentId, biboDocumentName);
 		
-		Assert.assertNotNull("the clasz id shouldn't be null", biboDocument.getId());
-		Assert.assertEquals("the clasz ids are not equal", biboDocumentId, biboDocument.getId());
+		Assert.assertNotNull("the clasz id shouldn't be null", biboDocument.getUri());
+		Assert.assertEquals("the clasz ids are not equal", biboDocumentId, biboDocument.getUri());
 		Assert.assertNotNull("the clasz name shouldn't be null", biboDocument.getName());
 		Assert.assertEquals("the clasz names are not equal", biboDocumentName, biboDocument.getName());
 

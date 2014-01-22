@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import de.avgl.dmp.persistence.model.BasicDMPObject;
+import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
 
 /**
  * An attribute is a property. In a graph an attribute is a relation between a node or subject and an object, e.g., 'dcterms:title'. In a CSV document an
@@ -17,7 +17,7 @@ import de.avgl.dmp.persistence.model.BasicDMPObject;
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "ATTRIBUTE")
-public class Attribute extends BasicDMPObject {
+public class Attribute extends AdvancedDMPJPAObject {
 
 	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(Attribute.class);
 
@@ -39,8 +39,8 @@ public class Attribute extends BasicDMPObject {
 	 * Creates new attribute with no identifier.
 	 */
 	public Attribute() {
-
-		super(null);
+		
+		super();
 	}
 
 	/**
@@ -48,9 +48,9 @@ public class Attribute extends BasicDMPObject {
 	 * 
 	 * @param id an attribute identifier
 	 */
-	public Attribute(final String id) {
-
-		super(id);
+	public Attribute(final String uriArg) {
+		
+		super(uriArg);
 	}
 
 	/**
@@ -59,10 +59,9 @@ public class Attribute extends BasicDMPObject {
 	 * @param id an attribute identifier
 	 * @param name an attribute name
 	 */
-	public Attribute(final String id, final String name) {
+	public Attribute(final String uriArg, final String name) {
 
-		super(id);
-		setName(name);
+		super(uriArg, name);
 	}
 
 	// public Set<AttributePath> getAttributePaths() {
@@ -184,18 +183,12 @@ public class Attribute extends BasicDMPObject {
 
 		if (!Attribute.class.isInstance(obj)) {
 
-			Attribute.LOG.debug("object is not an instance of Attribute, but " + obj.getClass().getName());
-
 			return false;
 		}
 
 		final boolean result = super.equals(obj);
-
-		if (!result) {
-
-			Attribute.LOG.debug("attribute objects do not match. attribute id = '" + getId() + "' to compare attribute id = '"
-					+ ((Attribute) obj).getId() + "'");
-		}
+		
+		// TODO: do uri comparison here or in upper class?
 
 		return result;
 	}

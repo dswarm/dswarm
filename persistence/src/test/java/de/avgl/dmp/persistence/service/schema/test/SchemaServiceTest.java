@@ -29,7 +29,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<Schema, SchemaServi
 
 	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	private Map<String, Attribute>					attributes		= Maps.newLinkedHashMap();
+	private Map<Long, Attribute>					attributes		= Maps.newLinkedHashMap();
 
 	public SchemaServiceTest() {
 
@@ -163,30 +163,17 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<Schema, SchemaServi
 		final AttributePathService attributePathService = GuicedTest.injector.getInstance(AttributePathService.class);
 
 		Assert.assertNotNull("attribute path service shouldn't be null", attributePathService);
+		
+		final AttributePath attributePath = new AttributePath(attributePathArg);
 
-		AttributePath attributePath = null;
+		AttributePath updatedAttributePath = null;
 
 		try {
 
-			attributePath = attributePathService.createObject();
+			updatedAttributePath = attributePathService.createObject(attributePathArg);
 		} catch (final DMPPersistenceException e1) {
 
 			Assert.assertTrue("something went wrong while attribute path creation.\n" + e1.getMessage(), false);
-		}
-
-		Assert.assertNotNull("attribute path shouldn't be null", attributePath);
-		Assert.assertNotNull("attribute path id shouldn't be null", attributePath.getId());
-
-		attributePath.setAttributePath(attributePathArg);
-
-		System.out.println("attribute path = '" + attributePath.toString());
-
-		AttributePath updatedAttributePath = null;
-		try {
-			updatedAttributePath = attributePathService.updateObjectTransactional(attributePath);
-		} catch (final DMPPersistenceException e1) {
-
-			Assert.assertTrue("something went wrong while updating the attribute path of id = '" + attributePath.getId() + "'", false);
 		}
 
 		Assert.assertNotNull("updated attribute path shouldn't be null", updatedAttributePath);
@@ -229,7 +216,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<Schema, SchemaServi
 		Attribute attribute = null;
 
 		try {
-			attribute = attributeService.createObject(id);
+			attribute = attributeService.createObjectTransactional(id);
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while attribute creation.\n" + e.getMessage(), false);
@@ -270,7 +257,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<Schema, SchemaServi
 		Clasz clasz = null;
 
 		try {
-			clasz = classService.createObject(id);
+			clasz = classService.createObjectTransactional(id);
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while class creation.\n" + e.getMessage(), false);
@@ -304,7 +291,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<Schema, SchemaServi
 
 		Assert.assertNotNull("attribute service shouldn't be null", attributeService);
 
-		final String attributeId = attribute.getId();
+		final Long attributeId = attribute.getId();
 
 		attributeService.deleteObject(attributeId);
 
@@ -334,7 +321,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<Schema, SchemaServi
 
 		Assert.assertNotNull("class service shouldn't be null", claszService);
 
-		final String claszId = clasz.getId();
+		final Long claszId = clasz.getId();
 
 		claszService.deleteObject(claszId);
 

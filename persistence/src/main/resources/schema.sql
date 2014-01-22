@@ -1,103 +1,4 @@
-
-    alter table ATTRIBUTES_ATTRIBUTE_PATHS 
-        drop
-        foreign key FK_qp5h79t2qm3x9dt0bvab84nwq;
-
-    alter table ATTRIBUTE_PATHS_SCHEMAS
-        drop
-        foreign key FK_5b237a3jiliubkbk3b4w625r4;
-
-    alter table ATTRIBUTE_PATHS_SCHEMAS
-        drop
-        foreign key FK_c5gir0ri2spql32cyff3tttst;
-
-    alter table COMPONENT
-        drop
-        foreign key FK_ag5gnetntolrsj5c8x1pk0mbu;
-
-    alter table COMPONENT
-        drop
-        foreign key FK_g82elj4ech037bcca6vqmufm1;
-
-    alter table DATA_MODEL
-        drop
-        foreign key FK_hpe71t1t2cy8817cq6jcval7v;
-
-    alter table DATA_MODEL
-        drop
-        foreign key FK_ixk5hb4bkl3vhu6agjra7mkr8;
-
-    alter table DATA_MODEL
-        drop
-        foreign key FK_id7ig90c37glf3njn0928o0v0;
-
-    alter table INPUT_ATTRIBUTE_PATHS_MAPPINGS
-        drop
-        foreign key FK_6c4ofueeyb3hbmv2wboyqw7n1;
-
-    alter table INPUT_ATTRIBUTE_PATHS_MAPPINGS
-        drop
-        foreign key FK_e46064nsbvmdxm74jg1yhlouk;
-
-    alter table MAPPING
-        drop
-        foreign key FK_1fdjucib6chk55t2evxrw6ugk;
-
-    alter table MAPPING
-        drop
-        foreign key FK_h0b70ivxm1byvbabn6ic3slrp;
-
-    alter table MAPPING
-        drop
-        foreign key FK_shvy8f39jmeyjgne94ntkyysn;
-
-    alter table MAPPING
-        drop
-        foreign key FK_y31lfpmsdwyyjjubvff2p2tw;
-
-    alter table OUTPUT_COMPONENTS_INPUT_COMPONENTS
-        drop
-        foreign key FK_f27jrrca3kaj4k5gkph7cmfhb;
-
-    alter table OUTPUT_COMPONENTS_INPUT_COMPONENTS
-        drop
-        foreign key FK_evs3264hua8pae1hgl2g4fa4x;
-
-    alter table PROJECT
-        drop
-        foreign key FK_nswwcscg2guqjctk1omny3loj;
-
-    alter table PROJECT
-        drop
-        foreign key FK_6unsgihaswor2ftvtcwmwg4nc;
-
-    alter table PROJECTS_FUNCTIONS
-        drop
-        foreign key FK_nx7uw5jry35jr2rxhngkypf8;
-
-    alter table PROJECTS_FUNCTIONS
-        drop
-        foreign key FK_6ja5bqjo5suu7p0wa0ac1cxa8;
-
-    alter table PROJECTS_MAPPINGS
-        drop
-        foreign key FK_8qrhjdabvk1ty4s9wuikcun2h;
-
-    alter table PROJECTS_MAPPINGS
-        drop
-        foreign key FK_qhq2xm12uixmdqfaq1y3w8nht;
-
-    alter table RESOURCES_CONFIGURATIONS
-        drop
-        foreign key FK_317homsxkat6e9lcmhs056nid;
-
-    alter table RESOURCES_CONFIGURATIONS
-        drop
-        foreign key FK_ba7nn2952k54vm2rbd2k5gd42;
-
-    alter table TRANSFORMATION
-        drop
-        foreign key FK_qk4t8c3cucrxqguipv9emdxpm;
+SET foreign_key_checks = 0;
 
     drop table if exists ATTRIBUTE;
 
@@ -140,14 +41,15 @@
     drop table if exists TRANSFORMATION;
 
     create table ATTRIBUTE (
-        ID VARCHAR(100) not null,
+        ID bigint not null auto_increment,
         NAME varchar(255),
+        URI VARCHAR(255),
         primary key (ID)
     ) ENGINE=InnoDB;
 
     create table ATTRIBUTES_ATTRIBUTE_PATHS (
         ATTRIBUTE_PATH_ID bigint not null,
-        ATTRIBUTE_ID VARCHAR(100) not null,
+        ATTRIBUTE_ID bigint not null,
         primary key (ATTRIBUTE_PATH_ID, ATTRIBUTE_ID)
     ) ENGINE=InnoDB;
 
@@ -164,8 +66,9 @@
     ) ENGINE=InnoDB;
 
     create table CLASS (
-        ID VARCHAR(100) not null,
+        ID bigint not null auto_increment,
         NAME varchar(255),
+        URI VARCHAR(255),
         primary key (ID)
     ) ENGINE=InnoDB;
 
@@ -200,7 +103,7 @@
     create table DATA_SCHEMA (
         ID bigint not null auto_increment,
         NAME varchar(255),
-        RECORD_CLASS VARCHAR(100),
+        RECORD_CLASS bigint,
         primary key (ID)
     ) ENGINE=InnoDB;
 
@@ -285,7 +188,10 @@
     ) ENGINE=InnoDB;
 
     alter table ATTRIBUTES_ATTRIBUTE_PATHS 
-        add index FK_c0tpxqimg4bfkv8j62bcxkxyc (ATTRIBUTE_ID);
+        add index FK_c0tpxqimg4bfkv8j62bcxkxyc (ATTRIBUTE_ID), 
+        add constraint FK_c0tpxqimg4bfkv8j62bcxkxyc 
+        foreign key (ATTRIBUTE_ID) 
+        references ATTRIBUTE (ID);
 
     alter table ATTRIBUTES_ATTRIBUTE_PATHS 
         add index FK_qp5h79t2qm3x9dt0bvab84nwq (ATTRIBUTE_PATH_ID), 
@@ -334,6 +240,12 @@
         add constraint FK_id7ig90c37glf3njn0928o0v0 
         foreign key (DATA_SCHEMA) 
         references DATA_SCHEMA (ID);
+
+    alter table DATA_SCHEMA 
+        add index FK_67hdhd4o40jypqxwdcq7tai28 (RECORD_CLASS), 
+        add constraint FK_67hdhd4o40jypqxwdcq7tai28 
+        foreign key (RECORD_CLASS) 
+        references CLASS (ID);
 
     alter table INPUT_ATTRIBUTE_PATHS_MAPPINGS 
         add index FK_6c4ofueeyb3hbmv2wboyqw7n1 (INPUT_ATTRIBUTE_PATH_ID), 
@@ -436,3 +348,5 @@
         add constraint FK_qk4t8c3cucrxqguipv9emdxpm 
         foreign key (ID) 
         references FUNCTION (ID);
+
+SET foreign_key_checks = 1;

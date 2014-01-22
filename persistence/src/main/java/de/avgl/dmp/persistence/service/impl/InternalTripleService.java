@@ -163,7 +163,7 @@ public class InternalTripleService implements InternalModelService {
 
 			if (dataModel.getSchema().getRecordClass() != null) {
 
-				final String recordClassURI = dataModel.getSchema().getRecordClass().getId();
+				final String recordClassURI = dataModel.getSchema().getRecordClass().getUri();
 
 				final Set<com.hp.hpl.jena.rdf.model.Resource> recordResources = getRecordResources(recordClassURI, realModel);
 
@@ -254,7 +254,7 @@ public class InternalTripleService implements InternalModelService {
 			throw new DMPPersistenceException("couldn't find record class in schema '" + schema.getId() + "' of data model '" + dataModelId + "'");
 		}
 
-		final String recordClassUri = recordClass.getId();
+		final String recordClassUri = recordClass.getUri();
 
 		final Set<com.hp.hpl.jena.rdf.model.Resource> recordResources = getRecordResources(recordClassUri, model);
 
@@ -378,7 +378,7 @@ public class InternalTripleService implements InternalModelService {
 		} else {
 
 			// create new class
-			recordClass = classService.get().createObject(recordClassUri);
+			recordClass = classService.get().createObjectTransactional(recordClassUri);
 			
 			final String recordClassName = SchemaUtils.determineRelativeURIPart(recordClassUri);
 
@@ -406,7 +406,7 @@ public class InternalTripleService implements InternalModelService {
 
 			for (final String attributeString : attributePathHelper.getAttributePath()) {
 
-				final Attribute attribute = attributeService.get().createObject(attributeString);
+				final Attribute attribute = attributeService.get().createObjectTransactional(attributeString);
 				attributes.add(attribute);
 
 				final String attributeName = SchemaUtils.determineRelativeURIPart(attributeString);
@@ -414,8 +414,7 @@ public class InternalTripleService implements InternalModelService {
 				attribute.setName(attributeName);
 			}
 
-			final AttributePath attributePath = attributePathService.get().createObject();
-			attributePath.setAttributePath(attributes);
+			final AttributePath attributePath = attributePathService.get().createObject(attributes);
 
 			dataModel.getSchema().addAttributePath(attributePath);
 		}

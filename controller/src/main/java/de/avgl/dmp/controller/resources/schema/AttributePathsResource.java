@@ -110,5 +110,4 @@ public class AttributePathsResource extends BasicIDResource<AttributePathsResour
 
 		return object;
 	}
-
 }

@@ -26,8 +26,7 @@ public class TransformationsResourceUtils extends BasicFunctionsResourceUtils<Tr
 
 	@Inject
 	public TransformationsResourceUtils(final Provider<TransformationService> persistenceServiceProviderArg,
-	                                    final Provider<ObjectMapper> objectMapperProviderArg,
-	                                    final ResourceUtilsFactory utilsFactory) {
+			final Provider<ObjectMapper> objectMapperProviderArg, final ResourceUtilsFactory utilsFactory) {
 
 		super(Transformation.class, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}

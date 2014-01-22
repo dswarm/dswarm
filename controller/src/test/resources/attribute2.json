@@ -1,4 +1,5 @@
 {
-        "id": "http://purl.org/dc/terms/hasPart",
-        "name": "hasPart"
+    "id": 2,
+    "name": "hasPart",
+    "uri": "http://purl.org/dc/terms/hasPart"
 }

@@ -31,7 +31,7 @@ public class MappingsResourceUtils extends BasicDMPResourceUtils<MappingService,
 	@Inject
 	public MappingsResourceUtils(final Provider<MappingService> persistenceServiceProviderArg,
 	                             final Provider<ObjectMapper> objectMapperProviderArg,
-	                             final ResourceUtilsFactory utilsFactory) {
+			final ResourceUtilsFactory utilsFactory) {
 
 		super(Mapping.class, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 
