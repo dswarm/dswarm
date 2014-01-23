@@ -137,19 +137,19 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends
 		
 		final POJOCLASS expectedObject = objectMapper.readValue(updateObjectJSONString, pojoClass);
 		
-		final POJOCLASS actualObject = updateObject(updateObjectJSONString, expectedObject);
+		final POJOCLASS updatedObject = updateObject(updateObjectJSONString, expectedObject);
 		
-		return actualObject;
+		return updatedObject;
 	}
 	
-	public POJOCLASS updateObject(final String objectJSONString, final POJOCLASS expectedObject) throws Exception {
+	public POJOCLASS updateObject(final String updateObjectJSONString, final POJOCLASS expectedObject) throws Exception {
 		
-		POJOCLASSIDTYPE objectId = objectMapper.readValue(objectJSONString, pojoClass).getId();
+		POJOCLASSIDTYPE objectId = objectMapper.readValue(updateObjectJSONString, pojoClass).getId();
 		
 		Assert.assertEquals("the id of the updeted object should be equal", objectId, expectedObject.getId());
 		
 		final Response response = target(String.valueOf(objectId)).request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
-				.put(Entity.json(objectJSONString));
+				.put(Entity.json(updateObjectJSONString));
 
 		Assert.assertEquals("200 Updated was expected", 200, response.getStatus());
 
@@ -157,11 +157,11 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends
 
 		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
 
-		final POJOCLASS actualObject = objectMapper.readValue(responseString, pojoClass);
+		final POJOCLASS updatedObject = objectMapper.readValue(responseString, pojoClass);
 
-		compareObjects(expectedObject, actualObject);
+		compareObjects(expectedObject, updatedObject);
 
-		return actualObject;
+		return updatedObject;
 	}
 	
 	public void deleteObject(final POJOCLASS object) {

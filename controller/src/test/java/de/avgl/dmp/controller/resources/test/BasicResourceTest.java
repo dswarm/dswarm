@@ -158,13 +158,13 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 	public void testPUTObject() throws Exception {
 		LOG.debug("start PUT " + pojoClassName + " test");
 		
-		POJOCLASS actualObject = createObjectInternal();
+		POJOCLASS persistedObject = createObjectInternal();
 
 		String idEncoded = null;
 
 		try {
 
-			idEncoded = URLEncoder.encode(actualObject.getId().toString(), "UTF-8");
+			idEncoded = URLEncoder.encode(persistedObject.getId().toString(), "UTF-8");
 		} catch (final UnsupportedEncodingException e) {
 
 			LOG.debug("couldn't encode id", e);
@@ -174,7 +174,7 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 
 		Assert.assertNotNull("the id shouldn't be null", idEncoded);
 		
-		actualObject = updateObject(actualObject);
+		final POJOCLASS updatedObject = updateObject(persistedObject);
 		
 		LOG.debug("try to retrieve updated " + pojoClassName + " with id '" + idEncoded + "'");
 
@@ -191,7 +191,7 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 		Assert.assertNotNull("response " + pojoClassName + " shouldn't be null", responseObject);
 
 		pojoClassResourceTestUtils.reset();
-		compareObjects(actualObject, responseObject);
+		compareObjects(updatedObject, responseObject);
 
 		cleanUpDB(responseObject);
 
@@ -217,9 +217,9 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 		return pojoClassResourceTestUtils.createObject(objectJSONString, expectedObject);
 	}
 	
-	protected POJOCLASS updateObject(final POJOCLASS actualObject) throws Exception {
+	protected POJOCLASS updateObject(final POJOCLASS persistedObject) throws Exception {
 
-		return pojoClassResourceTestUtils.updateObject(actualObject, updateObjectJSONFileName);
+		return pojoClassResourceTestUtils.updateObject(persistedObject, updateObjectJSONFileName);
 	}
 
 	protected void cleanUpDB(final POJOCLASS object) {

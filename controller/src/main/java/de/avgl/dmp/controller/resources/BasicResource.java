@@ -204,7 +204,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 	// @Produces(MediaType.APPLICATION_JSON)
 	public Response updateObject(final String jsonObjectString, /* @PathParam("id") */final POJOCLASSIDTYPE id) throws DMPControllerException {
 		
-		final Timer.Context context = dmpStatus.createNewObject(pojoClassResourceUtils.getClaszName(), this.getClass());
+		final Timer.Context context = dmpStatus.updateSingleObject(pojoClassResourceUtils.getClaszName(), this.getClass());
 
 		BasicResource.LOG.debug("try to update " + pojoClassResourceUtils.getClaszName());
 

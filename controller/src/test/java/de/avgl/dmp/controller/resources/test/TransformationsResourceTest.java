@@ -1,8 +1,11 @@
 package de.avgl.dmp.controller.resources.test;
 
+import java.util.Set;
+
 import org.junit.After;
 import org.junit.Assert;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -12,6 +15,7 @@ import de.avgl.dmp.controller.resources.test.utils.TransformationsResourceTestUt
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.Transformation;
+import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.service.job.TransformationService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
@@ -88,20 +92,43 @@ public class TransformationsResourceTest extends BasicResourceTest<Transformatio
 	}
 	
 	@Override
-	public Transformation updateObject(final Transformation actualTransformation) throws Exception {
+	public Transformation updateObject(final Transformation persistedTransformation) throws Exception {
+
+		// update component
+		final Function newFunction = functionsResourceTestUtils.createObject("function.json");
+		final Component newComponent = componentsResourceTestUtils.createObject("component.json");
+		newComponent.setFunction(newFunction);
+		persistedTransformation.addComponent(newComponent);
 		
-		actualTransformation.setDescription(actualTransformation.getDescription() + " update");
+		String updateTransformationJSONString = objectMapper.writeValueAsString(persistedTransformation);
 		
-		// TODO: [@fniederlein] update some more nested properties
+		final ObjectNode updateTransformationJSON = objectMapper.readValue(updateTransformationJSONString, ObjectNode.class);
 		
-		final String updateTransformationJSONString = objectMapper.writeValueAsString(actualTransformation);
+		// update name
+		final String updateTransformationNameString = persistedTransformation.getName() + " update";
+		updateTransformationJSON.put("name", updateTransformationNameString);
+		
+		// update description
+		final String updateTransformationDescriptionString = persistedTransformation.getDescription() + " update";
+		updateTransformationJSON.put("description", updateTransformationDescriptionString);
+		
+		updateTransformationJSONString = objectMapper.writeValueAsString(updateTransformationJSON);
+		
+		final Transformation expectedTransformation = objectMapper.readValue(updateTransformationJSONString, Transformation.class);
 		
 		Assert.assertNotNull("the transformation JSON string shouldn't be null", updateTransformationJSONString);
 		
-		final Transformation updateTransformation = transformationsResourceTestUtils.updateObject(updateTransformationJSONString, actualTransformation);
+		final Transformation updateTransformation = transformationsResourceTestUtils.updateObject(updateTransformationJSONString, expectedTransformation);
 		
 		Assert.assertNotNull("the transformation JSON string shouldn't be null", updateTransformation);
-		Assert.assertEquals("transformation name shoud be equal", updateTransformation.getName(), actualTransformation.getName());
+		Assert.assertEquals("transformation id shoud be equal", updateTransformation.getId(), persistedTransformation.getId());
+		Assert.assertEquals("transformation name shoud be equal", updateTransformation.getName(), updateTransformationNameString);
+		Assert.assertEquals("transformation description shoud be equal", updateTransformation.getDescription(), updateTransformationDescriptionString);
+		
+		Set<Component> components1 = expectedTransformation.getComponents();
+		Set<Component> components2 = updateTransformation.getComponents();
+		Assert.assertEquals("number of components should be equal", components1.size(), components2.size());
+		Assert.assertTrue("components of the transformation should be equal", components1.equals(components2));
 		
 		return updateTransformation;
 	}
