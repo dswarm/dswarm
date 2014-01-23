@@ -119,11 +119,14 @@ public class PersistenceModule extends AbstractModule {
 	@Provides
 	@Singleton
 	protected EventBus provideEventBus() {
-		final ExecutorService executorService = Executors.newCachedThreadPool();
+		// final ExecutorService executorService = Executors.newCachedThreadPool();
 
-		return new AsyncEventBus(executorService);
+		// return new AsyncEventBus(executorService);
 
-		// // synchronous event bus
-		// return new EventBus();
+		// synchronous event bus
+		// TODO: [@tgaengler] currently, we switched back to the synchronous event bus, which might not be optional for scaling or where
+		// asynchronous event handling is really required => so, we should think about how to replace/enhance this mechanism in
+		// the near future (maybe replace the event bus with akka (or similar frameworks))
+		return new EventBus();
 	}
 }
