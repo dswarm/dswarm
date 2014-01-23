@@ -1,6 +1,7 @@
 package de.avgl.dmp.controller.resources.test;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.avgl.dmp.controller.resources.test.utils.AttributesResourceTestUtils;
@@ -54,5 +55,17 @@ public class AttributesResourceTest extends BasicResourceTest<AttributesResource
 		cleanUpDB(attribute1);
 		
 		LOG.debug("end attribute uniqueness test");
+	}
+	
+	/**
+	 * note: this operation is not supported right now
+	 */
+	@Ignore
+	@Override
+	public void testPUTObject() throws Exception {
+
+		//super.testPUTObject();
+		
+		// TODO: [@fniederlein] implement test
 	}
 }

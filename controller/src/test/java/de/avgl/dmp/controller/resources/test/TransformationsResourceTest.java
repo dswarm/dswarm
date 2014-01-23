@@ -22,6 +22,8 @@ public class TransformationsResourceTest extends BasicResourceTest<Transformatio
 	private final FunctionsResourceTestUtils		functionsResourceTestUtils;
 
 	private final ComponentsResourceTestUtils		componentsResourceTestUtils;
+	
+	private final TransformationsResourceTestUtils	transformationsResourceTestUtils;
 
 	private Function								function;
 
@@ -33,6 +35,7 @@ public class TransformationsResourceTest extends BasicResourceTest<Transformatio
 
 		functionsResourceTestUtils = new FunctionsResourceTestUtils();
 		componentsResourceTestUtils = new ComponentsResourceTestUtils();
+		transformationsResourceTestUtils = new TransformationsResourceTestUtils();
 	}
 
 	@Override
@@ -83,86 +86,29 @@ public class TransformationsResourceTest extends BasicResourceTest<Transformatio
 		objectJSONString = objectMapper.writeValueAsString(objectJSON);
 		expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
 	}
-
+	
+	@Override
+	public Transformation updateObject(final Transformation actualTransformation) throws Exception {
+		
+		actualTransformation.setDescription(actualTransformation.getDescription() + " update");
+		
+		// TODO: [@fniederlein] update some more nested properties
+		
+		final String updateTransformationJSONString = objectMapper.writeValueAsString(actualTransformation);
+		
+		Assert.assertNotNull("the transformation JSON string shouldn't be null", updateTransformationJSONString);
+		
+		final Transformation updateTransformation = transformationsResourceTestUtils.updateObject(updateTransformationJSONString, actualTransformation);
+		
+		Assert.assertNotNull("the transformation JSON string shouldn't be null", updateTransformation);
+		Assert.assertEquals("transformation name shoud be equal", updateTransformation.getName(), actualTransformation.getName());
+		
+		return updateTransformation;
+	}
+	
 	@After
 	public void tearDown2() throws Exception {
 
 		functionsResourceTestUtils.deleteObject(function);
 	}
-
-	// private static final JsonNodeFactory factory = JsonNodeFactory.instance;
-	// private static final ObjectMapper mapper;
-	//
-	// static {
-	// mapper = new ObjectMapper();
-	// final JaxbAnnotationModule module = new JaxbAnnotationModule();
-	// mapper.registerModule(module);
-	// }
-	//
-	// private ObjectNode transformationJSON = null;
-	// private String transformationJSONString = null;
-	//
-	// public TransformationsResourceTest() {
-	// super("transformations");
-	// }
-	//
-	// @Before
-	// public void prepare() throws IOException {
-	// transformationJSONString = DMPPersistenceUtil.getResourceAsString("transformations-post-request.json");
-	// transformationJSON = mapper.readValue(transformationJSONString, ObjectNode.class);
-	// }
-	//
-	// /**
-	// * test post of transformations
-	// */
-	// @Ignore
-	// @Test
-	// public void testEchoJSON() {
-	// Response response = target("echo").request(MediaType.APPLICATION_JSON_TYPE)
-	// .accept(MediaType.APPLICATION_JSON_TYPE)
-	// .post(Entity.json(transformationJSONString));
-	// String responseString = response.readEntity(String.class);
-	//
-	// final ObjectNode expected = new ObjectNode(factory);
-	//
-	// expected.put("response_message", "this is your response message");
-	// expected.put("request_message", transformationJSON);
-	//
-	// Assert.assertEquals("POST responses are not equal", expected.toString(), responseString);
-	// Assert.assertEquals("200 OK was expected", 200, response.getStatus());
-	// }
-	//
-	// @Ignore
-	// @Test
-	// public void testXML() throws Exception {
-	//
-	// final Response response = target().request(MediaType.APPLICATION_XML_TYPE)
-	// .accept(MediaType.APPLICATION_XML_TYPE)
-	// .post(Entity.json(transformationJSONString));
-	//
-	// Assert.assertEquals("200 OK was expected", 200, response.getStatus());
-	//
-	// final String responseString = response.readEntity(String.class);
-	//
-	// final String expected = DMPPersistenceUtil.getResourceAsString("transformations-post-metamorph.xml");
-	//
-	// Assert.assertEquals("POST responses are not equal", expected, responseString);
-	// }
-	//
-	// @Ignore
-	// @Test
-	// public void testTransformationDemo() throws Exception {
-	//
-	// final Response response = target("/demo").request(MediaType.APPLICATION_JSON_TYPE)
-	// .accept(MediaType.APPLICATION_JSON_TYPE)
-	// .post(Entity.json(transformationJSONString));
-	//
-	// Assert.assertEquals("200 OK was expected", 200, response.getStatus());
-	//
-	// final String responseString = response.readEntity(String.class);
-	//
-	// final String expected = DMPPersistenceUtil.getResourceAsString("transformations-post-result.json");
-	//
-	// Assert.assertEquals("POST responses are not equal", expected, responseString);
-	// }
 }

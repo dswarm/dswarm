@@ -40,6 +40,8 @@ public class MappingsResourceTest extends BasicResourceTest<MappingsResourceTest
 
 	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
 
+	private final MappingsResourceTestUtils			mappingsResourceTestUtils;
+
 	private Function								function;
 
 	private Component								component;
@@ -48,7 +50,7 @@ public class MappingsResourceTest extends BasicResourceTest<MappingsResourceTest
 
 	private Component								transformationComponent;
 
-	final Map<Long, Attribute>					attributes		= Maps.newHashMap();
+	final Map<Long, Attribute>						attributes		= Maps.newHashMap();
 
 	final Map<Long, AttributePath>					attributePaths	= Maps.newLinkedHashMap();
 
@@ -61,6 +63,7 @@ public class MappingsResourceTest extends BasicResourceTest<MappingsResourceTest
 		attributesResourceTestUtils = new AttributesResourceTestUtils();
 		attributePathsResourceTestUtils = new AttributePathsResourceTestUtils();
 		transformationsResourceTestUtils = new TransformationsResourceTestUtils();
+		mappingsResourceTestUtils = new MappingsResourceTestUtils();
 	}
 
 	@Override
@@ -191,7 +194,7 @@ public class MappingsResourceTest extends BasicResourceTest<MappingsResourceTest
 
 			attributePathsResourceTestUtils.deleteObject(attributePath);
 		}
-		
+
 		for (final Attribute attribute : attributes.values()) {
 
 			attributesResourceTestUtils.deleteObject(attribute);
@@ -200,6 +203,25 @@ public class MappingsResourceTest extends BasicResourceTest<MappingsResourceTest
 		transformationsResourceTestUtils.deleteObject(transformation);
 
 		functionsResourceTestUtils.deleteObject(function);
+	}
+
+	@Override
+	public Mapping updateObject(final Mapping actualMapping) throws Exception {
+
+		actualMapping.setName(actualMapping.getName() + " update");
+
+		// TODO: [@fniederlein] update some more nested properties
+
+		final String updateMappingJSONString = objectMapper.writeValueAsString(actualMapping);
+
+		Assert.assertNotNull("the mapping JSON string shouldn't be null", updateMappingJSONString);
+
+		final Mapping updateMapping = mappingsResourceTestUtils.updateObject(updateMappingJSONString, actualMapping);
+
+		Assert.assertNotNull("the mapping JSON string shouldn't be null", updateMapping);
+		Assert.assertEquals("mapping name shoud be equal", updateMapping.getName(), actualMapping.getName());
+
+		return updateMapping;
 	}
 
 	private Attribute createAttribute(final String attributeJSONFileName) throws Exception {
@@ -212,10 +234,10 @@ public class MappingsResourceTest extends BasicResourceTest<MappingsResourceTest
 	}
 
 	private AttributePath createAttributePath(final String attributePathJSONFileName) throws Exception {
-		
+
 		String attributePathJSONString = DMPPersistenceUtil.getResourceAsString(attributePathJSONFileName);
 		final AttributePath attributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
-		
+
 		final LinkedList<Attribute> attributes = attributePath.getAttributePath();
 		final LinkedList<Attribute> newAttributes = Lists.newLinkedList();
 

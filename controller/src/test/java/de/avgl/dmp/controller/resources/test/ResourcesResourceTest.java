@@ -468,17 +468,34 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		LOG.debug("start post configuration CSV JSON preview test");
 	}
+	
+	@Test
+	public void testDELETEResource() throws Exception {
+		
+		LOG.debug("start DELETE resource test");
 
-	private void cleanUpDB(Resource resource, boolean withConfigurations) {
-		if (withConfigurations) {
+		final String resourceJSON = testResourceUploadInteral(resourceFile, expectedResource);
 
-			for (final Configuration configuration : resource.getConfigurations()) {
+		LOG.debug("created resource = '" + resourceJSON + "'");
 
-				configurationService.deleteObject(configuration.getId());
-			}
-		}
+		final Resource resource = objectMapper.readValue(resourceJSON, Resource.class);
 
-		cleanUpDB(resource);
+		final Long resourceId = resource.getId();
+		
+		Assert.assertNotNull("resource shouldn't be null", resource);
+		Assert.assertNotNull("resource id shouldn't be null", resourceId);
+
+		LOG.debug("try to retrieve resource '" + resource.getId() + "'");
+
+		final Response response = target(String.valueOf(resource.getId())).request().delete();
+
+		Assert.assertEquals("204 NO CONTENT was expected", 204, response.getStatus());
+
+		final Resource deletedResource = resourceService.getObject(resourceId);
+		
+		Assert.assertNull(deletedResource);
+		
+		LOG.debug("end DELETE resource test");
 	}
 
 	private String testResourceUploadInteral(final File resourceFile, final Resource expectedResource) throws Exception {

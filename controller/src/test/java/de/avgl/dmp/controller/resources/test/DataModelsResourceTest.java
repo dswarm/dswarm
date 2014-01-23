@@ -90,6 +90,10 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 		resourcesResourceTestUtils = new ResourcesResourceTestUtils();
 		configurationsResourceTestUtils = new ConfigurationsResourceTestUtils();
 		schemasResourceTestUtils = new SchemasResourceTestUtils();
+		
+		// TODO: [@fniederlein] implement update object test
+		
+		updateObjectJSONFileName = "datamodel2.json";
 	}
 
 	@Override

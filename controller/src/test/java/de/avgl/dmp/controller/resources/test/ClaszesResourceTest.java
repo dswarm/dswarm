@@ -1,6 +1,7 @@
 package de.avgl.dmp.controller.resources.test;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.avgl.dmp.controller.resources.test.utils.ClaszesResourceTestUtils;
@@ -14,6 +15,7 @@ public class ClaszesResourceTest extends BasicResourceTest<ClaszesResourceTestUt
 	public ClaszesResourceTest() {
 
 		super(Clasz.class, ClaszService.class, "classes", "clasz.json", new ClaszesResourceTestUtils());
+		
 	}
 	
 	@Test
@@ -54,5 +56,12 @@ public class ClaszesResourceTest extends BasicResourceTest<ClaszesResourceTestUt
 		cleanUpDB(clasz1);
 		
 		LOG.debug("end class uniqueness test");
+	}
+	
+	@Ignore
+	@Override
+	public void testPUTObject() throws Exception {
+
+		// TODO: [@fniederlein] implement test
 	}
 }
