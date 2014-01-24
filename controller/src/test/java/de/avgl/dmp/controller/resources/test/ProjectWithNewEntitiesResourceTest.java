@@ -31,6 +31,7 @@ import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.Mapping;
 import de.avgl.dmp.persistence.model.job.Project;
 import de.avgl.dmp.persistence.model.job.Transformation;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyProject;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
@@ -41,7 +42,7 @@ import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.service.job.ProjectService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class ProjectWithNewEntitiesResourceTest extends BasicResourceTest<ProjectsResourceTestUtils, ProjectService, Project, Long> {
+public class ProjectWithNewEntitiesResourceTest extends BasicResourceTest<ProjectsResourceTestUtils, ProjectService, ProxyProject, Project, Long> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributesResourceTest.class);
 
@@ -80,23 +81,23 @@ public class ProjectWithNewEntitiesResourceTest extends BasicResourceTest<Projec
 		dataModelsResourceTestUtils = new DataModelsResourceTestUtils();
 		mappingsResourceTestUtils = new MappingsResourceTestUtils();
 	}
-	
+
 	@Ignore
 	@Override
 	public void testPOSTObjects() throws Exception {
-		
+
 	}
 
 	@Ignore
 	@Override
 	public void testGETObjects() throws Exception {
-		
+
 	}
 
 	@Ignore
 	@Override
 	public void testGETObject() throws Exception {
-		
+
 	}
 
 	@Test

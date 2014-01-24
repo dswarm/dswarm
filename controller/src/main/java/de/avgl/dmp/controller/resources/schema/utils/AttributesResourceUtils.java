@@ -8,6 +8,7 @@ import com.google.inject.Inject;
 import de.avgl.dmp.controller.resources.utils.AdvancedDMPResourceUtils;
 import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.persistence.model.schema.Attribute;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttribute;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
 
 /**
@@ -16,7 +17,7 @@ import de.avgl.dmp.persistence.service.schema.AttributeService;
  * @param <POJOCLASS>
  * @param <POJOCLASSIDTYPE>
  */
-public class AttributesResourceUtils extends AdvancedDMPResourceUtils<AttributeService, Attribute> {
+public class AttributesResourceUtils extends AdvancedDMPResourceUtils<AttributeService, ProxyAttribute, Attribute> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributesResourceUtils.class);
 

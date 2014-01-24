@@ -43,6 +43,7 @@ import de.avgl.dmp.controller.utils.DataModelUtil;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
+import de.avgl.dmp.persistence.model.resource.proxy.ProxyDataModel;
 import de.avgl.dmp.persistence.model.types.Tuple;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 
@@ -54,7 +55,7 @@ import de.avgl.dmp.persistence.service.resource.DataModelService;
 @RequestScoped
 @Api(value = "/datamodels", description = "Operations about data models.")
 @Path("datamodels")
-public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResourceUtils, DataModelService, DataModel> {
+public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResourceUtils, DataModelService, ProxyDataModel, DataModel> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(DataModelsResource.class);
 

@@ -23,9 +23,10 @@ import com.google.common.io.Resources;
 
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
+import de.avgl.dmp.persistence.model.resource.proxy.ProxyResource;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
 
-public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtils<ResourceService, Resource> {
+public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtils<ResourceService, ProxyResource, Resource> {
 
 	private final ConfigurationsResourceTestUtils	configurationsResourceTestUtils;
 

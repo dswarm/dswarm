@@ -3,9 +3,10 @@ package de.avgl.dmp.controller.resources.test.utils;
 import org.junit.Assert;
 
 import de.avgl.dmp.persistence.model.job.Filter;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyFilter;
 import de.avgl.dmp.persistence.service.job.FilterService;
 
-public class FiltersResourceTestUtils extends BasicDMPResourceTestUtils<FilterService, Filter> {
+public class FiltersResourceTestUtils extends BasicDMPResourceTestUtils<FilterService, ProxyFilter, Filter> {
 
 	public FiltersResourceTestUtils() {
 

@@ -7,10 +7,11 @@ import org.junit.Assert;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import de.avgl.dmp.persistence.model.job.Function;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyBasicFunction;
 import de.avgl.dmp.persistence.service.job.BasicFunctionService;
 
-public abstract class BasicFunctionsResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends BasicFunctionService<POJOCLASS>, POJOCLASS extends Function> extends
-		BasicDMPResourceTestUtils<POJOCLASSPERSISTENCESERVICE, POJOCLASS> {
+public abstract class BasicFunctionsResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends BasicFunctionService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyBasicFunction<POJOCLASS>, POJOCLASS extends Function>
+		extends BasicDMPResourceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
 
 	public BasicFunctionsResourceTestUtils(final String resourceIdentifier, final Class<POJOCLASS> pojoClassArg,
 			final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg) {
@@ -54,7 +55,8 @@ public abstract class BasicFunctionsResourceTestUtils<POJOCLASSPERSISTENCESERVIC
 				Assert.assertTrue("something went wrong while serializing the expected " + pojoClassName + " description JSON", false);
 			}
 
-			Assert.assertNotNull("the expected " + pojoClassName + " description JSON string shouldn't be null", expectedFunctionDescriptionJSONString);
+			Assert.assertNotNull("the expected " + pojoClassName + " description JSON string shouldn't be null",
+					expectedFunctionDescriptionJSONString);
 
 			Assert.assertEquals("the " + pojoClassName + " description JSON strings are not equal", expectedFunctionDescriptionJSONString,
 					actualFunctionDescriptionJSONString);

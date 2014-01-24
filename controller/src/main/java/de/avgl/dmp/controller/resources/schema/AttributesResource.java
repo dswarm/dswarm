@@ -24,6 +24,7 @@ import de.avgl.dmp.controller.resources.schema.utils.AttributesResourceUtils;
 import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.schema.Attribute;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttribute;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
 
 /**
@@ -34,7 +35,7 @@ import de.avgl.dmp.persistence.service.schema.AttributeService;
 @RequestScoped
 @Api(value = "/attributes", description = "Operations about attributes.")
 @Path("attributes")
-public class AttributesResource extends AdvancedDMPResource<AttributesResourceUtils, AttributeService, Attribute> {
+public class AttributesResource extends AdvancedDMPResource<AttributesResourceUtils, AttributeService, ProxyAttribute, Attribute> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributesResource.class);
 

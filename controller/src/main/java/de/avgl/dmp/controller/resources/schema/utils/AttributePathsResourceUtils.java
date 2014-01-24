@@ -18,6 +18,7 @@ import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttributePath;
 import de.avgl.dmp.persistence.service.schema.AttributePathService;
 
 /**
@@ -26,7 +27,7 @@ import de.avgl.dmp.persistence.service.schema.AttributePathService;
  * @param <POJOCLASS>
  * @param <POJOCLASSIDTYPE>
  */
-public class AttributePathsResourceUtils extends BasicIDResourceUtils<AttributePathService, AttributePath> {
+public class AttributePathsResourceUtils extends BasicIDResourceUtils<AttributePathService, ProxyAttributePath, AttributePath> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributePathsResourceUtils.class);
 

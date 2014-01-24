@@ -25,6 +25,7 @@ import de.avgl.dmp.controller.resources.job.utils.FiltersResourceUtils;
 import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Filter;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyFilter;
 import de.avgl.dmp.persistence.service.job.FilterService;
 
 /**
@@ -36,7 +37,7 @@ import de.avgl.dmp.persistence.service.job.FilterService;
 @RequestScoped
 @Api(value = "/filters", description = "Operations about filters.")
 @Path("filters")
-public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, FilterService, Filter> {
+public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, FilterService, ProxyFilter, Filter> {
 
 	/**
 	 * Creates a new resource (controller service) for {@link Filter}s with the provider of the filter persistence service, the

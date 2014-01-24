@@ -25,6 +25,7 @@ import de.avgl.dmp.controller.resources.schema.utils.AttributePathsResourceUtils
 import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttributePath;
 import de.avgl.dmp.persistence.service.schema.AttributePathService;
 
 /**
@@ -35,7 +36,7 @@ import de.avgl.dmp.persistence.service.schema.AttributePathService;
 @RequestScoped
 @Api(value = "/attributepaths", description = "Operations about attribute paths.")
 @Path("attributepaths")
-public class AttributePathsResource extends BasicIDResource<AttributePathsResourceUtils, AttributePathService, AttributePath> {
+public class AttributePathsResource extends BasicIDResource<AttributePathsResourceUtils, AttributePathService, ProxyAttributePath, AttributePath> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributePathsResource.class);
 

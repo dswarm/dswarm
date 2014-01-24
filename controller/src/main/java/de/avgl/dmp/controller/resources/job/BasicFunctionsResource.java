@@ -4,6 +4,7 @@ import de.avgl.dmp.controller.resources.ExtendedBasicDMPResource;
 import de.avgl.dmp.controller.resources.job.utils.BasicFunctionsResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Function;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyBasicFunction;
 import de.avgl.dmp.persistence.service.job.BasicFunctionService;
 
 /**
@@ -14,8 +15,8 @@ import de.avgl.dmp.persistence.service.job.BasicFunctionService;
  *            concrete {@link Function} class
  * @param <POJOCLASS> the concrete {@link Function} class
  */
-public abstract class BasicFunctionsResource<POJOCLASSRESOURCEUTILS extends BasicFunctionsResourceUtils<POJOCLASSPERSISTENCESERVICE, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends BasicFunctionService<POJOCLASS>, POJOCLASS extends Function>
-		extends ExtendedBasicDMPResource<POJOCLASSRESOURCEUTILS, POJOCLASSPERSISTENCESERVICE, POJOCLASS> {
+public abstract class BasicFunctionsResource<POJOCLASSRESOURCEUTILS extends BasicFunctionsResourceUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends BasicFunctionService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyBasicFunction<POJOCLASS>, POJOCLASS extends Function>
+		extends ExtendedBasicDMPResource<POJOCLASSRESOURCEUTILS, POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
 
 	/**
 	 * Creates a new resource (controller service) for the given concrete {@link Function} class with the provider of the concrete

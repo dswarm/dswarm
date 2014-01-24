@@ -9,9 +9,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import de.avgl.dmp.persistence.model.resource.Configuration;
+import de.avgl.dmp.persistence.model.resource.proxy.ProxyConfiguration;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 
-public class ConfigurationsResourceTestUtils extends ExtendedBasicDMPResourceTestUtils<ConfigurationService, Configuration> {
+public class ConfigurationsResourceTestUtils extends ExtendedBasicDMPResourceTestUtils<ConfigurationService, ProxyConfiguration, Configuration> {
 
 	public ConfigurationsResourceTestUtils() {
 

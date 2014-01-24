@@ -25,6 +25,7 @@ import de.avgl.dmp.controller.resources.job.utils.ComponentsResourceUtils;
 import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Component;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyComponent;
 import de.avgl.dmp.persistence.service.job.ComponentService;
 
 /**
@@ -35,7 +36,7 @@ import de.avgl.dmp.persistence.service.job.ComponentService;
 @RequestScoped
 @Api(value = "/components", description = "Operations about components.")
 @Path("components")
-public class ComponentsResource extends ExtendedBasicDMPResource<ComponentsResourceUtils, ComponentService, Component> {
+public class ComponentsResource extends ExtendedBasicDMPResource<ComponentsResourceUtils, ComponentService, ProxyComponent, Component> {
 
 	/**
 	 * Creates a new resource (controller service) for {@link Component}s with the provider of the component persistence service,

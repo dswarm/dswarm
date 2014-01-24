@@ -24,6 +24,7 @@ import de.avgl.dmp.controller.resources.schema.utils.ClaszesResourceUtils;
 import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.schema.Clasz;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyClasz;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
 
 /**
@@ -34,7 +35,7 @@ import de.avgl.dmp.persistence.service.schema.ClaszService;
 @RequestScoped
 @Api(value = "/classes", description = "Operations about classes.")
 @Path("classes")
-public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, ClaszService, Clasz> {
+public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, ClaszService, ProxyClasz, Clasz> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ClaszesResource.class);
 

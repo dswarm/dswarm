@@ -12,20 +12,20 @@ import com.google.common.collect.Sets;
 
 import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.persistence.model.DMPJPAObject;
+import de.avgl.dmp.persistence.model.proxy.ProxyDMPJPAObject;
 import de.avgl.dmp.persistence.service.BasicJPAService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
- *
  * @author tgaengler
- *
  * @param <DMPJPAOBJECTIMPL> the concrete model class
  */
-abstract class ReferenceDeserializer<DMPJPAOBJECTIMPL extends DMPJPAObject> extends JsonDeserializer<Set<DMPJPAOBJECTIMPL>> {
+abstract class ReferenceDeserializer<PROXYDMPJPAOBJECTIMPL extends ProxyDMPJPAObject<DMPJPAOBJECTIMPL>, DMPJPAOBJECTIMPL extends DMPJPAObject>
+		extends JsonDeserializer<Set<DMPJPAOBJECTIMPL>> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ReferenceDeserializer.class);
 
-	abstract BasicJPAService<DMPJPAOBJECTIMPL, Long> getJpaService() throws DMPException;
+	abstract BasicJPAService<PROXYDMPJPAOBJECTIMPL, DMPJPAOBJECTIMPL, Long> getJpaService() throws DMPException;
 
 	@Override
 	public Set<DMPJPAOBJECTIMPL> deserialize(final JsonParser jp, final DeserializationContext ctxt) throws IOException {
@@ -64,14 +64,13 @@ abstract class ReferenceDeserializer<DMPJPAOBJECTIMPL extends DMPJPAObject> exte
 
 			final Long id = idNode.asLong();
 
-			final BasicJPAService<DMPJPAOBJECTIMPL, Long> jpaService;
+			final BasicJPAService<PROXYDMPJPAOBJECTIMPL, DMPJPAOBJECTIMPL, Long> jpaService;
 			try {
 				jpaService = getJpaService();
 			} catch (final DMPException e) {
 				LOG.error("Couldn't get JPAService", e);
 				continue;
 			}
-
 
 			final DMPJPAOBJECTIMPL object;
 			object = jpaService.getObject(id);
