@@ -7,7 +7,7 @@ import javax.persistence.MappedSuperclass;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * The abstract POJO class for entities where the identifier should be provided at object creation.
+ * The abstract POJO class for entities where the uri of the entity should be provided at object creation.
  * 
  * @author tgaengler
  */
