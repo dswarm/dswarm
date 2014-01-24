@@ -8,10 +8,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.job.Filter;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyFilter;
 import de.avgl.dmp.persistence.service.job.FilterService;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
 
-public class FilterServiceTest extends IDBasicJPAServiceTest<Filter, FilterService, Long> {
+public class FilterServiceTest extends IDBasicJPAServiceTest<ProxyFilter, Filter, FilterService> {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(FilterServiceTest.class);
 

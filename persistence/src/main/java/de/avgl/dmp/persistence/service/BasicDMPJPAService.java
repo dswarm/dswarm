@@ -6,6 +6,7 @@ import com.google.inject.Provider;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
+import de.avgl.dmp.persistence.model.proxy.ProxyBasicDMPJPAObject;
 
 /**
  * A generic persistence service implementation for {@link BasicDMPJPAObject}s, i.e., objects where the identifier will be
@@ -14,7 +15,8 @@ import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
  * @author tgaengler
  * @param <POJOCLASS> the concrete POJO class
  */
-public abstract class BasicDMPJPAService<POJOCLASS extends BasicDMPJPAObject> extends BasicIDJPAService<POJOCLASS> {
+public abstract class BasicDMPJPAService<PROXYPOJOCLASS extends ProxyBasicDMPJPAObject<POJOCLASS>, POJOCLASS extends BasicDMPJPAObject> extends
+		BasicIDJPAService<PROXYPOJOCLASS, POJOCLASS> {
 
 	/**
 	 * Creates a new persistence service for the given concrete POJO class and the entity manager provider.

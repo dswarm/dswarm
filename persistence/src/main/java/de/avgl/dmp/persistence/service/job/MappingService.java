@@ -11,6 +11,7 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Filter;
 import de.avgl.dmp.persistence.model.job.Mapping;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyMapping;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.service.BasicDMPJPAService;
 
@@ -19,7 +20,7 @@ import de.avgl.dmp.persistence.service.BasicDMPJPAService;
  * 
  * @author tgaengler
  */
-public class MappingService extends BasicDMPJPAService<Mapping> {
+public class MappingService extends BasicDMPJPAService<ProxyMapping, Mapping> {
 
 	/**
 	 * Creates a new mapping persistence service with the given entity manager provider.

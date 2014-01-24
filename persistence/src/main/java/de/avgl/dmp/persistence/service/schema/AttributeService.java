@@ -7,6 +7,7 @@ import com.google.inject.Provider;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.schema.Attribute;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttribute;
 import de.avgl.dmp.persistence.service.AdvancedDMPJPAService;
 
 /**
@@ -15,7 +16,7 @@ import de.avgl.dmp.persistence.service.AdvancedDMPJPAService;
  * @author tgaengler
  *
  */
-public class AttributeService extends AdvancedDMPJPAService<Attribute> {
+public class AttributeService extends AdvancedDMPJPAService<ProxyAttribute, Attribute> {
 
 	/**
 	 * Creates a new attribute persistence service with the given entity manager provider.

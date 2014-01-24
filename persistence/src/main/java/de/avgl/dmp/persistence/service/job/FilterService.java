@@ -7,6 +7,7 @@ import com.google.inject.Provider;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.job.Filter;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyFilter;
 import de.avgl.dmp.persistence.service.BasicDMPJPAService;
 
 /**
@@ -14,7 +15,7 @@ import de.avgl.dmp.persistence.service.BasicDMPJPAService;
  * 
  * @author tgaengler
  */
-public class FilterService extends BasicDMPJPAService<Filter> {
+public class FilterService extends BasicDMPJPAService<ProxyFilter, Filter> {
 
 	/**
 	 * Creates a new filter persistence service with the given entity manager provider.

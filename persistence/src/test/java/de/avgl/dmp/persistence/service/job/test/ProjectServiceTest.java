@@ -23,6 +23,7 @@ import de.avgl.dmp.persistence.model.job.FunctionType;
 import de.avgl.dmp.persistence.model.job.Mapping;
 import de.avgl.dmp.persistence.model.job.Project;
 import de.avgl.dmp.persistence.model.job.Transformation;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyProject;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
@@ -46,7 +47,7 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectService, Long> {
+public class ProjectServiceTest extends IDBasicJPAServiceTest<ProxyProject, Project, ProjectService> {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(ProjectServiceTest.class);
 
@@ -1563,7 +1564,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 		final AttributePathService attributePathService = GuicedTest.injector.getInstance(AttributePathService.class);
 
 		Assert.assertNotNull("attribute path service shouldn't be null", attributePathService);
-		
+
 		final AttributePath attributePath = new AttributePath(attributePathArg);
 
 		AttributePath updatedAttributePath = null;
@@ -1596,7 +1597,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 		}
 
 		LOG.debug("attribute path json for attribute path '" + updatedAttributePath.getId() + "': " + json);
-		
+
 		attributePaths.put(updatedAttributePath.getId(), updatedAttributePath);
 
 		return updatedAttributePath;

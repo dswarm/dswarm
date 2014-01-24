@@ -18,11 +18,12 @@ import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.FunctionType;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyComponent;
 import de.avgl.dmp.persistence.service.job.ComponentService;
 import de.avgl.dmp.persistence.service.job.FunctionService;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
 
-public class ComponentServiceTest extends IDBasicJPAServiceTest<Component, ComponentService, Long> {
+public class ComponentServiceTest extends IDBasicJPAServiceTest<ProxyComponent, Component, ComponentService> {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(ComponentServiceTest.class);
 
@@ -69,7 +70,8 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<Component, Compo
 				updatedComponent.getParameterMappings().containsKey(functionParameterName));
 		Assert.assertEquals("the component parameter mapping for '" + functionParameterName + "' are not equal", componentVariableName,
 				updatedComponent.getParameterMappings().get(functionParameterName));
-		Assert.assertEquals("the function type is not '" + FunctionType.Function + "'", FunctionType.Function, updatedComponent.getFunction().getFunctionType());
+		Assert.assertEquals("the function type is not '" + FunctionType.Function + "'", FunctionType.Function, updatedComponent.getFunction()
+				.getFunctionType());
 
 		String json = null;
 
@@ -201,7 +203,8 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<Component, Compo
 				.getOutputComponents().contains(component2));
 		Assert.assertEquals("the component output component '" + component2.getId() + "' are not equal", component2, updatedComponent
 				.getOutputComponents().iterator().next());
-		Assert.assertEquals("the function type is not '" + FunctionType.Function + "'", FunctionType.Function, updatedComponent.getFunction().getFunctionType());
+		Assert.assertEquals("the function type is not '" + FunctionType.Function + "'", FunctionType.Function, updatedComponent.getFunction()
+				.getFunctionType());
 
 		String json = null;
 
@@ -309,7 +312,8 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<Component, Compo
 		Assert.assertNotNull("the component name shouldn't be null", updatedComponent.getName());
 		Assert.assertEquals("the component names are not equal", name, updatedComponent.getName());
 		Assert.assertNotNull("the component parameter mappings shouldn't be null", updatedComponent.getParameterMappings());
-		Assert.assertEquals("the function type is not '" + FunctionType.Function + "'", FunctionType.Function, updatedComponent.getFunction().getFunctionType());
+		Assert.assertEquals("the function type is not '" + FunctionType.Function + "'", FunctionType.Function, updatedComponent.getFunction()
+				.getFunctionType());
 
 		return updatedComponent;
 	}

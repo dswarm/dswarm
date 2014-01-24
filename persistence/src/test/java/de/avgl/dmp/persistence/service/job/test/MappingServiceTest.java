@@ -21,6 +21,7 @@ import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.FunctionType;
 import de.avgl.dmp.persistence.model.job.Mapping;
 import de.avgl.dmp.persistence.model.job.Transformation;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyMapping;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.service.job.ComponentService;
@@ -31,7 +32,7 @@ import de.avgl.dmp.persistence.service.schema.AttributePathService;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
 
-public class MappingServiceTest extends IDBasicJPAServiceTest<Mapping, MappingService, Long> {
+public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapping, MappingService> {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(MappingServiceTest.class);
 
@@ -385,17 +386,17 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<Mapping, MappingSe
 
 		final Component component4 = createComponent(component4Name, parameterMapping4, function4, component4InputComponents, null);
 
-//		final Set<Component> transformationComponentOutputComponents = Sets.newLinkedHashSet();
-//
-//		transformationComponentOutputComponents.add(component4);
-//
-//		transformationComponent.setOutputComponents(transformationComponentOutputComponents);
-//
-//		final Set<Component> transformationComponent2OutputComponents = Sets.newLinkedHashSet();
-//
-//		transformationComponent2OutputComponents.add(component4);
-//
-//		transformationComponent2.setOutputComponents(transformationComponent2OutputComponents);
+		// final Set<Component> transformationComponentOutputComponents = Sets.newLinkedHashSet();
+		//
+		// transformationComponentOutputComponents.add(component4);
+		//
+		// transformationComponent.setOutputComponents(transformationComponentOutputComponents);
+		//
+		// final Set<Component> transformationComponent2OutputComponents = Sets.newLinkedHashSet();
+		//
+		// transformationComponent2OutputComponents.add(component4);
+		//
+		// transformationComponent2.setOutputComponents(transformationComponent2OutputComponents);
 
 		// TODO: update transformation component 1 + 2 (?)
 
@@ -521,9 +522,10 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<Mapping, MappingSe
 				.getTransformation().getFunction().getParameters().contains(transformation2Parameter));
 		Assert.assertEquals("the transformation parameter for '" + transformation2Parameter + "' are not equal", transformation2Parameter,
 				updatedMapping.getTransformation().getFunction().getParameters().iterator().next());
-		Assert.assertEquals("the function type is not '" + FunctionType.Transformation + "'", FunctionType.Transformation, updatedMapping.getTransformation()
-				.getFunction().getFunctionType());
-		Assert.assertTrue("mapping transformation is not a '" + FunctionType.Transformation + "'", Transformation.class.isInstance(updatedMapping.getTransformation().getFunction()));
+		Assert.assertEquals("the function type is not '" + FunctionType.Transformation + "'", FunctionType.Transformation, updatedMapping
+				.getTransformation().getFunction().getFunctionType());
+		Assert.assertTrue("mapping transformation is not a '" + FunctionType.Transformation + "'",
+				Transformation.class.isInstance(updatedMapping.getTransformation().getFunction()));
 		Assert.assertNotNull("the transformation components set shouldn't be null", ((Transformation) updatedMapping.getTransformation()
 				.getFunction()).getComponents());
 		Assert.assertEquals("the transformation component sets are not equal", components2, ((Transformation) updatedMapping.getTransformation()
@@ -752,7 +754,8 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<Mapping, MappingSe
 		Assert.assertNotNull("the component name shouldn't be null", updatedComponent.getName());
 		Assert.assertEquals("the component names are not equal", name, updatedComponent.getName());
 		Assert.assertNotNull("the component parameter mappings shouldn't be null", updatedComponent.getParameterMappings());
-		Assert.assertEquals("the function type is not '" + function.getFunctionType() + "'", function.getFunctionType(), updatedComponent.getFunction().getFunctionType());
+		Assert.assertEquals("the function type is not '" + function.getFunctionType() + "'", function.getFunctionType(), updatedComponent
+				.getFunction().getFunctionType());
 
 		components.put(updatedComponent.getId(), updatedComponent);
 
@@ -889,7 +892,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<Mapping, MappingSe
 		final AttributePathService attributePathService = GuicedTest.injector.getInstance(AttributePathService.class);
 
 		Assert.assertNotNull("attribute path service shouldn't be null", attributePathService);
-		
+
 		final AttributePath attributePath = new AttributePath(attributePathArg);
 
 		AttributePath updatedAttributePath = null;
@@ -922,7 +925,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<Mapping, MappingSe
 		}
 
 		LOG.debug("attribute path json for attribute path '" + updatedAttributePath.getId() + "': " + json);
-		
+
 		attributePaths.put(updatedAttributePath.getId(), updatedAttributePath);
 
 		return updatedAttributePath;

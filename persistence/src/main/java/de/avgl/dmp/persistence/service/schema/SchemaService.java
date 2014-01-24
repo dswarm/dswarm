@@ -11,6 +11,7 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxySchema;
 import de.avgl.dmp.persistence.service.BasicDMPJPAService;
 
 /**
@@ -18,7 +19,7 @@ import de.avgl.dmp.persistence.service.BasicDMPJPAService;
  * 
  * @author tgaengler
  */
-public class SchemaService extends BasicDMPJPAService<Schema> {
+public class SchemaService extends BasicDMPJPAService<ProxySchema, Schema> {
 
 	/**
 	 * Creates a new schema persistence service with the given entity manager provider.

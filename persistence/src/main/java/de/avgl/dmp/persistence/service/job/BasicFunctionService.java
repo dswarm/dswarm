@@ -8,6 +8,7 @@ import com.google.inject.Provider;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.job.Function;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyBasicFunction;
 import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
 
 /**
@@ -16,7 +17,8 @@ import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
  * @author tgaengler
  * @param <FUNCTIONIMPL> a concrete {@link Function} implementation
  */
-public abstract class BasicFunctionService<FUNCTIONIMPL extends Function> extends ExtendedBasicDMPJPAService<FUNCTIONIMPL> {
+public abstract class BasicFunctionService<PROXYFUNCTIONIMPL extends ProxyBasicFunction<FUNCTIONIMPL>, FUNCTIONIMPL extends Function> extends
+		ExtendedBasicDMPJPAService<PROXYFUNCTIONIMPL, FUNCTIONIMPL> {
 
 	/**
 	 * Creates a new persistence service for the given concrete {@link Function} implementation and the entity manager provider.

@@ -20,6 +20,7 @@ import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
+import de.avgl.dmp.persistence.model.resource.proxy.ProxyDataModel;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
@@ -34,7 +35,7 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class DataModelServiceTest extends IDBasicJPAServiceTest<DataModel, DataModelService, Long> {
+public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, DataModel, DataModelService> {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(DataModelServiceTest.class);
 
@@ -185,17 +186,21 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<DataModel, DataM
 		checkSimpleResource(resource, updatedDataModel.getDataResource(), attributeKey, attributeValue);
 		checkComplexResource(resource, updatedDataModel.getDataResource());
 		checkComplexResource(resource, updatedDataModel.getDataResource(), parameterKey, parameterValue);
-		
+
 		Assert.assertNotNull("the configuration of the updated data model shouldn't be null", updatedDataModel.getConfiguration());
 		Assert.assertNotNull("the configuration name of the updated resource shouldn't be null", updatedDataModel.getConfiguration().getName());
-		Assert.assertEquals("the configuration' names of the resource are not equal", configuration.getName(), updatedDataModel.getConfiguration().getName());
-		Assert.assertNotNull("the configuration description of the updated resource shouldn't be null", updatedDataModel.getConfiguration().getDescription());
-		Assert.assertEquals("the configuration descriptions of the resource are not equal", configuration.getDescription(), updatedDataModel.getConfiguration().getDescription());
-		Assert.assertNotNull("the configuration parameters of the updated resource shouldn't be null", updatedDataModel.getConfiguration().getParameters());
-		Assert.assertEquals("the configurations parameters of the resource are not equal", configuration.getParameters(), updatedDataModel.getConfiguration().getParameters());
+		Assert.assertEquals("the configuration' names of the resource are not equal", configuration.getName(), updatedDataModel.getConfiguration()
+				.getName());
+		Assert.assertNotNull("the configuration description of the updated resource shouldn't be null", updatedDataModel.getConfiguration()
+				.getDescription());
+		Assert.assertEquals("the configuration descriptions of the resource are not equal", configuration.getDescription(), updatedDataModel
+				.getConfiguration().getDescription());
+		Assert.assertNotNull("the configuration parameters of the updated resource shouldn't be null", updatedDataModel.getConfiguration()
+				.getParameters());
+		Assert.assertEquals("the configurations parameters of the resource are not equal", configuration.getParameters(), updatedDataModel
+				.getConfiguration().getParameters());
 		Assert.assertNotNull("the parameter value shouldn't be null", configuration.getParameter(parameterKey));
 		Assert.assertEquals("the parameter value should be equal", configuration.getParameter(parameterKey).asText(), parameterValue);
-
 
 		String json = null;
 
@@ -233,7 +238,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<DataModel, DataM
 		final AttributePathService attributePathService = GuicedTest.injector.getInstance(AttributePathService.class);
 
 		Assert.assertNotNull("attribute path service shouldn't be null", attributePathService);
-		
+
 		final AttributePath attributePath = new AttributePath(attributePathArg);
 
 		AttributePath updatedAttributePath = null;
@@ -266,7 +271,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<DataModel, DataM
 		}
 
 		LOG.debug("attribute path json for attribute path '" + updatedAttributePath.getId() + "': " + json);
-		
+
 		attributePaths.put(updatedAttributePath.getId(), updatedAttributePath);
 
 		return updatedAttributePath;

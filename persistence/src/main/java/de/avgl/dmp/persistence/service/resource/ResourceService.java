@@ -12,6 +12,7 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
+import de.avgl.dmp.persistence.model.resource.proxy.ProxyResource;
 import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
 
 /**
@@ -19,7 +20,7 @@ import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
  * 
  * @author tgaengler
  */
-public class ResourceService extends ExtendedBasicDMPJPAService<Resource> {
+public class ResourceService extends ExtendedBasicDMPJPAService<ProxyResource, Resource> {
 
 	/**
 	 * Creates a new resource persistence service with the given entity manager provider.

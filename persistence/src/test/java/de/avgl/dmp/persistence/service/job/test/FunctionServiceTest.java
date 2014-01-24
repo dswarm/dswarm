@@ -19,11 +19,12 @@ import com.google.common.collect.Lists;
 import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.FunctionType;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyFunction;
 import de.avgl.dmp.persistence.service.job.FunctionService;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class FunctionServiceTest extends IDBasicJPAServiceTest<Function, FunctionService, Long> {
+public class FunctionServiceTest extends IDBasicJPAServiceTest<ProxyFunction, Function, FunctionService> {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(FunctionServiceTest.class);
 
@@ -94,7 +95,7 @@ public class FunctionServiceTest extends IDBasicJPAServiceTest<Function, Functio
 		deletedObject(function.getId());
 	}
 
-	//@Test
+	// @Test
 	public void loadMetafactureSimpleFunctionSetTest() {
 
 		String metafactureFunctionDescriptionsJSONString = null;

@@ -13,7 +13,7 @@ import com.google.inject.persist.Transactional;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
-import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
+import de.avgl.dmp.persistence.model.proxy.ProxyAdvancedDMPJPAObject;
 
 /**
  * A generic persistence service implementation for {@link AdvancedDMPJPAObject}s, i.e., where the identifier will be set on
@@ -22,7 +22,8 @@ import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
  * @author tgaengler
  * @param <POJOCLASS> a concrete POJO class
  */
-public abstract class AdvancedDMPJPAService<POJOCLASS extends BasicDMPJPAObject> extends BasicDMPJPAService<POJOCLASS> {
+public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvancedDMPJPAObject<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
+		extends BasicDMPJPAService<PROXYPOJOCLASS, POJOCLASS> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AdvancedDMPJPAService.class);
 

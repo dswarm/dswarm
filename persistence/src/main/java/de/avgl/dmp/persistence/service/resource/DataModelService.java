@@ -9,6 +9,7 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
+import de.avgl.dmp.persistence.model.resource.proxy.ProxyDataModel;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
 
@@ -17,7 +18,7 @@ import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
  * 
  * @author tgaengler
  */
-public class DataModelService extends ExtendedBasicDMPJPAService<DataModel> {
+public class DataModelService extends ExtendedBasicDMPJPAService<ProxyDataModel, DataModel> {
 
 	/**
 	 * Creates a new data model persistence service with the given entity manager provider.

@@ -14,6 +14,7 @@ import com.google.inject.persist.Transactional;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.DMPObject;
+import de.avgl.dmp.persistence.model.proxy.ProxyDMPObject;
 
 /**
  * A generic persistence service implementation, whose concrete implementations can be derived with a given implementation of
@@ -24,7 +25,7 @@ import de.avgl.dmp.persistence.model.DMPObject;
  * @param <POJOCLASS> the concrete POJO class
  * @param <POJOCLASSIDTYPE> the identifier type of the concrete POJO class
  */
-public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE> {
+public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(BasicJPAService.class);
 

@@ -14,6 +14,7 @@ import com.google.inject.persist.Transactional;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttributePath;
 import de.avgl.dmp.persistence.service.BasicIDJPAService;
 
 /**
@@ -21,7 +22,7 @@ import de.avgl.dmp.persistence.service.BasicIDJPAService;
  * 
  * @author tgaengler
  */
-public class AttributePathService extends BasicIDJPAService<AttributePath> {
+public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, AttributePath> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributePathService.class);
 
@@ -148,13 +149,13 @@ public class AttributePathService extends BasicIDJPAService<AttributePath> {
 	}
 
 	public List<AttributePath> getAttributePathsWithPath(final String attributePathJSONArrayString) {
-		
+
 		final EntityManager entityManager = acquire(true);
-		
+
 		final String queryString = "from " + AttributePath.class.getName() + " where attributePath = '" + attributePathJSONArrayString + "'";
-		
+
 		final TypedQuery<AttributePath> query = entityManager.createQuery(queryString, AttributePath.class);
-		
+
 		return query.getResultList();
 	}
 

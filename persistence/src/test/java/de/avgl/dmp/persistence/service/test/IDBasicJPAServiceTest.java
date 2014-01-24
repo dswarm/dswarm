@@ -7,11 +7,12 @@ import org.junit.Test;
 
 import com.google.common.collect.Sets;
 
-import de.avgl.dmp.persistence.model.DMPObject;
-import de.avgl.dmp.persistence.service.BasicJPAService;
+import de.avgl.dmp.persistence.model.DMPJPAObject;
+import de.avgl.dmp.persistence.model.proxy.ProxyDMPJPAObject;
+import de.avgl.dmp.persistence.service.BasicIDJPAService;
 
-public abstract class IDBasicJPAServiceTest<POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, JPASERVICEIMPL extends BasicJPAService<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSIDTYPE>
-		extends BasicJPAServiceTest<POJOCLASS, JPASERVICEIMPL, POJOCLASSIDTYPE> {
+public abstract class IDBasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPJPAObject<POJOCLASS>, POJOCLASS extends DMPJPAObject, JPASERVICEIMPL extends BasicIDJPAService<PROXYPOJOCLASS, POJOCLASS>>
+		extends BasicJPAServiceTest<PROXYPOJOCLASS, POJOCLASS, JPASERVICEIMPL, Long> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(IDBasicJPAServiceTest.class);
 
@@ -27,7 +28,7 @@ public abstract class IDBasicJPAServiceTest<POJOCLASS extends DMPObject<POJOCLAS
 	 */
 	@Test
 	public void idGenerationTest() {
-		
+
 		LOG.debug("start id generation test for " + type);
 
 		final Set<POJOCLASS> objectes = Sets.newLinkedHashSet();
@@ -46,7 +47,7 @@ public abstract class IDBasicJPAServiceTest<POJOCLASS extends DMPObject<POJOCLAS
 
 			jpaService.deleteObject(object.getId());
 		}
-		
+
 		LOG.debug("end id generation test for " + type);
 	}
 }
