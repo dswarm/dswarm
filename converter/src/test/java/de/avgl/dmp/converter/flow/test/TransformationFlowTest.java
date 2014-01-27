@@ -82,16 +82,16 @@ public class TransformationFlowTest extends GuicedTest {
 
 		// process input data model
 		final ConfigurationService configurationService = injector.getInstance(ConfigurationService.class);
-		final Configuration configuration = configurationService.createObject();
+		final Configuration configuration = configurationService.createObject().getObject();
 
 		configuration.setName("config1");
 		configuration.addParameter(ConfigurationStatics.COLUMN_DELIMITER, new TextNode(";"));
 		configuration.addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode("csv"));
 
-		Configuration updatedConfiguration = configurationService.updateObjectTransactional(configuration);
+		Configuration updatedConfiguration = configurationService.updateObjectTransactional(configuration).getObject();
 
 		final ResourceService resourceService = injector.getInstance(ResourceService.class);
-		final Resource resource = resourceService.createObject();
+		final Resource resource = resourceService.createObject().getObject();
 		resource.setName("test_csv.csv");
 		resource.setType(ResourceType.FILE);
 		resource.addConfiguration(updatedConfiguration);
@@ -101,15 +101,15 @@ public class TransformationFlowTest extends GuicedTest {
 
 		resource.addAttribute("path", resourceFile.getAbsolutePath());
 
-		Resource updatedResource = resourceService.updateObjectTransactional(resource);
+		Resource updatedResource = resourceService.updateObjectTransactional(resource).getObject();
 
 		final DataModelService dataModelService = injector.getInstance(DataModelService.class);
-		final DataModel dataModel = dataModelService.createObject();
+		final DataModel dataModel = dataModelService.createObject().getObject();
 
 		dataModel.setDataResource(updatedResource);
 		dataModel.setConfiguration(updatedConfiguration);
 
-		DataModel updatedDataModel = dataModelService.updateObjectTransactional(dataModel);
+		DataModel updatedDataModel = dataModelService.updateObjectTransactional(dataModel).getObject();
 
 		final CSVSourceResourceTriplesFlow flow2 = new CSVSourceResourceTriplesFlow(updatedDataModel);
 
