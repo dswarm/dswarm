@@ -11,6 +11,7 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.Mapping;
 import de.avgl.dmp.persistence.model.job.Project;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyProject;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
 
@@ -19,7 +20,7 @@ import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
  * 
  * @author tgaengler
  */
-public class ProjectService extends ExtendedBasicDMPJPAService<Project> {
+public class ProjectService extends ExtendedBasicDMPJPAService<ProxyProject, Project> {
 
 	/**
 	 * Creates a new project persistence service with the given entity manager provider.
@@ -29,7 +30,7 @@ public class ProjectService extends ExtendedBasicDMPJPAService<Project> {
 	@Inject
 	public ProjectService(final Provider<EntityManager> entityManagerProvider) {
 
-		super(Project.class, entityManagerProvider);
+		super(Project.class, ProxyProject.class, entityManagerProvider);
 	}
 
 	/**

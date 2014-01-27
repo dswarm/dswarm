@@ -24,6 +24,7 @@ import de.avgl.dmp.controller.resources.job.utils.FunctionsResourceUtils;
 import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Function;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyFunction;
 import de.avgl.dmp.persistence.service.job.FunctionService;
 
 /**
@@ -35,7 +36,7 @@ import de.avgl.dmp.persistence.service.job.FunctionService;
 @RequestScoped
 @Api(value = "/functions", description = "Operations about functions.")
 @Path("functions")
-public class FunctionsResource extends BasicFunctionsResource<FunctionsResourceUtils, FunctionService, Function> {
+public class FunctionsResource extends BasicFunctionsResource<FunctionsResourceUtils, FunctionService, ProxyFunction, Function> {
 
 	/**
 	 * Creates a new resource (controller service) for {@link Function}s with the provider of the function persistence service,

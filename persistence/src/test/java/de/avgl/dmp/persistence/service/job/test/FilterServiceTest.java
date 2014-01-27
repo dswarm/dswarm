@@ -8,10 +8,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.job.Filter;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyFilter;
 import de.avgl.dmp.persistence.service.job.FilterService;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
 
-public class FilterServiceTest extends IDBasicJPAServiceTest<Filter, FilterService, Long> {
+public class FilterServiceTest extends IDBasicJPAServiceTest<ProxyFilter, Filter, FilterService> {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(FilterServiceTest.class);
 
@@ -32,12 +33,12 @@ public class FilterServiceTest extends IDBasicJPAServiceTest<Filter, FilterServi
 				+ "    ?metadata m:record ?mabrecord .\n" + "    ?mabrecord m:datafield ?dataField .\n" + "    ?dataField m:tag \"088\" ;\n"
 				+ "               m:ind1 \"a\" ;\n" + "               m:subfield ?subField .\n" + "    ?subField rdf:value ?url .\n" + "}";
 
-		final Filter filter = createObject();
+		final Filter filter = createObject().getObject();
 
 		filter.setName(name);
 		filter.setExpression(expression);
 
-		final Filter updatedFilter = updateObjectTransactional(filter);
+		final Filter updatedFilter = updateObjectTransactional(filter).getObject();
 
 		Assert.assertNotNull("the filter's name of the updated filter shouldn't be null", updatedFilter.getName());
 		Assert.assertEquals("the filter's names are not equal", filter.getName(), updatedFilter.getName());

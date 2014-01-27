@@ -9,9 +9,10 @@ import com.google.common.collect.Maps;
 
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Transformation;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyTransformation;
 import de.avgl.dmp.persistence.service.job.TransformationService;
 
-public class TransformationsResourceTestUtils extends BasicFunctionsResourceTestUtils<TransformationService, Transformation> {
+public class TransformationsResourceTestUtils extends BasicFunctionsResourceTestUtils<TransformationService, ProxyTransformation, Transformation> {
 
 	private final ComponentsResourceTestUtils	componentsResourceTestUtils;
 

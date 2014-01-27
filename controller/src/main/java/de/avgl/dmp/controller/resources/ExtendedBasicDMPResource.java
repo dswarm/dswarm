@@ -4,6 +4,7 @@ import de.avgl.dmp.controller.resources.utils.ExtendedBasicDMPResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
+import de.avgl.dmp.persistence.model.proxy.ProxyExtendedBasicDMPJPAObject;
 import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
 
 /**
@@ -15,8 +16,8 @@ import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
  *            class
  * @param <POJOCLASS> the concrete POJO class of the resource
  */
-public abstract class ExtendedBasicDMPResource<POJOCLASSRESOURCEUTILS extends ExtendedBasicDMPResourceUtils<POJOCLASSPERSISTENCESERVICE, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends ExtendedBasicDMPJPAService<POJOCLASS>, POJOCLASS extends ExtendedBasicDMPJPAObject>
-		extends BasicDMPResource<POJOCLASSRESOURCEUTILS, POJOCLASSPERSISTENCESERVICE, POJOCLASS> {
+public abstract class ExtendedBasicDMPResource<POJOCLASSRESOURCEUTILS extends ExtendedBasicDMPResourceUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends ExtendedBasicDMPJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyExtendedBasicDMPJPAObject<POJOCLASS>, POJOCLASS extends ExtendedBasicDMPJPAObject>
+		extends BasicDMPResource<POJOCLASSRESOURCEUTILS, POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ExtendedBasicDMPResource.class);
 

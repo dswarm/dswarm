@@ -15,6 +15,7 @@ import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.Mapping;
 import de.avgl.dmp.persistence.model.job.Project;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyProject;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.service.job.ProjectService;
 
@@ -24,7 +25,7 @@ import de.avgl.dmp.persistence.service.job.ProjectService;
  * @param <POJOCLASS>
  * @param <POJOCLASSIDTYPE>
  */
-public class ProjectsResourceUtils extends ExtendedBasicDMPResourceUtils<ProjectService, Project> {
+public class ProjectsResourceUtils extends ExtendedBasicDMPResourceUtils<ProjectService, ProxyProject, Project> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ProjectsResourceUtils.class);
 

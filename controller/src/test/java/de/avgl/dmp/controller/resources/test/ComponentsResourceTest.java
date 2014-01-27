@@ -9,9 +9,10 @@ import de.avgl.dmp.controller.resources.test.utils.ComponentsResourceTestUtils;
 import de.avgl.dmp.controller.resources.test.utils.FunctionsResourceTestUtils;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Function;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyComponent;
 import de.avgl.dmp.persistence.service.job.ComponentService;
 
-public class ComponentsResourceTest extends BasicResourceTest<ComponentsResourceTestUtils, ComponentService, Component, Long> {
+public class ComponentsResourceTest extends BasicResourceTest<ComponentsResourceTestUtils, ComponentService, ProxyComponent, Component, Long> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ComponentsResourceTest.class);
 

@@ -24,6 +24,7 @@ import de.avgl.dmp.controller.resources.job.utils.TransformationsResourceUtils;
 import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Transformation;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyTransformation;
 import de.avgl.dmp.persistence.service.job.TransformationService;
 
 /**
@@ -34,7 +35,7 @@ import de.avgl.dmp.persistence.service.job.TransformationService;
 @RequestScoped
 @Api(value = "/transformations", description = "Operations about transformations.")
 @Path("transformations")
-public class TransformationsResource extends BasicFunctionsResource<TransformationsResourceUtils, TransformationService, Transformation> {
+public class TransformationsResource extends BasicFunctionsResource<TransformationsResourceUtils, TransformationService, ProxyTransformation, Transformation> {
 
 	/**
 	 * Creates a new resource (controller service) for {@link Transformation}s with the provider of the transformation persistence

@@ -4,6 +4,7 @@ import de.avgl.dmp.controller.resources.utils.BasicIDResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.DMPJPAObject;
+import de.avgl.dmp.persistence.model.proxy.ProxyDMPJPAObject;
 import de.avgl.dmp.persistence.service.BasicIDJPAService;
 
 /**
@@ -15,8 +16,8 @@ import de.avgl.dmp.persistence.service.BasicIDJPAService;
  *            class
  * @param <POJOCLASS> the concrete POJO class of the resource
  */
-public abstract class BasicIDResource<POJOCLASSRESOURCEUTILS extends BasicIDResourceUtils<POJOCLASSPERSISTENCESERVICE, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends BasicIDJPAService<POJOCLASS>, POJOCLASS extends DMPJPAObject>
-		extends BasicResource<POJOCLASSRESOURCEUTILS, POJOCLASSPERSISTENCESERVICE, POJOCLASS, Long> {
+public abstract class BasicIDResource<POJOCLASSRESOURCEUTILS extends BasicIDResourceUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends BasicIDJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyDMPJPAObject<POJOCLASS>, POJOCLASS extends DMPJPAObject>
+		extends BasicResource<POJOCLASSRESOURCEUTILS, POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS, Long> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(BasicIDResource.class);
 

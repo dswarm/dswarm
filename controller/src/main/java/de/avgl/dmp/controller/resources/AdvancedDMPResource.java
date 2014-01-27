@@ -1,14 +1,10 @@
 package de.avgl.dmp.controller.resources;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.utils.AdvancedDMPResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
-import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
 import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
+import de.avgl.dmp.persistence.model.proxy.ProxyAdvancedDMPJPAObject;
 import de.avgl.dmp.persistence.service.AdvancedDMPJPAService;
 
 /**
@@ -20,8 +16,8 @@ import de.avgl.dmp.persistence.service.AdvancedDMPJPAService;
  *            class
  * @param <POJOCLASS> the concrete POJO class of the resource
  */
-public abstract class AdvancedDMPResource<POJOCLASSRESOURCEUTILS extends AdvancedDMPResourceUtils<POJOCLASSPERSISTENCESERVICE, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends AdvancedDMPJPAService<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
-		extends BasicDMPResource<POJOCLASSRESOURCEUTILS, POJOCLASSPERSISTENCESERVICE, POJOCLASS> {
+public abstract class AdvancedDMPResource<POJOCLASSRESOURCEUTILS extends AdvancedDMPResourceUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends AdvancedDMPJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyAdvancedDMPJPAObject<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
+		extends BasicDMPResource<POJOCLASSRESOURCEUTILS, POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AdvancedDMPResource.class);
 

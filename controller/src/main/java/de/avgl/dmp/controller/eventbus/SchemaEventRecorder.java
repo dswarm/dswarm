@@ -19,14 +19,20 @@ import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.CSVResourceFlowFactory;
 import de.avgl.dmp.converter.flow.CSVSourceResourceTriplesFlow;
 import de.avgl.dmp.persistence.DMPPersistenceException;
+import de.avgl.dmp.persistence.model.proxy.RetrievalType;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
+import de.avgl.dmp.persistence.model.resource.proxy.ProxyDataModel;
 import de.avgl.dmp.persistence.model.resource.utils.DataModelUtils;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttribute;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttributePath;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyClasz;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxySchema;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.schema.AttributePathService;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
@@ -66,12 +72,25 @@ public class SchemaEventRecorder {
 			dataModel = event.getDataModel();
 		} else {
 
-			dataModel = dataModelService.createObject();
+			final ProxyDataModel proxyDataModel = dataModelService.createObject();
+
+			if (proxyDataModel != null) {
+
+				dataModel = proxyDataModel.getObject();
+			} else {
+
+				// TODO: log something?
+
+				dataModel = null;
+			}
 		}
+
+		// TODO: check data model for null
 
 		final List<Triple> triples = triplesFromCsv(dataModel.getDataResource(), dataModel.getConfiguration()).orNull();
 
 		if (triples == null) {
+
 			throw new DMPConverterException("could not transform CSV into triples");
 		}
 
@@ -82,8 +101,20 @@ public class SchemaEventRecorder {
 			schema = dataModel.getSchema();
 		} else {
 
-			schema = schemaService.createObject();
+			final ProxySchema proxySchema = schemaService.createObject();
+
+			if (proxySchema != null) {
+
+				schema = proxySchema.getObject();
+			} else {
+
+				// TODO: log something?
+
+				schema = null;
+			}
 		}
+
+		// TODO: check schema for null
 
 		final String dataResourceBaseSchemaURI = DataModelUtils.determineDataResourceSchemaBaseURI(dataModel);
 
@@ -96,8 +127,24 @@ public class SchemaEventRecorder {
 
 			final String recordClassURI = dataResourceBaseSchemaURI + "RecordType";
 
-			final Clasz newClasz = claszService.createObjectTransactional(recordClassURI);
-			newClasz.setName("record type");
+			final ProxyClasz proxyNewClasz = claszService.createOrGetObjectTransactional(recordClassURI);
+
+			if (proxyNewClasz == null) {
+
+				throw new DMPPersistenceException("couldn't create or retrieve class");
+			}
+
+			final Clasz newClasz = proxyNewClasz.getObject();
+
+			if (proxyNewClasz.getType().equals(RetrievalType.CREATED)) {
+
+				if (newClasz == null) {
+
+					throw new DMPPersistenceException("couldn't create new class");
+				}
+
+				newClasz.setName("record type");
+			}
 
 			clasz = newClasz;
 		}
@@ -112,14 +159,41 @@ public class SchemaEventRecorder {
 
 		for (final String stringAttribute : stringAttributes) {
 			final String attributeUri = dataResourceBaseSchemaURI + stringAttribute;
-			final Attribute attribute = attributeService.createObjectTransactional(attributeUri);
+			final ProxyAttribute proxyAttribute = attributeService.createOrGetObjectTransactional(attributeUri);
 
-			attribute.setName(stringAttribute);
-			
+			if (proxyAttribute == null) {
+
+				throw new DMPPersistenceException("couldn't create or retrieve attribute");
+			}
+
+			final Attribute attribute = proxyAttribute.getObject();
+
+			if (proxyAttribute.getType().equals(RetrievalType.CREATED)) {
+
+				if (attribute == null) {
+
+					throw new DMPPersistenceException("couldn't create new attribute");
+				}
+
+				attribute.setName(stringAttribute);
+			}
+
 			final LinkedList<Attribute> attributes = Lists.newLinkedList();
 			attributes.add(attribute);
 
-			final AttributePath attributePath = attributePathService.createObject(attributes);
+			final ProxyAttributePath proxyAttributePath = attributePathService.createOrGetObject(attributes);
+			
+			if(proxyAttributePath == null) {
+				
+				throw new DMPPersistenceException("couldn't create or retrieve attribute path");
+			}
+			
+			final AttributePath attributePath = proxyAttributePath.getObject();
+			
+			if(attributePath == null) {
+				
+				throw new DMPPersistenceException("couldn't create or retrieve attribute path");
+			}
 
 			attributePaths.add(attributePath);
 		}

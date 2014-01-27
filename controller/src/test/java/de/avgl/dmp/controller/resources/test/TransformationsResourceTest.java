@@ -12,17 +12,19 @@ import de.avgl.dmp.controller.resources.test.utils.TransformationsResourceTestUt
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.Transformation;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyTransformation;
 import de.avgl.dmp.persistence.service.job.TransformationService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class TransformationsResourceTest extends BasicResourceTest<TransformationsResourceTestUtils, TransformationService, Transformation, Long> {
+public class TransformationsResourceTest extends
+		BasicResourceTest<TransformationsResourceTestUtils, TransformationService, ProxyTransformation, Transformation, Long> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributesResourceTest.class);
 
 	private final FunctionsResourceTestUtils		functionsResourceTestUtils;
 
 	private final ComponentsResourceTestUtils		componentsResourceTestUtils;
-	
+
 	private final TransformationsResourceTestUtils	transformationsResourceTestUtils;
 
 	private Function								function;
@@ -86,26 +88,27 @@ public class TransformationsResourceTest extends BasicResourceTest<Transformatio
 		objectJSONString = objectMapper.writeValueAsString(objectJSON);
 		expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
 	}
-	
+
 	@Override
 	public Transformation updateObject(final Transformation actualTransformation) throws Exception {
-		
+
 		actualTransformation.setDescription(actualTransformation.getDescription() + " update");
-		
+
 		// TODO: [@fniederlein] update some more nested properties
-		
+
 		final String updateTransformationJSONString = objectMapper.writeValueAsString(actualTransformation);
-		
+
 		Assert.assertNotNull("the transformation JSON string shouldn't be null", updateTransformationJSONString);
-		
-		final Transformation updateTransformation = transformationsResourceTestUtils.updateObject(updateTransformationJSONString, actualTransformation);
-		
+
+		final Transformation updateTransformation = transformationsResourceTestUtils.updateObject(updateTransformationJSONString,
+				actualTransformation);
+
 		Assert.assertNotNull("the transformation JSON string shouldn't be null", updateTransformation);
 		Assert.assertEquals("transformation name shoud be equal", updateTransformation.getName(), actualTransformation.getName());
-		
+
 		return updateTransformation;
 	}
-	
+
 	@After
 	public void tearDown2() throws Exception {
 

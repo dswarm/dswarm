@@ -14,6 +14,7 @@ import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxySchema;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
 
 /**
@@ -22,7 +23,7 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
  * @param <POJOCLASS>
  * @param <POJOCLASSIDTYPE>
  */
-public class SchemasResourceUtils extends BasicDMPResourceUtils<SchemaService, Schema> {
+public class SchemasResourceUtils extends BasicDMPResourceUtils<SchemaService, ProxySchema, Schema> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(SchemasResourceUtils.class);
 

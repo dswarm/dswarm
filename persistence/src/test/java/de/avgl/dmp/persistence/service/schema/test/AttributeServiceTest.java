@@ -8,10 +8,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.schema.Attribute;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttribute;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
 import de.avgl.dmp.persistence.service.test.AdvancedJPAServiceTest;
 
-public class AttributeServiceTest extends AdvancedJPAServiceTest<Attribute, AttributeService> {
+public class AttributeServiceTest extends AdvancedJPAServiceTest<ProxyAttribute, Attribute, AttributeService> {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(AttributeServiceTest.class);
 
@@ -25,7 +26,7 @@ public class AttributeServiceTest extends AdvancedJPAServiceTest<Attribute, Attr
 	@Test
 	public void testSimpleAttribute() {
 
-		final Attribute attribute = createObject("http://purl.org/dc/terms/title");
+		final Attribute attribute = createObject("http://purl.org/dc/terms/title").getObject();
 
 		attribute.setName("title");
 
@@ -80,7 +81,7 @@ public class AttributeServiceTest extends AdvancedJPAServiceTest<Attribute, Attr
 
 	private Attribute createAttribute() {
 
-		final Attribute attribute = createObject("http://purl.org/dc/terms/title");
+		final Attribute attribute = createObject("http://purl.org/dc/terms/title").getObject();
 
 		attribute.setName("title");
 

@@ -25,6 +25,7 @@ import de.avgl.dmp.controller.resources.job.utils.ProjectsResourceUtils;
 import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Project;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyProject;
 import de.avgl.dmp.persistence.service.job.ProjectService;
 
 /**
@@ -35,7 +36,7 @@ import de.avgl.dmp.persistence.service.job.ProjectService;
 @RequestScoped
 @Api(value = "/projects", description = "Operations about projects.")
 @Path("projects")
-public class ProjectsResource extends ExtendedBasicDMPResource<ProjectsResourceUtils, ProjectService, Project> {
+public class ProjectsResource extends ExtendedBasicDMPResource<ProjectsResourceUtils, ProjectService, ProxyProject, Project> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ProjectsResource.class);
 

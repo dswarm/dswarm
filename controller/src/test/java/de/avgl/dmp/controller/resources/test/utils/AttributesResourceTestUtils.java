@@ -1,9 +1,10 @@
 package de.avgl.dmp.controller.resources.test.utils;
 
 import de.avgl.dmp.persistence.model.schema.Attribute;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttribute;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
 
-public class AttributesResourceTestUtils extends BasicResourceTestUtils<AttributeService, Attribute, Long> {
+public class AttributesResourceTestUtils extends AdvancedDMPResourceTestUtils<AttributeService, ProxyAttribute, Attribute> {
 
 	public AttributesResourceTestUtils() {
 
