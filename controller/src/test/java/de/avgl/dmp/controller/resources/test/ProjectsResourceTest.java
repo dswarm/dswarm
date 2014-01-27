@@ -65,6 +65,8 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 	private final DataModelsResourceTestUtils		dataModelsResourceTestUtils;
 
 	private final MappingsResourceTestUtils			mappingsResourceTestUtils;
+	
+	private final ProjectsResourceTestUtils			projectsResourceTestUtils;
 
 	private Function								function;
 
@@ -105,6 +107,7 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 		schemasResourceTestUtils = new SchemasResourceTestUtils();
 		dataModelsResourceTestUtils = new DataModelsResourceTestUtils();
 		mappingsResourceTestUtils = new MappingsResourceTestUtils();
+		projectsResourceTestUtils = new ProjectsResourceTestUtils();
 	}
 
 	@Override
@@ -221,13 +224,35 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 		// END mappings tear down
 	}
 	
-	@Ignore
 	@Override
-	public void testPUTObject() throws Exception {
-
-		//super.testPUTObject();
+	public Project updateObject(final Project persistedProject) throws Exception {
 		
-		// TODO: [@fniederlein] implement test
+		persistedProject.setName(persistedProject.getName() + " update");
+		persistedProject.setDescription(persistedProject.getDescription() + " update");
+		
+		function = functionsResourceTestUtils.createObject("function.json");
+		Set<Function> functions = persistedProject.getFunctions();
+		functions.add(function);
+		persistedProject.setFunctions(functions);
+		
+		String updateProjectJSONString = objectMapper.writeValueAsString(persistedProject);
+		final ObjectNode updateProjectJSON = objectMapper.readValue(updateProjectJSONString, ObjectNode.class);
+		
+		final Mapping mapping = mappingsResourceTestUtils.createObject("mapping.json");
+		final String finalMappingJSONString = objectMapper.writeValueAsString(mapping);
+		final ObjectNode finalMappingJSON = objectMapper.readValue(finalMappingJSONString, ObjectNode.class);
+		
+		final ArrayNode mappingsArray = objectMapper.createArrayNode();
+		mappingsArray.add(finalMappingJSON);
+		
+		updateProjectJSON.put("functions", mappingsArray);
+		
+		updateProjectJSONString = objectMapper.writeValueAsString(updateProjectJSON);
+		expectedObject = objectMapper.readValue(updateProjectJSONString, pojoClass);
+
+		final Project updateProject = projectsResourceTestUtils.updateObject(updateProjectJSONString, expectedObject);
+
+		return updateProject;
 	}
 
 	private DataModel createInputDataModel() throws Exception {

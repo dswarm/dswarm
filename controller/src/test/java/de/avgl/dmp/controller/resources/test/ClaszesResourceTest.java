@@ -4,6 +4,8 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import de.avgl.dmp.controller.resources.test.utils.ClaszesResourceTestUtils;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
@@ -58,10 +60,53 @@ public class ClaszesResourceTest extends BasicResourceTest<ClaszesResourceTestUt
 		LOG.debug("end class uniqueness test");
 	}
 	
-	@Ignore
 	@Override
 	public void testPUTObject() throws Exception {
 
-		// TODO: [@fniederlein] implement test
+		LOG.debug("start class update test");
+
+		Clasz clasz = null;
+
+		try {
+			
+			clasz = pojoClassResourceTestUtils.createObject(objectJSONString, expectedObject);
+		} catch (Exception e) {
+			
+			LOG.error("coudln't create class for update test");
+			
+			Assert.assertTrue(false);
+		}
+		
+		Assert.assertNotNull("class shouldn't be null in update test", clasz);
+		
+		//modify class for update
+		clasz.setName(clasz.getName() + " update");
+		
+		String claszJSONString = objectMapper.writeValueAsString(clasz);
+		
+		Clasz updateClasz = pojoClassResourceTestUtils.updateObject(claszJSONString, clasz);
+		
+		Assert.assertEquals("the persisted class shoud be equal to the modified class for update", updateClasz, clasz);
+		
+		ObjectNode claszJSON = objectMapper.readValue(claszJSONString, ObjectNode.class);
+		
+		Assert.assertNotNull("the class JSON shouldn't be null", claszJSON);
+
+		//uniqueness dosn't allow that
+		claszJSON.put("uri", clasz.getUri().replaceAll("http", "https"));
+		
+		claszJSONString = objectMapper.writeValueAsString(claszJSON);
+		
+		clasz = objectMapper.readValue(claszJSONString, Clasz.class);
+		
+		//updateClasz = pojoClassResourceTestUtils.updateObject(claszJSONString, clasz);
+		
+		//Assert.assertNotEquals("uniqueness dosn't allow update of uri", updateClasz.getUri(), clasz.getUri());
+		
+		//TODO: [@fniederlein] after class persistence adjustments the test have to check if a new class was created
+		
+		cleanUpDB(clasz);
+		
+		LOG.debug("end class update test");
 	}
 }

@@ -1,5 +1,7 @@
 package de.avgl.dmp.controller.resources.test;
 
+import java.util.LinkedList;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -30,8 +32,7 @@ public class AttributePathsResourceTest extends BasicResourceTest<AttributePaths
 		super(AttributePath.class, AttributePathService.class, "attributepaths", "attribute_path.json", new AttributePathsResourceTestUtils());
 
 		attributeResourceTestUtils = new AttributesResourceTestUtils();
-		
-		updateObjectJSONFileName = "attribute_path1.json";
+	
 	}
 
 	@Override
@@ -104,6 +105,41 @@ public class AttributePathsResourceTest extends BasicResourceTest<AttributePaths
 		LOG.debug("end attribute paths uniqueness test");
 	}
 
+	@Override
+	public void testPUTObject() throws Exception {
+
+		LOG.debug("start attribute path update test");
+
+		AttributePath attributePath = null;
+
+		try {
+			
+			attributePath = pojoClassResourceTestUtils.createObject(objectJSONString, expectedObject);
+		} catch (Exception e) {
+			
+			LOG.error("coudln't create attribute path for update test");
+			
+			Assert.assertTrue(false);
+		}
+		
+		Assert.assertNotNull("attribute path shouldn't be null in update test", attributePath);
+		
+		Attribute actualAttribute3 = attributeResourceTestUtils.createObject("attribute3.json");
+		
+		attributePath.addAttribute(actualAttribute3);
+		
+		String attributePathJSONString = objectMapper.writeValueAsString(attributePath);
+		
+		AttributePath updateAttributePath = pojoClassResourceTestUtils.updateObject(attributePathJSONString, attributePath);
+		
+		Assert.assertEquals("the persisted attribute path shoud be equal to the modified attribute path for update", updateAttributePath, attributePath);
+		Assert.assertEquals("number of attribute elements in attribute path should be equal", updateAttributePath.getAttributePath().size(), attributePath.getAttributePath().size());
+				
+		cleanUpDB(attributePath);
+		
+		LOG.debug("end attribute update test");
+	}
+	
 	@After
 	public void tearDown2() throws Exception {
 

@@ -2,8 +2,10 @@ package de.avgl.dmp.controller.resources.test;
 
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Ignore;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -15,6 +17,7 @@ import de.avgl.dmp.controller.resources.test.utils.AttributePathsResourceTestUti
 import de.avgl.dmp.controller.resources.test.utils.AttributesResourceTestUtils;
 import de.avgl.dmp.controller.resources.test.utils.ClaszesResourceTestUtils;
 import de.avgl.dmp.controller.resources.test.utils.SchemasResourceTestUtils;
+import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
@@ -31,6 +34,8 @@ public class SchemasResourceTest extends BasicResourceTest<SchemasResourceTestUt
 	private final ClaszesResourceTestUtils			claszesResourceTestUtils;
 
 	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
+	
+	private final SchemasResourceTestUtils			schemasResourceTestUtils;
 
 	final Map<Long, Attribute>						attributes		= Maps.newHashMap();
 
@@ -45,6 +50,7 @@ public class SchemasResourceTest extends BasicResourceTest<SchemasResourceTestUt
 		attributesResourceTestUtils = new AttributesResourceTestUtils();
 		claszesResourceTestUtils = new ClaszesResourceTestUtils();
 		attributePathsResourceTestUtils = new AttributePathsResourceTestUtils();
+		schemasResourceTestUtils = new SchemasResourceTestUtils();
 	}
 
 	@Override
@@ -138,12 +144,39 @@ public class SchemasResourceTest extends BasicResourceTest<SchemasResourceTestUt
 		claszesResourceTestUtils.deleteObject(recordClass);
 	}
 	
-	@Ignore
 	@Override
-	public void testPUTObject() throws Exception {
+	public Schema updateObject(final Schema persistedSchema) throws Exception {
 
-		//super.testPUTObject();
+		Set<AttributePath> persistedAttributePaths = persistedSchema.getAttributePaths();
+		AttributePath firstAttributePath = persistedAttributePaths.iterator().next();
+		Attribute attribute = attributesResourceTestUtils.createObject("attribute4.json");
+		firstAttributePath.addAttribute(attribute);
 		
-		// TODO: [@fniederlein] implement test
+		//clasz update
+		final String biboBookId = "http://purl.org/ontology/bibo/Book";
+		final String biboBookName = "book";
+		final Clasz biboBook = new Clasz(biboBookId, biboBookName);
+		persistedSchema.setRecordClass(biboBook);
+		
+		String updateSchemaJSONString = objectMapper.writeValueAsString(persistedSchema);
+		final ObjectNode updateSchemaJSON = objectMapper.readValue(updateSchemaJSONString, ObjectNode.class);
+		
+		//schema name update
+		final String updateSchemaNameString = persistedSchema.getName() + " update";
+		updateSchemaJSON.put("name", updateSchemaNameString);
+		
+		updateSchemaJSONString = objectMapper.writeValueAsString(updateSchemaJSON);
+		
+		final Schema expectedSchema = objectMapper.readValue(updateSchemaJSONString, Schema.class);
+		
+		Assert.assertNotNull("the schema JSON string shouldn't be null", updateSchemaJSONString);
+		
+		final Schema updateSchema = schemasResourceTestUtils.updateObject(updateSchemaJSONString, expectedSchema);
+		
+		Assert.assertEquals("persisted and updated clasz uri should be equal", persistedSchema.getRecordClass().getUri(), biboBookId);
+		Assert.assertEquals("persisted and updated clasz name should be equal", persistedSchema.getRecordClass().getName(), biboBookName);
+		Assert.assertEquals("persisted and updated schema name should be equal", updateSchema.getName(), updateSchemaNameString);
+		
+		return updateSchema;
 	}
 }

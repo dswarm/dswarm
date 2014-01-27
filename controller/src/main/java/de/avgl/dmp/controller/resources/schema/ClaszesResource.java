@@ -15,6 +15,8 @@ import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.AdvancedDMPResource;
@@ -107,6 +109,9 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "update class with given id ", notes = "Returns an updated Clasz object.")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "class was successfully updated"),
+			@ApiResponse(code = 201, message = "class was successfully persisted"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@PUT
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
