@@ -10,10 +10,11 @@ import com.google.common.collect.Sets;
 
 import de.avgl.dmp.persistence.model.job.Filter;
 import de.avgl.dmp.persistence.model.job.Mapping;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyMapping;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.service.job.MappingService;
 
-public class MappingsResourceTestUtils extends BasicDMPResourceTestUtils<MappingService, Mapping> {
+public class MappingsResourceTestUtils extends BasicDMPResourceTestUtils<MappingService, ProxyMapping, Mapping> {
 
 	private final ComponentsResourceTestUtils		componentsResourceTestUtils;
 

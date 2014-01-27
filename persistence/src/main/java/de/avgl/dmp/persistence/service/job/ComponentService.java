@@ -11,6 +11,7 @@ import com.google.inject.Provider;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Function;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyComponent;
 import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
 
 /**
@@ -18,7 +19,7 @@ import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
  * 
  * @author tgaengler
  */
-public class ComponentService extends ExtendedBasicDMPJPAService<Component> {
+public class ComponentService extends ExtendedBasicDMPJPAService<ProxyComponent, Component> {
 
 	/**
 	 * Creates a new component persistence service with the given entity manager provider.
@@ -28,7 +29,7 @@ public class ComponentService extends ExtendedBasicDMPJPAService<Component> {
 	@Inject
 	public ComponentService(final Provider<EntityManager> entityManagerProvider) {
 
-		super(Component.class, entityManagerProvider);
+		super(Component.class, ProxyComponent.class, entityManagerProvider);
 	}
 
 	/**

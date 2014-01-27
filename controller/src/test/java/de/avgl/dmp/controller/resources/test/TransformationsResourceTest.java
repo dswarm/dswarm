@@ -15,18 +15,19 @@ import de.avgl.dmp.controller.resources.test.utils.TransformationsResourceTestUt
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.Transformation;
-import de.avgl.dmp.persistence.model.schema.Attribute;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyTransformation;
 import de.avgl.dmp.persistence.service.job.TransformationService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class TransformationsResourceTest extends BasicResourceTest<TransformationsResourceTestUtils, TransformationService, Transformation, Long> {
+public class TransformationsResourceTest extends
+		BasicResourceTest<TransformationsResourceTestUtils, TransformationService, ProxyTransformation, Transformation, Long> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributesResourceTest.class);
 
 	private final FunctionsResourceTestUtils		functionsResourceTestUtils;
 
 	private final ComponentsResourceTestUtils		componentsResourceTestUtils;
-	
+
 	private final TransformationsResourceTestUtils	transformationsResourceTestUtils;
 
 	private Function								function;

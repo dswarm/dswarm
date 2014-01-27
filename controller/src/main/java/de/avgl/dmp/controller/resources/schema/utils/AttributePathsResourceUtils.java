@@ -16,8 +16,11 @@ import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.utils.BasicIDResourceUtils;
 import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.persistence.DMPPersistenceException;
+import de.avgl.dmp.persistence.model.proxy.RetrievalType;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttribute;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttributePath;
 import de.avgl.dmp.persistence.service.schema.AttributePathService;
 
 /**
@@ -26,7 +29,7 @@ import de.avgl.dmp.persistence.service.schema.AttributePathService;
  * @param <POJOCLASS>
  * @param <POJOCLASSIDTYPE>
  */
-public class AttributePathsResourceUtils extends BasicIDResourceUtils<AttributePathService, AttributePath> {
+public class AttributePathsResourceUtils extends BasicIDResourceUtils<AttributePathService, ProxyAttributePath, AttributePath> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributePathsResourceUtils.class);
 
@@ -72,8 +75,24 @@ public class AttributePathsResourceUtils extends BasicIDResourceUtils<AttributeP
 
 					if (!attributesResourceUtils.hasObjectAlreadyBeenProcessed(attribute.getId())) {
 
-						final Attribute newAttribute = attributesResourceUtils.createNewObject(attribute);
-						newAttribute.setName(attribute.getName());
+						final ProxyAttribute proxyNewAttribute = attributesResourceUtils.createNewObject(attribute);
+
+						if (proxyNewAttribute == null) {
+
+							throw new DMPControllerException("couldn't create or retrieve attribute");
+						}
+
+						final Attribute newAttribute = proxyNewAttribute.getObject();
+
+						if (proxyNewAttribute.getType().equals(RetrievalType.CREATED)) {
+
+							if (newAttribute == null) {
+
+								throw new DMPControllerException("couldn't create new attribute");
+							}
+
+							newAttribute.setName(attribute.getName());
+						}
 
 						enhancedJsonNode = attributesResourceUtils.processDummyId(enhancedJsonNode, attribute.getId(), newAttribute.getId(),
 								dummyIdCandidates);
@@ -97,9 +116,9 @@ public class AttributePathsResourceUtils extends BasicIDResourceUtils<AttributeP
 	}
 
 	@Override
-	public AttributePath createObject(final AttributePath objectFromJSON, final AttributePathService persistenceService)
+	public ProxyAttributePath createObject(final AttributePath objectFromJSON, final AttributePathService persistenceService)
 			throws DMPPersistenceException {
 
-		return persistenceService.createObject(objectFromJSON.getAttributePath());
+		return persistenceService.createOrGetObject(objectFromJSON.getAttributePath());
 	}
 }

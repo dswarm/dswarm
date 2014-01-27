@@ -6,9 +6,10 @@ import javax.ws.rs.core.Response;
 import org.junit.Assert;
 
 import de.avgl.dmp.persistence.model.resource.DataModel;
+import de.avgl.dmp.persistence.model.resource.proxy.ProxyDataModel;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 
-public class DataModelsResourceTestUtils extends ExtendedBasicDMPResourceTestUtils<DataModelService, DataModel> {
+public class DataModelsResourceTestUtils extends ExtendedBasicDMPResourceTestUtils<DataModelService, ProxyDataModel, DataModel> {
 
 	private final ResourcesResourceTestUtils		resourcesResourceTestUtils;
 

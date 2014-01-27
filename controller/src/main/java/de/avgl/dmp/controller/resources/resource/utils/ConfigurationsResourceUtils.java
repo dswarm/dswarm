@@ -13,6 +13,7 @@ import de.avgl.dmp.controller.resources.utils.ExtendedBasicDMPResourceUtils;
 import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
+import de.avgl.dmp.persistence.model.resource.proxy.ProxyConfiguration;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 
 /**
@@ -21,7 +22,7 @@ import de.avgl.dmp.persistence.service.resource.ConfigurationService;
  * @param <POJOCLASS>
  * @param <POJOCLASSIDTYPE>
  */
-public class ConfigurationsResourceUtils extends ExtendedBasicDMPResourceUtils<ConfigurationService, Configuration> {
+public class ConfigurationsResourceUtils extends ExtendedBasicDMPResourceUtils<ConfigurationService, ProxyConfiguration, Configuration> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ConfigurationsResourceUtils.class);
 

@@ -11,6 +11,7 @@ import com.google.inject.Provider;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
+import de.avgl.dmp.persistence.model.resource.proxy.ProxyConfiguration;
 import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
 
 /**
@@ -18,7 +19,7 @@ import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
  * 
  * @author tgaengler
  */
-public class ConfigurationService extends ExtendedBasicDMPJPAService<Configuration> {
+public class ConfigurationService extends ExtendedBasicDMPJPAService<ProxyConfiguration, Configuration> {
 
 	/**
 	 * Creates a new configuration persistence service with the given entity manager provider.
@@ -28,7 +29,7 @@ public class ConfigurationService extends ExtendedBasicDMPJPAService<Configurati
 	@Inject
 	public ConfigurationService(final Provider<EntityManager> entityManagerProvider) {
 
-		super(Configuration.class, entityManagerProvider);
+		super(Configuration.class, ProxyConfiguration.class, entityManagerProvider);
 	}
 
 	/**

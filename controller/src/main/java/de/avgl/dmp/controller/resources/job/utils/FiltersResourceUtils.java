@@ -9,6 +9,7 @@ import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.utils.BasicDMPResourceUtils;
 import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.persistence.model.job.Filter;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyFilter;
 import de.avgl.dmp.persistence.service.job.FilterService;
 
 /**
@@ -17,7 +18,7 @@ import de.avgl.dmp.persistence.service.job.FilterService;
  * @param <POJOCLASS>
  * @param <POJOCLASSIDTYPE>
  */
-public class FiltersResourceUtils extends BasicDMPResourceUtils<FilterService, Filter> {
+public class FiltersResourceUtils extends BasicDMPResourceUtils<FilterService, ProxyFilter, Filter> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(FiltersResourceUtils.class);
 

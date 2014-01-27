@@ -1,8 +1,9 @@
 package de.avgl.dmp.controller.resources;
 
-import de.avgl.dmp.controller.resources.utils.BasicIDResourceUtils;
+import de.avgl.dmp.controller.resources.utils.BasicDMPResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
+import de.avgl.dmp.persistence.model.proxy.ProxyBasicDMPJPAObject;
 import de.avgl.dmp.persistence.service.BasicDMPJPAService;
 
 /**
@@ -14,8 +15,8 @@ import de.avgl.dmp.persistence.service.BasicDMPJPAService;
  *            class
  * @param <POJOCLASS> the concrete POJO class of the resource
  */
-public abstract class BasicDMPResource<POJOCLASSRESOURCEUTILS extends BasicIDResourceUtils<POJOCLASSPERSISTENCESERVICE, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends BasicDMPJPAService<POJOCLASS>, POJOCLASS extends BasicDMPJPAObject>
-		extends BasicIDResource<POJOCLASSRESOURCEUTILS, POJOCLASSPERSISTENCESERVICE, POJOCLASS> {
+public abstract class BasicDMPResource<POJOCLASSRESOURCEUTILS extends BasicDMPResourceUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends BasicDMPJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyBasicDMPJPAObject<POJOCLASS>, POJOCLASS extends BasicDMPJPAObject>
+		extends BasicIDResource<POJOCLASSRESOURCEUTILS, POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(BasicDMPResource.class);
 

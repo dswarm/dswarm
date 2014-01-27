@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import de.avgl.dmp.persistence.model.DMPJPAObject;
+import de.avgl.dmp.persistence.model.proxy.ProxyDMPJPAObject;
 import de.avgl.dmp.persistence.service.BasicIDJPAService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
@@ -16,15 +17,13 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
  * @param <POJOCLASS>
  * @param <POJOCLASSIDTYPE>
  */
-public abstract class BasicIDResourceUtils<POJOCLASSPERSISTENCESERVICE extends BasicIDJPAService<POJOCLASS>, POJOCLASS extends DMPJPAObject>
-		extends BasicResourceUtils<POJOCLASSPERSISTENCESERVICE, POJOCLASS, Long> {
+public abstract class BasicIDResourceUtils<POJOCLASSPERSISTENCESERVICE extends BasicIDJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyDMPJPAObject<POJOCLASS>, POJOCLASS extends DMPJPAObject>
+		extends BasicResourceUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS, Long> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(BasicIDResourceUtils.class);
 
-	public BasicIDResourceUtils(final Class<POJOCLASS> pojoClassArg,
-	                            final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
-	                            final Provider<ObjectMapper> objectMapperProviderArg,
-	                            final ResourceUtilsFactory utilsFactory) {
+	public BasicIDResourceUtils(final Class<POJOCLASS> pojoClassArg, final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
+			final Provider<ObjectMapper> objectMapperProviderArg, final ResourceUtilsFactory utilsFactory) {
 
 		super(pojoClassArg, Long.class, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactory);
 	}
@@ -46,7 +45,7 @@ public abstract class BasicIDResourceUtils<POJOCLASSPERSISTENCESERVICE extends B
 
 		return objectJSON;
 	}
-	
+
 	@Override
 	protected void checkObjectId(final JsonNode idNode, final ObjectNode objectJSON) {
 

@@ -20,6 +20,8 @@ import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.controller.utils.DataModelUtil;
@@ -37,7 +39,6 @@ import de.avgl.dmp.persistence.model.types.Tuple;
  * A resource (controller service) for {@link Task}s.
  * 
  * @author tgaengler
- *
  */
 @RequestScoped
 @Api(value = "/tasks", description = "Operations about tasks.")
@@ -55,7 +56,7 @@ public class TasksResource {
 	/**
 	 * The data model util.
 	 */
-	private final DataModelUtil			dataModelUtil;
+	private final DataModelUtil						dataModelUtil;
 
 	/**
 	 * The metrics registry.
@@ -90,7 +91,7 @@ public class TasksResource {
 	 * @return the response
 	 */
 	private Response buildResponse(final String responseContent) {
-		
+
 		return Response.ok(responseContent).build();
 	}
 
@@ -104,7 +105,9 @@ public class TasksResource {
 	 * @throws IOException
 	 * @throws DMPConverterException
 	 */
-	@ApiOperation(value = "execute the given task", notes = "Returns the result JSON object fo this task execution.")
+	@ApiOperation(value = "execute the given task", notes = "Returns the result data (as JSON) for this task execution.")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "task was successfully executed"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -178,7 +181,8 @@ public class TasksResource {
 		//
 		// final String recordPrefix = Joiner.on('.').join(parts);
 
-		//final Optional<Iterator<Tuple<String, JsonNode>>> inputData = schemaDataUtil.getData(dataResource.getId(), configuration.getId());
+		// final Optional<Iterator<Tuple<String, JsonNode>>> inputData = schemaDataUtil.getData(dataResource.getId(),
+		// configuration.getId());
 		final Optional<Iterator<Tuple<String, JsonNode>>> inputData = dataModelUtil.getData(inputDataModel.getId());
 
 		if (!inputData.isPresent()) {

@@ -17,13 +17,14 @@ import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxySchema;
 import de.avgl.dmp.persistence.service.schema.AttributePathService;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
 
-public class SchemaServiceTest extends IDBasicJPAServiceTest<Schema, SchemaService, Long> {
+public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema, SchemaService> {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(SchemaServiceTest.class);
 
@@ -102,7 +103,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<Schema, SchemaServi
 
 		// schema
 
-		final Schema schema = createObject();
+		final Schema schema = createObject().getObject();
 
 		schema.setName("my schema");
 		schema.addAttributePath(attributePath1);
@@ -112,7 +113,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<Schema, SchemaServi
 
 		// update schema
 
-		final Schema updatedSchema = updateObjectTransactional(schema);
+		final Schema updatedSchema = updateObjectTransactional(schema).getObject();
 
 		Assert.assertNotNull("the schema's attribute paths of the updated schema shouldn't be null", updatedSchema.getAttributePaths());
 		Assert.assertEquals("the schema's attribute paths size are not equal", schema.getAttributePaths(), updatedSchema.getAttributePaths());
@@ -163,14 +164,14 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<Schema, SchemaServi
 		final AttributePathService attributePathService = GuicedTest.injector.getInstance(AttributePathService.class);
 
 		Assert.assertNotNull("attribute path service shouldn't be null", attributePathService);
-		
+
 		final AttributePath attributePath = new AttributePath(attributePathArg);
 
 		AttributePath updatedAttributePath = null;
 
 		try {
 
-			updatedAttributePath = attributePathService.createObject(attributePathArg);
+			updatedAttributePath = attributePathService.createOrGetObject(attributePathArg).getObject();
 		} catch (final DMPPersistenceException e1) {
 
 			Assert.assertTrue("something went wrong while attribute path creation.\n" + e1.getMessage(), false);
@@ -216,7 +217,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<Schema, SchemaServi
 		Attribute attribute = null;
 
 		try {
-			attribute = attributeService.createObjectTransactional(id);
+			attribute = attributeService.createOrGetObjectTransactional(id).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while attribute creation.\n" + e.getMessage(), false);
@@ -231,7 +232,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<Schema, SchemaServi
 
 		try {
 
-			updatedAttribute = attributeService.updateObjectTransactional(attribute);
+			updatedAttribute = attributeService.updateObjectTransactional(attribute).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the attribute of id = '" + id + "'", false);
@@ -257,7 +258,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<Schema, SchemaServi
 		Clasz clasz = null;
 
 		try {
-			clasz = classService.createObjectTransactional(id);
+			clasz = classService.createOrGetObjectTransactional(id).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while class creation.\n" + e.getMessage(), false);
@@ -272,7 +273,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<Schema, SchemaServi
 
 		try {
 
-			updatedClasz = classService.updateObjectTransactional(clasz);
+			updatedClasz = classService.updateObjectTransactional(clasz).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the class of id = '" + id + "'", false);

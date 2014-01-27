@@ -5,18 +5,18 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.persist.Transactional;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
+import de.avgl.dmp.persistence.model.resource.proxy.ProxyResource;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class ResourceServiceTest extends IDBasicJPAServiceTest<Resource, ResourceService, Long> {
+public class ResourceServiceTest extends IDBasicJPAServiceTest<ProxyResource, Resource, ResourceService> {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(ResourceServiceTest.class);
 
@@ -57,7 +57,7 @@ public class ResourceServiceTest extends IDBasicJPAServiceTest<Resource, Resourc
 		Configuration configuration = null;
 
 		try {
-			configuration = configurationService.createObject();
+			configuration = configurationService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while configuration creation.\n" + e.getMessage(), false);
@@ -116,7 +116,7 @@ public class ResourceServiceTest extends IDBasicJPAServiceTest<Resource, Resourc
 		Configuration configuration2 = null;
 
 		try {
-			configuration2 = configurationService.createObject();
+			configuration2 = configurationService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while configuration creation.\n" + e.getMessage(), false);
@@ -177,7 +177,7 @@ public class ResourceServiceTest extends IDBasicJPAServiceTest<Resource, Resourc
 
 	private Resource createSimpleResource() {
 
-		final Resource resource = createObject();
+		final Resource resource = createObject().getObject();
 
 		resource.setName("bla");
 		resource.setDescription("blubblub");
@@ -222,6 +222,7 @@ public class ResourceServiceTest extends IDBasicJPAServiceTest<Resource, Resourc
 
 		Assert.assertNotNull("the configurations of the updated resource shouldn't be null", updatedResource.getConfigurations());
 		Assert.assertEquals("the configurations of the resource are not equal", resource.getConfigurations(), updatedResource.getConfigurations());
-		Assert.assertEquals("the configurations' size of the resource are not equal", resource.getConfigurations().size(), updatedResource.getConfigurations().size());
+		Assert.assertEquals("the configurations' size of the resource are not equal", resource.getConfigurations().size(), updatedResource
+				.getConfigurations().size());
 	}
 }

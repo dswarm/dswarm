@@ -12,8 +12,10 @@ import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
+import de.avgl.dmp.persistence.model.proxy.RetrievalType;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttributePath;
 import de.avgl.dmp.persistence.service.BasicIDJPAService;
 
 /**
@@ -21,7 +23,7 @@ import de.avgl.dmp.persistence.service.BasicIDJPAService;
  * 
  * @author tgaengler
  */
-public class AttributePathService extends BasicIDJPAService<AttributePath> {
+public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, AttributePath> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributePathService.class);
 
@@ -33,7 +35,7 @@ public class AttributePathService extends BasicIDJPAService<AttributePath> {
 	@Inject
 	public AttributePathService(final Provider<EntityManager> entityManagerProvider) {
 
-		super(AttributePath.class, entityManagerProvider);
+		super(AttributePath.class, ProxyAttributePath.class, entityManagerProvider);
 	}
 
 	/**
@@ -44,7 +46,7 @@ public class AttributePathService extends BasicIDJPAService<AttributePath> {
 	 * @throws DMPPersistenceException
 	 */
 	@Transactional(rollbackOn = Exception.class)
-	public AttributePath createObject(final AttributePath attributePath) throws DMPPersistenceException {
+	public ProxyAttributePath createObject(final AttributePath attributePath) throws DMPPersistenceException {
 
 		return createObjectInternal(attributePath);
 	}
@@ -57,7 +59,7 @@ public class AttributePathService extends BasicIDJPAService<AttributePath> {
 	 * @throws DMPPersistenceException
 	 */
 	@Transactional(rollbackOn = Exception.class)
-	public AttributePath createObject(final LinkedList<Attribute> attributes) throws DMPPersistenceException {
+	public ProxyAttributePath createOrGetObject(final LinkedList<Attribute> attributes) throws DMPPersistenceException {
 
 		final AttributePath tempAttributePath = new AttributePath(attributes);
 
@@ -77,7 +79,7 @@ public class AttributePathService extends BasicIDJPAService<AttributePath> {
 		return getObject(attributePathJSONArrayString, entityManager);
 	}
 
-	private AttributePath createObjectInternal(final AttributePath attributePath) throws DMPPersistenceException {
+	private ProxyAttributePath createObjectInternal(final AttributePath attributePath) throws DMPPersistenceException {
 
 		final EntityManager em = acquire();
 
@@ -100,15 +102,17 @@ public class AttributePathService extends BasicIDJPAService<AttributePath> {
 			persistObject(tempAttributePath, em);
 
 			object = tempAttributePath;
+
+			return new ProxyAttributePath(object);
 		} else {
 
 			object = existingObject;
 
 			AttributePathService.LOG.debug("attribute path with path '" + attributePath.toAttributePath()
 					+ "' exists already in the database. Will return the existing object, instead of creating a new one");
-		}
 
-		return object;
+			return new ProxyAttributePath(existingObject, RetrievalType.RETRIEVED);
+		}
 	}
 
 	private AttributePath getObject(final String attributePath, final EntityManager entityManager) {
@@ -148,13 +152,13 @@ public class AttributePathService extends BasicIDJPAService<AttributePath> {
 	}
 
 	public List<AttributePath> getAttributePathsWithPath(final String attributePathJSONArrayString) {
-		
+
 		final EntityManager entityManager = acquire(true);
-		
+
 		final String queryString = "from " + AttributePath.class.getName() + " where attributePath = '" + attributePathJSONArrayString + "'";
-		
+
 		final TypedQuery<AttributePath> query = entityManager.createQuery(queryString, AttributePath.class);
-		
+
 		return query.getResultList();
 	}
 

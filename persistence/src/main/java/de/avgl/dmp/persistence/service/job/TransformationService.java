@@ -13,13 +13,14 @@ import com.google.inject.Provider;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Transformation;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyTransformation;
 
 /**
  * A persistence service for {@link Transformation}s.
  * 
  * @author tgaengler
  */
-public class TransformationService extends BasicFunctionService<Transformation> {
+public class TransformationService extends BasicFunctionService<ProxyTransformation, Transformation> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(TransformationService.class);
 
@@ -31,7 +32,7 @@ public class TransformationService extends BasicFunctionService<Transformation> 
 	@Inject
 	public TransformationService(final Provider<EntityManager> entityManagerProvider) {
 
-		super(Transformation.class, entityManagerProvider);
+		super(Transformation.class, ProxyTransformation.class, entityManagerProvider);
 	}
 
 	/**

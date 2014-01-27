@@ -318,14 +318,32 @@ public class MorphScriptBuilder {
 		data.setAttribute("source", inputAttributePath);
 		// data.setAttribute("name", "record." + transformation.getTarget().getName());
 		data.setAttribute("name", outputAttributePath);
+		
+		final Component transformationComponent = mapping.getTransformation();
+		
+		if(transformationComponent == null) {
+			
+			LOG.debug("transformation component for mapping '" + mapping.getId() + "' was empty");
+			
+			return data;
+		}
 
-		final Function transformationFunction = mapping.getTransformation().getFunction();
+		final Function transformationFunction = transformationComponent.getFunction();
+		
+		if(transformationFunction == null) {
+			
+			LOG.debug("transformation component's function for mapping '" + mapping.getId() + "' was empty");
+			
+			return data;
+		}
 
 		switch (transformationFunction.getFunctionType()) {
 
 			case Function:
 
 				// TODO: process simple function
+				
+				LOG.error("transformation component's function for mapping '" + mapping.getId() + "' was a real FUNCTION. this is not supported right now.");
 
 				break;
 			case Transformation:
@@ -337,6 +355,13 @@ public class MorphScriptBuilder {
 				// determine start component(s) ( = a component that has the input variable as value of a parameter mapping) and
 				// follow the output components
 				final Set<Component> components = transformation.getComponents();
+				
+				if(components == null) {
+					
+					LOG.debug("transformation component's transformation's components for mapping '" + mapping.getId() + "' are empty");
+					
+					return data;
+				}
 
 				Component sourceComponent = null;
 
@@ -365,6 +390,13 @@ public class MorphScriptBuilder {
 
 				Component processingComponent = sourceComponent;
 				Component previousProcessingComponent = null;
+				
+				if(processingComponent == null) {
+					
+					LOG.debug("could find start component for transformation of mapping '" + mapping.getId() + "'");
+					
+					return data;
+				}
 
 				while (processingComponent != null) {
 

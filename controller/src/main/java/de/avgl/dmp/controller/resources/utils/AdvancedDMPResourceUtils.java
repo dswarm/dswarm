@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
+import de.avgl.dmp.persistence.model.proxy.ProxyAdvancedDMPJPAObject;
 import de.avgl.dmp.persistence.service.AdvancedDMPJPAService;
 
 /**
@@ -15,8 +16,8 @@ import de.avgl.dmp.persistence.service.AdvancedDMPJPAService;
  * @param <POJOCLASS>
  * @param <POJOCLASSIDTYPE>
  */
-public abstract class AdvancedDMPResourceUtils<POJOCLASSPERSISTENCESERVICE extends AdvancedDMPJPAService<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
-		extends BasicDMPResourceUtils<POJOCLASSPERSISTENCESERVICE, POJOCLASS> {
+public abstract class AdvancedDMPResourceUtils<POJOCLASSPERSISTENCESERVICE extends AdvancedDMPJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyAdvancedDMPJPAObject<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
+		extends BasicDMPResourceUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AdvancedDMPResourceUtils.class);
 
@@ -38,9 +39,9 @@ public abstract class AdvancedDMPResourceUtils<POJOCLASSPERSISTENCESERVICE exten
 	 * {@inheritDoc}
 	 */
 	@Override
-	public POJOCLASS createObject(final POJOCLASS objectFromJSON, final POJOCLASSPERSISTENCESERVICE persistenceService)
+	public PROXYPOJOCLASS createObject(final POJOCLASS objectFromJSON, final POJOCLASSPERSISTENCESERVICE persistenceService)
 			throws DMPPersistenceException {
 
-		return persistenceService.createObjectTransactional(objectFromJSON.getUri());
+		return persistenceService.createOrGetObjectTransactional(objectFromJSON.getUri());
 	}
 }

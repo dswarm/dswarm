@@ -23,9 +23,10 @@ import com.google.common.io.Resources;
 
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
+import de.avgl.dmp.persistence.model.resource.proxy.ProxyResource;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
 
-public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtils<ResourceService, Resource> {
+public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtils<ResourceService, ProxyResource, Resource> {
 
 	private final ConfigurationsResourceTestUtils	configurationsResourceTestUtils;
 
@@ -66,7 +67,7 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 		final Response response = target().request(MediaType.MULTIPART_FORM_DATA_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
 				.post(Entity.entity(form, MediaType.MULTIPART_FORM_DATA));
 
-		Assert.assertEquals("200 OK was expected", 201, response.getStatus());
+		Assert.assertEquals("201 CREATED was expected", 201, response.getStatus());
 
 		String responseResourceString = response.readEntity(String.class);
 

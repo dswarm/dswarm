@@ -27,6 +27,7 @@ public class DMPStatus {
 	private final Meter					allRequestsMeter;
 
 	private final Timer					createNewResourceTimer;
+	private final Timer					deleteResourceTimer;
 	private final Timer					configurationsPreviewTimer;
 	private final Timer					createNewConfigurationsTimer;
 
@@ -57,6 +58,7 @@ public class DMPStatus {
 		allRequestsMeter = registry.meter(name(ResourcesResource.class, "requests", "all"));
 
 		createNewResourceTimer = registry.timer(name(ResourcesResource.class, "post-requests", "resources", "create"));
+		deleteResourceTimer = registry.timer(name(ResourcesResource.class, "delete-requests", "resources", "delete"));
 		configurationsPreviewTimer = registry.timer(name(ResourcesResource.class, "post-requests", "configurations", "preview"));
 		createNewConfigurationsTimer = registry.timer(name(ResourcesResource.class, "post-requests", "configurations", "create"));
 
@@ -73,6 +75,11 @@ public class DMPStatus {
 		return createNewResourceTimer.time();
 	}
 
+	public Timer.Context deleteResource() {
+		allRequestsMeter.mark();
+		return deleteResourceTimer.time();
+	}
+	
 	/**
 	 * A generic create-method-timer creation method. Creates a timer for object creation of the given resource.
 	 * 
@@ -196,6 +203,27 @@ public class DMPStatus {
 		return getConfigurationsDataTimer.time();
 	}
 
+	/**
+	 * A generic delete-specific-object-method-timer creation method. Creates a timer for specific object deletion of the given 
+	 * resource.
+	 * 
+	 * @param objectType the resource type
+	 * @param clasz the resource class
+	 * @return a new timing context (timer)
+	 */
+	public Timer.Context deleteObject(final String objectType, final Class<? extends BasicResource> clasz) {
+
+		if (!deleteObjectTimers.containsKey(objectType)) {
+
+			final Timer deleteObjectTimer = registry.timer(name(clasz, "delete-requests", objectType, "delete"));
+
+			deleteObjectTimers.put(objectType, deleteObjectTimer);
+		}
+
+		allRequestsMeter.mark();
+		return deleteObjectTimers.get(objectType).time();
+	}
+	
 	public void stop(final Timer.Context context) {
 		context.stop();
 	}

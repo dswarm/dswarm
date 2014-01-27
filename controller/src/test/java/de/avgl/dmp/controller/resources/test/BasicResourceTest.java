@@ -16,6 +16,7 @@ import com.google.common.collect.Sets;
 
 import de.avgl.dmp.controller.resources.test.utils.BasicResourceTestUtils;
 import de.avgl.dmp.persistence.model.DMPObject;
+import de.avgl.dmp.persistence.model.proxy.ProxyDMPObject;
 import de.avgl.dmp.persistence.service.BasicJPAService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
@@ -26,19 +27,19 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
  * @param <POJOCLASS>
  * @param <POJOCLASSIDTYPE>
  */
-public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICE, POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSPERSISTENCESERVICE extends BasicJPAService<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE>
+public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE>
 		extends ResourceTest {
 
-	private static final org.apache.log4j.Logger		LOG					= org.apache.log4j.Logger.getLogger(BasicResourceTest.class);
+	private static final org.apache.log4j.Logger		LOG							= org.apache.log4j.Logger.getLogger(BasicResourceTest.class);
 
-	protected String									objectJSONString	= null;
-	protected POJOCLASS									expectedObject		= null;
-	protected Set<POJOCLASS>							expectedObjects		= null;
+	protected String									objectJSONString			= null;
+	protected POJOCLASS									expectedObject				= null;
+	protected Set<POJOCLASS>							expectedObjects				= null;
 	protected String									updateObjectJSONFileName	= null;
 
 	protected final POJOCLASSPERSISTENCESERVICE			persistenceService;
 
-	protected final ObjectMapper						objectMapper		= injector.getInstance(ObjectMapper.class);
+	protected final ObjectMapper						objectMapper				= injector.getInstance(ObjectMapper.class);
 
 	protected final String								objectJSONFileName;
 
@@ -196,6 +197,41 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 		cleanUpDB(responseObject);
 
 		LOG.debug("end PUT " + pojoClassName);
+	}
+
+	@Test
+	public void testDELETEObject() throws Exception {
+
+		LOG.debug("start DELETE " + pojoClassName + " test");
+
+		final POJOCLASS actualObject = createObjectInternal();
+
+		final POJOCLASSIDTYPE objectId = actualObject.getId();
+		String idEncoded = null;
+
+		try {
+
+			idEncoded = URLEncoder.encode(actualObject.getId().toString(), "UTF-8");
+		} catch (final UnsupportedEncodingException e) {
+
+			LOG.debug("couldn't encode id", e);
+
+			Assert.assertTrue(false);
+		}
+
+		Assert.assertNotNull("the id shouldn't be null", idEncoded);
+
+		LOG.debug("try to retrieve " + pojoClassName + " with id '" + idEncoded + "'");
+
+		final Response response = target(idEncoded).request().delete();
+
+		Assert.assertEquals("204 NO CONTENT was expected", 204, response.getStatus());
+
+		final POJOCLASS deletedObject = persistenceService.getObject(objectId);
+
+		Assert.assertNull(deletedObject);
+
+		LOG.debug("end DELETE " + pojoClassName);
 	}
 
 	protected boolean compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) {

@@ -12,6 +12,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -22,6 +23,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
@@ -44,6 +46,8 @@ import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.eventbus.XMLSchemaEvent;
@@ -55,18 +59,18 @@ import de.avgl.dmp.converter.flow.CSVResourceFlowFactory;
 import de.avgl.dmp.converter.flow.CSVSourceResourceCSVJSONPreviewFlow;
 import de.avgl.dmp.converter.flow.CSVSourceResourceCSVPreviewFlow;
 import de.avgl.dmp.persistence.DMPPersistenceException;
+import de.avgl.dmp.persistence.model.proxy.RetrievalType;
 import de.avgl.dmp.persistence.model.resource.Configuration;
-import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
-import de.avgl.dmp.persistence.model.schema.Schema;
+import de.avgl.dmp.persistence.model.resource.proxy.ProxyConfiguration;
+import de.avgl.dmp.persistence.model.resource.proxy.ProxyResource;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
-import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
 
 /**
  * A resource (controller service) for {@link Resource}s.
- *
+ * 
  * @author tgaengler
  * @author phorn
  */
@@ -89,14 +93,13 @@ public class ResourcesResource {
 	private final DMPStatus							dmpStatus;
 
 	private final ObjectMapper						objectMapper;
-	private final DataModelService					modelService;
 	private final DataModelUtil						dataModelUtil;
 
 	/**
 	 * Creates a new resource (controller service) for {@link Resource}s with the provider of the resource persistence service,
 	 * the provider of configuration persistence service, the provider of data model persistence service, the object mapper,
 	 * metrics registry, event bus provider and data model util.
-	 *
+	 * 
 	 * @param dmpStatusArg a metrics registry
 	 * @param objectMapperArg an object mapper
 	 * @param resourceServiceProviderArg the provider for the resource persistence service
@@ -108,20 +111,19 @@ public class ResourcesResource {
 	@Inject
 	public ResourcesResource(final DMPStatus dmpStatusArg, final ObjectMapper objectMapperArg,
 			final Provider<ResourceService> resourceServiceProviderArg, final Provider<ConfigurationService> configurationServiceProviderArg,
-			final Provider<EventBus> eventBusProviderArg, final DataModelService dataModelServiceArg, final DataModelUtil dataModelUtilArg) {
+			final Provider<EventBus> eventBusProviderArg, final DataModelUtil dataModelUtilArg) {
 
 		this.eventBusProvider = eventBusProviderArg;
 		this.resourceServiceProvider = resourceServiceProviderArg;
 		this.configurationServiceProvider = configurationServiceProviderArg;
 		this.dmpStatus = dmpStatusArg;
 		this.objectMapper = objectMapperArg;
-		this.modelService = dataModelServiceArg;
 		this.dataModelUtil = dataModelUtilArg;
 	}
 
 	/**
 	 * Builds a positive response with the given content.
-	 *
+	 * 
 	 * @param responseContent a response message
 	 * @return the response
 	 */
@@ -132,20 +134,43 @@ public class ResourcesResource {
 
 	/**
 	 * Builds a positive "created" response with the given content at the given response URI.
-	 *
+	 * 
 	 * @param responseContent a response message
 	 * @param responseURI a URI
 	 * @return the response
+	 * @throws DMPControllerException
 	 */
-	private Response buildResponseCreated(final String responseContent, final URI responseURI) {
+	private Response buildResponseCreated(final String responseContent, final URI responseURI, final RetrievalType type, final String objectType)
+			throws DMPControllerException {
 
-		return Response.created(responseURI).entity(responseContent).build();
+		final ResponseBuilder responseBuilder;
+
+		switch (type) {
+
+			case CREATED:
+
+				responseBuilder = Response.created(responseURI);
+
+				break;
+			case RETRIEVED:
+
+				responseBuilder = Response.ok().contentLocation(responseURI);
+
+				break;
+			default:
+
+				ResourcesResource.LOG.debug("something went wrong, while evaluating the retrieval type of the " + objectType);
+
+				throw new DMPControllerException("something went wrong, while evaluating the retrieval type of the " + objectType);
+		}
+
+		return responseBuilder.entity(responseContent).build();
 	}
 
 	/**
 	 * This endpoint processes (uploades) the input stream and creates a new resource object with related metadata that will be
 	 * returned as JSON representation.
-	 *
+	 * 
 	 * @param uploadedInputStream the input stream that should be uploaded
 	 * @param fileDetail file metadata
 	 * @param name the name of the resource
@@ -155,6 +180,8 @@ public class ResourcesResource {
 	 */
 	@POST
 	@ApiOperation(value = "upload new data resource", notes = "Returns a new Resource object, when upload was successfully.", response = Resource.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "data resource was successfully uploaded and stored"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response uploadResource(
@@ -166,7 +193,15 @@ public class ResourcesResource {
 
 		LOG.debug("try to create new resource '" + name + "' for file '" + fileDetail.getFileName() + "'");
 
-		final Resource resource = createResource(uploadedInputStream, fileDetail, name, description);
+		final ProxyResource proxyResource = createResource(uploadedInputStream, fileDetail, name, description);
+
+		if (proxyResource == null) {
+
+			dmpStatus.stop(context);
+			throw new DMPControllerException("couldn't create new resource");
+		}
+
+		final Resource resource = proxyResource.getObject();
 
 		if (resource == null) {
 
@@ -194,16 +229,19 @@ public class ResourcesResource {
 		LOG.debug("created new resource at '" + resourceURI.toString() + "' with content '" + resourceJSON + "'");
 
 		dmpStatus.stop(context);
-		return buildResponseCreated(resourceJSON, resourceURI);
+		return buildResponseCreated(resourceJSON, resourceURI, proxyResource.getType(), "resource");
 	}
 
 	/**
 	 * This endpoint returns a list of all resources as JSON representation.
-	 *
+	 * 
 	 * @return a list of all resources as JSON representation
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "get all data resources", notes = "Returns a list of Resource objects.")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "returns all resources (as JSON)"),
+			@ApiResponse(code = 404, message = "could not find any resource, i.e., there are no resources available"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getResources() throws DMPControllerException {
@@ -252,11 +290,14 @@ public class ResourcesResource {
 
 	/**
 	 * This endpoint returns a resource as JSON representation for the provided resource identifier.
-	 *
+	 * 
 	 * @param id a resource identifier
 	 * @return a JSON representation of a resource
 	 */
 	@ApiOperation(value = "get the data resource that matches the given id", notes = "Returns the Resource object that matches the given id.")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "returns the resource (as JSON) that matches the given id"),
+			@ApiResponse(code = 404, message = "could not find a resource for the given id"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -292,8 +333,56 @@ public class ResourcesResource {
 	}
 
 	/**
+	 * This endpoint deletes a resource that matches the given id.
+	 * 
+	 * @param id a resource identifier
+	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
+	 *         went wrong
+	 */
+	@ApiOperation(value = "delete the data resource that matches the given id", notes = "Returns status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong.")
+	@ApiResponses(value = { @ApiResponse(code = 204, message = "resource was successfully deleted"),
+			@ApiResponse(code = 404, message = "could not find a resource for the given id"),
+			@ApiResponse(code = 409, message = "resource couldn't be deleted (maybe there are some existing constraints to related objects)"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@DELETE
+	@Path("/{id}")
+	public Response deleteResource(@ApiParam(value = "data resource identifier", required = true) @PathParam("id") final Long id)
+			throws DMPControllerException {
+		final Timer.Context context = dmpStatus.deleteResource();
+
+		LOG.debug("try to delete resource with id '" + id + "'");
+
+		Optional<Resource> resourceOptional = dataModelUtil.fetchResource(id);
+
+		if (!resourceOptional.isPresent()) {
+
+			LOG.debug("couldn't find resource '" + id + "'");
+
+			dmpStatus.stop(context);
+			return Response.status(Status.NOT_FOUND).build();
+		}
+
+		dataModelUtil.deleteResource(id);
+
+		resourceOptional = dataModelUtil.fetchResource(id);
+
+		if (resourceOptional.isPresent()) {
+
+			LOG.debug("couldn't delete resource '" + id + "'");
+
+			dmpStatus.stop(context);
+			return Response.status(Status.CONFLICT).build();
+		}
+
+		LOG.debug("deletion of resourse with id '" + id + "' was successfull");
+
+		dmpStatus.stop(context);
+		return Response.status(Status.NO_CONTENT).build();
+	}
+
+	/**
 	 * Returns the content of the uploaded resource line-wise.
-	 *
+	 * 
 	 * @param id a resource identifier
 	 * @param atMost the number of lines that should be returned at most
 	 * @param encoding the encoding of the uploaded resource
@@ -301,6 +390,9 @@ public class ResourcesResource {
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "get the lines of the data resource that matches the given id", notes = "Returns the lines of the data resource that matches the given id. The number of lines can be limited via the 'atMost' parameter. The encoding can be set via the 'encoding' parameter.")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "raw data of data resource could be retrieved"),
+			@ApiResponse(code = 404, message = "could not find a resource for the given id"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@GET
 	@Path("/{id}/lines")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -380,12 +472,15 @@ public class ResourcesResource {
 
 	/**
 	 * This endpoint delivers all configurations that are related to this resource.
-	 *
+	 * 
 	 * @param id a resource identifier
 	 * @return a JSON representation of a list of configurations
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "get all configurations of the data resource that matches the given id", notes = "Returns the configurations of the data resource that matches the given id.")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "returns all configurations (as JSON) of the resource that matches the given id"),
+			@ApiResponse(code = 404, message = "could not find a resource for the given id"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@GET
 	@Path("/{id}/configurations")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -447,13 +542,16 @@ public class ResourcesResource {
 	 * note: [@tgaengler] the processing of a given data resource with a given configuration has been moved to
 	 * {@link DataModelsResource}, i.e., the result of this operation should only be the addition of the given configuration,
 	 * however, not the processing of this combination.
-	 *
+	 * 
 	 * @param id a resource identifier
 	 * @param jsonObjectString a JSON representation of a configuration.
 	 * @return a JSON representation of the added configuration
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "add a new configuration to the data resource that matches the given id", notes = "Returns the new configuration that was added to the data resource that matches the given id. Note: The data processing, which was a step of this operation is deprecated, i.e., only the given configuration will be added to this resource. For data processing of a given resource with a given configuration, please utilise POST [base uri]/datamodels instead")
+	@ApiResponses(value = {
+			@ApiResponse(code = 201, message = "configuration was successfully persisted and added to the resource for the given id"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@POST
 	@Path("/{id}/configurations")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -476,7 +574,17 @@ public class ResourcesResource {
 
 		final Resource resource = resourceOptional.get();
 
-		final Configuration configuration = addConfiguration(resource, jsonObjectString);
+		final ProxyConfiguration proxyConfiguration = addConfiguration(resource, jsonObjectString);
+
+		if (proxyConfiguration == null) {
+
+			LOG.debug("couldn't add configuration to resource with id '" + id + "'");
+
+			dmpStatus.stop(context);
+			throw new DMPControllerException("couldn't add configuration to resource with id '" + id + "'");
+		}
+
+		final Configuration configuration = proxyConfiguration.getObject();
 
 		if (configuration == null) {
 
@@ -491,26 +599,12 @@ public class ResourcesResource {
 		final JsonNode jsStorageType = configuration.getParameters().get("storage_type");
 		if (jsStorageType != null) {
 			final String storageType = jsStorageType.asText();
-			// try {
-			// final SchemaEvent.SchemaType type = SchemaEvent.SchemaType.fromString(storageType);
-			// eventBusProvider.get().post(new SchemaEvent(resource, configuration, type));
-			// } catch (final IllegalArgumentException e) {
-			// LOG.warn("could not determine schema type", e);
-			// }
 
 			switch (storageType) {
 				case "schema":
 
 					eventBusProvider.get().post(new XMLSchemaEvent(configuration, resource));
 					break;
-			// case "csv":
-			//
-			// eventBusProvider.get().post(new CSVConverterEvent(configuration, resource));
-			// break;
-			// case "xml":
-			//
-			// eventBusProvider.get().post(new XMLConverterEvent(configuration, resource));
-			// break;
 			}
 		}
 
@@ -531,18 +625,22 @@ public class ResourcesResource {
 		LOG.debug("return new configuration at '" + configurationURI.toString() + "' with content '" + configurationJSON + "'");
 
 		dmpStatus.stop(context);
-		return buildResponseCreated(configurationJSON, configurationURI);
+		return buildResponseCreated(configurationJSON, configurationURI, proxyConfiguration.getType(), "configuration");
 	}
 
 	/**
 	 * This endpoint delivers a configuration for the given resource identifier and configuration identifier.
-	 *
+	 * 
 	 * @param id a resource identifier
 	 * @param configurationId a configuration identifier
 	 * @return a JSON representation of the matched configuration
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "get the configuration of the data resource that matches the given data resource id and the given configuration id", notes = "Returns the configuration of the data resource that matches the given data resource id and the given configuration id.")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "returns a configuration (as JSON) that matches the given configuration id and is related to the resource that matches the given resource id"),
+			@ApiResponse(code = 404, message = "could not find a configuration for the given configuration id and/or resource id"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@GET
 	@Path("/{id}/configurations/{configurationid}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -577,93 +675,19 @@ public class ResourcesResource {
 	}
 
 	/**
-	 * This operation is deprecated. Please utilise {@link DataModelsResource#getObject(Long)} instead.<br/>
-	 * <br/>
-	 * note: [@tgaengler] this operation should be moved to {@link DataModelsResource}
-	 *
-	 * @param id
-	 * @param configurationId
-	 * @return
-	 * @throws DMPControllerException
-	 */
-	@Deprecated
-	@ApiOperation(value = "get the schema of the data resource and configuration (= data model) that matches the given data resource id and the given configuration id", notes = "Returns the schema of the data resource and configuration (= data model) that matches the given data resource id and the given configuration id. This operation is deprecated. Please utilise [base uri]/datamodels/{datamodelid} instead. The data model contains its schema.")
-	@GET
-	@Path("/{id}/configurations/{configurationid}/schema")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResourceConfigurationSchema(@ApiParam(value = "data resource identifier", required = true) @PathParam("id") final Long id,
-			@ApiParam(value = "configuration identifier", required = true) @PathParam("configurationid") final Long configurationId)
-			throws DMPControllerException {
-		final Timer.Context context = dmpStatus.getConfigurationSchema();
-
-		LOG.debug("try to get schema for configuration with id '" + configurationId + "' for resource with id '" + id + "'");
-
-		final List<DataModel> models = modelService.getObjects();
-
-		Schema schema = null;
-		for (final DataModel model : models) {
-			if (model.getDataResource().getId().equals(id) && model.getConfiguration().getId().equals(configurationId)) {
-
-				schema = model.getSchema();
-				break;
-			}
-		}
-
-		if (schema == null) {
-			LOG.info("could not find schema for resource=" + id + " and configuration=" + configurationId);
-			dmpStatus.stop(context);
-			return Response.status(Status.NOT_FOUND).build();
-		}
-
-		final String jsonString;
-		try {
-			jsonString = objectMapper.writeValueAsString(schema);
-		} catch (final JsonProcessingException e) {
-
-			dmpStatus.stop(context);
-			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
-		}
-
-		LOG.debug(String.format("return schema for configuration with id [%d] for resource with id [%d] and content [%s...]", configurationId, id,
-				jsonString.substring(0, 30)));
-
-		dmpStatus.stop(context);
-		return buildResponse(jsonString);
-	}
-
-	/**
-	 * This operation is deprecated. Please utilise DataModelsResource#getData instead.<br/>
-	 * <br/>
-	 * note: [@tgaengler] this operation has been moved to {@link DataModelsResource}
-	 *
-	 * @param id
-	 * @param configurationId
-	 * @param atMost
-	 * @return
-	 * @throws DMPControllerException
-	 */
-	@Deprecated
-	@ApiOperation(value = "get the data of the data resource and configuration (= data model) that matches the given data resource id and the given configuration id", notes = "Returns the data of the data resource and configuration (= data model) that matches the given data resource id and the given configuration id. This operation is deprecated. Please utilise [base uri]/datamodels/{datamodelid}/data instead.")
-	@GET
-	@Path("/{id}/configurations/{configurationid}/data")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResourceConfigurationData(@ApiParam(value = "data resource identifier", required = true) @PathParam("id") final Long id,
-			@ApiParam(value = "configuration identifier", required = true) @PathParam("configurationid") final Long configurationId,
-			@ApiParam("number of records limit") @QueryParam("atMost") final Integer atMost) throws DMPControllerException {
-
-		return Response.status(501).entity("This operation is deprecated. Please utilise [base uri]/datamodels/{datamodelid}/data instead.").build();
-	}
-
-	/**
 	 * note: [@tgaengler] this operation should be moved to {@link DataModelsResource} and there should be a generic preview
 	 * operation
-	 *
+	 * 
 	 * @param id
 	 * @param jsonObjectString
 	 * @return
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "get a CSV data preview of the data resource that matches the given id and where the given configuration will be applied to ( = data model)", notes = "Returns a CSV data preview of the data resource that matches the given id and where the given configuration will be applied to ( = data model).")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "a preview of the CSV data of the data resource, where the given configuration was applied, could be retrieved"),
+			@ApiResponse(code = 404, message = "could not find a resource for the given id or data for this resource"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@POST
 	@Path("/{id}/configurationpreview")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -707,13 +731,17 @@ public class ResourcesResource {
 	/**
 	 * note: [@tgaengler] this operation should be moved to {@link DataModelsResource} and there should be a generic preview
 	 * operation
-	 *
+	 * 
 	 * @param id
 	 * @param jsonObjectString
 	 * @return
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "get a CSV JSON data preview of the data resource that matches the given id and where the given configuration will be applied to ( = data model)", notes = "Returns a CSV JSON data preview of the data resource that matches the given id and where the given configuration will be applied to ( = data model).")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "a preview of the CSV JSON data of the data resource, where the given configuration was applied, could be retrieved"),
+			@ApiResponse(code = 404, message = "could not find a resource for the given id or data for this resource"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@POST
 	@Path("/{id}/configurationpreview")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -756,7 +784,7 @@ public class ResourcesResource {
 
 	/**
 	 * Process stores the input stream and creates and persists a new resource with the related metadata.
-	 *
+	 * 
 	 * @param uploadInputedStream an input stream that should be uploaded
 	 * @param fileDetail metadata of the given input stream
 	 * @param name the name of the resource
@@ -764,24 +792,31 @@ public class ResourcesResource {
 	 * @return a JSON representation of the new resource
 	 * @throws DMPControllerException
 	 */
-	private Resource createResource(final InputStream uploadInputedStream, final FormDataContentDisposition fileDetail, final String name,
+	private ProxyResource createResource(final InputStream uploadInputedStream, final FormDataContentDisposition fileDetail, final String name,
 			final String description) throws DMPControllerException {
 
 		final File file = DMPControllerUtils.writeToFile(uploadInputedStream, fileDetail.getFileName(), "resources");
 
 		final ResourceService resourceService = resourceServiceProvider.get();
 
-		final Resource resource;
+		ProxyResource proxyResource;
 
 		try {
 
-			resource = resourceService.createObject();
+			proxyResource = resourceService.createObject();
 		} catch (final DMPPersistenceException e) {
 
 			LOG.debug("something went wrong while resource creation");
 
 			throw new DMPControllerException("something went wrong while resource creation\n" + e.getMessage());
 		}
+
+		if (proxyResource == null) {
+
+			throw new DMPControllerException("fresh resource shouldn't be null");
+		}
+
+		final Resource resource = proxyResource.getObject();
 
 		if (resource == null) {
 
@@ -820,9 +855,20 @@ public class ResourcesResource {
 
 		resource.setAttributes(attributes);
 
+		final ProxyResource updatedResource;
+
 		try {
 
-			resourceService.updateObjectTransactional(resource);
+			updatedResource = resourceService.updateObjectTransactional(resource);
+
+			if (updatedResource == null) {
+
+				throw new DMPControllerException("something went wrong while resource updating");
+			}
+
+			final RetrievalType type = proxyResource.getType();
+
+			proxyResource = new ProxyResource(updatedResource.getObject(), type);
 		} catch (final DMPPersistenceException e) {
 
 			LOG.debug("something went wrong while resource updating");
@@ -830,42 +876,79 @@ public class ResourcesResource {
 			throw new DMPControllerException("something went wrong while resource updating\n" + e.getMessage());
 		}
 
-		return resource;
+		return proxyResource;
 	}
 
 	/**
 	 * Adds and persists a configuration to the given resource.
-	 *
+	 * 
 	 * @param resource a resource
 	 * @param configurationJSONString a JSON representation of a new configuration
 	 * @return the new configuration
 	 * @throws DMPControllerException
 	 */
-	private Configuration addConfiguration(final Resource resource, final String configurationJSONString) throws DMPControllerException {
+	private ProxyConfiguration addConfiguration(final Resource resource, final String configurationJSONString) throws DMPControllerException {
 
 		final Configuration configurationFromJSON = getConfiguration(configurationJSONString);
 
 		final ConfigurationService configurationService = configurationServiceProvider.get();
 
-		Configuration configuration = null;
+		ProxyConfiguration proxyConfiguration = null;
 
 		if (configurationFromJSON.getId() == null) {
 
 			// create new configuration, since it has no id
 
-			configuration = createNewConfiguration(configurationService);
+			proxyConfiguration = createNewConfiguration(configurationService);
 		} else {
 
 			// try to retrieve configuration via id from "configuration from JSON"
 
-			configuration = configurationService.getObject(configurationFromJSON.getId());
+			final Configuration retrievedConfiguration = configurationService.getObject(configurationFromJSON.getId());
 
-			if (configuration == null) {
+			if (retrievedConfiguration == null) {
 
 				// if the id is not in the DB, also create a new object
 
-				configuration = createNewConfiguration(configurationService);
+				proxyConfiguration = createNewConfiguration(configurationService);
+			} else {
+
+				RetrievalType type = null;
+
+				final Set<Configuration> configurations = resource.getConfigurations();
+
+				if (configurations != null) {
+
+					for (final Configuration configuration : configurations) {
+
+						if (configuration.getId().equals(retrievedConfiguration.getId())) {
+
+							type = RetrievalType.RETRIEVED;
+
+							break;
+						}
+					}
+				}
+
+				if (type == null) {
+
+					type = RetrievalType.CREATED;
+				}
+
+				proxyConfiguration = new ProxyConfiguration(retrievedConfiguration, type);
 			}
+		}
+
+		if (proxyConfiguration == null) {
+
+			throw new DMPControllerException("couldn't create or retrieve configuration");
+		}
+
+		Configuration configuration = proxyConfiguration.getObject();
+
+		if (configuration == null) {
+
+			throw new DMPControllerException("couldn't create or retrieve configuration");
 		}
 
 		final String name = configurationFromJSON.getName();
@@ -893,7 +976,16 @@ public class ResourcesResource {
 
 		try {
 
-			configurationService.updateObjectTransactional(configuration);
+			final ProxyConfiguration proxyUpdatedConfiguration = configurationService.updateObjectTransactional(configuration);
+
+			if (proxyUpdatedConfiguration == null) {
+
+				throw new DMPControllerException("something went wrong while configuration updating");
+			}
+
+			final RetrievalType type = proxyConfiguration.getType();
+
+			proxyConfiguration = new ProxyConfiguration(proxyUpdatedConfiguration.getObject(), type);
 		} catch (final DMPPersistenceException e) {
 
 			LOG.debug("something went wrong while configuration updating");
@@ -913,23 +1005,23 @@ public class ResourcesResource {
 			throw new DMPControllerException("something went wrong while resource updating for configuration\n" + e.getMessage());
 		}
 
-		return configuration;
+		return proxyConfiguration;
 	}
 
 	/**
 	 * Persists a new configuration in the database.
-	 *
+	 * 
 	 * @param configurationService the configuration persistence service
 	 * @return the new persisted configuration
 	 * @throws DMPControllerException
 	 */
-	private Configuration createNewConfiguration(final ConfigurationService configurationService) throws DMPControllerException {
+	private ProxyConfiguration createNewConfiguration(final ConfigurationService configurationService) throws DMPControllerException {
 
-		final Configuration configuration;
+		final ProxyConfiguration proxyConfiguration;
 
 		try {
 
-			configuration = configurationService.createObject();
+			proxyConfiguration = configurationService.createObject();
 		} catch (final DMPPersistenceException e) {
 
 			LOG.debug("something went wrong while configuration creation");
@@ -937,12 +1029,19 @@ public class ResourcesResource {
 			throw new DMPControllerException("something went wrong while configuration creation\n" + e.getMessage());
 		}
 
+		if (proxyConfiguration == null) {
+
+			throw new DMPControllerException("fresh configuration shouldn't be null");
+		}
+
+		final Configuration configuration = proxyConfiguration.getObject();
+
 		if (configuration == null) {
 
 			throw new DMPControllerException("fresh configuration shouldn't be null");
 		}
 
-		return configuration;
+		return proxyConfiguration;
 	}
 
 	private String applyConfigurationForCSVPreview(final Resource resource, final String configurationJSONString) throws DMPControllerException {
@@ -1014,7 +1113,7 @@ public class ResourcesResource {
 
 	/**
 	 * Deserializes the given string that holds a JSON object of a configuration.
-	 *
+	 * 
 	 * @param configurationJSONString a string that holds a JSON object of a configuration
 	 * @return the deserialized configuration
 	 * @throws DMPControllerException

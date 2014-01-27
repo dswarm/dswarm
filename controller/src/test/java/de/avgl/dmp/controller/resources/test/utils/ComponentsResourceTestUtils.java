@@ -12,9 +12,10 @@ import com.google.common.collect.Sets;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.FunctionType;
 import de.avgl.dmp.persistence.model.job.Transformation;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyComponent;
 import de.avgl.dmp.persistence.service.job.ComponentService;
 
-public class ComponentsResourceTestUtils extends ExtendedBasicDMPResourceTestUtils<ComponentService, Component> {
+public class ComponentsResourceTestUtils extends ExtendedBasicDMPResourceTestUtils<ComponentService, ProxyComponent, Component> {
 
 	private final FunctionsResourceTestUtils		functionsResourceTestUtils;
 

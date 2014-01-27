@@ -1,6 +1,8 @@
 package de.avgl.dmp.controller.resources.test;
 
-import java.util.LinkedList;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -13,11 +15,12 @@ import de.avgl.dmp.controller.resources.test.utils.AttributePathsResourceTestUti
 import de.avgl.dmp.controller.resources.test.utils.AttributesResourceTestUtils;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
-import de.avgl.dmp.persistence.model.schema.Clasz;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttributePath;
 import de.avgl.dmp.persistence.service.schema.AttributePathService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class AttributePathsResourceTest extends BasicResourceTest<AttributePathsResourceTestUtils, AttributePathService, AttributePath, Long> {
+public class AttributePathsResourceTest extends
+		BasicResourceTest<AttributePathsResourceTestUtils, AttributePathService, ProxyAttributePath, AttributePath, Long> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributePathsResourceTest.class);
 
@@ -32,7 +35,6 @@ public class AttributePathsResourceTest extends BasicResourceTest<AttributePaths
 		super(AttributePath.class, AttributePathService.class, "attributepaths", "attribute_path.json", new AttributePathsResourceTestUtils());
 
 		attributeResourceTestUtils = new AttributesResourceTestUtils();
-	
 	}
 
 	@Override
@@ -87,8 +89,19 @@ public class AttributePathsResourceTest extends BasicResourceTest<AttributePaths
 		AttributePath attributePath2 = null;
 
 		try {
-			
-			attributePath2 = pojoClassResourceTestUtils.createObject(objectJSONString, expectedObject);
+
+			final Response response = target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+					.post(Entity.json(objectJSONString));
+
+			Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+
+			final String responseString = response.readEntity(String.class);
+
+			Assert.assertNotNull("the response JSON shouldn't be null", responseString);
+
+			attributePath2 = objectMapper.readValue(responseString, pojoClass);
+
+			compareObjects(expectedObject, attributePath2);
 		} catch (Exception e) {
 			
 			LOG.error("couldn't create attribute path 2 for uniqueness test");

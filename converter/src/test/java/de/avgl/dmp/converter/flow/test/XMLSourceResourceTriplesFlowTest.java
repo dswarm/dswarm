@@ -80,7 +80,7 @@ public class XMLSourceResourceTriplesFlowTest extends GuicedTest {
 	public void testFromConfiguration3() throws Exception {
 
 		final DataModelService dataModelService = injector.getInstance(DataModelService.class);
-		final DataModel dataModel = dataModelService.createObject();
+		final DataModel dataModel = dataModelService.createObject().getObject();
 
 		dataModel.setConfiguration(new Configuration() {{
 			addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("record"));

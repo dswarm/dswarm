@@ -20,6 +20,7 @@ import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
+import de.avgl.dmp.persistence.model.resource.proxy.ProxyDataModel;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
@@ -34,7 +35,7 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class DataModelServiceTest extends IDBasicJPAServiceTest<DataModel, DataModelService, Long> {
+public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, DataModel, DataModelService> {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(DataModelServiceTest.class);
 
@@ -147,7 +148,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<DataModel, DataM
 
 		// data model
 
-		final DataModel dataModel = createObject();
+		final DataModel dataModel = createObject().getObject();
 
 		final String dataModelName = "my data model";
 		final String dataModelDescription = "my data model description";
@@ -158,7 +159,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<DataModel, DataM
 		dataModel.setConfiguration(configuration);
 		dataModel.setSchema(schema);
 
-		final DataModel updatedDataModel = updateObjectTransactional(dataModel);
+		final DataModel updatedDataModel = updateObjectTransactional(dataModel).getObject();
 
 		Assert.assertNotNull("the updated data model shouldn't be null", updatedDataModel);
 		Assert.assertNotNull("the update data model id shouldn't be null", updatedDataModel.getId());
@@ -185,17 +186,21 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<DataModel, DataM
 		checkSimpleResource(resource, updatedDataModel.getDataResource(), attributeKey, attributeValue);
 		checkComplexResource(resource, updatedDataModel.getDataResource());
 		checkComplexResource(resource, updatedDataModel.getDataResource(), parameterKey, parameterValue);
-		
+
 		Assert.assertNotNull("the configuration of the updated data model shouldn't be null", updatedDataModel.getConfiguration());
 		Assert.assertNotNull("the configuration name of the updated resource shouldn't be null", updatedDataModel.getConfiguration().getName());
-		Assert.assertEquals("the configuration' names of the resource are not equal", configuration.getName(), updatedDataModel.getConfiguration().getName());
-		Assert.assertNotNull("the configuration description of the updated resource shouldn't be null", updatedDataModel.getConfiguration().getDescription());
-		Assert.assertEquals("the configuration descriptions of the resource are not equal", configuration.getDescription(), updatedDataModel.getConfiguration().getDescription());
-		Assert.assertNotNull("the configuration parameters of the updated resource shouldn't be null", updatedDataModel.getConfiguration().getParameters());
-		Assert.assertEquals("the configurations parameters of the resource are not equal", configuration.getParameters(), updatedDataModel.getConfiguration().getParameters());
+		Assert.assertEquals("the configuration' names of the resource are not equal", configuration.getName(), updatedDataModel.getConfiguration()
+				.getName());
+		Assert.assertNotNull("the configuration description of the updated resource shouldn't be null", updatedDataModel.getConfiguration()
+				.getDescription());
+		Assert.assertEquals("the configuration descriptions of the resource are not equal", configuration.getDescription(), updatedDataModel
+				.getConfiguration().getDescription());
+		Assert.assertNotNull("the configuration parameters of the updated resource shouldn't be null", updatedDataModel.getConfiguration()
+				.getParameters());
+		Assert.assertEquals("the configurations parameters of the resource are not equal", configuration.getParameters(), updatedDataModel
+				.getConfiguration().getParameters());
 		Assert.assertNotNull("the parameter value shouldn't be null", configuration.getParameter(parameterKey));
 		Assert.assertEquals("the parameter value should be equal", configuration.getParameter(parameterKey).asText(), parameterValue);
-
 
 		String json = null;
 
@@ -233,14 +238,14 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<DataModel, DataM
 		final AttributePathService attributePathService = GuicedTest.injector.getInstance(AttributePathService.class);
 
 		Assert.assertNotNull("attribute path service shouldn't be null", attributePathService);
-		
+
 		final AttributePath attributePath = new AttributePath(attributePathArg);
 
 		AttributePath updatedAttributePath = null;
 
 		try {
 
-			updatedAttributePath = attributePathService.createObject(attributePathArg);
+			updatedAttributePath = attributePathService.createOrGetObject(attributePathArg).getObject();
 		} catch (final DMPPersistenceException e1) {
 
 			Assert.assertTrue("something went wrong while attribute path creation.\n" + e1.getMessage(), false);
@@ -266,7 +271,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<DataModel, DataM
 		}
 
 		LOG.debug("attribute path json for attribute path '" + updatedAttributePath.getId() + "': " + json);
-		
+
 		attributePaths.put(updatedAttributePath.getId(), updatedAttributePath);
 
 		return updatedAttributePath;
@@ -288,7 +293,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<DataModel, DataM
 		Attribute attribute = null;
 
 		try {
-			attribute = attributeService.createObjectTransactional(id);
+			attribute = attributeService.createOrGetObjectTransactional(id).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while attribute creation.\n" + e.getMessage(), false);
@@ -303,7 +308,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<DataModel, DataM
 
 		try {
 
-			updatedAttribute = attributeService.updateObjectTransactional(attribute);
+			updatedAttribute = attributeService.updateObjectTransactional(attribute).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the attribute of id = '" + id + "'", false);
@@ -329,7 +334,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<DataModel, DataM
 		Clasz clasz = null;
 
 		try {
-			clasz = classService.createObjectTransactional(id);
+			clasz = classService.createOrGetObjectTransactional(id).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while class creation.\n" + e.getMessage(), false);
@@ -344,7 +349,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<DataModel, DataM
 
 		try {
 
-			updatedClasz = classService.updateObjectTransactional(clasz);
+			updatedClasz = classService.updateObjectTransactional(clasz).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the class of id = '" + id + "'", false);
@@ -368,7 +373,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<DataModel, DataM
 		Schema schema = null;
 
 		try {
-			schema = schemaService.createObject();
+			schema = schemaService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while schema creation.\n" + e.getMessage(), false);
@@ -387,7 +392,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<DataModel, DataM
 
 		try {
 
-			updatedSchema = schemaService.updateObjectTransactional(schema);
+			updatedSchema = schemaService.updateObjectTransactional(schema).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the schema of id = '" + schema.getId() + "'", false);
@@ -442,7 +447,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<DataModel, DataM
 		Resource resource = null;
 
 		try {
-			resource = resourceService.createObject();
+			resource = resourceService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while resource creation.\n" + e.getMessage(), false);
@@ -461,7 +466,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<DataModel, DataM
 
 		try {
 
-			updatedResource = resourceService.updateObjectTransactional(resource);
+			updatedResource = resourceService.updateObjectTransactional(resource).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the resource of id = '" + resource.getId() + "'", false);
@@ -484,7 +489,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<DataModel, DataM
 		Configuration configuration = null;
 
 		try {
-			configuration = configurationService.createObject();
+			configuration = configurationService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while configuration creation.\n" + e.getMessage(), false);
@@ -501,7 +506,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<DataModel, DataM
 
 		try {
 
-			updatedConfiguration = configurationService.updateObjectTransactional(configuration);
+			updatedConfiguration = configurationService.updateObjectTransactional(configuration).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the configuration of id = '" + configuration.getId() + "'", false);

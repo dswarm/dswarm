@@ -2,6 +2,7 @@ package de.avgl.dmp.controller.resources.schema;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -23,12 +24,11 @@ import com.wordnik.swagger.annotations.ApiResponses;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.AdvancedDMPResource;
-import de.avgl.dmp.controller.resources.BasicResource;
 import de.avgl.dmp.controller.resources.schema.utils.AttributesResourceUtils;
 import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
-import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.schema.Attribute;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttribute;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
 
 /**
@@ -43,8 +43,6 @@ import de.avgl.dmp.persistence.service.schema.AttributeService;
 public class AttributesResource extends AdvancedDMPResource<AttributesResourceUtils, AttributeService, Attribute> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributesResource.class);
-	
-	private final ObjectMapper						objectMapper;
 
 	/**
 	 * Creates a new resource (controller service) for {@link Attribute}s with the provider of the attribute persistence
@@ -59,7 +57,6 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 			final ObjectMapper objectMapperArg) throws DMPControllerException {
 
 		super(utilsFactory.reset().get(AttributesResourceUtils.class), dmpStatusArg);
-		this.objectMapper = objectMapperArg;
 	}
 
 	/**
@@ -69,24 +66,30 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 	 * @return a JSON representation of an attribute
 	 */
 	@ApiOperation(value = "get the attribute that matches the given id", notes = "Returns the Attribute object that matches the given id.")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "returns the attribute (as JSON) that matches the given id"),
+			@ApiResponse(code = 404, message = "could not find an attribute for the given id"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "attribute identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+	public Response getObject(@ApiParam(value = "attribute identifier", required = true) @PathParam("id") final Long id)
+			throws DMPControllerException {
 
 		return super.getObject(id);
 	}
 
 	/**
-	 * This endpoint consumes an attribute as JSON representation and persists this attribute in the
-	 * database.
+	 * This endpoint consumes an attribute as JSON representation and persists this attribute in the database.
 	 * 
 	 * @param jsonObjectString a JSON representation of one attribute
 	 * @return the persisted attribute as JSON representation
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "create a new attribute", notes = "Returns a new Attribute object.", response = Attribute.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "attribute does already exist; returns the existing one"),
+			@ApiResponse(code = 201, message = "attribute was successfully persisted"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -104,6 +107,9 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "get all attributes ", notes = "Returns a list of Attribute objects.")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "returns all available attributes (as JSON)"),
+			@ApiResponse(code = 404, message = "could not find any attribute, i.e., there are no attribute available"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
@@ -133,5 +139,27 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 			@ApiParam(value = "attribute identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
 
 		return super.updateObject(jsonObjectString, id);
+	}
+
+	/**
+	 * This endpoint deletes a attribute that matches the given id.
+	 * 
+	 * @param id an attribute identifier
+	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
+	 *         went wrong
+	 * @throws DMPControllerException
+	 */
+	@ApiOperation(value = "delete attribute that matches the given id", notes = "Returns status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong.")
+	@ApiResponses(value = { @ApiResponse(code = 204, message = "attribute was successfully deleted"),
+			@ApiResponse(code = 404, message = "could not find an attribute for the given id"),
+			@ApiResponse(code = 409, message = "attribute couldn't be deleted (maybe there are some existing constraints to related objects)"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@DELETE
+	@Path("/{id}")
+	@Override
+	public Response deleteObject(@ApiParam(value = "attribute identifier", required = true) @PathParam("id") final Long id)
+			throws DMPControllerException {
+
+		return super.deleteObject(id);
 	}
 }
