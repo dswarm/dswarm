@@ -91,7 +91,7 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 		resourcesResourceTestUtils = new ResourcesResourceTestUtils();
 		configurationsResourceTestUtils = new ConfigurationsResourceTestUtils();
 		schemasResourceTestUtils = new SchemasResourceTestUtils();
-		
+
 		updateObjectJSONFileName = "datamodel1.json";
 	}
 
@@ -151,10 +151,10 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 		for (int j = 1; j < 4; j++) {
 
 			final String attributePathJSONFileName = "attribute_path" + j + ".json";
-			
+
 			String attributePathJSONString = DMPPersistenceUtil.getResourceAsString(attributePathJSONFileName);
 			final AttributePath attributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
-			
+
 			final LinkedList<Attribute> attributes = attributePath.getAttributePath();
 			final LinkedList<Attribute> newAttributes = Lists.newLinkedList();
 
@@ -457,6 +457,17 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 		assertThat(response.hasEntity(), equalTo(false));
 
 		LOG.debug("end get resource configuration data missing test");
+	}
+
+	@Override
+	public void testPUTObject() throws Exception {
+
+		super.testPUTObject();
+
+		// TODO: [@fniederlein] do clean-up for update (sub) objects (there is a schema after the test in
+		// the database); note: you need to take care of the overridden/replaced (sub) objects as well as the new ones; ps: this
+		// only happens when other tests of this test class are executed before, i.e., when you only execute the PUT test
+		// everything will be fine (when the DB was clean before)
 	}
 
 	@After

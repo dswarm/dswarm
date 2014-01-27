@@ -115,9 +115,13 @@ public class ClaszesResourceTest extends BasicResourceTest<ClaszesResourceTestUt
 		
 		clasz = objectMapper.readValue(claszJSONString, Clasz.class);
 		
-		//updateClasz = pojoClassResourceTestUtils.updateObject(claszJSONString, clasz);
+		updateClasz = pojoClassResourceTestUtils.updateObject(claszJSONString, clasz);
 		
-		//Assert.assertNotEquals("uniqueness dosn't allow update of uri", updateClasz.getUri(), clasz.getUri());
+		Assert.assertNotNull("class shouldn't be null", clasz);
+		Assert.assertNotNull("class attribute shouldn't be null", updateClasz);
+		Assert.assertNotEquals("id should be different, when uri was \"updated\"", updateClasz.getId(), clasz.getId());
+		
+		Assert.assertNotEquals("uniqueness dosn't allow update of uri", updateClasz.getUri(), clasz.getUri());
 		
 		//TODO: [@fniederlein] after class persistence adjustments the test have to check if a new class was created
 		

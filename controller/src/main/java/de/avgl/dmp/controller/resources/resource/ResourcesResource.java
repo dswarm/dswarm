@@ -331,6 +331,8 @@ public class ResourcesResource {
 		dmpStatus.stop(context);
 		return buildResponse(resourceJSON);
 	}
+	
+	// TODO: [@fniederlein] implement PUT
 
 	/**
 	 * This endpoint deletes a resource that matches the given id.

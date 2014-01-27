@@ -118,6 +118,10 @@ public class AttributesResourceTest extends BasicResourceTest<AttributesResource
 		
 		updateAttribute = pojoClassResourceTestUtils.updateObject(attributeJSONString, attribute);
 		
+		Assert.assertNotNull("attribute shouldn't be null", attribute);
+		Assert.assertNotNull("updated attribute shouldn't be null", updateAttribute);
+		Assert.assertNotEquals("id should be different, when uri was \"updated\"", updateAttribute.getId(), attribute.getId());
+		
 		Assert.assertNotEquals("uniqueness dosn't allow update of uri", updateAttribute.getUri(), attribute.getUri());
 		
 		//TODO: [@fniederlein] after attribute persistence adjustments the test have to check if a new attribute was created

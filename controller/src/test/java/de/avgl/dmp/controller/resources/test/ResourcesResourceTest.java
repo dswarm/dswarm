@@ -24,6 +24,7 @@ import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -467,6 +468,12 @@ public class ResourcesResourceTest extends ResourceTest {
 		cleanUpDB(resource);
 
 		LOG.debug("start post configuration CSV JSON preview test");
+	}
+	
+	@Ignore
+	public void testPUTResource() throws Exception {
+
+		// TODO: [@fniederlein] implement test (+ resource methode)
 	}
 	
 	@Test

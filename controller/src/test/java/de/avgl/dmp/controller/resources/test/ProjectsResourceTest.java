@@ -65,7 +65,7 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 	private final DataModelsResourceTestUtils		dataModelsResourceTestUtils;
 
 	private final MappingsResourceTestUtils			mappingsResourceTestUtils;
-	
+
 	private final ProjectsResourceTestUtils			projectsResourceTestUtils;
 
 	private Function								function;
@@ -159,6 +159,15 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 		// END project preparation
 	}
 
+	@Override
+	public void testPUTObject() throws Exception {
+
+		super.testPUTObject();
+
+		// TODO: [@fniederlein] do clean-up for update (sub) objects (there are a functions, components, mappings etc. after the test in
+		// the database); note: you need to take care of the overridden/replaced (sub) objects as well as the new ones
+	}
+
 	@After
 	public void tearDown2() throws Exception {
 
@@ -223,30 +232,30 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 
 		// END mappings tear down
 	}
-	
+
 	@Override
 	public Project updateObject(final Project persistedProject) throws Exception {
-		
+
 		persistedProject.setName(persistedProject.getName() + " update");
 		persistedProject.setDescription(persistedProject.getDescription() + " update");
-		
+
 		function = functionsResourceTestUtils.createObject("function.json");
 		Set<Function> functions = persistedProject.getFunctions();
 		functions.add(function);
 		persistedProject.setFunctions(functions);
-		
+
 		String updateProjectJSONString = objectMapper.writeValueAsString(persistedProject);
 		final ObjectNode updateProjectJSON = objectMapper.readValue(updateProjectJSONString, ObjectNode.class);
-		
+
 		final Mapping mapping = mappingsResourceTestUtils.createObject("mapping.json");
 		final String finalMappingJSONString = objectMapper.writeValueAsString(mapping);
 		final ObjectNode finalMappingJSON = objectMapper.readValue(finalMappingJSONString, ObjectNode.class);
-		
+
 		final ArrayNode mappingsArray = objectMapper.createArrayNode();
 		mappingsArray.add(finalMappingJSON);
-		
+
 		updateProjectJSON.put("functions", mappingsArray);
-		
+
 		updateProjectJSONString = objectMapper.writeValueAsString(updateProjectJSON);
 		expectedObject = objectMapper.readValue(updateProjectJSONString, pojoClass);
 

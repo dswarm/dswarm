@@ -93,6 +93,15 @@ public class TransformationsResourceTest extends
 	}
 	
 	@Override
+	public void testPUTObject() throws Exception {
+
+		super.testPUTObject();
+
+		// TODO: [@fniederlein] do clean-up for update (sub) objects (there are a functions and components after the test in
+		// the database); note: you need to take care of the overridden/replaced (sub) objects as well as the new ones
+	}
+	
+	@Override
 	public Transformation updateObject(final Transformation persistedTransformation) throws Exception {
 
 		// update component
