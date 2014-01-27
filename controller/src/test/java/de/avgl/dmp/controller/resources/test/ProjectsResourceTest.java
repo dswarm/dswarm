@@ -6,7 +6,6 @@ import java.util.Set;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Ignore;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -251,9 +250,9 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 		updateProjectJSONString = objectMapper.writeValueAsString(updateProjectJSON);
 		expectedObject = objectMapper.readValue(updateProjectJSONString, pojoClass);
 
-		//super.testPUTObject();
-		
-		// TODO: [@fniederlein] implement test
+		final Project updateProject = projectsResourceTestUtils.updateObject(updateProjectJSONString, expectedObject);
+
+		return updateProject;
 	}
 
 	private DataModel createInputDataModel() throws Exception {

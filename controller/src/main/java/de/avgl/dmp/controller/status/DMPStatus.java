@@ -42,6 +42,7 @@ public class DMPStatus {
 	private final Map<String, Timer>	createNewObjectTimers	= Maps.newHashMap();
 	private final Map<String, Timer>	getObjectTimers			= Maps.newHashMap();
 	private final Map<String, Timer>	updateObjectTimers		= Maps.newHashMap();
+	private final Map<String, Timer>	deleteObjectTimers		= Maps.newHashMap();
 
 	private final MetricRegistry		registry;
 

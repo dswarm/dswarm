@@ -11,9 +11,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
-import com.codahale.metrics.Timer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
@@ -40,7 +38,7 @@ import de.avgl.dmp.persistence.service.schema.AttributeService;
 @RequestScoped
 @Api(value = "/attributes", description = "Operations about attributes.")
 @Path("attributes")
-public class AttributesResource extends AdvancedDMPResource<AttributesResourceUtils, AttributeService, Attribute> {
+public class AttributesResource extends AdvancedDMPResource<AttributesResourceUtils, AttributeService, ProxyAttribute, Attribute> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributesResource.class);
 
