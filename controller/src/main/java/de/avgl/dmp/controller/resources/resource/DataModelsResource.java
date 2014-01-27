@@ -41,6 +41,7 @@ import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.controller.utils.DataModelUtil;
 import de.avgl.dmp.persistence.DMPPersistenceException;
+import de.avgl.dmp.persistence.model.proxy.RetrievalType;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.proxy.ProxyDataModel;
@@ -157,6 +158,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 	 * @return the updated data model as JSON representation
 	 * @throws DMPControllerException
 	 */
+	@Override
 	@ApiOperation(value = "update data model with given id ", notes = "Returns an updated DataModel object.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "data model was successfully updated"),
 			@ApiResponse(code = 404, message = "could not find a data model for the given id"),
@@ -191,13 +193,13 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 
 		// final Timer.Context context = dmpStatus.getConfigurationData();
 
-		LOG.debug("try to get data for data model with id '" + id + "'");
+		DataModelsResource.LOG.debug("try to get data for data model with id '" + id + "'");
 
 		final Optional<Iterator<Tuple<String, JsonNode>>> data = dataModelUtil.getData(id, Optional.fromNullable(atMost));
 
 		if (!data.isPresent()) {
 
-			LOG.debug("couldn't find data for data model with id '" + id + "'");
+			DataModelsResource.LOG.debug("couldn't find data for data model with id '" + id + "'");
 
 			// dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
@@ -228,7 +230,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 			throw new DMPControllerException("couldn't transform data to JSON string.\n" + e.getMessage());
 		}
 
-		LOG.debug("return data for data model with id '" + id + "' and content '" + jsonString + "'");
+		DataModelsResource.LOG.debug("return data for data model with id '" + id + "' and content '" + jsonString + "'");
 
 		// dmpStatus.stop(context);
 		return buildResponse(jsonString);
@@ -261,13 +263,20 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 	 * The data of the data model will also be converted and persisted.
 	 */
 	@Override
-	protected DataModel addObject(final String objectJSONString) throws DMPControllerException {
+	protected ProxyDataModel addObject(final String objectJSONString) throws DMPControllerException {
 
-		DataModel dataModel = super.addObject(objectJSONString);
+		ProxyDataModel proxyDataModel = super.addObject(objectJSONString);
+
+		if (proxyDataModel == null) {
+
+			return proxyDataModel;
+		}
+
+		DataModel dataModel = proxyDataModel.getObject();
 
 		if (dataModel == null) {
 
-			return dataModel;
+			return proxyDataModel;
 		}
 
 		if (dataModel.getConfiguration() != null) {
@@ -277,11 +286,39 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 
 			try {
 
-				dataModel = pojoClassResourceUtils.getPersistenceService().updateObjectTransactional(dataModel);
-			} catch (DMPPersistenceException e) {
+				final ProxyDataModel proxyUpdatedDataModel = pojoClassResourceUtils.getPersistenceService().updateObjectTransactional(dataModel);
 
-				LOG.error("something went wrong, when trying to add configuration to data resource of data model '" + dataModel.getId() + "'");
+				if (proxyUpdatedDataModel == null) {
+
+					DataModelsResource.LOG.error("something went wrong, when trying to add configuration to data resource of data model '"
+							+ dataModel.getId() + "'");
+
+					proxyDataModel = null;
+				} else {
+
+					final RetrievalType type = proxyDataModel.getType();
+
+					proxyDataModel = new ProxyDataModel(proxyUpdatedDataModel.getObject(), type);
+				}
+			} catch (final DMPPersistenceException e) {
+
+				DataModelsResource.LOG.error("something went wrong, when trying to add configuration to data resource of data model '"
+						+ dataModel.getId() + "'");
+
+				proxyDataModel = null;
 			}
+		}
+
+		if (proxyDataModel == null) {
+
+			return proxyDataModel;
+		}
+
+		dataModel = proxyDataModel.getObject();
+
+		if (dataModel == null) {
+
+			return proxyDataModel;
 		}
 
 		// final Timer.Context context = dmpStatus.createNewConfiguration();
@@ -296,7 +333,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 
 			DataModelsResource.LOG.debug("The data model has no configuration. Hence, the data of the data model cannot be processed.");
 
-			return dataModel;
+			return proxyDataModel;
 		}
 
 		final JsonNode jsStorageType = configuration.getParameters().get("storage_type");
@@ -328,8 +365,11 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 		// refresh data model
 		final DataModelService persistenceService = pojoClassResourceUtils.getPersistenceService();
 		final DataModel freshDataModel = persistenceService.getObject(dataModel.getId());
+		final RetrievalType type = proxyDataModel.getType();
 
-		return freshDataModel;
+		proxyDataModel = new ProxyDataModel(freshDataModel, type);
+
+		return proxyDataModel;
 	}
 
 	/**

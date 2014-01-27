@@ -12,6 +12,7 @@ import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
+import de.avgl.dmp.persistence.model.proxy.RetrievalType;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttributePath;
@@ -45,7 +46,7 @@ public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, 
 	 * @throws DMPPersistenceException
 	 */
 	@Transactional(rollbackOn = Exception.class)
-	public AttributePath createObject(final AttributePath attributePath) throws DMPPersistenceException {
+	public ProxyAttributePath createObject(final AttributePath attributePath) throws DMPPersistenceException {
 
 		return createObjectInternal(attributePath);
 	}
@@ -58,7 +59,7 @@ public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, 
 	 * @throws DMPPersistenceException
 	 */
 	@Transactional(rollbackOn = Exception.class)
-	public AttributePath createObject(final LinkedList<Attribute> attributes) throws DMPPersistenceException {
+	public ProxyAttributePath createOrGetObject(final LinkedList<Attribute> attributes) throws DMPPersistenceException {
 
 		final AttributePath tempAttributePath = new AttributePath(attributes);
 
@@ -78,7 +79,7 @@ public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, 
 		return getObject(attributePathJSONArrayString, entityManager);
 	}
 
-	private AttributePath createObjectInternal(final AttributePath attributePath) throws DMPPersistenceException {
+	private ProxyAttributePath createObjectInternal(final AttributePath attributePath) throws DMPPersistenceException {
 
 		final EntityManager em = acquire();
 
@@ -101,15 +102,17 @@ public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, 
 			persistObject(tempAttributePath, em);
 
 			object = tempAttributePath;
+
+			return new ProxyAttributePath(object);
 		} else {
 
 			object = existingObject;
 
 			AttributePathService.LOG.debug("attribute path with path '" + attributePath.toAttributePath()
 					+ "' exists already in the database. Will return the existing object, instead of creating a new one");
-		}
 
-		return object;
+			return new ProxyAttributePath(existingObject, RetrievalType.RETRIEVED);
+		}
 	}
 
 	private AttributePath getObject(final String attributePath, final EntityManager entityManager) {

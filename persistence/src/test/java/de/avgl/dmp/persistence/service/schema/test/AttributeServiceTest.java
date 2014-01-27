@@ -26,7 +26,7 @@ public class AttributeServiceTest extends AdvancedJPAServiceTest<ProxyAttribute,
 	@Test
 	public void testSimpleAttribute() {
 
-		final Attribute attribute = createObject("http://purl.org/dc/terms/title");
+		final Attribute attribute = createObject("http://purl.org/dc/terms/title").getObject();
 
 		attribute.setName("title");
 
@@ -81,7 +81,7 @@ public class AttributeServiceTest extends AdvancedJPAServiceTest<ProxyAttribute,
 
 	private Attribute createAttribute() {
 
-		final Attribute attribute = createObject("http://purl.org/dc/terms/title");
+		final Attribute attribute = createObject("http://purl.org/dc/terms/title").getObject();
 
 		attribute.setName("title");
 

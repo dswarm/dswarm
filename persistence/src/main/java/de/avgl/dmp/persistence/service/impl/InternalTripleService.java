@@ -29,12 +29,16 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.internal.Model;
 import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
 import de.avgl.dmp.persistence.model.internal.rdf.helper.AttributePathHelper;
+import de.avgl.dmp.persistence.model.proxy.RetrievalType;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.proxy.ProxyDataModel;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttribute;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttributePath;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyClasz;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxySchema;
 import de.avgl.dmp.persistence.model.schema.utils.SchemaUtils;
 import de.avgl.dmp.persistence.service.InternalModelService;
@@ -380,11 +384,26 @@ public class InternalTripleService implements InternalModelService {
 		} else {
 
 			// create new class
-			recordClass = classService.get().createObjectTransactional(recordClassUri);
+			final ProxyClasz proxyRecordClass = classService.get().createOrGetObjectTransactional(recordClassUri);
 
-			final String recordClassName = SchemaUtils.determineRelativeURIPart(recordClassUri);
+			if (proxyRecordClass == null) {
 
-			recordClass.setName(recordClassName);
+				throw new DMPPersistenceException("couldn't create or retrieve record class");
+			}
+
+			recordClass = proxyRecordClass.getObject();
+
+			if (proxyRecordClass.getType().equals(RetrievalType.CREATED)) {
+
+				if (recordClass == null) {
+
+					throw new DMPPersistenceException("couldn't create new record class");
+				}
+
+				final String recordClassName = SchemaUtils.determineRelativeURIPart(recordClassUri);
+
+				recordClass.setName(recordClassName);
+			}
 
 			schema.setRecordClass(recordClass);
 		}
@@ -393,9 +412,7 @@ public class InternalTripleService implements InternalModelService {
 
 		if (proxyUpdatedDataModel == null) {
 
-			// TODO: log something
-
-			return null;
+			throw new DMPPersistenceException("couldn't update data model");
 		}
 
 		return proxyUpdatedDataModel.getObject();
@@ -417,7 +434,20 @@ public class InternalTripleService implements InternalModelService {
 
 			for (final String attributeString : attributePathHelper.getAttributePath()) {
 
-				final Attribute attribute = attributeService.get().createObjectTransactional(attributeString);
+				final ProxyAttribute proxyAttribute = attributeService.get().createOrGetObjectTransactional(attributeString);
+
+				if (proxyAttribute == null) {
+
+					throw new DMPPersistenceException("couldn't create or retrieve attribute");
+				}
+
+				final Attribute attribute = proxyAttribute.getObject();
+
+				if (attribute == null) {
+
+					throw new DMPPersistenceException("couldn't create or retrieve attribute");
+				}
+
 				attributes.add(attribute);
 
 				final String attributeName = SchemaUtils.determineRelativeURIPart(attributeString);
@@ -425,7 +455,19 @@ public class InternalTripleService implements InternalModelService {
 				attribute.setName(attributeName);
 			}
 
-			final AttributePath attributePath = attributePathService.get().createObject(attributes);
+			final ProxyAttributePath proxyAttributePath = attributePathService.get().createOrGetObject(attributes);
+
+			if (proxyAttributePath == null) {
+
+				throw new DMPPersistenceException("couldn't create or retrieve attribute path");
+			}
+
+			final AttributePath attributePath = proxyAttributePath.getObject();
+
+			if (attributePath == null) {
+
+				throw new DMPPersistenceException("couldn't create or retrieve attribute path");
+			}
 
 			dataModel.getSchema().addAttributePath(attributePath);
 		}
@@ -434,9 +476,7 @@ public class InternalTripleService implements InternalModelService {
 
 		if (proxyUpdatedDataModel == null) {
 
-			// TODO: log something
-
-			return null;
+			throw new DMPPersistenceException("couldn't update data model");
 		}
 
 		return proxyUpdatedDataModel.getObject();

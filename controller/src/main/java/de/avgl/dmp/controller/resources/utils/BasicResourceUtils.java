@@ -271,15 +271,15 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 	 * @return the persisted object
 	 * @throws DMPPersistenceException
 	 */
-	public POJOCLASS createObject(final POJOCLASS objectFromJSON, final POJOCLASSPERSISTENCESERVICE persistenceService)
+	public PROXYPOJOCLASS createObject(final POJOCLASS objectFromJSON, final POJOCLASSPERSISTENCESERVICE persistenceService)
 			throws DMPPersistenceException {
 
 		return persistenceService.createObject();
 	}
 
-	public POJOCLASS createNewObject(final POJOCLASS object) throws DMPControllerException {
+	public PROXYPOJOCLASS createNewObject(final POJOCLASS object) throws DMPControllerException {
 
-		POJOCLASS newObject = null;
+		PROXYPOJOCLASS newObject = null;
 
 		try {
 
@@ -359,7 +359,19 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 	protected JsonNode createNewObjectForDummyId(final POJOCLASS object, final JsonNode jsonNode, final Set<POJOCLASSIDTYPE> dummyIdCandidates)
 			throws DMPControllerException {
 
-		final POJOCLASS newObject = createNewObject(object);
+		final PROXYPOJOCLASS proxyNewObject = createNewObject(object);
+
+		if (proxyNewObject == null) {
+
+			throw new DMPControllerException("couldn't create new " + pojoClassName + " for dummy id '" + object.getId() + "'");
+		}
+
+		final POJOCLASS newObject = proxyNewObject.getObject();
+
+		if (newObject == null) {
+
+			throw new DMPControllerException("couldn't create new " + pojoClassName + " for dummy id '" + object.getId() + "'");
+		}
 
 		final JsonNode enhancedJsonNode = processDummyId(jsonNode, object.getId(), newObject.getId(), dummyIdCandidates);
 

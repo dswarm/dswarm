@@ -17,25 +17,23 @@ public abstract class AdvancedJPAServiceTest<PROXYPOJOCLASS extends ProxyAdvance
 		super(type, jpaServiceClass);
 	}
 
-	protected POJOCLASS createObject(final String id) {
+	protected PROXYPOJOCLASS createObject(final String id) {
 
-		POJOCLASS object = null;
+		PROXYPOJOCLASS proxyObject = null;
 
 		try {
 
-			object = jpaService.createObjectTransactional(id);
+			proxyObject = jpaService.createOrGetObjectTransactional(id);
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong during object creation.\n" + e.getMessage(), false);
 		}
 
-		Assert.assertNotNull(type + " shouldn't be null", object);
-		Assert.assertNotNull(type + " id shouldn't be null", object.getId());
+		Assert.assertNotNull(type + " shouldn't be null", proxyObject);
+		Assert.assertNotNull(type + " id shouldn't be null", proxyObject.getId());
 
-		LOG.debug("created new " + type + " with id = '" + object.getId() + "'");
+		LOG.debug("created new " + type + " with id = '" + proxyObject.getId() + "'");
 
-		getObject(object);
-
-		return object;
+		return proxyObject;
 	}
 }

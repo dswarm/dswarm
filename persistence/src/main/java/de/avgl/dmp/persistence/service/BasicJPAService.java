@@ -366,37 +366,14 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 		BasicJPAService.LOG.debug("created new " + className + " with id '" + object.getId() + "'");
 	}
-
-	/**
-	 * Creates a new object of the concrete POJO class.
-	 * 
-	 * @return a new instance of the concrete POJO class
-	 * @throws DMPPersistenceException if something went wrong.
-	 */
-	private POJOCLASS createNewObject() throws DMPPersistenceException {
-
-		final POJOCLASS object;
-
-		try {
-
-			object = clasz.newInstance();
-		} catch (final InstantiationException | IllegalAccessException e) {
-
-			BasicJPAService.LOG.error("something went wrong while " + className + "object creation", e);
-
-			throw new DMPPersistenceException(e.getMessage());
-		}
-
-		return object;
-	}
-
+	
 	/**
 	 * Creates a new proxy object of the concrete proxy POJO class.
 	 * 
 	 * @return a new instance of the concrete proxy POJO class
 	 * @throws DMPPersistenceException if something went wrong.
 	 */
-	private PROXYPOJOCLASS createNewProxyObject(final POJOCLASS object) throws DMPPersistenceException {
+	protected PROXYPOJOCLASS createNewProxyObject(final POJOCLASS object) throws DMPPersistenceException {
 
 		final PROXYPOJOCLASS proxyObject;
 
@@ -434,7 +411,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	 * @return a new instance of the concrete proxy POJO class
 	 * @throws DMPPersistenceException if something went wrong.
 	 */
-	private PROXYPOJOCLASS createNewProxyObject(final POJOCLASS object, final RetrievalType type) throws DMPPersistenceException {
+	public PROXYPOJOCLASS createNewProxyObject(final POJOCLASS object, final RetrievalType type) throws DMPPersistenceException {
 
 		final PROXYPOJOCLASS proxyObject;
 
@@ -464,5 +441,28 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 		}
 
 		return proxyObject;
+	}
+
+	/**
+	 * Creates a new object of the concrete POJO class.
+	 * 
+	 * @return a new instance of the concrete POJO class
+	 * @throws DMPPersistenceException if something went wrong.
+	 */
+	private POJOCLASS createNewObject() throws DMPPersistenceException {
+
+		final POJOCLASS object;
+
+		try {
+
+			object = clasz.newInstance();
+		} catch (final InstantiationException | IllegalAccessException e) {
+
+			BasicJPAService.LOG.error("something went wrong while " + className + "object creation", e);
+
+			throw new DMPPersistenceException(e.getMessage());
+		}
+
+		return object;
 	}
 }

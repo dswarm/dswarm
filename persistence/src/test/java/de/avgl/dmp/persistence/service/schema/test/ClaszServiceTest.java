@@ -25,7 +25,7 @@ public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, 
 	@Test
 	public void testSimpleAttribute() {
 
-		Clasz clasz = createObject("http://purl.org/ontology/bibo/Document");
+		Clasz clasz = createObject("http://purl.org/ontology/bibo/Document").getObject();
 
 		clasz.setName("document");
 
@@ -80,7 +80,7 @@ public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, 
 
 	private Clasz createClass() {
 
-		final Clasz clasz = createObject("http://purl.org/ontology/bibo/Document");
+		final Clasz clasz = createObject("http://purl.org/ontology/bibo/Document").getObject();
 
 		clasz.setName("document");
 

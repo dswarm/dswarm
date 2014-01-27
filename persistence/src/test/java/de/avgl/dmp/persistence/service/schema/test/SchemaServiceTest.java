@@ -171,7 +171,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema
 
 		try {
 
-			updatedAttributePath = attributePathService.createObject(attributePathArg);
+			updatedAttributePath = attributePathService.createOrGetObject(attributePathArg).getObject();
 		} catch (final DMPPersistenceException e1) {
 
 			Assert.assertTrue("something went wrong while attribute path creation.\n" + e1.getMessage(), false);
@@ -217,7 +217,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema
 		Attribute attribute = null;
 
 		try {
-			attribute = attributeService.createObjectTransactional(id);
+			attribute = attributeService.createOrGetObjectTransactional(id).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while attribute creation.\n" + e.getMessage(), false);
@@ -258,7 +258,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema
 		Clasz clasz = null;
 
 		try {
-			clasz = classService.createObjectTransactional(id);
+			clasz = classService.createOrGetObjectTransactional(id).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while class creation.\n" + e.getMessage(), false);

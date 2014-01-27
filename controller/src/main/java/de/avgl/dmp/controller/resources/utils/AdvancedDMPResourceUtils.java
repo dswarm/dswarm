@@ -39,9 +39,9 @@ public abstract class AdvancedDMPResourceUtils<POJOCLASSPERSISTENCESERVICE exten
 	 * {@inheritDoc}
 	 */
 	@Override
-	public POJOCLASS createObject(final POJOCLASS objectFromJSON, final POJOCLASSPERSISTENCESERVICE persistenceService)
+	public PROXYPOJOCLASS createObject(final POJOCLASS objectFromJSON, final POJOCLASSPERSISTENCESERVICE persistenceService)
 			throws DMPPersistenceException {
 
-		return persistenceService.createObjectTransactional(objectFromJSON.getUri());
+		return persistenceService.createOrGetObjectTransactional(objectFromJSON.getUri());
 	}
 }

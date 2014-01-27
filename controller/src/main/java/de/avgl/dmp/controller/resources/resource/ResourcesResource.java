@@ -23,6 +23,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
@@ -58,9 +59,12 @@ import de.avgl.dmp.converter.flow.CSVResourceFlowFactory;
 import de.avgl.dmp.converter.flow.CSVSourceResourceCSVJSONPreviewFlow;
 import de.avgl.dmp.converter.flow.CSVSourceResourceCSVPreviewFlow;
 import de.avgl.dmp.persistence.DMPPersistenceException;
+import de.avgl.dmp.persistence.model.proxy.RetrievalType;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
+import de.avgl.dmp.persistence.model.resource.proxy.ProxyConfiguration;
+import de.avgl.dmp.persistence.model.resource.proxy.ProxyResource;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
 
@@ -134,10 +138,33 @@ public class ResourcesResource {
 	 * @param responseContent a response message
 	 * @param responseURI a URI
 	 * @return the response
+	 * @throws DMPControllerException
 	 */
-	private Response buildResponseCreated(final String responseContent, final URI responseURI) {
+	private Response buildResponseCreated(final String responseContent, final URI responseURI, final RetrievalType type, final String objectType)
+			throws DMPControllerException {
 
-		return Response.created(responseURI).entity(responseContent).build();
+		final ResponseBuilder responseBuilder;
+
+		switch (type) {
+
+			case CREATED:
+
+				responseBuilder = Response.created(responseURI);
+
+				break;
+			case RETRIEVED:
+
+				responseBuilder = Response.ok().contentLocation(responseURI);
+
+				break;
+			default:
+
+				ResourcesResource.LOG.debug("something went wrong, while evaluating the retrieval type of the " + objectType);
+
+				throw new DMPControllerException("something went wrong, while evaluating the retrieval type of the " + objectType);
+		}
+
+		return responseBuilder.entity(responseContent).build();
 	}
 
 	/**
@@ -166,7 +193,15 @@ public class ResourcesResource {
 
 		LOG.debug("try to create new resource '" + name + "' for file '" + fileDetail.getFileName() + "'");
 
-		final Resource resource = createResource(uploadedInputStream, fileDetail, name, description);
+		final ProxyResource proxyResource = createResource(uploadedInputStream, fileDetail, name, description);
+
+		if (proxyResource == null) {
+
+			dmpStatus.stop(context);
+			throw new DMPControllerException("couldn't create new resource");
+		}
+
+		final Resource resource = proxyResource.getObject();
 
 		if (resource == null) {
 
@@ -194,7 +229,7 @@ public class ResourcesResource {
 		LOG.debug("created new resource at '" + resourceURI.toString() + "' with content '" + resourceJSON + "'");
 
 		dmpStatus.stop(context);
-		return buildResponseCreated(resourceJSON, resourceURI);
+		return buildResponseCreated(resourceJSON, resourceURI, proxyResource.getType(), "resource");
 	}
 
 	/**
@@ -539,7 +574,17 @@ public class ResourcesResource {
 
 		final Resource resource = resourceOptional.get();
 
-		final Configuration configuration = addConfiguration(resource, jsonObjectString);
+		final ProxyConfiguration proxyConfiguration = addConfiguration(resource, jsonObjectString);
+
+		if (proxyConfiguration == null) {
+
+			LOG.debug("couldn't add configuration to resource with id '" + id + "'");
+
+			dmpStatus.stop(context);
+			throw new DMPControllerException("couldn't add configuration to resource with id '" + id + "'");
+		}
+
+		final Configuration configuration = proxyConfiguration.getObject();
 
 		if (configuration == null) {
 
@@ -580,7 +625,7 @@ public class ResourcesResource {
 		LOG.debug("return new configuration at '" + configurationURI.toString() + "' with content '" + configurationJSON + "'");
 
 		dmpStatus.stop(context);
-		return buildResponseCreated(configurationJSON, configurationURI);
+		return buildResponseCreated(configurationJSON, configurationURI, proxyConfiguration.getType(), "configuration");
 	}
 
 	/**
@@ -747,24 +792,31 @@ public class ResourcesResource {
 	 * @return a JSON representation of the new resource
 	 * @throws DMPControllerException
 	 */
-	private Resource createResource(final InputStream uploadInputedStream, final FormDataContentDisposition fileDetail, final String name,
+	private ProxyResource createResource(final InputStream uploadInputedStream, final FormDataContentDisposition fileDetail, final String name,
 			final String description) throws DMPControllerException {
 
 		final File file = DMPControllerUtils.writeToFile(uploadInputedStream, fileDetail.getFileName(), "resources");
 
 		final ResourceService resourceService = resourceServiceProvider.get();
 
-		final Resource resource;
+		ProxyResource proxyResource;
 
 		try {
 
-			resource = resourceService.createObject();
+			proxyResource = resourceService.createObject();
 		} catch (final DMPPersistenceException e) {
 
 			LOG.debug("something went wrong while resource creation");
 
 			throw new DMPControllerException("something went wrong while resource creation\n" + e.getMessage());
 		}
+
+		if (proxyResource == null) {
+
+			throw new DMPControllerException("fresh resource shouldn't be null");
+		}
+
+		final Resource resource = proxyResource.getObject();
 
 		if (resource == null) {
 
@@ -803,9 +855,20 @@ public class ResourcesResource {
 
 		resource.setAttributes(attributes);
 
+		final ProxyResource updatedResource;
+
 		try {
 
-			resourceService.updateObjectTransactional(resource);
+			updatedResource = resourceService.updateObjectTransactional(resource);
+
+			if (updatedResource == null) {
+
+				throw new DMPControllerException("something went wrong while resource updating");
+			}
+
+			final RetrievalType type = proxyResource.getType();
+
+			proxyResource = new ProxyResource(updatedResource.getObject(), type);
 		} catch (final DMPPersistenceException e) {
 
 			LOG.debug("something went wrong while resource updating");
@@ -813,7 +876,7 @@ public class ResourcesResource {
 			throw new DMPControllerException("something went wrong while resource updating\n" + e.getMessage());
 		}
 
-		return resource;
+		return proxyResource;
 	}
 
 	/**
@@ -824,31 +887,68 @@ public class ResourcesResource {
 	 * @return the new configuration
 	 * @throws DMPControllerException
 	 */
-	private Configuration addConfiguration(final Resource resource, final String configurationJSONString) throws DMPControllerException {
+	private ProxyConfiguration addConfiguration(final Resource resource, final String configurationJSONString) throws DMPControllerException {
 
 		final Configuration configurationFromJSON = getConfiguration(configurationJSONString);
 
 		final ConfigurationService configurationService = configurationServiceProvider.get();
 
-		Configuration configuration = null;
+		ProxyConfiguration proxyConfiguration = null;
 
 		if (configurationFromJSON.getId() == null) {
 
 			// create new configuration, since it has no id
 
-			configuration = createNewConfiguration(configurationService);
+			proxyConfiguration = createNewConfiguration(configurationService);
 		} else {
 
 			// try to retrieve configuration via id from "configuration from JSON"
 
-			configuration = configurationService.getObject(configurationFromJSON.getId());
+			final Configuration retrievedConfiguration = configurationService.getObject(configurationFromJSON.getId());
 
-			if (configuration == null) {
+			if (retrievedConfiguration == null) {
 
 				// if the id is not in the DB, also create a new object
 
-				configuration = createNewConfiguration(configurationService);
+				proxyConfiguration = createNewConfiguration(configurationService);
+			} else {
+
+				RetrievalType type = null;
+
+				final Set<Configuration> configurations = resource.getConfigurations();
+
+				if (configurations != null) {
+
+					for (final Configuration configuration : configurations) {
+
+						if (configuration.getId().equals(retrievedConfiguration.getId())) {
+
+							type = RetrievalType.RETRIEVED;
+
+							break;
+						}
+					}
+				}
+
+				if (type == null) {
+
+					type = RetrievalType.CREATED;
+				}
+
+				proxyConfiguration = new ProxyConfiguration(retrievedConfiguration, type);
 			}
+		}
+
+		if (proxyConfiguration == null) {
+
+			throw new DMPControllerException("couldn't create or retrieve configuration");
+		}
+
+		Configuration configuration = proxyConfiguration.getObject();
+
+		if (configuration == null) {
+
+			throw new DMPControllerException("couldn't create or retrieve configuration");
 		}
 
 		final String name = configurationFromJSON.getName();
@@ -876,7 +976,16 @@ public class ResourcesResource {
 
 		try {
 
-			configurationService.updateObjectTransactional(configuration);
+			final ProxyConfiguration proxyUpdatedConfiguration = configurationService.updateObjectTransactional(configuration);
+
+			if (proxyUpdatedConfiguration == null) {
+
+				throw new DMPControllerException("something went wrong while configuration updating");
+			}
+
+			final RetrievalType type = proxyConfiguration.getType();
+
+			proxyConfiguration = new ProxyConfiguration(proxyUpdatedConfiguration.getObject(), type);
 		} catch (final DMPPersistenceException e) {
 
 			LOG.debug("something went wrong while configuration updating");
@@ -896,7 +1005,7 @@ public class ResourcesResource {
 			throw new DMPControllerException("something went wrong while resource updating for configuration\n" + e.getMessage());
 		}
 
-		return configuration;
+		return proxyConfiguration;
 	}
 
 	/**
@@ -906,13 +1015,13 @@ public class ResourcesResource {
 	 * @return the new persisted configuration
 	 * @throws DMPControllerException
 	 */
-	private Configuration createNewConfiguration(final ConfigurationService configurationService) throws DMPControllerException {
+	private ProxyConfiguration createNewConfiguration(final ConfigurationService configurationService) throws DMPControllerException {
 
-		final Configuration configuration;
+		final ProxyConfiguration proxyConfiguration;
 
 		try {
 
-			configuration = configurationService.createObject();
+			proxyConfiguration = configurationService.createObject();
 		} catch (final DMPPersistenceException e) {
 
 			LOG.debug("something went wrong while configuration creation");
@@ -920,12 +1029,19 @@ public class ResourcesResource {
 			throw new DMPControllerException("something went wrong while configuration creation\n" + e.getMessage());
 		}
 
+		if (proxyConfiguration == null) {
+
+			throw new DMPControllerException("fresh configuration shouldn't be null");
+		}
+
+		final Configuration configuration = proxyConfiguration.getObject();
+
 		if (configuration == null) {
 
 			throw new DMPControllerException("fresh configuration shouldn't be null");
 		}
 
-		return configuration;
+		return proxyConfiguration;
 	}
 
 	private String applyConfigurationForCSVPreview(final Resource resource, final String configurationJSONString) throws DMPControllerException {

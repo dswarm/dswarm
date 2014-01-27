@@ -183,7 +183,7 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttribu
 	private AttributePath createObject(final LinkedList<Attribute> attributePath) {
 		AttributePath object = null;
 		try {
-			object = jpaService.createObject(attributePath);
+			object = jpaService.createOrGetObject(attributePath).getObject();
 			System.out.println(object);
 		} catch (final DMPPersistenceException e) {
 			Assert.assertTrue("something went wrong during attribute path creation.\n" + e.getMessage(), false);
@@ -203,7 +203,7 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttribu
 
 		AttributePath object = null;
 		try {
-			object = jpaService.createObject(attributePath);
+			object = jpaService.createObject(attributePath).getObject();
 			System.out.println(object);
 		} catch (final DMPPersistenceException e) {
 			Assert.assertTrue("something went wrong during attribute path creation.\n" + e.getMessage(), false);
@@ -230,7 +230,7 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttribu
 		Attribute attribute = null;
 
 		try {
-			attribute = attributeService.createObjectTransactional(id);
+			attribute = attributeService.createOrGetObjectTransactional(id).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while attribute creation.\n" + e.getMessage(), false);

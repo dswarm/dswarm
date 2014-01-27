@@ -100,6 +100,18 @@ public class ProjectWithNewEntitiesResourceTest extends BasicResourceTest<Projec
 
 	}
 
+	@Ignore
+	@Override
+	public void testPUTObject() throws Exception {
+
+	}
+
+	@Ignore
+	@Override
+	public void testDELETEObject() throws Exception {
+
+	}
+
 	@Test
 	public void testPOSTObjectsWithNewEntities() throws Exception {
 

@@ -14,6 +14,7 @@ import com.google.inject.persist.Transactional;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
 import de.avgl.dmp.persistence.model.proxy.ProxyAdvancedDMPJPAObject;
+import de.avgl.dmp.persistence.model.proxy.RetrievalType;
 
 /**
  * A generic persistence service implementation for {@link AdvancedDMPJPAObject}s, i.e., where the identifier will be set on
@@ -33,7 +34,8 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 	 * @param clasz a concrete POJO class
 	 * @param entityManagerProvider an entity manager provider
 	 */
-	protected AdvancedDMPJPAService(final Class<POJOCLASS> clasz, final Class<PROXYPOJOCLASS> proxyClasz, final Provider<EntityManager> entityManagerProvider) {
+	protected AdvancedDMPJPAService(final Class<POJOCLASS> clasz, final Class<PROXYPOJOCLASS> proxyClasz,
+			final Provider<EntityManager> entityManagerProvider) {
 
 		super(clasz, proxyClasz, entityManagerProvider);
 	}
@@ -45,7 +47,7 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 	 * @return the persisted object of the specific class
 	 */
 	@Transactional(rollbackOn = DMPPersistenceException.class)
-	public POJOCLASS createObjectTransactional(final String id) throws DMPPersistenceException {
+	public PROXYPOJOCLASS createOrGetObjectTransactional(final String id) throws DMPPersistenceException {
 
 		return createObject(id);
 	}
@@ -56,7 +58,7 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 	 * @param id the identifier of the object
 	 * @return the persisted object of the specific class
 	 */
-	public POJOCLASS createObject(final String uri) throws DMPPersistenceException {
+	public PROXYPOJOCLASS createObject(final String uri) throws DMPPersistenceException {
 
 		final EntityManager em = acquire();
 
@@ -69,15 +71,17 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 			object = createNewObject(uri);
 
 			persistObject(object, em);
+
+			return createNewProxyObject(object);
 		} else {
 
 			AdvancedDMPJPAService.LOG.debug(className + " with uri '" + uri
 					+ "' exists already in the database, will return the existing object, instead creating a new one");
 
 			object = existingObject;
-		}
 
-		return object;
+			return createNewProxyObject(existingObject, RetrievalType.RETRIEVED);
+		}
 	}
 
 	public POJOCLASS getObjectByUri(final String uri) throws DMPPersistenceException {

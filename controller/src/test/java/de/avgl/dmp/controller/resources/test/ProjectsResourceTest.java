@@ -266,7 +266,7 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 
 		// START schema preparation
 
-		for (int i = 1; i <= 6; i++) {
+		for (int i = 1; i < 6; i++) {
 
 			final String attributeJSONFileName = "attribute" + i + ".json";
 
