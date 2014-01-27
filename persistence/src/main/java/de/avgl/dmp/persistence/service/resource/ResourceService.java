@@ -30,7 +30,7 @@ public class ResourceService extends ExtendedBasicDMPJPAService<ProxyResource, R
 	@Inject
 	public ResourceService(final Provider<EntityManager> entityManagerProvider) {
 
-		super(Resource.class, entityManagerProvider);
+		super(Resource.class, ProxyResource.class, entityManagerProvider);
 	}
 
 	/**

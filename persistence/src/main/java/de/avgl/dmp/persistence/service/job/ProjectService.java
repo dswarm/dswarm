@@ -30,7 +30,7 @@ public class ProjectService extends ExtendedBasicDMPJPAService<ProxyProject, Pro
 	@Inject
 	public ProjectService(final Provider<EntityManager> entityManagerProvider) {
 
-		super(Project.class, entityManagerProvider);
+		super(Project.class, ProxyProject.class, entityManagerProvider);
 	}
 
 	/**

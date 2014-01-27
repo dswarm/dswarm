@@ -27,39 +27,39 @@ public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<
 		Assert.assertNotNull(type + " service shouldn't be null", jpaService);
 	}
 
-	protected POJOCLASS createObject() {
+	protected PROXYPOJOCLASS createObject() {
 
-		POJOCLASS object = null;
+		PROXYPOJOCLASS proxyObject = null;
 
 		try {
 
-			object = jpaService.createObject();
+			proxyObject = jpaService.createObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong during object creation.\n" + e.getMessage(), false);
 		}
 
-		Assert.assertNotNull(type + " shouldn't be null", object);
-		Assert.assertNotNull(type + " id shouldn't be null", object.getId());
+		Assert.assertNotNull(type + " shouldn't be null", proxyObject);
+		Assert.assertNotNull(type + " id shouldn't be null", proxyObject.getId());
 
-		LOG.debug("created new " + type + " with id = '" + object.getId() + "'");
+		LOG.debug("created new " + type + " with id = '" + proxyObject.getId() + "'");
 
-		return object;
+		return proxyObject;
 	}
 
-	protected POJOCLASS updateObjectTransactional(final POJOCLASS object) {
+	protected PROXYPOJOCLASS updateObjectTransactional(final POJOCLASS object) {
 
-		POJOCLASS updatedObject = null;
+		PROXYPOJOCLASS proxyUpdatedObject = null;
 
 		try {
 
-			updatedObject = jpaService.updateObjectTransactional(object);
+			proxyUpdatedObject = jpaService.updateObjectTransactional(object);
 		} catch (DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updaging the " + type, false);
 		}
 
-		return updatedObject;
+		return proxyUpdatedObject;
 	}
 
 	protected POJOCLASS getObject(final POJOCLASS object) {

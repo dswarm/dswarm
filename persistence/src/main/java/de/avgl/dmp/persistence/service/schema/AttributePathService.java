@@ -34,7 +34,7 @@ public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, 
 	@Inject
 	public AttributePathService(final Provider<EntityManager> entityManagerProvider) {
 
-		super(AttributePath.class, entityManagerProvider);
+		super(AttributePath.class, ProxyAttributePath.class, entityManagerProvider);
 	}
 
 	/**

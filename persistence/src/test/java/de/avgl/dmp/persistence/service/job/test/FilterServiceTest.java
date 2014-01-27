@@ -33,12 +33,12 @@ public class FilterServiceTest extends IDBasicJPAServiceTest<ProxyFilter, Filter
 				+ "    ?metadata m:record ?mabrecord .\n" + "    ?mabrecord m:datafield ?dataField .\n" + "    ?dataField m:tag \"088\" ;\n"
 				+ "               m:ind1 \"a\" ;\n" + "               m:subfield ?subField .\n" + "    ?subField rdf:value ?url .\n" + "}";
 
-		final Filter filter = createObject();
+		final Filter filter = createObject().getObject();
 
 		filter.setName(name);
 		filter.setExpression(expression);
 
-		final Filter updatedFilter = updateObjectTransactional(filter);
+		final Filter updatedFilter = updateObjectTransactional(filter).getObject();
 
 		Assert.assertNotNull("the filter's name of the updated filter shouldn't be null", updatedFilter.getName());
 		Assert.assertEquals("the filter's names are not equal", filter.getName(), updatedFilter.getName());

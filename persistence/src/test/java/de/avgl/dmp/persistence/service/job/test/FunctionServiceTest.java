@@ -51,14 +51,14 @@ public class FunctionServiceTest extends IDBasicJPAServiceTest<ProxyFunction, Fu
 
 		Assert.assertNotNull("the function description JSON shouldn't be null", functionFunctionDescription);
 
-		final Function function = createObject();
+		final Function function = createObject().getObject();
 		function.setName(functionName);
 		function.setDescription(functionDescription);
 		function.addParameter(functionParameter1);
 		function.addParameter(functionParameter2);
 		function.setFunctionDescription(functionFunctionDescription);
 
-		final Function updatedFunction = updateObjectTransactional(function);
+		final Function updatedFunction = updateObjectTransactional(function).getObject();
 
 		Assert.assertNotNull("the function name shouldn't be null", updatedFunction.getName());
 		Assert.assertEquals("the function names are not equal", functionName, updatedFunction.getName());
@@ -194,7 +194,7 @@ public class FunctionServiceTest extends IDBasicJPAServiceTest<ProxyFunction, Fu
 				}
 			}
 
-			final Function function = createObject();
+			final Function function = createObject().getObject();
 
 			if (functionName != null) {
 
@@ -213,7 +213,7 @@ public class FunctionServiceTest extends IDBasicJPAServiceTest<ProxyFunction, Fu
 
 			function.setFunctionDescription(metafactureFunctionDescriptionJSON);
 
-			final Function updatedFunction = updateObjectTransactional(function);
+			final Function updatedFunction = updateObjectTransactional(function).getObject();
 
 			Assert.assertNotNull("the updated metafacture function shouldn't be null", updatedFunction);
 		}

@@ -24,9 +24,9 @@ public abstract class ExtendedBasicDMPJPAService<PROXYPOJOCLASS extends ProxyExt
 	 * @param clasz a concrete POJO class
 	 * @param entityManagerProvider an entity manager provider
 	 */
-	protected ExtendedBasicDMPJPAService(final Class<POJOCLASS> clasz, final Provider<EntityManager> entityManagerProvider) {
+	protected ExtendedBasicDMPJPAService(final Class<POJOCLASS> clasz, final Class<PROXYPOJOCLASS> proxyClasz, final Provider<EntityManager> entityManagerProvider) {
 
-		super(clasz, entityManagerProvider);
+		super(clasz, proxyClasz, entityManagerProvider);
 	}
 
 	/**

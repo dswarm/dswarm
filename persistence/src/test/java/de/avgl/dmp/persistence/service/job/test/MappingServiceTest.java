@@ -130,13 +130,13 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		final String mappingName = "my mapping";
 
-		final Mapping mapping = createObject();
+		final Mapping mapping = createObject().getObject();
 		mapping.setName(mappingName);
 		mapping.addInputAttributePath(inputAttributePath);
 		mapping.setOutputAttributePath(outputAttributePath);
 		mapping.setTransformation(transformationComponent);
 
-		final Mapping updatedMapping = updateObjectTransactional(mapping);
+		final Mapping updatedMapping = updateObjectTransactional(mapping).getObject();
 
 		Assert.assertNotNull("the mapping id shouldn't be null", updatedMapping.getId());
 		Assert.assertNotNull("the mapping name shouldn't be null", updatedMapping.getName());
@@ -483,14 +483,14 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		final String mappingName = "my mapping";
 
-		final Mapping mapping = createObject();
+		final Mapping mapping = createObject().getObject();
 		mapping.setName(mappingName);
 		mapping.addInputAttributePath(firstNameAttributePath);
 		mapping.addInputAttributePath(familyNameAttributePath);
 		mapping.setOutputAttributePath(nameAttributePath);
 		mapping.setTransformation(transformationComponent3);
 
-		final Mapping updatedMapping = updateObjectTransactional(mapping);
+		final Mapping updatedMapping = updateObjectTransactional(mapping).getObject();
 
 		Assert.assertNotNull("the mapping shouldn't be null", updatedMapping);
 		Assert.assertNotNull("the mapping name shouldn't be null", updatedMapping.getName());
@@ -673,7 +673,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		try {
 
-			function = functionService.createObject();
+			function = functionService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while function creation.\n" + e.getMessage(), false);
@@ -690,7 +690,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		try {
 
-			updatedFunction = functionService.updateObjectTransactional(function);
+			updatedFunction = functionService.updateObjectTransactional(function).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the function of id = '" + function.getId() + "'", false);
@@ -718,7 +718,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		try {
 
-			component = componentService.createObject();
+			component = componentService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while component creation.\n" + e.getMessage(), false);
@@ -743,7 +743,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		try {
 
-			updatedComponent = componentService.updateObjectTransactional(component);
+			updatedComponent = componentService.updateObjectTransactional(component).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the component of id = '" + component.getId() + "'", false);
@@ -771,7 +771,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		try {
 
-			transformation = transformationService.createObject();
+			transformation = transformationService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while transformation creation.\n" + e.getMessage(), false);
@@ -789,7 +789,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		try {
 
-			updatedTransformation = transformationService.updateObjectTransactional(transformation);
+			updatedTransformation = transformationService.updateObjectTransactional(transformation).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the transformation of id = '" + transformation.getId() + "'", false);
@@ -962,7 +962,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		try {
 
-			updatedAttribute = attributeService.updateObjectTransactional(attribute);
+			updatedAttribute = attributeService.updateObjectTransactional(attribute).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the attribute of id = '" + id + "'", false);

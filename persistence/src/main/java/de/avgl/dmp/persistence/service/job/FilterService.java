@@ -25,7 +25,7 @@ public class FilterService extends BasicDMPJPAService<ProxyFilter, Filter> {
 	@Inject
 	public FilterService(final Provider<EntityManager> entityManagerProvider) {
 
-		super(Filter.class, entityManagerProvider);
+		super(Filter.class, ProxyFilter.class, entityManagerProvider);
 	}
 
 	/**

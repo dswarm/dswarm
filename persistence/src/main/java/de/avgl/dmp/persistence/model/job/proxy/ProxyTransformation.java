@@ -11,7 +11,7 @@ import de.avgl.dmp.persistence.model.proxy.RetrievalType;
  * @author tgaengler
  */
 @XmlRootElement
-public abstract class ProxyTransformation extends ProxyBasicFunction<Transformation> {
+public class ProxyTransformation extends ProxyBasicFunction<Transformation> {
 
 	/**
 	 *

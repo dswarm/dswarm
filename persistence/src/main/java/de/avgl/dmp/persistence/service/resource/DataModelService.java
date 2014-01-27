@@ -28,7 +28,7 @@ public class DataModelService extends ExtendedBasicDMPJPAService<ProxyDataModel,
 	@Inject
 	public DataModelService(final Provider<EntityManager> entityManagerProvider) {
 
-		super(DataModel.class, entityManagerProvider);
+		super(DataModel.class, ProxyDataModel.class, entityManagerProvider);
 	}
 
 	/**

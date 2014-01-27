@@ -26,7 +26,7 @@ public class AttributeService extends AdvancedDMPJPAService<ProxyAttribute, Attr
 	@Inject
 	public AttributeService(final Provider<EntityManager> entityManagerProvider) {
 
-		super(Attribute.class, entityManagerProvider);
+		super(Attribute.class, ProxyAttribute.class, entityManagerProvider);
 	}
 
 	/**

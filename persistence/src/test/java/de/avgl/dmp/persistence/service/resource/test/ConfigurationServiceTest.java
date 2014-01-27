@@ -26,7 +26,7 @@ public class ConfigurationServiceTest extends IDBasicJPAServiceTest<ProxyConfigu
 	@Test
 	public void testSimpleConfiguration() {
 
-		Configuration configuration = createObject();
+		Configuration configuration = createObject().getObject();
 
 		configuration.setName("my configuration");
 		configuration.setDescription("configuration description");

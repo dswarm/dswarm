@@ -60,7 +60,7 @@ public abstract class ProxyDMPObject<POJOCLASS extends DMPObject<IDTYPE>, IDTYPE
 	 * 
 	 * @return the real object that was proxied by this object
 	 */
-	public POJOCLASS getDmpObject() {
+	public final POJOCLASS getObject() {
 
 		return dmpObject;
 	}

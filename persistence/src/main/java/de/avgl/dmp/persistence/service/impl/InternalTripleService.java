@@ -30,10 +30,12 @@ import de.avgl.dmp.persistence.model.internal.Model;
 import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
 import de.avgl.dmp.persistence.model.internal.rdf.helper.AttributePathHelper;
 import de.avgl.dmp.persistence.model.resource.DataModel;
+import de.avgl.dmp.persistence.model.resource.proxy.ProxyDataModel;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxySchema;
 import de.avgl.dmp.persistence.model.schema.utils.SchemaUtils;
 import de.avgl.dmp.persistence.service.InternalModelService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
@@ -379,15 +381,24 @@ public class InternalTripleService implements InternalModelService {
 
 			// create new class
 			recordClass = classService.get().createObjectTransactional(recordClassUri);
-			
+
 			final String recordClassName = SchemaUtils.determineRelativeURIPart(recordClassUri);
 
 			recordClass.setName(recordClassName);
-			
+
 			schema.setRecordClass(recordClass);
 		}
 
-		return dataModelService.get().updateObjectTransactional(dataModel);
+		final ProxyDataModel proxyUpdatedDataModel = dataModelService.get().updateObjectTransactional(dataModel);
+
+		if (proxyUpdatedDataModel == null) {
+
+			// TODO: log something
+
+			return null;
+		}
+
+		return proxyUpdatedDataModel.getObject();
 	}
 
 	private DataModel addAttributePaths(final DataModel dataModel, final Set<AttributePathHelper> attributePathHelpers)
@@ -419,7 +430,16 @@ public class InternalTripleService implements InternalModelService {
 			dataModel.getSchema().addAttributePath(attributePath);
 		}
 
-		return dataModelService.get().updateObjectTransactional(dataModel);
+		final ProxyDataModel proxyUpdatedDataModel = dataModelService.get().updateObjectTransactional(dataModel);
+
+		if (proxyUpdatedDataModel == null) {
+
+			// TODO: log something
+
+			return null;
+		}
+
+		return proxyUpdatedDataModel.getObject();
 	}
 
 	private DataModel getSchemaInternal(final Long dataModelId) throws DMPPersistenceException {
@@ -434,7 +454,16 @@ public class InternalTripleService implements InternalModelService {
 		} else {
 
 			// create new schema
-			schema = schemaService.get().createObject();
+			final ProxySchema proxySchema = schemaService.get().createObject();
+
+			if (proxySchema != null) {
+
+				schema = proxySchema.getObject();
+			} else {
+
+				schema = null;
+			}
+
 			dataModel.setSchema(schema);
 		}
 

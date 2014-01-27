@@ -29,7 +29,7 @@ public class ConfigurationService extends ExtendedBasicDMPJPAService<ProxyConfig
 	@Inject
 	public ConfigurationService(final Provider<EntityManager> entityManagerProvider) {
 
-		super(Configuration.class, entityManagerProvider);
+		super(Configuration.class, ProxyConfiguration.class, entityManagerProvider);
 	}
 
 	/**

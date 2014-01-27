@@ -32,7 +32,7 @@ public class TransformationService extends BasicFunctionService<ProxyTransformat
 	@Inject
 	public TransformationService(final Provider<EntityManager> entityManagerProvider) {
 
-		super(Transformation.class, entityManagerProvider);
+		super(Transformation.class, ProxyTransformation.class, entityManagerProvider);
 	}
 
 	/**

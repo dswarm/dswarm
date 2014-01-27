@@ -24,6 +24,6 @@ public class FunctionService extends BasicFunctionService<ProxyFunction, Functio
 	@Inject
 	public FunctionService(final Provider<EntityManager> entityManagerProvider) {
 
-		super(Function.class, entityManagerProvider);
+		super(Function.class, ProxyFunction.class, entityManagerProvider);
 	}
 }

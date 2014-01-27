@@ -70,13 +70,13 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 
 		components.add(component);
 
-		final Transformation transformation = createObject();
+		final Transformation transformation = createObject().getObject();
 		transformation.setName(transformationName);
 		transformation.setDescription(transformationDescription);
 		transformation.setComponents(components);
 		transformation.addParameter(transformationParameter);
 
-		final Transformation updatedTransformation = updateObjectTransactional(transformation);
+		final Transformation updatedTransformation = updateObjectTransactional(transformation).getObject();
 
 		Assert.assertNotNull("the transformation id shouldn't be null", updatedTransformation.getId());
 		Assert.assertNotNull("the transformation name shouldn't be null", updatedTransformation.getName());
@@ -222,7 +222,7 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 		components.add(component);
 		components.add(component2);
 
-		final Transformation transformation = createObject();
+		final Transformation transformation = createObject().getObject();
 		transformation.setName(transformationName);
 		transformation.setDescription(transformationDescription);
 		transformation.setComponents(components);
@@ -231,7 +231,7 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 		Assert.assertNotNull("the transformation components set shouldn't be null", transformation.getComponents());
 		Assert.assertEquals("the transformation components sizes are not equal", 3, transformation.getComponents().size());
 
-		final Transformation updatedTransformation = updateObjectTransactional(transformation);
+		final Transformation updatedTransformation = updateObjectTransactional(transformation).getObject();
 
 		Assert.assertNotNull("the transformation id shouldn't be null", updatedTransformation.getId());
 		Assert.assertNotNull("the transformation name shouldn't be null", updatedTransformation.getName());
@@ -353,7 +353,7 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 
 		try {
 
-			function = functionService.createObject();
+			function = functionService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while function creation.\n" + e.getMessage(), false);
@@ -370,7 +370,7 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 
 		try {
 
-			updatedFunction = functionService.updateObjectTransactional(function);
+			updatedFunction = functionService.updateObjectTransactional(function).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the function of id = '" + function.getId() + "'", false);
@@ -398,7 +398,7 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 
 		try {
 
-			component = componentService.createObject();
+			component = componentService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while component creation.\n" + e.getMessage(), false);
@@ -423,7 +423,7 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 
 		try {
 
-			updatedComponent = componentService.updateObjectTransactional(component);
+			updatedComponent = componentService.updateObjectTransactional(component).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the component of id = '" + component.getId() + "'", false);

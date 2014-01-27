@@ -35,9 +35,9 @@ public abstract class IDBasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPJPAOb
 
 		for (int i = 0; i < 10; i++) {
 
-			POJOCLASS object = createObject();
+			PROXYPOJOCLASS proxyObject = createObject();
 
-			objectes.add(object);
+			objectes.add(proxyObject.getObject());
 		}
 
 		Assert.assertEquals(type + "s set size should be 10", 10, objectes.size());

@@ -30,7 +30,7 @@ public class MappingService extends BasicDMPJPAService<ProxyMapping, Mapping> {
 	@Inject
 	public MappingService(final Provider<EntityManager> entityManagerProvider) {
 
-		super(Mapping.class, entityManagerProvider);
+		super(Mapping.class, ProxyMapping.class, entityManagerProvider);
 	}
 
 	/**

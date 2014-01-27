@@ -148,7 +148,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, 
 
 		// data model
 
-		final DataModel dataModel = createObject();
+		final DataModel dataModel = createObject().getObject();
 
 		final String dataModelName = "my data model";
 		final String dataModelDescription = "my data model description";
@@ -159,7 +159,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, 
 		dataModel.setConfiguration(configuration);
 		dataModel.setSchema(schema);
 
-		final DataModel updatedDataModel = updateObjectTransactional(dataModel);
+		final DataModel updatedDataModel = updateObjectTransactional(dataModel).getObject();
 
 		Assert.assertNotNull("the updated data model shouldn't be null", updatedDataModel);
 		Assert.assertNotNull("the update data model id shouldn't be null", updatedDataModel.getId());
@@ -308,7 +308,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, 
 
 		try {
 
-			updatedAttribute = attributeService.updateObjectTransactional(attribute);
+			updatedAttribute = attributeService.updateObjectTransactional(attribute).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the attribute of id = '" + id + "'", false);
@@ -349,7 +349,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, 
 
 		try {
 
-			updatedClasz = classService.updateObjectTransactional(clasz);
+			updatedClasz = classService.updateObjectTransactional(clasz).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the class of id = '" + id + "'", false);
@@ -373,7 +373,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, 
 		Schema schema = null;
 
 		try {
-			schema = schemaService.createObject();
+			schema = schemaService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while schema creation.\n" + e.getMessage(), false);
@@ -392,7 +392,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, 
 
 		try {
 
-			updatedSchema = schemaService.updateObjectTransactional(schema);
+			updatedSchema = schemaService.updateObjectTransactional(schema).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the schema of id = '" + schema.getId() + "'", false);
@@ -447,7 +447,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, 
 		Resource resource = null;
 
 		try {
-			resource = resourceService.createObject();
+			resource = resourceService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while resource creation.\n" + e.getMessage(), false);
@@ -466,7 +466,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, 
 
 		try {
 
-			updatedResource = resourceService.updateObjectTransactional(resource);
+			updatedResource = resourceService.updateObjectTransactional(resource).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the resource of id = '" + resource.getId() + "'", false);
@@ -489,7 +489,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, 
 		Configuration configuration = null;
 
 		try {
-			configuration = configurationService.createObject();
+			configuration = configurationService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while configuration creation.\n" + e.getMessage(), false);
@@ -506,7 +506,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, 
 
 		try {
 
-			updatedConfiguration = configurationService.updateObjectTransactional(configuration);
+			updatedConfiguration = configurationService.updateObjectTransactional(configuration).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the configuration of id = '" + configuration.getId() + "'", false);

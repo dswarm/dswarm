@@ -29,7 +29,7 @@ public class ComponentService extends ExtendedBasicDMPJPAService<ProxyComponent,
 	@Inject
 	public ComponentService(final Provider<EntityManager> entityManagerProvider) {
 
-		super(Component.class, entityManagerProvider);
+		super(Component.class, ProxyComponent.class, entityManagerProvider);
 	}
 
 	/**

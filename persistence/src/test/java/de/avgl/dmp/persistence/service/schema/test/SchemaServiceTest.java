@@ -103,7 +103,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema
 
 		// schema
 
-		final Schema schema = createObject();
+		final Schema schema = createObject().getObject();
 
 		schema.setName("my schema");
 		schema.addAttributePath(attributePath1);
@@ -113,7 +113,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema
 
 		// update schema
 
-		final Schema updatedSchema = updateObjectTransactional(schema);
+		final Schema updatedSchema = updateObjectTransactional(schema).getObject();
 
 		Assert.assertNotNull("the schema's attribute paths of the updated schema shouldn't be null", updatedSchema.getAttributePaths());
 		Assert.assertEquals("the schema's attribute paths size are not equal", schema.getAttributePaths(), updatedSchema.getAttributePaths());
@@ -164,7 +164,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema
 		final AttributePathService attributePathService = GuicedTest.injector.getInstance(AttributePathService.class);
 
 		Assert.assertNotNull("attribute path service shouldn't be null", attributePathService);
-		
+
 		final AttributePath attributePath = new AttributePath(attributePathArg);
 
 		AttributePath updatedAttributePath = null;
@@ -232,7 +232,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema
 
 		try {
 
-			updatedAttribute = attributeService.updateObjectTransactional(attribute);
+			updatedAttribute = attributeService.updateObjectTransactional(attribute).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the attribute of id = '" + id + "'", false);
@@ -273,7 +273,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema
 
 		try {
 
-			updatedClasz = classService.updateObjectTransactional(clasz);
+			updatedClasz = classService.updateObjectTransactional(clasz).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the class of id = '" + id + "'", false);

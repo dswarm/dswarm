@@ -26,7 +26,7 @@ public class ClaszService extends AdvancedDMPJPAService<ProxyClasz, Clasz> {
 	@Inject
 	public ClaszService(final Provider<EntityManager> entityManagerProvider) {
 
-		super(Clasz.class, entityManagerProvider);
+		super(Clasz.class, ProxyClasz.class, entityManagerProvider);
 	}
 
 	/**

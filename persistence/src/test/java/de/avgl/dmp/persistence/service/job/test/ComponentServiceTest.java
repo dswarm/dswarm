@@ -53,12 +53,12 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<ProxyComponent, 
 
 		parameterMapping.put(functionParameterName, componentVariableName);
 
-		final Component component = createObject();
+		final Component component = createObject().getObject();
 		component.setName(componentName);
 		component.setFunction(function);
 		component.setParameterMappings(parameterMapping);
 
-		final Component updatedComponent = updateObjectTransactional(component);
+		final Component updatedComponent = updateObjectTransactional(component).getObject();
 
 		Assert.assertNotNull("the updated component shouldn't be null", updatedComponent);
 		Assert.assertNotNull("the component id shouldn't be null", updatedComponent.getId());
@@ -173,14 +173,14 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<ProxyComponent, 
 
 		outputComponents.add(component2);
 
-		final Component component = createObject();
+		final Component component = createObject().getObject();
 		component.setName(componentName);
 		component.setFunction(function);
 		component.setParameterMappings(parameterMapping);
 		component.setInputComponents(inputComponents);
 		component.setOutputComponents(outputComponents);
 
-		final Component updatedComponent = updateObjectTransactional(component);
+		final Component updatedComponent = updateObjectTransactional(component).getObject();
 
 		Assert.assertNotNull("the component id shouldn't be null", updatedComponent.getId());
 		Assert.assertNotNull("the component name shouldn't be null", updatedComponent.getName());
@@ -242,7 +242,7 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<ProxyComponent, 
 
 		try {
 
-			function = functionService.createObject();
+			function = functionService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while function creation.\n" + e.getMessage(), false);
@@ -260,7 +260,7 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<ProxyComponent, 
 
 		try {
 
-			updatedFunction = functionService.updateObjectTransactional(function);
+			updatedFunction = functionService.updateObjectTransactional(function).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the function of id = '" + function.getId() + "'", false);
@@ -285,7 +285,7 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<ProxyComponent, 
 
 		try {
 
-			component = jpaService.createObject();
+			component = jpaService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while component creation.\n" + e.getMessage(), false);
@@ -302,7 +302,7 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<ProxyComponent, 
 
 		try {
 
-			updatedComponent = jpaService.updateObjectTransactional(component);
+			updatedComponent = jpaService.updateObjectTransactional(component).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the component of id = '" + component.getId() + "'", false);

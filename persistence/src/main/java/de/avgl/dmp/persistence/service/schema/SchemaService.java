@@ -29,7 +29,7 @@ public class SchemaService extends BasicDMPJPAService<ProxySchema, Schema> {
 	@Inject
 	public SchemaService(final Provider<EntityManager> entityManagerProvider) {
 
-		super(Schema.class, entityManagerProvider);
+		super(Schema.class, ProxySchema.class, entityManagerProvider);
 	}
 
 	/**

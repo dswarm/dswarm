@@ -116,7 +116,7 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttribu
 
 		final Attribute dctermsHasPart = createAttribute("http://purl.org/dc/terms/hasPart", "hasPart");
 
-		final AttributePath attributePath = createObject();
+		final AttributePath attributePath = createObject().getObject();
 
 		attributePath.addAttribute(dctermsHasPart);
 		attributePath.addAttribute(dctermsTitle);
@@ -125,7 +125,7 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttribu
 		System.out.println("attribute hasPart = '" + dctermsHasPart.toString());
 		System.out.println("attribute path = '" + attributePath.toString());
 
-		final AttributePath updatedAttributePath = updateObjectTransactional(attributePath);
+		final AttributePath updatedAttributePath = updateObjectTransactional(attributePath).getObject();
 
 		Assert.assertNotNull("the attribute path's attribute of the updated attribute path shouldn't be null", updatedAttributePath.getAttributes());
 		Assert.assertEquals("the attribute path's attributes size are not equal", attributePath.getAttributes(), updatedAttributePath.getAttributes());
@@ -245,7 +245,7 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttribu
 
 		try {
 
-			updatedAttribute = attributeService.updateObjectTransactional(attribute);
+			updatedAttribute = attributeService.updateObjectTransactional(attribute).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updaging the attribute of id = '" + id + "'", false);
