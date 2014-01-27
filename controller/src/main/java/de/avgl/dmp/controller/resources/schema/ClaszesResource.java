@@ -80,7 +80,8 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "create a new class", notes = "Returns a new Clasz object.", response = Clasz.class)
-	@ApiResponses(value = { @ApiResponse(code = 201, message = "class was successfully persisted"),
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "class does already exist; returns the existing one"),
+			@ApiResponse(code = 201, message = "class was successfully persisted"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
