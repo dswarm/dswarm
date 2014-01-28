@@ -242,7 +242,7 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<ProxyComponent, 
 
 		try {
 
-			function = functionService.createObject().getObject();
+			function = functionService.createObjectTransactional().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while function creation.\n" + e.getMessage(), false);
@@ -285,7 +285,7 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<ProxyComponent, 
 
 		try {
 
-			component = jpaService.createObject().getObject();
+			component = jpaService.createObjectTransactional().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while component creation.\n" + e.getMessage(), false);

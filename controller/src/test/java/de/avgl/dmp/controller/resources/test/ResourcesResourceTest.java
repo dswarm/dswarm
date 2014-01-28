@@ -668,7 +668,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		try {
 
-			complexResource = resourceService.createObject().getObject();
+			complexResource = resourceService.createObjectTransactional().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong during object creation.\n" + e.getMessage(), false);
@@ -692,7 +692,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 			try {
 
-				configuration = configurationService.createObject().getObject();
+				configuration = configurationService.createObjectTransactional().getObject();
 			} catch (final DMPPersistenceException e) {
 
 				Assert.assertTrue("something went wrong during object creation.\n" + e.getMessage(), false);

@@ -15,6 +15,7 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
 import de.avgl.dmp.persistence.model.proxy.ProxyAdvancedDMPJPAObject;
 import de.avgl.dmp.persistence.model.proxy.RetrievalType;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttributePath;
 
 /**
  * A generic persistence service implementation for {@link AdvancedDMPJPAObject}s, i.e., where the identifier will be set on
@@ -43,13 +44,15 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 	/**
 	 * Create and persist an object of the specific class with the given identifier.<br>
 	 * 
-	 * @param id the identifier of the object
+	 * @param uri the identifier of the object
 	 * @return the persisted object of the specific class
 	 */
 	@Transactional(rollbackOn = DMPPersistenceException.class)
-	public PROXYPOJOCLASS createOrGetObjectTransactional(final String id) throws DMPPersistenceException {
+	public PROXYPOJOCLASS createOrGetObjectTransactional(final String uri) throws DMPPersistenceException {
 
-		return createObject(id);
+		final POJOCLASS tempObject = createNewObject(uri);
+
+		return createObject(tempObject);
 	}
 
 	/**
@@ -58,30 +61,45 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 	 * @param id the identifier of the object
 	 * @return the persisted object of the specific class
 	 */
-	public PROXYPOJOCLASS createObject(final String uri) throws DMPPersistenceException {
+	@Override
+	public PROXYPOJOCLASS createObject(final POJOCLASS object) throws DMPPersistenceException {
 
 		final EntityManager em = acquire();
 
-		final POJOCLASS existingObject = getObjectByUri(uri, em);
+		return createObjectInternal(object, em);
+	}
 
-		final POJOCLASS object;
+	@Override
+	protected PROXYPOJOCLASS createObjectInternal(final POJOCLASS object, final EntityManager entityManager) throws DMPPersistenceException {
+
+		final String uri = object.getUri();
+
+		final POJOCLASS existingObject = getObjectByUri(uri, entityManager);
+
+		final POJOCLASS newObject;
 
 		if (null == existingObject) {
 
-			object = createNewObject(uri);
+			newObject = createNewObject(uri);
 
-			persistObject(object, em);
+			persistObject(newObject, entityManager);
 
-			return createNewProxyObject(object);
+			return createNewProxyObject(newObject);
 		} else {
 
 			AdvancedDMPJPAService.LOG.debug(className + " with uri '" + uri
 					+ "' exists already in the database, will return the existing object, instead creating a new one");
 
-			object = existingObject;
+			newObject = existingObject;
 
 			return createNewProxyObject(existingObject, RetrievalType.RETRIEVED);
 		}
+	}
+
+	@Override
+	protected void prepareObjectForRemoval(final POJOCLASS object) {
+		// TODO Auto-generated method stub
+
 	}
 
 	public POJOCLASS getObjectByUri(final String uri) throws DMPPersistenceException {
@@ -89,6 +107,46 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 		final EntityManager entityManager = acquire();
 
 		return getObjectByUri(uri, entityManager);
+	}
+
+	@Override
+	protected PROXYPOJOCLASS getObjectInternal(final POJOCLASS object, final EntityManager entityManager) throws DMPPersistenceException {
+
+		// 1. try to receive object by id (as usual)
+
+		final PROXYPOJOCLASS tempProxyObject = super.getObjectInternal(object, entityManager);
+
+		// 2. compare uri of the retrieved object with the uri of the current object to determine,
+		// whether has anything changed in between
+
+		if ((object != null && object.getUri() != null && !object.getUri().trim().equals("")) && tempProxyObject != null
+				&& tempProxyObject.getObject() != null && !object.getUri().equals(tempProxyObject.getObject().getUri())) {
+
+			final POJOCLASS currentObject;
+			final RetrievalType type;
+
+			// retrieve object by uri first
+
+			final POJOCLASS tempObject = getObjectByUri(object.getUri(), entityManager);
+
+			if (tempObject != null) {
+
+				// retrieved existing entity for this uri => object will be changed to the retrieved one
+
+				currentObject = tempObject;
+				type = RetrievalType.RETRIEVED;
+			} else {
+
+				// uri was modified to a non-existing one => a new entity with the given uri will be created
+
+				currentObject = createNewObject(object.getUri());
+				type = RetrievalType.CREATED;
+			}
+
+			return createNewProxyObject(currentObject, type);
+		}
+
+		return tempProxyObject;
 	}
 
 	private POJOCLASS getObjectByUri(final String uri, final EntityManager entityManager) throws DMPPersistenceException {
@@ -103,7 +161,7 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 			object = query.getSingleResult();
 		} catch (final NoResultException e) {
 
-			LOG.debug("couldn't find " + className + " for uri '" + uri + "' in the database");
+			AdvancedDMPJPAService.LOG.debug("couldn't find " + className + " for uri '" + uri + "' in the database");
 
 			return null;
 		} catch (final NonUniqueResultException e) {

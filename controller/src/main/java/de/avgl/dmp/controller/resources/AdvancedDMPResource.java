@@ -1,7 +1,11 @@
 package de.avgl.dmp.controller.resources;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.utils.AdvancedDMPResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
+import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
 import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.proxy.ProxyAdvancedDMPJPAObject;
@@ -39,6 +43,53 @@ public abstract class AdvancedDMPResource<POJOCLASSRESOURCEUTILS extends Advance
 	protected POJOCLASS prepareObjectForUpdate(final POJOCLASS objectFromJSON, final POJOCLASS object) {
 
 		object.setName(objectFromJSON.getName());
+
+		return object;
+	}
+
+	@Override
+	protected POJOCLASS retrieveObject(final Long id, final String jsonObjectString) throws DMPControllerException {
+
+		if (jsonObjectString == null) {
+
+			return super.retrieveObject(id, jsonObjectString);
+		}
+
+		// TODO: what should we do if the uri is a different one, i.e., someone tries to manipulate the uri
+
+		final POJOCLASS objectFromJSON = pojoClassResourceUtils.deserializeObjectJSONString(jsonObjectString);
+
+		// get persistent object per id
+
+		final POJOCLASSPERSISTENCESERVICE persistenceService = pojoClassResourceUtils.getPersistenceService();
+
+		PROXYPOJOCLASS proxyObject = null;
+
+		try {
+
+			proxyObject = persistenceService.createOrGetObjectTransactional(objectFromJSON.getUri());
+		} catch (final DMPPersistenceException e) {
+
+			// TODO:
+		}
+
+		if (proxyObject == null) {
+
+			// TODO:
+
+		}
+
+		final POJOCLASS object = proxyObject.getObject();
+
+		if (object == null) {
+
+			AdvancedDMPResource.LOG.debug(pojoClassResourceUtils.getClaszName() + " for id '" + id + "' does not exist, i.e., it cannot be updated");
+
+			return null;
+		}
+
+		AdvancedDMPResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "' = '"
+				+ ToStringBuilder.reflectionToString(object) + "'");
 
 		return object;
 	}

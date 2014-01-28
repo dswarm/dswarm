@@ -5,7 +5,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -22,26 +21,26 @@ public class ClaszesResourceTest extends BasicResourceTest<ClaszesResourceTestUt
 	public ClaszesResourceTest() {
 
 		super(Clasz.class, ClaszService.class, "classes", "clasz.json", new ClaszesResourceTestUtils());
-		
+
 	}
-	
+
 	@Test
 	public void testUniquenessOfClasses() {
-		
+
 		LOG.debug("start classes uniqueness test");
 
 		Clasz clasz1 = null;
 
 		try {
-			
+
 			clasz1 = pojoClassResourceTestUtils.createObject(objectJSONString, expectedObject);
 		} catch (Exception e) {
-			
+
 			LOG.error("coudln't create class 1 for uniqueness test");
-			
+
 			Assert.assertTrue(false);
 		}
-		
+
 		Assert.assertNotNull("class 1 shouldn't be null in uniqueness test", clasz1);
 
 		Clasz clasz2 = null;
@@ -61,21 +60,21 @@ public class ClaszesResourceTest extends BasicResourceTest<ClaszesResourceTestUt
 
 			compareObjects(expectedObject, clasz2);
 		} catch (Exception e) {
-			
+
 			LOG.error("couldn't create class 2 for uniqueness test");
-			
+
 			Assert.assertTrue(false);
 		}
-		
+
 		Assert.assertNotNull("class 2 shouldn't be null in uniqueness test", clasz2);
-		
+
 		Assert.assertEquals("the classes should be equal", clasz1, clasz2);
-		
+
 		cleanUpDB(clasz1);
-		
+
 		LOG.debug("end class uniqueness test");
 	}
-	
+
 	@Override
 	public void testPUTObject() throws Exception {
 
@@ -84,49 +83,52 @@ public class ClaszesResourceTest extends BasicResourceTest<ClaszesResourceTestUt
 		Clasz clasz = null;
 
 		try {
-			
+
 			clasz = pojoClassResourceTestUtils.createObject(objectJSONString, expectedObject);
 		} catch (Exception e) {
-			
+
 			LOG.error("coudln't create class for update test");
-			
+
 			Assert.assertTrue(false);
 		}
-		
+
 		Assert.assertNotNull("class shouldn't be null in update test", clasz);
-		
-		//modify class for update
+
+		// modify class for update
 		clasz.setName(clasz.getName() + " update");
-		
+
 		String claszJSONString = objectMapper.writeValueAsString(clasz);
-		
+
 		Clasz updateClasz = pojoClassResourceTestUtils.updateObject(claszJSONString, clasz);
-		
+
 		Assert.assertEquals("the persisted class shoud be equal to the modified class for update", updateClasz, clasz);
-		
+
 		ObjectNode claszJSON = objectMapper.readValue(claszJSONString, ObjectNode.class);
-		
+
 		Assert.assertNotNull("the class JSON shouldn't be null", claszJSON);
 
-		//uniqueness dosn't allow that
+		// uniqueness dosn't allow that
 		claszJSON.put("uri", clasz.getUri().replaceAll("http", "https"));
-		
+
 		claszJSONString = objectMapper.writeValueAsString(claszJSON);
-		
-		clasz = objectMapper.readValue(claszJSONString, Clasz.class);
-		
-		updateClasz = pojoClassResourceTestUtils.updateObject(claszJSONString, clasz);
-		
+
+		final Clasz modifiedClasz = objectMapper.readValue(claszJSONString, Clasz.class);
+
+		updateClasz = pojoClassResourceTestUtils.updateObject(claszJSONString, modifiedClasz);
+
 		Assert.assertNotNull("class shouldn't be null", clasz);
 		Assert.assertNotNull("class attribute shouldn't be null", updateClasz);
 		Assert.assertNotEquals("id should be different, when uri was \"updated\"", updateClasz.getId(), clasz.getId());
-		
+
+		Assert.assertNotEquals("id should be different, when uri was \"updated\" (uniqueness dosn't allow update of uri)", updateClasz.getId(),
+				clasz.getId());
+
+		Assert.assertEquals("uri's should be equal", updateClasz.getUri(), modifiedClasz.getUri());
 		Assert.assertNotEquals("uniqueness dosn't allow update of uri", updateClasz.getUri(), clasz.getUri());
-		
-		//TODO: [@fniederlein] after class persistence adjustments the test have to check if a new class was created
-		
+
 		cleanUpDB(clasz);
-		
+		cleanUpDB(updateClasz);
+
 		LOG.debug("end class update test");
 	}
 }

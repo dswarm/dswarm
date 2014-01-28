@@ -805,7 +805,7 @@ public class ResourcesResource {
 
 		try {
 
-			proxyResource = resourceService.createObject();
+			proxyResource = resourceService.createObjectTransactional();
 		} catch (final DMPPersistenceException e) {
 
 			LOG.debug("something went wrong while resource creation");
@@ -1023,7 +1023,7 @@ public class ResourcesResource {
 
 		try {
 
-			proxyConfiguration = configurationService.createObject();
+			proxyConfiguration = configurationService.createObjectTransactional();
 		} catch (final DMPPersistenceException e) {
 
 			LOG.debug("something went wrong while configuration creation");
