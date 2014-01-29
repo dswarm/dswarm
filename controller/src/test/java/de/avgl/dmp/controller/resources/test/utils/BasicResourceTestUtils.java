@@ -1,5 +1,7 @@
 package de.avgl.dmp.controller.resources.test.utils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -98,6 +100,42 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends
 
 		return persistenceService.getObjects();
 	}
+	
+	public POJOCLASS getObject(final POJOCLASS expectedObject) throws Exception {
+		
+		String idEncoded = null;
+
+		try {
+
+			idEncoded = URLEncoder.encode(expectedObject.getId().toString(), "UTF-8");
+		} catch (final UnsupportedEncodingException e) {
+
+			LOG.debug("couldn't encode id", e);
+
+			Assert.assertTrue(false);
+		}
+
+		Assert.assertNotNull("the id shouldn't be null", idEncoded);
+
+		LOG.debug("try to retrieve " + pojoClassName + " with id '" + idEncoded + "'");
+
+		final Response response = target(idEncoded).request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+
+		final String responseObjectJSON = response.readEntity(String.class);
+
+		Assert.assertNotNull("response " + pojoClassName + " JSON shouldn't be null", responseObjectJSON);
+
+		final POJOCLASS responseObject = objectMapper.readValue(responseObjectJSON, pojoClass);
+
+		Assert.assertNotNull("response " + pojoClassName + " shouldn't be null", responseObject);
+
+		reset();
+		compareObjects(expectedObject, responseObject);
+		
+		return responseObject;
+	}
 
 	public POJOCLASS createObject(final String objectJSONFileName) throws Exception {
 		
@@ -111,8 +149,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends
 	
 	public POJOCLASS createObject(final String objectJSONString, final POJOCLASS expectedObject) throws Exception {
 
-		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(Entity.json(objectJSONString));
+		final Response response = executeCreateObject(objectJSONString);
 
 		Assert.assertEquals("201 Created was expected", 201, response.getStatus());
 
@@ -125,6 +162,12 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends
 		compareObjects(expectedObject, actualObject);
 
 		return actualObject;
+	}
+	
+	public Response executeCreateObject(final String objectJSONString) throws Exception {
+		
+		return target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+		.post(Entity.json(objectJSONString));
 	}
 	
 	public POJOCLASS updateObject(final POJOCLASS persistedObject, final String updateObjectJSONFileName) throws Exception {

@@ -17,6 +17,19 @@ import com.google.common.io.Resources;
 import com.google.inject.Injector;
 
 import de.avgl.dmp.init.DMPException;
+import de.avgl.dmp.persistence.model.job.utils.ComponentUtils;
+import de.avgl.dmp.persistence.model.job.utils.FilterUtils;
+import de.avgl.dmp.persistence.model.job.utils.FunctionUtils;
+import de.avgl.dmp.persistence.model.job.utils.JobUtils;
+import de.avgl.dmp.persistence.model.job.utils.MappingUtils;
+import de.avgl.dmp.persistence.model.job.utils.TransformationUtils;
+import de.avgl.dmp.persistence.model.resource.utils.ConfigurationUtils;
+import de.avgl.dmp.persistence.model.resource.utils.DataModelUtils;
+import de.avgl.dmp.persistence.model.resource.utils.ResourceUtils;
+import de.avgl.dmp.persistence.model.schema.utils.AttributePathUtils;
+import de.avgl.dmp.persistence.model.schema.utils.AttributeUtils;
+import de.avgl.dmp.persistence.model.schema.utils.ClaszUtils;
+import de.avgl.dmp.persistence.model.schema.utils.SchemaUtils;
 
 /**
  * A utility class for the persistence module.
@@ -29,24 +42,52 @@ public final class DMPPersistenceUtil {
 	/**
 	 * The JSON node factory that can be utilised to create new JSON nodes (objects or arrays).
 	 */
-	private static final JsonNodeFactory	FACTORY;
+	private static final JsonNodeFactory		FACTORY;
 
 	/**
 	 * The object mapper that can be utilised to de-/serialise JSON nodes.
 	 */
-	private static final ObjectMapper		MAPPER;
+	private static final ObjectMapper			MAPPER;
+
+	private static final AttributePathUtils		ATTRIBUTEPATHUTILS;
+
+	private static final AttributeUtils			ATTRIBUTEUTILS;
+
+	private static final ComponentUtils			COMPONENTUTILS;
+
+	private static final MappingUtils			MAPPINGUTILS;
+
+	private static final FunctionUtils			FUNCTIONUTILS;
+
+	private static final ResourceUtils			RESOURCEUTILS;
+
+	private static final ConfigurationUtils		CONFIGURATIONUTILS;
+
+	private static final ClaszUtils				CLASZUTILS;
+
+	private static final SchemaUtils			SCHEMAUTILS;
+
+	private static final TransformationUtils	TRANSFORMATIONUTILS;
+
+	private static final FilterUtils			FILTERUTILS;
+
+	private static final DataModelUtils			DATAMODELUTILS;
+	
+	private static final JobUtils JOBUTILS;
 
 	/**
 	 * The injector for dependency injection.
 	 */
 	@SuppressWarnings("StaticNonFinalField")
-	public static transient Injector		injector;
+	public static transient Injector			injector;
 
-	private static final long				LOWER_RANGE	= Long.valueOf("-9223372036854775808").longValue(); // assign lower range
-																											// value
-	private static final long				UPPER_RANGE	= -1;												// assign upper range
-																											// value
-	private static final Random				random		= new SecureRandom();
+	private static final long					LOWER_RANGE	= Long.valueOf("-9223372036854775808").longValue(); // assign lower
+																												// range
+																												// value
+	private static final long					UPPER_RANGE	= -1;												// assign upper
+																												// range
+																												// value
+	private static final Random					random		= new SecureRandom();
 
 	static {
 		MAPPER = new ObjectMapper();
@@ -55,6 +96,20 @@ public final class DMPPersistenceUtil {
 				.setSerializationInclusion(Include.NON_EMPTY);
 
 		FACTORY = MAPPER.getNodeFactory();
+
+		ATTRIBUTEPATHUTILS = new AttributePathUtils();
+		ATTRIBUTEUTILS = new AttributeUtils();
+		COMPONENTUTILS = new ComponentUtils();
+		MAPPINGUTILS = new MappingUtils();
+		FUNCTIONUTILS = new FunctionUtils();
+		RESOURCEUTILS = new ResourceUtils();
+		CONFIGURATIONUTILS = new ConfigurationUtils();
+		CLASZUTILS = new ClaszUtils();
+		SCHEMAUTILS = new SchemaUtils();
+		TRANSFORMATIONUTILS = new TransformationUtils();
+		FILTERUTILS = new FilterUtils();
+		DATAMODELUTILS = new DataModelUtils();
+		JOBUTILS = new JobUtils();
 	}
 
 	/**
@@ -123,6 +178,71 @@ public final class DMPPersistenceUtil {
 		return FACTORY;
 	}
 
+	public static AttributePathUtils getAttributePathUtils() {
+
+		return ATTRIBUTEPATHUTILS;
+	}
+
+	public static AttributeUtils getAttributeUtils() {
+
+		return ATTRIBUTEUTILS;
+	}
+
+	public static ComponentUtils getComponentUtils() {
+
+		return COMPONENTUTILS;
+	}
+
+	public static MappingUtils getMappingUtils() {
+
+		return MAPPINGUTILS;
+	}
+
+	public static FunctionUtils getFunctionUtils() {
+
+		return FUNCTIONUTILS;
+	}
+
+	public static ResourceUtils getResourceUtils() {
+
+		return RESOURCEUTILS;
+	}
+
+	public static ConfigurationUtils getConfigurationUtils() {
+
+		return CONFIGURATIONUTILS;
+	}
+
+	public static ClaszUtils getClaszUtils() {
+
+		return CLASZUTILS;
+	}
+
+	public static SchemaUtils getSchemaUtils() {
+
+		return SCHEMAUTILS;
+	}
+
+	public static TransformationUtils getTransformationUtils() {
+
+		return TRANSFORMATIONUTILS;
+	}
+
+	public static FilterUtils getFilterUtils() {
+
+		return FILTERUTILS;
+	}
+
+	public static DataModelUtils getDataModelUtils() {
+
+		return DATAMODELUTILS;
+	}
+	
+	public static JobUtils getJobUtils() {
+		
+		return JOBUTILS;
+	}
+
 	/**
 	 * Gets the injector for dependency injection.
 	 * 
@@ -140,7 +260,7 @@ public final class DMPPersistenceUtil {
 	public static long generateRandomDummyId() {
 
 		long randomValue = LOWER_RANGE + (long) (random.nextDouble() * (UPPER_RANGE - LOWER_RANGE));
-		
+
 		return randomValue;
 	}
 

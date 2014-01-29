@@ -15,6 +15,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.Sets;
 
+import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
+
 /**
  * A transformation is a complex {@link Function} that consists of {@link Component}s.<br/>
  * <br/>
@@ -91,10 +93,10 @@ public class Transformation extends Function {
 
 			if (components == null) {
 
-				components = Sets.newLinkedHashSet();
+				components = Sets.newCopyOnWriteArraySet();
 			}
 
-			if (!components.equals(componentsArg)) {
+			if (!DMPPersistenceUtil.getComponentUtils().completeEquals(components, componentsArg)) {
 
 				components.clear();
 				components.addAll(componentsArg);
@@ -161,5 +163,12 @@ public class Transformation extends Function {
 
 		return Transformation.class.isInstance(obj) && super.equals(obj);
 
+	}
+
+	@Override
+	public boolean completeEquals(final Object obj) {
+
+		return Transformation.class.isInstance(obj) && super.completeEquals(obj)
+				&& DMPPersistenceUtil.getComponentUtils().completeEquals(((Transformation) obj).getComponents(), getComponents());
 	}
 }

@@ -26,6 +26,8 @@ import com.google.common.collect.Sets;
 
 import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
+import de.avgl.dmp.persistence.model.schema.Schema;
+import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
  * A mapping is an instantiation of a {@link Function} or {@link Transformation} with a given collection of input
@@ -123,7 +125,7 @@ public class Mapping extends BasicDMPJPAObject {
 				inputAttributePaths = Sets.newLinkedHashSet();
 			}
 
-			if (!inputAttributePaths.equals(inputAttributePathsArg)) {
+			if (!DMPPersistenceUtil.getAttributePathUtils().completeEquals(inputAttributePaths, inputAttributePathsArg)) {
 
 				inputAttributePaths.clear();
 				inputAttributePaths.addAll(inputAttributePathsArg);
@@ -279,6 +281,16 @@ public class Mapping extends BasicDMPJPAObject {
 	public boolean equals(final Object obj) {
 
 		return Mapping.class.isInstance(obj) && super.equals(obj);
+	}
 
+	@Override
+	public boolean completeEquals(final Object obj) {
+
+		return Mapping.class.isInstance(obj) && super.completeEquals(obj)
+				&& DMPPersistenceUtil.getAttributePathUtils().completeEquals(((Mapping) obj).getInputAttributePaths(), getInputAttributePaths())
+				&& DMPPersistenceUtil.getAttributePathUtils().completeEquals(((Mapping) obj).getOutputAttributePath(), getOutputAttributePath())
+				&& DMPPersistenceUtil.getComponentUtils().completeEquals(((Mapping) obj).getTransformation(), getTransformation())
+				&& DMPPersistenceUtil.getFilterUtils().completeEquals(((Mapping) obj).getInputFilter(), getInputFilter())
+				&& DMPPersistenceUtil.getFilterUtils().completeEquals(((Mapping) obj).getOutputFilter(), getOutputFilter());
 	}
 }

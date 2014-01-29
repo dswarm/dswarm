@@ -27,6 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
 import com.wordnik.swagger.annotations.ApiModel;
 
@@ -209,7 +210,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 
 		if (configurationsArg != null) {
 
-			if (!configurationsArg.equals(configurations)) {
+			if (!DMPPersistenceUtil.getConfigurationUtils().completeEquals(configurations, configurationsArg)) {
 
 				if (configurations == null) {
 
@@ -372,6 +373,13 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 	public boolean equals(final Object obj) {
 
 		return Resource.class.isInstance(obj) && super.equals(obj);
+	}
 
+	@Override
+	public boolean completeEquals(final Object obj) {
+
+		return Resource.class.isInstance(obj) && super.completeEquals(obj) && Objects.equal(((Resource) obj).getType(), getType())
+				&& Objects.equal(((Resource) obj).getAttributes(), getAttributes())
+				&& Objects.equal(((Resource) obj).getConfigurations(), getConfigurations());
 	}
 }

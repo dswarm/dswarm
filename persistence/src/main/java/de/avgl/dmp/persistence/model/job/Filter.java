@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.google.common.base.Objects;
+
 import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 
 /**
@@ -55,6 +57,11 @@ public class Filter extends BasicDMPJPAObject {
 	public boolean equals(final Object obj) {
 
 		return Filter.class.isInstance(obj) && super.equals(obj);
+	}
 
+	@Override
+	public boolean completeEquals(final Object obj) {
+
+		return Filter.class.isInstance(obj) && super.completeEquals(obj) && Objects.equal(((Filter) obj).getExpression(), getExpression());
 	}
 }

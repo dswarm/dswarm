@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.schema.Schema;
+import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
  * A (input) data model consists of a {@link Resource} and a {@link Configuration} that has been applied to the data resource to
@@ -127,6 +128,14 @@ public class DataModel extends ExtendedBasicDMPJPAObject {
 	public boolean equals(final Object obj) {
 
 		return DataModel.class.isInstance(obj) && super.equals(obj);
+	}
 
+	@Override
+	public boolean completeEquals(final Object obj) {
+
+		return DataModel.class.isInstance(obj) && super.completeEquals(obj)
+				&& DMPPersistenceUtil.getResourceUtils().completeEquals(((DataModel) obj).getDataResource(), getDataResource())
+				&& DMPPersistenceUtil.getConfigurationUtils().completeEquals(((DataModel) obj).getConfiguration(), getConfiguration())
+				&& DMPPersistenceUtil.getSchemaUtils().completeEquals(((DataModel) obj).getSchema(), getSchema());
 	}
 }

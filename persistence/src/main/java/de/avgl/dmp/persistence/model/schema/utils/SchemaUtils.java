@@ -1,9 +1,12 @@
 package de.avgl.dmp.persistence.model.schema.utils;
 
+import de.avgl.dmp.persistence.model.schema.Schema;
+import de.avgl.dmp.persistence.model.utils.BasicDMPJPAObjectUtils;
+
 /**
  * @author tgaengler
  */
-public class SchemaUtils {
+public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 	public static String determineRelativeURIPart(final String uri) {
 

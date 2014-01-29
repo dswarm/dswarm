@@ -31,6 +31,7 @@ import com.google.common.collect.Sets;
 
 import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.init.util.DMPStatics;
+import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.DMPJPAObject;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
@@ -62,7 +63,8 @@ public class AttributePath extends DMPJPAObject {
 	@Access(AccessType.FIELD)
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "ATTRIBUTES_ATTRIBUTE_PATHS", joinColumns = { @JoinColumn(name = "ATTRIBUTE_PATH_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "ATTRIBUTE_ID", referencedColumnName = "ID") })
-	private Set<Attribute>							attributes; //						= Sets.newCopyOnWriteArraySet();
+	private Set<Attribute>							attributes;																				// =
+																																				// Sets.newCopyOnWriteArraySet();
 
 	/**
 	 * all attributes of this attribute path as ordered list.
@@ -546,5 +548,13 @@ public class AttributePath extends DMPJPAObject {
 		}
 
 		return attributesFiltered.get(0);
+	}
+
+	@Override
+	public boolean completeEquals(final Object obj) {
+
+		return AttributePath.class.isInstance(obj) && super.completeEquals(obj)
+				&& DMPPersistenceUtil.getAttributeUtils().completeEquals(((AttributePath) obj).getAttributes(), getAttributes())
+				&& DMPPersistenceUtil.getAttributeUtils().completeEquals(((AttributePath) obj).getAttributePath(), getAttributePath());
 	}
 }

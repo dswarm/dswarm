@@ -12,6 +12,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -24,6 +26,7 @@ import de.avgl.dmp.controller.resources.BasicIDResource;
 import de.avgl.dmp.controller.resources.schema.utils.AttributePathsResourceUtils;
 import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
+import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttributePath;
 import de.avgl.dmp.persistence.service.schema.AttributePathService;
@@ -121,6 +124,7 @@ public class AttributePathsResource extends BasicIDResource<AttributePathsResour
 	 * @return the updated attribute path as JSON representation
 	 * @throws DMPControllerException
 	 */
+	@Override
 	@ApiOperation(value = "update attribute path with given id ", notes = "Returns an updated AttributePath object.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "attribute path was successfully updated"),
 			@ApiResponse(code = 404, message = "could not find an attribute path for the given id"),
@@ -165,6 +169,50 @@ public class AttributePathsResource extends BasicIDResource<AttributePathsResour
 	protected AttributePath prepareObjectForUpdate(final AttributePath objectFromJSON, final AttributePath object) {
 
 		object.setAttributePath(objectFromJSON.getAttributePath());
+
+		return object;
+	}
+
+	@Override
+	protected AttributePath retrieveObject(final Long id, final String jsonObjectString) throws DMPControllerException {
+
+		if (jsonObjectString == null) {
+
+			return super.retrieveObject(id, jsonObjectString);
+		}
+
+		// what should we do if the attribute path is a different one? => check whether an entity
+		// with this attribute path exists and manipulate this one instead
+		// note: we could also throw an exception instead
+
+		final AttributePath objectFromJSON = pojoClassResourceUtils.deserializeObjectJSONString(jsonObjectString);
+
+		// get persistent object per attribute path
+
+		final AttributePathService persistenceService = pojoClassResourceUtils.getPersistenceService();
+
+		AttributePath object = null;
+
+		try {
+
+			object = persistenceService.getObject(objectFromJSON.getAttributePathAsJSONObjectString());
+		} catch (final DMPPersistenceException e) {
+
+			AttributePathsResource.LOG.debug("couldn't retrieve " + pojoClassResourceUtils.getClaszName() + " for attribute path '"
+					+ objectFromJSON.toAttributePath() + "'");
+
+			return null;
+		}
+
+		if (object == null) {
+
+			// retrieve object by id and manipulate attribute path
+
+			return super.retrieveObject(id, jsonObjectString);
+		}
+
+		AttributePathsResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with attribute path '" + objectFromJSON.toAttributePath()
+				+ "' = '" + ToStringBuilder.reflectionToString(object) + "'");
 
 		return object;
 	}

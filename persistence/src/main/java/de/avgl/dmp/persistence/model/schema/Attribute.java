@@ -7,8 +7,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
 
 /**
- * An attribute is a property. In a graph an attribute is a relation between a node or subject and an object, e.g., 'dcterms:title'. In a CSV document an
- * attribute is the header (label) of one column, e.g., 'title'.
+ * An attribute is a property. In a graph an attribute is a relation between a node or subject and an object, e.g.,
+ * 'dcterms:title'. In a CSV document an attribute is the header (label) of one column, e.g., 'title'.
  * 
  * @author tgaengler
  */
@@ -39,7 +39,7 @@ public class Attribute extends AdvancedDMPJPAObject {
 	 * Creates new attribute with no identifier.
 	 */
 	public Attribute() {
-		
+
 		super();
 	}
 
@@ -49,7 +49,7 @@ public class Attribute extends AdvancedDMPJPAObject {
 	 * @param id an attribute identifier
 	 */
 	public Attribute(final String uriArg) {
-		
+
 		super(uriArg);
 	}
 
@@ -187,9 +187,15 @@ public class Attribute extends AdvancedDMPJPAObject {
 		}
 
 		final boolean result = super.equals(obj);
-		
+
 		// TODO: do uri comparison here or in upper class?
 
 		return result;
+	}
+
+	@Override
+	public boolean completeEquals(final Object obj) {
+
+		return Attribute.class.isInstance(obj) && super.completeEquals(obj);
 	}
 }
