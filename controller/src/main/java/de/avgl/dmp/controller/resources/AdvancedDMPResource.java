@@ -55,40 +55,36 @@ public abstract class AdvancedDMPResource<POJOCLASSRESOURCEUTILS extends Advance
 			return super.retrieveObject(id, jsonObjectString);
 		}
 
-		// TODO: what should we do if the uri is a different one, i.e., someone tries to manipulate the uri
+		// what should we do if the uri is a different one, i.e., someone tries to manipulate the uri? => check whether an entity
+		// with this uri exists and manipulate this one instead
+		// note: we could also throw an exception instead
 
 		final POJOCLASS objectFromJSON = pojoClassResourceUtils.deserializeObjectJSONString(jsonObjectString);
 
-		// get persistent object per id
+		// get persistent object per uri
 
 		final POJOCLASSPERSISTENCESERVICE persistenceService = pojoClassResourceUtils.getPersistenceService();
 
-		PROXYPOJOCLASS proxyObject = null;
-
+		POJOCLASS object = null;
 		try {
-
-			proxyObject = persistenceService.createOrGetObjectTransactional(objectFromJSON.getUri());
+			object = persistenceService.getObjectByUri(objectFromJSON.getUri());
 		} catch (final DMPPersistenceException e) {
 
-			// TODO:
-		}
-
-		if (proxyObject == null) {
-
-			// TODO:
-
-		}
-
-		final POJOCLASS object = proxyObject.getObject();
-
-		if (object == null) {
-
-			AdvancedDMPResource.LOG.debug(pojoClassResourceUtils.getClaszName() + " for id '" + id + "' does not exist, i.e., it cannot be updated");
+			AdvancedDMPResource.LOG
+					.debug("couldn't retrieve " + pojoClassResourceUtils.getClaszName() + " for uri '" + objectFromJSON.getUri() + "'");
 
 			return null;
 		}
 
-		AdvancedDMPResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "' = '"
+		if (object == null) {
+
+			AdvancedDMPResource.LOG.debug(pojoClassResourceUtils.getClaszName() + " for uri '" + objectFromJSON.getUri()
+					+ "' does not exist, i.e., it cannot be updated");
+
+			return null;
+		}
+
+		AdvancedDMPResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with uri '" + objectFromJSON.getUri() + "' = '"
 				+ ToStringBuilder.reflectionToString(object) + "'");
 
 		return object;
