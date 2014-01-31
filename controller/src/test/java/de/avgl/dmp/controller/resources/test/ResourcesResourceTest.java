@@ -661,7 +661,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		try {
 
-			complexResource = resourceService.createObject();
+			complexResource = resourceService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong during object creation.\n" + e.getMessage(), false);
@@ -685,7 +685,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 			try {
 
-				configuration = configurationService.createObject();
+				configuration = configurationService.createObject().getObject();
 			} catch (final DMPPersistenceException e) {
 
 				Assert.assertTrue("something went wrong during object creation.\n" + e.getMessage(), false);
@@ -705,7 +705,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		try {
 
-			updatedComplexResource = resourceService.updateObjectTransactional(complexResource);
+			updatedComplexResource = resourceService.updateObjectTransactional(complexResource).getObject();
 		} catch (DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the resource", false);

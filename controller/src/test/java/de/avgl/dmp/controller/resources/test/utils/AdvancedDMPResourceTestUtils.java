@@ -3,10 +3,11 @@ package de.avgl.dmp.controller.resources.test.utils;
 import org.junit.Assert;
 
 import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
+import de.avgl.dmp.persistence.model.proxy.ProxyAdvancedDMPJPAObject;
 import de.avgl.dmp.persistence.service.AdvancedDMPJPAService;
 
-public abstract class AdvancedDMPResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends AdvancedDMPJPAService<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
-		extends BasicDMPResourceTestUtils<POJOCLASSPERSISTENCESERVICE, POJOCLASS> {
+public abstract class AdvancedDMPResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends AdvancedDMPJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyAdvancedDMPJPAObject<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
+		extends BasicDMPResourceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
 
 	public AdvancedDMPResourceTestUtils(final String resourceIdentifier, final Class<POJOCLASS> pojoClassArg,
 			final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg) {

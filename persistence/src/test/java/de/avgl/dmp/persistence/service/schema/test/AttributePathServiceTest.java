@@ -14,11 +14,12 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttributePath;
 import de.avgl.dmp.persistence.service.schema.AttributePathService;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
 
-public class AttributePathServiceTest extends IDBasicJPAServiceTest<AttributePath, AttributePathService, Long> {
+public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttributePath, AttributePath, AttributePathService> {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(AttributePathServiceTest.class);
 
@@ -115,7 +116,7 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<AttributePat
 
 		final Attribute dctermsHasPart = createAttribute("http://purl.org/dc/terms/hasPart", "hasPart");
 
-		final AttributePath attributePath = createObject();
+		final AttributePath attributePath = createObject().getObject();
 
 		attributePath.addAttribute(dctermsHasPart);
 		attributePath.addAttribute(dctermsTitle);
@@ -124,7 +125,7 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<AttributePat
 		System.out.println("attribute hasPart = '" + dctermsHasPart.toString());
 		System.out.println("attribute path = '" + attributePath.toString());
 
-		final AttributePath updatedAttributePath = updateObjectTransactional(attributePath);
+		final AttributePath updatedAttributePath = updateObjectTransactional(attributePath).getObject();
 
 		Assert.assertNotNull("the attribute path's attribute of the updated attribute path shouldn't be null", updatedAttributePath.getAttributes());
 		Assert.assertEquals("the attribute path's attributes size are not equal", attributePath.getAttributes(), updatedAttributePath.getAttributes());
@@ -182,7 +183,7 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<AttributePat
 	private AttributePath createObject(final LinkedList<Attribute> attributePath) {
 		AttributePath object = null;
 		try {
-			object = jpaService.createObject(attributePath);
+			object = jpaService.createOrGetObject(attributePath).getObject();
 			System.out.println(object);
 		} catch (final DMPPersistenceException e) {
 			Assert.assertTrue("something went wrong during attribute path creation.\n" + e.getMessage(), false);
@@ -202,7 +203,7 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<AttributePat
 
 		AttributePath object = null;
 		try {
-			object = jpaService.createObject(attributePath);
+			object = jpaService.createObject(attributePath).getObject();
 			System.out.println(object);
 		} catch (final DMPPersistenceException e) {
 			Assert.assertTrue("something went wrong during attribute path creation.\n" + e.getMessage(), false);
@@ -229,7 +230,7 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<AttributePat
 		Attribute attribute = null;
 
 		try {
-			attribute = attributeService.createObjectTransactional(id);
+			attribute = attributeService.createOrGetObjectTransactional(id).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while attribute creation.\n" + e.getMessage(), false);
@@ -244,7 +245,7 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<AttributePat
 
 		try {
 
-			updatedAttribute = attributeService.updateObjectTransactional(attribute);
+			updatedAttribute = attributeService.updateObjectTransactional(attribute).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updaging the attribute of id = '" + id + "'", false);

@@ -1,5 +1,7 @@
 package de.avgl.dmp.persistence.service;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,6 +16,8 @@ import com.google.inject.persist.Transactional;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.DMPObject;
+import de.avgl.dmp.persistence.model.proxy.ProxyDMPObject;
+import de.avgl.dmp.persistence.model.proxy.RetrievalType;
 
 /**
  * A generic persistence service implementation, whose concrete implementations can be derived with a given implementation of
@@ -24,19 +28,29 @@ import de.avgl.dmp.persistence.model.DMPObject;
  * @param <POJOCLASS> the concrete POJO class
  * @param <POJOCLASSIDTYPE> the identifier type of the concrete POJO class
  */
-public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE> {
+public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(BasicJPAService.class);
 
 	/**
 	 * The concrete POJO class of this persistence service.
 	 */
-	protected final Class<POJOCLASS>							clasz;
+	protected final Class<POJOCLASS>				clasz;
 
 	/**
 	 * The name of the concrete POJO class this persistence service.
 	 */
-	protected final String									className;
+	protected final String							className;
+
+	/**
+	 * The concrete proxy POJO class of this persistence service.
+	 */
+	protected final Class<PROXYPOJOCLASS>			proxyClasz;
+
+	/**
+	 * The name of the concrete proxy POJO class this persistence service.
+	 */
+	protected final String							proxyClassName;
 
 	/**
 	 * The entity manager provider (powered by Guice).
@@ -49,10 +63,13 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 	 * @param clasz a concrete POJO class
 	 * @param entityManagerProvider an entity manager provider
 	 */
-	BasicJPAService(final Class<POJOCLASS> clasz, final Provider<EntityManager> entityManagerProvider) {
+	BasicJPAService(final Class<POJOCLASS> clasz, final Class<PROXYPOJOCLASS> proxyClasz, final Provider<EntityManager> entityManagerProvider) {
 
 		this.clasz = clasz;
 		this.className = clasz.getSimpleName();
+
+		this.proxyClasz = proxyClasz;
+		this.proxyClassName = proxyClasz.getSimpleName();
 
 		this.entityManagerProvider = entityManagerProvider;
 	}
@@ -97,14 +114,16 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 	 * 
 	 * @return the persisted object of the specific class
 	 */
-	@Transactional(rollbackOn = DMPPersistenceException.class)
-	public POJOCLASS createObject() throws DMPPersistenceException {
+	@Transactional(rollbackOn = Exception.class)
+	public PROXYPOJOCLASS createObject() throws DMPPersistenceException {
 
 		final POJOCLASS object = createNewObject();
 
 		persistObject(object);
 
-		return object;
+		final PROXYPOJOCLASS proxyObject = createNewProxyObject(object);
+
+		return proxyObject;
 	}
 
 	/**
@@ -115,30 +134,11 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 	 * @param object the to be updated instance of the specific class
 	 */
 	@Transactional(rollbackOn = Exception.class)
-	public POJOCLASS updateObjectTransactional(final POJOCLASS object) throws DMPPersistenceException {
+	public PROXYPOJOCLASS updateObjectTransactional(final POJOCLASS object) throws DMPPersistenceException {
 
 		final EntityManager entityManager = acquire(false);
 
-		final POJOCLASS updateObject = getObject(object, entityManager);
-
-		BasicJPAService.LOG.debug("try to update " + className + " with id '" + object.getId() + "' transactional");
-
-		updateObjectInternal(object, updateObject, entityManager);
-
-		entityManager.merge(updateObject);
-
-		BasicJPAService.LOG.debug("updated " + className + " with id '" + object.getId() + "' transactional");
-
-		if (updateObject != null) {
-
-			BasicJPAService.LOG.debug("updated " + className + " with id '" + updateObject.getId() + "' in the database = '"
-					+ ToStringBuilder.reflectionToString(updateObject) + "'");
-		} else {
-
-			BasicJPAService.LOG.debug("couldn't updated " + className + " with id '" + object.getId() + "' in the database");
-		}
-
-		return updateObject;
+		return updateObjectInternal(object, entityManager, "transactional");
 	}
 
 	/**
@@ -149,24 +149,69 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 	 * @param object the to be updated instance of the specific class
 	 */
 	// @Transactional(rollbackOn = DMPPersistenceException.class)
-	public POJOCLASS updateObject(final POJOCLASS object) throws DMPPersistenceException {
+	public PROXYPOJOCLASS updateObject(final POJOCLASS object) throws DMPPersistenceException {
 
 		final EntityManager entityManager = acquire(false);
-		
+
 		return updateObject(object, entityManager);
 	}
-	
-	protected POJOCLASS updateObject(final POJOCLASS object, final EntityManager entityManager) throws DMPPersistenceException {
-		
-		final POJOCLASS updateObject = getObject(object, entityManager);
 
-		BasicJPAService.LOG.debug("try to update " + className + " with id '" + object.getId() + "' non-transactional");
+	protected PROXYPOJOCLASS updateObject(final POJOCLASS object, final EntityManager entityManager) throws DMPPersistenceException {
+
+		// final PROXYPOJOCLASS proxyUpdateObject = getObject(object, entityManager);
+		//
+		// BasicJPAService.LOG.debug("try to update " + className + " with id '" + object.getId() + "' non-transactional");
+		//
+		// updateObjectInternal(object, updateObject, entityManager);
+		//
+		// BasicJPAService.LOG.debug("updated " + className + " with id '" + object.getId() + "' non-transactional");
+		//
+		// return updateObject;
+
+		return updateObjectInternal(object, entityManager, "non-transactional");
+	}
+
+	protected PROXYPOJOCLASS updateObjectInternal(final POJOCLASS object, final EntityManager entityManager, final String transactionType)
+			throws DMPPersistenceException {
+
+		final PROXYPOJOCLASS proxyUpdateObject = getObject(object, entityManager);
+
+		if (proxyUpdateObject == null) {
+
+			BasicJPAService.LOG.debug("couldn't continue " + transactionType + " update for " + className + " with id '" + object.getId()
+					+ "', because the proxy object is invalid.");
+
+			return proxyUpdateObject;
+		}
+
+		if (proxyUpdateObject.getObject() == null) {
+
+			BasicJPAService.LOG.debug("couldn't continue " + transactionType + " update for " + className + " with id '" + object.getId()
+					+ "', because the retrieved/created object is invalid.");
+
+			return proxyUpdateObject;
+		}
+
+		BasicJPAService.LOG.debug("try to update " + className + " with id '" + object.getId() + "' " + transactionType);
+
+		final POJOCLASS updateObject = proxyUpdateObject.getObject();
 
 		updateObjectInternal(object, updateObject, entityManager);
 
-		BasicJPAService.LOG.debug("updated " + className + " with id '" + object.getId() + "' non-transactional");
+		entityManager.merge(updateObject);
 
-		return updateObject;
+		BasicJPAService.LOG.debug("updated " + className + " with id '" + object.getId() + "' " + transactionType);
+
+		if (updateObject != null) {
+
+			BasicJPAService.LOG.debug("updated " + className + " with id '" + updateObject.getId() + "' in the database = '"
+					+ ToStringBuilder.reflectionToString(updateObject) + "' " + transactionType);
+		} else {
+
+			BasicJPAService.LOG.debug("couldn't updated " + className + " with id '" + object.getId() + "' in the database " + transactionType);
+		}
+
+		return proxyUpdateObject;
 	}
 
 	/**
@@ -262,26 +307,26 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 	 * @return the requested POJOCLASS instance fresh from the DB or a new POJOCLASS instance
 	 * @throws DMPPersistenceException
 	 */
-	protected POJOCLASS getObject(final POJOCLASS object, final EntityManager entityManager) throws DMPPersistenceException {
+	protected PROXYPOJOCLASS getObject(final POJOCLASS object, final EntityManager entityManager) throws DMPPersistenceException {
 
-		final POJOCLASS updateObject;
+		final PROXYPOJOCLASS proxyUpdateObject;
 
 		// second condition is for new object creation on dummy id
 		if (object.getId() == null) {
 
 			BasicJPAService.LOG.debug(className + " id is null, will create a new " + className);
 
-			updateObject = this.createObject();
+			proxyUpdateObject = this.createObject();
 		} else if (Long.class.isInstance(object.getId()) && ((Long) object.getId()).longValue() < 0) {
-			
+
 			BasicJPAService.LOG.debug(className + " id is a dummy id, will create a new " + className);
 
-			updateObject = this.createObject();
-			
+			proxyUpdateObject = this.createObject();
+
 			// TODO: cache all ids of objects that have dummy id?
 		} else {
 
-			updateObject = entityManager.find(clasz, object.getId(),
+			final POJOCLASS updateObject = entityManager.find(clasz, object.getId(),
 					Collections.<String, Object> singletonMap("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS));
 
 			if (updateObject != null) {
@@ -294,9 +339,11 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 
 				BasicJPAService.LOG.debug("couldn't find " + className + " with id '" + object.getId() + "' in the database");
 			}
+
+			proxyUpdateObject = createNewProxyObject(updateObject, RetrievalType.RETRIEVED);
 		}
 
-		return updateObject;
+		return proxyUpdateObject;
 	}
 
 	/**
@@ -310,14 +357,90 @@ public abstract class BasicJPAService<POJOCLASS extends DMPObject<POJOCLASSIDTYP
 
 		persistObject(object, entityManager);
 	}
-	
+
 	protected void persistObject(final POJOCLASS object, final EntityManager entityManager) {
-		
+
 		BasicJPAService.LOG.debug("try to create new " + className);
 
 		entityManager.persist(object);
 
 		BasicJPAService.LOG.debug("created new " + className + " with id '" + object.getId() + "'");
+	}
+	
+	/**
+	 * Creates a new proxy object of the concrete proxy POJO class.
+	 * 
+	 * @return a new instance of the concrete proxy POJO class
+	 * @throws DMPPersistenceException if something went wrong.
+	 */
+	protected PROXYPOJOCLASS createNewProxyObject(final POJOCLASS object) throws DMPPersistenceException {
+
+		final PROXYPOJOCLASS proxyObject;
+
+		Constructor<PROXYPOJOCLASS> constructor = null;
+
+		try {
+			constructor = proxyClasz.getConstructor(clasz);
+		} catch (final SecurityException | NoSuchMethodException e1) {
+
+			throw new DMPPersistenceException(e1.getMessage());
+		}
+
+		if (null == constructor) {
+
+			throw new DMPPersistenceException("couldn't find constructor to instantiate new '" + proxyClassName + "' with for " + className + " '"
+					+ object.getId() + "'");
+		}
+
+		try {
+
+			proxyObject = constructor.newInstance(object);
+		} catch (final InstantiationException | InvocationTargetException | IllegalArgumentException | IllegalAccessException e) {
+
+			BasicJPAService.LOG.error("something went wrong while " + proxyClassName + " object creation", e);
+
+			throw new DMPPersistenceException(e.getMessage());
+		}
+
+		return proxyObject;
+	}
+
+	/**
+	 * Creates a new proxy object of the concrete proxy POJO class.
+	 * 
+	 * @return a new instance of the concrete proxy POJO class
+	 * @throws DMPPersistenceException if something went wrong.
+	 */
+	public PROXYPOJOCLASS createNewProxyObject(final POJOCLASS object, final RetrievalType type) throws DMPPersistenceException {
+
+		final PROXYPOJOCLASS proxyObject;
+
+		Constructor<PROXYPOJOCLASS> constructor = null;
+
+		try {
+			constructor = proxyClasz.getConstructor(clasz, RetrievalType.class);
+		} catch (final SecurityException | NoSuchMethodException e1) {
+
+			throw new DMPPersistenceException(e1.getMessage());
+		}
+
+		if (null == constructor) {
+
+			throw new DMPPersistenceException("couldn't find constructor to instantiate new '" + proxyClassName + "' with for " + className + " '"
+					+ object.getId() + "' and type '" + type + "'");
+		}
+
+		try {
+
+			proxyObject = constructor.newInstance(object, type);
+		} catch (final InstantiationException | InvocationTargetException | IllegalArgumentException | IllegalAccessException e) {
+
+			BasicJPAService.LOG.error("something went wrong while " + proxyClassName + " object creation", e);
+
+			throw new DMPPersistenceException(e.getMessage());
+		}
+
+		return proxyObject;
 	}
 
 	/**

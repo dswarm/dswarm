@@ -21,12 +21,13 @@ import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.Mapping;
 import de.avgl.dmp.persistence.model.job.Transformation;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyMapping;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.service.job.MappingService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class MappingsResourceTest extends BasicResourceTest<MappingsResourceTestUtils, MappingService, Mapping, Long> {
+public class MappingsResourceTest extends BasicResourceTest<MappingsResourceTestUtils, MappingService, ProxyMapping, Mapping, Long> {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(AttributesResourceTest.class);
 

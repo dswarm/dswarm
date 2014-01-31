@@ -10,9 +10,10 @@ import com.google.common.collect.Maps;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.Mapping;
 import de.avgl.dmp.persistence.model.job.Project;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyProject;
 import de.avgl.dmp.persistence.service.job.ProjectService;
 
-public class ProjectsResourceTestUtils extends ExtendedBasicDMPResourceTestUtils<ProjectService, Project> {
+public class ProjectsResourceTestUtils extends ExtendedBasicDMPResourceTestUtils<ProjectService, ProxyProject, Project> {
 
 	private final FunctionsResourceTestUtils	functionsResourceTestUtils;
 

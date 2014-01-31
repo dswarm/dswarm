@@ -7,10 +7,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.avgl.dmp.persistence.model.schema.Clasz;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyClasz;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
 import de.avgl.dmp.persistence.service.test.AdvancedJPAServiceTest;
 
-public class ClaszServiceTest extends AdvancedJPAServiceTest<Clasz, ClaszService> {
+public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, ClaszService> {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(ClaszServiceTest.class);
 
@@ -24,7 +25,7 @@ public class ClaszServiceTest extends AdvancedJPAServiceTest<Clasz, ClaszService
 	@Test
 	public void testSimpleAttribute() {
 
-		Clasz clasz = createObject("http://purl.org/ontology/bibo/Document");
+		Clasz clasz = createObject("http://purl.org/ontology/bibo/Document").getObject();
 
 		clasz.setName("document");
 
@@ -79,7 +80,7 @@ public class ClaszServiceTest extends AdvancedJPAServiceTest<Clasz, ClaszService
 
 	private Clasz createClass() {
 
-		final Clasz clasz = createObject("http://purl.org/ontology/bibo/Document");
+		final Clasz clasz = createObject("http://purl.org/ontology/bibo/Document").getObject();
 
 		clasz.setName("document");
 

@@ -1,7 +1,5 @@
 package de.avgl.dmp.converter.flow.test;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +10,6 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.base.Optional;
@@ -80,29 +77,29 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		// process input data model
 		final ConfigurationService configurationService = injector.getInstance(ConfigurationService.class);
-		final Configuration configuration = configurationService.createObject();
+		final Configuration configuration = configurationService.createObject().getObject();
 
 		configuration.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode(recordTag));
 		configuration.addParameter(ConfigurationStatics.XML_NAMESPACE, new TextNode(xmlNamespace));
 		configuration.addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode("xml"));
 
-		Configuration updatedConfiguration = configurationService.updateObjectTransactional(configuration);
+		Configuration updatedConfiguration = configurationService.updateObjectTransactional(configuration).getObject();
 
 		final ResourceService resourceService = injector.getInstance(ResourceService.class);
-		final Resource resource = resourceService.createObject();
+		final Resource resource = resourceService.createObject().getObject();
 		resource.setName(exampleDataResourceFileName);
 		resource.setType(ResourceType.FILE);
 		resource.addConfiguration(updatedConfiguration);
 
-		Resource updatedResource = resourceService.updateObjectTransactional(resource);
+		Resource updatedResource = resourceService.updateObjectTransactional(resource).getObject();
 
 		final DataModelService dataModelService = injector.getInstance(DataModelService.class);
-		final DataModel dataModel = dataModelService.createObject();
+		final DataModel dataModel = dataModelService.createObject().getObject();
 
 		dataModel.setDataResource(updatedResource);
 		dataModel.setConfiguration(updatedConfiguration);
 
-		DataModel updatedDataModel = dataModelService.updateObjectTransactional(dataModel);
+		DataModel updatedDataModel = dataModelService.updateObjectTransactional(dataModel).getObject();
 
 		final XMLSourceResourceTriplesFlow flow2 = new XMLSourceResourceTriplesFlow(updatedDataModel);
 

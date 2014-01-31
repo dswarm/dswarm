@@ -9,9 +9,10 @@ import com.google.common.collect.Maps;
 
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Schema;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxySchema;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
 
-public class SchemasResourceTestUtils extends BasicDMPResourceTestUtils<SchemaService, Schema> {
+public class SchemasResourceTestUtils extends BasicDMPResourceTestUtils<SchemaService, ProxySchema, Schema> {
 
 	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
 

@@ -26,6 +26,7 @@ import de.avgl.dmp.controller.resources.resource.utils.ConfigurationsResourceUti
 import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.resource.Configuration;
+import de.avgl.dmp.persistence.model.resource.proxy.ProxyConfiguration;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 
 /**
@@ -36,7 +37,7 @@ import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 @RequestScoped
 @Api(value = "/configurations", description = "Operations about configurations")
 @Path("configurations")
-public class ConfigurationsResource extends ExtendedBasicDMPResource<ConfigurationsResourceUtils, ConfigurationService, Configuration> {
+public class ConfigurationsResource extends ExtendedBasicDMPResource<ConfigurationsResourceUtils, ConfigurationService, ProxyConfiguration, Configuration> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ConfigurationsResource.class);
 

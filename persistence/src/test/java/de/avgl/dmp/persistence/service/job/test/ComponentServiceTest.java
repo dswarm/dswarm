@@ -18,11 +18,12 @@ import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.FunctionType;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyComponent;
 import de.avgl.dmp.persistence.service.job.ComponentService;
 import de.avgl.dmp.persistence.service.job.FunctionService;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
 
-public class ComponentServiceTest extends IDBasicJPAServiceTest<Component, ComponentService, Long> {
+public class ComponentServiceTest extends IDBasicJPAServiceTest<ProxyComponent, Component, ComponentService> {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(ComponentServiceTest.class);
 
@@ -52,12 +53,12 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<Component, Compo
 
 		parameterMapping.put(functionParameterName, componentVariableName);
 
-		final Component component = createObject();
+		final Component component = createObject().getObject();
 		component.setName(componentName);
 		component.setFunction(function);
 		component.setParameterMappings(parameterMapping);
 
-		final Component updatedComponent = updateObjectTransactional(component);
+		final Component updatedComponent = updateObjectTransactional(component).getObject();
 
 		Assert.assertNotNull("the updated component shouldn't be null", updatedComponent);
 		Assert.assertNotNull("the component id shouldn't be null", updatedComponent.getId());
@@ -69,7 +70,8 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<Component, Compo
 				updatedComponent.getParameterMappings().containsKey(functionParameterName));
 		Assert.assertEquals("the component parameter mapping for '" + functionParameterName + "' are not equal", componentVariableName,
 				updatedComponent.getParameterMappings().get(functionParameterName));
-		Assert.assertEquals("the function type is not '" + FunctionType.Function + "'", FunctionType.Function, updatedComponent.getFunction().getFunctionType());
+		Assert.assertEquals("the function type is not '" + FunctionType.Function + "'", FunctionType.Function, updatedComponent.getFunction()
+				.getFunctionType());
 
 		String json = null;
 
@@ -171,14 +173,14 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<Component, Compo
 
 		outputComponents.add(component2);
 
-		final Component component = createObject();
+		final Component component = createObject().getObject();
 		component.setName(componentName);
 		component.setFunction(function);
 		component.setParameterMappings(parameterMapping);
 		component.setInputComponents(inputComponents);
 		component.setOutputComponents(outputComponents);
 
-		final Component updatedComponent = updateObjectTransactional(component);
+		final Component updatedComponent = updateObjectTransactional(component).getObject();
 
 		Assert.assertNotNull("the component id shouldn't be null", updatedComponent.getId());
 		Assert.assertNotNull("the component name shouldn't be null", updatedComponent.getName());
@@ -201,7 +203,8 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<Component, Compo
 				.getOutputComponents().contains(component2));
 		Assert.assertEquals("the component output component '" + component2.getId() + "' are not equal", component2, updatedComponent
 				.getOutputComponents().iterator().next());
-		Assert.assertEquals("the function type is not '" + FunctionType.Function + "'", FunctionType.Function, updatedComponent.getFunction().getFunctionType());
+		Assert.assertEquals("the function type is not '" + FunctionType.Function + "'", FunctionType.Function, updatedComponent.getFunction()
+				.getFunctionType());
 
 		String json = null;
 
@@ -239,7 +242,7 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<Component, Compo
 
 		try {
 
-			function = functionService.createObject();
+			function = functionService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while function creation.\n" + e.getMessage(), false);
@@ -257,7 +260,7 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<Component, Compo
 
 		try {
 
-			updatedFunction = functionService.updateObjectTransactional(function);
+			updatedFunction = functionService.updateObjectTransactional(function).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the function of id = '" + function.getId() + "'", false);
@@ -282,7 +285,7 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<Component, Compo
 
 		try {
 
-			component = jpaService.createObject();
+			component = jpaService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while component creation.\n" + e.getMessage(), false);
@@ -299,7 +302,7 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<Component, Compo
 
 		try {
 
-			updatedComponent = jpaService.updateObjectTransactional(component);
+			updatedComponent = jpaService.updateObjectTransactional(component).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the component of id = '" + component.getId() + "'", false);
@@ -309,7 +312,8 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<Component, Compo
 		Assert.assertNotNull("the component name shouldn't be null", updatedComponent.getName());
 		Assert.assertEquals("the component names are not equal", name, updatedComponent.getName());
 		Assert.assertNotNull("the component parameter mappings shouldn't be null", updatedComponent.getParameterMappings());
-		Assert.assertEquals("the function type is not '" + FunctionType.Function + "'", FunctionType.Function, updatedComponent.getFunction().getFunctionType());
+		Assert.assertEquals("the function type is not '" + FunctionType.Function + "'", FunctionType.Function, updatedComponent.getFunction()
+				.getFunctionType());
 
 		return updatedComponent;
 	}

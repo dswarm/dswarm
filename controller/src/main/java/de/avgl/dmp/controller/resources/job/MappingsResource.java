@@ -25,6 +25,7 @@ import de.avgl.dmp.controller.resources.job.utils.MappingsResourceUtils;
 import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.job.Mapping;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyMapping;
 import de.avgl.dmp.persistence.service.job.MappingService;
 
 /**
@@ -35,7 +36,7 @@ import de.avgl.dmp.persistence.service.job.MappingService;
 @RequestScoped
 @Api(value = "/mappings", description = "Operations about mappings.")
 @Path("mappings")
-public class MappingsResource extends BasicDMPResource<MappingsResourceUtils, MappingService, Mapping> {
+public class MappingsResource extends BasicDMPResource<MappingsResourceUtils, MappingService, ProxyMapping, Mapping> {
 
 	/**
 	 * Creates a new resource (controller service) for {@link Mapping}s with the provider of the mapping persistence service, the

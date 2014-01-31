@@ -23,6 +23,7 @@ import de.avgl.dmp.persistence.model.job.FunctionType;
 import de.avgl.dmp.persistence.model.job.Mapping;
 import de.avgl.dmp.persistence.model.job.Project;
 import de.avgl.dmp.persistence.model.job.Transformation;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyProject;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
@@ -46,7 +47,7 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectService, Long> {
+public class ProjectServiceTest extends IDBasicJPAServiceTest<ProxyProject, Project, ProjectService> {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(ProjectServiceTest.class);
 
@@ -113,7 +114,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 		final String projectName = "my project";
 		final String projectDescription = "my project description";
 
-		final Project project = createObject();
+		final Project project = createObject().getObject();
 
 		project.setName(projectName);
 		project.setDescription(projectDescription);
@@ -122,7 +123,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 		project.setMappings(mappings);
 		project.setFunctions(functions);
 
-		final Project updatedProject = updateObjectTransactional(project);
+		final Project updatedProject = updateObjectTransactional(project).getObject();
 
 		Assert.assertNotNull("the update project shouldn't be null", updatedProject);
 		Assert.assertNotNull("the id of the updated project shouldn't be null", updatedProject.getId());
@@ -391,7 +392,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 
 		try {
 
-			function = functionService.createObject();
+			function = functionService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while function creation.\n" + e.getMessage(), false);
@@ -408,7 +409,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 
 		try {
 
-			updatedFunction = functionService.updateObjectTransactional(function);
+			updatedFunction = functionService.updateObjectTransactional(function).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the function of id = '" + function.getId() + "'", false);
@@ -436,7 +437,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 
 		try {
 
-			component = componentService.createObject();
+			component = componentService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while component creation.\n" + e.getMessage(), false);
@@ -461,7 +462,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 
 		try {
 
-			updatedComponent = componentService.updateObjectTransactional(component);
+			updatedComponent = componentService.updateObjectTransactional(component).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the component of id = '" + component.getId() + "'", false);
@@ -489,7 +490,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 
 		try {
 
-			transformation = transformationService.createObject();
+			transformation = transformationService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while transformation creation.\n" + e.getMessage(), false);
@@ -507,7 +508,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 
 		try {
 
-			updatedTransformation = transformationService.updateObjectTransactional(transformation);
+			updatedTransformation = transformationService.updateObjectTransactional(transformation).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the transformation of id = '" + transformation.getId() + "'", false);
@@ -606,7 +607,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 
 		try {
 
-			mapping = mappingService.createObject();
+			mapping = mappingService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while mapping creation.\n" + e.getMessage(), false);
@@ -621,7 +622,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 
 		try {
 
-			updatedMapping = mappingService.updateObjectTransactional(mapping);
+			updatedMapping = mappingService.updateObjectTransactional(mapping).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the mapping of id = '" + mapping.getId() + "'", false);
@@ -949,7 +950,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 
 		try {
 
-			mapping = mappingService.createObject();
+			mapping = mappingService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while mapping creation.\n" + e.getMessage(), false);
@@ -965,7 +966,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 
 		try {
 
-			updatedMapping = mappingService.updateObjectTransactional(mapping);
+			updatedMapping = mappingService.updateObjectTransactional(mapping).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the mapping of id = '" + mapping.getId() + "'", false);
@@ -1211,7 +1212,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 
 		try {
 
-			dataModel = dataModelService.createObject();
+			dataModel = dataModelService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while data model creation.\n" + e.getMessage(), false);
@@ -1230,7 +1231,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 
 		try {
 
-			updatedDataModel = dataModelService.updateObjectTransactional(dataModel);
+			updatedDataModel = dataModelService.updateObjectTransactional(dataModel).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the data model of id = '" + dataModel.getId() + "'", false);
@@ -1373,7 +1374,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 
 		try {
 
-			dataModel = dataModelService.createObject();
+			dataModel = dataModelService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while data model creation.\n" + e.getMessage(), false);
@@ -1390,7 +1391,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 
 		try {
 
-			updatedDataModel = dataModelService.updateObjectTransactional(dataModel);
+			updatedDataModel = dataModelService.updateObjectTransactional(dataModel).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the data model of id = '" + dataModel.getId() + "'", false);
@@ -1563,14 +1564,14 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 		final AttributePathService attributePathService = GuicedTest.injector.getInstance(AttributePathService.class);
 
 		Assert.assertNotNull("attribute path service shouldn't be null", attributePathService);
-		
+
 		final AttributePath attributePath = new AttributePath(attributePathArg);
 
 		AttributePath updatedAttributePath = null;
 
 		try {
 
-			updatedAttributePath = attributePathService.createObject(attributePathArg);
+			updatedAttributePath = attributePathService.createOrGetObject(attributePathArg).getObject();
 		} catch (final DMPPersistenceException e1) {
 
 			Assert.assertTrue("something went wrong while attribute path creation.\n" + e1.getMessage(), false);
@@ -1596,7 +1597,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 		}
 
 		LOG.debug("attribute path json for attribute path '" + updatedAttributePath.getId() + "': " + json);
-		
+
 		attributePaths.put(updatedAttributePath.getId(), updatedAttributePath);
 
 		return updatedAttributePath;
@@ -1618,7 +1619,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 		Attribute attribute = null;
 
 		try {
-			attribute = attributeService.createObjectTransactional(id);
+			attribute = attributeService.createOrGetObjectTransactional(id).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while attribute creation.\n" + e.getMessage(), false);
@@ -1633,7 +1634,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 
 		try {
 
-			updatedAttribute = attributeService.updateObjectTransactional(attribute);
+			updatedAttribute = attributeService.updateObjectTransactional(attribute).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the attribute of id = '" + id + "'", false);
@@ -1664,7 +1665,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 		Clasz clasz = null;
 
 		try {
-			clasz = classService.createObjectTransactional(id);
+			clasz = classService.createOrGetObjectTransactional(id).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while class creation.\n" + e.getMessage(), false);
@@ -1679,7 +1680,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 
 		try {
 
-			updatedClasz = classService.updateObjectTransactional(clasz);
+			updatedClasz = classService.updateObjectTransactional(clasz).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the class of id = '" + id + "'", false);
@@ -1705,7 +1706,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 		Schema schema = null;
 
 		try {
-			schema = schemaService.createObject();
+			schema = schemaService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while schema creation.\n" + e.getMessage(), false);
@@ -1724,7 +1725,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 
 		try {
 
-			updatedSchema = schemaService.updateObjectTransactional(schema);
+			updatedSchema = schemaService.updateObjectTransactional(schema).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the schema of id = '" + schema.getId() + "'", false);
@@ -1781,7 +1782,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 		Resource resource = null;
 
 		try {
-			resource = resourceService.createObject();
+			resource = resourceService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while resource creation.\n" + e.getMessage(), false);
@@ -1800,7 +1801,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 
 		try {
 
-			updatedResource = resourceService.updateObjectTransactional(resource);
+			updatedResource = resourceService.updateObjectTransactional(resource).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the resource of id = '" + resource.getId() + "'", false);
@@ -1825,7 +1826,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 		Configuration configuration = null;
 
 		try {
-			configuration = configurationService.createObject();
+			configuration = configurationService.createObject().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while configuration creation.\n" + e.getMessage(), false);
@@ -1842,7 +1843,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<Project, ProjectSe
 
 		try {
 
-			updatedConfiguration = configurationService.updateObjectTransactional(configuration);
+			updatedConfiguration = configurationService.updateObjectTransactional(configuration).getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the configuration of id = '" + configuration.getId() + "'", false);

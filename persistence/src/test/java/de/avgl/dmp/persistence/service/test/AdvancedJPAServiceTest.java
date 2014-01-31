@@ -3,38 +3,37 @@ package de.avgl.dmp.persistence.service.test;
 import org.junit.Assert;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
-import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
+import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
+import de.avgl.dmp.persistence.model.proxy.ProxyAdvancedDMPJPAObject;
 import de.avgl.dmp.persistence.service.AdvancedDMPJPAService;
 
-public abstract class AdvancedJPAServiceTest<POJOCLASS extends BasicDMPJPAObject, JPASERVICEIMPL extends AdvancedDMPJPAService<POJOCLASS>> extends
-		IDBasicJPAServiceTest<POJOCLASS, JPASERVICEIMPL, Long> {
+public abstract class AdvancedJPAServiceTest<PROXYPOJOCLASS extends ProxyAdvancedDMPJPAObject<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject, JPASERVICEIMPL extends AdvancedDMPJPAService<PROXYPOJOCLASS, POJOCLASS>>
+		extends IDBasicJPAServiceTest<PROXYPOJOCLASS, POJOCLASS, JPASERVICEIMPL> {
 
-	private static final org.apache.log4j.Logger	LOG			= org.apache.log4j.Logger.getLogger(AdvancedJPAServiceTest.class);
+	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AdvancedJPAServiceTest.class);
 
 	public AdvancedJPAServiceTest(final String type, final Class<JPASERVICEIMPL> jpaServiceClass) {
 
 		super(type, jpaServiceClass);
 	}
 
-	protected POJOCLASS createObject(final String id) {
+	protected PROXYPOJOCLASS createObject(final String id) {
 
-		POJOCLASS object = null;
+		PROXYPOJOCLASS proxyObject = null;
 
 		try {
 
-			object = jpaService.createObjectTransactional(id);
+			proxyObject = jpaService.createOrGetObjectTransactional(id);
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong during object creation.\n" + e.getMessage(), false);
 		}
 
-		Assert.assertNotNull(type + " shouldn't be null", object);
-		Assert.assertNotNull(type + " id shouldn't be null", object.getId());
+		Assert.assertNotNull(type + " shouldn't be null", proxyObject);
+		Assert.assertNotNull(type + " id shouldn't be null", proxyObject.getId());
 
-		LOG.debug("created new " + type + " with id = '" + object.getId() + "'");
-		
-		getObject(object);
+		LOG.debug("created new " + type + " with id = '" + proxyObject.getId() + "'");
 
-		return object;
+		return proxyObject;
 	}
 }

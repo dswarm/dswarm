@@ -19,11 +19,12 @@ import com.google.common.collect.Lists;
 import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.FunctionType;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyFunction;
 import de.avgl.dmp.persistence.service.job.FunctionService;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class FunctionServiceTest extends IDBasicJPAServiceTest<Function, FunctionService, Long> {
+public class FunctionServiceTest extends IDBasicJPAServiceTest<ProxyFunction, Function, FunctionService> {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(FunctionServiceTest.class);
 
@@ -50,14 +51,14 @@ public class FunctionServiceTest extends IDBasicJPAServiceTest<Function, Functio
 
 		Assert.assertNotNull("the function description JSON shouldn't be null", functionFunctionDescription);
 
-		final Function function = createObject();
+		final Function function = createObject().getObject();
 		function.setName(functionName);
 		function.setDescription(functionDescription);
 		function.addParameter(functionParameter1);
 		function.addParameter(functionParameter2);
 		function.setFunctionDescription(functionFunctionDescription);
 
-		final Function updatedFunction = updateObjectTransactional(function);
+		final Function updatedFunction = updateObjectTransactional(function).getObject();
 
 		Assert.assertNotNull("the function name shouldn't be null", updatedFunction.getName());
 		Assert.assertEquals("the function names are not equal", functionName, updatedFunction.getName());
@@ -94,7 +95,7 @@ public class FunctionServiceTest extends IDBasicJPAServiceTest<Function, Functio
 		deletedObject(function.getId());
 	}
 
-	//@Test
+	// @Test
 	public void loadMetafactureSimpleFunctionSetTest() {
 
 		String metafactureFunctionDescriptionsJSONString = null;
@@ -193,7 +194,7 @@ public class FunctionServiceTest extends IDBasicJPAServiceTest<Function, Functio
 				}
 			}
 
-			final Function function = createObject();
+			final Function function = createObject().getObject();
 
 			if (functionName != null) {
 
@@ -212,7 +213,7 @@ public class FunctionServiceTest extends IDBasicJPAServiceTest<Function, Functio
 
 			function.setFunctionDescription(metafactureFunctionDescriptionJSON);
 
-			final Function updatedFunction = updateObjectTransactional(function);
+			final Function updatedFunction = updateObjectTransactional(function).getObject();
 
 			Assert.assertNotNull("the updated metafacture function shouldn't be null", updatedFunction);
 		}

@@ -12,6 +12,7 @@ import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.Transformation;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyFunction;
 import de.avgl.dmp.persistence.service.job.FunctionService;
 
 /**
@@ -20,7 +21,7 @@ import de.avgl.dmp.persistence.service.job.FunctionService;
  * @param <POJOCLASS>
  * @param <POJOCLASSIDTYPE>
  */
-public class FunctionsResourceUtils extends BasicFunctionsResourceUtils<FunctionService, Function> {
+public class FunctionsResourceUtils extends BasicFunctionsResourceUtils<FunctionService, ProxyFunction, Function> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(FunctionsResourceUtils.class);
 

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.avgl.dmp.controller.resources.utils.ExtendedBasicDMPResourceUtils;
 import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.persistence.model.job.Function;
+import de.avgl.dmp.persistence.model.job.proxy.ProxyBasicFunction;
 import de.avgl.dmp.persistence.service.job.BasicFunctionService;
 
 /**
@@ -15,8 +16,8 @@ import de.avgl.dmp.persistence.service.job.BasicFunctionService;
  * @param <POJOCLASS>
  * @param <POJOCLASSIDTYPE>
  */
-public abstract class BasicFunctionsResourceUtils<POJOCLASSPERSISTENCESERVICE extends BasicFunctionService<POJOCLASS>, POJOCLASS extends Function>
-		extends ExtendedBasicDMPResourceUtils<POJOCLASSPERSISTENCESERVICE, POJOCLASS> {
+public abstract class BasicFunctionsResourceUtils<POJOCLASSPERSISTENCESERVICE extends BasicFunctionService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyBasicFunction<POJOCLASS>, POJOCLASS extends Function>
+		extends ExtendedBasicDMPResourceUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(BasicFunctionsResourceUtils.class);
 

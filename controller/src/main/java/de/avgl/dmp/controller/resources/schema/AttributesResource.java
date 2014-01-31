@@ -24,6 +24,7 @@ import de.avgl.dmp.controller.resources.schema.utils.AttributesResourceUtils;
 import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.model.schema.Attribute;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttribute;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
 
 /**
@@ -34,7 +35,7 @@ import de.avgl.dmp.persistence.service.schema.AttributeService;
 @RequestScoped
 @Api(value = "/attributes", description = "Operations about attributes.")
 @Path("attributes")
-public class AttributesResource extends AdvancedDMPResource<AttributesResourceUtils, AttributeService, Attribute> {
+public class AttributesResource extends AdvancedDMPResource<AttributesResourceUtils, AttributeService, ProxyAttribute, Attribute> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributesResource.class);
 
@@ -80,7 +81,8 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "create a new attribute", notes = "Returns a new Attribute object.", response = Attribute.class)
-	@ApiResponses(value = { @ApiResponse(code = 201, message = "attribute was successfully persisted"),
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "attribute does already exist; returns the existing one"),
+			@ApiResponse(code = 201, message = "attribute was successfully persisted"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
