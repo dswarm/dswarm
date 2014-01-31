@@ -1,10 +1,5 @@
 package de.avgl.dmp.persistence.model.schema;
 
-import static ch.lambdaj.Lambda.filter;
-import static ch.lambdaj.Lambda.having;
-import static ch.lambdaj.Lambda.on;
-import static org.hamcrest.Matchers.equalTo;
-
 import java.util.List;
 import java.util.Set;
 
@@ -19,9 +14,14 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.hamcrest.Matchers;
+
+import ch.lambdaj.Lambda;
+
 import com.google.common.collect.Sets;
 
 import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
+import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
  * A data schema is a collection of {@link AttributePath}s and a record class ({@link Clasz}).
@@ -96,7 +96,7 @@ public class Schema extends BasicDMPJPAObject {
 				attributePaths = Sets.newCopyOnWriteArraySet();
 			}
 
-			if (!attributePaths.equals(attributePathsArg)) {
+			if (!DMPPersistenceUtil.getAttributePathUtils().completeEquals(attributePaths, attributePathsArg)) {
 
 				attributePaths.clear();
 				attributePaths.addAll(attributePathsArg);
@@ -122,12 +122,13 @@ public class Schema extends BasicDMPJPAObject {
 			return null;
 		}
 
-		if (this.attributePaths == null || this.attributePaths.isEmpty()) {
+		if (attributePaths == null || attributePaths.isEmpty()) {
 
 			return null;
 		}
 
-		final List<AttributePath> attributePathsFiltered = filter(having(on(AttributePath.class).getId(), equalTo(id)), this.attributePaths);
+		final List<AttributePath> attributePathsFiltered = Lambda.filter(Lambda.having(Lambda.on(AttributePath.class).getId(), Matchers.equalTo(id)),
+				attributePaths);
 
 		if (attributePathsFiltered == null || attributePathsFiltered.isEmpty()) {
 
@@ -193,7 +194,7 @@ public class Schema extends BasicDMPJPAObject {
 	 */
 	public void setRecordClass(final Clasz recordClassArg) {
 
-		this.recordClass = recordClassArg;
+		recordClass = recordClassArg;
 	}
 
 	@Override
@@ -201,5 +202,13 @@ public class Schema extends BasicDMPJPAObject {
 
 		return Schema.class.isInstance(obj) && super.equals(obj);
 
+	}
+
+	@Override
+	public boolean completeEquals(final Object obj) {
+
+		return Schema.class.isInstance(obj) && super.completeEquals(obj)
+				&& DMPPersistenceUtil.getAttributePathUtils().completeEquals(((Schema) obj).getAttributePaths(), getAttributePaths())
+				&& DMPPersistenceUtil.getClaszUtils().completeEquals(((Schema) obj).getRecordClass(), getRecordClass());
 	}
 }

@@ -494,7 +494,7 @@ public class InternalTripleService implements InternalModelService {
 		} else {
 
 			// create new schema
-			final ProxySchema proxySchema = schemaService.get().createObject();
+			final ProxySchema proxySchema = schemaService.get().createObjectTransactional();
 
 			if (proxySchema != null) {
 

@@ -77,7 +77,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		// process input data model
 		final ConfigurationService configurationService = injector.getInstance(ConfigurationService.class);
-		final Configuration configuration = configurationService.createObject().getObject();
+		final Configuration configuration = configurationService.createObjectTransactional().getObject();
 
 		configuration.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode(recordTag));
 		configuration.addParameter(ConfigurationStatics.XML_NAMESPACE, new TextNode(xmlNamespace));
@@ -86,7 +86,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		Configuration updatedConfiguration = configurationService.updateObjectTransactional(configuration).getObject();
 
 		final ResourceService resourceService = injector.getInstance(ResourceService.class);
-		final Resource resource = resourceService.createObject().getObject();
+		final Resource resource = resourceService.createObjectTransactional().getObject();
 		resource.setName(exampleDataResourceFileName);
 		resource.setType(ResourceType.FILE);
 		resource.addConfiguration(updatedConfiguration);
@@ -94,7 +94,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		Resource updatedResource = resourceService.updateObjectTransactional(resource).getObject();
 
 		final DataModelService dataModelService = injector.getInstance(DataModelService.class);
-		final DataModel dataModel = dataModelService.createObject().getObject();
+		final DataModel dataModel = dataModelService.createObjectTransactional().getObject();
 
 		dataModel.setDataResource(updatedResource);
 		dataModel.setConfiguration(updatedConfiguration);

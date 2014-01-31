@@ -24,6 +24,7 @@ import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -469,6 +470,12 @@ public class ResourcesResourceTest extends ResourceTest {
 		LOG.debug("start post configuration CSV JSON preview test");
 	}
 	
+	@Ignore
+	public void testPUTResource() throws Exception {
+
+		// TODO: [@fniederlein] implement test (+ resource methode)
+	}
+	
 	@Test
 	public void testDELETEResource() throws Exception {
 		
@@ -661,7 +668,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		try {
 
-			complexResource = resourceService.createObject().getObject();
+			complexResource = resourceService.createObjectTransactional().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong during object creation.\n" + e.getMessage(), false);
@@ -685,7 +692,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 			try {
 
-				configuration = configurationService.createObject().getObject();
+				configuration = configurationService.createObjectTransactional().getObject();
 			} catch (final DMPPersistenceException e) {
 
 				Assert.assertTrue("something went wrong during object creation.\n" + e.getMessage(), false);

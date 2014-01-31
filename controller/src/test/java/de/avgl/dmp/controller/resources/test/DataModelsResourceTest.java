@@ -92,9 +92,7 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 		configurationsResourceTestUtils = new ConfigurationsResourceTestUtils();
 		schemasResourceTestUtils = new SchemasResourceTestUtils();
 
-		// TODO: [@fniederlein] implement update object test
-
-		updateObjectJSONFileName = "datamodel2.json";
+		updateObjectJSONFileName = "datamodel1.json";
 	}
 
 	@Override
@@ -459,6 +457,17 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 		assertThat(response.hasEntity(), equalTo(false));
 
 		LOG.debug("end get resource configuration data missing test");
+	}
+
+	@Override
+	public void testPUTObject() throws Exception {
+
+		super.testPUTObject();
+
+		// TODO: [@fniederlein] do clean-up for update (sub) objects (there is a schema after the test in
+		// the database); note: you need to take care of the overridden/replaced (sub) objects as well as the new ones; ps: this
+		// only happens when other tests of this test class are executed before, i.e., when you only execute the PUT test
+		// everything will be fine (when the DB was clean before)
 	}
 
 	@After

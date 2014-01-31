@@ -6,7 +6,6 @@ import java.util.Set;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Ignore;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -67,6 +66,8 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 
 	private final MappingsResourceTestUtils			mappingsResourceTestUtils;
 
+	private final ProjectsResourceTestUtils			projectsResourceTestUtils;
+
 	private Function								function;
 
 	private Component								component;
@@ -106,6 +107,7 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 		schemasResourceTestUtils = new SchemasResourceTestUtils();
 		dataModelsResourceTestUtils = new DataModelsResourceTestUtils();
 		mappingsResourceTestUtils = new MappingsResourceTestUtils();
+		projectsResourceTestUtils = new ProjectsResourceTestUtils();
 	}
 
 	@Override
@@ -155,6 +157,15 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 		expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
 
 		// END project preparation
+	}
+
+	@Override
+	public void testPUTObject() throws Exception {
+
+		super.testPUTObject();
+
+		// TODO: [@fniederlein] do clean-up for update (sub) objects (there are a functions, components, mappings etc. after the test in
+		// the database); note: you need to take care of the overridden/replaced (sub) objects as well as the new ones
 	}
 
 	@After
@@ -222,13 +233,35 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 		// END mappings tear down
 	}
 
-	@Ignore
 	@Override
-	public void testPUTObject() throws Exception {
+	public Project updateObject(final Project persistedProject) throws Exception {
 
-		// super.testPUTObject();
+		persistedProject.setName(persistedProject.getName() + " update");
+		persistedProject.setDescription(persistedProject.getDescription() + " update");
 
-		// TODO: [@fniederlein] implement test
+		function = functionsResourceTestUtils.createObject("function.json");
+		Set<Function> functions = persistedProject.getFunctions();
+		functions.add(function);
+		persistedProject.setFunctions(functions);
+
+		String updateProjectJSONString = objectMapper.writeValueAsString(persistedProject);
+		final ObjectNode updateProjectJSON = objectMapper.readValue(updateProjectJSONString, ObjectNode.class);
+
+		final Mapping mapping = mappingsResourceTestUtils.createObject("mapping.json");
+		final String finalMappingJSONString = objectMapper.writeValueAsString(mapping);
+		final ObjectNode finalMappingJSON = objectMapper.readValue(finalMappingJSONString, ObjectNode.class);
+
+		final ArrayNode mappingsArray = objectMapper.createArrayNode();
+		mappingsArray.add(finalMappingJSON);
+
+		updateProjectJSON.put("functions", mappingsArray);
+
+		updateProjectJSONString = objectMapper.writeValueAsString(updateProjectJSON);
+		expectedObject = objectMapper.readValue(updateProjectJSONString, pojoClass);
+
+		final Project updateProject = projectsResourceTestUtils.updateObject(updateProjectJSONString, expectedObject);
+
+		return updateProject;
 	}
 
 	private DataModel createInputDataModel() throws Exception {

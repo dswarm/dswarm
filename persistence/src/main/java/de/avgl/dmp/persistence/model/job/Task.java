@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.resource.DataModel;
+import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
  * A task is an executable {@link Job}, i.e., a job with a concrete input {@link DataModel} and output {@link DataModel}.
@@ -105,5 +106,20 @@ public class Task extends ExtendedBasicDMPJPAObject {
 	public void setJob(final Job jobArg) {
 
 		job = jobArg;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+
+		return Task.class.isInstance(obj) && super.equals(obj);
+	}
+
+	@Override
+	public boolean completeEquals(final Object obj) {
+
+		return Task.class.isInstance(obj) && super.completeEquals(obj)
+				&& DMPPersistenceUtil.getDataModelUtils().completeEquals(((Task) obj).getInputDataModel(), getInputDataModel())
+				&& DMPPersistenceUtil.getDataModelUtils().completeEquals(((Task) obj).getOutputDataModel(), getOutputDataModel())
+				&& DMPPersistenceUtil.getJobUtils().completeEquals(((Task) obj).getJob(), getJob());
 	}
 }

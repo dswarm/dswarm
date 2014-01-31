@@ -1,7 +1,11 @@
 package de.avgl.dmp.controller.resources;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.resources.utils.AdvancedDMPResourceUtils;
 import de.avgl.dmp.controller.status.DMPStatus;
+import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
 import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.proxy.ProxyAdvancedDMPJPAObject;
@@ -39,6 +43,49 @@ public abstract class AdvancedDMPResource<POJOCLASSRESOURCEUTILS extends Advance
 	protected POJOCLASS prepareObjectForUpdate(final POJOCLASS objectFromJSON, final POJOCLASS object) {
 
 		object.setName(objectFromJSON.getName());
+
+		return object;
+	}
+
+	@Override
+	protected POJOCLASS retrieveObject(final Long id, final String jsonObjectString) throws DMPControllerException {
+
+		if (jsonObjectString == null) {
+
+			return super.retrieveObject(id, jsonObjectString);
+		}
+
+		// what should we do if the uri is a different one, i.e., someone tries to manipulate the uri? => check whether an entity
+		// with this uri exists and manipulate this one instead
+		// note: we could also throw an exception instead
+
+		final POJOCLASS objectFromJSON = pojoClassResourceUtils.deserializeObjectJSONString(jsonObjectString);
+
+		// get persistent object per uri
+
+		final POJOCLASSPERSISTENCESERVICE persistenceService = pojoClassResourceUtils.getPersistenceService();
+
+		POJOCLASS object = null;
+		try {
+			object = persistenceService.getObjectByUri(objectFromJSON.getUri());
+		} catch (final DMPPersistenceException e) {
+
+			AdvancedDMPResource.LOG
+					.debug("couldn't retrieve " + pojoClassResourceUtils.getClaszName() + " for uri '" + objectFromJSON.getUri() + "'");
+
+			return null;
+		}
+
+		if (object == null) {
+
+			AdvancedDMPResource.LOG.debug(pojoClassResourceUtils.getClaszName() + " for uri '" + objectFromJSON.getUri()
+					+ "' does not exist, i.e., it cannot be updated");
+
+			return null;
+		}
+
+		AdvancedDMPResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with uri '" + objectFromJSON.getUri() + "' = '"
+				+ ToStringBuilder.reflectionToString(object) + "'");
 
 		return object;
 	}

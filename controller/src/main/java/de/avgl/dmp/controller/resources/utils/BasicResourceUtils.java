@@ -274,7 +274,7 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 	public PROXYPOJOCLASS createObject(final POJOCLASS objectFromJSON, final POJOCLASSPERSISTENCESERVICE persistenceService)
 			throws DMPPersistenceException {
 
-		return persistenceService.createObject();
+		return persistenceService.createObjectTransactional();
 	}
 
 	public PROXYPOJOCLASS createNewObject(final POJOCLASS object) throws DMPControllerException {

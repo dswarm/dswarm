@@ -19,6 +19,7 @@ import com.google.common.collect.Sets;
 
 import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.resource.DataModel;
+import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
  * A project is a container that hold the current working state of a job creation, i.e., it knows all relevant parts of a
@@ -195,5 +196,21 @@ public class Project extends ExtendedBasicDMPJPAObject {
 				functions.addAll(functionsArg);
 			}
 		}
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+
+		return Project.class.isInstance(obj) && super.equals(obj);
+	}
+
+	@Override
+	public boolean completeEquals(final Object obj) {
+
+		return Project.class.isInstance(obj) && super.completeEquals(obj)
+				&& DMPPersistenceUtil.getDataModelUtils().completeEquals(((Project) obj).getInputDataModel(), getInputDataModel())
+				&& DMPPersistenceUtil.getDataModelUtils().completeEquals(((Project) obj).getOutputDataModel(), getOutputDataModel())
+				&& DMPPersistenceUtil.getMappingUtils().completeEquals(((Project) obj).getMappings(), getMappings())
+				&& DMPPersistenceUtil.getFunctionUtils().completeEquals(((Project) obj).getFunctions(), getFunctions());
 	}
 }

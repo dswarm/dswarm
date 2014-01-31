@@ -242,11 +242,11 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 	// @Produces(MediaType.APPLICATION_JSON)
 	public Response updateObject(final String jsonObjectString, /* @PathParam("id") */final POJOCLASSIDTYPE id) throws DMPControllerException {
 
-		final Timer.Context context = dmpStatus.createNewObject(pojoClassResourceUtils.getClaszName(), this.getClass());
+		final Timer.Context context = dmpStatus.updateSingleObject(pojoClassResourceUtils.getClaszName(), this.getClass());
 
-		BasicResource.LOG.debug("try to update " + pojoClassResourceUtils.getClaszName());
+		BasicResource.LOG.debug("try to update " + pojoClassResourceUtils.getClaszName() + " '" + id + "'");
 
-		final POJOCLASS objectFromDB = retrieveObject(id);
+		final POJOCLASS objectFromDB = retrieveObject(id, jsonObjectString);
 
 		if (objectFromDB == null) {
 
@@ -254,17 +254,28 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		final POJOCLASS object = refreshObject(jsonObjectString, objectFromDB, id);
+		final PROXYPOJOCLASS proxyObject = refreshObject(jsonObjectString, objectFromDB, id);
+
+		if (proxyObject == null) {
+
+			BasicResource.LOG.debug("couldn't update " + pojoClassResourceUtils.getClaszName() + " '" + id + "'");
+
+			dmpStatus.stop(context);
+			throw new DMPControllerException("couldn't update " + pojoClassResourceUtils.getClaszName() + " '" + id + "'");
+		}
+
+		final POJOCLASS object = proxyObject.getObject();
 
 		if (object == null) {
 
-			BasicResource.LOG.debug("couldn't update " + pojoClassResourceUtils.getClaszName());
+			BasicResource.LOG.debug("couldn't update " + pojoClassResourceUtils.getClaszName() + " '" + id + "'");
 
 			dmpStatus.stop(context);
-			throw new DMPControllerException("couldn't update " + pojoClassResourceUtils.getClaszName());
+			throw new DMPControllerException("couldn't update " + pojoClassResourceUtils.getClaszName() + " '" + id + "'");
 		}
 
-		BasicResource.LOG.debug("update " + pojoClassResourceUtils.getClaszName() + " = '" + ToStringBuilder.reflectionToString(object) + "'");
+		BasicResource.LOG.debug("updated " + pojoClassResourceUtils.getClaszName() + " '" + id + "' = '" + ToStringBuilder.reflectionToString(object)
+				+ "'");
 
 		final String objectJSON;
 
@@ -277,10 +288,38 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			throw new DMPControllerException("couldn't transform " + pojoClassResourceUtils.getClaszName() + " to JSON string.\n" + e.getMessage());
 		}
 
-		BasicResource.LOG.debug("return updated " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "' = '" + objectJSON + "'");
+		BasicResource.LOG.debug("return updated " + pojoClassResourceUtils.getClaszName() + " with id '" + object.getId() + "' = '" + objectJSON
+				+ "'");
 
 		dmpStatus.stop(context);
-		return buildResponse(objectJSON);
+		
+		final URI objectURI = createObjectURI(object);
+		final ResponseBuilder responseBuilder;
+		final RetrievalType type = proxyObject.getType();
+
+		switch (type) {
+
+			case CREATED:
+
+				responseBuilder = Response.created(objectURI);
+
+				break;
+			case UPDATED:
+			case RETRIEVED:
+
+				responseBuilder = Response.ok().contentLocation(objectURI);
+
+				break;
+			default:
+
+				BasicResource.LOG.debug("something went wrong, while evaluating the retrieval type of the " + pojoClassResourceUtils.getClaszName());
+
+				dmpStatus.stop(context);
+				throw new DMPControllerException("something went wrong, while evaluating the retrieval type of the "
+						+ pojoClassResourceUtils.getClaszName());
+		}
+		
+		return responseBuilder.entity(objectJSON).build();
 	}
 
 	/**
@@ -492,7 +531,8 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 	 * @return
 	 * @throws DMPControllerException
 	 */
-	protected POJOCLASS refreshObject(final String objectJSONString, final POJOCLASS object, final POJOCLASSIDTYPE id) throws DMPControllerException {
+	protected PROXYPOJOCLASS refreshObject(final String objectJSONString, final POJOCLASS object, final POJOCLASSIDTYPE id)
+			throws DMPControllerException {
 
 		// enhance object JSON as necessary
 
@@ -510,7 +550,9 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 		try {
 
-			persistenceService.updateObjectTransactional(preparedObject);
+			final PROXYPOJOCLASS proxyPreparedObject = persistenceService.updateObjectTransactional(preparedObject);
+
+			return proxyPreparedObject;
 		} catch (final DMPPersistenceException e) {
 
 			BasicResource.LOG.debug("something went wrong while updating " + pojoClassResourceUtils.getClaszName() + "  for id '" + id + "'");
@@ -518,13 +560,11 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			throw new DMPControllerException("something went wrong while updating" + pojoClassResourceUtils.getClaszName() + "  for id '" + id
 					+ "'\n" + e.getMessage());
 		}
-
-		return preparedObject;
 	}
 
-	private POJOCLASS retrieveObject(final POJOCLASSIDTYPE id) {
+	protected POJOCLASS retrieveObject(final POJOCLASSIDTYPE id, final String jsonObjectString) throws DMPControllerException {
 
-		// get persistented object per id
+		// get persistent object per id
 
 		final POJOCLASSPERSISTENCESERVICE persistenceService = pojoClassResourceUtils.getPersistenceService();
 		final POJOCLASS object = persistenceService.getObject(id);

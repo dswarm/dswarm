@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
 
 import de.avgl.dmp.init.DMPException;
@@ -171,7 +172,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 
 		if (resourcesArg != null) {
 
-			if (!resourcesArg.equals(resources)) {
+			if (!DMPPersistenceUtil.getResourceUtils().completeEquals(resources, resourcesArg)) {
 
 				if (resources == null) {
 
@@ -268,8 +269,8 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	}
 
 	/**
-	 * Initialises the configuration parameters from the string that holds the serialised JSON object of the
-	 * configuration parameters.
+	 * Initialises the configuration parameters from the string that holds the serialised JSON object of the configuration
+	 * parameters.
 	 * 
 	 * @param fromScratch flag that indicates, whether the configuration parameters should be initialised from scratch or not
 	 */
@@ -307,6 +308,13 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	public boolean equals(final Object obj) {
 
 		return Configuration.class.isInstance(obj) && super.equals(obj);
+	}
 
+	@Override
+	public boolean completeEquals(final Object obj) {
+
+		return Configuration.class.isInstance(obj) && super.completeEquals(obj)
+				&& Objects.equal(((Configuration) obj).getParameters(), getParameters())
+				&& Objects.equal(((Configuration) obj).getResources(), getResources());
 	}
 }

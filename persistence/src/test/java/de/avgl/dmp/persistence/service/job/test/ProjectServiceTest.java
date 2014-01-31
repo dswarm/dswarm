@@ -392,7 +392,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<ProxyProject, Proj
 
 		try {
 
-			function = functionService.createObject().getObject();
+			function = functionService.createObjectTransactional().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while function creation.\n" + e.getMessage(), false);
@@ -437,7 +437,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<ProxyProject, Proj
 
 		try {
 
-			component = componentService.createObject().getObject();
+			component = componentService.createObjectTransactional().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while component creation.\n" + e.getMessage(), false);
@@ -490,7 +490,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<ProxyProject, Proj
 
 		try {
 
-			transformation = transformationService.createObject().getObject();
+			transformation = transformationService.createObjectTransactional().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while transformation creation.\n" + e.getMessage(), false);
@@ -607,7 +607,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<ProxyProject, Proj
 
 		try {
 
-			mapping = mappingService.createObject().getObject();
+			mapping = mappingService.createObjectTransactional().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while mapping creation.\n" + e.getMessage(), false);
@@ -950,7 +950,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<ProxyProject, Proj
 
 		try {
 
-			mapping = mappingService.createObject().getObject();
+			mapping = mappingService.createObjectTransactional().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while mapping creation.\n" + e.getMessage(), false);
@@ -1212,7 +1212,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<ProxyProject, Proj
 
 		try {
 
-			dataModel = dataModelService.createObject().getObject();
+			dataModel = dataModelService.createObjectTransactional().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while data model creation.\n" + e.getMessage(), false);
@@ -1374,7 +1374,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<ProxyProject, Proj
 
 		try {
 
-			dataModel = dataModelService.createObject().getObject();
+			dataModel = dataModelService.createObjectTransactional().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while data model creation.\n" + e.getMessage(), false);
@@ -1706,7 +1706,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<ProxyProject, Proj
 		Schema schema = null;
 
 		try {
-			schema = schemaService.createObject().getObject();
+			schema = schemaService.createObjectTransactional().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while schema creation.\n" + e.getMessage(), false);
@@ -1782,7 +1782,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<ProxyProject, Proj
 		Resource resource = null;
 
 		try {
-			resource = resourceService.createObject().getObject();
+			resource = resourceService.createObjectTransactional().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while resource creation.\n" + e.getMessage(), false);
@@ -1826,7 +1826,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<ProxyProject, Proj
 		Configuration configuration = null;
 
 		try {
-			configuration = configurationService.createObject().getObject();
+			configuration = configurationService.createObjectTransactional().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while configuration creation.\n" + e.getMessage(), false);

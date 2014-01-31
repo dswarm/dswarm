@@ -5,13 +5,14 @@ import java.net.URI;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import de.avgl.dmp.persistence.model.resource.DataModel;
+import de.avgl.dmp.persistence.model.utils.ExtendedBasicDMPJPAObjectUtils;
 
 /**
  * A utility class for {@link DataModel}s and related entities.
  *
  * @author tgaengler
  */
-public final class DataModelUtils {
+public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataModel> {
 
 	public static String determineDataResourceSchemaBaseURI(final DataModel dataModel) {
 

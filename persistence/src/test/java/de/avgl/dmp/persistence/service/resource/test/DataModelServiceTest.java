@@ -373,7 +373,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, 
 		Schema schema = null;
 
 		try {
-			schema = schemaService.createObject().getObject();
+			schema = schemaService.createObjectTransactional().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while schema creation.\n" + e.getMessage(), false);
@@ -447,7 +447,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, 
 		Resource resource = null;
 
 		try {
-			resource = resourceService.createObject().getObject();
+			resource = resourceService.createObjectTransactional().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while resource creation.\n" + e.getMessage(), false);
@@ -489,7 +489,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, 
 		Configuration configuration = null;
 
 		try {
-			configuration = configurationService.createObject().getObject();
+			configuration = configurationService.createObjectTransactional().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while configuration creation.\n" + e.getMessage(), false);

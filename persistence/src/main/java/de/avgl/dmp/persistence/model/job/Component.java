@@ -28,11 +28,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Objects;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import de.avgl.dmp.init.DMPException;
+import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
+import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.model.utils.SetComponentReferenceSerializer;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
@@ -164,7 +167,8 @@ public class Component extends ExtendedBasicDMPJPAObject {
 				inputComponents = Sets.newCopyOnWriteArraySet();
 			}
 
-			if (!inputComponents.equals(inputComponentsArg)) {
+			// if (!inputComponents.equals(inputComponentsArg)) {
+			if (!DMPPersistenceUtil.getComponentUtils().completeEquals(inputComponents, inputComponentsArg)) {
 
 				inputComponents.clear();
 				inputComponents.addAll(inputComponentsArg);
@@ -254,7 +258,8 @@ public class Component extends ExtendedBasicDMPJPAObject {
 				outputComponents = Sets.newCopyOnWriteArraySet();
 			}
 
-			if (!outputComponents.equals(outputComponentsArg)) {
+			// if (!outputComponents.equals(outputComponentsArg)) {
+			if (!DMPPersistenceUtil.getComponentUtils().completeEquals(outputComponents, outputComponentsArg)) {
 
 				outputComponents.clear();
 				outputComponents.addAll(outputComponentsArg);
@@ -519,5 +524,15 @@ public class Component extends ExtendedBasicDMPJPAObject {
 
 			parameterMappingsInitialized = true;
 		}
+	}
+
+	@Override
+	public boolean completeEquals(final Object obj) {
+
+		return Component.class.isInstance(obj) && super.completeEquals(obj)
+				&& Objects.equal(((Component) obj).getParameterMappings(), getParameterMappings())
+				&& DMPPersistenceUtil.getFunctionUtils().completeEquals(((Component) obj).getFunction(), getFunction())
+				&& Objects.equal(((Component) obj).getInputComponents(), getInputComponents())
+				&& Objects.equal(((Component) obj).getOutputComponents(), getOutputComponents());
 	}
 }

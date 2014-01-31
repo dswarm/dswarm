@@ -26,9 +26,11 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 
 import de.avgl.dmp.init.DMPException;
+import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
@@ -369,5 +371,13 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 			functionDescriptionInitialized = true;
 		}
+	}
+
+	@Override
+	public boolean completeEquals(final Object obj) {
+
+		return Function.class.isInstance(obj) && super.completeEquals(obj) && Objects.equal(((Function) obj).getFunctionType(), getFunctionType())
+				&& Objects.equal(((Function) obj).getParameters(), getParameters())
+				&& Objects.equal(((Function) obj).getFunctionDescription(), getFunctionDescription());
 	}
 }

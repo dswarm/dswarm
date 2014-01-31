@@ -5,12 +5,14 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -31,6 +33,7 @@ import de.avgl.dmp.persistence.service.schema.AttributeService;
  * A resource (controller service) for {@link Attribute}s.
  * 
  * @author tgaengler
+ *
  */
 @RequestScoped
 @Api(value = "/attributes", description = "Operations about attributes.")
@@ -40,15 +43,16 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributesResource.class);
 
 	/**
-	 * Creates a new resource (controller service) for {@link Attribute}s with the provider of the attribute persistence service,
-	 * the object mapper and metrics registry.
+	 * Creates a new resource (controller service) for {@link Attribute}s with the provider of the attribute persistence
+	 * service, the object mapper and metrics registry.
 	 * 
 	 * @param attributeServiceProviderArg the attribute persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public AttributesResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
+	public AttributesResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg,
+			final ObjectMapper objectMapperArg) throws DMPControllerException {
 
 		super(utilsFactory.reset().get(AttributesResourceUtils.class), dmpStatusArg);
 	}
@@ -111,8 +115,29 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 
 		return super.getObjects();
 	}
+	
+	/**
+	 * This endpoint consumes an attribute as JSON representation and updates this attribute in the
+	 * database.
+	 * 
+	 * @param jsonObjectString a JSON representation of one attribute
+	 * @param id an attribute identifier
+	 * @return the updated attribute as JSON representation
+	 * @throws DMPControllerException
+	 */
+	@ApiOperation(value = "update attribute with given id ", notes = "Returns an updated Attribute object.")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "attribut was successfully updated"),
+			@ApiResponse(code = 201, message = "attribut was successfully persisted"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@PUT
+	@Path("/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateObject(@ApiParam(value = "attribute (as JSON)", required = true) final String jsonObjectString, 
+			@ApiParam(value = "attribute identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
 
-	// TODO: add put
+		return super.updateObject(jsonObjectString, id);
+	}
 
 	/**
 	 * This endpoint deletes a attribute that matches the given id.

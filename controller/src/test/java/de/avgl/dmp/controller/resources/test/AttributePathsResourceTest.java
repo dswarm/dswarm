@@ -35,8 +35,6 @@ public class AttributePathsResourceTest extends
 		super(AttributePath.class, AttributePathService.class, "attributepaths", "attribute_path.json", new AttributePathsResourceTestUtils());
 
 		attributeResourceTestUtils = new AttributesResourceTestUtils();
-
-		updateObjectJSONFileName = "attribute_path1.json";
 	}
 
 	@Override
@@ -118,6 +116,118 @@ public class AttributePathsResourceTest extends
 		cleanUpDB(attributePath1);
 
 		LOG.debug("end attribute paths uniqueness test");
+	}
+
+	@Override
+	public void testPUTObject() throws Exception {
+
+		LOG.debug("start attribute path update test");
+
+		AttributePath attributePath = null;
+
+		try {
+
+			attributePath = pojoClassResourceTestUtils.createObject(objectJSONString, expectedObject);
+		} catch (Exception e) {
+
+			LOG.error("coudln't create attribute path for update test");
+
+			Assert.assertTrue(false);
+		}
+
+		Assert.assertNotNull("attribute path shouldn't be null in update test", attributePath);
+
+		Attribute actualAttribute3 = attributeResourceTestUtils.createObject("attribute3.json");
+
+		attributePath.addAttribute(actualAttribute3);
+
+		String attributePathJSONString = objectMapper.writeValueAsString(attributePath);
+
+		AttributePath updateAttributePath = pojoClassResourceTestUtils.updateObject(attributePathJSONString, attributePath);
+
+		Assert.assertEquals("the persisted attribute path shoud be equal to the modified attribute path for update", updateAttributePath,
+				attributePath);
+		Assert.assertEquals("number of attribute elements in attribute path should be equal", updateAttributePath.getAttributePath().size(),
+				attributePath.getAttributePath().size());
+
+		cleanUpDB(attributePath);
+
+		attributeResourceTestUtils.deleteObject(actualAttribute3);
+
+		LOG.debug("end attribute update test");
+	}
+
+	@Test
+	public void testPUTObjectWExistingAttributePath() throws Exception {
+
+		LOG.debug("start attribute path update test with existing attribute path");
+
+		Attribute actualAttribute3 = attributeResourceTestUtils.createObject("attribute3.json");
+
+		expectedObject.addAttribute(actualAttribute3);
+
+		objectJSONString = objectMapper.writeValueAsString(expectedObject);
+
+		AttributePath attributePath = null;
+
+		try {
+
+			attributePath = pojoClassResourceTestUtils.createObject(objectJSONString, expectedObject);
+		} catch (Exception e) {
+
+			LOG.error("coudln't create attribute path for update test");
+
+			Assert.assertTrue(false);
+		}
+
+		Assert.assertNotNull("attribute path shouldn't be null in update test", attributePath);
+
+		AttributePath retrievedAttributePath = pojoClassResourceTestUtils.getObject(attributePath);
+
+		// remove an attribute
+		retrievedAttributePath.removeAttribute(actualAttribute3, 2);
+
+		String attributePathJSONString = objectMapper.writeValueAsString(retrievedAttributePath);
+
+		AttributePath modifiedAttributePath = null;
+
+		try {
+
+			modifiedAttributePath = pojoClassResourceTestUtils.createObject(attributePathJSONString, retrievedAttributePath);
+		} catch (Exception e) {
+
+			LOG.error("coudln't create modified attribute path for update test");
+
+			Assert.assertTrue(false);
+		}
+
+		Assert.assertNotNull("attribute path shouldn't be null in update test", modifiedAttributePath);
+
+		// add an attribute
+		modifiedAttributePath.addAttribute(actualAttribute3);
+
+		attributePathJSONString = objectMapper.writeValueAsString(modifiedAttributePath);
+
+		AttributePath updateAttributePath = pojoClassResourceTestUtils.updateObject(attributePathJSONString, modifiedAttributePath);
+
+		// ids should differ
+		Assert.assertNotEquals("the persisted attribute path shoud not be equal to the modified attribute path for update", modifiedAttributePath,
+				updateAttributePath);
+		// ids should be the same
+		Assert.assertEquals("the persisted attribute path shoud be equal to the modified attribute path for update", attributePath,
+				updateAttributePath);
+		Assert.assertEquals("number of attribute elements in attribute path should be equal", attributePath.getAttributePath().size(),
+				updateAttributePath.getAttributePath().size());
+		Assert.assertNotEquals("number of attribute elements in attribute path should be equal", retrievedAttributePath.getAttributePath().size(),
+				updateAttributePath.getAttributePath().size());
+		Assert.assertEquals("number of attribute elements in attribute path should be equal", 3, updateAttributePath.getAttributePath().size());
+
+		cleanUpDB(attributePath);
+		cleanUpDB(modifiedAttributePath);
+
+		attributeResourceTestUtils.deleteObject(actualAttribute3);
+
+		LOG.debug("end attribute update test with existing attribute path");
 	}
 
 	@After

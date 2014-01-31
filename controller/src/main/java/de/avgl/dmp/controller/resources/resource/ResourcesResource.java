@@ -331,6 +331,8 @@ public class ResourcesResource {
 		dmpStatus.stop(context);
 		return buildResponse(resourceJSON);
 	}
+	
+	// TODO: [@fniederlein] implement PUT
 
 	/**
 	 * This endpoint deletes a resource that matches the given id.
@@ -803,7 +805,7 @@ public class ResourcesResource {
 
 		try {
 
-			proxyResource = resourceService.createObject();
+			proxyResource = resourceService.createObjectTransactional();
 		} catch (final DMPPersistenceException e) {
 
 			LOG.debug("something went wrong while resource creation");
@@ -1021,7 +1023,7 @@ public class ResourcesResource {
 
 		try {
 
-			proxyConfiguration = configurationService.createObject();
+			proxyConfiguration = configurationService.createObjectTransactional();
 		} catch (final DMPPersistenceException e) {
 
 			LOG.debug("something went wrong while configuration creation");
