@@ -43,7 +43,7 @@ http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
 
 			<!-- Echo all executed SQL to stdout -->
 			<property name="hibernate.show_sql" value="true" />
-			
+
 			<property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider" />
 
 			<!-- for enabling L2 caching -->
@@ -73,8 +73,8 @@ http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
 			<property name="hibernate.c3p0.maxConnectionAge" value="500" />
 			<property name="hibernate.c3p0.numHelperThreads" value="1" />
 			<property name="hibernate.c3p0.checkoutTimeout" value="0" />
-			<!--<property name="hibernate.c3p0.testConnectionOnCheckout" value="true" />-->
-			<property name="hibernate.c3p0.testConnectionOnCheckin" value="false" />
+			<property name="hibernate.c3p0.testConnectionOnCheckout" value="true" />
+			<!--<property name="hibernate.c3p0.testConnectionOnCheckin" value="true" />-->
 			<property name="hibernate.c3p0.preferredTestQuery" value="SELECT 1" />
 			<property name="hibernate.c3p0.acquireRetryAttempts" value="3" />
 			<property name="hibernate.c3p0.acquireRetryDelay" value="100" />

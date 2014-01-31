@@ -36,7 +36,7 @@ import de.avgl.dmp.persistence.model.types.Tuple;
 
 /**
  * Flow that executes a given set of transformations on data of a given data model.
- * 
+ *
  * @author phorn
  * @author tgaengler
  */
@@ -115,7 +115,7 @@ public class TransformationFlow {
 
 			@Override
 			public void closeStream() {
-				System.out.println("close stream called");
+				LOG.debug("close stream called");
 				final StringBuffer buffer = stringWriter.getBuffer();
 				buffer.deleteCharAt(buffer.length() - 1);
 				stringWriter.append(']');
