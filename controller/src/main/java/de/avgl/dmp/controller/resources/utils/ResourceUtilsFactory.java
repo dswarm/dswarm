@@ -33,7 +33,7 @@ import de.avgl.dmp.controller.resources.schema.utils.SchemasResourceUtils;
  * and offers a {@code reset()} method, to reset the cache, effectively creating
  * a new scope, given that the Utils class itself are not Singleton-scoped.
  *
- * @see https://jira.slub-dresden.de/browse/DD-311
+ * see https://jira.slub-dresden.de/browse/DD-311
  * @author phorn
  */
 @Singleton
