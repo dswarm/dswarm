@@ -44,6 +44,11 @@ public abstract class DMPObject<IDTYPE> implements Serializable {
 		return DMPObject.class.isInstance(obj) && Objects.equal(((DMPObject<?>) obj).getId(), getId());
 
 	}
+	
+	public boolean completeEquals(final Object obj) {
+		
+		return DMPObject.class.isInstance(obj) && Objects.equal(((DMPObject<?>) obj).getId(), getId());
+	}
 
 	@Override
 	public String toString() {

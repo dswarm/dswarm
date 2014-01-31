@@ -41,6 +41,7 @@ public class DMPStatus {
 	private final Map<String, Timer>	getAllObjectsTimers		= Maps.newHashMap();
 	private final Map<String, Timer>	createNewObjectTimers	= Maps.newHashMap();
 	private final Map<String, Timer>	getObjectTimers			= Maps.newHashMap();
+	private final Map<String, Timer>	updateObjectTimers		= Maps.newHashMap();
 	private final Map<String, Timer>	deleteObjectTimers		= Maps.newHashMap();
 
 	private final MetricRegistry		registry;
@@ -162,6 +163,27 @@ public class DMPStatus {
 		return getObjectTimers.get(objectType).time();
 	}
 
+	/**
+	 * A generic update-specific-object-method-timer creation method. Creates a timer for specific object update of the given
+	 * resource.
+	 * 
+	 * @param objectType the resource type
+	 * @param clasz the resource class
+	 * @return a new timing context (timer)
+	 */
+	public Timer.Context updateSingleObject(final String objectType, final Class<? extends BasicResource> clasz) {
+
+		if (!updateObjectTimers.containsKey(objectType)) {
+
+			final Timer updateObjectTimer = registry.timer(name(clasz, "put-requests", objectType, "specific"));
+
+			updateObjectTimers.put(objectType, updateObjectTimer);
+		}
+
+		allRequestsMeter.mark();
+		return updateObjectTimers.get(objectType).time();
+	}
+	
 	public Timer.Context getAllConfigurations() {
 		allRequestsMeter.mark();
 		return getAllConfigurationsTimer.time();

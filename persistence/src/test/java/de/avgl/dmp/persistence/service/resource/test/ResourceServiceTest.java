@@ -57,7 +57,7 @@ public class ResourceServiceTest extends IDBasicJPAServiceTest<ProxyResource, Re
 		Configuration configuration = null;
 
 		try {
-			configuration = configurationService.createObject().getObject();
+			configuration = configurationService.createObjectTransactional().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while configuration creation.\n" + e.getMessage(), false);
@@ -116,7 +116,7 @@ public class ResourceServiceTest extends IDBasicJPAServiceTest<ProxyResource, Re
 		Configuration configuration2 = null;
 
 		try {
-			configuration2 = configurationService.createObject().getObject();
+			configuration2 = configurationService.createObjectTransactional().getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while configuration creation.\n" + e.getMessage(), false);

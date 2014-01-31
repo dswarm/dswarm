@@ -82,7 +82,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 		// process input data model
 		final ConfigurationService configurationService = injector.getInstance(ConfigurationService.class);
-		final Configuration configuration = configurationService.createObject().getObject();
+		final Configuration configuration = configurationService.createObjectTransactional().getObject();
 
 		configuration.setName("config1");
 		configuration.addParameter(ConfigurationStatics.COLUMN_DELIMITER, new TextNode(";"));
@@ -91,7 +91,7 @@ public class TransformationFlowTest extends GuicedTest {
 		Configuration updatedConfiguration = configurationService.updateObjectTransactional(configuration).getObject();
 
 		final ResourceService resourceService = injector.getInstance(ResourceService.class);
-		final Resource resource = resourceService.createObject().getObject();
+		final Resource resource = resourceService.createObjectTransactional().getObject();
 		resource.setName("test_csv.csv");
 		resource.setType(ResourceType.FILE);
 		resource.addConfiguration(updatedConfiguration);
@@ -104,7 +104,7 @@ public class TransformationFlowTest extends GuicedTest {
 		Resource updatedResource = resourceService.updateObjectTransactional(resource).getObject();
 
 		final DataModelService dataModelService = injector.getInstance(DataModelService.class);
-		final DataModel dataModel = dataModelService.createObject().getObject();
+		final DataModel dataModel = dataModelService.createObjectTransactional().getObject();
 
 		dataModel.setDataResource(updatedResource);
 		dataModel.setConfiguration(updatedConfiguration);

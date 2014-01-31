@@ -22,7 +22,7 @@ public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<
 		this.type = type;
 		this.jpaServiceClass = jpaServiceClass;
 
-		jpaService = injector.getInstance(jpaServiceClass);
+		jpaService = GuicedTest.injector.getInstance(jpaServiceClass);
 
 		Assert.assertNotNull(type + " service shouldn't be null", jpaService);
 	}
@@ -33,7 +33,7 @@ public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<
 
 		try {
 
-			proxyObject = jpaService.createObject();
+			proxyObject = jpaService.createObjectTransactional();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong during object creation.\n" + e.getMessage(), false);
@@ -42,7 +42,7 @@ public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<
 		Assert.assertNotNull(type + " shouldn't be null", proxyObject);
 		Assert.assertNotNull(type + " id shouldn't be null", proxyObject.getId());
 
-		LOG.debug("created new " + type + " with id = '" + proxyObject.getId() + "'");
+		BasicJPAServiceTest.LOG.debug("created new " + type + " with id = '" + proxyObject.getId() + "'");
 
 		return proxyObject;
 	}
@@ -54,7 +54,7 @@ public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<
 		try {
 
 			proxyUpdatedObject = jpaService.updateObjectTransactional(object);
-		} catch (DMPPersistenceException e) {
+		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updaging the " + type, false);
 		}

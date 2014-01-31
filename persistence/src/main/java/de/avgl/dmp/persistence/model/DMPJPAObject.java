@@ -38,4 +38,11 @@ public abstract class DMPJPAObject extends DMPObject<Long> {
 
 		return id;
 	}
+
+	@Override
+	public boolean completeEquals(final Object obj) {
+
+		return DMPJPAObject.class.isInstance(obj) && super.completeEquals(obj);
+	}
+
 }

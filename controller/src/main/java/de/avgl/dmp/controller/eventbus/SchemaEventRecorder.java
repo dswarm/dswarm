@@ -72,7 +72,7 @@ public class SchemaEventRecorder {
 			dataModel = event.getDataModel();
 		} else {
 
-			final ProxyDataModel proxyDataModel = dataModelService.createObject();
+			final ProxyDataModel proxyDataModel = dataModelService.createObjectTransactional();
 
 			if (proxyDataModel != null) {
 
@@ -101,7 +101,7 @@ public class SchemaEventRecorder {
 			schema = dataModel.getSchema();
 		} else {
 
-			final ProxySchema proxySchema = schemaService.createObject();
+			final ProxySchema proxySchema = schemaService.createObjectTransactional();
 
 			if (proxySchema != null) {
 

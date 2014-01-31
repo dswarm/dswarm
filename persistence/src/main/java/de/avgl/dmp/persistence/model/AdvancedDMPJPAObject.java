@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.google.common.base.Objects;
+
 /**
  * The abstract POJO class for entities where the uri of the entity should be provided at object creation.
  * 
@@ -23,7 +25,7 @@ public abstract class AdvancedDMPJPAObject extends BasicDMPJPAObject {
 	// @Id
 	@Access(AccessType.FIELD)
 	@Column(name = "URI", columnDefinition = "VARCHAR(255)", length = 255)
-	private String				uri;
+	private final String		uri;
 
 	protected AdvancedDMPJPAObject() {
 
@@ -44,5 +46,12 @@ public abstract class AdvancedDMPJPAObject extends BasicDMPJPAObject {
 	public String getUri() {
 
 		return uri;
+	}
+
+	@Override
+	public boolean completeEquals(final Object obj) {
+
+		return AdvancedDMPJPAObject.class.isInstance(obj) && super.completeEquals(obj)
+				&& Objects.equal(((AdvancedDMPJPAObject) obj).getUri(), getUri());
 	}
 }

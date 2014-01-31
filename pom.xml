@@ -416,18 +416,18 @@
 		</plugins>
 	</reporting>
 
-	<url>http://avantgarde-labs.de</url>
+	<url>http://dmp.slub-dresden.de/</url>
 
 	<distributionManagement>
 		<repository>
 			<id>deployment</id>
 			<name>Internal Releases</name>
-			<url>http://achvcontes01.avantgarde-labs.de:8082/nexus/content/repositories/releases/</url>
+			<url>http://nexus.slub-dresden.de:8081/nexus/content/repositories/releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>deployment</id>
 			<name>Internal Releases</name>
-			<url>http://achvcontes01.avantgarde-labs.de:8082/nexus/content/repositories/snapshots/</url>
+			<url>http://nexus.slub-dresden.de:8081/nexus/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 

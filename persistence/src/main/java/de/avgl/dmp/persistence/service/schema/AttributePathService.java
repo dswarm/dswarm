@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.TypedQuery;
 
 import com.google.inject.Inject;
@@ -39,19 +40,6 @@ public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, 
 	}
 
 	/**
-	 * Persists the given attribute path or returns the existing one from the DB.
-	 * 
-	 * @param attributePath an attribute path that should be persisted
-	 * @return the persisted or matched attribute path from the DB
-	 * @throws DMPPersistenceException
-	 */
-	@Transactional(rollbackOn = Exception.class)
-	public ProxyAttributePath createObject(final AttributePath attributePath) throws DMPPersistenceException {
-
-		return createObjectInternal(attributePath);
-	}
-
-	/**
 	 * Creates an attribute path with the given ordered list of attributes or returns the existing one from the DB.
 	 * 
 	 * @param attributes an ordered list of attributes
@@ -63,7 +51,7 @@ public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, 
 
 		final AttributePath tempAttributePath = new AttributePath(attributes);
 
-		return createObjectInternal(tempAttributePath);
+		return createObject(tempAttributePath);
 	}
 
 	/**
@@ -71,51 +59,90 @@ public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, 
 	 * 
 	 * @param attributePathJSONArrayString
 	 * @return
+	 * @throws DMPPersistenceException
 	 */
-	public AttributePath getObject(final String attributePathJSONArrayString) {
+	public AttributePath getObject(final String attributePathJSONArrayString) throws DMPPersistenceException {
 
 		final EntityManager entityManager = acquire();
 
 		return getObject(attributePathJSONArrayString, entityManager);
 	}
 
-	private ProxyAttributePath createObjectInternal(final AttributePath attributePath) throws DMPPersistenceException {
+	@Override
+	public ProxyAttributePath createObject(final AttributePath object) throws DMPPersistenceException {
 
 		final EntityManager em = acquire();
 
-		final AttributePath existingObject = getObject(attributePath.getAttributePathAsJSONObjectString(), em);
+		return createObjectInternal(object, em);
+	}
 
-		final AttributePath object;
+	@Override
+	protected ProxyAttributePath createObjectInternal(final AttributePath object, final EntityManager entityManager) throws DMPPersistenceException {
+
+		final AttributePath existingObject = getObject(object.getAttributePathAsJSONObjectString(), entityManager);
+
+		final AttributePath newObject;
 
 		if (null == existingObject) {
 
-			final AttributePath tempAttributePath = new AttributePath();
+			final AttributePath tempAttributePath = mergeAttributesIntoEntityManager(object, entityManager);
 
-			final LinkedList<Attribute> attributes = attributePath.getAttributePath();
+			persistObject(tempAttributePath, entityManager);
 
-			for (final Attribute attribute : attributes) {
+			newObject = tempAttributePath;
 
-				final Attribute managedAttribute = em.merge(attribute);
-				tempAttributePath.addAttribute(managedAttribute);
-			}
-
-			persistObject(tempAttributePath, em);
-
-			object = tempAttributePath;
-
-			return new ProxyAttributePath(object);
+			return new ProxyAttributePath(newObject);
 		} else {
 
-			object = existingObject;
+			newObject = existingObject;
 
-			AttributePathService.LOG.debug("attribute path with path '" + attributePath.toAttributePath()
+			AttributePathService.LOG.debug("attribute path with path '" + object.toAttributePath()
 					+ "' exists already in the database. Will return the existing object, instead of creating a new one");
 
 			return new ProxyAttributePath(existingObject, RetrievalType.RETRIEVED);
 		}
 	}
 
-	private AttributePath getObject(final String attributePath, final EntityManager entityManager) {
+	@Override
+	protected ProxyAttributePath getObjectInternal(final AttributePath object, final EntityManager entityManager) throws DMPPersistenceException {
+
+		// 1. try to receive attribute path by id (as usual)
+
+		final ProxyAttributePath tempProxyAttributePath = super.getObjectInternal(object, entityManager);
+
+		// 2. compare attribute path (strings) of the retrieved attribute path with the current attribute path to determine,
+		// whether has anything changed inbetween
+
+		if (object != null && tempProxyAttributePath != null && tempProxyAttributePath.getObject() != null
+				&& !object.toAttributePath().equals(tempProxyAttributePath.getObject().toAttributePath())) {
+
+			final AttributePath tempAttributePath = getObject(object.getAttributePathAsJSONObjectString(), entityManager);
+
+			final AttributePath currentObject;
+			final RetrievalType type;
+
+			if (tempAttributePath != null) {
+
+				// attribute path was modified to another existing one => attribute path object changes to the retrieved attribute
+				// path object
+
+				currentObject = tempAttributePath;
+				type = RetrievalType.RETRIEVED;
+			} else {
+
+				// attribute path was modified to a non-existing attribute path => attribute path object will be kept
+
+				currentObject = object;
+				type = RetrievalType.UPDATED;
+			}
+
+			return createNewProxyObject(currentObject, type);
+		}
+
+		return tempProxyAttributePath;
+	}
+
+	private AttributePath getObject(final String attributePath, final EntityManager entityManager) throws DMPPersistenceException {
 
 		final AttributePath object;
 
@@ -127,12 +154,34 @@ public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, 
 			object = query.getSingleResult();
 		} catch (final NoResultException e) {
 
-			// TODO: maybe log something here
+			AttributePathService.LOG.debug("couldn't find " + className + " for attribute path JSON string '" + attributePath + "' in the database");
 
 			return null;
+		} catch (final NonUniqueResultException e) {
+
+			throw new DMPPersistenceException("there is more than one " + className + " in the database for attribute path JSON string '"
+					+ attributePath + "'");
 		}
 
 		return object;
+	}
+
+	private AttributePath mergeAttributesIntoEntityManager(final AttributePath object, final EntityManager entityManager) {
+
+		final AttributePath tempAttributePath = new AttributePath();
+
+		final LinkedList<Attribute> attributes = object.getAttributePath();
+
+		if (attributes != null) {
+
+			for (final Attribute attribute : attributes) {
+
+				final Attribute managedAttribute = entityManager.merge(attribute);
+				tempAttributePath.addAttribute(managedAttribute);
+			}
+		}
+
+		return tempAttributePath;
 	}
 
 	@Override
