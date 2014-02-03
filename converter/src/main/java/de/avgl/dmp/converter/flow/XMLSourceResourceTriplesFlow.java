@@ -15,6 +15,7 @@ import com.google.common.collect.ImmutableList;
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.mf.stream.source.BOMResourceOpener;
 import de.avgl.dmp.converter.mf.stream.source.XMLTripleEncoder;
+import de.avgl.dmp.converter.pipe.StreamOutWriter;
 import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;

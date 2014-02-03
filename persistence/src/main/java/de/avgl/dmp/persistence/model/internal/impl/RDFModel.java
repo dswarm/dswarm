@@ -27,6 +27,7 @@ import de.avgl.dmp.persistence.model.internal.rdf.helper.ConverterHelperHelper;
 import de.avgl.dmp.persistence.model.internal.rdf.helper.SchemaHelper;
 import de.avgl.dmp.persistence.model.internal.rdf.helper.SchemaHelperHelper;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
+import de.avgl.dmp.persistence.util.RDFUtil;
 
 /**
  * A {@link Model} implementation for RDF data.
@@ -35,11 +36,13 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
  */
 public class RDFModel implements Model {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(RDFModel.class);
+	private static final org.apache.log4j.Logger	LOG							= org.apache.log4j.Logger.getLogger(RDFModel.class);
 
 	private final com.hp.hpl.jena.rdf.model.Model	model;
 	private final Set<String>						recordURIs;
 	private final String							recordClassURI;
+
+	private boolean									areRecordURIsInitialized	= false;
 
 	/**
 	 * Creates a new {@link RDFModel} with a given Jena model instance.
@@ -49,7 +52,7 @@ public class RDFModel implements Model {
 	public RDFModel(final com.hp.hpl.jena.rdf.model.Model modelArg) {
 
 		model = modelArg;
-		recordURIs = null;
+		recordURIs = Sets.newHashSet();
 		recordClassURI = null;
 	}
 
@@ -68,7 +71,7 @@ public class RDFModel implements Model {
 
 			recordURIs.add(recordURIArg);
 		}
-		
+
 		recordClassURI = null;
 	}
 
@@ -104,18 +107,37 @@ public class RDFModel implements Model {
 	}
 
 	/**
-	 * Gets the record identifier.
+	 * Gets the record identifiers.
 	 * 
-	 * @return the record identifier
+	 * @return the record identifiers
 	 */
-	public String getRecordURI() {
+	public Set<String> getRecordURIs() {
 
 		if (recordURIs == null || recordURIs.isEmpty()) {
+
+			if (!areRecordURIsInitialized) {
+
+				final Set<Resource> recordResources = RDFUtil.getRecordResources(getRecordClassURI(), getModel());
+
+				if (recordResources != null) {
+
+					recordURIs.clear();
+
+					for (final Resource recordResource : recordResources) {
+
+						recordURIs.add(recordResource.getURI());
+					}
+				}
+
+				areRecordURIsInitialized = true;
+
+				return getRecordURIs();
+			}
 
 			return null;
 		}
 
-		return recordURIs.iterator().next();
+		return recordURIs;
 	}
 
 	/**
@@ -127,13 +149,13 @@ public class RDFModel implements Model {
 
 		return recordClassURI;
 	}
-	
+
 	public void setRecordURIs(final Set<String> recordURIsArg) {
-		
+
 		recordURIs.clear();
-		
-		if(recordURIsArg != null) {
-			
+
+		if (recordURIsArg != null) {
+
 			recordURIs.addAll(recordURIsArg);
 		}
 	}
@@ -151,7 +173,7 @@ public class RDFModel implements Model {
 			return null;
 		}
 
-		if (getRecordURI() == null) {
+		if (getRecordURIs() == null) {
 
 			LOG.debug("resource URI is null, can't convert model to JSON");
 
@@ -161,11 +183,11 @@ public class RDFModel implements Model {
 		// System.out.println("write rdf model '" + resourceURI + "' in n3");
 		// model.write(System.out, "N3");
 
-		final Resource recordResource = model.getResource(getRecordURI());
+		final Resource recordResource = model.getResource(getRecordURIs().iterator().next());
 
 		if (recordResource == null) {
 
-			LOG.debug("couldn't find record resource for record  uri '" + getRecordURI() + "' in model");
+			LOG.debug("couldn't find record resource for record  uri '" + getRecordURIs() + "' in model");
 
 			return null;
 		}
@@ -214,11 +236,11 @@ public class RDFModel implements Model {
 
 		// TODO: enable attribute path retrieval from all records, currently, only one record is utilised for schema determination
 
-		final Resource recordResource = model.getResource(getRecordURI());
+		final Resource recordResource = model.getResource(getRecordURIs().iterator().next());
 
 		if (recordResource == null) {
 
-			LOG.debug("couldn't find record resource for record  uri '" + getRecordURI() + "' in model");
+			LOG.debug("couldn't find record resource for record  uri '" + getRecordURIs() + "' in model");
 
 			return null;
 		}
@@ -246,7 +268,7 @@ public class RDFModel implements Model {
 			final RDFNode rdfNode = statement.getObject();
 
 			if (rdfNode.isLiteral()) {
-				
+
 				ConverterHelperHelper.addLiteralToConverterHelper(converterHelpers, propertyURI, rdfNode);
 
 				continue;
@@ -257,7 +279,7 @@ public class RDFModel implements Model {
 				final ObjectNode objectNode = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
 
 				final JsonNode jsonNode = convertRDFToJSON(rdfNode.asResource(), rootJson, objectNode);
-				
+
 				ConverterHelperHelper.addJSONNodeToConverterHelper(converterHelpers, propertyURI, jsonNode);
 
 				continue;

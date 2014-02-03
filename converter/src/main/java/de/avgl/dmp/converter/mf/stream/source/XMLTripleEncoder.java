@@ -1,5 +1,11 @@
 package de.avgl.dmp.converter.mf.stream.source;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.URI;
 import java.util.Stack;
 import java.util.UUID;
@@ -32,12 +38,9 @@ import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.utils.DataModelUtils;
 import de.avgl.dmp.persistence.model.types.Tuple;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-
 /**
  * Converts XML records to RDF triples.
- *
+ * 
  * @author tgaengler
  * @author phorn
  */
@@ -46,24 +49,261 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Out(RDFModel.class)
 public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFModel>> {
 
-	private String						currentId;
-	private Model						model;
-	private Resource					recordResource;
-	private Resource					entityResource;
-	Stack<Tuple<Resource, Property>>	entityStack;
+	private String								currentId;
+	private Model								model;
+	private Resource							recordResource;
+	private Resource							entityResource;
+	private Stack<Tuple<Resource, Property>>	entityStack;
+	private final Stack<String>						elementURIStack;
 
-	private static final Pattern		TABS			= Pattern.compile("\t+");
-	private final String				recordTagName;
-	private boolean						inRecord;
-	private StringBuilder				valueBuffer		= new StringBuilder();
-	private String						uri;
-	private Resource					recordType;
+	private static final Pattern				TABS			= Pattern.compile("\t+");
 
-	private final Optional<DataModel>	dataModel;
-	private final Optional<String>		dataModelUri;
+	/**
+	 * note: recordTagName is not biunique, i.e., the record tag name can occur in different name spaces; hence, a record tag
+	 * uniqueness is only give by a complete uri
+	 */
+	private final String						recordTagName;
+
+	/**
+	 * record tag URI should be unique
+	 */
+	private String								recordTagUri	= null;
+
+	private boolean								inRecord;
+	private StringBuilder						valueBuffer		= new StringBuilder();
+	private String								uri;
+	private Resource							recordType;
+
+	private final Optional<DataModel>			dataModel;
+	private final Optional<String>				dataModelUri;
+
+	public XMLTripleEncoder(final Optional<DataModel> dataModel) {
+		super();
+
+		this.recordTagName = System.getProperty("org.culturegraph.metamorph.xml.recordtag");
+		if (recordTagName == null) {
+			throw new MetafactureException("Missing name for the tag marking a record.");
+		}
+
+		this.dataModel = dataModel;
+		this.dataModelUri = init(dataModel);
+
+		// init
+		elementURIStack = new Stack<>();
+	}
+
+	public XMLTripleEncoder(final String recordTagName, final Optional<DataModel> dataModel) {
+		super();
+		this.recordTagName = checkNotNull(recordTagName);
+
+		this.dataModel = dataModel;
+		this.dataModelUri = init(dataModel);
+
+		// init
+		elementURIStack = new Stack<>();
+	}
+
+	@Override
+	public void startElement(final String uri, final String localName, final String qName, final Attributes attributes) throws SAXException {
+
+		this.uri = mintDataModelUri(uri);
+
+		elementURIStack.push(this.uri);
+
+		if (inRecord) {
+			writeValue();
+			startEntity(mintUri(uri, localName));
+			writeAttributes(attributes);
+		} else if (localName.equals(recordTagName)) {
+
+			if (recordTagUri == null) {
+
+				recordTagUri = mintUri(elementURIStack.peek(), localName);
+			}
+
+			if (recordTagUri.equals(mintUri(elementURIStack.peek(), localName))) {
+
+				// TODO: how to determine the id of an record, or should we mint uris?
+				final String identifier = attributes.getValue("id");
+				startRecord(identifier);
+				writeAttributes(attributes);
+				inRecord = true;
+			}
+		}
+	}
+
+	@Override
+	public void endElement(final String uri, final String localName, final String qName) throws SAXException {
+
+		// System.out.println("in end element with: uri = '" + uri + "' :: local name = '" + localName + "'");
+
+		if (inRecord) {
+			writeValue();
+
+			final String elementUri = elementURIStack.pop();
+
+			if (recordTagUri.equals(mintUri(elementUri, localName))) {
+				inRecord = false;
+				endRecord();
+			} else {
+				endEntity();
+			}
+		}
+	}
+
+	@Override
+	public void characters(final char[] chars, final int start, final int length) throws SAXException {
+		if (inRecord) {
+			valueBuffer.append(TABS.matcher(new String(chars, start, length)).replaceAll(""));
+		}
+	}
+
+	private void writeValue() {
+		final String value = valueBuffer.toString();
+		if (!value.trim().isEmpty()) {
+			literal(RDF.value.getURI(), value.replace('\n', ' '));
+		}
+		valueBuffer = new StringBuilder();
+	}
+
+	private void writeAttributes(final Attributes attributes) {
+		final int length = attributes.getLength();
+
+		for (int i = 0; i < length; ++i) {
+			final String name = mintUri(uri, attributes.getLocalName(i));
+			final String value = attributes.getValue(i);
+			literal(name, value);
+		}
+	}
+
+	public void startRecord(final String identifier) {
+
+		// System.out.println("in start record with: identifier = '" + identifier + "'");
+
+		assert !isClosed();
+
+		model = ModelFactory.createDefaultModel();
+
+		currentId = isValidUri(identifier) ? identifier : mintRecordUri(identifier);
+
+		recordResource = model.createResource(currentId);
+
+		// init
+		entityStack = new Stack<>();
+
+		// TODO: determine record type and create type triple with it
+		if (recordType == null) {
+
+			final String recordTypeUri = recordTagUri + "Type";
+
+			recordType = model.createResource(recordTypeUri);
+		}
+
+		recordResource.addProperty(RDF.type, recordType);
+	}
+
+	public void endRecord() {
+
+		// System.out.println("in end record");
+
+		assert !isClosed();
+
+		inRecord = false;
+
+		// write triples
+		final RDFModel rdfModel = new RDFModel(model, currentId, recordType.getURI());
+		
+//		OutputStream os;
+//		try {
+//			os = new FileOutputStream("test.n3");
+//			
+//			rdfModel.getModel().write(os, "N3");
+//			
+//			final PrintStream printStream = new PrintStream(os);
+//			printStream.close();
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		getReceiver().process(rdfModel);
+	}
+
+	public void startEntity(final String name) {
+
+		// System.out.println("in start entity with name = '" + name + "'");
+
+		assert !isClosed();
+
+		// bnode or url
+		entityResource = model.createResource();
+		// sub resource type
+		final Resource entityType = model.createResource(name + "Type");
+
+		entityResource.addProperty(RDF.type, entityType);
+
+		final Property entityProperty = model.createProperty(name);
+
+		entityStack.push(new Tuple<>(entityResource, entityProperty));
+
+		// System.out.println("in start entity with entity stact size: '" + entityStack.size() + "'");
+	}
+
+	public void endEntity() {
+
+		// System.out.println("in end entity");
+
+		assert !isClosed();
+
+		// write sub resource
+		final Tuple<Resource, Property> entityTuple = entityStack.pop();
+
+		// System.out.println("in end entity with entity stact size: '" + entityStack.size() + "'");
+
+		// add entity resource to parent entity resource (or to record resource, if there is no parent entity)
+		if (!entityStack.isEmpty()) {
+
+			entityResource = entityStack.peek().v1();
+
+			final Tuple<Resource, Property> parentEntityTuple = entityStack.peek();
+
+			parentEntityTuple.v1().addProperty(entityTuple.v2(), entityTuple.v1());
+		} else {
+
+			entityResource = null;
+
+			recordResource.addProperty(entityTuple.v2(), entityTuple.v1());
+		}
+	}
+
+	public void literal(final String name, final String value) {
+
+		// System.out.println("in literal with name = '" + name + "' :: value = '" + value + "'");
+
+		assert !isClosed();
+
+		// create triple
+		// name = predicate
+		// value = literal or object
+		// TODO: only literals atm, i.e., how to determine other resources?
+		if (value != null && !value.isEmpty()) {
+			final Property attributeProperty = model.createProperty(name);
+
+			if (null != entityResource) {
+
+				entityResource.addProperty(attributeProperty, value);
+			} else if (null != recordResource) {
+
+				recordResource.addProperty(attributeProperty, value);
+			} else {
+
+				throw new MetafactureException("couldn't get a resource for adding this property");
+			}
+		}
+	}
 
 	private Optional<String> init(final Optional<DataModel> dataModel) {
 		return dataModel.transform(new Function<DataModel, String>() {
+
 			@Override
 			public String apply(final DataModel dm) {
 				return StringUtils.stripEnd(DataModelUtils.determineDataResourceSchemaBaseURI(dm), "#");
@@ -122,7 +362,6 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 			return sb.append(UUID.randomUUID()).toString();
 		}
 
-
 		// create uri with help of given record id
 
 		final StringBuilder sb = new StringBuilder();
@@ -142,193 +381,14 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 		return sb.toString();
 	}
 
-	public XMLTripleEncoder(final Optional<DataModel> dataModel) {
-		super();
+	private String mintUri(final String uri, final String localName) {
 
-		this.recordTagName = System.getProperty("org.culturegraph.metamorph.xml.recordtag");
-		if (recordTagName == null) {
-			throw new MetafactureException("Missing name for the tag marking a record.");
+		// allow has and slash uris
+		if(uri != null && uri.endsWith("/")) {
+			
+			return uri + localName;
 		}
-
-		this.dataModel = dataModel;
-		this.dataModelUri = init(dataModel);
-	}
-
-	public XMLTripleEncoder(final String recordTagName, final Optional<DataModel> dataModel) {
-		super();
-		this.recordTagName = checkNotNull(recordTagName);
-
-		this.dataModel = dataModel;
-		this.dataModelUri = init(dataModel);
-	}
-
-	@Override
-	public void startElement(final String uri, final String localName, final String qName, final Attributes attributes) throws SAXException {
-
-		this.uri = mintDataModelUri(uri);
-
-		if (inRecord) {
-			writeValue();
-			startEntity(this.uri + "#" + localName);
-			writeAttributes(attributes);
-		} else if (localName.equals(recordTagName)) {
-			// TODO: how to determine the id of an record, or should we mint uris?
-			final String identifier = attributes.getValue("id");
-			startRecord(identifier);
-			writeAttributes(attributes);
-			inRecord = true;
-		}
-	}
-
-	@Override
-	public void endElement(final String uri, final String localName, final String qName) throws SAXException {
-
-		// System.out.println("in end element with: uri = '" + uri + "' :: local name = '" + localName + "'");
-
-		if (inRecord) {
-			writeValue();
-			if (localName.equals(recordTagName)) {
-				inRecord = false;
-				endRecord();
-			} else {
-				endEntity();
-			}
-		}
-	}
-
-	@Override
-	public void characters(final char[] chars, final int start, final int length) throws SAXException {
-		if (inRecord) {
-			valueBuffer.append(TABS.matcher(new String(chars, start, length)).replaceAll(""));
-		}
-	}
-
-	private void writeValue() {
-		final String value = valueBuffer.toString();
-		if (!value.trim().isEmpty()) {
-			literal(RDF.value.getURI(), value.replace('\n', ' '));
-		}
-		valueBuffer = new StringBuilder();
-	}
-
-	private void writeAttributes(final Attributes attributes) {
-		final int length = attributes.getLength();
-
-		for (int i = 0; i < length; ++i) {
-			final String name = uri + "#" + attributes.getLocalName(i);
-			final String value = attributes.getValue(i);
-			literal(name, value);
-		}
-	}
-
-	public void startRecord(final String identifier) {
-
-		// System.out.println("in start record with: identifier = '" + identifier + "'");
-
-		assert !isClosed();
-
-		model = ModelFactory.createDefaultModel();
-
-		currentId = isValidUri(identifier) ? identifier : mintRecordUri(identifier);
-
-		recordResource = model.createResource(currentId);
-
-		// init
-		entityStack = new Stack<>();
-
-		// TODO: determine record type and create type triple with it
-		if (recordType == null) {
-
-			final String recordTypeUri = uri + "#" + recordTagName + "Type";
-
-			recordType = model.createResource(recordTypeUri);
-		}
-
-		recordResource.addProperty(RDF.type, recordType);
-	}
-
-	public void endRecord() {
-
-		// System.out.println("in end record");
-
-		assert !isClosed();
-
-		inRecord = false;
-
-		// write triples
-		getReceiver().process(new RDFModel(model, currentId, recordType.getURI()));
-	}
-
-	public void startEntity(final String name) {
-
-		// System.out.println("in start entity with name = '" + name + "'");
-
-		assert !isClosed();
-
-		// bnode or url
-		entityResource = model.createResource();
-		// sub resource type
-		final Resource entityType = model.createResource(name + "Type");
-
-		entityResource.addProperty(RDF.type, entityType);
-
-		final Property entityProperty = model.createProperty(name);
-
-		entityStack.push(new Tuple<>(entityResource, entityProperty));
-
-		// System.out.println("in start entity with entity stact size: '" + entityStack.size() + "'");
-	}
-
-	public void endEntity() {
-
-		// System.out.println("in end entity");
-
-		assert !isClosed();
-
-		// write sub resource
-		final Tuple<Resource, Property> entityTuple = entityStack.pop();
-
-		// System.out.println("in end entity with entity stact size: '" + entityStack.size() + "'");
-
-		// add entity resource to parent entity resource (or to record resource, if there is no parent entity)
-		if (!entityStack.isEmpty()) {
-
-			entityResource = entityStack.peek().v1();
-
-			final Tuple<Resource, Property> parentEntityTuple = entityStack.peek();
-
-			parentEntityTuple.v1().addProperty(entityTuple.v2(), entityTuple.v1());
-		} else {
-
-			entityResource = null;
-
-			recordResource.addProperty(entityTuple.v2(), entityTuple.v1());
-		}
-	}
-
-	public void literal(final String name, final String value) {
-
-		// System.out.println("in literal with name = '" + name + "' :: value = '" + value + "'");
-
-		assert !isClosed();
-
-		// create triple
-		// name = predicate (without namespace)
-		// value = literal or object
-		// TODO: only literals atm, i.e., how to determine other resources?
-		if (value != null && !value.isEmpty()) {
-			final Property attributeProperty = model.createProperty(name);
-
-			if (null != entityResource) {
-
-				entityResource.addProperty(attributeProperty, value);
-			} else if (null != recordResource) {
-
-				recordResource.addProperty(attributeProperty, value);
-			} else {
-
-				throw new MetafactureException("couldn't get a resource for adding this property");
-			}
-		}
+		
+		return uri + "#" + localName;
 	}
 }

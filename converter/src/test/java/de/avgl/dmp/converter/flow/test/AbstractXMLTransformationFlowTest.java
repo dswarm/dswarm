@@ -1,5 +1,7 @@
 package de.avgl.dmp.converter.flow.test;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +12,7 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.base.Optional;
@@ -22,6 +25,7 @@ import de.avgl.dmp.converter.flow.TransformationFlow;
 import de.avgl.dmp.converter.flow.XMLSourceResourceTriplesFlow;
 import de.avgl.dmp.persistence.model.internal.Model;
 import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
+import de.avgl.dmp.persistence.model.internal.rdf.helper.AttributePathHelper;
 import de.avgl.dmp.persistence.model.job.Task;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
@@ -43,25 +47,25 @@ import de.avgl.dmp.persistence.service.schema.ClaszService;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-
 public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
-	
-	protected final String taskJSONFileName;
-	
-	protected final String expectedResultJSONFileName;
-	
-	protected final String recordTag;
-	
-	protected final String xmlNamespace;
-	
-	protected final String exampleDataResourceFileName;
-	
-	protected final ObjectMapper objectMapper;
-	
-	public AbstractXMLTransformationFlowTest(final String taskJSONFileNameArg, final String expectedResultJSONFileNameArg, final String recordTagArg, final String xmlNamespaceArg, final String exampleDataResourceFileNameArg) {
-		
+
+	protected final String			taskJSONFileName;
+
+	protected final String			expectedResultJSONFileName;
+
+	protected final String			recordTag;
+
+	protected final String			xmlNamespace;
+
+	protected final String			exampleDataResourceFileName;
+
+	protected final ObjectMapper	objectMapper;
+
+	public AbstractXMLTransformationFlowTest(final String taskJSONFileNameArg, final String expectedResultJSONFileNameArg, final String recordTagArg,
+			final String xmlNamespaceArg, final String exampleDataResourceFileNameArg) {
+
 		objectMapper = injector.getInstance(ObjectMapper.class);
-		
+
 		taskJSONFileName = taskJSONFileNameArg;
 		expectedResultJSONFileName = expectedResultJSONFileNameArg;
 		recordTag = recordTagArg;
@@ -80,7 +84,12 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		final Configuration configuration = configurationService.createObjectTransactional().getObject();
 
 		configuration.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode(recordTag));
-		configuration.addParameter(ConfigurationStatics.XML_NAMESPACE, new TextNode(xmlNamespace));
+
+		if (xmlNamespace != null) {
+
+			configuration.addParameter(ConfigurationStatics.XML_NAMESPACE, new TextNode(xmlNamespace));
+		}
+
 		configuration.addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode("xml"));
 
 		Configuration updatedConfiguration = configurationService.updateObjectTransactional(configuration).getObject();
@@ -125,6 +134,15 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		}
 
 		final RDFModel rdfModel = new RDFModel(model, null, recordClassUri);
+		
+//		System.out.println(objectMapper.writeValueAsString(rdfModel.getSchema()));
+//		
+//		for(final AttributePathHelper attributePathHelper : rdfModel.getAttributePaths()) {
+//			
+//			System.out.println(attributePathHelper.toString());
+//		}
+//		
+//		System.out.println(objectMapper.writeValueAsString(rdfModel.toJSON()));
 
 		// write model and retrieve tuples
 		final InternalTripleService tripleService = injector.getInstance(InternalTripleService.class);
@@ -218,9 +236,20 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		configurationService.deleteObject(updatedConfiguration.getId());
 		resourceService.deleteObject(updatedResource.getId());
 	}
-	
-	protected abstract void compareResults(final String expectedResultJSONString, final String actualResultJSONString) throws Exception;
-	
+
+	protected void compareResults(final String expectedResultJSONString, final String actualResultJSONString) throws Exception {
+
+		final ArrayNode expectedJSONArray = objectMapper.readValue(expectedResultJSONString, ArrayNode.class);
+		final ObjectNode expectedJSON = (ObjectNode) expectedJSONArray.get(0).get("record_data");
+		final String finalExpectedJSONString = objectMapper.writeValueAsString(expectedJSON);
+
+		final ArrayNode actualJSONArray = objectMapper.readValue(actualResultJSONString, ArrayNode.class);
+		final ObjectNode actualJSON = (ObjectNode) actualJSONArray.get(0).get("record_data");
+		final String finalActualJSONString = objectMapper.writeValueAsString(actualJSON);
+
+		assertEquals(finalExpectedJSONString.length(), finalActualJSONString.length());
+	}
+
 	private Iterator<Tuple<String, JsonNode>> dataIterator(final Iterator<Map.Entry<String, Model>> triples) {
 		return new AbstractIterator<Tuple<String, JsonNode>>() {
 
