@@ -155,6 +155,8 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		Assert.assertNotNull("the schema of the fresh data model shouldn't be null", freshDataModel.getSchema());
 
 		final Schema schema = freshDataModel.getSchema();
+		
+		// System.out.println(objectMapper.writeValueAsString(schema));
 
 		Assert.assertNotNull("the record class of the schema of the fresh data model shouldn't be null", schema.getRecordClass());
 
