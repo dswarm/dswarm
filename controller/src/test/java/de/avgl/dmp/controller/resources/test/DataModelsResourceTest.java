@@ -7,7 +7,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.net.URL;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
@@ -40,9 +39,6 @@ import de.avgl.dmp.controller.resources.test.utils.ResourcesResourceTestUtils;
 import de.avgl.dmp.controller.resources.test.utils.SchemasResourceTestUtils;
 import de.avgl.dmp.controller.servlet.DMPInjector;
 import de.avgl.dmp.persistence.model.internal.Model;
-import de.avgl.dmp.persistence.model.job.Component;
-import de.avgl.dmp.persistence.model.job.Filter;
-import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
