@@ -16,6 +16,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -51,6 +52,7 @@ import com.wordnik.swagger.annotations.ApiResponses;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.eventbus.XMLSchemaEvent;
+import de.avgl.dmp.controller.resources.BasicResource;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.controller.utils.DMPControllerUtils;
 import de.avgl.dmp.controller.utils.DataModelUtil;
@@ -332,7 +334,66 @@ public class ResourcesResource {
 		return buildResponse(resourceJSON);
 	}
 	
-	// TODO: [@fniederlein] implement PUT
+	/**
+	 * This endpoint processes (uploades) the input stream and update an existing resource object with related metadata that will be
+	 * returned as JSON representation.
+	 * 
+	 * @param uploadedInputStream the input stream that should be uploaded
+	 * @param fileDetail file metadata
+	 * @param name the name of the resource
+	 * @param description an description of the resource
+	 * @return a JSON representation of the created resource
+	 * @throws DMPControllerException
+	 */
+	@PUT
+	@Path("/{id}")
+	@ApiOperation(value = "update data resource", notes = "Returns a Resource object, when update was successfully.", response = Resource.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "data resource was successfully updated"),
+			@ApiResponse(code = 404, message = "could not find a resource for the given id"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateResource(
+			@ApiParam(value = "resource identifier", required = true) @PathParam("id") final Long id,
+			@ApiParam(value = "file input stream", required = true) @FormDataParam("file") final InputStream uploadedInputStream,
+			@ApiParam("file metadata") @FormDataParam("file") final FormDataContentDisposition fileDetail,
+			@ApiParam(value = "resource name", required = true) @FormDataParam("name") final String name,
+			@ApiParam("resource description") @FormDataParam("description") final String description) throws DMPControllerException {
+		
+		final Timer.Context context = dmpStatus.updateResource();
+		
+		final Optional<Resource> resourceOptional = dataModelUtil.fetchResource(id);
+
+		if (!resourceOptional.isPresent()) {
+
+			dmpStatus.stop(context);
+			return Response.status(Status.NOT_FOUND).build();
+		}
+
+		final Resource resource = resourceOptional.get();
+
+		LOG.debug("try to update resource '" + name + "' for file '" + fileDetail.getFileName() + "'");
+
+		final ProxyResource proxyResource = refreshResource(resource, uploadedInputStream, fileDetail, name, description);
+
+		final Resource updateResource = proxyResource.getObject();
+
+		final String resourceJSON;
+
+		try {
+
+			resourceJSON = objectMapper.writeValueAsString(updateResource);
+		} catch (final JsonProcessingException e) {
+
+			dmpStatus.stop(context);
+			throw new DMPControllerException("couldn't transform resource object to JSON string");
+		}
+
+		LOG.debug("updated resource with id '" + id + "' and JSON content '" + resourceJSON + "'");
+
+		dmpStatus.stop(context);
+		return buildResponse(resourceJSON);
+	}
 
 	/**
 	 * This endpoint deletes a resource that matches the given id.
@@ -880,7 +941,64 @@ public class ResourcesResource {
 
 		return proxyResource;
 	}
+	
+	/**
+	 * Process stores the input stream and update a resource with the related metadata.
+	 * 
+	 * @param uploadInputedStream an input stream that should be uploaded
+	 * @param fileDetail metadata of the given input stream
+	 * @param name the name of the resource
+	 * @param description an description of the resource
+	 * @return a JSON representation of the updated resource
+	 * @throws DMPControllerException
+	 */
+	private ProxyResource refreshResource(final Resource resource, final InputStream uploadInputedStream, final FormDataContentDisposition fileDetail, final String name,
+			final String description) throws DMPControllerException {
 
+		final File file = DMPControllerUtils.writeToFile(uploadInputedStream, fileDetail.getFileName(), "resources");
+
+		final ResourceService resourceService = resourceServiceProvider.get();
+		
+		ProxyResource proxyResource;
+
+		resource.setName(name);
+
+		if (description != null) {
+
+			resource.setDescription(description);
+		}
+
+		resource.setType(ResourceType.FILE);
+
+		final ObjectNode attributes = new ObjectNode(objectMapper.getNodeFactory());
+		attributes.put("path", file.getAbsolutePath());
+
+		attributes.put("filesize", fileDetail.getSize());
+
+		resource.setAttributes(attributes);
+
+		final ProxyResource updatedResource;
+
+		try {
+
+			updatedResource = resourceService.updateObjectTransactional(resource);
+
+			if (updatedResource == null) {
+
+				throw new DMPControllerException("something went wrong while resource updating");
+			}
+
+			proxyResource = new ProxyResource(updatedResource.getObject(), updatedResource.getType());
+		} catch (final DMPPersistenceException e) {
+
+			LOG.debug("something went wrong while resource updating");
+
+			throw new DMPControllerException("something went wrong while resource updating\n" + e.getMessage());
+		}
+
+		return proxyResource;
+	}
+	
 	/**
 	 * Adds and persists a configuration to the given resource.
 	 * 

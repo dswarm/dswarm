@@ -1,9 +1,13 @@
 package de.avgl.dmp.controller.resources.test;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Ignore;
+
+import scala.collection.mutable.HashSet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -33,6 +37,10 @@ public class TransformationsResourceTest extends
 	private Function								function;
 
 	private Component								component;
+	
+	private Function								updateFunction;
+
+	private Component								updateComponent;
 
 	public TransformationsResourceTest() {
 
@@ -97,21 +105,30 @@ public class TransformationsResourceTest extends
 
 		super.testPUTObject();
 
-		// TODO: [@fniederlein] do clean-up for update (sub) objects (there are a functions and components after the test in
-		// the database); note: you need to take care of the overridden/replaced (sub) objects as well as the new ones
+		functionsResourceTestUtils.deleteObject(updateFunction);
 	}
 	
 	@Override
 	public Transformation updateObject(final Transformation persistedTransformation) throws Exception {
+		
+		String functionJSONString = DMPPersistenceUtil.getResourceAsString("function.json");
+		final ObjectNode functionJSON = objectMapper.readValue(functionJSONString, ObjectNode.class);
 
-		// update component
-		final Function newFunction = functionsResourceTestUtils.createObject("function.json");
-		final Component newComponent = componentsResourceTestUtils.createObject("component.json");
-		newComponent.setFunction(newFunction);
-		persistedTransformation.addComponent(newComponent);
+		String componentJSONString = DMPPersistenceUtil.getResourceAsString("component.json");
+		final ObjectNode componentJSON = objectMapper.readValue(componentJSONString, ObjectNode.class);
+		
+		// update function in component object
+		componentJSON.put("function", functionJSON);
+		componentJSONString = objectMapper.writeValueAsString(componentJSON);
+		final Component expectedComponent = objectMapper.readValue(componentJSONString, Component.class);
+		updateComponent = componentsResourceTestUtils.createObject(componentJSONString, expectedComponent);
+		updateFunction = updateComponent.getFunction();
+		
+		Set<Component> components = new LinkedHashSet<Component>();
+		components.add(updateComponent);
+		persistedTransformation.setComponents(components);
 		
 		String updateTransformationJSONString = objectMapper.writeValueAsString(persistedTransformation);
-		
 		final ObjectNode updateTransformationJSON = objectMapper.readValue(updateTransformationJSONString, ObjectNode.class);
 		
 		// update name
@@ -123,9 +140,7 @@ public class TransformationsResourceTest extends
 		updateTransformationJSON.put("description", updateTransformationDescriptionString);
 		
 		updateTransformationJSONString = objectMapper.writeValueAsString(updateTransformationJSON);
-		
 		final Transformation expectedTransformation = objectMapper.readValue(updateTransformationJSONString, Transformation.class);
-		
 		Assert.assertNotNull("the transformation JSON string shouldn't be null", updateTransformationJSONString);
 		
 		final Transformation updateTransformation = transformationsResourceTestUtils.updateObject(updateTransformationJSONString, expectedTransformation);
@@ -139,6 +154,8 @@ public class TransformationsResourceTest extends
 		Set<Component> components2 = updateTransformation.getComponents();
 		Assert.assertEquals("number of components should be equal", components1.size(), components2.size());
 		Assert.assertTrue("components of the transformation should be equal", components1.equals(components2));
+		
+		Assert.assertTrue("transformation function should be equal", updateTransformation.getComponents().contains(updateComponent));
 		
 		return updateTransformation;
 	}
