@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.net.URL;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
@@ -39,6 +40,9 @@ import de.avgl.dmp.controller.resources.test.utils.ResourcesResourceTestUtils;
 import de.avgl.dmp.controller.resources.test.utils.SchemasResourceTestUtils;
 import de.avgl.dmp.controller.servlet.DMPInjector;
 import de.avgl.dmp.persistence.model.internal.Model;
+import de.avgl.dmp.persistence.model.job.Component;
+import de.avgl.dmp.persistence.model.job.Filter;
+import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
@@ -68,19 +72,27 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 	private final ConfigurationsResourceTestUtils	configurationsResourceTestUtils;
 
 	private final SchemasResourceTestUtils			schemasResourceTestUtils;
+	
+	private final DataModelsResourceTestUtils		dataModelsResourceTestUtils;
 
 	private final Map<Long, Attribute>				attributes		= Maps.newHashMap();
 
 	private final Map<Long, AttributePath>			attributePaths	= Maps.newLinkedHashMap();
 
 	private Clasz									recordClass;
+	
+	private Clasz									updateRecordClass = null;
 
 	private Schema									schema;
 
 	private Configuration							configuration;
+	
+	private Configuration							updateConfiguration = null;
 
 	private Resource								resource;
-
+	
+	private Resource								updateResource = null;
+	
 	public DataModelsResourceTest() {
 
 		super(DataModel.class, DataModelService.class, "datamodels", "datamodel.json", new DataModelsResourceTestUtils());
@@ -91,8 +103,7 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 		resourcesResourceTestUtils = new ResourcesResourceTestUtils();
 		configurationsResourceTestUtils = new ConfigurationsResourceTestUtils();
 		schemasResourceTestUtils = new SchemasResourceTestUtils();
-
-		updateObjectJSONFileName = "datamodel1.json";
+		dataModelsResourceTestUtils = new DataModelsResourceTestUtils();
 	}
 
 	@Override
@@ -463,11 +474,9 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 	public void testPUTObject() throws Exception {
 
 		super.testPUTObject();
-
-		// TODO: [@fniederlein] do clean-up for update (sub) objects (there is a schema after the test in
-		// the database); note: you need to take care of the overridden/replaced (sub) objects as well as the new ones; ps: this
-		// only happens when other tests of this test class are executed before, i.e., when you only execute the PUT test
-		// everything will be fine (when the DB was clean before)
+	
+		resourcesResourceTestUtils.deleteObject(updateResource);
+		configurationsResourceTestUtils.deleteObject(updateConfiguration);
 	}
 
 	@After
@@ -497,6 +506,45 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 
 		claszesResourceTestUtils.deleteObject(recordClass);
 
+		claszesResourceTestUtils.deleteObject(updateRecordClass);
+
 		// END schema clean-up
+	}
+	
+	@Override
+	public DataModel updateObject(final DataModel persistedDataModel) throws Exception {
+	
+		persistedDataModel.setName(persistedDataModel.getName() + " update");
+		
+		persistedDataModel.setDescription(persistedDataModel.getDescription() + " update");
+		
+		updateConfiguration = configurationsResourceTestUtils.createObject("configuration2.json");
+		persistedDataModel.setConfiguration(updateConfiguration);
+		
+		updateResource = resourcesResourceTestUtils.createObject("resource2.json");
+		persistedDataModel.setDataResource(updateResource);
+		
+		updateRecordClass = claszesResourceTestUtils.createObject("clasz1.json");
+		
+		Schema schema = persistedDataModel.getSchema();
+		schema.setName(schema.getName() + " update");
+		schema.setRecordClass(updateRecordClass);
+		
+		persistedDataModel.setSchema(schema);
+		
+		String updateDataModelJSONString = objectMapper.writeValueAsString(persistedDataModel);
+		final DataModel expectedDataModel = objectMapper.readValue(updateDataModelJSONString, DataModel.class);
+		Assert.assertNotNull("the data model JSON string shouldn't be null", updateDataModelJSONString);
+		
+		final DataModel updateDataModel = dataModelsResourceTestUtils.updateObject(updateDataModelJSONString, expectedDataModel);
+		
+		Assert.assertNotNull("the data model JSON string shouldn't be null", updateDataModel);
+		Assert.assertEquals("data model id shoud be equal", updateDataModel.getId(), persistedDataModel.getId());
+		Assert.assertEquals("data model name shoud be equal", updateDataModel.getName(), persistedDataModel.getName());
+		Assert.assertEquals("data model description shoud be equal", updateDataModel.getDescription(), persistedDataModel.getDescription());
+		Assert.assertEquals("data model schema shoud be equal", updateDataModel.getSchema(), persistedDataModel.getSchema());
+		Assert.assertEquals("data model configuration shoud be equal", updateDataModel.getConfiguration(), persistedDataModel.getConfiguration());
+		
+		return updateDataModel;
 	}
 }

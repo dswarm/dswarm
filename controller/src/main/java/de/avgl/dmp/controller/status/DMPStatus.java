@@ -27,6 +27,7 @@ public class DMPStatus {
 	private final Meter					allRequestsMeter;
 
 	private final Timer					createNewResourceTimer;
+	private final Timer					updateResourceTimer;
 	private final Timer					deleteResourceTimer;
 	private final Timer					configurationsPreviewTimer;
 	private final Timer					createNewConfigurationsTimer;
@@ -59,6 +60,7 @@ public class DMPStatus {
 		allRequestsMeter = registry.meter(name(ResourcesResource.class, "requests", "all"));
 
 		createNewResourceTimer = registry.timer(name(ResourcesResource.class, "post-requests", "resources", "create"));
+		updateResourceTimer = registry.timer(name(ResourcesResource.class, "put-requests", "resources", "update"));
 		deleteResourceTimer = registry.timer(name(ResourcesResource.class, "delete-requests", "resources", "delete"));
 		configurationsPreviewTimer = registry.timer(name(ResourcesResource.class, "post-requests", "configurations", "preview"));
 		createNewConfigurationsTimer = registry.timer(name(ResourcesResource.class, "post-requests", "configurations", "create"));
@@ -76,6 +78,11 @@ public class DMPStatus {
 		return createNewResourceTimer.time();
 	}
 
+	public Timer.Context updateResource() {
+		allRequestsMeter.mark();
+		return updateResourceTimer.time();
+	}
+	
 	public Timer.Context deleteResource() {
 		allRequestsMeter.mark();
 		return deleteResourceTimer.time();
