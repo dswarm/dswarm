@@ -113,7 +113,7 @@ public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, 
 		// 2. compare attribute path (strings) of the retrieved attribute path with the current attribute path to determine,
 		// whether has anything changed inbetween
 
-		if (object != null && tempProxyAttributePath != null && tempProxyAttributePath.getObject() != null
+		if (object != null && tempProxyAttributePath != null && tempProxyAttributePath.getObject() != null && object.toAttributePath() != null
 				&& !object.toAttributePath().equals(tempProxyAttributePath.getObject().toAttributePath())) {
 
 			final AttributePath tempAttributePath = getObject(object.getAttributePathAsJSONObjectString(), entityManager);

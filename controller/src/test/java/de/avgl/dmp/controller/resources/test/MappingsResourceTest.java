@@ -48,12 +48,20 @@ public class MappingsResourceTest extends BasicResourceTest<MappingsResourceTest
 	private final MappingsResourceTestUtils			mappingsResourceTestUtils;
 
 	private Function								function;
+	
+	private Function								updateFunction;
+	
+	private Filter									updateFilter;
 
 	private Component								component;
 
 	private Transformation							transformation;
 
 	private Component								transformationComponent;
+	
+	private Component								updateTransformationComponent;
+	
+	private AttributePath							updateInputAttributePath;
 
 	final Map<Long, Attribute>						attributes		= Maps.newHashMap();
 
@@ -198,8 +206,10 @@ public class MappingsResourceTest extends BasicResourceTest<MappingsResourceTest
 
 		super.testPUTObject();
 
-		// TODO: [@fniederlein] do clean-up for update (sub) objects (there is a function, component and filter after the test in
-		// the database); note: you need to take care of the overridden/replaced (sub) objects as well as the new ones
+		filtersResourceTestUtils.deleteObject(updateFilter);
+		componentsResourceTestUtils.deleteObject(updateTransformationComponent);
+		functionsResourceTestUtils.deleteObject(updateFunction);
+		attributePathsResourceTestUtils.deleteObject(updateInputAttributePath);
 	}
 
 	@After
@@ -223,24 +233,41 @@ public class MappingsResourceTest extends BasicResourceTest<MappingsResourceTest
 	@Override
 	public Mapping updateObject(final Mapping persistedMapping) throws Exception {
 
+		// update name
 		persistedMapping.setName(persistedMapping.getName() + " update");
 
-		Filter inputFilter = filtersResourceTestUtils.createObject("filter2.json");
-		persistedMapping.setInputFilter(inputFilter);
-
-		// Filter outputFilter = persistedMapping.getOutputFilter();
-		// String outputFilterName = "output filter update";
-		// outputFilter.setName(outputFilterName);
-		// persistedMapping.setOutputFilter(outputFilter);
-
-		// final Component component = componentsResourceTestUtils.createObject("component.json");
-		// persistedMapping.setTransformation(component);
-
+		// update filter
+		final Filter filter = filtersResourceTestUtils.createObject("filter2.json");
+		
+		if (persistedMapping.getInputFilter() != null) {
+			updateFilter = persistedMapping.getInputFilter();
+		} else {
+			updateFilter = filter;
+		}
+		
+		persistedMapping.setInputFilter(filter);
+		
+		// update component
+		final Component updateComponent = componentsResourceTestUtils.createObject("component.json");
+		
+		if (persistedMapping.getTransformation() != null) {
+			
+			updateTransformationComponent = persistedMapping.getTransformation();
+	
+		} else {
+			updateTransformationComponent = updateComponent;
+		}
+		
+		persistedMapping.setTransformation(updateComponent);
+		
+		updateFunction = updateComponent.getFunction();
+		
 		String updateMappingJSONString = objectMapper.writeValueAsString(persistedMapping);
 		final ObjectNode updateMappingJSON = objectMapper.readValue(updateMappingJSONString, ObjectNode.class);
 
-		final AttributePath inputAttributePath = createAttributePath("attribute_path3.json");
-		final String finalInputAttributePathJSONString = objectMapper.writeValueAsString(inputAttributePath);
+		// update input attribute paths
+		updateInputAttributePath = createAttributePath("attribute_path2.json");
+		final String finalInputAttributePathJSONString = objectMapper.writeValueAsString(updateInputAttributePath);
 
 		Assert.assertNotNull("the input attribute path JSON string shouldn't be null", finalInputAttributePathJSONString);
 
@@ -254,20 +281,13 @@ public class MappingsResourceTest extends BasicResourceTest<MappingsResourceTest
 
 		updateMappingJSON.put("input_attribute_paths", inputAttributePathsJSON);
 
-		final Component component = componentsResourceTestUtils.createObject("component.json");
-		final String finalComponentJSONString = objectMapper.writeValueAsString(component);
-		final ObjectNode finalComponentJSON = objectMapper.readValue(finalComponentJSONString, ObjectNode.class);
-		// updateMappingJSON.put("transformation", finalComponentJSON);
-
 		updateMappingJSONString = objectMapper.writeValueAsString(updateMappingJSON);
 		expectedObject = objectMapper.readValue(updateMappingJSONString, pojoClass);
 
 		final Mapping updateMapping = mappingsResourceTestUtils.updateObject(updateMappingJSONString, expectedObject);
-
+		
 		Assert.assertNotNull("the mapping JSON string shouldn't be null", updateMapping);
 		Assert.assertEquals("mapping name shoud be equal", updateMapping.getName(), expectedObject.getName());
-		// Assert.assertEquals("the output filter name should be updated", updateMapping.getOutputFilter().getName(),
-		// outputFilterName);
 
 		return updateMapping;
 	}

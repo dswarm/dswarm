@@ -470,10 +470,57 @@ public class ResourcesResourceTest extends ResourceTest {
 		LOG.debug("start post configuration CSV JSON preview test");
 	}
 	
-	@Ignore
+	@Test
 	public void testPUTResource() throws Exception {
 
-		// TODO: [@fniederlein] implement test (+ resource methode)
+		LOG.debug("start put resource test");
+
+		final String createResourceJSON = testResourceUploadInteral(resourceFile, expectedResource);
+
+		LOG.debug("created resource for update = '" + createResourceJSON + "'");
+
+		final Resource createResource = objectMapper.readValue(createResourceJSON, Resource.class);
+
+		Assert.assertNotNull("resource shouldn't be null", createResource);
+		Assert.assertNotNull("resource id shouldn't be null", createResource.getId());
+		
+		LOG.debug("try to retrieve resource '" + createResource.getId() + "'");
+
+		final Response createResponse = target(String.valueOf(createResource.getId())).request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+
+		final String createResourceString = createResponse.readEntity(String.class);
+
+		Assert.assertEquals("200 OK was expected", 200, createResponse.getStatus());
+		Assert.assertEquals("resource JSONs are not equal", createResourceJSON, createResourceString);
+		
+		expectedResource.setName(expectedResource.getName() + " update");
+		expectedResource.setDescription(expectedResource.getDescription() + " update");
+		
+		Configuration configuration = configurationsResourceTestUtils.createObject("configuration2.json");
+		expectedResource.addConfiguration(configuration);
+		
+		final String updateResourceJSON = testResourceUpdateInteral(resourceFile, expectedResource, createResource.getId());
+
+		LOG.debug("update resource = '" + updateResourceJSON + "'");
+
+		final Resource updateResource = objectMapper.readValue(updateResourceJSON, Resource.class);
+
+		Assert.assertNotNull("updated resource shouldn't be null", updateResource);
+		Assert.assertEquals("updated resource ids should be equals", updateResource.getId(), createResource.getId());
+		
+		LOG.debug("try to retrieve updated resource '" + updateResource.getId() + "'");
+
+		final Response updateResponse = target(String.valueOf(updateResource.getId())).request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+
+		final String updateResourceString = updateResponse.readEntity(String.class);
+
+		Assert.assertEquals("200 OK was expected", 200, updateResponse.getStatus());
+		Assert.assertEquals("resource JSONs are not equal", updateResourceJSON, updateResourceString);
+
+		cleanUpDB(updateResource);
+		configurationsResourceTestUtils.deleteObject(configuration);
+
+		LOG.debug("end put resource test");
 	}
 	
 	@Test
@@ -529,6 +576,30 @@ public class ResourcesResourceTest extends ResourceTest {
 		return responseResourceString;
 	}
 
+	private String testResourceUpdateInteral(final File resourceFile, final Resource expectedResource, final Long id) throws Exception {
+
+		final FormDataMultiPart form = new FormDataMultiPart();
+		form.field("name", resourceFile.getName() + " update");
+		form.field("filename", resourceFile.getName() + " update");
+		form.field("description", "this is a description update");
+		form.bodyPart(new FileDataBodyPart("file", resourceFile, MediaType.MULTIPART_FORM_DATA_TYPE));
+
+		final Response response = target(String.valueOf(id)).request(MediaType.MULTIPART_FORM_DATA_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+				.put(Entity.entity(form, MediaType.MULTIPART_FORM_DATA));
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+
+		String responseResourceString = response.readEntity(String.class);
+
+		Assert.assertNotNull("resource shouldn't be null", responseResourceString);
+
+		final Resource responseResource = objectMapper.readValue(responseResourceString, Resource.class);
+
+		compareResource(expectedResource, responseResource);
+
+		return responseResourceString;
+	}
+	
 	private Resource addResourceConfigurationInternal(final File resourceFile, final String configurationFileName, final Resource expectedResource)
 			throws Exception {
 
