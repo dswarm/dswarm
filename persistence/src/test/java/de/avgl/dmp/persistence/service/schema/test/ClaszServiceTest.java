@@ -49,7 +49,7 @@ public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, 
 		LOG.debug("class json: " + json);
 
 		// clean up DB
-		deletedObject(clasz.getId());
+		deleteObject(clasz.getId());
 	}
 	
 	@Test
@@ -75,7 +75,7 @@ public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, 
 		Assert.assertEquals("the attribute uris should be equal", clasz1.getName(), clasz2.getName());
 
 		// clean up DB
-		deletedObject(clasz1.getId());
+		deleteObject(clasz1.getId());
 	}
 
 	private Clasz createClass() {

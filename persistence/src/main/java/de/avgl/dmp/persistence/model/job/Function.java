@@ -30,7 +30,6 @@ import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 
 import de.avgl.dmp.init.DMPException;
-import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;

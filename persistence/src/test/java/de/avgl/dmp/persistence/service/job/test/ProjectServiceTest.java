@@ -276,7 +276,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<ProxyProject, Proj
 
 		LOG.debug("project json: " + json);
 
-		deletedObject(updatedProject.getId());
+		deleteObject(updatedProject.getId());
 
 		final Transformation transformationFromComplexMapping = (Transformation) complexMapping.getTransformation().getFunction();
 

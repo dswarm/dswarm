@@ -65,6 +65,6 @@ public class ConfigurationServiceTest extends IDBasicJPAServiceTest<ProxyConfigu
 		LOG.debug("configuration json: " + json);
 
 		// clean up DB
-		deletedObject(configuration.getId());
+		deleteObject(configuration.getId());
 	}
 }

@@ -215,7 +215,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, 
 		LOG.debug("data model json: " + json);
 
 		// clean up DB
-		deletedObject(dataModel.getId());
+		deleteObject(dataModel.getId());
 
 		deleteSchema(schema);
 		deleteConfiguration(configuration);

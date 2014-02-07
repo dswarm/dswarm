@@ -116,7 +116,7 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 
 		LOG.debug("transformation json: " + json);
 
-		deletedObject(transformation.getId());
+		deleteObject(transformation.getId());
 		checkDeletedComponent(component);
 		deleteFunction(function);
 
@@ -330,7 +330,7 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 		LOG.debug("next component json: " + json);
 
 		// clean-up
-		deletedObject(updatedTransformation.getId());
+		deleteObject(updatedTransformation.getId());
 
 		for (final Function functionToDelete : functions.values()) {
 

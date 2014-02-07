@@ -5,8 +5,6 @@ import de.avgl.dmp.persistence.model.utils.BasicDMPJPAObjectUtils;
 
 /**
  * 
- * TODO: include Transformation.completeEquals somehow
- * 
  * @author tgaengler
  *
  */

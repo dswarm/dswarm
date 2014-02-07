@@ -86,7 +86,7 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<ProxyComponent, 
 		LOG.debug("component json: " + json);
 
 		// clean up DB
-		deletedObject(component.getId());
+		deleteObject(component.getId());
 		deleteFunction(function);
 	}
 
@@ -219,9 +219,9 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<ProxyComponent, 
 		LOG.debug("component json: " + json);
 
 		// clean-up
-		deletedObject(updatedComponent.getId());
-		deletedObject(component1.getId());
-		deletedObject(component2.getId());
+		deleteObject(updatedComponent.getId());
+		deleteObject(component1.getId());
+		deleteObject(component2.getId());
 
 		for (final Function functionToDelete : functions.values()) {
 

@@ -205,7 +205,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		LOG.debug("mapping json: " + json);
 
-		deletedObject(updatedMapping.getId());
+		deleteObject(updatedMapping.getId());
 		deleteTransformation(transformation);
 		checkDeletedComponent(component);
 		deleteFunction(function);
@@ -625,7 +625,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 		LOG.debug("clean-up next component json: " + json);
 
 		// clean-up
-		deletedObject(updatedMapping.getId());
+		deleteObject(updatedMapping.getId());
 
 		// upper transformation needs to be deleted first, so that the functions/transformations of its components will be
 		// released

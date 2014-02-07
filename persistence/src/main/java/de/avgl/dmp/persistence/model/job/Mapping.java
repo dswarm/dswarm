@@ -26,7 +26,7 @@ import com.google.common.collect.Sets;
 
 import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
-import de.avgl.dmp.persistence.model.schema.Schema;
+import de.avgl.dmp.persistence.model.schema.MappingAttributePathInstance;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -46,7 +46,7 @@ public class Mapping extends BasicDMPJPAObject {
 	/**
 	 *
 	 */
-	private static final long	serialVersionUID	= 1L;
+	private static final long					serialVersionUID	= 1L;
 
 	/**
 	 * The input attribute path collection of the mapping.
@@ -57,7 +57,7 @@ public class Mapping extends BasicDMPJPAObject {
 	// @JsonSerialize(using = SetAttributePathReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@XmlList
-	private Set<AttributePath>	inputAttributePaths;
+	private Set<MappingAttributePathInstance>	inputAttributePaths;
 
 	/**
 	 * The output attribute path of the mapping.
@@ -67,7 +67,7 @@ public class Mapping extends BasicDMPJPAObject {
 	@JoinColumn(name = "OUTPUT_ATTRIBUTE_PATH")
 	// @JsonSerialize(using = AttributePathReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private AttributePath		outputAttributePath;
+	private MappingAttributePathInstance		outputAttributePath;
 
 	/**
 	 * The instantiation ({@link Component}) of the function or transformation that should be applied at this mapping.
@@ -76,32 +76,34 @@ public class Mapping extends BasicDMPJPAObject {
 			CascadeType.REMOVE }, orphanRemoval = true)
 	@JoinColumn(name = "TRANSFORMATION")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private Component			transformation;
+	private Component							transformation;
 
-	/**
-	 * The input filter of this mapping.
-	 */
-	@XmlElement(name = "input_filter")
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinColumn(name = "INPUT_FILTER")
-	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private Filter				inputFilter;
+	// /**
+	// * The input filter of this mapping.
+	// */
+	// @XmlElement(name = "input_filter")
+	// @ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+	// CascadeType.REFRESH })
+	// @JoinColumn(name = "INPUT_FILTER")
+	// @JsonInclude(JsonInclude.Include.NON_NULL)
+	// private Filter inputFilter;
 
-	/**
-	 * The output filter of this mapping.
-	 */
-	@XmlElement(name = "output_filter")
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinColumn(name = "OUTPUT_FILTER")
-	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private Filter				outputFilter;
+	// /**
+	// * The output filter of this mapping.
+	// */
+	// @XmlElement(name = "output_filter")
+	// @ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+	// CascadeType.REFRESH })
+	// @JoinColumn(name = "OUTPUT_FILTER")
+	// @JsonInclude(JsonInclude.Include.NON_NULL)
+	// private Filter outputFilter;
 
 	/**
 	 * Gets the input attribute paths of the mapping.
 	 * 
 	 * @return the input attribute paths of the mapping
 	 */
-	public Set<AttributePath> getInputAttributePaths() {
+	public Set<MappingAttributePathInstance> getInputAttributePaths() {
 
 		return inputAttributePaths;
 	}
@@ -111,7 +113,7 @@ public class Mapping extends BasicDMPJPAObject {
 	 * 
 	 * @param inputAttributePathsArg a new collection of input attribute paths
 	 */
-	public void setInputAttributePaths(final Set<AttributePath> inputAttributePathsArg) {
+	public void setInputAttributePaths(final Set<MappingAttributePathInstance> inputAttributePathsArg) {
 
 		if (inputAttributePathsArg == null && inputAttributePaths != null) {
 
@@ -125,7 +127,7 @@ public class Mapping extends BasicDMPJPAObject {
 				inputAttributePaths = Sets.newLinkedHashSet();
 			}
 
-			if (!DMPPersistenceUtil.getAttributePathUtils().completeEquals(inputAttributePaths, inputAttributePathsArg)) {
+			if (!DMPPersistenceUtil.getMappingAttributePathInstanceUtils().completeEquals(inputAttributePaths, inputAttributePathsArg)) {
 
 				inputAttributePaths.clear();
 				inputAttributePaths.addAll(inputAttributePathsArg);
@@ -139,7 +141,7 @@ public class Mapping extends BasicDMPJPAObject {
 	 * @param id the input attribute path identifier
 	 * @return the matched input attribute path or null
 	 */
-	public AttributePath getInputAttributePath(final Long id) {
+	public MappingAttributePathInstance getInputAttributePath(final Long id) {
 
 		if (id == null) {
 
@@ -151,7 +153,8 @@ public class Mapping extends BasicDMPJPAObject {
 			return null;
 		}
 
-		final List<AttributePath> inputAttributePathsFiltered = filter(having(on(AttributePath.class).getId(), equalTo(id)), this.inputAttributePaths);
+		final List<MappingAttributePathInstance> inputAttributePathsFiltered = filter(
+				having(on(MappingAttributePathInstance.class).getId(), equalTo(id)), this.inputAttributePaths);
 
 		if (inputAttributePathsFiltered == null || inputAttributePathsFiltered.isEmpty()) {
 
@@ -167,7 +170,7 @@ public class Mapping extends BasicDMPJPAObject {
 	 * 
 	 * @param inputAttributePath a new input attribute path
 	 */
-	public void addInputAttributePath(final AttributePath inputAttributePath) {
+	public void addInputAttributePath(final MappingAttributePathInstance inputAttributePath) {
 
 		if (inputAttributePath != null) {
 
@@ -202,7 +205,7 @@ public class Mapping extends BasicDMPJPAObject {
 	 * 
 	 * @return the output attribute path of the mapping
 	 */
-	public AttributePath getOutputAttributePath() {
+	public MappingAttributePathInstance getOutputAttributePath() {
 
 		return outputAttributePath;
 	}
@@ -212,7 +215,7 @@ public class Mapping extends BasicDMPJPAObject {
 	 * 
 	 * @param outputAttributePathArg a new output attribute path
 	 */
-	public void setOutputAttributePath(final AttributePath outputAttributePathArg) {
+	public void setOutputAttributePath(final MappingAttributePathInstance outputAttributePathArg) {
 
 		outputAttributePath = outputAttributePathArg;
 	}
@@ -237,45 +240,45 @@ public class Mapping extends BasicDMPJPAObject {
 		transformation = transformationArg;
 	}
 
-	/**
-	 * Gets the input filter of the mapping.
-	 * 
-	 * @return the input filter of the mapping
-	 */
-	public Filter getInputFilter() {
-
-		return inputFilter;
-	}
-
-	/**
-	 * Sets the input filter of the mapping.
-	 * 
-	 * @param inputFilterArg a new input filter
-	 */
-	public void setInputFilter(final Filter inputFilterArg) {
-
-		inputFilter = inputFilterArg;
-	}
-
-	/**
-	 * Gets the output filter of the mapping.
-	 * 
-	 * @return the output filter of the mapping
-	 */
-	public Filter getOutputFilter() {
-
-		return outputFilter;
-	}
-
-	/**
-	 * Sets the output filter of the mapping.
-	 * 
-	 * @param outputFilterArg a new output filter
-	 */
-	public void setOutputFilter(final Filter outputFilterArg) {
-
-		outputFilter = outputFilterArg;
-	}
+	// /**
+	// * Gets the input filter of the mapping.
+	// *
+	// * @return the input filter of the mapping
+	// */
+	// public Filter getInputFilter() {
+	//
+	// return inputFilter;
+	// }
+	//
+	// /**
+	// * Sets the input filter of the mapping.
+	// *
+	// * @param inputFilterArg a new input filter
+	// */
+	// public void setInputFilter(final Filter inputFilterArg) {
+	//
+	// inputFilter = inputFilterArg;
+	// }
+	//
+	// /**
+	// * Gets the output filter of the mapping.
+	// *
+	// * @return the output filter of the mapping
+	// */
+	// public Filter getOutputFilter() {
+	//
+	// return outputFilter;
+	// }
+	//
+	// /**
+	// * Sets the output filter of the mapping.
+	// *
+	// * @param outputFilterArg a new output filter
+	// */
+	// public void setOutputFilter(final Filter outputFilterArg) {
+	//
+	// outputFilter = outputFilterArg;
+	// }
 
 	@Override
 	public boolean equals(final Object obj) {
@@ -286,11 +289,14 @@ public class Mapping extends BasicDMPJPAObject {
 	@Override
 	public boolean completeEquals(final Object obj) {
 
-		return Mapping.class.isInstance(obj) && super.completeEquals(obj)
-				&& DMPPersistenceUtil.getAttributePathUtils().completeEquals(((Mapping) obj).getInputAttributePaths(), getInputAttributePaths())
-				&& DMPPersistenceUtil.getAttributePathUtils().completeEquals(((Mapping) obj).getOutputAttributePath(), getOutputAttributePath())
-				&& DMPPersistenceUtil.getComponentUtils().completeEquals(((Mapping) obj).getTransformation(), getTransformation())
-				&& DMPPersistenceUtil.getFilterUtils().completeEquals(((Mapping) obj).getInputFilter(), getInputFilter())
-				&& DMPPersistenceUtil.getFilterUtils().completeEquals(((Mapping) obj).getOutputFilter(), getOutputFilter());
+		return Mapping.class.isInstance(obj)
+				&& super.completeEquals(obj)
+				&& DMPPersistenceUtil.getMappingAttributePathInstanceUtils().completeEquals(((Mapping) obj).getInputAttributePaths(),
+						getInputAttributePaths())
+				&& DMPPersistenceUtil.getMappingAttributePathInstanceUtils().completeEquals(((Mapping) obj).getOutputAttributePath(),
+						getOutputAttributePath())
+				&& DMPPersistenceUtil.getComponentUtils().completeEquals(((Mapping) obj).getTransformation(), getTransformation());
+		// && DMPPersistenceUtil.getFilterUtils().completeEquals(((Mapping) obj).getInputFilter(), getInputFilter())
+		// && DMPPersistenceUtil.getFilterUtils().completeEquals(((Mapping) obj).getOutputFilter(), getOutputFilter());
 	}
 }

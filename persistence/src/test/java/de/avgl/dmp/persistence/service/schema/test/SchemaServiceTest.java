@@ -11,17 +11,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxySchema;
-import de.avgl.dmp.persistence.service.schema.AttributePathService;
-import de.avgl.dmp.persistence.service.schema.AttributeService;
-import de.avgl.dmp.persistence.service.schema.ClaszService;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
+import de.avgl.dmp.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
+import de.avgl.dmp.persistence.service.schema.test.utils.AttributeServiceTestUtils;
+import de.avgl.dmp.persistence.service.schema.test.utils.ClaszServiceTestUtils;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
 
 public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema, SchemaService> {
@@ -32,19 +31,29 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema
 
 	private Map<Long, Attribute>					attributes		= Maps.newLinkedHashMap();
 
+	private final AttributeServiceTestUtils			attributeServiceTestUtils;
+	private final ClaszServiceTestUtils				claszServiceTestUtils;
+	private final AttributePathServiceTestUtils		attributePathServiceTestUtils;
+
 	public SchemaServiceTest() {
 
 		super("schema", SchemaService.class);
+
+		attributeServiceTestUtils = new AttributeServiceTestUtils();
+		attributePathServiceTestUtils = new AttributePathServiceTestUtils();
+		claszServiceTestUtils = new ClaszServiceTestUtils();
 	}
 
 	@Test
-	public void testSimpleSchema() {
+	public void testSimpleSchema() throws Exception {
 
 		// first attribute path
 
-		final Attribute dctermsTitle = createAttribute("http://purl.org/dc/terms/title", "title");
+		final Attribute dctermsTitle = attributeServiceTestUtils.createAttribute("http://purl.org/dc/terms/title", "title");
+		attributes.put(dctermsTitle.getId(), dctermsTitle);
 
-		final Attribute dctermsHasPart = createAttribute("http://purl.org/dc/terms/hasPart", "hasPart");
+		final Attribute dctermsHasPart = attributeServiceTestUtils.createAttribute("http://purl.org/dc/terms/hasPart", "hasPart");
+		attributes.put(dctermsHasPart.getId(), dctermsHasPart);
 
 		final LinkedList<Attribute> attributePath1Arg = Lists.newLinkedList();
 
@@ -55,19 +64,21 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema
 		System.out.println("attribute title = '" + dctermsTitle.toString());
 		System.out.println("attribute hasPart = '" + dctermsHasPart.toString());
 
-		final AttributePath attributePath1 = createAttributePath(attributePath1Arg);
+		final AttributePath attributePath1 = attributePathServiceTestUtils.createAttributePath(attributePath1Arg);
 
 		// second attribute path
 
 		final String dctermsCreatorId = "http://purl.org/dc/terms/creator";
 		final String dctermsCreatorName = "creator";
 
-		final Attribute dctermsCreator = createAttribute(dctermsCreatorId, dctermsCreatorName);
+		final Attribute dctermsCreator = attributeServiceTestUtils.createAttribute(dctermsCreatorId, dctermsCreatorName);
+		attributes.put(dctermsCreator.getId(), dctermsCreator);
 
 		final String foafNameId = "http://xmlns.com/foaf/0.1/name";
 		final String foafNameName = "name";
 
-		final Attribute foafName = createAttribute(foafNameId, foafNameName);
+		final Attribute foafName = attributeServiceTestUtils.createAttribute(foafNameId, foafNameName);
+		attributes.put(foafName.getId(), foafName);
 
 		final LinkedList<Attribute> attributePath2Arg = Lists.newLinkedList();
 
@@ -77,14 +88,15 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema
 		System.out.println("attribute creator = '" + dctermsCreator.toString());
 		System.out.println("attribute name = '" + foafName.toString());
 
-		final AttributePath attributePath2 = createAttributePath(attributePath2Arg);
+		final AttributePath attributePath2 = attributePathServiceTestUtils.createAttributePath(attributePath2Arg);
 
 		// third attribute path
 
 		final String dctermsCreatedId = "http://purl.org/dc/terms/created";
 		final String dctermsCreatedName = "created";
 
-		final Attribute dctermsCreated = createAttribute(dctermsCreatedId, dctermsCreatedName);
+		final Attribute dctermsCreated = attributeServiceTestUtils.createAttribute(dctermsCreatedId, dctermsCreatedName);
+		attributes.put(dctermsCreated.getId(), dctermsCreated);
 
 		final LinkedList<Attribute> attributePath3Arg = Lists.newLinkedList();
 
@@ -92,14 +104,14 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema
 
 		System.out.println("attribute created = '" + dctermsCreated.toString());
 
-		final AttributePath attributePath3 = createAttributePath(attributePath3Arg);
+		final AttributePath attributePath3 = attributePathServiceTestUtils.createAttributePath(attributePath3Arg);
 
 		// record class
 
 		final String biboDocumentId = "http://purl.org/ontology/bibo/Document";
 		final String biboDocumentName = "document";
 
-		final Clasz biboDocument = createClass(biboDocumentId, biboDocumentName);
+		final Clasz biboDocument = claszServiceTestUtils.createClass(biboDocumentId, biboDocumentName);
 
 		// schema
 
@@ -145,189 +157,17 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema
 		LOG.debug("schema json: " + json);
 
 		// clean up DB
-		deletedObject(schema.getId());
+		deleteObject(schema.getId());
 
-		deleteClasz(biboDocument);
+		claszServiceTestUtils.deleteObject(biboDocument);
 
-		deleteAttributePath(attributePath1);
-		deleteAttributePath(attributePath2);
-		deleteAttributePath(attributePath3);
+		attributePathServiceTestUtils.deleteObject(attributePath1);
+		attributePathServiceTestUtils.deleteObject(attributePath2);
+		attributePathServiceTestUtils.deleteObject(attributePath3);
 
 		for (final Attribute attribute : attributes.values()) {
 
-			deleteAttribute(attribute);
+			attributeServiceTestUtils.deleteObject(attribute);
 		}
-	}
-
-	private AttributePath createAttributePath(final LinkedList<Attribute> attributePathArg) {
-
-		final AttributePathService attributePathService = GuicedTest.injector.getInstance(AttributePathService.class);
-
-		Assert.assertNotNull("attribute path service shouldn't be null", attributePathService);
-
-		final AttributePath attributePath = new AttributePath(attributePathArg);
-
-		AttributePath updatedAttributePath = null;
-
-		try {
-
-			updatedAttributePath = attributePathService.createOrGetObject(attributePathArg).getObject();
-		} catch (final DMPPersistenceException e1) {
-
-			Assert.assertTrue("something went wrong while attribute path creation.\n" + e1.getMessage(), false);
-		}
-
-		Assert.assertNotNull("updated attribute path shouldn't be null", updatedAttributePath);
-		Assert.assertNotNull("updated attribute path id shouldn't be null", updatedAttributePath.getId());
-		Assert.assertNotNull("the attribute path's attribute of the updated attribute path shouldn't be null", updatedAttributePath.getAttributes());
-		Assert.assertEquals("the attribute path's attributes size are not equal", attributePath.getAttributes(), updatedAttributePath.getAttributes());
-		Assert.assertEquals("the first attributes of the attribute path are not equal", attributePath.getAttributePath().get(0), updatedAttributePath
-				.getAttributePath().get(0));
-		Assert.assertNotNull("the attribute path string of the updated attribute path shouldn't be null", updatedAttributePath.toAttributePath());
-		Assert.assertEquals("the attribute path's strings are not equal", attributePath.toAttributePath(), updatedAttributePath.toAttributePath());
-
-		String json = null;
-
-		try {
-
-			json = objectMapper.writeValueAsString(updatedAttributePath);
-		} catch (JsonProcessingException e) {
-
-			e.printStackTrace();
-		}
-
-		LOG.debug("attribute path json for attribute path '" + attributePath.getId() + "': " + json);
-
-		return updatedAttributePath;
-	}
-
-	private Attribute createAttribute(final String id, final String name) {
-
-		if (attributes.containsKey(id)) {
-
-			return attributes.get(id);
-		}
-
-		final AttributeService attributeService = GuicedTest.injector.getInstance(AttributeService.class);
-
-		Assert.assertNotNull("attribute service shouldn't be null", attributeService);
-
-		// create first attribute
-
-		Attribute attribute = null;
-
-		try {
-			attribute = attributeService.createOrGetObjectTransactional(id).getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while attribute creation.\n" + e.getMessage(), false);
-		}
-
-		Assert.assertNotNull("attribute shouldn't be null", attribute);
-		Assert.assertNotNull("attribute id shouldn't be null", attribute.getId());
-
-		attribute.setName(name);
-
-		Attribute updatedAttribute = null;
-
-		try {
-
-			updatedAttribute = attributeService.updateObjectTransactional(attribute).getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while updating the attribute of id = '" + id + "'", false);
-		}
-
-		Assert.assertNotNull("updated attribute shouldn't be null", updatedAttribute);
-		Assert.assertNotNull("updated attribute id shouldn't be null", updatedAttribute.getId());
-		Assert.assertNotNull("updated attribute name shouldn't be null", updatedAttribute.getName());
-
-		attributes.put(updatedAttribute.getId(), updatedAttribute);
-
-		return updatedAttribute;
-	}
-
-	private Clasz createClass(final String id, final String name) {
-
-		final ClaszService classService = GuicedTest.injector.getInstance(ClaszService.class);
-
-		Assert.assertNotNull("class service shouldn't be null", classService);
-
-		// create class
-
-		Clasz clasz = null;
-
-		try {
-			clasz = classService.createOrGetObjectTransactional(id).getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while class creation.\n" + e.getMessage(), false);
-		}
-
-		Assert.assertNotNull("attribute shouldn't be null", clasz);
-		Assert.assertNotNull("attribute id shouldn't be null", clasz.getId());
-
-		clasz.setName(name);
-
-		Clasz updatedClasz = null;
-
-		try {
-
-			updatedClasz = classService.updateObjectTransactional(clasz).getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while updating the class of id = '" + id + "'", false);
-		}
-
-		Assert.assertNotNull("updated class shouldn't be null", updatedClasz);
-		Assert.assertNotNull("updated class id shouldn't be null", updatedClasz.getId());
-		Assert.assertNotNull("updated class name shouldn't be null", updatedClasz.getName());
-
-		return updatedClasz;
-	}
-
-	private void deleteAttribute(final Attribute attribute) {
-
-		final AttributeService attributeService = GuicedTest.injector.getInstance(AttributeService.class);
-
-		Assert.assertNotNull("attribute service shouldn't be null", attributeService);
-
-		final Long attributeId = attribute.getId();
-
-		attributeService.deleteObject(attributeId);
-
-		final Attribute deletedAttribute = attributeService.getObject(attributeId);
-
-		Assert.assertNull("deleted attribute shouldn't exist any more", deletedAttribute);
-	}
-
-	private void deleteAttributePath(final AttributePath attributePath) {
-
-		final AttributePathService attributePathService = GuicedTest.injector.getInstance(AttributePathService.class);
-
-		Assert.assertNotNull("attribute path service shouldn't be null", attributePathService);
-
-		final Long attributePathId = attributePath.getId();
-
-		attributePathService.deleteObject(attributePathId);
-
-		final AttributePath deletedAttributePath = attributePathService.getObject(attributePathId);
-
-		Assert.assertNull("deleted attribute path shouldn't exist any more", deletedAttributePath);
-	}
-
-	private void deleteClasz(final Clasz clasz) {
-
-		final ClaszService claszService = GuicedTest.injector.getInstance(ClaszService.class);
-
-		Assert.assertNotNull("class service shouldn't be null", claszService);
-
-		final Long claszId = clasz.getId();
-
-		claszService.deleteObject(claszId);
-
-		final Clasz deletedClass = claszService.getObject(claszId);
-
-		Assert.assertNull("deleted class shouldn't exist any more", deletedClass);
 	}
 }

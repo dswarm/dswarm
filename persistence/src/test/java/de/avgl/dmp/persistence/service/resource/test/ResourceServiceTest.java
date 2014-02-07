@@ -40,7 +40,7 @@ public class ResourceServiceTest extends IDBasicJPAServiceTest<ProxyResource, Re
 		checkSimpleResource(resource, updatedResource);
 
 		// clean up DB
-		deletedObject(resource.getId());
+		deleteObject(resource.getId());
 	}
 
 	@Test
@@ -164,7 +164,7 @@ public class ResourceServiceTest extends IDBasicJPAServiceTest<ProxyResource, Re
 		// clean up DB
 		configurationService.deleteObject(configurationId);
 		configurationService.deleteObject(configuration2Id);
-		deletedObject(resource.getId());
+		deleteObject(resource.getId());
 
 		final Configuration deletedConfiguration = configurationService.getObject(configurationId);
 
