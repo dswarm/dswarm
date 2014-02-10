@@ -7,12 +7,13 @@ import org.junit.Assert;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import de.avgl.dmp.persistence.model.job.Function;
+import de.avgl.dmp.persistence.model.job.FunctionType;
 import de.avgl.dmp.persistence.model.job.proxy.ProxyBasicFunction;
 import de.avgl.dmp.persistence.service.job.BasicFunctionService;
-import de.avgl.dmp.persistence.service.test.utils.BasicDMPJPAServiceTestUtils;
+import de.avgl.dmp.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestUtils;
 
 public abstract class BasicFunctionServiceTestUtils<POJOCLASSPERSISTENCESERVICE extends BasicFunctionService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyBasicFunction<POJOCLASS>, POJOCLASS extends Function>
-		extends BasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
+		extends ExtendedBasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
 
 	public BasicFunctionServiceTestUtils(final Class<POJOCLASS> pojoClassArg, final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg) {
 
@@ -25,6 +26,22 @@ public abstract class BasicFunctionServiceTestUtils<POJOCLASSPERSISTENCESERVICE 
 		super.compareObjects(expectedObject, actualObject);
 
 		compareFunctions(expectedObject, actualObject);
+	}
+
+	public POJOCLASS createFunction(final String name, final String description, final LinkedList<String> parameters) throws Exception {
+
+		final String functionName = name;
+		final String functionDescription = description;
+
+		final POJOCLASS function = createNewObject();
+
+		function.setName(functionName);
+		function.setDescription(functionDescription);
+		function.setParameters(parameters);
+
+		final POJOCLASS updatedFunction = createObject(function, function);
+
+		return updatedFunction;
 	}
 
 	private void compareFunctions(final POJOCLASS expectedFunction, final POJOCLASS actualFunction) {
@@ -81,7 +98,7 @@ public abstract class BasicFunctionServiceTestUtils<POJOCLASSPERSISTENCESERVICE 
 			}
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}<br/>
 	 * Updates the name, description, parameters and machine processable function description of the function.

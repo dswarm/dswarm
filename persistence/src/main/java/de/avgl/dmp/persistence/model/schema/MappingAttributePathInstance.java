@@ -11,6 +11,7 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.base.Objects;
 
@@ -24,7 +25,7 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 @Entity
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@DiscriminatorValue("Mapping Attribute Path Instance")
+@DiscriminatorValue("MappingAttributePathInstance")
 @Table(name = "MAPPING_ATTRIBUTE_PATH_INSTANCE")
 public class MappingAttributePathInstance extends AttributePathInstance {
 

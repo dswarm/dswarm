@@ -110,7 +110,9 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	/**
 	 * The function type, e.g., function ({@link FunctionType#Function}) or transformation ({@link FunctionType#Transformation}).
 	 */
-	@XmlElement(name = "type")
+	// @XmlElement(name = "type") -> note: separate attribute for entity type is not necessary since Jackson will include this
+	// property automatically, when serialising the object
+	@JsonIgnore
 	@Column(name = "FUNCTION_TYPE")
 	@Enumerated(EnumType.STRING)
 	private final FunctionType						functionType;

@@ -19,7 +19,6 @@ import de.avgl.dmp.persistence.model.DMPObject;
 import de.avgl.dmp.persistence.model.proxy.ProxyDMPObject;
 import de.avgl.dmp.persistence.service.BasicJPAService;
 import de.avgl.dmp.persistence.service.test.BasicJPAServiceTest;
-import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE>
 		extends BasicJPAServiceTest<PROXYPOJOCLASS, POJOCLASS, POJOCLASSPERSISTENCESERVICE, POJOCLASSIDTYPE> {
@@ -181,6 +180,29 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 	protected PROXYPOJOCLASS createObject(final POJOCLASS object) throws DMPPersistenceException {
 		
 		return jpaService.createObjectTransactional();
+	}
+	
+	/**
+	 * Creates a new object of the concrete POJO class.
+	 * 
+	 * @return a new instance of the concrete POJO class
+	 * @throws DMPPersistenceException if something went wrong.
+	 */
+	protected POJOCLASS createNewObject() throws DMPPersistenceException {
+
+		final POJOCLASS object;
+
+		try {
+
+			object =  pojoClass.newInstance();
+		} catch (final InstantiationException | IllegalAccessException e) {
+
+			BasicJPAServiceTestUtils.LOG.error("something went wrong while " + pojoClassName + "object creation", e);
+
+			throw new DMPPersistenceException(e.getMessage());
+		}
+
+		return object;
 	}
 
 	public abstract void reset();

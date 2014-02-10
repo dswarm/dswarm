@@ -54,5 +54,9 @@ public class MappingAttributePathInstanceService extends
 		final Filter filter = object.getFilter();
 
 		updateObject.setFilter(filter);
+		
+		final Integer ordinal = object.getOrdinal();
+		
+		updateObject.setOrdinal(ordinal);
 	}
 }

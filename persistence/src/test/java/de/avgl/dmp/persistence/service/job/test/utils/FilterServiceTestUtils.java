@@ -2,9 +2,12 @@ package de.avgl.dmp.persistence.service.job.test.utils;
 
 import org.junit.Assert;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import de.avgl.dmp.persistence.model.job.Filter;
 import de.avgl.dmp.persistence.model.job.proxy.ProxyFilter;
 import de.avgl.dmp.persistence.service.job.FilterService;
+import de.avgl.dmp.persistence.service.job.test.FilterServiceTest;
 import de.avgl.dmp.persistence.service.test.utils.BasicDMPJPAServiceTestUtils;
 
 public class FilterServiceTestUtils extends BasicDMPJPAServiceTestUtils<FilterService, ProxyFilter, Filter> {
@@ -20,6 +23,18 @@ public class FilterServiceTestUtils extends BasicDMPJPAServiceTestUtils<FilterSe
 		super.compareObjects(expectedObject, actualObject);
 
 		compareFilters(expectedObject, actualObject);
+	}
+	
+	public Filter createFilter(final String name, final String expression) throws Exception {
+
+		final Filter filter = new Filter();
+
+		filter.setName(name);
+		filter.setExpression(expression);
+
+		final Filter updatedFilter = createObject(filter, filter);
+		
+		return updatedFilter;
 	}
 
 	private void compareFilters(final Filter expectedFilter, final Filter actualFilter) {

@@ -15,7 +15,7 @@ public enum AttributePathInstanceType {
 	/**
 	 * The attribute path instance type to indicate functions ({@link Function}).
 	 */
-	MappingAttributePathInstance("Mapping Attribute Path Instance");
+	MappingAttributePathInstance("MappingAttributePathInstance");
 
 	/**
 	 * The name of the attribute path instance type.
