@@ -37,7 +37,7 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 
 		compareResources(expectedObject, actualObject);
 	}
-	
+
 	public Resource createResource(final String name, final String description, final ResourceType resourceType, final ObjectNode attributes,
 			final Set<Configuration> configurations) throws Exception {
 
@@ -123,7 +123,7 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 		super.prepareObjectForUpdate(objectWithUpdates, object);
 
 		final Set<Configuration> configurations = objectWithUpdates.getConfigurations();
-		Set<Configuration> newConfigurations;
+		final Set<Configuration> newConfigurations;
 
 		if (configurations != null) {
 

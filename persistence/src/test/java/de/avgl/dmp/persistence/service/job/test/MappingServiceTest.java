@@ -24,37 +24,54 @@ import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.model.job.proxy.ProxyMapping;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
-import de.avgl.dmp.persistence.service.job.ComponentService;
-import de.avgl.dmp.persistence.service.job.FunctionService;
+import de.avgl.dmp.persistence.model.schema.MappingAttributePathInstance;
 import de.avgl.dmp.persistence.service.job.MappingService;
 import de.avgl.dmp.persistence.service.job.TransformationService;
-import de.avgl.dmp.persistence.service.schema.AttributePathService;
-import de.avgl.dmp.persistence.service.schema.AttributeService;
+import de.avgl.dmp.persistence.service.job.test.utils.ComponentServiceTestUtils;
+import de.avgl.dmp.persistence.service.job.test.utils.FunctionServiceTestUtils;
+import de.avgl.dmp.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
+import de.avgl.dmp.persistence.service.schema.test.utils.AttributeServiceTestUtils;
+import de.avgl.dmp.persistence.service.schema.test.utils.MappingAttributePathInstanceServiceTestUtils;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
 
 public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapping, MappingService> {
 
-	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(MappingServiceTest.class);
+	private static final org.apache.log4j.Logger				LOG								= org.apache.log4j.Logger
+																										.getLogger(MappingServiceTest.class);
 
-	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper									objectMapper					= GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	private final Map<Long, Function>				functions		= Maps.newLinkedHashMap();
+	private final Map<Long, Function>							functions						= Maps.newLinkedHashMap();
 
-	private Map<Long, Attribute>					attributes		= Maps.newLinkedHashMap();
+	private Map<Long, Attribute>								attributes						= Maps.newLinkedHashMap();
 
-	private Map<Long, AttributePath>				attributePaths	= Maps.newLinkedHashMap();
+	private Map<Long, AttributePath>							attributePaths					= Maps.newLinkedHashMap();
 
-	private Map<Long, Component>					components		= Maps.newLinkedHashMap();
+	private Map<Long, Component>								components						= Maps.newLinkedHashMap();
 
-	private Map<Long, Transformation>				transformations	= Maps.newLinkedHashMap();
+	private Map<Long, Transformation>							transformations					= Maps.newLinkedHashMap();
+
+	private Map<Long, MappingAttributePathInstance>				mappingAttributePathInstances	= Maps.newLinkedHashMap();
+
+	private final AttributeServiceTestUtils						attributeServiceTestUtils;
+	private final AttributePathServiceTestUtils					attributePathServiceTestUtils;
+	private final FunctionServiceTestUtils						functionServiceTestUtils;
+	private final MappingAttributePathInstanceServiceTestUtils	mappingAttributePathInstanceServiceTestUtils;
+	private final ComponentServiceTestUtils						componentServiceTestUtils;
 
 	public MappingServiceTest() {
 
 		super("mapping", MappingService.class);
+
+		attributeServiceTestUtils = new AttributeServiceTestUtils();
+		attributePathServiceTestUtils = new AttributePathServiceTestUtils();
+		functionServiceTestUtils = new FunctionServiceTestUtils();
+		mappingAttributePathInstanceServiceTestUtils = new MappingAttributePathInstanceServiceTestUtils();
+		componentServiceTestUtils = new ComponentServiceTestUtils();
 	}
 
 	@Test
-	public void simpleMappingTest() {
+	public void simpleMappingTest() throws Exception {
 
 		LOG.debug("start simple mapping test");
 
@@ -62,7 +79,8 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		parameters.add("inputString");
 
-		final Function function = createFunction("trim", "trims leading and trailing whitespaces from a given string", parameters);
+		final Function function = functionServiceTestUtils.createFunction("trim", "trims leading and trailing whitespaces from a given string",
+				parameters);
 
 		final String componentName = "my trim component";
 		final Map<String, String> parameterMappings = Maps.newLinkedHashMap();
@@ -72,7 +90,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		parameterMappings.put(functionParameterName, componentVariableName);
 
-		final Component component = createComponent(componentName, parameterMappings, function, null, null);
+		final Component component = componentServiceTestUtils.createComponent(componentName, parameterMappings, function, null, null);
 
 		// transformation
 
@@ -97,24 +115,40 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 		final String dctermsTitleId = "http://purl.org/dc/terms/title";
 		final String dctermsTitleName = "title";
 
-		final Attribute dctermsTitle = createAttribute(dctermsTitleId, dctermsTitleName);
+		final Attribute dctermsTitle = attributeServiceTestUtils.createAttribute(dctermsTitleId, dctermsTitleName);
+		attributes.put(dctermsTitle.getId(), dctermsTitle);
 
 		final LinkedList<Attribute> dctermsTitleAttributePath = Lists.newLinkedList();
 		dctermsTitleAttributePath.add(dctermsTitle);
 
-		final AttributePath inputAttributePath = createAttributePath(dctermsTitleAttributePath);
+		final AttributePath inputAttributePath = attributePathServiceTestUtils.createAttributePath(dctermsTitleAttributePath);
+		attributePaths.put(inputAttributePath.getId(), inputAttributePath);
+
+		// input mapping attribute path instance
+
+		final MappingAttributePathInstance inputMappingAttributePathInstance = mappingAttributePathInstanceServiceTestUtils
+				.createMappingAttributePathInstance("input mapping attribute path instance", inputAttributePath, null, null);
+		mappingAttributePathInstances.put(inputMappingAttributePathInstance.getId(), inputMappingAttributePathInstance);
 
 		// output attribute path
 
 		final String rdfsLabelId = "http://www.w3.org/2000/01/rdf-schema#label";
 		final String rdfsLabelName = "label";
 
-		final Attribute rdfsLabel = createAttribute(rdfsLabelId, rdfsLabelName);
+		final Attribute rdfsLabel = attributeServiceTestUtils.createAttribute(rdfsLabelId, rdfsLabelName);
+		attributes.put(rdfsLabel.getId(), rdfsLabel);
 
 		final LinkedList<Attribute> rdfsLabelAttributePath = Lists.newLinkedList();
 		rdfsLabelAttributePath.add(rdfsLabel);
 
-		final AttributePath outputAttributePath = createAttributePath(rdfsLabelAttributePath);
+		final AttributePath outputAttributePath = attributePathServiceTestUtils.createAttributePath(rdfsLabelAttributePath);
+		attributePaths.put(outputAttributePath.getId(), outputAttributePath);
+
+		// output mapping attribute path instance
+
+		final MappingAttributePathInstance outputMappingAttributePathInstance = mappingAttributePathInstanceServiceTestUtils
+				.createMappingAttributePathInstance("output mapping attribute path instance", outputAttributePath, null, null);
+		mappingAttributePathInstances.put(outputMappingAttributePathInstance.getId(), outputMappingAttributePathInstance);
 
 		// transformation component
 
@@ -123,7 +157,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 		transformationComponentParameterMappings.put(transformation.getParameters().get(0), inputAttributePath.toAttributePath());
 		transformationComponentParameterMappings.put("transformationOutputVariable", outputAttributePath.toAttributePath());
 
-		final Component transformationComponent = createComponent(transformation.getName() + " (component)",
+		final Component transformationComponent = componentServiceTestUtils.createComponent(transformation.getName() + " (component)",
 				transformationComponentParameterMappings, transformation, null, null);
 
 		// mapping
@@ -132,8 +166,8 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		final Mapping mapping = createObject().getObject();
 		mapping.setName(mappingName);
-		mapping.addInputAttributePath(inputAttributePath);
-		mapping.setOutputAttributePath(outputAttributePath);
+		mapping.addInputAttributePath(inputMappingAttributePathInstance);
+		mapping.setOutputAttributePath(outputMappingAttributePathInstance);
 		mapping.setTransformation(transformationComponent);
 
 		final Mapping updatedMapping = updateObjectTransactional(mapping).getObject();
@@ -207,24 +241,29 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		deleteObject(updatedMapping.getId());
 		deleteTransformation(transformation);
-		checkDeletedComponent(component);
-		deleteFunction(function);
+		componentServiceTestUtils.checkDeletedComponent(component);
+		functionServiceTestUtils.deleteObject(function);
+
+		for (final MappingAttributePathInstance mappingAttributePathInstance : mappingAttributePathInstances.values()) {
+
+			mappingAttributePathInstanceServiceTestUtils.deleteObject(mappingAttributePathInstance);
+		}
 
 		for (final AttributePath attributePath : attributePaths.values()) {
 
-			deleteAttributePath(attributePath);
+			attributePathServiceTestUtils.deleteObject(attributePath);
 		}
 
 		for (final Attribute attribute : attributes.values()) {
 
-			deleteAttribute(attribute);
+			attributeServiceTestUtils.deleteObject(attribute);
 		}
 
 		LOG.debug("end simple mappping test");
 	}
 
 	@Test
-	public void complexMappingTest() {
+	public void complexMappingTest() throws Exception {
 
 		LOG.debug("start complex mapping test");
 
@@ -241,7 +280,8 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 		function1Parameters.add(function2Parameter);
 		function1Parameters.add(function3Parameter);
 
-		final Function function1 = createFunction(function1Name, function1Description, function1Parameters);
+		final Function function1 = functionServiceTestUtils.createFunction(function1Name, function1Description, function1Parameters);
+		functions.put(function1.getId(), function1);
 
 		final String component1Name = "my replace component";
 		final Map<String, String> parameterMapping1 = Maps.newLinkedHashMap();
@@ -257,7 +297,8 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 		parameterMapping1.put(functionParameterName2, componentVariableName2);
 		parameterMapping1.put(functionParameterName3, componentVariableName3);
 
-		final Component component1 = createComponent(component1Name, parameterMapping1, function1, null, null);
+		final Component component1 = componentServiceTestUtils.createComponent(component1Name, parameterMapping1, function1, null, null);
+		this.components.put(component1.getId(), component1);
 
 		// next component
 
@@ -268,7 +309,8 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 		final LinkedList<String> function2Parameters = Lists.newLinkedList();
 		function2Parameters.add(function4Parameter);
 
-		final Function function2 = createFunction(function2Name, function2Description, function2Parameters);
+		final Function function2 = functionServiceTestUtils.createFunction(function2Name, function2Description, function2Parameters);
+		functions.put(function2.getId(), function2);
 
 		final String component2Name = "my lower case component";
 		final Map<String, String> parameterMapping2 = Maps.newLinkedHashMap();
@@ -278,7 +320,8 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		parameterMapping2.put(functionParameterName4, componentVariableName4);
 
-		final Component component2 = createComponent(component2Name, parameterMapping2, function2, null, null);
+		final Component component2 = componentServiceTestUtils.createComponent(component2Name, parameterMapping2, function2, null, null);
+		this.components.put(component2.getId(), component2);
 
 		// main component
 
@@ -289,7 +332,8 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 		final LinkedList<String> functionParameters = Lists.newLinkedList();
 		functionParameters.add(functionParameter);
 
-		final Function function = createFunction(functionName, functionDescription, functionParameters);
+		final Function function = functionServiceTestUtils.createFunction(functionName, functionDescription, functionParameters);
+		functions.put(function.getId(), function);
 
 		// final String componentId = UUID.randomUUID().toString();
 		final String componentName = "my trim component";
@@ -308,7 +352,9 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		outputComponents.add(component2);
 
-		final Component component = createComponent(componentName, parameterMapping, function, inputComponents, outputComponents);
+		final Component component = componentServiceTestUtils.createComponent(componentName, parameterMapping, function, inputComponents,
+				outputComponents);
+		this.components.put(component2.getId(), component2);
 
 		// transformation
 
@@ -318,9 +364,9 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		final Set<Component> components = Sets.newLinkedHashSet();
 
-		components.add(component1);
+		components.add(component.getInputComponents().iterator().next());
 		components.add(component);
-		components.add(component2);
+		components.add(component.getOutputComponents().iterator().next());
 
 		final LinkedList<String> transformationParameters = Lists.newLinkedList();
 
@@ -343,8 +389,9 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		final String transformationComponentName = "prepare first name";
 
-		final Component transformationComponent = createComponent(transformationComponentName, transformationComponentParameterMappings,
-				transformation, null, null);
+		final Component transformationComponent = componentServiceTestUtils.createComponent(transformationComponentName,
+				transformationComponentParameterMappings, transformation, null, null);
+		this.components.put(transformationComponent.getId(), transformationComponent);
 
 		// transformation component 2 (in main transformation) -> clean family name
 
@@ -352,8 +399,9 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		transformationComponentParameterMappings2.put("transformationInputString", "familyName");
 
-		final Component transformationComponent2 = createComponent("prepare family name", transformationComponentParameterMappings2, transformation,
-				null, null);
+		final Component transformationComponent2 = componentServiceTestUtils.createComponent("prepare family name",
+				transformationComponentParameterMappings2, transformation, null, null);
+		this.components.put(transformationComponent2.getId(), transformationComponent2);
 
 		// concat component -> full name
 
@@ -366,7 +414,8 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 		function4Parameters.add(function5Parameter);
 		function4Parameters.add(function6Parameter);
 
-		final Function function4 = createFunction(function4Name, function4Description, function4Parameters);
+		final Function function4 = functionServiceTestUtils.createFunction(function4Name, function4Description, function4Parameters);
+		functions.put(function4.getId(), function4);
 
 		final String component4Name = "full name";
 		final Map<String, String> parameterMapping4 = Maps.newLinkedHashMap();
@@ -384,7 +433,9 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 		component4InputComponents.add(transformationComponent);
 		component4InputComponents.add(transformationComponent2);
 
-		final Component component4 = createComponent(component4Name, parameterMapping4, function4, component4InputComponents, null);
+		final Component component4 = componentServiceTestUtils.createComponent(component4Name, parameterMapping4, function4,
+				component4InputComponents, null);
+		this.components.put(component4.getId(), component4);
 
 		// final Set<Component> transformationComponentOutputComponents = Sets.newLinkedHashSet();
 		//
@@ -409,8 +460,10 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		final Set<Component> components2 = Sets.newLinkedHashSet();
 
-		components2.add(transformationComponent);
-		components2.add(transformationComponent2);
+		final Iterator<Component> iter = component4.getInputComponents().iterator();
+
+		components2.add(iter.next());
+		components2.add(iter.next());
 		components2.add(component4);
 
 		final LinkedList<String> transformation2Parameters = Lists.newLinkedList();
@@ -427,46 +480,71 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 		final String dctermsCreatorId = "http://purl.org/dc/terms/creator";
 		final String dctermsCreatorName = "creator";
 
-		final Attribute dctermsCreator = createAttribute(dctermsCreatorId, dctermsCreatorName);
+		final Attribute dctermsCreator = attributeServiceTestUtils.createAttribute(dctermsCreatorId, dctermsCreatorName);
+		attributes.put(dctermsCreator.getId(), dctermsCreator);
 
 		// first name attribute path
 
 		final String firstNameId = "http://xmlns.com/foaf/0.1/firstName";
 		final String firstNameName = "firstName";
 
-		final Attribute firstName = createAttribute(firstNameId, firstNameName);
+		final Attribute firstName = attributeServiceTestUtils.createAttribute(firstNameId, firstNameName);
+		attributes.put(firstName.getId(), firstName);
 
 		final LinkedList<Attribute> firstNameAttributePathList = Lists.newLinkedList();
 		firstNameAttributePathList.add(dctermsCreator);
 		firstNameAttributePathList.add(firstName);
 
-		final AttributePath firstNameAttributePath = createAttributePath(firstNameAttributePathList);
+		final AttributePath firstNameAttributePath = attributePathServiceTestUtils.createAttributePath(firstNameAttributePathList);
+		attributePaths.put(firstNameAttributePath.getId(), firstNameAttributePath);
+
+		// first name mapping attribute path instance
+
+		final MappingAttributePathInstance firstNameMappingAttributePathInstance = mappingAttributePathInstanceServiceTestUtils
+				.createMappingAttributePathInstance("first name mapping attribute path instance", firstNameAttributePath, null, null);
+		mappingAttributePathInstances.put(firstNameMappingAttributePathInstance.getId(), firstNameMappingAttributePathInstance);
 
 		// family name attribute path
 
 		final String familyNameId = "http://xmlns.com/foaf/0.1/familyName";
 		final String familyNameName = "familyName";
 
-		final Attribute familyName = createAttribute(familyNameId, familyNameName);
+		final Attribute familyName = attributeServiceTestUtils.createAttribute(familyNameId, familyNameName);
+		attributes.put(familyName.getId(), familyName);
 
 		final LinkedList<Attribute> familyNameAttributePathList = Lists.newLinkedList();
 		familyNameAttributePathList.add(dctermsCreator);
 		familyNameAttributePathList.add(familyName);
 
-		final AttributePath familyNameAttributePath = createAttributePath(familyNameAttributePathList);
+		final AttributePath familyNameAttributePath = attributePathServiceTestUtils.createAttributePath(familyNameAttributePathList);
+		attributePaths.put(familyNameAttributePath.getId(), familyNameAttributePath);
+
+		// family name mapping attribute path instance
+
+		final MappingAttributePathInstance familyNameMappingAttributePathInstance = mappingAttributePathInstanceServiceTestUtils
+				.createMappingAttributePathInstance("family name mapping attribute path instance", familyNameAttributePath, null, null);
+		mappingAttributePathInstances.put(familyNameMappingAttributePathInstance.getId(), familyNameMappingAttributePathInstance);
 
 		// output attribute path
 
 		final String foafNameId = "http://xmlns.com/foaf/0.1/name";
 		final String foafNameName = "name";
 
-		final Attribute foafName = createAttribute(foafNameId, foafNameName);
+		final Attribute foafName = attributeServiceTestUtils.createAttribute(foafNameId, foafNameName);
+		attributes.put(foafName.getId(), foafName);
 
 		final LinkedList<Attribute> nameAttributePathList = Lists.newLinkedList();
 		nameAttributePathList.add(dctermsCreator);
 		nameAttributePathList.add(foafName);
 
-		final AttributePath nameAttributePath = createAttributePath(nameAttributePathList);
+		final AttributePath nameAttributePath = attributePathServiceTestUtils.createAttributePath(nameAttributePathList);
+		attributePaths.put(nameAttributePath.getId(), nameAttributePath);
+
+		// output mapping attribute path instance
+
+		final MappingAttributePathInstance outputMappingAttributePathInstance = mappingAttributePathInstanceServiceTestUtils
+				.createMappingAttributePathInstance("output mapping attribute path instance", nameAttributePath, null, null);
+		mappingAttributePathInstances.put(outputMappingAttributePathInstance.getId(), outputMappingAttributePathInstance);
 
 		// transformation component
 
@@ -476,8 +554,9 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 		transformationComponent3ParameterMappings.put(transformation2Parameter2, familyNameAttributePath.toAttributePath());
 		transformationComponent3ParameterMappings.put("transformationOutputVariable", nameAttributePath.toAttributePath());
 
-		final Component transformationComponent3 = createComponent(transformation2.getName() + " (component)",
+		final Component transformationComponent3 = componentServiceTestUtils.createComponent(transformation2.getName() + " (component)",
 				transformationComponent3ParameterMappings, transformation2, null, null);
+		this.components.put(transformationComponent3.getId(), transformationComponent3);
 
 		// mapping
 
@@ -485,9 +564,9 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		final Mapping mapping = createObject().getObject();
 		mapping.setName(mappingName);
-		mapping.addInputAttributePath(firstNameAttributePath);
-		mapping.addInputAttributePath(familyNameAttributePath);
-		mapping.setOutputAttributePath(nameAttributePath);
+		mapping.addInputAttributePath(firstNameMappingAttributePathInstance);
+		mapping.addInputAttributePath(familyNameMappingAttributePathInstance);
+		mapping.setOutputAttributePath(outputMappingAttributePathInstance);
 		mapping.setTransformation(transformationComponent3);
 
 		final Mapping updatedMapping = updateObjectTransactional(mapping).getObject();
@@ -639,127 +718,30 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		for (final Component componentAlreadyDeleted : this.components.values()) {
 
-			checkDeletedComponent(componentAlreadyDeleted);
+			componentServiceTestUtils.checkDeletedComponent(componentAlreadyDeleted);
 		}
 
 		for (final Function functionToDelete : functions.values()) {
 
-			deleteFunction(functionToDelete);
+			functionServiceTestUtils.deleteObject(functionToDelete);
+		}
+
+		for (final MappingAttributePathInstance mappingAttributePathInstance : mappingAttributePathInstances.values()) {
+
+			mappingAttributePathInstanceServiceTestUtils.deleteObject(mappingAttributePathInstance);
 		}
 
 		for (final AttributePath attributePath : attributePaths.values()) {
 
-			deleteAttributePath(attributePath);
+			attributePathServiceTestUtils.deleteObject(attributePath);
 		}
 
 		for (final Attribute attribute : attributes.values()) {
 
-			deleteAttribute(attribute);
+			attributeServiceTestUtils.deleteObject(attribute);
 		}
 
 		LOG.debug("end complex mapping test");
-	}
-
-	private Function createFunction(final String name, final String description, final LinkedList<String> parameters) {
-
-		final FunctionService functionService = GuicedTest.injector.getInstance(FunctionService.class);
-
-		Assert.assertNotNull("function service shouldn't be null", functionService);
-
-		final String functionName = name;
-		final String functionDescription = description;
-
-		Function function = null;
-
-		try {
-
-			function = functionService.createObjectTransactional().getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while function creation.\n" + e.getMessage(), false);
-		}
-
-		Assert.assertNotNull("function shouldn't be null", function);
-		Assert.assertNotNull("function id shouldn't be null", function.getId());
-
-		function.setName(functionName);
-		function.setDescription(functionDescription);
-		function.setParameters(parameters);
-
-		Function updatedFunction = null;
-
-		try {
-
-			updatedFunction = functionService.updateObjectTransactional(function).getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while updating the function of id = '" + function.getId() + "'", false);
-		}
-
-		Assert.assertNotNull("function shouldn't be null", updatedFunction);
-		Assert.assertNotNull("the function name shouldn't be null", function.getName());
-		Assert.assertEquals("the function names are not equal", functionName, function.getName());
-		Assert.assertNotNull("the function description shouldn't be null", function.getDescription());
-		Assert.assertEquals("the function descriptions are not equal", functionDescription, function.getDescription());
-		Assert.assertNotNull("the function parameters shouldn't be null", function.getParameters());
-		Assert.assertEquals("the function type is not '" + FunctionType.Function + "'", FunctionType.Function, function.getFunctionType());
-
-		functions.put(updatedFunction.getId(), updatedFunction);
-
-		return updatedFunction;
-	}
-
-	private Component createComponent(final String name, final Map<String, String> parameterMappings, final Function function,
-			final Set<Component> inputComponents, final Set<Component> outputComponents) {
-
-		final ComponentService componentService = GuicedTest.injector.getInstance(ComponentService.class);
-
-		Component component = null;
-
-		try {
-
-			component = componentService.createObjectTransactional().getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while component creation.\n" + e.getMessage(), false);
-		}
-
-		Assert.assertNotNull("component shouldn't be null", component);
-		Assert.assertNotNull("component id shouldn't be null", component.getId());
-
-		component.setName(name);
-		component.setFunction(function);
-		component.setParameterMappings(parameterMappings);
-
-		if (inputComponents != null) {
-			component.setInputComponents(inputComponents);
-		}
-
-		if (outputComponents != null) {
-			component.setOutputComponents(outputComponents);
-		}
-
-		Component updatedComponent = null;
-
-		try {
-
-			updatedComponent = componentService.updateObjectTransactional(component).getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while updating the component of id = '" + component.getId() + "'", false);
-		}
-
-		Assert.assertNotNull("the updated component shouldn't be null", updatedComponent);
-		Assert.assertNotNull("the component name shouldn't be null", updatedComponent.getId());
-		Assert.assertNotNull("the component name shouldn't be null", updatedComponent.getName());
-		Assert.assertEquals("the component names are not equal", name, updatedComponent.getName());
-		Assert.assertNotNull("the component parameter mappings shouldn't be null", updatedComponent.getParameterMappings());
-		Assert.assertEquals("the function type is not '" + function.getFunctionType() + "'", function.getFunctionType(), updatedComponent
-				.getFunction().getFunctionType());
-
-		components.put(updatedComponent.getId(), updatedComponent);
-
-		return updatedComponent;
 	}
 
 	private Transformation createTransformation(final String name, final String description, final Set<Component> components,
@@ -806,21 +788,6 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 		return updatedTransformation;
 	}
 
-	private void deleteFunction(final Function function) {
-
-		final FunctionService functionService = GuicedTest.injector.getInstance(FunctionService.class);
-
-		Assert.assertNotNull("function service shouldn't be null", functionService);
-
-		final Long functionId = function.getId();
-
-		functionService.deleteObject(functionId);
-
-		final Function deletedFunction = functionService.getObject(functionId);
-
-		Assert.assertNull("deleted function shouldn't exist any more", deletedFunction);
-	}
-
 	private void deleteTransformation(final Transformation transformation) {
 
 		LOG.debug("try to delete transformation '" + transformation.getId() + "'");
@@ -843,137 +810,5 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 			LOG.debug("deleted transformation '" + transformation.getId() + "'");
 		}
-	}
-
-	private void deleteAttributePath(final AttributePath attributePath) {
-
-		final AttributePathService attributePathService = GuicedTest.injector.getInstance(AttributePathService.class);
-
-		Assert.assertNotNull("attribute path service shouldn't be null", attributePathService);
-
-		final Long attributePathId = attributePath.getId();
-
-		attributePathService.deleteObject(attributePathId);
-
-		final AttributePath deletedAttributePath = attributePathService.getObject(attributePathId);
-
-		Assert.assertNull("deleted attribute path shouldn't exist any more", deletedAttributePath);
-	}
-
-	private void deleteAttribute(final Attribute attribute) {
-
-		final AttributeService attributeService = GuicedTest.injector.getInstance(AttributeService.class);
-
-		Assert.assertNotNull("attribute service shouldn't be null", attributeService);
-
-		final Long attributeId = attribute.getId();
-
-		attributeService.deleteObject(attributeId);
-
-		final Attribute deletedAttribute = attributeService.getObject(attributeId);
-
-		Assert.assertNull("deleted attribute shouldn't exist any more", deletedAttribute);
-	}
-
-	private void checkDeletedComponent(final Component component) {
-
-		final ComponentService componentService = GuicedTest.injector.getInstance(ComponentService.class);
-
-		Component deletedComponent = null;
-
-		deletedComponent = componentService.getObject(component.getId());
-
-		Assert.assertNull("component should be null", deletedComponent);
-
-	}
-
-	private AttributePath createAttributePath(final LinkedList<Attribute> attributePathArg) {
-
-		final AttributePathService attributePathService = GuicedTest.injector.getInstance(AttributePathService.class);
-
-		Assert.assertNotNull("attribute path service shouldn't be null", attributePathService);
-
-		final AttributePath attributePath = new AttributePath(attributePathArg);
-
-		AttributePath updatedAttributePath = null;
-
-		try {
-
-			updatedAttributePath = attributePathService.createOrGetObject(attributePathArg).getObject();
-		} catch (final DMPPersistenceException e1) {
-
-			Assert.assertTrue("something went wrong while attribute path creation.\n" + e1.getMessage(), false);
-		}
-
-		Assert.assertNotNull("updated attribute path shouldn't be null", updatedAttributePath);
-		Assert.assertNotNull("updated attribute path id shouldn't be null", updatedAttributePath.getId());
-		Assert.assertNotNull("the attribute path's attribute of the updated attribute path shouldn't be null", updatedAttributePath.getAttributes());
-		Assert.assertEquals("the attribute path's attributes size are not equal", attributePath.getAttributes(), updatedAttributePath.getAttributes());
-		Assert.assertEquals("the first attributes of the attribute path are not equal", attributePath.getAttributePath().get(0), updatedAttributePath
-				.getAttributePath().get(0));
-		Assert.assertNotNull("the attribute path string of the updated attribute path shouldn't be null", updatedAttributePath.toAttributePath());
-		Assert.assertEquals("the attribute path's strings are not equal", attributePath.toAttributePath(), updatedAttributePath.toAttributePath());
-
-		String json = null;
-
-		try {
-
-			json = objectMapper.writeValueAsString(updatedAttributePath);
-		} catch (JsonProcessingException e) {
-
-			e.printStackTrace();
-		}
-
-		LOG.debug("attribute path json for attribute path '" + updatedAttributePath.getId() + "': " + json);
-
-		attributePaths.put(updatedAttributePath.getId(), updatedAttributePath);
-
-		return updatedAttributePath;
-	}
-
-	private Attribute createAttribute(final String id, final String name) {
-
-		if (attributes.containsKey(id)) {
-
-			return attributes.get(id);
-		}
-
-		final AttributeService attributeService = GuicedTest.injector.getInstance(AttributeService.class);
-
-		Assert.assertNotNull("attribute service shouldn't be null", attributeService);
-
-		// create first attribute
-
-		Attribute attribute = null;
-
-		try {
-			attribute = attributeService.createOrGetObjectTransactional(id).getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while attribute creation.\n" + e.getMessage(), false);
-		}
-
-		Assert.assertNotNull("attribute shouldn't be null", attribute);
-		Assert.assertNotNull("attribute id shouldn't be null", attribute.getId());
-
-		attribute.setName(name);
-
-		Attribute updatedAttribute = null;
-
-		try {
-
-			updatedAttribute = attributeService.updateObjectTransactional(attribute).getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while updating the attribute of id = '" + id + "'", false);
-		}
-
-		Assert.assertNotNull("updated attribute shouldn't be null", updatedAttribute);
-		Assert.assertNotNull("updated attribute id shouldn't be null", updatedAttribute.getId());
-		Assert.assertNotNull("updated attribute name shouldn't be null", updatedAttribute.getName());
-
-		attributes.put(updatedAttribute.getId(), updatedAttribute);
-
-		return updatedAttribute;
 	}
 }

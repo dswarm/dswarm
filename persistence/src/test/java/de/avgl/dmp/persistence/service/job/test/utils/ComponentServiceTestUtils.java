@@ -10,6 +10,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import de.avgl.dmp.persistence.model.job.Component;
+import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.FunctionType;
 import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.model.job.proxy.ProxyComponent;
@@ -18,7 +19,7 @@ import de.avgl.dmp.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTest
 
 public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils<ComponentService, ProxyComponent, Component> {
 
-	private final FunctionServiceTestUtils		functionsResourceTestUtils;
+	private final FunctionServiceTestUtils			functionsResourceTestUtils;
 
 	private final TransformationServiceTestUtils	transformationsResourceTestUtils;
 
@@ -32,6 +33,35 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 
 		functionsResourceTestUtils = new FunctionServiceTestUtils();
 		transformationsResourceTestUtils = new TransformationServiceTestUtils(this);
+	}
+
+	public Component createComponent(final String name, final Map<String, String> parameterMappings, final Function function,
+			final Set<Component> inputComponents, final Set<Component> outputComponents) throws Exception {
+
+		// component needs to be a persistent object from the beginning
+		final Component component = createObject().getObject();
+
+		component.setName(name);
+		component.setFunction(function);
+		component.setParameterMappings(parameterMappings);
+
+		if (inputComponents != null) {
+
+			component.setInputComponents(inputComponents);
+		}
+
+		if (outputComponents != null) {
+
+			component.setOutputComponents(outputComponents);
+		}
+
+		// update method needs to be utilised here, because component was already created
+		final Component updatedComponent = updateObject(component, component);
+
+		Assert.assertNotNull("the updated component shouldn't be null", updatedComponent);
+		Assert.assertNotNull("the component name shouldn't be null", updatedComponent.getId());
+
+		return updatedComponent;
 	}
 
 	@Override
@@ -123,6 +153,16 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 			}
 		}
 	}
+	
+	public void checkDeletedComponent(final Component component) {
+
+		Component deletedComponent = null;
+
+		deletedComponent = jpaService.getObject(component.getId());
+
+		Assert.assertNull("component should be null", deletedComponent);
+
+	}
 
 	private void prepareCompareComponents(final Long actualComponentId, final Set<Component> expectedComponents,
 			final Set<Component> actualComponents, final String type) {
@@ -139,7 +179,7 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 
 		compareObjects(expectedComponents, actualComponentsMap);
 	}
-	
+
 	/**
 	 * {@inheritDoc}<br/>
 	 * Updates the name, description, function, parameter mappings, input components and output components of the component.
@@ -151,8 +191,48 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 
 		object.setFunction(objectWithUpdates.getFunction());
 		object.setParameterMappings(objectWithUpdates.getParameterMappings());
-		object.setInputComponents(objectWithUpdates.getInputComponents());
-		object.setOutputComponents(objectWithUpdates.getOutputComponents());
+
+		final Set<Component> inputComponents = objectWithUpdates.getInputComponents();
+		Set<Component> newInputComponents;
+
+		if (inputComponents != null) {
+
+			newInputComponents = Sets.newCopyOnWriteArraySet();
+
+			for (final Component inputComponent : inputComponents) {
+
+				inputComponent.removeOutputComponent(objectWithUpdates);
+				inputComponent.addOutputComponent(object);
+
+				newInputComponents.add(inputComponent);
+			}
+		} else {
+
+			newInputComponents = inputComponents;
+		}
+
+		object.setInputComponents(newInputComponents);
+
+		final Set<Component> outputComponents = objectWithUpdates.getOutputComponents();
+		Set<Component> newOutputComponents;
+
+		if (outputComponents != null) {
+
+			newOutputComponents = Sets.newCopyOnWriteArraySet();
+
+			for (final Component outputComponent : outputComponents) {
+
+				outputComponent.removeInputComponent(objectWithUpdates);
+				outputComponent.addInputComponent(object);
+
+				newOutputComponents.add(outputComponent);
+			}
+		} else {
+
+			newOutputComponents = outputComponents;
+		}
+
+		object.setOutputComponents(newOutputComponents);
 
 		return object;
 	}

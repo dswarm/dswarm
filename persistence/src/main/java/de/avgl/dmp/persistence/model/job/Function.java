@@ -58,7 +58,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	 */
 	private static final long						serialVersionUID	= 1L;
 
-	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(AttributePath.class);
+	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(Function.class);
 
 	/**
 	 * A string that holds the serialised JSON object of a function description.
