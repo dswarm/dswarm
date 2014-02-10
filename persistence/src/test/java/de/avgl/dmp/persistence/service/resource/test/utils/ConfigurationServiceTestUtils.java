@@ -2,13 +2,16 @@ package de.avgl.dmp.persistence.service.resource.test.utils;
 
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.junit.Assert;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Sets;
 
 import de.avgl.dmp.persistence.model.resource.Configuration;
+import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.proxy.ProxyConfiguration;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestUtils;
@@ -26,6 +29,22 @@ public class ConfigurationServiceTestUtils extends ExtendedBasicDMPJPAServiceTes
 		super.compareObjects(expectedObject, actualObject);
 
 		compareConfigurations(expectedObject, actualObject);
+	}
+	
+	public Configuration createConfiguration(final String name, final String description, final ObjectNode parameters) throws Exception {
+
+		final Configuration configuration = new Configuration();
+
+		configuration.setName(name);
+		configuration.setDescription(description);
+		configuration.setParameters(parameters);
+
+		final Configuration updatedConfiguration = createObject(configuration, configuration);
+
+		Assert.assertNotNull("updated configuration shouldn't be null", updatedConfiguration);
+		Assert.assertNotNull("updated configuration id shouldn't be null", updatedConfiguration.getId());
+
+		return updatedConfiguration;
 	}
 
 	private void compareConfigurations(final Configuration expectedConfiguration, final Configuration actualConfiguration) {
@@ -57,7 +76,7 @@ public class ConfigurationServiceTestUtils extends ExtendedBasicDMPJPAServiceTes
 					+ parameterValueNode.asText() + "'", parameterValue.equals(parameterValueNode.asText()));
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}<br/>
 	 * Updates the name, description, resources and parameters of the configuration.
@@ -71,7 +90,26 @@ public class ConfigurationServiceTestUtils extends ExtendedBasicDMPJPAServiceTes
 
 		object.setParameters(parameters);
 
-		object.setResources(objectWithUpdates.getResources());
+		final Set<Resource> resources = objectWithUpdates.getResources();
+		final Set<Resource> newResources;
+
+		if (resources != null) {
+
+			newResources = Sets.newCopyOnWriteArraySet();
+
+			for (final Resource resource : resources) {
+
+				resource.removeConfiguration(objectWithUpdates);
+				resource.addConfiguration(object);
+
+				newResources.add(resource);
+			}
+		} else {
+
+			newResources = resources;
+		}
+
+		object.setResources(newResources);
 
 		return object;
 	}

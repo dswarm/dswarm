@@ -35,6 +35,24 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 
 		compareSchemas(expectedObject, actualObject);
 	}
+	
+	public Schema createSchema(final String name, final Set<AttributePath> attributePaths, final Clasz recordClass) throws Exception {
+
+		final Schema schema = new Schema();
+
+		schema.setName(name);
+		schema.setAttributePaths(attributePaths);
+		schema.setRecordClass(recordClass);
+
+		// update schema
+
+		final Schema updatedSchema = createObject(schema, schema);
+
+		Assert.assertNotNull("updated schema shouldn't be null", updatedSchema);
+		Assert.assertNotNull("updated schema id shouldn't be null", updatedSchema.getId());
+
+		return updatedSchema;
+	}
 
 	private void compareSchemas(final Schema expectedSchema, final Schema actualSchema) {
 

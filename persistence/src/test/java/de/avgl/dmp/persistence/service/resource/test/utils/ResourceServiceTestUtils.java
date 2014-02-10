@@ -5,15 +5,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.persistence.EntityManager;
-
 import org.junit.Assert;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
-import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
@@ -38,6 +36,25 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 		super.compareObjects(expectedObject, actualObject);
 
 		compareResources(expectedObject, actualObject);
+	}
+	
+	public Resource createResource(final String name, final String description, final ResourceType resourceType, final ObjectNode attributes,
+			final Set<Configuration> configurations) throws Exception {
+
+		final Resource resource = new Resource();
+
+		resource.setName(name);
+		resource.setDescription(description);
+		resource.setType(resourceType);
+		resource.setAttributes(attributes);
+		resource.setConfigurations(configurations);
+
+		final Resource updatedResource = createObject(resource, resource);
+
+		Assert.assertNotNull("updated resource shouldn't be null", updatedResource);
+		Assert.assertNotNull("updated resource id shouldn't be null", updatedResource.getId());
+
+		return updatedResource;
 	}
 
 	private void compareResources(final Resource expectedResource, final Resource actualResource) {
@@ -103,11 +120,28 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 	@Override
 	protected Resource prepareObjectForUpdate(final Resource objectWithUpdates, final Resource object) {
 
-		super.prepareObjectForUpdate(object, objectWithUpdates);
+		super.prepareObjectForUpdate(objectWithUpdates, object);
 
 		final Set<Configuration> configurations = objectWithUpdates.getConfigurations();
+		Set<Configuration> newConfigurations;
 
-		object.setConfigurations(configurations);
+		if (configurations != null) {
+
+			newConfigurations = Sets.newCopyOnWriteArraySet();
+
+			for (final Configuration configuration : configurations) {
+
+				configuration.removeResource(objectWithUpdates);
+				configuration.addResource(object);
+
+				newConfigurations.add(configuration);
+			}
+		} else {
+
+			newConfigurations = configurations;
+		}
+
+		object.setConfigurations(newConfigurations);
 
 		final ResourceType type = objectWithUpdates.getType();
 
