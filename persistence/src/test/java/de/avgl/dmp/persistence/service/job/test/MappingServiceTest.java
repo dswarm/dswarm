@@ -14,7 +14,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Function;
@@ -26,9 +25,9 @@ import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.MappingAttributePathInstance;
 import de.avgl.dmp.persistence.service.job.MappingService;
-import de.avgl.dmp.persistence.service.job.TransformationService;
 import de.avgl.dmp.persistence.service.job.test.utils.ComponentServiceTestUtils;
 import de.avgl.dmp.persistence.service.job.test.utils.FunctionServiceTestUtils;
+import de.avgl.dmp.persistence.service.job.test.utils.TransformationServiceTestUtils;
 import de.avgl.dmp.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
 import de.avgl.dmp.persistence.service.schema.test.utils.AttributeServiceTestUtils;
 import de.avgl.dmp.persistence.service.schema.test.utils.MappingAttributePathInstanceServiceTestUtils;
@@ -58,6 +57,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 	private final FunctionServiceTestUtils						functionServiceTestUtils;
 	private final MappingAttributePathInstanceServiceTestUtils	mappingAttributePathInstanceServiceTestUtils;
 	private final ComponentServiceTestUtils						componentServiceTestUtils;
+	private final TransformationServiceTestUtils transformationServiceTestUtils;
 
 	public MappingServiceTest() {
 
@@ -68,6 +68,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 		functionServiceTestUtils = new FunctionServiceTestUtils();
 		mappingAttributePathInstanceServiceTestUtils = new MappingAttributePathInstanceServiceTestUtils();
 		componentServiceTestUtils = new ComponentServiceTestUtils();
+		transformationServiceTestUtils = new TransformationServiceTestUtils();
 	}
 
 	@Test
@@ -105,7 +106,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		components.add(component);
 
-		final Transformation transformation = createTransformation(transformationName, transformationDescription, components,
+		final Transformation transformation = transformationServiceTestUtils.createTransformation(transformationName, transformationDescription, components,
 				transformationParameters);
 
 		// attribute paths
@@ -240,7 +241,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 		LOG.debug("mapping json: " + json);
 
 		deleteObject(updatedMapping.getId());
-		deleteTransformation(transformation);
+		transformationServiceTestUtils.deleteObject(transformation);
 		componentServiceTestUtils.checkDeletedComponent(component);
 		functionServiceTestUtils.deleteObject(function);
 
@@ -372,8 +373,9 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		transformationParameters.add(transformationParameter);
 
-		final Transformation transformation = createTransformation(transformationName, transformationDescription, components,
+		final Transformation transformation = transformationServiceTestUtils.createTransformation(transformationName, transformationDescription, components,
 				transformationParameters);
+		transformations.put(transformation.getId(), transformation);
 
 		Assert.assertNotNull("the transformation components set shouldn't be null", transformation.getComponents());
 		Assert.assertEquals("the transformation components sizes are not equal", 3, transformation.getComponents().size());
@@ -470,7 +472,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 		transformation2Parameters.add(transformation2Parameter);
 		transformation2Parameters.add(transformation2Parameter2);
 
-		final Transformation transformation2 = createTransformation(transformation2Name, transformation2Description, components2,
+		final Transformation transformation2 = transformationServiceTestUtils.createTransformation(transformation2Name, transformation2Description, components2,
 				transformation2Parameters);
 
 		// attribute paths
@@ -709,11 +711,11 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 		// upper transformation needs to be deleted first, so that the functions/transformations of its components will be
 		// released
 		// note: could maybe improved via bidirectional relationship from component to function and vice versa
-		deleteTransformation(transformation2);
+		transformationServiceTestUtils.deleteObject(transformation2);
 
 		for (final Transformation transformationToBeDeleted : transformations.values()) {
 
-			deleteTransformation(transformationToBeDeleted);
+			transformationServiceTestUtils.deleteObject(transformationToBeDeleted);
 		}
 
 		for (final Component componentAlreadyDeleted : this.components.values()) {
@@ -742,73 +744,5 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 		}
 
 		LOG.debug("end complex mapping test");
-	}
-
-	private Transformation createTransformation(final String name, final String description, final Set<Component> components,
-			final LinkedList<String> parameters) {
-
-		final TransformationService transformationService = GuicedTest.injector.getInstance(TransformationService.class);
-
-		Transformation transformation = null;
-
-		try {
-
-			transformation = transformationService.createObjectTransactional().getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while transformation creation.\n" + e.getMessage(), false);
-		}
-
-		Assert.assertNotNull("transformation shouldn't be null", transformation);
-		Assert.assertNotNull("transformation id shouldn't be null", transformation.getId());
-
-		transformation.setName(name);
-		transformation.setDescription(description);
-		transformation.setComponents(components);
-		transformation.setParameters(parameters);
-
-		Transformation updatedTransformation = null;
-
-		try {
-
-			updatedTransformation = transformationService.updateObjectTransactional(transformation).getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while updating the transformation of id = '" + transformation.getId() + "'", false);
-		}
-
-		Assert.assertNotNull("the updated component shouldn't be null", updatedTransformation);
-		Assert.assertNotNull("the transformation name shouldn't be null", updatedTransformation.getId());
-		Assert.assertNotNull("the transformation name shouldn't be null", updatedTransformation.getName());
-		Assert.assertEquals("the transformation names are not equal", name, updatedTransformation.getName());
-		Assert.assertNotNull("the transformation parameter mappings shouldn't be null", updatedTransformation.getParameters());
-
-		transformations.put(updatedTransformation.getId(), updatedTransformation);
-
-		return updatedTransformation;
-	}
-
-	private void deleteTransformation(final Transformation transformation) {
-
-		LOG.debug("try to delete transformation '" + transformation.getId() + "'");
-
-		final TransformationService transformationService = GuicedTest.injector.getInstance(TransformationService.class);
-
-		Assert.assertNotNull("transformation service shouldn't be null", transformationService);
-
-		final Long transformationId = transformation.getId();
-
-		final Transformation notDeletedTransformation = transformationService.getObject(transformationId);
-
-		if (notDeletedTransformation != null) {
-
-			transformationService.deleteObject(transformationId);
-
-			final Transformation deletedTransformation = transformationService.getObject(transformationId);
-
-			Assert.assertNull("deleted transformation shouldn't exist any more", deletedTransformation);
-
-			LOG.debug("deleted transformation '" + transformation.getId() + "'");
-		}
 	}
 }

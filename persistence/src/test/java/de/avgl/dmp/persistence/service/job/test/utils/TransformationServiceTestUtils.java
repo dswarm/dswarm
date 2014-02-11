@@ -1,5 +1,6 @@
 package de.avgl.dmp.persistence.service.job.test.utils;
 
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
@@ -51,6 +52,21 @@ public class TransformationServiceTestUtils extends BasicFunctionServiceTestUtil
 
 			componentsResourceTestUtils.compareObjects(expectedObject.getComponents(), actualComponentsMap);
 		}
+	}
+
+	public Transformation createTransformation(final String name, final String description, final Set<Component> components,
+			final LinkedList<String> parameters) throws Exception {
+
+		final Transformation transformation = new Transformation();
+
+		transformation.setName(name);
+		transformation.setDescription(description);
+		transformation.setComponents(components);
+		transformation.setParameters(parameters);
+
+		final Transformation updatedTransformation = createObject(transformation, transformation);
+
+		return updatedTransformation;
 	}
 
 	/**
