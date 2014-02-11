@@ -1,55 +1,16 @@
 package de.avgl.dmp.controller.resources.schema.test.utils;
 
-import java.util.Map;
-import java.util.Set;
-
-import org.junit.Assert;
-
-import com.google.common.collect.Maps;
-
 import de.avgl.dmp.controller.resources.test.utils.BasicResourceTestUtils;
-import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttributePath;
 import de.avgl.dmp.persistence.service.schema.AttributePathService;
+import de.avgl.dmp.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
 
-public class AttributePathsResourceTestUtils extends BasicResourceTestUtils<AttributePathService, ProxyAttributePath, AttributePath, Long> {
-
-	private final AttributesResourceTestUtils	attributeResourceTestUtils;
+public class AttributePathsResourceTestUtils extends
+		BasicResourceTestUtils<AttributePathServiceTestUtils, AttributePathService, ProxyAttributePath, AttributePath, Long> {
 
 	public AttributePathsResourceTestUtils() {
 
-		super("attributepaths", AttributePath.class, AttributePathService.class);
-
-		attributeResourceTestUtils = new AttributesResourceTestUtils();
-	}
-
-	@Override
-	public void compareObjects(final AttributePath expectedObject, final AttributePath actualObject) {
-
-		super.compareObjects(expectedObject, actualObject);
-
-		if (expectedObject.getAttributes() != null && !expectedObject.getAttributes().isEmpty()) {
-
-			final Set<Attribute> actualAttributes = actualObject.getAttributes();
-
-			Assert.assertNotNull("attributes of actual attribute path '" + actualObject.getId() + "' shouldn't be null", actualAttributes);
-			Assert.assertFalse("attributes of actual attribute path '" + actualObject.getId() + "' shouldn't be empty", actualAttributes.isEmpty());
-
-			final Map<Long, Attribute> actualAttributesMap = Maps.newHashMap();
-
-			for (final Attribute actualAttribute : actualAttributes) {
-
-				actualAttributesMap.put(actualAttribute.getId(), actualAttribute);
-			}
-
-			attributeResourceTestUtils.compareObjects(expectedObject.getAttributes(), actualAttributesMap);
-		}
-	}
-
-	@Override
-	public void reset() {
-		
-		attributeResourceTestUtils.reset();
+		super("attributepaths", AttributePath.class, AttributePathService.class, AttributePathServiceTestUtils.class);
 	}
 }

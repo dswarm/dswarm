@@ -18,10 +18,12 @@ import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttributePath;
 import de.avgl.dmp.persistence.service.schema.AttributePathService;
+import de.avgl.dmp.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class AttributePathsResourceTest extends
-		BasicResourceTest<AttributePathsResourceTestUtils, AttributePathService, ProxyAttributePath, AttributePath, Long> {
+public class AttributePathsResourceTest
+		extends
+		BasicResourceTest<AttributePathsResourceTestUtils, AttributePathServiceTestUtils, AttributePathService, ProxyAttributePath, AttributePath, Long> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributePathsResourceTest.class);
 

@@ -26,24 +26,17 @@ import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.proxy.ProxyResource;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
+import de.avgl.dmp.persistence.service.resource.test.utils.ResourceServiceTestUtils;
 
-public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtils<ResourceService, ProxyResource, Resource> {
+public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtils<ResourceServiceTestUtils, ResourceService, ProxyResource, Resource> {
 
 	private final ConfigurationsResourceTestUtils	configurationsResourceTestUtils;
 
 	public ResourcesResourceTestUtils() {
 
-		super("resources", Resource.class, ResourceService.class);
+		super("resources", Resource.class, ResourceService.class, ResourceServiceTestUtils.class);
 
 		configurationsResourceTestUtils = new ConfigurationsResourceTestUtils();
-	}
-
-	@Override
-	public void compareObjects(final Resource expectedObject, final Resource actualObject) {
-
-		super.compareObjects(expectedObject, actualObject);
-
-		compareResources(expectedObject, actualObject);
 	}
 
 	@Override
@@ -222,11 +215,5 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 
 			configurationsResourceTestUtils.compareObjects(expectedResource.getConfigurations(), actualConfigurationsMap);
 		}
-	}
-
-	@Override
-	public void reset() {
-
-		configurationsResourceTestUtils.reset();
 	}
 }

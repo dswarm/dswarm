@@ -1,6 +1,5 @@
 package de.avgl.dmp.controller.resources.job.test;
 
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
@@ -41,9 +40,11 @@ import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.service.job.ProjectService;
+import de.avgl.dmp.persistence.service.job.test.utils.ProjectServiceTestUtils;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTestUtils, ProjectService, ProxyProject, Project, Long> {
+public class ProjectsResourceTest extends
+		BasicResourceTest<ProjectsResourceTestUtils, ProjectServiceTestUtils, ProjectService, ProxyProject, Project, Long> {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(AttributesResourceTest.class);
 
@@ -72,15 +73,15 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 	private final ProjectsResourceTestUtils			projectsResourceTestUtils;
 
 	private Function								function;
-	
+
 	private Function								updateFunction;
 
 	private Component								component;
-	
+
 	private Component								updateComponent;
 
 	private Transformation							transformation;
-	
+
 	private Transformation							updateTransformation;
 
 	private Component								transformationComponent;
@@ -90,19 +91,19 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 	final Map<Long, AttributePath>					attributePaths	= Maps.newLinkedHashMap();
 
 	private Clasz									recordClass;
-	
+
 	private Clasz									updateRecordClass;
 
 	private Schema									schema;
 
 	private Configuration							configuration;
-	
+
 	private Configuration							updateConfiguration;
 
 	private Resource								resource;
-	
+
 	private Resource								updateResource;
-	
+
 	private Mapping									updateMapping;
 
 	private Map<Long, DataModel>					dataModels		= Maps.newHashMap();
@@ -181,7 +182,8 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 
 		super.testPUTObject();
 
-		// TODO: [@fniederlein] do clean-up for update (sub) objects (there are a functions, components, mappings etc. after the test in
+		// TODO: [@fniederlein] do clean-up for update (sub) objects (there are a functions, components, mappings etc. after the
+		// test in
 		// the database); note: you need to take care of the overridden/replaced (sub) objects as well as the new ones
 	}
 
@@ -211,13 +213,13 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 		// resource clean-up
 
 		resourcesResourceTestUtils.deleteObject(resource);
-		
+
 		resourcesResourceTestUtils.deleteObject(updateResource);
 
 		// configuration clean-up
 
 		configurationsResourceTestUtils.deleteObject(configuration);
-		
+
 		configurationsResourceTestUtils.deleteObject(updateConfiguration);
 
 		// START schema clean-up
@@ -225,7 +227,7 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 		schemasResourceTestUtils.deleteObject(schema);
 
 		claszesResourceTestUtils.deleteObject(recordClass);
-		
+
 		claszesResourceTestUtils.deleteObject(updateRecordClass);
 
 		// END schema clean-up
@@ -260,80 +262,80 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 	public Project updateObject(final Project persistedProject) throws Exception {
 
 		persistedProject.setName(persistedProject.getName() + " update");
-		
+
 		persistedProject.setDescription(persistedProject.getDescription() + " update");
-		
+
 		// update data model
 		updateConfiguration = configurationsResourceTestUtils.createObject("configuration2.json");
 		final DataModel inputDataModel = persistedProject.getInputDataModel();
 		inputDataModel.setConfiguration(updateConfiguration);
-		
+
 		updateResource = resourcesResourceTestUtils.createObject("resource2.json");
 		inputDataModel.setDataResource(updateResource);
-		
+
 		updateRecordClass = claszesResourceTestUtils.createObject("clasz1.json");
-		
+
 		Schema schema = inputDataModel.getSchema();
 		schema.setName(schema.getName() + " update");
 		schema.setRecordClass(updateRecordClass);
-		
+
 		inputDataModel.setSchema(schema);
-		
+
 		persistedProject.setInputDataModel(inputDataModel);
-		
-//		// update mapping
-//		updateFunction = functionsResourceTestUtils.createObject("function1.json");
-//		final String finalFunctionJSONString = objectMapper.writeValueAsString(updateFunction);
-//		final ObjectNode finalFunctionJSON = objectMapper.readValue(finalFunctionJSONString, ObjectNode.class);
-//		Assert.assertNotNull("the function JSON shouldn't be null", finalFunctionJSON);
-//
-//		updateComponent = componentsResourceTestUtils.createObject("component1.json");
-//		final String finalComponentJSONString = objectMapper.writeValueAsString(updateComponent);
-//		final ObjectNode finalComponentJSON = objectMapper.readValue(finalComponentJSONString, ObjectNode.class);
-//
-//		finalComponentJSON.put("function", finalFunctionJSON);
-//		
-//		String transformationJSONString = DMPPersistenceUtil.getResourceAsString("transformation.json");
-//		final ObjectNode transformationJSON = objectMapper.readValue(transformationJSONString, ObjectNode.class);
-//		
-//		final ArrayNode componentsJSONArray = objectMapper.createArrayNode();
-//		
-//		componentsJSONArray.add(finalComponentJSON);
-//
-//		transformationJSON.put("components", componentsJSONArray);
-//		
-//		transformationJSONString = objectMapper.writeValueAsString(transformationJSON);
-//		final Transformation expectedTransformation = objectMapper.readValue(transformationJSONString, Transformation.class);
-//
-//		updateTransformation = transformationsResourceTestUtils.createObject(transformationJSONString, expectedTransformation);
-//
-//		final String finalTransformationJSONString = objectMapper.writeValueAsString(updateTransformation);
-//		final ObjectNode finalTransformationJSON = objectMapper.readValue(finalTransformationJSONString, ObjectNode.class);
-//
-//		String mappingJSONString = DMPPersistenceUtil.getResourceAsString("mapping1.json");
-//		final ObjectNode mappingJSON = objectMapper.readValue(mappingJSONString, ObjectNode.class);
-//	
-//		mappingJSON.put("transformation", finalTransformationJSON);
-//		
-//		mappingJSONString = objectMapper.writeValueAsString(mappingJSON);
-//		final Mapping expectedMapping = objectMapper.readValue(mappingJSONString, Mapping.class);
-//
-//		updateMapping = mappingsResourceTestUtils.createObject(mappingJSONString, expectedMapping);
-//		final Set<Mapping> updateMappings = new LinkedHashSet<Mapping>();
-//		updateMappings.add(updateMapping);
-//		
-//		persistedProject.setMappings(updateMappings);
-				
+
+		// // update mapping
+		// updateFunction = functionsResourceTestUtils.createObject("function1.json");
+		// final String finalFunctionJSONString = objectMapper.writeValueAsString(updateFunction);
+		// final ObjectNode finalFunctionJSON = objectMapper.readValue(finalFunctionJSONString, ObjectNode.class);
+		// Assert.assertNotNull("the function JSON shouldn't be null", finalFunctionJSON);
+		//
+		// updateComponent = componentsResourceTestUtils.createObject("component1.json");
+		// final String finalComponentJSONString = objectMapper.writeValueAsString(updateComponent);
+		// final ObjectNode finalComponentJSON = objectMapper.readValue(finalComponentJSONString, ObjectNode.class);
+		//
+		// finalComponentJSON.put("function", finalFunctionJSON);
+		//
+		// String transformationJSONString = DMPPersistenceUtil.getResourceAsString("transformation.json");
+		// final ObjectNode transformationJSON = objectMapper.readValue(transformationJSONString, ObjectNode.class);
+		//
+		// final ArrayNode componentsJSONArray = objectMapper.createArrayNode();
+		//
+		// componentsJSONArray.add(finalComponentJSON);
+		//
+		// transformationJSON.put("components", componentsJSONArray);
+		//
+		// transformationJSONString = objectMapper.writeValueAsString(transformationJSON);
+		// final Transformation expectedTransformation = objectMapper.readValue(transformationJSONString, Transformation.class);
+		//
+		// updateTransformation = transformationsResourceTestUtils.createObject(transformationJSONString, expectedTransformation);
+		//
+		// final String finalTransformationJSONString = objectMapper.writeValueAsString(updateTransformation);
+		// final ObjectNode finalTransformationJSON = objectMapper.readValue(finalTransformationJSONString, ObjectNode.class);
+		//
+		// String mappingJSONString = DMPPersistenceUtil.getResourceAsString("mapping1.json");
+		// final ObjectNode mappingJSON = objectMapper.readValue(mappingJSONString, ObjectNode.class);
+		//
+		// mappingJSON.put("transformation", finalTransformationJSON);
+		//
+		// mappingJSONString = objectMapper.writeValueAsString(mappingJSON);
+		// final Mapping expectedMapping = objectMapper.readValue(mappingJSONString, Mapping.class);
+		//
+		// updateMapping = mappingsResourceTestUtils.createObject(mappingJSONString, expectedMapping);
+		// final Set<Mapping> updateMappings = new LinkedHashSet<Mapping>();
+		// updateMappings.add(updateMapping);
+		//
+		// persistedProject.setMappings(updateMappings);
+
 		String updateProjectJSONString = objectMapper.writeValueAsString(persistedProject);
 		final Project expectedProject = objectMapper.readValue(updateProjectJSONString, Project.class);
 		Assert.assertNotNull("the project JSON string shouldn't be null", updateProjectJSONString);
-		
+
 		final Project updateProject = projectsResourceTestUtils.updateObject(updateProjectJSONString, expectedProject);
-		
-		Assert.assertEquals("projects shoud be equal", persistedProject,updateProject);
-		
+
+		Assert.assertEquals("projects shoud be equal", persistedProject, updateProject);
+
 		return updateProject;
-		
+
 	}
 
 	private DataModel createInputDataModel() throws Exception {
@@ -630,7 +632,7 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 
 		return mapping;
 	}
-	
+
 	private Attribute createAttribute(final String attributeJSONFileName) throws Exception {
 
 		final Attribute actualAttribute = attributesResourceTestUtils.createObject(attributeJSONFileName);

@@ -14,8 +14,9 @@ import de.avgl.dmp.controller.resources.test.BasicResourceTest;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxyClasz;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
+import de.avgl.dmp.persistence.service.schema.test.utils.ClaszServiceTestUtils;
 
-public class ClaszesResourceTest extends BasicResourceTest<ClaszesResourceTestUtils, ClaszService, ProxyClasz, Clasz, Long> {
+public class ClaszesResourceTest extends BasicResourceTest<ClaszesResourceTestUtils, ClaszServiceTestUtils, ClaszService, ProxyClasz, Clasz, Long> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ClaszesResourceTest.class);
 

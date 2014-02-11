@@ -42,9 +42,11 @@ import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.service.job.ProjectService;
+import de.avgl.dmp.persistence.service.job.test.utils.ProjectServiceTestUtils;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class ProjectWithNewEntitiesResourceTest extends BasicResourceTest<ProjectsResourceTestUtils, ProjectService, ProxyProject, Project, Long> {
+public class ProjectWithNewEntitiesResourceTest extends
+		BasicResourceTest<ProjectsResourceTestUtils, ProjectServiceTestUtils, ProjectService, ProxyProject, Project, Long> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributesResourceTest.class);
 

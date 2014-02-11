@@ -29,9 +29,11 @@ import de.avgl.dmp.persistence.model.job.proxy.ProxyMapping;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.service.job.MappingService;
+import de.avgl.dmp.persistence.service.job.test.utils.MappingServiceTestUtils;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class MappingsResourceTest extends BasicResourceTest<MappingsResourceTestUtils, MappingService, ProxyMapping, Mapping, Long> {
+public class MappingsResourceTest extends
+		BasicResourceTest<MappingsResourceTestUtils, MappingServiceTestUtils, MappingService, ProxyMapping, Mapping, Long> {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(AttributesResourceTest.class);
 
@@ -50,9 +52,9 @@ public class MappingsResourceTest extends BasicResourceTest<MappingsResourceTest
 	private final MappingsResourceTestUtils			mappingsResourceTestUtils;
 
 	private Function								function;
-	
+
 	private Function								updateFunction;
-	
+
 	private Filter									updateFilter;
 
 	private Component								component;
@@ -60,9 +62,9 @@ public class MappingsResourceTest extends BasicResourceTest<MappingsResourceTest
 	private Transformation							transformation;
 
 	private Component								transformationComponent;
-	
+
 	private Component								updateTransformationComponent;
-	
+
 	private AttributePath							updateInputAttributePath;
 
 	final Map<Long, Attribute>						attributes		= Maps.newHashMap();
@@ -240,30 +242,30 @@ public class MappingsResourceTest extends BasicResourceTest<MappingsResourceTest
 
 		// update filter
 		final Filter filter = filtersResourceTestUtils.createObject("filter2.json");
-		
+
 		if (persistedMapping.getInputFilter() != null) {
 			updateFilter = persistedMapping.getInputFilter();
 		} else {
 			updateFilter = filter;
 		}
-		
+
 		persistedMapping.setInputFilter(filter);
-		
+
 		// update component
 		final Component updateComponent = componentsResourceTestUtils.createObject("component.json");
-		
+
 		if (persistedMapping.getTransformation() != null) {
-			
+
 			updateTransformationComponent = persistedMapping.getTransformation();
-	
+
 		} else {
 			updateTransformationComponent = updateComponent;
 		}
-		
+
 		persistedMapping.setTransformation(updateComponent);
-		
+
 		updateFunction = updateComponent.getFunction();
-		
+
 		String updateMappingJSONString = objectMapper.writeValueAsString(persistedMapping);
 		final ObjectNode updateMappingJSON = objectMapper.readValue(updateMappingJSONString, ObjectNode.class);
 
@@ -287,7 +289,7 @@ public class MappingsResourceTest extends BasicResourceTest<MappingsResourceTest
 		expectedObject = objectMapper.readValue(updateMappingJSONString, pojoClass);
 
 		final Mapping updateMapping = mappingsResourceTestUtils.updateObject(updateMappingJSONString, expectedObject);
-		
+
 		Assert.assertNotNull("the mapping JSON string shouldn't be null", updateMapping);
 		Assert.assertEquals("mapping name shoud be equal", updateMapping.getName(), expectedObject.getName());
 

@@ -8,8 +8,10 @@ import de.avgl.dmp.controller.resources.test.BasicResourceTest;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.proxy.ProxyFunction;
 import de.avgl.dmp.persistence.service.job.FunctionService;
+import de.avgl.dmp.persistence.service.job.test.utils.FunctionServiceTestUtils;
 
-public class FunctionsResourceTest extends BasicResourceTest<FunctionsResourceTestUtils, FunctionService, ProxyFunction, Function, Long> {
+public class FunctionsResourceTest extends
+		BasicResourceTest<FunctionsResourceTestUtils, FunctionServiceTestUtils, FunctionService, ProxyFunction, Function, Long> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributesResourceTest.class);
 

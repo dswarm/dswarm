@@ -14,8 +14,10 @@ import de.avgl.dmp.controller.resources.test.BasicResourceTest;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttribute;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
+import de.avgl.dmp.persistence.service.schema.test.utils.AttributeServiceTestUtils;
 
-public class AttributesResourceTest extends BasicResourceTest<AttributesResourceTestUtils, AttributeService, ProxyAttribute, Attribute, Long> {
+public class AttributesResourceTest extends
+		BasicResourceTest<AttributesResourceTestUtils, AttributeServiceTestUtils, AttributeService, ProxyAttribute, Attribute, Long> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributesResourceTest.class);
 

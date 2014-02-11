@@ -25,9 +25,11 @@ import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxySchema;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
+import de.avgl.dmp.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class SchemasResourceTest extends BasicResourceTest<SchemasResourceTestUtils, SchemaService, ProxySchema, Schema, Long> {
+public class SchemasResourceTest extends
+		BasicResourceTest<SchemasResourceTestUtils, SchemaServiceTestUtils, SchemaService, ProxySchema, Schema, Long> {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(SchemasResourceTest.class);
 

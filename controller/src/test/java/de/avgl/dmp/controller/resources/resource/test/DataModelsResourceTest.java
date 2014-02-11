@@ -52,11 +52,13 @@ import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.service.InternalModelService;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
+import de.avgl.dmp.persistence.service.resource.test.utils.DataModelServiceTestUtils;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class DataModelsResourceTest extends BasicResourceTest<DataModelsResourceTestUtils, DataModelService, ProxyDataModel, DataModel, Long> {
+public class DataModelsResourceTest extends
+		BasicResourceTest<DataModelsResourceTestUtils, DataModelServiceTestUtils, DataModelService, ProxyDataModel, DataModel, Long> {
 
-	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(DataModelsResourceTest.class);
+	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(DataModelsResourceTest.class);
 
 	private final AttributesResourceTestUtils		attributesResourceTestUtils;
 
@@ -69,27 +71,27 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 	private final ConfigurationsResourceTestUtils	configurationsResourceTestUtils;
 
 	private final SchemasResourceTestUtils			schemasResourceTestUtils;
-	
+
 	private final DataModelsResourceTestUtils		dataModelsResourceTestUtils;
 
-	private final Map<Long, Attribute>				attributes		= Maps.newHashMap();
+	private final Map<Long, Attribute>				attributes			= Maps.newHashMap();
 
-	private final Map<Long, AttributePath>			attributePaths	= Maps.newLinkedHashMap();
+	private final Map<Long, AttributePath>			attributePaths		= Maps.newLinkedHashMap();
 
 	private Clasz									recordClass;
-	
-	private Clasz									updateRecordClass = null;
+
+	private Clasz									updateRecordClass	= null;
 
 	private Schema									schema;
 
 	private Configuration							configuration;
-	
-	private Configuration							updateConfiguration = null;
+
+	private Configuration							updateConfiguration	= null;
 
 	private Resource								resource;
-	
-	private Resource								updateResource = null;
-	
+
+	private Resource								updateResource		= null;
+
 	public DataModelsResourceTest() {
 
 		super(DataModel.class, DataModelService.class, "datamodels", "datamodel.json", new DataModelsResourceTestUtils());
@@ -471,7 +473,7 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 	public void testPUTObject() throws Exception {
 
 		super.testPUTObject();
-	
+
 		resourcesResourceTestUtils.deleteObject(updateResource);
 		configurationsResourceTestUtils.deleteObject(updateConfiguration);
 	}
@@ -507,41 +509,41 @@ public class DataModelsResourceTest extends BasicResourceTest<DataModelsResource
 
 		// END schema clean-up
 	}
-	
+
 	@Override
 	public DataModel updateObject(final DataModel persistedDataModel) throws Exception {
-	
+
 		persistedDataModel.setName(persistedDataModel.getName() + " update");
-		
+
 		persistedDataModel.setDescription(persistedDataModel.getDescription() + " update");
-		
+
 		updateConfiguration = configurationsResourceTestUtils.createObject("configuration2.json");
 		persistedDataModel.setConfiguration(updateConfiguration);
-		
+
 		updateResource = resourcesResourceTestUtils.createObject("resource2.json");
 		persistedDataModel.setDataResource(updateResource);
-		
+
 		updateRecordClass = claszesResourceTestUtils.createObject("clasz1.json");
-		
+
 		Schema schema = persistedDataModel.getSchema();
 		schema.setName(schema.getName() + " update");
 		schema.setRecordClass(updateRecordClass);
-		
+
 		persistedDataModel.setSchema(schema);
-		
+
 		String updateDataModelJSONString = objectMapper.writeValueAsString(persistedDataModel);
 		final DataModel expectedDataModel = objectMapper.readValue(updateDataModelJSONString, DataModel.class);
 		Assert.assertNotNull("the data model JSON string shouldn't be null", updateDataModelJSONString);
-		
+
 		final DataModel updateDataModel = dataModelsResourceTestUtils.updateObject(updateDataModelJSONString, expectedDataModel);
-		
+
 		Assert.assertNotNull("the data model JSON string shouldn't be null", updateDataModel);
 		Assert.assertEquals("data model id shoud be equal", updateDataModel.getId(), persistedDataModel.getId());
 		Assert.assertEquals("data model name shoud be equal", updateDataModel.getName(), persistedDataModel.getName());
 		Assert.assertEquals("data model description shoud be equal", updateDataModel.getDescription(), persistedDataModel.getDescription());
 		Assert.assertEquals("data model schema shoud be equal", updateDataModel.getSchema(), persistedDataModel.getSchema());
 		Assert.assertEquals("data model configuration shoud be equal", updateDataModel.getConfiguration(), persistedDataModel.getConfiguration());
-		
+
 		return updateDataModel;
 	}
 }

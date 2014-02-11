@@ -5,11 +5,7 @@ import java.util.Set;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Ignore;
 
-import scala.collection.mutable.HashSet;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -23,10 +19,12 @@ import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.model.job.proxy.ProxyTransformation;
 import de.avgl.dmp.persistence.service.job.TransformationService;
+import de.avgl.dmp.persistence.service.job.test.utils.TransformationServiceTestUtils;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-public class TransformationsResourceTest extends
-		BasicResourceTest<TransformationsResourceTestUtils, TransformationService, ProxyTransformation, Transformation, Long> {
+public class TransformationsResourceTest
+		extends
+		BasicResourceTest<TransformationsResourceTestUtils, TransformationServiceTestUtils, TransformationService, ProxyTransformation, Transformation, Long> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributesResourceTest.class);
 
@@ -39,7 +37,7 @@ public class TransformationsResourceTest extends
 	private Function								function;
 
 	private Component								component;
-	
+
 	private Function								updateFunction;
 
 	private Component								updateComponent;
@@ -101,7 +99,7 @@ public class TransformationsResourceTest extends
 		objectJSONString = objectMapper.writeValueAsString(objectJSON);
 		expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
 	}
-	
+
 	@Override
 	public void testPUTObject() throws Exception {
 
@@ -109,59 +107,60 @@ public class TransformationsResourceTest extends
 
 		functionsResourceTestUtils.deleteObject(updateFunction);
 	}
-	
+
 	@Override
 	public Transformation updateObject(final Transformation persistedTransformation) throws Exception {
-		
+
 		String functionJSONString = DMPPersistenceUtil.getResourceAsString("function.json");
 		final ObjectNode functionJSON = objectMapper.readValue(functionJSONString, ObjectNode.class);
 
 		String componentJSONString = DMPPersistenceUtil.getResourceAsString("component.json");
 		final ObjectNode componentJSON = objectMapper.readValue(componentJSONString, ObjectNode.class);
-		
+
 		// update function in component object
 		componentJSON.put("function", functionJSON);
 		componentJSONString = objectMapper.writeValueAsString(componentJSON);
 		final Component expectedComponent = objectMapper.readValue(componentJSONString, Component.class);
 		updateComponent = componentsResourceTestUtils.createObject(componentJSONString, expectedComponent);
 		updateFunction = updateComponent.getFunction();
-		
+
 		Set<Component> components = new LinkedHashSet<Component>();
 		components.add(updateComponent);
 		persistedTransformation.setComponents(components);
-		
+
 		String updateTransformationJSONString = objectMapper.writeValueAsString(persistedTransformation);
 		final ObjectNode updateTransformationJSON = objectMapper.readValue(updateTransformationJSONString, ObjectNode.class);
-		
+
 		// update name
 		final String updateTransformationNameString = persistedTransformation.getName() + " update";
 		updateTransformationJSON.put("name", updateTransformationNameString);
-		
+
 		// update description
 		final String updateTransformationDescriptionString = persistedTransformation.getDescription() + " update";
 		updateTransformationJSON.put("description", updateTransformationDescriptionString);
-		
+
 		updateTransformationJSONString = objectMapper.writeValueAsString(updateTransformationJSON);
 		final Transformation expectedTransformation = objectMapper.readValue(updateTransformationJSONString, Transformation.class);
 		Assert.assertNotNull("the transformation JSON string shouldn't be null", updateTransformationJSONString);
-		
-		final Transformation updateTransformation = transformationsResourceTestUtils.updateObject(updateTransformationJSONString, expectedTransformation);
-		
+
+		final Transformation updateTransformation = transformationsResourceTestUtils.updateObject(updateTransformationJSONString,
+				expectedTransformation);
+
 		Assert.assertNotNull("the transformation JSON string shouldn't be null", updateTransformation);
 		Assert.assertEquals("transformation id shoud be equal", updateTransformation.getId(), persistedTransformation.getId());
 		Assert.assertEquals("transformation name shoud be equal", updateTransformation.getName(), updateTransformationNameString);
 		Assert.assertEquals("transformation description shoud be equal", updateTransformation.getDescription(), updateTransformationDescriptionString);
-		
+
 		Set<Component> components1 = expectedTransformation.getComponents();
 		Set<Component> components2 = updateTransformation.getComponents();
 		Assert.assertEquals("number of components should be equal", components1.size(), components2.size());
 		Assert.assertTrue("components of the transformation should be equal", components1.equals(components2));
-		
+
 		Assert.assertTrue("transformation function should be equal", updateTransformation.getComponents().contains(updateComponent));
-		
+
 		return updateTransformation;
 	}
-	
+
 	@After
 	public void tearDown2() throws Exception {
 
