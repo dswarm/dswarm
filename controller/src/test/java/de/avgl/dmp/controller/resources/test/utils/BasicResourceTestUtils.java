@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import de.avgl.dmp.controller.resources.test.ResourceTest;
+import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.DMPObject;
 import de.avgl.dmp.persistence.model.proxy.ProxyDMPObject;
 import de.avgl.dmp.persistence.service.BasicJPAService;
@@ -32,8 +33,8 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 	protected final String										pojoClassName;
 
 	protected final POJOCLASSPERSISTENCESERVICE					persistenceService;
-	
-	protected final POJOCLASSPERSISTENCESERVICETESTUTILS	persistenceServiceTestUtils;
+
+	protected final POJOCLASSPERSISTENCESERVICETESTUTILS		persistenceServiceTestUtils;
 
 	protected final Class<POJOCLASSPERSISTENCESERVICE>			persistenceServiceClass;
 
@@ -55,14 +56,16 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 		persistenceServiceTestUtilsClass = persistenceServiceTestUtilsClassArg;
 
 		persistenceService = injector.getInstance(persistenceServiceClass);
-		
-		persistenceServiceTestUtils = injector.getInstance(persistenceServiceTestUtilsClass);
+
+		persistenceServiceTestUtils = injector.getInstance(persistenceServiceTestUtilsClass);// createNewPersistenceServiceTestUtilsInstance();
+		// injector.getInstance(persistenceServiceTestUtilsClass); -> doesn't seem to work right - how can I inject test class
+		// from other sub modules?
 
 		objectMapper = injector.getInstance(ObjectMapper.class);
 	}
-	
+
 	public POJOCLASSPERSISTENCESERVICETESTUTILS getPersistenceServiceTestUtils() {
-		
+
 		return persistenceServiceTestUtils;
 	}
 
@@ -218,7 +221,30 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 	}
 
 	public void reset() {
-		
+
 		persistenceServiceTestUtils.reset();
+	}
+
+	/**
+	 * Creates a new object of the concrete POJO class.
+	 * 
+	 * @return a new instance of the concrete POJO class
+	 * @throws DMPPersistenceException if something went wrong.
+	 */
+	private POJOCLASSPERSISTENCESERVICETESTUTILS createNewPersistenceServiceTestUtilsInstance() {
+
+		final POJOCLASSPERSISTENCESERVICETESTUTILS object;
+
+		try {
+
+			object = persistenceServiceTestUtilsClass.newInstance();
+		} catch (final InstantiationException | IllegalAccessException e) {
+
+			LOG.error("something went wrong while " + persistenceServiceTestUtilsClass.getSimpleName() + "object creation", e);
+
+			return null;
+		}
+
+		return object;
 	}
 }
