@@ -154,8 +154,8 @@ public class MappingsResource extends BasicDMPResource<MappingsResourceUtils, Ma
 
 	/**
 	 * {@inheritDoc}<br/>
-	 * Updates the name, transformation (component), input filter, output filter, input attribute paths and output attribute path
-	 * of the mapping.
+	 * Updates the name, transformation (component), input mapping attribute path instances and output mapping attribute path
+	 * instance of the mapping.
 	 */
 	@Override
 	protected Mapping prepareObjectForUpdate(final Mapping objectFromJSON, final Mapping object) {
@@ -163,8 +163,6 @@ public class MappingsResource extends BasicDMPResource<MappingsResourceUtils, Ma
 		super.prepareObjectForUpdate(objectFromJSON, object);
 
 		object.setTransformation(objectFromJSON.getTransformation());
-		object.setInputFilter(objectFromJSON.getInputFilter());
-		object.setOutputFilter(objectFromJSON.getOutputFilter());
 		object.setInputAttributePaths(objectFromJSON.getInputAttributePaths());
 		object.setOutputAttributePath(objectFromJSON.getOutputAttributePath());
 

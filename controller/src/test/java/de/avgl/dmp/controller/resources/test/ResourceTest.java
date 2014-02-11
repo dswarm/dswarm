@@ -11,6 +11,7 @@ import org.junit.BeforeClass;
 import de.avgl.dmp.controller.EmbeddedServer;
 import de.avgl.dmp.controller.providers.handler.ExceptionHandler;
 import de.avgl.dmp.controller.servlet.DMPInjector;
+import de.avgl.dmp.controller.test.GuicedTest;
 
 public class ResourceTest extends GuicedTest {
 

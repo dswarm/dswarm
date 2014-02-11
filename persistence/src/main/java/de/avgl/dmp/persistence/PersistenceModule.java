@@ -32,6 +32,7 @@ import de.avgl.dmp.persistence.service.resource.ResourceService;
 import de.avgl.dmp.persistence.service.schema.AttributePathService;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
+import de.avgl.dmp.persistence.service.schema.MappingAttributePathInstanceService;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
 
 /**
@@ -76,6 +77,7 @@ public class PersistenceModule extends AbstractModule {
 		bind(MappingService.class).in(Scopes.SINGLETON);
 		bind(FilterService.class).in(Scopes.SINGLETON);
 		bind(ProjectService.class).in(Scopes.SINGLETON);
+		bind(MappingAttributePathInstanceService.class).in(Scopes.SINGLETON);
 
 		bind(InternalModelServiceFactory.class).to(InternalServiceFactoryImpl.class).in(Scopes.SINGLETON);
 	}
