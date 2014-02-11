@@ -2,6 +2,7 @@ package de.avgl.dmp.persistence.model.job.test;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,6 +26,7 @@ import de.avgl.dmp.persistence.model.resource.ResourceType;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
+import de.avgl.dmp.persistence.model.schema.MappingAttributePathInstance;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
@@ -36,31 +38,31 @@ public class ProjectTest extends GuicedTest {
 
 	@Test
 	public void simpleProjectTest() {
-		
+
 		// mappings
-		
+
 		final Set<Mapping> mappings = Sets.newLinkedHashSet();
-		
+
 		final Mapping simpleMapping = simpleMapping();
 		final Mapping complexMapping = complexMapping();
-		
+
 		mappings.add(simpleMapping);
 		mappings.add(complexMapping);
-		
+
 		// data model
-		
+
 		final DataModel inputDataModel = createDataModel();
-		
+
 		final DataModel outputDataModel = createDataModel();
-		
+
 		// functions
-		
+
 		final Function function1 = createFunction();
-		
+
 		final Set<Function> functions = Sets.newLinkedHashSet();
-		
+
 		functions.add(function1);
-		
+
 		final Project project = new Project();
 		project.setName("my project");
 		project.setDescription("my description");
@@ -68,7 +70,7 @@ public class ProjectTest extends GuicedTest {
 		project.setInputDataModel(inputDataModel);
 		project.setOutputDataModel(outputDataModel);
 		project.setFunctions(functions);
-		
+
 		String json = null;
 
 		try {
@@ -81,7 +83,7 @@ public class ProjectTest extends GuicedTest {
 
 		LOG.debug("project json: " + json);
 	}
-	
+
 	private Mapping simpleMapping() {
 
 		final String functionName = "trim";
@@ -135,6 +137,9 @@ public class ProjectTest extends GuicedTest {
 
 		inputAttributePath.addAttribute(dctermsTitle);
 
+		final MappingAttributePathInstance inputMappingAttributePathInstance = new MappingAttributePathInstance();
+		inputMappingAttributePathInstance.setAttributePath(inputAttributePath);
+
 		// output attribute path
 
 		final String rdfsLabelId = "http://www.w3.org/2000/01/rdf-schema#label";
@@ -145,6 +150,9 @@ public class ProjectTest extends GuicedTest {
 		final AttributePath outputAttributePath = new AttributePath();
 
 		outputAttributePath.addAttribute(rdfsLabel);
+
+		final MappingAttributePathInstance outputMappingAttributePathInstance = new MappingAttributePathInstance();
+		outputMappingAttributePathInstance.setAttributePath(outputAttributePath);
 
 		// transformation component
 
@@ -164,8 +172,8 @@ public class ProjectTest extends GuicedTest {
 
 		final Mapping mapping = new Mapping();
 		mapping.setName(mappingName);
-		mapping.addInputAttributePath(inputAttributePath);
-		mapping.setOutputAttributePath(outputAttributePath);
+		mapping.addInputAttributePath(inputMappingAttributePathInstance);
+		mapping.setOutputAttributePath(outputMappingAttributePathInstance);
 		mapping.setTransformation(transformationComponent);
 
 		Assert.assertNotNull("the mapping name shouldn't be null", mapping.getName());
@@ -222,7 +230,7 @@ public class ProjectTest extends GuicedTest {
 		}
 
 		LOG.debug("simple mapping json: " + json);
-		
+
 		return mapping;
 	}
 
@@ -340,6 +348,7 @@ public class ProjectTest extends GuicedTest {
 
 		// transformation component 1 (in main transformation) -> clean first name
 
+		final String transformationComponentId = UUID.randomUUID().toString();
 		final Map<String, String> transformationComponentParameterMappings = Maps.newLinkedHashMap();
 
 		transformationComponentParameterMappings.put("transformationInputString", "firstName");
@@ -351,6 +360,7 @@ public class ProjectTest extends GuicedTest {
 
 		// transformation component 1 (in main transformation) -> clean family name
 
+		final String transformationComponentId2 = UUID.randomUUID().toString();
 		final Map<String, String> transformationComponentParameterMappings2 = Maps.newLinkedHashMap();
 
 		transformationComponentParameterMappings2.put("transformationInputString", "familyName");
@@ -377,9 +387,9 @@ public class ProjectTest extends GuicedTest {
 		final Map<String, String> parameterMapping4 = Maps.newLinkedHashMap();
 
 		final String functionParameterName5 = "firstString";
-		final String componentVariableName5 = "transformationComponentId" + ".outputVariable";
+		final String componentVariableName5 = transformationComponentId + ".outputVariable";
 		final String functionParameterName6 = "secondString";
-		final String componentVariableName6 = "transformationComponentId2" + ".outputVariable";
+		final String componentVariableName6 = transformationComponentId2 + ".outputVariable";
 
 		parameterMapping4.put(functionParameterName5, componentVariableName5);
 		parameterMapping4.put(functionParameterName6, componentVariableName6);
@@ -451,6 +461,9 @@ public class ProjectTest extends GuicedTest {
 		firstNameAttributePath.addAttribute(dctermsCreator);
 		firstNameAttributePath.addAttribute(firstName);
 
+		final MappingAttributePathInstance firstNameMappingAttributePathInstance = new MappingAttributePathInstance();
+		firstNameMappingAttributePathInstance.setAttributePath(firstNameAttributePath);
+
 		// family name attribute path
 
 		final String familyNameId = "http://xmlns.com/foaf/0.1/familyName";
@@ -463,6 +476,9 @@ public class ProjectTest extends GuicedTest {
 		familyNameAttributePath.addAttribute(dctermsCreator);
 		familyNameAttributePath.addAttribute(familyName);
 
+		final MappingAttributePathInstance familyNameMappingAttributePathInstance = new MappingAttributePathInstance();
+		familyNameMappingAttributePathInstance.setAttributePath(familyNameAttributePath);
+
 		// output attribute path
 
 		final String foafNameId = "http://xmlns.com/foaf/0.1/name";
@@ -474,6 +490,9 @@ public class ProjectTest extends GuicedTest {
 
 		nameAttributePath.addAttribute(dctermsCreator);
 		nameAttributePath.addAttribute(foafName);
+
+		final MappingAttributePathInstance outputMappingAttributePathInstance = new MappingAttributePathInstance();
+		outputMappingAttributePathInstance.setAttributePath(nameAttributePath);
 
 		// transformation component
 
@@ -494,9 +513,9 @@ public class ProjectTest extends GuicedTest {
 
 		final Mapping mapping = new Mapping();
 		mapping.setName(mappingName);
-		mapping.addInputAttributePath(firstNameAttributePath);
-		mapping.addInputAttributePath(familyNameAttributePath);
-		mapping.setOutputAttributePath(nameAttributePath);
+		mapping.addInputAttributePath(firstNameMappingAttributePathInstance);
+		mapping.addInputAttributePath(familyNameMappingAttributePathInstance);
+		mapping.setOutputAttributePath(outputMappingAttributePathInstance);
 		mapping.setTransformation(transformationComponent3);
 
 		String json = null;
@@ -510,7 +529,7 @@ public class ProjectTest extends GuicedTest {
 		}
 
 		LOG.debug("complex mapping json: " + json);
-		
+
 		try {
 
 			json = objectMapper.writeValueAsString(transformation2);
@@ -560,10 +579,10 @@ public class ProjectTest extends GuicedTest {
 		}
 
 		LOG.debug("clean-up next component json: " + json);
-		
+
 		return mapping;
 	}
-	
+
 	private DataModel createDataModel() {
 
 		// first attribute path
@@ -659,9 +678,9 @@ public class ProjectTest extends GuicedTest {
 		parameters.put(parameterKey, parameterValue);
 
 		configuration.setParameters(parameters);
-		
+
 		resource.addConfiguration(configuration);
-		
+
 		// data model
 		final DataModel dataModel = new DataModel();
 		dataModel.setName("my data model");
@@ -681,12 +700,12 @@ public class ProjectTest extends GuicedTest {
 		}
 
 		LOG.debug("data model json: " + json);
-		
+
 		return dataModel;
 	}
-	
+
 	private Function createFunction() {
-		
+
 		final String functionName = "trim";
 		final String functionDescription = "trims leading and trailing whitespaces from a given string";
 		final String functionParameter = "inputString";
@@ -695,7 +714,7 @@ public class ProjectTest extends GuicedTest {
 		function.setName(functionName);
 		function.setDescription(functionDescription);
 		function.addParameter(functionParameter);
-		
+
 		return function;
 	}
 

@@ -27,6 +27,7 @@ import de.avgl.dmp.persistence.model.resource.ResourceType;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
+import de.avgl.dmp.persistence.model.schema.MappingAttributePathInstance;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
@@ -268,6 +269,9 @@ public class TaskTest extends GuicedTest {
 
 		inputAttributePath.addAttribute(dctermsTitle);
 
+		final MappingAttributePathInstance inputMappingAttributePathInstance = new MappingAttributePathInstance();
+		inputMappingAttributePathInstance.setAttributePath(inputAttributePath);
+
 		// output attribute path
 
 		final String rdfsLabelId = "http://www.w3.org/2000/01/rdf-schema#label";
@@ -278,6 +282,9 @@ public class TaskTest extends GuicedTest {
 		final AttributePath outputAttributePath = new AttributePath();
 
 		outputAttributePath.addAttribute(rdfsLabel);
+
+		final MappingAttributePathInstance outputMappingAttributePathInstance = new MappingAttributePathInstance();
+		outputMappingAttributePathInstance.setAttributePath(outputAttributePath);
 
 		// transformation component
 
@@ -293,13 +300,12 @@ public class TaskTest extends GuicedTest {
 
 		// mapping
 
-		final String mappingId = UUID.randomUUID().toString();
 		final String mappingName = "my simple mapping";
 
 		final Mapping mapping = new Mapping();
 		mapping.setName(mappingName);
-		mapping.addInputAttributePath(inputAttributePath);
-		mapping.setOutputAttributePath(outputAttributePath);
+		mapping.addInputAttributePath(inputMappingAttributePathInstance);
+		mapping.setOutputAttributePath(outputMappingAttributePathInstance);
 		mapping.setTransformation(transformationComponent);
 
 		Assert.assertNotNull("the mapping name shouldn't be null", mapping.getName());
@@ -587,6 +593,9 @@ public class TaskTest extends GuicedTest {
 		firstNameAttributePath.addAttribute(dctermsCreator);
 		firstNameAttributePath.addAttribute(firstName);
 
+		final MappingAttributePathInstance firstNameMappingAttributePathInstance = new MappingAttributePathInstance();
+		firstNameMappingAttributePathInstance.setAttributePath(firstNameAttributePath);
+
 		// family name attribute path
 
 		final String familyNameId = "http://xmlns.com/foaf/0.1/familyName";
@@ -599,6 +608,9 @@ public class TaskTest extends GuicedTest {
 		familyNameAttributePath.addAttribute(dctermsCreator);
 		familyNameAttributePath.addAttribute(familyName);
 
+		final MappingAttributePathInstance familyNameMappingAttributePathInstance = new MappingAttributePathInstance();
+		familyNameMappingAttributePathInstance.setAttributePath(familyNameAttributePath);
+
 		// output attribute path
 
 		final String foafNameId = "http://xmlns.com/foaf/0.1/name";
@@ -610,6 +622,9 @@ public class TaskTest extends GuicedTest {
 
 		nameAttributePath.addAttribute(dctermsCreator);
 		nameAttributePath.addAttribute(foafName);
+
+		final MappingAttributePathInstance outputMappingAttributePathInstance = new MappingAttributePathInstance();
+		outputMappingAttributePathInstance.setAttributePath(nameAttributePath);
 
 		// transformation component
 
@@ -630,9 +645,9 @@ public class TaskTest extends GuicedTest {
 
 		final Mapping mapping = new Mapping();
 		mapping.setName(mappingName);
-		mapping.addInputAttributePath(firstNameAttributePath);
-		mapping.addInputAttributePath(familyNameAttributePath);
-		mapping.setOutputAttributePath(nameAttributePath);
+		mapping.addInputAttributePath(firstNameMappingAttributePathInstance);
+		mapping.addInputAttributePath(familyNameMappingAttributePathInstance);
+		mapping.setOutputAttributePath(outputMappingAttributePathInstance);
 		mapping.setTransformation(transformationComponent3);
 
 		String json = null;

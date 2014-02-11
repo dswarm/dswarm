@@ -20,6 +20,7 @@ import de.avgl.dmp.persistence.model.job.Mapping;
 import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
+import de.avgl.dmp.persistence.model.schema.MappingAttributePathInstance;
 
 public class JobTest extends GuicedTest {
 
@@ -29,18 +30,18 @@ public class JobTest extends GuicedTest {
 
 	@Test
 	public void simpleJobTest() {
-		
+
 		final Set<Mapping> mappings = Sets.newLinkedHashSet();
-		
+
 		final Mapping simpleMapping = simpleMapping();
 		final Mapping complexMapping = complexMapping();
-		
+
 		mappings.add(simpleMapping);
 		mappings.add(complexMapping);
-		
+
 		final Job job = new Job();
 		job.setMappings(mappings);
-		
+
 		String json = null;
 
 		try {
@@ -53,7 +54,7 @@ public class JobTest extends GuicedTest {
 
 		LOG.debug("job json: " + json);
 	}
-	
+
 	private Mapping simpleMapping() {
 
 		final String functionName = "trim";
@@ -104,8 +105,11 @@ public class JobTest extends GuicedTest {
 		final Attribute dctermsTitle = createAttribute(dctermsTitleId, dctermsTitleName);
 
 		final AttributePath inputAttributePath = new AttributePath();
-		
+
 		inputAttributePath.addAttribute(dctermsTitle);
+
+		final MappingAttributePathInstance inputMappingAttributePathInstance = new MappingAttributePathInstance();
+		inputMappingAttributePathInstance.setAttributePath(inputAttributePath);
 
 		// output attribute path
 
@@ -115,8 +119,11 @@ public class JobTest extends GuicedTest {
 		final Attribute rdfsLabel = createAttribute(rdfsLabelId, rdfsLabelName);
 
 		final AttributePath outputAttributePath = new AttributePath();
-		
+
 		outputAttributePath.addAttribute(rdfsLabel);
+
+		final MappingAttributePathInstance outputMappingAttributePathInstance = new MappingAttributePathInstance();
+		outputMappingAttributePathInstance.setAttributePath(outputAttributePath);
 
 		// transformation component
 
@@ -132,13 +139,12 @@ public class JobTest extends GuicedTest {
 
 		// mapping
 
-		final String mappingId = UUID.randomUUID().toString();
 		final String mappingName = "my simple mapping";
 
 		final Mapping mapping = new Mapping();
 		mapping.setName(mappingName);
-		mapping.addInputAttributePath(inputAttributePath);
-		mapping.setOutputAttributePath(outputAttributePath);
+		mapping.addInputAttributePath(inputMappingAttributePathInstance);
+		mapping.setOutputAttributePath(outputMappingAttributePathInstance);
 		mapping.setTransformation(transformationComponent);
 
 		Assert.assertNotNull("the mapping name shouldn't be null", mapping.getName());
@@ -195,7 +201,7 @@ public class JobTest extends GuicedTest {
 		}
 
 		LOG.debug("simple mapping json: " + json);
-		
+
 		return mapping;
 	}
 
@@ -422,9 +428,12 @@ public class JobTest extends GuicedTest {
 		final Attribute firstName = createAttribute(firstNameId, firstNameName);
 
 		final AttributePath firstNameAttributePath = new AttributePath();
-		
+
 		firstNameAttributePath.addAttribute(dctermsCreator);
 		firstNameAttributePath.addAttribute(firstName);
+
+		final MappingAttributePathInstance firstNameMappingAttributePathInstance = new MappingAttributePathInstance();
+		firstNameMappingAttributePathInstance.setAttributePath(firstNameAttributePath);
 
 		// family name attribute path
 
@@ -434,9 +443,12 @@ public class JobTest extends GuicedTest {
 		final Attribute familyName = createAttribute(familyNameId, familyNameName);
 
 		final AttributePath familyNameAttributePath = new AttributePath();
-		
+
 		familyNameAttributePath.addAttribute(dctermsCreator);
 		familyNameAttributePath.addAttribute(familyName);
+
+		final MappingAttributePathInstance familyNameMappingAttributePathInstance = new MappingAttributePathInstance();
+		familyNameMappingAttributePathInstance.setAttributePath(familyNameAttributePath);
 
 		// output attribute path
 
@@ -446,9 +458,12 @@ public class JobTest extends GuicedTest {
 		final Attribute foafName = createAttribute(foafNameId, foafNameName);
 
 		final AttributePath nameAttributePath = new AttributePath();
-		
+
 		nameAttributePath.addAttribute(dctermsCreator);
 		nameAttributePath.addAttribute(foafName);
+
+		final MappingAttributePathInstance outputMappingAttributePathInstance = new MappingAttributePathInstance();
+		outputMappingAttributePathInstance.setAttributePath(nameAttributePath);
 
 		// transformation component
 
@@ -469,9 +484,9 @@ public class JobTest extends GuicedTest {
 
 		final Mapping mapping = new Mapping();
 		mapping.setName(mappingName);
-		mapping.addInputAttributePath(firstNameAttributePath);
-		mapping.addInputAttributePath(familyNameAttributePath);
-		mapping.setOutputAttributePath(nameAttributePath);
+		mapping.addInputAttributePath(firstNameMappingAttributePathInstance);
+		mapping.addInputAttributePath(familyNameMappingAttributePathInstance);
+		mapping.setOutputAttributePath(outputMappingAttributePathInstance);
 		mapping.setTransformation(transformationComponent3);
 
 		String json = null;
@@ -485,7 +500,7 @@ public class JobTest extends GuicedTest {
 		}
 
 		LOG.debug("complex mapping json: " + json);
-		
+
 		try {
 
 			json = objectMapper.writeValueAsString(transformation2);
@@ -535,7 +550,7 @@ public class JobTest extends GuicedTest {
 		}
 
 		LOG.debug("clean-up next component json: " + json);
-		
+
 		return mapping;
 	}
 

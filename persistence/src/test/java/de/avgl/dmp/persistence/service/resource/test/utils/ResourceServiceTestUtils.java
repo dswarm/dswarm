@@ -56,6 +56,63 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 
 		return updatedResource;
 	}
+	
+	/**
+	 * note: legacy
+	 * 
+	 * @param resource
+	 * @param updatedResource
+	 * @param attributeKey
+	 * @param attributeValue
+	 */
+	public void checkSimpleResource(final Resource resource, final Resource updatedResource, final String attributeKey, final String attributeValue) {
+
+		Assert.assertNotNull("the name of the updated resource shouldn't be null", updatedResource.getName());
+		Assert.assertEquals("the names of the resource are not equal", resource.getName(), updatedResource.getName());
+		Assert.assertNotNull("the description of the updated resource shouldn't be null", updatedResource.getDescription());
+		Assert.assertEquals("the descriptions of the resource are not equal", resource.getDescription(), updatedResource.getDescription());
+		Assert.assertNotNull("the type of the updated resource shouldn't be null", updatedResource.getType());
+		Assert.assertEquals("the types of the resource are not equal", resource.getType(), updatedResource.getType());
+		Assert.assertNotNull("the attributes of the updated resource shouldn't be null", updatedResource.getAttributes());
+		Assert.assertEquals("the attributes of the resource are not equal", resource.getAttributes(), updatedResource.getAttributes());
+		Assert.assertNotNull("the attribute value shouldn't be null", resource.getAttribute(attributeKey));
+		Assert.assertEquals("the attribute value should be equal", resource.getAttribute(attributeKey).asText(), attributeValue);
+	}
+
+	/**
+	 * note: legacy
+	 * 
+	 * @param resource
+	 * @param updatedResource
+	 * @param parameterKey
+	 * @param parameterValue
+	 */
+	public void checkComplexResource(final Resource resource, final Resource updatedResource, final String parameterKey, final String parameterValue) {
+
+		checkComplexResource(resource, updatedResource);
+
+		Assert.assertEquals("the configuration of the resource is not equal", resource.getConfigurations().iterator().next(), resource
+				.getConfigurations().iterator().next());
+		Assert.assertEquals("the configuration parameter '" + parameterKey + "' of the resource is not equal", resource.getConfigurations()
+				.iterator().next().getParameter(parameterKey), resource.getConfigurations().iterator().next().getParameter(parameterKey));
+		Assert.assertEquals("the configuration parameter value for '" + parameterKey + "' of the resource is not equal", resource.getConfigurations()
+				.iterator().next().getParameter(parameterKey).asText(), resource.getConfigurations().iterator().next().getParameter(parameterKey)
+				.asText());
+	}
+
+	/**
+	 * note: legacy
+	 * 
+	 * @param resource
+	 * @param updatedResource
+	 */
+	public void checkComplexResource(final Resource resource, final Resource updatedResource) {
+
+		Assert.assertNotNull("the configurations of the updated resource shouldn't be null", updatedResource.getConfigurations());
+		Assert.assertEquals("the configurations of the resource are not equal", resource.getConfigurations(), updatedResource.getConfigurations());
+		Assert.assertEquals("the configurations' size of the resource are not equal", resource.getConfigurations().size(), updatedResource
+				.getConfigurations().size());
+	}
 
 	private void compareResources(final Resource expectedResource, final Resource actualResource) {
 

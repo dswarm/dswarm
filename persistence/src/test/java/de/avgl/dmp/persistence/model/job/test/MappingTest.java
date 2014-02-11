@@ -19,6 +19,7 @@ import de.avgl.dmp.persistence.model.job.Mapping;
 import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
+import de.avgl.dmp.persistence.model.schema.MappingAttributePathInstance;
 
 public class MappingTest extends GuicedTest {
 
@@ -86,6 +87,9 @@ public class MappingTest extends GuicedTest {
 
 		inputAttributePath.addAttribute(dctermsTitle);
 
+		final MappingAttributePathInstance inputMappingAttributePathInstance = new MappingAttributePathInstance();
+		inputMappingAttributePathInstance.setAttributePath(inputAttributePath);
+
 		// output attribute path
 
 		final String rdfsLabelId = "http://www.w3.org/2000/01/rdf-schema#label";
@@ -97,6 +101,9 @@ public class MappingTest extends GuicedTest {
 		// outputAttributePath.setId(UUID.randomUUID().toString());
 
 		outputAttributePath.addAttribute(rdfsLabel);
+
+		final MappingAttributePathInstance outputMappingAttributePathInstance = new MappingAttributePathInstance();
+		outputMappingAttributePathInstance.setAttributePath(outputAttributePath);
 
 		// transformation component
 
@@ -117,12 +124,13 @@ public class MappingTest extends GuicedTest {
 
 		final Mapping mapping = new Mapping();
 		mapping.setName(mappingName);
-		mapping.addInputAttributePath(inputAttributePath);
-		mapping.setOutputAttributePath(outputAttributePath);
+		mapping.addInputAttributePath(inputMappingAttributePathInstance);
+		mapping.setOutputAttributePath(outputMappingAttributePathInstance);
 		mapping.setTransformation(transformationComponent);
 
 		Assert.assertNotNull("the mapping name shouldn't be null", mapping.getName());
-		Assert.assertEquals("the mapping names are not equal", mappingName, mapping.getName());Assert.assertNotNull("the transformation component parameter mappings shouldn't be null", mapping.getTransformation().getParameterMappings());
+		Assert.assertEquals("the mapping names are not equal", mappingName, mapping.getName());
+		Assert.assertNotNull("the transformation component parameter mappings shouldn't be null", mapping.getTransformation().getParameterMappings());
 		Assert.assertEquals("the transformation component parameter mappings' size are not equal", 2, mapping.getTransformation()
 				.getParameterMappings().size());
 		Assert.assertTrue("the transformation component parameter mappings doesn't contain a mapping for function parameter '"
@@ -417,6 +425,9 @@ public class MappingTest extends GuicedTest {
 		firstNameAttributePath.addAttribute(dctermsCreator);
 		firstNameAttributePath.addAttribute(firstName);
 
+		final MappingAttributePathInstance firstNameMappingAttributePathInstance = new MappingAttributePathInstance();
+		firstNameMappingAttributePathInstance.setAttributePath(firstNameAttributePath);
+
 		// family name attribute path
 
 		final String familyNameId = "http://xmlns.com/foaf/0.1/familyName";
@@ -430,6 +441,9 @@ public class MappingTest extends GuicedTest {
 		familyNameAttributePath.addAttribute(dctermsCreator);
 		familyNameAttributePath.addAttribute(familyName);
 
+		final MappingAttributePathInstance familyNameMappingAttributePathInstance = new MappingAttributePathInstance();
+		familyNameMappingAttributePathInstance.setAttributePath(familyNameAttributePath);
+
 		// output attribute path
 
 		final String foafNameId = "http://xmlns.com/foaf/0.1/name";
@@ -442,6 +456,9 @@ public class MappingTest extends GuicedTest {
 
 		nameAttributePath.addAttribute(dctermsCreator);
 		nameAttributePath.addAttribute(foafName);
+
+		final MappingAttributePathInstance outputMappingAttributePathInstance = new MappingAttributePathInstance();
+		outputMappingAttributePathInstance.setAttributePath(nameAttributePath);
 
 		// transformation component
 
@@ -464,9 +481,9 @@ public class MappingTest extends GuicedTest {
 		final Mapping mapping = new Mapping();
 		// mapping.setId(mappingId);
 		mapping.setName(mappingName);
-		mapping.addInputAttributePath(firstNameAttributePath);
-		mapping.addInputAttributePath(familyNameAttributePath);
-		mapping.setOutputAttributePath(nameAttributePath);
+		mapping.addInputAttributePath(firstNameMappingAttributePathInstance);
+		mapping.addInputAttributePath(familyNameMappingAttributePathInstance);
+		mapping.setOutputAttributePath(outputMappingAttributePathInstance);
 		mapping.setTransformation(transformationComponent3);
 
 		// Assert.assertNotNull("the mapping id shouldn't be null", mapping.getId());
