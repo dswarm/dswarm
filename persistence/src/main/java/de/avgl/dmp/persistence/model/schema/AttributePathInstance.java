@@ -16,7 +16,6 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
@@ -52,9 +51,11 @@ public abstract class AttributePathInstance extends BasicDMPJPAObject {
 	 * The attribute path instance type, e.g., mapping attribute path instance (
 	 * {@link AttributePathInstanceType#MappingAttributePathInstance}).
 	 */
-	// @XmlElement(name = "type") -> note: separate attribute for entity type is not necessary since Jackson will include this
+	@XmlElement(name = "type")
+	// -> note: separate attribute for entity type is not necessary since Jackson will include this
 	// property automatically, when serialising the object
-	@JsonIgnore
+	// however, it needs to be enabled - otherwise on could not serialise a JSON string to a POJO object
+	// @JsonIgnore
 	@Column(name = "ATTRIBUTE_PATH_INSTANCE_TYPE")
 	@Enumerated(EnumType.STRING)
 	private final AttributePathInstanceType			attributePathInstanceType;

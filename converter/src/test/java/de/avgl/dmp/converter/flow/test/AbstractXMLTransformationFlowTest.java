@@ -25,7 +25,6 @@ import de.avgl.dmp.converter.flow.TransformationFlow;
 import de.avgl.dmp.converter.flow.XMLSourceResourceTriplesFlow;
 import de.avgl.dmp.persistence.model.internal.Model;
 import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
-import de.avgl.dmp.persistence.model.internal.rdf.helper.AttributePathHelper;
 import de.avgl.dmp.persistence.model.job.Task;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
@@ -134,15 +133,15 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		}
 
 		final RDFModel rdfModel = new RDFModel(model, null, recordClassUri);
-		
-//		System.out.println(objectMapper.writeValueAsString(rdfModel.getSchema()));
-//		
-//		for(final AttributePathHelper attributePathHelper : rdfModel.getAttributePaths()) {
-//			
-//			System.out.println(attributePathHelper.toString());
-//		}
-//		
-//		System.out.println(objectMapper.writeValueAsString(rdfModel.toJSON()));
+
+		// System.out.println(objectMapper.writeValueAsString(rdfModel.getSchema()));
+		//
+		// for(final AttributePathHelper attributePathHelper : rdfModel.getAttributePaths()) {
+		//
+		// System.out.println(attributePathHelper.toString());
+		// }
+		//
+		// System.out.println(objectMapper.writeValueAsString(rdfModel.toJSON()));
 
 		// write model and retrieve tuples
 		final InternalTripleService tripleService = injector.getInstance(InternalTripleService.class);
@@ -155,7 +154,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		Assert.assertNotNull("the schema of the fresh data model shouldn't be null", freshDataModel.getSchema());
 
 		final Schema schema = freshDataModel.getSchema();
-		
+
 		// System.out.println(objectMapper.writeValueAsString(schema));
 
 		Assert.assertNotNull("the record class of the schema of the fresh data model shouldn't be null", schema.getRecordClass());

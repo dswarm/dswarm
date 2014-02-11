@@ -31,7 +31,6 @@ import com.google.common.collect.Lists;
 
 import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
-import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -110,9 +109,11 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	/**
 	 * The function type, e.g., function ({@link FunctionType#Function}) or transformation ({@link FunctionType#Transformation}).
 	 */
-	// @XmlElement(name = "type") -> note: separate attribute for entity type is not necessary since Jackson will include this
+	@XmlElement(name = "type")
+	// -> note: separate attribute for entity type is not necessary since Jackson will include this
 	// property automatically, when serialising the object
-	@JsonIgnore
+	// however, it needs to be enabled - otherwise on could not serialise a JSON string to a POJO object
+	// @JsonIgnore
 	@Column(name = "FUNCTION_TYPE")
 	@Enumerated(EnumType.STRING)
 	private final FunctionType						functionType;
