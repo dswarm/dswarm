@@ -149,7 +149,9 @@ public class MappingsResource extends BasicDMPResource<MappingsResourceUtils, Ma
 	public Response updateObject(@ApiParam(value = "mapping (as JSON)", required = true) final String jsonObjectString,
 			@ApiParam(value = "mapping identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
 
-		return super.updateObject(jsonObjectString, id);
+		final Response response = super.updateObject(jsonObjectString, id);
+		
+		return response;
 	}
 
 	/**

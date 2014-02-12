@@ -17,7 +17,7 @@
                     "id": 1,
                     "parameters": ["inputString"]
                 },
-                "id": 1
+                "id": 1,
                 "parameter_mappings": {
                     "inputString": "previousComponent.outputString"
                 }

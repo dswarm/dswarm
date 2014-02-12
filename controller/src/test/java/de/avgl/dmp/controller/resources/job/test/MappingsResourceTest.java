@@ -19,6 +19,7 @@ import de.avgl.dmp.controller.resources.job.test.utils.TransformationsResourceTe
 import de.avgl.dmp.controller.resources.schema.test.AttributesResourceTest;
 import de.avgl.dmp.controller.resources.schema.test.utils.AttributePathsResourceTestUtils;
 import de.avgl.dmp.controller.resources.schema.test.utils.AttributesResourceTestUtils;
+import de.avgl.dmp.controller.resources.schema.test.utils.MappingAttributePathInstancesResourceTestUtils;
 import de.avgl.dmp.controller.resources.test.BasicResourceTest;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Filter;
@@ -28,6 +29,7 @@ import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.model.job.proxy.ProxyMapping;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
+import de.avgl.dmp.persistence.model.schema.MappingAttributePathInstance;
 import de.avgl.dmp.persistence.service.job.MappingService;
 import de.avgl.dmp.persistence.service.job.test.utils.MappingServiceTestUtils;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
@@ -35,41 +37,46 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 public class MappingsResourceTest extends
 		BasicResourceTest<MappingsResourceTestUtils, MappingServiceTestUtils, MappingService, ProxyMapping, Mapping, Long> {
 
-	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(AttributesResourceTest.class);
+	private static final org.apache.log4j.Logger					LOG								= org.apache.log4j.Logger
+																											.getLogger(AttributesResourceTest.class);
 
-	private final FiltersResourceTestUtils			filtersResourceTestUtils;
+	private final FiltersResourceTestUtils							filtersResourceTestUtils;
 
-	private final FunctionsResourceTestUtils		functionsResourceTestUtils;
+	private final FunctionsResourceTestUtils						functionsResourceTestUtils;
 
-	private final TransformationsResourceTestUtils	transformationsResourceTestUtils;
+	private final TransformationsResourceTestUtils					transformationsResourceTestUtils;
 
-	private final ComponentsResourceTestUtils		componentsResourceTestUtils;
+	private final ComponentsResourceTestUtils						componentsResourceTestUtils;
 
-	private final AttributesResourceTestUtils		attributesResourceTestUtils;
+	private final AttributesResourceTestUtils						attributesResourceTestUtils;
 
-	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
+	private final AttributePathsResourceTestUtils					attributePathsResourceTestUtils;
 
-	private final MappingsResourceTestUtils			mappingsResourceTestUtils;
+	private final MappingsResourceTestUtils							mappingsResourceTestUtils;
 
-	private Function								function;
+	private final MappingAttributePathInstancesResourceTestUtils	mappingAttributePathInstancesResourceTestUtils;
 
-	private Function								updateFunction;
+	private Function												function;
 
-	private Filter									updateFilter;
+	private Function												updateFunction;
 
-	private Component								component;
+	private Filter													updateFilter;
 
-	private Transformation							transformation;
+	private Component												component;
 
-	private Component								transformationComponent;
+	private Transformation											transformation;
 
-	private Component								updateTransformationComponent;
+	private Component												transformationComponent;
 
-	private AttributePath							updateInputAttributePath;
+	private Component												updateTransformationComponent;
 
-	final Map<Long, Attribute>						attributes		= Maps.newHashMap();
+	private AttributePath											updateInputAttributePath;
 
-	final Map<Long, AttributePath>					attributePaths	= Maps.newLinkedHashMap();
+	final Map<Long, Attribute>										attributes						= Maps.newHashMap();
+
+	final Map<Long, AttributePath>									attributePaths					= Maps.newLinkedHashMap();
+
+	final Map<Long, MappingAttributePathInstance>					mappingAttributePathInstances	= Maps.newLinkedHashMap();
 
 	public MappingsResourceTest() {
 
@@ -82,6 +89,7 @@ public class MappingsResourceTest extends
 		attributePathsResourceTestUtils = new AttributePathsResourceTestUtils();
 		transformationsResourceTestUtils = new TransformationsResourceTestUtils();
 		mappingsResourceTestUtils = new MappingsResourceTestUtils();
+		mappingAttributePathInstancesResourceTestUtils = new MappingAttributePathInstancesResourceTestUtils();
 	}
 
 	@Override
@@ -94,6 +102,11 @@ public class MappingsResourceTest extends
 
 		final AttributePath inputAttributePath = createAttributePath("attribute_path4.json");
 		final AttributePath outputAttributePath = createAttributePath("attribute_path5.json");
+
+		final MappingAttributePathInstance inputMappingAttributePathInstance = createMappingAttributePathInstance(
+				"input_mapping_attribute_path_instance.json", inputAttributePath);
+		final MappingAttributePathInstance outputMappingAttributePathInstance = createMappingAttributePathInstance(
+				"output_mapping_attribute_path_instance.json", outputAttributePath);
 
 		function = functionsResourceTestUtils.createObject("function.json");
 
@@ -174,7 +187,7 @@ public class MappingsResourceTest extends
 
 		objectJSON.put("transformation", finalTransformationComponentJSON);
 
-		final String finalInputAttributePathJSONString = objectMapper.writeValueAsString(inputAttributePath);
+		final String finalInputAttributePathJSONString = objectMapper.writeValueAsString(inputMappingAttributePathInstance);
 
 		Assert.assertNotNull("the input attribute path JSON string shouldn't be null", finalInputAttributePathJSONString);
 
@@ -188,7 +201,7 @@ public class MappingsResourceTest extends
 
 		objectJSON.put("input_attribute_paths", inputAttributePathsJSON);
 
-		final String finalOutputAttributePathJSONString = objectMapper.writeValueAsString(outputAttributePath);
+		final String finalOutputAttributePathJSONString = objectMapper.writeValueAsString(outputMappingAttributePathInstance);
 
 		Assert.assertNotNull("the output attribute path JSON string shouldn't be null", finalOutputAttributePathJSONString);
 
@@ -210,14 +223,30 @@ public class MappingsResourceTest extends
 
 		super.testPUTObject();
 
+		for (final MappingAttributePathInstance mappingAttributePathInstance : mappingAttributePathInstances.values()) {
+
+			mappingAttributePathInstancesResourceTestUtils.deleteObject(mappingAttributePathInstance);
+		}
+
 		filtersResourceTestUtils.deleteObject(updateFilter);
+		componentsResourceTestUtils.deleteObject(transformationComponent);
 		componentsResourceTestUtils.deleteObject(updateTransformationComponent);
-		functionsResourceTestUtils.deleteObject(updateFunction);
+		
+		if (!function.equals(updateFunction)) {
+			
+			functionsResourceTestUtils.deleteObject(updateFunction);
+		}
+		
 		attributePathsResourceTestUtils.deleteObject(updateInputAttributePath);
 	}
 
 	@After
 	public void tearDown2() throws Exception {
+
+		for (final MappingAttributePathInstance mappingAttributePathInstance : mappingAttributePathInstances.values()) {
+
+			mappingAttributePathInstancesResourceTestUtils.deleteObject(mappingAttributePathInstance);
+		}
 
 		for (final AttributePath attributePath : attributePaths.values()) {
 
@@ -234,74 +263,45 @@ public class MappingsResourceTest extends
 		functionsResourceTestUtils.deleteObject(function);
 	}
 
-	/**
-	 * TODO: fixme
-	 * 
-	 * @param attributeJSONFileName
-	 * @return
-	 * @throws Exception
-	 */
-//	@Override
-//	public Mapping updateObject(final Mapping persistedMapping) throws Exception {
-//
-//		// update name
-//		persistedMapping.setName(persistedMapping.getName() + " update");
-//
-//		// update filter
-//		final Filter filter = filtersResourceTestUtils.createObject("filter2.json");
-//
-//		if (persistedMapping.getInputFilter() != null) {
-//			updateFilter = persistedMapping.getInputFilter();
-//		} else {
-//			updateFilter = filter;
-//		}
-//
-//		persistedMapping.setInputFilter(filter);
-//
-//		// update component
-//		final Component updateComponent = componentsResourceTestUtils.createObject("component.json");
-//
-//		if (persistedMapping.getTransformation() != null) {
-//
-//			updateTransformationComponent = persistedMapping.getTransformation();
-//
-//		} else {
-//			updateTransformationComponent = updateComponent;
-//		}
-//
-//		persistedMapping.setTransformation(updateComponent);
-//
-//		updateFunction = updateComponent.getFunction();
-//
-//		String updateMappingJSONString = objectMapper.writeValueAsString(persistedMapping);
-//		final ObjectNode updateMappingJSON = objectMapper.readValue(updateMappingJSONString, ObjectNode.class);
-//
-//		// update input attribute paths
-//		updateInputAttributePath = createAttributePath("attribute_path2.json");
-//		final String finalInputAttributePathJSONString = objectMapper.writeValueAsString(updateInputAttributePath);
-//
-//		Assert.assertNotNull("the input attribute path JSON string shouldn't be null", finalInputAttributePathJSONString);
-//
-//		final ObjectNode finalInputAttributePathJSON = objectMapper.readValue(finalInputAttributePathJSONString, ObjectNode.class);
-//
-//		Assert.assertNotNull("the input attribute path JSON shouldn't be null", finalInputAttributePathJSON);
-//
-//		final ArrayNode inputAttributePathsJSON = objectMapper.createArrayNode();
-//
-//		inputAttributePathsJSON.add(finalInputAttributePathJSON);
-//
-//		updateMappingJSON.put("input_attribute_paths", inputAttributePathsJSON);
-//
-//		updateMappingJSONString = objectMapper.writeValueAsString(updateMappingJSON);
-//		expectedObject = objectMapper.readValue(updateMappingJSONString, pojoClass);
-//
-//		final Mapping updateMapping = mappingsResourceTestUtils.updateObject(updateMappingJSONString, expectedObject);
-//
-//		Assert.assertNotNull("the mapping JSON string shouldn't be null", updateMapping);
-//		Assert.assertEquals("mapping name shoud be equal", updateMapping.getName(), expectedObject.getName());
-//
-//		return updateMapping;
-//	}
+	@Override
+	public Mapping updateObject(final Mapping persistedMapping) throws Exception {
+
+		// update name
+		persistedMapping.setName(persistedMapping.getName() + " update");
+
+		// update filter
+		updateFilter = filtersResourceTestUtils.createObject("filter2.json");
+
+		// update component
+		updateTransformationComponent = componentsResourceTestUtils.createObject("component.json");
+
+		persistedMapping.setTransformation(updateTransformationComponent);
+
+		updateFunction = updateTransformationComponent.getFunction();
+
+		// update input attribute paths
+		updateInputAttributePath = createAttributePath("attribute_path2.json");
+
+		for (final Attribute attribute : updateInputAttributePath.getAttributes()) {
+
+			attributes.put(attribute.getId(), attribute);
+		}
+
+		persistedMapping.getInputAttributePaths().iterator().next().setAttributePath(updateInputAttributePath);
+		persistedMapping.getInputAttributePaths().iterator().next().setFilter(updateFilter);
+
+		final String updateMappingJSONString = objectMapper.writeValueAsString(persistedMapping);
+		expectedObject = objectMapper.readValue(updateMappingJSONString, pojoClass);
+
+		final Mapping updateMapping = mappingsResourceTestUtils.updateObject(updateMappingJSONString, expectedObject);
+
+		Assert.assertNotNull("the mapping JSON string shouldn't be null", updateMapping);
+		Assert.assertEquals("mapping name shoud be equal", expectedObject.getName(), updateMapping.getName());
+		Assert.assertEquals(updateMapping.getInputAttributePaths().iterator().next().getAttributePath(), updateInputAttributePath);
+		Assert.assertEquals(updateMapping.getInputAttributePaths().iterator().next().getFilter(), updateFilter);
+
+		return updateMapping;
+	}
 
 	private Attribute createAttribute(final String attributeJSONFileName) throws Exception {
 
@@ -333,6 +333,11 @@ public class MappingsResourceTest extends
 			}
 		}
 
+		if (attributes.size() > 0 && attributes.size() != newAttributes.size()) {
+
+			newAttributes.addAll(attributes);
+		}
+
 		attributePath.setAttributePath(newAttributes);
 
 		attributePathJSONString = objectMapper.writeValueAsString(attributePath);
@@ -342,5 +347,25 @@ public class MappingsResourceTest extends
 		attributePaths.put(actualAttributePath.getId(), actualAttributePath);
 
 		return actualAttributePath;
+	}
+
+	private MappingAttributePathInstance createMappingAttributePathInstance(final String mappingAttributePathInstanceFileName,
+			final AttributePath attributePath) throws Exception {
+
+		String mappingAttributePathInstanceJSONString = DMPPersistenceUtil.getResourceAsString(mappingAttributePathInstanceFileName);
+		final MappingAttributePathInstance mappingAttributePathInstanceFromJSON = objectMapper.readValue(mappingAttributePathInstanceJSONString,
+				MappingAttributePathInstance.class);
+
+		mappingAttributePathInstanceFromJSON.setAttributePath(attributePath);
+
+		mappingAttributePathInstanceJSONString = objectMapper.writeValueAsString(mappingAttributePathInstanceFromJSON);
+		final MappingAttributePathInstance expectedMappingAttributePathInstance = objectMapper.readValue(mappingAttributePathInstanceJSONString,
+				MappingAttributePathInstance.class);
+		final MappingAttributePathInstance actualMappingAttributePathInstance = mappingAttributePathInstancesResourceTestUtils.createObject(
+				mappingAttributePathInstanceJSONString, expectedMappingAttributePathInstance);
+
+		mappingAttributePathInstances.put(actualMappingAttributePathInstance.getId(), actualMappingAttributePathInstance);
+
+		return actualMappingAttributePathInstance;
 	}
 }
