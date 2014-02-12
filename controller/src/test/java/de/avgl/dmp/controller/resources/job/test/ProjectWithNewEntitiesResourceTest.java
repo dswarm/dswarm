@@ -312,43 +312,45 @@ public class ProjectWithNewEntitiesResourceTest extends
 						}
 					}
 				}
+				
+				// TODO: fixme
 
-				final Set<AttributePath> projectMappingInputAttributePaths = projectMapping.getInputAttributePaths();
-
-				if (projectMappingInputAttributePaths != null) {
-
-					for (final AttributePath inputAttributePath : projectMappingInputAttributePaths) {
-
-						attributePaths.put(inputAttributePath.getId(), inputAttributePath);
-
-						final Set<Attribute> inputAttributePathAttributes = inputAttributePath.getAttributes();
-
-						if (inputAttributePathAttributes != null) {
-
-							for (final Attribute inputAttributePathAttribute : inputAttributePathAttributes) {
-
-								attributes.put(inputAttributePathAttribute.getId(), inputAttributePathAttribute);
-							}
-						}
-					}
-				}
-
-				final AttributePath projectMappingOutputAttributePath = projectMapping.getOutputAttributePath();
-
-				if (projectMappingOutputAttributePath != null) {
-
-					attributePaths.put(projectMappingOutputAttributePath.getId(), projectMappingOutputAttributePath);
-
-					final Set<Attribute> inputAttributePathAttributes = projectMappingOutputAttributePath.getAttributes();
-
-					if (inputAttributePathAttributes != null) {
-
-						for (final Attribute inputAttributePathAttribute : inputAttributePathAttributes) {
-
-							attributes.put(inputAttributePathAttribute.getId(), inputAttributePathAttribute);
-						}
-					}
-				}
+//				final Set<AttributePath> projectMappingInputAttributePaths = projectMapping.getInputAttributePaths();
+//
+//				if (projectMappingInputAttributePaths != null) {
+//
+//					for (final AttributePath inputAttributePath : projectMappingInputAttributePaths) {
+//
+//						attributePaths.put(inputAttributePath.getId(), inputAttributePath);
+//
+//						final Set<Attribute> inputAttributePathAttributes = inputAttributePath.getAttributes();
+//
+//						if (inputAttributePathAttributes != null) {
+//
+//							for (final Attribute inputAttributePathAttribute : inputAttributePathAttributes) {
+//
+//								attributes.put(inputAttributePathAttribute.getId(), inputAttributePathAttribute);
+//							}
+//						}
+//					}
+//				}
+//
+//				final AttributePath projectMappingOutputAttributePath = projectMapping.getOutputAttributePath();
+//
+//				if (projectMappingOutputAttributePath != null) {
+//
+//					attributePaths.put(projectMappingOutputAttributePath.getId(), projectMappingOutputAttributePath);
+//
+//					final Set<Attribute> inputAttributePathAttributes = projectMappingOutputAttributePath.getAttributes();
+//
+//					if (inputAttributePathAttributes != null) {
+//
+//						for (final Attribute inputAttributePathAttribute : inputAttributePathAttributes) {
+//
+//							attributes.put(inputAttributePathAttribute.getId(), inputAttributePathAttribute);
+//						}
+//					}
+//				}
 			}
 		}
 
