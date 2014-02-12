@@ -58,13 +58,18 @@ public abstract class AttributePathInstance extends BasicDMPJPAObject {
 	// @JsonIgnore
 	@Column(name = "ATTRIBUTE_PATH_INSTANCE_TYPE")
 	@Enumerated(EnumType.STRING)
-	private final AttributePathInstanceType			attributePathInstanceType;
+	private AttributePathInstanceType				attributePathInstanceType;
 
 	@XmlElement(name = "attribute_path")
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "ATTRIBUTE_PATH")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private AttributePath							attributePath;
+
+	public AttributePathInstance() {
+
+		// just for JPA
+	}
 
 	/**
 	 * Creates a new attribute path instance with the given attribute path instance type.

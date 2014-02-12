@@ -116,7 +116,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	// @JsonIgnore
 	@Column(name = "FUNCTION_TYPE")
 	@Enumerated(EnumType.STRING)
-	private final FunctionType						functionType;
+	private FunctionType						functionType;
 
 	/**
 	 * Creates a new function.
