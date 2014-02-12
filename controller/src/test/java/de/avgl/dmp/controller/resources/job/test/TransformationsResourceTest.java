@@ -109,7 +109,7 @@ public class TransformationsResourceTest
 	}
 
 	@Override
-	public Transformation updateObject(final Transformation persistedTransformation) throws Exception {
+	protected Transformation updateObject(final Transformation persistedTransformation) throws Exception {
 
 		String functionJSONString = DMPPersistenceUtil.getResourceAsString("function.json");
 		final ObjectNode functionJSON = objectMapper.readValue(functionJSONString, ObjectNode.class);

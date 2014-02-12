@@ -162,7 +162,7 @@ public class SchemasResourceTest extends
 	}
 
 	@Override
-	public Schema updateObject(final Schema persistedSchema) throws Exception {
+	protected Schema updateObject(final Schema persistedSchema) throws Exception {
 
 		final Set<AttributePath> persistedAttributePaths = persistedSchema.getAttributePaths();
 		final AttributePath firstAttributePath = persistedAttributePaths.iterator().next();
@@ -208,8 +208,8 @@ public class SchemasResourceTest extends
 
 		recordClass2 = updateSchema.getRecordClass();
 
-		Assert.assertEquals("persisted and updated clasz uri should be equal", persistedSchema.getRecordClass().getUri(), biboBookId);
-		Assert.assertEquals("persisted and updated clasz name should be equal", persistedSchema.getRecordClass().getName(), biboBookName);
+		Assert.assertEquals("persisted and updated clasz uri should be equal", updateSchema.getRecordClass().getUri(), biboBookId);
+		Assert.assertEquals("persisted and updated clasz name should be equal", updateSchema.getRecordClass().getName(), biboBookName);
 		Assert.assertEquals("persisted and updated schema name should be equal", updateSchema.getName(), updateSchemaNameString);
 
 		return updateSchema;

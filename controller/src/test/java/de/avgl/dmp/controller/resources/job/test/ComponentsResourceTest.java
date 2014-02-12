@@ -64,7 +64,7 @@ public class ComponentsResourceTest extends
 	}
 
 	@Override
-	public Component updateObject(final Component actualComponent) throws Exception {
+	protected Component updateObject(final Component actualComponent) throws Exception {
 
 		Function componentFunction = actualComponent.getFunction();
 

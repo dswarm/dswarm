@@ -259,7 +259,7 @@ public class ProjectsResourceTest extends
 	}
 
 	@Override
-	public Project updateObject(final Project persistedProject) throws Exception {
+	protected Project updateObject(final Project persistedProject) throws Exception {
 
 		persistedProject.setName(persistedProject.getName() + " update");
 

@@ -25,7 +25,7 @@ public class FunctionsResourceTest extends
 	}
 
 	@Override
-	public Function updateObject(final Function actualFunction) throws Exception {
+	protected Function updateObject(final Function actualFunction) throws Exception {
 
 		actualFunction.setDescription(actualFunction.getDescription() + " update");
 

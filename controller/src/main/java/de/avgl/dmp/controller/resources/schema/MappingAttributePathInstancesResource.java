@@ -34,7 +34,7 @@ import de.avgl.dmp.persistence.service.schema.MappingAttributePathInstanceServic
  */
 @RequestScoped
 @Api(value = "/mappingattributepathinstances", description = "Operations about mapping attribute path instances.")
-@Path("mappingattributepaths")
+@Path("mappingattributepathinstances")
 public class MappingAttributePathInstancesResource
 		extends
 		AttributePathInstancesResource<MappingAttributePathInstancesResourceUtils, MappingAttributePathInstanceService, ProxyMappingAttributePathInstance, MappingAttributePathInstance> {
