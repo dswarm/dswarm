@@ -47,11 +47,15 @@ public class GuicedTest {
 		injector = getInjector();
 
 		injector.getInstance(PersistService.class).start();
+		
+		de.avgl.dmp.persistence.GuicedTest.startUp();
 	}
 
 	@AfterClass
 	public static void tearDown() throws Exception {
 
 		injector.getInstance(PersistService.class).stop();
+		
+		de.avgl.dmp.persistence.GuicedTest.tearDown();
 	}
 }

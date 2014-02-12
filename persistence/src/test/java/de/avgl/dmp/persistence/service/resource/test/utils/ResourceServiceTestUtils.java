@@ -134,9 +134,9 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 
 				final String attributeKey = attributeEntry.getKey();
 
-				if (attributeKey.equals("path")) {
+				if (attributeKey.equals("path") || attributeKey.equals("filesize")) {
 
-					// skip path attribute
+					// skip attribute
 
 					continue;
 				}
