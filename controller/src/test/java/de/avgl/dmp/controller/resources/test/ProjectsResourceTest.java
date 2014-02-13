@@ -181,13 +181,13 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 	@Override
 	public void testPUTObject() throws Exception {
 
-//		super.testPUTObject();
-//		
-//		mappingsResourceTestUtils.deleteObject(updateMapping);
-//
-//		transformationsResourceTestUtils.deleteObject(updateTransformation);
-//
-//		functionsResourceTestUtils.deleteObject(updateFunction);
+		super.testPUTObject();
+		
+		mappingsResourceTestUtils.deleteObject(updateMapping);
+
+		transformationsResourceTestUtils.deleteObject(updateTransformation);
+
+		functionsResourceTestUtils.deleteObject(updateFunction);
 
 	}
 
