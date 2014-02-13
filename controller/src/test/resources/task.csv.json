@@ -2,20 +2,30 @@
     "job": {
         "mappings": [{
             "output_attribute_path": {
-                "attributes": [{
-                    "id": 89,
-                    "name": "description",
-                    "uri": "/test_csv.csv#description"
-                }],
-                "id": 98
+                "type": "MappingAttributePathInstance",
+                "name": "output mapping attribute path instance",
+                "id": 3,
+                "attribute_path": {
+                    "attributes": [{
+                        "id": 89,
+                        "name": "description",
+                        "uri": "/test_csv.csv#description"
+                    }],
+                    "id": 98
+                }
             },
             "input_attribute_paths": [{
-                "attributes": [{
-                    "id": 89,
-                    "name": "description",
-                    "uri": "/test_csv.csv#description"
-                }],
-                "id": 98
+                "type": "MappingAttributePathInstance",
+                "name": "input mapping attribute path instance",
+                "id": 2,
+                "attribute_path": {
+                    "attributes": [{
+                        "id": 89,
+                        "name": "description",
+                        "uri": "/test_csv.csv#description"
+                    }],
+                    "id": 98
+                }
             }],
             "transformation": {
                 "function": {

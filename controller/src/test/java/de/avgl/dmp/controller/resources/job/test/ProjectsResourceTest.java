@@ -48,73 +48,74 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 public class ProjectsResourceTest extends
 		BasicResourceTest<ProjectsResourceTestUtils, ProjectServiceTestUtils, ProjectService, ProxyProject, Project, Long> {
 
-	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(AttributesResourceTest.class);
+	private static final org.apache.log4j.Logger					LOG								= org.apache.log4j.Logger
+																											.getLogger(AttributesResourceTest.class);
 
-	private final FunctionsResourceTestUtils		functionsResourceTestUtils;
+	private final FunctionsResourceTestUtils						functionsResourceTestUtils;
 
-	private final TransformationsResourceTestUtils	transformationsResourceTestUtils;
+	private final TransformationsResourceTestUtils					transformationsResourceTestUtils;
 
-	private final ComponentsResourceTestUtils		componentsResourceTestUtils;
+	private final ComponentsResourceTestUtils						componentsResourceTestUtils;
 
-	private final AttributesResourceTestUtils		attributesResourceTestUtils;
+	private final AttributesResourceTestUtils						attributesResourceTestUtils;
 
-	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
+	private final AttributePathsResourceTestUtils					attributePathsResourceTestUtils;
 
-	private final ClaszesResourceTestUtils			claszesResourceTestUtils;
+	private final ClaszesResourceTestUtils							claszesResourceTestUtils;
 
-	private final ResourcesResourceTestUtils		resourcesResourceTestUtils;
+	private final ResourcesResourceTestUtils						resourcesResourceTestUtils;
 
-	private final ConfigurationsResourceTestUtils	configurationsResourceTestUtils;
+	private final ConfigurationsResourceTestUtils					configurationsResourceTestUtils;
 
-	private final SchemasResourceTestUtils			schemasResourceTestUtils;
+	private final SchemasResourceTestUtils							schemasResourceTestUtils;
 
-	private final DataModelsResourceTestUtils		dataModelsResourceTestUtils;
+	private final DataModelsResourceTestUtils						dataModelsResourceTestUtils;
 
-	private final MappingsResourceTestUtils			mappingsResourceTestUtils;
+	private final MappingsResourceTestUtils							mappingsResourceTestUtils;
 
-	private final ProjectsResourceTestUtils			projectsResourceTestUtils;
-	
+	private final ProjectsResourceTestUtils							projectsResourceTestUtils;
+
 	private final MappingAttributePathInstancesResourceTestUtils	mappingAttributePathInstancesResourceTestUtils;
 
-	private Function								function;
+	private Function												function;
 
-	private Function								updateFunction;
+	private Function												updateFunction;
 
-	private Component								component;
+	private Component												component;
 
-	private Component								updateComponent;
+	private Component												updateComponent;
 
-	private Transformation							transformation;
+	private Transformation											transformation;
 
-	private Transformation							updateTransformation;
+	private Transformation											updateTransformation;
 
-	private Component								transformationComponent;
+	private Component												transformationComponent;
 
-	final Map<Long, Attribute>						attributes		= Maps.newHashMap();
+	final Map<Long, Attribute>										attributes						= Maps.newHashMap();
 
-	final Map<Long, AttributePath>					attributePaths	= Maps.newLinkedHashMap();
-	
+	final Map<Long, AttributePath>									attributePaths					= Maps.newLinkedHashMap();
+
 	final Map<Long, MappingAttributePathInstance>					mappingAttributePathInstances	= Maps.newLinkedHashMap();
 
-	private Clasz									recordClass;
+	private Clasz													recordClass;
 
-	private Clasz									updateRecordClass;
+	private Clasz													updateRecordClass;
 
-	private Schema									schema;
+	private Schema													schema;
 
-	private Configuration							configuration;
+	private Configuration											configuration;
 
-	private Configuration							updateConfiguration;
+	private Configuration											updateConfiguration;
 
-	private Resource								resource;
+	private Resource												resource;
 
-	private Resource								updateResource;
+	private Resource												updateResource;
 
-	private Mapping									updateMapping;
+	private Mapping													updateMapping;
 
-	private Map<Long, DataModel>					dataModels		= Maps.newHashMap();
+	private final Map<Long, DataModel>								dataModels						= Maps.newHashMap();
 
-	private Map<Long, Mapping>						mappings		= Maps.newHashMap();
+	private final Map<Long, Mapping>								mappings						= Maps.newHashMap();
 
 	public ProjectsResourceTest() {
 
@@ -247,7 +248,7 @@ public class ProjectsResourceTest extends
 
 			mappingsResourceTestUtils.deleteObject(mapping);
 		}
-		
+
 		for (final MappingAttributePathInstance mappingAttributePathInstance : mappingAttributePathInstances.values()) {
 
 			mappingAttributePathInstancesResourceTestUtils.deleteObject(mappingAttributePathInstance);
@@ -287,7 +288,7 @@ public class ProjectsResourceTest extends
 
 		updateRecordClass = claszesResourceTestUtils.createObject("clasz1.json");
 
-		Schema schema = inputDataModel.getSchema();
+		final Schema schema = inputDataModel.getSchema();
 		schema.setName(schema.getName() + " update");
 		schema.setRecordClass(updateRecordClass);
 
@@ -338,7 +339,7 @@ public class ProjectsResourceTest extends
 		//
 		// persistedProject.setMappings(updateMappings);
 
-		String updateProjectJSONString = objectMapper.writeValueAsString(persistedProject);
+		final String updateProjectJSONString = objectMapper.writeValueAsString(persistedProject);
 		final Project expectedProject = objectMapper.readValue(updateProjectJSONString, Project.class);
 		Assert.assertNotNull("the project JSON string shouldn't be null", updateProjectJSONString);
 
@@ -527,7 +528,7 @@ public class ProjectsResourceTest extends
 
 		final AttributePath inputAttributePath = createAttributePath("attribute_path4.json");
 		final AttributePath outputAttributePath = createAttributePath("attribute_path5.json");
-		
+
 		final MappingAttributePathInstance inputMappingAttributePathInstance = createMappingAttributePathInstance(
 				"input_mapping_attribute_path_instance.json", inputAttributePath);
 		final MappingAttributePathInstance outputMappingAttributePathInstance = createMappingAttributePathInstance(
@@ -690,7 +691,7 @@ public class ProjectsResourceTest extends
 
 		return actualAttributePath;
 	}
-	
+
 	private MappingAttributePathInstance createMappingAttributePathInstance(final String mappingAttributePathInstanceFileName,
 			final AttributePath attributePath) throws Exception {
 

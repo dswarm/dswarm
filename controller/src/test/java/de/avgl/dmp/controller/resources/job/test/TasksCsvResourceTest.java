@@ -65,7 +65,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 	private final SchemasResourceTestUtils			schemasResourceTestUtils;
 
 	private final ClaszesResourceTestUtils			classesResourceTestUtils;
-	
+
 	private final AttributesResourceTestUtils		attributesResourceTestUtils;
 
 	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
@@ -167,8 +167,8 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataResourceSchemaBaseURI(dataModel);
 
-		final ObjectNode outputAttributePathAttributeJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) mappingJSON.get("output_attribute_path"))
-				.get("attributes")).get(0);
+		final ObjectNode outputAttributePathAttributeJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) ((ObjectNode) mappingJSON
+				.get("output_attribute_path")).get("attribute_path")).get("attributes")).get(0);
 		final String outputAttributeName = outputAttributePathAttributeJSON.get("name").asText();
 		outputAttributePathAttributeJSON.put("uri", dataResourceSchemaBaseURI + outputAttributeName);
 
@@ -176,7 +176,8 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 		for (final JsonNode inputAttributePathsJSONNode : inputAttributePathsJSON) {
 
-			final ObjectNode inputAttributeJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) inputAttributePathsJSONNode).get("attributes")).get(0);
+			final ObjectNode inputAttributeJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) ((ObjectNode) inputAttributePathsJSONNode)
+					.get("attribute_path")).get("attributes")).get(0);
 			final String inputAttributeName = inputAttributeJSON.get("name").asText();
 			inputAttributeJSON.put("uri", dataResourceSchemaBaseURI + inputAttributeName);
 		}
@@ -235,10 +236,10 @@ public class TasksCsvResourceTest extends ResourceTest {
 	@After
 	public void cleanUp() {
 
-		final Map<Long, Attribute>					attributes		= Maps.newHashMap();
+		final Map<Long, Attribute> attributes = Maps.newHashMap();
 
-		final Map<Long, AttributePath>					attributePaths	= Maps.newLinkedHashMap();
-		
+		final Map<Long, AttributePath> attributePaths = Maps.newLinkedHashMap();
+
 		if (schema != null) {
 
 			final Set<AttributePath> attributePathsToDelete = schema.getAttributePaths();
@@ -261,10 +262,10 @@ public class TasksCsvResourceTest extends ResourceTest {
 				}
 			}
 		}
-		
+
 		dataModelsResourceTestUtils.deleteObject(dataModel);
 		schemasResourceTestUtils.deleteObject(schema);
-		
+
 		for (final AttributePath attributePath : attributePaths.values()) {
 
 			attributePathsResourceTestUtils.deleteObject(attributePath);
@@ -274,7 +275,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 			attributesResourceTestUtils.deleteObject(attribute);
 		}
-		
+
 		classesResourceTestUtils.deleteObject(recordClass);
 		resourcesResourceTestUtils.deleteObject(resource);
 		configurationsResourceTestUtils.deleteObject(configuration);
