@@ -15,14 +15,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.hp.hpl.jena.query.Dataset;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ReadWrite;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.sparql.resultset.ResultSetMem;
 import com.hp.hpl.jena.tdb.TDBFactory;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
@@ -47,6 +40,7 @@ import de.avgl.dmp.persistence.service.schema.AttributePathService;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
+import de.avgl.dmp.persistence.util.RDFUtil;
 
 /**
  * A internal model service implementation for RDF triples.<br/>
@@ -171,7 +165,7 @@ public class InternalTripleService implements InternalModelService {
 
 				final String recordClassURI = dataModel.getSchema().getRecordClass().getUri();
 
-				final Set<com.hp.hpl.jena.rdf.model.Resource> recordResources = getRecordResources(recordClassURI, realModel);
+				final Set<com.hp.hpl.jena.rdf.model.Resource> recordResources = RDFUtil.getRecordResources(recordClassURI, realModel);
 
 				if (recordResources != null) {
 
@@ -262,7 +256,7 @@ public class InternalTripleService implements InternalModelService {
 
 		final String recordClassUri = recordClass.getUri();
 
-		final Set<com.hp.hpl.jena.rdf.model.Resource> recordResources = getRecordResources(recordClassUri, model);
+		final Set<com.hp.hpl.jena.rdf.model.Resource> recordResources = RDFUtil.getRecordResources(recordClassUri, model);
 
 		if (recordResources == null || recordResources.isEmpty()) {
 
@@ -524,63 +518,5 @@ public class InternalTripleService implements InternalModelService {
 		return dataModel;
 	}
 
-	/**
-	 * Gets all resources for the given record class identifier in the given Jena model.
-	 * 
-	 * @param recordClassURI the record class identifier
-	 * @param model the Jena model
-	 * @return
-	 */
-	private Set<com.hp.hpl.jena.rdf.model.Resource> getRecordResources(final String recordClassURI, final com.hp.hpl.jena.rdf.model.Model model) {
-
-		LOG.debug("start processing all record resources SPARQL query");
-
-		final String allRecordResourcesQueryString = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n" + "SELECT ?resource\n"
-				+ "WHERE { \n" + "        ?resource rdf:type <" + recordClassURI + "> . \n" + "     }";
-
-		final Query allRecordResourcesQuery = QueryFactory.create(allRecordResourcesQueryString);
-		final QueryExecution allRecordResourcesQueryExec = QueryExecutionFactory.create(allRecordResourcesQuery, model);
-
-		final ResultSet realResultSet = allRecordResourcesQueryExec.execSelect();
-
-		LOG.debug("end processing all record resources SPARQL query");
-
-		if (realResultSet == null || !realResultSet.hasNext()) {
-
-			LOG.error("all record resources result set was 'null' or empty");
-
-			return null;
-		}
-
-		LOG.debug("start copying all record resource SPARQL query result set");
-
-		final ResultSetMem results = new ResultSetMem(realResultSet);
-
-		allRecordResourcesQueryExec.close();
-
-		LOG.debug("end copying all record resources SPARQL query result set");
-
-		// final ResultSetMem results2 = new ResultSetMem(results, true);
-
-		// ResultSetFormatter.out(System.out, results2, allTagsQuery);
-
-		final Set<com.hp.hpl.jena.rdf.model.Resource> recordResources = Sets.newHashSet();
-
-		while (results.hasNext()) {
-
-			final QuerySolution querySolution = results.next();
-
-			if (null != querySolution) {
-
-				final com.hp.hpl.jena.rdf.model.Resource recordResource = querySolution.getResource("resource");
-
-				if (null != recordResource) {
-
-					recordResources.add(recordResource);
-				}
-			}
-		}
-
-		return recordResources;
-	}
+	
 }

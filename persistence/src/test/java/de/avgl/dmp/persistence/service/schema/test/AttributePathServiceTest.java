@@ -16,22 +16,29 @@ import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttributePath;
 import de.avgl.dmp.persistence.service.schema.AttributePathService;
-import de.avgl.dmp.persistence.service.schema.AttributeService;
+import de.avgl.dmp.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
+import de.avgl.dmp.persistence.service.schema.test.utils.AttributeServiceTestUtils;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
 
 public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttributePath, AttributePath, AttributePathService> {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(AttributePathServiceTest.class);
 
+	private final AttributeServiceTestUtils			attributeServiceTestUtils;
+	private final AttributePathServiceTestUtils		attributePathServiceTestUtils;
+
 	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	public AttributePathServiceTest() {
 
 		super("attribute path", AttributePathService.class);
+
+		attributeServiceTestUtils = new AttributeServiceTestUtils();
+		attributePathServiceTestUtils = new AttributePathServiceTestUtils();
 	}
 
 	@Test
-	public void testSimpleAttributePath2() {
+	public void testSimpleAttributePath2() throws Exception {
 
 		AttributePathServiceTest.LOG.debug("start simple attribute path test 2");
 
@@ -56,7 +63,7 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttribu
 		Assert.assertFalse("the attribute path's attributes set shouldn't be empty", attributeSet1.isEmpty());
 
 		// clean up DB
-		deletedObject(updatedAttributePath.getId());
+		deleteObject(updatedAttributePath.getId());
 
 		// TODO: for some reason the loop on the set won't be executed, when all tests are executed at once and only when this
 		// test class is executed alone, i.e., the attributes
@@ -68,14 +75,14 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttribu
 		// delete the attributes created for the example paths
 		for (final Attribute attribute : attributeSet1) {
 
-			deleteAttribute(attribute);
+			attributeServiceTestUtils.deleteObject(attribute);
 		}
 
 		AttributePathServiceTest.LOG.debug("end simple attribute path test 2");
 	}
 
 	@Test
-	public void testUniquenessOfAttributePath() {
+	public void testUniquenessOfAttributePath() throws Exception {
 
 		AttributePathServiceTest.LOG.debug("start uniqueness of attribute path test");
 
@@ -96,25 +103,25 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttribu
 		Assert.assertFalse("the attribute path's attributes set shouldn't be empty", attributeSet1.isEmpty());
 
 		// clean up DB
-		deletedObject(attributePath1.getId());
+		deleteObject(attributePath1.getId());
 
 		// delete the attributes created for the example paths
 		for (final Attribute attribute : attributeSet1) {
 
-			deleteAttribute(attribute);
+			attributeServiceTestUtils.deleteObject(attribute);
 		}
 
 		AttributePathServiceTest.LOG.debug("start uniquness of attribute path test");
 	}
 
 	@Test
-	public void testSimpleAttributePath() {
+	public void testSimpleAttributePath() throws Exception {
 
 		AttributePathServiceTest.LOG.debug("start simple attribute path test");
 
-		final Attribute dctermsTitle = createAttribute("http://purl.org/dc/terms/title", "title");
+		final Attribute dctermsTitle = attributeServiceTestUtils.createAttribute("http://purl.org/dc/terms/title", "title");
 
-		final Attribute dctermsHasPart = createAttribute("http://purl.org/dc/terms/hasPart", "hasPart");
+		final Attribute dctermsHasPart = attributeServiceTestUtils.createAttribute("http://purl.org/dc/terms/hasPart", "hasPart");
 
 		final AttributePath attributePath = createObject().getObject();
 
@@ -146,14 +153,14 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttribu
 		AttributePathServiceTest.LOG.debug("attribute path json: " + json);
 
 		// clean up DB
-		deletedObject(attributePath.getId());
-		deleteAttribute(dctermsHasPart);
-		deleteAttribute(dctermsTitle);
+		deleteObject(attributePath.getId());
+		attributeServiceTestUtils.deleteObject(dctermsHasPart);
+		attributeServiceTestUtils.deleteObject(dctermsTitle);
 
 		AttributePathServiceTest.LOG.debug("end simple attribute path test");
 	}
 
-	private AttributePath configureUniqueExampleAttributePath() {
+	private AttributePath configureUniqueExampleAttributePath() throws Exception {
 
 		final AttributePath tempAttributePath = createAttributePath();
 
@@ -162,12 +169,12 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttribu
 		return attributePath;
 	}
 
-	private AttributePath createAttributePath() {
+	private AttributePath createAttributePath() throws Exception {
 
 		final AttributePath attributePath = new AttributePath();
 
-		final Attribute dctermsTitle = createAttribute("http://purl.org/dc/terms/title", "title");
-		final Attribute dctermsHasPart = createAttribute("http://purl.org/dc/terms/hasPart", "hasPart");
+		final Attribute dctermsTitle = attributeServiceTestUtils.createAttribute("http://purl.org/dc/terms/title", "title");
+		final Attribute dctermsHasPart = attributeServiceTestUtils.createAttribute("http://purl.org/dc/terms/hasPart", "hasPart");
 
 		attributePath.addAttribute(dctermsHasPart);
 		attributePath.addAttribute(dctermsTitle);
@@ -199,77 +206,13 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttribu
 		return object;
 	}
 
-	private AttributePath createObject(final AttributePath attributePath) {
+	private AttributePath createObject(final AttributePath attributePath) throws Exception {
 
-		AttributePath object = null;
-		try {
-			object = jpaService.createObjectTransactional(attributePath).getObject();
-			System.out.println(object);
-		} catch (final DMPPersistenceException e) {
-			Assert.assertTrue("something went wrong during attribute path creation.\n" + e.getMessage(), false);
-		}
-
-		Assert.assertNotNull(type + " shouldn't be null", object);
-		Assert.assertNotNull(type + " id shouldn't be null", object.getId());
-		Assert.assertNotNull(type + " path shouldn't be null", object.getAttributePathAsJSONObjectString());
+		final AttributePath object = attributePathServiceTestUtils.createObject(attributePath, attributePath);
 
 		AttributePathServiceTest.LOG.debug("created new attribute path with id = '" + object.getId() + "'" + " and path = '"
 				+ object.getAttributePathAsJSONObjectString() + "'");
 
 		return object;
-	}
-
-	private Attribute createAttribute(final String id, final String name) {
-
-		final AttributeService attributeService = GuicedTest.injector.getInstance(AttributeService.class);
-
-		Assert.assertNotNull("attribute service shouldn't be null", attributeService);
-
-		// create first attribute
-
-		Attribute attribute = null;
-
-		try {
-			attribute = attributeService.createOrGetObjectTransactional(id).getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while attribute creation.\n" + e.getMessage(), false);
-		}
-
-		Assert.assertNotNull("attribute shouldn't be null", attribute);
-		Assert.assertNotNull("attribute id shouldn't be null", attribute.getId());
-
-		attribute.setName(name);
-
-		Attribute updatedAttribute = null;
-
-		try {
-
-			updatedAttribute = attributeService.updateObjectTransactional(attribute).getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while updaging the attribute of id = '" + id + "'", false);
-		}
-
-		Assert.assertNotNull("updated attribute shouldn't be null", updatedAttribute);
-		Assert.assertNotNull("updated attribute id shouldn't be null", updatedAttribute.getId());
-		Assert.assertNotNull("updated attribute name shouldn't be null", updatedAttribute.getName());
-
-		return updatedAttribute;
-	}
-
-	private void deleteAttribute(final Attribute attribute) {
-
-		final AttributeService attributeService = GuicedTest.injector.getInstance(AttributeService.class);
-
-		Assert.assertNotNull("attribute service shouldn't be null", attributeService);
-
-		final Long attributeId = attribute.getId();
-
-		attributeService.deleteObject(attributeId);
-
-		final Attribute deletedAttribute = attributeService.getObject(attributeId);
-
-		Assert.assertNull("deleted attribute shouldn't exist any more", deletedAttribute);
 	}
 }

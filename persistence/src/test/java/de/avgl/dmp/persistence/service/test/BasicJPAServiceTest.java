@@ -16,7 +16,7 @@ public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<
 	protected final String							type;
 	protected final Class<JPASERVICEIMPL>			jpaServiceClass;
 	protected JPASERVICEIMPL						jpaService	= null;
-
+	
 	public BasicJPAServiceTest(final String type, final Class<JPASERVICEIMPL> jpaServiceClass) {
 
 		this.type = type;
@@ -74,7 +74,7 @@ public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<
 		return bbject;
 	}
 
-	protected void deletedObject(final POJOCLASSIDTYPE id) {
+	protected void deleteObject(final POJOCLASSIDTYPE id) {
 
 		jpaService.deleteObject(id);
 

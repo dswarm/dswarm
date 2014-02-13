@@ -29,6 +29,7 @@ import de.avgl.dmp.persistence.model.resource.utils.ResourceUtils;
 import de.avgl.dmp.persistence.model.schema.utils.AttributePathUtils;
 import de.avgl.dmp.persistence.model.schema.utils.AttributeUtils;
 import de.avgl.dmp.persistence.model.schema.utils.ClaszUtils;
+import de.avgl.dmp.persistence.model.schema.utils.MappingAttributePathInstanceUtils;
 import de.avgl.dmp.persistence.model.schema.utils.SchemaUtils;
 
 /**
@@ -42,52 +43,56 @@ public final class DMPPersistenceUtil {
 	/**
 	 * The JSON node factory that can be utilised to create new JSON nodes (objects or arrays).
 	 */
-	private static final JsonNodeFactory		FACTORY;
+	private static final JsonNodeFactory					FACTORY;
 
 	/**
 	 * The object mapper that can be utilised to de-/serialise JSON nodes.
 	 */
-	private static final ObjectMapper			MAPPER;
+	private static final ObjectMapper						MAPPER;
 
-	private static final AttributePathUtils		ATTRIBUTEPATHUTILS;
+	private static final AttributePathUtils					ATTRIBUTEPATHUTILS;
 
-	private static final AttributeUtils			ATTRIBUTEUTILS;
+	private static final AttributeUtils						ATTRIBUTEUTILS;
 
-	private static final ComponentUtils			COMPONENTUTILS;
+	private static final ComponentUtils						COMPONENTUTILS;
 
-	private static final MappingUtils			MAPPINGUTILS;
+	private static final MappingUtils						MAPPINGUTILS;
 
-	private static final FunctionUtils			FUNCTIONUTILS;
+	private static final FunctionUtils						FUNCTIONUTILS;
 
-	private static final ResourceUtils			RESOURCEUTILS;
+	private static final ResourceUtils						RESOURCEUTILS;
 
-	private static final ConfigurationUtils		CONFIGURATIONUTILS;
+	private static final ConfigurationUtils					CONFIGURATIONUTILS;
 
-	private static final ClaszUtils				CLASZUTILS;
+	private static final ClaszUtils							CLASZUTILS;
 
-	private static final SchemaUtils			SCHEMAUTILS;
+	private static final SchemaUtils						SCHEMAUTILS;
 
-	private static final TransformationUtils	TRANSFORMATIONUTILS;
+	private static final TransformationUtils				TRANSFORMATIONUTILS;
 
-	private static final FilterUtils			FILTERUTILS;
+	private static final FilterUtils						FILTERUTILS;
 
-	private static final DataModelUtils			DATAMODELUTILS;
-	
-	private static final JobUtils JOBUTILS;
+	private static final DataModelUtils						DATAMODELUTILS;
+
+	private static final JobUtils							JOBUTILS;
+
+	private static final MappingAttributePathInstanceUtils	MAPPINGATTRIBUTEPATHINSTANCEUTILS;
 
 	/**
 	 * The injector for dependency injection.
 	 */
 	@SuppressWarnings("StaticNonFinalField")
-	public static transient Injector			injector;
+	public static transient Injector						injector;
 
-	private static final long					LOWER_RANGE	= Long.valueOf("-9223372036854775808").longValue(); // assign lower
-																												// range
-																												// value
-	private static final long					UPPER_RANGE	= -1;												// assign upper
-																												// range
-																												// value
-	private static final Random					random		= new SecureRandom();
+	private static final long								LOWER_RANGE	= Long.valueOf("-9223372036854775808").longValue(); // assign
+																															// lower
+																															// range
+																															// value
+	private static final long								UPPER_RANGE	= -1;												// assign
+																															// upper
+																															// range
+																															// value
+	private static final Random								random		= new SecureRandom();
 
 	static {
 		MAPPER = new ObjectMapper();
@@ -110,6 +115,7 @@ public final class DMPPersistenceUtil {
 		FILTERUTILS = new FilterUtils();
 		DATAMODELUTILS = new DataModelUtils();
 		JOBUTILS = new JobUtils();
+		MAPPINGATTRIBUTEPATHINSTANCEUTILS = new MappingAttributePathInstanceUtils();
 	}
 
 	/**
@@ -237,10 +243,15 @@ public final class DMPPersistenceUtil {
 
 		return DATAMODELUTILS;
 	}
-	
+
 	public static JobUtils getJobUtils() {
-		
+
 		return JOBUTILS;
+	}
+
+	public static MappingAttributePathInstanceUtils getMappingAttributePathInstanceUtils() {
+
+		return MAPPINGATTRIBUTEPATHINSTANCEUTILS;
 	}
 
 	/**

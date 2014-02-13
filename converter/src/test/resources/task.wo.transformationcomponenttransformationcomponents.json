@@ -18,28 +18,38 @@
                 }
             },
             "input_attribute_paths": [{
-                "id": 11,
-                "attributes": [{
-                    "id": 99,
-                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                    "name": "feld"
-                }, {
-                    "id": 98,
-                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
-                    "name": "nr"
-                }]
+                "type": "MappingAttributePathInstance",
+                "name": "input mapping attribute path instance",
+                "id": 2,
+                "attribute_path": {
+                    "id": 11,
+                    "attributes": [{
+                        "id": 99,
+                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                        "name": "feld"
+                    }, {
+                        "id": 98,
+                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
+                        "name": "nr"
+                    }]
+                }
             }],
             "output_attribute_path": {
-                "id": 11,
-                "attributes": [{
-                    "id": 99,
-                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                    "name": "feld"
-                }, {
-                    "id": 98,
-                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
-                    "name": "nr"
-                }]
+                "type": "MappingAttributePathInstance",
+                "name": "output mapping attribute path instance",
+                "id": 3,
+                "attribute_path": {
+                    "id": 11,
+                    "attributes": [{
+                        "id": 99,
+                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                        "name": "feld"
+                    }, {
+                        "id": 98,
+                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
+                        "name": "nr"
+                    }]
+                }
             }
         }]
     },

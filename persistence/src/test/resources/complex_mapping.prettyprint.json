@@ -1,54 +1,52 @@
 {
-    "id": 19,
     "name": "my mapping",
     "transformation": {
-        "id": 61,
         "name": "my transformation 2 (component)",
         "function": {
             "type": "Transformation",
-            "id": 71,
             "name": "my transformation 2",
             "description": "transformation which makes use of three functions (two transformations and one funcion)",
+            "id": 6,
             "parameters": ["firstName", "familyName"],
             "components": [{
-                "id": 58,
                 "name": "prepare first name",
                 "function": {
                     "type": "Transformation",
-                    "id": 69,
                     "name": "my transformation",
                     "description": "transformation which makes use of three functions",
+                    "id": 4,
                     "parameters": ["transformationInputString"],
                     "components": [{
-                        "id": 56,
-                        "name": "my lower case component",
+                        "name": "my trim component",
                         "function": {
                             "type": "Function",
-                            "id": 67,
-                            "name": "lower_case",
-                            "description": "lower cases all characters of a given string",
-                            "parameters": ["inputString"],
-                            "type": "Function"
+                            "name": "trim",
+                            "description": "trims leading and trailing whitespaces from a given string",
+                            "id": 3,
+                            "parameters": ["inputString"]
                         },
+                        "id": 3,
                         "input_components": [{
-                            "id": 57
+                            "id": 1
+                        }],
+                        "output_components": [{
+                            "id": 2
                         }],
                         "parameter_mappings": {
                             "inputString": "previousComponent.outputString"
                         }
                     }, {
-                        "id": 55,
                         "name": "my replace component",
                         "function": {
                             "type": "Function",
-                            "id": 66,
                             "name": "replace",
                             "description": "replace certain parts of a given string that matches a certain regex",
-                            "parameters": ["inputString", "regex", "replaceString"],
-                            "type": "Function"
+                            "id": 1,
+                            "parameters": ["inputString", "regex", "replaceString"]
                         },
+                        "id": 1,
                         "output_components": [{
-                            "id": 57
+                            "id": 3
                         }],
                         "parameter_mappings": {
                             "inputString": "previousComponent.outputString",
@@ -56,93 +54,69 @@
                             "replaceString": ":"
                         }
                     }, {
-                        "id": 57,
-                        "name": "my trim component",
+                        "name": "my lower case component",
                         "function": {
                             "type": "Function",
-                            "id": 68,
-                            "name": "trim",
-                            "description": "trims leading and trailing whitespaces from a given string",
-                            "parameters": ["inputString"],
-                            "type": "Function"
+                            "name": "lower_case",
+                            "description": "lower cases all characters of a given string",
+                            "id": 2,
+                            "parameters": ["inputString"]
                         },
+                        "id": 2,
                         "input_components": [{
-                            "id": 55
-                        }],
-                        "output_components": [{
-                            "id": 56
+                            "id": 3
                         }],
                         "parameter_mappings": {
                             "inputString": "previousComponent.outputString"
                         }
-                    }],
-                    "type": "Transformation"
+                    }]
                 },
+                "id": 4,
                 "output_components": [{
-                    "id": 60
+                    "id": 6
                 }],
                 "parameter_mappings": {
                     "transformationInputString": "firstName"
                 }
             }, {
-                "id": 60,
-                "name": "full name",
-                "function": {
-                    "type": "Function",
-                    "id": 70,
-                    "name": "concat",
-                    "description": "concatenates two given string",
-                    "parameters": ["firstString", "secondString"],
-                    "type": "Function"
-                },
-                "input_components": [{
-                    "id": 58
-                }, {
-                    "id": 59
-                }],
-                "parameter_mappings": {
-                    "firstString": "58.outputVariable",
-                    "secondString": "59.outputVariable"
-                }
-            }, {
-                "id": 59,
                 "name": "prepare family name",
                 "function": {
                     "type": "Transformation",
-                    "id": 69,
                     "name": "my transformation",
                     "description": "transformation which makes use of three functions",
+                    "id": 4,
                     "parameters": ["transformationInputString"],
                     "components": [{
-                        "id": 56,
-                        "name": "my lower case component",
+                        "name": "my trim component",
                         "function": {
                             "type": "Function",
-                            "id": 67,
-                            "name": "lower_case",
-                            "description": "lower cases all characters of a given string",
-                            "parameters": ["inputString"],
-                            "type": "Function"
+                            "name": "trim",
+                            "description": "trims leading and trailing whitespaces from a given string",
+                            "id": 3,
+                            "parameters": ["inputString"]
                         },
+                        "id": 3,
                         "input_components": [{
-                            "id": 57
+                            "id": 1
+                        }],
+                        "output_components": [{
+                            "id": 2
                         }],
                         "parameter_mappings": {
                             "inputString": "previousComponent.outputString"
                         }
                     }, {
-                        "id": 55,
                         "name": "my replace component",
                         "function": {
                             "type": "Function",
-                            "id": 66,
                             "name": "replace",
                             "description": "replace certain parts of a given string that matches a certain regex",
-                            "parameters": ["inputString", "regex", "replaceString"],
-                            "type": "Function"
+                            "id": 1,
+                            "parameters": ["inputString", "regex", "replaceString"]
                         },
+                        "id": 1,
                         "output_components": [{
-                            "id": 57
+                            "id": 3
                         }],
                         "parameter_mappings": {
                             "inputString": "previousComponent.outputString",
@@ -150,76 +124,107 @@
                             "replaceString": ":"
                         }
                     }, {
-                        "id": 57,
-                        "name": "my trim component",
+                        "name": "my lower case component",
                         "function": {
                             "type": "Function",
-                            "id": 68,
-                            "name": "trim",
-                            "description": "trims leading and trailing whitespaces from a given string",
-                            "parameters": ["inputString"],
-                            "type": "Function"
+                            "name": "lower_case",
+                            "description": "lower cases all characters of a given string",
+                            "id": 2,
+                            "parameters": ["inputString"]
                         },
+                        "id": 2,
                         "input_components": [{
-                            "id": 55
-                        }],
-                        "output_components": [{
-                            "id": 56
+                            "id": 3
                         }],
                         "parameter_mappings": {
                             "inputString": "previousComponent.outputString"
                         }
-                    }],
-                    "type": "Transformation"
+                    }]
                 },
+                "id": 5,
                 "output_components": [{
-                    "id": 60
+                    "id": 6
                 }],
                 "parameter_mappings": {
                     "transformationInputString": "familyName"
                 }
-            }],
-            "type": "Transformation"
+            }, {
+                "name": "full name",
+                "function": {
+                    "type": "Function",
+                    "name": "concat",
+                    "description": "concatenates two given string",
+                    "id": 5,
+                    "parameters": ["firstString", "secondString"]
+                },
+                "id": 6,
+                "input_components": [{
+                    "id": 4
+                }, {
+                    "id": 5
+                }],
+                "parameter_mappings": {
+                    "firstString": "4.outputVariable",
+                    "secondString": "5.outputVariable"
+                }
+            }]
         },
+        "id": 7,
         "parameter_mappings": {
             "firstName": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/firstName",
             "familyName": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/familyName",
             "transformationOutputVariable": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/name"
         }
     },
+    "id": 1,
     "input_attribute_paths": [{
-        "id": 62,
-        "attributes": [{
-            "id": 67,
-            "name": "creator",
-            "uri": "http://purl.org/dc/terms/creator"
-        }, {
-            "id": 69,
-            "name": "familyName",
-            "uri": "http://xmlns.com/foaf/0.1/familyName"
-        }]
+        "type": "MappingAttributePathInstance",
+        "name": "first name mapping attribute path instance",
+        "id": 1,
+        "attribute_path": {
+            "id": 1,
+            "attributes": [{
+                "name": "creator",
+                "uri": "http://purl.org/dc/terms/creator",
+                "id": 1
+            }, {
+                "name": "firstName",
+                "uri": "http://xmlns.com/foaf/0.1/firstName",
+                "id": 2
+            }]
+        }
     }, {
-        "id": 61,
-        "attributes": [{
-            "id": 67,
-            "name": "creator",
-            "uri": "http://purl.org/dc/terms/creator"
-        }, {
-            "id": 68,
-            "name": "firstName",
-            "uri": "http://xmlns.com/foaf/0.1/firstName"
-        }]
+        "type": "MappingAttributePathInstance",
+        "name": "family name mapping attribute path instance",
+        "id": 2,
+        "attribute_path": {
+            "id": 2,
+            "attributes": [{
+                "name": "creator",
+                "uri": "http://purl.org/dc/terms/creator",
+                "id": 1
+            }, {
+                "name": "familyName",
+                "uri": "http://xmlns.com/foaf/0.1/familyName",
+                "id": 3
+            }]
+        }
     }],
     "output_attribute_path": {
-        "id": 63,
-        "attributes": [{
-            "id": 67,
-            "name": "creator",
-            "uri": "http://purl.org/dc/terms/creator"
-        }, {
-            "id": 70,
-            "name": "name",
-            "uri": "http://xmlns.com/foaf/0.1/name"
-        }]
+        "type": "MappingAttributePathInstance",
+        "name": "output mapping attribute path instance",
+        "id": 3,
+        "attribute_path": {
+            "id": 3,
+            "attributes": [{
+                "name": "creator",
+                "uri": "http://purl.org/dc/terms/creator",
+                "id": 1
+            }, {
+                "name": "name",
+                "uri": "http://xmlns.com/foaf/0.1/name",
+                "id": 4
+            }]
+        }
     }
 }

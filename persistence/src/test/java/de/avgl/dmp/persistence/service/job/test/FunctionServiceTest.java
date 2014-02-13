@@ -92,7 +92,7 @@ public class FunctionServiceTest extends IDBasicJPAServiceTest<ProxyFunction, Fu
 		FunctionServiceTest.LOG.debug("function json: " + json);
 
 		// clean up DB
-		deletedObject(function.getId());
+		deleteObject(function.getId());
 	}
 
 	// @Test

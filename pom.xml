@@ -36,6 +36,7 @@
 		<maven-jxr-plugin.version>2.3</maven-jxr-plugin.version>
 		<maven-shade-plugin.version>2.2</maven-shade-plugin.version>
 		<maven-war-plugin.version>2.4</maven-war-plugin.version>
+		<maven-jar-plugin.version>2.4</maven-jar-plugin.version>
 		<maven-failsafe-plugin.version>2.16</maven-failsafe-plugin.version>
 		<cobertura-maven-plugin.version>2.6</cobertura-maven-plugin.version>
 		<exec-maven-plugin.version>1.2.1</exec-maven-plugin.version>
@@ -49,7 +50,7 @@
 		<maxallowedviolations>7000</maxallowedviolations>
 		<google.guava.version>14.0.1</google.guava.version>
 		<google.collections.version>1.0</google.collections.version>
-		<jackson.version>2.2.3</jackson.version>
+		<jackson.version>2.3.1</jackson.version>
 		<apache.commons.version>3.1</apache.commons.version>
 		<commons-io.version>2.4</commons-io.version>
 		<guice.version>3.0</guice.version>
@@ -77,11 +78,16 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>${maven-jar-plugin.version}</version>
+				</plugin>
+				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>cobertura-maven-plugin</artifactId>
 					<version>${cobertura-maven-plugin.version}</version>
 					<configuration>
-						<!-- <instrumentation> <ignores> <ignore>...</ignore> </ignores> <excludes>
+						<!-- <instrumentation> <ignores> <ignore>...</ignore> </ignores> <excludes> 
 							<exclude>...</exclude> </excludes> </instrumentation> -->
 						<formats>
 							<format>xml</format>
@@ -416,18 +422,18 @@
 		</plugins>
 	</reporting>
 
-	<url>http://avantgarde-labs.de</url>
+	<url>http://dmp.slub-dresden.de/</url>
 
 	<distributionManagement>
 		<repository>
 			<id>deployment</id>
 			<name>Internal Releases</name>
-			<url>http://achvcontes01.avantgarde-labs.de:8082/nexus/content/repositories/releases/</url>
+			<url>http://nexus.slub-dresden.de:8081/nexus/content/repositories/releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>deployment</id>
 			<name>Internal Releases</name>
-			<url>http://achvcontes01.avantgarde-labs.de:8082/nexus/content/repositories/snapshots/</url>
+			<url>http://nexus.slub-dresden.de:8081/nexus/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
@@ -445,7 +451,7 @@
 			<id>SDVDMPDEV</id>
 			<properties>
 				<env>sdvdmpdev</env>
-				<rdb.url>jdbc:mysql://localhost:3306/dmp_dev?useUnicode=true&amp;amp;characterEncoding=UTF-8</rdb.url>
+				<rdb.url>jdbc:mysql://localhost:3306/dmp_dev?useUnicode=true&amp;amp;characterEncoding=UTF-8&amp;amp;autoReconnect=true</rdb.url>
 				<rdb.username>dmp</rdb.username>
 				<rdb.password>dmp_mysql</rdb.password>
 			</properties>
@@ -526,6 +532,11 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
 			<version>${jackson.version}</version>
 		</dependency>
 		<dependency>
