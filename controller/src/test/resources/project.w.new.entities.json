@@ -47,18 +47,26 @@
             }
         },
         "input_attribute_paths": [{
-            "attributes": [{
-                "id": -4072354651565733000,
-                "uri": "http://purl.org/dc/terms/title",
-                "name": "title"
-            }]
+            "type": "MappingAttributePathInstance",
+            "name": "input mapping attribute path instance",
+            "attribute_path": {
+                "attributes": [{
+                    "id": -4072354651565733000,
+                    "uri": "http://purl.org/dc/terms/title",
+                    "name": "title"
+                }]
+            }
         }],
         "output_attribute_path": {
-            "attributes": [{
-                "id": -4072354651565733222,
-                "uri": "http://www.w3.org/2000/01/rdf-schema#label",
-                "name": "label"
-            }]
+            "type": "MappingAttributePathInstance",
+            "name": "output mapping attribute path instance",
+            "attribute_path": {
+                "attributes": [{
+                    "id": -4072354651565733222,
+                    "uri": "http://www.w3.org/2000/01/rdf-schema#label",
+                    "name": "label"
+                }]
+            }
         }
     }],
     "functions": [{

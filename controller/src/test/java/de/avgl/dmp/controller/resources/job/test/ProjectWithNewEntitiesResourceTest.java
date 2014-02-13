@@ -26,6 +26,7 @@ import de.avgl.dmp.controller.resources.schema.test.AttributesResourceTest;
 import de.avgl.dmp.controller.resources.schema.test.utils.AttributePathsResourceTestUtils;
 import de.avgl.dmp.controller.resources.schema.test.utils.AttributesResourceTestUtils;
 import de.avgl.dmp.controller.resources.schema.test.utils.ClaszesResourceTestUtils;
+import de.avgl.dmp.controller.resources.schema.test.utils.MappingAttributePathInstancesResourceTestUtils;
 import de.avgl.dmp.controller.resources.schema.test.utils.SchemasResourceTestUtils;
 import de.avgl.dmp.controller.resources.test.BasicResourceTest;
 import de.avgl.dmp.persistence.model.job.Component;
@@ -40,6 +41,7 @@ import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
+import de.avgl.dmp.persistence.model.schema.MappingAttributePathInstance;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.service.job.ProjectService;
 import de.avgl.dmp.persistence.service.job.test.utils.ProjectServiceTestUtils;
@@ -48,27 +50,29 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 public class ProjectWithNewEntitiesResourceTest extends
 		BasicResourceTest<ProjectsResourceTestUtils, ProjectServiceTestUtils, ProjectService, ProxyProject, Project, Long> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributesResourceTest.class);
+	private static final org.apache.log4j.Logger					LOG	= org.apache.log4j.Logger.getLogger(AttributesResourceTest.class);
 
-	private final FunctionsResourceTestUtils		functionsResourceTestUtils;
+	private final FunctionsResourceTestUtils						functionsResourceTestUtils;
 
-	private final TransformationsResourceTestUtils	transformationsResourceTestUtils;
+	private final TransformationsResourceTestUtils					transformationsResourceTestUtils;
 
-	private final AttributesResourceTestUtils		attributesResourceTestUtils;
+	private final AttributesResourceTestUtils						attributesResourceTestUtils;
 
-	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
+	private final AttributePathsResourceTestUtils					attributePathsResourceTestUtils;
 
-	private final ClaszesResourceTestUtils			claszesResourceTestUtils;
+	private final ClaszesResourceTestUtils							claszesResourceTestUtils;
 
-	private final ResourcesResourceTestUtils		resourcesResourceTestUtils;
+	private final ResourcesResourceTestUtils						resourcesResourceTestUtils;
 
-	private final ConfigurationsResourceTestUtils	configurationsResourceTestUtils;
+	private final ConfigurationsResourceTestUtils					configurationsResourceTestUtils;
 
-	private final SchemasResourceTestUtils			schemasResourceTestUtils;
+	private final SchemasResourceTestUtils							schemasResourceTestUtils;
 
-	private final DataModelsResourceTestUtils		dataModelsResourceTestUtils;
+	private final DataModelsResourceTestUtils						dataModelsResourceTestUtils;
 
-	private final MappingsResourceTestUtils			mappingsResourceTestUtils;
+	private final MappingsResourceTestUtils							mappingsResourceTestUtils;
+
+	private final MappingAttributePathInstancesResourceTestUtils	mappingAttributePathInstancesResourceTestUtils;
 
 	public ProjectWithNewEntitiesResourceTest() {
 
@@ -84,33 +88,39 @@ public class ProjectWithNewEntitiesResourceTest extends
 		schemasResourceTestUtils = new SchemasResourceTestUtils();
 		dataModelsResourceTestUtils = new DataModelsResourceTestUtils();
 		mappingsResourceTestUtils = new MappingsResourceTestUtils();
+		mappingAttributePathInstancesResourceTestUtils = new MappingAttributePathInstancesResourceTestUtils();
 	}
 
 	@Ignore
+	@Test
 	@Override
 	public void testPOSTObjects() throws Exception {
 
 	}
 
 	@Ignore
+	@Test
 	@Override
 	public void testGETObjects() throws Exception {
 
 	}
 
 	@Ignore
+	@Test
 	@Override
 	public void testGETObject() throws Exception {
 
 	}
 
 	@Ignore
+	@Test
 	@Override
 	public void testPUTObject() throws Exception {
 
 	}
 
 	@Ignore
+	@Test
 	@Override
 	public void testDELETEObject() throws Exception {
 
@@ -191,6 +201,7 @@ public class ProjectWithNewEntitiesResourceTest extends
 		Configuration inputConfiguration = null;
 		Schema inputSchema = null;
 
+		final Map<Long, MappingAttributePathInstance> mappingAttributePathInstances = Maps.newHashMap();
 		final Map<Long, AttributePath> attributePaths = Maps.newHashMap();
 		final Map<Long, Attribute> attributes = Maps.newHashMap();
 		final Map<Long, Clasz> claszes = Maps.newHashMap();
@@ -312,45 +323,58 @@ public class ProjectWithNewEntitiesResourceTest extends
 						}
 					}
 				}
-				
-				// TODO: fixme
 
-//				final Set<AttributePath> projectMappingInputAttributePaths = projectMapping.getInputAttributePaths();
-//
-//				if (projectMappingInputAttributePaths != null) {
-//
-//					for (final AttributePath inputAttributePath : projectMappingInputAttributePaths) {
-//
-//						attributePaths.put(inputAttributePath.getId(), inputAttributePath);
-//
-//						final Set<Attribute> inputAttributePathAttributes = inputAttributePath.getAttributes();
-//
-//						if (inputAttributePathAttributes != null) {
-//
-//							for (final Attribute inputAttributePathAttribute : inputAttributePathAttributes) {
-//
-//								attributes.put(inputAttributePathAttribute.getId(), inputAttributePathAttribute);
-//							}
-//						}
-//					}
-//				}
-//
-//				final AttributePath projectMappingOutputAttributePath = projectMapping.getOutputAttributePath();
-//
-//				if (projectMappingOutputAttributePath != null) {
-//
-//					attributePaths.put(projectMappingOutputAttributePath.getId(), projectMappingOutputAttributePath);
-//
-//					final Set<Attribute> inputAttributePathAttributes = projectMappingOutputAttributePath.getAttributes();
-//
-//					if (inputAttributePathAttributes != null) {
-//
-//						for (final Attribute inputAttributePathAttribute : inputAttributePathAttributes) {
-//
-//							attributes.put(inputAttributePathAttribute.getId(), inputAttributePathAttribute);
-//						}
-//					}
-//				}
+				final Set<MappingAttributePathInstance> projectMappingInputAttributePaths = projectMapping.getInputAttributePaths();
+
+				if (projectMappingInputAttributePaths != null) {
+
+					for (final MappingAttributePathInstance inputMappingAttributePathInstance : projectMappingInputAttributePaths) {
+
+						mappingAttributePathInstances.put(inputMappingAttributePathInstance.getId(), inputMappingAttributePathInstance);
+
+						final AttributePath inputAttributePath = inputMappingAttributePathInstance.getAttributePath();
+
+						if (inputAttributePath != null) {
+
+							attributePaths.put(inputAttributePath.getId(), inputAttributePath);
+
+							final Set<Attribute> inputAttributePathAttributes = inputAttributePath.getAttributes();
+
+							if (inputAttributePathAttributes != null) {
+
+								for (final Attribute inputAttributePathAttribute : inputAttributePathAttributes) {
+
+									attributes.put(inputAttributePathAttribute.getId(), inputAttributePathAttribute);
+								}
+							}
+						}
+					}
+				}
+
+				final MappingAttributePathInstance projectMappingOutputMappingAttributePathInstance = projectMapping.getOutputAttributePath();
+
+				if (projectMappingOutputMappingAttributePathInstance != null) {
+
+					mappingAttributePathInstances.put(projectMappingOutputMappingAttributePathInstance.getId(),
+							projectMappingOutputMappingAttributePathInstance);
+
+					final AttributePath projectMappingOutputAttributePath = projectMappingOutputMappingAttributePathInstance.getAttributePath();
+
+					if (projectMappingOutputAttributePath != null) {
+
+						attributePaths.put(projectMappingOutputAttributePath.getId(), projectMappingOutputAttributePath);
+
+						final Set<Attribute> inputAttributePathAttributes = projectMappingOutputAttributePath.getAttributes();
+
+						if (inputAttributePathAttributes != null) {
+
+							for (final Attribute inputAttributePathAttribute : inputAttributePathAttributes) {
+
+								attributes.put(inputAttributePathAttribute.getId(), inputAttributePathAttribute);
+							}
+						}
+					}
+				}
 			}
 		}
 
@@ -399,6 +423,11 @@ public class ProjectWithNewEntitiesResourceTest extends
 		for (final Mapping mapping : mappings.values()) {
 
 			mappingsResourceTestUtils.deleteObject(mapping);
+		}
+
+		for (final MappingAttributePathInstance mappingAttributePathInstance : mappingAttributePathInstances.values()) {
+
+			mappingAttributePathInstancesResourceTestUtils.deleteObject(mappingAttributePathInstance);
 		}
 
 		for (final AttributePath attributePath : attributePaths.values()) {
