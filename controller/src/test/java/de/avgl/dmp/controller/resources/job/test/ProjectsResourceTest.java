@@ -295,6 +295,7 @@ public class ProjectsResourceTest extends
 		inputDataModel.setSchema(schema);
 
 		persistedProject.setInputDataModel(inputDataModel);
+		persistedProject.getOutputDataModel().setSchema(schema);
 
 		// // update mapping
 		// updateFunction = functionsResourceTestUtils.createObject("function1.json");
