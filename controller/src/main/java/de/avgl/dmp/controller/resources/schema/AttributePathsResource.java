@@ -1,5 +1,9 @@
 package de.avgl.dmp.controller.resources.schema;
 
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -14,6 +18,9 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -27,6 +34,7 @@ import de.avgl.dmp.controller.resources.schema.utils.AttributePathsResourceUtils
 import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.DMPPersistenceException;
+import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttributePath;
 import de.avgl.dmp.persistence.service.schema.AttributePathService;
@@ -168,7 +176,69 @@ public class AttributePathsResource extends BasicIDResource<AttributePathsResour
 	@Override
 	protected AttributePath prepareObjectForUpdate(final AttributePath objectFromJSON, final AttributePath object) {
 
-		object.setAttributePath(objectFromJSON.getAttributePath());
+//		if (!object.getId().equals(objectFromJSON.getId())) {
+//
+//			object.setAttributePath(objectFromJSON.getAttributePath());
+//		} else {
+
+			// attribute path was already retrieved by attribute path string (maybe + attributes where created, because they
+			// didn't exist before)
+			// => replace dummy id'ed attributes with real ids by attribute uri
+
+			final LinkedList<Attribute> attributePath = objectFromJSON.getAttributePath();
+
+			if (attributePath != null) {
+
+				final Set<Attribute> persistentAttributes = object.getAttributes();
+
+				if (persistentAttributes != null) {
+
+					final Set<String> attributeURIsFromDummyIdsFromObjectFromJSON = Sets.newHashSet();
+					final Map<String, Attribute> attributeFromRealIdsFromObject = Maps.newHashMap();
+
+					// collect uris of attributes with dummy id
+
+					for (final Attribute attribute : attributePath) {
+
+						// note: one could even collect all attribute ids and replace them by their actual ones
+						
+						if (attribute.getId().longValue() < 0) {
+
+							attributeURIsFromDummyIdsFromObjectFromJSON.add(attribute.getUri());
+						}
+					}
+
+					// collect attributes that match the uris of the attribute with dummy id
+
+					for (final Attribute attribute : persistentAttributes) {
+
+						if (attributeURIsFromDummyIdsFromObjectFromJSON.contains(attribute.getUri())) {
+
+							attributeFromRealIdsFromObject.put(attribute.getUri(), attribute);
+						}
+					}
+
+					final LinkedList<Attribute> newAttributePath = Lists.newLinkedList();
+
+					// construct new attribute path
+
+					for (final Attribute attribute : attributePath) {
+
+						final Attribute newAttribute = attributeFromRealIdsFromObject.get(attribute.getUri());
+
+						if (newAttribute == null) {
+
+							newAttributePath.add(attribute);
+						} else {
+
+							newAttributePath.add(newAttribute);
+						}
+					}
+
+					object.setAttributePath(newAttributePath);
+				}
+			}
+//		}
 
 		return object;
 	}

@@ -264,7 +264,7 @@ public class MappingsResourceTest extends
 	}
 
 	@Override
-	public Mapping updateObject(final Mapping persistedMapping) throws Exception {
+	protected Mapping updateObject(final Mapping persistedMapping) throws Exception {
 
 		// update name
 		persistedMapping.setName(persistedMapping.getName() + " update");
@@ -280,7 +280,7 @@ public class MappingsResourceTest extends
 		updateFunction = updateTransformationComponent.getFunction();
 
 		// update input attribute paths
-		updateInputAttributePath = createAttributePath("attribute_path2.json");
+		updateInputAttributePath = createAttributePath("attribute_path6.json");
 
 		for (final Attribute attribute : updateInputAttributePath.getAttributes()) {
 
