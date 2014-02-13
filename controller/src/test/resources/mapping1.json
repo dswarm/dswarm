@@ -1,23 +1,15 @@
 {
     "id": 21,
-    "name": "my mapping",
+    "name": "my mapping update",
     "transformation": {
         "id": 64
     },
     "input_attribute_paths": [{
-        "id": 67,
-        "attributes": [{
-            "id": 76,
-            "name": "title",
-            "uri": "http://purl.org/dc/terms/title"
+        "id": 67
         }]
     }],
     "output_attribute_path": {
-        "id": 68,
-        "attributes": [{
-            "id": 77,
-            "name": "label",
-            "uri": "http://www.w3.org/2000/01/rdf-schema#label"
+        "id": 68
         }]
     }
 }

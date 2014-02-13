@@ -76,6 +76,8 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 	private Component								component;
 	
 	private Component								updateComponent;
+	
+	private Component								updateTransformationComponent;
 
 	private Transformation							transformation;
 	
@@ -92,11 +94,13 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 	private Clasz									updateRecordClass;
 
 	private Schema									schema;
+	
+	private Schema									updateSchema;
 
 	private Configuration							configuration;
 	
 	private Configuration							updateConfiguration;
-
+	
 	private Resource								resource;
 	
 	private Resource								updateResource;
@@ -177,10 +181,14 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 	@Override
 	public void testPUTObject() throws Exception {
 
-		super.testPUTObject();
+//		super.testPUTObject();
+//		
+//		mappingsResourceTestUtils.deleteObject(updateMapping);
+//
+//		transformationsResourceTestUtils.deleteObject(updateTransformation);
+//
+//		functionsResourceTestUtils.deleteObject(updateFunction);
 
-		// TODO: [@fniederlein] do clean-up for update (sub) objects (there are a functions, components, mappings etc. after the test in
-		// the database); note: you need to take care of the overridden/replaced (sub) objects as well as the new ones
 	}
 
 	@After
@@ -221,6 +229,8 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 		// START schema clean-up
 
 		schemasResourceTestUtils.deleteObject(schema);
+		
+		schemasResourceTestUtils.deleteObject(updateSchema);
 
 		claszesResourceTestUtils.deleteObject(recordClass);
 		
@@ -271,56 +281,72 @@ public class ProjectsResourceTest extends BasicResourceTest<ProjectsResourceTest
 		
 		updateRecordClass = claszesResourceTestUtils.createObject("clasz1.json");
 		
-		Schema schema = inputDataModel.getSchema();
-		schema.setName(schema.getName() + " update");
-		schema.setRecordClass(updateRecordClass);
+		Schema tmpSchema = inputDataModel.getSchema();
+		tmpSchema.setName(tmpSchema.getName() + " update");
+		tmpSchema.setRecordClass(updateRecordClass);
 		
-		inputDataModel.setSchema(schema);
+		final String tmpSchemaJSONString =  objectMapper.writeValueAsString(tmpSchema);
+		
+		updateSchema = schemasResourceTestUtils.createObject(tmpSchemaJSONString, tmpSchema);
+		
+		inputDataModel.setSchema(updateSchema);
 		
 		persistedProject.setInputDataModel(inputDataModel);
 		
-//		// update mapping
-//		updateFunction = functionsResourceTestUtils.createObject("function1.json");
-//		final String finalFunctionJSONString = objectMapper.writeValueAsString(updateFunction);
-//		final ObjectNode finalFunctionJSON = objectMapper.readValue(finalFunctionJSONString, ObjectNode.class);
-//		Assert.assertNotNull("the function JSON shouldn't be null", finalFunctionJSON);
-//
-//		updateComponent = componentsResourceTestUtils.createObject("component1.json");
-//		final String finalComponentJSONString = objectMapper.writeValueAsString(updateComponent);
-//		final ObjectNode finalComponentJSON = objectMapper.readValue(finalComponentJSONString, ObjectNode.class);
-//
-//		finalComponentJSON.put("function", finalFunctionJSON);
-//		
-//		String transformationJSONString = DMPPersistenceUtil.getResourceAsString("transformation.json");
-//		final ObjectNode transformationJSON = objectMapper.readValue(transformationJSONString, ObjectNode.class);
-//		
-//		final ArrayNode componentsJSONArray = objectMapper.createArrayNode();
-//		
-//		componentsJSONArray.add(finalComponentJSON);
-//
-//		transformationJSON.put("components", componentsJSONArray);
-//		
-//		transformationJSONString = objectMapper.writeValueAsString(transformationJSON);
-//		final Transformation expectedTransformation = objectMapper.readValue(transformationJSONString, Transformation.class);
-//
-//		updateTransformation = transformationsResourceTestUtils.createObject(transformationJSONString, expectedTransformation);
-//
-//		final String finalTransformationJSONString = objectMapper.writeValueAsString(updateTransformation);
-//		final ObjectNode finalTransformationJSON = objectMapper.readValue(finalTransformationJSONString, ObjectNode.class);
-//
-//		String mappingJSONString = DMPPersistenceUtil.getResourceAsString("mapping1.json");
-//		final ObjectNode mappingJSON = objectMapper.readValue(mappingJSONString, ObjectNode.class);
-//	
-//		mappingJSON.put("transformation", finalTransformationJSON);
-//		
-//		mappingJSONString = objectMapper.writeValueAsString(mappingJSON);
-//		final Mapping expectedMapping = objectMapper.readValue(mappingJSONString, Mapping.class);
-//
-//		updateMapping = mappingsResourceTestUtils.createObject(mappingJSONString, expectedMapping);
-//		final Set<Mapping> updateMappings = new LinkedHashSet<Mapping>();
-//		updateMappings.add(updateMapping);
-//		
-//		persistedProject.setMappings(updateMappings);
+		// update mapping
+		// - function
+		updateFunction = functionsResourceTestUtils.createObject("function1.json");
+		final String finalUpdateFunctionJSONString = objectMapper.writeValueAsString(updateFunction);
+		final ObjectNode finalUpdateFunctionJSON = objectMapper.readValue(finalUpdateFunctionJSONString, ObjectNode.class);
+
+		// - component
+		String updateComponentJSONString = DMPPersistenceUtil.getResourceAsString("component1.json");
+		final ObjectNode updateComponentJSON = objectMapper.readValue(updateComponentJSONString, ObjectNode.class);
+		updateComponentJSON.put("function", finalUpdateFunctionJSON);
+		updateComponentJSONString = objectMapper.writeValueAsString(updateComponentJSON);
+		final Component expectedComponent = objectMapper.readValue(updateComponentJSONString, Component.class);
+		updateComponent = componentsResourceTestUtils.createObject(updateComponentJSONString, expectedComponent);
+		
+		// - transformation
+		String updateTransformationJSONString = DMPPersistenceUtil.getResourceAsString("transformation1.json");
+		final ObjectNode updateTransformationJSON = objectMapper.readValue(updateTransformationJSONString, ObjectNode.class);
+		final String finalUpdateComponentJSONString = objectMapper.writeValueAsString(updateComponent);
+		final ObjectNode finalUpdateComponentJSON = objectMapper.readValue(finalUpdateComponentJSONString, ObjectNode.class);
+		final ArrayNode updateComponentsJSONArray = objectMapper.createArrayNode();
+		updateComponentsJSONArray.add(finalUpdateComponentJSON);
+		updateTransformationJSON.put("components", updateComponentsJSONArray);
+		updateTransformationJSONString = objectMapper.writeValueAsString(updateTransformationJSON);
+		final Transformation expectedTransformation = objectMapper.readValue(updateTransformationJSONString, Transformation.class);
+		updateTransformation = transformationsResourceTestUtils.createObject(updateTransformationJSONString, expectedTransformation);
+				
+		// - transformation component
+		String updateTransformationComponentJSONString = DMPPersistenceUtil.getResourceAsString("transformation_component1.json");
+		final ObjectNode updateTransformationComponentJSON = objectMapper.readValue(updateTransformationComponentJSONString, ObjectNode.class);
+		final String finalUpdateTransformationJSONString = objectMapper.writeValueAsString(updateTransformation);
+		final ObjectNode finalUpdateTransformationJSON = objectMapper.readValue(finalUpdateTransformationJSONString, ObjectNode.class);
+		updateTransformationComponentJSON.put("function", finalUpdateTransformationJSON);
+		updateTransformationComponentJSONString = objectMapper.writeValueAsString(updateTransformationComponentJSON);
+		final Component expectedTransformationComponent = objectMapper.readValue(updateTransformationComponentJSONString, Component.class);
+		updateTransformationComponent = componentsResourceTestUtils.createObject(updateTransformationComponentJSONString, expectedTransformationComponent);
+		
+		// - mapping
+		String updateMappingJSONString = DMPPersistenceUtil.getResourceAsString("mapping1.json");
+		final ObjectNode updateMappingJSON = objectMapper.readValue(updateMappingJSONString, ObjectNode.class);
+		final String finalUpdateTransformationComponentJSONString = objectMapper.writeValueAsString(updateTransformationComponent);
+		final ObjectNode finalUpdateTransformationComponentJSON = objectMapper.readValue(finalUpdateTransformationComponentJSONString, ObjectNode.class);
+		updateMappingJSON.put("transformation", finalUpdateTransformationComponentJSON);
+
+		// - attribute paths
+		updateMappingJSONString = objectMapper.writeValueAsString(updateMappingJSON);
+		final Mapping expectedMapping = objectMapper.readValue(updateMappingJSONString, Mapping.class);
+		expectedMapping.setInputAttributePaths(persistedProject.getMappings().iterator().next().getInputAttributePaths());
+		expectedMapping.setOutputAttributePath(persistedProject.getMappings().iterator().next().getOutputAttributePath());
+		
+		updateMapping = mappingsResourceTestUtils.createObject(updateMappingJSONString, expectedMapping);
+		final Set<Mapping> updateMappings = new LinkedHashSet<Mapping>();
+		updateMappings.add(updateMapping);
+		
+		persistedProject.setMappings(updateMappings);
 				
 		String updateProjectJSONString = objectMapper.writeValueAsString(persistedProject);
 		final Project expectedProject = objectMapper.readValue(updateProjectJSONString, Project.class);
