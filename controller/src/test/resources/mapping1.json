@@ -7,27 +7,15 @@
     "input_attribute_paths": [{
         "type": "MappingAttributePathInstance",
         "name": "input mapping attribute path instance",
-        "id": 1,
         "attribute_path": {
-            "id": 1,
-            "attributes": [{
-                "name": "title",
-                "uri": "http://purl.org/dc/terms/title",
-                "id": 1
-            }]
+            "attributes": []
         }
     }],
     "output_attribute_path": {
         "type": "MappingAttributePathInstance",
         "name": "output mapping attribute path instance",
-        "id": 2,
         "attribute_path": {
-            "id": 2,
-            "attributes": [{
-                "name": "label",
-                "uri": "http://www.w3.org/2000/01/rdf-schema#label",
-                "id": 2
-            }]
+            "attributes": []
         }
     }
 }

@@ -85,8 +85,8 @@ public class ProjectsResourceTest extends
 	private Component												component;
 
 	private Component												updateComponent;
-	
-	private Component								updateTransformationComponent;
+
+	private Component												updateTransformationComponent;
 
 	private Transformation											transformation;
 
@@ -106,7 +106,7 @@ public class ProjectsResourceTest extends
 
 	private Schema													schema;
 
-	private Schema									updateSchema;
+	private Schema													updateSchema;
 
 	private Configuration											configuration;
 
@@ -194,15 +194,12 @@ public class ProjectsResourceTest extends
 	public void testPUTObject() throws Exception {
 
 		super.testPUTObject();
-		
+
 		mappingsResourceTestUtils.deleteObject(updateMapping);
 
 		transformationsResourceTestUtils.deleteObject(updateTransformation);
 
 		functionsResourceTestUtils.deleteObject(updateFunction);
-	
-		schemasResourceTestUtils.deleteObject(updateSchema);
-
 	}
 
 	@After
@@ -243,6 +240,8 @@ public class ProjectsResourceTest extends
 		// START schema clean-up
 
 		schemasResourceTestUtils.deleteObject(schema);
+
+		schemasResourceTestUtils.deleteObject(updateSchema);
 
 		claszesResourceTestUtils.deleteObject(recordClass);
 
@@ -298,18 +297,38 @@ public class ProjectsResourceTest extends
 
 		updateRecordClass = claszesResourceTestUtils.createObject("clasz1.json");
 
-		final Schema schema = inputDataModel.getSchema();
-		schema.setName(schema.getName() + " update");
-		schema.setRecordClass(updateRecordClass);
-		
-		final String tmpSchemaJSONString =  objectMapper.writeValueAsString(tmpSchema);
-		
+		final Schema tmpSchema = inputDataModel.getSchema();
+		tmpSchema.setName(schema.getName() + " update");
+		tmpSchema.setRecordClass(updateRecordClass);
+
+		final String tmpSchemaJSONString = objectMapper.writeValueAsString(tmpSchema);
+
 		updateSchema = schemasResourceTestUtils.createObject(tmpSchemaJSONString, tmpSchema);
-		
+
+		final Set<AttributePath> updateAttributePaths = updateSchema.getAttributePaths();
+
+		if (updateAttributePaths != null) {
+
+			for (final AttributePath updateAttributePath : updateAttributePaths) {
+
+				attributePaths.put(updateAttributePath.getId(), updateAttributePath);
+
+				final Set<Attribute> updateAttributes = updateAttributePath.getAttributes();
+
+				if (updateAttributes != null) {
+
+					for (final Attribute updateAttribute : updateAttributes) {
+
+						attributes.put(updateAttribute.getId(), updateAttribute);
+					}
+				}
+			}
+		}
+
 		inputDataModel.setSchema(updateSchema);
-		
+
 		persistedProject.setInputDataModel(inputDataModel);
-		
+
 		// update mapping
 		// - function
 		updateFunction = functionsResourceTestUtils.createObject("function1.json");
@@ -323,7 +342,7 @@ public class ProjectsResourceTest extends
 		updateComponentJSONString = objectMapper.writeValueAsString(updateComponentJSON);
 		final Component expectedComponent = objectMapper.readValue(updateComponentJSONString, Component.class);
 		updateComponent = componentsResourceTestUtils.createObject(updateComponentJSONString, expectedComponent);
-		
+
 		// - transformation
 		String updateTransformationJSONString = DMPPersistenceUtil.getResourceAsString("transformation1.json");
 		final ObjectNode updateTransformationJSON = objectMapper.readValue(updateTransformationJSONString, ObjectNode.class);
@@ -335,7 +354,7 @@ public class ProjectsResourceTest extends
 		updateTransformationJSONString = objectMapper.writeValueAsString(updateTransformationJSON);
 		final Transformation expectedTransformation = objectMapper.readValue(updateTransformationJSONString, Transformation.class);
 		updateTransformation = transformationsResourceTestUtils.createObject(updateTransformationJSONString, expectedTransformation);
-				
+
 		// - transformation component
 		String updateTransformationComponentJSONString = DMPPersistenceUtil.getResourceAsString("transformation_component1.json");
 		final ObjectNode updateTransformationComponentJSON = objectMapper.readValue(updateTransformationComponentJSONString, ObjectNode.class);
@@ -344,13 +363,15 @@ public class ProjectsResourceTest extends
 		updateTransformationComponentJSON.put("function", finalUpdateTransformationJSON);
 		updateTransformationComponentJSONString = objectMapper.writeValueAsString(updateTransformationComponentJSON);
 		final Component expectedTransformationComponent = objectMapper.readValue(updateTransformationComponentJSONString, Component.class);
-		updateTransformationComponent = componentsResourceTestUtils.createObject(updateTransformationComponentJSONString, expectedTransformationComponent);
-		
+		updateTransformationComponent = componentsResourceTestUtils.createObject(updateTransformationComponentJSONString,
+				expectedTransformationComponent);
+
 		// - mapping
 		String updateMappingJSONString = DMPPersistenceUtil.getResourceAsString("mapping1.json");
 		final ObjectNode updateMappingJSON = objectMapper.readValue(updateMappingJSONString, ObjectNode.class);
 		final String finalUpdateTransformationComponentJSONString = objectMapper.writeValueAsString(updateTransformationComponent);
-		final ObjectNode finalUpdateTransformationComponentJSON = objectMapper.readValue(finalUpdateTransformationComponentJSONString, ObjectNode.class);
+		final ObjectNode finalUpdateTransformationComponentJSON = objectMapper.readValue(finalUpdateTransformationComponentJSONString,
+				ObjectNode.class);
 		updateMappingJSON.put("transformation", finalUpdateTransformationComponentJSON);
 
 		// - attribute paths
@@ -358,13 +379,13 @@ public class ProjectsResourceTest extends
 		final Mapping expectedMapping = objectMapper.readValue(updateMappingJSONString, Mapping.class);
 		expectedMapping.setInputAttributePaths(persistedProject.getMappings().iterator().next().getInputAttributePaths());
 		expectedMapping.setOutputAttributePath(persistedProject.getMappings().iterator().next().getOutputAttributePath());
-		
+
 		updateMapping = mappingsResourceTestUtils.createObject(updateMappingJSONString, expectedMapping);
 		final Set<Mapping> updateMappings = new LinkedHashSet<Mapping>();
 		updateMappings.add(updateMapping);
-		
+
 		persistedProject.setMappings(updateMappings);
-				
+
 		String updateProjectJSONString = objectMapper.writeValueAsString(persistedProject);
 		final Project expectedProject = objectMapper.readValue(updateProjectJSONString, Project.class);
 		Assert.assertNotNull("the project JSON string shouldn't be null", updateProjectJSONString);
@@ -373,8 +394,55 @@ public class ProjectsResourceTest extends
 
 		Assert.assertEquals("projects shoud be equal", persistedProject, updateProject);
 
-		return updateProject;
+		final MappingAttributePathInstance inputMappingAttributePathInstance = updateMapping.getInputAttributePaths().iterator().next();
 
+		if (inputMappingAttributePathInstance != null) {
+
+			mappingAttributePathInstances.put(inputMappingAttributePathInstance.getId(), inputMappingAttributePathInstance);
+
+			final AttributePath inputAttributePath = inputMappingAttributePathInstance.getAttributePath();
+
+			if (inputAttributePath != null) {
+
+				attributePaths.put(inputAttributePath.getId(), inputAttributePath);
+
+				final Set<Attribute> inputAttributes = inputAttributePath.getAttributes();
+
+				if (inputAttributes != null) {
+
+					for (final Attribute inputAttribute : inputAttributes) {
+
+						attributes.put(inputAttribute.getId(), inputAttribute);
+					}
+				}
+			}
+		}
+
+		final MappingAttributePathInstance outputMappingAttributePathInstance = updateMapping.getOutputAttributePath();
+
+		if (outputMappingAttributePathInstance != null) {
+
+			mappingAttributePathInstances.put(outputMappingAttributePathInstance.getId(), outputMappingAttributePathInstance);
+
+			final AttributePath outputAttributePath = outputMappingAttributePathInstance.getAttributePath();
+
+			if (outputAttributePath != null) {
+
+				attributePaths.put(outputAttributePath.getId(), outputAttributePath);
+
+				final Set<Attribute> outputAttributes = outputAttributePath.getAttributes();
+
+				if (outputAttributes != null) {
+
+					for (final Attribute outputAttribute : outputAttributes) {
+
+						attributes.put(outputAttribute.getId(), outputAttribute);
+					}
+				}
+			}
+		}
+
+		return updateProject;
 	}
 
 	private DataModel createInputDataModel() throws Exception {
