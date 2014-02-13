@@ -24,6 +24,7 @@ import de.avgl.dmp.controller.resources.schema.test.AttributesResourceTest;
 import de.avgl.dmp.controller.resources.schema.test.utils.AttributePathsResourceTestUtils;
 import de.avgl.dmp.controller.resources.schema.test.utils.AttributesResourceTestUtils;
 import de.avgl.dmp.controller.resources.schema.test.utils.ClaszesResourceTestUtils;
+import de.avgl.dmp.controller.resources.schema.test.utils.MappingAttributePathInstancesResourceTestUtils;
 import de.avgl.dmp.controller.resources.schema.test.utils.SchemasResourceTestUtils;
 import de.avgl.dmp.controller.resources.test.BasicResourceTest;
 import de.avgl.dmp.persistence.model.job.Component;
@@ -38,6 +39,7 @@ import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
+import de.avgl.dmp.persistence.model.schema.MappingAttributePathInstance;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.service.job.ProjectService;
 import de.avgl.dmp.persistence.service.job.test.utils.ProjectServiceTestUtils;
@@ -71,6 +73,8 @@ public class ProjectsResourceTest extends
 	private final MappingsResourceTestUtils			mappingsResourceTestUtils;
 
 	private final ProjectsResourceTestUtils			projectsResourceTestUtils;
+	
+	private final MappingAttributePathInstancesResourceTestUtils	mappingAttributePathInstancesResourceTestUtils;
 
 	private Function								function;
 
@@ -89,6 +93,8 @@ public class ProjectsResourceTest extends
 	final Map<Long, Attribute>						attributes		= Maps.newHashMap();
 
 	final Map<Long, AttributePath>					attributePaths	= Maps.newLinkedHashMap();
+	
+	final Map<Long, MappingAttributePathInstance>					mappingAttributePathInstances	= Maps.newLinkedHashMap();
 
 	private Clasz									recordClass;
 
@@ -126,6 +132,7 @@ public class ProjectsResourceTest extends
 		dataModelsResourceTestUtils = new DataModelsResourceTestUtils();
 		mappingsResourceTestUtils = new MappingsResourceTestUtils();
 		projectsResourceTestUtils = new ProjectsResourceTestUtils();
+		mappingAttributePathInstancesResourceTestUtils = new MappingAttributePathInstancesResourceTestUtils();
 	}
 
 	@Override
@@ -239,6 +246,11 @@ public class ProjectsResourceTest extends
 		for (final Mapping mapping : mappings.values()) {
 
 			mappingsResourceTestUtils.deleteObject(mapping);
+		}
+		
+		for (final MappingAttributePathInstance mappingAttributePathInstance : mappingAttributePathInstances.values()) {
+
+			mappingAttributePathInstancesResourceTestUtils.deleteObject(mappingAttributePathInstance);
 		}
 
 		for (final AttributePath attributePath : attributePaths.values()) {
@@ -515,6 +527,11 @@ public class ProjectsResourceTest extends
 
 		final AttributePath inputAttributePath = createAttributePath("attribute_path4.json");
 		final AttributePath outputAttributePath = createAttributePath("attribute_path5.json");
+		
+		final MappingAttributePathInstance inputMappingAttributePathInstance = createMappingAttributePathInstance(
+				"input_mapping_attribute_path_instance.json", inputAttributePath);
+		final MappingAttributePathInstance outputMappingAttributePathInstance = createMappingAttributePathInstance(
+				"output_mapping_attribute_path_instance.json", outputAttributePath);
 
 		function = functionsResourceTestUtils.createObject("function.json");
 
@@ -596,7 +613,7 @@ public class ProjectsResourceTest extends
 
 		mappingJSON.put("transformation", finalTransformationComponentJSON);
 
-		final String finalInputAttributePathJSONString = objectMapper.writeValueAsString(inputAttributePath);
+		final String finalInputAttributePathJSONString = objectMapper.writeValueAsString(inputMappingAttributePathInstance);
 
 		Assert.assertNotNull("the input attribute path JSON string shouldn't be null", finalInputAttributePathJSONString);
 
@@ -610,7 +627,7 @@ public class ProjectsResourceTest extends
 
 		mappingJSON.put("input_attribute_paths", inputAttributePathsJSON);
 
-		final String finalOutputAttributePathJSONString = objectMapper.writeValueAsString(outputAttributePath);
+		final String finalOutputAttributePathJSONString = objectMapper.writeValueAsString(outputMappingAttributePathInstance);
 
 		Assert.assertNotNull("the output attribute path JSON string shouldn't be null", finalOutputAttributePathJSONString);
 
@@ -672,5 +689,25 @@ public class ProjectsResourceTest extends
 		attributePaths.put(actualAttributePath.getId(), actualAttributePath);
 
 		return actualAttributePath;
+	}
+	
+	private MappingAttributePathInstance createMappingAttributePathInstance(final String mappingAttributePathInstanceFileName,
+			final AttributePath attributePath) throws Exception {
+
+		String mappingAttributePathInstanceJSONString = DMPPersistenceUtil.getResourceAsString(mappingAttributePathInstanceFileName);
+		final MappingAttributePathInstance mappingAttributePathInstanceFromJSON = objectMapper.readValue(mappingAttributePathInstanceJSONString,
+				MappingAttributePathInstance.class);
+
+		mappingAttributePathInstanceFromJSON.setAttributePath(attributePath);
+
+		mappingAttributePathInstanceJSONString = objectMapper.writeValueAsString(mappingAttributePathInstanceFromJSON);
+		final MappingAttributePathInstance expectedMappingAttributePathInstance = objectMapper.readValue(mappingAttributePathInstanceJSONString,
+				MappingAttributePathInstance.class);
+		final MappingAttributePathInstance actualMappingAttributePathInstance = mappingAttributePathInstancesResourceTestUtils.createObject(
+				mappingAttributePathInstanceJSONString, expectedMappingAttributePathInstance);
+
+		mappingAttributePathInstances.put(actualMappingAttributePathInstance.getId(), actualMappingAttributePathInstance);
+
+		return actualMappingAttributePathInstance;
 	}
 }
