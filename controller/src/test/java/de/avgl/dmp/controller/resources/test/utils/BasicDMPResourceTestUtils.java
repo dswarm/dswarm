@@ -1,29 +1,17 @@
 package de.avgl.dmp.controller.resources.test.utils;
 
-import org.junit.Assert;
-
 import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.proxy.ProxyBasicDMPJPAObject;
 import de.avgl.dmp.persistence.service.BasicDMPJPAService;
+import de.avgl.dmp.persistence.service.test.utils.BasicDMPJPAServiceTestUtils;
 
-public abstract class BasicDMPResourceTestUtils<POJOCLASSPERSISTENCESERVICE extends BasicDMPJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyBasicDMPJPAObject<POJOCLASS>, POJOCLASS extends BasicDMPJPAObject>
-		extends BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS, Long> {
+public abstract class BasicDMPResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTILS extends BasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends BasicDMPJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyBasicDMPJPAObject<POJOCLASS>, POJOCLASS extends BasicDMPJPAObject>
+		extends BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTILS, POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS, Long> {
 
 	public BasicDMPResourceTestUtils(final String resourceIdentifier, final Class<POJOCLASS> pojoClassArg,
-			final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg) {
+			final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg,
+			final Class<POJOCLASSPERSISTENCESERVICETESTUTILS> persistenceServiceTestUtilsClassArg) {
 
-		super(resourceIdentifier, pojoClassArg, persistenceServiceClassArg);
-	}
-
-	@Override
-	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) {
-
-		super.compareObjects(expectedObject, actualObject);
-
-		if (expectedObject.getName() != null) {
-
-			Assert.assertNotNull("the " + pojoClassName + " name shouldn't be null", actualObject.getName());
-			Assert.assertEquals("the " + pojoClassName + " names should be equal", expectedObject.getName(), actualObject.getName());
-		}
+		super(resourceIdentifier, pojoClassArg, persistenceServiceClassArg, persistenceServiceTestUtilsClassArg);
 	}
 }

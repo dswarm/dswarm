@@ -20,6 +20,7 @@ http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
 		<class>de.avgl.dmp.persistence.model.job.Mapping</class>
 		<class>de.avgl.dmp.persistence.model.job.Project</class>
 		<class>de.avgl.dmp.persistence.model.job.Transformation</class>
+		<class>de.avgl.dmp.persistence.model.schema.MappingAttributePathInstance</class>
 
 		<!-- if you want to selectively cache entities using the @Cacheable annotation -->
 		<!-- <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode> -->

@@ -58,6 +58,6 @@ public class FilterServiceTest extends IDBasicJPAServiceTest<ProxyFilter, Filter
 		FilterServiceTest.LOG.debug("filter json: " + json);
 
 		// clean up DB
-		deletedObject(filter.getId());
+		deleteObject(filter.getId());
 	}
 }

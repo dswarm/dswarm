@@ -14,16 +14,15 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.FunctionType;
 import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.model.job.proxy.ProxyTransformation;
-import de.avgl.dmp.persistence.service.job.ComponentService;
-import de.avgl.dmp.persistence.service.job.FunctionService;
 import de.avgl.dmp.persistence.service.job.TransformationService;
+import de.avgl.dmp.persistence.service.job.test.utils.ComponentServiceTestUtils;
+import de.avgl.dmp.persistence.service.job.test.utils.FunctionServiceTestUtils;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
 
 public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransformation, Transformation, TransformationService> {
@@ -34,13 +33,19 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 
 	private final Map<Long, Function>				functions		= Maps.newLinkedHashMap();
 
+	private final FunctionServiceTestUtils			functionServiceTestUtils;
+	private final ComponentServiceTestUtils componentServiceTestUtils;
+
 	public TransformationServiceTest() {
 
 		super("transformation", TransformationService.class);
+
+		functionServiceTestUtils = new FunctionServiceTestUtils();
+		componentServiceTestUtils = new ComponentServiceTestUtils();
 	}
 
 	@Test
-	public void simpleTransformationTest() {
+	public void simpleTransformationTest() throws Exception {
 
 		LOG.debug("start simple transformation test");
 
@@ -48,7 +53,8 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 
 		parameters.add("inputString");
 
-		final Function function = createFunction("trim", "trims leading and trailing whitespaces from a given string", parameters);
+		final Function function = functionServiceTestUtils.createFunction("trim", "trims leading and trailing whitespaces from a given string",
+				parameters);
 
 		final String componentName = "my trim component";
 		final Map<String, String> parameterMappings = Maps.newLinkedHashMap();
@@ -58,7 +64,7 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 
 		parameterMappings.put(functionParameterName, componentVariableName);
 
-		final Component component = createComponent(componentName, parameterMappings, function, null, null);
+		final Component component = componentServiceTestUtils.createComponent(componentName, parameterMappings, function, null, null);
 
 		// transformation
 
@@ -116,15 +122,15 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 
 		LOG.debug("transformation json: " + json);
 
-		deletedObject(transformation.getId());
-		checkDeletedComponent(component);
-		deleteFunction(function);
+		deleteObject(transformation.getId());
+		componentServiceTestUtils.checkDeletedComponent(component);
+		functionServiceTestUtils.deleteObject(function);
 
 		LOG.debug("end simple transformation test");
 	}
 
 	@Test
-	public void complexTransformationTest() {
+	public void complexTransformationTest() throws Exception {
 
 		LOG.debug("start complex transformation test");
 
@@ -141,7 +147,8 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 		function1Parameters.add(function2Parameter);
 		function1Parameters.add(function3Parameter);
 
-		final Function function1 = createFunction(function1Name, function1Description, function1Parameters);
+		final Function function1 = functionServiceTestUtils.createFunction(function1Name, function1Description, function1Parameters);
+		functions.put(function1.getId(), function1);
 
 		final String component1Name = "my replace component";
 		final Map<String, String> parameterMapping1 = Maps.newLinkedHashMap();
@@ -157,7 +164,7 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 		parameterMapping1.put(functionParameterName2, componentVariableName2);
 		parameterMapping1.put(functionParameterName3, componentVariableName3);
 
-		final Component component1 = createComponent(component1Name, parameterMapping1, function1, null, null);
+		final Component component1 = componentServiceTestUtils.createComponent(component1Name, parameterMapping1, function1, null, null);
 
 		// next component
 
@@ -168,7 +175,8 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 		final LinkedList<String> function2Parameters = Lists.newLinkedList();
 		function2Parameters.add(function4Parameter);
 
-		final Function function2 = createFunction(function2Name, function2Description, function2Parameters);
+		final Function function2 = functionServiceTestUtils.createFunction(function2Name, function2Description, function2Parameters);
+		functions.put(function2.getId(), function2);
 
 		final String component2Name = "my lower case component";
 		final Map<String, String> parameterMapping2 = Maps.newLinkedHashMap();
@@ -178,7 +186,7 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 
 		parameterMapping2.put(functionParameterName4, componentVariableName4);
 
-		final Component component2 = createComponent(component2Name, parameterMapping2, function2, null, null);
+		final Component component2 = componentServiceTestUtils.createComponent(component2Name, parameterMapping2, function2, null, null);
 
 		// main component
 
@@ -189,7 +197,8 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 		final LinkedList<String> functionParameters = Lists.newLinkedList();
 		functionParameters.add(functionParameter);
 
-		final Function function = createFunction(functionName, functionDescription, functionParameters);
+		final Function function = functionServiceTestUtils.createFunction(functionName, functionDescription, functionParameters);
+		functions.put(function.getId(), function);
 
 		// final String componentId = UUID.randomUUID().toString();
 		final String componentName = "my trim component";
@@ -208,7 +217,7 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 
 		outputComponents.add(component2);
 
-		final Component component = createComponent(componentName, parameterMapping, function, inputComponents, outputComponents);
+		final Component component = componentServiceTestUtils.createComponent(componentName, parameterMapping, function, inputComponents, outputComponents);
 
 		// transformation
 
@@ -218,9 +227,9 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 
 		final Set<Component> components = Sets.newLinkedHashSet();
 
-		components.add(component1);
+		components.add(component.getInputComponents().iterator().next());
 		components.add(component);
-		components.add(component2);
+		components.add(component.getOutputComponents().iterator().next());
 
 		final Transformation transformation = createObject().getObject();
 		transformation.setName(transformationName);
@@ -330,140 +339,13 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 		LOG.debug("next component json: " + json);
 
 		// clean-up
-		deletedObject(updatedTransformation.getId());
+		deleteObject(updatedTransformation.getId());
 
 		for (final Function functionToDelete : functions.values()) {
 
-			deleteFunction(functionToDelete);
+			functionServiceTestUtils.deleteObject(functionToDelete);
 		}
 
 		LOG.debug("end complex transformation test");
-	}
-
-	private Function createFunction(final String name, final String description, final LinkedList<String> parameters) {
-
-		final FunctionService functionService = GuicedTest.injector.getInstance(FunctionService.class);
-
-		Assert.assertNotNull("function service shouldn't be null", functionService);
-
-		final String functionName = name;
-		final String functionDescription = description;
-
-		Function function = null;
-
-		try {
-
-			function = functionService.createObjectTransactional().getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while function creation.\n" + e.getMessage(), false);
-		}
-
-		Assert.assertNotNull("function shouldn't be null", function);
-		Assert.assertNotNull("function id shouldn't be null", function.getId());
-
-		function.setName(functionName);
-		function.setDescription(functionDescription);
-		function.setParameters(parameters);
-
-		Function updatedFunction = null;
-
-		try {
-
-			updatedFunction = functionService.updateObjectTransactional(function).getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while updating the function of id = '" + function.getId() + "'", false);
-		}
-
-		Assert.assertNotNull("function shouldn't be null", updatedFunction);
-		Assert.assertNotNull("the function name shouldn't be null", function.getName());
-		Assert.assertEquals("the function names are not equal", functionName, function.getName());
-		Assert.assertNotNull("the function description shouldn't be null", function.getDescription());
-		Assert.assertEquals("the function descriptions are not equal", functionDescription, function.getDescription());
-		Assert.assertNotNull("the function parameters shouldn't be null", function.getParameters());
-		Assert.assertEquals("the function type is not '" + FunctionType.Function + "'", FunctionType.Function, function.getFunctionType());
-
-		functions.put(updatedFunction.getId(), updatedFunction);
-
-		return updatedFunction;
-	}
-
-	private Component createComponent(final String name, final Map<String, String> parameterMappings, final Function function,
-			final Set<Component> inputComponents, final Set<Component> outputComponents) {
-
-		final ComponentService componentService = GuicedTest.injector.getInstance(ComponentService.class);
-
-		Component component = null;
-
-		try {
-
-			component = componentService.createObjectTransactional().getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while component creation.\n" + e.getMessage(), false);
-		}
-
-		Assert.assertNotNull("component shouldn't be null", component);
-		Assert.assertNotNull("component id shouldn't be null", component.getId());
-
-		component.setName(name);
-		component.setFunction(function);
-		component.setParameterMappings(parameterMappings);
-
-		if (inputComponents != null) {
-			component.setInputComponents(inputComponents);
-		}
-
-		if (outputComponents != null) {
-			component.setOutputComponents(outputComponents);
-		}
-
-		Component updatedComponent = null;
-
-		try {
-
-			updatedComponent = componentService.updateObjectTransactional(component).getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while updating the component of id = '" + component.getId() + "'", false);
-		}
-
-		Assert.assertNotNull("the updated component shouldn't be null", updatedComponent);
-		Assert.assertNotNull("the component name shouldn't be null", updatedComponent.getId());
-		Assert.assertNotNull("the component name shouldn't be null", updatedComponent.getName());
-		Assert.assertEquals("the component names are not equal", name, updatedComponent.getName());
-		Assert.assertNotNull("the component parameter mappings shouldn't be null", updatedComponent.getParameterMappings());
-		Assert.assertEquals("the function type is not '" + FunctionType.Function + "'", FunctionType.Function, updatedComponent.getFunction()
-				.getFunctionType());
-
-		return updatedComponent;
-	}
-
-	private void deleteFunction(final Function function) {
-
-		final FunctionService functionService = GuicedTest.injector.getInstance(FunctionService.class);
-
-		Assert.assertNotNull("function service shouldn't be null", functionService);
-
-		final Long functionId = function.getId();
-
-		functionService.deleteObject(functionId);
-
-		final Function deletedFunction = functionService.getObject(functionId);
-
-		Assert.assertNull("deleted function shouldn't exist any more", deletedFunction);
-	}
-
-	private void checkDeletedComponent(final Component component) {
-
-		final ComponentService componentService = GuicedTest.injector.getInstance(ComponentService.class);
-
-		Component deletedComponent = null;
-
-		deletedComponent = componentService.getObject(component.getId());
-
-		Assert.assertNull("component should be null", deletedComponent);
-
 	}
 }

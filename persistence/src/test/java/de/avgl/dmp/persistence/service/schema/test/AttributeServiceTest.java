@@ -50,7 +50,7 @@ public class AttributeServiceTest extends AdvancedJPAServiceTest<ProxyAttribute,
 		AttributeServiceTest.LOG.debug("attribute json: " + json);
 
 		// clean up DB
-		deletedObject(attribute.getId());
+		deleteObject(attribute.getId());
 	}
 
 	@Test
@@ -76,7 +76,7 @@ public class AttributeServiceTest extends AdvancedJPAServiceTest<ProxyAttribute,
 		Assert.assertEquals("the attribute uris should be equal", attribute1.getName(), attribute2.getName());
 
 		// clean up DB
-		deletedObject(attribute1.getId());
+		deleteObject(attribute1.getId());
 	}
 
 	private Attribute createAttribute() {

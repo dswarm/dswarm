@@ -31,7 +31,6 @@ import com.google.common.collect.Sets;
 
 import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.init.util.DMPStatics;
-import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.DMPJPAObject;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
@@ -523,7 +522,7 @@ public class AttributePath extends DMPJPAObject {
 	 * @param id an attribute identifier
 	 * @return the matched attribute or null
 	 */
-	private Attribute getAttribute(final Long id) {
+	public Attribute getAttribute(final Long id) {
 
 		if (null == id) {
 

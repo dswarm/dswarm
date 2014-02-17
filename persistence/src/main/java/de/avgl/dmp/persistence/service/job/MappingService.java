@@ -9,10 +9,9 @@ import com.google.inject.Provider;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.job.Component;
-import de.avgl.dmp.persistence.model.job.Filter;
 import de.avgl.dmp.persistence.model.job.Mapping;
 import de.avgl.dmp.persistence.model.job.proxy.ProxyMapping;
-import de.avgl.dmp.persistence.model.schema.AttributePath;
+import de.avgl.dmp.persistence.model.schema.MappingAttributePathInstance;
 import de.avgl.dmp.persistence.service.BasicDMPJPAService;
 
 /**
@@ -44,8 +43,8 @@ public class MappingService extends BasicDMPJPAService<ProxyMapping, Mapping> {
 		// transformation function
 		object.setInputAttributePaths(null);
 		object.setOutputAttributePath(null);
-		object.setInputFilter(null);
-		object.setOutputFilter(null);
+//		object.setInputFilter(null);
+//		object.setOutputFilter(null);
 
 		final Component transformation = object.getTransformation();
 
@@ -64,16 +63,16 @@ public class MappingService extends BasicDMPJPAService<ProxyMapping, Mapping> {
 
 		super.updateObjectInternal(object, updateObject, entityManager);
 
-		final Set<AttributePath> inputAttributePaths = object.getInputAttributePaths();
-		final AttributePath outputAttributePath = object.getOutputAttributePath();
-		final Filter inputFilter = object.getInputFilter();
-		final Filter outputFilter = object.getOutputFilter();
+		final Set<MappingAttributePathInstance> inputAttributePaths = object.getInputAttributePaths();
+		final MappingAttributePathInstance outputAttributePath = object.getOutputAttributePath();
+//		final Filter inputFilter = object.getInputFilter();
+//		final Filter outputFilter = object.getOutputFilter();
 		final Component transformation = object.getTransformation();
 
 		updateObject.setInputAttributePaths(inputAttributePaths);
 		updateObject.setOutputAttributePath(outputAttributePath);
-		updateObject.setInputFilter(inputFilter);
-		updateObject.setOutputFilter(outputFilter);
+//		updateObject.setInputFilter(inputFilter);
+//		updateObject.setOutputFilter(outputFilter);
 		updateObject.setTransformation(transformation);
 	}
 

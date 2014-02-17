@@ -288,8 +288,8 @@ public class MorphScriptBuilder {
 		final Element data = doc.createElement("data");
 
 		// TODO: only one input attribute path for now
-		final String inputAttributePath = mapping.getInputAttributePaths().iterator().next().toAttributePath();
-		final String outputAttributePath = mapping.getOutputAttributePath().toAttributePath();
+		final String inputAttributePath = mapping.getInputAttributePaths().iterator().next().getAttributePath().toAttributePath();
+		final String outputAttributePath = mapping.getOutputAttributePath().getAttributePath().toAttributePath();
 
 		// TODO: this is for the processing algorithm later
 		// final Map<String, String> parameterMappings = mapping.getTransformation().getParameterMappings();

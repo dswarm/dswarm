@@ -30,9 +30,7 @@ import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 
 import de.avgl.dmp.init.DMPException;
-import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
-import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -59,7 +57,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	 */
 	private static final long						serialVersionUID	= 1L;
 
-	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(AttributePath.class);
+	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(Function.class);
 
 	/**
 	 * A string that holds the serialised JSON object of a function description.
@@ -112,9 +110,13 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	 * The function type, e.g., function ({@link FunctionType#Function}) or transformation ({@link FunctionType#Transformation}).
 	 */
 	@XmlElement(name = "type")
+	// -> note: separate attribute for entity type is not necessary since Jackson will include this
+	// property automatically, when serialising the object
+	// however, it needs to be enabled - otherwise on could not serialise a JSON string to a POJO object
+	// @JsonIgnore
 	@Column(name = "FUNCTION_TYPE")
 	@Enumerated(EnumType.STRING)
-	private final FunctionType						functionType;
+	private FunctionType						functionType;
 
 	/**
 	 * Creates a new function.

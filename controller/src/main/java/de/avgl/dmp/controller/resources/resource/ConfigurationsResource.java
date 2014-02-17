@@ -168,10 +168,7 @@ public class ConfigurationsResource extends ExtendedBasicDMPResource<Configurati
 
 		final ObjectNode parameters = objectFromJSON.getParameters();
 
-		if (parameters != null && parameters.size() > 0) {
-
-			object.setParameters(parameters);
-		}
+		object.setParameters(parameters);
 
 		object.setResources(objectFromJSON.getResources());
 

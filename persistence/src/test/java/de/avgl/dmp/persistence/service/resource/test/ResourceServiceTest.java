@@ -13,6 +13,7 @@ import de.avgl.dmp.persistence.model.resource.ResourceType;
 import de.avgl.dmp.persistence.model.resource.proxy.ProxyResource;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
+import de.avgl.dmp.persistence.service.resource.test.utils.ResourceServiceTestUtils;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
@@ -23,9 +24,13 @@ public class ResourceServiceTest extends IDBasicJPAServiceTest<ProxyResource, Re
 	final String									attributeKey	= "path";
 	final String									attributeValue	= "/path/to/file.end";
 
+	private final ResourceServiceTestUtils			resourceServiceTestUtils;
+	
 	public ResourceServiceTest() {
 
 		super("resource", ResourceService.class);
+		
+		resourceServiceTestUtils = new ResourceServiceTestUtils();
 	}
 
 	@Test
@@ -40,7 +45,7 @@ public class ResourceServiceTest extends IDBasicJPAServiceTest<ProxyResource, Re
 		checkSimpleResource(resource, updatedResource);
 
 		// clean up DB
-		deletedObject(resource.getId());
+		deleteObject(resource.getId());
 	}
 
 	@Test
@@ -87,7 +92,7 @@ public class ResourceServiceTest extends IDBasicJPAServiceTest<ProxyResource, Re
 
 		checkSimpleResource(resource, updatedResource);
 
-		checkComplexResource(resource, updatedResource, parameterKey, parameterValue);
+		resourceServiceTestUtils.checkComplexResource(resource, updatedResource, parameterKey, parameterValue);
 
 		// modify first configuration
 
@@ -109,7 +114,7 @@ public class ResourceServiceTest extends IDBasicJPAServiceTest<ProxyResource, Re
 
 		checkSimpleResource(updatedResource, updatedResource2);
 
-		checkComplexResource(updatedResource, updatedResource2, parameterKey, modifiedParameterValue);
+		resourceServiceTestUtils.checkComplexResource(updatedResource, updatedResource2, parameterKey, modifiedParameterValue);
 
 		// create second configuration
 
@@ -146,7 +151,7 @@ public class ResourceServiceTest extends IDBasicJPAServiceTest<ProxyResource, Re
 
 		checkSimpleResource(updatedResource2, updatedResource3);
 
-		checkComplexResource(updatedResource2, updatedResource3);
+		resourceServiceTestUtils.checkComplexResource(updatedResource2, updatedResource3);
 
 		String resourceJSON = null;
 
@@ -164,7 +169,7 @@ public class ResourceServiceTest extends IDBasicJPAServiceTest<ProxyResource, Re
 		// clean up DB
 		configurationService.deleteObject(configurationId);
 		configurationService.deleteObject(configuration2Id);
-		deletedObject(resource.getId());
+		deleteObject(resource.getId());
 
 		final Configuration deletedConfiguration = configurationService.getObject(configurationId);
 
@@ -203,26 +208,5 @@ public class ResourceServiceTest extends IDBasicJPAServiceTest<ProxyResource, Re
 		Assert.assertEquals("the attributes of the resource are not equal", resource.getAttributes(), updatedResource.getAttributes());
 		Assert.assertNotNull("the attribute value shouldn't be null", resource.getAttribute(attributeKey));
 		Assert.assertEquals("the attribute value should be equal", resource.getAttribute(attributeKey).asText(), attributeValue);
-	}
-
-	private void checkComplexResource(final Resource resource, final Resource updatedResource, final String parameterKey, final String parameterValue) {
-
-		checkComplexResource(resource, updatedResource);
-
-		Assert.assertEquals("the configuration of the resource is not equal", resource.getConfigurations().iterator().next(), resource
-				.getConfigurations().iterator().next());
-		Assert.assertEquals("the configuration parameter '" + parameterKey + "' of the resource is not equal", resource.getConfigurations()
-				.iterator().next().getParameter(parameterKey), resource.getConfigurations().iterator().next().getParameter(parameterKey));
-		Assert.assertEquals("the configuration parameter value for '" + parameterKey + "' of the resource is not equal", resource.getConfigurations()
-				.iterator().next().getParameter(parameterKey).asText(), resource.getConfigurations().iterator().next().getParameter(parameterKey)
-				.asText());
-	}
-
-	private void checkComplexResource(final Resource resource, final Resource updatedResource) {
-
-		Assert.assertNotNull("the configurations of the updated resource shouldn't be null", updatedResource.getConfigurations());
-		Assert.assertEquals("the configurations of the resource are not equal", resource.getConfigurations(), updatedResource.getConfigurations());
-		Assert.assertEquals("the configurations' size of the resource are not equal", resource.getConfigurations().size(), updatedResource
-				.getConfigurations().size());
 	}
 }
