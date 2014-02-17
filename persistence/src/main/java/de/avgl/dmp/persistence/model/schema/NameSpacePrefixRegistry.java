@@ -1,4 +1,4 @@
-package de.avgl.dmp.persistence.model.schema.test;
+package de.avgl.dmp.persistence.model.schema;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -15,6 +15,9 @@ public class NameSpacePrefixRegistry {
 	public static final String DC = "http://purl.org/dc/elements/1.1/";
 	public static final String DCTERMS = "http://purl.org/dc/terms/";
 	public static final String BIBO = "http://purl.org/ontology/bibo/";
+	public static final String ISBD = "http://iflastandards.info/ns/isbd/elements/";
+	public static final String OWL = "http://www.w3.org/2002/07/owl#";
+	public static final String UMBEL = "http://umbel.org/umbel#";
 	
 	private Map<String, String>						namespaces		= Maps.newLinkedHashMap();
 	private Map<String, String>						prefixes		= Maps.newLinkedHashMap();
@@ -25,11 +28,14 @@ public class NameSpacePrefixRegistry {
 		super();
 		
 		registerNameSpace("rdf", RDF);
+		registerNameSpace("owl", OWL);
 		registerNameSpace("rda", RDA);
 		registerNameSpace("foaf", FOAF);
 		registerNameSpace("dc", DC);
 		registerNameSpace("dcterms", DCTERMS);
 		registerNameSpace("bibo", BIBO);
+		registerNameSpace("isbd", ISBD);
+		registerNameSpace("umbel", UMBEL);
 	}
 
 	public void registerNameSpace(String prefix, String uri) {

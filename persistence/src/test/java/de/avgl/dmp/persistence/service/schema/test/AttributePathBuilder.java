@@ -1,4 +1,4 @@
-package de.avgl.dmp.persistence.model.schema.test;
+package de.avgl.dmp.persistence.service.schema.test;
 
 import java.util.LinkedList;
 import java.util.Map;
@@ -16,10 +16,10 @@ import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
+import de.avgl.dmp.persistence.model.schema.NameSpacePrefixRegistry;
 import de.avgl.dmp.persistence.service.schema.AttributePathService;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
-import de.avgl.dmp.persistence.service.schema.test.SchemaServiceTest;
 
 public class AttributePathBuilder extends GuicedTest {
 	
@@ -34,6 +34,7 @@ public class AttributePathBuilder extends GuicedTest {
 	
 	NameSpacePrefixRegistry registry;
 	
+	String prefixPaths ="";
 	
 	public AttributePathBuilder() {
 		
@@ -64,6 +65,9 @@ public class AttributePathBuilder extends GuicedTest {
 	
 	public AttributePath parsePrefixPath(String pathInPrefixNotation) {
 		
+		// temp store prefix paths as a summary
+		prefixPaths += pathInPrefixNotation + System.lineSeparator();
+		
 		start();
 		
 		String[] attributesInPrefixNotation = pathInPrefixNotation.split("/");
@@ -83,6 +87,10 @@ public class AttributePathBuilder extends GuicedTest {
 		
 		return getPath();
 		
+	}
+
+	public String getPrefixPaths() {
+		return prefixPaths;
 	}
 
 	private AttributePath createAttributePath(final LinkedList<Attribute> attributePathArg) {
