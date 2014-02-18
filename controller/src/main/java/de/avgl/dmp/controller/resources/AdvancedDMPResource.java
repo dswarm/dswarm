@@ -40,14 +40,6 @@ public abstract class AdvancedDMPResource<POJOCLASSRESOURCEUTILS extends Advance
 	}
 
 	@Override
-	protected POJOCLASS prepareObjectForUpdate(final POJOCLASS objectFromJSON, final POJOCLASS object) {
-
-		object.setName(objectFromJSON.getName());
-
-		return object;
-	}
-
-	@Override
 	protected POJOCLASS retrieveObject(final Long id, final String jsonObjectString) throws DMPControllerException {
 
 		if (jsonObjectString == null) {

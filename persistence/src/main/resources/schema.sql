@@ -8,6 +8,8 @@ SET foreign_key_checks = 0;
 
     drop table if exists ATTRIBUTE_PATHS_SCHEMAS;
 
+    drop table if exists ATTRIBUTE_PATH_INSTANCE;
+
     drop table if exists CLASS;
 
     drop table if exists COMPONENT;
@@ -25,6 +27,8 @@ SET foreign_key_checks = 0;
     drop table if exists INPUT_ATTRIBUTE_PATHS_MAPPINGS;
 
     drop table if exists MAPPING;
+
+    drop table if exists MAPPING_ATTRIBUTE_PATH_INSTANCE;
 
     drop table if exists OUTPUT_COMPONENTS_INPUT_COMPONENTS;
 
@@ -63,6 +67,14 @@ SET foreign_key_checks = 0;
         SCHEMA_ID bigint not null,
         ATTRIBUTE_PATH_ID bigint not null,
         primary key (SCHEMA_ID, ATTRIBUTE_PATH_ID)
+    ) ENGINE=InnoDB;
+
+    create table ATTRIBUTE_PATH_INSTANCE (
+        ID bigint not null auto_increment,
+        NAME varchar(255),
+        ATTRIBUTE_PATH_INSTANCE_TYPE varchar(255),
+        ATTRIBUTE_PATH bigint,
+        primary key (ID)
     ) ENGINE=InnoDB;
 
     create table CLASS (
@@ -133,10 +145,15 @@ SET foreign_key_checks = 0;
     create table MAPPING (
         ID bigint not null auto_increment,
         NAME varchar(255),
-        INPUT_FILTER bigint,
         OUTPUT_ATTRIBUTE_PATH bigint,
-        OUTPUT_FILTER bigint,
         TRANSFORMATION bigint,
+        primary key (ID)
+    ) ENGINE=InnoDB;
+
+    create table MAPPING_ATTRIBUTE_PATH_INSTANCE (
+        ORDINAL integer,
+        ID bigint not null,
+        FILTER bigint,
         primary key (ID)
     ) ENGINE=InnoDB;
 
@@ -211,6 +228,12 @@ SET foreign_key_checks = 0;
         foreign key (SCHEMA_ID) 
         references DATA_SCHEMA (ID);
 
+    alter table ATTRIBUTE_PATH_INSTANCE 
+        add index FK_6jt089wmlbkpdlj0x2rcxup8e (ATTRIBUTE_PATH), 
+        add constraint FK_6jt089wmlbkpdlj0x2rcxup8e 
+        foreign key (ATTRIBUTE_PATH) 
+        references ATTRIBUTE_PATH (ID);
+
     alter table COMPONENT 
         add index FK_ag5gnetntolrsj5c8x1pk0mbu (FUNCTION), 
         add constraint FK_ag5gnetntolrsj5c8x1pk0mbu 
@@ -251,7 +274,7 @@ SET foreign_key_checks = 0;
         add index FK_6c4ofueeyb3hbmv2wboyqw7n1 (INPUT_ATTRIBUTE_PATH_ID), 
         add constraint FK_6c4ofueeyb3hbmv2wboyqw7n1 
         foreign key (INPUT_ATTRIBUTE_PATH_ID) 
-        references ATTRIBUTE_PATH (ID);
+        references MAPPING_ATTRIBUTE_PATH_INSTANCE (ID);
 
     alter table INPUT_ATTRIBUTE_PATHS_MAPPINGS 
         add index FK_e46064nsbvmdxm74jg1yhlouk (MAPPING_ID), 
@@ -260,28 +283,28 @@ SET foreign_key_checks = 0;
         references MAPPING (ID);
 
     alter table MAPPING 
-        add index FK_1fdjucib6chk55t2evxrw6ugk (INPUT_FILTER), 
-        add constraint FK_1fdjucib6chk55t2evxrw6ugk 
-        foreign key (INPUT_FILTER) 
-        references FILTER (ID);
-
-    alter table MAPPING 
         add index FK_h0b70ivxm1byvbabn6ic3slrp (OUTPUT_ATTRIBUTE_PATH), 
         add constraint FK_h0b70ivxm1byvbabn6ic3slrp 
         foreign key (OUTPUT_ATTRIBUTE_PATH) 
-        references ATTRIBUTE_PATH (ID);
-
-    alter table MAPPING 
-        add index FK_shvy8f39jmeyjgne94ntkyysn (OUTPUT_FILTER), 
-        add constraint FK_shvy8f39jmeyjgne94ntkyysn 
-        foreign key (OUTPUT_FILTER) 
-        references FILTER (ID);
+        references MAPPING_ATTRIBUTE_PATH_INSTANCE (ID);
 
     alter table MAPPING 
         add index FK_y31lfpmsdwyyjjubvff2p2tw (TRANSFORMATION), 
         add constraint FK_y31lfpmsdwyyjjubvff2p2tw 
         foreign key (TRANSFORMATION) 
         references COMPONENT (ID);
+
+    alter table MAPPING_ATTRIBUTE_PATH_INSTANCE 
+        add index FK_gqbk1yvsk4obdq7awumondc49 (FILTER), 
+        add constraint FK_gqbk1yvsk4obdq7awumondc49 
+        foreign key (FILTER) 
+        references FILTER (ID);
+
+    alter table MAPPING_ATTRIBUTE_PATH_INSTANCE 
+        add index FK_numa6haek9lnkkd2caq9nf7sv (ID), 
+        add constraint FK_numa6haek9lnkkd2caq9nf7sv 
+        foreign key (ID) 
+        references ATTRIBUTE_PATH_INSTANCE (ID);
 
     alter table OUTPUT_COMPONENTS_INPUT_COMPONENTS 
         add index FK_f27jrrca3kaj4k5gkph7cmfhb (OUTPUT_COMPONENT_ID), 

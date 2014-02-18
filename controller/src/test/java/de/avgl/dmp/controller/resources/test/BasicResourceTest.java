@@ -18,6 +18,7 @@ import de.avgl.dmp.controller.resources.test.utils.BasicResourceTestUtils;
 import de.avgl.dmp.persistence.model.DMPObject;
 import de.avgl.dmp.persistence.model.proxy.ProxyDMPObject;
 import de.avgl.dmp.persistence.service.BasicJPAService;
+import de.avgl.dmp.persistence.service.test.utils.BasicJPAServiceTestUtils;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -27,7 +28,7 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
  * @param <POJOCLASS>
  * @param <POJOCLASSIDTYPE>
  */
-public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE>
+public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTILS, POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSPERSISTENCESERVICETESTUTILS extends BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE>
 		extends ResourceTest {
 
 	private static final org.apache.log4j.Logger		LOG							= org.apache.log4j.Logger.getLogger(BasicResourceTest.class);

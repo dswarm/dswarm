@@ -14,7 +14,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
@@ -25,13 +24,13 @@ import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
-import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
-import de.avgl.dmp.persistence.service.resource.ResourceService;
-import de.avgl.dmp.persistence.service.schema.AttributePathService;
-import de.avgl.dmp.persistence.service.schema.AttributeService;
-import de.avgl.dmp.persistence.service.schema.ClaszService;
-import de.avgl.dmp.persistence.service.schema.SchemaService;
+import de.avgl.dmp.persistence.service.resource.test.utils.ConfigurationServiceTestUtils;
+import de.avgl.dmp.persistence.service.resource.test.utils.ResourceServiceTestUtils;
+import de.avgl.dmp.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
+import de.avgl.dmp.persistence.service.schema.test.utils.AttributeServiceTestUtils;
+import de.avgl.dmp.persistence.service.schema.test.utils.ClaszServiceTestUtils;
+import de.avgl.dmp.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
@@ -45,19 +44,35 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, 
 
 	private Map<Long, AttributePath>				attributePaths	= Maps.newLinkedHashMap();
 
+	private final AttributeServiceTestUtils			attributeServiceTestUtils;
+	private final ClaszServiceTestUtils				claszServiceTestUtils;
+	private final AttributePathServiceTestUtils		attributePathServiceTestUtils;
+	private final SchemaServiceTestUtils			schemaServiceTestUtils;
+	private final ConfigurationServiceTestUtils		configurationServiceTestUtils;
+	private final ResourceServiceTestUtils			resourceServiceTestUtils;
+
 	public DataModelServiceTest() {
 
 		super("data model", DataModelService.class);
+
+		attributeServiceTestUtils = new AttributeServiceTestUtils();
+		attributePathServiceTestUtils = new AttributePathServiceTestUtils();
+		claszServiceTestUtils = new ClaszServiceTestUtils();
+		schemaServiceTestUtils = new SchemaServiceTestUtils();
+		configurationServiceTestUtils = new ConfigurationServiceTestUtils();
+		resourceServiceTestUtils = new ResourceServiceTestUtils();
 	}
 
 	@Test
-	public void testSimpleDataModel() {
+	public void testSimpleDataModel() throws Exception {
 
 		// first attribute path
 
-		final Attribute dctermsTitle = createAttribute("http://purl.org/dc/terms/title", "title");
+		final Attribute dctermsTitle = attributeServiceTestUtils.createAttribute("http://purl.org/dc/terms/title", "title");
+		attributes.put(dctermsTitle.getId(), dctermsTitle);
 
-		final Attribute dctermsHasPart = createAttribute("http://purl.org/dc/terms/hasPart", "hasPart");
+		final Attribute dctermsHasPart = attributeServiceTestUtils.createAttribute("http://purl.org/dc/terms/hasPart", "hasPart");
+		attributes.put(dctermsHasPart.getId(), dctermsHasPart);
 
 		final LinkedList<Attribute> attributePath1Arg = Lists.newLinkedList();
 
@@ -68,19 +83,22 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, 
 		System.out.println("attribute title = '" + dctermsTitle.toString());
 		System.out.println("attribute hasPart = '" + dctermsHasPart.toString());
 
-		final AttributePath attributePath1 = createAttributePath(attributePath1Arg);
+		final AttributePath attributePath1 = attributePathServiceTestUtils.createAttributePath(attributePath1Arg);
+		attributePaths.put(attributePath1.getId(), attributePath1);
 
 		// second attribute path
 
 		final String dctermsCreatorId = "http://purl.org/dc/terms/creator";
 		final String dctermsCreatorName = "creator";
 
-		final Attribute dctermsCreator = createAttribute(dctermsCreatorId, dctermsCreatorName);
+		final Attribute dctermsCreator = attributeServiceTestUtils.createAttribute(dctermsCreatorId, dctermsCreatorName);
+		attributes.put(dctermsCreator.getId(), dctermsCreator);
 
 		final String foafNameId = "http://xmlns.com/foaf/0.1/name";
 		final String foafNameName = "name";
 
-		final Attribute foafName = createAttribute(foafNameId, foafNameName);
+		final Attribute foafName = attributeServiceTestUtils.createAttribute(foafNameId, foafNameName);
+		attributes.put(foafName.getId(), foafName);
 
 		final LinkedList<Attribute> attributePath2Arg = Lists.newLinkedList();
 
@@ -90,14 +108,16 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, 
 		System.out.println("attribute creator = '" + dctermsCreator.toString());
 		System.out.println("attribute name = '" + foafName.toString());
 
-		final AttributePath attributePath2 = createAttributePath(attributePath2Arg);
+		final AttributePath attributePath2 = attributePathServiceTestUtils.createAttributePath(attributePath2Arg);
+		attributePaths.put(attributePath2.getId(), attributePath2);
 
 		// third attribute path
 
 		final String dctermsCreatedId = "http://purl.org/dc/terms/created";
 		final String dctermsCreatedName = "created";
 
-		final Attribute dctermsCreated = createAttribute(dctermsCreatedId, dctermsCreatedName);
+		final Attribute dctermsCreated = attributeServiceTestUtils.createAttribute(dctermsCreatedId, dctermsCreatedName);
+		attributes.put(dctermsCreated.getId(), dctermsCreated);
 
 		final LinkedList<Attribute> attributePath3Arg = Lists.newLinkedList();
 
@@ -105,14 +125,15 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, 
 
 		System.out.println("attribute created = '" + dctermsCreated.toString());
 
-		final AttributePath attributePath3 = createAttributePath(attributePath3Arg);
+		final AttributePath attributePath3 = attributePathServiceTestUtils.createAttributePath(attributePath3Arg);
+		attributePaths.put(attributePath3.getId(), attributePath3);
 
 		// record class
 
 		final String biboDocumentId = "http://purl.org/ontology/bibo/Document";
 		final String biboDocumentName = "document";
 
-		final Clasz biboDocument = createClass(biboDocumentId, biboDocumentName);
+		final Clasz biboDocument = claszServiceTestUtils.createClass(biboDocumentId, biboDocumentName);
 
 		// schema
 
@@ -122,7 +143,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, 
 		attributePaths.add(attributePath2);
 		attributePaths.add(attributePath3);
 
-		final Schema schema = createSchema("my schema", attributePaths, biboDocument);
+		final Schema schema = schemaServiceTestUtils.createSchema("my schema", attributePaths, biboDocument);
 
 		// configuration
 
@@ -131,7 +152,8 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, 
 		final String parameterValue = ";";
 		parameters.put(parameterKey, parameterValue);
 
-		final Configuration configuration = createConfiguration("my configuration", "configuration description", parameters);
+		final Configuration configuration = configurationServiceTestUtils.createConfiguration("my configuration", "configuration description",
+				parameters);
 
 		// data resource
 
@@ -144,7 +166,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, 
 		final Set<Configuration> configurations = Sets.newLinkedHashSet();
 		configurations.add(configuration);
 
-		final Resource resource = createResource("bla", "blubblub", ResourceType.FILE, attributes, configurations);
+		final Resource resource = resourceServiceTestUtils.createResource("bla", "blubblub", ResourceType.FILE, attributes, configurations);
 
 		// data model
 
@@ -215,397 +237,22 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, 
 		LOG.debug("data model json: " + json);
 
 		// clean up DB
-		deletedObject(dataModel.getId());
+		deleteObject(dataModel.getId());
 
-		deleteSchema(schema);
-		deleteConfiguration(configuration);
-		deleteResource(resource);
-		deleteClasz(biboDocument);
+		schemaServiceTestUtils.deleteObject(schema);
+		configurationServiceTestUtils.deleteObject(configuration);
+		resourceServiceTestUtils.deleteObject(resource);
+		claszServiceTestUtils.deleteObject(biboDocument);
 
 		for (final AttributePath attributePath : this.attributePaths.values()) {
 
-			deleteAttributePath(attributePath);
+			attributePathServiceTestUtils.deleteObject(attributePath);
 		}
 
 		for (final Attribute attribute : this.attributes.values()) {
 
-			deleteAttribute(attribute);
+			attributeServiceTestUtils.deleteObject(attribute);
 		}
-	}
-
-	private AttributePath createAttributePath(final LinkedList<Attribute> attributePathArg) {
-
-		final AttributePathService attributePathService = GuicedTest.injector.getInstance(AttributePathService.class);
-
-		Assert.assertNotNull("attribute path service shouldn't be null", attributePathService);
-
-		final AttributePath attributePath = new AttributePath(attributePathArg);
-
-		AttributePath updatedAttributePath = null;
-
-		try {
-
-			updatedAttributePath = attributePathService.createOrGetObject(attributePathArg).getObject();
-		} catch (final DMPPersistenceException e1) {
-
-			Assert.assertTrue("something went wrong while attribute path creation.\n" + e1.getMessage(), false);
-		}
-
-		Assert.assertNotNull("updated attribute path shouldn't be null", updatedAttributePath);
-		Assert.assertNotNull("updated attribute path id shouldn't be null", updatedAttributePath.getId());
-		Assert.assertNotNull("the attribute path's attribute of the updated attribute path shouldn't be null", updatedAttributePath.getAttributes());
-		Assert.assertEquals("the attribute path's attributes size are not equal", attributePath.getAttributes(), updatedAttributePath.getAttributes());
-		Assert.assertEquals("the first attributes of the attribute path are not equal", attributePath.getAttributePath().get(0), updatedAttributePath
-				.getAttributePath().get(0));
-		Assert.assertNotNull("the attribute path string of the updated attribute path shouldn't be null", updatedAttributePath.toAttributePath());
-		Assert.assertEquals("the attribute path's strings are not equal", attributePath.toAttributePath(), updatedAttributePath.toAttributePath());
-
-		String json = null;
-
-		try {
-
-			json = objectMapper.writeValueAsString(updatedAttributePath);
-		} catch (JsonProcessingException e) {
-
-			e.printStackTrace();
-		}
-
-		LOG.debug("attribute path json for attribute path '" + updatedAttributePath.getId() + "': " + json);
-
-		attributePaths.put(updatedAttributePath.getId(), updatedAttributePath);
-
-		return updatedAttributePath;
-	}
-
-	private Attribute createAttribute(final String id, final String name) {
-
-		if (attributes.containsKey(id)) {
-
-			return attributes.get(id);
-		}
-
-		final AttributeService attributeService = GuicedTest.injector.getInstance(AttributeService.class);
-
-		Assert.assertNotNull("attribute service shouldn't be null", attributeService);
-
-		// create first attribute
-
-		Attribute attribute = null;
-
-		try {
-			attribute = attributeService.createOrGetObjectTransactional(id).getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while attribute creation.\n" + e.getMessage(), false);
-		}
-
-		Assert.assertNotNull("attribute shouldn't be null", attribute);
-		Assert.assertNotNull("attribute id shouldn't be null", attribute.getId());
-
-		attribute.setName(name);
-
-		Attribute updatedAttribute = null;
-
-		try {
-
-			updatedAttribute = attributeService.updateObjectTransactional(attribute).getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while updating the attribute of id = '" + id + "'", false);
-		}
-
-		Assert.assertNotNull("updated attribute shouldn't be null", updatedAttribute);
-		Assert.assertNotNull("updated attribute id shouldn't be null", updatedAttribute.getId());
-		Assert.assertNotNull("updated attribute name shouldn't be null", updatedAttribute.getName());
-
-		attributes.put(updatedAttribute.getId(), updatedAttribute);
-
-		return updatedAttribute;
-	}
-
-	private Clasz createClass(final String id, final String name) {
-
-		final ClaszService classService = GuicedTest.injector.getInstance(ClaszService.class);
-
-		Assert.assertNotNull("class service shouldn't be null", classService);
-
-		// create class
-
-		Clasz clasz = null;
-
-		try {
-			clasz = classService.createOrGetObjectTransactional(id).getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while class creation.\n" + e.getMessage(), false);
-		}
-
-		Assert.assertNotNull("class shouldn't be null", clasz);
-		Assert.assertNotNull("class id shouldn't be null", clasz.getId());
-
-		clasz.setName(name);
-
-		Clasz updatedClasz = null;
-
-		try {
-
-			updatedClasz = classService.updateObjectTransactional(clasz).getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while updating the class of id = '" + id + "'", false);
-		}
-
-		Assert.assertNotNull("updated class shouldn't be null", updatedClasz);
-		Assert.assertNotNull("updated class id shouldn't be null", updatedClasz.getId());
-		Assert.assertNotNull("updated class name shouldn't be null", updatedClasz.getName());
-
-		return updatedClasz;
-	}
-
-	private Schema createSchema(final String name, final Set<AttributePath> attributePaths, final Clasz recordClass) {
-
-		final SchemaService schemaService = GuicedTest.injector.getInstance(SchemaService.class);
-
-		Assert.assertNotNull("schema service shouldn't be null", schemaService);
-
-		// create schema
-
-		Schema schema = null;
-
-		try {
-			schema = schemaService.createObjectTransactional().getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while schema creation.\n" + e.getMessage(), false);
-		}
-
-		Assert.assertNotNull("schema shouldn't be null", schema);
-		Assert.assertNotNull("schema id shouldn't be null", schema.getId());
-
-		schema.setName(name);
-		schema.setAttributePaths(attributePaths);
-		schema.setRecordClass(recordClass);
-
-		// update schema
-
-		Schema updatedSchema = null;
-
-		try {
-
-			updatedSchema = schemaService.updateObjectTransactional(schema).getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while updating the schema of id = '" + schema.getId() + "'", false);
-		}
-
-		Assert.assertNotNull("updated schema shouldn't be null", updatedSchema);
-		Assert.assertNotNull("updated schema id shouldn't be null", updatedSchema.getId());
-
-		final AttributePath attributePath1 = attributePaths.iterator().next();
-
-		Assert.assertNotNull("the schema's attribute paths of the updated schema shouldn't be null", updatedSchema.getAttributePaths());
-		Assert.assertEquals("the schema's attribute paths size are not equal", schema.getAttributePaths(), updatedSchema.getAttributePaths());
-		Assert.assertEquals("the attribute path '" + attributePath1.getId() + "' of the schema are not equal",
-				schema.getAttributePath(attributePath1.getId()), updatedSchema.getAttributePath(attributePath1.getId()));
-		Assert.assertNotNull("the attribute path's attributes of the attribute path '" + attributePath1.getId()
-				+ "' of the updated schema shouldn't be null", updatedSchema.getAttributePath(attributePath1.getId()).getAttributes());
-		Assert.assertEquals("the attribute path's attributes size of attribute path '" + attributePath1.getId() + "' are not equal",
-				attributePath1.getAttributes(), updatedSchema.getAttributePath(attributePath1.getId()).getAttributes());
-		Assert.assertEquals("the first attributes of attribute path '" + attributePath1.getId() + "' are not equal", attributePath1
-				.getAttributePath().get(0), updatedSchema.getAttributePath(attributePath1.getId()).getAttributePath().get(0));
-		Assert.assertNotNull("the attribute path string of attribute path '" + attributePath1.getId() + "' of the update schema shouldn't be null",
-				updatedSchema.getAttributePath(attributePath1.getId()).toAttributePath());
-		Assert.assertEquals("the attribute path's strings attribute path '" + attributePath1.getId() + "' are not equal",
-				attributePath1.toAttributePath(), updatedSchema.getAttributePath(attributePath1.getId()).toAttributePath());
-		Assert.assertNotNull("the record class of the updated schema shouldn't be null", updatedSchema.getRecordClass());
-		Assert.assertEquals("the recod classes are not equal", schema.getRecordClass(), updatedSchema.getRecordClass());
-
-		String json = null;
-
-		try {
-
-			json = objectMapper.writeValueAsString(updatedSchema);
-		} catch (JsonProcessingException e) {
-
-			e.printStackTrace();
-		}
-
-		LOG.debug("schema json: " + json);
-
-		return updatedSchema;
-	}
-
-	private Resource createResource(final String name, final String description, final ResourceType resourceType, final ObjectNode attributes,
-			final Set<Configuration> configurations) {
-
-		final ResourceService resourceService = GuicedTest.injector.getInstance(ResourceService.class);
-
-		Assert.assertNotNull("resource service shouldn't be null", resourceService);
-
-		// create resource
-
-		Resource resource = null;
-
-		try {
-			resource = resourceService.createObjectTransactional().getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while resource creation.\n" + e.getMessage(), false);
-		}
-
-		Assert.assertNotNull("resource shouldn't be null", resource);
-		Assert.assertNotNull("resource id shouldn't be null", resource.getId());
-
-		resource.setName(name);
-		resource.setDescription(description);
-		resource.setType(resourceType);
-		resource.setAttributes(attributes);
-		resource.setConfigurations(configurations);
-
-		Resource updatedResource = null;
-
-		try {
-
-			updatedResource = resourceService.updateObjectTransactional(resource).getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while updating the resource of id = '" + resource.getId() + "'", false);
-		}
-
-		Assert.assertNotNull("updated resource shouldn't be null", updatedResource);
-		Assert.assertNotNull("updated resource id shouldn't be null", updatedResource.getId());
-
-		return updatedResource;
-	}
-
-	private Configuration createConfiguration(final String name, final String description, final ObjectNode parameters) {
-
-		final ConfigurationService configurationService = GuicedTest.injector.getInstance(ConfigurationService.class);
-
-		Assert.assertNotNull("configuration service shouldn't be null", configurationService);
-
-		// create configuration
-
-		Configuration configuration = null;
-
-		try {
-			configuration = configurationService.createObjectTransactional().getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while configuration creation.\n" + e.getMessage(), false);
-		}
-
-		Assert.assertNotNull("configuration shouldn't be null", configuration);
-		Assert.assertNotNull("configuration id shouldn't be null", configuration.getId());
-
-		configuration.setName(name);
-		configuration.setDescription(description);
-		configuration.setParameters(parameters);
-
-		Configuration updatedConfiguration = null;
-
-		try {
-
-			updatedConfiguration = configurationService.updateObjectTransactional(configuration).getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while updating the configuration of id = '" + configuration.getId() + "'", false);
-		}
-
-		Assert.assertNotNull("updated configuration shouldn't be null", updatedConfiguration);
-		Assert.assertNotNull("updated configuration id shouldn't be null", updatedConfiguration.getId());
-
-		return updatedConfiguration;
-	}
-
-	private void deleteAttribute(final Attribute attribute) {
-
-		final AttributeService attributeService = GuicedTest.injector.getInstance(AttributeService.class);
-
-		Assert.assertNotNull("attribute service shouldn't be null", attributeService);
-
-		final Long attributeId = attribute.getId();
-
-		attributeService.deleteObject(attributeId);
-
-		final Attribute deletedAttribute = attributeService.getObject(attributeId);
-
-		Assert.assertNull("deleted attribute shouldn't exist any more", deletedAttribute);
-	}
-
-	private void deleteAttributePath(final AttributePath attributePath) {
-
-		final AttributePathService attributePathService = GuicedTest.injector.getInstance(AttributePathService.class);
-
-		Assert.assertNotNull("attribute path service shouldn't be null", attributePathService);
-
-		final Long attributePathId = attributePath.getId();
-
-		attributePathService.deleteObject(attributePathId);
-
-		final AttributePath deletedAttributePath = attributePathService.getObject(attributePathId);
-
-		Assert.assertNull("deleted attribute path shouldn't exist any more", deletedAttributePath);
-	}
-
-	private void deleteClasz(final Clasz clasz) {
-
-		final ClaszService claszService = GuicedTest.injector.getInstance(ClaszService.class);
-
-		Assert.assertNotNull("class service shouldn't be null", claszService);
-
-		final Long claszId = clasz.getId();
-
-		claszService.deleteObject(claszId);
-
-		final Clasz deletedClass = claszService.getObject(claszId);
-
-		Assert.assertNull("deleted class shouldn't exist any more", deletedClass);
-	}
-
-	private void deleteSchema(final Schema schema) {
-
-		final SchemaService schemaService = GuicedTest.injector.getInstance(SchemaService.class);
-
-		Assert.assertNotNull("schema service shouldn't be null", schemaService);
-
-		final Long schemaId = schema.getId();
-
-		schemaService.deleteObject(schemaId);
-
-		final Schema deletedSchema = schemaService.getObject(schemaId);
-
-		Assert.assertNull("deleted schema shouldn't exist any more", deletedSchema);
-	}
-
-	private void deleteResource(final Resource resource) {
-
-		final ResourceService resourceService = GuicedTest.injector.getInstance(ResourceService.class);
-
-		Assert.assertNotNull("resource service shouldn't be null", resourceService);
-
-		final Long resourceId = resource.getId();
-
-		resourceService.deleteObject(resourceId);
-
-		final Resource deletedResource = resourceService.getObject(resourceId);
-
-		Assert.assertNull("deleted resource shouldn't exist any more", deletedResource);
-	}
-
-	private void deleteConfiguration(final Configuration configuration) {
-
-		final ConfigurationService configurationService = GuicedTest.injector.getInstance(ConfigurationService.class);
-
-		Assert.assertNotNull("configuration service shouldn't be null", configurationService);
-
-		final Long configurationId = configuration.getId();
-
-		configurationService.deleteObject(configurationId);
-
-		final Configuration deletedConfiguration = configurationService.getObject(configurationId);
-
-		Assert.assertNull("deleted configuration shouldn't exist any more", deletedConfiguration);
 	}
 
 	private void checkSimpleResource(final Resource resource, final Resource updatedResource, final String attributeKey, final String attributeValue) {
@@ -626,13 +273,13 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, 
 
 		checkComplexResource(resource, updatedResource);
 
-		Assert.assertEquals("the configuration of the resource is not equal", resource.getConfigurations().iterator().next(), resource
+		Assert.assertEquals("the configuration of the resource is not equal", resource.getConfigurations().iterator().next(), updatedResource
 				.getConfigurations().iterator().next());
 		Assert.assertEquals("the configuration parameter '" + parameterKey + "' of the resource is not equal", resource.getConfigurations()
-				.iterator().next().getParameter(parameterKey), resource.getConfigurations().iterator().next().getParameter(parameterKey));
+				.iterator().next().getParameter(parameterKey), updatedResource.getConfigurations().iterator().next().getParameter(parameterKey));
 		Assert.assertEquals("the configuration parameter value for '" + parameterKey + "' of the resource is not equal", resource.getConfigurations()
-				.iterator().next().getParameter(parameterKey).asText(), resource.getConfigurations().iterator().next().getParameter(parameterKey)
-				.asText());
+				.iterator().next().getParameter(parameterKey).asText(),
+				updatedResource.getConfigurations().iterator().next().getParameter(parameterKey).asText());
 	}
 
 	private void checkComplexResource(final Resource resource, final Resource updatedResource) {

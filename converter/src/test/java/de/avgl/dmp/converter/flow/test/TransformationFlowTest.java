@@ -150,8 +150,8 @@ public class TransformationFlowTest extends GuicedTest {
 
 		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataResourceSchemaBaseURI(updatedDataModel);
 
-		final ObjectNode outputAttributePathAttributeJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) mappingJSON.get("output_attribute_path"))
-				.get("attributes")).get(0);
+		final ObjectNode outputAttributePathAttributeJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) ((ObjectNode) mappingJSON
+				.get("output_attribute_path")).get("attribute_path")).get("attributes")).get(0);
 		final String outputAttributeName = outputAttributePathAttributeJSON.get("name").asText();
 		outputAttributePathAttributeJSON.put("uri", dataResourceSchemaBaseURI + outputAttributeName);
 
@@ -159,7 +159,8 @@ public class TransformationFlowTest extends GuicedTest {
 
 		for (final JsonNode inputAttributePathsJSONNode : inputAttributePathsJSON) {
 
-			final ObjectNode inputAttributeJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) inputAttributePathsJSONNode).get("attributes")).get(0);
+			final ObjectNode inputAttributeJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) ((ObjectNode) inputAttributePathsJSONNode)
+					.get("attribute_path")).get("attributes")).get(0);
 			final String inputAttributeName = inputAttributeJSON.get("name").asText();
 			inputAttributeJSON.put("uri", dataResourceSchemaBaseURI + inputAttributeName);
 		}

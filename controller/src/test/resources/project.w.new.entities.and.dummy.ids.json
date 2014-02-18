@@ -39,33 +39,43 @@
                     "parameter_mappings": {
                         "inputString": "previousComponent.outputString"
                     },
-                    "id": -4565839526378372096
+                    "id": -40344660662677504
                 }],
-                "id": -4104000197807160320
+                "id": -8165055419232808960
             },
             "parameter_mappings": {
                 "transformationInputString": "http://purl.org/dc/terms/title",
                 "transformationOutputVariable": "http://www.w3.org/2000/01/rdf-schema#label"
             },
-            "id": -3384997677760722944
+            "id": -8344651754896458752
         },
         "input_attribute_paths": [{
-            "attributes": [{
-                "id": 4,
-                "uri": "http://purl.org/dc/terms/title",
-                "name": "title"
-            }],
-            "id": -455718513102396416
+            "type": "MappingAttributePathInstance",
+            "name": "input mapping attribute path instance",
+            "attribute_path": {
+                "attributes": [{
+                    "id": 4,
+                    "uri": "http://purl.org/dc/terms/title",
+                    "name": "title"
+                }],
+                "id": -1972214728943086592
+            },
+            "id": -46738832623118336
         }],
         "output_attribute_path": {
-            "attributes": [{
-                "id": 7,
-                "uri": "http://www.w3.org/2000/01/rdf-schema#label",
-                "name": "label"
-            }],
-            "id": -8490036504767497216
+            "type": "MappingAttributePathInstance",
+            "name": "output mapping attribute path instance",
+            "attribute_path": {
+                "attributes": [{
+                    "id": 6,
+                    "uri": "http://www.w3.org/2000/01/rdf-schema#label",
+                    "name": "label"
+                }],
+                "id": -7224536841823020032
+            },
+            "id": -5856279909432938496
         },
-        "id": -3367775307768301568
+        "id": -6334873149665740800
     }],
     "functions": [{
         "type": "Function",
@@ -94,19 +104,19 @@
         "name": "my data model",
         "description": "my data model description",
         "configuration": {
-            "id": 1,
             "name": "foo",
             "description": "bar",
-            "resources": [{
-                "id": 1
-            }],
             "parameters": {
                 "encoding": "UTF-8",
                 "escape_character": "\\",
                 "quote_character": "\"",
                 "column_delimiter": ";",
                 "row_delimiter": "\n"
-            }
+            },
+            "id": 1,
+            "resources": [{
+                "id": 1
+            }]
         },
         "schema": {
             "id": 1,
@@ -152,31 +162,31 @@
             }
         },
         "data_resource": {
-            "id": 1,
             "name": "test_csv.csv",
             "description": "blubblub",
             "type": "FILE",
+            "id": 1,
+            "resource_attributes": {
+                "path": "/home/tgaengler/git/tgaengler/datamanagement-platform/init/../tmp/resources/test_csv.csv",
+                "filesize": 766
+            },
             "configurations": [{
-                "id": 1,
                 "name": "foo",
                 "description": "bar",
-                "resources": [{
-                    "id": 1
-                }],
                 "parameters": {
                     "encoding": "UTF-8",
                     "escape_character": "\\",
                     "quote_character": "\"",
                     "column_delimiter": ";",
                     "row_delimiter": "\n"
-                }
-            }],
-            "resource_attributes": {
-                "path": "/home/tgaengler/git/tgaengler/datamanagement-platform/init/../tmp/resources/test_csv.csv",
-                "filesize": 766
-            }
+                },
+                "id": 1,
+                "resources": [{
+                    "id": 1
+                }]
+            }]
         },
-        "id": -336933627372545024
+        "id": -4750052245271813120
     },
     "output_data_model": {
         "name": "my output data model",
@@ -224,6 +234,6 @@
                 "name": "document"
             }
         },
-        "id": -226498002784808960
+        "id": -2223209601959904256
     }
 }

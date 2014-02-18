@@ -187,7 +187,7 @@ public class Component extends ExtendedBasicDMPJPAObject {
 	 * 
 	 * @param inputComponent a new input component
 	 */
-	void addInputComponent(final Component inputComponent) {
+	public void addInputComponent(final Component inputComponent) {
 
 		if (inputComponent != null) {
 
@@ -210,7 +210,7 @@ public class Component extends ExtendedBasicDMPJPAObject {
 	 * 
 	 * @param inputComponent an existing input component that should be removed
 	 */
-	void removeInputComponent(final Component inputComponent) {
+	public void removeInputComponent(final Component inputComponent) {
 
 		if (inputComponents != null && inputComponent != null && inputComponents.contains(inputComponent)) {
 
@@ -278,7 +278,7 @@ public class Component extends ExtendedBasicDMPJPAObject {
 	 * 
 	 * @param outputComponent a new output component
 	 */
-	void addOutputComponent(final Component outputComponent) {
+	public void addOutputComponent(final Component outputComponent) {
 
 		if (outputComponent != null) {
 
@@ -301,7 +301,7 @@ public class Component extends ExtendedBasicDMPJPAObject {
 	 * 
 	 * @param outputComponent an existing output component that should be removed
 	 */
-	void removeOutputComponent(final Component outputComponent) {
+	public void removeOutputComponent(final Component outputComponent) {
 
 		if (outputComponents != null && outputComponent != null && outputComponents.contains(outputComponent)) {
 
