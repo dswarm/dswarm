@@ -1,4 +1,4 @@
-package de.avgl.dmp.controller.resources;
+package de.avgl.dmp.controller.resources.status;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
