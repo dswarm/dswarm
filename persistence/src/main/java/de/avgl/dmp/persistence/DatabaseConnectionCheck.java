@@ -27,18 +27,11 @@ public class DatabaseConnectionCheck {
 		final EntityManagerFactory entityManagerFactory = entityManagerFactoryProvider.get();
 		final Map<String, Object> properties = entityManagerFactory.getProperties();
 
-		this.preferredTestQuery = getPersistenceProperty(properties, "hibernate.c3p0.preferredTestQuery", "SELECT 1", String.class);
-		this.jdbcUrl = getPersistenceProperty(properties, "javax.persistence.jdbc.url", "", String.class);
-	}
+		final Object preferredTestQuery = properties.get("hibernate.c3p0.preferredTestQuery");
+		this.preferredTestQuery = preferredTestQuery == null ? "SELECT 1" : (String) preferredTestQuery;
 
-	private <T> T getPersistenceProperty(final Map<String, Object> properties, final String key, final T defaultValue, final Class<T> tClass) {
-
-		final Object value = properties.get(key);
-		if (value == null) {
-			return defaultValue;
-		}
-
-		return tClass.cast(value);
+		final Object jdbcUrl = properties.get("javax.persistence.jdbc.url");
+		this.jdbcUrl = jdbcUrl == null ? "" : (String) jdbcUrl;
 	}
 
 	public boolean isConnected() {
