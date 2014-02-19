@@ -92,8 +92,7 @@ public class HealthResource {
 		} else {
 			generator.writeBooleanField("healthy", false);
 			generator.writeStringField("reason", result.getMessage());
-			//noinspection ThrowableResultOfMethodCallIgnored
-			final Throwable error = result.getError();
+			@SuppressWarnings("ThrowableResultOfMethodCallIgnored") final Throwable error = result.getError();
 			if (error != null) {
 				generator.writeStringField("error", error.getMessage());
 			}
