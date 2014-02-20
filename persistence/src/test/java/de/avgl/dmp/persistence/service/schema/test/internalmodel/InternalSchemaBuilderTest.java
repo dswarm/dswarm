@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -32,8 +33,9 @@ public class InternalSchemaBuilderTest extends GuicedTest {
 	private static final String NL = System.lineSeparator();
 
 
+	@Ignore
 	@Test
-	public void testSimpleSchema() {
+	public void buildInternalSchema() {
 		
 		InternalSchemaBuilder schemaBuilder = new InternalSchemaBuilder();
 		Schema internalSchema = schemaBuilder.buildInternalSchema();
