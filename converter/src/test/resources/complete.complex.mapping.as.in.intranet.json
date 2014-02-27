@@ -1,0 +1,1397 @@
+{
+    "name": "my mapping",
+    "transformation": {
+        "name": "my transformation 2 (component)",
+        "function": {
+            "type": "Transformation",
+            "name": "my transformation 2",
+            "description": "transformation which makes use of three functions (two transformations and one funcion)",
+            "id": 16,
+            "parameters": ["firstName",
+                "familyName"
+            ],
+            "type": "Transformation",
+            "components": [{
+                "name": "full name",
+                "function": {
+                    "type": "Function",
+                    "name": "concat",
+                    "description": "concatenates two given string",
+                    "id": 15,
+                    "parameters": [
+                        "firstString",
+                        "secondString"
+                    ],
+                    "type": "Function"
+                },
+                "id": 17,
+                "input_components": [{
+                    "name": "prepare first name",
+                    "function": {
+                        "type": "Transformation",
+                        "name": "my transformation",
+                        "description": "transformation which makes use of three functions",
+                        "id": 14,
+                        "parameters": [
+                            "transformationInputString"
+                        ],
+                        "type": "Transformation",
+                        "components": [{
+                            "name": "my replace component",
+                            "function": {
+                                "type": "Function",
+                                "name": "replace",
+                                "description": "replace certain parts of a given string that matches a certain regex",
+                                "id": 11,
+                                "parameters": [
+                                    "inputString",
+                                    "regex",
+                                    "replaceString"
+                                ],
+                                "type": "Function"
+                            },
+                            "id": 12,
+                            "output_components": [{
+                                "name": "my trim component",
+                                "function": {
+                                    "type": "Function",
+                                    "name": "trim",
+                                    "description": "trims leading and trailing whitespaces from a given string",
+                                    "id": 13,
+                                    "parameters": [
+                                        "inputString"
+                                    ],
+                                    "type": "Function"
+                                },
+                                "id": 14,
+                                "input_components": [{
+                                    "id": 12
+                                }],
+                                "output_components": [{
+                                    "name": "my lower case component",
+                                    "function": {
+                                        "type": "Function",
+                                        "name": "lower_case",
+                                        "description": "lower cases all characters of a given string",
+                                        "id": 12,
+                                        "parameters": [
+                                            "inputString"
+                                        ],
+                                        "type": "Function"
+                                    },
+                                    "id": 13,
+                                    "input_components": [{
+                                        "id": 14
+                                    }],
+                                    "parameter_mappings": {
+                                        "inputString": "previousComponent.outputString"
+                                    }
+                                }],
+                                "parameter_mappings": {
+                                    "inputString": "previousComponent.outputString"
+                                }
+                            }],
+                            "parameter_mappings": {
+                                "inputString": "previousComponent.outputString",
+                                "regex": "\\.",
+                                "replaceString": ":"
+                            }
+                        }, {
+                            "name": "my lower case component",
+                            "function": {
+                                "type": "Function",
+                                "name": "lower_case",
+                                "description": "lower cases all characters of a given string",
+                                "id": 12,
+                                "parameters": [
+                                    "inputString"
+                                ],
+                                "type": "Function"
+                            },
+                            "id": 13,
+                            "input_components": [{
+                                "name": "my trim component",
+                                "function": {
+                                    "type": "Function",
+                                    "name": "trim",
+                                    "description": "trims leading and trailing whitespaces from a given string",
+                                    "id": 13,
+                                    "parameters": [
+                                        "inputString"
+                                    ],
+                                    "type": "Function"
+                                },
+                                "id": 14,
+                                "input_components": [{
+                                    "id": 12
+                                }],
+                                "output_components": [{
+                                    "name": "my lower case component",
+                                    "function": {
+                                        "type": "Function",
+                                        "name": "lower_case",
+                                        "description": "lower cases all characters of a given string",
+                                        "id": 12,
+                                        "parameters": [
+                                            "inputString"
+                                        ],
+                                        "type": "Function"
+                                    },
+                                    "id": 13,
+                                    "input_components": [{
+                                        "id": 14
+                                    }],
+                                    "parameter_mappings": {
+                                        "inputString": "previousComponent.outputString"
+                                    }
+                                }],
+                                "parameter_mappings": {
+                                    "inputString": "previousComponent.outputString"
+                                }
+                            }],
+                            "parameter_mappings": {
+                                "inputString": "previousComponent.outputString"
+                            }
+                        }, {
+                            "name": "my trim component",
+                            "function": {
+                                "type": "Function",
+                                "name": "trim",
+                                "description": "trims leading and trailing whitespaces from a given string",
+                                "id": 13,
+                                "parameters": [
+                                    "inputString"
+                                ],
+                                "type": "Function"
+                            },
+                            "id": 14,
+                            "input_components": [{
+                                "id": 12
+                            }],
+                            "output_components": [{
+                                "name": "my lower case component",
+                                "function": {
+                                    "type": "Function",
+                                    "name": "lower_case",
+                                    "description": "lower cases all characters of a given string",
+                                    "id": 12,
+                                    "parameters": [
+                                        "inputString"
+                                    ],
+                                    "type": "Function"
+                                },
+                                "id": 13,
+                                "input_components": [{
+                                    "id": 14
+                                }],
+                                "parameter_mappings": {
+                                    "inputString": "previousComponent.outputString"
+                                }
+                            }],
+                            "parameter_mappings": {
+                                "inputString": "previousComponent.outputString"
+                            }
+                        }]
+                    },
+                    "id": 15,
+                    "output_components": [{
+                        "name": "full name",
+                        "function": {
+                            "type": "Function",
+                            "name": "concat",
+                            "description": "concatenates two given string",
+                            "id": 15,
+                            "parameters": [
+                                "firstString",
+                                "secondString"
+                            ],
+                            "type": "Function"
+                        },
+                        "id": 17,
+                        "input_components": [{
+                            "id": 15
+                        }, {
+                            "name": "prepare family name",
+                            "function": {
+                                "type": "Transformation",
+                                "name": "my transformation",
+                                "description": "transformation which makes use of three functions",
+                                "id": 14,
+                                "parameters": [
+                                    "transformationInputString"
+                                ],
+                                "type": "Transformation",
+                                "components": [{
+                                    "name": "my replace component",
+                                    "function": {
+                                        "type": "Function",
+                                        "name": "replace",
+                                        "description": "replace certain parts of a given string that matches a certain regex",
+                                        "id": 11,
+                                        "parameters": [
+                                            "inputString",
+                                            "regex",
+                                            "replaceString"
+                                        ],
+                                        "type": "Function"
+                                    },
+                                    "id": 12,
+                                    "output_components": [{
+                                        "name": "my trim component",
+                                        "function": {
+                                            "type": "Function",
+                                            "name": "trim",
+                                            "description": "trims leading and trailing whitespaces from a given string",
+                                            "id": 13,
+                                            "parameters": [
+                                                "inputString"
+                                            ],
+                                            "type": "Function"
+                                        },
+                                        "id": 14,
+                                        "input_components": [{
+                                            "id": 12
+                                        }],
+                                        "output_components": [{
+                                            "name": "my lower case component",
+                                            "function": {
+                                                "type": "Function",
+                                                "name": "lower_case",
+                                                "description": "lower cases all characters of a given string",
+                                                "id": 12,
+                                                "parameters": [
+                                                    "inputString"
+                                                ],
+                                                "type": "Function"
+                                            },
+                                            "id": 13,
+                                            "input_components": [{
+                                                "id": 14
+                                            }],
+                                            "parameter_mappings": {
+                                                "inputString": "previousComponent.outputString"
+                                            }
+                                        }],
+                                        "parameter_mappings": {
+                                            "inputString": "previousComponent.outputString"
+                                        }
+                                    }],
+                                    "parameter_mappings": {
+                                        "inputString": "previousComponent.outputString",
+                                        "regex": "\\.",
+                                        "replaceString": ":"
+                                    }
+                                }, {
+                                    "name": "my lower case component",
+                                    "function": {
+                                        "type": "Function",
+                                        "name": "lower_case",
+                                        "description": "lower cases all characters of a given string",
+                                        "id": 12,
+                                        "parameters": [
+                                            "inputString"
+                                        ],
+                                        "type": "Function"
+                                    },
+                                    "id": 13,
+                                    "input_components": [{
+                                        "id": 14
+                                    }],
+                                    "parameter_mappings": {
+                                        "inputString": "previousComponent.outputString"
+                                    }
+                                }, {
+                                    "name": "my trim component",
+                                    "function": {
+                                        "type": "Function",
+                                        "name": "trim",
+                                        "description": "trims leading and trailing whitespaces from a given string",
+                                        "id": 13,
+                                        "parameters": [
+                                            "inputString"
+                                        ],
+                                        "type": "Function"
+                                    },
+                                    "id": 14,
+                                    "input_components": [{
+                                        "id": 12
+                                    }],
+                                    "output_components": [{
+                                        "name": "my lower case component",
+                                        "function": {
+                                            "type": "Function",
+                                            "name": "lower_case",
+                                            "description": "lower cases all characters of a given string",
+                                            "id": 12,
+                                            "parameters": [
+                                                "inputString"
+                                            ],
+                                            "type": "Function"
+                                        },
+                                        "id": 13,
+                                        "input_components": [{
+                                            "id": 14
+                                        }],
+                                        "parameter_mappings": {
+                                            "inputString": "previousComponent.outputString"
+                                        }
+                                    }],
+                                    "parameter_mappings": {
+                                        "inputString": "previousComponent.outputString"
+                                    }
+                                }]
+                            },
+                            "id": 16,
+                            "output_components": [{
+                                "name": "full name",
+                                "function": {
+                                    "type": "Function",
+                                    "name": "concat",
+                                    "description": "concatenates two given string",
+                                    "id": 15,
+                                    "parameters": [
+                                        "firstString",
+                                        "secondString"
+                                    ],
+                                    "type": "Function"
+                                },
+                                "id": 17,
+                                "input_components": [{
+                                    "id": 15
+                                }, {
+                                    "id": 16
+                                }],
+                                "parameter_mappings": {
+                                    "firstString": "15.outputVariable",
+                                    "secondString": "16.outputVariable"
+                                }
+                            }],
+                            "parameter_mappings": {
+                                "transformationInputString": "familyName"
+                            }
+                        }],
+                        "parameter_mappings": {
+                            "firstString": "15.outputVariable",
+                            "secondString": "16.outputVariable"
+                        }
+                    }],
+                    "parameter_mappings": {
+                        "transformationInputString": "firstName"
+                    }
+                }, {
+                    "name": "prepare family name",
+                    "function": {
+                        "type": "Transformation",
+                        "name": "my transformation",
+                        "description": "transformation which makes use of three functions",
+                        "id": 14,
+                        "parameters": [
+                            "transformationInputString"
+                        ],
+                        "type": "Transformation",
+                        "components": [{
+                            "name": "my replace component",
+                            "function": {
+                                "type": "Function",
+                                "name": "replace",
+                                "description": "replace certain parts of a given string that matches a certain regex",
+                                "id": 11,
+                                "parameters": [
+                                    "inputString",
+                                    "regex",
+                                    "replaceString"
+                                ],
+                                "type": "Function"
+                            },
+                            "id": 12,
+                            "output_components": [{
+                                "name": "my trim component",
+                                "function": {
+                                    "type": "Function",
+                                    "name": "trim",
+                                    "description": "trims leading and trailing whitespaces from a given string",
+                                    "id": 13,
+                                    "parameters": [
+                                        "inputString"
+                                    ],
+                                    "type": "Function"
+                                },
+                                "id": 14,
+                                "input_components": [{
+                                    "id": 12
+                                }],
+                                "output_components": [{
+                                    "name": "my lower case component",
+                                    "function": {
+                                        "type": "Function",
+                                        "name": "lower_case",
+                                        "description": "lower cases all characters of a given string",
+                                        "id": 12,
+                                        "parameters": [
+                                            "inputString"
+                                        ],
+                                        "type": "Function"
+                                    },
+                                    "id": 13,
+                                    "input_components": [{
+                                        "id": 14
+                                    }],
+                                    "parameter_mappings": {
+                                        "inputString": "previousComponent.outputString"
+                                    }
+                                }],
+                                "parameter_mappings": {
+                                    "inputString": "previousComponent.outputString"
+                                }
+                            }],
+                            "parameter_mappings": {
+                                "inputString": "previousComponent.outputString",
+                                "regex": "\\.",
+                                "replaceString": ":"
+                            }
+                        }, {
+                            "name": "my lower case component",
+                            "function": {
+                                "type": "Function",
+                                "name": "lower_case",
+                                "description": "lower cases all characters of a given string",
+                                "id": 12,
+                                "parameters": [
+                                    "inputString"
+                                ],
+                                "type": "Function"
+                            },
+                            "id": 13,
+                            "input_components": [{
+                                "id": 14
+                            }],
+                            "parameter_mappings": {
+                                "inputString": "previousComponent.outputString"
+                            }
+                        }, {
+                            "name": "my trim component",
+                            "function": {
+                                "type": "Function",
+                                "name": "trim",
+                                "description": "trims leading and trailing whitespaces from a given string",
+                                "id": 13,
+                                "parameters": [
+                                    "inputString"
+                                ],
+                                "type": "Function"
+                            },
+                            "id": 14,
+                            "input_components": [{
+                                "id": 12
+                            }],
+                            "output_components": [{
+                                "name": "my lower case component",
+                                "function": {
+                                    "type": "Function",
+                                    "name": "lower_case",
+                                    "description": "lower cases all characters of a given string",
+                                    "id": 12,
+                                    "parameters": [
+                                        "inputString"
+                                    ],
+                                    "type": "Function"
+                                },
+                                "id": 13,
+                                "input_components": [{
+                                    "id": 14
+                                }],
+                                "parameter_mappings": {
+                                    "inputString": "previousComponent.outputString"
+                                }
+                            }],
+                            "parameter_mappings": {
+                                "inputString": "previousComponent.outputString"
+                            }
+                        }]
+                    },
+                    "id": 16,
+                    "output_components": [{
+                        "name": "full name",
+                        "function": {
+                            "type": "Function",
+                            "name": "concat",
+                            "description": "concatenates two given string",
+                            "id": 15,
+                            "parameters": [
+                                "firstString",
+                                "secondString"
+                            ],
+                            "type": "Function"
+                        },
+                        "id": 17,
+                        "input_components": [{
+                            "id": 15
+                        }, {
+                            "name": "prepare family name",
+                            "function": {
+                                "type": "Transformation",
+                                "name": "my transformation",
+                                "description": "transformation which makes use of three functions",
+                                "id": 14,
+                                "parameters": [
+                                    "transformationInputString"
+                                ],
+                                "type": "Transformation",
+                                "components": [{
+                                    "name": "my replace component",
+                                    "function": {
+                                        "type": "Function",
+                                        "name": "replace",
+                                        "description": "replace certain parts of a given string that matches a certain regex",
+                                        "id": 11,
+                                        "parameters": [
+                                            "inputString",
+                                            "regex",
+                                            "replaceString"
+                                        ],
+                                        "type": "Function"
+                                    },
+                                    "id": 12,
+                                    "output_components": [{
+                                        "name": "my trim component",
+                                        "function": {
+                                            "type": "Function",
+                                            "name": "trim",
+                                            "description": "trims leading and trailing whitespaces from a given string",
+                                            "id": 13,
+                                            "parameters": [
+                                                "inputString"
+                                            ],
+                                            "type": "Function"
+                                        },
+                                        "id": 14,
+                                        "input_components": [{
+                                            "id": 12
+                                        }],
+                                        "output_components": [{
+                                            "name": "my lower case component",
+                                            "function": {
+                                                "type": "Function",
+                                                "name": "lower_case",
+                                                "description": "lower cases all characters of a given string",
+                                                "id": 12,
+                                                "parameters": [
+                                                    "inputString"
+                                                ],
+                                                "type": "Function"
+                                            },
+                                            "id": 13,
+                                            "input_components": [{
+                                                "id": 14
+                                            }],
+                                            "parameter_mappings": {
+                                                "inputString": "previousComponent.outputString"
+                                            }
+                                        }],
+                                        "parameter_mappings": {
+                                            "inputString": "previousComponent.outputString"
+                                        }
+                                    }],
+                                    "parameter_mappings": {
+                                        "inputString": "previousComponent.outputString",
+                                        "regex": "\\.",
+                                        "replaceString": ":"
+                                    }
+                                }, {
+                                    "name": "my lower case component",
+                                    "function": {
+                                        "type": "Function",
+                                        "name": "lower_case",
+                                        "description": "lower cases all characters of a given string",
+                                        "id": 12,
+                                        "parameters": [
+                                            "inputString"
+                                        ],
+                                        "type": "Function"
+                                    },
+                                    "id": 13,
+                                    "input_components": [{
+                                        "id": 14
+                                    }],
+                                    "parameter_mappings": {
+                                        "inputString": "previousComponent.outputString"
+                                    }
+                                }, {
+                                    "name": "my trim component",
+                                    "function": {
+                                        "type": "Function",
+                                        "name": "trim",
+                                        "description": "trims leading and trailing whitespaces from a given string",
+                                        "id": 13,
+                                        "parameters": [
+                                            "inputString"
+                                        ],
+                                        "type": "Function"
+                                    },
+                                    "id": 14,
+                                    "input_components": [{
+                                        "id": 12
+                                    }],
+                                    "output_components": [{
+                                        "name": "my lower case component",
+                                        "function": {
+                                            "type": "Function",
+                                            "name": "lower_case",
+                                            "description": "lower cases all characters of a given string",
+                                            "id": 12,
+                                            "parameters": [
+                                                "inputString"
+                                            ],
+                                            "type": "Function"
+                                        },
+                                        "id": 13,
+                                        "input_components": [{
+                                            "id": 14
+                                        }],
+                                        "parameter_mappings": {
+                                            "inputString": "previousComponent.outputString"
+                                        }
+                                    }],
+                                    "parameter_mappings": {
+                                        "inputString": "previousComponent.outputString"
+                                    }
+                                }]
+                            },
+                            "id": 16,
+                            "output_components": [{
+                                "name": "full name",
+                                "function": {
+                                    "type": "Function",
+                                    "name": "concat",
+                                    "description": "concatenates two given string",
+                                    "id": 15,
+                                    "parameters": [
+                                        "firstString",
+                                        "secondString"
+                                    ],
+                                    "type": "Function"
+                                },
+                                "id": 17,
+                                "input_components": [{
+                                    "id": 15
+                                }, {
+                                    "id": 16
+                                }],
+                                "parameter_mappings": {
+                                    "firstString": "15.outputVariable",
+                                    "secondString": "16.outputVariable"
+                                }
+                            }],
+                            "parameter_mappings": {
+                                "transformationInputString": "familyName"
+                            }
+                        }],
+                        "parameter_mappings": {
+                            "firstString": "15.outputVariable",
+                            "secondString": "16.outputVariable"
+                        }
+                    }],
+                    "parameter_mappings": {
+                        "transformationInputString": "familyName"
+                    }
+                }],
+                "parameter_mappings": {
+                    "firstString": "15.outputVariable",
+                    "secondString": "16.outputVariable"
+                }
+            }, {
+                "name": "prepare first name",
+                "function": {
+                    "type": "Transformation",
+                    "name": "my transformation",
+                    "description": "transformation which makes use of three functions",
+                    "id": 14,
+                    "parameters": [
+                        "transformationInputString"
+                    ],
+                    "type": "Transformation",
+                    "components": [{
+                        "name": "my replace component",
+                        "function": {
+                            "type": "Function",
+                            "name": "replace",
+                            "description": "replace certain parts of a given string that matches a certain regex",
+                            "id": 11,
+                            "parameters": [
+                                "inputString",
+                                "regex",
+                                "replaceString"
+                            ],
+                            "type": "Function"
+                        },
+                        "id": 12,
+                        "output_components": [{
+                            "name": "my trim component",
+                            "function": {
+                                "type": "Function",
+                                "name": "trim",
+                                "description": "trims leading and trailing whitespaces from a given string",
+                                "id": 13,
+                                "parameters": [
+                                    "inputString"
+                                ],
+                                "type": "Function"
+                            },
+                            "id": 14,
+                            "input_components": [{
+                                "id": 12
+                            }],
+                            "output_components": [{
+                                "name": "my lower case component",
+                                "function": {
+                                    "type": "Function",
+                                    "name": "lower_case",
+                                    "description": "lower cases all characters of a given string",
+                                    "id": 12,
+                                    "parameters": [
+                                        "inputString"
+                                    ],
+                                    "type": "Function"
+                                },
+                                "id": 13,
+                                "input_components": [{
+                                    "id": 14
+                                }],
+                                "parameter_mappings": {
+                                    "inputString": "previousComponent.outputString"
+                                }
+                            }],
+                            "parameter_mappings": {
+                                "inputString": "previousComponent.outputString"
+                            }
+                        }],
+                        "parameter_mappings": {
+                            "inputString": "previousComponent.outputString",
+                            "regex": "\\.",
+                            "replaceString": ":"
+                        }
+                    }, {
+                        "name": "my lower case component",
+                        "function": {
+                            "type": "Function",
+                            "name": "lower_case",
+                            "description": "lower cases all characters of a given string",
+                            "id": 12,
+                            "parameters": [
+                                "inputString"
+                            ],
+                            "type": "Function"
+                        },
+                        "id": 13,
+                        "input_components": [{
+                            "id": 14
+                        }],
+                        "parameter_mappings": {
+                            "inputString": "previousComponent.outputString"
+                        }
+                    }, {
+                        "name": "my trim component",
+                        "function": {
+                            "type": "Function",
+                            "name": "trim",
+                            "description": "trims leading and trailing whitespaces from a given string",
+                            "id": 13,
+                            "parameters": [
+                                "inputString"
+                            ],
+                            "type": "Function"
+                        },
+                        "id": 14,
+                        "input_components": [{
+                            "id": 12
+                        }],
+                        "output_components": [{
+                            "name": "my lower case component",
+                            "function": {
+                                "type": "Function",
+                                "name": "lower_case",
+                                "description": "lower cases all characters of a given string",
+                                "id": 12,
+                                "parameters": [
+                                    "inputString"
+                                ],
+                                "type": "Function"
+                            },
+                            "id": 13,
+                            "input_components": [{
+                                "id": 14
+                            }],
+                            "parameter_mappings": {
+                                "inputString": "previousComponent.outputString"
+                            }
+                        }],
+                        "parameter_mappings": {
+                            "inputString": "previousComponent.outputString"
+                        }
+                    }]
+                },
+                "id": 15,
+                "output_components": [{
+                    "name": "full name",
+                    "function": {
+                        "type": "Function",
+                        "name": "concat",
+                        "description": "concatenates two given string",
+                        "id": 15,
+                        "parameters": [
+                            "firstString",
+                            "secondString"
+                        ],
+                        "type": "Function"
+                    },
+                    "id": 17,
+                    "input_components": [{
+                        "id": 15
+                    }, {
+                        "name": "prepare family name",
+                        "function": {
+                            "type": "Transformation",
+                            "name": "my transformation",
+                            "description": "transformation which makes use of three functions",
+                            "id": 14,
+                            "parameters": [
+                                "transformationInputString"
+                            ],
+                            "type": "Transformation",
+                            "components": [{
+                                "name": "my replace component",
+                                "function": {
+                                    "type": "Function",
+                                    "name": "replace",
+                                    "description": "replace certain parts of a given string that matches a certain regex",
+                                    "id": 11,
+                                    "parameters": [
+                                        "inputString",
+                                        "regex",
+                                        "replaceString"
+                                    ],
+                                    "type": "Function"
+                                },
+                                "id": 12,
+                                "output_components": [{
+                                    "name": "my trim component",
+                                    "function": {
+                                        "type": "Function",
+                                        "name": "trim",
+                                        "description": "trims leading and trailing whitespaces from a given string",
+                                        "id": 13,
+                                        "parameters": [
+                                            "inputString"
+                                        ],
+                                        "type": "Function"
+                                    },
+                                    "id": 14,
+                                    "input_components": [{
+                                        "id": 12
+                                    }],
+                                    "output_components": [{
+                                        "name": "my lower case component",
+                                        "function": {
+                                            "type": "Function",
+                                            "name": "lower_case",
+                                            "description": "lower cases all characters of a given string",
+                                            "id": 12,
+                                            "parameters": [
+                                                "inputString"
+                                            ],
+                                            "type": "Function"
+                                        },
+                                        "id": 13,
+                                        "input_components": [{
+                                            "id": 14
+                                        }],
+                                        "parameter_mappings": {
+                                            "inputString": "previousComponent.outputString"
+                                        }
+                                    }],
+                                    "parameter_mappings": {
+                                        "inputString": "previousComponent.outputString"
+                                    }
+                                }],
+                                "parameter_mappings": {
+                                    "inputString": "previousComponent.outputString",
+                                    "regex": "\\.",
+                                    "replaceString": ":"
+                                }
+                            }, {
+                                "name": "my lower case component",
+                                "function": {
+                                    "type": "Function",
+                                    "name": "lower_case",
+                                    "description": "lower cases all characters of a given string",
+                                    "id": 12,
+                                    "parameters": [
+                                        "inputString"
+                                    ],
+                                    "type": "Function"
+                                },
+                                "id": 13,
+                                "input_components": [{
+                                    "id": 14
+                                }],
+                                "parameter_mappings": {
+                                    "inputString": "previousComponent.outputString"
+                                }
+                            }, {
+                                "name": "my trim component",
+                                "function": {
+                                    "type": "Function",
+                                    "name": "trim",
+                                    "description": "trims leading and trailing whitespaces from a given string",
+                                    "id": 13,
+                                    "parameters": [
+                                        "inputString"
+                                    ],
+                                    "type": "Function"
+                                },
+                                "id": 14,
+                                "input_components": [{
+                                    "id": 12
+                                }],
+                                "output_components": [{
+                                    "name": "my lower case component",
+                                    "function": {
+                                        "type": "Function",
+                                        "name": "lower_case",
+                                        "description": "lower cases all characters of a given string",
+                                        "id": 12,
+                                        "parameters": [
+                                            "inputString"
+                                        ],
+                                        "type": "Function"
+                                    },
+                                    "id": 13,
+                                    "input_components": [{
+                                        "id": 14
+                                    }],
+                                    "parameter_mappings": {
+                                        "inputString": "previousComponent.outputString"
+                                    }
+                                }],
+                                "parameter_mappings": {
+                                    "inputString": "previousComponent.outputString"
+                                }
+                            }]
+                        },
+                        "id": 16,
+                        "output_components": [{
+                            "name": "full name",
+                            "function": {
+                                "type": "Function",
+                                "name": "concat",
+                                "description": "concatenates two given string",
+                                "id": 15,
+                                "parameters": [
+                                    "firstString",
+                                    "secondString"
+                                ],
+                                "type": "Function"
+                            },
+                            "id": 17,
+                            "input_components": [{
+                                "id": 15
+                            }, {
+                                "id": 16
+                            }],
+                            "parameter_mappings": {
+                                "firstString": "15.outputVariable",
+                                "secondString": "16.outputVariable"
+                            }
+                        }],
+                        "parameter_mappings": {
+                            "transformationInputString": "familyName"
+                        }
+                    }],
+                    "parameter_mappings": {
+                        "firstString": "15.outputVariable",
+                        "secondString": "16.outputVariable"
+                    }
+                }],
+                "parameter_mappings": {
+                    "transformationInputString": "firstName"
+                }
+            }, {
+                "name": "prepare family name",
+                "function": {
+                    "type": "Transformation",
+                    "name": "my transformation",
+                    "description": "transformation which makes use of three functions",
+                    "id": 14,
+                    "parameters": [
+                        "transformationInputString"
+                    ],
+                    "type": "Transformation",
+                    "components": [{
+                        "name": "my replace component",
+                        "function": {
+                            "type": "Function",
+                            "name": "replace",
+                            "description": "replace certain parts of a given string that matches a certain regex",
+                            "id": 11,
+                            "parameters": [
+                                "inputString",
+                                "regex",
+                                "replaceString"
+                            ],
+                            "type": "Function"
+                        },
+                        "id": 12,
+                        "output_components": [{
+                            "name": "my trim component",
+                            "function": {
+                                "type": "Function",
+                                "name": "trim",
+                                "description": "trims leading and trailing whitespaces from a given string",
+                                "id": 13,
+                                "parameters": [
+                                    "inputString"
+                                ],
+                                "type": "Function"
+                            },
+                            "id": 14,
+                            "input_components": [{
+                                "id": 12
+                            }],
+                            "output_components": [{
+                                "name": "my lower case component",
+                                "function": {
+                                    "type": "Function",
+                                    "name": "lower_case",
+                                    "description": "lower cases all characters of a given string",
+                                    "id": 12,
+                                    "parameters": [
+                                        "inputString"
+                                    ],
+                                    "type": "Function"
+                                },
+                                "id": 13,
+                                "input_components": [{
+                                    "id": 14
+                                }],
+                                "parameter_mappings": {
+                                    "inputString": "previousComponent.outputString"
+                                }
+                            }],
+                            "parameter_mappings": {
+                                "inputString": "previousComponent.outputString"
+                            }
+                        }],
+                        "parameter_mappings": {
+                            "inputString": "previousComponent.outputString",
+                            "regex": "\\.",
+                            "replaceString": ":"
+                        }
+                    }, {
+                        "name": "my lower case component",
+                        "function": {
+                            "type": "Function",
+                            "name": "lower_case",
+                            "description": "lower cases all characters of a given string",
+                            "id": 12,
+                            "parameters": [
+                                "inputString"
+                            ],
+                            "type": "Function"
+                        },
+                        "id": 13,
+                        "input_components": [{
+                            "id": 14
+                        }],
+                        "parameter_mappings": {
+                            "inputString": "previousComponent.outputString"
+                        }
+                    }, {
+                        "name": "my trim component",
+                        "function": {
+                            "type": "Function",
+                            "name": "trim",
+                            "description": "trims leading and trailing whitespaces from a given string",
+                            "id": 13,
+                            "parameters": [
+                                "inputString"
+                            ],
+                            "type": "Function"
+                        },
+                        "id": 14,
+                        "input_components": [{
+                            "id": 12
+                        }],
+                        "output_components": [{
+                            "name": "my lower case component",
+                            "function": {
+                                "type": "Function",
+                                "name": "lower_case",
+                                "description": "lower cases all characters of a given string",
+                                "id": 12,
+                                "parameters": [
+                                    "inputString"
+                                ],
+                                "type": "Function"
+                            },
+                            "id": 13,
+                            "input_components": [{
+                                "id": 14
+                            }],
+                            "parameter_mappings": {
+                                "inputString": "previousComponent.outputString"
+                            }
+                        }],
+                        "parameter_mappings": {
+                            "inputString": "previousComponent.outputString"
+                        }
+                    }]
+                },
+                "id": 16,
+                "output_components": [{
+                    "name": "full name",
+                    "function": {
+                        "type": "Function",
+                        "name": "concat",
+                        "description": "concatenates two given string",
+                        "id": 15,
+                        "parameters": [
+                            "firstString",
+                            "secondString"
+                        ],
+                        "type": "Function"
+                    },
+                    "id": 17,
+                    "input_components": [{
+                        "id": 15
+                    }, {
+                        "name": "prepare family name",
+                        "function": {
+                            "type": "Transformation",
+                            "name": "my transformation",
+                            "description": "transformation which makes use of three functions",
+                            "id": 14,
+                            "parameters": [
+                                "transformationInputString"
+                            ],
+                            "type": "Transformation",
+                            "components": [{
+                                "name": "my replace component",
+                                "function": {
+                                    "type": "Function",
+                                    "name": "replace",
+                                    "description": "replace certain parts of a given string that matches a certain regex",
+                                    "id": 11,
+                                    "parameters": [
+                                        "inputString",
+                                        "regex",
+                                        "replaceString"
+                                    ],
+                                    "type": "Function"
+                                },
+                                "id": 12,
+                                "output_components": [{
+                                    "name": "my trim component",
+                                    "function": {
+                                        "type": "Function",
+                                        "name": "trim",
+                                        "description": "trims leading and trailing whitespaces from a given string",
+                                        "id": 13,
+                                        "parameters": [
+                                            "inputString"
+                                        ],
+                                        "type": "Function"
+                                    },
+                                    "id": 14,
+                                    "input_components": [{
+                                        "id": 12
+                                    }],
+                                    "output_components": [{
+                                        "name": "my lower case component",
+                                        "function": {
+                                            "type": "Function",
+                                            "name": "lower_case",
+                                            "description": "lower cases all characters of a given string",
+                                            "id": 12,
+                                            "parameters": [
+                                                "inputString"
+                                            ],
+                                            "type": "Function"
+                                        },
+                                        "id": 13,
+                                        "input_components": [{
+                                            "id": 14
+                                        }],
+                                        "parameter_mappings": {
+                                            "inputString": "previousComponent.outputString"
+                                        }
+                                    }],
+                                    "parameter_mappings": {
+                                        "inputString": "previousComponent.outputString"
+                                    }
+                                }],
+                                "parameter_mappings": {
+                                    "inputString": "previousComponent.outputString",
+                                    "regex": "\\.",
+                                    "replaceString": ":"
+                                }
+                            }, {
+                                "name": "my lower case component",
+                                "function": {
+                                    "type": "Function",
+                                    "name": "lower_case",
+                                    "description": "lower cases all characters of a given string",
+                                    "id": 12,
+                                    "parameters": [
+                                        "inputString"
+                                    ],
+                                    "type": "Function"
+                                },
+                                "id": 13,
+                                "input_components": [{
+                                    "id": 14
+                                }],
+                                "parameter_mappings": {
+                                    "inputString": "previousComponent.outputString"
+                                }
+                            }, {
+                                "name": "my trim component",
+                                "function": {
+                                    "type": "Function",
+                                    "name": "trim",
+                                    "description": "trims leading and trailing whitespaces from a given string",
+                                    "id": 13,
+                                    "parameters": [
+                                        "inputString"
+                                    ],
+                                    "type": "Function"
+                                },
+                                "id": 14,
+                                "input_components": [{
+                                    "id": 12
+                                }],
+                                "output_components": [{
+                                    "name": "my lower case component",
+                                    "function": {
+                                        "type": "Function",
+                                        "name": "lower_case",
+                                        "description": "lower cases all characters of a given string",
+                                        "id": 12,
+                                        "parameters": [
+                                            "inputString"
+                                        ],
+                                        "type": "Function"
+                                    },
+                                    "id": 13,
+                                    "input_components": [{
+                                        "id": 14
+                                    }],
+                                    "parameter_mappings": {
+                                        "inputString": "previousComponent.outputString"
+                                    }
+                                }],
+                                "parameter_mappings": {
+                                    "inputString": "previousComponent.outputString"
+                                }
+                            }]
+                        },
+                        "id": 16,
+                        "output_components": [{
+                            "name": "full name",
+                            "function": {
+                                "type": "Function",
+                                "name": "concat",
+                                "description": "concatenates two given string",
+                                "id": 15,
+                                "parameters": [
+                                    "firstString",
+                                    "secondString"
+                                ],
+                                "type": "Function"
+                            },
+                            "id": 17,
+                            "input_components": [{
+                                "id": 15
+                            }, {
+                                "id": 16
+                            }],
+                            "parameter_mappings": {
+                                "firstString": "15.outputVariable",
+                                "secondString": "16.outputVariable"
+                            }
+                        }],
+                        "parameter_mappings": {
+                            "transformationInputString": "familyName"
+                        }
+                    }],
+                    "parameter_mappings": {
+                        "firstString": "15.outputVariable",
+                        "secondString": "16.outputVariable"
+                    }
+                }],
+                "parameter_mappings": {
+                    "transformationInputString": "familyName"
+                }
+            }]
+        },
+        "id": 18,
+        "parameter_mappings": {
+            "firstName": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/firstName",
+            "familyName": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/familyName",
+            "transformationOutputVariable": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/name"
+        }
+    },
+    "id": 14,
+    "input_attribute_paths": [{
+        "type": "MappingAttributePathInstance",
+        "name": "first name mapping attribute path instance",
+        "id": 8,
+        "type": "MappingAttributePathInstance",
+        "attribute_path": {
+            "id": 8,
+            "attributes": [{
+                "name": "creator",
+                "uri": "http://purl.org/dc/terms/creator",
+                "id": 9
+            }, {
+                "name": "firstName",
+                "uri": "http://xmlns.com/foaf/0.1/firstName",
+                "id": 10
+            }]
+        }
+    }, {
+        "type": "MappingAttributePathInstance",
+        "name": "family name mapping attribute path instance",
+        "id": 9,
+        "type": "MappingAttributePathInstance",
+        "attribute_path": {
+            "id": 9,
+            "attributes": [{
+                "name": "creator",
+                "uri": "http://purl.org/dc/terms/creator",
+                "id": 9
+            }, {
+                "name": "familyName",
+                "uri": "http://xmlns.com/foaf/0.1/familyName",
+                "id": 11
+            }]
+        }
+    }],
+    "output_attribute_path": {
+        "type": "MappingAttributePathInstance",
+        "name": "output mapping attribute path instance",
+        "id": 10,
+        "type": "MappingAttributePathInstance",
+        "attribute_path": {
+            "id": 10,
+            "attributes": [{
+                "name": "creator",
+                "uri": "http://purl.org/dc/terms/creator",
+                "id": 9
+            }, {
+                "name": "name",
+                "uri": "http://xmlns.com/foaf/0.1/name",
+                "id": 12
+            }]
+        }
+    }
+}
