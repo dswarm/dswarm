@@ -213,6 +213,18 @@ public class TransformationFlowTest extends GuicedTest {
 
 		assertEquals(expected, actual);
 	}
+	
+	@Test
+	public void testMorphRecursiveToEndDemo() throws Exception {
+
+		final String expected = DMPPersistenceUtil.getResourceAsString("complex-result.json");
+
+		final TransformationFlow flow = TransformationFlow.fromFile("complex-metamorph-recursive.xml");
+
+		final String actual = flow.applyDemo();
+
+		assertEquals(expected, actual);
+	}
 
 	@Test
 	public void testEndToEndByRecordStringExampleDemo() throws Exception {

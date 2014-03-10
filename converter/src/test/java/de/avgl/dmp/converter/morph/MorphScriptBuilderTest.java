@@ -39,7 +39,7 @@ public class MorphScriptBuilderTest extends GuicedTest {
 		
 		final ObjectMapper objectMapper = injector.getInstance(ObjectMapper.class);
 		
-		final String mappingJSONString = DMPPersistenceUtil.getResourceAsString("complete.complex.mapping.as.in.intranet.json");
+		final String mappingJSONString = DMPPersistenceUtil.getResourceAsString("complex-transformation.json");
 		//final String mappingJSONString = DMPPersistenceUtil.getResourceAsString("complex.mapping.as.in.intranet.json"); // does not work, since @IDRef was used to reference input/output components -> object mapper seems to fail reconstructing the full objects here
 		
 		

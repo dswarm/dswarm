@@ -11,6 +11,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -36,6 +37,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
+import scala.collection.mutable.LinkedHashSet;
+
 import com.google.common.base.Joiner;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -51,6 +54,7 @@ import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.Mapping;
 import de.avgl.dmp.persistence.model.job.Task;
 import de.avgl.dmp.persistence.model.job.Transformation;
+import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.MappingAttributePathInstance;
 
 /**
@@ -306,10 +310,12 @@ public class MorphScriptBuilder {
 			LOG.debug("transformation component for mapping '" + mapping.getId() + "' was empty");
 			return;
 		}
-		
+	
 		// get all input attribute paths and create datas for them
 		
 		Set<MappingAttributePathInstance> inputAttributePathInstances = mapping.getInputAttributePaths();
+		
+		List<String> inputAttributePaths = new LinkedList<String>();
 		
 		for (Iterator<MappingAttributePathInstance> iterator = inputAttributePathInstances.iterator(); iterator
 				.hasNext();) {
@@ -319,26 +325,24 @@ public class MorphScriptBuilder {
 			
 			String inputAttributePathString = mappingAttributePathInstance.getAttributePath().toAttributePath();
 			
-			HashBiMap<String, String> parameterMappingsBiMap = HashBiMap.create(transformationComponent.getParameterMappings());
-			
 			final Element data = doc.createElement("data");
 			data.setAttribute("source", inputAttributePathString);
-			data.setAttribute("name", parameterMappingsBiMap.inverse().get(inputAttributePathString)); 
+			data.setAttribute("name", "@" + getKeyParameterMapping(inputAttributePathString, transformationComponent));
+			
+			// TODO: filter inputAttributePath in data section
+			
+			inputAttributePaths.add(inputAttributePathString);
 
 			rules.appendChild(data);
 		}
 		
-		// get the output attribute path and create a data for it (we assume there's only one)
 		final String outputAttributePath = mapping.getOutputAttributePath().getAttributePath().toAttributePath();
-		final Element data_MappingOutputAP2TransfomationComponentOutputVariable = doc.createElement("data");
-		data_MappingOutputAP2TransfomationComponentOutputVariable.setAttribute("name", outputAttributePath);
-		data_MappingOutputAP2TransfomationComponentOutputVariable.setAttribute("source", "transformationOutputVariable"); // is this qualified enough?? probably needs prefix
-		rules.appendChild(data_MappingOutputAP2TransfomationComponentOutputVariable);
 		
-		// data.setAttribute("name", "record." + transformation.getTarget().getName()); // where was this from?
+		final Element dataOutput = doc.createElement("data");
+		dataOutput.setAttribute("source", "@" + getKeyParameterMapping(outputAttributePath, transformationComponent));
+		dataOutput.setAttribute("name", outputAttributePath);
+		rules.appendChild(dataOutput);		
 		
-		
-
 		final Function transformationFunction = transformationComponent.getFunction();
 		
 		if(transformationFunction == null) {
@@ -347,8 +351,6 @@ public class MorphScriptBuilder {
 			return;
 		}
 		
-		
-
 		
 		switch (transformationFunction.getFunctionType()) {
 
@@ -373,68 +375,135 @@ public class MorphScriptBuilder {
 				LOG.debug("transformation component's transformation's components for mapping '" + mapping.getId() + "' are empty");
 				return;
 			}
-
-			// start the traversal: get the last component as a root (the one not having output components itself)
 			
-			Component rootComponent = null;
-
+				
 			for (final Component component : components) {
 
-				// TODO: this is for the processing algorithm later
-				// if (component.getParameterMappings().containsValue(inputVariable)) {
-				//
-				// sourceComponent = component;
-				// }
+				String[] inputStrings = {};
 
-				if (component.getOutputComponents() == null) {
+				Map<String, String> componentParameterMapping = component.getParameterMappings();
 
-					rootComponent = component;
+				if (componentParameterMapping != null) {
 
-					break;
+					for (Entry<String, String> parameterMapping : componentParameterMapping.entrySet()) {
+
+						if (parameterMapping.getKey().equals("inputString")) {
+
+							inputStrings = parameterMapping.getValue().split(",");
+
+							break;
+						}
+					}
 				}
 
-				if (component.getOutputComponents().isEmpty()) {
-
-					rootComponent = component;
-
-					break;
+				if (inputStrings.length > 0) {
+					
+					if (inputStrings.length == 1 && component.getInputComponents() == null) {
+						
+						final Element data = doc.createElement("data");
+						
+						data.setAttribute("source", "@" + inputStrings[0]);
+						
+						data.setAttribute("name", "@component" + component.getId());
+						
+						final Element comp = doc.createElement(component.getFunction().getName());
+						
+						createParameters(component.getParameterMappings(), comp);
+						
+						data.appendChild(comp);
+						
+						rules.appendChild(data);			
+					}
+					
+//					if (inputStrings.length + component.getInputComponents().size() > 1) {
+//						
+//						final Element collection = doc.createElement(component.getFunction().getName());
+//						
+//						// TODO: be aware that parameter mapping include inputString which souldn't be an attribute in collection tag
+//						createParameters(component.getParameterMappings(), collection);
+//						
+//						collection.setAttribute("name", "@component" + component.getId());
+//						
+//						for (int i = 0; i >= inputStrings.length; i++) {
+//							
+//							final Element collectionData = doc.createElement("data");
+//							
+//							collectionData.setAttribute("source", "@" + inputStrings[i]);
+//							
+//							collection.appendChild(collectionData);
+//						}
+//						
+//					} 
+		
 				}
-			}
-
-			Component processingComponent = rootComponent;
-			
-			if(processingComponent == null) {
 				
-				LOG.debug("could find root component for transformation of mapping '" + mapping.getId() + "'");
-				return;
-			} else {
-				LOG.debug("Found root transformation component with ID '" + processingComponent.getId() + "'" + "(" + processingComponent.getName() + ")");
-			}
+				if (component.getOutputComponents() == null && component.getInputComponents() != null) {
+					
+					if (component.getInputComponents().size() > 1) {
+						
+						String collectionNameAttribute = null;
+						
+						collectionNameAttribute = getKeyParameterMapping(outputAttributePath, transformationComponent);
+						
+						if(collectionNameAttribute == null) {
+							
+							LOG.debug("attribute name for collection tag couldn't be resolved for outputAttributePath: '" + outputAttributePath + "'");
+						}
+						
+						final Element collection = createCollectionTag(component, collectionNameAttribute);
+						
+						rules.appendChild(collection);
+						
+					} 
+					else if (component.getInputComponents().size() == 1) {
+						
+						String dataNameAttribute = null;
+						
+						dataNameAttribute = getKeyParameterMapping(outputAttributePath, transformationComponent);
+						
+						if(dataNameAttribute == null) {
+							
+							LOG.debug("attribute name for data tag couldn't be resolved for outputAttributePath: '" + outputAttributePath + "'");
+						}
+						
+						final Element data = createDataTag(component, dataNameAttribute);
+						
+						rules.appendChild(data);			
+						
+					}
+				}
 				
-
-			if (null == processingComponent.getFunction()) {
-				LOG.debug("could not find function for component '" + processingComponent.getId() + "'");
-				return;
-			} 
-
-			String functionName = "unnamed_function";
-			functionName = processingComponent.getFunction().getName();
-			functionName = StringUtils.replace(functionName," ","-");
-			
-			LOG.debug("Found function with ID '" + processingComponent.getFunction().getId() + "'" + "(" + functionName + " (space replaced by _ ) )");
-
-			final Element data = doc.createElement("data");
-			final Element function = doc.createElement(functionName);
-
-			createParameters(processingComponent.getParameterMappings(), function);
-			
-			data.appendChild(function);
-
-			createTransformationsForComponent(processingComponent, rules);
-
+				if (component.getOutputComponents() != null && component.getInputComponents() != null) {
+					
+					if (component.getInputComponents().size() > 1) {
+						
+						String collectionNameAttribute = null;
+						
+						collectionNameAttribute = getKeyParameterMapping(outputAttributePath, transformationComponent);
+						
+						if(collectionNameAttribute == null) {
+							
+							LOG.debug("attribute name for collection tag couldn't be resolved for outputAttributePath: '" + outputAttributePath + "'");
+						}
+						
+						final Element collection = createCollectionTag(component, collectionNameAttribute);
+						
+						rules.appendChild(collection);
+						
+					}
+					else if (component.getInputComponents().size() == 1) {
+						
+						final Element data = createDataTag(component, "component" + component.getId());
+						
+						rules.appendChild(data);			
+						
+					}
+				}
+					
+			}
 
 			break;
-	}
+		}
 
 	}
 
@@ -691,6 +760,9 @@ public class MorphScriptBuilder {
 			for (final Entry<String, String> parameterMapping : parameterMappings.entrySet()) {
 
 				if (parameterMapping.getKey() != null) {
+					
+					if (parameterMapping.getKey().equals("inputString"))
+						continue;
 
 					if (parameterMapping.getValue() != null) {
 
@@ -716,7 +788,61 @@ public class MorphScriptBuilder {
 			// }
 		}
 	}
-
+	
+	private Element createDataTag(final Component singleInputComponent, final String dataNameAttribute) {
+		
+		final Element data = doc.createElement("data");
+		
+		data.setAttribute("source", "@component" + singleInputComponent.getInputComponents().iterator().next().getId());
+		
+		data.setAttribute("name", "@" + dataNameAttribute);
+		
+		final Element comp = doc.createElement(singleInputComponent.getFunction().getName());
+		
+		createParameters(singleInputComponent.getParameterMappings(), comp);
+		
+		data.appendChild(comp);
+		
+		return data;
+	}
+	
+	private Element createCollectionTag(final Component multipleInputComponent, final String collectionNameAttribute) {
+		
+		final Element collection = doc.createElement(multipleInputComponent.getFunction().getName());
+		
+		createParameters(multipleInputComponent.getParameterMappings(), collection);
+		
+		collection.setAttribute("name", "@" + collectionNameAttribute);
+		
+		for (Component inputComponent : multipleInputComponent.getInputComponents()) {
+			
+			final Element collectionData = doc.createElement("data");
+			
+			collectionData.setAttribute("source", "@component" + inputComponent.getId());
+			
+			collection.appendChild(collectionData);
+		}
+		
+		return collection;
+	}
+	
+	private String getKeyParameterMapping(String attributePathString, Component transformationComponent) {
+		
+		String attributePathKey = null;
+		
+		Map<String, String> transformationParameterMapping = transformationComponent.getParameterMappings();
+		
+		for (Entry<String, String> parameterMapping : transformationParameterMapping.entrySet()) {
+			
+			if (parameterMapping.getValue().equals(attributePathString)) {
+				
+				attributePathKey = parameterMapping.getKey();
+			}
+		}
+		
+		return attributePathKey;
+	}
+	
 	// temp until complex task test is complete
 	public Object apply(Mapping mapping) throws DMPConverterException {
 		final DocumentBuilder docBuilder;
