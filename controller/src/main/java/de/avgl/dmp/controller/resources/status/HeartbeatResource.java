@@ -1,4 +1,4 @@
-package de.avgl.dmp.controller.resources;
+package de.avgl.dmp.controller.resources.status;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -10,6 +10,7 @@ import com.google.common.net.HttpHeaders;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
+
 
 @RequestScoped
 @Api(value = "/_ping", description = "Ping the server for a heartbeat.")

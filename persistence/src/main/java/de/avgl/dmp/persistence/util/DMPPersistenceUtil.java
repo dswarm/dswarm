@@ -34,7 +34,7 @@ import de.avgl.dmp.persistence.model.schema.utils.SchemaUtils;
 
 /**
  * A utility class for the persistence module.
- * 
+ *
  * @author tgaengler
  * @author phorn
  */
@@ -84,14 +84,14 @@ public final class DMPPersistenceUtil {
 	@SuppressWarnings("StaticNonFinalField")
 	public static transient Injector						injector;
 
-	private static final long								LOWER_RANGE	= Long.valueOf("-9223372036854775808").longValue(); // assign
-																															// lower
-																															// range
-																															// value
-	private static final long								UPPER_RANGE	= -1;												// assign
-																															// upper
-																															// range
-																															// value
+	private static final long								LOWER_RANGE	= -9223372036854775808L;	// assign
+																									// lower
+																									// range
+																									// value
+	private static final long								UPPER_RANGE	= -1;						// assign
+																									// upper
+																									// range
+																									// value
 	private static final Random								random		= new SecureRandom();
 
 	static {
@@ -120,7 +120,7 @@ public final class DMPPersistenceUtil {
 
 	/**
 	 * Retrieves a resource by the give path and converts its content to a string.
-	 * 
+	 *
 	 * @param resource a resource path
 	 * @return a string representation fo the content of the resource
 	 * @throws IOException
@@ -132,7 +132,7 @@ public final class DMPPersistenceUtil {
 
 	/**
 	 * Gets a JSON object from the given string.
-	 * 
+	 *
 	 * @param jsonString the string that holds a serialised JSON object.
 	 * @return the deserialised JSON object
 	 * @throws DMPException
@@ -149,7 +149,7 @@ public final class DMPPersistenceUtil {
 
 	/**
 	 * Gets a JSON array from the given string.
-	 * 
+	 *
 	 * @param jsonString the string that holds a serialised JSON array.
 	 * @return the deserialised JSON array
 	 * @throws DMPException
@@ -166,7 +166,7 @@ public final class DMPPersistenceUtil {
 
 	/**
 	 * Gets the object mapper that can be utilised to de-/serialise JSON nodes.
-	 * 
+	 *
 	 * @return the object mapper that can be utilised to de-/serialise JSON nodes
 	 */
 	public static ObjectMapper getJSONObjectMapper() {
@@ -176,7 +176,7 @@ public final class DMPPersistenceUtil {
 
 	/**
 	 * Gets the JSON node factory that can be utilised to create new JSON nodes (objects or arrays)
-	 * 
+	 *
 	 * @return JSON node factory that can be utilised to create new JSON nodes (objects or arrays)
 	 */
 	public static JsonNodeFactory getJSONFactory() {
@@ -256,7 +256,7 @@ public final class DMPPersistenceUtil {
 
 	/**
 	 * Gets the injector for dependency injection.
-	 * 
+	 *
 	 * @return the injector for dependency injection
 	 * @throws DMPException
 	 */

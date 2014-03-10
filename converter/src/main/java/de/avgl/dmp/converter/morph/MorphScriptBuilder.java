@@ -10,6 +10,8 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -29,12 +31,18 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
+import scala.collection.mutable.LinkedHashSet;
+
 import com.google.common.base.Joiner;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.Lists;
 import com.google.common.io.InputSupplier;
 import com.google.common.io.Resources;
@@ -46,6 +54,8 @@ import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.Mapping;
 import de.avgl.dmp.persistence.model.job.Task;
 import de.avgl.dmp.persistence.model.job.Transformation;
+import de.avgl.dmp.persistence.model.schema.Attribute;
+import de.avgl.dmp.persistence.model.schema.MappingAttributePathInstance;
 
 /**
  * Creates a metamorph script from a given {@link Task}.
@@ -273,6 +283,7 @@ public class MorphScriptBuilder {
 			// vars.appendChild(var);
 			// }
 
+			// TODO: obsolete, since we expect mappings to produce multiple datas from now on:
 			final Element data = createTransformation(mapping);
 
 			rules.appendChild(data);
@@ -281,6 +292,320 @@ public class MorphScriptBuilder {
 		metaName.setTextContent(Joiner.on(", ").join(metas));
 
 		return this;
+	}
+
+	private void createTransformations(Element rules, Mapping mapping) {
+		
+		// add all transformation rules (datas) to the rules that are required to implement the mapping
+		// this algorithm starts at the output-side (since thsi way we can traverse a tree from its root)
+		// (this is only possible as long as we allow only 1 output attribute path for mappings and 1 output component for transformations)
+		
+		
+		// first handle the parameter mapping from the attribute paths of the mapping to the transformation component
+
+		final Component transformationComponent = mapping.getTransformation();
+		
+		if(transformationComponent == null) {
+			
+			LOG.debug("transformation component for mapping '" + mapping.getId() + "' was empty");
+			return;
+		}
+	
+		// get all input attribute paths and create datas for them
+		
+		Set<MappingAttributePathInstance> inputAttributePathInstances = mapping.getInputAttributePaths();
+		
+		List<String> inputAttributePaths = new LinkedList<String>();
+		
+		for (Iterator<MappingAttributePathInstance> iterator = inputAttributePathInstances.iterator(); iterator
+				.hasNext();) {
+			
+			MappingAttributePathInstance mappingAttributePathInstance = (MappingAttributePathInstance) iterator
+					.next();
+			
+			String inputAttributePathString = mappingAttributePathInstance.getAttributePath().toAttributePath();
+			
+			final Element data = doc.createElement("data");
+			data.setAttribute("source", inputAttributePathString);
+			data.setAttribute("name", "@" + getKeyParameterMapping(inputAttributePathString, transformationComponent));
+			
+			// TODO: filter inputAttributePath in data section
+			
+			inputAttributePaths.add(inputAttributePathString);
+
+			rules.appendChild(data);
+		}
+		
+		final String outputAttributePath = mapping.getOutputAttributePath().getAttributePath().toAttributePath();
+		
+		final Element dataOutput = doc.createElement("data");
+		dataOutput.setAttribute("source", "@" + getKeyParameterMapping(outputAttributePath, transformationComponent));
+		dataOutput.setAttribute("name", outputAttributePath);
+		rules.appendChild(dataOutput);		
+		
+		final Function transformationFunction = transformationComponent.getFunction();
+		
+		if(transformationFunction == null) {
+			
+			LOG.debug("transformation component's function for mapping '" + mapping.getId() + "' was empty");
+			return;
+		}
+		
+		
+		switch (transformationFunction.getFunctionType()) {
+
+		case Function:
+
+			// TODO: process simple function
+			
+			LOG.error("transformation component's function for mapping '" + mapping.getId() + "' was a real FUNCTION. this is not supported right now.");
+
+			break;
+			
+		case Transformation:
+
+			// TODO: process simple input -> output mapping (?)
+
+			final Transformation transformation = (Transformation) transformationFunction;
+	
+			final Set<Component> components = transformation.getComponents();
+			
+			if(components == null) {
+				
+				LOG.debug("transformation component's transformation's components for mapping '" + mapping.getId() + "' are empty");
+				return;
+			}
+			
+				
+			for (final Component component : components) {
+
+				String[] inputStrings = {};
+
+				Map<String, String> componentParameterMapping = component.getParameterMappings();
+
+				if (componentParameterMapping != null) {
+
+					for (Entry<String, String> parameterMapping : componentParameterMapping.entrySet()) {
+
+						if (parameterMapping.getKey().equals("inputString")) {
+
+							inputStrings = parameterMapping.getValue().split(",");
+
+							break;
+						}
+					}
+				}
+
+				if (inputStrings.length > 0) {
+					
+					if (inputStrings.length == 1 && component.getInputComponents() == null) {
+						
+						final Element data = doc.createElement("data");
+						
+						data.setAttribute("source", "@" + inputStrings[0]);
+						
+						data.setAttribute("name", "@component" + component.getId());
+						
+						final Element comp = doc.createElement(component.getFunction().getName());
+						
+						createParameters(component.getParameterMappings(), comp);
+						
+						data.appendChild(comp);
+						
+						rules.appendChild(data);			
+					}
+					
+//					if (inputStrings.length + component.getInputComponents().size() > 1) {
+//						
+//						final Element collection = doc.createElement(component.getFunction().getName());
+//						
+//						// TODO: be aware that parameter mapping include inputString which souldn't be an attribute in collection tag
+//						createParameters(component.getParameterMappings(), collection);
+//						
+//						collection.setAttribute("name", "@component" + component.getId());
+//						
+//						for (int i = 0; i >= inputStrings.length; i++) {
+//							
+//							final Element collectionData = doc.createElement("data");
+//							
+//							collectionData.setAttribute("source", "@" + inputStrings[i]);
+//							
+//							collection.appendChild(collectionData);
+//						}
+//						
+//					} 
+		
+				}
+				
+				if (component.getOutputComponents() == null && component.getInputComponents() != null) {
+					
+					if (component.getInputComponents().size() > 1) {
+						
+						String collectionNameAttribute = null;
+						
+						collectionNameAttribute = getKeyParameterMapping(outputAttributePath, transformationComponent);
+						
+						if(collectionNameAttribute == null) {
+							
+							LOG.debug("attribute name for collection tag couldn't be resolved for outputAttributePath: '" + outputAttributePath + "'");
+						}
+						
+						final Element collection = createCollectionTag(component, collectionNameAttribute);
+						
+						rules.appendChild(collection);
+						
+					} 
+					else if (component.getInputComponents().size() == 1) {
+						
+						String dataNameAttribute = null;
+						
+						dataNameAttribute = getKeyParameterMapping(outputAttributePath, transformationComponent);
+						
+						if(dataNameAttribute == null) {
+							
+							LOG.debug("attribute name for data tag couldn't be resolved for outputAttributePath: '" + outputAttributePath + "'");
+						}
+						
+						final Element data = createDataTag(component, dataNameAttribute);
+						
+						rules.appendChild(data);			
+						
+					}
+				}
+				
+				if (component.getOutputComponents() != null && component.getInputComponents() != null) {
+					
+					if (component.getInputComponents().size() > 1) {
+						
+						String collectionNameAttribute = null;
+						
+						collectionNameAttribute = getKeyParameterMapping(outputAttributePath, transformationComponent);
+						
+						if(collectionNameAttribute == null) {
+							
+							LOG.debug("attribute name for collection tag couldn't be resolved for outputAttributePath: '" + outputAttributePath + "'");
+						}
+						
+						final Element collection = createCollectionTag(component, collectionNameAttribute);
+						
+						rules.appendChild(collection);
+						
+					}
+					else if (component.getInputComponents().size() == 1) {
+						
+						final Element data = createDataTag(component, "component" + component.getId());
+						
+						rules.appendChild(data);			
+						
+					}
+				}
+					
+			}
+
+			break;
+		}
+
+	}
+
+	/** 
+	 * Recursively creates the transformation for the component if there are some input components,
+	 *  or if there are none, creates the final transformation datas to the main component 
+	 *  of the mapping
+	 * 
+	 * @param processingComponent
+	 */
+	private void createTransformationsForComponent(Component processingComponent, Element rules) {
+
+		
+		final Function transformationFunction = processingComponent.getFunction();
+		
+		if(transformationFunction == null) {
+			
+			LOG.debug("function/transformation for transformation component '" + processingComponent.getId() + "' was empty");
+			return;
+			
+		} else {
+			
+			// TODO handle function of this component
+			LOG.debug("processing function/transformation '" + transformationFunction.getId() + " (" + transformationFunction.getName() + ")");
+			
+			switch (transformationFunction.getFunctionType()) {
+
+			case Function:
+
+				// TODO: process simple function (required for our example!)
+				
+				LOG.error("function '" + transformationFunction.getId() + "' was a real FUNCTION. this is not supported right now.");
+
+				break;
+				
+			case Transformation:
+
+				// TODO: process simple input -> output mapping (?)
+
+				final Transformation transformation = (Transformation) transformationFunction;
+		
+				final Set<Component> components = transformation.getComponents();
+				
+				if(components == null) {
+					
+					LOG.debug("components for transformation '" + transformation.getId() + "' are empty");
+					return;
+				}
+			}
+			
+		}
+		
+		
+		// handle input components recursively
+		
+		final Set<Component> inputComponents = processingComponent.getInputComponents();
+
+		if (inputComponents != null && !inputComponents.isEmpty()) {
+			
+			int numberOfInputComponents = inputComponents.size();
+			LOG.debug("Number of input components: " + numberOfInputComponents );
+			
+			if(numberOfInputComponents > 1) {
+				// TODO create compound /collect when more than 1 input component
+			}
+			
+			for (Iterator<Component> iterator = inputComponents.iterator(); iterator
+					.hasNext();) {
+				
+				Component inputComponent = (Component) iterator.next();
+				
+				LOG.debug("creating transformations for input component '" + inputComponent.getId() + 
+						" (" + inputComponent.getName() + ")");
+
+				final Element intraData = doc.createElement("data");
+				intraData.setAttribute("name", "todo");
+				intraData.setAttribute("source", "todo");
+				rules.appendChild(intraData);
+				
+				// TODO
+				createTransformationsForComponent(inputComponent, rules);
+			}
+
+			
+		} else { 
+			
+			// this component has no input components and needs to be directly mapped to the main transformation component / attribute paths
+			
+			LOG.debug("no input components for component " + processingComponent.getId() + " (" + processingComponent.getName() + "), "
+					+ "will create transformation to main transformation component");
+			
+			final Element leafData = doc.createElement("data");
+
+			// TODO (re)use createParameters(..) here for adding name/source attributes?
+			leafData.setAttribute("name", "todo: get variable of the main transformation component");
+			leafData.setAttribute("source", "transformationInputString"); // is this qualified enough?? probably needs prefix
+
+			rules.appendChild(leafData);
+		}
+		
+
+		
 	}
 
 	private Element createTransformation(final Mapping mapping) {
@@ -435,6 +760,9 @@ public class MorphScriptBuilder {
 			for (final Entry<String, String> parameterMapping : parameterMappings.entrySet()) {
 
 				if (parameterMapping.getKey() != null) {
+					
+					if (parameterMapping.getKey().equals("inputString"))
+						continue;
 
 					if (parameterMapping.getValue() != null) {
 
@@ -459,6 +787,107 @@ public class MorphScriptBuilder {
 			// }
 			// }
 		}
+	}
+	
+	private Element createDataTag(final Component singleInputComponent, final String dataNameAttribute) {
+		
+		final Element data = doc.createElement("data");
+		
+		data.setAttribute("source", "@component" + singleInputComponent.getInputComponents().iterator().next().getId());
+		
+		data.setAttribute("name", "@" + dataNameAttribute);
+		
+		final Element comp = doc.createElement(singleInputComponent.getFunction().getName());
+		
+		createParameters(singleInputComponent.getParameterMappings(), comp);
+		
+		data.appendChild(comp);
+		
+		return data;
+	}
+	
+	private Element createCollectionTag(final Component multipleInputComponent, final String collectionNameAttribute) {
+		
+		final Element collection = doc.createElement(multipleInputComponent.getFunction().getName());
+		
+		createParameters(multipleInputComponent.getParameterMappings(), collection);
+		
+		collection.setAttribute("name", "@" + collectionNameAttribute);
+		
+		for (Component inputComponent : multipleInputComponent.getInputComponents()) {
+			
+			final Element collectionData = doc.createElement("data");
+			
+			collectionData.setAttribute("source", "@component" + inputComponent.getId());
+			
+			collection.appendChild(collectionData);
+		}
+		
+		return collection;
+	}
+	
+	private String getKeyParameterMapping(String attributePathString, Component transformationComponent) {
+		
+		String attributePathKey = null;
+		
+		Map<String, String> transformationParameterMapping = transformationComponent.getParameterMappings();
+		
+		for (Entry<String, String> parameterMapping : transformationParameterMapping.entrySet()) {
+			
+			if (parameterMapping.getValue().equals(attributePathString)) {
+				
+				attributePathKey = parameterMapping.getKey();
+			}
+		}
+		
+		return attributePathKey;
+	}
+	
+	// temp until complex task test is complete
+	public Object apply(Mapping mapping) throws DMPConverterException {
+		final DocumentBuilder docBuilder;
+		try {
+			docBuilder = DOC_FACTORY.newDocumentBuilder();
+		} catch (ParserConfigurationException e) {
+			throw new DMPConverterException(e.getMessage());
+		}
+
+		doc = docBuilder.newDocument();
+		doc.setXmlVersion("1.1");
+
+		final Element rootElement = doc.createElement("metamorph");
+		rootElement.setAttribute("xmlns", "http://www.culturegraph.org/metamorph");
+		rootElement.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+		rootElement.setAttribute("xsi:schemaLocation", "http://www.culturegraph.org/metamorph metamorph.xsd");
+		rootElement.setAttribute("entityMarker", DMPStatics.ATTRIBUTE_DELIMITER.toString());
+		rootElement.setAttribute("version", "1");
+		doc.appendChild(rootElement);
+
+		final Element meta = doc.createElement("meta");
+		rootElement.appendChild(meta);
+
+		final Element metaName = doc.createElement("name");
+		meta.appendChild(metaName);
+
+		// final Element vars = doc.createElement("vars");
+		// rootElement.appendChild(vars);
+
+		final Element rules = doc.createElement("rules");
+		rootElement.appendChild(rules);
+
+		final List<String> metas = Lists.newArrayList();
+
+		// TODO: utilise mappings and all available data to generate the morph transformations
+		// i.e. take the transformation of each mapping and handle the variable replacement correctly (?) or create a mapping in
+		// the morph script for the variables
+
+		metas.add(MAPPING_PREFIX + mapping.getId());
+		createTransformations(rules,mapping);
+
+		metaName.setTextContent(Joiner.on(", ").join(metas));
+
+		return this;
+
 	}
 
 	// private Iterable<Element> createVarDefinitions(final Transformation transformation) {
