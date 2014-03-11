@@ -176,7 +176,7 @@
 					"id": 17
 				}],
 				"parameter_mappings": {
-					"inputString": "title",
+					"inputString": "title,givenName",
 					"delimiter": ","
 				}
 			}]
@@ -186,6 +186,7 @@
 			"firstName": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/firstName",
             "familyName": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/familyName",
 			"title": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/title",
+			"givenName": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/givenName",
             "transformationOutputVariable": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/name"
         }
     },
@@ -236,6 +237,22 @@
                 "name": "title",
                 "uri": "http://xmlns.com/foaf/0.1/title",
                 "id": 12
+            }]
+        }
+	}, {
+        "type": "MappingAttributePathInstance",
+        "name": "given name mapping attribute path instance",
+        "id": 11,
+        "attribute_path": {
+            "id": 9,
+            "attributes": [{
+                "name": "creator",
+                "uri": "http://purl.org/dc/terms/creator",
+                "id": 9
+            }, {
+                "name": "givenName",
+                "uri": "http://xmlns.com/foaf/0.1/givenName",
+                "id": 13
             }]
         }
     }],

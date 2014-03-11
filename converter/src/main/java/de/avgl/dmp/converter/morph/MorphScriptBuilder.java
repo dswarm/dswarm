@@ -10,6 +10,8 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -395,110 +397,60 @@ public class MorphScriptBuilder {
 						}
 					}
 				}
-
-				if (inputStrings.length > 0) {
+				
+				LinkedList<String> sourceAttributes = new LinkedList<String>();
+				
+				for (String inputString : inputStrings) {
 					
-					if (inputStrings.length == 1 && component.getInputComponents() == null) {
-						
-						final Element data = doc.createElement("data");
-						
-						data.setAttribute("source", "@" + inputStrings[0]);
-						
-						data.setAttribute("name", "@component" + component.getId());
-						
-						final Element comp = doc.createElement(component.getFunction().getName());
-						
-						createParameters(component.getParameterMappings(), comp);
-						
-						data.appendChild(comp);
-						
-						rules.appendChild(data);			
-					}
-					
-//					if (inputStrings.length + component.getInputComponents().size() > 1) {
-//						
-//						final Element collection = doc.createElement(component.getFunction().getName());
-//						
-//						// TODO: be aware that parameter mapping include inputString which souldn't be an attribute in collection tag
-//						createParameters(component.getParameterMappings(), collection);
-//						
-//						collection.setAttribute("name", "@component" + component.getId());
-//						
-//						for (int i = 0; i >= inputStrings.length; i++) {
-//							
-//							final Element collectionData = doc.createElement("data");
-//							
-//							collectionData.setAttribute("source", "@" + inputStrings[i]);
-//							
-//							collection.appendChild(collectionData);
-//						}
-//						
-//					} 
-		
+					sourceAttributes.add(inputString);
 				}
 				
-				if (component.getOutputComponents() == null && component.getInputComponents() != null) {
+				if (component.getInputComponents() != null) {
 					
-					if (component.getInputComponents().size() > 1) {
+					for (Component inputComponent : component.getInputComponents()) {
 						
-						String collectionNameAttribute = null;
+						sourceAttributes.add("component" + inputComponent.getId());
+					}
+				}
+				
+				if (sourceAttributes.size() > 1) {
+					
+					String collectionNameAttribute = null;
+					
+					if (component.getOutputComponents() == null) {
 						
 						collectionNameAttribute = getKeyParameterMapping(outputAttributePath, transformationComponent);
 						
-						if(collectionNameAttribute == null) {
-							
-							LOG.debug("attribute name for collection tag couldn't be resolved for outputAttributePath: '" + outputAttributePath + "'");
-						}
+					} else {
 						
-						final Element collection = createCollectionTag(component, collectionNameAttribute);
-						
-						rules.appendChild(collection);
-						
-					} 
-					else if (component.getInputComponents().size() == 1) {
-						
-						String dataNameAttribute = null;
+						collectionNameAttribute = "component" + component.getId();
+					}
+					
+					
+					final Element collection = createCollectionTag(component, collectionNameAttribute, sourceAttributes);
+					
+					rules.appendChild(collection);
+					
+				} 
+				else if (sourceAttributes.size() == 1) {
+					
+					String dataNameAttribute = null;
+					
+					if (component.getOutputComponents() == null) {
 						
 						dataNameAttribute = getKeyParameterMapping(outputAttributePath, transformationComponent);
 						
-						if(dataNameAttribute == null) {
-							
-							LOG.debug("attribute name for data tag couldn't be resolved for outputAttributePath: '" + outputAttributePath + "'");
-						}
+					} else {
 						
-						final Element data = createDataTag(component, dataNameAttribute);
-						
-						rules.appendChild(data);			
-						
+						dataNameAttribute = "component" + component.getId();
 					}
-				}
-				
-				if (component.getOutputComponents() != null && component.getInputComponents() != null) {
 					
-					if (component.getInputComponents().size() > 1) {
-						
-						String collectionNameAttribute = null;
-						
-						collectionNameAttribute = getKeyParameterMapping(outputAttributePath, transformationComponent);
-						
-						if(collectionNameAttribute == null) {
-							
-							LOG.debug("attribute name for collection tag couldn't be resolved for outputAttributePath: '" + outputAttributePath + "'");
-						}
-						
-						final Element collection = createCollectionTag(component, collectionNameAttribute);
-						
-						rules.appendChild(collection);
-						
-					}
-					else if (component.getInputComponents().size() == 1) {
-						
-						final Element data = createDataTag(component, "component" + component.getId());
-						
-						rules.appendChild(data);			
-						
-					}
-				}
+										
+					final Element data = createDataTag(component, dataNameAttribute, sourceAttributes.get(0));
+					
+					rules.appendChild(data);			
+					
+				}				
 					
 			}
 
@@ -789,11 +741,28 @@ public class MorphScriptBuilder {
 		}
 	}
 	
-	private Element createDataTag(final Component singleInputComponent, final String dataNameAttribute) {
+//	private Element createDataTag(final Component singleInputComponent, final String dataNameAttribute) {
+//		
+//		final Element data = doc.createElement("data");
+//		
+//		data.setAttribute("source", "@component" + singleInputComponent.getInputComponents().iterator().next().getId());
+//		
+//		data.setAttribute("name", "@" + dataNameAttribute);
+//		
+//		final Element comp = doc.createElement(singleInputComponent.getFunction().getName());
+//		
+//		createParameters(singleInputComponent.getParameterMappings(), comp);
+//		
+//		data.appendChild(comp);
+//		
+//		return data;
+//	}
+
+	private Element createDataTag(final Component singleInputComponent, final String dataNameAttribute, final String dataSourceAttribute) {
 		
 		final Element data = doc.createElement("data");
 		
-		data.setAttribute("source", "@component" + singleInputComponent.getInputComponents().iterator().next().getId());
+		data.setAttribute("source", "@" + dataSourceAttribute);
 		
 		data.setAttribute("name", "@" + dataNameAttribute);
 		
@@ -806,7 +775,7 @@ public class MorphScriptBuilder {
 		return data;
 	}
 	
-	private Element createCollectionTag(final Component multipleInputComponent, final String collectionNameAttribute) {
+	private Element createCollectionTag(final Component multipleInputComponent, final String collectionNameAttribute, final List<String> collectionSourceAttributes) {
 		
 		final Element collection = doc.createElement(multipleInputComponent.getFunction().getName());
 		
@@ -814,18 +783,18 @@ public class MorphScriptBuilder {
 		
 		collection.setAttribute("name", "@" + collectionNameAttribute);
 		
-		for (Component inputComponent : multipleInputComponent.getInputComponents()) {
+		for (String sourceAttribute : collectionSourceAttributes) {
 			
 			final Element collectionData = doc.createElement("data");
 			
-			collectionData.setAttribute("source", "@component" + inputComponent.getId());
+			collectionData.setAttribute("source", "@" + sourceAttribute);
 			
 			collection.appendChild(collectionData);
 		}
 		
 		return collection;
 	}
-	
+
 	private String getKeyParameterMapping(String attributePathString, Component transformationComponent) {
 		
 		String attributePathKey = null;
