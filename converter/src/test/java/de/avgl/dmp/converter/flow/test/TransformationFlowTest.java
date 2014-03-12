@@ -46,7 +46,7 @@ import de.avgl.dmp.persistence.model.resource.ResourceType;
 import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
 import de.avgl.dmp.persistence.model.resource.utils.DataModelUtils;
 import de.avgl.dmp.persistence.model.types.Tuple;
-import de.avgl.dmp.persistence.service.impl.InternalMemoryDbService;
+import de.avgl.dmp.persistence.service.internal.memorydb.InternalMemoryDbService;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;

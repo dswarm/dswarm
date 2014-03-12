@@ -22,5 +22,11 @@ public interface InternalModelServiceFactory {
 	 * @return the triple internal model service implementation
 	 */
 	/* @Named("Triple") */InternalModelService getInternalTripleService();
-
+	
+	/**
+	 * Gets the graph internal model service implementation.
+	 * 
+	 * @return the graph internal model service implementation
+	 */
+	/* @Named("Triple") */InternalModelService getInternalGraphService();
 }

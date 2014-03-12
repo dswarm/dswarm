@@ -355,7 +355,7 @@ public class DataModelUtil {
 				return internalServiceFactoryProvider.get().getMemoryDbInternalService();
 			} else if ("xml".equals(storageType.asText())) {
 
-				return internalServiceFactoryProvider.get().getInternalTripleService();
+				return internalServiceFactoryProvider.get().getInternalGraphService();
 			} else {
 
 				throw new DMPControllerException("couldn't determine internal service type from storage type = '" + storageType.asText() + "'");

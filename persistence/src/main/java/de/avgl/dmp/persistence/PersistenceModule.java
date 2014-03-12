@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
 
+import org.apache.log4j.LogManager;
+
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.log4j.InstrumentedAppender;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -18,11 +20,10 @@ import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 
-import org.apache.log4j.LogManager;
-
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
+import de.avgl.dmp.persistence.model.internal.graph.Neo4jServer;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
-import de.avgl.dmp.persistence.service.impl.InternalServiceFactoryImpl;
+import de.avgl.dmp.persistence.service.internal.InternalServiceFactoryImpl;
 import de.avgl.dmp.persistence.service.job.ComponentService;
 import de.avgl.dmp.persistence.service.job.FilterService;
 import de.avgl.dmp.persistence.service.job.FunctionService;
@@ -83,6 +84,8 @@ public class PersistenceModule extends AbstractModule {
 		bind(MappingAttributePathInstanceService.class).in(Scopes.SINGLETON);
 
 		bind(InternalModelServiceFactory.class).to(InternalServiceFactoryImpl.class).in(Scopes.SINGLETON);
+		
+		bind(Neo4jServer.class).in(Scopes.SINGLETON);
 	}
 
 	/**
