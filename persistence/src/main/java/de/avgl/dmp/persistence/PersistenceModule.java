@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.Properties;
 
 import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.log4j.InstrumentedAppender;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
@@ -16,6 +17,8 @@ import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
+
+import org.apache.log4j.LogManager;
 
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
@@ -37,7 +40,7 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
 
 /**
  * The Guice configuration of the persistence module. Interface/classes that are registered here can be utilised for injection.
- * 
+ *
  * @author phorn
  * @author tgaengler
  */
@@ -84,7 +87,7 @@ public class PersistenceModule extends AbstractModule {
 
 	/**
 	 * Provides the {@link ObjectMapper} instance for JSON de-/serialisation.
-	 * 
+	 *
 	 * @return a {@link ObjectMapper} instance as singleton
 	 */
 	@Provides
@@ -101,18 +104,24 @@ public class PersistenceModule extends AbstractModule {
 
 	/**
 	 * Provides the metric registry to register objects for metric statistics.
-	 * 
+	 *
 	 * @return a {@link MetricRegistry} instance as singleton
 	 */
 	@Provides
 	@Singleton
 	protected MetricRegistry provideMetricRegistry() {
-		return new MetricRegistry();
+		final MetricRegistry metricRegistry = new MetricRegistry();
+
+		final InstrumentedAppender appender = new InstrumentedAppender(metricRegistry);
+		appender.activateOptions();
+		LogManager.getRootLogger().addAppender(appender);
+
+		return metricRegistry;
 	}
 
 	/**
 	 * Provides the event bus for event processing.
-	 * 
+	 *
 	 * @return a {@link EventBus} instance as singleton
 	 */
 	@Provides
