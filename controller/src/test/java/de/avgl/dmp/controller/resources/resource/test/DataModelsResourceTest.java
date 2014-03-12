@@ -381,7 +381,7 @@ public class DataModelsResourceTest extends
 		final int atMost = 1;
 
 		final InternalModelServiceFactory serviceFactory = DMPInjector.injector.getInstance(Key.get(InternalModelServiceFactory.class));
-		final InternalModelService service = serviceFactory.getInternalTripleService();
+		final InternalModelService service = serviceFactory.getInternalGraphService();
 		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getId(), Optional.of(atMost));
 
 		assertTrue(data.isPresent());

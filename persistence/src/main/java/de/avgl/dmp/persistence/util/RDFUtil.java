@@ -11,7 +11,7 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.sparql.resultset.ResultSetMem;
 
-import de.avgl.dmp.persistence.service.impl.InternalTripleService;
+import de.avgl.dmp.persistence.service.internal.triple.InternalTripleService;
 
 /**
  * @author tgaengler

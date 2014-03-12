@@ -1,4 +1,4 @@
-package de.avgl.dmp.persistence.service.impl;
+package de.avgl.dmp.persistence.service.internal.triple;
 
 import java.util.LinkedList;
 import java.util.Map;

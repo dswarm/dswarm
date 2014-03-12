@@ -36,7 +36,7 @@ import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.model.types.Tuple;
-import de.avgl.dmp.persistence.service.impl.InternalTripleService;
+import de.avgl.dmp.persistence.service.internal.triple.InternalTripleService;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
