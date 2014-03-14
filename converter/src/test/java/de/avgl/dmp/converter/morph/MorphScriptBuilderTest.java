@@ -15,6 +15,7 @@ import de.avgl.dmp.converter.GuicedTest;
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
 import de.avgl.dmp.persistence.model.job.Job;
 import de.avgl.dmp.persistence.model.job.Mapping;
+import de.avgl.dmp.persistence.model.job.Task;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public class MorphScriptBuilderTest extends GuicedTest {
@@ -39,13 +40,11 @@ public class MorphScriptBuilderTest extends GuicedTest {
 		
 		final ObjectMapper objectMapper = injector.getInstance(ObjectMapper.class);
 		
-		final String mappingJSONString = DMPPersistenceUtil.getResourceAsString("complex-transformation.json");
-		//final String mappingJSONString = DMPPersistenceUtil.getResourceAsString("complex.mapping.as.in.intranet.json"); // does not work, since @IDRef was used to reference input/output components -> object mapper seems to fail reconstructing the full objects here
+		final String request = DMPPersistenceUtil.getResourceAsString("complex-transformation.json");
 		
+		final Task task = objectMapper.readValue(request, Task.class);
 		
-		Mapping mapping = objectMapper.readValue(mappingJSONString,Mapping.class);
-		
-		final String morphScriptString = new MorphScriptBuilder().apply(mapping).toString();
+		final String morphScriptString = new MorphScriptBuilder().apply(task).toString();
 		
 		System.out.println(morphScriptString);
 		

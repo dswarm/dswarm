@@ -1,49 +1,73 @@
 {
-    "name": "my mapping",
-    "transformation": {
-        "name": "my transformation 2 (component)",
-        "function": {
-            "type": "Transformation",
-            "name": "my transformation 2",
-            "description": "transformation which makes use of three functions (two transformations and one funcion)",
-            "id": 16,
-            "parameters": ["firstName",
-                "familyName"
-            ],
-            "type": "Transformation",
-            "components": [{
-				"name": "my replace component",
-                "function": {
-                    "type": "Function",
-                    "name": "replace",
-                    "description": "replace certain parts of a given string that matches a certain regex",
-                    "id": 11,
-                    "parameters": [
-						"regex",
-						"replaceString"
-					],
-					"type": "Function"
-				},
-				"id": 12,
-				"output_components": [{
-					"name": "my trim component",
-					"function": {
-						"type": "Function",
-						"name": "trim",
-						"description": "trims leading and trailing whitespaces from a given string",
-						"id": 13,
-						"type": "Function"
-					},
-					"id": 14,
-					"input_components": [{
-						"id": 12
-					}],
-					"output_components": [{
-						"name": "my lower case component",
+	"job": {
+	    "mappings": [{
+		    "transformation": {
+		        "name": "my transformation 2 (component)",
+		        "function": {
+		            "type": "Transformation",
+		            "name": "my transformation 2",
+		            "description": "transformation which makes use of three functions (two transformations and one funcion)",
+		            "id": 16,
+		            "parameters": ["firstName",
+		                "familyName"
+		            ],
+		            "type": "Transformation",
+		            "components": [{
+						"name": "my replace component",
+		                "function": {
+		                    "type": "Function",
+		                    "name": "replace",
+		                    "description": "replace certain parts of a given string that matches a certain regex",
+		                    "id": 11,
+		                    "parameters": [
+								"pattern",
+								"with"
+							],
+							"type": "Function"
+						},
+						"id": 12,
+						"output_components": [{
+							"name": "my trim component",
+							"function": {
+								"type": "Function",
+								"name": "trim",
+								"description": "trims leading and trailing whitespaces from a given string",
+								"id": 13,
+								"type": "Function"
+							},
+							"id": 14,
+							"input_components": [{
+								"id": 12
+							}],
+							"output_components": [{
+								"name": "my lower case component",
+								"function": {
+									"type": "Function",
+									"name": "lower_case",
+									"description": "lower cases all characters of a given string",
+									"id": 12,
+									"type": "Function"
+								},
+								"id": 13,
+								"input_components": [{
+									"id": 14
+								}],
+								"output_components": [{
+									"id": 17
+								}]
+							}]
+						}],
+						"parameter_mappings": {
+							"inputString": "familyName",
+							"pattern": "=",
+							"with": ""
+						}
+					}, {
+						"name": "my trim component",
 						"function": {
 							"type": "Function",
-							"name": "lower_case",
-							"description": "lower cases all characters of a given string",
+							"name": "trim",
+							"description": "trims leading and trailing whitespaces from a given string",
 							"id": 12,
 							"type": "Function"
 						},
@@ -54,223 +78,375 @@
 						"output_components": [{
 							"id": 17
 						}]
+					}, {
+						"name": "my trim component",
+						"function": {
+							"type": "Function",
+							"name": "trim",
+							"description": "trims leading and trailing whitespaces from a given string",
+							"id": 13,
+							"type": "Function"
+						},
+						"id": 14,
+						"input_components": [{
+							"id": 12
+						}],
+						"output_components": [{
+							"name": "my lower case component",
+							"function": {
+								"type": "Function",
+								"name": "lower_case",
+								"description": "lower cases all characters of a given string",
+								"id": 12,
+								"type": "Function"
+							},
+							"id": 13,
+							"input_components": [{
+								"id": 14
+							}],
+							"output_components": [{
+								"id": 17
+							}]
+						}]
+					}, {
+						"name": "my replace component",
+		                "function": {
+		                    "type": "Function",
+		                    "name": "replace",
+		                    "description": "replace certain parts of a given string that matches a certain regex",
+		                    "id": 11,
+		                    "parameters": [
+								"pattern",
+								"with"
+							],
+							"type": "Function"
+						},
+						"id": 15,
+						"output_components": [{
+							"id": 16
+						}],
+						"parameter_mappings": {
+							"inputString": "firstName",
+							"pattern": "=",
+							"with": ""
+						}
+					}, {
+						"name": "my concat component",
+		                "function": {
+		                    "type": "Function",
+		                    "name": "concat",
+		                    "description": "Collects all received values and concatenates them on record end.",
+		                    "id": 23,
+		                    "parameters": [
+								"delimiter",
+								"prefix",
+								"postfix"
+							],
+							"type": "Function"
+						},
+						"id": 17,
+						"input_components": [{
+							"id": 15
+						}, {
+							"id": 13
+						}],
+						"output_components": [{
+							"id": 18
+						}],
+						"parameter_mappings": {
+							"delimiter": " ",
+							"prefix": "_",
+							"postfix": "_"
+						}
+					}, {
+						"name": "my concat component 2",
+		                "function": {
+		                    "type": "Function",
+		                    "name": "concat",
+		                    "description": "Collects all received values and concatenates them on record end.",
+		                    "id": 23,
+		                    "parameters": [
+								"delimiter",
+								"prefix",
+								"postfix"
+							],
+							"type": "Function"
+						},
+						"id": 18,
+						"input_components": [{
+							"id": 17
+						}],
+						"parameter_mappings": {
+							"inputString": "title,givenName",
+							"delimiter": ","
+						}
 					}]
-				}],
-				"parameter_mappings": {
-					"inputString": "familyName",
-					"regex": "-",
-					"replaceString": "+"
-				}
-			}, {
-				"name": "my lower case component",
-				"function": {
-					"type": "Function",
-					"name": "lower_case",
-					"description": "lower cases all characters of a given string",
-					"id": 12,
-					"type": "Function"
 				},
-				"id": 13,
-				"input_components": [{
-					"id": 14
-				}],
-				"output_components": [{
-					"id": 17
-				}]
+		        "id": 18,
+		        "parameter_mappings": {
+					"firstName": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/firstName",
+		            "familyName": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/familyName",
+					"title": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/title",
+					"givenName": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/givenName",
+		            "transformationOutputVariable": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/name"
+		        }
+		    },
+		    "id": 14,
+		    "input_attribute_paths": [{
+		        "type": "MappingAttributePathInstance",
+		        "name": "first name mapping attribute path instance",
+		        "id": 8,
+		        "attribute_path": {
+		            "id": 8,
+		            "attributes": [{
+		                "name": "creator",
+		                "uri": "http://purl.org/dc/terms/creator",
+		                "id": 9
+		            }, {
+		                "name": "firstName",
+		                "uri": "http://xmlns.com/foaf/0.1/firstName",
+		                "id": 10
+		            }]
+		        }
+		    }, {
+		        "type": "MappingAttributePathInstance",
+		        "name": "family name mapping attribute path instance",
+		        "id": 9,
+		        "attribute_path": {
+		            "id": 9,
+		            "attributes": [{
+		                "name": "creator",
+		                "uri": "http://purl.org/dc/terms/creator",
+		                "id": 9
+		            }, {
+		                "name": "familyName",
+		                "uri": "http://xmlns.com/foaf/0.1/familyName",
+		                "id": 11
+		            }]
+		        }
 			}, {
-				"name": "my trim component",
-				"function": {
-					"type": "Function",
-					"name": "trim",
-					"description": "trims leading and trailing whitespaces from a given string",
-					"id": 13,
-					"type": "Function"
-				},
-				"id": 14,
-				"input_components": [{
-					"id": 12
-				}],
-				"output_components": [{
-					"name": "my lower case component",
-					"function": {
-						"type": "Function",
-						"name": "lower_case",
-						"description": "lower cases all characters of a given string",
-						"id": 12,
-						"type": "Function"
-					},
-					"id": 13,
-					"input_components": [{
-						"id": 14
-					}],
-					"output_components": [{
-						"id": 17
-					}]
-				}]
+		        "type": "MappingAttributePathInstance",
+		        "name": "title mapping attribute path instance",
+		        "id": 10,
+		        "attribute_path": {
+		            "id": 9,
+		            "attributes": [{
+		                "name": "creator",
+		                "uri": "http://purl.org/dc/terms/creator",
+		                "id": 9
+		            }, {
+		                "name": "title",
+		                "uri": "http://xmlns.com/foaf/0.1/title",
+		                "id": 12
+		            }]
+		        }
 			}, {
-				"name": "my replace component",
-                "function": {
-                    "type": "Function",
-                    "name": "replace",
-                    "description": "replace certain parts of a given string that matches a certain regex",
-                    "id": 11,
-                    "parameters": [
-						"regex",
-						"replaceString"
-					],
-					"type": "Function"
-				},
-				"id": 15,
-				"output_components": [{
-					"id": 16
-				}],
-				"parameter_mappings": {
-					"inputString": "firstName",
-					"regex": "falsch",
-					"replaceString": "richtig"
-				}
-			}, {
-				"name": "my concat component",
-                "function": {
-                    "type": "Function",
-                    "name": "concat",
-                    "description": "Collects all received values and concatenates them on record end.",
-                    "id": 23,
-                    "parameters": [
-						"delimiter",
-						"prefix",
-						"postfix"
-					],
-					"type": "Function"
-				},
-				"id": 17,
-				"input_components": [{
-					"id": 15
-				}, {
-					"id": 13
-				}],
-				"output_components": [{
-					"id": 18
-				}],
-				"parameter_mappings": {
-					"delimiter": ".",
-					"prefix": "_",
-					"postfix": "_"
-				}
-			}, {
-				"name": "my concat component 2",
-                "function": {
-                    "type": "Function",
-                    "name": "concat",
-                    "description": "Collects all received values and concatenates them on record end.",
-                    "id": 23,
-                    "parameters": [
-						"delimiter",
-						"prefix",
-						"postfix"
-					],
-					"type": "Function"
-				},
-				"id": 18,
-				"input_components": [{
-					"id": 17
-				}],
-				"parameter_mappings": {
-					"inputString": "title,givenName",
-					"delimiter": ","
-				}
-			}]
-		},
-        "id": 18,
-        "parameter_mappings": {
-			"firstName": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/firstName",
-            "familyName": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/familyName",
-			"title": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/title",
-			"givenName": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/givenName",
-            "transformationOutputVariable": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/name"
-        }
+		        "type": "MappingAttributePathInstance",
+		        "name": "given name mapping attribute path instance",
+		        "id": 11,
+		        "attribute_path": {
+		            "id": 9,
+		            "attributes": [{
+		                "name": "creator",
+		                "uri": "http://purl.org/dc/terms/creator",
+		                "id": 9
+		            }, {
+		                "name": "givenName",
+		                "uri": "http://xmlns.com/foaf/0.1/givenName",
+		                "id": 13
+		            }]
+		        }
+		    }],
+		    "output_attribute_path": {
+		        "type": "MappingAttributePathInstance",
+		        "name": "output mapping attribute path instance",
+		        "id": 11,
+		        "attribute_path": {
+		            "id": 10,
+		            "attributes": [{
+		                "name": "creator",
+		                "uri": "http://purl.org/dc/terms/creator",
+		                "id": 9
+		            }, {
+		                "name": "name",
+		                "uri": "http://xmlns.com/foaf/0.1/name",
+		                "id": 12
+		            }]
+		        }
+		    },
+		    "name": "my mapping"
+		}]
     },
-    "id": 14,
-    "input_attribute_paths": [{
-        "type": "MappingAttributePathInstance",
-        "name": "first name mapping attribute path instance",
-        "id": 8,
-        "attribute_path": {
-            "id": 8,
-            "attributes": [{
-                "name": "creator",
-                "uri": "http://purl.org/dc/terms/creator",
-                "id": 9
+    "output_data_model": {
+        "data_resource": {
+            "configurations": [{
+                "parameters": {
+                    "storage_type": "csv",
+                    "column_names": "columnN",
+                    "quote_character": "\"",
+                    "escape_character": "\\",
+                    "column_delimiter": ";"
+                },
+                "resources": [{
+                    "id": 2
+                }],
+                "id": 2
+            }],
+            "resource_attributes": {
+                "filesize": -1,
+                "path": "/Users/knut/Development/Projects/DMP/init/../tmp/resources/test_csv.csv"
+            },
+            "type": "FILE",
+            "description": "ssdfadfsdf",
+            "name": "test_csv.csv",
+            "id": 2
+        },
+        "schema": {
+            "record_class": {
+                "id": 80,
+                "name": "record type",
+                "uri": "/test_csv.csv#RecordType"
+            },
+            "attribute_paths": [{
+                "attributes": [{
+                    "id": 89,
+                    "name": "description",
+                    "uri": "/test_csv.csv#description"
+                }],
+                "id": 98
             }, {
-                "name": "firstName",
-                "uri": "http://xmlns.com/foaf/0.1/firstName",
-                "id": 10
-            }]
-        }
-    }, {
-        "type": "MappingAttributePathInstance",
-        "name": "family name mapping attribute path instance",
-        "id": 9,
-        "attribute_path": {
-            "id": 9,
-            "attributes": [{
-                "name": "creator",
-                "uri": "http://purl.org/dc/terms/creator",
-                "id": 9
+                "attributes": [{
+                    "id": 88,
+                    "name": "id",
+                    "uri": "/test_csv.csv#id"
+                }],
+                "id": 96
             }, {
-                "name": "familyName",
-                "uri": "http://xmlns.com/foaf/0.1/familyName",
-                "id": 11
-            }]
-        }
-	}, {
-        "type": "MappingAttributePathInstance",
-        "name": "title mapping attribute path instance",
-        "id": 10,
-        "attribute_path": {
-            "id": 9,
-            "attributes": [{
-                "name": "creator",
-                "uri": "http://purl.org/dc/terms/creator",
-                "id": 9
+                "attributes": [{
+                    "id": 87,
+                    "name": "name",
+                    "uri": "/test_csv.csv#name"
+                }],
+                "id": 97
             }, {
-                "name": "title",
-                "uri": "http://xmlns.com/foaf/0.1/title",
-                "id": 12
-            }]
-        }
-	}, {
-        "type": "MappingAttributePathInstance",
-        "name": "given name mapping attribute path instance",
-        "id": 11,
-        "attribute_path": {
-            "id": 9,
-            "attributes": [{
-                "name": "creator",
-                "uri": "http://purl.org/dc/terms/creator",
-                "id": 9
+                "attributes": [{
+                    "id": 86,
+                    "name": "year",
+                    "uri": "/test_csv.csv#year"
+                }],
+                "id": 100
             }, {
-                "name": "givenName",
-                "uri": "http://xmlns.com/foaf/0.1/givenName",
-                "id": 13
-            }]
-        }
-    }],
-    "output_attribute_path": {
-        "type": "MappingAttributePathInstance",
-        "name": "output mapping attribute path instance",
-        "id": 11,
-        "attribute_path": {
-            "id": 10,
-            "attributes": [{
-                "name": "creator",
-                "uri": "http://purl.org/dc/terms/creator",
-                "id": 9
+                "attributes": [{
+                    "id": 85,
+                    "name": "isbn",
+                    "uri": "/test_csv.csv#isbn"
+                }],
+                "id": 99
+            }],
+            "name": "test_csv.csv schema",
+            "id": 6
+        },
+        "configuration": {
+            "parameters": {
+                "storage_type": "csv",
+                "column_names": "columnN",
+                "quote_character": "\"",
+                "escape_character": "\\",
+                "column_delimiter": ";"
+            },
+            "resources": [{
+                "id": 2
+            }],
+            "id": 2
+        },
+        "description": " data model of resource test_csv.csv and configuration  null",
+        "name": "test_csv.csv + null data model",
+        "id": 6
+    },
+    "input_data_model": {
+        "data_resource": {
+            "configurations": [{
+                "parameters": {
+                    "storage_type": "csv",
+                    "column_names": "columnN",
+                    "quote_character": "\"",
+                    "escape_character": "\\",
+                    "column_delimiter": ";"
+                },
+                "resources": [{
+                    "id": 2
+                }],
+                "id": 2
+            }],
+            "resource_attributes": {
+                "filesize": -1,
+                "path": "/Users/knut/Development/Projects/DMP/init/../tmp/resources/test_csv.csv"
+            },
+            "type": "FILE",
+            "description": "ssdfadfsdf",
+            "name": "test_csv.csv",
+            "id": 2
+        },
+        "schema": {
+            "record_class": {
+                "id": 80,
+                "name": "record type",
+                "uri": "/test_csv.csv#RecordType"
+            },
+            "attribute_paths": [{
+                "attributes": [{
+                    "id": 89,
+                    "name": "description",
+                    "uri": "/test_csv.csv#description"
+                }],
+                "id": 98
             }, {
-                "name": "name",
-                "uri": "http://xmlns.com/foaf/0.1/name",
-                "id": 12
-            }]
-        }
+                "attributes": [{
+                    "id": 88,
+                    "name": "id",
+                    "uri": "/test_csv.csv#id"
+                }],
+                "id": 96
+            }, {
+                "attributes": [{
+                    "id": 87,
+                    "name": "name",
+                    "uri": "/test_csv.csv#name"
+                }],
+                "id": 97
+            }, {
+                "attributes": [{
+                    "id": 86,
+                    "name": "year",
+                    "uri": "/test_csv.csv#year"
+                }],
+                "id": 100
+            }, {
+                "attributes": [{
+                    "id": 85,
+                    "name": "isbn",
+                    "uri": "/test_csv.csv#isbn"
+                }],
+                "id": 99
+            }],
+            "name": "test_csv.csv schema",
+            "id": 6
+        },
+        "configuration": {
+            "parameters": {
+                "storage_type": "csv",
+                "column_names": "columnN",
+                "quote_character": "\"",
+                "escape_character": "\\",
+                "column_delimiter": ";"
+            },
+            "resources": [{
+                "id": 2
+            }],
+            "id": 2
+        },
+        "description": " data model of resource test_csv.csv and configuration  null",
+        "name": "test_csv.csv + null data model",
+        "id": 6
     }
 }
