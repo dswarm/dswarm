@@ -352,7 +352,7 @@ public class DataModelUtil {
 				return internalServiceFactoryProvider.get().getMemoryDbInternalService();
 			} else if ("csv".equals(storageType.asText())) {
 
-				return internalServiceFactoryProvider.get().getMemoryDbInternalService();
+				return internalServiceFactoryProvider.get().getInternalGraphService();
 			} else if ("xml".equals(storageType.asText())) {
 
 				return internalServiceFactoryProvider.get().getInternalGraphService();
