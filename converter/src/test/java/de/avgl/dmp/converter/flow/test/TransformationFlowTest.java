@@ -238,6 +238,19 @@ public class TransformationFlowTest extends GuicedTest {
 
 		assertEquals(expected, actual);
 	}
+	
+	@Test
+	public void testEndToEndByRecordStringExampleDemo2() throws Exception {
+
+		final String request = DMPPersistenceUtil.getResourceAsString("qucosa-foaf.xml");
+		final String expected = DMPPersistenceUtil.getResourceAsString("complex-multiple-input-result.json");
+
+		final TransformationFlow flow = TransformationFlow.fromFile("complex-metamorph-multiple-input.xml");
+
+		final String actual = flow.applyRecordDemo(request);
+
+		assertEquals(expected, actual);
+	}
 
 	public void readCSVTest() throws Exception {
 
