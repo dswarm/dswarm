@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="." version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+    <meta>
+        <name>Identifier, Title, Identifier 2, Creator 1, Creator 2, Subjects</name>
+    </meta>
+    <rules>
+    	<data name="@var1_1" source="record.header.identifier"/>
+        <data name="record.OAI-PMH.dc:identifier" source="@var1_1">
+            <trim/>
+        </data>
+        <data name="@var2_1" source="record.metadata.oai_dc:dc.dc:title"/>
+        <data name="record.OAI-PMH.dc:title" source="@var2_1">
+            <trim/>
+        </data>
+        <data name="@var3_1" source="record.metadata.oai_dc:dc.dc:identifier"/>
+        <data name="record.OAI-PMH.dc:identifier" source="@var3_1">
+            <trim/>
+        </data>
+        <data name="@var4_1" source="record.metadata.oai_dc:dc.dc:creator"/>
+        <data name="record.OAI-PMH.dc:creator" source="@var4_1">
+            <trim/>
+        </data>
+        <data name="@var5_1" source="record.metadata.oai_dc:dc.dc:contributor"/>
+        <data name="record.OAI-PMH.dc:creator" source="@var5_1">
+            <trim/>
+        </data>
+        <data name="@var6_in" source="record.metadata.oai_dc:dc.dc:subject"/>
+        <data name="record.OAI-PMH.dc:subject" source="@var6_out"/>
+        <data name="@var6_1" source="@var6_in">
+            <trim/>
+        </data>
+        <data name="@var6_2" source="@var6_1">
+            <replace pattern="Libraries" with="Bibliotheken"/>
+        </data>
+        <data name="@var6_3" source="@var6_2">
+            <replace pattern="Saxony" with="Sachsen"/>
+        </data>
+        <data name="@var6_4" source="@var6_3">
+            <unique/>
+        </data>
+        <data name="@var6_5" source="@var6_4">
+            <blacklist>
+                <entry name="ddc:020"/>
+            </blacklist>
+        </data>
+        <data name="@var6_6" source="@var6_5">
+            <blacklist>
+                <entry name="rvk:--"/>
+            </blacklist>
+        </data>
+        <data name="@var6_7" source="@var6_6">
+            <urlencode/>
+        </data>
+        <data name="@var6_out" source="@var6_7">
+            <htmlanchor postfix="/1/" prefix="http://slub-dd.de/s/"/>
+        </data>
+    </rules>
+</metamorph>

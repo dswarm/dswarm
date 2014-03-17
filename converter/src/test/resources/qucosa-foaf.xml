@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+         
+    <GetRecord>
+        <record>
+            <metadata>
+                <oai_dc:dc>
+             		<!-- not a valid oai xml, just testing -->
+                    <dc:firstName xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="deu">=Hans=</dc:firstName>
+                    <dc:familyName xmlns:dc="http://purl.org/dc/elements/1.1/">   =Wurst   =</dc:familyName>
+                    <dc:title xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="deu">Mr.</dc:title>
+                    <dc:givenName xmlns:dc="http://purl.org/dc/elements/1.1/">Würstchen</dc:givenName>
+                </oai_dc:dc>
+            </metadata>
+        </record>
+    </GetRecord>
+</OAI-PMH>
