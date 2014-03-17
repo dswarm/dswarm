@@ -1,11 +1,27 @@
 package de.avgl.dmp.persistence.service.internal.graph;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.NotImplementedException;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang.NotImplementedException;
+import org.glassfish.jersey.media.multipart.MultiPart;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -37,6 +53,7 @@ import de.avgl.dmp.persistence.service.schema.AttributePathService;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
+import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 import de.avgl.dmp.persistence.util.RDFUtil;
 
 /**
@@ -50,10 +67,12 @@ public class InternalGraphService implements InternalModelService {
 
 	private static final org.apache.log4j.Logger	LOG								= org.apache.log4j.Logger.getLogger(InternalGraphService.class);
 
-//	/**
-//	 * The graph database.
-//	 */
-//	private final GraphDatabaseService							database;
+	private static final String						resourceIdentifier				= "rdf";
+
+	// /**
+	// * The graph database.
+	// */
+	// private final GraphDatabaseService database;
 
 	/**
 	 * The data model persistence service.
@@ -92,7 +111,7 @@ public class InternalGraphService implements InternalModelService {
 	public InternalGraphService(final Provider<DataModelService> dataModelService, final Provider<SchemaService> schemaService,
 			final Provider<ClaszService> classService, final Provider<AttributePathService> attributePathService,
 			final Provider<AttributeService> attributeService) {
-		//database = server.getDatabase();
+		// database = server.getDatabase();
 		this.dataModelService = dataModelService;
 		this.schemaService = schemaService;
 		this.classService = classService;
@@ -113,10 +132,10 @@ public class InternalGraphService implements InternalModelService {
 	@Override
 	public void createObject(final Long dataModelId, final Object model) throws DMPPersistenceException {
 
-//		if (database == null) {
-//
-//			throw new DMPPersistenceException("couldn't establish connection to DB, i.e., cannot add new model to DB");
-//		}
+		// if (database == null) {
+		//
+		// throw new DMPPersistenceException("couldn't establish connection to DB, i.e., cannot add new model to DB");
+		// }
 
 		if (dataModelId == null) {
 
@@ -179,11 +198,8 @@ public class InternalGraphService implements InternalModelService {
 		}
 
 		addAttributePaths(finalDataModel, rdfModel.getAttributePaths());
-		
-//		final RDFHandler handler = new Neo4jRDFHandler(database, resourceGraphURI);
-//		final RDFParser parser = new JenaModelParser(realModel);
-//		parser.setRDFHandler(handler);
-//		parser.parse();
+
+		writeRDFToDB(realModel, resourceGraphURI);
 	}
 
 	/**
@@ -192,10 +208,10 @@ public class InternalGraphService implements InternalModelService {
 	@Override
 	public Optional<Map<String, Model>> getObjects(final Long dataModelId, final Optional<Integer> atMost) throws DMPPersistenceException {
 
-//		if (database == null) {
-//
-//			throw new DMPPersistenceException("couldn't establish connection to DB, i.e., cannot retrieve model from DB");
-//		}
+		// if (database == null) {
+		//
+		// throw new DMPPersistenceException("couldn't establish connection to DB, i.e., cannot retrieve model from DB");
+		// }
 
 		if (dataModelId == null) {
 
@@ -233,11 +249,8 @@ public class InternalGraphService implements InternalModelService {
 		}
 
 		final String recordClassUri = recordClass.getUri();
-		
-//		final RDFReader rdfReader = new PropertyGraphReader(recordClassUri, resourceGraphURI, database);
-//		final com.hp.hpl.jena.rdf.model.Model model = rdfReader.read();
-		
-		final com.hp.hpl.jena.rdf.model.Model model = ModelFactory.createDefaultModel();
+
+		final com.hp.hpl.jena.rdf.model.Model model = readRDFFromDB(recordClassUri, resourceGraphURI);
 
 		if (model == null) {
 
@@ -295,10 +308,10 @@ public class InternalGraphService implements InternalModelService {
 	@Override
 	public void deleteObject(final Long dataModelId) throws DMPPersistenceException {
 
-//		if (database == null) {
-//
-//			throw new DMPPersistenceException("couldn't establish connection to DB, i.e., cannot remove model from DB");
-//		}
+		// if (database == null) {
+		//
+		// throw new DMPPersistenceException("couldn't establish connection to DB, i.e., cannot remove model from DB");
+		// }
 
 		if (dataModelId == null) {
 
@@ -309,11 +322,11 @@ public class InternalGraphService implements InternalModelService {
 
 		// TODO: delete DataModel object from DB here as well?
 
-//		dataset.begin(ReadWrite.WRITE);
-//		dataset.removeNamedModel(resourceGraphURI);
-//		dataset.commit();
-//		dataset.end();
-		
+		// dataset.begin(ReadWrite.WRITE);
+		// dataset.removeNamedModel(resourceGraphURI);
+		// dataset.commit();
+		// dataset.end();
+
 		// TODO
 
 	}
@@ -518,5 +531,107 @@ public class InternalGraphService implements InternalModelService {
 		return dataModel;
 	}
 
-	
+	private void writeRDFToDB(final com.hp.hpl.jena.rdf.model.Model model, final String resourceGraphUri) throws DMPPersistenceException {
+
+		final WebTarget target = target("/put");
+
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+		// TODO: change this to n-triples
+		model.write(baos, "N3");
+		final byte[] bytes = baos.toByteArray();
+
+		// Construct a MultiPart with two body parts
+		final MultiPart multiPart = new MultiPart();
+		multiPart.bodyPart(bytes, MediaType.APPLICATION_OCTET_STREAM_TYPE).bodyPart(resourceGraphUri, MediaType.TEXT_PLAIN_TYPE);
+
+		// POST the request
+		final Response response = target.request("multipart/mixed").post(Entity.entity(multiPart, "multipart/mixed"));
+
+		if (response.getStatus() != 200) {
+
+			throw new DMPPersistenceException("Couldn't store RDF data into database. Received status code '" + response.getStatus()
+					+ "' from database endpoint.");
+		}
+	}
+
+	private com.hp.hpl.jena.rdf.model.Model readRDFFromDB(final String recordClassUri, final String resourceGraphUri) throws DMPPersistenceException {
+
+		final WebTarget target = target("/get");
+
+		final ObjectMapper objectMapper = DMPPersistenceUtil.getJSONObjectMapper();
+		final ObjectNode requestJson = objectMapper.createObjectNode();
+
+		requestJson.put("record_class_uri", recordClassUri);
+		requestJson.put("resource_graph_uri", resourceGraphUri);
+
+		String requestJsonString;
+		
+		try {
+
+			requestJsonString = objectMapper.writeValueAsString(requestJson);
+		} catch (final JsonProcessingException e) {
+
+			throw new DMPPersistenceException("something went wrong, while creating the request JSON string for the read-rdf-from-db request");
+		}
+
+		// POST the request
+		final Response response = target.request(MediaType.APPLICATION_JSON_TYPE).accept("application/n-triples")
+				.post(Entity.entity(requestJsonString, MediaType.APPLICATION_JSON));
+
+		if (response.getStatus() != 200) {
+
+			throw new DMPPersistenceException("Couldn't store RDF data into database. Received status code '" + response.getStatus()
+					+ "' from database endpoint.");
+		}
+
+		final String body = response.readEntity(String.class);
+
+		InputStream stream;
+		
+		try {
+
+			stream = new ByteArrayInputStream(body.getBytes("UTF-8"));
+		} catch (final UnsupportedEncodingException e) {
+
+			throw new DMPPersistenceException("something went wrong, while reading the response stream from the read-rdf-from-db request");
+		}
+
+		final com.hp.hpl.jena.rdf.model.Model model = ModelFactory.createDefaultModel();
+		model.read(stream, null, "N-TRIPLE");
+
+		return model;
+	}
+
+	private Client client() {
+
+		final ClientBuilder builder = ClientBuilder.newBuilder();
+
+		return builder.register(MultiPartFeature.class).build();
+	}
+
+	private WebTarget target() {
+
+		// TODO: outsource this as property
+		WebTarget target = client().target("http://localhost:7474/graph");
+
+		if (InternalGraphService.resourceIdentifier != null) {
+
+			target = target.path(InternalGraphService.resourceIdentifier);
+		}
+
+		return target;
+	}
+
+	private WebTarget target(final String... path) {
+
+		WebTarget target = target();
+
+		for (final String p : path) {
+
+			target = target.path(p);
+		}
+
+		return target;
+	}
 }

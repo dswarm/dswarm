@@ -16,7 +16,6 @@
 	<url>http://avantgarde-labs.de</url>
 
 	<properties>
-		<jersey.version>2.4</jersey.version>
 		<h2k.version>2.2.0-b21</h2k.version>
 		<jetty.version>9.1.0.v20131115</jetty.version>
 		<maven.tomcat.version>2.2</maven.tomcat.version>
