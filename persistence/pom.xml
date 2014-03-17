@@ -26,7 +26,6 @@
 		<hibernate-ehcache.version>4.1.2.Final</hibernate-ehcache.version>
 		<ehcache.version>2.7.2</ehcache.version>
 		<hibernate4-maven-plugin.version>1.0.3</hibernate4-maven-plugin.version>
-		<neo4j.version>2.0.0-M06</neo4j.version>
 	</properties>
 
 	<repositories>
@@ -215,58 +214,6 @@
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-hibernate4</artifactId>
 			<version>${jackson.version}</version>
-		</dependency>
-		<!--  neo4j -->
-		<dependency>
-			<groupId>org.neo4j</groupId>
-			<artifactId>neo4j-enterprise</artifactId>
-			<version>${neo4j.version}</version>
-		</dependency>
-		<!-- <dependency> <groupId>org.neo4j</groupId> <artifactId>neo4j-jdbc</artifactId> 
-			<version${neo4j.version}</version> </dependency> -->
-		<!-- <dependency>
-			<groupId>org.neo4j</groupId>
-			<artifactId>neo4j-cypher</artifactId>
-			<version>${neo4j.version}</version>
-		</dependency> -->
-		<dependency>
-			<groupId>org.neo4j.app</groupId>
-			<artifactId>neo4j-server</artifactId>
-			<version>${neo4j.version}</version>
-			<!-- <exclusions>
-				<exclusion>
-					<artifactId>jsr311-api</artifactId>
-					<groupId>org.neo4j.3rdparty.javax.ws.rs</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>jackson-jaxrs</artifactId>
-					<groupId>org.codehaus.jackson</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>jersey-server</artifactId>
-					<groupId>com.sun.jersey</groupId>
-				</exclusion>
-			</exclusions> -->
-		</dependency>
-		<dependency>
-			<groupId>org.neo4j.app</groupId>
-			<artifactId>neo4j-server</artifactId>
-			<classifier>static-web</classifier>
-			<version>${neo4j.version}</version>
-			<!-- <exclusions>
-				<exclusion>
-					<artifactId>jsr311-api</artifactId>
-					<groupId>org.neo4j.3rdparty.javax.ws.rs</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>jackson-jaxrs</artifactId>
-					<groupId>org.codehaus.jackson</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>jersey-server</artifactId>
-					<groupId>com.sun.jersey</groupId>
-				</exclusion>
-			</exclusions> -->
 		</dependency>
 	</dependencies>
 </project>

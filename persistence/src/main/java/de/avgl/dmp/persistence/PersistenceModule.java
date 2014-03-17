@@ -21,7 +21,6 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
-import de.avgl.dmp.persistence.model.internal.graph.Neo4jServer;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 import de.avgl.dmp.persistence.service.internal.InternalServiceFactoryImpl;
 import de.avgl.dmp.persistence.service.job.ComponentService;
@@ -84,8 +83,6 @@ public class PersistenceModule extends AbstractModule {
 		bind(MappingAttributePathInstanceService.class).in(Scopes.SINGLETON);
 
 		bind(InternalModelServiceFactory.class).to(InternalServiceFactoryImpl.class).in(Scopes.SINGLETON);
-		
-		bind(Neo4jServer.class).in(Scopes.SINGLETON);
 	}
 
 	/**

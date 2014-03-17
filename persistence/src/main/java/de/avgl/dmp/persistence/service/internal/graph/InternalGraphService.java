@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.neo4j.graphdb.GraphDatabaseService;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
@@ -14,10 +13,10 @@ import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.internal.Model;
-import de.avgl.dmp.persistence.model.internal.graph.Neo4jServer;
 import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
 import de.avgl.dmp.persistence.model.internal.rdf.helper.AttributePathHelper;
 import de.avgl.dmp.persistence.model.proxy.RetrievalType;
@@ -33,12 +32,6 @@ import de.avgl.dmp.persistence.model.schema.proxy.ProxyClasz;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxySchema;
 import de.avgl.dmp.persistence.model.schema.utils.SchemaUtils;
 import de.avgl.dmp.persistence.service.InternalModelService;
-import de.avgl.dmp.persistence.service.internal.graph.parse.JenaModelParser;
-import de.avgl.dmp.persistence.service.internal.graph.parse.Neo4jRDFHandler;
-import de.avgl.dmp.persistence.service.internal.graph.parse.RDFHandler;
-import de.avgl.dmp.persistence.service.internal.graph.parse.RDFParser;
-import de.avgl.dmp.persistence.service.internal.graph.read.PropertyGraphReader;
-import de.avgl.dmp.persistence.service.internal.graph.read.RDFReader;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.schema.AttributePathService;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
@@ -57,10 +50,10 @@ public class InternalGraphService implements InternalModelService {
 
 	private static final org.apache.log4j.Logger	LOG								= org.apache.log4j.Logger.getLogger(InternalGraphService.class);
 
-	/**
-	 * The graph database.
-	 */
-	private final GraphDatabaseService							database;
+//	/**
+//	 * The graph database.
+//	 */
+//	private final GraphDatabaseService							database;
 
 	/**
 	 * The data model persistence service.
@@ -98,8 +91,8 @@ public class InternalGraphService implements InternalModelService {
 	@Inject
 	public InternalGraphService(final Provider<DataModelService> dataModelService, final Provider<SchemaService> schemaService,
 			final Provider<ClaszService> classService, final Provider<AttributePathService> attributePathService,
-			final Provider<AttributeService> attributeService, final Neo4jServer server) {
-		database = server.getDatabase();
+			final Provider<AttributeService> attributeService) {
+		//database = server.getDatabase();
 		this.dataModelService = dataModelService;
 		this.schemaService = schemaService;
 		this.classService = classService;
@@ -120,10 +113,10 @@ public class InternalGraphService implements InternalModelService {
 	@Override
 	public void createObject(final Long dataModelId, final Object model) throws DMPPersistenceException {
 
-		if (database == null) {
-
-			throw new DMPPersistenceException("couldn't establish connection to DB, i.e., cannot add new model to DB");
-		}
+//		if (database == null) {
+//
+//			throw new DMPPersistenceException("couldn't establish connection to DB, i.e., cannot add new model to DB");
+//		}
 
 		if (dataModelId == null) {
 
@@ -187,10 +180,10 @@ public class InternalGraphService implements InternalModelService {
 
 		addAttributePaths(finalDataModel, rdfModel.getAttributePaths());
 		
-		final RDFHandler handler = new Neo4jRDFHandler(database, resourceGraphURI);
-		final RDFParser parser = new JenaModelParser(realModel);
-		parser.setRDFHandler(handler);
-		parser.parse();
+//		final RDFHandler handler = new Neo4jRDFHandler(database, resourceGraphURI);
+//		final RDFParser parser = new JenaModelParser(realModel);
+//		parser.setRDFHandler(handler);
+//		parser.parse();
 	}
 
 	/**
@@ -199,10 +192,10 @@ public class InternalGraphService implements InternalModelService {
 	@Override
 	public Optional<Map<String, Model>> getObjects(final Long dataModelId, final Optional<Integer> atMost) throws DMPPersistenceException {
 
-		if (database == null) {
-
-			throw new DMPPersistenceException("couldn't establish connection to DB, i.e., cannot retrieve model from DB");
-		}
+//		if (database == null) {
+//
+//			throw new DMPPersistenceException("couldn't establish connection to DB, i.e., cannot retrieve model from DB");
+//		}
 
 		if (dataModelId == null) {
 
@@ -241,8 +234,10 @@ public class InternalGraphService implements InternalModelService {
 
 		final String recordClassUri = recordClass.getUri();
 		
-		final RDFReader rdfReader = new PropertyGraphReader(recordClassUri, resourceGraphURI, database);
-		final com.hp.hpl.jena.rdf.model.Model model = rdfReader.read();
+//		final RDFReader rdfReader = new PropertyGraphReader(recordClassUri, resourceGraphURI, database);
+//		final com.hp.hpl.jena.rdf.model.Model model = rdfReader.read();
+		
+		final com.hp.hpl.jena.rdf.model.Model model = ModelFactory.createDefaultModel();
 
 		if (model == null) {
 
@@ -300,10 +295,10 @@ public class InternalGraphService implements InternalModelService {
 	@Override
 	public void deleteObject(final Long dataModelId) throws DMPPersistenceException {
 
-		if (database == null) {
-
-			throw new DMPPersistenceException("couldn't establish connection to DB, i.e., cannot remove model from DB");
-		}
+//		if (database == null) {
+//
+//			throw new DMPPersistenceException("couldn't establish connection to DB, i.e., cannot remove model from DB");
+//		}
 
 		if (dataModelId == null) {
 
