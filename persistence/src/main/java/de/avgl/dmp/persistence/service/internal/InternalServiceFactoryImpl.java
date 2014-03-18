@@ -49,6 +49,7 @@ public class InternalServiceFactoryImpl implements InternalModelServiceFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Deprecated
 	@Override
 	public InternalModelService getMemoryDbInternalService() {
 
