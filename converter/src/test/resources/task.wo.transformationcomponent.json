@@ -6,7 +6,9 @@
         "mappings": [{
             "id": 1,
             "name": "Nr->Nr",
-            "transformation": {},
+            "transformation": {
+            	"parameter_mappings": {}
+            },
             "input_attribute_paths": [{
                 "type": "MappingAttributePathInstance",
                 "name": "input mapping attribute path instance",

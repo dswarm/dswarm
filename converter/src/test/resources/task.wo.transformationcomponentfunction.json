@@ -10,7 +10,8 @@
                 "id": 1,
                 "name": "Nr->Nr transformation component",
                 "description": "Nr->Nr",
-                "function": {}
+                "function": {},
+                "parameter_mappings": {}
             },
             "input_attribute_paths": [{
                 "type": "MappingAttributePathInstance",

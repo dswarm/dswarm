@@ -36,6 +36,7 @@ import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.model.types.Tuple;
+import de.avgl.dmp.persistence.service.internal.graph.InternalGraphService;
 import de.avgl.dmp.persistence.service.internal.triple.InternalTripleService;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
@@ -144,7 +145,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		// System.out.println(objectMapper.writeValueAsString(rdfModel.toJSON()));
 
 		// write model and retrieve tuples
-		final InternalTripleService tripleService = injector.getInstance(InternalTripleService.class);
+		final InternalGraphService tripleService = injector.getInstance(InternalGraphService.class);
 		tripleService.createObject(updatedDataModel.getId(), rdfModel);
 
 		// retrieve updated fresh data model
@@ -200,7 +201,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 					final Set<Attribute> attributesToDelete = attributePath.getAttributes();
 
-					if (attributes != null) {
+					if (attributePathsToDelete != null) {
 
 						for (final Attribute attribute : attributesToDelete) {
 
