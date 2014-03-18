@@ -40,7 +40,7 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
 
 /**
  * The Guice configuration of the persistence module. Interface/classes that are registered here can be utilised for injection.
- *
+ * 
  * @author phorn
  * @author tgaengler
  */
@@ -65,6 +65,10 @@ public class PersistenceModule extends AbstractModule {
 
 		bind(String.class).annotatedWith(Names.named("TdbPath")).toInstance(tdbPath);
 
+		final String graphEndpoint = properties.getProperty("dmp_graph_endpoint", "http://localhost:7474/graph");
+
+		bind(String.class).annotatedWith(Names.named("dmp_graph_endpoint")).toInstance(graphEndpoint);
+
 		bind(JsonToPojoMapper.class);
 
 		bind(ResourceService.class).in(Scopes.SINGLETON);
@@ -87,7 +91,7 @@ public class PersistenceModule extends AbstractModule {
 
 	/**
 	 * Provides the {@link ObjectMapper} instance for JSON de-/serialisation.
-	 *
+	 * 
 	 * @return a {@link ObjectMapper} instance as singleton
 	 */
 	@Provides
@@ -104,7 +108,7 @@ public class PersistenceModule extends AbstractModule {
 
 	/**
 	 * Provides the metric registry to register objects for metric statistics.
-	 *
+	 * 
 	 * @return a {@link MetricRegistry} instance as singleton
 	 */
 	@Provides
@@ -121,7 +125,7 @@ public class PersistenceModule extends AbstractModule {
 
 	/**
 	 * Provides the event bus for event processing.
-	 *
+	 * 
 	 * @return a {@link EventBus} instance as singleton
 	 */
 	@Provides
@@ -132,7 +136,8 @@ public class PersistenceModule extends AbstractModule {
 		// return new AsyncEventBus(executorService);
 
 		// synchronous event bus
-		// TODO: [@tgaengler] currently, we switched back to the synchronous event bus, which might not be optional for scaling or where
+		// TODO: [@tgaengler] currently, we switched back to the synchronous event bus, which might not be optional for scaling or
+		// where
 		// asynchronous event handling is really required => so, we should think about how to replace/enhance this mechanism in
 		// the near future (maybe replace the event bus with akka (or similar frameworks))
 		return new EventBus();

@@ -29,6 +29,7 @@ import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
@@ -98,6 +99,8 @@ public class InternalGraphService implements InternalModelService {
 	 */
 	private static final String						DATA_MODEL_GRAPH_URI_PATTERN	= "http://data.slub-dresden.de/datamodel/{datamodelid}/data";
 
+	private final String							graphEndpoint;
+
 	/**
 	 * Creates a new internal triple service with the given data model persistence service, schema persistence service, class
 	 * persistence service and the directory of the Jena TDB triple store.
@@ -110,13 +113,15 @@ public class InternalGraphService implements InternalModelService {
 	@Inject
 	public InternalGraphService(final Provider<DataModelService> dataModelService, final Provider<SchemaService> schemaService,
 			final Provider<ClaszService> classService, final Provider<AttributePathService> attributePathService,
-			final Provider<AttributeService> attributeService) {
+			final Provider<AttributeService> attributeService, @Named("dmp_graph_endpoint") final String graphEndpointArg) {
 		// database = server.getDatabase();
 		this.dataModelService = dataModelService;
 		this.schemaService = schemaService;
 		this.classService = classService;
 		this.attributePathService = attributePathService;
 		this.attributeService = attributeService;
+
+		graphEndpoint = graphEndpointArg;
 	}
 
 	@Deprecated
@@ -566,7 +571,7 @@ public class InternalGraphService implements InternalModelService {
 		requestJson.put("resource_graph_uri", resourceGraphUri);
 
 		String requestJsonString;
-		
+
 		try {
 
 			requestJsonString = objectMapper.writeValueAsString(requestJson);
@@ -588,7 +593,7 @@ public class InternalGraphService implements InternalModelService {
 		final String body = response.readEntity(String.class);
 
 		InputStream stream;
-		
+
 		try {
 
 			stream = new ByteArrayInputStream(body.getBytes("UTF-8"));
@@ -612,8 +617,7 @@ public class InternalGraphService implements InternalModelService {
 
 	private WebTarget target() {
 
-		// TODO: outsource this as property
-		WebTarget target = client().target("http://localhost:7474/graph");
+		WebTarget target = client().target(graphEndpoint);
 
 		if (InternalGraphService.resourceIdentifier != null) {
 
