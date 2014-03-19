@@ -181,6 +181,12 @@ public class TasksCsvResourceTest extends ResourceTest {
 			final String inputAttributeName = inputAttributeJSON.get("name").asText();
 			inputAttributeJSON.put("uri", dataResourceSchemaBaseURI + inputAttributeName);
 		}
+		
+		// manipulate parameter mappings in transformation component
+		final ObjectNode transformationComponentParameterMappingsJSON = (ObjectNode) ((ObjectNode) mappingJSON.get("transformation"))
+				.get("parameter_mappings");
+		transformationComponentParameterMappingsJSON.put("description", dataResourceSchemaBaseURI + outputAttributeName);
+		transformationComponentParameterMappingsJSON.put("transformationOutputVariable", dataResourceSchemaBaseURI + outputAttributeName);
 
 		final String finalTaskJSONString = objectMapper.writeValueAsString(taskJSON);
 
@@ -217,17 +223,17 @@ public class TasksCsvResourceTest extends ResourceTest {
 				expectedRecordDataFieldNameExample.lastIndexOf('#') + 1);
 
 		for (final JsonNode expectedNode : expectedJSONArray) {
-			final JsonNode actualNode = actualNodes.get(expectedNode.get("record_id").asText());
+
+			final String recordData = ((ObjectNode) expectedNode.get("record_data")).get(expectedDataResourceSchemaBaseURI + "description").asText();
+			final JsonNode actualNode = getRecordData(recordData, actualJSONArray, actualDataResourceSchemaBaseURI + "description");
 
 			assertThat(actualNode, is(notNullValue()));
-
-			assertThat(expectedNode.get("record_id").asText(), equalTo(actualNode.get("record_id").asText()));
 
 			final ObjectNode expectedRecordData = (ObjectNode) expectedNode.get("record_data");
 			final ObjectNode actualRecordData = (ObjectNode) actualNode.get("record_data");
 
-			assertThat(expectedRecordData.get(expectedDataResourceSchemaBaseURI + "description").asText(),
-					equalTo(actualRecordData.get(actualDataResourceSchemaBaseURI + "description").asText()));
+			assertThat(actualRecordData.get(actualDataResourceSchemaBaseURI + "description").asText(),
+					equalTo(expectedRecordData.get(expectedDataResourceSchemaBaseURI + "description").asText()));
 		}
 
 		LOG.debug("end task execution test");
@@ -279,5 +285,20 @@ public class TasksCsvResourceTest extends ResourceTest {
 		classesResourceTestUtils.deleteObject(recordClass);
 		resourcesResourceTestUtils.deleteObject(resource);
 		configurationsResourceTestUtils.deleteObject(configuration);
+	}
+	
+	private JsonNode getRecordData(final String recordData, final ArrayNode jsonArray, final String key) {
+
+		for (final JsonNode jsonEntry : jsonArray) {
+
+			final ObjectNode actualRecordData = (ObjectNode) jsonEntry.get("record_data");
+
+			if (recordData.equals(actualRecordData.get(key).asText())) {
+
+				return jsonEntry;
+			}
+		}
+
+		return null;
 	}
 }

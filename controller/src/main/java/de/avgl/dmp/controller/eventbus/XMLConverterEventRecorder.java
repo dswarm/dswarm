@@ -91,7 +91,7 @@ public class XMLConverterEventRecorder {
 
 			try {
 
-				internalServiceFactory.getInternalTripleService().createObject(dataModel.getId(), result);
+				internalServiceFactory.getInternalGraphService().createObject(dataModel.getId(), result);
 			} catch (final DMPPersistenceException e) {
 
 				LOG.error("couldn't persist the converted data of data model '" + dataModel.getId() + "'", e);

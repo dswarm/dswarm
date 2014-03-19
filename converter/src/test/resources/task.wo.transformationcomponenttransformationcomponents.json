@@ -15,7 +15,7 @@
                     "name": "transformation",
                     "type": "Transformation",
                     "components": []
-                }
+                 }
             },
             "input_attribute_paths": [{
                 "type": "MappingAttributePathInstance",

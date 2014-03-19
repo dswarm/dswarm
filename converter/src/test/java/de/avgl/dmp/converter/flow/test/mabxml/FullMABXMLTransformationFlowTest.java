@@ -1,4 +1,5 @@
-package de.avgl.dmp.converter.flow.test;
+package de.avgl.dmp.converter.flow.test.mabxml;
+
 
 
 /**
