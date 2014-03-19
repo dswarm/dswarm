@@ -284,6 +284,12 @@ public class MorphScriptBuilder {
 			MorphScriptBuilder.LOG.debug("transformation component for mapping '" + mapping.getId() + "' was empty");
 			return;
 		}
+		
+//		if (transformationComponent.getParameterMappings() == null) {
+//
+//			MorphScriptBuilder.LOG.debug("parameter mappings for transformation component shouldn't be empty, mapping: '" + mapping.getId() + "'");
+//			return;
+//		}
 
 		// get all input attribute paths and create datas for them
 
@@ -314,7 +320,8 @@ public class MorphScriptBuilder {
 		dataOutput.setAttribute("source", "@" + getKeyParameterMapping(outputAttributePath, transformationComponent));
 		dataOutput.setAttribute("name", outputAttributePath);
 		rules.appendChild(dataOutput);
-
+		
+		
 		final Function transformationFunction = transformationComponent.getFunction();
 
 		if (transformationFunction == null) {

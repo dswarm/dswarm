@@ -200,7 +200,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 					final Set<Attribute> attributesToDelete = attributePath.getAttributes();
 
-					if (attributes != null) {
+					if (attributePathsToDelete != null) {
 
 						for (final Attribute attribute : attributesToDelete) {
 

@@ -195,7 +195,8 @@
                             "title": "Lorem Ipsum"
                         }
                     }]
-                }
+                },
+                "parameter_mappings": {}
             },
             "input_attribute_paths": [{
                 "type": "MappingAttributePathInstance",
