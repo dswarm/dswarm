@@ -446,6 +446,7 @@
 				<rdb.url>${db.mysql.url}</rdb.url>
 				<rdb.username>${db.mysql.username}</rdb.username>
 				<rdb.password>${db.mysql.password}</rdb.password>
+				<dmp_graph_endpoint>${dmp_graph_endpoint}</dmp_graph_endpoint>
 			</properties>
 		</profile>
 		<profile>
@@ -455,6 +456,7 @@
 				<rdb.url>jdbc:mysql://localhost:3306/dmp_dev?useUnicode=true&amp;amp;characterEncoding=UTF-8&amp;amp;autoReconnect=true</rdb.url>
 				<rdb.username>dmp</rdb.username>
 				<rdb.password>dmp_mysql</rdb.password>
+				<dmp_graph_endpoint>http://194.95.145.12:7474/graph</dmp_graph_endpoint>
 			</properties>
 		</profile>
 		<profile>
@@ -464,6 +466,7 @@
 				<rdb.url>${db.mysql.url}</rdb.url>
 				<rdb.username>${db.mysql.username}</rdb.username>
 				<rdb.password>${db.mysql.password}</rdb.password>
+				<dmp_graph_endpoint>${dmp_graph_endpoint}</dmp_graph_endpoint>
 			</properties>
 		</profile>
 		<profile>
