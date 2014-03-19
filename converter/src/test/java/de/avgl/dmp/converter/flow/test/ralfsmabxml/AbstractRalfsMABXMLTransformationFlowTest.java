@@ -1,4 +1,6 @@
-package de.avgl.dmp.converter.flow.test;
+package de.avgl.dmp.converter.flow.test.ralfsmabxml;
+
+import de.avgl.dmp.converter.flow.test.AbstractXMLTransformationFlowTest;
 
 
 /**

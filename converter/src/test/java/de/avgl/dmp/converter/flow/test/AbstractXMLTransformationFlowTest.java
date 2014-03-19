@@ -176,6 +176,8 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
 		final TransformationFlow flow = TransformationFlow.fromTask(task);
+		
+		flow.getScript();
 
 		final String actual = flow.apply(tuples);
 

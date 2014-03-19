@@ -1,15 +1,21 @@
 package de.avgl.dmp.persistence.model.resource.utils;
 
 import java.net.URI;
+import java.util.Map;
+import java.util.UUID;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.utils.ExtendedBasicDMPJPAObjectUtils;
 
 /**
  * A utility class for {@link DataModel}s and related entities.
- *
+ * 
  * @author tgaengler
  */
 public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataModel> {
@@ -18,12 +24,12 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 
 		final String dataResourceBaseURI = determineDataResourceBaseURI(dataModel);
 
-		if(dataResourceBaseURI == null) {
+		if (dataResourceBaseURI == null) {
 
 			return null;
 		}
 
-		if(dataResourceBaseURI.endsWith("/")) {
+		if (dataResourceBaseURI.endsWith("/")) {
 
 			return dataResourceBaseURI + "schema#";
 		}
@@ -77,5 +83,46 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 		}
 
 		return dataResourceBaseURI;
+	}
+
+	public static Resource mintRecordResource(final Long identifier, final DataModel dataModel, final Map<Long, Resource> recordResources,
+			final Model model, final String recordClassURI) {
+
+		if (identifier != null) {
+
+			if (recordResources.containsKey(identifier)) {
+
+				return recordResources.get(identifier);
+			}
+		}
+
+		// mint completely new uri
+
+		final StringBuilder sb = new StringBuilder();
+
+		if (dataModel != null) {
+
+			// create uri from resource id and configuration id and random uuid
+
+			sb.append("http://data.slub-dresden.de/datamodels/").append(dataModel.getId()).append("/records/");
+		} else {
+
+			// create uri from random uuid
+
+			sb.append("http://data.slub-dresden.de/records/");
+		}
+
+		final String recordURI = sb.append(UUID.randomUUID()).toString();
+		final Resource recordResource = ResourceFactory.createResource(recordURI);
+
+		if (identifier != null) {
+
+			recordResources.put(identifier, recordResource);
+		}
+
+		// add resource type statement to model
+		model.add(recordResource, RDF.type, ResourceFactory.createResource(recordClassURI));
+
+		return recordResource;
 	}
 }

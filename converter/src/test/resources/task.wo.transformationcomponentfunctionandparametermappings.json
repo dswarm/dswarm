@@ -6,6 +6,11 @@
         "mappings": [{
             "id": 1,
             "name": "Nr->Nr",
+            "transformation": {
+                "id": 1,
+                "name": "Nr->Nr transformation component",
+                "description": "Nr->Nr"
+            },
             "input_attribute_paths": [{
                 "type": "MappingAttributePathInstance",
                 "name": "input mapping attribute path instance",

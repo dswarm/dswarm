@@ -47,9 +47,19 @@ public class TransformationFlow {
 	public static final String						DEFAULT_RESOURCE_PATH	= "qucosa_record.xml";
 
 	private final Metamorph							transformer;
+	
+	private final String script;
 
 	public TransformationFlow(final Metamorph transformer) {
+		
 		this.transformer = transformer;
+		script = null;
+	}
+	
+	public TransformationFlow(final Metamorph transformer, final String scriptArg) {
+		
+		this.transformer = transformer;
+		script = scriptArg;
 	}
 
 	// public String applyRecord(final String record) {
@@ -58,6 +68,11 @@ public class TransformationFlow {
 	//
 	// return apply(record, opener);
 	// }
+	
+	public String getScript() {
+		
+		return script;
+	}
 
 	public String applyRecordDemo(final String record) {
 
@@ -172,7 +187,7 @@ public class TransformationFlow {
 		final java.io.StringReader stringReader = new java.io.StringReader(morphScriptString);
 		final Metamorph transformer = new Metamorph(stringReader);
 
-		return new TransformationFlow(transformer);
+		return new TransformationFlow(transformer, morphScriptString);
 	}
 
 	public static TransformationFlow fromFile(final File file) throws FileNotFoundException, DMPConverterException {

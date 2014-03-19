@@ -1,4 +1,4 @@
-package de.avgl.dmp.converter.flow.test;
+package de.avgl.dmp.converter.flow.test.ralfsmabxml;
 
 import org.junit.Ignore;
 

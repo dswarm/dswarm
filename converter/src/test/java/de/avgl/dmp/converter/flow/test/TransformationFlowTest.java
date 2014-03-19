@@ -12,6 +12,7 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.culturegraph.mf.stream.converter.JsonEncoder;
@@ -30,14 +31,19 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
 import com.google.common.collect.AbstractIterator;
+import com.google.common.collect.Maps;
 import com.google.common.io.Resources;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
 import de.avgl.dmp.converter.GuicedTest;
 import de.avgl.dmp.converter.flow.CSVSourceResourceTriplesFlow;
 import de.avgl.dmp.converter.flow.TransformationFlow;
 import de.avgl.dmp.converter.mf.stream.reader.CsvReader;
 import de.avgl.dmp.persistence.model.internal.Model;
-import de.avgl.dmp.persistence.model.internal.impl.MemoryDBInputModel;
+import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
+// import de.avgl.dmp.persistence.model.internal.impl.MemoryDBInputModel;
 import de.avgl.dmp.persistence.model.job.Task;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
@@ -45,11 +51,19 @@ import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
 import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
 import de.avgl.dmp.persistence.model.resource.utils.DataModelUtils;
+import de.avgl.dmp.persistence.model.schema.Attribute;
+import de.avgl.dmp.persistence.model.schema.AttributePath;
+import de.avgl.dmp.persistence.model.schema.Clasz;
+import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.model.types.Tuple;
-import de.avgl.dmp.persistence.service.internal.memorydb.InternalMemoryDbService;
+import de.avgl.dmp.persistence.service.internal.graph.InternalGraphService;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
+import de.avgl.dmp.persistence.service.schema.AttributePathService;
+import de.avgl.dmp.persistence.service.schema.AttributeService;
+import de.avgl.dmp.persistence.service.schema.ClaszService;
+import de.avgl.dmp.persistence.service.schema.SchemaService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public class TransformationFlowTest extends GuicedTest {
@@ -118,15 +132,45 @@ public class TransformationFlowTest extends GuicedTest {
 		Assert.assertNotNull("CSV record triple list shouldn't be null", csvRecordTriples);
 		Assert.assertFalse("CSV record triple list shouldn't be empty", csvRecordTriples.isEmpty());
 
-		final InternalMemoryDbService memoryDbService = injector.getInstance(InternalMemoryDbService.class);
+		final InternalGraphService memoryDbService = injector.getInstance(InternalGraphService.class);
 
 		// write CSV record triples
-		for (final Triple triple : csvRecordTriples) {
+		// for (final Triple triple : csvRecordTriples) {
+		//
+		// final MemoryDBInputModel mdbim = new MemoryDBInputModel(triple);
+		//
+		// memoryDbService.createObject(updatedDataModel.getId(), mdbim);
+		// }
 
-			final MemoryDBInputModel mdbim = new MemoryDBInputModel(triple);
+		// convert result to RDF
+		final Map<Long, com.hp.hpl.jena.rdf.model.Resource> recordResources = Maps.newHashMap();
 
-			memoryDbService.createObject(updatedDataModel.getId(), mdbim);
+		final com.hp.hpl.jena.rdf.model.Model model = ModelFactory.createDefaultModel();
+
+		final String dataResourceBaseSchemaURI = DataModelUtils.determineDataResourceSchemaBaseURI(dataModel);
+		final String recordClassURI = dataResourceBaseSchemaURI + "RecordType";
+
+		for (final org.culturegraph.mf.types.Triple triple : csvRecordTriples) {
+
+			final com.hp.hpl.jena.rdf.model.Resource subject = DataModelUtils.mintRecordResource(Long.valueOf(triple.getSubject()), dataModel,
+					recordResources, model, recordClassURI);
+			final Property property = ResourceFactory.createProperty(triple.getPredicate());
+
+			model.add(subject, property, triple.getObject());
 		}
+
+		final RDFModel rdfModel = new RDFModel(model, null, recordClassURI);
+
+		memoryDbService.createObject(dataModel.getId(), rdfModel);
+		// finished writing CSV statements to graph
+		
+		// retrieve updated fresh data model
+		final DataModel freshDataModel = dataModelService.getObject(updatedDataModel.getId());
+
+		Assert.assertNotNull("the fresh data model shouldn't be null", freshDataModel);
+		Assert.assertNotNull("the schema of the fresh data model shouldn't be null", freshDataModel.getSchema());
+
+		final Schema schema = freshDataModel.getSchema();
 
 		final Optional<Map<String, Model>> optionalModelMap = memoryDbService.getObjects(updatedDataModel.getId(), Optional.<Integer> absent());
 
@@ -165,15 +209,25 @@ public class TransformationFlowTest extends GuicedTest {
 			inputAttributeJSON.put("uri", dataResourceSchemaBaseURI + inputAttributeName);
 		}
 
+		// manipulate parameter mappings in transformation component
+		final ObjectNode transformationComponentParameterMappingsJSON = (ObjectNode) ((ObjectNode) mappingJSON.get("transformation"))
+				.get("parameter_mappings");
+		transformationComponentParameterMappingsJSON.put("description", dataResourceSchemaBaseURI + outputAttributeName);
+		transformationComponentParameterMappingsJSON.put("transformationOutputVariable", dataResourceSchemaBaseURI + outputAttributeName);
+
 		final String finalTaskJSONString = objectMapper.writeValueAsString(taskJSON);
 
 		final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
 		final TransformationFlow flow = TransformationFlow.fromTask(task);
 
+		flow.getScript();
+
 		final String actual = flow.apply(tuples);
 
 		final ArrayNode expectedJSONArray = objectMapper.readValue(expected, ArrayNode.class);
 		final ArrayNode actualNodes = objectMapper.readValue(actual, ArrayNode.class);
+
+		objectMapper.writeValueAsString(actualNodes);
 
 		final String actualDataResourceSchemaBaseURI = DataModelUtils.determineDataResourceSchemaBaseURI(updatedDataModel);
 
@@ -182,22 +236,75 @@ public class TransformationFlowTest extends GuicedTest {
 				expectedRecordDataFieldNameExample.lastIndexOf('#') + 1);
 
 		for (final JsonNode expectedNode : expectedJSONArray) {
-			final String recordId = expectedNode.get("record_id").asText();
-			final JsonNode actualNode = getRecord(recordId, actualNodes);
+
+			final String recordData = ((ObjectNode) expectedNode.get("record_data")).get(expectedDataResourceSchemaBaseURI + "description").asText();
+			final JsonNode actualNode = getRecordData(recordData, actualNodes, actualDataResourceSchemaBaseURI + "description");
 
 			assertThat(actualNode, is(notNullValue()));
-
-			assertThat(expectedNode.get("record_id").asText(), equalTo(actualNode.get("record_id").asText()));
 
 			final ObjectNode expectedRecordData = (ObjectNode) expectedNode.get("record_data");
 			final ObjectNode actualRecordData = (ObjectNode) actualNode.get("record_data");
 
-			assertThat(expectedRecordData.get(expectedDataResourceSchemaBaseURI + "description").asText(),
-					equalTo(actualRecordData.get(actualDataResourceSchemaBaseURI + "description").asText()));
+			assertThat(actualRecordData.get(actualDataResourceSchemaBaseURI + "description").asText(),
+					equalTo(expectedRecordData.get(expectedDataResourceSchemaBaseURI + "description").asText()));
 		}
 
 		// clean-up
+		// TODO: move clean-up to @After
+
+		final Map<Long, Attribute> attributes = Maps.newHashMap();
+
+		final Map<Long, AttributePath> attributePaths = Maps.newLinkedHashMap();
+
+		final Clasz recordClass = schema.getRecordClass();
+
+		if (schema != null) {
+
+			final Set<AttributePath> attributePathsToDelete = schema.getAttributePaths();
+
+			if (attributePaths != null) {
+
+				for (final AttributePath attributePath : attributePathsToDelete) {
+
+					attributePaths.put(attributePath.getId(), attributePath);
+
+					final Set<Attribute> attributesToDelete = attributePath.getAttributes();
+
+					if (attributePathsToDelete != null) {
+
+						for (final Attribute attribute : attributesToDelete) {
+
+							attributes.put(attribute.getId(), attribute);
+						}
+					}
+				}
+			}
+		}
+
 		dataModelService.deleteObject(updatedDataModel.getId());
+		final SchemaService schemaService = injector.getInstance(SchemaService.class);
+
+		schemaService.deleteObject(schema.getId());
+
+		final AttributePathService attributePathService = injector.getInstance(AttributePathService.class);
+
+		for (final AttributePath attributePath : attributePaths.values()) {
+
+			attributePathService.deleteObject(attributePath.getId());
+		}
+
+		final AttributeService attributeService = injector.getInstance(AttributeService.class);
+
+		for (final Attribute attribute : attributes.values()) {
+
+			attributeService.deleteObject(attribute.getId());
+		}
+
+		final ClaszService claszService = injector.getInstance(ClaszService.class);
+
+		claszService.deleteObject(recordClass.getId());
+
+		// clean-up
 		configurationService.deleteObject(updatedConfiguration.getId());
 		resourceService.deleteObject(updatedResource.getId());
 	}
@@ -213,13 +320,15 @@ public class TransformationFlowTest extends GuicedTest {
 
 		assertEquals(expected, actual);
 	}
-	
+
 	@Test
 	public void testMorphRecursiveToEndDemo() throws Exception {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("complex-result.json");
 
 		final TransformationFlow flow = TransformationFlow.fromFile("complex-metamorph-recursive.xml");
+
+		flow.getScript();
 
 		final String actual = flow.applyDemo();
 
@@ -238,7 +347,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 		assertEquals(expected, actual);
 	}
-	
+
 	@Test
 	public void testEndToEndByRecordStringExampleDemo2() throws Exception {
 
@@ -300,11 +409,13 @@ public class TransformationFlowTest extends GuicedTest {
 		};
 	}
 
-	private JsonNode getRecord(final String recordId, final ArrayNode jsonArray) {
+	private JsonNode getRecordData(final String recordData, final ArrayNode jsonArray, final String key) {
 
 		for (final JsonNode jsonEntry : jsonArray) {
 
-			if (recordId.equals(jsonEntry.get("record_id").asText())) {
+			final ObjectNode actualRecordData = (ObjectNode) jsonEntry.get("record_data");
+
+			if (recordData.equals(actualRecordData.get(key).asText())) {
 
 				return jsonEntry;
 			}

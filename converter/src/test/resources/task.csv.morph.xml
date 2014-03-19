@@ -1,0 +1,13 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+    <meta>
+        <name>mappingnull</name>
+    </meta>
+    <rules>
+        <data name="@description" source="http://data.slub-dresden.de/resources/1/schema#description"/>
+        <data name="http://data.slub-dresden.de/resources/1/schema#description" source="@transformationOutputVariable"/>
+        <data name="@transformationOutputVariable" source="@description">
+            <replace pattern="a" with="x"/>
+        </data>
+    </rules>
+</metamorph>

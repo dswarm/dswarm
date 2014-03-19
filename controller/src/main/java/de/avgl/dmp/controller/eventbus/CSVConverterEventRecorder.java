@@ -70,7 +70,7 @@ public class CSVConverterEventRecorder {
 				// 2. create property object from property uri string
 				// 3. convert objects (string literals) to string literals (?)
 
-				final Resource subject = mintRecordResource(Long.valueOf(triple.getSubject()), dataModel, recordResources, model, recordClassURI);
+				final Resource subject = DataModelUtils.mintRecordResource(Long.valueOf(triple.getSubject()), dataModel, recordResources, model, recordClassURI);
 				final Property property = ResourceFactory.createProperty(triple.getPredicate());
 
 				model.add(subject, property, triple.getObject());
@@ -96,46 +96,5 @@ public class CSVConverterEventRecorder {
 				CSVConverterEventRecorder.LOG.error("couldn't persist the converted data of data model '" + dataModel.getId() + "'", e);
 			}
 		}
-	}
-
-	private Resource mintRecordResource(final Long identifier, final DataModel dataModel, final Map<Long, Resource> recordResources,
-			final com.hp.hpl.jena.rdf.model.Model model, final String recordClassURI) {
-
-		if (identifier != null) {
-
-			if (recordResources.containsKey(identifier)) {
-
-				return recordResources.get(identifier);
-			}
-		}
-
-		// mint completely new uri
-
-		final StringBuilder sb = new StringBuilder();
-
-		if (dataModel != null) {
-
-			// create uri from resource id and configuration id and random uuid
-
-			sb.append("http://data.slub-dresden.de/datamodels/").append(dataModel.getId()).append("/records/");
-		} else {
-
-			// create uri from random uuid
-
-			sb.append("http://data.slub-dresden.de/records/");
-		}
-
-		final String recordURI = sb.append(UUID.randomUUID()).toString();
-		final Resource recordResource = ResourceFactory.createResource(recordURI);
-
-		if (identifier != null) {
-
-			recordResources.put(identifier, recordResource);
-		}
-
-		// add resource type statement to model
-		model.add(recordResource, RDF.type, ResourceFactory.createResource(recordClassURI));
-
-		return recordResource;
 	}
 }

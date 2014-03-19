@@ -28,9 +28,14 @@
                 }
             }],
             "transformation": {
+                "parameter_mappings": {
+                    "description": "/test_csv.csv#description",
+                    "transformationOutputVariable": "/test_csv.csv#description"
+                 },
                 "function": {
                     "components": [{
                         "parameter_mappings": {
+                            "inputString": "description",
                             "with": "x",
                             "pattern": "a"
                         },
