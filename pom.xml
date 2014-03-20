@@ -293,6 +293,7 @@
 					<configuration>
 						<source>${java.source.version}</source>
 						<target>${java.target.version}</target>
+						<show>private</show>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -356,7 +357,7 @@
 						<artifactId>doclet</artifactId>
 						<version>${org.umlgraph.doclet.version}</version>
 					</docletArtifact>
-					<show>public</show>
+					<show>private</show>
 					<additionalparam>-all -constructors -inferdepinpackage -inferrel</additionalparam>
 					<useStandardDocletOptions>false</useStandardDocletOptions>
 					<targetJdk>${java.source.version}</targetJdk>
