@@ -191,27 +191,40 @@
         "input_attribute_paths": [{
             "type": "MappingAttributePathInstance",
             "name": "input mapping attribute path instance",
-            "id": 2,
+            "id": 3,
             "type": "MappingAttributePathInstance",
             "attribute_path": {
-                "id": 5,
+                "id": 6,
                 "attributes": [{
                     "name": "title",
                     "uri": "http://purl.org/dc/terms/title",
                     "id": 4
                 }]
             }
+        }, {
+            "type": "MappingAttributePathInstance",
+            "name": "input mapping attribute path instance",
+            "id": 1,
+            "type": "MappingAttributePathInstance",
+            "attribute_path": {
+                "id": 5,
+                "attributes": [{
+                    "name": "dataset",
+                    "uri": "http://data.slub-dresden.de/resources/1/schema#dataset",
+                    "id": 6
+                }]
+            }
         }],
         "output_attribute_path": {
             "type": "MappingAttributePathInstance",
             "name": "output mapping attribute path instance",
-            "id": 1,
+            "id": 2,
             "type": "MappingAttributePathInstance",
             "attribute_path": {
                 "id": 4,
                 "attributes": [{
-                    "name": "label",
-                    "uri": "http://www.w3.org/2000/01/rdf-schema#label",
+                    "name": "dataset",
+                    "uri": "http://data.slub-dresden.de/resources/1/schema#dataset",
                     "id": 6
                 }]
             }

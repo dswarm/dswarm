@@ -39,15 +39,15 @@
                     "parameter_mappings": {
                         "inputString": "previousComponent.outputString"
                     },
-                    "id": -40344660662677504
+                    "id": -8764606810422070272
                 }],
-                "id": -8165055419232808960
+                "id": -8678798010126573568
             },
             "parameter_mappings": {
                 "transformationInputString": "http://purl.org/dc/terms/title",
                 "transformationOutputVariable": "http://www.w3.org/2000/01/rdf-schema#label"
             },
-            "id": -8344651754896458752
+            "id": -5580896502870875136
         },
         "input_attribute_paths": [{
             "type": "MappingAttributePathInstance",
@@ -58,9 +58,21 @@
                     "uri": "http://purl.org/dc/terms/title",
                     "name": "title"
                 }],
-                "id": -1972214728943086592
+                "id": -3813055239539509248
             },
-            "id": -46738832623118336
+            "id": -596195708559444992
+        }, {
+            "type": "MappingAttributePathInstance",
+            "name": "input mapping attribute path instance",
+            "id": 1,
+            "attribute_path": {
+                "id": 5,
+                "attributes": [{
+                    "name": "dataset",
+                    "uri": "http://data.slub-dresden.de/resources/1/schema#dataset",
+                    "id": 6
+                }]
+            }
         }],
         "output_attribute_path": {
             "type": "MappingAttributePathInstance",
@@ -71,11 +83,11 @@
                     "uri": "http://www.w3.org/2000/01/rdf-schema#label",
                     "name": "label"
                 }],
-                "id": -7224536841823020032
+                "id": -4408671628666616832
             },
-            "id": -5856279909432938496
+            "id": -4604650445286682624
         },
-        "id": -6334873149665740800
+        "id": -1883180186746344448
     }],
     "functions": [{
         "type": "Function",
@@ -186,7 +198,7 @@
                 }]
             }]
         },
-        "id": -4750052245271813120
+        "id": -8825977498776171520
     },
     "output_data_model": {
         "name": "my output data model",
@@ -234,6 +246,6 @@
                 "name": "document"
             }
         },
-        "id": -2223209601959904256
+        "id": -3564962124993277952
     }
 }
