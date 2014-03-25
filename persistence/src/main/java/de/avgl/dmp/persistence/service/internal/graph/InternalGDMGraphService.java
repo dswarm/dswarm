@@ -64,9 +64,9 @@ import de.avgl.dmp.persistence.util.RDFUtil;
  * @author tgaengler
  */
 @Singleton
-public class InternalGraphService implements InternalModelService {
+public class InternalGDMGraphService implements InternalModelService {
 
-	private static final org.apache.log4j.Logger	LOG								= org.apache.log4j.Logger.getLogger(InternalGraphService.class);
+	private static final org.apache.log4j.Logger	LOG								= org.apache.log4j.Logger.getLogger(InternalGDMGraphService.class);
 
 	private static final String						resourceIdentifier				= "rdf";
 
@@ -111,7 +111,7 @@ public class InternalGraphService implements InternalModelService {
 	 * @param directory the directory of the Jena TDB triple store
 	 */
 	@Inject
-	public InternalGraphService(final Provider<DataModelService> dataModelService, final Provider<SchemaService> schemaService,
+	public InternalGDMGraphService(final Provider<DataModelService> dataModelService, final Provider<SchemaService> schemaService,
 			final Provider<ClaszService> classService, final Provider<AttributePathService> attributePathService,
 			final Provider<AttributeService> attributeService, @Named("dmp_graph_endpoint") final String graphEndpointArg) {
 		// database = server.getDatabase();
@@ -166,7 +166,7 @@ public class InternalGraphService implements InternalModelService {
 			throw new DMPPersistenceException("real model that should be added to DB shouldn't be null");
 		}
 
-		final String resourceGraphURI = InternalGraphService.DATA_MODEL_GRAPH_URI_PATTERN.replace("{datamodelid}", dataModelId.toString());
+		final String resourceGraphURI = InternalGDMGraphService.DATA_MODEL_GRAPH_URI_PATTERN.replace("{datamodelid}", dataModelId.toString());
 
 		final DataModel dataModel = addRecordClass(dataModelId, rdfModel.getRecordClassURI());
 
@@ -223,14 +223,14 @@ public class InternalGraphService implements InternalModelService {
 			throw new DMPPersistenceException("data model id shouldn't be null");
 		}
 
-		final String resourceGraphURI = InternalGraphService.DATA_MODEL_GRAPH_URI_PATTERN.replace("{datamodelid}", dataModelId.toString());
+		final String resourceGraphURI = InternalGDMGraphService.DATA_MODEL_GRAPH_URI_PATTERN.replace("{datamodelid}", dataModelId.toString());
 
 		// retrieve record class uri from data model schema
 		final DataModel dataModel = dataModelService.get().getObject(dataModelId);
 
 		if (dataModel == null) {
 
-			InternalGraphService.LOG.debug("couldn't find data model '" + dataModelId + "' to retrieve record class from");
+			InternalGDMGraphService.LOG.debug("couldn't find data model '" + dataModelId + "' to retrieve record class from");
 
 			throw new DMPPersistenceException("couldn't find data model '" + dataModelId + "' to retrieve record class from");
 		}
@@ -239,7 +239,7 @@ public class InternalGraphService implements InternalModelService {
 
 		if (schema == null) {
 
-			InternalGraphService.LOG.debug("couldn't find schema in data model '" + dataModelId + "'");
+			InternalGDMGraphService.LOG.debug("couldn't find schema in data model '" + dataModelId + "'");
 
 			throw new DMPPersistenceException("couldn't find schema in data model '" + dataModelId + "'");
 		}
@@ -248,7 +248,7 @@ public class InternalGraphService implements InternalModelService {
 
 		if (recordClass == null) {
 
-			InternalGraphService.LOG.debug("couldn't find record class in schema '" + schema.getId() + "' of data model '" + dataModelId + "'");
+			InternalGDMGraphService.LOG.debug("couldn't find record class in schema '" + schema.getId() + "' of data model '" + dataModelId + "'");
 
 			throw new DMPPersistenceException("couldn't find record class in schema '" + schema.getId() + "' of data model '" + dataModelId + "'");
 		}
@@ -259,14 +259,14 @@ public class InternalGraphService implements InternalModelService {
 
 		if (model == null) {
 
-			InternalGraphService.LOG.debug("couldn't find model for data model '" + dataModelId + "' in database");
+			InternalGDMGraphService.LOG.debug("couldn't find model for data model '" + dataModelId + "' in database");
 
 			return Optional.absent();
 		}
 
 		if (model.isEmpty()) {
 
-			InternalGraphService.LOG.debug("model is empty for data model '" + dataModelId + "' in database");
+			InternalGDMGraphService.LOG.debug("model is empty for data model '" + dataModelId + "' in database");
 
 			return Optional.absent();
 		}
@@ -275,7 +275,7 @@ public class InternalGraphService implements InternalModelService {
 
 		if (recordResources == null || recordResources.isEmpty()) {
 
-			InternalGraphService.LOG.debug("couldn't find records for record class'" + recordClassUri + "' in data model '" + dataModelId + "'");
+			InternalGDMGraphService.LOG.debug("couldn't find records for record class'" + recordClassUri + "' in data model '" + dataModelId + "'");
 
 			throw new DMPPersistenceException("couldn't find records for record class'" + recordClassUri + "' in data model '" + dataModelId + "'");
 		}
@@ -323,7 +323,7 @@ public class InternalGraphService implements InternalModelService {
 			throw new DMPPersistenceException("data model id shouldn't be null");
 		}
 
-		final String resourceGraphURI = InternalGraphService.DATA_MODEL_GRAPH_URI_PATTERN.replace("{datamodelid}", dataModelId.toString());
+		final String resourceGraphURI = InternalGDMGraphService.DATA_MODEL_GRAPH_URI_PATTERN.replace("{datamodelid}", dataModelId.toString());
 
 		// TODO: delete DataModel object from DB here as well?
 
@@ -351,7 +351,7 @@ public class InternalGraphService implements InternalModelService {
 
 		if (dataModel == null) {
 
-			InternalGraphService.LOG.debug("couldn't find data model '" + dataModelId + "' to retrieve it's schema");
+			InternalGDMGraphService.LOG.debug("couldn't find data model '" + dataModelId + "' to retrieve it's schema");
 
 			throw new DMPPersistenceException("couldn't find data model '" + dataModelId + "' to retrieve it's schema");
 		}
@@ -360,7 +360,7 @@ public class InternalGraphService implements InternalModelService {
 
 		if (schema == null) {
 
-			InternalGraphService.LOG.debug("couldn't find schema in data model '" + dataModelId + "'");
+			InternalGDMGraphService.LOG.debug("couldn't find schema in data model '" + dataModelId + "'");
 
 			return Optional.absent();
 		}
@@ -435,7 +435,7 @@ public class InternalGraphService implements InternalModelService {
 
 		if (attributePathHelpers == null) {
 
-			InternalGraphService.LOG.debug("couldn't datermine attribute paths from data model '" + dataModel.getId() + "'");
+			InternalGDMGraphService.LOG.debug("couldn't datermine attribute paths from data model '" + dataModel.getId() + "'");
 
 			return dataModel;
 		}
@@ -528,7 +528,7 @@ public class InternalGraphService implements InternalModelService {
 
 		if (dataModel == null) {
 
-			InternalGraphService.LOG.debug("couldn't find data model '" + dataModelId + "'");
+			InternalGDMGraphService.LOG.debug("couldn't find data model '" + dataModelId + "'");
 
 			return null;
 		}
@@ -619,9 +619,9 @@ public class InternalGraphService implements InternalModelService {
 
 		WebTarget target = client().target(graphEndpoint);
 
-		if (InternalGraphService.resourceIdentifier != null) {
+		if (InternalGDMGraphService.resourceIdentifier != null) {
 
-			target = target.path(InternalGraphService.resourceIdentifier);
+			target = target.path(InternalGDMGraphService.resourceIdentifier);
 		}
 
 		return target;

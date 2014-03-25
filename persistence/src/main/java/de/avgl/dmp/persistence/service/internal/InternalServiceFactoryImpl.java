@@ -5,7 +5,7 @@ import com.google.inject.Singleton;
 
 import de.avgl.dmp.persistence.service.InternalModelService;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
-import de.avgl.dmp.persistence.service.internal.graph.InternalGraphService;
+import de.avgl.dmp.persistence.service.internal.graph.InternalRDFGraphService;
 import de.avgl.dmp.persistence.service.internal.memorydb.InternalMemoryDbService;
 import de.avgl.dmp.persistence.service.internal.triple.InternalTripleService;
 
@@ -30,7 +30,7 @@ public class InternalServiceFactoryImpl implements InternalModelServiceFactory {
 	/**
 	 * The graph internal model service implementation.
 	 */
-	private final InternalGraphService		internalGraphService;
+	private final InternalRDFGraphService		internalGraphService;
 
 	/**
 	 * Creates a new internal model service factory with the given memory DB and triple internal model service implementations.
@@ -39,7 +39,7 @@ public class InternalServiceFactoryImpl implements InternalModelServiceFactory {
 	 * @param internalTripleService the triple internal model service implementation
 	 */
 	@Inject
-	public InternalServiceFactoryImpl(final InternalMemoryDbService internalMemoryDbService, final InternalTripleService internalTripleService, final InternalGraphService internalGraphService) {
+	public InternalServiceFactoryImpl(final InternalMemoryDbService internalMemoryDbService, final InternalTripleService internalTripleService, final InternalRDFGraphService internalGraphService) {
 
 		this.internalMemoryDbService = internalMemoryDbService;
 		this.internalTripleService = internalTripleService;

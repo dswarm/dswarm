@@ -72,6 +72,17 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
+		<repository>
+			<id>slubnexus</id>
+			<name>Internal Releases</name>
+			<url>http://nexus.slub-dresden.de:8081/nexus/content/repositories/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
 	</repositories>
 
 	<build>
@@ -88,7 +99,7 @@
 					<artifactId>cobertura-maven-plugin</artifactId>
 					<version>${cobertura-maven-plugin.version}</version>
 					<configuration>
-						<!-- <instrumentation> <ignores> <ignore>...</ignore> </ignores> <excludes>
+						<!-- <instrumentation> <ignores> <ignore>...</ignore> </ignores> <excludes> 
 							<exclude>...</exclude> </excludes> </instrumentation> -->
 						<formats>
 							<format>xml</format>

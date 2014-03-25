@@ -56,7 +56,7 @@ import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.model.types.Tuple;
-import de.avgl.dmp.persistence.service.internal.graph.InternalGraphService;
+import de.avgl.dmp.persistence.service.internal.graph.InternalRDFGraphService;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
@@ -132,7 +132,7 @@ public class TransformationFlowTest extends GuicedTest {
 		Assert.assertNotNull("CSV record triple list shouldn't be null", csvRecordTriples);
 		Assert.assertFalse("CSV record triple list shouldn't be empty", csvRecordTriples.isEmpty());
 
-		final InternalGraphService memoryDbService = injector.getInstance(InternalGraphService.class);
+		final InternalRDFGraphService memoryDbService = injector.getInstance(InternalRDFGraphService.class);
 
 		// write CSV record triples
 		// for (final Triple triple : csvRecordTriples) {
