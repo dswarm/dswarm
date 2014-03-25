@@ -23,4 +23,8 @@ public interface Model {
 	JsonNode getSchema();
 	
 	Set<AttributePathHelper> getAttributePaths();
+	
+	String getRecordClassURI();
+	
+	void setRecordURIs(final Set<String> recordURIs);
 }

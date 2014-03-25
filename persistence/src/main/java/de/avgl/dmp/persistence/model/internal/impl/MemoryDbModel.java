@@ -58,4 +58,16 @@ public class MemoryDbModel implements Model {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public String getRecordClassURI() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setRecordURIs(Set<String> recordURIs) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -5,6 +5,7 @@ import com.google.inject.Singleton;
 
 import de.avgl.dmp.persistence.service.InternalModelService;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
+import de.avgl.dmp.persistence.service.internal.graph.InternalGDMGraphService;
 import de.avgl.dmp.persistence.service.internal.graph.InternalRDFGraphService;
 import de.avgl.dmp.persistence.service.internal.memorydb.InternalMemoryDbService;
 import de.avgl.dmp.persistence.service.internal.triple.InternalTripleService;
@@ -26,11 +27,16 @@ public class InternalServiceFactoryImpl implements InternalModelServiceFactory {
 	 * The triple internal model service implementation.
 	 */
 	private final InternalTripleService		internalTripleService;
-	
+
 	/**
-	 * The graph internal model service implementation.
+	 * The RDF graph internal model service implementation.
 	 */
-	private final InternalRDFGraphService		internalGraphService;
+	private final InternalRDFGraphService	internalRDFGraphService;
+
+	/**
+	 * The GDM graph internal model service implementation.
+	 */
+	private final InternalGDMGraphService	internalGDMGraphService;
 
 	/**
 	 * Creates a new internal model service factory with the given memory DB and triple internal model service implementations.
@@ -39,11 +45,13 @@ public class InternalServiceFactoryImpl implements InternalModelServiceFactory {
 	 * @param internalTripleService the triple internal model service implementation
 	 */
 	@Inject
-	public InternalServiceFactoryImpl(final InternalMemoryDbService internalMemoryDbService, final InternalTripleService internalTripleService, final InternalRDFGraphService internalGraphService) {
+	public InternalServiceFactoryImpl(final InternalMemoryDbService internalMemoryDbService, final InternalTripleService internalTripleService,
+			final InternalRDFGraphService internalRDFGraphService, final InternalGDMGraphService internalGDMGraphService) {
 
 		this.internalMemoryDbService = internalMemoryDbService;
 		this.internalTripleService = internalTripleService;
-		this.internalGraphService = internalGraphService;
+		this.internalRDFGraphService = internalRDFGraphService;
+		this.internalGDMGraphService = internalGDMGraphService;
 	}
 
 	/**
@@ -64,13 +72,19 @@ public class InternalServiceFactoryImpl implements InternalModelServiceFactory {
 
 		return internalTripleService;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public InternalModelService getInternalGraphService() {
+	public InternalModelService getInternalRDFGraphService() {
 
-		return internalGraphService;
+		return internalRDFGraphService;
+	}
+
+	@Override
+	public InternalModelService getInternalGDMGraphService() {
+
+		return internalGDMGraphService;
 	}
 }

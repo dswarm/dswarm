@@ -28,9 +28,16 @@ public interface InternalModelServiceFactory {
 	/* @Named("Triple") */InternalModelService getInternalTripleService();
 
 	/**
-	 * Gets the graph internal model service implementation.
+	 * Gets the RDFgraph internal model service implementation.
 	 * 
-	 * @return the graph internal model service implementation
+	 * @return the RDF graph internal model service implementation
 	 */
-	/* @Named("Triple") */InternalModelService getInternalGraphService();
+	/* @Named("Triple") */InternalModelService getInternalRDFGraphService();
+	
+	/**
+	 * Gets the GDM graph internal model service implementation.
+	 * 
+	 * @return the GDM graph internal model service implementation
+	 */
+	/* @Named("Triple") */InternalModelService getInternalGDMGraphService();
 }

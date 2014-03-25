@@ -90,7 +90,7 @@ public class CSVConverterEventRecorder {
 
 			try {
 
-				internalServiceFactory.getInternalGraphService().createObject(dataModel.getId(), rdfModel);
+				internalServiceFactory.getInternalRDFGraphService().createObject(dataModel.getId(), rdfModel);
 			} catch (final DMPPersistenceException e) {
 
 				CSVConverterEventRecorder.LOG.error("couldn't persist the converted data of data model '" + dataModel.getId() + "'", e);

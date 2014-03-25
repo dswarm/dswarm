@@ -1,10 +1,6 @@
 package de.avgl.dmp.persistence.service.internal.graph;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.LinkedList;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,32 +15,29 @@ import org.apache.commons.lang.NotImplementedException;
 import org.glassfish.jersey.media.multipart.MultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 
+import de.avgl.dmp.graph.json.Resource;
+import de.avgl.dmp.graph.json.util.Util;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.internal.Model;
-import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
-import de.avgl.dmp.persistence.model.internal.rdf.helper.AttributePathHelper;
+import de.avgl.dmp.persistence.model.internal.gdm.GDMModel;
 import de.avgl.dmp.persistence.model.proxy.RetrievalType;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.proxy.ProxyDataModel;
-import de.avgl.dmp.persistence.model.schema.Attribute;
-import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
-import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttribute;
-import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttributePath;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxyClasz;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxySchema;
 import de.avgl.dmp.persistence.model.schema.utils.SchemaUtils;
@@ -55,7 +48,7 @@ import de.avgl.dmp.persistence.service.schema.AttributeService;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
-import de.avgl.dmp.persistence.util.RDFUtil;
+import de.avgl.dmp.persistence.util.GDMUtil;
 
 /**
  * A internal model service implementation for RDF triples.<br/>
@@ -66,9 +59,10 @@ import de.avgl.dmp.persistence.util.RDFUtil;
 @Singleton
 public class InternalGDMGraphService implements InternalModelService {
 
-	private static final org.apache.log4j.Logger	LOG								= org.apache.log4j.Logger.getLogger(InternalGDMGraphService.class);
+	private static final org.apache.log4j.Logger	LOG								= org.apache.log4j.Logger
+																							.getLogger(InternalGDMGraphService.class);
 
-	private static final String						resourceIdentifier				= "rdf";
+	private static final String						resourceIdentifier				= "gdm";
 
 	// /**
 	// * The graph database.
@@ -102,19 +96,21 @@ public class InternalGDMGraphService implements InternalModelService {
 	private final String							graphEndpoint;
 
 	/**
-	 * Creates a new internal triple service with the given data model persistence service, schema persistence service, class
-	 * persistence service and the directory of the Jena TDB triple store.
+	 * /** Creates a new internal triple service with the given data model persistence service, schema persistence service, class
+	 * persistence service and the endpoint to access the graph database.
 	 * 
 	 * @param dataModelService the data model persistence service
 	 * @param schemaService the schema persistence service
 	 * @param classService the class persistence service
-	 * @param directory the directory of the Jena TDB triple store
+	 * @param attributePathService the attribute path persistence service
+	 * @param attributeService the attribute persistence service
+	 * @param graphEndpointArg the endpoint to access the graph database
 	 */
 	@Inject
 	public InternalGDMGraphService(final Provider<DataModelService> dataModelService, final Provider<SchemaService> schemaService,
 			final Provider<ClaszService> classService, final Provider<AttributePathService> attributePathService,
 			final Provider<AttributeService> attributeService, @Named("dmp_graph_endpoint") final String graphEndpointArg) {
-		// database = server.getDatabase();
+
 		this.dataModelService = dataModelService;
 		this.schemaService = schemaService;
 		this.classService = classService;
@@ -152,14 +148,14 @@ public class InternalGDMGraphService implements InternalModelService {
 			throw new DMPPersistenceException("model that should be added to DB shouldn't be null");
 		}
 
-		if (!RDFModel.class.isInstance(model)) {
+		if (!GDMModel.class.isInstance(model)) {
 
-			throw new DMPPersistenceException("this service can only process RDF models");
+			throw new DMPPersistenceException("this service can only process GDM models");
 		}
 
-		final RDFModel rdfModel = (RDFModel) model;
+		final GDMModel gdmModel = (GDMModel) model;
 
-		final com.hp.hpl.jena.rdf.model.Model realModel = rdfModel.getModel();
+		final de.avgl.dmp.graph.json.Model realModel = gdmModel.getModel();
 
 		if (realModel == null) {
 
@@ -168,7 +164,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final String resourceGraphURI = InternalGDMGraphService.DATA_MODEL_GRAPH_URI_PATTERN.replace("{datamodelid}", dataModelId.toString());
 
-		final DataModel dataModel = addRecordClass(dataModelId, rdfModel.getRecordClassURI());
+		final DataModel dataModel = addRecordClass(dataModelId, gdmModel.getRecordClassURI());
 
 		final DataModel finalDataModel;
 
@@ -186,25 +182,27 @@ public class InternalGDMGraphService implements InternalModelService {
 
 				final String recordClassURI = dataModel.getSchema().getRecordClass().getUri();
 
-				final Set<com.hp.hpl.jena.rdf.model.Resource> recordResources = RDFUtil.getRecordResources(recordClassURI, realModel);
+				final Set<Resource> recordResources = GDMUtil.getRecordResources(recordClassURI, realModel);
 
 				if (recordResources != null) {
 
 					final Set<String> recordURIs = Sets.newHashSet();
 
-					for (final com.hp.hpl.jena.rdf.model.Resource recordResource : recordResources) {
+					for (final Resource recordResource : recordResources) {
 
-						recordURIs.add(recordResource.getURI());
+						recordURIs.add(recordResource.getUri());
 					}
 
-					rdfModel.setRecordURIs(recordURIs);
+					gdmModel.setRecordURIs(recordURIs);
 				}
 			}
 		}
 
-		addAttributePaths(finalDataModel, rdfModel.getAttributePaths());
+		// TODO: reimplement/ adapt for GDM model
+		
+		// addAttributePaths(finalDataModel, gdmModel.getAttributePaths());
 
-		writeRDFToDB(realModel, resourceGraphURI);
+		writeGDMToDB(realModel, resourceGraphURI);
 	}
 
 	/**
@@ -255,7 +253,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final String recordClassUri = recordClass.getUri();
 
-		final com.hp.hpl.jena.rdf.model.Model model = readRDFFromDB(recordClassUri, resourceGraphURI);
+		final de.avgl.dmp.graph.json.Model model = readGDMFromDB(recordClassUri, resourceGraphURI);
 
 		if (model == null) {
 
@@ -264,14 +262,14 @@ public class InternalGDMGraphService implements InternalModelService {
 			return Optional.absent();
 		}
 
-		if (model.isEmpty()) {
+		if (model.size() <= 0) {
 
 			InternalGDMGraphService.LOG.debug("model is empty for data model '" + dataModelId + "' in database");
 
 			return Optional.absent();
 		}
 
-		final Set<com.hp.hpl.jena.rdf.model.Resource> recordResources = RDFUtil.getRecordResources(recordClassUri, model);
+		final Set<Resource> recordResources = GDMUtil.getRecordResources(recordClassUri, model);
 
 		if (recordResources == null || recordResources.isEmpty()) {
 
@@ -284,7 +282,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		int i = 0;
 
-		for (final com.hp.hpl.jena.rdf.model.Resource recordResource : recordResources) {
+		for (final Resource recordResource : recordResources) {
 
 			if (atMost.isPresent()) {
 
@@ -294,12 +292,12 @@ public class InternalGDMGraphService implements InternalModelService {
 				}
 			}
 
-			// TODO: maybe extract only the related part of the model for the record (however, afaik, recordResource.getModel()
-			// will return an empty model for now, or?)
-			// note: with the new PropertyGraphReader we could do this, or (?)
-			final Model rdfModel = new RDFModel(model, recordResource.getURI());
+			final de.avgl.dmp.graph.json.Model recordModel = new de.avgl.dmp.graph.json.Model();
+			recordModel.addResource(recordResource);
+			
+			final Model rdfModel = new GDMModel(recordModel, recordResource.getUri());
 
-			modelMap.put(recordResource.getURI(), rdfModel);
+			modelMap.put(recordResource.getUri(), rdfModel);
 
 			i++;
 		}
@@ -430,69 +428,71 @@ public class InternalGDMGraphService implements InternalModelService {
 		return proxyUpdatedDataModel.getObject();
 	}
 
-	private DataModel addAttributePaths(final DataModel dataModel, final Set<AttributePathHelper> attributePathHelpers)
-			throws DMPPersistenceException {
-
-		if (attributePathHelpers == null) {
-
-			InternalGDMGraphService.LOG.debug("couldn't datermine attribute paths from data model '" + dataModel.getId() + "'");
-
-			return dataModel;
-		}
-
-		for (final AttributePathHelper attributePathHelper : attributePathHelpers) {
-
-			final LinkedList<Attribute> attributes = Lists.newLinkedList();
-
-			for (final String attributeString : attributePathHelper.getAttributePath()) {
-
-				final ProxyAttribute proxyAttribute = attributeService.get().createOrGetObjectTransactional(attributeString);
-
-				if (proxyAttribute == null) {
-
-					throw new DMPPersistenceException("couldn't create or retrieve attribute");
-				}
-
-				final Attribute attribute = proxyAttribute.getObject();
-
-				if (attribute == null) {
-
-					throw new DMPPersistenceException("couldn't create or retrieve attribute");
-				}
-
-				attributes.add(attribute);
-
-				final String attributeName = SchemaUtils.determineRelativeURIPart(attributeString);
-
-				attribute.setName(attributeName);
-			}
-
-			final ProxyAttributePath proxyAttributePath = attributePathService.get().createOrGetObject(attributes);
-
-			if (proxyAttributePath == null) {
-
-				throw new DMPPersistenceException("couldn't create or retrieve attribute path");
-			}
-
-			final AttributePath attributePath = proxyAttributePath.getObject();
-
-			if (attributePath == null) {
-
-				throw new DMPPersistenceException("couldn't create or retrieve attribute path");
-			}
-
-			dataModel.getSchema().addAttributePath(attributePath);
-		}
-
-		final ProxyDataModel proxyUpdatedDataModel = dataModelService.get().updateObjectTransactional(dataModel);
-
-		if (proxyUpdatedDataModel == null) {
-
-			throw new DMPPersistenceException("couldn't update data model");
-		}
-
-		return proxyUpdatedDataModel.getObject();
-	}
+	// TODO: reimplement/ adapt for GDM model
+	
+//	private DataModel addAttributePaths(final DataModel dataModel, final Set<AttributePathHelper> attributePathHelpers)
+//			throws DMPPersistenceException {
+//
+//		if (attributePathHelpers == null) {
+//
+//			InternalGDMGraphService.LOG.debug("couldn't datermine attribute paths from data model '" + dataModel.getId() + "'");
+//
+//			return dataModel;
+//		}
+//
+//		for (final AttributePathHelper attributePathHelper : attributePathHelpers) {
+//
+//			final LinkedList<Attribute> attributes = Lists.newLinkedList();
+//
+//			for (final String attributeString : attributePathHelper.getAttributePath()) {
+//
+//				final ProxyAttribute proxyAttribute = attributeService.get().createOrGetObjectTransactional(attributeString);
+//
+//				if (proxyAttribute == null) {
+//
+//					throw new DMPPersistenceException("couldn't create or retrieve attribute");
+//				}
+//
+//				final Attribute attribute = proxyAttribute.getObject();
+//
+//				if (attribute == null) {
+//
+//					throw new DMPPersistenceException("couldn't create or retrieve attribute");
+//				}
+//
+//				attributes.add(attribute);
+//
+//				final String attributeName = SchemaUtils.determineRelativeURIPart(attributeString);
+//
+//				attribute.setName(attributeName);
+//			}
+//
+//			final ProxyAttributePath proxyAttributePath = attributePathService.get().createOrGetObject(attributes);
+//
+//			if (proxyAttributePath == null) {
+//
+//				throw new DMPPersistenceException("couldn't create or retrieve attribute path");
+//			}
+//
+//			final AttributePath attributePath = proxyAttributePath.getObject();
+//
+//			if (attributePath == null) {
+//
+//				throw new DMPPersistenceException("couldn't create or retrieve attribute path");
+//			}
+//
+//			dataModel.getSchema().addAttributePath(attributePath);
+//		}
+//
+//		final ProxyDataModel proxyUpdatedDataModel = dataModelService.get().updateObjectTransactional(dataModel);
+//
+//		if (proxyUpdatedDataModel == null) {
+//
+//			throw new DMPPersistenceException("couldn't update data model");
+//		}
+//
+//		return proxyUpdatedDataModel.getObject();
+//	}
 
 	private DataModel getSchemaInternal(final Long dataModelId) throws DMPPersistenceException {
 
@@ -536,15 +536,21 @@ public class InternalGDMGraphService implements InternalModelService {
 		return dataModel;
 	}
 
-	private void writeRDFToDB(final com.hp.hpl.jena.rdf.model.Model model, final String resourceGraphUri) throws DMPPersistenceException {
+	private void writeGDMToDB(final de.avgl.dmp.graph.json.Model model, final String resourceGraphUri) throws DMPPersistenceException {
 
 		final WebTarget target = target("/put");
 
-		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		final ObjectMapper objectMapper = Util.getJSONObjectMapper();
 
-		// TODO: change this to n-triples
-		model.write(baos, "N3");
-		final byte[] bytes = baos.toByteArray();
+		byte[] bytes = null;
+
+		try {
+
+			bytes = objectMapper.writeValueAsBytes(model);
+		} catch (final JsonProcessingException e) {
+
+			throw new DMPPersistenceException("couldn't serialise model to JSON");
+		}
 
 		// Construct a MultiPart with two body parts
 		final MultiPart multiPart = new MultiPart();
@@ -555,12 +561,12 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		if (response.getStatus() != 200) {
 
-			throw new DMPPersistenceException("Couldn't store RDF data into database. Received status code '" + response.getStatus()
+			throw new DMPPersistenceException("Couldn't store GDM data into database. Received status code '" + response.getStatus()
 					+ "' from database endpoint.");
 		}
 	}
 
-	private com.hp.hpl.jena.rdf.model.Model readRDFFromDB(final String recordClassUri, final String resourceGraphUri) throws DMPPersistenceException {
+	private de.avgl.dmp.graph.json.Model readGDMFromDB(final String recordClassUri, final String resourceGraphUri) throws DMPPersistenceException {
 
 		final WebTarget target = target("/get");
 
@@ -577,33 +583,38 @@ public class InternalGDMGraphService implements InternalModelService {
 			requestJsonString = objectMapper.writeValueAsString(requestJson);
 		} catch (final JsonProcessingException e) {
 
-			throw new DMPPersistenceException("something went wrong, while creating the request JSON string for the read-rdf-from-db request");
+			throw new DMPPersistenceException("something went wrong, while creating the request JSON string for the read-gdm-from-db request");
 		}
 
 		// POST the request
-		final Response response = target.request(MediaType.APPLICATION_JSON_TYPE).accept("application/n-triples")
+		final Response response = target.request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
 				.post(Entity.entity(requestJsonString, MediaType.APPLICATION_JSON));
 
 		if (response.getStatus() != 200) {
 
-			throw new DMPPersistenceException("Couldn't store RDF data into database. Received status code '" + response.getStatus()
+			throw new DMPPersistenceException("Couldn't read GDM data from database. Received status code '" + response.getStatus()
 					+ "' from database endpoint.");
 		}
 
 		final String body = response.readEntity(String.class);
 
-		InputStream stream;
+		final ObjectMapper gdmObjectMapper = Util.getJSONObjectMapper();
+
+		final de.avgl.dmp.graph.json.Model model;
 
 		try {
 
-			stream = new ByteArrayInputStream(body.getBytes("UTF-8"));
-		} catch (final UnsupportedEncodingException e) {
+			model = gdmObjectMapper.readValue(body, de.avgl.dmp.graph.json.Model.class);
+		} catch (final JsonParseException e) {
 
-			throw new DMPPersistenceException("something went wrong, while reading the response stream from the read-rdf-from-db request");
+			throw new DMPPersistenceException("something went wrong, while parsing the JSON string");
+		} catch (final JsonMappingException e) {
+
+			throw new DMPPersistenceException("something went wrong, while mapping the JSON string");
+		} catch (final IOException e) {
+
+			throw new DMPPersistenceException("something went wrong, while processing the JSON string");
 		}
-
-		final com.hp.hpl.jena.rdf.model.Model model = ModelFactory.createDefaultModel();
-		model.read(stream, null, "N-TRIPLE");
 
 		return model;
 	}
