@@ -148,7 +148,7 @@ public class Project extends ExtendedBasicDMPJPAObject {
 
 		if (mappingsArg != null) {
 
-			if (!mappingsArg.equals(mappings)) {
+			if (!DMPPersistenceUtil.getMappingUtils().completeEquals(mappings, mappingsArg)) {
 
 				if (mappings == null) {
 
@@ -185,7 +185,7 @@ public class Project extends ExtendedBasicDMPJPAObject {
 
 		if (functionsArg != null) {
 
-			if (!functionsArg.equals(functions)) {
+			if (!DMPPersistenceUtil.getFunctionUtils().completeEquals(functions, functionsArg)) {
 
 				if (functions == null) {
 
