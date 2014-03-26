@@ -10,6 +10,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectPipe;
@@ -21,45 +22,85 @@ import org.culturegraph.mf.stream.sink.ObjectJavaIoWriter;
 import org.culturegraph.mf.stream.source.ResourceOpener;
 import org.culturegraph.mf.stream.source.StringReader;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 import de.avgl.dmp.converter.DMPConverterException;
-import de.avgl.dmp.converter.mf.stream.RecordAwareJsonEncoder;
+import de.avgl.dmp.converter.mf.stream.RDFModelReceiver;
+import de.avgl.dmp.converter.mf.stream.TripleEncoder;
 import de.avgl.dmp.converter.mf.stream.reader.JsonNodeReader;
 import de.avgl.dmp.converter.morph.MorphScriptBuilder;
 import de.avgl.dmp.converter.pipe.StreamJsonCollapser;
 import de.avgl.dmp.converter.pipe.StreamUnflattener;
 import de.avgl.dmp.converter.reader.QucosaReader;
 import de.avgl.dmp.init.util.DMPStatics;
+import de.avgl.dmp.persistence.DMPPersistenceException;
+import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
 import de.avgl.dmp.persistence.model.job.Task;
+import de.avgl.dmp.persistence.model.resource.DataModel;
+import de.avgl.dmp.persistence.model.schema.Clasz;
+import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.model.types.Tuple;
+import de.avgl.dmp.persistence.service.InternalModelService;
+import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
+import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
  * Flow that executes a given set of transformations on data of a given data model.
- *
+ * 
  * @author phorn
  * @author tgaengler
  */
 public class TransformationFlow {
 
-	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(TransformationFlow.class);
+	private static final org.apache.log4j.Logger		LOG						= org.apache.log4j.Logger.getLogger(TransformationFlow.class);
 
-	public static final String						DEFAULT_RESOURCE_PATH	= "qucosa_record.xml";
+	public static final String							DEFAULT_RESOURCE_PATH	= "qucosa_record.xml";
 
-	private final Metamorph							transformer;
-	
-	private final String script;
+	private final Metamorph								transformer;
 
-	public TransformationFlow(final Metamorph transformer) {
-		
+	private final String								script;
+
+	private final Optional<DataModel>					outputDataModel;
+
+	private final Provider<InternalModelServiceFactory>	internalModelServiceFactoryProvider;
+
+	@Inject
+	public TransformationFlow(final Metamorph transformer, final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
+
 		this.transformer = transformer;
 		script = null;
+		outputDataModel = Optional.absent();
+		internalModelServiceFactoryProvider = internalModelServiceFactoryProviderArg;
 	}
-	
-	public TransformationFlow(final Metamorph transformer, final String scriptArg) {
-		
+
+	@Inject
+	public TransformationFlow(final Metamorph transformer, final String scriptArg,
+			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
+
 		this.transformer = transformer;
 		script = scriptArg;
+		outputDataModel = Optional.absent();
+		internalModelServiceFactoryProvider = internalModelServiceFactoryProviderArg;
+	}
+
+	@Inject
+	public TransformationFlow(final Metamorph transformer, final String scriptArg, final DataModel outputDataModelArg,
+			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
+
+		this.transformer = transformer;
+		script = scriptArg;
+		outputDataModel = Optional.of(outputDataModelArg);
+		internalModelServiceFactoryProvider = internalModelServiceFactoryProviderArg;
 	}
 
 	// public String applyRecord(final String record) {
@@ -68,9 +109,9 @@ public class TransformationFlow {
 	//
 	// return apply(record, opener);
 	// }
-	
+
 	public String getScript() {
-		
+
 		return script;
 	}
 
@@ -104,57 +145,152 @@ public class TransformationFlow {
 		return applyDemo(resourcePath, opener);
 	}
 
-	public String apply(final Iterator<Tuple<String, JsonNode>> tuples, final ObjectPipe<Iterator<Tuple<String, JsonNode>>, StreamReceiver> opener) {
+	public String apply(final Iterator<Tuple<String, JsonNode>> tuples, final ObjectPipe<Iterator<Tuple<String, JsonNode>>, StreamReceiver> opener)
+			throws DMPConverterException {
 
 		// final String recordDummy = "record";
 
 		final StreamUnflattener unflattener = new StreamUnflattener("", DMPStatics.ATTRIBUTE_DELIMITER);
 		final StreamJsonCollapser collapser = new StreamJsonCollapser();
 
-		final StringWriter stringWriter = new StringWriter();
-		stringWriter.append('[');
-
-		final ObjectReceiver<String> objectReceiver = new ObjectReceiver<String>() {
-
-			@Override
-			public void process(final String obj) {
-				stringWriter.append(obj);
-				stringWriter.append(',');
-			}
-
-			@Override
-			public void resetStream() {
-				final StringBuffer buffer = stringWriter.getBuffer();
-				buffer.delete(0, buffer.length());
-			}
-
-			@Override
-			public void closeStream() {
-				LOG.debug("close stream called");
-				final StringBuffer buffer = stringWriter.getBuffer();
-				buffer.deleteCharAt(buffer.length() - 1);
-				stringWriter.append(']');
-			}
-		};
-
-		final JsonEncoder jsonEncoder = new JsonEncoder();
-
-		final RecordAwareJsonEncoder converter = new RecordAwareJsonEncoder(jsonEncoder);
-		jsonEncoder.setReceiver(objectReceiver);
+		// final StringWriter stringWriter = new StringWriter();
+		// stringWriter.append('[');
+		//
+		// final ObjectReceiver<String> objectReceiver = new ObjectReceiver<String>() {
+		//
+		// @Override
+		// public void process(final String obj) {
+		// stringWriter.append(obj);
+		// stringWriter.append(',');
+		// }
+		//
+		// @Override
+		// public void resetStream() {
+		// final StringBuffer buffer = stringWriter.getBuffer();
+		// buffer.delete(0, buffer.length());
+		// }
+		//
+		// @Override
+		// public void closeStream() {
+		// LOG.debug("close stream called");
+		// final StringBuffer buffer = stringWriter.getBuffer();
+		// buffer.deleteCharAt(buffer.length() - 1);
+		// stringWriter.append(']');
+		// }
+		// };
+		//
+		// final JsonEncoder jsonEncoder = new JsonEncoder();
+		//
+		// final RecordAwareJsonEncoder converter = new RecordAwareJsonEncoder(jsonEncoder);
+		// jsonEncoder.setReceiver(objectReceiver);
 
 		// final StreamOutWriter streamOutWriter = new StreamOutWriter();
 
-		opener.setReceiver(transformer).setReceiver(unflattener).setReceiver(collapser).setReceiver(converter);
+		final TripleEncoder converter = new TripleEncoder(outputDataModel);
+		final RDFModelReceiver writer = new RDFModelReceiver();
+
+		opener.setReceiver(transformer).setReceiver(unflattener).setReceiver(collapser).setReceiver(converter).setReceiver(writer);
 
 		opener.process(tuples);
 		opener.closeStream();
-		objectReceiver.closeStream();
+		// objectReceiver.closeStream();
 
-		return stringWriter.toString();
+		// return stringWriter.toString();
+
+		final Optional<ImmutableList<RDFModel>> optionalRDFModels = Optional.of(writer.getCollection());
+
+		if (!optionalRDFModels.isPresent()) {
+
+			return null;
+		}
+		
+		// TODO: make write to DB optional
+
+		// write result to graph db
+		final InternalModelService internalModelService = internalModelServiceFactoryProvider.get().getInternalRDFGraphService();
+
+		final Model model = ModelFactory.createDefaultModel();
+		String recordClassUri = null;
+
+		// transform to FE friendly JSON => or use Model#toJSON() ;)
+
+		final ObjectMapper objectMapper = DMPPersistenceUtil.getJSONObjectMapper();
+		final ArrayNode result = objectMapper.createArrayNode();
+		final Set<String> recordURIs = Sets.newHashSet();
+
+		for (final RDFModel rdfModel : optionalRDFModels.get()) {
+
+			result.add(rdfModel.toJSON());
+
+			if (rdfModel.getModel() == null) {
+
+				continue;
+			}
+
+			model.add(rdfModel.getModel());
+
+			if (recordClassUri == null) {
+
+				recordClassUri = rdfModel.getRecordClassURI();
+			}
+
+			recordURIs.add(rdfModel.getRecordURIs().iterator().next());
+		}
+
+		if (recordClassUri == null) {
+
+			if (outputDataModel.isPresent()) {
+
+				final Schema schema = outputDataModel.get().getSchema();
+
+				if (schema != null) {
+
+					final Clasz recordClass = schema.getRecordClass();
+
+					if (recordClass != null) {
+
+						recordClassUri = recordClass.getUri();
+					}
+				}
+			}
+		}
+
+		// note: we may don't really need the record class uri here (I guess), because we can provide the record identifiers
+		// separately
+		final RDFModel rdfModel = new RDFModel(model, null, recordClassUri);
+		rdfModel.setRecordURIs(recordURIs);
+
+		try {
+
+			internalModelService.createObject(outputDataModel.get().getId(), rdfModel);
+		} catch (final DMPPersistenceException e1) {
+
+			LOG.error("couldn't persistent the the result of the transformation");
+
+			// TODO: maybe throw an exception
+		}
+
+		final String resultString;
+
+		try {
+
+			resultString = objectMapper.writeValueAsString(result);
+		} catch (final JsonProcessingException e) {
+
+			final String message = "couldn't convert result into JSON";
+
+			LOG.error(message);
+
+			throw new DMPConverterException(message, e);
+		}
+
+		return resultString;
 	}
 
-	public String apply(final Iterator<Tuple<String, JsonNode>> tuples) {
+	public String apply(final Iterator<Tuple<String, JsonNode>> tuples) throws DMPConverterException {
+
 		final JsonNodeReader opener = new JsonNodeReader();
+
 		return apply(tuples, opener);
 	}
 
@@ -183,35 +319,52 @@ public class TransformationFlow {
 		return applyResourceDemo(TransformationFlow.DEFAULT_RESOURCE_PATH);
 	}
 
-	public static TransformationFlow fromString(final String morphScriptString) {
+	public static TransformationFlow fromString(final String morphScriptString,
+			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
 		final java.io.StringReader stringReader = new java.io.StringReader(morphScriptString);
 		final Metamorph transformer = new Metamorph(stringReader);
 
-		return new TransformationFlow(transformer, morphScriptString);
+		return new TransformationFlow(transformer, morphScriptString, internalModelServiceFactoryProviderArg);
 	}
 
-	public static TransformationFlow fromFile(final File file) throws FileNotFoundException, DMPConverterException {
+	public static TransformationFlow fromString(final String morphScriptString, final DataModel outputDataModel,
+			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
+
+		final java.io.StringReader stringReader = new java.io.StringReader(morphScriptString);
+		final Metamorph transformer = new Metamorph(stringReader);
+
+		return new TransformationFlow(transformer, morphScriptString, outputDataModel, internalModelServiceFactoryProviderArg);
+	}
+
+	public static TransformationFlow fromFile(final File file, final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg)
+			throws FileNotFoundException, DMPConverterException {
+
 		final FileInputStream is = new FileInputStream(file);
 		final Reader inputSource = TransformationFlow.getReader(is);
 
 		final Metamorph transformer = new Metamorph(inputSource);
 
-		return new TransformationFlow(transformer);
+		return new TransformationFlow(transformer, internalModelServiceFactoryProviderArg);
 	}
 
-	public static TransformationFlow fromFile(final String resourcePath) throws DMPConverterException {
+	public static TransformationFlow fromFile(final String resourcePath,
+			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) throws DMPConverterException {
+
 		final InputStream morph = TransformationFlow.class.getClassLoader().getResourceAsStream(resourcePath);
 		final Reader inputSource = TransformationFlow.getReader(morph);
 		final Metamorph transformer = new Metamorph(inputSource);
 
-		return new TransformationFlow(transformer);
+		return new TransformationFlow(transformer, internalModelServiceFactoryProviderArg);
 	}
 
-	public static TransformationFlow fromTask(final Task task) throws DMPConverterException {
+	public static TransformationFlow fromTask(final Task task, final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg)
+			throws DMPConverterException {
 
 		final String morphScriptString = new MorphScriptBuilder().apply(task).toString();
 
-		return TransformationFlow.fromString(morphScriptString);
+		final DataModel outputDataModel = task.getOutputDataModel();
+
+		return TransformationFlow.fromString(morphScriptString, outputDataModel, internalModelServiceFactoryProviderArg);
 	}
 
 	private static Reader getReader(final InputStream is) throws DMPConverterException {

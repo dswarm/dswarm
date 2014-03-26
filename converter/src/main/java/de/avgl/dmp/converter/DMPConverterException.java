@@ -23,5 +23,10 @@ public class DMPConverterException extends DMPException {
 
 		super(exception);
 	}
+	
+	public DMPConverterException(final String message, final Throwable cause) {
+		
+		super(message, cause);
+	}
 
 }

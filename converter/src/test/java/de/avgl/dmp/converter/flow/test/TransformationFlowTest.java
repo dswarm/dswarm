@@ -33,6 +33,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Maps;
 import com.google.common.io.Resources;
+import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
@@ -56,6 +57,7 @@ import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.model.types.Tuple;
+import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 import de.avgl.dmp.persistence.service.internal.graph.InternalRDFGraphService;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
@@ -163,7 +165,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 		memoryDbService.createObject(dataModel.getId(), rdfModel);
 		// finished writing CSV statements to graph
-		
+
 		// retrieve updated fresh data model
 		final DataModel freshDataModel = dataModelService.getObject(updatedDataModel.getId());
 
@@ -188,6 +190,9 @@ public class TransformationFlowTest extends GuicedTest {
 		// manipulate input data model
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
 		((ObjectNode) taskJSON).put("input_data_model", dataModelJSON);
+		
+		// manipulate output data model (output data model = input data model (for now))
+		((ObjectNode) taskJSON).put("output_data_model", dataModelJSON);
 
 		// manipulate attributes
 		final ObjectNode mappingJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) ((ObjectNode) taskJSON).get("job")).get("mappings")).get(0);
@@ -218,7 +223,10 @@ public class TransformationFlowTest extends GuicedTest {
 		final String finalTaskJSONString = objectMapper.writeValueAsString(taskJSON);
 
 		final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
-		final TransformationFlow flow = TransformationFlow.fromTask(task);
+
+		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = injector.getProvider(InternalModelServiceFactory.class);
+
+		final TransformationFlow flow = TransformationFlow.fromTask(task, internalModelServiceFactoryProvider);
 
 		flow.getScript();
 
@@ -314,7 +322,9 @@ public class TransformationFlowTest extends GuicedTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("complex-result.json");
 
-		final TransformationFlow flow = TransformationFlow.fromFile("complex-metamorph.xml");
+		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = injector.getProvider(InternalModelServiceFactory.class);
+
+		final TransformationFlow flow = TransformationFlow.fromFile("complex-metamorph.xml", internalModelServiceFactoryProvider);
 
 		final String actual = flow.applyDemo();
 
@@ -326,7 +336,9 @@ public class TransformationFlowTest extends GuicedTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("complex-result.json");
 
-		final TransformationFlow flow = TransformationFlow.fromFile("complex-metamorph-recursive.xml");
+		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = injector.getProvider(InternalModelServiceFactory.class);
+
+		final TransformationFlow flow = TransformationFlow.fromFile("complex-metamorph-recursive.xml", internalModelServiceFactoryProvider);
 
 		flow.getScript();
 
@@ -341,7 +353,9 @@ public class TransformationFlowTest extends GuicedTest {
 		final String request = DMPPersistenceUtil.getResourceAsString("qucosa_record.xml");
 		final String expected = DMPPersistenceUtil.getResourceAsString("complex-result.json");
 
-		final TransformationFlow flow = TransformationFlow.fromFile("complex-metamorph.xml");
+		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = injector.getProvider(InternalModelServiceFactory.class);
+
+		final TransformationFlow flow = TransformationFlow.fromFile("complex-metamorph.xml", internalModelServiceFactoryProvider);
 
 		final String actual = flow.applyRecordDemo(request);
 
@@ -354,7 +368,9 @@ public class TransformationFlowTest extends GuicedTest {
 		final String request = DMPPersistenceUtil.getResourceAsString("qucosa-foaf.xml");
 		final String expected = DMPPersistenceUtil.getResourceAsString("complex-multiple-input-result.json");
 
-		final TransformationFlow flow = TransformationFlow.fromFile("complex-metamorph-multiple-input.xml");
+		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = injector.getProvider(InternalModelServiceFactory.class);
+
+		final TransformationFlow flow = TransformationFlow.fromFile("complex-metamorph-multiple-input.xml", internalModelServiceFactoryProvider);
 
 		final String actual = flow.applyRecordDemo(request);
 

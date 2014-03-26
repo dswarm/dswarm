@@ -2,10 +2,6 @@ package de.avgl.dmp.converter.mf.stream.source;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.net.URI;
 import java.util.Stack;
 import java.util.UUID;

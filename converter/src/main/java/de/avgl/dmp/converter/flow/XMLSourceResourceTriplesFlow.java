@@ -10,12 +10,11 @@ import org.culturegraph.mf.stream.source.StringReader;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
 
 import de.avgl.dmp.converter.DMPConverterException;
+import de.avgl.dmp.converter.mf.stream.RDFModelReceiver;
 import de.avgl.dmp.converter.mf.stream.source.BOMResourceOpener;
 import de.avgl.dmp.converter.mf.stream.source.XMLTripleEncoder;
-import de.avgl.dmp.converter.pipe.StreamOutWriter;
 import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
@@ -122,44 +121,5 @@ public class XMLSourceResourceTriplesFlow {
 		}
 
 		return valueNode;
-	}
-
-	private static class RDFModelReceiver implements ObjectReceiver<RDFModel> {
-
-		private ImmutableList.Builder<RDFModel>	builder	= ImmutableList.builder();
-		private ImmutableList<RDFModel>			collection;
-
-		@Override
-		public void process(final RDFModel rdfModel) {
-
-			builder.add(rdfModel);
-		}
-
-		@Override
-		public void resetStream() {
-
-			builder = ImmutableList.builder();
-		}
-
-		@Override
-		public void closeStream() {
-
-			buildCollection();
-		}
-
-		public ImmutableList<RDFModel> getCollection() {
-
-			if (collection == null) {
-
-				buildCollection();
-			}
-
-			return collection;
-		}
-
-		private void buildCollection() {
-
-			collection = builder.build();
-		}
 	}
 }

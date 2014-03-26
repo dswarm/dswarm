@@ -16,6 +16,7 @@ import javax.ws.rs.core.UriInfo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
+import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -34,6 +35,7 @@ import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.types.Tuple;
+import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 
 /**
  * A resource (controller service) for {@link Task}s.
@@ -45,28 +47,30 @@ import de.avgl.dmp.persistence.model.types.Tuple;
 @Path("/tasks")
 public class TasksResource {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(TasksResource.class);
+	private static final org.apache.log4j.Logger		LOG	= org.apache.log4j.Logger.getLogger(TasksResource.class);
 
 	/**
 	 * The base URI of this resource.
 	 */
 	@Context
-	UriInfo											uri;
+	UriInfo												uri;
 
 	/**
 	 * The data model util.
 	 */
-	private final DataModelUtil						dataModelUtil;
+	private final DataModelUtil							dataModelUtil;
 
 	/**
 	 * The metrics registry.
 	 */
-	private final DMPStatus							dmpStatus;
+	private final DMPStatus								dmpStatus;
 
 	/**
 	 * The object mapper that can be utilised to de-/serialise JSON nodes.
 	 */
-	private final ObjectMapper						objectMapper;
+	private final ObjectMapper							objectMapper;
+
+	private final Provider<InternalModelServiceFactory>	internalModelServiceFactoryProvider;
 
 	/**
 	 * Creates a new resource (controller service) for {@link Transformation}s with the provider of the transformation persistence
@@ -77,11 +81,13 @@ public class TasksResource {
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public TasksResource(final DataModelUtil dataModelUtilArg, final ObjectMapper objectMapperArg, final DMPStatus dmpStatusArg) {
+	public TasksResource(final DataModelUtil dataModelUtilArg, final ObjectMapper objectMapperArg, final DMPStatus dmpStatusArg,
+			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
 
 		dataModelUtil = dataModelUtilArg;
 		dmpStatus = dmpStatusArg;
 		objectMapper = objectMapperArg;
+		internalModelServiceFactoryProvider = internalModelServiceFactoryProviderArg;
 	}
 
 	/**
@@ -150,7 +156,9 @@ public class TasksResource {
 			throw new DMPConverterException("there is no input data model for this task");
 		}
 
-		final TransformationFlow flow = TransformationFlow.fromTask(task);
+		// TODO: make write to DB optional
+		
+		final TransformationFlow flow = TransformationFlow.fromTask(task, internalModelServiceFactoryProvider);
 
 		final Resource dataResource = inputDataModel.getDataResource();
 

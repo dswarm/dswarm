@@ -162,6 +162,9 @@ public class TasksCsvResourceTest extends ResourceTest {
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
 		taskJSON.put("input_data_model", finalDataModelJSON);
 
+		// manipulate output data model (output data model = input data model (for now))
+		taskJSON.put("output_data_model", finalDataModelJSON);
+
 		// manipulate attributes
 		final ObjectNode mappingJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) ((ObjectNode) taskJSON).get("job")).get("mappings")).get(0);
 
@@ -181,7 +184,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 			final String inputAttributeName = inputAttributeJSON.get("name").asText();
 			inputAttributeJSON.put("uri", dataResourceSchemaBaseURI + inputAttributeName);
 		}
-		
+
 		// manipulate parameter mappings in transformation component
 		final ObjectNode transformationComponentParameterMappingsJSON = (ObjectNode) ((ObjectNode) mappingJSON.get("transformation"))
 				.get("parameter_mappings");
@@ -286,7 +289,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 		resourcesResourceTestUtils.deleteObject(resource);
 		configurationsResourceTestUtils.deleteObject(configuration);
 	}
-	
+
 	private JsonNode getRecordData(final String recordData, final ArrayNode jsonArray, final String key) {
 
 		for (final JsonNode jsonEntry : jsonArray) {

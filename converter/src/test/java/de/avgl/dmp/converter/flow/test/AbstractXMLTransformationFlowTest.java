@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.base.Optional;
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Maps;
+import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 import de.avgl.dmp.converter.GuicedTest;
@@ -36,6 +37,7 @@ import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.model.types.Tuple;
+import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 import de.avgl.dmp.persistence.service.internal.graph.InternalRDFGraphService;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
@@ -171,11 +173,17 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		// manipulate input data model
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
 		((ObjectNode) taskJSON).put("input_data_model", dataModelJSON);
+		
+		// manipulate output data model (output data model = input data model (for now))
+		((ObjectNode) taskJSON).put("output_data_model", dataModelJSON);
 
 		final String finalTaskJSONString = objectMapper.writeValueAsString(taskJSON);
 
 		final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
-		final TransformationFlow flow = TransformationFlow.fromTask(task);
+		
+		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = injector.getProvider(InternalModelServiceFactory.class);
+		
+		final TransformationFlow flow = TransformationFlow.fromTask(task, internalModelServiceFactoryProvider);
 		
 		flow.getScript();
 
