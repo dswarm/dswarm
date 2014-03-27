@@ -15,7 +15,7 @@
                     "name": "my trim component",
                     "function": {
                         "type": "Function",
-                        "id": 1,
+                        "id": 5,
                         "name": "trim",
                         "description": "trims leading and trailing whitespaces from a given string",
                         "parameters": ["inputString", "parameter2"],
@@ -39,38 +39,38 @@
                     "parameter_mappings": {
                         "inputString": "previousComponent.outputString"
                     },
-                    "id": -8764606810422070272
+                    "id": -5361046036097251328
                 }],
-                "id": -8678798010126573568
+                "id": -476118665130769408
             },
             "parameter_mappings": {
                 "transformationInputString": "http://purl.org/dc/terms/title",
                 "transformationOutputVariable": "http://www.w3.org/2000/01/rdf-schema#label"
             },
-            "id": -5580896502870875136
+            "id": -5863898989807465472
         },
         "input_attribute_paths": [{
             "type": "MappingAttributePathInstance",
             "name": "input mapping attribute path instance",
+            "id": 7,
             "attribute_path": {
+                "id": 13,
                 "attributes": [{
-                    "id": 4,
-                    "uri": "http://purl.org/dc/terms/title",
-                    "name": "title"
-                }],
-                "id": -3813055239539509248
-            },
-            "id": -596195708559444992
+                    "name": "new property",
+                    "uri": "http://purl.org/dc/terms/anewproperty",
+                    "id": 14
+                }]
+            }
         }, {
             "type": "MappingAttributePathInstance",
             "name": "input mapping attribute path instance",
-            "id": 1,
+            "id": 8,
             "attribute_path": {
-                "id": 5,
+                "id": 19,
                 "attributes": [{
                     "name": "dataset",
                     "uri": "http://data.slub-dresden.de/resources/1/schema#dataset",
-                    "id": 6
+                    "id": 20
                 }]
             }
         }],
@@ -79,19 +79,19 @@
             "name": "output mapping attribute path instance",
             "attribute_path": {
                 "attributes": [{
-                    "id": 6,
+                    "id": 20,
                     "uri": "http://www.w3.org/2000/01/rdf-schema#label",
                     "name": "label"
                 }],
-                "id": -4408671628666616832
+                "id": -6430378985362671616
             },
-            "id": -4604650445286682624
+            "id": -6793592602902561792
         },
-        "id": -1883180186746344448
+        "id": -4975254275856016384
     }],
     "functions": [{
         "type": "Function",
-        "id": 1,
+        "id": 5,
         "name": "trim",
         "description": "trims leading and trailing whitespaces from a given string",
         "parameters": ["inputString", "parameter2"],
@@ -125,50 +125,50 @@
                 "column_delimiter": ";",
                 "row_delimiter": "\n"
             },
-            "id": 1,
+            "id": 3,
             "resources": [{
-                "id": 1
+                "id": 3
             }]
         },
         "schema": {
-            "id": 1,
+            "id": 3,
             "name": "my schema",
             "attribute_paths": [{
-                "id": 3,
+                "id": 16,
                 "attributes": [{
-                    "id": 4,
+                    "id": 18,
                     "uri": "http://purl.org/dc/terms/title",
                     "name": "title"
                 }, {
-                    "id": 5,
+                    "id": 19,
                     "uri": "http://purl.org/dc/terms/hasPart",
                     "name": "hasPart"
                 }, {
-                    "id": 4,
+                    "id": 18,
                     "uri": "http://purl.org/dc/terms/title",
                     "name": "title"
                 }]
             }, {
-                "id": 2,
+                "id": 15,
                 "attributes": [{
-                    "id": 2,
+                    "id": 16,
                     "uri": "http://purl.org/dc/terms/creator",
                     "name": "creator"
                 }, {
-                    "id": 3,
+                    "id": 17,
                     "uri": "http://xmlns.com/foaf/0.1/name",
                     "name": "name"
                 }]
             }, {
-                "id": 1,
+                "id": 14,
                 "attributes": [{
-                    "id": 1,
+                    "id": 15,
                     "uri": "http://purl.org/dc/terms/created",
                     "name": "created"
                 }]
             }],
             "record_class": {
-                "id": 1,
+                "id": 3,
                 "uri": "http://purl.org/ontology/bibo/Document",
                 "name": "document"
             }
@@ -177,7 +177,7 @@
             "name": "test_csv.csv",
             "description": "blubblub",
             "type": "FILE",
-            "id": 1,
+            "id": 3,
             "resource_attributes": {
                 "path": "/home/tgaengler/git/tgaengler/datamanagement-platform/init/../tmp/resources/test_csv.csv",
                 "filesize": 766
@@ -192,60 +192,60 @@
                     "column_delimiter": ";",
                     "row_delimiter": "\n"
                 },
-                "id": 1,
+                "id": 3,
                 "resources": [{
-                    "id": 1
+                    "id": 3
                 }]
             }]
         },
-        "id": -8825977498776171520
+        "id": -1415040745573813248
     },
     "output_data_model": {
         "name": "my output data model",
         "description": "my output data model description",
         "schema": {
-            "id": 1,
+            "id": 3,
             "name": "my schema",
             "attribute_paths": [{
-                "id": 3,
+                "id": 16,
                 "attributes": [{
-                    "id": 4,
+                    "id": 18,
                     "uri": "http://purl.org/dc/terms/title",
                     "name": "title"
                 }, {
-                    "id": 5,
+                    "id": 19,
                     "uri": "http://purl.org/dc/terms/hasPart",
                     "name": "hasPart"
                 }, {
-                    "id": 4,
+                    "id": 18,
                     "uri": "http://purl.org/dc/terms/title",
                     "name": "title"
                 }]
             }, {
-                "id": 2,
+                "id": 15,
                 "attributes": [{
-                    "id": 2,
+                    "id": 16,
                     "uri": "http://purl.org/dc/terms/creator",
                     "name": "creator"
                 }, {
-                    "id": 3,
+                    "id": 17,
                     "uri": "http://xmlns.com/foaf/0.1/name",
                     "name": "name"
                 }]
             }, {
-                "id": 1,
+                "id": 14,
                 "attributes": [{
-                    "id": 1,
+                    "id": 15,
                     "uri": "http://purl.org/dc/terms/created",
                     "name": "created"
                 }]
             }],
             "record_class": {
-                "id": 1,
+                "id": 3,
                 "uri": "http://purl.org/ontology/bibo/Document",
                 "name": "document"
             }
         },
-        "id": -3564962124993277952
+        "id": -1963397940249134080
     }
 }

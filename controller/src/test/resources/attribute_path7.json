@@ -1,0 +1,8 @@
+{
+    "id": 1,
+    "attributes": [{
+        "id": 1,
+        "uri": "http://purl.org/dc/terms/anewproperty",
+        "name": "new property"
+    }]
+}
