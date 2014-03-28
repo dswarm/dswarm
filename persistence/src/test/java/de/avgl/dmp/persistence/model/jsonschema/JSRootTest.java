@@ -9,12 +9,15 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Lists;
+import org.hamcrest.Matcher;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -49,7 +52,10 @@ public class JSRootTest extends BaseJSTest<JSRoot> {
 		assertThat(jsonNode.get("title").asText(), equalTo(obj.getName()));
 		assertThat(jsonNode.get("type").asText(), equalTo(obj.getType()));
 		assertThat(jsonNode.get("properties").isObject(), equalTo(true));
-		assertThat(Lists.newArrayList(jsonNode.get("properties").fieldNames()), is(empty()));
+
+		final List<String> fields = Lists.newArrayList(jsonNode.get("properties").fieldNames());
+		final Matcher<Collection<String>> emptyMatcher = empty();
+		assertThat(fields, is(emptyMatcher));
 	}
 
 	private void doRenderTest(final InputStream inputStream) throws IOException {
@@ -60,15 +66,15 @@ public class JSRootTest extends BaseJSTest<JSRoot> {
 		doRenderTest(new ByteArrayInputStream(outputStream.toByteArray()));
 	}
 
-	private void doRenderTest(Reader reader) throws IOException {
+	private void doRenderTest(final Reader reader) throws IOException {
 		doRenderTest(om.readTree(reader));
 	}
 
-	private void doRenderTest(StringWriter writer) throws IOException {
+	private void doRenderTest(final StringWriter writer) throws IOException {
 		doRenderTest(new StringReader(writer.toString()));
 	}
 
-	private void doRenderTest(String rendered) throws IOException {
+	private void doRenderTest(final String rendered) throws IOException {
 		doRenderTest(om.readTree(rendered));
 	}
 

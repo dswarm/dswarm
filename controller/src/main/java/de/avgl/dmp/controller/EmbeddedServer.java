@@ -23,7 +23,7 @@ import de.avgl.dmp.controller.servlet.DMPInjector;
 /**
  * The embedded web server for the backend API.<br/>
  * note: currently, Grizzly is utilised
- * 
+ *
  * @author phorn
  * @author tgaengler
  */
@@ -68,7 +68,7 @@ public class EmbeddedServer {
 
 	/**
 	 * Starts the backend web server.
-	 * 
+	 *
 	 * @return the backend web server.
 	 * @throws IOException
 	 */
@@ -79,7 +79,7 @@ public class EmbeddedServer {
 
 	/**
 	 * Starts the backend web server.
-	 * 
+	 *
 	 * @param skipStart a flag that indicates, whether the backend web server should be really started or not
 	 * @return the backend web server
 	 * @throws IOException
@@ -126,7 +126,7 @@ public class EmbeddedServer {
 
 	/**
 	 * Gets the base URI of the backend API.
-	 * 
+	 *
 	 * @return the base URI
 	 */
 	public URI getBaseUri() {
@@ -136,7 +136,7 @@ public class EmbeddedServer {
 
 	/**
 	 * Gets the hostname or ip of the backend web server.
-	 * 
+	 *
 	 * @return host name or ip of the backend web server
 	 */
 	private String getHost() {
@@ -144,7 +144,7 @@ public class EmbeddedServer {
 		final String value = System.getProperty(EmbeddedServer.HTTP_HOST_PROPERTY);
 
 		if (value != null) {
-			
+
 			return value;
 		}
 
@@ -153,17 +153,17 @@ public class EmbeddedServer {
 
 	/**
 	 * Gets the context path of the backend API at the backend webserver.
-	 * 
+	 *
 	 * @return the context path of the backend API at the backend webserver
 	 */
 	private String getContextPath() {
-		
+
 		final String value = System.getProperty(EmbeddedServer.CONTEXT_PATH_PROPERTY);
-		
+
 		if (value != null) {
 
 			if ("/".equals(value.substring(0, 1))) {
-				
+
 				return value;
 			}
 
@@ -176,27 +176,27 @@ public class EmbeddedServer {
 
 	/**
 	 * Gets the port of the backend web server.
-	 * 
+	 *
 	 * @return the port of the backend web server
 	 */
 	private int getPort() {
-		
+
 		final String value = System.getProperty(EmbeddedServer.HTTP_PORT_PROPERTY);
-		
+
 		if (value != null) {
 
 			try {
-				
+
 				final int port = Integer.parseInt(value);
-				
+
 				if (port <= 0) {
-					
+
 					throw new NumberFormatException("port must be positive.");
 				}
 
 				return port;
 			} catch (final NumberFormatException e) {
-				
+
 				EmbeddedServer.LOG.warn("Value of " + EmbeddedServer.HTTP_PORT_PROPERTY + " property is not a  valid positive integer [" + value
 						+ "]." + " Using default [" + EmbeddedServer.DEFAULT_PORT + "].", e);
 			}
@@ -207,33 +207,31 @@ public class EmbeddedServer {
 
 	/**
 	 * Creates and starts the backend web server.
-	 * 
-	 * @param args
 	 * @throws IOException
 	 */
 	public static void main(final String[] args) throws IOException {
-		
+
 		final EmbeddedServer main = new EmbeddedServer();
-		
+
 		main.start();
 
 		System.out.println(String.format("Jersey app with WADL available at " + "%s/application.wadl\nHit ^C to stop it...", main.getBaseUri()));
 
 		final CountDownLatch keepAliveLatch = new CountDownLatch(1);
-		
+
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 
 			@Override
 			public void run() {
-				
+
 				try {
-					
+
 					main.stop();
 				} catch (final Exception e) {
-					
+
 					e.printStackTrace();
 				} finally {
-					
+
 					keepAliveLatch.countDown();
 				}
 			}
@@ -243,13 +241,13 @@ public class EmbeddedServer {
 
 			@Override
 			public void run() {
-				
+
 				try {
-					
+
 					keepAliveLatch.await();
 				} catch (final InterruptedException ignore) {
-				
-					LOG.fatal("The backend web server execution thread was interupted.");
+
+					LOG.fatal("The backend web server execution thread was interrupted.");
 				}
 			}
 		}, "dmp/grizzly");
