@@ -37,7 +37,7 @@ import de.avgl.dmp.persistence.model.types.Tuple;
 
 /**
  * A resource (controller service) for {@link Task}s.
- * 
+ *
  * @author tgaengler
  */
 @RequestScoped
@@ -71,7 +71,7 @@ public class TasksResource {
 	/**
 	 * Creates a new resource (controller service) for {@link Transformation}s with the provider of the transformation persistence
 	 * service, the object mapper and metrics registry.
-	 * 
+	 *
 	 * @param dataModelUtilArg the data model util
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
@@ -86,7 +86,7 @@ public class TasksResource {
 
 	/**
 	 * Builds a positive response with the given content.
-	 * 
+	 *
 	 * @param responseContent a response message
 	 * @return the response
 	 */
@@ -99,7 +99,7 @@ public class TasksResource {
 
 	/**
 	 * This endpoint executes the task that is given via its JSON representation and returns the result of the task execution.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one task
 	 * @return the result of the task execution
 	 * @throws IOException
@@ -216,160 +216,64 @@ public class TasksResource {
 		return buildResponse(result);
 	}
 
-	// @Path("/demo")
-	// @POST
-	// @Consumes(MediaType.APPLICATION_JSON)
-	// @Produces(MediaType.APPLICATION_JSON)
-	// public Response executeJobDemo(final String jsonObjectString) throws IOException, DMPConverterException {
-	//
-	// // TODO: fixme
-	//
-	// // final Job job;
-	// // try {
-	// // job = pojoMapperProvider.get().toJob(jsonObjectString);
-	// // } catch (DMPPersistenceException e) {
-	// // throw new DMPConverterException(e.getMessage());
-	// // }
-	// //
-	// // final TransformationFlow flow = TransformationFlow.fromJob(job);
-	// final String result = null;
-	// // flow.applyResourceDemo(TransformationFlow.DEFAULT_RESOURCE_PATH);
-	//
-	// return buildResponse(result);
-	// }
 
-	// END FROM JobsResource
+	/**
+	 * This endpoint executes the task that is given via its JSON representation and returns the result of the task execution.
+	 *
+	 * @param jsonObjectString a JSON representation of one task
+	 * @return the result of the task execution
+	 * @throws IOException
+	 * @throws DMPConverterException
+	 */
+	@ApiOperation(value = "get the metamorph script of the given task", notes = "Returns the Metamorph as XML.")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "metamorph could be built successfully"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_XML)
+	public String renderMetamorph(@ApiParam(value = "task (as JSON)", required = true) final String jsonObjectString) throws IOException,
+			DMPConverterException {
 
-	// START FROM TransformationsResource
+		final Task task;
 
-	// @POST
-	// @Consumes(MediaType.APPLICATION_JSON)
-	// @Produces(MediaType.APPLICATION_XML)
-	// public Response runToXML(final String jsonObjectString) throws IOException, DMPConverterException {
-	//
-	// // TODO: fixme
-	//
-	// // final Transformation transformations;
-	// // try {
-	// // transformations = pojoMapperProvider.get().toTransformation(jsonObjectString);
-	// // } catch (DMPPersistenceException e) {
-	// // throw new DMPConverterException(e.getMessage());
-	// // }
-	//
-	// final String xml = null;
-	//
-	// // new MorphScriptBuilder().apply(transformations).toString();
-	//
-	// return buildResponse(xml);
-	// }
-	//
-	// /**
-	// * this endpoint consumes a transformations as JSON representation
-	// *
-	// * @param jsonObjectString a JSON representation of one transformations
-	// * @return
-	// * @throws IOException
-	// * @throws DMPConverterException
-	// * @throws DMPControllerException
-	// */
-	// @POST
-	// @Consumes(MediaType.APPLICATION_JSON)
-	// @Produces(MediaType.APPLICATION_JSON)
-	// public Response runWithMetamorph(final String jsonObjectString, @QueryParam("resourceId") final Long resourceId,
-	// @QueryParam("configurationId") final Long configurationId) throws IOException, DMPConverterException,
-	// DMPControllerException {
-	//
-	// // TODO: fixme
-	//
-	// // final Transformation transformations;
-	// //
-	// // try {
-	// // transformations = pojoMapperProvider.get().toTransformation(jsonObjectString);
-	// // } catch (DMPPersistenceException e) {
-	// // throw new DMPConverterException(e.getMessage());
-	// // }
-	//
-	// if (resourceId == null) {
-	//
-	// throw new DMPControllerException("No resource id defined for this transformations task. Please set a resource id.");
-	// }
-	//
-	// if (configurationId == null) {
-	//
-	// throw new
-	// DMPControllerException("No configuration id defined for this transformations task. Please set a configuration id.");
-	// }
-	//
-	// // TODO: fixme
-	//
-	// // final TransformationFlow flow = TransformationFlow.fromTransformation(transformations);
-	//
-	// // final long resourceId = transformations.getSource().getResourceId();
-	// // final long configurationId = transformations.getSource().getConfigurationId();
-	// //
-	// // final Optional<Configuration> configurationOptional = schemaDataUtil.fetchConfiguration(resourceId, configurationId);
-	//
-	// // final List<String> parts = new ArrayList<String>(2);
-	// // parts.add("record");
-	// //
-	// // if (configurationOptional.isPresent()) {
-	// // final String name = configurationOptional.get().getName();
-	// // if (name != null && !name.isEmpty()) {
-	// // parts.add(name);
-	// // }
-	// // }
-	// //
-	// // final String recordPrefix = Joiner.on('.').join(parts);
-	//
-	// final Optional<Iterator<Tuple<String, JsonNode>>> inputData = schemaDataUtil.getData(resourceId, configurationId);
-	//
-	// if (!inputData.isPresent()) {
-	//
-	// throw new DMPConverterException("couldn't find input data for transformations");
-	// }
-	//
-	// final Iterator<Tuple<String, JsonNode>> tupleIterator = inputData.get();
-	//
-	// // TODO: fime
-	//
-	// final String result = null;
-	// // flow.apply(tupleIterator, new JsonNodeReader());
-	//
-	// return buildResponse(result);
-	// }
-	//
-	// /**
-	// * this endpoint consumes a transformations as JSON representation
-	// *
-	// * @param jsonObjectString a JSON representation of one transformations
-	// * @return
-	// * @throws IOException
-	// * @throws DMPConverterException
-	// */
-	// @Path("/demo")
-	// @POST
-	// @Consumes(MediaType.APPLICATION_JSON)
-	// @Produces(MediaType.APPLICATION_JSON)
-	// public Response runWithMetamorphDemo(final String jsonObjectString) throws IOException, DMPConverterException {
-	//
-	// // TODO: fixme
-	//
-	// // final Transformation transformations;
-	// // try {
-	// // transformations = pojoMapperProvider.get().toTransformation(jsonObjectString);
-	// // } catch (DMPPersistenceException e) {
-	// // throw new DMPConverterException(e.getMessage());
-	// // }
-	//
-	// final TransformationFlow flow = null;
-	// // TransformationFlow.fromTransformation(transformations);
-	//
-	// // final String result = flow.applyResourceDemo(TransformationFlow.DEFAULT_RESOURCE_PATH);
-	// final String result = "{\"status\":\"nok\",\"reason\":\"not implemented / in transition\"}";
-	//
-	// return buildResponse(result);
-	// }
+		task = objectMapper.readValue(jsonObjectString, Task.class);
 
-	// END FROM TransformationsResource
+		if (task == null) {
+
+			LOG.error("couldn't parse task JSON to Task");
+
+			throw new DMPConverterException("couldn't parse task JSON to Task");
+		}
+
+		final Job job = task.getJob();
+
+		if (job == null) {
+
+			LOG.error("there is no job for this task");
+
+			throw new DMPConverterException("there is no job for this task");
+		}
+
+		if (job.getMappings() == null) {
+
+			LOG.error("there is are no mappings for this job of this task");
+
+			throw new DMPConverterException("there is are no mappings for this job of this task");
+		}
+
+		final DataModel inputDataModel = task.getInputDataModel();
+
+		if (inputDataModel == null) {
+
+			LOG.error("there is no input data model for this task");
+
+			throw new DMPConverterException("there is no input data model for this task");
+		}
+
+		final TransformationFlow flow = TransformationFlow.fromTask(task);
+
+		return flow.getScript();
+	}
+
 
 }
