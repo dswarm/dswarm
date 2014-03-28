@@ -256,7 +256,7 @@ public class DataModelsResourceTest extends
 		final URL fileURL = Resources.getResource("test_csv.csv");
 		final File resourceFile = FileUtils.toFile(fileURL);
 
-		final String configurationJSONString = DMPPersistenceUtil.getResourceAsString("configuration.json");
+		final String configurationJSONString = DMPPersistenceUtil.getResourceAsString("controller_configuration.json");
 
 		// add resource and config
 		final Resource resource = resourcesResourceTestUtils.uploadResource(resourceFile, expectedResource);
