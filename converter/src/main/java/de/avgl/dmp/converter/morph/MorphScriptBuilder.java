@@ -54,7 +54,7 @@ import de.avgl.dmp.persistence.model.schema.MappingAttributePathInstance;
 
 /**
  * Creates a metamorph script from a given {@link Task}.
- * 
+ *
  * @author phorn
  * @author tgaengler
  */
@@ -487,7 +487,7 @@ public class MorphScriptBuilder {
 		}
 
 		List<Element> datas = null;
-		
+
 		final String inputAttributePathStringXMLEscaped = StringEscapeUtils.escapeXml(inputAttributePathString);
 
 		for (final String variable : variables) {
@@ -521,7 +521,7 @@ public class MorphScriptBuilder {
 
 			return null;
 		}
-		
+
 		final String outputAttributePathStringXMLEscaped = StringEscapeUtils.escapeXml(outputAttributePathString);
 
 		// TODO: maybe add mapping to default output variable identifier, if output attribute path is not part of the parameter
@@ -694,7 +694,7 @@ public class MorphScriptBuilder {
 
 		String dataNameAttribute = null;
 
-		if (component.getOutputComponents() == null) {
+		if (component.getOutputComponents() == null || component.getOutputComponents().isEmpty()) {
 
 			// dataNameAttribute = getKeyParameterMapping(outputAttributePath, transformationComponent);
 			dataNameAttribute = OUTPUT_VARIABLE_IDENTIFIER;

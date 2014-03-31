@@ -319,7 +319,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		LOG.debug("start add resource configuration test");
 
-		final Resource resource = addResourceConfigurationInternal(resourceFile, "configuration.json", expectedResource);
+		final Resource resource = addResourceConfigurationInternal(resourceFile, "controller_configuration.json", expectedResource);
 
 		// clean up
 
@@ -338,7 +338,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		LOG.debug("start get resource configuration test");
 
-		final Resource resource = addResourceConfigurationInternal(resourceFile, "configuration.json", expectedResource);
+		final Resource resource = addResourceConfigurationInternal(resourceFile, "controller_configuration.json", expectedResource);
 
 		final Configuration configuration = resource.getConfigurations().iterator().next();
 
@@ -470,7 +470,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		LOG.debug("start post configuration CSV JSON preview test");
 	}
-	
+
 	@Test
 	public void testPUTResource() throws Exception {
 
@@ -484,7 +484,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		Assert.assertNotNull("resource shouldn't be null", createResource);
 		Assert.assertNotNull("resource id shouldn't be null", createResource.getId());
-		
+
 		LOG.debug("try to retrieve resource '" + createResource.getId() + "'");
 
 		final Response createResponse = target(String.valueOf(createResource.getId())).request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
@@ -493,13 +493,13 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		Assert.assertEquals("200 OK was expected", 200, createResponse.getStatus());
 		Assert.assertEquals("resource JSONs are not equal", createResourceJSON, createResourceString);
-		
+
 		expectedResource.setName(expectedResource.getName() + " update");
 		expectedResource.setDescription(expectedResource.getDescription() + " update");
-		
+
 		Configuration configuration = configurationsResourceTestUtils.createObject("configuration2.json");
 		expectedResource.addConfiguration(configuration);
-		
+
 		final String updateResourceJSON = testResourceUpdateInteral(resourceFile, expectedResource, createResource.getId());
 
 		LOG.debug("update resource = '" + updateResourceJSON + "'");
@@ -508,7 +508,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		Assert.assertNotNull("updated resource shouldn't be null", updateResource);
 		Assert.assertEquals("updated resource ids should be equals", updateResource.getId(), createResource.getId());
-		
+
 		LOG.debug("try to retrieve updated resource '" + updateResource.getId() + "'");
 
 		final Response updateResponse = target(String.valueOf(updateResource.getId())).request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
@@ -523,10 +523,10 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		LOG.debug("end put resource test");
 	}
-	
+
 	@Test
 	public void testDELETEResource() throws Exception {
-		
+
 		LOG.debug("start DELETE resource test");
 
 		final String resourceJSON = testResourceUploadInteral(resourceFile, expectedResource);
@@ -536,7 +536,7 @@ public class ResourcesResourceTest extends ResourceTest {
 		final Resource resource = objectMapper.readValue(resourceJSON, Resource.class);
 
 		final Long resourceId = resource.getId();
-		
+
 		Assert.assertNotNull("resource shouldn't be null", resource);
 		Assert.assertNotNull("resource id shouldn't be null", resourceId);
 
@@ -547,9 +547,9 @@ public class ResourcesResourceTest extends ResourceTest {
 		Assert.assertEquals("204 NO CONTENT was expected", 204, response.getStatus());
 
 		final Resource deletedResource = resourceService.getObject(resourceId);
-		
+
 		Assert.assertNull(deletedResource);
-		
+
 		LOG.debug("end DELETE resource test");
 	}
 
@@ -600,7 +600,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		return responseResourceString;
 	}
-	
+
 	private Resource addResourceConfigurationInternal(final File resourceFile, final String configurationFileName, final Resource expectedResource)
 			throws Exception {
 
