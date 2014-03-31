@@ -45,6 +45,7 @@ import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
+import de.avgl.dmp.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 
 public class PNXSchemaTest extends ResourceTest {
 
@@ -165,6 +166,9 @@ public class PNXSchemaTest extends ResourceTest {
 
 			claszesResourceTestUtils.deleteObject(recordClass);
 		}
+
+		// clean-up graph db
+		InternalGDMGraphServiceTestUtils.cleanGraphDB();
 	}
 
 	private Resource uploadResource() throws URISyntaxException, IOException {

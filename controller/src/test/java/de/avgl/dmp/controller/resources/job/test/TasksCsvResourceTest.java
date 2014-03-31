@@ -48,6 +48,7 @@ import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
+import de.avgl.dmp.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public class TasksCsvResourceTest extends ResourceTest {
@@ -193,8 +194,8 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 		final String finalTaskJSONString = objectMapper.writeValueAsString(taskJSON);
 
-		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(Entity.json(finalTaskJSONString));
+		final Response response = target().queryParam("persist", Boolean.TRUE).request(MediaType.APPLICATION_JSON_TYPE)
+				.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(finalTaskJSONString));
 
 		Assert.assertEquals("200 Created was expected", 200, response.getStatus());
 
@@ -204,7 +205,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 		LOG.debug("task execution response = '" + responseString + "'");
 
-		final String expectedResultString = DMPPersistenceUtil.getResourceAsString("task-result.csv.json");
+		final String expectedResultString = DMPPersistenceUtil.getResourceAsString("controller_task-result.csv.json");
 
 		final ArrayNode expectedJSONArray = objectMapper.readValue(expectedResultString, ArrayNode.class);
 		final ArrayNode actualJSONArray = objectMapper.readValue(responseString, ArrayNode.class);
@@ -288,6 +289,9 @@ public class TasksCsvResourceTest extends ResourceTest {
 		classesResourceTestUtils.deleteObject(recordClass);
 		resourcesResourceTestUtils.deleteObject(resource);
 		configurationsResourceTestUtils.deleteObject(configuration);
+
+		// clean-up graph db
+		InternalGDMGraphServiceTestUtils.cleanGraphDB();
 	}
 
 	private JsonNode getRecordData(final String recordData, final ArrayNode jsonArray, final String key) {

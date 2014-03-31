@@ -51,6 +51,7 @@ import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.service.InternalModelService;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
+import de.avgl.dmp.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.resource.test.utils.DataModelServiceTestUtils;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
@@ -508,6 +509,9 @@ public class DataModelsResourceTest extends
 		claszesResourceTestUtils.deleteObject(updateRecordClass);
 
 		// END schema clean-up
+
+		// clean-up graph db
+		InternalGDMGraphServiceTestUtils.cleanGraphDB();
 	}
 
 	@Override

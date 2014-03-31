@@ -120,7 +120,7 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 
 		final POJOCLASS actualObject = createObjectInternal();
 
-		final POJOCLASS responseObject = pojoClassResourceTestUtils.getObject(actualObject);
+		final POJOCLASS responseObject = pojoClassResourceTestUtils.getObjectAndCompare(actualObject);
 
 		cleanUpDB(responseObject);
 

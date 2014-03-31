@@ -89,13 +89,23 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 		return persistenceService.getObjects();
 	}
 
-	public POJOCLASS getObject(final POJOCLASS expectedObject) throws Exception {
+	public POJOCLASS getObjectAndCompare(final POJOCLASS expectedObject) throws Exception {
+
+		final POJOCLASS responseObject = getObject(expectedObject.getId());
+
+		reset();
+		compareObjects(expectedObject, responseObject);
+
+		return responseObject;
+	}
+
+	public POJOCLASS getObject(final POJOCLASSIDTYPE id) throws Exception {
 
 		String idEncoded = null;
 
 		try {
 
-			idEncoded = URLEncoder.encode(expectedObject.getId().toString(), "UTF-8");
+			idEncoded = URLEncoder.encode(id.toString(), "UTF-8");
 		} catch (final UnsupportedEncodingException e) {
 
 			LOG.debug("couldn't encode id", e);
@@ -118,9 +128,6 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 		final POJOCLASS responseObject = objectMapper.readValue(responseObjectJSON, pojoClass);
 
 		Assert.assertNotNull("response " + pojoClassName + " shouldn't be null", responseObject);
-
-		reset();
-		compareObjects(expectedObject, responseObject);
 
 		return responseObject;
 	}

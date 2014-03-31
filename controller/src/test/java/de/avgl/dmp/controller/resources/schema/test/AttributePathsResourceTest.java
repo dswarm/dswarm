@@ -185,7 +185,7 @@ public class AttributePathsResourceTest
 
 		Assert.assertNotNull("attribute path shouldn't be null in update test", attributePath);
 
-		AttributePath retrievedAttributePath = pojoClassResourceTestUtils.getObject(attributePath);
+		AttributePath retrievedAttributePath = pojoClassResourceTestUtils.getObjectAndCompare(attributePath);
 
 		// remove an attribute
 		retrievedAttributePath.removeAttribute(actualAttribute3, 2);

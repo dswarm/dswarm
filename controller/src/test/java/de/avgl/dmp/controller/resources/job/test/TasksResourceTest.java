@@ -45,6 +45,7 @@ import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
+import de.avgl.dmp.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public class TasksResourceTest extends ResourceTest {
@@ -62,7 +63,7 @@ public class TasksResourceTest extends ResourceTest {
 	private final SchemasResourceTestUtils			schemasResourceTestUtils;
 
 	private final ClaszesResourceTestUtils			classesResourceTestUtils;
-	
+
 	private final AttributesResourceTestUtils		attributesResourceTestUtils;
 
 	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
@@ -140,13 +141,6 @@ public class TasksResourceTest extends ResourceTest {
 		dataModel = dataModelsResourceTestUtils.createObject(dataModelJSONString, data1);
 
 		Assert.assertNotNull("the data model shouldn't be null", dataModel);
-		Assert.assertNotNull("the data model schema shouldn't be null", dataModel.getSchema());
-
-		schema = dataModel.getSchema();
-
-		Assert.assertNotNull("the data model schema record class shouldn't be null", schema.getRecordClass());
-
-		recordClass = schema.getRecordClass();
 
 		// check processed data
 		final String data = dataModelsResourceTestUtils.getData(dataModel.getId(), 1);
@@ -159,14 +153,14 @@ public class TasksResourceTest extends ResourceTest {
 
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
 		((ObjectNode) taskJSON).put("input_data_model", finalDataModelJSON);
-		
+
 		// manipulate output data model (output data model = input data model (for now))
 		((ObjectNode) taskJSON).put("output_data_model", finalDataModelJSON);
 
 		final String finalTaskJSONString = objectMapper.writeValueAsString(taskJSON);
 
-		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(Entity.json(finalTaskJSONString));
+		final Response response = target().queryParam("persist", Boolean.TRUE).request(MediaType.APPLICATION_JSON_TYPE)
+				.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(finalTaskJSONString));
 
 		Assert.assertEquals("200 Created was expected", 200, response.getStatus());
 
@@ -191,7 +185,7 @@ public class TasksResourceTest extends ResourceTest {
 
 		LOG.debug("task execution response = '" + responseString + "'");
 
-		final String expectedResultString = DMPPersistenceUtil.getResourceAsString("task-result.json");
+		final String expectedResultString = DMPPersistenceUtil.getResourceAsString("controller_task-result.json");
 
 		final ArrayNode expectedJSONArray = objectMapper.readValue(expectedResultString, ArrayNode.class);
 		final ObjectNode expectedJSON = (ObjectNode) expectedJSONArray.get(0).get("record_data");
@@ -203,16 +197,27 @@ public class TasksResourceTest extends ResourceTest {
 
 		assertEquals(finalExpectedJSONString.length(), finalActualJSONString.length());
 
+		dataModel = dataModelsResourceTestUtils.getObject(dataModel.getId());
+
+		Assert.assertNotNull("the data model shouldn't be null", dataModel);
+		Assert.assertNotNull("the data model schema shouldn't be null", dataModel.getSchema());
+
+		this.schema = dataModel.getSchema();
+
+		Assert.assertNotNull("the data model schema record class shouldn't be null", this.schema.getRecordClass());
+
+		recordClass = this.schema.getRecordClass();
+
 		LOG.debug("end task execution test");
 	}
 
 	@After
 	public void cleanUp() {
-		
-		final Map<Long, Attribute>					attributes		= Maps.newHashMap();
 
-		final Map<Long, AttributePath>					attributePaths	= Maps.newLinkedHashMap();
-		
+		final Map<Long, Attribute> attributes = Maps.newHashMap();
+
+		final Map<Long, AttributePath> attributePaths = Maps.newLinkedHashMap();
+
 		if (schema != null) {
 
 			final Set<AttributePath> attributePathsToDelete = schema.getAttributePaths();
@@ -235,10 +240,10 @@ public class TasksResourceTest extends ResourceTest {
 				}
 			}
 		}
-		
+
 		dataModelsResourceTestUtils.deleteObject(dataModel);
 		schemasResourceTestUtils.deleteObject(schema);
-		
+
 		for (final AttributePath attributePath : attributePaths.values()) {
 
 			attributePathsResourceTestUtils.deleteObject(attributePath);
@@ -252,5 +257,8 @@ public class TasksResourceTest extends ResourceTest {
 		classesResourceTestUtils.deleteObject(recordClass);
 		resourcesResourceTestUtils.deleteObject(resource);
 		configurationsResourceTestUtils.deleteObject(configuration);
+
+		// clean-up graph db
+		InternalGDMGraphServiceTestUtils.cleanGraphDB();
 	}
 }

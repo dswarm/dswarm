@@ -1,0 +1,6 @@
+[{
+    "record_id": "http://data.slub-dresden.de/datamodels/36/records/2bca7783-eabe-4f5c-a55a-10d9c90dd80e",
+    "record_data": {
+        "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": ["<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>", "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>", "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>", "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>", "<a href=\"http://av.gl/dmp5?foo\">Lorem Ipsum</a>", "<a href=\"http://av.gl/dmp2?foo\">Lorem Ipsum</a>"]
+    }
+}]

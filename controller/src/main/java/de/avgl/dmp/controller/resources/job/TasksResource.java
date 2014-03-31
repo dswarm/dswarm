@@ -5,9 +5,11 @@ import java.util.Iterator;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -15,6 +17,7 @@ import javax.ws.rs.core.UriInfo;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
 import com.google.inject.Provider;
@@ -112,7 +115,7 @@ public class TasksResource {
 	 * @return the result of the task execution
 	 * @throws IOException
 	 * @throws DMPConverterException
-	 * @throws DMPControllerException 
+	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "execute the given task", notes = "Returns the result data (as JSON) for this task execution.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "task was successfully executed"),
@@ -120,7 +123,8 @@ public class TasksResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response executeTask(@ApiParam(value = "task (as JSON)", required = true) final String jsonObjectString) throws IOException,
+	public Response executeTask(@ApiParam(value = "task (as JSON)", required = true) final String jsonObjectString,
+			@ApiParam("perist result set") @QueryParam("persist") @DefaultValue(value = "false") final Boolean persistResult) throws IOException,
 			DMPConverterException, DMPControllerException {
 
 		final Task task;
@@ -180,7 +184,7 @@ public class TasksResource {
 
 			throw new DMPConverterException("there is no configuration for this input data model of this task");
 		}
-		
+
 		final Optional<Iterator<Tuple<String, JsonNode>>> inputData = dataModelUtil.getData(inputDataModel.getId());
 
 		if (!inputData.isPresent()) {
@@ -192,33 +196,73 @@ public class TasksResource {
 
 		final Iterator<Tuple<String, JsonNode>> tupleIterator = inputData.get();
 
-		final String result = flow.apply(tupleIterator);
-		
-//		if(result == null) {
-//			
-//			LOG.debug("result of task execution is null");
-//			
-//			// TODO: or throw an exception here?
-//		}
-//		
-//		// transform model json to fe friendly json
-//		final ObjectNode resultJSON = objectMapper.readValue(result, ObjectNode.class);
-//		
-//		if(resultJSON == null) {
-//			
-//			final String message = "couldn't deserialize result JSON from string";
-//			
-//			LOG.error(message);
-//			
-//			throw new DMPControllerException(message);
-//		}
-//		
-//		if(resultJSON.size() <= 0) {
-//			
-//			// TODO: continue here
-//		}
+		final boolean writeResultToDatahub;
 
-		return buildResponse(result);
+		if (persistResult != null) {
+
+			writeResultToDatahub = persistResult.booleanValue();
+		} else {
+
+			writeResultToDatahub = false;
+		}
+
+		final String result = flow.apply(tupleIterator, writeResultToDatahub);
+
+		if (result == null) {
+
+			LOG.debug("result of task execution is null");
+
+			return buildResponse(null);
+		}
+
+		// transform model json to fe friendly json
+		final ArrayNode resultJSON = objectMapper.readValue(result, ArrayNode.class);
+
+		if (resultJSON == null) {
+
+			final String message = "couldn't deserialize result JSON from string";
+
+			LOG.error(message);
+
+			throw new DMPControllerException(message);
+		}
+
+		if (resultJSON.size() <= 0) {
+
+			LOG.debug("result of task execution is empty");
+
+			return buildResponse(null);
+		}
+
+		final ArrayNode feFriendlyJSON = objectMapper.createArrayNode();
+
+		for (final JsonNode entry : resultJSON) {
+
+			final Iterator<String> fieldNamesIter = entry.fieldNames();
+
+			if (fieldNamesIter == null || !fieldNamesIter.hasNext()) {
+
+				continue;
+			}
+
+			final String recordURI = fieldNamesIter.next();
+			final JsonNode recordContentNode = entry.get(recordURI);
+
+			if (recordContentNode == null) {
+
+				continue;
+			}
+
+			final ObjectNode recordNode = objectMapper.createObjectNode();
+			recordNode.put("record_id", recordURI);
+			recordNode.put("record_data", recordContentNode);
+
+			feFriendlyJSON.add(recordNode);
+		}
+
+		final String resultString = objectMapper.writeValueAsString(feFriendlyJSON);
+
+		return buildResponse(resultString);
 	}
 
 	/**
