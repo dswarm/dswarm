@@ -15,6 +15,7 @@ import javax.ws.rs.core.UriInfo;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
@@ -24,6 +25,7 @@ import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
+import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.controller.utils.DataModelUtil;
 import de.avgl.dmp.converter.DMPConverterException;
@@ -110,6 +112,7 @@ public class TasksResource {
 	 * @return the result of the task execution
 	 * @throws IOException
 	 * @throws DMPConverterException
+	 * @throws DMPControllerException 
 	 */
 	@ApiOperation(value = "execute the given task", notes = "Returns the result data (as JSON) for this task execution.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "task was successfully executed"),
@@ -118,7 +121,7 @@ public class TasksResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response executeTask(@ApiParam(value = "task (as JSON)", required = true) final String jsonObjectString) throws IOException,
-			DMPConverterException {
+			DMPConverterException, DMPControllerException {
 
 		final Task task;
 
@@ -177,20 +180,7 @@ public class TasksResource {
 
 			throw new DMPConverterException("there is no configuration for this input data model of this task");
 		}
-
-		// [@tgaengler]: @phorn what is the purpose of this record prefix here?
-		// final List<String> parts = new ArrayList<String>(2);
-		// parts.add("record");
-		//
-		// final String name = configuration.getName();
-		// if (name != null && !name.isEmpty()) {
-		// parts.add(name);
-		// }
-		//
-		// final String recordPrefix = Joiner.on('.').join(parts);
-
-		// final Optional<Iterator<Tuple<String, JsonNode>>> inputData = schemaDataUtil.getData(dataResource.getId(),
-		// configuration.getId());
+		
 		final Optional<Iterator<Tuple<String, JsonNode>>> inputData = dataModelUtil.getData(inputDataModel.getId());
 
 		if (!inputData.isPresent()) {
@@ -202,24 +192,31 @@ public class TasksResource {
 
 		final Iterator<Tuple<String, JsonNode>> tupleIterator = inputData.get();
 
-		// if(tupleIterator.hasNext()) {
-		//
-		// final Tuple<String, JsonNode> tuple = tupleIterator.next();
-		//
-		// System.out.println("id = '" + tuple.v1() + "'");
-		//
-		// final JsonNode jsonNode = tuple.v2();
-		//
-		// if(jsonNode != null) {
-		//
-		// final ObjectNode node = (ObjectNode) jsonNode;
-		//
-		// System.out.println("model = '" + objectMapper.writeValueAsString(node) + "'");
-		// }
-		// }
-
 		final String result = flow.apply(tupleIterator);
-		// flow.apply(tupleIterator, new JsonNodeReader(recordPrefix));
+		
+//		if(result == null) {
+//			
+//			LOG.debug("result of task execution is null");
+//			
+//			// TODO: or throw an exception here?
+//		}
+//		
+//		// transform model json to fe friendly json
+//		final ObjectNode resultJSON = objectMapper.readValue(result, ObjectNode.class);
+//		
+//		if(resultJSON == null) {
+//			
+//			final String message = "couldn't deserialize result JSON from string";
+//			
+//			LOG.error(message);
+//			
+//			throw new DMPControllerException(message);
+//		}
+//		
+//		if(resultJSON.size() <= 0) {
+//			
+//			// TODO: continue here
+//		}
 
 		return buildResponse(result);
 	}

@@ -44,7 +44,7 @@ import de.avgl.dmp.converter.pipe.StreamUnflattener;
 import de.avgl.dmp.converter.reader.QucosaReader;
 import de.avgl.dmp.init.util.DMPStatics;
 import de.avgl.dmp.persistence.DMPPersistenceException;
-import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
+import de.avgl.dmp.persistence.model.internal.rdf.RDFModel;
 import de.avgl.dmp.persistence.model.job.Task;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.schema.Clasz;

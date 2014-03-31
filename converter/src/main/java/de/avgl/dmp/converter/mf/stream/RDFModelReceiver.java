@@ -4,7 +4,7 @@ import org.culturegraph.mf.framework.ObjectReceiver;
 
 import com.google.common.collect.ImmutableList;
 
-import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
+import de.avgl.dmp.persistence.model.internal.rdf.RDFModel;
 
 /**
  * 

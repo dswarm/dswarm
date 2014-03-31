@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.GuicedTest;
 import de.avgl.dmp.converter.flow.XMLSourceResourceTriplesFlow;
-import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
+import de.avgl.dmp.persistence.model.internal.rdf.RDFModel;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;

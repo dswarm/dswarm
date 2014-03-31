@@ -24,7 +24,6 @@ import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -487,7 +486,8 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		LOG.debug("try to retrieve resource '" + createResource.getId() + "'");
 
-		final Response createResponse = target(String.valueOf(createResource.getId())).request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+		final Response createResponse = target(String.valueOf(createResource.getId())).request().accept(MediaType.APPLICATION_JSON_TYPE)
+				.get(Response.class);
 
 		final String createResourceString = createResponse.readEntity(String.class);
 
@@ -511,7 +511,8 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		LOG.debug("try to retrieve updated resource '" + updateResource.getId() + "'");
 
-		final Response updateResponse = target(String.valueOf(updateResource.getId())).request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+		final Response updateResponse = target(String.valueOf(updateResource.getId())).request().accept(MediaType.APPLICATION_JSON_TYPE)
+				.get(Response.class);
 
 		final String updateResourceString = updateResponse.readEntity(String.class);
 

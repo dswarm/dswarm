@@ -1,4 +1,4 @@
-package de.avgl.dmp.persistence.model.internal.impl;
+package de.avgl.dmp.persistence.model.internal.rdf;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -160,9 +160,6 @@ public class RDFModel implements Model {
 		}
 	}
 
-	/**
-	 * TODO: (maybe) implement JSON serialisation for multiple records
-	 */
 	@Override
 	public JsonNode toJSON() {
 
@@ -183,20 +180,52 @@ public class RDFModel implements Model {
 		// System.out.println("write rdf model '" + resourceURI + "' in n3");
 		// model.write(System.out, "N3");
 
-		final Resource recordResource = model.getResource(getRecordURIs().iterator().next());
+		final Iterator<String> iter = getRecordURIs().iterator();
 
-		if (recordResource == null) {
-
-			LOG.debug("couldn't find record resource for record  uri '" + getRecordURIs() + "' in model");
+		if (iter == null) {
 
 			return null;
 		}
 
-		final ObjectNode json = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
+		if (!iter.hasNext()) {
 
-		convertRDFToJSON(recordResource, json, json);
+			// no entries
 
-		return json;
+			return null;
+		}
+
+		final ArrayNode jsonArray = DMPPersistenceUtil.getJSONObjectMapper().createArrayNode();
+
+		while (iter.hasNext()) {
+
+			final String resourceURI = iter.next();
+			final Resource recordResource = model.getResource(resourceURI);
+
+			if (recordResource == null) {
+
+				LOG.debug("couldn't find record resource for record  uri '" + getRecordURIs() + "' in model");
+
+				return null;
+			}
+
+			final ObjectNode json = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
+
+			convertRDFToJSON(recordResource, json, json);
+
+			if (json == null) {
+
+				// TODO: maybe log something here
+
+				continue;
+			}
+
+			final ObjectNode resourceJson = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
+
+			resourceJson.put(resourceURI, json);
+			jsonArray.add(resourceJson);
+		}
+
+		return jsonArray;
 	}
 
 	@Override

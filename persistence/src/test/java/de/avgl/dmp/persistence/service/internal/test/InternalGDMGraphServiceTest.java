@@ -6,8 +6,11 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.base.Optional;
@@ -18,7 +21,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.internal.Model;
 import de.avgl.dmp.persistence.model.internal.gdm.GDMModel;
-import de.avgl.dmp.persistence.model.internal.impl.RDFModel;
+import de.avgl.dmp.persistence.model.internal.rdf.RDFModel;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
@@ -30,6 +33,7 @@ import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.service.internal.graph.InternalGDMGraphService;
 import de.avgl.dmp.persistence.service.internal.graph.InternalRDFGraphService;
+import de.avgl.dmp.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
@@ -40,10 +44,11 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
 
 public class InternalGDMGraphServiceTest extends GuicedTest {
 
+	private static final Logger	LOG	= LoggerFactory.getLogger(InternalGDMGraphServiceTest.class);
+
 	/**
-	 * write data via InternalRDFGraphService and read it via InternalGDMGraphService.
-	 * 
-	 * TODO: adapt record uri re. current model (to ensure integrity)
+	 * write data via InternalRDFGraphService and read it via InternalGDMGraphService. TODO: adapt record uri re. current model
+	 * (to ensure integrity)
 	 * 
 	 * @throws Exception
 	 */
@@ -129,6 +134,8 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 		Assert.assertNotNull("the real record model shouldn't be null", realRecordModel);
 		Assert.assertEquals("wrong size of the record model; expected '2601'", 2601, realRecordModel.size());
 
+		// TODO: move clean-up to tearDown2
+
 		// clean-up
 		final Map<Long, Attribute> attributes = Maps.newHashMap();
 
@@ -184,5 +191,11 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 
 		configurationService.deleteObject(updatedConfiguration.getId());
 		resourceService.deleteObject(updatedResource.getId());
+	}
+
+	@After
+	public void tearDown2() {
+
+		InternalGDMGraphServiceTestUtils.cleanGraphDB();
 	}
 }
