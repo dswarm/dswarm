@@ -39,6 +39,7 @@ import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.model.types.Tuple;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 import de.avgl.dmp.persistence.service.internal.graph.InternalRDFGraphService;
+import de.avgl.dmp.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
@@ -149,6 +150,34 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		final InternalRDFGraphService tripleService = injector.getInstance(InternalRDFGraphService.class);
 		tripleService.createObject(updatedDataModel.getId(), rdfModel);
 
+		final Optional<Map<String, Model>> optionalModelMap = tripleService.getObjects(updatedDataModel.getId(), Optional.of(1));
+
+		final Iterator<Tuple<String, JsonNode>> tuples = dataIterator(optionalModelMap.get().entrySet().iterator());
+
+		final String dataModelJSONString = objectMapper.writeValueAsString(updatedDataModel);
+		final ObjectNode dataModelJSON = objectMapper.readValue(dataModelJSONString, ObjectNode.class);
+
+		// manipulate input data model
+		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
+		((ObjectNode) taskJSON).put("input_data_model", dataModelJSON);
+
+		// manipulate output data model (output data model = input data model (for now))
+		((ObjectNode) taskJSON).put("output_data_model", dataModelJSON);
+
+		final String finalTaskJSONString = objectMapper.writeValueAsString(taskJSON);
+
+		final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
+
+		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = injector.getProvider(InternalModelServiceFactory.class);
+
+		final TransformationFlow flow = TransformationFlow.fromTask(task, internalModelServiceFactoryProvider);
+
+		flow.getScript();
+
+		final String actual = flow.apply(tuples, true);
+
+		compareResults(expected, actual);
+
 		// retrieve updated fresh data model
 		final DataModel freshDataModel = dataModelService.getObject(updatedDataModel.getId());
 
@@ -162,34 +191,6 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		Assert.assertNotNull("the record class of the schema of the fresh data model shouldn't be null", schema.getRecordClass());
 
 		final Clasz recordClass = schema.getRecordClass();
-
-		final Optional<Map<String, Model>> optionalModelMap = tripleService.getObjects(updatedDataModel.getId(), Optional.of(1));
-
-		final Iterator<Tuple<String, JsonNode>> tuples = dataIterator(optionalModelMap.get().entrySet().iterator());
-
-		final String dataModelJSONString = objectMapper.writeValueAsString(updatedDataModel);
-		final ObjectNode dataModelJSON = objectMapper.readValue(dataModelJSONString, ObjectNode.class);
-
-		// manipulate input data model
-		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
-		((ObjectNode) taskJSON).put("input_data_model", dataModelJSON);
-		
-		// manipulate output data model (output data model = input data model (for now))
-		((ObjectNode) taskJSON).put("output_data_model", dataModelJSON);
-
-		final String finalTaskJSONString = objectMapper.writeValueAsString(taskJSON);
-
-		final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
-		
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = injector.getProvider(InternalModelServiceFactory.class);
-		
-		final TransformationFlow flow = TransformationFlow.fromTask(task, internalModelServiceFactoryProvider);
-		
-		flow.getScript();
-
-		final String actual = flow.apply(tuples);
-
-		compareResults(expected, actual);
 
 		// clean-up
 		// TODO: move clean-up to @After
@@ -246,16 +247,19 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		configurationService.deleteObject(updatedConfiguration.getId());
 		resourceService.deleteObject(updatedResource.getId());
+
+		// clean-up graph db
+		InternalGDMGraphServiceTestUtils.cleanGraphDB();
 	}
 
 	protected void compareResults(final String expectedResultJSONString, final String actualResultJSONString) throws Exception {
 
 		final ArrayNode expectedJSONArray = objectMapper.readValue(expectedResultJSONString, ArrayNode.class);
-		final ObjectNode expectedJSON = (ObjectNode) expectedJSONArray.get(0).get("record_data");
+		final ObjectNode expectedJSON = (ObjectNode) expectedJSONArray.get(0).fields().next().getValue();
 		final String finalExpectedJSONString = objectMapper.writeValueAsString(expectedJSON);
 
 		final ArrayNode actualJSONArray = objectMapper.readValue(actualResultJSONString, ArrayNode.class);
-		final ObjectNode actualJSON = (ObjectNode) actualJSONArray.get(0).get("record_data");
+		final ObjectNode actualJSON = (ObjectNode) actualJSONArray.get(0).fields().next().getValue();
 		final String finalActualJSONString = objectMapper.writeValueAsString(actualJSON);
 
 		assertEquals(finalExpectedJSONString.length(), finalActualJSONString.length());

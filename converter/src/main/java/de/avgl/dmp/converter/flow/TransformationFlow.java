@@ -144,8 +144,8 @@ public class TransformationFlow {
 		return applyDemo(resourcePath, opener);
 	}
 
-	public String apply(final Iterator<Tuple<String, JsonNode>> tuples, final ObjectPipe<Iterator<Tuple<String, JsonNode>>, StreamReceiver> opener)
-			throws DMPConverterException {
+	public String apply(final Iterator<Tuple<String, JsonNode>> tuples, final ObjectPipe<Iterator<Tuple<String, JsonNode>>, StreamReceiver> opener,
+			final boolean writeResultToDatahub) throws DMPConverterException {
 
 		// final String recordDummy = "record";
 
@@ -202,11 +202,6 @@ public class TransformationFlow {
 
 			return null;
 		}
-		
-		// TODO: make write to DB optional
-
-		// write result to graph db
-		final InternalModelService internalModelService = internalModelServiceFactoryProvider.get().getInternalRDFGraphService();
 
 		final Model model = ModelFactory.createDefaultModel();
 		String recordClassUri = null;
@@ -259,14 +254,22 @@ public class TransformationFlow {
 		final RDFModel rdfModel = new RDFModel(model, null, recordClassUri);
 		rdfModel.setRecordURIs(recordURIs);
 
-		try {
+		if (writeResultToDatahub) {
 
-			internalModelService.createObject(outputDataModel.get().getId(), rdfModel);
-		} catch (final DMPPersistenceException e1) {
+			// write result to graph db
+			final InternalModelService internalModelService = internalModelServiceFactoryProvider.get().getInternalRDFGraphService();
 
-			LOG.error("couldn't persistent the the result of the transformation");
+			try {
 
-			// TODO: maybe throw an exception
+				internalModelService.createObject(outputDataModel.get().getId(), rdfModel);
+			} catch (final DMPPersistenceException e1) {
+
+				final String message = "couldn't persistent the the result of the transformation";
+
+				LOG.error(message);
+
+				throw new DMPConverterException(message);
+			}
 		}
 
 		final String resultString;
@@ -286,11 +289,11 @@ public class TransformationFlow {
 		return resultString;
 	}
 
-	public String apply(final Iterator<Tuple<String, JsonNode>> tuples) throws DMPConverterException {
+	public String apply(final Iterator<Tuple<String, JsonNode>> tuples, final boolean writeResultToDatahub) throws DMPConverterException {
 
 		final JsonNodeReader opener = new JsonNodeReader();
 
-		return apply(tuples, opener);
+		return apply(tuples, opener, writeResultToDatahub);
 	}
 
 	public String applyDemo(final String object, final DefaultObjectPipe<String, ObjectReceiver<Reader>> opener) {
