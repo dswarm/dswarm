@@ -1,96 +1,77 @@
 [{
-    "record_id": "http://data.slub-dresden.de/datamodels/1/records/4d7e87b7-4661-4790-9612-346e36936202",
-    "record_data": {
-        "http://data.slub-dresden.de/resources/1/schema#description": "quietsch quietsch"
-    }
-}, {
-    "record_id": "http://data.slub-dresden.de/datamodels/1/records/cbc2600d-5df6-4441-ba16-5dc5d16423c1",
-    "record_data": {
-        "http://data.slub-dresden.de/resources/1/schema#description": "foo foo"
-    }
-}, {
-    "record_id": "http://data.slub-dresden.de/datamodels/1/records/be2c255d-9d8d-47bd-b812-25689104c917",
-    "record_data": {
-        "http://data.slub-dresden.de/resources/1/schema#description": "quick quick"
-    }
-}, {
-    "record_id": "http://data.slub-dresden.de/datamodels/1/records/b4d0472b-779d-40fd-8316-65d8f0a9aaeb",
-    "record_data": {
-        "http://data.slub-dresden.de/resources/1/schema#description": "gluck gluck"
-    }
-}, {
-    "record_id": "http://data.slub-dresden.de/datamodels/1/records/f731ffce-0c46-4ef2-a51a-b7cba2ff2e45",
-    "record_data": {
-        "http://data.slub-dresden.de/resources/1/schema#description": "brumm brumm"
-    }
-}, {
-    "record_id": "http://data.slub-dresden.de/datamodels/1/records/34a525c3-3f79-411e-b09c-1a67b2987d33",
-    "record_data": {
-        "http://data.slub-dresden.de/resources/1/schema#description": "kikeriki kikeriki"
-    }
-}, {
-    "record_id": "http://data.slub-dresden.de/datamodels/1/records/2b7ef880-011d-4d73-a08a-5a587efd2c72",
-    "record_data": {
-        "http://data.slub-dresden.de/resources/1/schema#description": "quäk quäk"
-    }
-}, {
-    "record_id": "http://data.slub-dresden.de/datamodels/1/records/11c8d39a-8d83-4d52-b181-d759625c96a0",
-    "record_data": {
-        "http://data.slub-dresden.de/resources/1/schema#description": "piep piep"
-    }
-}, {
-    "record_id": "http://data.slub-dresden.de/datamodels/1/records/ff9aac5f-2e2f-49e6-aa23-2bfa9535e89e",
-    "record_data": {
-        "http://data.slub-dresden.de/resources/1/schema#description": "muh muh"
-    }
-}, {
-    "record_id": "http://data.slub-dresden.de/datamodels/1/records/a8503eb4-cc89-45ca-bae1-433638aa8b9d",
-    "record_data": {
-        "http://data.slub-dresden.de/resources/1/schema#description": "mixu mixu"
-    }
-}, {
-    "record_id": "http://data.slub-dresden.de/datamodels/1/records/e26f3150-0aa2-4ce4-a134-09577ee6298b",
-    "record_data": {
-        "http://data.slub-dresden.de/resources/1/schema#description": "wxuwxu wxuwxu"
-    }
-}, {
-    "record_id": "http://data.slub-dresden.de/datamodels/1/records/8e2456ae-8e23-4233-89b4-ea6d3c28c853",
-    "record_data": {
-        "http://data.slub-dresden.de/resources/1/schema#description": "plök plök"
-    }
-}, {
-    "record_id": "http://data.slub-dresden.de/datamodels/1/records/69927fca-9d38-49cd-9085-67493485af76",
-    "record_data": {
-        "http://data.slub-dresden.de/resources/1/schema#description": "hup hup"
-    }
-}, {
-    "record_id": "http://data.slub-dresden.de/datamodels/1/records/dc02b232-f9a6-4b2c-8d29-2404cd6f0062",
-    "record_data": {
-        "http://data.slub-dresden.de/resources/1/schema#description": "blx blx"
-    }
-}, {
-    "record_id": "http://data.slub-dresden.de/datamodels/1/records/aca348c6-af3e-419f-a40e-16f77abd232d",
-    "record_data": {
+    "http://data.slub-dresden.de/datamodels/1/records/c9c05493-e5fd-422c-934d-c5253e352de0": {
         "http://data.slub-dresden.de/resources/1/schema#description": "mäh mäh"
     }
 }, {
-    "record_id": "http://data.slub-dresden.de/datamodels/1/records/16dcaefb-dabf-418a-a88f-8f50cbf1a2df",
-    "record_data": {
-        "http://data.slub-dresden.de/resources/1/schema#description": "bxr bxr"
+    "http://data.slub-dresden.de/datamodels/1/records/fe7b8e34-eb4a-4422-a1e9-4ee0b95dfd31": {
+        "http://data.slub-dresden.de/resources/1/schema#description": "piep piep"
     }
 }, {
-    "record_id": "http://data.slub-dresden.de/datamodels/1/records/f622840a-b438-4c49-94d7-e89ff4c50708",
-    "record_data": {
+    "http://data.slub-dresden.de/datamodels/1/records/b971ccf2-8c27-4ab7-8120-dd7214d94679": {
+        "http://data.slub-dresden.de/resources/1/schema#description": "gluck gluck"
+    }
+}, {
+    "http://data.slub-dresden.de/datamodels/1/records/e88322f3-4c70-4e78-b64f-aabcf1759bea": {
+        "http://data.slub-dresden.de/resources/1/schema#description": "mixu mixu"
+    }
+}, {
+    "http://data.slub-dresden.de/datamodels/1/records/fc7acaaf-4a6e-4858-bb2f-48e3f60adbc2": {
+        "http://data.slub-dresden.de/resources/1/schema#description": "blub blub"
+    }
+}, {
+    "http://data.slub-dresden.de/datamodels/1/records/0f49d185-c9dc-4995-b80c-550d42a42449": {
+        "http://data.slub-dresden.de/resources/1/schema#description": "quick quick"
+    }
+}, {
+    "http://data.slub-dresden.de/datamodels/1/records/05009cc7-0365-4202-b3a8-197532b8fee7": {
+        "http://data.slub-dresden.de/resources/1/schema#description": "plök plök"
+    }
+}, {
+    "http://data.slub-dresden.de/datamodels/1/records/36b89532-79ff-4442-9854-9ccc80851cb4": {
+        "http://data.slub-dresden.de/resources/1/schema#description": "muh muh"
+    }
+}, {
+    "http://data.slub-dresden.de/datamodels/1/records/54d52591-b8fe-42bd-8508-541b799a1e71": {
+        "http://data.slub-dresden.de/resources/1/schema#description": "foo foo"
+    }
+}, {
+    "http://data.slub-dresden.de/datamodels/1/records/bb966455-45c4-4851-8531-42fa6504d56b": {
+        "http://data.slub-dresden.de/resources/1/schema#description": "kikeriki kikeriki"
+    }
+}, {
+    "http://data.slub-dresden.de/datamodels/1/records/ce288fc3-57cc-4f6b-93eb-2ccefc20017f": {
+        "http://data.slub-dresden.de/resources/1/schema#description": "brumm brumm"
+    }
+}, {
+    "http://data.slub-dresden.de/datamodels/1/records/49d4a343-f95d-463a-8e3a-18f5704e6ef2": {
         "http://data.slub-dresden.de/resources/1/schema#description": "möp möp"
     }
 }, {
-    "record_id": "http://data.slub-dresden.de/datamodels/1/records/b37d6104-fc08-4931-85f9-f117c30e547d",
-    "record_data": {
+    "http://data.slub-dresden.de/datamodels/1/records/ea1662fb-4044-4eb7-97a8-bd0f1bee4c72": {
+        "http://data.slub-dresden.de/resources/1/schema#description": "blx blx"
+    }
+}, {
+    "http://data.slub-dresden.de/datamodels/1/records/87c6f39a-1ee3-4b72-85b1-65fb24a80c6a": {
+        "http://data.slub-dresden.de/resources/1/schema#description": "bxr bxr"
+    }
+}, {
+    "http://data.slub-dresden.de/datamodels/1/records/756351f0-716c-4429-9dab-57eafb848de5": {
+        "http://data.slub-dresden.de/resources/1/schema#description": "wxuwxu wxuwxu"
+    }
+}, {
+    "http://data.slub-dresden.de/datamodels/1/records/829af99f-3a46-42d4-a724-4dd21db7d07c": {
+        "http://data.slub-dresden.de/resources/1/schema#description": "hup hup"
+    }
+}, {
+    "http://data.slub-dresden.de/datamodels/1/records/597758e9-a60e-435b-994e-b2f2d891e221": {
         "http://data.slub-dresden.de/resources/1/schema#description": "quxck quxck"
     }
 }, {
-    "record_id": "http://data.slub-dresden.de/datamodels/1/records/9045385b-1427-4095-b7b8-70e0d9729bce",
-    "record_data": {
-        "http://data.slub-dresden.de/resources/1/schema#description": "blub blub"
+    "http://data.slub-dresden.de/datamodels/1/records/b64be3eb-1b79-4884-8195-012e83547fac": {
+        "http://data.slub-dresden.de/resources/1/schema#description": "quietsch quietsch"
+    }
+}, {
+    "http://data.slub-dresden.de/datamodels/1/records/b483bc4b-eefa-48e5-bce2-3e64f7d3b5cb": {
+        "http://data.slub-dresden.de/resources/1/schema#description": "quäk quäk"
     }
 }]

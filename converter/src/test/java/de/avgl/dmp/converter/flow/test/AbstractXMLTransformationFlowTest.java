@@ -269,7 +269,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 				if (triples.hasNext()) {
 					final Map.Entry<String, Model> nextTriple = triples.next();
 					final String recordId = nextTriple.getKey();
-					final JsonNode jsonNode = nextTriple.getValue().toJSON();
+					final JsonNode jsonNode = nextTriple.getValue().toRawJSON();
 					return Tuple.tuple(recordId, jsonNode);
 				}
 				return endOfData();

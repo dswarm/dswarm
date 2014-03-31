@@ -299,15 +299,15 @@ public class DataModelsResourceTest extends
 		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataResourceSchemaBaseURI(dataModel);
 
 		assertThat(json.get(dataResourceSchemaBaseURI + "id").asText(),
-				equalTo(data.get().get(recordId).toJSON().get(dataResourceSchemaBaseURI + "id").asText()));
+				equalTo(data.get().get(recordId).toRawJSON().get(dataResourceSchemaBaseURI + "id").asText()));
 		assertThat(json.get(dataResourceSchemaBaseURI + "year").asText(),
-				equalTo(data.get().get(recordId).toJSON().get(dataResourceSchemaBaseURI + "year").asText()));
+				equalTo(data.get().get(recordId).toRawJSON().get(dataResourceSchemaBaseURI + "year").asText()));
 		assertThat(json.get(dataResourceSchemaBaseURI + "description").asText(),
-				equalTo(data.get().get(recordId).toJSON().get(dataResourceSchemaBaseURI + "description").asText()));
+				equalTo(data.get().get(recordId).toRawJSON().get(dataResourceSchemaBaseURI + "description").asText()));
 		assertThat(json.get(dataResourceSchemaBaseURI + "name").asText(),
-				equalTo(data.get().get(recordId).toJSON().get(dataResourceSchemaBaseURI + "name").asText()));
+				equalTo(data.get().get(recordId).toRawJSON().get(dataResourceSchemaBaseURI + "name").asText()));
 		assertThat(json.get(dataResourceSchemaBaseURI + "isbn").asText(),
-				equalTo(data.get().get(recordId).toJSON().get(dataResourceSchemaBaseURI + "isbn").asText()));
+				equalTo(data.get().get(recordId).toRawJSON().get(dataResourceSchemaBaseURI + "isbn").asText()));
 
 		// clean up
 
@@ -405,7 +405,7 @@ public class DataModelsResourceTest extends
 
 		JsonNode json = assoziativeJsonArray.get(recordId);
 
-		final JsonNode expectedJson = data.get().get(recordId).toJSON();
+		final JsonNode expectedJson = data.get().get(recordId).toRawJSON();
 
 		System.out.println("expected JSON = '" + objectMapper.writeValueAsString(expectedJson) + "'");
 

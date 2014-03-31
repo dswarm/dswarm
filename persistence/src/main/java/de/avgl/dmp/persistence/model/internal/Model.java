@@ -14,17 +14,25 @@ import de.avgl.dmp.persistence.model.internal.rdf.helper.AttributePathHelper;
 public interface Model {
 
 	/**
-	 * Serializes the data of the model to JSON.
+	 * Serializes the data (i.e. only the data - without record identifier) of the model to JSON.
+	 * 
+	 * @return a JSON serialisation of the data of the model
+	 */
+	JsonNode toRawJSON();
+
+	/**
+	 * Serializes the data (incl. record identifiers -> record identifiers are the keys of the JSON objects of the JSON array) of
+	 * the model to JSON.
 	 * 
 	 * @return a JSON serialisation of the data of the model
 	 */
 	JsonNode toJSON();
-	
+
 	JsonNode getSchema();
-	
+
 	Set<AttributePathHelper> getAttributePaths();
-	
+
 	String getRecordClassURI();
-	
+
 	void setRecordURIs(final Set<String> recordURIs);
 }

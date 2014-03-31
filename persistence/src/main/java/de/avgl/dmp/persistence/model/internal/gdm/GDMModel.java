@@ -61,7 +61,7 @@ public class GDMModel implements Model {
 	}
 
 	@Override
-	public JsonNode toJSON() {
+	public JsonNode toRawJSON() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -93,6 +93,12 @@ public class GDMModel implements Model {
 
 			recordURIs.addAll(recordURIsArg);
 		}
+	}
+
+	@Override
+	public JsonNode toJSON() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

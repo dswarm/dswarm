@@ -1,4 +1,4 @@
-package de.avgl.dmp.persistence.model.internal.impl;
+package de.avgl.dmp.persistence.model.internal.memorydb;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -21,7 +21,7 @@ public class MemoryDbModel implements Model {
 	}
 
 	@Override
-	public JsonNode toJSON() {
+	public JsonNode toRawJSON() {
 
 		if (keyValueMap == null) {
 
@@ -69,5 +69,11 @@ public class MemoryDbModel implements Model {
 	public void setRecordURIs(Set<String> recordURIs) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public JsonNode toJSON() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

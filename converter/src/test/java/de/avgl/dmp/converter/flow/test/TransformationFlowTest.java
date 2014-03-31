@@ -59,6 +59,7 @@ import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.model.types.Tuple;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 import de.avgl.dmp.persistence.service.internal.graph.InternalRDFGraphService;
+import de.avgl.dmp.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
@@ -190,7 +191,7 @@ public class TransformationFlowTest extends GuicedTest {
 		// manipulate input data model
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
 		((ObjectNode) taskJSON).put("input_data_model", dataModelJSON);
-		
+
 		// manipulate output data model (output data model = input data model (for now))
 		((ObjectNode) taskJSON).put("output_data_model", dataModelJSON);
 
@@ -239,19 +240,20 @@ public class TransformationFlowTest extends GuicedTest {
 
 		final String actualDataResourceSchemaBaseURI = DataModelUtils.determineDataResourceSchemaBaseURI(updatedDataModel);
 
-		final String expectedRecordDataFieldNameExample = expectedJSONArray.get(0).get("record_data").fieldNames().next();
+		final String expectedRecordDataFieldNameExample = expectedJSONArray.get(0).fields().next().getValue().fieldNames().next();
 		final String expectedDataResourceSchemaBaseURI = expectedRecordDataFieldNameExample.substring(0,
 				expectedRecordDataFieldNameExample.lastIndexOf('#') + 1);
 
 		for (final JsonNode expectedNode : expectedJSONArray) {
 
-			final String recordData = ((ObjectNode) expectedNode.get("record_data")).get(expectedDataResourceSchemaBaseURI + "description").asText();
+			final String recordData = ((ObjectNode) expectedNode.fields().next().getValue()).get(expectedDataResourceSchemaBaseURI + "description")
+					.asText();
 			final JsonNode actualNode = getRecordData(recordData, actualNodes, actualDataResourceSchemaBaseURI + "description");
 
 			assertThat(actualNode, is(notNullValue()));
 
-			final ObjectNode expectedRecordData = (ObjectNode) expectedNode.get("record_data");
-			final ObjectNode actualRecordData = (ObjectNode) actualNode.get("record_data");
+			final ObjectNode expectedRecordData = (ObjectNode) expectedNode.fields().next().getValue();
+			final ObjectNode actualRecordData = (ObjectNode) actualNode.fields().next().getValue();
 
 			assertThat(actualRecordData.get(actualDataResourceSchemaBaseURI + "description").asText(),
 					equalTo(expectedRecordData.get(expectedDataResourceSchemaBaseURI + "description").asText()));
@@ -315,6 +317,9 @@ public class TransformationFlowTest extends GuicedTest {
 		// clean-up
 		configurationService.deleteObject(updatedConfiguration.getId());
 		resourceService.deleteObject(updatedResource.getId());
+
+		// clean-up graph db
+		InternalGDMGraphServiceTestUtils.cleanGraphDB();
 	}
 
 	@Test
@@ -402,7 +407,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 		final String resultOutput = stringWriter.toString();
 
-		Assert.assertNotNull("the result output shoudln't be null", resultOutput);
+		Assert.assertNotNull("the result output shouldn't be null", resultOutput);
 
 		final String expectedResult = DMPPersistenceUtil.getResourceAsString("csv_json.output");
 
@@ -417,7 +422,7 @@ public class TransformationFlowTest extends GuicedTest {
 				if (triples.hasNext()) {
 					final Map.Entry<String, Model> nextTriple = triples.next();
 					final String recordId = nextTriple.getKey();
-					final JsonNode jsonNode = nextTriple.getValue().toJSON();
+					final JsonNode jsonNode = nextTriple.getValue().toRawJSON();
 					return Tuple.tuple(recordId, jsonNode);
 				}
 				return endOfData();
@@ -429,7 +434,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 		for (final JsonNode jsonEntry : jsonArray) {
 
-			final ObjectNode actualRecordData = (ObjectNode) jsonEntry.get("record_data");
+			final ObjectNode actualRecordData = (ObjectNode) jsonEntry.fields().next().getValue();
 
 			if (recordData.equals(actualRecordData.get(key).asText())) {
 

@@ -3,7 +3,7 @@ package de.avgl.dmp.persistence.service.internal.memorydb;
 import com.google.common.base.Optional;
 
 import de.avgl.dmp.persistence.model.internal.MemoryDb;
-import de.avgl.dmp.persistence.model.internal.impl.MemoryDbImpl;
+import de.avgl.dmp.persistence.model.internal.memorydb.MemoryDbImpl;
 
 public class BaseMemoryServiceImpl<A, B, C> {
 

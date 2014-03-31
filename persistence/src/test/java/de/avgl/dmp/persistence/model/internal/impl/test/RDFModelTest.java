@@ -52,7 +52,7 @@ public class RDFModelTest {
 		model.read(testResourceUri, "N3");
 
 		final RDFModel rdfModel = new RDFModel(model, resourceURI);
-		final JsonNode jsonNode = rdfModel.toJSON();
+		final JsonNode jsonNode = rdfModel.toRawJSON();
 
 		String jsonString = null;
 		try {

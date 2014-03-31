@@ -25,7 +25,6 @@ import org.culturegraph.mf.stream.source.StringReader;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
@@ -215,12 +214,12 @@ public class TransformationFlow {
 		// transform to FE friendly JSON => or use Model#toJSON() ;)
 
 		final ObjectMapper objectMapper = DMPPersistenceUtil.getJSONObjectMapper();
-		final ArrayNode result = objectMapper.createArrayNode();
+		// final ArrayNode result = objectMapper.createArrayNode();
 		final Set<String> recordURIs = Sets.newHashSet();
 
 		for (final RDFModel rdfModel : optionalRDFModels.get()) {
 
-			result.add(rdfModel.toJSON());
+			// result.add(rdfModel.toRawJSON());
 
 			if (rdfModel.getModel() == null) {
 
@@ -274,7 +273,7 @@ public class TransformationFlow {
 
 		try {
 
-			resultString = objectMapper.writeValueAsString(result);
+			resultString = objectMapper.writeValueAsString(rdfModel.toJSON());
 		} catch (final JsonProcessingException e) {
 
 			final String message = "couldn't convert result into JSON";

@@ -1,4 +1,4 @@
-package de.avgl.dmp.persistence.model.internal.impl;
+package de.avgl.dmp.persistence.model.internal.memorydb;
 
 import java.util.Map;
 

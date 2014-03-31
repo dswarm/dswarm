@@ -3,12 +3,12 @@ package de.avgl.dmp.persistence.model.internal.impl.test;
 import java.util.Map;
 
 import com.google.common.base.Optional;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import de.avgl.dmp.persistence.model.internal.MemoryDb;
-import de.avgl.dmp.persistence.model.internal.impl.MemoryDbImpl;
-
+import de.avgl.dmp.persistence.model.internal.memorydb.MemoryDbImpl;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasKey;
 import static org.junit.Assert.assertFalse;

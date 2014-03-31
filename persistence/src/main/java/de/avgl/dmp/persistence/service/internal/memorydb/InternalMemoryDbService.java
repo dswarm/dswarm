@@ -17,8 +17,8 @@ import com.google.inject.Singleton;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.internal.Model;
-import de.avgl.dmp.persistence.model.internal.impl.MemoryDBInputModel;
-import de.avgl.dmp.persistence.model.internal.impl.MemoryDbModel;
+import de.avgl.dmp.persistence.model.internal.memorydb.MemoryDBInputModel;
+import de.avgl.dmp.persistence.model.internal.memorydb.MemoryDbModel;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.service.InternalModelService;

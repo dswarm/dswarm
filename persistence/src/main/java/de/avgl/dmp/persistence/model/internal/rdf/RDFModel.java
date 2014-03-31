@@ -160,6 +160,50 @@ public class RDFModel implements Model {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public JsonNode toRawJSON() {
+
+		if (model == null) {
+
+			LOG.debug("model is null, can't convert model to JSON");
+
+			return null;
+		}
+
+		if (getRecordURIs() == null) {
+
+			LOG.debug("resource URI is null, can't convert model to JSON");
+
+			return null;
+		}
+
+		// System.out.println("write rdf model '" + resourceURI + "' in n3");
+		// model.write(System.out, "N3");
+
+		final Iterator<String> iter = getRecordURIs().iterator();
+		final String resourceURI = iter.next();
+		final Resource recordResource = model.getResource(resourceURI);
+
+		if (recordResource == null) {
+
+			LOG.debug("couldn't find record resource for record  uri '" + getRecordURIs() + "' in model");
+
+			return null;
+		}
+
+		final ObjectNode json = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
+
+		convertRDFToJSON(recordResource, json, json);
+
+		return json;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public JsonNode toJSON() {
 
