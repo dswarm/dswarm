@@ -2,7 +2,6 @@ package de.avgl.dmp.controller.eventbus;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import com.google.common.collect.Maps;
 import com.google.common.eventbus.EventBus;
@@ -13,7 +12,6 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.CSVResourceFlowFactory;

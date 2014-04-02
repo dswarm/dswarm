@@ -28,7 +28,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
-import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -55,7 +54,7 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
  * Flow that executes a given set of transformations on data of a given data model.
- * 
+ *
  * @author phorn
  * @author tgaengler
  */
@@ -73,7 +72,6 @@ public class TransformationFlow {
 
 	private final Provider<InternalModelServiceFactory>	internalModelServiceFactoryProvider;
 
-	@Inject
 	public TransformationFlow(final Metamorph transformer, final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
 
 		this.transformer = transformer;
@@ -82,7 +80,6 @@ public class TransformationFlow {
 		internalModelServiceFactoryProvider = internalModelServiceFactoryProviderArg;
 	}
 
-	@Inject
 	public TransformationFlow(final Metamorph transformer, final String scriptArg,
 			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
 
@@ -92,7 +89,6 @@ public class TransformationFlow {
 		internalModelServiceFactoryProvider = internalModelServiceFactoryProviderArg;
 	}
 
-	@Inject
 	public TransformationFlow(final Metamorph transformer, final String scriptArg, final DataModel outputDataModelArg,
 			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
 
@@ -256,19 +252,26 @@ public class TransformationFlow {
 
 		if (writeResultToDatahub) {
 
-			// write result to graph db
-			final InternalModelService internalModelService = internalModelServiceFactoryProvider.get().getInternalRDFGraphService();
+			if (outputDataModel.isPresent() && outputDataModel.get().getId() != null) {
 
-			try {
+				// write result to graph db
+				final InternalModelService internalModelService = internalModelServiceFactoryProvider.get().getInternalRDFGraphService();
 
-				internalModelService.createObject(outputDataModel.get().getId(), rdfModel);
-			} catch (final DMPPersistenceException e1) {
+				try {
 
-				final String message = "couldn't persistent the the result of the transformation";
+					internalModelService.createObject(outputDataModel.get().getId(), rdfModel);
+				} catch (final DMPPersistenceException e1) {
 
-				LOG.error(message);
+					final String message = "couldn't persistent the the result of the transformation: " + e1.getMessage();
 
-				throw new DMPConverterException(message);
+					LOG.error(message);
+
+					throw new DMPConverterException(message, e1);
+				}
+
+			} else {
+
+				LOG.warn("Wanted to persist, but could not find OutputDataModel");
 			}
 		}
 
@@ -371,7 +374,7 @@ public class TransformationFlow {
 
 	private static Reader getReader(final InputStream is) throws DMPConverterException {
 
-		Reader reader = null;
+		final Reader reader;
 
 		try {
 
@@ -386,7 +389,7 @@ public class TransformationFlow {
 				TransformationFlow.LOG.error("couldn't close file input stream");
 			}
 
-			throw new DMPConverterException("couldn't parse file with UTF-8");
+			throw new DMPConverterException("couldn't parse file with UTF-8", e);
 		}
 
 		return reader;

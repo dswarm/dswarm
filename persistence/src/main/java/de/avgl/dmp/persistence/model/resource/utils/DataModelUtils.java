@@ -10,15 +10,18 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 
+import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.utils.ExtendedBasicDMPJPAObjectUtils;
 
 /**
  * A utility class for {@link DataModel}s and related entities.
- * 
+ *
  * @author tgaengler
  */
 public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataModel> {
+
+	private static final org.apache.log4j.Logger		LOG						= org.apache.log4j.Logger.getLogger(DataModelUtils.class);
 
 	public static String determineDataResourceSchemaBaseURI(final DataModel dataModel) {
 
@@ -40,7 +43,14 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 	public static String determineDataResourceBaseURI(final DataModel dataModel) {
 
 		// create data resource base uri
-		final JsonNode path = dataModel.getDataResource().getAttribute("path");
+		final de.avgl.dmp.persistence.model.resource.Resource dataResource = dataModel.getDataResource();
+
+		if (dataResource == null) {
+			LOG.warn("The data model ["+ dataModel.getId() +"] is missing the data resource");
+			return null;
+		}
+
+		final JsonNode path = dataResource.getAttribute("path");
 		final String dataResourceFilePath = path == null ? "/UnknownResource" : path.asText();
 		final String dataResourceName = dataResourceFilePath.substring(dataResourceFilePath.lastIndexOf("/"), dataResourceFilePath.length());
 
@@ -67,11 +77,11 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 
 			final StringBuilder sb = new StringBuilder();
 
-			if (dataModel.getDataResource().getId() != null) {
+			if (dataResource.getId() != null) {
 
 				// create uri from resource id
 
-				sb.append("http://data.slub-dresden.de/resources/").append(dataModel.getDataResource().getId());
+				sb.append("http://data.slub-dresden.de/resources/").append(dataResource.getId());
 			} else {
 
 				// create uri from data resource name

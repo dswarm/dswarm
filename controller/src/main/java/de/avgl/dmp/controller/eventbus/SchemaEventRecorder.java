@@ -85,9 +85,7 @@ public class SchemaEventRecorder {
 			}
 		}
 
-		// TODO: check data model for null
-
-		final List<Triple> triples = triplesFromCsv(dataModel.getDataResource(), dataModel.getConfiguration()).orNull();
+		final List<Triple> triples = dataModel == null ? null : triplesFromCsv(dataModel.getDataResource(), dataModel.getConfiguration()).orNull();
 
 		if (triples == null) {
 
@@ -114,7 +112,10 @@ public class SchemaEventRecorder {
 			}
 		}
 
-		// TODO: check schema for null
+		if (schema == null) {
+
+			throw new DMPConverterException("could not transform CSV into triples due to missing schema");
+		}
 
 		final String dataResourceBaseSchemaURI = DataModelUtils.determineDataResourceSchemaBaseURI(dataModel);
 
@@ -136,7 +137,7 @@ public class SchemaEventRecorder {
 
 			final Clasz newClasz = proxyNewClasz.getObject();
 
-			if (proxyNewClasz.getType().equals(RetrievalType.CREATED)) {
+			if (proxyNewClasz.getType() == RetrievalType.CREATED) {
 
 				if (newClasz == null) {
 
@@ -168,7 +169,7 @@ public class SchemaEventRecorder {
 
 			final Attribute attribute = proxyAttribute.getObject();
 
-			if (proxyAttribute.getType().equals(RetrievalType.CREATED)) {
+			if (proxyAttribute.getType() == RetrievalType.CREATED) {
 
 				if (attribute == null) {
 
@@ -182,16 +183,16 @@ public class SchemaEventRecorder {
 			attributes.add(attribute);
 
 			final ProxyAttributePath proxyAttributePath = attributePathService.createOrGetObject(attributes);
-			
+
 			if(proxyAttributePath == null) {
-				
+
 				throw new DMPPersistenceException("couldn't create or retrieve attribute path");
 			}
-			
+
 			final AttributePath attributePath = proxyAttributePath.getObject();
-			
+
 			if(attributePath == null) {
-				
+
 				throw new DMPPersistenceException("couldn't create or retrieve attribute path");
 			}
 
