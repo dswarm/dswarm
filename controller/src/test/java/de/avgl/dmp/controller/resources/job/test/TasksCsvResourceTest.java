@@ -169,7 +169,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 		// manipulate attributes
 		final ObjectNode mappingJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) ((ObjectNode) taskJSON).get("job")).get("mappings")).get(0);
 
-		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataResourceSchemaBaseURI(dataModel);
+		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
 
 		final ObjectNode outputAttributePathAttributeJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) ((ObjectNode) mappingJSON
 				.get("output_attribute_path")).get("attribute_path")).get("attributes")).get(0);
@@ -220,7 +220,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 			actualNodes.put(node.get("record_id").asText(), node);
 		}
 
-		final String actualDataResourceSchemaBaseURI = DataModelUtils.determineDataResourceSchemaBaseURI(dataModel);
+		final String actualDataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
 
 		final String expectedRecordDataFieldNameExample = expectedJSONArray.get(0).get("record_data").fieldNames().next();
 		final String expectedDataResourceSchemaBaseURI = expectedRecordDataFieldNameExample.substring(0,

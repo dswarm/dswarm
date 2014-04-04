@@ -164,7 +164,7 @@ public final class TripleEncoder extends DefaultStreamPipe<ObjectReceiver<RDFMod
 
 			@Override
 			public String apply(final DataModel dm) {
-				return StringUtils.stripEnd(DataModelUtils.determineDataResourceSchemaBaseURI(dm), "#");
+				return StringUtils.stripEnd(DataModelUtils.determineDataModelSchemaBaseURI(dm), "#");
 			}
 		});
 	}

@@ -59,7 +59,7 @@ public class CSVConverterEventRecorder {
 
 			final com.hp.hpl.jena.rdf.model.Model model = ModelFactory.createDefaultModel();
 
-			final String dataResourceBaseSchemaURI = DataModelUtils.determineDataResourceSchemaBaseURI(dataModel);
+			final String dataResourceBaseSchemaURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
 			final String recordClassURI = dataResourceBaseSchemaURI + "RecordType";
 
 			for (final org.culturegraph.mf.types.Triple triple : result) {
