@@ -47,11 +47,9 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 
 		if (dataResource == null) {
 			LOG.warn("The data model ["+ dataModel.getId() +"] is missing the data resource");
-			return null;
 		}
 
-		final JsonNode path = dataResource.getAttribute("path");
-		final String dataResourceFilePath = path == null ? "/UnknownResource" : path.asText();
+		final String dataResourceFilePath = dataResource == null ? "/UnknownResource" : dataResource.getAttribute("path").asText();
 		final String dataResourceName = dataResourceFilePath.substring(dataResourceFilePath.lastIndexOf("/"), dataResourceFilePath.length());
 
 		final String dataResourceBaseURI;
@@ -77,7 +75,7 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 
 			final StringBuilder sb = new StringBuilder();
 
-			if (dataResource.getId() != null) {
+			if (dataResource != null && dataResource.getId() != null) {
 
 				// create uri from resource id
 
