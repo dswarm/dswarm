@@ -8,7 +8,7 @@ MYSQL_DB=${MYSQL_DB:="dmp_dev"}
 
 NEO4J_URL=${NEO4J_URL:="http://localhost:7474/graph"}
 
-cd ${DIR}
+cd "${DIR}"
 
 mysql -f -u${MYSQL_UN} -p${MYSQL_PW} ${MYSQL_DB} < persistence/src/main/resources/schema.sql
 mysql -f -u${MYSQL_UN} -p${MYSQL_PW} ${MYSQL_DB} < persistence/src/main/resources/functions.sql
