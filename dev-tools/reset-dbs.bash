@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIR="$( dirname $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd ))"
+DIR="$( dirname "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" )"
 
 MYSQL_PW=${MYSQL_PW:="dmp_mysql"}
 MYSQL_UN=${MYSQL_UN:="dmp"}
