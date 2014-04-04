@@ -297,7 +297,7 @@ public class DataModelsResourceTest extends
 
 		final JsonNode json = assoziativeJsonArray.get(recordId);
 
-		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataResourceSchemaBaseURI(dataModel);
+		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
 
 		assertThat(json.get(dataResourceSchemaBaseURI + "id").asText(),
 				equalTo(data.get().get(recordId).toRawJSON().get(dataResourceSchemaBaseURI + "id").asText()));

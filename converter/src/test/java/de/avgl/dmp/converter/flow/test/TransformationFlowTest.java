@@ -150,7 +150,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 		final com.hp.hpl.jena.rdf.model.Model model = ModelFactory.createDefaultModel();
 
-		final String dataResourceBaseSchemaURI = DataModelUtils.determineDataResourceSchemaBaseURI(dataModel);
+		final String dataResourceBaseSchemaURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
 		final String recordClassURI = dataResourceBaseSchemaURI + "RecordType";
 
 		for (final org.culturegraph.mf.types.Triple triple : csvRecordTriples) {
@@ -198,7 +198,7 @@ public class TransformationFlowTest extends GuicedTest {
 		// manipulate attributes
 		final ObjectNode mappingJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) ((ObjectNode) taskJSON).get("job")).get("mappings")).get(0);
 
-		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataResourceSchemaBaseURI(updatedDataModel);
+		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(updatedDataModel);
 
 		final ObjectNode outputAttributePathAttributeJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) ((ObjectNode) mappingJSON
 				.get("output_attribute_path")).get("attribute_path")).get("attributes")).get(0);
@@ -238,7 +238,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 		objectMapper.writeValueAsString(actualNodes);
 
-		final String actualDataResourceSchemaBaseURI = DataModelUtils.determineDataResourceSchemaBaseURI(updatedDataModel);
+		final String actualDataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(updatedDataModel);
 
 		final String expectedRecordDataFieldNameExample = expectedJSONArray.get(0).fields().next().getValue().fieldNames().next();
 		final String expectedDataResourceSchemaBaseURI = expectedRecordDataFieldNameExample.substring(0,

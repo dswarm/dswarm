@@ -100,8 +100,8 @@ public abstract class AbstractCSVResourceFlow<T> {
 			throw new DMPConverterException(String.format("Unsupported Encoding - [%s]", e.getCharsetName()));
 		}
 		
-		dataResourceBaseURI = DataModelUtils.determineDataResourceBaseURI(dataModel);
-		dataResourceSchemaBaseURI = DataModelUtils.determineDataResourceSchemaBaseURI(dataModel);
+		dataResourceBaseURI = DataModelUtils.determineDataModelBaseURI(dataModel);
+		dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
 	}
 
 	public AbstractCSVResourceFlow(final String encoding, final Character escapeCharacter, final Character quoteCharacter,

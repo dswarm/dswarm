@@ -10,22 +10,21 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 
-import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.utils.ExtendedBasicDMPJPAObjectUtils;
 
 /**
  * A utility class for {@link DataModel}s and related entities.
- *
+ * 
  * @author tgaengler
  */
 public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataModel> {
 
-	private static final org.apache.log4j.Logger		LOG						= org.apache.log4j.Logger.getLogger(DataModelUtils.class);
+	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(DataModelUtils.class);
 
-	public static String determineDataResourceSchemaBaseURI(final DataModel dataModel) {
+	public static String determineDataModelSchemaBaseURI(final DataModel dataModel) {
 
-		final String dataResourceBaseURI = determineDataResourceBaseURI(dataModel);
+		final String dataResourceBaseURI = determineDataModelBaseURI(dataModel);
 
 		if (dataResourceBaseURI == null) {
 
@@ -40,29 +39,54 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 		return dataResourceBaseURI + "/schema#";
 	}
 
-	public static String determineDataResourceBaseURI(final DataModel dataModel) {
+	public static String determineDataModelBaseURI(final DataModel dataModel) {
+
+		if (dataModel == null) {
+
+			LOG.error("data model shouldn't be null at data model base uri determination");
+
+			return null;
+		}
 
 		// create data resource base uri
+		URI uri = null;
+		String dataResourceName = null;
+
 		final de.avgl.dmp.persistence.model.resource.Resource dataResource = dataModel.getDataResource();
 
-		if (dataResource == null) {
-			LOG.warn("The data model ["+ dataModel.getId() +"] is missing the data resource");
-		}
+		if (dataResource != null) {
 
-		final String dataResourceFilePath = dataResource == null ? "/UnknownResource" : dataResource.getAttribute("path").asText();
-		final String dataResourceName = dataResourceFilePath.substring(dataResourceFilePath.lastIndexOf("/"), dataResourceFilePath.length());
+			final JsonNode pathNode = dataResource.getAttribute("path");
+
+			if (pathNode != null) {
+
+				final String path = pathNode.asText();
+
+				if (path != null) {
+
+					dataResourceName = path.substring(path.lastIndexOf("/"), path.length());
+
+					try {
+
+						uri = URI.create(dataResourceName);
+					} catch (final Exception e) {
+
+						LOG.debug("couldn't create uri from data resource path", e);
+					}
+				} else {
+
+					LOG.warn("The data model [" + dataModel.getId() + "] is missing the data resource path string");
+				}
+			} else {
+
+				LOG.warn("The data model [" + dataModel.getId() + "] is missing the data resource path");
+			}
+		} else {
+
+			LOG.warn("The data model [" + dataModel.getId() + "] is missing the data resource");
+		}
 
 		final String dataResourceBaseURI;
-
-		URI uri = null;
-
-		try {
-
-			uri = URI.create(dataResourceName);
-		} catch (final Exception e) {
-
-			e.printStackTrace();
-		}
 
 		if (uri != null && uri.getScheme() != null) {
 
@@ -71,7 +95,7 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 			dataResourceBaseURI = dataResourceName;
 		} else {
 
-			// create uri with help of given data resource id
+			// create uri with help of given data resource id or data model id
 
 			final StringBuilder sb = new StringBuilder();
 
@@ -80,11 +104,23 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 				// create uri from resource id
 
 				sb.append("http://data.slub-dresden.de/resources/").append(dataResource.getId());
-			} else {
+			} else if (dataResourceName != null) {
 
 				// create uri from data resource name
+				
+				// TODO: (probably) replace whitespaces etc.
 
 				sb.append("http://data.slub-dresden.de/resources/").append(dataResourceName);
+			} else if (dataModel.getId() != null) {
+
+				// create uri from data model id
+
+				sb.append("http://data.slub-dresden.de/datamodels/").append(dataModel.getId());
+			} else {
+
+				// create uri with random uuid
+
+				sb.append("http://data.slub-dresden.de/datamodels/").append(UUID.randomUUID());
 			}
 
 			dataResourceBaseURI = sb.toString();
