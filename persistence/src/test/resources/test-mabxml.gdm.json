@@ -1,0 +1,195 @@
+[ {
+  "http://data.slub-dresden.de/records/e9e1fa5a-3350-43ec-bb21-6ccfa90a4497" : {
+    "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld" : [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Bildtonträger",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "334",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "412",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " ",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "ZDF [u.a.]"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "335",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " ",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "nach der Biographie von Golo Mann für das Fernsehen erzählt von Leopold Ahlsen"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " ",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Wallenstein",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "331",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " ",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "00004514",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "110",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "108",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "b",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Ahlsen, Leopold"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "b",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Wirth, Franz Peter",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "100",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " ",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "00465696",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "118"
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "06978834",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "001",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "076",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "k",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "101171"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " ",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "20010620",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "003",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "359",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " ",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "[Darsteller:] Rolf Boysen, Romuald Pekny, Werner Kreindl ... Kamera: Gernot Roll ... Musik: Eugen Thomas. Regie: Franz Peter Wirth"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " ",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "102",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "00412254"
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Pekny, Romuald",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "116",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "b"
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "00243077",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " ",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "106"
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "098301",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "n",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "076"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "104",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "b",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Mann, Golo"
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Fernsehfilm, BRD 1978",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " ",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "501",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "19981028",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "a",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "002"
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Boysen, Rolf",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "b",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "112",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "dt.",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "037",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "z"
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "00209123",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " ",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "122",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "b",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Kreindl, Werner",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "120"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "m",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "MB",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "029",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "00045374",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " ",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "114"
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "az1dcr|||||37",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "030",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "005",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "n",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "20011121",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "051",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " ",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "n||||||"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "077",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : [ "Thomas, Eugen", "00872284" ],
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf" : {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tfType"
+      },
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "p"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " ",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "050",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "|||||c||||||||"
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Videokassetten",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " ",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "433"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "p",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : [ "Roll, Gernot", "00872805" ],
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf" : {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tfType"
+      },
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "077"
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "KNUB",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "070",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "FRhk",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "b",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "070",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "v",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "5",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "076"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "410",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "[Mainz]",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+    } ],
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType",
+    "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ" : "h",
+    "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion" : "M2.0",
+    "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status" : "n"
+  }
+} ]

@@ -1,4 +1,4 @@
-package de.avgl.dmp.persistence.model.internal.rdf.helper;
+package de.avgl.dmp.persistence.model.internal.helper;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

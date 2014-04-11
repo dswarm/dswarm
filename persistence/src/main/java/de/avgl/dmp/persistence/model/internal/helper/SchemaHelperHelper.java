@@ -1,9 +1,8 @@
-package de.avgl.dmp.persistence.model.internal.rdf.helper;
+package de.avgl.dmp.persistence.model.internal.helper;
 
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.hp.hpl.jena.rdf.model.RDFNode;
 
 /**
  * A helper class with static methods for the converter helper.

@@ -1,31 +1,35 @@
-package de.avgl.dmp.persistence.model.internal.rdf.helper;
+package de.avgl.dmp.persistence.model.internal.gdm.helper;
 
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.hp.hpl.jena.rdf.model.RDFNode;
+
+import de.avgl.dmp.graph.json.LiteralNode;
+import de.avgl.dmp.graph.json.Node;
+import de.avgl.dmp.graph.json.ResourceNode;
+import de.avgl.dmp.persistence.model.internal.helper.ConverterHelper;
 
 /**
  * A helper class with static methods for the converter helper.
  * 
  * @author tgaengler
  */
-public final class ConverterHelperHelper {
+public final class ConverterHelperGDMHelper {
 
 	/**
 	 * Adds a literal to the converter helper of the given property.
 	 * 
 	 * @param converterHelpers a map of converter helpers
 	 * @param property the property, where the literal belongs to
-	 * @param rdfNode the RDF node to contains the literal
+	 * @param gdmNode the node to contains the literal
 	 * @return the map of converter helpers
 	 */
 	public static Map<String, ConverterHelper> addLiteralToConverterHelper(final Map<String, ConverterHelper> converterHelpers,
-			final String property, final RDFNode rdfNode) {
+			final String property, final Node gdmNode) {
 
 		checkConverterHelpers(converterHelpers, property);
 
-		converterHelpers.get(property).addLiteralOrURI(rdfNode.asLiteral().toString());
+		converterHelpers.get(property).addLiteralOrURI(((LiteralNode) gdmNode).getValue());
 
 		return converterHelpers;
 	}
@@ -53,15 +57,15 @@ public final class ConverterHelperHelper {
 	 * 
 	 * @param converterHelpers a map of converter helpers
 	 * @param property the property, where the URI belongs to
-	 * @param rdfNode the RDF node that contains the URI
+	 * @param gdmNode the node that contains the URI
 	 * @return the map of converter helpers
 	 */
 	public static Map<String, ConverterHelper> addURIResourceToConverterHelper(final Map<String, ConverterHelper> converterHelpers,
-			final String property, final RDFNode rdfNode) {
+			final String property, final Node gdmNode) {
 
 		checkConverterHelpers(converterHelpers, property);
 
-		converterHelpers.get(property).addLiteralOrURI(rdfNode.asResource().getURI());
+		converterHelpers.get(property).addLiteralOrURI(((ResourceNode) gdmNode).getUri());
 
 		return converterHelpers;
 	}
