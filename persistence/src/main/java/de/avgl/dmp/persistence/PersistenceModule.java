@@ -40,7 +40,7 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
 
 /**
  * The Guice configuration of the persistence module. Interface/classes that are registered here can be utilised for injection.
- * 
+ *
  * @author phorn
  * @author tgaengler
  */
@@ -108,7 +108,7 @@ public class PersistenceModule extends AbstractModule {
 
 	/**
 	 * Provides the metric registry to register objects for metric statistics.
-	 * 
+	 *
 	 * @return a {@link MetricRegistry} instance as singleton
 	 */
 	@Provides
@@ -125,7 +125,7 @@ public class PersistenceModule extends AbstractModule {
 
 	/**
 	 * Provides the event bus for event processing.
-	 * 
+	 *
 	 * @return a {@link EventBus} instance as singleton
 	 */
 	@Provides

@@ -21,7 +21,7 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
  * A transformation is a complex {@link Function} that consists of {@link Component}s.<br/>
  * <br/>
  * TODO: maybe add some methods to retrieve starting and finishing components
- * 
+ *
  * @author tgaengler
  */
 @XmlRootElement
@@ -59,7 +59,7 @@ public class Transformation extends Function {
 
 	/**
 	 * Gets the components of the transformation.
-	 * 
+	 *
 	 * @return the components of the transformation
 	 */
 	public Set<Component> getComponents() {
@@ -69,7 +69,7 @@ public class Transformation extends Function {
 
 	/**
 	 * Sets the components of the transformation
-	 * 
+	 *
 	 * @param componentsArg a new collection of components
 	 */
 	public void setComponents(final Set<Component> componentsArg) {
@@ -115,7 +115,7 @@ public class Transformation extends Function {
 	/**
 	 * Adds a new component to the collection of components of this transformation.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param component a new component
 	 */
 	public void addComponent(final Component component) {
@@ -142,7 +142,7 @@ public class Transformation extends Function {
 	/**
 	 * Removes an existing component from the collection of components of this transformation.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param component an existing component that should be removed
 	 */
 	public void removeComponent(final Component component) {
