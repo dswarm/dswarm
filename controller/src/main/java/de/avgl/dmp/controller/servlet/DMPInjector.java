@@ -35,6 +35,7 @@ public class DMPInjector extends GuiceServletContextListener {
 
 			DMPInjector.injector = Guice.createInjector(
 					new ObjectMapperModule()
+							.registerModule(new PersistenceModule.DmpDeserializerModule())
 							.registerModule(new JaxbAnnotationModule())
 							.registerModule(new Hibernate4Module()),
 					new PersistenceModule(), new DMPModule(), new DMPServletModule());

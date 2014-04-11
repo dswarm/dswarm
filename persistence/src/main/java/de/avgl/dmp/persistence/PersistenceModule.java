@@ -18,6 +18,8 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 
 import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
+import de.avgl.dmp.persistence.model.job.Transformation;
+import de.avgl.dmp.persistence.model.job.utils.TransformationDeserializer;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 import de.avgl.dmp.persistence.service.internal.InternalServiceFactoryImpl;
 import de.avgl.dmp.persistence.service.job.ComponentService;
@@ -121,5 +123,13 @@ public class PersistenceModule extends AbstractModule {
 		// asynchronous event handling is really required => so, we should think about how to replace/enhance this mechanism in
 		// the near future (maybe replace the event bus with akka (or similar frameworks))
 		return new EventBus();
+	}
+
+	public static class DmpDeserializerModule extends SimpleModule {
+		public DmpDeserializerModule() {
+			super("DmpDeserializerModule");
+
+			addDeserializer(Transformation.class, new TransformationDeserializer());
+		}
 	}
 }
