@@ -104,14 +104,19 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 				// create uri from resource id
 
 				sb.append("http://data.slub-dresden.de/resources/").append(dataResource.getId());
-			} else if (dataResourceName != null) {
+			}
 
-				// create uri from data resource name
-				
-				// TODO: (probably) replace whitespaces etc.
+			// TODO: this is wrong, or? - "create uri from data resource name" -> this will result in ugly uris ...
 
-				sb.append("http://data.slub-dresden.de/resources/").append(dataResourceName);
-			} else if (dataModel.getId() != null) {
+			// else if (dataResourceName != null) {
+			//
+			// // create uri from data resource name
+			//
+			// // TODO: (probably) replace whitespaces etc.
+			//
+			// sb.append("http://data.slub-dresden.de/resources/").append(dataResourceName);
+			// }
+			else if (dataModel.getId() != null) {
 
 				// create uri from data model id
 

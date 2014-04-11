@@ -49,6 +49,26 @@ public class GDMModel implements Model {
 
 		recordClassURI = null;
 	}
+	
+	/**
+	 * Creates a new {@link GDMModel} with a given GDM model instance and an identifier of the record.
+	 * 
+	 * @param modelArg a GDM model instance that hold the RDF data
+	 * @param recordURIArg the record identifier
+	 * @param recordClassURIArg the URI of the record class
+	 */
+	public GDMModel(final de.avgl.dmp.graph.json.Model modelArg, final String recordURIArg, final String recordClassURIArg) {
+
+		model = modelArg;
+		recordURIs = Sets.newHashSet();
+
+		if (recordURIArg != null) {
+
+			recordURIs.add(recordURIArg);
+		}
+
+		recordClassURI = recordClassURIArg;
+	}
 
 	/**
 	 * Gets the GDM model with the GDM data.
