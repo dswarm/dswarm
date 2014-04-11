@@ -8,10 +8,7 @@ import org.apache.log4j.LogManager;
 
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.log4j.InstrumentedAppender;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.common.eventbus.EventBus;
 import com.google.common.io.Resources;
 import com.google.inject.AbstractModule;
@@ -87,23 +84,6 @@ public class PersistenceModule extends AbstractModule {
 		bind(MappingAttributePathInstanceService.class).in(Scopes.SINGLETON);
 
 		bind(InternalModelServiceFactory.class).to(InternalServiceFactoryImpl.class).in(Scopes.SINGLETON);
-	}
-
-	/**
-	 * Provides the {@link ObjectMapper} instance for JSON de-/serialisation.
-	 * 
-	 * @return a {@link ObjectMapper} instance as singleton
-	 */
-	@Provides
-	@Singleton
-	protected ObjectMapper provideObjectMapper() {
-		final ObjectMapper mapper = new ObjectMapper();
-		final JaxbAnnotationModule module = new JaxbAnnotationModule();
-
-		mapper.registerModule(module).registerModule(new Hibernate4Module()).setSerializationInclusion(JsonInclude.Include.NON_NULL)
-				.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-
-		return mapper;
 	}
 
 	/**
