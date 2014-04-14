@@ -44,6 +44,8 @@ public final class ConverterHelperGDMHelper {
 	 */
 	public static Map<String, ConverterHelper> addJSONNodeToConverterHelper(final Map<String, ConverterHelper> converterHelpers,
 			final String property, final JsonNode jsonNode) {
+		
+		// TODO: outsource to abstract converter helper helper
 
 		checkConverterHelpers(converterHelpers, property);
 

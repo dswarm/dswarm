@@ -37,13 +37,11 @@ public class GDMModelTest {
 				"test-complex-xml.json");
 	}
 
-	// @Test
-	// public void testGetSchema() {
-	//
-	// testGetSchemaInternal("test-mabxml.gson",
-	// "http://data.slub-dresden.de/resources/1/configurations/1/records/aa916dc1-231a-4552-89e3-822886715fa9",
-	// "test-mabxml.json");
-	// }
+	@Test
+	public void testGetSchema() {
+
+		testGetSchemaInternal("test-mabxml.gson", "http://data.slub-dresden.de/records/e9e1fa5a-3350-43ec-bb21-6ccfa90a4497", "mabxml_schema.json");
+	}
 
 	private void testToJSONInternal(final String fileName, final String resourceURI, final String expectedFileName) {
 
@@ -106,47 +104,74 @@ public class GDMModelTest {
 
 		Assert.assertNotNull("the JSON string shouldn't be null", expectedJsonString);
 
-		Assert.assertEquals("the lengths of transformed JSON for FE should be equal", jsonString.length(), expectedJsonString.length());
+		Assert.assertEquals("the lengths of transformed JSON for FE should be equal", expectedJsonString.length(), jsonString.length());
 
-		Assert.assertEquals("the content of transformed JSON for FE should be equal", jsonString, expectedJsonString);
+		Assert.assertEquals("the content of transformed JSON for FE should be equal", expectedJsonString, jsonString);
 	}
 
-	// private void testGetSchemaInternal(final String fileName, final String resourceURI, final String expectedFileName) {
-	//
-	// // prepare
-	// // final File file = new File(fileName);
-	// final Model model = ModelFactory.createDefaultModel();
-	//
-	// final String testResourceUri = Resources.getResource(fileName).toString();
-	// model.read(testResourceUri, "N3");
-	//
-	// final RDFModel rdfModel = new RDFModel(model, resourceURI);
-	// final JsonNode jsonNode = rdfModel.getSchema();
-	//
-	// String jsonString = null;
-	// try {
-	// jsonString = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(jsonNode);
-	// } catch (JsonProcessingException e) {
-	//
-	// e.printStackTrace();
-	// }
-	//
-	// Assert.assertNotNull("the JSON string shouldn't be null", jsonString);
-	//
-	// // System.out.println(jsonString);
-	//
-	// String expectedJsonString = null;
-	//
-	// try {
-	//
-	// expectedJsonString = DMPPersistenceUtil.getResourceAsString(expectedFileName);
-	// } catch (IOException e) {
-	//
-	// e.printStackTrace();
-	// }
-	//
-	// Assert.assertNotNull("the JSON string shouldn't be null", expectedJsonString);
-	//
-	// // TODO: do proper comparison of the JSON objects
-	// }
+	private void testGetSchemaInternal(final String fileName, final String resourceURI, final String expectedFileName) {
+
+		// prepare
+		final ObjectMapper mapper = Util.getJSONObjectMapper();
+
+		final URL fileURL = Resources.getResource(fileName);
+
+		Assert.assertNotNull(fileURL);
+
+		String fileContent = null;
+		try {
+			fileContent = Resources.toString(fileURL, Charsets.UTF_8);
+		} catch (IOException e1) {
+
+			Assert.assertFalse(true);
+		}
+
+		Assert.assertNotNull(fileContent);
+
+		Model model = null;
+		try {
+			model = mapper.readValue(fileContent, Model.class);
+		} catch (JsonParseException e1) {
+			Assert.assertFalse(true);
+		} catch (JsonMappingException e1) {
+			Assert.assertFalse(true);
+		} catch (IOException e1) {
+			Assert.assertFalse(true);
+		}
+
+		Assert.assertNotNull(model);
+
+		final GDMModel gdmModel = new GDMModel(model, resourceURI);
+		final JsonNode jsonNode = gdmModel.getSchema();
+
+		String jsonString = null;
+		try {
+			jsonString = DMPPersistenceUtil.getJSONObjectMapper()
+			// .configure(SerializationFeature.INDENT_OUTPUT, true)
+					.writeValueAsString(jsonNode);
+		} catch (JsonProcessingException e) {
+
+			e.printStackTrace();
+		}
+
+		Assert.assertNotNull("the schema JSON string shouldn't be null", jsonString);
+
+		// System.out.println(jsonString);
+
+		String expectedJsonString = null;
+
+		try {
+
+			expectedJsonString = DMPPersistenceUtil.getResourceAsString(expectedFileName);
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+
+		Assert.assertNotNull("the schema JSON string shouldn't be null", expectedJsonString);
+
+		Assert.assertEquals("the lengths of the schema JSON should be equal", expectedJsonString.length(), jsonString.length());
+
+		Assert.assertEquals("the content of the schema JSON should be equal", expectedJsonString, jsonString);
+	}
 }
