@@ -2,6 +2,7 @@ package de.avgl.dmp.persistence.model.internal.impl.test;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Set;
 
 import org.apache.commons.io.Charsets;
 import org.junit.Assert;
@@ -17,6 +18,7 @@ import com.google.common.io.Resources;
 import de.avgl.dmp.graph.json.Model;
 import de.avgl.dmp.graph.json.util.Util;
 import de.avgl.dmp.persistence.model.internal.gdm.GDMModel;
+import de.avgl.dmp.persistence.model.internal.helper.AttributePathHelper;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -143,6 +145,13 @@ public class GDMModelTest {
 
 		final GDMModel gdmModel = new GDMModel(model, resourceURI);
 		final JsonNode jsonNode = gdmModel.getSchema();
+
+		// Set<AttributePathHelper> attributePathHelpers = gdmModel.getAttributePaths();
+		//
+		// for(final AttributePathHelper attributePathHelper : attributePathHelpers) {
+		//
+		// System.out.println(attributePathHelper.toString());
+		// }
 
 		String jsonString = null;
 		try {
