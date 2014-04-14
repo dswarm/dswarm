@@ -51,7 +51,7 @@ public final class GDMUtil {
 			return null;
 		}
 
-		final Set<Resource> recordResources = Sets.newHashSet();
+		final Set<Resource> recordResources = Sets.newLinkedHashSet();
 
 		for (final Resource resource : resources) {
 
@@ -236,7 +236,7 @@ public final class GDMUtil {
 			return null;
 		}
 
-		final Set<Statement> resourceStatements = Sets.newHashSet();
+		final Set<Statement> resourceStatements = Sets.newLinkedHashSet();
 
 		for (final Statement statement : statements) {
 
@@ -289,7 +289,7 @@ public final class GDMUtil {
 			return null;
 		}
 
-		final Set<Statement> resourceStatements = Sets.newHashSet();
+		final Set<Statement> resourceStatements = Sets.newLinkedHashSet();
 
 		for (final Statement statement : statements) {
 
