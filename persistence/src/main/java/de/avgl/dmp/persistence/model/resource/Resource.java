@@ -38,7 +38,7 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 /**
  * A data resource describes attributes of a specific amount of data. A data resource can be, e.g., an XML or CSV document, a SQL
  * database, or an RDF graph. A data resource can consist of several records.
- * 
+ *
  * @author tgaengler
  */
 @ApiModel("A data resource, e.g., an XML or CSV document, a SQL database, or an RDF graph. A data resource can consist of several records.")
@@ -98,7 +98,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the resource type.
-	 * 
+	 *
 	 * @return the resource type
 	 */
 	public ResourceType getType() {
@@ -108,7 +108,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the resource type
-	 * 
+	 *
 	 * @param type a new resource type
 	 */
 	public void setType(final ResourceType type) {
@@ -118,7 +118,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets all attributes of the data resource.
-	 * 
+	 *
 	 * @return all attributes of the data resource
 	 */
 	@XmlElement(name = "resource_attributes")
@@ -131,7 +131,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the attributes of the data resource.
-	 * 
+	 *
 	 * @param attributes new attributes
 	 */
 	public void setAttributes(final ObjectNode attributes) {
@@ -143,7 +143,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Adds a new attribute to the attributes of the data resource.
-	 * 
+	 *
 	 * @param key the key of the attribute
 	 * @param value the value of the attribute
 	 */
@@ -161,7 +161,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets a specific attribute by the given attribute key.
-	 * 
+	 *
 	 * @param key an attribute key
 	 * @return the value of the matched attribute or null.
 	 */
@@ -179,7 +179,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets all configurations of the resource.
-	 * 
+	 *
 	 * @return all configurations of the resource
 	 */
 	public Set<Configuration> getConfigurations() {
@@ -189,7 +189,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets all configurations of the resource.
-	 * 
+	 *
 	 * @param configurationsArg all configurations of the resource
 	 */
 	public void setConfigurations(final Set<Configuration> configurationsArg) {
@@ -230,7 +230,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the configuration by the given identifier.
-	 * 
+	 *
 	 * @param id a configuration identifier
 	 * @return the matched configuration or null
 	 */
@@ -259,7 +259,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Adds a new configuration to the collection of configurations of this resource.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param configuration a new export definition revision
 	 */
 	public void addConfiguration(final Configuration configuration) {
@@ -282,7 +282,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Replaces an existing configuration, i.e., the configuration with the same identifier will be replaced.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param configuration an existing, updated configuration
 	 */
 	public void replaceConfiguration(final Configuration configuration) {
@@ -309,7 +309,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Removes an existing configuration from the collection of configurations of this export resource.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param configuration an existing configuration that should be removed
 	 */
 	public void removeConfiguration(final Configuration configuration) {
@@ -336,7 +336,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Initialises the attributes from the string that holds the serialised JSON object of the attributes.
-	 * 
+	 *
 	 * @param fromScratch flag that indicates, whether the attributes should be initialised from scratch or not
 	 */
 	private void initAttributes(final boolean fromScratch) {

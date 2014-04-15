@@ -1,8 +1,14 @@
 package de.avgl.dmp.persistence;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
+import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
 import com.google.inject.persist.PersistService;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import org.junit.AfterClass;
@@ -19,6 +25,26 @@ public class GuicedTest {
 			@Override
 			protected EventBus provideEventBus() {
 				return new EventBus();
+			}
+
+			/**
+			 * Provides the {@link ObjectMapper} instance for JSON de-/serialisation.
+			 * @return a {@link ObjectMapper} instance as singleton
+			 */
+			@Provides
+			@Singleton
+			protected ObjectMapper provideObjectMapper() {
+
+				final ObjectMapper mapper = new ObjectMapper();
+				final JaxbAnnotationModule module = new JaxbAnnotationModule();
+
+				mapper
+						.registerModule(module)
+						.registerModule(new Hibernate4Module())
+						.setSerializationInclusion(JsonInclude.Include.NON_NULL)
+						.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+
+				return mapper;
 			}
 		}
 
