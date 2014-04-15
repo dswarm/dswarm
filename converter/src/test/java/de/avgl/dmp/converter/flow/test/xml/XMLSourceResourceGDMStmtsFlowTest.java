@@ -1,4 +1,4 @@
-package de.avgl.dmp.converter.flow.test;
+package de.avgl.dmp.converter.flow.test.xml;
 
 import java.io.IOException;
 import java.net.URL;

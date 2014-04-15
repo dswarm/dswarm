@@ -1,7 +1,8 @@
-package de.avgl.dmp.converter.flow.test;
+package de.avgl.dmp.converter.flow.test.xml;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -19,13 +20,12 @@ import com.google.common.base.Optional;
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Maps;
 import com.google.inject.Provider;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 import de.avgl.dmp.converter.GuicedTest;
 import de.avgl.dmp.converter.flow.TransformationFlow;
-import de.avgl.dmp.converter.flow.XMLSourceResourceTriplesFlow;
+import de.avgl.dmp.converter.flow.XMLSourceResourceGDMStmtsFlow;
 import de.avgl.dmp.persistence.model.internal.Model;
-import de.avgl.dmp.persistence.model.internal.rdf.RDFModel;
+import de.avgl.dmp.persistence.model.internal.gdm.GDMModel;
 import de.avgl.dmp.persistence.model.job.Task;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
@@ -38,7 +38,7 @@ import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.model.types.Tuple;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
-import de.avgl.dmp.persistence.service.internal.graph.InternalRDFGraphService;
+import de.avgl.dmp.persistence.service.internal.graph.InternalGDMGraphService;
 import de.avgl.dmp.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
@@ -112,30 +112,40 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		DataModel updatedDataModel = dataModelService.updateObjectTransactional(dataModel).getObject();
 
-		final XMLSourceResourceTriplesFlow flow2 = new XMLSourceResourceTriplesFlow(updatedDataModel);
+		final XMLSourceResourceGDMStmtsFlow flow2 = new XMLSourceResourceGDMStmtsFlow(updatedDataModel);
 
-		final List<RDFModel> rdfModels = flow2.applyResource(exampleDataResourceFileName);
+		final List<GDMModel> gdmModels = flow2.applyResource(exampleDataResourceFileName);
 
-		Assert.assertNotNull("RDF model list shouldn't be null", rdfModels);
-		Assert.assertFalse("RDF model list shouldn't be empty", rdfModels.isEmpty());
+		Assert.assertNotNull("GDM model list shouldn't be null", gdmModels);
+		Assert.assertFalse("GDM model list shouldn't be empty", gdmModels.isEmpty());
 
 		// write RDF models at once
-		final com.hp.hpl.jena.rdf.model.Model model = ModelFactory.createDefaultModel();
+		final de.avgl.dmp.graph.json.Model model = new de.avgl.dmp.graph.json.Model();
 		String recordClassUri = null;
 
-		for (final RDFModel rdfModel : rdfModels) {
+		for (final GDMModel gdmModel : gdmModels) {
 
-			Assert.assertNotNull("the RDF triples of the RDF model shouldn't be null", rdfModel.getModel());
+			Assert.assertNotNull("the GDM statements of the GDM model shouldn't be null", gdmModel.getModel());
 
-			model.add(rdfModel.getModel());
+			final de.avgl.dmp.graph.json.Model aModel = gdmModel.getModel();
 
-			if (recordClassUri == null) {
+			Assert.assertNotNull("the resources of the GDM model shouldn't be null", aModel.getResources());
 
-				recordClassUri = rdfModel.getRecordClassURI();
+			final Collection<de.avgl.dmp.graph.json.Resource> resources = aModel.getResources();
+
+			for (final de.avgl.dmp.graph.json.Resource aResource : resources) {
+				
+				model.addResource(aResource);
+
+				if (recordClassUri == null) {
+
+					recordClassUri = gdmModel.getRecordClassURI();
+				}
+
 			}
 		}
 
-		final RDFModel rdfModel = new RDFModel(model, null, recordClassUri);
+		final GDMModel gdmModel = new GDMModel(model, null, recordClassUri);
 
 		// System.out.println(objectMapper.writeValueAsString(rdfModel.getSchema()));
 		//
@@ -147,10 +157,10 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		// System.out.println(objectMapper.writeValueAsString(rdfModel.toJSON()));
 
 		// write model and retrieve tuples
-		final InternalRDFGraphService tripleService = injector.getInstance(InternalRDFGraphService.class);
-		tripleService.createObject(updatedDataModel.getId(), rdfModel);
+		final InternalGDMGraphService gdmService = injector.getInstance(InternalGDMGraphService.class);
+		gdmService.createObject(updatedDataModel.getId(), gdmModel);
 
-		final Optional<Map<String, Model>> optionalModelMap = tripleService.getObjects(updatedDataModel.getId(), Optional.of(1));
+		final Optional<Map<String, Model>> optionalModelMap = gdmService.getObjects(updatedDataModel.getId(), Optional.of(1));
 
 		final Iterator<Tuple<String, JsonNode>> tuples = dataIterator(optionalModelMap.get().entrySet().iterator());
 

@@ -1,6 +1,7 @@
 package de.avgl.dmp.persistence.service.internal.graph;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,6 +22,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
@@ -33,11 +35,16 @@ import de.avgl.dmp.graph.json.util.Util;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.internal.Model;
 import de.avgl.dmp.persistence.model.internal.gdm.GDMModel;
+import de.avgl.dmp.persistence.model.internal.helper.AttributePathHelper;
 import de.avgl.dmp.persistence.model.proxy.RetrievalType;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.proxy.ProxyDataModel;
+import de.avgl.dmp.persistence.model.schema.Attribute;
+import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttribute;
+import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttributePath;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxyClasz;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxySchema;
 import de.avgl.dmp.persistence.model.schema.utils.SchemaUtils;
@@ -197,10 +204,8 @@ public class InternalGDMGraphService implements InternalModelService {
 				}
 			}
 		}
-
-		// TODO: reimplement/ adapt for GDM model
 		
-		// addAttributePaths(finalDataModel, gdmModel.getAttributePaths());
+		addAttributePaths(finalDataModel, gdmModel.getAttributePaths());
 
 		writeGDMToDB(realModel, resourceGraphURI);
 	}
@@ -427,72 +432,70 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		return proxyUpdatedDataModel.getObject();
 	}
-
-	// TODO: reimplement/ adapt for GDM model
 	
-//	private DataModel addAttributePaths(final DataModel dataModel, final Set<AttributePathHelper> attributePathHelpers)
-//			throws DMPPersistenceException {
-//
-//		if (attributePathHelpers == null) {
-//
-//			InternalGDMGraphService.LOG.debug("couldn't datermine attribute paths from data model '" + dataModel.getId() + "'");
-//
-//			return dataModel;
-//		}
-//
-//		for (final AttributePathHelper attributePathHelper : attributePathHelpers) {
-//
-//			final LinkedList<Attribute> attributes = Lists.newLinkedList();
-//
-//			for (final String attributeString : attributePathHelper.getAttributePath()) {
-//
-//				final ProxyAttribute proxyAttribute = attributeService.get().createOrGetObjectTransactional(attributeString);
-//
-//				if (proxyAttribute == null) {
-//
-//					throw new DMPPersistenceException("couldn't create or retrieve attribute");
-//				}
-//
-//				final Attribute attribute = proxyAttribute.getObject();
-//
-//				if (attribute == null) {
-//
-//					throw new DMPPersistenceException("couldn't create or retrieve attribute");
-//				}
-//
-//				attributes.add(attribute);
-//
-//				final String attributeName = SchemaUtils.determineRelativeURIPart(attributeString);
-//
-//				attribute.setName(attributeName);
-//			}
-//
-//			final ProxyAttributePath proxyAttributePath = attributePathService.get().createOrGetObject(attributes);
-//
-//			if (proxyAttributePath == null) {
-//
-//				throw new DMPPersistenceException("couldn't create or retrieve attribute path");
-//			}
-//
-//			final AttributePath attributePath = proxyAttributePath.getObject();
-//
-//			if (attributePath == null) {
-//
-//				throw new DMPPersistenceException("couldn't create or retrieve attribute path");
-//			}
-//
-//			dataModel.getSchema().addAttributePath(attributePath);
-//		}
-//
-//		final ProxyDataModel proxyUpdatedDataModel = dataModelService.get().updateObjectTransactional(dataModel);
-//
-//		if (proxyUpdatedDataModel == null) {
-//
-//			throw new DMPPersistenceException("couldn't update data model");
-//		}
-//
-//		return proxyUpdatedDataModel.getObject();
-//	}
+	private DataModel addAttributePaths(final DataModel dataModel, final Set<AttributePathHelper> attributePathHelpers)
+			throws DMPPersistenceException {
+
+		if (attributePathHelpers == null) {
+
+			InternalGDMGraphService.LOG.debug("couldn't datermine attribute paths from data model '" + dataModel.getId() + "'");
+
+			return dataModel;
+		}
+
+		for (final AttributePathHelper attributePathHelper : attributePathHelpers) {
+
+			final LinkedList<Attribute> attributes = Lists.newLinkedList();
+
+			for (final String attributeString : attributePathHelper.getAttributePath()) {
+
+				final ProxyAttribute proxyAttribute = attributeService.get().createOrGetObjectTransactional(attributeString);
+
+				if (proxyAttribute == null) {
+
+					throw new DMPPersistenceException("couldn't create or retrieve attribute");
+				}
+
+				final Attribute attribute = proxyAttribute.getObject();
+
+				if (attribute == null) {
+
+					throw new DMPPersistenceException("couldn't create or retrieve attribute");
+				}
+
+				attributes.add(attribute);
+
+				final String attributeName = SchemaUtils.determineRelativeURIPart(attributeString);
+
+				attribute.setName(attributeName);
+			}
+
+			final ProxyAttributePath proxyAttributePath = attributePathService.get().createOrGetObject(attributes);
+
+			if (proxyAttributePath == null) {
+
+				throw new DMPPersistenceException("couldn't create or retrieve attribute path");
+			}
+
+			final AttributePath attributePath = proxyAttributePath.getObject();
+
+			if (attributePath == null) {
+
+				throw new DMPPersistenceException("couldn't create or retrieve attribute path");
+			}
+
+			dataModel.getSchema().addAttributePath(attributePath);
+		}
+
+		final ProxyDataModel proxyUpdatedDataModel = dataModelService.get().updateObjectTransactional(dataModel);
+
+		if (proxyUpdatedDataModel == null) {
+
+			throw new DMPPersistenceException("couldn't update data model");
+		}
+
+		return proxyUpdatedDataModel.getObject();
+	}
 
 	private DataModel getSchemaInternal(final Long dataModelId) throws DMPPersistenceException {
 

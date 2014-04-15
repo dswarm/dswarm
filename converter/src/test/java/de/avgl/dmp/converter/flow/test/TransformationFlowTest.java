@@ -34,17 +34,16 @@ import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Maps;
 import com.google.common.io.Resources;
 import com.google.inject.Provider;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
 import de.avgl.dmp.converter.GuicedTest;
 import de.avgl.dmp.converter.flow.CSVSourceResourceTriplesFlow;
 import de.avgl.dmp.converter.flow.TransformationFlow;
 import de.avgl.dmp.converter.mf.stream.reader.CsvReader;
+import de.avgl.dmp.graph.json.LiteralNode;
+import de.avgl.dmp.graph.json.Predicate;
+import de.avgl.dmp.graph.json.ResourceNode;
 import de.avgl.dmp.persistence.model.internal.Model;
-import de.avgl.dmp.persistence.model.internal.rdf.RDFModel;
-// import de.avgl.dmp.persistence.model.internal.impl.MemoryDBInputModel;
+import de.avgl.dmp.persistence.model.internal.gdm.GDMModel;
 import de.avgl.dmp.persistence.model.job.Task;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
@@ -58,7 +57,7 @@ import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.model.types.Tuple;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
-import de.avgl.dmp.persistence.service.internal.graph.InternalRDFGraphService;
+import de.avgl.dmp.persistence.service.internal.graph.InternalGDMGraphService;
 import de.avgl.dmp.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
@@ -135,7 +134,7 @@ public class TransformationFlowTest extends GuicedTest {
 		Assert.assertNotNull("CSV record triple list shouldn't be null", csvRecordTriples);
 		Assert.assertFalse("CSV record triple list shouldn't be empty", csvRecordTriples.isEmpty());
 
-		final InternalRDFGraphService memoryDbService = injector.getInstance(InternalRDFGraphService.class);
+		final InternalGDMGraphService gdmService = injector.getInstance(InternalGDMGraphService.class);
 
 		// write CSV record triples
 		// for (final Triple triple : csvRecordTriples) {
@@ -145,26 +144,29 @@ public class TransformationFlowTest extends GuicedTest {
 		// memoryDbService.createObject(updatedDataModel.getId(), mdbim);
 		// }
 
-		// convert result to RDF
-		final Map<Long, com.hp.hpl.jena.rdf.model.Resource> recordResources = Maps.newHashMap();
+		// convert result to GDM
+		final Map<Long, de.avgl.dmp.graph.json.Resource> recordResources = Maps.newHashMap();
 
-		final com.hp.hpl.jena.rdf.model.Model model = ModelFactory.createDefaultModel();
+		final de.avgl.dmp.graph.json.Model model = new de.avgl.dmp.graph.json.Model();
 
 		final String dataResourceBaseSchemaURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
 		final String recordClassURI = dataResourceBaseSchemaURI + "RecordType";
+		final ResourceNode recordClasz = new ResourceNode(recordClassURI);
 
 		for (final org.culturegraph.mf.types.Triple triple : csvRecordTriples) {
 
-			final com.hp.hpl.jena.rdf.model.Resource subject = DataModelUtils.mintRecordResource(Long.valueOf(triple.getSubject()), dataModel,
-					recordResources, model, recordClassURI);
-			final Property property = ResourceFactory.createProperty(triple.getPredicate());
+			final de.avgl.dmp.graph.json.Resource recordResource = DataModelUtils.mintRecordResource(Long.valueOf(triple.getSubject()), dataModel,
+					recordResources, model, recordClasz);
+			final Predicate property = new Predicate(triple.getPredicate());
 
-			model.add(subject, property, triple.getObject());
+			final ResourceNode subject = (ResourceNode) recordResource.getStatements().iterator().next().getSubject();
+
+			recordResource.addStatement(subject, property, new LiteralNode(triple.getObject()));
 		}
 
-		final RDFModel rdfModel = new RDFModel(model, null, recordClassURI);
+		final GDMModel gdmModel = new GDMModel(model, null, recordClassURI);
 
-		memoryDbService.createObject(dataModel.getId(), rdfModel);
+		gdmService.createObject(dataModel.getId(), gdmModel);
 		// finished writing CSV statements to graph
 
 		// retrieve updated fresh data model
@@ -175,7 +177,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 		final Schema schema = freshDataModel.getSchema();
 
-		final Optional<Map<String, Model>> optionalModelMap = memoryDbService.getObjects(updatedDataModel.getId(), Optional.<Integer> absent());
+		final Optional<Map<String, Model>> optionalModelMap = gdmService.getObjects(updatedDataModel.getId(), Optional.<Integer> absent());
 
 		Assert.assertNotNull("CSV record model map optional shouldn't be null", optionalModelMap);
 		Assert.assertTrue("CSV record model map should be present", optionalModelMap.isPresent());
