@@ -8,16 +8,16 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.CSVResourceFlowFactory;
 import de.avgl.dmp.converter.flow.CSVSourceResourceTriplesFlow;
+import de.avgl.dmp.graph.json.LiteralNode;
+import de.avgl.dmp.graph.json.Predicate;
+import de.avgl.dmp.graph.json.Resource;
+import de.avgl.dmp.graph.json.ResourceNode;
 import de.avgl.dmp.persistence.DMPPersistenceException;
-import de.avgl.dmp.persistence.model.internal.rdf.RDFModel;
+import de.avgl.dmp.persistence.model.internal.gdm.GDMModel;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.utils.DataModelUtils;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
@@ -54,13 +54,14 @@ public class CSVConverterEventRecorder {
 
 		if (result != null) {
 
-			// convert result to RDF
-			final Map<Long, Resource> recordResources = Maps.newHashMap();
+			// convert result to GDM
+			final Map<Long, de.avgl.dmp.graph.json.Resource> recordResources = Maps.newHashMap();
 
-			final com.hp.hpl.jena.rdf.model.Model model = ModelFactory.createDefaultModel();
+			final de.avgl.dmp.graph.json.Model model = new de.avgl.dmp.graph.json.Model();
 
 			final String dataResourceBaseSchemaURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
 			final String recordClassURI = dataResourceBaseSchemaURI + "RecordType";
+			final ResourceNode recordClassNode = new ResourceNode(recordClassURI);
 
 			for (final org.culturegraph.mf.types.Triple triple : result) {
 
@@ -68,10 +69,12 @@ public class CSVConverterEventRecorder {
 				// 2. create property object from property uri string
 				// 3. convert objects (string literals) to string literals (?)
 
-				final Resource subject = DataModelUtils.mintRecordResource(Long.valueOf(triple.getSubject()), dataModel, recordResources, model, recordClassURI);
-				final Property property = ResourceFactory.createProperty(triple.getPredicate());
-
-				model.add(subject, property, triple.getObject());
+				final Resource recordResource = DataModelUtils.mintRecordResource(Long.valueOf(triple.getSubject()), dataModel, recordResources, model, recordClassNode);
+				final Predicate property = new Predicate(triple.getPredicate());
+				
+				final ResourceNode subject = (ResourceNode) recordResource.getStatements().iterator().next().getSubject();
+				
+				recordResource.addStatement(subject, property, new LiteralNode(triple.getObject()));
 
 				// final MemoryDBInputModel mdbim = new MemoryDBInputModel(triple);
 				//
@@ -84,11 +87,11 @@ public class CSVConverterEventRecorder {
 				// }
 			}
 
-			final RDFModel rdfModel = new RDFModel(model, null, recordClassURI);
+			final GDMModel gdmModel = new GDMModel(model, null, recordClassURI);
 
 			try {
 
-				internalServiceFactory.getInternalRDFGraphService().createObject(dataModel.getId(), rdfModel);
+				internalServiceFactory.getInternalGDMGraphService().createObject(dataModel.getId(), gdmModel);
 			} catch (final DMPPersistenceException e) {
 
 				CSVConverterEventRecorder.LOG.error("couldn't persist the converted data of data model '" + dataModel.getId() + "'", e);

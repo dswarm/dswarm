@@ -10,6 +10,8 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 
+import de.avgl.dmp.graph.json.Predicate;
+import de.avgl.dmp.graph.json.ResourceNode;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.utils.ExtendedBasicDMPJPAObjectUtils;
 
@@ -104,14 +106,19 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 				// create uri from resource id
 
 				sb.append("http://data.slub-dresden.de/resources/").append(dataResource.getId());
-			} else if (dataResourceName != null) {
+			}
 
-				// create uri from data resource name
-				
-				// TODO: (probably) replace whitespaces etc.
+			// TODO: this is wrong, or? - "create uri from data resource name" -> this will result in ugly uris ...
 
-				sb.append("http://data.slub-dresden.de/resources/").append(dataResourceName);
-			} else if (dataModel.getId() != null) {
+			// else if (dataResourceName != null) {
+			//
+			// // create uri from data resource name
+			//
+			// // TODO: (probably) replace whitespaces etc.
+			//
+			// sb.append("http://data.slub-dresden.de/resources/").append(dataResourceName);
+			// }
+			else if (dataModel.getId() != null) {
 
 				// create uri from data model id
 
@@ -166,6 +173,48 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 
 		// add resource type statement to model
 		model.add(recordResource, RDF.type, ResourceFactory.createResource(recordClassURI));
+
+		return recordResource;
+	}
+	
+	public static de.avgl.dmp.graph.json.Resource mintRecordResource(final Long identifier, final DataModel dataModel, final Map<Long, de.avgl.dmp.graph.json.Resource> recordResources,
+			final de.avgl.dmp.graph.json.Model model, final ResourceNode recordClassNode) {
+
+		if (identifier != null) {
+
+			if (recordResources.containsKey(identifier)) {
+
+				return recordResources.get(identifier);
+			}
+		}
+
+		// mint completely new uri
+
+		final StringBuilder sb = new StringBuilder();
+
+		if (dataModel != null) {
+
+			// create uri from resource id and configuration id and random uuid
+
+			sb.append("http://data.slub-dresden.de/datamodels/").append(dataModel.getId()).append("/records/");
+		} else {
+
+			// create uri from random uuid
+
+			sb.append("http://data.slub-dresden.de/records/");
+		}
+
+		final String recordURI = sb.append(UUID.randomUUID()).toString();
+		final de.avgl.dmp.graph.json.Resource recordResource = new de.avgl.dmp.graph.json.Resource(recordURI);
+
+		if (identifier != null) {
+
+			recordResources.put(identifier, recordResource);
+		}
+
+		// add resource type statement to model
+		recordResource.addStatement(new ResourceNode(recordResource.getUri()), new Predicate(RDF.type.getURI()), recordClassNode);
+		model.addResource(recordResource);
 
 		return recordResource;
 	}

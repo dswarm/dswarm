@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import de.avgl.dmp.persistence.model.internal.Model;
-import de.avgl.dmp.persistence.model.internal.rdf.helper.AttributePathHelper;
+import de.avgl.dmp.persistence.model.internal.helper.AttributePathHelper;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public class MemoryDbModel implements Model {

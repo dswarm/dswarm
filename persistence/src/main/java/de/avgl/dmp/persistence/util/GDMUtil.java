@@ -13,6 +13,7 @@ import com.google.common.collect.Sets;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.avgl.dmp.graph.json.Model;
+import de.avgl.dmp.graph.json.Node;
 import de.avgl.dmp.graph.json.NodeType;
 import de.avgl.dmp.graph.json.Resource;
 import de.avgl.dmp.graph.json.ResourceNode;
@@ -50,7 +51,7 @@ public final class GDMUtil {
 			return null;
 		}
 
-		final Set<Resource> recordResources = Sets.newHashSet();
+		final Set<Resource> recordResources = Sets.newLinkedHashSet();
 
 		for (final Resource resource : resources) {
 
@@ -123,5 +124,194 @@ public final class GDMUtil {
 		}
 
 		return recordResources;
+	}
+
+	/**
+	 * Gets resource node for the given resource identifier in the given record resource.
+	 * 
+	 * @param resourceURI the resource identifier
+	 * @param model the GDM model
+	 * @return
+	 */
+	public static ResourceNode getResourceNode(final String resourceURI, final Resource recordResource) {
+
+		if (resourceURI == null || recordResource == null) {
+
+			GDMUtil.LOG.debug("resource URI or record resource is null");
+
+			return null;
+		}
+
+		final Collection<Statement> statements = recordResource.getStatements();
+
+		if (statements == null || statements.isEmpty()) {
+
+			GDMUtil.LOG.debug("record resource contains no statements");
+
+			return null;
+		}
+
+		for (final Statement statement : statements) {
+
+			final Node subjectNode = statement.getSubject();
+
+			if (subjectNode == null) {
+
+				// this should never be the case
+
+				continue;
+			}
+
+			if (!(subjectNode instanceof ResourceNode)) {
+
+				// only resource nodes are relevant in this game
+
+				continue;
+			}
+
+			final ResourceNode subjectResourceNode = (ResourceNode) subjectNode;
+
+			if (resourceURI.equals(subjectResourceNode.getUri())) {
+
+				// match !!!
+
+				return subjectResourceNode;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets all statements for the given resource node in the given record resource.
+	 * 
+	 * @param resourceURI the resource identifier
+	 * @param model the GDM model
+	 * @return
+	 */
+	public static Set<Statement> getResourceStatement(final Node resourceNode, final Resource recordResource) {
+
+		if (resourceNode == null || recordResource == null) {
+
+			GDMUtil.LOG.debug("resource Node or record resource is null");
+
+			return null;
+		}
+
+		if (resourceNode instanceof ResourceNode) {
+
+			final ResourceNode castedResourceNode = (ResourceNode) resourceNode;
+			final String resourceURI = castedResourceNode.getUri();
+
+			return getResourceStatement(resourceURI, recordResource);
+		}
+
+		final Long resourceId = resourceNode.getId();
+
+		return getResourceStatement(resourceId, recordResource);
+	}
+
+	/**
+	 * Gets all statements for the given resource identifier in the given record resource.
+	 * 
+	 * @param resourceURI the resource identifier
+	 * @param model the GDM model
+	 * @return
+	 */
+	public static Set<Statement> getResourceStatement(final String resourceURI, final Resource recordResource) {
+
+		if (resourceURI == null || recordResource == null) {
+
+			GDMUtil.LOG.debug("resource URI or record resource is null");
+
+			return null;
+		}
+
+		final Collection<Statement> statements = recordResource.getStatements();
+
+		if (statements == null || statements.isEmpty()) {
+
+			GDMUtil.LOG.debug("record resource contains no statements");
+
+			return null;
+		}
+
+		final Set<Statement> resourceStatements = Sets.newLinkedHashSet();
+
+		for (final Statement statement : statements) {
+
+			final Node subjectNode = statement.getSubject();
+
+			if (!(subjectNode instanceof ResourceNode)) {
+
+				// only resource nodes are relevant here ..
+
+				continue;
+			}
+
+			final ResourceNode subjectResourceNode = (ResourceNode) subjectNode;
+
+			if (!resourceURI.equals(subjectResourceNode.getUri())) {
+
+				// only resource nodes that matches the resource uri are relevant here ..
+
+				continue;
+			}
+
+			resourceStatements.add(statement);
+		}
+
+		return resourceStatements;
+	}
+
+	/**
+	 * Gets all statements for the given resource identifier in the given record resource.
+	 * 
+	 * @param resourceId the resource identifier
+	 * @param model the GDM model
+	 * @return
+	 */
+	public static Set<Statement> getResourceStatement(final Long resourceId, final Resource recordResource) {
+
+		if (resourceId == null || recordResource == null) {
+
+			GDMUtil.LOG.debug("resource id or record resource is null");
+
+			return null;
+		}
+
+		final Collection<Statement> statements = recordResource.getStatements();
+
+		if (statements == null || statements.isEmpty()) {
+
+			GDMUtil.LOG.debug("record resource contains no statements");
+
+			return null;
+		}
+
+		final Set<Statement> resourceStatements = Sets.newLinkedHashSet();
+
+		for (final Statement statement : statements) {
+
+			final Node subjectNode = statement.getSubject();
+
+			if (subjectNode.getId() == null) {
+
+				// only nodes with id are relevant here ..
+
+				continue;
+			}
+
+			if (!resourceId.equals(subjectNode.getId())) {
+
+				// only nodes that matches the resource id are relevant here ..
+
+				continue;
+			}
+
+			resourceStatements.add(statement);
+		}
+
+		return resourceStatements;
 	}
 }

@@ -20,12 +20,12 @@ import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 import de.avgl.dmp.persistence.model.internal.Model;
-import de.avgl.dmp.persistence.model.internal.rdf.helper.AttributePathHelper;
-import de.avgl.dmp.persistence.model.internal.rdf.helper.AttributePathHelperHelper;
-import de.avgl.dmp.persistence.model.internal.rdf.helper.ConverterHelper;
-import de.avgl.dmp.persistence.model.internal.rdf.helper.ConverterHelperHelper;
-import de.avgl.dmp.persistence.model.internal.rdf.helper.SchemaHelper;
-import de.avgl.dmp.persistence.model.internal.rdf.helper.SchemaHelperHelper;
+import de.avgl.dmp.persistence.model.internal.helper.AttributePathHelper;
+import de.avgl.dmp.persistence.model.internal.helper.AttributePathHelperHelper;
+import de.avgl.dmp.persistence.model.internal.helper.ConverterHelper;
+import de.avgl.dmp.persistence.model.internal.helper.SchemaHelper;
+import de.avgl.dmp.persistence.model.internal.helper.SchemaHelperHelper;
+import de.avgl.dmp.persistence.model.internal.rdf.helper.ConverterHelperJenaHelper;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 import de.avgl.dmp.persistence.util.RDFUtil;
 
@@ -342,7 +342,7 @@ public class RDFModel implements Model {
 
 			if (rdfNode.isLiteral()) {
 
-				ConverterHelperHelper.addLiteralToConverterHelper(converterHelpers, propertyURI, rdfNode);
+				ConverterHelperJenaHelper.addLiteralToConverterHelper(converterHelpers, propertyURI, rdfNode);
 
 				continue;
 			}
@@ -353,7 +353,7 @@ public class RDFModel implements Model {
 
 				final JsonNode jsonNode = convertRDFToJSON(rdfNode.asResource(), rootJson, objectNode);
 
-				ConverterHelperHelper.addJSONNodeToConverterHelper(converterHelpers, propertyURI, jsonNode);
+				ConverterHelperJenaHelper.addJSONNodeToConverterHelper(converterHelpers, propertyURI, jsonNode);
 
 				continue;
 			}
@@ -366,7 +366,7 @@ public class RDFModel implements Model {
 
 				if (objectIter == null || !objectIter.hasNext()) {
 
-					ConverterHelperHelper.addURIResourceToConverterHelper(converterHelpers, propertyURI, rdfNode);
+					ConverterHelperJenaHelper.addURIResourceToConverterHelper(converterHelpers, propertyURI, rdfNode);
 
 					continue;
 				}

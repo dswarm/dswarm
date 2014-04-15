@@ -4,7 +4,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import de.avgl.dmp.persistence.model.internal.rdf.helper.AttributePathHelper;
+import de.avgl.dmp.persistence.model.internal.helper.AttributePathHelper;
 
 /**
  * The model interface for holding and providing data for further processing.

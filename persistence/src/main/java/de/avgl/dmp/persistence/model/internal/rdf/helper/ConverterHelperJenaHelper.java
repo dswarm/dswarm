@@ -5,12 +5,14 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 
+import de.avgl.dmp.persistence.model.internal.helper.ConverterHelper;
+
 /**
  * A helper class with static methods for the converter helper.
  * 
  * @author tgaengler
  */
-public final class ConverterHelperHelper {
+public final class ConverterHelperJenaHelper {
 
 	/**
 	 * Adds a literal to the converter helper of the given property.

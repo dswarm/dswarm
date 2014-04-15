@@ -1,4 +1,4 @@
-package de.avgl.dmp.converter.flow.test;
+package de.avgl.dmp.converter.flow.test.csv;
 
 import java.util.ArrayList;
 import java.util.Iterator;
