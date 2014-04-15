@@ -199,8 +199,11 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 
 		while (currentToken != JsonToken.END_ARRAY) {
 
-			while (currentToken != JsonToken.START_OBJECT) {
+			while (currentToken != JsonToken.START_OBJECT && currentToken != JsonToken.END_ARRAY) {
 				currentToken = jp.nextToken();
+			}
+			if (currentToken == JsonToken.END_ARRAY) {
+				break;
 			}
 			currentToken = jp.nextToken();
 
