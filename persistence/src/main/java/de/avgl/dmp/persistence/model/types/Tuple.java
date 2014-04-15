@@ -7,7 +7,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class Tuple<V1, V2> {
 
-	public static <V1, V2, V3> Tuple<V1, V2> tuple(final V1 v1, final V2 v2) {
+	public static <V1, V2> Tuple<V1, V2> tuple(final V1 v1, final V2 v2) {
 		return new Tuple<>(v1, v2);
 	}
 

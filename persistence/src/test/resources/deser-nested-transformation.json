@@ -1,0 +1,127 @@
+{
+  "id": -1,
+  "name": "TestMapping",
+  "transformation": {
+    "description": "transformation",
+    "function": {
+      "components": [
+        {
+          "description": "Add pre- or postfix to a string.",
+          "function": {
+            "description": "Add pre- or postfix to a string.",
+            "function_description": {
+              "description": "Add pre- or postfix to a string.",
+              "dsl": "metafacture",
+              "name": "compose",
+              "parameters": {
+                "postfix": {
+                  "optional": true,
+                  "type": "text"
+                },
+                "prefix": {
+                  "optional": true,
+                  "type": "text"
+                }
+              },
+              "reference": "compose"
+            },
+            "id": 1,
+            "name": "compose",
+            "parameters": [
+              "prefix",
+              "postfix"
+            ],
+            "type": "Function"
+          },
+          "id": 1,
+          "input_components": [],
+          "name": "compose",
+          "output_components": [
+            {
+              "id": 2
+            }
+          ],
+          "parameter_mappings": {
+            "inputString": "variable_name"
+          }
+        },
+        {
+          "description": "Upper/lower-case transformation.",
+          "function": {
+            "description": "Upper/lower-case transformation.",
+            "function_description": {
+              "description": "Upper/lower-case transformation.",
+              "dsl": "metafacture",
+              "name": "case",
+              "parameters": {
+                "language": {
+                  "optional": true,
+                  "type": "text"
+                },
+                "to": {
+                  "choices": [
+                    "upper",
+                    "lower"
+                  ],
+                  "type": "radio"
+                }
+              },
+              "reference": "case"
+            },
+            "id": 2,
+            "name": "case",
+            "parameters": [
+              "to",
+              "language"
+            ],
+            "type": "Function"
+          },
+          "id": 2,
+          "input_components": [
+            {
+              "id": 1
+            }
+          ],
+          "name": "case",
+          "output_components": [],
+          "parameter_mappings": {}
+        },
+        {
+          "description": "Returns the an increasing count for each received literal.",
+          "function": {
+            "description": "Returns the an increasing count for each received literal.",
+            "function_description": {
+              "description": "Returns the an increasing count for each received literal.",
+              "dsl": "metafacture",
+              "name": "count",
+              "reference": "count"
+            },
+            "id": 3,
+            "name": "count",
+            "type": "Function"
+          },
+          "id": 3,
+          "input_components": [],
+          "name": "count",
+          "output_components": [],
+          "parameter_mappings": {
+            "inputString": "dataset"
+          }
+        }
+      ],
+      "description": "transformation",
+      "name": "transformation",
+      "parameters": [
+        "transformationInputString"
+      ],
+      "type": "Transformation",
+      "id": 42
+    },
+    "name": "transformation",
+    "parameter_mappings": {
+      "dataset": "http://data.slub-dresden.de/resources/1/schema#dataset",
+      "transformationOutputVariable": "http://purl.org/dc/elements/1.1/title",
+      "variable_name": "http://data.slub-dresden.de/resources/1/schema#variable_name"
+    }
+  }
+}
