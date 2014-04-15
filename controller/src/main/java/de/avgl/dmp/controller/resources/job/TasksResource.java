@@ -163,8 +163,6 @@ public class TasksResource {
 			throw new DMPConverterException("there is no input data model for this task");
 		}
 
-		// TODO: make write to DB optional
-
 		final TransformationFlow flow = TransformationFlow.fromTask(task, internalModelServiceFactoryProvider);
 
 		final Resource dataResource = inputDataModel.getDataResource();

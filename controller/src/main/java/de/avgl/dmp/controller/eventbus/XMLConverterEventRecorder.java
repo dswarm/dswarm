@@ -1,17 +1,18 @@
 package de.avgl.dmp.controller.eventbus;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 import de.avgl.dmp.converter.DMPConverterException;
-import de.avgl.dmp.converter.flow.XMLSourceResourceTriplesFlow;
+import de.avgl.dmp.converter.flow.XMLSourceResourceGDMStmtsFlow;
+import de.avgl.dmp.graph.json.Resource;
 import de.avgl.dmp.persistence.DMPPersistenceException;
-import de.avgl.dmp.persistence.model.internal.rdf.RDFModel;
+import de.avgl.dmp.persistence.model.internal.gdm.GDMModel;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 
@@ -54,33 +55,43 @@ public class XMLConverterEventRecorder {
 
 		final DataModel dataModel = event.getDataModel();
 
-		RDFModel result = null;
+		GDMModel result = null;
 
 		try {
 
-			final XMLSourceResourceTriplesFlow flow = new XMLSourceResourceTriplesFlow(dataModel);
+			final XMLSourceResourceGDMStmtsFlow flow = new XMLSourceResourceGDMStmtsFlow(dataModel);
 
 			final String path = dataModel.getDataResource().getAttribute("path").asText();
-			final List<RDFModel> rdfModels = flow.applyResource(path);
+			final List<GDMModel> gdmModels = flow.applyResource(path);
 
-			// write RDF models at once
-			final com.hp.hpl.jena.rdf.model.Model model = ModelFactory.createDefaultModel();
+			// write GDM models at once
+			final de.avgl.dmp.graph.json.Model model = new de.avgl.dmp.graph.json.Model();
 			String recordClassUri = null;
 
-			for (final RDFModel rdfModel : rdfModels) {
+			for (final GDMModel gdmModel : gdmModels) {
 
-				if (rdfModel.getModel() != null) {
+				if (gdmModel.getModel() != null) {
 
-					model.add(rdfModel.getModel());
+					final de.avgl.dmp.graph.json.Model aModel = gdmModel.getModel();
 
-					if (recordClassUri == null) {
+					if (aModel.getResources() != null) {
 
-						recordClassUri = rdfModel.getRecordClassURI();
+						final Collection<Resource> resources = aModel.getResources();
+
+						for (final Resource resource : resources) {
+
+							model.addResource(resource);
+
+							if (recordClassUri == null) {
+
+								recordClassUri = gdmModel.getRecordClassURI();
+							}
+						}
 					}
 				}
 			}
 
-			result = new RDFModel(model, null, recordClassUri);
+			result = new GDMModel(model, null, recordClassUri);
 
 		} catch (final DMPConverterException | NullPointerException e) {
 
@@ -91,7 +102,7 @@ public class XMLConverterEventRecorder {
 
 			try {
 
-				internalServiceFactory.getInternalRDFGraphService().createObject(dataModel.getId(), result);
+				internalServiceFactory.getInternalGDMGraphService().createObject(dataModel.getId(), result);
 			} catch (final DMPPersistenceException e) {
 
 				LOG.error("couldn't persist the converted data of data model '" + dataModel.getId() + "'", e);

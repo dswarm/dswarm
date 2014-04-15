@@ -277,7 +277,7 @@ public class DataModelsResourceTest extends
 		final int atMost = 1;
 
 		final InternalModelServiceFactory serviceFactory = DMPInjector.injector.getInstance(Key.get(InternalModelServiceFactory.class));
-		final InternalModelService service = serviceFactory.getInternalRDFGraphService();
+		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
 		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getId(), Optional.of(atMost));
 
 		assertTrue(data.isPresent());
@@ -382,7 +382,7 @@ public class DataModelsResourceTest extends
 		final int atMost = 1;
 
 		final InternalModelServiceFactory serviceFactory = DMPInjector.injector.getInstance(Key.get(InternalModelServiceFactory.class));
-		final InternalModelService service = serviceFactory.getInternalRDFGraphService();
+		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
 		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getId(), Optional.of(atMost));
 
 		assertTrue(data.isPresent());
