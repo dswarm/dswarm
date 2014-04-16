@@ -167,7 +167,7 @@ public class GDMModel implements Model {
 			return null;
 		}
 
-		final ObjectNode json = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
+		final ArrayNode json = DMPPersistenceUtil.getJSONObjectMapper().createArrayNode();
 
 		// determine record resource node from statements of the record resource
 		final ResourceNode recordResourceNode = GDMUtil.getResourceNode(resourceURI, recordResource);
@@ -317,7 +317,7 @@ public class GDMModel implements Model {
 				return null;
 			}
 
-			final ObjectNode json = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
+			final ArrayNode json = DMPPersistenceUtil.getJSONObjectMapper().createArrayNode();
 
 			// determine record resource node from statements of the record resource
 			final ResourceNode recordResourceNode = GDMUtil.getResourceNode(resourceURI, recordResource);
@@ -347,7 +347,7 @@ public class GDMModel implements Model {
 		return jsonArray;
 	}
 
-	private JsonNode convertRDFToJSON(final Resource recordResource, final Node resourceNode, final ObjectNode rootJson, final ObjectNode json) {
+	private JsonNode convertRDFToJSON(final Resource recordResource, final Node resourceNode, final ArrayNode rootJson, final ArrayNode json) {
 
 		final Map<String, ConverterHelper> converterHelpers = Maps.newLinkedHashMap();
 
@@ -383,18 +383,22 @@ public class GDMModel implements Model {
 				// resource has an uri, but is deeper in the hierarchy -> it will be attached to the root json node as separate
 				// entry
 
-				final ObjectNode objectNode = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
+				final ArrayNode objectNode = DMPPersistenceUtil.getJSONObjectMapper().createArrayNode();
 
 				final JsonNode jsonNode = convertRDFToJSON(recordResource, object, rootJson, objectNode);
 
-				rootJson.put(object.getUri(), jsonNode);
+				final ObjectNode objectJSONObject = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
+
+				objectJSONObject.put(object.getUri(), jsonNode);
+
+				rootJson.add(objectJSONObject);
 
 				continue;
 			}
 
 			// node is (/must be) a blank node
 
-			final ObjectNode objectNode = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
+			final ArrayNode objectNode = DMPPersistenceUtil.getJSONObjectMapper().createArrayNode();
 
 			final JsonNode jsonNode = convertRDFToJSON(recordResource, gdmNode, rootJson, objectNode);
 
