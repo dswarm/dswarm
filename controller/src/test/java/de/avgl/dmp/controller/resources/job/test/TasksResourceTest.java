@@ -188,11 +188,11 @@ public class TasksResourceTest extends ResourceTest {
 		final String expectedResultString = DMPPersistenceUtil.getResourceAsString("controller_task-result.json");
 
 		final ArrayNode expectedJSONArray = objectMapper.readValue(expectedResultString, ArrayNode.class);
-		final ObjectNode expectedJSON = (ObjectNode) expectedJSONArray.get(0).get("record_data");
+		final ObjectNode expectedJSON = (ObjectNode) expectedJSONArray.get(0).get("record_data").get(0);
 		final String finalExpectedJSONString = objectMapper.writeValueAsString(expectedJSON);
 
 		final ArrayNode actualJSONArray = objectMapper.readValue(responseString, ArrayNode.class);
-		final ObjectNode actualJSON = (ObjectNode) actualJSONArray.get(0).get("record_data");
+		final ObjectNode actualJSON = (ObjectNode) actualJSONArray.get(0).get("record_data").get(0);
 		final String finalActualJSONString = objectMapper.writeValueAsString(actualJSON);
 
 		assertEquals(finalExpectedJSONString.length(), finalActualJSONString.length());

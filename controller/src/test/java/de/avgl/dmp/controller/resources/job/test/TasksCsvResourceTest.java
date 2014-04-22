@@ -222,19 +222,20 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 		final String actualDataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
 
-		final String expectedRecordDataFieldNameExample = expectedJSONArray.get(0).get("record_data").fieldNames().next();
+		final String expectedRecordDataFieldNameExample = expectedJSONArray.get(0).get("record_data").get(0).fieldNames().next();
 		final String expectedDataResourceSchemaBaseURI = expectedRecordDataFieldNameExample.substring(0,
 				expectedRecordDataFieldNameExample.lastIndexOf('#') + 1);
 
 		for (final JsonNode expectedNode : expectedJSONArray) {
 
-			final String recordData = ((ObjectNode) expectedNode.get("record_data")).get(expectedDataResourceSchemaBaseURI + "description").asText();
+			final String recordData = ((ObjectNode) expectedNode.get("record_data").get(0)).get(expectedDataResourceSchemaBaseURI + "description")
+					.asText();
 			final JsonNode actualNode = getRecordData(recordData, actualJSONArray, actualDataResourceSchemaBaseURI + "description");
 
 			assertThat(actualNode, is(notNullValue()));
 
-			final ObjectNode expectedRecordData = (ObjectNode) expectedNode.get("record_data");
-			final ObjectNode actualRecordData = (ObjectNode) actualNode.get("record_data");
+			final ObjectNode expectedRecordData = (ObjectNode) expectedNode.get("record_data").get(0);
+			final ObjectNode actualRecordData = (ObjectNode) actualNode.get("record_data").get(0);
 
 			assertThat(actualRecordData.get(actualDataResourceSchemaBaseURI + "description").asText(),
 					equalTo(expectedRecordData.get(expectedDataResourceSchemaBaseURI + "description").asText()));
@@ -275,7 +276,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 		dataModelsResourceTestUtils.deleteObject(dataModel);
 		schemasResourceTestUtils.deleteObject(schema);
-
+ 
 		for (final AttributePath attributePath : attributePaths.values()) {
 
 			attributePathsResourceTestUtils.deleteObject(attributePath);
@@ -298,7 +299,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 		for (final JsonNode jsonEntry : jsonArray) {
 
-			final ObjectNode actualRecordData = (ObjectNode) jsonEntry.get("record_data");
+			final ObjectNode actualRecordData = (ObjectNode) jsonEntry.get("record_data").get(0);
 
 			if (recordData.equals(actualRecordData.get(key).asText())) {
 

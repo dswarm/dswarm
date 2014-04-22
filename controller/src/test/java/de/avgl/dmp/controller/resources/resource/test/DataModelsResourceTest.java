@@ -297,18 +297,22 @@ public class DataModelsResourceTest extends
 
 		final JsonNode json = assoziativeJsonArray.get(recordId);
 
+		Assert.assertNotNull("the JSON structure for record '" + recordId + "' shouldn't be null", json);
+
 		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
 
-		assertThat(json.get(dataResourceSchemaBaseURI + "id").asText(),
-				equalTo(data.get().get(recordId).toRawJSON().get(dataResourceSchemaBaseURI + "id").asText()));
-		assertThat(json.get(dataResourceSchemaBaseURI + "year").asText(),
-				equalTo(data.get().get(recordId).toRawJSON().get(dataResourceSchemaBaseURI + "year").asText()));
-		assertThat(json.get(dataResourceSchemaBaseURI + "description").asText(),
-				equalTo(data.get().get(recordId).toRawJSON().get(dataResourceSchemaBaseURI + "description").asText()));
-		assertThat(json.get(dataResourceSchemaBaseURI + "name").asText(),
-				equalTo(data.get().get(recordId).toRawJSON().get(dataResourceSchemaBaseURI + "name").asText()));
-		assertThat(json.get(dataResourceSchemaBaseURI + "isbn").asText(),
-				equalTo(data.get().get(recordId).toRawJSON().get(dataResourceSchemaBaseURI + "isbn").asText()));
+		Assert.assertNotNull("the data resource schema base uri shouldn't be null", dataResourceSchemaBaseURI);
+
+		assertThat(getValue(dataResourceSchemaBaseURI + "id", json),
+				equalTo(getValue(dataResourceSchemaBaseURI + "id", data.get().get(recordId).toRawJSON())));
+		assertThat(getValue(dataResourceSchemaBaseURI + "year", json),
+				equalTo(getValue(dataResourceSchemaBaseURI + "year", data.get().get(recordId).toRawJSON())));
+		assertThat(getValue(dataResourceSchemaBaseURI + "description", json),
+				equalTo(getValue(dataResourceSchemaBaseURI + "description", data.get().get(recordId).toRawJSON())));
+		assertThat(getValue(dataResourceSchemaBaseURI + "name", json),
+				equalTo(getValue(dataResourceSchemaBaseURI + "name", data.get().get(recordId).toRawJSON())));
+		assertThat(getValue(dataResourceSchemaBaseURI + "isbn", json),
+				equalTo(getValue(dataResourceSchemaBaseURI + "isbn", data.get().get(recordId).toRawJSON())));
 
 		// clean up
 
@@ -408,16 +412,18 @@ public class DataModelsResourceTest extends
 
 		final JsonNode expectedJson = data.get().get(recordId).toRawJSON();
 
+		Assert.assertNotNull("the expected data JSON shouldn't be null", expectedJson);
+
 		System.out.println("expected JSON = '" + objectMapper.writeValueAsString(expectedJson) + "'");
 
-		assertThat(json.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status").asText(),
-				equalTo(expectedJson.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status").asText()));
-		assertThat(json.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion").asText(),
-				equalTo(expectedJson.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion").asText()));
-		assertThat(json.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ").asText(),
-				equalTo(expectedJson.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ").asText()));
-		assertThat(json.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld").size(),
-				equalTo(expectedJson.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld").size()));
+		assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", json),
+				equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", expectedJson)));
+		assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion", json),
+				equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion", expectedJson)));
+		assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ", json),
+				equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ", expectedJson)));
+		assertThat(getValueNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld", json).size(),
+				equalTo(getValueNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld", expectedJson).size()));
 
 		// clean up
 
@@ -549,5 +555,46 @@ public class DataModelsResourceTest extends
 		Assert.assertEquals("data model configuration shoud be equal", updateDataModel.getConfiguration(), persistedDataModel.getConfiguration());
 
 		return updateDataModel;
+	}
+
+	private JsonNode getValueNode(final String key, final JsonNode json) {
+
+		Assert.assertNotNull("the JSON structure shouldn't be null", json);
+		Assert.assertTrue("the JSON structure should be an array", json.isArray());
+		Assert.assertNotNull("the key shouldn't be null", key);
+
+		for (final JsonNode jsonEntry : json) {
+
+			Assert.assertTrue("the entries of the JSON array should be JSON objects", jsonEntry.isObject());
+
+			final JsonNode jsonNode = jsonEntry.get(key);
+
+			if (jsonNode == null) {
+
+				continue;
+			}
+
+			return jsonNode;
+		}
+
+		Assert.assertTrue("couldn't find element with key '" + key + "' in JSON structure '" + json + "'", false);
+
+		return null;
+	}
+
+	private String getValue(final String key, final JsonNode json) {
+
+		final JsonNode jsonNode = getValueNode(key, json);
+
+		if (jsonNode == null) {
+
+			Assert.assertTrue("couldn't find element with key '" + key + "' in JSON structure '" + json + "'", false);
+
+			return null;
+		}
+
+		Assert.assertTrue("the value should be a string", jsonNode.isTextual());
+
+		return jsonNode.asText();
 	}
 }
