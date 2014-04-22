@@ -49,7 +49,7 @@ public final class TripleEncoder extends DefaultStreamPipe<ObjectReceiver<RDFMod
 
 		this.dataModel = dataModel;
 		this.dataModelUri = init(dataModel);
-		
+
 	}
 
 	@Override
@@ -130,20 +130,20 @@ public final class TripleEncoder extends DefaultStreamPipe<ObjectReceiver<RDFMod
 		// TODO: only literals atm, i.e., how to determine other resources?
 		// => still valid: how to determine other resources!
 		if (name == null) {
-			
+
 			return;
 		}
-		
+
 		final String propertyUri;
-		
-		if(isValidUri(name)) {
-			
+
+		if (isValidUri(name)) {
+
 			propertyUri = name;
 		} else {
-			
+
 			propertyUri = mintUri(dataModelUri.get(), name);
 		}
-		
+
 		if (value != null && !value.isEmpty()) {
 
 			final Property attributeProperty = model.createProperty(propertyUri);
@@ -159,6 +159,11 @@ public final class TripleEncoder extends DefaultStreamPipe<ObjectReceiver<RDFMod
 	}
 
 	private Optional<String> init(final Optional<DataModel> dataModel) {
+		
+		if(!dataModel.isPresent()) {
+			
+			return Optional.fromNullable(StringUtils.stripEnd(DataModelUtils.determineDataModelSchemaBaseURI(null), "#"));
+		}
 
 		return dataModel.transform(new Function<DataModel, String>() {
 

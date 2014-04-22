@@ -10,6 +10,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.culturegraph.mf.framework.DefaultObjectPipe;
@@ -22,7 +23,10 @@ import org.culturegraph.mf.stream.sink.ObjectJavaIoWriter;
 import org.culturegraph.mf.stream.source.ResourceOpener;
 import org.culturegraph.mf.stream.source.StringReader;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
@@ -54,7 +58,7 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
  * Flow that executes a given set of transformations on data of a given data model.
- *
+ * 
  * @author phorn
  * @author tgaengler
  */
@@ -117,14 +121,58 @@ public class TransformationFlow {
 		return applyDemo(record, opener);
 	}
 
-	// public String applyResource(final String resourcePath) {
-	//
-	// // public String applyResource(final String resourcePath) {
-	// //
-	// // final ResourceOpener opener = new ResourceOpener();
-	// //
-	// // return apply(resourcePath, opener);
-	// // }
+	public String applyRecord(final String record) throws DMPConverterException {
+
+		// TODO: convert JSON string to Iterator with tuples of string + JsonNode pairs
+		List<Tuple<String, JsonNode>> tuplesList = null;
+
+		try {
+
+			tuplesList = DMPPersistenceUtil.getJSONObjectMapper().readValue(record, new TypeReference<List<Tuple<String, JsonNode>>>() {
+			});
+		} catch (final JsonParseException e) {
+
+			// TODO: log something
+		} catch (final JsonMappingException e) {
+
+			// TODO: log something
+		} catch (final IOException e) {
+
+			// TODO: log something
+		}
+
+		if (tuplesList == null) {
+
+			// TODO: log something
+
+			return null;
+		}
+
+		return apply(tuplesList.iterator(), false);
+	}
+
+	public String applyResource(final String resourcePath) throws DMPConverterException {
+
+		String resourceString = null;
+
+		try {
+			
+			resourceString = DMPPersistenceUtil.getResourceAsString(resourcePath);
+		} catch (final IOException e) {
+
+			// TODO: log something
+		}
+
+		if (resourceString == null) {
+
+			// TODO log something
+
+			return null;
+		}
+
+		return applyRecord(resourceString);
+	}
+
 	//
 	// String applyResourceDemo(final String resourcePath) {
 	//
@@ -264,14 +312,14 @@ public class TransformationFlow {
 
 					final String message = "couldn't persistent the the result of the transformation: " + e1.getMessage();
 
-					LOG.error(message);
+					TransformationFlow.LOG.error(message);
 
 					throw new DMPConverterException(message, e1);
 				}
 
 			} else {
 
-				LOG.warn("Wanted to persist, but could not find OutputDataModel");
+				TransformationFlow.LOG.warn("Wanted to persist, but could not find OutputDataModel");
 			}
 		}
 
@@ -284,7 +332,7 @@ public class TransformationFlow {
 
 			final String message = "couldn't convert result into JSON";
 
-			LOG.error(message);
+			TransformationFlow.LOG.error(message);
 
 			throw new DMPConverterException(message, e);
 		}

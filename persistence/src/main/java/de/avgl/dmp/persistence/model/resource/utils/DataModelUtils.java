@@ -45,9 +45,15 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 
 		if (dataModel == null) {
 
-			LOG.error("data model shouldn't be null at data model base uri determination");
+			LOG.error("data model shouldn't be really null at data model base uri determination; however I'll create a uri with a random uuid instead ...");
 
-			return null;
+			final StringBuilder sb = new StringBuilder();
+
+			// create uri with random uuid
+
+			sb.append("http://data.slub-dresden.de/datamodels/").append(UUID.randomUUID());
+
+			return sb.toString();
 		}
 
 		// create data resource base uri
@@ -176,9 +182,10 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 
 		return recordResource;
 	}
-	
-	public static de.avgl.dmp.graph.json.Resource mintRecordResource(final Long identifier, final DataModel dataModel, final Map<Long, de.avgl.dmp.graph.json.Resource> recordResources,
-			final de.avgl.dmp.graph.json.Model model, final ResourceNode recordClassNode) {
+
+	public static de.avgl.dmp.graph.json.Resource mintRecordResource(final Long identifier, final DataModel dataModel,
+			final Map<Long, de.avgl.dmp.graph.json.Resource> recordResources, final de.avgl.dmp.graph.json.Model model,
+			final ResourceNode recordClassNode) {
 
 		if (identifier != null) {
 

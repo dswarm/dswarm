@@ -13,11 +13,13 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.base.Optional;
 import com.google.common.collect.AbstractIterator;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.Provider;
 
@@ -134,7 +136,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 			final Collection<de.avgl.dmp.graph.json.Resource> resources = aModel.getResources();
 
 			for (final de.avgl.dmp.graph.json.Resource aResource : resources) {
-				
+
 				model.addResource(aResource);
 
 				if (recordClassUri == null) {
@@ -162,7 +164,24 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		final Optional<Map<String, Model>> optionalModelMap = gdmService.getObjects(updatedDataModel.getId(), Optional.of(1));
 
-		final Iterator<Tuple<String, JsonNode>> tuples = dataIterator(optionalModelMap.get().entrySet().iterator());
+		Assert.assertTrue("there is no map of entry models in the database", optionalModelMap.isPresent());
+
+		final Map<String, Model> modelMap = optionalModelMap.get();
+
+		Assert.assertNotNull("the model map shouldn't be null", modelMap);
+
+		final Iterator<Tuple<String, JsonNode>> tuples = dataIterator(modelMap.entrySet().iterator());
+		
+//		final List<Tuple<String, JsonNode>> tuplesList = Lists.newLinkedList();
+//		
+//		while(tuples.hasNext()) {
+//			
+//			tuplesList.add(tuples.next());
+//		}
+//		
+//		final String tuplesJSON = objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true).writeValueAsString(tuplesList);
+//		
+//		System.out.println(tuplesJSON);
 
 		final String dataModelJSONString = objectMapper.writeValueAsString(updatedDataModel);
 		final ObjectNode dataModelJSON = objectMapper.readValue(dataModelJSONString, ObjectNode.class);
