@@ -9,7 +9,7 @@
 
 		<!-- <data name="out" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/> -->
 
-		<combine name="ok" value="${out}" sameEntity="true" reset="true">
+		<combine name="ok" value="${out}" sameEntity="true" reset="false">
 			
 			<!-- filter elements -->
 			<data
