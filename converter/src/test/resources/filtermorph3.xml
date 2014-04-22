@@ -1,0 +1,35 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;"
+	version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+	<meta>
+		<name>mapping1</name>
+	</meta>
+	<rules>
+		<!-- <combine name="ok3" value="${ok2}"> -->
+		<!-- <data name="out" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/> -->
+		<!-- flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value" -->
+		<combine name="@ok3" value="${ok}" sameEntity="true" reset="true"> <!-- flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld" -->
+			<combine name="ok" value="${out}" sameEntity="true" reset="false">
+				<data
+					source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
+					<equals string="p" />
+				</data>
+				<data
+					source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
+					<equals string="077" />
+				</data>
+
+				<data name="out"
+					source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value" />
+			</combine>
+			<!--<data name="@ok2" source="@ok"> -->
+			<!-- <occurrence only="2" /> -->
+			<!-- </data> -->
+		</combine>
+		<data name="ok4" source="@ok3">
+			<!-- <occurrence only="2" /> -->
+		</data>
+		<!-- </combine> -->
+	</rules>
+</metamorph>

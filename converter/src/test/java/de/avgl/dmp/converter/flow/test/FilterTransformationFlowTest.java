@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -48,6 +49,47 @@ public class FilterTransformationFlowTest extends GuicedTest {
 		final TransformationFlow flow = TransformationFlow.fromFile("filtermorph2.xml", internalModelServiceFactoryProvider);
 
 		final String actual = flow.applyResource("test-mabxml.tuples.2.json");
+
+		final ArrayNode expectedJson = replaceKeyWithActualKey(expected, actual);
+		final String finalExpected = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(expectedJson);
+
+		assertEquals(finalExpected, actual);
+	}
+
+	/**
+	 * TODO: fix this - this test doesn't work yet as expected - or? - i.e. we need to find the entity boarder to be able to
+	 * combine it with an index (occurrence)
+	 * 
+	 * @throws Exception
+	 */
+	@Ignore
+	@Test
+	public void testFilterEndToEndWithMultipleResultsAndRepeatableElements() throws Exception {
+
+		final String expected = DMPPersistenceUtil.getResourceAsString("test-mabxml.filter.result.3.json");
+
+		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = injector.getProvider(InternalModelServiceFactory.class);
+
+		final TransformationFlow flow = TransformationFlow.fromFile("filtermorph3.xml", internalModelServiceFactoryProvider);
+
+		final String actual = flow.applyResource("test-mabxml.tuples.json");
+
+		final ArrayNode expectedJson = replaceKeyWithActualKey(expected, actual);
+		final String finalExpected = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(expectedJson);
+
+		assertEquals(finalExpected, actual);
+	}
+
+	@Test
+	public void testFilterEndToEndWithMultipleResultsAndSelectingSpecificIndex() throws Exception {
+
+		final String expected = DMPPersistenceUtil.getResourceAsString("test-mabxml.filter.result.4.json");
+
+		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = injector.getProvider(InternalModelServiceFactory.class);
+
+		final TransformationFlow flow = TransformationFlow.fromFile("filtermorph4.xml", internalModelServiceFactoryProvider);
+
+		final String actual = flow.applyResource("test-mabxml.tuples.json");
 
 		final ArrayNode expectedJson = replaceKeyWithActualKey(expected, actual);
 		final String finalExpected = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(expectedJson);
