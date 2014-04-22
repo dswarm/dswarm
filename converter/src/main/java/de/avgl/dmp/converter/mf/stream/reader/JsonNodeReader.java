@@ -88,7 +88,7 @@ public class JsonNodeReader extends DefaultObjectPipe<Iterator<Tuple<String, Jso
 
 	private void processNode(final StreamReceiver receiver, final String fieldName, final JsonNode node, final boolean isEntity) throws IOException {
 
-		System.out.println("is entity = '" + isEntity + "'");
+		// System.out.println("is entity = '" + isEntity + "'");
 
 		switch (node.getNodeType()) {
 			case OBJECT:
@@ -101,7 +101,7 @@ public class JsonNodeReader extends DefaultObjectPipe<Iterator<Tuple<String, Jso
 
 			case ARRAY:
 
-				System.out.println("field '" + fieldName + "' value is an array");
+				// System.out.println("field '" + fieldName + "' value is an array");
 
 				if (isEntity) {
 
