@@ -5,8 +5,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -32,6 +32,7 @@ import javax.xml.validation.SchemaFactory;
 
 import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.text.translate.NumericEntityEscaper;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -41,7 +42,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.google.common.io.ByteSource;
+import com.google.common.io.CharSource;
 import com.google.common.io.Resources;
 
 import de.avgl.dmp.converter.DMPConverterException;
@@ -83,9 +84,9 @@ public class MorphScriptBuilder {
 		MorphScriptBuilder.TRANSFORMER_FACTORY.setAttribute("indent-number", 4);
 
 		final URL resource = Resources.getResource(MorphScriptBuilder.SCHEMA_PATH);
-		final ByteSource inputStreamInputSupplier = Resources.asByteSource(resource);
+		final CharSource inputStreamInputSupplier = Resources.asCharSource(resource, Charsets.UTF_8);
 
-		try (final InputStream schemaStream = inputStreamInputSupplier.openStream()) {
+		try (final Reader schemaStream = inputStreamInputSupplier.openStream()) {
 
 			// final StreamSource SCHEMA_SOURCE = new StreamSource(schemaStream);
 			final SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -489,7 +490,7 @@ public class MorphScriptBuilder {
 
 		List<Element> datas = null;
 
-		final String inputAttributePathStringXMLEscaped = StringEscapeUtils.escapeXml11(inputAttributePathString);
+		final String inputAttributePathStringXMLEscaped = StringEscapeUtils.escapeXml(inputAttributePathString);
 
 		for (final String variable : variables) {
 
@@ -523,7 +524,8 @@ public class MorphScriptBuilder {
 			return null;
 		}
 
-		final String outputAttributePathStringXMLEscaped = StringEscapeUtils.escapeXml11(outputAttributePathString);
+		// .ESCAPE_XML11.with(NumericEntityEscaper.between(0x7f, Integer.MAX_VALUE)).translate( <- also doesn't work
+		final String outputAttributePathStringXMLEscaped = StringEscapeUtils.escapeXml(outputAttributePathString);
 
 		// TODO: maybe add mapping to default output variable identifier, if output attribute path is not part of the parameter
 		// mappings of the transformation component
@@ -563,18 +565,19 @@ public class MorphScriptBuilder {
 
 		final Element data = doc.createElement("data");
 		data.setAttribute("source",
-				StringEscapeUtils.escapeXml11(inputMappingAttributePathInstances.iterator().next().getAttributePath().toAttributePath()));
+				StringEscapeUtils.escapeXml(inputMappingAttributePathInstances.iterator().next().getAttributePath().toAttributePath()));
 
-		data.setAttribute("name", StringEscapeUtils.escapeXml11(outputMappingAttributePathInstance.getAttributePath().toAttributePath()));
+		data.setAttribute("name", StringEscapeUtils.escapeXml(outputMappingAttributePathInstance.getAttributePath().toAttributePath()));
 
 		rules.appendChild(data);
 	}
 
 	private void processTransformationComponentFunction(final Component transformationComponent, final Mapping mapping,
 			final Map<String, List<String>> inputAttributePathVariablesMap, final Element rules) {
-		
+
 		final String transformationOutputVariableIdentifier = determineTransformationOutputVariable(transformationComponent);
-		final String finalTransformationOutputVariableIdentifier = transformationOutputVariableIdentifier == null ? OUTPUT_VARIABLE_PREFIX_IDENTIFIER : transformationOutputVariableIdentifier;
+		final String finalTransformationOutputVariableIdentifier = transformationOutputVariableIdentifier == null ? OUTPUT_VARIABLE_PREFIX_IDENTIFIER
+				: transformationOutputVariableIdentifier;
 
 		final Function transformationFunction = transformationComponent.getFunction();
 
@@ -622,7 +625,8 @@ public class MorphScriptBuilder {
 		}
 	}
 
-	private void processComponent(final Component component, final Map<String, List<String>> inputAttributePathVariablesMap, final String transformationOutputVariableIdentifier, final Element rules) {
+	private void processComponent(final Component component, final Map<String, List<String>> inputAttributePathVariablesMap,
+			final String transformationOutputVariableIdentifier, final Element rules) {
 
 		String[] inputStrings = {};
 

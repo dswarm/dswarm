@@ -190,7 +190,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 		final ObjectNode transformationComponentParameterMappingsJSON = (ObjectNode) ((ObjectNode) mappingJSON.get("transformation"))
 				.get("parameter_mappings");
 		transformationComponentParameterMappingsJSON.put("description", dataResourceSchemaBaseURI + outputAttributeName);
-		transformationComponentParameterMappingsJSON.put("transformationOutputVariable", dataResourceSchemaBaseURI + outputAttributeName);
+		transformationComponentParameterMappingsJSON.put("__TRANSFORMATION_OUTPUT_VARIABLE__1", dataResourceSchemaBaseURI + outputAttributeName);
 
 		final String finalTaskJSONString = objectMapper.writeValueAsString(taskJSON);
 
