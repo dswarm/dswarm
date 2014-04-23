@@ -2,7 +2,6 @@ package de.avgl.dmp.persistence.model.internal.impl.test;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Set;
 
 import org.apache.commons.io.Charsets;
 import org.junit.Assert;
@@ -18,7 +17,6 @@ import com.google.common.io.Resources;
 import de.avgl.dmp.graph.json.Model;
 import de.avgl.dmp.graph.json.util.Util;
 import de.avgl.dmp.persistence.model.internal.gdm.GDMModel;
-import de.avgl.dmp.persistence.model.internal.helper.AttributePathHelper;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -37,6 +35,13 @@ public class GDMModelTest {
 
 		testToJSONInternal("test-complex-xml.gson", "http://data.slub-dresden.de/records/7fc13720-2859-477d-9127-5ec65f82220e",
 				"test-complex-xml.json");
+	}
+	
+	@Test
+	public void testToJSON3() {
+
+		testToJSONInternal("test-pnx.gson", "http://data.slub-dresden.de/datamodels/1/records/a95c0401-5acf-471d-aefb-14cdf0f5deb2",
+				"test-pnx.json");
 	}
 
 	@Test

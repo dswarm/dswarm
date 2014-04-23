@@ -1,0 +1,2370 @@
+[ {
+  "http://data.slub-dresden.de/datamodels/1/records/a95c0401-5acf-471d-aefb-14cdf0f5deb2" : [ {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/records/a95c0401-5acf-471d-aefb-14cdf0f5deb2"
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#recordType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/records/a95c0401-5acf-471d-aefb-14cdf0f5deb2"
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#control",
+    "o" : {
+      "id" : 1
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 1
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#controlType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 1
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#sourcerecordid",
+    "o" : {
+      "id" : 2
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 2
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#sourcerecordidType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 2
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "63275"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 1
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#sourceid",
+    "o" : {
+      "id" : 3
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 3
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#sourceidType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 3
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "libero_mab2"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 1
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#recordid",
+    "o" : {
+      "id" : 4
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 4
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#recordidType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 4
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "libero_mab263275"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 1
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#ilsapiid",
+    "o" : {
+      "id" : 5
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 5
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#ilsapiidType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 5
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "63275"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 1
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#addsrcrecordid",
+    "o" : {
+      "id" : 6
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 6
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#addsrcrecordidType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 6
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "63275"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 1
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#sourceformat",
+    "o" : {
+      "id" : 7
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 7
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#sourceformatType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 7
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "MAB"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 1
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#sourcesystem",
+    "o" : {
+      "id" : 8
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 8
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#sourcesystemType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 8
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "Other"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/records/a95c0401-5acf-471d-aefb-14cdf0f5deb2"
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#display",
+    "o" : {
+      "id" : 9
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 9
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#displayType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 9
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#type",
+    "o" : {
+      "id" : 10
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 10
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#typeType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 10
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "book"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 9
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#title",
+    "o" : {
+      "id" : 11
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 11
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#titleType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 11
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "Apel, Heinrich Eduard: Disputationes de iis, quae Carolus Miltitius cum Luthero, inprimis Altenburgi in aedibus Spalatini, egerit - 1"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 9
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#publisher",
+    "o" : {
+      "id" : 12
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 12
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#publisherType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 12
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "Typogr. Aulico"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 9
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#creationdate",
+    "o" : {
+      "id" : 13
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 13
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#creationdateType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 13
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "1844"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 9
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#format",
+    "o" : {
+      "id" : 14
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 14
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#formatType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 14
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "18 S."
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 9
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#ispartof",
+    "o" : {
+      "id" : 15
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 15
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#ispartofType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 15
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "Sacra anniversaria illustris Gymnasii Fridericiani Altenburgensis ... rite celebranda indicit ; 1844"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 9
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#language",
+    "o" : {
+      "id" : 16
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 16
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#languageType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 16
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "lat"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 9
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#relation",
+    "o" : {
+      "id" : 17
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 17
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#relationType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 17
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "Sacra anniversaria illustris Gymnasii Fridericiani Altenburgensis ... rite celebranda indicit ; 1844"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 9
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#availlibrary",
+    "o" : {
+      "id" : 18
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 18
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#availlibraryType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 18
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "$$ISLUB$$Lzell1$$1Magazin$$Savailable$$3MAG$$X32515514$$Yzell1 "
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 9
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#lds12",
+    "o" : {
+      "id" : 19
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 19
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#lds12Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 19
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "Apel, Heinrich Eduard: Disputationes de iis, quae Carolus Miltitius cum Luthero, inprimis Altenburgi in aedibus Spalatini, egerit - 1"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 9
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#lds17",
+    "o" : {
+      "id" : 20
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 20
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#lds17Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 20
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "Buch"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 9
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#lds18",
+    "o" : {
+      "id" : 21
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 21
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#lds18Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 21
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "Typogr. Aulico"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 9
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#lds21",
+    "o" : {
+      "id" : 22
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 22
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#lds21Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 22
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "032431163"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 9
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#lds22",
+    "o" : {
+      "id" : 23
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 23
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#lds22Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 23
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "074958739"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 9
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#lds28",
+    "o" : {
+      "id" : 24
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 24
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#lds28Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 24
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "Altenburgi :"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 9
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#lds31",
+    "o" : {
+      "id" : 25
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 25
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#lds31Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 25
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "Apel, Heinrich Eduard: Disputationes de iis, quae Carolus Miltitius cum Luthero, inprimis Altenburgi in aedibus Spalatini, egerit"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 9
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#lds32",
+    "o" : {
+      "id" : 26
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 26
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#lds32Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 26
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "Friedrichs-Gymnasium &lt;Altenburg, Leipzig&gt;: Sacra anniversaria illustris Gymnasii Fridericiani Altenburgensis ... rite celebranda indicit"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 9
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#lds39",
+    "o" : {
+      "id" : 27
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 27
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#lds39Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 27
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "Sacra anniversaria illustris Gymnasii Fridericiani Altenburgensis ... rite celebranda indicit ; 1844"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 9
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#availinstitution",
+    "o" : {
+      "id" : 28
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 28
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#availinstitutionType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 28
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "$$ISLUB$$Savailable"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 9
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#availpnx",
+    "o" : {
+      "id" : 29
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 29
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#availpnxType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 29
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "available"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/records/a95c0401-5acf-471d-aefb-14cdf0f5deb2"
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#links",
+    "o" : {
+      "id" : 30
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 30
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#linksType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 30
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#linktoholdings",
+    "o" : {
+      "id" : 31
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 31
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#linktoholdingsType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 31
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "$$Tlibero_holdings"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/records/a95c0401-5acf-471d-aefb-14cdf0f5deb2"
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#search",
+    "o" : {
+      "id" : 32
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#searchType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#title",
+    "o" : {
+      "id" : 33
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 33
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#titleType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 33
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "Apel, Heinrich Eduard: Disputationes de iis, quae Carolus Miltitius cum Luthero, inprimis Altenburgi in aedibus Spalatini, egerit"
+    }
+  }, {
+    "order" : 2,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#title",
+    "o" : {
+      "id" : 34
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 34
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#titleType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 34
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "1"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#sourceid",
+    "o" : {
+      "id" : 35
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 35
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#sourceidType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 35
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "libero_mab2"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#recordid",
+    "o" : {
+      "id" : 36
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 36
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#recordidType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 36
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "libero_mab263275"
+    }
+  }, {
+    "order" : 2,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#recordid",
+    "o" : {
+      "id" : 37
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 37
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#recordidType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 37
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "032431201"
+    }
+  }, {
+    "order" : 3,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#recordid",
+    "o" : {
+      "id" : 38
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 38
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#recordidType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 38
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "63275"
+    }
+  }, {
+    "order" : 4,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#recordid",
+    "o" : {
+      "id" : 39
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 39
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#recordidType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 39
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "311720309"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#rsrctype",
+    "o" : {
+      "id" : 40
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 40
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#rsrctypeType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 40
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "book"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#creationdate",
+    "o" : {
+      "id" : 41
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 41
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#creationdateType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 41
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "1844"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#addtitle",
+    "o" : {
+      "id" : 42
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 42
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#addtitleType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 42
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "Sacra anniversaria illustris Gymnasii Fridericiani Altenburgensis ... rite celebranda indicit ; 1844"
+    }
+  }, {
+    "order" : 2,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#addtitle",
+    "o" : {
+      "id" : 43
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 43
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#addtitleType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 43
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "Friedrichs-Gymnasium &lt;Altenburg, Leipzig&gt;: Sacra anniversaria illustris Gymnasii Fridericiani Altenburgensis ... rite celebranda indicit"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#addsrcrecordid",
+    "o" : {
+      "id" : 44
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 44
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#addsrcrecordidType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 44
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "63275"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#searchscope",
+    "o" : {
+      "id" : 45
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 45
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#searchscopeType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 45
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "libero_mab2"
+    }
+  }, {
+    "order" : 2,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#searchscope",
+    "o" : {
+      "id" : 46
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 46
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#searchscopeType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 46
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "SC_SLUB-ZB"
+    }
+  }, {
+    "order" : 3,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#searchscope",
+    "o" : {
+      "id" : 47
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 47
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#searchscopeType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 47
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "EXL"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#scope",
+    "o" : {
+      "id" : 48
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 48
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#scopeType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 48
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "libero_mab2"
+    }
+  }, {
+    "order" : 2,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#scope",
+    "o" : {
+      "id" : 49
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 49
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#scopeType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 49
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "SC_SLUB-ZB"
+    }
+  }, {
+    "order" : 3,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#scope",
+    "o" : {
+      "id" : 50
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 50
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#scopeType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 50
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "EXL"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#lsr01",
+    "o" : {
+      "id" : 51
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 51
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#lsr01Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 51
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "32515514"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#lsr04",
+    "o" : {
+      "id" : 52
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 52
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#lsr04Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 52
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "Hist.Sax.D.527,1.m-1"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#lsr05",
+    "o" : {
+      "id" : 53
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 53
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#lsr05Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 53
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "Typogr. Aulico"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#lsr06",
+    "o" : {
+      "id" : 54
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 54
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#lsr06Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 54
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "MAG"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#lsr20",
+    "o" : {
+      "id" : 55
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 55
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#lsr20Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 55
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "032431201"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#lsr21",
+    "o" : {
+      "id" : 56
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 56
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#lsr21Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 56
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "032431163"
+    }
+  }, {
+    "order" : 2,
+    "s" : {
+      "id" : 32
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#lsr21",
+    "o" : {
+      "id" : 57
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 57
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#lsr21Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 57
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "074958739"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/records/a95c0401-5acf-471d-aefb-14cdf0f5deb2"
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#sort",
+    "o" : {
+      "id" : 58
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 58
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#sortType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 58
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#title",
+    "o" : {
+      "id" : 59
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 59
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#titleType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 59
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "Apel, Heinrich Eduard: Disputationes de iis, quae Carolus Miltitius cum Luthero, inprimis Altenburgi in aedibus Spalatini, egerit - 1"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 58
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#creationdate",
+    "o" : {
+      "id" : 60
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 60
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#creationdateType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 60
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "1844"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/records/a95c0401-5acf-471d-aefb-14cdf0f5deb2"
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#facets",
+    "o" : {
+      "id" : 61
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 61
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#facetsType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 61
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#language",
+    "o" : {
+      "id" : 62
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 62
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#languageType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 62
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "lat"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 61
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#creationdate",
+    "o" : {
+      "id" : 63
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 63
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#creationdateType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 63
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "1844"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 61
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#prefilter",
+    "o" : {
+      "id" : 64
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 64
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#prefilterType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 64
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "books"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 61
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#rsrctype",
+    "o" : {
+      "id" : 65
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 65
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#rsrctypeType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 65
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "books"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 61
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#lfc01",
+    "o" : {
+      "id" : 66
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 66
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#lfc01Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 66
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "available"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 61
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#lfc02",
+    "o" : {
+      "id" : 67
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 67
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#lfc02Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 67
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "zell1"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 61
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#toplevel",
+    "o" : {
+      "id" : 68
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 68
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#toplevelType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 68
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "available"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/records/a95c0401-5acf-471d-aefb-14cdf0f5deb2"
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#dedup",
+    "o" : {
+      "id" : 69
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 69
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#dedupType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 69
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#t",
+    "o" : {
+      "id" : 70
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 70
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#tType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 70
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "99"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 69
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#c1",
+    "o" : {
+      "id" : 71
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 71
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#c1Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 71
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "032431201"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 69
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#c4",
+    "o" : {
+      "id" : 72
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 72
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#c4Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 72
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "1844"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 69
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#f1",
+    "o" : {
+      "id" : 73
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 73
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#f1Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 73
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "032431201"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 69
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#f6",
+    "o" : {
+      "id" : 74
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 74
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#f6Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 74
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "1844"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 69
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#f10",
+    "o" : {
+      "id" : 75
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 75
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#f10Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 75
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "typog"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/records/a95c0401-5acf-471d-aefb-14cdf0f5deb2"
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#frbr",
+    "o" : {
+      "id" : 76
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 76
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#frbrType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 76
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#t",
+    "o" : {
+      "id" : 77
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 77
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#tType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 77
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "99"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/records/a95c0401-5acf-471d-aefb-14cdf0f5deb2"
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#delivery",
+    "o" : {
+      "id" : 78
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 78
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#deliveryType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 78
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#institution",
+    "o" : {
+      "id" : 79
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 79
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#institutionType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 79
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "EXL"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 78
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#delcategory",
+    "o" : {
+      "id" : 80
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 80
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#delcategoryType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 80
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "Physical Item"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/records/a95c0401-5acf-471d-aefb-14cdf0f5deb2"
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#ranking",
+    "o" : {
+      "id" : 81
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 81
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#rankingType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 81
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#booster2",
+    "o" : {
+      "id" : 82
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 82
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#booster2Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 82
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "1"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/records/a95c0401-5acf-471d-aefb-14cdf0f5deb2"
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#addata",
+    "o" : {
+      "id" : 83
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 83
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#addataType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 83
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#btitle",
+    "o" : {
+      "id" : 84
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 84
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#btitleType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 84
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "Apel, Heinrich Eduard: Disputationes de iis, quae Carolus Miltitius cum Luthero, inprimis Altenburgi in aedibus Spalatini, egerit - 1"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 83
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#addtitle",
+    "o" : {
+      "id" : 85
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 85
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#addtitleType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 85
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "Sacra anniversaria illustris Gymnasii Fridericiani Altenburgensis ... rite celebranda indicit ; 1844"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 83
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#format",
+    "o" : {
+      "id" : 86
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 86
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#formatType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 86
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "book"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 83
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#genre",
+    "o" : {
+      "id" : 87
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 87
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#genreType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 87
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "book"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 83
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#cop",
+    "o" : {
+      "id" : 88
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 88
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#copType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 88
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "Altenburgi"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 83
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#pub",
+    "o" : {
+      "id" : 89
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 89
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#pubType"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 89
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "Typogr. Aulico"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 83
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#lad04",
+    "o" : {
+      "id" : 90
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 90
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#lad04Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 90
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "dbodproxy_du"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 83
+    },
+    "p" : "http://data.slub-dresden.de/datamodels/1/schema#lad05",
+    "o" : {
+      "id" : 91
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 91
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/1/schema#lad05Type"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "id" : 91
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "o" : {
+      "v" : "dbodproxy_du"
+    }
+  } ]
+} ]

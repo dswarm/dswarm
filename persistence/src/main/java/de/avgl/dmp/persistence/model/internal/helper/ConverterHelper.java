@@ -68,12 +68,14 @@ public class ConverterHelper {
 	}
 
 	/**
-	 * Serialises the property + object list to a JSON object.
+	 * Serialises the property + object list to a JSON array.
 	 * 
-	 * @param json the JSON object that should be filled
-	 * @return the filled JSON object
+	 * @param json the JSON array that should be filled
+	 * @return the filled JSON array
 	 */
-	public ObjectNode build(final ObjectNode json) {
+	public ArrayNode build(final ArrayNode json) {
+
+		final ObjectNode objectJSONObject = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
 
 		if (isArray()) {
 
@@ -91,19 +93,21 @@ public class ConverterHelper {
 				arrayNode.add(object.getLiteralOrURI());
 			}
 
-			json.put(property, arrayNode);
+			objectJSONObject.put(property, arrayNode);
 		} else {
 
 			final Object object = objects.get(0);
 
 			if (object.isJsonNode()) {
 
-				json.put(property, object.getJsonNode());
+				objectJSONObject.put(property, object.getJsonNode());
 			} else {
 
-				json.put(property, object.getLiteralOrURI());
+				objectJSONObject.put(property, object.getLiteralOrURI());
 			}
 		}
+
+		json.add(objectJSONObject);
 
 		return json;
 	}

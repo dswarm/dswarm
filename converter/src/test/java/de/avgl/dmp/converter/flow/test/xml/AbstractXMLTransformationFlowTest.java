@@ -265,11 +265,15 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 	protected void compareResults(final String expectedResultJSONString, final String actualResultJSONString) throws Exception {
 
 		final ArrayNode expectedJSONArray = objectMapper.readValue(expectedResultJSONString, ArrayNode.class);
-		final ObjectNode expectedJSON = (ObjectNode) expectedJSONArray.get(0).fields().next().getValue();
+		final ObjectNode expectedElementInArray = (ObjectNode) expectedJSONArray.get(0);
+		final String expectedKeyInArray = expectedElementInArray.fieldNames().next();
+		final ObjectNode expectedJSON = (ObjectNode) expectedElementInArray.get(expectedKeyInArray).get(0);
 		final String finalExpectedJSONString = objectMapper.writeValueAsString(expectedJSON);
 
 		final ArrayNode actualJSONArray = objectMapper.readValue(actualResultJSONString, ArrayNode.class);
-		final ObjectNode actualJSON = (ObjectNode) actualJSONArray.get(0).fields().next().getValue();
+		final ObjectNode actualElementInArray = (ObjectNode) actualJSONArray.get(0);
+		final String actualKeyInArray = actualElementInArray.fieldNames().next();
+		final ObjectNode actualJSON = (ObjectNode) actualElementInArray.get(actualKeyInArray).get(0);
 		final String finalActualJSONString = objectMapper.writeValueAsString(actualJSON);
 
 		assertEquals(finalExpectedJSONString.length(), finalActualJSONString.length());

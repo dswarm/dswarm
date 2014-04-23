@@ -242,20 +242,27 @@ public class TransformationFlowTest extends GuicedTest {
 
 		final String actualDataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(updatedDataModel);
 
-		final String expectedRecordDataFieldNameExample = expectedJSONArray.get(0).fields().next().getValue().fieldNames().next();
+		final ObjectNode firstExpectedElement = (ObjectNode) expectedJSONArray.get(0);
+		final String firstExpectedKey = firstExpectedElement.fieldNames().next();
+		final String expectedRecordDataFieldNameExample = firstExpectedElement.get(firstExpectedKey).get(0).fieldNames().next();
 		final String expectedDataResourceSchemaBaseURI = expectedRecordDataFieldNameExample.substring(0,
 				expectedRecordDataFieldNameExample.lastIndexOf('#') + 1);
 
 		for (final JsonNode expectedNode : expectedJSONArray) {
 
-			final String recordData = ((ObjectNode) expectedNode.fields().next().getValue()).get(expectedDataResourceSchemaBaseURI + "description")
+			final ObjectNode expectedElementInArray = (ObjectNode) expectedNode;
+			final String expectedKeyInArray = expectedElementInArray.fieldNames().next();
+			final String recordData = ((ObjectNode) expectedElementInArray.get(expectedKeyInArray).get(0)).get(expectedDataResourceSchemaBaseURI + "description")
 					.asText();
 			final JsonNode actualNode = getRecordData(recordData, actualNodes, actualDataResourceSchemaBaseURI + "description");
 
 			assertThat(actualNode, is(notNullValue()));
 
-			final ObjectNode expectedRecordData = (ObjectNode) expectedNode.fields().next().getValue();
-			final ObjectNode actualRecordData = (ObjectNode) actualNode.fields().next().getValue();
+			final ObjectNode expectedRecordData = (ObjectNode) expectedElementInArray.get(expectedKeyInArray).get(0);
+			
+			final ObjectNode actualElement = (ObjectNode) actualNode;
+			final String actualKey = actualElement.fieldNames().next();
+			final ObjectNode actualRecordData = (ObjectNode) actualElement.get(actualKey).get(0);
 
 			assertThat(actualRecordData.get(actualDataResourceSchemaBaseURI + "description").asText(),
 					equalTo(expectedRecordData.get(expectedDataResourceSchemaBaseURI + "description").asText()));
@@ -435,8 +442,11 @@ public class TransformationFlowTest extends GuicedTest {
 	private JsonNode getRecordData(final String recordData, final ArrayNode jsonArray, final String key) {
 
 		for (final JsonNode jsonEntry : jsonArray) {
+			
+			final ObjectNode actualElementInArray = (ObjectNode) jsonEntry;
+			final String actualKeyInArray = actualElementInArray.fieldNames().next();
 
-			final ObjectNode actualRecordData = (ObjectNode) jsonEntry.fields().next().getValue();
+			final ObjectNode actualRecordData = (ObjectNode) actualElementInArray.get(actualKeyInArray).get(0);
 
 			if (recordData.equals(actualRecordData.get(key).asText())) {
 

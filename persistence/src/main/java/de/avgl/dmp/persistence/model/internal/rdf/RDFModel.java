@@ -194,7 +194,7 @@ public class RDFModel implements Model {
 			return null;
 		}
 
-		final ObjectNode json = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
+		final ArrayNode json = DMPPersistenceUtil.getJSONObjectMapper().createArrayNode();
 
 		convertRDFToJSON(recordResource, json, json);
 
@@ -252,7 +252,7 @@ public class RDFModel implements Model {
 				return null;
 			}
 
-			final ObjectNode json = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
+			final ArrayNode json = DMPPersistenceUtil.getJSONObjectMapper().createArrayNode();
 
 			convertRDFToJSON(recordResource, json, json);
 
@@ -329,7 +329,7 @@ public class RDFModel implements Model {
 		return attributePaths;
 	}
 
-	private JsonNode convertRDFToJSON(final Resource resource, final ObjectNode rootJson, final ObjectNode json) {
+	private JsonNode convertRDFToJSON(final Resource resource, final ArrayNode rootJson, final ArrayNode json) {
 
 		final StmtIterator iter = resource.listProperties();
 		final Map<String, ConverterHelper> converterHelpers = Maps.newLinkedHashMap();
@@ -349,7 +349,7 @@ public class RDFModel implements Model {
 
 			if (rdfNode.asNode().isBlank()) {
 
-				final ObjectNode objectNode = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
+				final ArrayNode objectNode = DMPPersistenceUtil.getJSONObjectMapper().createArrayNode();
 
 				final JsonNode jsonNode = convertRDFToJSON(rdfNode.asResource(), rootJson, objectNode);
 
@@ -374,11 +374,15 @@ public class RDFModel implements Model {
 				// resource has an uri, but is deeper in the hierarchy -> it will be attached to the root json node as separate
 				// entry
 
-				final ObjectNode objectNode = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
+				final ArrayNode objectNode = DMPPersistenceUtil.getJSONObjectMapper().createArrayNode();
 
 				final JsonNode jsonNode = convertRDFToJSON(rdfNode.asResource(), rootJson, objectNode);
 
-				rootJson.put(rdfNode.asResource().getURI(), jsonNode);
+				final ObjectNode objectJSONObject = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
+
+				objectJSONObject.put(rdfNode.asResource().getURI(), jsonNode);
+
+				rootJson.add(objectJSONObject);
 			}
 		}
 
