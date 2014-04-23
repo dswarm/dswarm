@@ -1337,7 +1337,7 @@
         "parameter_mappings": {
             "firstName": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/firstName",
             "familyName": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/familyName",
-            "transformationOutputVariable": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/name"
+            "__TRANSFORMATION_OUTPUT_VARIABLE__1": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/name"
         }
     },
     "id": 14,
