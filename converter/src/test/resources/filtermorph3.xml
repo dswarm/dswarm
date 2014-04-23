@@ -22,9 +22,12 @@
 
 				<data name="out"
 					source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value" />
+				<!-- <data name="out2" source="@out"> -->
+				<!-- <occurrence only="1" /> -->
+				<!-- </data> -->
 			</combine>
-			<!--<data name="@ok2" source="@ok"> -->
-			<!-- <occurrence only="2" /> -->
+			<!-- <data name="ok2" source="@ok"> -->
+			<!-- <occurrence only="1" /> -->
 			<!-- </data> -->
 		</combine>
 		<data name="ok4" source="@ok3">
