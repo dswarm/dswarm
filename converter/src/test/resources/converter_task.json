@@ -198,7 +198,7 @@
                     }]
                 },
                 "parameter_mappings": {"feldnr": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr", 
-                "transformationOutputVariable": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" }
+                "__TRANSFORMATION_OUTPUT_VARIABLE__1": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" }
             },
             "input_attribute_paths": [{
                 "type": "MappingAttributePathInstance",

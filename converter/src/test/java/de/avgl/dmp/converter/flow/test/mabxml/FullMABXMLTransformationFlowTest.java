@@ -9,6 +9,6 @@ public class FullMABXMLTransformationFlowTest extends AbstractMABXMLTransformati
 
 	public FullMABXMLTransformationFlowTest() {
 
-		super("task.json", "task-result.json");
+		super("converter_task.json", "task-result.json");
 	}
 }

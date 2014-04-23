@@ -218,7 +218,7 @@
             "familyName": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/familyName",
             "title": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/title",
             "givenName": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/givenName",
-            "transformationOutputVariable": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/name"
+            "__TRANSFORMATION_OUTPUT_VARIABLE__1": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/name"
           }
         },
         "id": 14,

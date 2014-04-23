@@ -93,7 +93,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 		final ObjectMapper objectMapper = injector.getInstance(ObjectMapper.class);
 
-		final String taskJSONString = DMPPersistenceUtil.getResourceAsString("task.csv.json");
+		final String taskJSONString = DMPPersistenceUtil.getResourceAsString("converter_task.csv.json");
 		final String expected = DMPPersistenceUtil.getResourceAsString("task-result.csv.json");
 
 		// process input data model
@@ -221,7 +221,7 @@ public class TransformationFlowTest extends GuicedTest {
 		final ObjectNode transformationComponentParameterMappingsJSON = (ObjectNode) ((ObjectNode) mappingJSON.get("transformation"))
 				.get("parameter_mappings");
 		transformationComponentParameterMappingsJSON.put("description", dataResourceSchemaBaseURI + outputAttributeName);
-		transformationComponentParameterMappingsJSON.put("transformationOutputVariable", dataResourceSchemaBaseURI + outputAttributeName);
+		transformationComponentParameterMappingsJSON.put("__TRANSFORMATION_OUTPUT_VARIABLE__1", dataResourceSchemaBaseURI + outputAttributeName);
 
 		final String finalTaskJSONString = objectMapper.writeValueAsString(taskJSON);
 
