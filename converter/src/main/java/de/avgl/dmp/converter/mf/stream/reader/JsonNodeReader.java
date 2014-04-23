@@ -166,28 +166,6 @@ public class JsonNodeReader extends DefaultObjectPipe<Iterator<Tuple<String, Jso
 
 	private boolean checkValue(final JsonNode jsonNode) {
 
-		final boolean isEntity;
-
-		switch (jsonNode.getNodeType()) {
-			case ARRAY:
-
-				if (((ArrayNode) jsonNode).elements().next().isObject()) {
-
-					isEntity = true;
-
-					break;
-				}
-
-				isEntity = false;
-
-				break;
-			default:
-
-				isEntity = false;
-
-				break;
-		}
-
-		return isEntity;
+		return jsonNode.isArray() && jsonNode.elements().next().isObject();
 	}
 }
