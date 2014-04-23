@@ -26,7 +26,7 @@ public class JobsResourceTest extends ResourceTest {
 	@Before
 	public void prepare() throws IOException {
 
-		jobJSONString = DMPPersistenceUtil.getResourceAsString("complex-request.json");
+		// jobJSONString = DMPPersistenceUtil.getResourceAsString("complex-request.json");
 	}
 
 	@Ignore
