@@ -30,6 +30,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -40,7 +41,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.google.common.io.InputSupplier;
+import com.google.common.io.ByteSource;
 import com.google.common.io.Resources;
 
 import de.avgl.dmp.converter.DMPConverterException;
@@ -54,27 +55,27 @@ import de.avgl.dmp.persistence.model.schema.MappingAttributePathInstance;
 
 /**
  * Creates a metamorph script from a given {@link Task}.
- *
+ * 
  * @author phorn
  * @author tgaengler
  */
 public class MorphScriptBuilder {
 
-	private static final org.apache.log4j.Logger	LOG							= org.apache.log4j.Logger.getLogger(MorphScriptBuilder.class);
+	private static final org.apache.log4j.Logger	LOG									= org.apache.log4j.Logger.getLogger(MorphScriptBuilder.class);
 
-	private static final String						MAPPING_PREFIX				= "mapping";
+	private static final String						MAPPING_PREFIX						= "mapping";
 
-	private static final DocumentBuilderFactory		DOC_FACTORY					= DocumentBuilderFactory.newInstance();
+	private static final DocumentBuilderFactory		DOC_FACTORY							= DocumentBuilderFactory.newInstance();
 
-	private static final String						SCHEMA_PATH					= "schemata/metamorph.xsd";
+	private static final String						SCHEMA_PATH							= "schemata/metamorph.xsd";
 
 	private static final TransformerFactory			TRANSFORMER_FACTORY;
 
-	private static final String						TRANSFORMER_FACTORY_CLASS	= "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl";
+	private static final String						TRANSFORMER_FACTORY_CLASS			= "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl";
 
-	private static final String						INPUT_VARIABLE_IDENTIFIER	= "inputString";
+	private static final String						INPUT_VARIABLE_IDENTIFIER			= "inputString";
 
-	private static final String						OUTPUT_VARIABLE_IDENTIFIER	= "transformationOutputVariable";
+	private static final String						OUTPUT_VARIABLE_PREFIX_IDENTIFIER	= "__TRANSFORMATION_OUTPUT_VARIABLE__";
 
 	static {
 		System.setProperty("javax.xml.transform.TransformerFactory", MorphScriptBuilder.TRANSFORMER_FACTORY_CLASS);
@@ -82,9 +83,9 @@ public class MorphScriptBuilder {
 		MorphScriptBuilder.TRANSFORMER_FACTORY.setAttribute("indent-number", 4);
 
 		final URL resource = Resources.getResource(MorphScriptBuilder.SCHEMA_PATH);
-		final InputSupplier<InputStream> inputStreamInputSupplier = Resources.newInputStreamSupplier(resource);
+		final ByteSource inputStreamInputSupplier = Resources.asByteSource(resource);
 
-		try (final InputStream schemaStream = inputStreamInputSupplier.getInput()) {
+		try (final InputStream schemaStream = inputStreamInputSupplier.openStream()) {
 
 			// final StreamSource SCHEMA_SOURCE = new StreamSource(schemaStream);
 			final SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -488,11 +489,11 @@ public class MorphScriptBuilder {
 
 		List<Element> datas = null;
 
-		final String inputAttributePathStringXMLEscaped = StringEscapeUtils.escapeXml(inputAttributePathString);
+		final String inputAttributePathStringXMLEscaped = StringEscapeUtils.escapeXml11(inputAttributePathString);
 
 		for (final String variable : variables) {
 
-			if (variable.equals(OUTPUT_VARIABLE_IDENTIFIER)) {
+			if (variable.startsWith(OUTPUT_VARIABLE_PREFIX_IDENTIFIER)) {
 
 				continue;
 			}
@@ -522,7 +523,7 @@ public class MorphScriptBuilder {
 			return null;
 		}
 
-		final String outputAttributePathStringXMLEscaped = StringEscapeUtils.escapeXml(outputAttributePathString);
+		final String outputAttributePathStringXMLEscaped = StringEscapeUtils.escapeXml11(outputAttributePathString);
 
 		// TODO: maybe add mapping to default output variable identifier, if output attribute path is not part of the parameter
 		// mappings of the transformation component
@@ -530,7 +531,7 @@ public class MorphScriptBuilder {
 
 		for (final String variable : variables) {
 
-			if (!variable.equals(OUTPUT_VARIABLE_IDENTIFIER)) {
+			if (!variable.startsWith(OUTPUT_VARIABLE_PREFIX_IDENTIFIER)) {
 
 				continue;
 			}
@@ -561,15 +562,19 @@ public class MorphScriptBuilder {
 		}
 
 		final Element data = doc.createElement("data");
-		data.setAttribute("source", StringEscapeUtils.escapeXml(inputMappingAttributePathInstances.iterator().next().getAttributePath().toAttributePath()));
+		data.setAttribute("source",
+				StringEscapeUtils.escapeXml11(inputMappingAttributePathInstances.iterator().next().getAttributePath().toAttributePath()));
 
-		data.setAttribute("name", StringEscapeUtils.escapeXml(outputMappingAttributePathInstance.getAttributePath().toAttributePath()));
+		data.setAttribute("name", StringEscapeUtils.escapeXml11(outputMappingAttributePathInstance.getAttributePath().toAttributePath()));
 
 		rules.appendChild(data);
 	}
 
 	private void processTransformationComponentFunction(final Component transformationComponent, final Mapping mapping,
 			final Map<String, List<String>> inputAttributePathVariablesMap, final Element rules) {
+		
+		final String transformationOutputVariableIdentifier = determineTransformationOutputVariable(transformationComponent);
+		final String finalTransformationOutputVariableIdentifier = transformationOutputVariableIdentifier == null ? OUTPUT_VARIABLE_PREFIX_IDENTIFIER : transformationOutputVariableIdentifier;
 
 		final Function transformationFunction = transformationComponent.getFunction();
 
@@ -610,14 +615,14 @@ public class MorphScriptBuilder {
 
 				for (final Component component : components) {
 
-					processComponent(component, inputAttributePathVariablesMap, rules);
+					processComponent(component, inputAttributePathVariablesMap, finalTransformationOutputVariableIdentifier, rules);
 				}
 
 				break;
 		}
 	}
 
-	private void processComponent(final Component component, final Map<String, List<String>> inputAttributePathVariablesMap, final Element rules) {
+	private void processComponent(final Component component, final Map<String, List<String>> inputAttributePathVariablesMap, final String transformationOutputVariableIdentifier, final Element rules) {
 
 		String[] inputStrings = {};
 
@@ -679,7 +684,7 @@ public class MorphScriptBuilder {
 				// the end has been reached
 
 				// collectionNameAttribute = getKeyParameterMapping(outputAttributePath, transformationComponent);
-				collectionNameAttribute = OUTPUT_VARIABLE_IDENTIFIER;
+				collectionNameAttribute = transformationOutputVariableIdentifier;
 			} else {
 
 				collectionNameAttribute = "component" + component.getId();
@@ -697,7 +702,7 @@ public class MorphScriptBuilder {
 		if (component.getOutputComponents() == null || component.getOutputComponents().isEmpty()) {
 
 			// dataNameAttribute = getKeyParameterMapping(outputAttributePath, transformationComponent);
-			dataNameAttribute = OUTPUT_VARIABLE_IDENTIFIER;
+			dataNameAttribute = transformationOutputVariableIdentifier;
 		} else {
 
 			dataNameAttribute = "component" + component.getId();
@@ -706,5 +711,45 @@ public class MorphScriptBuilder {
 		final Element data = createDataTag(component, dataNameAttribute, sourceAttributes.iterator().next());
 
 		rules.appendChild(data);
+	}
+
+	private String determineTransformationOutputVariable(final Component transformationComponent) {
+
+		if (transformationComponent == null) {
+
+			LOG.error("transformation component is null, couldn't identify transformation output variable identifier");
+
+			return null;
+		}
+
+		final Map<String, String> parameterMappings = transformationComponent.getParameterMappings();
+
+		if (parameterMappings == null) {
+
+			LOG.error("transformation component parameter mappings are null, couldn't identify transformation output variable identifier");
+
+			return null;
+		}
+
+		if (parameterMappings.isEmpty()) {
+
+			LOG.error("transformation component parameter mappings are empty, couldn't identify transformation output variable identifier");
+
+			return null;
+		}
+
+		for (final String key : parameterMappings.keySet()) {
+
+			if (key.startsWith(OUTPUT_VARIABLE_PREFIX_IDENTIFIER)) {
+
+				// found output variable identifier
+
+				return key;
+			}
+		}
+
+		LOG.error("couldn't find transformation output variable identifier");
+
+		return null;
 	}
 }
