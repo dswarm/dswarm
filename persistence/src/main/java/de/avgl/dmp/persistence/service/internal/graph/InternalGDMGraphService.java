@@ -438,16 +438,28 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		if (attributePathHelpers == null) {
 
-			InternalGDMGraphService.LOG.debug("couldn't datermine attribute paths from data model '" + dataModel.getId() + "'");
+			InternalGDMGraphService.LOG.debug("couldn't determine attribute paths from data model '" + dataModel.getId() + "'");
 
 			return dataModel;
+		}
+
+		if(attributePathHelpers.isEmpty()) {
+
+			InternalGDMGraphService.LOG.debug("there are no attribute paths from data model '" + dataModel.getId() + "'");
 		}
 
 		for (final AttributePathHelper attributePathHelper : attributePathHelpers) {
 
 			final LinkedList<Attribute> attributes = Lists.newLinkedList();
 
-			for (final String attributeString : attributePathHelper.getAttributePath()) {
+			final LinkedList<String> attributePathFromHelper = attributePathHelper.getAttributePath();
+
+			if(attributePathFromHelper.isEmpty()) {
+
+				InternalGDMGraphService.LOG.debug("there are no attributes for this attribute path from data model '" + dataModel.getId() + "'");
+			}
+
+			for (final String attributeString : attributePathFromHelper) {
 
 				final ProxyAttribute proxyAttribute = attributeService.get().createOrGetObjectTransactional(attributeString);
 
@@ -470,7 +482,7 @@ public class InternalGDMGraphService implements InternalModelService {
 				attribute.setName(attributeName);
 			}
 
-			final ProxyAttributePath proxyAttributePath = attributePathService.get().createOrGetObject(attributes);
+			final ProxyAttributePath proxyAttributePath = attributePathService.get().createOrGetObjectTransactional(attributes);
 
 			if (proxyAttributePath == null) {
 

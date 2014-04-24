@@ -449,7 +449,7 @@ public class InternalTripleService implements InternalModelService {
 				attribute.setName(attributeName);
 			}
 
-			final ProxyAttributePath proxyAttributePath = attributePathService.get().createOrGetObject(attributes);
+			final ProxyAttributePath proxyAttributePath = attributePathService.get().createOrGetObjectTransactional(attributes);
 
 			if (proxyAttributePath == null) {
 

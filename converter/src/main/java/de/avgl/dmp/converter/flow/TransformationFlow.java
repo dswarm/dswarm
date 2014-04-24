@@ -147,40 +147,6 @@ public class TransformationFlow {
 
 		final StreamUnflattener unflattener = new StreamUnflattener("", DMPStatics.ATTRIBUTE_DELIMITER);
 		final StreamJsonCollapser collapser = new StreamJsonCollapser();
-
-		// final StringWriter stringWriter = new StringWriter();
-		// stringWriter.append('[');
-		//
-		// final ObjectReceiver<String> objectReceiver = new ObjectReceiver<String>() {
-		//
-		// @Override
-		// public void process(final String obj) {
-		// stringWriter.append(obj);
-		// stringWriter.append(',');
-		// }
-		//
-		// @Override
-		// public void resetStream() {
-		// final StringBuffer buffer = stringWriter.getBuffer();
-		// buffer.delete(0, buffer.length());
-		// }
-		//
-		// @Override
-		// public void closeStream() {
-		// LOG.debug("close stream called");
-		// final StringBuffer buffer = stringWriter.getBuffer();
-		// buffer.deleteCharAt(buffer.length() - 1);
-		// stringWriter.append(']');
-		// }
-		// };
-		//
-		// final JsonEncoder jsonEncoder = new JsonEncoder();
-		//
-		// final RecordAwareJsonEncoder converter = new RecordAwareJsonEncoder(jsonEncoder);
-		// jsonEncoder.setReceiver(objectReceiver);
-
-		// final StreamOutWriter streamOutWriter = new StreamOutWriter();
-
 		final TripleEncoder converter = new TripleEncoder(outputDataModel);
 		final RDFModelReceiver writer = new RDFModelReceiver();
 
@@ -262,7 +228,7 @@ public class TransformationFlow {
 					internalModelService.createObject(outputDataModel.get().getId(), rdfModel);
 				} catch (final DMPPersistenceException e1) {
 
-					final String message = "couldn't persistent the the result of the transformation: " + e1.getMessage();
+					final String message = "couldn't persist the result of the transformation: " + e1.getMessage();
 
 					LOG.error(message);
 
@@ -271,7 +237,11 @@ public class TransformationFlow {
 
 			} else {
 
-				LOG.warn("Wanted to persist, but could not find OutputDataModel");
+				final String message = "couldn't persist the result of the transformation, because there is no output data model assigned at this task";
+
+				LOG.error(message);
+
+				throw new DMPConverterException(message);
 			}
 		}
 

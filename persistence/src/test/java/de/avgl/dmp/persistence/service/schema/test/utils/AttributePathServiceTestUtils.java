@@ -77,6 +77,31 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 	}
 
 	@Override
+	public void deleteObject(AttributePath object) {
+
+		if (object == null) {
+
+			return;
+		}
+
+		final Set<Attribute> attributes = object.getAttributes();
+
+		if (attributes != null && !attributes.isEmpty() && attributes.size() == 1) {
+
+			final Attribute attribute = attributes.iterator().next();
+
+			if (attribute != null && attribute.getUri() != null && AttributeServiceTestUtils.excludeAttributes.contains(attribute.getUri())) {
+
+				// don't delete attribute paths of attributes that should be excluded from removal
+
+				return;
+			}
+		}
+
+		super.deleteObject(object);
+	}
+
+	@Override
 	public void reset() {
 
 		attributeResourceTestUtils.reset();

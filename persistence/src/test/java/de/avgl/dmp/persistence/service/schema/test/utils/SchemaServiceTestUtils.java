@@ -3,6 +3,9 @@ package de.avgl.dmp.persistence.service.schema.test.utils;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.collect.Sets;
+import de.avgl.dmp.persistence.DMPPersistenceException;
+import de.avgl.dmp.persistence.model.schema.Attribute;
 import org.junit.Assert;
 
 import com.google.common.collect.Maps;
@@ -52,6 +55,47 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 		Assert.assertNotNull("updated schema id shouldn't be null", updatedSchema.getId());
 
 		return updatedSchema;
+	}
+
+	public void removeAddedAttributePathsFromOutputModelSchema(final Schema outputDataModelSchema, final Map<Long, Attribute> attributes, final Map<Long, AttributePath> attributePaths)
+			throws DMPPersistenceException {
+
+		final Set<AttributePath> outputDataModelSchemaAttributePathRemovalCandidates = Sets.newHashSet();
+
+		// collect attribute paths of attributes that were created via processing the transformation result
+		if (outputDataModelSchema != null) {
+
+			final Set<AttributePath> outputDataModelSchemaAttributePaths = outputDataModelSchema.getAttributePaths();
+
+			if (outputDataModelSchemaAttributePaths != null) {
+
+				for (final AttributePath outputDataModelSchemaAttributePath : outputDataModelSchemaAttributePaths) {
+
+					final Set<Attribute> outputDataModelSchemaAttributePathAttributes = outputDataModelSchemaAttributePath.getAttributes();
+
+					for (final Attribute outputDataModelSchemaAttribute : outputDataModelSchemaAttributePathAttributes) {
+
+						if (attributes.containsKey(outputDataModelSchemaAttribute.getId())) {
+
+							// found candidate for removal
+
+							attributePaths.put(outputDataModelSchemaAttributePath.getId(), outputDataModelSchemaAttributePath);
+
+							// remove candidate from output data model schema
+							outputDataModelSchemaAttributePathRemovalCandidates.add(outputDataModelSchemaAttributePath);
+						}
+					}
+				}
+			}
+		}
+
+		for (final AttributePath outputDataModelSchemaAttributePath : outputDataModelSchemaAttributePathRemovalCandidates) {
+
+			outputDataModelSchema.removeAttributePath(outputDataModelSchemaAttributePath);
+		}
+
+		// update output data model schema to persist possible changes
+		jpaService.updateObjectTransactional(outputDataModelSchema);
 	}
 
 	private void compareSchemas(final Schema expectedSchema, final Schema actualSchema) {
