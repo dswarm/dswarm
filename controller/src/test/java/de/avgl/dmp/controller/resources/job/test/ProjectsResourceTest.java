@@ -243,9 +243,9 @@ public class ProjectsResourceTest extends
 
 		schemasResourceTestUtils.deleteObject(updateSchema);
 
-		claszesResourceTestUtils.deleteObject(recordClass);
+		claszesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(recordClass);
 
-		claszesResourceTestUtils.deleteObject(updateRecordClass);
+		claszesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(updateRecordClass);
 
 		// END schema clean-up
 
@@ -265,12 +265,12 @@ public class ProjectsResourceTest extends
 
 		for (final AttributePath attributePath : attributePaths.values()) {
 
-			attributePathsResourceTestUtils.deleteObject(attributePath);
+			attributePathsResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(attributePath);
 		}
 
 		for (final Attribute attribute : attributes.values()) {
 
-			attributesResourceTestUtils.deleteObject(attribute);
+			attributesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(attribute);
 		}
 
 		transformationsResourceTestUtils.deleteObject(transformation);
@@ -295,7 +295,7 @@ public class ProjectsResourceTest extends
 		updateResource = resourcesResourceTestUtils.createObject("resource2.json");
 		inputDataModel.setDataResource(updateResource);
 
-		updateRecordClass = claszesResourceTestUtils.createObject("clasz1.json");
+		updateRecordClass = claszesResourceTestUtils.createObject("clasz2.json");
 
 		final Schema tmpSchema = inputDataModel.getSchema();
 		tmpSchema.setName(schema.getName() + " update");
@@ -392,7 +392,7 @@ public class ProjectsResourceTest extends
 
 		final Project updateProject = projectsResourceTestUtils.updateObject(updateProjectJSONString, expectedProject);
 
-		Assert.assertEquals("projects shoud be equal", persistedProject, updateProject);
+		Assert.assertEquals("projects should be equal", persistedProject, updateProject);
 
 		final MappingAttributePathInstance inputMappingAttributePathInstance = updateMapping.getInputAttributePaths().iterator().next();
 
@@ -480,7 +480,14 @@ public class ProjectsResourceTest extends
 
 		// START schema preparation
 
-		for (int i = 1; i < 6; i++) {
+		for (int i = 3; i < 6; i++) {
+
+			if (i == 4) {
+
+				// exclude attributes from internal model schema (because they should already exist)
+
+				continue;
+			}
 
 			final String attributeJSONFileName = "attribute" + i + ".json";
 
@@ -489,13 +496,20 @@ public class ProjectsResourceTest extends
 			attributes.put(actualAttribute.getId(), actualAttribute);
 		}
 
-		recordClass = claszesResourceTestUtils.createObject("clasz.json");
+		recordClass = claszesResourceTestUtils.createObject("clasz1.json");
 
 		// prepare schema json for attribute path ids manipulation
 		String schemaJSONString = DMPPersistenceUtil.getResourceAsString("schema.json");
 		final ObjectNode schemaJSON = objectMapper.readValue(schemaJSONString, ObjectNode.class);
 
 		for (int j = 1; j < 4; j++) {
+
+			if (j == 2) {
+
+				// exclude attribute paths from internal model schema (because they should already exist)
+
+				continue;
+			}
 
 			final String attributePathJSONFileName = "attribute_path" + j + ".json";
 

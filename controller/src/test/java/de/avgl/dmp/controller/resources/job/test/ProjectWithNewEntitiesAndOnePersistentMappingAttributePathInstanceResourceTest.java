@@ -229,8 +229,8 @@ public class ProjectWithNewEntitiesAndOnePersistentMappingAttributePathInstanceR
 		dataModelJSON.put("configuration", finalConfigurationJSON);
 
 		// mapping attribute path instance
-		final ObjectNode mappingJSON = (ObjectNode) ((ArrayNode) projectJSON.get("mappings")).get(0);
-		final ObjectNode secondIMAPI = (ObjectNode) ((ArrayNode) mappingJSON.get("input_attribute_paths")).get(1);
+		final ObjectNode mappingJSON = (ObjectNode) projectJSON.get("mappings").get(0);
+		final ObjectNode secondIMAPI = (ObjectNode) mappingJSON.get("input_attribute_paths").get(1);
 
 		final ArrayNode newIMAPIs = objectMapper.createArrayNode();
 
@@ -497,17 +497,17 @@ public class ProjectWithNewEntitiesAndOnePersistentMappingAttributePathInstanceR
 
 		for (final AttributePath attributePath : attributePaths.values()) {
 
-			attributePathsResourceTestUtils.deleteObject(attributePath);
+			attributePathsResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(attributePath);
 		}
 
 		for (final Clasz clasz : claszes.values()) {
 
-			claszesResourceTestUtils.deleteObject(clasz);
+			claszesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(clasz);
 		}
 
 		for (final Attribute attribute : attributes.values()) {
 
-			attributesResourceTestUtils.deleteObject(attribute);
+			attributesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(attribute);
 		}
 
 		if (transformation != null) {

@@ -45,8 +45,8 @@ public class AttributePathsResourceTest
 
 		super.prepare();
 
-		actualAttribute1 = attributeResourceTestUtils.createObject("attribute1.json");
-		actualAttribute2 = attributeResourceTestUtils.createObject("attribute2.json");
+		actualAttribute1 = attributeResourceTestUtils.createObject("attribute6.json");
+		actualAttribute2 = attributeResourceTestUtils.createObject("attribute7.json");
 
 		// manipulate attribute path attributes
 		String attributePathJSONString = DMPPersistenceUtil.getResourceAsString("attribute_path.json");
