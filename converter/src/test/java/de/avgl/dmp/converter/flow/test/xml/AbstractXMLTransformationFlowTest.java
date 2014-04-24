@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.*;
 
-import com.google.common.collect.Sets;
-import de.avgl.dmp.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -41,12 +39,11 @@ import de.avgl.dmp.persistence.service.internal.test.utils.InternalGDMGraphServi
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
-import de.avgl.dmp.persistence.service.schema.AttributePathService;
-import de.avgl.dmp.persistence.service.schema.AttributeService;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
 import de.avgl.dmp.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
 import de.avgl.dmp.persistence.service.schema.test.utils.AttributeServiceTestUtils;
+import de.avgl.dmp.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
@@ -177,14 +174,14 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		// manipulate input data model
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
-		((ObjectNode) taskJSON).put("input_data_model", inputDataModelJSON);
+		taskJSON.put("input_data_model", inputDataModelJSON);
 
 		// manipulate output data model (output data model = internal model (for now))
 		final long internalModelId = 1;
 		final DataModel outputDataModel = dataModelService.getObject(internalModelId);
 		final String outputDataModelJSONString = objectMapper.writeValueAsString(outputDataModel);
 		final ObjectNode outputDataModelJSON = objectMapper.readValue(outputDataModelJSONString, ObjectNode.class);
-		((ObjectNode) taskJSON).put("output_data_model", outputDataModelJSON);
+		taskJSON.put("output_data_model", outputDataModelJSON);
 
 		final String finalTaskJSONString = objectMapper.writeValueAsString(taskJSON);
 
