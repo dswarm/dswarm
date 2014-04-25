@@ -7,7 +7,7 @@ import com.google.common.collect.ImmutableList;
 import de.avgl.dmp.persistence.model.internal.rdf.RDFModel;
 
 /**
- * 
+ *
  * @author tgaengler
  *
  */
@@ -26,6 +26,7 @@ public class RDFModelReceiver implements ObjectReceiver<RDFModel> {
 	public void resetStream() {
 
 		builder = ImmutableList.builder();
+		collection = null;
 	}
 
 	@Override
