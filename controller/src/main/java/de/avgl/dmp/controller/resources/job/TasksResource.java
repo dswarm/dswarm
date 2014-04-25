@@ -33,6 +33,7 @@ import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.controller.utils.DataModelUtil;
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.TransformationFlow;
+import de.avgl.dmp.converter.morph.MorphScriptBuilder;
 import de.avgl.dmp.persistence.model.job.Job;
 import de.avgl.dmp.persistence.model.job.Task;
 import de.avgl.dmp.persistence.model.job.Transformation;
@@ -307,18 +308,7 @@ public class TasksResource {
 			throw new DMPConverterException("there is are no mappings for this job of this task");
 		}
 
-		final DataModel inputDataModel = task.getInputDataModel();
-
-		if (inputDataModel == null) {
-
-			LOG.error("there is no input data model for this task");
-
-			throw new DMPConverterException("there is no input data model for this task");
-		}
-
-		final TransformationFlow flow = TransformationFlow.fromTask(task, internalModelServiceFactoryProvider);
-
-		return flow.getScript();
+		return new MorphScriptBuilder().apply(task).toString();
 	}
 
 }
