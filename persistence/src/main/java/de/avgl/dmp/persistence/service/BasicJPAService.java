@@ -329,7 +329,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	 * 
 	 * @param id the identifier of the to be deleted instance of the specific class
 	 */
-	@Transactional(rollbackOn = DMPPersistenceException.class)
+	@Transactional(rollbackOn = Exception.class)
 	public void deleteObject(final POJOCLASSIDTYPE id) {
 
 		final EntityManager entityManager = acquire(false);

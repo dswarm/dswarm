@@ -66,6 +66,13 @@ public class SchemasResourceTest extends
 
 		for (int i = 1; i < 6; i++) {
 
+			if(i == 2 || i == 4) {
+
+				// exclude attributes from internal model schema (because they should already exist)
+
+				continue;
+			}
+
 			final String attributeJSONFileName = "attribute" + i + ".json";
 
 			final Attribute actualAttribute = attributesResourceTestUtils.createObject(attributeJSONFileName);
@@ -73,12 +80,19 @@ public class SchemasResourceTest extends
 			attributes.put(actualAttribute.getId(), actualAttribute);
 		}
 
-		recordClass = claszesResourceTestUtils.createObject("clasz.json");
+		recordClass = claszesResourceTestUtils.createObject("clasz1.json");
 
 		// prepare schema json for attribute path ids manipulation
 		final ObjectNode objectJSON = objectMapper.readValue(objectJSONString, ObjectNode.class);
 
 		for (int j = 1; j < 4; j++) {
+
+			if(j == 2) {
+
+				// exclude attribute paths from internal model schema (because they should already exist)
+
+				continue;
+			}
 
 			final String attributePathJSONFileName = "attribute_path" + j + ".json";
 
@@ -150,15 +164,15 @@ public class SchemasResourceTest extends
 
 		for (final AttributePath attributePath : attributePaths.values()) {
 
-			attributePathsResourceTestUtils.deleteObject(attributePath);
+			attributePathsResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(attributePath);
 		}
 
 		for (final Attribute attribute : attributes.values()) {
 
-			attributesResourceTestUtils.deleteObject(attribute);
+			attributesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(attribute);
 		}
 
-		claszesResourceTestUtils.deleteObject(recordClass);
+		claszesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(recordClass);
 	}
 
 	@Override
@@ -167,7 +181,7 @@ public class SchemasResourceTest extends
 		final Set<AttributePath> persistedAttributePaths = persistedSchema.getAttributePaths();
 		final AttributePath firstAttributePath = persistedAttributePaths.iterator().next();
 
-		final String attributeJSONString = DMPPersistenceUtil.getResourceAsString("attribute4.json");
+		final String attributeJSONString = DMPPersistenceUtil.getResourceAsString("attribute3.json");
 		final Attribute expectedAttribute = objectMapper.readValue(attributeJSONString, Attribute.class);
 
 		final Response response = attributesResourceTestUtils.executeCreateObject(attributeJSONString);
@@ -186,8 +200,8 @@ public class SchemasResourceTest extends
 		firstAttributePath.addAttribute(attribute);
 
 		// clasz update (with a non-persistent class)
-		final String biboBookId = "http://purl.org/ontology/bibo/Book";
-		final String biboBookName = "book";
+		final String biboBookId = "http://purl.org/ontology/bibo/Bookibook";
+		final String biboBookName = "bookibook";
 		final Clasz biboBook = new Clasz(biboBookId, biboBookName);
 		persistedSchema.setRecordClass(biboBook);
 

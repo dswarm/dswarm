@@ -60,8 +60,8 @@ public class MappingAttributePathInstancesResourceTest
 
 		super.prepare();
 
-		actualAttribute1 = attributeResourceTestUtils.createObject("attribute1.json");
-		actualAttribute2 = attributeResourceTestUtils.createObject("attribute2.json");
+		actualAttribute1 = attributeResourceTestUtils.createObject("attribute6.json");
+		actualAttribute2 = attributeResourceTestUtils.createObject("attribute7.json");
 
 		// manipulate attribute path attributes
 		String attributePathJSONString = DMPPersistenceUtil.getResourceAsString("attribute_path1.json");
@@ -131,7 +131,7 @@ public class MappingAttributePathInstancesResourceTest
 
 		final AttributePath persistedAttributePath = persistedMappingAttributePathInstance.getAttributePath();
 
-		attributeFromUpdate = attributeResourceTestUtils.createObject("attribute4.json");
+		attributeFromUpdate = attributeResourceTestUtils.createObject("attribute3.json");
 
 		persistedAttributePath.removeAttribute(actualAttribute2, 2);
 		persistedAttributePath.addAttribute(attributeFromUpdate);

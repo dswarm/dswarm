@@ -182,7 +182,7 @@ public class SchemaEventRecorder {
 			final LinkedList<Attribute> attributes = Lists.newLinkedList();
 			attributes.add(attribute);
 
-			final ProxyAttributePath proxyAttributePath = attributePathService.createOrGetObject(attributes);
+			final ProxyAttributePath proxyAttributePath = attributePathService.createOrGetObjectTransactional(attributes);
 
 			if(proxyAttributePath == null) {
 

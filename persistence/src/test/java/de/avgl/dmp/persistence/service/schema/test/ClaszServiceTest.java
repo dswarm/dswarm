@@ -1,5 +1,6 @@
 package de.avgl.dmp.persistence.service.schema.test;
 
+import de.avgl.dmp.persistence.service.schema.test.utils.ClaszServiceTestUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -17,9 +18,13 @@ public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, 
 
 	private final ObjectMapper						objectMapper	= injector.getInstance(ObjectMapper.class);
 
+	private final ClaszServiceTestUtils claszServiceTestUtils;
+
 	public ClaszServiceTest() {
 
 		super("class", ClaszService.class);
+
+		claszServiceTestUtils = new ClaszServiceTestUtils();
 	}
 
 	@Test
@@ -49,7 +54,7 @@ public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, 
 		LOG.debug("class json: " + json);
 
 		// clean up DB
-		deleteObject(clasz.getId());
+		claszServiceTestUtils.deleteObject(clasz);
 	}
 	
 	@Test
@@ -75,7 +80,7 @@ public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, 
 		Assert.assertEquals("the attribute uris should be equal", clasz1.getName(), clasz2.getName());
 
 		// clean up DB
-		deleteObject(clasz1.getId());
+		claszServiceTestUtils.deleteObject(clasz1);
 	}
 
 	private Clasz createClass() {

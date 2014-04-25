@@ -432,17 +432,17 @@ public class ProjectWithNewEntitiesResourceTest extends
 
 		for (final AttributePath attributePath : attributePaths.values()) {
 
-			attributePathsResourceTestUtils.deleteObject(attributePath);
+			attributePathsResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(attributePath);
 		}
 
 		for (final Clasz clasz : claszes.values()) {
 
-			claszesResourceTestUtils.deleteObject(clasz);
+			claszesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(clasz);
 		}
 
 		for (final Attribute attribute : attributes.values()) {
 
-			attributesResourceTestUtils.deleteObject(attribute);
+			attributesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(attribute);
 		}
 
 		if (transformation != null) {

@@ -227,6 +227,14 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 		}
 	}
 
+	public void deleteObjectViaPersistenceServiceTestUtils(final POJOCLASS object) {
+
+		if(object != null) {
+
+			persistenceServiceTestUtils.deleteObject(object);
+		}
+	}
+
 	public void reset() {
 
 		persistenceServiceTestUtils.reset();

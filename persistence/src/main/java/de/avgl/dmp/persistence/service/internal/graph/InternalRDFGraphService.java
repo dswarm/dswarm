@@ -108,7 +108,6 @@ public class InternalRDFGraphService implements InternalModelService {
 	 * @param dataModelService the data model persistence service
 	 * @param schemaService the schema persistence service
 	 * @param classService the class persistence service
-	 * @param directory the directory of the Jena TDB triple store
 	 */
 	@Inject
 	public InternalRDFGraphService(final Provider<DataModelService> dataModelService, final Provider<SchemaService> schemaService,
@@ -467,7 +466,7 @@ public class InternalRDFGraphService implements InternalModelService {
 				attribute.setName(attributeName);
 			}
 
-			final ProxyAttributePath proxyAttributePath = attributePathService.get().createOrGetObject(attributes);
+			final ProxyAttributePath proxyAttributePath = attributePathService.get().createOrGetObjectTransactional(attributes);
 
 			if (proxyAttributePath == null) {
 

@@ -190,7 +190,7 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttribu
 	private AttributePath createObject(final LinkedList<Attribute> attributePath) {
 		AttributePath object = null;
 		try {
-			object = jpaService.createOrGetObject(attributePath).getObject();
+			object = jpaService.createOrGetObjectTransactional(attributePath).getObject();
 			System.out.println(object);
 		} catch (final DMPPersistenceException e) {
 			Assert.assertTrue("something went wrong during attribute path creation.\n" + e.getMessage(), false);
