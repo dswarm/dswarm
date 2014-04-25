@@ -158,12 +158,7 @@ public class TransformationFlow {
 
 		// return stringWriter.toString();
 
-		final Optional<ImmutableList<RDFModel>> optionalRDFModels = Optional.of(writer.getCollection());
-
-		if (!optionalRDFModels.isPresent()) {
-
-			return null;
-		}
+		final ImmutableList<RDFModel> rdfModels = writer.getCollection();
 
 		final Model model = ModelFactory.createDefaultModel();
 		String recordClassUri = null;
@@ -174,7 +169,7 @@ public class TransformationFlow {
 		// final ArrayNode result = objectMapper.createArrayNode();
 		final Set<String> recordURIs = Sets.newHashSet();
 
-		for (final RDFModel rdfModel : optionalRDFModels.get()) {
+		for (final RDFModel rdfModel : rdfModels) {
 
 			// result.add(rdfModel.toRawJSON());
 
