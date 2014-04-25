@@ -14,6 +14,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.avgl.dmp.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
+import de.avgl.dmp.persistence.service.schema.test.utils.AttributeServiceTestUtils;
+import de.avgl.dmp.persistence.service.schema.test.utils.ClaszServiceTestUtils;
+import de.avgl.dmp.persistence.service.schema.test.utils.SchemaServiceTestUtils;
+
 import org.apache.commons.io.FileUtils;
 import org.culturegraph.mf.stream.converter.JsonEncoder;
 import org.culturegraph.mf.stream.sink.ObjectJavaIoWriter;
@@ -274,6 +279,10 @@ public class TransformationFlowTest extends GuicedTest {
 
 		// clean-up
 		// TODO: move clean-up to @After
+		
+		final DataModel freshOutputDataModel = dataModelService.getObject(internalModelId);
+
+		final Schema outputDataModelSchema = freshOutputDataModel.getSchema();
 
 		final Map<Long, Attribute> attributes = Maps.newHashMap();
 
@@ -306,26 +315,28 @@ public class TransformationFlowTest extends GuicedTest {
 
 		dataModelService.deleteObject(updatedInputDataModel.getId());
 		final SchemaService schemaService = injector.getInstance(SchemaService.class);
-
+		final SchemaServiceTestUtils schemaServiceTestUtils = new SchemaServiceTestUtils();
+		
+		schemaServiceTestUtils.removeAddedAttributePathsFromOutputModelSchema(outputDataModelSchema, attributes, attributePaths);
 		schemaService.deleteObject(schema.getId());
 
-		final AttributePathService attributePathService = injector.getInstance(AttributePathService.class);
+		final AttributePathServiceTestUtils attributePathServiceTestUtils = new AttributePathServiceTestUtils();
 
 		for (final AttributePath attributePath : attributePaths.values()) {
 
-			attributePathService.deleteObject(attributePath.getId());
+			attributePathServiceTestUtils.deleteObject(attributePath);
 		}
 
-		final AttributeService attributeService = injector.getInstance(AttributeService.class);
+		final AttributeServiceTestUtils attributeServiceTestUtils = new AttributeServiceTestUtils();
 
 		for (final Attribute attribute : attributes.values()) {
 
-			attributeService.deleteObject(attribute.getId());
+			attributeServiceTestUtils.deleteObject(attribute);
 		}
 
-		final ClaszService claszService = injector.getInstance(ClaszService.class);
+		final ClaszServiceTestUtils claszServiceTestUtils = new ClaszServiceTestUtils();
 
-		claszService.deleteObject(recordClass.getId());
+		claszServiceTestUtils.deleteObject(recordClass);
 
 		// clean-up
 		configurationService.deleteObject(updatedConfiguration.getId());

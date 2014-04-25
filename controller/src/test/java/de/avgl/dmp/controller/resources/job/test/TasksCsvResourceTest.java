@@ -279,15 +279,15 @@ public class TasksCsvResourceTest extends ResourceTest {
  
 		for (final AttributePath attributePath : attributePaths.values()) {
 
-			attributePathsResourceTestUtils.deleteObject(attributePath);
+			attributePathsResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(attributePath);
 		}
 
 		for (final Attribute attribute : attributes.values()) {
 
-			attributesResourceTestUtils.deleteObject(attribute);
+			attributesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(attribute);
 		}
 
-		classesResourceTestUtils.deleteObject(recordClass);
+		classesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(recordClass);
 		resourcesResourceTestUtils.deleteObject(resource);
 		configurationsResourceTestUtils.deleteObject(configuration);
 

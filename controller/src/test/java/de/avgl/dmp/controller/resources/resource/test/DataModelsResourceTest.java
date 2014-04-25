@@ -144,9 +144,9 @@ public class DataModelsResourceTest extends
 
 		// START schema preparation
 
-		for (int i = 3; i < 6; i++) {
+		for (int i = 1; i < 6; i++) {
 
-			if (i == 4) {
+			if (i == 2 || i == 4) {
 
 				// exclude attributes from internal model schema (because they should already exist)
 
