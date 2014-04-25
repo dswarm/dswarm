@@ -12,6 +12,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.culturegraph.mf.exceptions.MorphDefException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
@@ -33,6 +34,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 import de.avgl.dmp.converter.DMPConverterException;
+import de.avgl.dmp.converter.DMPMorphDefException;
 import de.avgl.dmp.converter.mf.stream.RDFModelReceiver;
 import de.avgl.dmp.converter.mf.stream.TripleEncoder;
 import de.avgl.dmp.converter.mf.stream.reader.JsonNodeReader;
@@ -298,10 +300,15 @@ public class TransformationFlow {
 	}
 
 	public static TransformationFlow fromString(final String morphScriptString, final DataModel outputDataModel,
-			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
+			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) throws DMPConverterException {
 
 		final java.io.StringReader stringReader = new java.io.StringReader(morphScriptString);
-		final Metamorph transformer = new Metamorph(stringReader);
+		final Metamorph transformer;
+		try {
+			transformer = new Metamorph(stringReader);
+		} catch (final MorphDefException e) {
+			throw new DMPMorphDefException(e.getMessage(), e);
+		}
 
 		return new TransformationFlow(transformer, morphScriptString, outputDataModel, internalModelServiceFactoryProviderArg);
 	}

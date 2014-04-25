@@ -14,6 +14,7 @@ import com.wordnik.swagger.jersey.listing.JerseyResourceListingProvider;
 
 import de.avgl.dmp.controller.providers.filter.CorsResponseFilter;
 import de.avgl.dmp.controller.providers.handler.DMPJsonExceptionHandler;
+import de.avgl.dmp.controller.providers.handler.DMPMorphDefExceptionHandler;
 import de.avgl.dmp.controller.providers.handler.ExceptionHandler;
 import de.avgl.dmp.controller.providers.handler.WebApplicationExceptionHandler;
 import de.avgl.dmp.controller.servlet.DMPInjector;
@@ -21,7 +22,7 @@ import de.avgl.dmp.controller.servlet.DMPInjector;
 /**
  * The configuration for the backend API. Packages with (web) resources, API feature classes (e.g. {@link MultiPartFeature}) etc.
  * can be registered here.
- * 
+ *
  * @author phorn
  * @author tgaengler
  */
@@ -30,14 +31,19 @@ class DMPApplication extends ResourceConfig {
 
 	/**
 	 * Creates a new backend API configuration with the given service locator (H2K service registry).
-	 * 
+	 *
 	 * @param serviceLocator a H2K service registry
 	 */
 	@Inject
 	public DMPApplication(final ServiceLocator serviceLocator) {
 
 		packages("de.avgl.dmp.controller.resources", "com.wordnik.swagger.jersey.listing");
-		registerClasses(DMPJsonExceptionHandler.class, ExceptionHandler.class, WebApplicationExceptionHandler.class, CorsResponseFilter.class);
+		registerClasses(
+				DMPJsonExceptionHandler.class,
+				DMPMorphDefExceptionHandler.class,
+				ExceptionHandler.class,
+				WebApplicationExceptionHandler.class,
+				CorsResponseFilter.class);
 		register(MultiPartFeature.class);
 
 		// swagger
