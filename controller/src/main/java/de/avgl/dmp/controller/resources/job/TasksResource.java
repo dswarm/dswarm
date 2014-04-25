@@ -45,7 +45,7 @@ import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 
 /**
  * A resource (controller service) for {@link Task}s.
- * 
+ *
  * @author tgaengler
  */
 @RequestScoped
@@ -81,7 +81,7 @@ public class TasksResource {
 	/**
 	 * Creates a new resource (controller service) for {@link Transformation}s with the provider of the transformation persistence
 	 * service, the object mapper and metrics registry.
-	 * 
+	 *
 	 * @param dataModelUtilArg the data model util
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
@@ -98,7 +98,7 @@ public class TasksResource {
 
 	/**
 	 * Builds a positive response with the given content.
-	 * 
+	 *
 	 * @param responseContent a response message
 	 * @return the response
 	 */
@@ -111,7 +111,7 @@ public class TasksResource {
 
 	/**
 	 * This endpoint executes the task that is given via its JSON representation and returns the result of the task execution.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one task
 	 * @return the result of the task execution
 	 * @throws IOException
@@ -164,8 +164,6 @@ public class TasksResource {
 			throw new DMPConverterException("there is no input data model for this task");
 		}
 
-		final TransformationFlow flow = TransformationFlow.fromTask(task, internalModelServiceFactoryProvider);
-
 		final Resource dataResource = inputDataModel.getDataResource();
 
 		if (dataResource == null) {
@@ -183,6 +181,8 @@ public class TasksResource {
 
 			throw new DMPConverterException("there is no configuration for this input data model of this task");
 		}
+
+		final TransformationFlow flow = TransformationFlow.fromTask(task, internalModelServiceFactoryProvider);
 
 		final Optional<Iterator<Tuple<String, JsonNode>>> inputData = dataModelUtil.getData(inputDataModel.getId());
 
@@ -260,7 +260,7 @@ public class TasksResource {
 
 	/**
 	 * This endpoint executes the task that is given via its JSON representation and returns the result of the task execution.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one task
 	 * @return the result of the task execution
 	 * @throws IOException
