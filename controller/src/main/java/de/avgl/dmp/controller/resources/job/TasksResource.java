@@ -197,13 +197,7 @@ public class TasksResource {
 
 		final boolean writeResultToDatahub;
 
-		if (persistResult != null) {
-
-			writeResultToDatahub = persistResult.booleanValue();
-		} else {
-
-			writeResultToDatahub = false;
-		}
+		writeResultToDatahub = persistResult != null && persistResult;
 
 		final String result = flow.apply(tupleIterator, writeResultToDatahub);
 
