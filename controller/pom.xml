@@ -271,6 +271,13 @@
 			<artifactId>xsom</artifactId>
 			<version>20110809</version>
 		</dependency>
+
+        <dependency>
+            <groupId>de.avgl.dmp</groupId>
+            <artifactId>graph</artifactId>
+            <version>1.0</version>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 
 	<dependencyManagement>
