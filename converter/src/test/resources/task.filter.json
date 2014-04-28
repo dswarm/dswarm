@@ -30,7 +30,7 @@
                 		},
 						"parameter_mappings": {
                             "inputString": "feldnr,feldvalue",
-                            "delimiter": " "
+                            "delimiter": ","
                         }
                     }]
                 },

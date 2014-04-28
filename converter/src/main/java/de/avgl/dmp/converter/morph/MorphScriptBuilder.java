@@ -416,6 +416,8 @@ public class MorphScriptBuilder {
 			collection = doc.createElement("combine");
 
 			collection.setAttribute("name", "@" + collectionNameAttribute);
+			
+			collection.setAttribute("reset", "true");
 
 			final Iterator<String> iter = collectionSourceAttributes.iterator();
 
@@ -427,7 +429,7 @@ public class MorphScriptBuilder {
 
 				valueString += "${" + sourceAttribute + "}";
 
-				if ((i + 1) < collectionSourceAttributes.size()) {
+				if ((i++ + 1) < collectionSourceAttributes.size()) {
 					valueString += delimiterString;
 				}
 
@@ -532,7 +534,7 @@ public class MorphScriptBuilder {
 				}
 				
 				final Element combineAsFilter = doc.createElement("combine");
-				combineAsFilter.setAttribute("reset", "true");
+				combineAsFilter.setAttribute("reset", "false");
 				combineAsFilter.setAttribute("sameEntity", "true");
 				combineAsFilter.setAttribute("name", "@" + variable);
 				combineAsFilter.setAttribute("value", "${" + variable + ".filtered}");
@@ -540,7 +542,7 @@ public class MorphScriptBuilder {
 				for (final Entry<String, String> filter : filterExpressionMap.entrySet()) {
 					
 					final Element combineAsFilterData = doc.createElement("data");
-					combineAsFilterData.setAttribute("source", filter.getKey());
+					combineAsFilterData.setAttribute("source", StringEscapeUtils.unescapeXml(filter.getKey()));
 					
 					final Element combineAsFilterDataFunction = doc.createElement("equals");
 					combineAsFilterDataFunction.setAttribute("string", filter.getValue());
