@@ -285,7 +285,21 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		final ArrayNode actualJSONArray = objectMapper.readValue(actualResultJSONString, ArrayNode.class);
 		final ObjectNode actualElementInArray = (ObjectNode) actualJSONArray.get(0);
 		final String actualKeyInArray = actualElementInArray.fieldNames().next();
-		final ObjectNode actualJSON = (ObjectNode) actualElementInArray.get(actualKeyInArray).get(0);
+		final ArrayNode actualKeyArray = (ArrayNode) actualElementInArray.get(actualKeyInArray);
+		ObjectNode actualJSON = null;
+
+		for(final JsonNode actualKeyArrayItem : actualKeyArray) {
+
+			if(actualKeyArrayItem.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#type") != null) {
+
+				// don't take the type JSON object for comparison
+
+				continue;
+			}
+
+			actualJSON = (ObjectNode) actualKeyArrayItem;
+		}
+
 		final String finalActualJSONString = objectMapper.writeValueAsString(actualJSON);
 
 		assertEquals(finalExpectedJSONString.length(), finalActualJSONString.length());
