@@ -11,12 +11,15 @@ import org.junit.Test;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Provider;
 
 import de.avgl.dmp.converter.GuicedTest;
 import de.avgl.dmp.converter.flow.TransformationFlow;
+import de.avgl.dmp.converter.morph.MorphScriptBuilder;
+import de.avgl.dmp.persistence.model.job.Task;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
@@ -88,6 +91,31 @@ public class FilterTransformationFlowTest extends GuicedTest {
 		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = injector.getProvider(InternalModelServiceFactory.class);
 
 		final TransformationFlow flow = TransformationFlow.fromFile("filtermorph4.xml", internalModelServiceFactoryProvider);
+
+		final String actual = flow.applyResource("test-mabxml.tuples.json");
+
+		final ArrayNode expectedJson = replaceKeyWithActualKey(expected, actual);
+		final String finalExpected = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(expectedJson);
+
+		assertEquals(finalExpected, actual);
+	}
+	
+	@Test
+	public void testFilterEndToEndWithMorphScriptBuilder() throws Exception {
+
+		final String expected = DMPPersistenceUtil.getResourceAsString("test-mabxml.filter.morphscript.result.json");
+
+		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = injector.getProvider(InternalModelServiceFactory.class);
+
+		final String request = DMPPersistenceUtil.getResourceAsString("task.filter.json");
+		
+		final ObjectMapper objectMapper = injector.getInstance(ObjectMapper.class);
+		
+		final Task task = objectMapper.readValue(request, Task.class);
+		
+		final String morphScriptString = new MorphScriptBuilder().apply(task).toString();
+		
+		final TransformationFlow flow = TransformationFlow.fromString(morphScriptString, internalModelServiceFactoryProvider);
 
 		final String actual = flow.applyResource("test-mabxml.tuples.json");
 

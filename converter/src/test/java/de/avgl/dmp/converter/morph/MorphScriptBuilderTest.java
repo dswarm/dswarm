@@ -46,7 +46,7 @@ public class MorphScriptBuilderTest extends GuicedTest {
 		
 		final String morphScriptString = new MorphScriptBuilder().apply(task).toString();
 		
-		System.out.println(morphScriptString);
+		//System.out.println(morphScriptString);
 		
 	}
 	

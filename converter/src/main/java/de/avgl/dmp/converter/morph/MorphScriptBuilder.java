@@ -10,6 +10,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -32,12 +33,12 @@ import javax.xml.validation.SchemaFactory;
 
 import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.text.translate.NumericEntityEscaper;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -323,11 +324,19 @@ public class MorphScriptBuilder {
 			final String inputAttributePathString = mappingAttributePathInstance.getAttributePath().toAttributePath();
 
 			final List<String> variablesFromInputAttributePaths = getParameterMappingKeys(inputAttributePathString, transformationComponent);
+			
+			final String filterExpressionString = mappingAttributePathInstance.getFilter().getExpression();
+			
+			String filterExpressionStringUnescaped = null;
+			
+			if (filterExpressionString != null) {
+				
+				filterExpressionStringUnescaped = StringEscapeUtils.unescapeXml(filterExpressionString);
+			}
+			
+			final List<Element> inputAttributePathsToVars = addInputAttributePathVars(variablesFromInputAttributePaths, inputAttributePathString, rules,
+					inputAttributePaths, filterExpressionStringUnescaped);
 
-			final List<Element> datas = addInputAttributePathMappings(variablesFromInputAttributePaths, inputAttributePathString, rules,
-					inputAttributePaths);
-
-			// TODO: filter inputAttributePath in data section
 		}
 
 		final String outputAttributePath = mapping.getOutputAttributePath().getAttributePath().toAttributePath();
@@ -480,15 +489,15 @@ public class MorphScriptBuilder {
 		return parameterMappingKeys;
 	}
 
-	private List<Element> addInputAttributePathMappings(final List<String> variables, final String inputAttributePathString, final Element rules,
-			final Map<String, List<String>> inputAttributePaths) {
-
+	private List<Element> addInputAttributePathVars(final List<String> variables, final String inputAttributePathString, final Element rules,
+			final Map<String, List<String>> inputAttributePaths, final String filterExpressionString) {
+		
 		if (variables == null || variables.isEmpty()) {
 
 			return null;
 		}
 
-		List<Element> datas = null;
+		List<Element> vars = null;
 
 		final String inputAttributePathStringXMLEscaped = StringEscapeUtils.escapeXml(inputAttributePathString);
 
@@ -499,22 +508,69 @@ public class MorphScriptBuilder {
 				continue;
 			}
 
-			final Element data = doc.createElement("data");
-			data.setAttribute("source", inputAttributePathStringXMLEscaped);
+			if (filterExpressionString == null	|| filterExpressionString.isEmpty()) {
 
-			data.setAttribute("name", "@" + variable);
+				final Element data = doc.createElement("data");
+				data.setAttribute("source", inputAttributePathStringXMLEscaped);
 
-			rules.appendChild(data);
+				data.setAttribute("name", "@" + variable);
 
-			if (datas == null) {
+				rules.appendChild(data);
 
-				datas = Lists.newArrayList();
+			} else {
+				
+				Map<String,String> filterExpressionMap = new HashMap<String, String>();
+				 
+				ObjectMapper objectMapper = new ObjectMapper();
+				
+				try {
+					
+					filterExpressionMap = objectMapper.readValue(filterExpressionString, HashMap.class);
+				} catch (IOException e) {
+				
+					e.printStackTrace();
+				}
+				
+				final Element combineAsFilter = doc.createElement("combine");
+				combineAsFilter.setAttribute("reset", "true");
+				combineAsFilter.setAttribute("sameEntity", "true");
+				combineAsFilter.setAttribute("name", "@" + variable);
+				combineAsFilter.setAttribute("value", "${" + variable + ".filtered}");
+				
+				for (final Entry<String, String> filter : filterExpressionMap.entrySet()) {
+					
+					final Element combineAsFilterData = doc.createElement("data");
+					combineAsFilterData.setAttribute("source", filter.getKey());
+					
+					final Element combineAsFilterDataFunction = doc.createElement("equals");
+					combineAsFilterDataFunction.setAttribute("string", filter.getValue());
+					
+					combineAsFilterData.appendChild(combineAsFilterDataFunction);
+					combineAsFilter.appendChild(combineAsFilterData);
+					
+				}
+				
+				final Element combineAsFilterDataOut = doc.createElement("data");
+				combineAsFilterDataOut.setAttribute("name", variable + ".filtered");
+				combineAsFilterDataOut.setAttribute("source", inputAttributePathStringXMLEscaped);
+				
+				combineAsFilter.appendChild(combineAsFilterDataOut);
+				
+				rules.appendChild(combineAsFilter);
+				
+				
 			}
+			
+			if (vars == null) {
+
+				vars = Lists.newArrayList();
+			}
+			
 
 			inputAttributePaths.put(inputAttributePathStringXMLEscaped, variables);
 		}
 
-		return datas;
+		return vars;
 	}
 
 	private Element addOutputAttributePathMapping(final List<String> variables, final String outputAttributePathString, final Element rules) {
