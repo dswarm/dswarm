@@ -25,10 +25,11 @@ import com.wordnik.swagger.annotations.ApiResponses;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.status.DMPStatus;
+import de.avgl.dmp.persistence.GraphDatabaseConfig;
 
 /**
  * Created by tgaengler on 28/04/14.
- * 
+ *
  * @author tgaengler
  */
 @RequestScoped
@@ -50,15 +51,15 @@ public class RDFResource {
 	private final String							graphEndpoint;
 
 	@Inject
-	public RDFResource(final DMPStatus dmpStatusArg, @Named("dmp_graph_endpoint") final String graphEndpointArg) {
+	public RDFResource(final DMPStatus dmpStatusArg, final GraphDatabaseConfig graphEndpointArg) {
 
 		dmpStatus = dmpStatusArg;
-		graphEndpoint = graphEndpointArg;
+		graphEndpoint = graphEndpointArg.getEndpoint();
 	}
 
 	/**
 	 * for triggering a download
-	 * 
+	 *
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "exports all data from the graph DB in the given RDF serialisation format", notes = "Returns exported data in the given RDF serialisation format.")

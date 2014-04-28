@@ -65,8 +65,10 @@ public class PersistenceModule extends AbstractModule {
 		bind(String.class).annotatedWith(Names.named("TdbPath")).toInstance(tdbPath);
 
 		final String graphEndpoint = properties.getProperty("dmp_graph_endpoint", "http://localhost:7474/graph");
+		final GraphDatabaseConfig gdbConfig = new GraphDatabaseConfig(graphEndpoint);
 
 		bind(String.class).annotatedWith(Names.named("dmp_graph_endpoint")).toInstance(graphEndpoint);
+		bind(GraphDatabaseConfig.class).toInstance(gdbConfig);
 
 		bind(JsonToPojoMapper.class);
 
