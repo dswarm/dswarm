@@ -76,8 +76,9 @@
                 "filter": {
                 	"id": 1,
                 	"name": "filter mabxml attributes nr and ind",
-                	"expression": "{&quot;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&amp;#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr&quot;: &quot;029&quot;, &quot;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&amp;#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind&quot;: &quot;m&quot;}"
-                }
+                	"expression": "{&quot;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&amp;#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr&quot;: &quot;077&quot;, &quot;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&amp;#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind&quot;: &quot;p&quot;}"
+                },
+                "ordinal": 2
             }],
             "output_attribute_path": {
                 "type": "MappingAttributePathInstance",

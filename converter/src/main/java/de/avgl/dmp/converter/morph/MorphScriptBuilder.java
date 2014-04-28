@@ -12,6 +12,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -325,6 +326,8 @@ public class MorphScriptBuilder {
 
 			final List<String> variablesFromInputAttributePaths = getParameterMappingKeys(inputAttributePathString, transformationComponent);
 			
+			final Integer ordinal = mappingAttributePathInstance.getOrdinal();
+			
 			final String filterExpressionString = mappingAttributePathInstance.getFilter().getExpression();
 			
 			String filterExpressionStringUnescaped = null;
@@ -335,7 +338,7 @@ public class MorphScriptBuilder {
 			}
 			
 			final List<Element> inputAttributePathsToVars = addInputAttributePathVars(variablesFromInputAttributePaths, inputAttributePathString, rules,
-					inputAttributePaths, filterExpressionStringUnescaped);
+					inputAttributePaths, filterExpressionStringUnescaped, ordinal);
 
 		}
 
@@ -492,7 +495,7 @@ public class MorphScriptBuilder {
 	}
 
 	private List<Element> addInputAttributePathVars(final List<String> variables, final String inputAttributePathString, final Element rules,
-			final Map<String, List<String>> inputAttributePaths, final String filterExpressionString) {
+			final Map<String, List<String>> inputAttributePaths, final String filterExpressionString, final Integer ordinal) {
 		
 		if (variables == null || variables.isEmpty()) {
 
@@ -503,11 +506,30 @@ public class MorphScriptBuilder {
 
 		final String inputAttributePathStringXMLEscaped = StringEscapeUtils.escapeXml(inputAttributePathString);
 
-		for (final String variable : variables) {
+		for (String variable : variables) {
 
 			if (variable.startsWith(OUTPUT_VARIABLE_PREFIX_IDENTIFIER)) {
 
 				continue;
+			}
+			
+			if (ordinal != null && ordinal > 0) {
+				
+				final Element occurrenceData = doc.createElement("data");
+				
+				occurrenceData.setAttribute("name", "@" + variable);
+				
+				variable = variable + ".occurrence";
+				
+				occurrenceData.setAttribute("source", "@" + variable);
+				
+				final Element occurrenceFunction = doc.createElement("occurrence");
+				
+				occurrenceFunction.setAttribute("only", String.valueOf(ordinal));
+				
+				occurrenceData.appendChild(occurrenceFunction);
+				
+				rules.appendChild(occurrenceData);
 			}
 
 			if (filterExpressionString == null	|| filterExpressionString.isEmpty()) {
@@ -703,9 +725,9 @@ public class MorphScriptBuilder {
 			}
 		}
 
-		// this is a list of variable names, which should be unique
-		final Set<String> sourceAttributes = Sets.newHashSet();
-
+		// this is a list of variable names, which should be unique and ordered
+		final Set<String> sourceAttributes = new LinkedHashSet<String>();
+	
 		for (final String inputString : inputStrings) {
 
 			sourceAttributes.add(inputString);
