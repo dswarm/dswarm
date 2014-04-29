@@ -128,7 +128,8 @@ $ mv dmp-graph/target/graph-1.0-jar-with-dependencies.jar dmp-graph.jar
 
 TODO: create new profile
 
-edit `datamanagement-platform/init/src/test/filters/dmp-sdvdmpdev.properties` with the following chages
+edit `datamanagement-platform/init/src/test/filters/dmp-sdvdmpdev.properties` with the following changes
+
 ```
 logging_root_path=/data/log/logs/dmp
 tmp_path=/data/log/tmp
@@ -152,6 +153,7 @@ However,when  the missing transitive dependency doesn't seem to be required, you
 
 
 short way:
+
 ```
 $ pushd dmp-backoffice-web
 $ make dist
@@ -159,6 +161,7 @@ $ popd
 ```
 
 longer way:
+
 ```
 $ pushd dmp-backoffice-web
 $ pushd yo
