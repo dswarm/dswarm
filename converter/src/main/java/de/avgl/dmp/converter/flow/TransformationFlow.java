@@ -12,6 +12,10 @@ import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.vocabulary.RDF;
+import de.avgl.dmp.persistence.util.RDFUtil;
 import org.culturegraph.mf.exceptions.MorphDefException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectPipe;
@@ -185,6 +189,18 @@ public class TransformationFlow {
 			if (recordClassUri == null) {
 
 				recordClassUri = rdfModel.getRecordClassURI();
+			}
+
+			// TODO: this a WORKAROUND to insert a default type (bibo:Document) for records in the output data model
+
+			if(rdfModel.getRecordClassURI() == null) {
+
+				final Resource recordResource = model.getResource(rdfModel.getRecordURIs().iterator().next());
+
+				if(recordResource != null) {
+
+					recordResource.addProperty(RDF.type, ResourceFactory.createResource("http://purl.org/ontology/bibo/Document"));
+				}
 			}
 
 			recordURIs.add(rdfModel.getRecordURIs().iterator().next());

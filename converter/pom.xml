@@ -45,6 +45,12 @@
 			<groupId>de.avgl.dmp</groupId>
 			<artifactId>persistence</artifactId>
 			<version>0.1-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>hamcrest-core</artifactId>
+					<groupId>org.hamcrest</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>de.avgl.dmp</groupId>
@@ -52,6 +58,12 @@
 			<version>0.1-SNAPSHOT</version>
 			<type>test-jar</type>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>hamcrest-core</artifactId>
+					<groupId>org.hamcrest</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.culturegraph</groupId>

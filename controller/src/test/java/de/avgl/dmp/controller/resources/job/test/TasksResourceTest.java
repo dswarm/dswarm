@@ -15,6 +15,7 @@ import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.validation.SchemaFactory;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -192,7 +193,23 @@ public class TasksResourceTest extends ResourceTest {
 		final String finalExpectedJSONString = objectMapper.writeValueAsString(expectedJSON);
 
 		final ArrayNode actualJSONArray = objectMapper.readValue(responseString, ArrayNode.class);
-		final ObjectNode actualJSON = (ObjectNode) actualJSONArray.get(0).get("record_data").get(0);
+		final ArrayNode actualKeyArray = (ArrayNode) actualJSONArray.get(0).get("record_data");
+		ObjectNode actualJSON = null;
+
+		for(final JsonNode actualKeyArrayItem : actualKeyArray) {
+
+			if(actualKeyArrayItem.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#type") != null) {
+
+				// don't take the type JSON object for comparison
+
+				continue;
+			}
+
+			actualJSON = (ObjectNode) actualKeyArrayItem;
+		}
+
+		Assert.assertNotNull("actual selected JSON node shouldn't be null", actualJSON);
+
 		final String finalActualJSONString = objectMapper.writeValueAsString(actualJSON);
 
 		assertEquals(finalExpectedJSONString.length(), finalActualJSONString.length());
@@ -222,7 +239,7 @@ public class TasksResourceTest extends ResourceTest {
 
 			final Set<AttributePath> attributePathsToDelete = schema.getAttributePaths();
 
-			if (attributePaths != null) {
+			if (attributePathsToDelete != null) {
 
 				for (final AttributePath attributePath : attributePathsToDelete) {
 

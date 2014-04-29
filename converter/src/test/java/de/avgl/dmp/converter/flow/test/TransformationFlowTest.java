@@ -160,8 +160,8 @@ public class TransformationFlowTest extends GuicedTest {
 
 		for (final org.culturegraph.mf.types.Triple triple : csvRecordTriples) {
 
-			final de.avgl.dmp.graph.json.Resource recordResource = DataModelUtils.mintRecordResource(Long.valueOf(triple.getSubject()), inputDataModel,
-					recordResources, model, recordClasz);
+			final de.avgl.dmp.graph.json.Resource recordResource = DataModelUtils.mintRecordResource(Long.valueOf(triple.getSubject()),
+					inputDataModel, recordResources, model, recordClasz);
 			final Predicate property = new Predicate(triple.getPredicate());
 
 			final ResourceNode subject = (ResourceNode) recordResource.getStatements().iterator().next().getSubject();
@@ -182,7 +182,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 		final Schema schema = freshInputDataModel.getSchema();
 
-		final Optional<Map<String, Model>> optionalModelMap = gdmService.getObjects(updatedInputDataModel.getId(), Optional.<Integer>absent());
+		final Optional<Map<String, Model>> optionalModelMap = gdmService.getObjects(updatedInputDataModel.getId(), Optional.<Integer> absent());
 
 		Assert.assertNotNull("CSV record model map optional shouldn't be null", optionalModelMap);
 		Assert.assertTrue("CSV record model map should be present", optionalModelMap.isPresent());
@@ -271,7 +271,17 @@ public class TransformationFlowTest extends GuicedTest {
 
 			final ObjectNode actualElement = (ObjectNode) actualNode;
 			final String actualKey = actualElement.fieldNames().next();
-			final ObjectNode actualRecordData = (ObjectNode) actualElement.get(actualKey).get(0);
+			ObjectNode actualRecordData = null;
+
+			for(final JsonNode actualRecordDataCandidate : actualElement.get(actualKey)) {
+
+				if(actualRecordDataCandidate.get(actualDataResourceSchemaBaseURI + "description") != null) {
+
+					actualRecordData = (ObjectNode) actualRecordDataCandidate;
+
+					break;
+				}
+			}
 
 			assertThat(actualRecordData.get(actualDataResourceSchemaBaseURI + "description").asText(),
 					equalTo(expectedRecordData.get(expectedDataResourceSchemaBaseURI + "description").asText()));
@@ -279,7 +289,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 		// clean-up
 		// TODO: move clean-up to @After
-		
+
 		final DataModel freshOutputDataModel = dataModelService.getObject(internalModelId);
 
 		final Schema outputDataModelSchema = freshOutputDataModel.getSchema();
@@ -294,7 +304,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 			final Set<AttributePath> attributePathsToDelete = schema.getAttributePaths();
 
-			if (attributePaths != null) {
+			if (attributePathsToDelete != null) {
 
 				for (final AttributePath attributePath : attributePathsToDelete) {
 
@@ -302,7 +312,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 					final Set<Attribute> attributesToDelete = attributePath.getAttributes();
 
-					if (attributePathsToDelete != null) {
+					if (attributesToDelete != null) {
 
 						for (final Attribute attribute : attributesToDelete) {
 
@@ -316,7 +326,7 @@ public class TransformationFlowTest extends GuicedTest {
 		dataModelService.deleteObject(updatedInputDataModel.getId());
 		final SchemaService schemaService = injector.getInstance(SchemaService.class);
 		final SchemaServiceTestUtils schemaServiceTestUtils = new SchemaServiceTestUtils();
-		
+
 		schemaServiceTestUtils.removeAddedAttributePathsFromOutputModelSchema(outputDataModelSchema, attributes, attributePaths);
 		schemaService.deleteObject(schema.getId());
 
@@ -343,7 +353,7 @@ public class TransformationFlowTest extends GuicedTest {
 		resourceService.deleteObject(updatedResource.getId());
 
 		// clean-up graph db
-		//InternalGDMGraphServiceTestUtils.cleanGraphDB();
+		InternalGDMGraphServiceTestUtils.cleanGraphDB();
 	}
 
 	@Test
@@ -461,11 +471,19 @@ public class TransformationFlowTest extends GuicedTest {
 			final ObjectNode actualElementInArray = (ObjectNode) jsonEntry;
 			final String actualKeyInArray = actualElementInArray.fieldNames().next();
 
-			final ObjectNode actualRecordData = (ObjectNode) actualElementInArray.get(actualKeyInArray).get(0);
+			final ArrayNode actualRecordDataArray = (ArrayNode) actualElementInArray.get(actualKeyInArray);
 
-			if (recordData.equals(actualRecordData.get(key).asText())) {
+			for (final JsonNode actualRecordData : actualRecordDataArray) {
 
-				return jsonEntry;
+				if (actualRecordData.get(key) == null) {
+
+					continue;
+				}
+
+				if (recordData.equals(actualRecordData.get(key).asText())) {
+
+					return jsonEntry;
+				}
 			}
 		}
 
