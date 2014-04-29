@@ -49,7 +49,25 @@ FLUSH PRIVILEGES;
 EOT
 ```
 
-then, add `wait_timeout = 1209600` to the section `[mysqld]` and restart mysql.
+then, open `/etc/mysql/my.cnf` and add the following line to the section `[mysqld]` (around line 45)
+
+```
+wait_timeout = 1209600
+```
+
+in the same file, same sections, change `datadir` to `/data/mysql` (around line 40)
+
+```
+datadir         = /data/mysql
+```
+
+and add this directory to AppArmor
+
+```
+# echo "alias /var/lib/mysql/ -> /data/mysql/," >> /etc/apparmor.d/tunables/alias
+# /etc/init.d/apparmor reload
+```
+
 
 **6**  setup Nginx
 
@@ -62,7 +80,7 @@ location /dmp {
 }
 ```
 
-move old content root and link the new one. lookupt for the correct user path! (the directory will be created later on)
+move old content root and link the new one. lookout for the correct user path! (the directory will be created later on)
 
 ```
 # mv /usr/share/nginx/{html,.old}
@@ -77,7 +95,17 @@ open /etc/tomcat7/server.xml at line 33 and add a `driverManagerProtection="fals
 <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" driverManagerProtection="false" />
 ```
 
-then give tomcat some more memory
+at line 73, same file, add this option `maxPostSize="104857600"`, so that the Connector block reads
+
+```
+    <Connector port="8080" protocol="HTTP/1.1"
+               connectionTimeout="20000"
+               maxPostSize="104857600"
+               URIEncoding="UTF-8"
+               redirectPort="8443" />
+```
+
+then, give tomcat some more memory
 
 ```
 # echo 'CATALINA_OPTS="-Xms4G -Xmx4G -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC -XX:MaxPermSize=512M"' >> /usr/share/tomcat7/bin/setenv.sh
@@ -85,10 +113,39 @@ then give tomcat some more memory
 
 **8**. setup neo4j
 
-edit `/etc/neo4j/neo4j-server.properties` around line 75, the following line has to be enabled and set
+edit `/etc/neo4j/neo4j-server.properties` and:
+
+- at line 12, change the database location
+
+```
+org.neo4j.server.database.location=/data/neo4j/data/graph.db
+```
+
+- at line 53, change the database location
+
+```
+org.neo4j.server.webadmin.rrdb.location=/data/neo4j/data/rrd
+```
+
+- at line 75 and add our graph extension
 
 ```
 org.neo4j.server.thirdparty_jaxrs_classes=de.avgl.dmp.graph.resources=/graph
+```
+
+edit `/etc/neo4j/logging.properties` and change line 54 to be
+
+```
+java.util.logging.FileHandler.pattern=/data/neo4j/log/neo4j.%u.%g.log
+```
+
+then, create a symlink from the previous log location to the external partition
+
+```
+# mv /var/lib/neo4j/data/{log,-old}
+# ln -s /data/neo4j/log /var/lib/neo4j/data/log
+# mkdir /data/neo4j/log
+# chown -R neo4j:adm /data/neo4j
 ```
 
 
@@ -98,7 +155,7 @@ org.neo4j.server.thirdparty_jaxrs_classes=de.avgl.dmp.graph.resources=/graph
 $ ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa -N ''
 ```
 
-**10**. add ssh key do deployment hooks in gitlab
+**10**. add ssh key to deployment hooks in gitlab
 
 - copy the contents of the public key at `~/.ssh/id_rsa.pub`
 - open https://git.slub-dresden.de/dmp/datamanagement-platform/deploy_keys/new to add a new deploy key
@@ -126,45 +183,19 @@ $ mv dmp-graph/target/graph-1.0-jar-with-dependencies.jar dmp-graph.jar
 
 **13**. build backend
 
-TODO: create new profile
-
-edit `datamanagement-platform/init/src/test/filters/dmp-sdvdmpdev.properties` with the following changes
-
-```
-logging_root_path=/data/log/logs/dmp
-tmp_path=/data/log/tmp
-```
-
-then
-
 ```
 $ pushd datamanagement-platform
-$ mvn -U -PSDVDMPDEV -DskipTests clean install -Ddb.mysql.username=dmp -Ddb.mysql.password=dmp
+$ mvn -U -PSDVDSWARM01 -DskipTests clean install
 $ pushd controller
-$ mvn -U -PSDVDMPDEV -DskipTests war:war -Ddb.mysql.username=dmp -Ddb.mysql.password=dmp
+$ mvn -U -PSDVDSWARM01 -DskipTests war:war
 $ popd; popd
 $ mv datamanagement-platform/controller/target/controller-0.1-SNAPSHOT.war dmp.war
 ```
 
 **14**. build frontend
 
-_Note:_ as of 2014-04-30, npm has a rather [nasty](https://github.com/npm/npm/issues/5157) [bug](https://github.com/npm/npm/issues/5162), making it unable to build the frontend the short way.
-However,when  the missing transitive dependency doesn't seem to be required, you can try build the long way
-
-
-short way:
-
 ```
-$ pushd dmp-backoffice-web
-$ make dist
-$ popd
-```
-
-longer way:
-
-```
-$ pushd dmp-backoffice-web
-$ pushd yo
+$ pushd dmp-backoffice-web; pushd yo
 $ npm install
 $ bower install
 $ STAGE=unstable DMP_HOME=../../datamanagement-platform grunt build
@@ -204,19 +235,3 @@ $ pushd dmp-backoffice-web; git pull; popd
 ```
 
 **2**. repeat steps 12 to 15 from installation as necessary
-
-
-
-TODO: move data from mysql to /data
-TODO: move data from neo4j to /data
-TODO: tomcat server.xml
-```
-<Connector port="8088" protocol="HTTP/1.1"
-               connectionTimeout="20000"
-               maxPostSize="104857600"
-               URIEncoding="UTF-8"
-               redirectPort="8443" />
-```
-
-
-
