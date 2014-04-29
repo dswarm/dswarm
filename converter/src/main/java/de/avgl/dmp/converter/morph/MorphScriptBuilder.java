@@ -328,13 +328,16 @@ public class MorphScriptBuilder {
 			
 			final Integer ordinal = mappingAttributePathInstance.getOrdinal();
 			
-			final String filterExpressionString = mappingAttributePathInstance.getFilter().getExpression();
-			
 			String filterExpressionStringUnescaped = null;
 			
-			if (filterExpressionString != null) {
+			if (mappingAttributePathInstance.getFilter() != null) {
+			
+				final String filterExpressionString = mappingAttributePathInstance.getFilter().getExpression();
+			
+				if (filterExpressionString != null && !filterExpressionString.isEmpty()) {
 				
-				filterExpressionStringUnescaped = StringEscapeUtils.unescapeXml(filterExpressionString);
+					filterExpressionStringUnescaped = StringEscapeUtils.unescapeXml(filterExpressionString);
+				}
 			}
 			
 			final List<Element> inputAttributePathsToVars = addInputAttributePathVars(variablesFromInputAttributePaths, inputAttributePathString, rules,

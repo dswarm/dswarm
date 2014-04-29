@@ -55,8 +55,7 @@
                         "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
                         "name": "nr"
                     }]
-                },
-                "filter": {}
+                }
             }, {
                 "type": "MappingAttributePathInstance",
                 "name": "input mapping attribute path instance",
