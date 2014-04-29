@@ -226,7 +226,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 			final Set<AttributePath> attributePathsToDelete = schema.getAttributePaths();
 
-			if (attributePaths != null) {
+			if (attributePathsToDelete != null) {
 
 				for (final AttributePath attributePath : attributePathsToDelete) {
 
@@ -234,7 +234,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 					final Set<Attribute> attributesToDelete = attributePath.getAttributes();
 
-					if (attributePathsToDelete != null) {
+					if (attributesToDelete != null) {
 
 						for (final Attribute attribute : attributesToDelete) {
 
