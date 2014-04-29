@@ -43,7 +43,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.google.common.io.CharSource;
 import com.google.common.io.Resources;
 
@@ -546,16 +545,16 @@ public class MorphScriptBuilder {
 
 			} else {
 				
-				Map<String,String> filterExpressionMap = new HashMap<String, String>();
-				 
+				Map<String,String> filterExpressionMap = Maps.newHashMap();
+				
 				ObjectMapper objectMapper = new ObjectMapper();
 				
 				try {
-					
+	
 					filterExpressionMap = objectMapper.readValue(filterExpressionString, HashMap.class);
 				} catch (IOException e) {
-				
-					e.printStackTrace();
+
+					LOG.debug("something went wrong while deserialize filter expression" + e);
 				}
 				
 				final Element combineAsFilter = doc.createElement("combine");
