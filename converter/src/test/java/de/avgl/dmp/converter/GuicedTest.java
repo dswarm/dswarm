@@ -60,6 +60,8 @@ public class GuicedTest {
 		injector = getInjector();
 
 		injector.getInstance(PersistService.class).start();
+
+		de.avgl.dmp.persistence.GuicedTest.startUp();
 	}
 
 	@AfterClass

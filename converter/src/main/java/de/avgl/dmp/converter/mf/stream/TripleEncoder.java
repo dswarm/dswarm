@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.vocabulary.RDF;
 import org.apache.commons.lang3.StringUtils;
 import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultStreamPipe;
@@ -129,6 +131,7 @@ public final class TripleEncoder extends DefaultStreamPipe<ObjectReceiver<RDFMod
 		// value = literal or object
 		// TODO: only literals atm, i.e., how to determine other resources?
 		// => still valid: how to determine other resources!
+		// ==> @phorn proposed to utilise "<" ">" to identify resource ids (uris)
 		if (name == null) {
 
 			return;
@@ -150,7 +153,24 @@ public final class TripleEncoder extends DefaultStreamPipe<ObjectReceiver<RDFMod
 
 			if (null != recordResource) {
 
-				recordResource.addProperty(attributeProperty, value);
+				// TODO: this is only a HOTFIX for creating resources from resource type uris
+
+				if(!RDF.type.getURI().equals(propertyUri)) {
+
+					recordResource.addProperty(attributeProperty, value);
+				} else {
+
+					// check, whether value is really a URI
+					if(isValidUri(value)) {
+
+						final Resource typeResource = ResourceFactory.createResource(value);
+
+						recordResource.addProperty(attributeProperty, typeResource);
+					} else {
+
+						recordResource.addProperty(attributeProperty, value);
+					}
+				}
 			} else {
 
 				throw new MetafactureException("couldn't get a resource for adding this property");

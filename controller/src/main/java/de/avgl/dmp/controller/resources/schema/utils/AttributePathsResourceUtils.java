@@ -25,9 +25,6 @@ import de.avgl.dmp.persistence.service.schema.AttributePathService;
 
 /**
  * @author tgaengler
- * @param <POJOCLASSPERSISTENCESERVICE>
- * @param <POJOCLASS>
- * @param <POJOCLASSIDTYPE>
  */
 public class AttributePathsResourceUtils extends BasicIDResourceUtils<AttributePathService, ProxyAttributePath, AttributePath> {
 
@@ -119,6 +116,6 @@ public class AttributePathsResourceUtils extends BasicIDResourceUtils<AttributeP
 	public ProxyAttributePath createObject(final AttributePath objectFromJSON, final AttributePathService persistenceService)
 			throws DMPPersistenceException {
 
-		return persistenceService.createOrGetObject(objectFromJSON.getAttributePath());
+		return persistenceService.createOrGetObjectTransactional(objectFromJSON.getAttributePath());
 	}
 }

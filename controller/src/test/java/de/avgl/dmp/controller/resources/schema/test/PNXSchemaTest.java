@@ -16,6 +16,9 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import de.avgl.dmp.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
+import de.avgl.dmp.persistence.service.schema.test.utils.AttributeServiceTestUtils;
+import de.avgl.dmp.persistence.service.schema.test.utils.ClaszServiceTestUtils;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.MultiPart;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
@@ -154,17 +157,17 @@ public class PNXSchemaTest extends ResourceTest {
 
 		for (final AttributePath attributePath : attributePaths.values()) {
 
-			attributePathsResourceTestUtils.deleteObject(attributePath);
+			attributePathsResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(attributePath);
 		}
 
 		for (final Attribute attribute : attributes.values()) {
 
-			attributesResourceTestUtils.deleteObject(attribute);
+			attributesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(attribute);
 		}
 
 		if (recordClass != null) {
 
-			claszesResourceTestUtils.deleteObject(recordClass);
+			claszesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(recordClass);
 		}
 
 		// clean-up graph db

@@ -98,7 +98,7 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 
 		responseObject = jpaService.getObject(expectedObject.getId());
 
-		Assert.assertNotNull("the updated " + type + " shoudln't be null", responseObject);
+		Assert.assertNotNull("the updated " + type + " shouldn't be null", responseObject);
 		Assert.assertEquals("the " + type + "s are not equal", expectedObject, responseObject);
 
 		reset();

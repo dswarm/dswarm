@@ -5,6 +5,8 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 
+import de.avgl.dmp.persistence.service.schema.test.utils.AttributeServiceTestUtils;
+import de.avgl.dmp.persistence.service.schema.test.utils.ClaszServiceTestUtils;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -37,10 +39,8 @@ import de.avgl.dmp.persistence.service.internal.test.utils.InternalGDMGraphServi
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
-import de.avgl.dmp.persistence.service.schema.AttributePathService;
-import de.avgl.dmp.persistence.service.schema.AttributeService;
-import de.avgl.dmp.persistence.service.schema.ClaszService;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
+import de.avgl.dmp.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
 
 public class InternalGDMGraphServiceTest extends GuicedTest {
 
@@ -170,24 +170,24 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 		final SchemaService schemaService = injector.getInstance(SchemaService.class);
 
 		schemaService.deleteObject(schema.getId());
-
-		final AttributePathService attributePathService = injector.getInstance(AttributePathService.class);
+		
+		final AttributePathServiceTestUtils attributePathServiceTestUtils = new AttributePathServiceTestUtils();
 
 		for (final AttributePath attributePath : attributePaths.values()) {
 
-			attributePathService.deleteObject(attributePath.getId());
+			attributePathServiceTestUtils.deleteObject(attributePath);
 		}
-
-		final AttributeService attributeService = injector.getInstance(AttributeService.class);
+		
+		final AttributeServiceTestUtils attributeServiceTestUtils = new AttributeServiceTestUtils();
 
 		for (final Attribute attribute : attributes.values()) {
 
-			attributeService.deleteObject(attribute.getId());
+			attributeServiceTestUtils.deleteObject(attribute);
 		}
 
-		final ClaszService claszService = injector.getInstance(ClaszService.class);
+		final ClaszServiceTestUtils claszServiceTestUtils = new ClaszServiceTestUtils();
 
-		claszService.deleteObject(recordClass.getId());
+		claszServiceTestUtils.deleteObject(recordClass);
 
 		configurationService.deleteObject(updatedConfiguration.getId());
 		resourceService.deleteObject(updatedResource.getId());

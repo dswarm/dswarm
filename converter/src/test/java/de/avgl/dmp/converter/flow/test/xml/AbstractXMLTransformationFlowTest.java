@@ -2,11 +2,7 @@ package de.avgl.dmp.converter.flow.test.xml;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -45,25 +41,30 @@ import de.avgl.dmp.persistence.service.internal.test.utils.InternalGDMGraphServi
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
-import de.avgl.dmp.persistence.service.schema.AttributePathService;
-import de.avgl.dmp.persistence.service.schema.AttributeService;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
+import de.avgl.dmp.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
+import de.avgl.dmp.persistence.service.schema.test.utils.AttributeServiceTestUtils;
+import de.avgl.dmp.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
-	protected final String			taskJSONFileName;
+	protected final String						taskJSONFileName;
 
-	protected final String			expectedResultJSONFileName;
+	protected final String						expectedResultJSONFileName;
 
-	protected final String			recordTag;
+	protected final String						recordTag;
 
-	protected final String			xmlNamespace;
+	protected final String						xmlNamespace;
 
-	protected final String			exampleDataResourceFileName;
+	protected final String						exampleDataResourceFileName;
 
-	protected final ObjectMapper	objectMapper;
+	protected final ObjectMapper				objectMapper;
+
+	private final AttributeServiceTestUtils		attributeServiceTestUtils;
+	private final AttributePathServiceTestUtils	attributePathServiceTestUtils;
+	private final SchemaServiceTestUtils	schemaServiceTestUtils;
 
 	public AbstractXMLTransformationFlowTest(final String taskJSONFileNameArg, final String expectedResultJSONFileNameArg, final String recordTagArg,
 			final String xmlNamespaceArg, final String exampleDataResourceFileNameArg) {
@@ -75,6 +76,10 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		recordTag = recordTagArg;
 		xmlNamespace = xmlNamespaceArg;
 		exampleDataResourceFileName = exampleDataResourceFileNameArg;
+
+		attributeServiceTestUtils = new AttributeServiceTestUtils();
+		attributePathServiceTestUtils = new AttributePathServiceTestUtils();
+		schemaServiceTestUtils = new SchemaServiceTestUtils();
 	}
 
 	@Test
@@ -107,14 +112,14 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		Resource updatedResource = resourceService.updateObjectTransactional(resource).getObject();
 
 		final DataModelService dataModelService = injector.getInstance(DataModelService.class);
-		final DataModel dataModel = dataModelService.createObjectTransactional().getObject();
+		final DataModel inputDataModel = dataModelService.createObjectTransactional().getObject();
 
-		dataModel.setDataResource(updatedResource);
-		dataModel.setConfiguration(updatedConfiguration);
+		inputDataModel.setDataResource(updatedResource);
+		inputDataModel.setConfiguration(updatedConfiguration);
 
-		DataModel updatedDataModel = dataModelService.updateObjectTransactional(dataModel).getObject();
+		DataModel updatedInputDataModel = dataModelService.updateObjectTransactional(inputDataModel).getObject();
 
-		final XMLSourceResourceGDMStmtsFlow flow2 = new XMLSourceResourceGDMStmtsFlow(updatedDataModel);
+		final XMLSourceResourceGDMStmtsFlow flow2 = new XMLSourceResourceGDMStmtsFlow(updatedInputDataModel);
 
 		final List<GDMModel> gdmModels = flow2.applyResource(exampleDataResourceFileName);
 
@@ -160,9 +165,9 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		// write model and retrieve tuples
 		final InternalGDMGraphService gdmService = injector.getInstance(InternalGDMGraphService.class);
-		gdmService.createObject(updatedDataModel.getId(), gdmModel);
+		gdmService.createObject(updatedInputDataModel.getId(), gdmModel);
 
-		final Optional<Map<String, Model>> optionalModelMap = gdmService.getObjects(updatedDataModel.getId(), Optional.of(1));
+		final Optional<Map<String, Model>> optionalModelMap = gdmService.getObjects(updatedInputDataModel.getId(), Optional.of(1));
 
 		Assert.assertTrue("there is no map of entry models in the database", optionalModelMap.isPresent());
 
@@ -183,15 +188,19 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 //		
 //		System.out.println(tuplesJSON);
 
-		final String dataModelJSONString = objectMapper.writeValueAsString(updatedDataModel);
-		final ObjectNode dataModelJSON = objectMapper.readValue(dataModelJSONString, ObjectNode.class);
+		final String inputDataModelJSONString = objectMapper.writeValueAsString(updatedInputDataModel);
+		final ObjectNode inputDataModelJSON = objectMapper.readValue(inputDataModelJSONString, ObjectNode.class);
 
 		// manipulate input data model
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
-		((ObjectNode) taskJSON).put("input_data_model", dataModelJSON);
+		taskJSON.put("input_data_model", inputDataModelJSON);
 
-		// manipulate output data model (output data model = input data model (for now))
-		((ObjectNode) taskJSON).put("output_data_model", dataModelJSON);
+		// manipulate output data model (output data model = internal model (for now))
+		final long internalModelId = 1;
+		final DataModel outputDataModel = dataModelService.getObject(internalModelId);
+		final String outputDataModelJSONString = objectMapper.writeValueAsString(outputDataModel);
+		final ObjectNode outputDataModelJSON = objectMapper.readValue(outputDataModelJSONString, ObjectNode.class);
+		taskJSON.put("output_data_model", outputDataModelJSON);
 
 		final String finalTaskJSONString = objectMapper.writeValueAsString(taskJSON);
 
@@ -208,12 +217,12 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		compareResults(expected, actual);
 
 		// retrieve updated fresh data model
-		final DataModel freshDataModel = dataModelService.getObject(updatedDataModel.getId());
+		final DataModel freshInputDataModel = dataModelService.getObject(updatedInputDataModel.getId());
 
-		Assert.assertNotNull("the fresh data model shouldn't be null", freshDataModel);
-		Assert.assertNotNull("the schema of the fresh data model shouldn't be null", freshDataModel.getSchema());
+		Assert.assertNotNull("the fresh data model shouldn't be null", freshInputDataModel);
+		Assert.assertNotNull("the schema of the fresh data model shouldn't be null", freshInputDataModel.getSchema());
 
-		final Schema schema = freshDataModel.getSchema();
+		final Schema schema = freshInputDataModel.getSchema();
 
 		// System.out.println(objectMapper.writeValueAsString(schema));
 
@@ -224,6 +233,10 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		// clean-up
 		// TODO: move clean-up to @After
 
+		final DataModel freshOutputDataModel = dataModelService.getObject(internalModelId);
+
+		final Schema outputDataModelSchema = freshOutputDataModel.getSchema();
+
 		final Map<Long, Attribute> attributes = Maps.newHashMap();
 
 		final Map<Long, AttributePath> attributePaths = Maps.newLinkedHashMap();
@@ -232,7 +245,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 			final Set<AttributePath> attributePathsToDelete = schema.getAttributePaths();
 
-			if (attributePaths != null) {
+			if (attributePathsToDelete != null) {
 
 				for (final AttributePath attributePath : attributePathsToDelete) {
 
@@ -240,7 +253,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 					final Set<Attribute> attributesToDelete = attributePath.getAttributes();
 
-					if (attributePathsToDelete != null) {
+					if (attributesToDelete != null) {
 
 						for (final Attribute attribute : attributesToDelete) {
 
@@ -251,23 +264,22 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 			}
 		}
 
-		dataModelService.deleteObject(updatedDataModel.getId());
 		final SchemaService schemaService = injector.getInstance(SchemaService.class);
+
+		schemaServiceTestUtils.removeAddedAttributePathsFromOutputModelSchema(outputDataModelSchema, attributes, attributePaths);
+
+		dataModelService.deleteObject(updatedInputDataModel.getId());
 
 		schemaService.deleteObject(schema.getId());
 
-		final AttributePathService attributePathService = injector.getInstance(AttributePathService.class);
-
 		for (final AttributePath attributePath : attributePaths.values()) {
 
-			attributePathService.deleteObject(attributePath.getId());
+			attributePathServiceTestUtils.deleteObject(attributePath);
 		}
-
-		final AttributeService attributeService = injector.getInstance(AttributeService.class);
 
 		for (final Attribute attribute : attributes.values()) {
 
-			attributeService.deleteObject(attribute.getId());
+			attributeServiceTestUtils.deleteObject(attribute);
 		}
 
 		final ClaszService claszService = injector.getInstance(ClaszService.class);
@@ -292,7 +304,21 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		final ArrayNode actualJSONArray = objectMapper.readValue(actualResultJSONString, ArrayNode.class);
 		final ObjectNode actualElementInArray = (ObjectNode) actualJSONArray.get(0);
 		final String actualKeyInArray = actualElementInArray.fieldNames().next();
-		final ObjectNode actualJSON = (ObjectNode) actualElementInArray.get(actualKeyInArray).get(0);
+		final ArrayNode actualKeyArray = (ArrayNode) actualElementInArray.get(actualKeyInArray);
+		ObjectNode actualJSON = null;
+
+		for(final JsonNode actualKeyArrayItem : actualKeyArray) {
+
+			if(actualKeyArrayItem.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#type") != null) {
+
+				// don't take the type JSON object for comparison
+
+				continue;
+			}
+
+			actualJSON = (ObjectNode) actualKeyArrayItem;
+		}
+
 		final String finalActualJSONString = objectMapper.writeValueAsString(actualJSON);
 
 		assertEquals(finalExpectedJSONString.length(), finalActualJSONString.length());

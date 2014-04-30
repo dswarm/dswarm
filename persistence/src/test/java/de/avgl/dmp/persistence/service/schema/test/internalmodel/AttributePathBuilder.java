@@ -104,7 +104,7 @@ public class AttributePathBuilder  extends GuicedTest {
 	
 		try {
 	
-			updatedAttributePath = attributePathService.createOrGetObject(attributePathArg).getObject();
+			updatedAttributePath = attributePathService.createOrGetObjectTransactional(attributePathArg).getObject();
 		} catch (final DMPPersistenceException e1) {
 	
 			Assert.assertTrue("something went wrong while attribute path creation.\n" + e1.getMessage(), false);

@@ -47,7 +47,7 @@ public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, 
 	 * @throws DMPPersistenceException
 	 */
 	@Transactional(rollbackOn = Exception.class)
-	public ProxyAttributePath createOrGetObject(final LinkedList<Attribute> attributes) throws DMPPersistenceException {
+	public ProxyAttributePath createOrGetObjectTransactional(final LinkedList<Attribute> attributes) throws DMPPersistenceException {
 
 		final AttributePath tempAttributePath = new AttributePath(attributes);
 

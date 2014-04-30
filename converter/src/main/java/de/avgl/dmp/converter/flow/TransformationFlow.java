@@ -13,6 +13,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.vocabulary.RDF;
+import de.avgl.dmp.persistence.util.RDFUtil;
+import org.culturegraph.mf.exceptions.MorphDefException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
@@ -37,6 +42,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 import de.avgl.dmp.converter.DMPConverterException;
+import de.avgl.dmp.converter.DMPMorphDefException;
 import de.avgl.dmp.converter.mf.stream.RDFModelReceiver;
 import de.avgl.dmp.converter.mf.stream.TripleEncoder;
 import de.avgl.dmp.converter.mf.stream.reader.JsonNodeReader;
@@ -58,7 +64,7 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
  * Flow that executes a given set of transformations on data of a given data model.
- * 
+ *
  * @author phorn
  * @author tgaengler
  */
@@ -195,40 +201,6 @@ public class TransformationFlow {
 
 		final StreamUnflattener unflattener = new StreamUnflattener("", DMPStatics.ATTRIBUTE_DELIMITER);
 		final StreamJsonCollapser collapser = new StreamJsonCollapser();
-
-		// final StringWriter stringWriter = new StringWriter();
-		// stringWriter.append('[');
-		//
-		// final ObjectReceiver<String> objectReceiver = new ObjectReceiver<String>() {
-		//
-		// @Override
-		// public void process(final String obj) {
-		// stringWriter.append(obj);
-		// stringWriter.append(',');
-		// }
-		//
-		// @Override
-		// public void resetStream() {
-		// final StringBuffer buffer = stringWriter.getBuffer();
-		// buffer.delete(0, buffer.length());
-		// }
-		//
-		// @Override
-		// public void closeStream() {
-		// LOG.debug("close stream called");
-		// final StringBuffer buffer = stringWriter.getBuffer();
-		// buffer.deleteCharAt(buffer.length() - 1);
-		// stringWriter.append(']');
-		// }
-		// };
-		//
-		// final JsonEncoder jsonEncoder = new JsonEncoder();
-		//
-		// final RecordAwareJsonEncoder converter = new RecordAwareJsonEncoder(jsonEncoder);
-		// jsonEncoder.setReceiver(objectReceiver);
-
-		// final StreamOutWriter streamOutWriter = new StreamOutWriter();
-
 		final TripleEncoder converter = new TripleEncoder(outputDataModel);
 		final RDFModelReceiver writer = new RDFModelReceiver();
 
@@ -240,12 +212,7 @@ public class TransformationFlow {
 
 		// return stringWriter.toString();
 
-		final Optional<ImmutableList<RDFModel>> optionalRDFModels = Optional.of(writer.getCollection());
-
-		if (!optionalRDFModels.isPresent()) {
-
-			return null;
-		}
+		final ImmutableList<RDFModel> rdfModels = writer.getCollection();
 
 		final Model model = ModelFactory.createDefaultModel();
 		String recordClassUri = null;
@@ -256,7 +223,7 @@ public class TransformationFlow {
 		// final ArrayNode result = objectMapper.createArrayNode();
 		final Set<String> recordURIs = Sets.newHashSet();
 
-		for (final RDFModel rdfModel : optionalRDFModels.get()) {
+		for (final RDFModel rdfModel : rdfModels) {
 
 			// result.add(rdfModel.toRawJSON());
 
@@ -270,6 +237,18 @@ public class TransformationFlow {
 			if (recordClassUri == null) {
 
 				recordClassUri = rdfModel.getRecordClassURI();
+			}
+
+			// TODO: this a WORKAROUND to insert a default type (bibo:Document) for records in the output data model
+
+			if(rdfModel.getRecordClassURI() == null) {
+
+				final Resource recordResource = model.getResource(rdfModel.getRecordURIs().iterator().next());
+
+				if(recordResource != null) {
+
+					recordResource.addProperty(RDF.type, ResourceFactory.createResource("http://purl.org/ontology/bibo/Document"));
+				}
 			}
 
 			recordURIs.add(rdfModel.getRecordURIs().iterator().next());
@@ -310,7 +289,7 @@ public class TransformationFlow {
 					internalModelService.createObject(outputDataModel.get().getId(), rdfModel);
 				} catch (final DMPPersistenceException e1) {
 
-					final String message = "couldn't persistent the the result of the transformation: " + e1.getMessage();
+					final String message = "couldn't persist the result of the transformation: " + e1.getMessage();
 
 					TransformationFlow.LOG.error(message);
 
@@ -319,7 +298,11 @@ public class TransformationFlow {
 
 			} else {
 
-				TransformationFlow.LOG.warn("Wanted to persist, but could not find OutputDataModel");
+				final String message = "couldn't persist the result of the transformation, because there is no output data model assigned at this task";
+
+				LOG.error(message);
+
+				throw new DMPConverterException(message);
 			}
 		}
 
@@ -381,10 +364,15 @@ public class TransformationFlow {
 	}
 
 	public static TransformationFlow fromString(final String morphScriptString, final DataModel outputDataModel,
-			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
+			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) throws DMPConverterException {
 
 		final java.io.StringReader stringReader = new java.io.StringReader(morphScriptString);
-		final Metamorph transformer = new Metamorph(stringReader);
+		final Metamorph transformer;
+		try {
+			transformer = new Metamorph(stringReader);
+		} catch (final MorphDefException e) {
+			throw new DMPMorphDefException(e.getMessage(), e);
+		}
 
 		return new TransformationFlow(transformer, morphScriptString, outputDataModel, internalModelServiceFactoryProviderArg);
 	}

@@ -12,5 +12,6 @@ cd "${DIR}"
 
 mysql -f -u${MYSQL_UN} -p${MYSQL_PW} ${MYSQL_DB} < persistence/src/main/resources/schema.sql
 mysql -f -u${MYSQL_UN} -p${MYSQL_PW} ${MYSQL_DB} < persistence/src/main/resources/functions.sql
+mysql -f -u${MYSQL_UN} -p${MYSQL_PW} ${MYSQL_DB} < persistence/src/main/resources/init_internal_schema.sql
 
 curl -v -X DELETE "${NEO4J_URL}/maintain/delete"

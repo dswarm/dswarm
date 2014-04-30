@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+		xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>de.avgl.dmp</groupId>
@@ -144,6 +144,16 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-grizzly2-http</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>guava</artifactId>
+					<groupId>com.google.guava</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>hk2-api</artifactId>
+					<groupId>org.glassfish.hk2</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
@@ -262,6 +272,10 @@
 					<artifactId>jackson-databind</artifactId>
 					<groupId>com.fasterxml.jackson.core</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
@@ -270,6 +284,19 @@
 			<groupId>com.sun.xsom</groupId>
 			<artifactId>xsom</artifactId>
 			<version>20110809</version>
+		</dependency>
+
+		<dependency>
+			<groupId>de.avgl.dmp</groupId>
+			<artifactId>graph</artifactId>
+			<version>1.0</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>apache-jena-libs</artifactId>
+					<groupId>org.apache.jena</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 

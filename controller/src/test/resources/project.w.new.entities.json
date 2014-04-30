@@ -61,11 +61,11 @@
             "name": "input mapping attribute path instance",
             "id": -1395249437038,
             "attribute_path": {
-                "id": -4072354651565733111,
+                "id": -4072354651565733112,
                 "attributes": [{
                     "name": "dataset",
                     "uri": "http://data.slub-dresden.de/resources/1/schema#dataset",
-                    "id": -4072354651565733222
+                    "id": -4072354651565733223
                 }]
             }
         }],

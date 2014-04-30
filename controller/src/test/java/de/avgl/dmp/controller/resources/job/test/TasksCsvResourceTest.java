@@ -235,7 +235,21 @@ public class TasksCsvResourceTest extends ResourceTest {
 			assertThat(actualNode, is(notNullValue()));
 
 			final ObjectNode expectedRecordData = (ObjectNode) expectedNode.get("record_data").get(0);
-			final ObjectNode actualRecordData = (ObjectNode) actualNode.get("record_data").get(0);
+
+			final ObjectNode actualElement = (ObjectNode) actualNode;
+			ObjectNode actualRecordData = null;
+
+			for(final JsonNode actualRecordDataCandidate : actualElement.get("record_data")) {
+
+				if(actualRecordDataCandidate.get(actualDataResourceSchemaBaseURI + "description") != null) {
+
+					actualRecordData = (ObjectNode) actualRecordDataCandidate;
+
+					break;
+				}
+			}
+
+			assertThat(actualRecordData, is(notNullValue()));
 
 			assertThat(actualRecordData.get(actualDataResourceSchemaBaseURI + "description").asText(),
 					equalTo(expectedRecordData.get(expectedDataResourceSchemaBaseURI + "description").asText()));
@@ -255,7 +269,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 			final Set<AttributePath> attributePathsToDelete = schema.getAttributePaths();
 
-			if (attributePaths != null) {
+			if (attributePathsToDelete != null) {
 
 				for (final AttributePath attributePath : attributePathsToDelete) {
 
@@ -279,15 +293,15 @@ public class TasksCsvResourceTest extends ResourceTest {
  
 		for (final AttributePath attributePath : attributePaths.values()) {
 
-			attributePathsResourceTestUtils.deleteObject(attributePath);
+			attributePathsResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(attributePath);
 		}
 
 		for (final Attribute attribute : attributes.values()) {
 
-			attributesResourceTestUtils.deleteObject(attribute);
+			attributesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(attribute);
 		}
 
-		classesResourceTestUtils.deleteObject(recordClass);
+		classesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(recordClass);
 		resourcesResourceTestUtils.deleteObject(resource);
 		configurationsResourceTestUtils.deleteObject(configuration);
 
@@ -299,11 +313,19 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 		for (final JsonNode jsonEntry : jsonArray) {
 
-			final ObjectNode actualRecordData = (ObjectNode) jsonEntry.get("record_data").get(0);
+			final ArrayNode actualRecordDataArray = (ArrayNode) jsonEntry.get("record_data");
 
-			if (recordData.equals(actualRecordData.get(key).asText())) {
+			for (final JsonNode actualRecordData : actualRecordDataArray) {
 
-				return jsonEntry;
+				if (actualRecordData.get(key) == null) {
+
+					continue;
+				}
+
+				if (recordData.equals(actualRecordData.get(key).asText())) {
+
+					return jsonEntry;
+				}
 			}
 		}
 

@@ -22,7 +22,7 @@ public class ClaszesResourceTest extends BasicResourceTest<ClaszesResourceTestUt
 
 	public ClaszesResourceTest() {
 
-		super(Clasz.class, ClaszService.class, "classes", "clasz.json", new ClaszesResourceTestUtils());
+		super(Clasz.class, ClaszService.class, "classes", "clasz1.json", new ClaszesResourceTestUtils());
 
 	}
 
