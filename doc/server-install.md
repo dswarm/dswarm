@@ -3,9 +3,9 @@
 premise:
 - empty trusty (14.04)
 - three additional partitions: /data/log, /data/mysql, /data/neo4j
-- commands starting with `#` are to be executed as root
-- commands starting with `$` are to be executed as a less privileged user
 - let the $HOME of the less privileged user be '/home/user'
+- all commands boxes start as the less privileges user and in their $HOME.
+- Requiring root is explicitly markes (with `su` rather than `sudo ...`)
 
 _Note: some commands require user input, this is no unattended installation_
 
@@ -16,43 +16,49 @@ _Note: some commands require user input, this is no unattended installation_
 **1**. install system packages required for running the software
 
 ```
-# apt-get install --no-install-recommends --yes mysql-server nginx tomcat7 openjdk-7-jdk
+su
+apt-get install --no-install-recommends --yes mysql-server nginx tomcat7 openjdk-7-jdk
 ```
 
 **2**. install system packages required for building the software
 
 ```
-# apt-get install --no-install-recommends --yes git-core maven nodejs npm build-essential
+su
+apt-get install --no-install-recommends --yes git-core maven nodejs npm build-essential
 ```
 
 **3**. install Neo4j
 
 ```
-# wget -O - http://debian.neo4j.org/neotechnology.gpg.key| apt-key add -
-# echo 'deb http://debian.neo4j.org/repo stable/' > /etc/apt/sources.list.d/neo4j.list
-# apt-get update
-# apt-get install --no-install-recommends --yes neo4j
+su
+wget -O - http://debian.neo4j.org/neotechnology.gpg.key| apt-key add -
+echo 'deb http://debian.neo4j.org/repo stable/' > /etc/apt/sources.list.d/neo4j.list
+apt-get update
+apt-get install --no-install-recommends --yes neo4j
 ```
 
 **4**. make sure, permissions are correctly
 
 ```
-# chown -R tomcat7:tomcat7 /data/log
-# chown -R mysql:mysql /data/mysql
-# chown -R neo4j:adm /data/neo4j
+su
+chown -R tomcat7:tomcat7 /data/log
+chown -R mysql:mysql /data/mysql
+chown -R neo4j:adm /data/neo4j
 ```
 
 **5**. install build environment for frontend
 
 ```
-# ln -s /usr/bin/nodejs /usr/bin/node
-# npm install -g grunt-cli karma bower
+su
+ln -s /usr/bin/nodejs /usr/bin/node
+npm install -g grunt-cli karma bower
 ```
 
 **6**. setup MySQL
 
 ```
-# echo <<EOT | mysql -uroot -p
+su
+echo <<EOT | mysql -uroot -p
 CREATE DATABASE IF NOT EXISTS dmp DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_bin;
 CREATE USER 'dmp'@'localhost' IDENTIFIED BY 'dmp';
 GRANT ALL PRIVILEGES ON dmp.* TO 'dmp'@localhost IDENTIFIED BY 'dmp';
@@ -75,8 +81,9 @@ datadir         = /data/mysql
 and add this directory to AppArmor
 
 ```
-# echo "alias /var/lib/mysql/ -> /data/mysql/," >> /etc/apparmor.d/tunables/alias
-# /etc/init.d/apparmor reload
+su
+echo "alias /var/lib/mysql/ -> /data/mysql/," >> /etc/apparmor.d/tunables/alias
+/etc/init.d/apparmor reload
 ```
 
 
@@ -94,8 +101,9 @@ location /dmp {
 move old content root and link the new one. lookout for the correct user path! (the directory will be created later on)
 
 ```
-# mv /usr/share/nginx/{html,.old}
-# ln -s /home/user/dmp-backoffice-web/yo/publish /usr/share/nginx/html
+su
+mv /usr/share/nginx/{html,.old}
+ln -s /home/user/dmp-backoffice-web/yo/publish /usr/share/nginx/html
 ```
 
 **8**. setup tomcat
@@ -119,7 +127,8 @@ at line 73, same file, add this option `maxPostSize="104857600"`, so that the Co
 then, give tomcat some more memory
 
 ```
-# echo 'CATALINA_OPTS="-Xms4G -Xmx4G -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC -XX:MaxPermSize=512M"' >> /usr/share/tomcat7/bin/setenv.sh
+su
+echo 'CATALINA_OPTS="-Xms4G -Xmx4G -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC -XX:MaxPermSize=512M"' >> /usr/share/tomcat7/bin/setenv.sh
 ```
 
 **9**. setup neo4j
@@ -153,9 +162,10 @@ java.util.logging.FileHandler.pattern=/data/neo4j/log/neo4j.%u.%g.log
 then, create a symlink from the previous log location to the external partition
 
 ```
-# mv /var/lib/neo4j/data/{log,-old}
-# ln -s /data/neo4j/log /var/lib/neo4j/data/log
-# mkdir /data/neo4j/log
+su
+mv /var/lib/neo4j/data/{log,-old}
+ln -s /data/neo4j/log /var/lib/neo4j/data/log
+mkdir /data/neo4j/log
 ```
 
 ** Steps require less privileged access **
@@ -164,7 +174,7 @@ then, create a symlink from the previous log location to the external partition
 **10**. create ssh key
 
 ```
-$ ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa -N ''
+ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa -N ''
 ```
 
 **11**. add ssh key to deployment hooks in gitlab
@@ -179,41 +189,41 @@ $ ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa -N ''
 **12**. clone repositories
 
 ```
-$ git clone --depth 1 --branch builds/unstable git@git.slub-dresden.de:dmp/datamanagement-platform.git
-$ git clone --depth 1 --branch master git@git.slub-dresden.de:dmp/dmp-graph.git
-$ git clone --depth 1 --branch builds/unstable git@git.slub-dresden.de:dmp/dmp-backoffice-web.git
+git clone --depth 1 --branch builds/unstable git@git.slub-dresden.de:dmp/datamanagement-platform.git
+git clone --depth 1 --branch master git@git.slub-dresden.de:dmp/dmp-graph.git
+git clone --depth 1 --branch builds/unstable git@git.slub-dresden.de:dmp/dmp-backoffice-web.git
 ```
 
 **13**. build neo4j extension
 
 ```
-$ pushd dmp-graph
-$ mvn -U -PRELEASE -DskipTests clean package
-$ popd
-$ mv dmp-graph/target/graph-1.0-jar-with-dependencies.jar dmp-graph.jar
+pushd dmp-graph
+mvn -U -PRELEASE -DskipTests clean package
+popd
+mv dmp-graph/target/graph-1.0-jar-with-dependencies.jar dmp-graph.jar
 ```
 
 **14**. build backend
 
 ```
-$ pushd datamanagement-platform
-$ mvn -U -PSDVDSWARM01 -DskipTests clean install
-$ pushd controller
-$ mvn -U -PSDVDSWARM01 -DskipTests war:war
-$ popd; popd
-$ mv datamanagement-platform/controller/target/controller-0.1-SNAPSHOT.war dmp.war
+pushd datamanagement-platform
+mvn -U -PSDVDSWARM01 -DskipTests clean install
+pushd controller
+mvn -U -PSDVDSWARM01 -DskipTests war:war
+popd; popd
+mv datamanagement-platform/controller/target/controller-0.1-SNAPSHOT.war dmp.war
 ```
 
 **15**. build frontend
 
 ```
-$ pushd dmp-backoffice-web; pushd yo
-$ npm install
-$ bower install
-$ STAGE=unstable DMP_HOME=../../datamanagement-platform grunt build
-$ popd
-$ rsync --delete --verbose --recursive yo/dist/ yo/publish
-$ popd
+pushd dmp-backoffice-web; pushd yo
+npm install
+bower install
+STAGE=unstable DMP_HOME=../../datamanagement-platform grunt build
+popd
+rsync --delete --verbose --recursive yo/dist/ yo/publish
+popd
 ```
 
 ** Steps require root level access **
@@ -224,24 +234,22 @@ $ popd
 lookout for the correct path (/home/user)
 
 ```
-# rm /var/lib/tomcat7/webapps/dmp.war
-# rm -r /var/lib/tomcat7/webapps/dmp
-# cp /home/user/dmp.war /var/lib/tomcat7/webapps/
-# cp /home/user/dmp-graph.jar /usr/share/neo4j/plugins/
-```
-
+su
 rm /var/lib/tomcat7/webapps/dmp.war
 rm -r /var/lib/tomcat7/webapps/dmp
 cp /home/user/dmp.war /var/lib/tomcat7/webapps/
+cp /home/user/dmp-graph.jar /usr/share/neo4j/plugins/
+```
 
 
 **17**. restart everything, if needed
 
 ```
-# /etc/init.d/mysql restart
-# /etc/init.d/neo4j-service restart
-# /etc/init.d/nginx restart
-# /etc/init.d/tomcat7 restart
+su
+/etc/init.d/mysql restart
+/etc/init.d/neo4j-service restart
+/etc/init.d/nginx restart
+/etc/init.d/tomcat7 restart
 ```
 
 
@@ -250,9 +258,9 @@ cp /home/user/dmp.war /var/lib/tomcat7/webapps/
 **1**. update repository contents
 
 ```
-$ pushd datamanagement-platform; git pull; popd
-$ pushd dmp-graph; git pull; popd
-$ pushd dmp-backoffice-web; git pull; popd
+pushd datamanagement-platform; git pull; popd
+pushd dmp-graph; git pull; popd
+pushd dmp-backoffice-web; git pull; popd
 ```
 
 **2**. repeat steps 13 to 17 from installation as necessary
