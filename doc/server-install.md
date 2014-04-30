@@ -57,7 +57,6 @@ npm install -g grunt-cli karma bower
 **6**. setup MySQL
 
 ```
-su
 echo <<EOT | mysql -uroot -p
 CREATE DATABASE IF NOT EXISTS dmp DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_bin;
 CREATE USER 'dmp'@'localhost' IDENTIFIED BY 'dmp';
@@ -102,7 +101,7 @@ move old content root and link the new one. lookout for the correct user path! (
 
 ```
 su
-mv /usr/share/nginx/{html,.old}
+mv /usr/share/nginx/{html,-old}
 ln -s /home/user/dmp-backoffice-web/yo/publish /usr/share/nginx/html
 ```
 
