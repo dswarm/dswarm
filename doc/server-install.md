@@ -10,7 +10,7 @@ premise:
 _Note: some commands require user input, this is no unattended installation_
 
 
-** Steps require root level access **
+**These steps require root level access**
 
 
 **1**. install system packages required for running the software
@@ -167,7 +167,9 @@ ln -s /data/neo4j/log /var/lib/neo4j/data/log
 mkdir /data/neo4j/log
 ```
 
-** Steps require less privileged access **
+* * *
+
+**These steps require less privileged access**
 
 
 **10**. create ssh key
@@ -225,7 +227,9 @@ rsync --delete --verbose --recursive yo/dist/ yo/publish
 popd
 ```
 
-** Steps require root level access **
+* * *
+
+**These steps require root level access**
 
 
 **16**. wire everything together
