@@ -1,1 +1,1 @@
-[{"http://data.slub-dresden.de/datamodels/1/records/8fd200b4-b432-4618-9c1a-6cded44848de":[{"http://data.slub-dresden.de/datamodels/5353e702-7a08-49d4-8918-5824ae4b2b79/schema#ok":["00872805","Roll, Gernot"]}]}]
+[{"http://data.slub-dresden.de/datamodels/1/records/8fd200b4-b432-4618-9c1a-6cded44848de":[{"http://www.w3.org/1999/02/22-rdf-syntax-ns#type":"http://purl.org/ontology/bibo/Document"},{"http://data.slub-dresden.de/datamodels/ee5300fe-8e16-4405-9c3b-8079a49da389/schema#ok":["00872805","Roll, Gernot"]}]}]

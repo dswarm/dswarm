@@ -133,7 +133,25 @@ public class FilterTransformationFlowTest extends GuicedTest {
 		final ObjectNode expectedTuple = (ObjectNode) expectedJson.get(0);
 		final String expectedFieldName = expectedTuple.fieldNames().next();
 		final ArrayNode expectedContent = (ArrayNode) expectedTuple.get(expectedFieldName);
-		final ObjectNode expectedContentJson = (ObjectNode) expectedContent.get(0);
+		ObjectNode expectedContentJson = null;
+		JsonNode typeNode = null;
+
+		for(final JsonNode expectedContentJsonCandidate : expectedContent) {
+
+			final String expectedContentJsonFieldName = expectedContentJsonCandidate.fieldNames().next();
+
+			if(expectedContentJsonFieldName.equals("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")) {
+
+				typeNode = expectedContentJsonCandidate;
+
+				continue;
+			}
+
+			expectedContentJson = (ObjectNode) expectedContentJsonCandidate;
+		}
+
+		Assert.assertNotNull("expected content JSON shouldn't be null", expectedContentJson);
+
 		final JsonNode expectedContentValue = expectedContentJson.get(expectedContentJson.fieldNames().next());
 
 		Assert.assertNotNull("the actual transformation result shouldn't be null", actual);
@@ -145,14 +163,54 @@ public class FilterTransformationFlowTest extends GuicedTest {
 		Assert.assertNotNull("the content of the tuple of the deserialised JSON array of the actual transformation result shouldn't be null",
 				actualContent);
 		Assert.assertTrue("the actual content should be a JSON array", actualContent.isArray());
-		final JsonNode actualContentJson = actualContent.get(0);
+		JsonNode actualContentJson = null;
+		Integer typeNodePosition = null;
+		int i = 0;
+
+		for(final JsonNode actualContentJsonCandidate : actualContent) {
+
+			i++;
+
+			final String actualContentJsonFieldName = actualContentJsonCandidate.fieldNames().next();
+
+			if(actualContentJsonFieldName.equals("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")) {
+
+				typeNodePosition = i;
+
+				continue;
+			}
+
+			actualContentJson = (ObjectNode) actualContentJsonCandidate;
+		}
+
 		Assert.assertNotNull("the acutal content JSON shouldn't be null", actualContentJson);
 		Assert.assertTrue("the actual content JSON should be a JSON object", actualContentJson.isObject());
 
 		final ObjectNode newExpectedContentJson = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
 		newExpectedContentJson.put(actualContentJson.fieldNames().next(), expectedContentValue);
 		final ArrayNode newExpectedContent = DMPPersistenceUtil.getJSONObjectMapper().createArrayNode();
-		newExpectedContent.add(newExpectedContentJson);
+
+		if(typeNode != null) {
+
+			if(typeNodePosition != null) {
+
+				if(typeNodePosition == 1) {
+
+					newExpectedContent.add(typeNode);
+					newExpectedContent.add(newExpectedContentJson);
+				} else {
+
+					newExpectedContent.add(newExpectedContentJson);
+					newExpectedContent.add(typeNode);
+				}
+			} else {
+
+				newExpectedContent.add(newExpectedContentJson);
+			}
+		} else {
+
+			newExpectedContent.add(newExpectedContentJson);
+		}
 		expectedTuple.put(expectedFieldName, newExpectedContent);
 
 		return expectedJson;
