@@ -78,7 +78,11 @@ public class MorphScriptBuilder {
 	private static final String						INPUT_VARIABLE_IDENTIFIER			= "inputString";
 
 	private static final String						OUTPUT_VARIABLE_PREFIX_IDENTIFIER	= "__TRANSFORMATION_OUTPUT_VARIABLE__";
+	
+	private static final String						FILTER_VARIABLE_POSTFIX				= ".filtered";
 
+	private static final String						OCCURRENCE_VARIABLE_POSTFIX			= ".occurrence";
+	
 	static {
 		System.setProperty("javax.xml.transform.TransformerFactory", MorphScriptBuilder.TRANSFORMER_FACTORY_CLASS);
 		TRANSFORMER_FACTORY = TransformerFactory.newInstance();
@@ -521,7 +525,7 @@ public class MorphScriptBuilder {
 				
 				occurrenceData.setAttribute("name", "@" + variable);
 				
-				variable = variable + ".occurrence";
+				variable = variable + OCCURRENCE_VARIABLE_POSTFIX;
 				
 				occurrenceData.setAttribute("source", "@" + variable);
 				
@@ -534,7 +538,22 @@ public class MorphScriptBuilder {
 				rules.appendChild(occurrenceData);
 			}
 
-			if (filterExpressionString == null	|| filterExpressionString.isEmpty()) {
+			Map<String, String> filterExpressionMap = Maps.newHashMap();
+
+			ObjectMapper objectMapper = new ObjectMapper();
+			
+			if (filterExpressionString != null && !filterExpressionString.isEmpty()) {
+				
+				try {
+
+					filterExpressionMap = objectMapper.readValue(filterExpressionString, HashMap.class);
+				} catch (IOException e) {
+
+					LOG.debug("something went wrong while deserialize filter expression" + e);
+				}
+			}
+			
+			if (filterExpressionMap == null || filterExpressionMap.isEmpty()) {
 
 				final Element data = doc.createElement("data");
 				data.setAttribute("source", inputAttributePathStringXMLEscaped);
@@ -544,24 +563,12 @@ public class MorphScriptBuilder {
 				rules.appendChild(data);
 
 			} else {
-				
-				Map<String,String> filterExpressionMap = Maps.newHashMap();
-				
-				ObjectMapper objectMapper = new ObjectMapper();
-				
-				try {
-	
-					filterExpressionMap = objectMapper.readValue(filterExpressionString, HashMap.class);
-				} catch (IOException e) {
 
-					LOG.debug("something went wrong while deserialize filter expression" + e);
-				}
-				
 				final Element combineAsFilter = doc.createElement("combine");
 				combineAsFilter.setAttribute("reset", "false");
 				combineAsFilter.setAttribute("sameEntity", "true");
 				combineAsFilter.setAttribute("name", "@" + variable);
-				combineAsFilter.setAttribute("value", "${" + variable + ".filtered}");
+				combineAsFilter.setAttribute("value", "${" + variable + FILTER_VARIABLE_POSTFIX + "}");
 				
 				for (final Entry<String, String> filter : filterExpressionMap.entrySet()) {
 					
@@ -577,7 +584,7 @@ public class MorphScriptBuilder {
 				}
 				
 				final Element combineAsFilterDataOut = doc.createElement("data");
-				combineAsFilterDataOut.setAttribute("name", variable + ".filtered");
+				combineAsFilterDataOut.setAttribute("name", variable + FILTER_VARIABLE_POSTFIX);
 				combineAsFilterDataOut.setAttribute("source", inputAttributePathStringXMLEscaped);
 				
 				combineAsFilter.appendChild(combineAsFilterDataOut);
