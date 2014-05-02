@@ -45,6 +45,8 @@ public final class TripleEncoder extends DefaultStreamPipe<ObjectReceiver<RDFMod
 	private final Optional<DataModel>	dataModel;
 	private final Optional<String>		dataModelUri;
 
+	private String recordTypeUri;
+
 	public TripleEncoder(final Optional<DataModel> dataModel) {
 
 		super();
@@ -76,7 +78,15 @@ public final class TripleEncoder extends DefaultStreamPipe<ObjectReceiver<RDFMod
 		assert !isClosed();
 
 		// write triples
-		final RDFModel rdfModel = new RDFModel(model, currentId);
+		final RDFModel rdfModel;
+
+		if(recordTypeUri == null) {
+
+			rdfModel =new RDFModel(model, currentId);
+		} else {
+
+			rdfModel = new RDFModel(model, currentId, recordTypeUri);
+		}
 
 		// OutputStream os;
 		// try {
@@ -166,6 +176,8 @@ public final class TripleEncoder extends DefaultStreamPipe<ObjectReceiver<RDFMod
 						final Resource typeResource = ResourceFactory.createResource(value);
 
 						recordResource.addProperty(attributeProperty, typeResource);
+
+						recordTypeUri = value;
 					} else {
 
 						recordResource.addProperty(attributeProperty, value);
