@@ -1,6 +1,6 @@
 [submodule "web"]
 	path = web
-	url = https://git.slub-dresden.de/dmp/dmp-backoffice-web.git 
+	url = git@git.slub-dresden.de:dmp/dmp-backoffice-web.git
 [submodule "docs"]
 	path = controller/src/docs/ui
 	url = git@git.slub-dresden.de:dmp/backoffice-api-docs.git
