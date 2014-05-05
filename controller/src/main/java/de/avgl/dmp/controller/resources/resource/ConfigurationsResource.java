@@ -37,7 +37,8 @@ import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 @RequestScoped
 @Api(value = "/configurations", description = "Operations about configurations")
 @Path("configurations")
-public class ConfigurationsResource extends ExtendedBasicDMPResource<ConfigurationsResourceUtils, ConfigurationService, ProxyConfiguration, Configuration> {
+public class ConfigurationsResource extends
+		ExtendedBasicDMPResource<ConfigurationsResourceUtils, ConfigurationService, ProxyConfiguration, Configuration> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ConfigurationsResource.class);
 
@@ -143,6 +144,7 @@ public class ConfigurationsResource extends ExtendedBasicDMPResource<Configurati
 	 * @return the updated configuration as JSON representation
 	 * @throws DMPControllerException
 	 */
+	@Override
 	@ApiOperation(value = "update configuration with given id ", notes = "Returns an updated Configuration object.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "configuration was successfully updated"),
 			@ApiResponse(code = 404, message = "could not find a configuration for the given id"),

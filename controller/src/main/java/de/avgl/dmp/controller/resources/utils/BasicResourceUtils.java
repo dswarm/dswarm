@@ -78,7 +78,7 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 
 	/**
 	 * Gets the concrete POJO class of this resource (controller service).
-	 *
+	 * 
 	 * @return the concrete POJO class
 	 */
 	public Class<POJOCLASS> getClasz() {
@@ -265,7 +265,7 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 
 	/**
 	 * Creates and persists a new object into the database.
-	 *
+	 * 
 	 * @param objectFromJSON the new object
 	 * @param persistenceService the related persistence service
 	 * @return the persisted object

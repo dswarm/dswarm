@@ -60,7 +60,7 @@ public class ComponentsResourceUtils extends ExtendedBasicDMPResourceUtils<Compo
 	}
 
 	@Override
-	public String prepareObjectJSONString(String objectJSONString) throws DMPControllerException {
+	public String prepareObjectJSONString(final String objectJSONString) throws DMPControllerException {
 
 		// TODO: remove id from parameter mappings (?) -> avoid dummy id creation there
 

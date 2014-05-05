@@ -3,6 +3,7 @@ package de.avgl.dmp.controller.resources.status;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -27,8 +28,8 @@ import com.wordnik.swagger.annotations.ApiParam;
 @Path("_stats")
 public class MetricsResource {
 
-	private final MetricRegistry registry;
-	private final ObjectMapper   mapper;
+	private final MetricRegistry	registry;
+	private final ObjectMapper		mapper;
 
 	@Inject
 	public MetricsResource(final MetricRegistry registry) {
@@ -41,17 +42,15 @@ public class MetricsResource {
 
 		final MetricsModule metricsModule = new MetricsModule(rateUnit, durationUnit, showSamples);
 
-		this.mapper = new ObjectMapper().registerModule(metricsModule);
+		mapper = new ObjectMapper().registerModule(metricsModule);
 	}
 
 	@ApiOperation("get a bunch of metrics and gauges and timers since the last server restart. rates are in per-second, durations in milliseconds.")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getStats(
-			@ApiParam(value = "json pretty print", required = false, defaultValue = "false", name = "pretty")
-			@DefaultValue("false")
-			@QueryParam("pretty")
-			final boolean pretty) throws IOException {
+			@ApiParam(value = "json pretty print", required = false, defaultValue = "false", name = "pretty") @DefaultValue("false") @QueryParam("pretty") final boolean pretty)
+			throws IOException {
 
 		final ByteArrayOutputStream stream = new ByteArrayOutputStream(1024);
 
@@ -59,10 +58,7 @@ public class MetricsResource {
 
 		writer.writeValue(stream, registry);
 
-		return Response
-				.ok(stream.toString("UTF-8"))
-				.header(HttpHeaders.CACHE_CONTROL, "must-revalidate,no-cache,no-store")
-				.build();
+		return Response.ok(stream.toString("UTF-8")).header(HttpHeaders.CACHE_CONTROL, "must-revalidate,no-cache,no-store").build();
 	}
 
 }

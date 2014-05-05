@@ -36,7 +36,7 @@ public abstract class AttributePathInstancesResourceUtils<POJOCLASSPERSISTENCESE
 	@Override
 	public JsonNode replaceRelevantDummyIds(final POJOCLASS object, final JsonNode jsonNode, final Set<Long> dummyIdCandidates)
 			throws DMPControllerException {
-		
+
 		if (checkObject(object, dummyIdCandidates)) {
 
 			return jsonNode;

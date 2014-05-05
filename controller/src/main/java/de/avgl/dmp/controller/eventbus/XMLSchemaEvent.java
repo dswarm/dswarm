@@ -4,8 +4,9 @@ import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 
 public class XMLSchemaEvent {
-	private final Configuration configuration;
-	private final Resource resource;
+
+	private final Configuration	configuration;
+	private final Resource		resource;
 
 	public XMLSchemaEvent(final Configuration configuration, final Resource resource) {
 		this.configuration = configuration;

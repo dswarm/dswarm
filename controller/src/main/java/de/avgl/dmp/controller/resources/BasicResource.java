@@ -292,7 +292,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 				+ "'");
 
 		dmpStatus.stop(context);
-		
+
 		final URI objectURI = createObjectURI(object);
 		final ResponseBuilder responseBuilder;
 		final RetrievalType type = proxyObject.getType();
@@ -318,7 +318,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 				throw new DMPControllerException("something went wrong, while evaluating the retrieval type of the "
 						+ pojoClassResourceUtils.getClaszName());
 		}
-		
+
 		return responseBuilder.entity(objectJSON).build();
 	}
 

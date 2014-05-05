@@ -176,69 +176,69 @@ public class AttributePathsResource extends BasicIDResource<AttributePathsResour
 	@Override
 	protected AttributePath prepareObjectForUpdate(final AttributePath objectFromJSON, final AttributePath object) {
 
-//		if (!object.getId().equals(objectFromJSON.getId())) {
-//
-//			object.setAttributePath(objectFromJSON.getAttributePath());
-//		} else {
+		// if (!object.getId().equals(objectFromJSON.getId())) {
+		//
+		// object.setAttributePath(objectFromJSON.getAttributePath());
+		// } else {
 
-			// attribute path was already retrieved by attribute path string (maybe + attributes where created, because they
-			// didn't exist before)
-			// => replace dummy id'ed attributes with real ids by attribute uri
+		// attribute path was already retrieved by attribute path string (maybe + attributes where created, because they
+		// didn't exist before)
+		// => replace dummy id'ed attributes with real ids by attribute uri
 
-			final LinkedList<Attribute> attributePath = objectFromJSON.getAttributePath();
+		final LinkedList<Attribute> attributePath = objectFromJSON.getAttributePath();
 
-			if (attributePath != null) {
+		if (attributePath != null) {
 
-				final Set<Attribute> persistentAttributes = object.getAttributes();
+			final Set<Attribute> persistentAttributes = object.getAttributes();
 
-				if (persistentAttributes != null) {
+			if (persistentAttributes != null) {
 
-					final Set<String> attributeURIsFromDummyIdsFromObjectFromJSON = Sets.newHashSet();
-					final Map<String, Attribute> attributeFromRealIdsFromObject = Maps.newHashMap();
+				final Set<String> attributeURIsFromDummyIdsFromObjectFromJSON = Sets.newHashSet();
+				final Map<String, Attribute> attributeFromRealIdsFromObject = Maps.newHashMap();
 
-					// collect uris of attributes with dummy id
+				// collect uris of attributes with dummy id
 
-					for (final Attribute attribute : attributePath) {
+				for (final Attribute attribute : attributePath) {
 
-						// note: one could even collect all attribute ids and replace them by their actual ones
-						
-						if (attribute.getId().longValue() < 0) {
+					// note: one could even collect all attribute ids and replace them by their actual ones
 
-							attributeURIsFromDummyIdsFromObjectFromJSON.add(attribute.getUri());
-						}
+					if (attribute.getId().longValue() < 0) {
+
+						attributeURIsFromDummyIdsFromObjectFromJSON.add(attribute.getUri());
 					}
-
-					// collect attributes that match the uris of the attribute with dummy id
-
-					for (final Attribute attribute : persistentAttributes) {
-
-						if (attributeURIsFromDummyIdsFromObjectFromJSON.contains(attribute.getUri())) {
-
-							attributeFromRealIdsFromObject.put(attribute.getUri(), attribute);
-						}
-					}
-
-					final LinkedList<Attribute> newAttributePath = Lists.newLinkedList();
-
-					// construct new attribute path
-
-					for (final Attribute attribute : attributePath) {
-
-						final Attribute newAttribute = attributeFromRealIdsFromObject.get(attribute.getUri());
-
-						if (newAttribute == null) {
-
-							newAttributePath.add(attribute);
-						} else {
-
-							newAttributePath.add(newAttribute);
-						}
-					}
-
-					object.setAttributePath(newAttributePath);
 				}
+
+				// collect attributes that match the uris of the attribute with dummy id
+
+				for (final Attribute attribute : persistentAttributes) {
+
+					if (attributeURIsFromDummyIdsFromObjectFromJSON.contains(attribute.getUri())) {
+
+						attributeFromRealIdsFromObject.put(attribute.getUri(), attribute);
+					}
+				}
+
+				final LinkedList<Attribute> newAttributePath = Lists.newLinkedList();
+
+				// construct new attribute path
+
+				for (final Attribute attribute : attributePath) {
+
+					final Attribute newAttribute = attributeFromRealIdsFromObject.get(attribute.getUri());
+
+					if (newAttribute == null) {
+
+						newAttributePath.add(attribute);
+					} else {
+
+						newAttributePath.add(newAttribute);
+					}
+				}
+
+				object.setAttributePath(newAttributePath);
 			}
-//		}
+		}
+		// }
 
 		return object;
 	}

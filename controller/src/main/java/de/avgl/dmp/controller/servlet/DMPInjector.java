@@ -14,7 +14,7 @@ import de.avgl.dmp.persistence.PersistenceModule;
 /**
  * The Guice injector for the backend API. Register here all Guice configuration that should be recognized when the backend API is
  * running.
- *
+ * 
  * @author phorn
  */
 public class DMPInjector extends GuiceServletContextListener {
@@ -33,12 +33,9 @@ public class DMPInjector extends GuiceServletContextListener {
 
 		if (DMPInjector.injector == null) {
 
-			DMPInjector.injector = Guice.createInjector(
-					new ObjectMapperModule()
-							.registerModule(new PersistenceModule.DmpDeserializerModule())
-							.registerModule(new JaxbAnnotationModule())
-							.registerModule(new Hibernate4Module()),
-					new PersistenceModule(), new DMPModule(), new DMPServletModule());
+			DMPInjector.injector = Guice.createInjector(new ObjectMapperModule().registerModule(new PersistenceModule.DmpDeserializerModule())
+					.registerModule(new JaxbAnnotationModule()).registerModule(new Hibernate4Module()), new PersistenceModule(), new DMPModule(),
+					new DMPServletModule());
 		}
 
 		return DMPInjector.injector;

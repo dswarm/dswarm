@@ -23,12 +23,12 @@ public class SwaggerConfig extends JerseyJaxrsConfig {
 	 *
 	 */
 	private static final long	serialVersionUID	= 1L;
-	
+
 	/**
 	 * The version of the backend API.
 	 */
 	private final String		apiVersion;
-	
+
 	/**
 	 * The base URI of the backend API.
 	 */
@@ -64,7 +64,7 @@ public class SwaggerConfig extends JerseyJaxrsConfig {
 		);
 
 		final com.wordnik.swagger.config.SwaggerConfig config = ConfigFactory.config();
-		
+
 		config.setApiVersion(apiVersion);
 		config.setBasePath(apiBaseUrl);
 		config.setApiInfo(info);

@@ -69,11 +69,12 @@ public class CSVConverterEventRecorder {
 				// 2. create property object from property uri string
 				// 3. convert objects (string literals) to string literals (?)
 
-				final Resource recordResource = DataModelUtils.mintRecordResource(Long.valueOf(triple.getSubject()), dataModel, recordResources, model, recordClassNode);
+				final Resource recordResource = DataModelUtils.mintRecordResource(Long.valueOf(triple.getSubject()), dataModel, recordResources,
+						model, recordClassNode);
 				final Predicate property = new Predicate(triple.getPredicate());
-				
+
 				final ResourceNode subject = (ResourceNode) recordResource.getStatements().iterator().next().getSubject();
-				
+
 				recordResource.addStatement(subject, property, new LiteralNode(triple.getObject()));
 
 				// final MemoryDBInputModel mdbim = new MemoryDBInputModel(triple);

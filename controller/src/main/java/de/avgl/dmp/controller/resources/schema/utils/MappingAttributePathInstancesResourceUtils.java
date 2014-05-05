@@ -22,7 +22,8 @@ import de.avgl.dmp.persistence.service.schema.MappingAttributePathInstanceServic
  * @param <POJOCLASS>
  * @param <POJOCLASSIDTYPE>
  */
-public class MappingAttributePathInstancesResourceUtils extends AttributePathInstancesResourceUtils<MappingAttributePathInstanceService, ProxyMappingAttributePathInstance, MappingAttributePathInstance> {
+public class MappingAttributePathInstancesResourceUtils extends
+		AttributePathInstancesResourceUtils<MappingAttributePathInstanceService, ProxyMappingAttributePathInstance, MappingAttributePathInstance> {
 
 	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(MappingAttributePathInstancesResourceUtils.class);
 

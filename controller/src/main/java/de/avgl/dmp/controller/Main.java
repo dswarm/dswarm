@@ -5,11 +5,11 @@ import java.util.Properties;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 
-import static de.avgl.dmp.controller.utils.DMPControllerUtils.loadProperties;
+import de.avgl.dmp.controller.utils.DMPControllerUtils;
 
 /**
  * The main class of the backend API. Wraps the backend web server where the backend API is located.
- *
+ * 
  * @author phorn
  * @author tgaengler
  */
@@ -24,7 +24,7 @@ public class Main {
 
 	/**
 	 * Inits the properties for the backend web server.
-	 *
+	 * 
 	 * @param properties user properties
 	 */
 	private Main(final Properties properties) {
@@ -38,7 +38,7 @@ public class Main {
 
 	/**
 	 * Gets the base URI of the backend API.
-	 *
+	 * 
 	 * @return the base URI of the backend API
 	 */
 	public String getBaseUri() {
@@ -48,7 +48,7 @@ public class Main {
 
 	/**
 	 * Starts the (embedded) backend web server exposing resources defined in this application.
-	 *
+	 * 
 	 * @return the (embedded) backend web server
 	 */
 	public HttpServer startServer() {
@@ -68,13 +68,13 @@ public class Main {
 
 	/**
 	 * Creates the backend API (incl. its hosting backend web server at the given port).
-	 *
+	 * 
 	 * @param port the port of the backend web server
 	 * @return the main class of the backend API
 	 */
 	public static Main create(final int port) {
 
-		final Properties properties = loadProperties();
+		final Properties properties = DMPControllerUtils.loadProperties();
 		properties.setProperty("backend_http_server_port", String.valueOf(port));
 
 		return new Main(properties);
@@ -82,19 +82,19 @@ public class Main {
 
 	/**
 	 * Creates the backend API (incl. its hosting backend web server).
-	 *
+	 * 
 	 * @return the main class of the backend API
 	 */
 	public static Main create() {
 
-		final Properties properties = loadProperties();
+		final Properties properties = DMPControllerUtils.loadProperties();
 
 		return new Main(properties);
 	}
 
 	/**
 	 * Creates and starts the backend API (incl. its hosting backend web server).
-	 *
+	 * 
 	 * @param args main args
 	 * @throws IOException
 	 */

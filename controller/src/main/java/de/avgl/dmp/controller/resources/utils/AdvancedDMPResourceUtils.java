@@ -28,7 +28,7 @@ public abstract class AdvancedDMPResourceUtils<POJOCLASSPERSISTENCESERVICE exten
 	}
 
 	@Override
-	public String prepareObjectJSONString(String objectJSONString) throws DMPControllerException {
+	public String prepareObjectJSONString(final String objectJSONString) throws DMPControllerException {
 
 		// an attribute or clasz is not a complex object
 

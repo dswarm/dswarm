@@ -52,7 +52,6 @@ import com.wordnik.swagger.annotations.ApiResponses;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.eventbus.XMLSchemaEvent;
-import de.avgl.dmp.controller.resources.BasicResource;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.controller.utils.DMPControllerUtils;
 import de.avgl.dmp.controller.utils.DataModelUtil;
@@ -115,12 +114,12 @@ public class ResourcesResource {
 			final Provider<ResourceService> resourceServiceProviderArg, final Provider<ConfigurationService> configurationServiceProviderArg,
 			final Provider<EventBus> eventBusProviderArg, final DataModelUtil dataModelUtilArg) {
 
-		this.eventBusProvider = eventBusProviderArg;
-		this.resourceServiceProvider = resourceServiceProviderArg;
-		this.configurationServiceProvider = configurationServiceProviderArg;
-		this.dmpStatus = dmpStatusArg;
-		this.objectMapper = objectMapperArg;
-		this.dataModelUtil = dataModelUtilArg;
+		eventBusProvider = eventBusProviderArg;
+		resourceServiceProvider = resourceServiceProviderArg;
+		configurationServiceProvider = configurationServiceProviderArg;
+		dmpStatus = dmpStatusArg;
+		objectMapper = objectMapperArg;
+		dataModelUtil = dataModelUtilArg;
 	}
 
 	/**
@@ -193,7 +192,7 @@ public class ResourcesResource {
 			@ApiParam("resource description") @FormDataParam("description") final String description) throws DMPControllerException {
 		final Timer.Context context = dmpStatus.createNewResource();
 
-		LOG.debug("try to create new resource '" + name + "' for file '" + fileDetail.getFileName() + "'");
+		ResourcesResource.LOG.debug("try to create new resource '" + name + "' for file '" + fileDetail.getFileName() + "'");
 
 		final ProxyResource proxyResource = createResource(uploadedInputStream, fileDetail, name, description);
 
@@ -211,7 +210,7 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't create new resource");
 		}
 
-		LOG.debug("created new resource '" + name + "' for file '" + fileDetail.getFileName() + "' = '"
+		ResourcesResource.LOG.debug("created new resource '" + name + "' for file '" + fileDetail.getFileName() + "' = '"
 				+ ToStringBuilder.reflectionToString(resource) + "'");
 
 		final String resourceJSON;
@@ -228,7 +227,7 @@ public class ResourcesResource {
 		final URI baseURI = uri.getRequestUri();
 		final URI resourceURI = URI.create(baseURI.toString() + "/" + resource.getId());
 
-		LOG.debug("created new resource at '" + resourceURI.toString() + "' with content '" + resourceJSON + "'");
+		ResourcesResource.LOG.debug("created new resource at '" + resourceURI.toString() + "' with content '" + resourceJSON + "'");
 
 		dmpStatus.stop(context);
 		return buildResponseCreated(resourceJSON, resourceURI, proxyResource.getType(), "resource");
@@ -249,7 +248,7 @@ public class ResourcesResource {
 	public Response getResources() throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getAllResources();
 
-		LOG.debug("try to get all resources");
+		ResourcesResource.LOG.debug("try to get all resources");
 
 		final ResourceService resourceService = resourceServiceProvider.get();
 
@@ -257,7 +256,7 @@ public class ResourcesResource {
 
 		if (resources == null) {
 
-			LOG.debug("couldn't find resources");
+			ResourcesResource.LOG.debug("couldn't find resources");
 
 			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
@@ -265,13 +264,13 @@ public class ResourcesResource {
 
 		if (resources.isEmpty()) {
 
-			LOG.debug("there are no resources");
+			ResourcesResource.LOG.debug("there are no resources");
 
 			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		LOG.debug("got all resources = ' = '" + ToStringBuilder.reflectionToString(resources) + "'");
+		ResourcesResource.LOG.debug("got all resources = ' = '" + ToStringBuilder.reflectionToString(resources) + "'");
 
 		final String resourcesJSON;
 
@@ -284,7 +283,7 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't transform resources list object to JSON string.\n" + e.getMessage());
 		}
 
-		LOG.debug("return all resources '" + resourcesJSON + "'");
+		ResourcesResource.LOG.debug("return all resources '" + resourcesJSON + "'");
 
 		dmpStatus.stop(context);
 		return buildResponse(resourcesJSON);
@@ -328,15 +327,15 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't transform resource object to JSON string.\n" + e.getMessage());
 		}
 
-		LOG.debug("return resource with id '" + id + "' and content '" + resourceJSON + "'");
+		ResourcesResource.LOG.debug("return resource with id '" + id + "' and content '" + resourceJSON + "'");
 
 		dmpStatus.stop(context);
 		return buildResponse(resourceJSON);
 	}
-	
+
 	/**
-	 * This endpoint processes (uploades) the input stream and update an existing resource object with related metadata that will be
-	 * returned as JSON representation.
+	 * This endpoint processes (uploades) the input stream and update an existing resource object with related metadata that will
+	 * be returned as JSON representation.
 	 * 
 	 * @param uploadedInputStream the input stream that should be uploaded
 	 * @param fileDetail file metadata
@@ -353,15 +352,14 @@ public class ResourcesResource {
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateResource(
-			@ApiParam(value = "resource identifier", required = true) @PathParam("id") final Long id,
+	public Response updateResource(@ApiParam(value = "resource identifier", required = true) @PathParam("id") final Long id,
 			@ApiParam(value = "file input stream", required = true) @FormDataParam("file") final InputStream uploadedInputStream,
 			@ApiParam("file metadata") @FormDataParam("file") final FormDataContentDisposition fileDetail,
 			@ApiParam(value = "resource name", required = true) @FormDataParam("name") final String name,
 			@ApiParam("resource description") @FormDataParam("description") final String description) throws DMPControllerException {
-		
+
 		final Timer.Context context = dmpStatus.updateResource();
-		
+
 		final Optional<Resource> resourceOptional = dataModelUtil.fetchResource(id);
 
 		if (!resourceOptional.isPresent()) {
@@ -372,7 +370,7 @@ public class ResourcesResource {
 
 		final Resource resource = resourceOptional.get();
 
-		LOG.debug("try to update resource '" + name + "' for file '" + fileDetail.getFileName() + "'");
+		ResourcesResource.LOG.debug("try to update resource '" + name + "' for file '" + fileDetail.getFileName() + "'");
 
 		final ProxyResource proxyResource = refreshResource(resource, uploadedInputStream, fileDetail, name, description);
 
@@ -389,7 +387,7 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't transform resource object to JSON string");
 		}
 
-		LOG.debug("updated resource with id '" + id + "' and JSON content '" + resourceJSON + "'");
+		ResourcesResource.LOG.debug("updated resource with id '" + id + "' and JSON content '" + resourceJSON + "'");
 
 		dmpStatus.stop(context);
 		return buildResponse(resourceJSON);
@@ -413,13 +411,13 @@ public class ResourcesResource {
 			throws DMPControllerException {
 		final Timer.Context context = dmpStatus.deleteResource();
 
-		LOG.debug("try to delete resource with id '" + id + "'");
+		ResourcesResource.LOG.debug("try to delete resource with id '" + id + "'");
 
 		Optional<Resource> resourceOptional = dataModelUtil.fetchResource(id);
 
 		if (!resourceOptional.isPresent()) {
 
-			LOG.debug("couldn't find resource '" + id + "'");
+			ResourcesResource.LOG.debug("couldn't find resource '" + id + "'");
 
 			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
@@ -431,13 +429,13 @@ public class ResourcesResource {
 
 		if (resourceOptional.isPresent()) {
 
-			LOG.debug("couldn't delete resource '" + id + "'");
+			ResourcesResource.LOG.debug("couldn't delete resource '" + id + "'");
 
 			dmpStatus.stop(context);
 			return Response.status(Status.CONFLICT).build();
 		}
 
-		LOG.debug("deletion of resourse with id '" + id + "' was successfull");
+		ResourcesResource.LOG.debug("deletion of resourse with id '" + id + "' was successfull");
 
 		dmpStatus.stop(context);
 		return Response.status(Status.NO_CONTENT).build();
@@ -551,7 +549,7 @@ public class ResourcesResource {
 			throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getAllConfigurations();
 
-		LOG.debug("try to get resource configurations for resource with id '" + id.toString() + "'");
+		ResourcesResource.LOG.debug("try to get resource configurations for resource with id '" + id.toString() + "'");
 
 		final Optional<Resource> resourceOptional = dataModelUtil.fetchResource(id);
 
@@ -563,21 +561,21 @@ public class ResourcesResource {
 
 		final Resource resource = resourceOptional.get();
 
-		LOG.debug("got resource with id '" + id.toString() + "' for resource configurations retrieval = '"
+		ResourcesResource.LOG.debug("got resource with id '" + id.toString() + "' for resource configurations retrieval = '"
 				+ ToStringBuilder.reflectionToString(resource) + "'");
 
 		final Set<Configuration> configurations = resource.getConfigurations();
 
 		if (configurations == null || configurations.isEmpty()) {
 
-			LOG.debug("couldn't find configurations for resource '" + id + "'; or there are no configurations for this resource");
+			ResourcesResource.LOG.debug("couldn't find configurations for resource '" + id + "'; or there are no configurations for this resource");
 
 			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		LOG.debug("got resource configurations for resource with id '" + id.toString() + "' = '" + ToStringBuilder.reflectionToString(configurations)
-				+ "'");
+		ResourcesResource.LOG.debug("got resource configurations for resource with id '" + id.toString() + "' = '"
+				+ ToStringBuilder.reflectionToString(configurations) + "'");
 
 		final String configurationsJSON;
 
@@ -590,7 +588,8 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't transform resource configurations set to JSON string.\n" + e.getMessage());
 		}
 
-		LOG.debug("return resource configurations for resource with id '" + id.toString() + "' and content '" + configurationsJSON + "'");
+		ResourcesResource.LOG.debug("return resource configurations for resource with id '" + id.toString() + "' and content '" + configurationsJSON
+				+ "'");
 
 		dmpStatus.stop(context);
 		return buildResponse(configurationsJSON);
@@ -623,7 +622,7 @@ public class ResourcesResource {
 			@ApiParam(value = "configuration (as JSON)", required = true) final String jsonObjectString) throws DMPControllerException {
 		final Timer.Context context = dmpStatus.createNewConfiguration();
 
-		LOG.debug("try to create new configuration for resource with id '" + id + "'");
+		ResourcesResource.LOG.debug("try to create new configuration for resource with id '" + id + "'");
 
 		final Optional<Resource> resourceOptional = dataModelUtil.fetchResource(id);
 
@@ -633,7 +632,7 @@ public class ResourcesResource {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		LOG.debug("try to add new configuration to resource with id '" + id + "'");
+		ResourcesResource.LOG.debug("try to add new configuration to resource with id '" + id + "'");
 
 		final Resource resource = resourceOptional.get();
 
@@ -641,7 +640,7 @@ public class ResourcesResource {
 
 		if (proxyConfiguration == null) {
 
-			LOG.debug("couldn't add configuration to resource with id '" + id + "'");
+			ResourcesResource.LOG.debug("couldn't add configuration to resource with id '" + id + "'");
 
 			dmpStatus.stop(context);
 			throw new DMPControllerException("couldn't add configuration to resource with id '" + id + "'");
@@ -651,13 +650,14 @@ public class ResourcesResource {
 
 		if (configuration == null) {
 
-			LOG.debug("couldn't add configuration to resource with id '" + id + "'");
+			ResourcesResource.LOG.debug("couldn't add configuration to resource with id '" + id + "'");
 
 			dmpStatus.stop(context);
 			throw new DMPControllerException("couldn't add configuration to resource with id '" + id + "'");
 		}
 
-		LOG.debug("added new configuration to resource with id '" + id + "' = '" + ToStringBuilder.reflectionToString(configuration) + "'");
+		ResourcesResource.LOG.debug("added new configuration to resource with id '" + id + "' = '"
+				+ ToStringBuilder.reflectionToString(configuration) + "'");
 
 		final JsonNode jsStorageType = configuration.getParameters().get("storage_type");
 		if (jsStorageType != null) {
@@ -685,7 +685,7 @@ public class ResourcesResource {
 		final URI baseURI = uri.getRequestUri();
 		final URI configurationURI = URI.create(baseURI.toString() + "/" + configuration.getId());
 
-		LOG.debug("return new configuration at '" + configurationURI.toString() + "' with content '" + configurationJSON + "'");
+		ResourcesResource.LOG.debug("return new configuration at '" + configurationURI.toString() + "' with content '" + configurationJSON + "'");
 
 		dmpStatus.stop(context);
 		return buildResponseCreated(configurationJSON, configurationURI, proxyConfiguration.getType(), "configuration");
@@ -731,7 +731,8 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
 		}
 
-		LOG.debug("return configuration with id '" + configurationId + "' for resource with id '" + id + "' and content '" + configurationJSON + "'");
+		ResourcesResource.LOG.debug("return configuration with id '" + configurationId + "' for resource with id '" + id + "' and content '"
+				+ configurationJSON + "'");
 
 		dmpStatus.stop(context);
 		return buildResponse(configurationJSON);
@@ -759,8 +760,8 @@ public class ResourcesResource {
 			@ApiParam(value = "configuration (as JSON)", required = true) final String jsonObjectString) throws DMPControllerException {
 		final Timer.Context context = dmpStatus.configurationsPreview();
 
-		LOG.debug("try to apply configuration for resource with id '" + id + "'");
-		LOG.debug("try to recieve resource with id '" + id + "' for csv configuration preview");
+		ResourcesResource.LOG.debug("try to apply configuration for resource with id '" + id + "'");
+		ResourcesResource.LOG.debug("try to recieve resource with id '" + id + "' for csv configuration preview");
 
 		final Optional<Resource> resourceOptional = dataModelUtil.fetchResource(id);
 
@@ -772,20 +773,21 @@ public class ResourcesResource {
 
 		final Resource resource = resourceOptional.get();
 
-		LOG.debug("found resource with id '" + id + "' for csv configuration preview = '" + ToStringBuilder.reflectionToString(resource) + "'");
-		LOG.debug("try to apply configuration to resource with id '" + id + "'");
+		ResourcesResource.LOG.debug("found resource with id '" + id + "' for csv configuration preview = '"
+				+ ToStringBuilder.reflectionToString(resource) + "'");
+		ResourcesResource.LOG.debug("try to apply configuration to resource with id '" + id + "'");
 
 		final String result = applyConfigurationForCSVPreview(resource, jsonObjectString);
 
 		if (result == null) {
 
-			LOG.debug("couldn't apply configuration to resource with id '" + id + "'");
+			ResourcesResource.LOG.debug("couldn't apply configuration to resource with id '" + id + "'");
 
 			dmpStatus.stop(context);
 			throw new DMPControllerException("couldn't apply configuration to resource with id '" + id + "'");
 		}
 
-		LOG.debug("applied configuration to resource with id '" + id + "'");
+		ResourcesResource.LOG.debug("applied configuration to resource with id '" + id + "'");
 
 		dmpStatus.stop(context);
 		return buildResponse(result);
@@ -813,8 +815,8 @@ public class ResourcesResource {
 			@ApiParam(value = "configuration (as JSON)", required = true) final String jsonObjectString) throws DMPControllerException {
 		final Timer.Context context = dmpStatus.configurationsPreview();
 
-		LOG.debug("try to apply configuration for resource with id '" + id + "'");
-		LOG.debug("try to recieve resource with id '" + id + "' for csv json configuration preview");
+		ResourcesResource.LOG.debug("try to apply configuration for resource with id '" + id + "'");
+		ResourcesResource.LOG.debug("try to recieve resource with id '" + id + "' for csv json configuration preview");
 
 		final Optional<Resource> resourceOptional = dataModelUtil.fetchResource(id);
 
@@ -826,20 +828,21 @@ public class ResourcesResource {
 
 		final Resource resource = resourceOptional.get();
 
-		LOG.debug("found resource with id '" + id + "' for csv json configuration preview = '" + ToStringBuilder.reflectionToString(resource) + "'");
-		LOG.debug("try to apply configuration to resource with id '" + id + "'");
+		ResourcesResource.LOG.debug("found resource with id '" + id + "' for csv json configuration preview = '"
+				+ ToStringBuilder.reflectionToString(resource) + "'");
+		ResourcesResource.LOG.debug("try to apply configuration to resource with id '" + id + "'");
 
 		final String result = applyConfigurationForCSVJSONPreview(resource, jsonObjectString);
 
 		if (result == null) {
 
-			LOG.debug("couldn't apply configuration to resource with id '" + id + "'");
+			ResourcesResource.LOG.debug("couldn't apply configuration to resource with id '" + id + "'");
 
 			dmpStatus.stop(context);
 			throw new DMPControllerException("couldn't apply configuration to resource with id '" + id + "'");
 		}
 
-		LOG.debug("applied configuration to resource with id '" + id + "'");
+		ResourcesResource.LOG.debug("applied configuration to resource with id '" + id + "'");
 
 		dmpStatus.stop(context);
 		return buildResponse(result);
@@ -869,7 +872,7 @@ public class ResourcesResource {
 			proxyResource = resourceService.createObjectTransactional();
 		} catch (final DMPPersistenceException e) {
 
-			LOG.debug("something went wrong while resource creation");
+			ResourcesResource.LOG.debug("something went wrong while resource creation");
 
 			throw new DMPControllerException("something went wrong while resource creation\n" + e.getMessage());
 		}
@@ -934,14 +937,14 @@ public class ResourcesResource {
 			proxyResource = new ProxyResource(updatedResource.getObject(), type);
 		} catch (final DMPPersistenceException e) {
 
-			LOG.debug("something went wrong while resource updating");
+			ResourcesResource.LOG.debug("something went wrong while resource updating");
 
 			throw new DMPControllerException("something went wrong while resource updating\n" + e.getMessage());
 		}
 
 		return proxyResource;
 	}
-	
+
 	/**
 	 * Process stores the input stream and update a resource with the related metadata.
 	 * 
@@ -952,13 +955,13 @@ public class ResourcesResource {
 	 * @return a JSON representation of the updated resource
 	 * @throws DMPControllerException
 	 */
-	private ProxyResource refreshResource(final Resource resource, final InputStream uploadInputedStream, final FormDataContentDisposition fileDetail, final String name,
-			final String description) throws DMPControllerException {
+	private ProxyResource refreshResource(final Resource resource, final InputStream uploadInputedStream,
+			final FormDataContentDisposition fileDetail, final String name, final String description) throws DMPControllerException {
 
 		final File file = DMPControllerUtils.writeToFile(uploadInputedStream, fileDetail.getFileName(), "resources");
 
 		final ResourceService resourceService = resourceServiceProvider.get();
-		
+
 		ProxyResource proxyResource;
 
 		resource.setName(name);
@@ -991,14 +994,14 @@ public class ResourcesResource {
 			proxyResource = new ProxyResource(updatedResource.getObject(), updatedResource.getType());
 		} catch (final DMPPersistenceException e) {
 
-			LOG.debug("something went wrong while resource updating");
+			ResourcesResource.LOG.debug("something went wrong while resource updating");
 
 			throw new DMPControllerException("something went wrong while resource updating\n" + e.getMessage());
 		}
 
 		return proxyResource;
 	}
-	
+
 	/**
 	 * Adds and persists a configuration to the given resource.
 	 * 
@@ -1064,7 +1067,7 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't create or retrieve configuration");
 		}
 
-		Configuration configuration = proxyConfiguration.getObject();
+		final Configuration configuration = proxyConfiguration.getObject();
 
 		if (configuration == null) {
 
@@ -1108,7 +1111,7 @@ public class ResourcesResource {
 			proxyConfiguration = new ProxyConfiguration(proxyUpdatedConfiguration.getObject(), type);
 		} catch (final DMPPersistenceException e) {
 
-			LOG.debug("something went wrong while configuration updating");
+			ResourcesResource.LOG.debug("something went wrong while configuration updating");
 
 			throw new DMPControllerException("something went wrong while configuration updating\n" + e.getMessage());
 		}
@@ -1120,7 +1123,7 @@ public class ResourcesResource {
 			resourceService.updateObjectTransactional(resource);
 		} catch (final DMPPersistenceException e) {
 
-			LOG.debug("something went wrong while resource updating for configuration");
+			ResourcesResource.LOG.debug("something went wrong while resource updating for configuration");
 
 			throw new DMPControllerException("something went wrong while resource updating for configuration\n" + e.getMessage());
 		}
@@ -1144,7 +1147,7 @@ public class ResourcesResource {
 			proxyConfiguration = configurationService.createObjectTransactional();
 		} catch (final DMPPersistenceException e) {
 
-			LOG.debug("something went wrong while configuration creation");
+			ResourcesResource.LOG.debug("something went wrong while configuration creation");
 
 			throw new DMPControllerException("something went wrong while configuration creation\n" + e.getMessage());
 		}
@@ -1247,7 +1250,7 @@ public class ResourcesResource {
 			configurationFromJSON = objectMapper.readValue(configurationJSONString, Configuration.class);
 		} catch (final IOException e) {
 
-			LOG.debug("something went wrong while deserializing the configuration JSON string");
+			ResourcesResource.LOG.debug("something went wrong while deserializing the configuration JSON string");
 
 			throw new DMPControllerException("something went wrong while deserializing the configuration JSON string.\n" + e.getMessage());
 		}

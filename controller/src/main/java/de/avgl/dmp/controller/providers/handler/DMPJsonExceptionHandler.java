@@ -2,6 +2,7 @@ package de.avgl.dmp.controller.providers.handler;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
@@ -12,12 +13,14 @@ import de.avgl.dmp.controller.providers.BaseExceptionHandler;
  * An exception handler for providing JSON exceptions at client side of the backend API
  * 
  * @author phorn
- *
  */
 @Provider
 public class DMPJsonExceptionHandler extends BaseExceptionHandler<DMPJsonException> {
 
-	private static final Pattern PATTERN = Pattern.compile("Unrecognized field (\"[^\"]+?\") \\(class [\\S]+?\\), not marked as ignorable \\((\\d+) known properties: , ([^\\)]+?)\\]\\).*", Pattern.DOTALL | Pattern.MULTILINE);
+	private static final Pattern	PATTERN	= Pattern
+													.compile(
+															"Unrecognized field (\"[^\"]+?\") \\(class [\\S]+?\\), not marked as ignorable \\((\\d+) known properties: , ([^\\)]+?)\\]\\).*",
+															Pattern.DOTALL | Pattern.MULTILINE);
 
 	/**
 	 * {@inheritDoc}
@@ -28,7 +31,7 @@ public class DMPJsonExceptionHandler extends BaseExceptionHandler<DMPJsonExcepti
 		final String message = errorMessage(exception);
 
 		final Throwable exceptionCause = exception.getCause();
-		final Matcher matcher = PATTERN.matcher(exceptionCause.getMessage());
+		final Matcher matcher = DMPJsonExceptionHandler.PATTERN.matcher(exceptionCause.getMessage());
 
 		if (matcher.matches() && matcher.groupCount() >= 3) {
 

@@ -6,7 +6,6 @@ import de.avgl.dmp.persistence.model.resource.DataModel;
  * An (abstract) event that provides a {@link DataModel}.
  * 
  * @author tgaengler
- *
  */
 public abstract class DataModelEvent {
 
@@ -21,7 +20,7 @@ public abstract class DataModelEvent {
 	 * @param dataModel a data model that can be utilised for further processing
 	 */
 	public DataModelEvent(final DataModel dataModel) {
-		
+
 		this.dataModel = dataModel;
 	}
 
@@ -31,7 +30,7 @@ public abstract class DataModelEvent {
 	 * @return the data model of the event for further processing
 	 */
 	public DataModel getDataModel() {
-		
+
 		return dataModel;
 	}
 }

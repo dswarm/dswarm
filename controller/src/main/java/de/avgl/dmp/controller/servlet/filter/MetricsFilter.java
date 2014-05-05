@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -20,8 +21,6 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import static com.codahale.metrics.MetricRegistry.name;
 
 /**
  * The filter for the metrics measuring.
@@ -66,13 +65,13 @@ public class MetricsFilter implements Filter {
 
 		final ConcurrentMap<Integer, Meter> metersByStatusCode = new ConcurrentHashMap<>(meterNamesByStatusCode.size());
 		for (final Map.Entry<Integer, String> entry : meterNamesByStatusCode.entrySet()) {
-			metersByStatusCode.put(entry.getKey(), metricRegistry.meter(name(MetricsFilter.class, entry.getValue())));
+			metersByStatusCode.put(entry.getKey(), metricRegistry.meter(MetricRegistry.name(MetricsFilter.class, entry.getValue())));
 		}
 		this.metersByStatusCode = metersByStatusCode;
 
-		this.otherMeter = metricRegistry.meter(name(MetricsFilter.class, otherMetricName));
-		this.activeRequests = metricRegistry.counter(name(MetricsFilter.class, "activeRequests"));
-		this.requestTimer = metricRegistry.timer(name(MetricsFilter.class, "requests"));
+		otherMeter = metricRegistry.meter(MetricRegistry.name(MetricsFilter.class, otherMetricName));
+		activeRequests = metricRegistry.counter(MetricRegistry.name(MetricsFilter.class, "activeRequests"));
+		requestTimer = metricRegistry.timer(MetricRegistry.name(MetricsFilter.class, "requests"));
 	}
 
 	@Override
@@ -133,6 +132,7 @@ public class MetricsFilter implements Filter {
 			super.setStatus(sc);
 		}
 
+		@Override
 		public int getStatus() {
 			return httpStatus;
 		}

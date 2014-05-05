@@ -21,12 +21,12 @@ public class SchemaEvent extends DataModelEvent {
 		}
 	}
 
-	private final SchemaType schemaType;
+	private final SchemaType	schemaType;
 
 	public SchemaEvent(final DataModel dataModel, final SchemaType schemaType) {
 
 		super(dataModel);
-		
+
 		this.schemaType = schemaType;
 	}
 

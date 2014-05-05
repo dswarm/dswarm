@@ -16,7 +16,6 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
-import com.google.inject.name.Named;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -29,7 +28,7 @@ import de.avgl.dmp.persistence.GraphDatabaseConfig;
 
 /**
  * Created by tgaengler on 28/04/14.
- *
+ * 
  * @author tgaengler
  */
 @RequestScoped
@@ -59,7 +58,7 @@ public class RDFResource {
 
 	/**
 	 * for triggering a download
-	 *
+	 * 
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "exports all data from the graph DB in the given RDF serialisation format", notes = "Returns exported data in the given RDF serialisation format.")
@@ -68,17 +67,18 @@ public class RDFResource {
 	@GET
 	@Path("/getall")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	public Response exportAllRDFForDownload(@QueryParam("format") @DefaultValue("application/n-quads") String format) throws DMPControllerException {
+	public Response exportAllRDFForDownload(@QueryParam("format") @DefaultValue("application/n-quads") final String format)
+			throws DMPControllerException {
 
 		final String[] formatStrings = format.split("/", 2);
 		final MediaType formatType;
 		if (formatStrings.length == 2) {
 			formatType = new MediaType(formatStrings[0], formatStrings[1]);
 		} else {
-			formatType = N_QUADS_TYPE;
+			formatType = RDFResource.N_QUADS_TYPE;
 		}
 
-		LOG.debug("Exporting rdf data into " + formatType);
+		RDFResource.LOG.debug("Exporting rdf data into " + formatType);
 
 		final WebTarget target = target("/getall");
 
@@ -129,9 +129,9 @@ public class RDFResource {
 
 		WebTarget target = client().target(graphEndpoint);
 
-		if (resourceIdentifier != null) {
+		if (RDFResource.resourceIdentifier != null) {
 
-			target = target.path(resourceIdentifier);
+			target = target.path(RDFResource.resourceIdentifier);
 		}
 
 		return target;

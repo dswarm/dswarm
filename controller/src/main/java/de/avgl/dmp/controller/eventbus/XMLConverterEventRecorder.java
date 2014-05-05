@@ -41,7 +41,7 @@ public class XMLConverterEventRecorder {
 	@Inject
 	public XMLConverterEventRecorder(final InternalModelServiceFactory internalModelServiceFactory, final EventBus eventBus) {
 
-		this.internalServiceFactory = internalModelServiceFactory;
+		internalServiceFactory = internalModelServiceFactory;
 		eventBus.register(this);
 	}
 
@@ -95,7 +95,7 @@ public class XMLConverterEventRecorder {
 
 		} catch (final DMPConverterException | NullPointerException e) {
 
-			LOG.error("couldn't convert the XML data of data model '" + dataModel.getId() + "'", e);
+			XMLConverterEventRecorder.LOG.error("couldn't convert the XML data of data model '" + dataModel.getId() + "'", e);
 		}
 
 		if (result != null) {
@@ -105,7 +105,7 @@ public class XMLConverterEventRecorder {
 				internalServiceFactory.getInternalGDMGraphService().createObject(dataModel.getId(), result);
 			} catch (final DMPPersistenceException e) {
 
-				LOG.error("couldn't persist the converted data of data model '" + dataModel.getId() + "'", e);
+				XMLConverterEventRecorder.LOG.error("couldn't persist the converted data of data model '" + dataModel.getId() + "'", e);
 			}
 		}
 	}

@@ -122,6 +122,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	 * @return the updated schema as JSON representation
 	 * @throws DMPControllerException
 	 */
+	@Override
 	@ApiOperation(value = "update schema with given id ", notes = "Returns an updated Schema object.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "schema was successfully updated"),
 			@ApiResponse(code = 404, message = "could not find a schema for the given id"),
