@@ -3,7 +3,6 @@ package de.avgl.dmp.controller.utils;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -18,7 +17,6 @@ import com.google.inject.Singleton;
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.internal.Model;
-import de.avgl.dmp.persistence.model.jsonschema.JSRoot;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
@@ -115,72 +113,6 @@ public class DataModelUtil {
 		return Optional.of(dataIterator(iterator));
 	}
 
-	/**
-	 * This method is deprecated. Please utilise {@link DataModelUtil#getSchema(long)} instead.
-	 * 
-	 * @param resourceId
-	 * @param configurationId
-	 * @return
-	 */
-	@Deprecated
-	public Optional<ObjectNode> getSchema(final long resourceId, final long configurationId) {
-
-		final Optional<Configuration> configurationOptional = fetchConfiguration(resourceId, configurationId);
-
-		if (!configurationOptional.isPresent()) {
-
-			return Optional.absent();
-		}
-
-		final Configuration configuration = configurationOptional.get();
-
-		// TODO: fixme
-
-		final Optional<JSRoot> rootOptional = null;
-
-		// schemaServiceProvider.get().getSchema(resourceId, configurationId)
-		// .or(getConfiguredSchema(configuration));
-
-		// if (rootOptional.isPresent()) {
-		//
-		// final JSRoot jsElements = rootOptional.get();
-		//
-		// try {
-		// return Optional.of(jsElements.toJson(objectMapper));
-		// } catch (final IOException e) {
-		// LOG.warn(e.getMessage(), e);
-		// return Optional.absent();
-		// }
-		// }
-
-		final InternalModelService internalService;
-		try {
-			internalService = determineInternalService(configurationOptional.get());
-		} catch (final DMPControllerException e) {
-
-			return Optional.absent();
-		}
-
-		final Optional<Set<String>> schemaOptional = internalService.getSchema(resourceId, configurationId);
-
-		if (!schemaOptional.isPresent()) {
-
-			DataModelUtil.LOG.debug("couldn't find schema");
-			return Optional.absent();
-		}
-
-		final ObjectNode node = objectMapper.createObjectNode();
-		node.put("title", configuration.getName());
-		node.put("type", "object");
-		final ObjectNode properties = node.putObject("properties");
-
-		for (final String schemaProp : schemaOptional.get()) {
-			properties.putObject(schemaProp).put("type", "string");
-		}
-
-		return Optional.of(node);
-	}
-
 	public Optional<ObjectNode> getSchema(final long dataModelId) {
 
 		final Optional<Configuration> configurationOptional = fetchConfiguration(dataModelId);
@@ -189,27 +121,6 @@ public class DataModelUtil {
 
 			return Optional.absent();
 		}
-
-		final Configuration configuration = configurationOptional.get();
-
-		// TODO: fixme
-
-		final Optional<JSRoot> rootOptional = null;
-
-		// schemaServiceProvider.get().getSchema(resourceId, configurationId)
-		// .or(getConfiguredSchema(configuration));
-
-		// if (rootOptional.isPresent()) {
-		//
-		// final JSRoot jsElements = rootOptional.get();
-		//
-		// try {
-		// return Optional.of(jsElements.toJson(objectMapper));
-		// } catch (final IOException e) {
-		// LOG.warn(e.getMessage(), e);
-		// return Optional.absent();
-		// }
-		// }
 
 		final InternalModelService internalService;
 		try {
@@ -328,7 +239,7 @@ public class DataModelUtil {
 
 		return Optional.fromNullable(configuration);
 	}
-	
+
 	/**
 	 * Deletes the resource for the given resource identifier.
 	 * 
@@ -349,7 +260,9 @@ public class DataModelUtil {
 
 			if ("schema".equals(storageType.asText())) {
 
-				return internalServiceFactoryProvider.get().getMemoryDbInternalService();
+				// TODO: fix this as needed
+
+				return null;
 			} else if ("csv".equals(storageType.asText())) {
 
 				return internalServiceFactoryProvider.get().getInternalGDMGraphService();
@@ -364,39 +277,6 @@ public class DataModelUtil {
 
 			throw new DMPControllerException("couldn't determine storage type from configuration");
 		}
-	}
-
-	private Optional<JSRoot> getConfiguredSchema(final Configuration configuration) {
-		final ObjectNode parameters = configuration.getParameters();
-		final JsonNode storageType = parameters.get("storage_type");
-		if ("xml".equals(storageType.asText())) {
-
-			final JsonNode schemaFile = parameters.get("schema_file");
-			if (schemaFile != null) {
-				final long schemaId = Long.valueOf(schemaFile.get("id").asText());
-				final Optional<Resource> schemaOptional = fetchResource(schemaId);
-				if (schemaOptional.isPresent()) {
-
-					long latestConfigId = Integer.MIN_VALUE;
-
-					for (final Configuration schemaConfiguration : schemaOptional.get().getConfigurations()) {
-
-						if (schemaConfiguration.getId() > latestConfigId) {
-							latestConfigId = schemaConfiguration.getId();
-						}
-					}
-
-					if (latestConfigId != Integer.MIN_VALUE) {
-
-						// TODO: fixme
-
-						// return schemaServiceProvider.get().getSchema(schemaId, latestConfigId);
-					}
-				}
-			}
-		}
-
-		return Optional.absent();
 	}
 
 	private Iterator<Tuple<String, JsonNode>> dataIterator(final Iterator<Map.Entry<String, Model>> triples) {

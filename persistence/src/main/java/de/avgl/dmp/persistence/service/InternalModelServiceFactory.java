@@ -1,6 +1,5 @@
 package de.avgl.dmp.persistence.service;
 
-import de.avgl.dmp.persistence.service.internal.graph.InternalRDFGraphService;
 
 /**
  * A factory for internal model service.
@@ -10,15 +9,6 @@ import de.avgl.dmp.persistence.service.internal.graph.InternalRDFGraphService;
 public interface InternalModelServiceFactory {
 
 	// <TYPE extends Model> InternalService<TYPE> create(TypeLiteral<TYPE> typeLiteral);
-
-	/**
-	 * Gets the memory DB internal model service implementation. Note: this service is deprecated, please utilise
-	 * {@link InternalRDFGraphService} preferable.
-	 * 
-	 * @return the memory DB internal model service implementation
-	 */
-	@Deprecated
-	/* @Named("MemoryDb") */InternalModelService getMemoryDbInternalService();
 
 	/**
 	 * Gets the triple internal model service implementation.

@@ -18,9 +18,6 @@ import de.avgl.dmp.persistence.model.schema.Schema;
  */
 public interface InternalModelService {
 
-	@Deprecated
-	Optional<Set<String>> getSchema(Long resourceId, Long configurationId);
-
 	/**
 	 * Persists an object (model) to a data model.
 	 * 

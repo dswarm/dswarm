@@ -127,13 +127,6 @@ public class InternalGDMGraphService implements InternalModelService {
 		graphEndpoint = graphEndpointArg;
 	}
 
-	@Deprecated
-	@Override
-	public Optional<Set<String>> getSchema(final Long resourceId, final Long configurationId) {
-
-		throw new NotImplementedException("schema retrieval via this method is not implemented yet, please utilise #getSchema(dataModelId) instead.");
-	}
-
 	/**
 	 * {@inheritDoc}
 	 */
