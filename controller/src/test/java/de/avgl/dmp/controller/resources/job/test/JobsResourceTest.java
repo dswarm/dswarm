@@ -28,20 +28,4 @@ public class JobsResourceTest extends ResourceTest {
 
 		// jobJSONString = DMPPersistenceUtil.getResourceAsString("complex-request.json");
 	}
-
-	@Ignore
-	@Test
-	public void testExecuteJobDemo() throws Exception {
-
-		Response response = target("/demo").request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(Entity.json(jobJSONString));
-
-		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
-
-		final String responseString = response.readEntity(String.class);
-
-		final String expected = DMPPersistenceUtil.getResourceAsString("complex-result.json");
-
-		Assert.assertEquals("POST responses are not equal", expected, responseString);
-	}
 }
