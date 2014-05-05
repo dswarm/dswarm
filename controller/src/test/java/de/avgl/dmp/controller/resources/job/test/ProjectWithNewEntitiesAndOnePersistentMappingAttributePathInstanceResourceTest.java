@@ -129,7 +129,8 @@ public class ProjectWithNewEntitiesAndOnePersistentMappingAttributePathInstanceR
 	@Test
 	public void testPOSTObjectsWithNewEntities() throws Exception {
 
-		LOG.debug("start POST " + pojoClassName + "s with new entities test");
+		ProjectWithNewEntitiesAndOnePersistentMappingAttributePathInstanceResourceTest.LOG.debug("start POST " + pojoClassName
+				+ "s with new entities test");
 
 		objectJSONString = DMPPersistenceUtil.getResourceAsString("project.w.new.entities.onepersistentmappingattributepathinstance.json");
 
@@ -520,6 +521,7 @@ public class ProjectWithNewEntitiesAndOnePersistentMappingAttributePathInstanceR
 			functionsResourceTestUtils.deleteObject(function);
 		}
 
-		LOG.debug("end POST " + pojoClassName + "s with new entities test");
+		ProjectWithNewEntitiesAndOnePersistentMappingAttributePathInstanceResourceTest.LOG.debug("end POST " + pojoClassName
+				+ "s with new entities test");
 	}
 }

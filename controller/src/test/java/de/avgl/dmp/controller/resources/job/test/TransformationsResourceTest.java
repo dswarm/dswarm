@@ -111,7 +111,7 @@ public class TransformationsResourceTest
 	@Override
 	protected Transformation updateObject(final Transformation persistedTransformation) throws Exception {
 
-		String functionJSONString = DMPPersistenceUtil.getResourceAsString("function.json");
+		final String functionJSONString = DMPPersistenceUtil.getResourceAsString("function.json");
 		final ObjectNode functionJSON = objectMapper.readValue(functionJSONString, ObjectNode.class);
 
 		String componentJSONString = DMPPersistenceUtil.getResourceAsString("component.json");
@@ -124,7 +124,7 @@ public class TransformationsResourceTest
 		updateComponent = componentsResourceTestUtils.createObject(componentJSONString, expectedComponent);
 		updateFunction = updateComponent.getFunction();
 
-		Set<Component> components = new LinkedHashSet<Component>();
+		final Set<Component> components = new LinkedHashSet<Component>();
 		components.add(updateComponent);
 		persistedTransformation.setComponents(components);
 
@@ -151,8 +151,8 @@ public class TransformationsResourceTest
 		Assert.assertEquals("transformation name shoud be equal", updateTransformation.getName(), updateTransformationNameString);
 		Assert.assertEquals("transformation description shoud be equal", updateTransformation.getDescription(), updateTransformationDescriptionString);
 
-		Set<Component> components1 = expectedTransformation.getComponents();
-		Set<Component> components2 = updateTransformation.getComponents();
+		final Set<Component> components1 = expectedTransformation.getComponents();
+		final Set<Component> components2 = updateTransformation.getComponents();
 		Assert.assertEquals("number of components should be equal", components1.size(), components2.size());
 		Assert.assertTrue("components of the transformation should be equal", components1.equals(components2));
 

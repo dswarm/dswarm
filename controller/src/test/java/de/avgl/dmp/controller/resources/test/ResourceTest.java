@@ -17,7 +17,7 @@ public class ResourceTest extends GuicedTest {
 
 	private static final org.apache.log4j.Logger	LOG		= org.apache.log4j.Logger.getLogger(ResourceTest.class);
 
-	protected static EmbeddedServer                 grizzlyServer;
+	protected static EmbeddedServer					grizzlyServer;
 
 	protected String								resourceIdentifier;
 	protected static final int						port	= 9998;
@@ -33,36 +33,33 @@ public class ResourceTest extends GuicedTest {
 
 		System.setProperty(EmbeddedServer.CONTEXT_PATH_PROPERTY, "/test");
 		System.setProperty(EmbeddedServer.HTTP_HOST_PROPERTY, "127.0.0.1");
-		System.setProperty(EmbeddedServer.HTTP_PORT_PROPERTY, String.valueOf(port));
+		System.setProperty(EmbeddedServer.HTTP_PORT_PROPERTY, String.valueOf(ResourceTest.port));
 
-		DMPInjector.injector = injector;
+		DMPInjector.injector = GuicedTest.injector;
 
-		grizzlyServer = new EmbeddedServer();
-		grizzlyServer.start();
+		ResourceTest.grizzlyServer = new EmbeddedServer();
+		ResourceTest.grizzlyServer.start();
 	}
 
 	@AfterClass
 	public static void tearDown() throws Exception {
 
 		GuicedTest.tearDown();
-		grizzlyServer.stop();
+		ResourceTest.grizzlyServer.stop();
 	}
 
 	protected Client client() {
 
-		LOG.debug("create Jersey client for test");
+		ResourceTest.LOG.debug("create Jersey client for test");
 
 		final ClientBuilder builder = ClientBuilder.newBuilder();
 
-		return builder
-				.register(MultiPartFeature.class)
-				.register(ExceptionHandler.class)
-				.build();
+		return builder.register(MultiPartFeature.class).register(ExceptionHandler.class).build();
 	}
 
 	protected WebTarget target() {
 
-		WebTarget target = client().target(grizzlyServer.getBaseUri());
+		WebTarget target = client().target(ResourceTest.grizzlyServer.getBaseUri());
 
 		if (resourceIdentifier != null) {
 			target = target.path(resourceIdentifier);
@@ -71,11 +68,11 @@ public class ResourceTest extends GuicedTest {
 		return target;
 	}
 
-	protected WebTarget target(String... path) {
+	protected WebTarget target(final String... path) {
 
 		WebTarget target = target();
 
-		for (String p : path) {
+		for (final String p : path) {
 			target = target.path(p);
 		}
 
@@ -83,6 +80,6 @@ public class ResourceTest extends GuicedTest {
 	}
 
 	protected String baseUri() {
-		return grizzlyServer.getBaseUri().toString();
+		return ResourceTest.grizzlyServer.getBaseUri().toString();
 	}
 }

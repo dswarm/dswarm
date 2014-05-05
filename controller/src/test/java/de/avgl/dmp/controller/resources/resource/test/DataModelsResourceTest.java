@@ -1,10 +1,5 @@
 package de.avgl.dmp.controller.resources.resource.test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.net.URL;
 import java.util.LinkedList;
@@ -15,6 +10,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.FileUtils;
+import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -39,6 +35,7 @@ import de.avgl.dmp.controller.resources.schema.test.utils.ClaszesResourceTestUti
 import de.avgl.dmp.controller.resources.schema.test.utils.SchemasResourceTestUtils;
 import de.avgl.dmp.controller.resources.test.BasicResourceTest;
 import de.avgl.dmp.controller.servlet.DMPInjector;
+import de.avgl.dmp.controller.test.GuicedTest;
 import de.avgl.dmp.persistence.model.internal.Model;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
@@ -262,11 +259,11 @@ public class DataModelsResourceTest extends
 	@Test
 	public void testCSVData() throws Exception {
 
-		LOG.debug("start get CSV data test");
+		DataModelsResourceTest.LOG.debug("start get CSV data test");
 
 		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("resource.json");
 
-		final Resource expectedResource = injector.getInstance(ObjectMapper.class).readValue(resourceJSONString, Resource.class);
+		final Resource expectedResource = GuicedTest.injector.getInstance(ObjectMapper.class).readValue(resourceJSONString, Resource.class);
 
 		final URL fileURL = Resources.getResource("test_csv.csv");
 		final File resourceFile = FileUtils.toFile(fileURL);
@@ -294,9 +291,9 @@ public class DataModelsResourceTest extends
 		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
 		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getId(), Optional.of(atMost));
 
-		assertTrue(data.isPresent());
-		assertFalse(data.get().isEmpty());
-		assertThat(data.get().size(), equalTo(atMost));
+		Assert.assertTrue(data.isPresent());
+		Assert.assertFalse(data.get().isEmpty());
+		Assert.assertThat(data.get().size(), CoreMatchers.equalTo(atMost));
 
 		final String recordId = data.get().keySet().iterator().next();
 
@@ -307,7 +304,7 @@ public class DataModelsResourceTest extends
 
 		final ObjectNode assoziativeJsonArray = response.readEntity(ObjectNode.class);
 
-		assertThat(assoziativeJsonArray.size(), equalTo(atMost));
+		Assert.assertThat(assoziativeJsonArray.size(), CoreMatchers.equalTo(atMost));
 
 		final JsonNode json = assoziativeJsonArray.get(recordId);
 
@@ -317,16 +314,16 @@ public class DataModelsResourceTest extends
 
 		Assert.assertNotNull("the data resource schema base uri shouldn't be null", dataResourceSchemaBaseURI);
 
-		assertThat(getValue(dataResourceSchemaBaseURI + "id", json),
-				equalTo(getValue(dataResourceSchemaBaseURI + "id", data.get().get(recordId).toRawJSON())));
-		assertThat(getValue(dataResourceSchemaBaseURI + "year", json),
-				equalTo(getValue(dataResourceSchemaBaseURI + "year", data.get().get(recordId).toRawJSON())));
-		assertThat(getValue(dataResourceSchemaBaseURI + "description", json),
-				equalTo(getValue(dataResourceSchemaBaseURI + "description", data.get().get(recordId).toRawJSON())));
-		assertThat(getValue(dataResourceSchemaBaseURI + "name", json),
-				equalTo(getValue(dataResourceSchemaBaseURI + "name", data.get().get(recordId).toRawJSON())));
-		assertThat(getValue(dataResourceSchemaBaseURI + "isbn", json),
-				equalTo(getValue(dataResourceSchemaBaseURI + "isbn", data.get().get(recordId).toRawJSON())));
+		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "id", json),
+				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "id", data.get().get(recordId).toRawJSON())));
+		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "year", json),
+				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "year", data.get().get(recordId).toRawJSON())));
+		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "description", json),
+				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "description", data.get().get(recordId).toRawJSON())));
+		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "name", json),
+				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "name", data.get().get(recordId).toRawJSON())));
+		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "isbn", json),
+				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "isbn", data.get().get(recordId).toRawJSON())));
 
 		// clean up
 
@@ -364,13 +361,13 @@ public class DataModelsResourceTest extends
 
 		claszesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(recordClasz);
 
-		LOG.debug("end get CSV data test");
+		DataModelsResourceTest.LOG.debug("end get CSV data test");
 	}
 
 	@Test
 	public void testXMLData() throws Exception {
 
-		LOG.debug("start get XML data test");
+		DataModelsResourceTest.LOG.debug("start get XML data test");
 
 		// prepare resource
 		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("test-mabxml-resource.json");
@@ -403,9 +400,9 @@ public class DataModelsResourceTest extends
 		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
 		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getId(), Optional.of(atMost));
 
-		assertTrue(data.isPresent());
-		assertFalse(data.get().isEmpty());
-		assertThat(data.get().size(), equalTo(atMost));
+		Assert.assertTrue(data.isPresent());
+		Assert.assertFalse(data.get().isEmpty());
+		Assert.assertThat(data.get().size(), CoreMatchers.equalTo(atMost));
 
 		final String recordId = data.get().keySet().iterator().next();
 
@@ -420,9 +417,9 @@ public class DataModelsResourceTest extends
 
 		final ObjectNode assoziativeJsonArray = response.readEntity(ObjectNode.class);
 
-		assertThat(assoziativeJsonArray.size(), equalTo(atMost));
+		Assert.assertThat(assoziativeJsonArray.size(), CoreMatchers.equalTo(atMost));
 
-		JsonNode json = assoziativeJsonArray.get(recordId);
+		final JsonNode json = assoziativeJsonArray.get(recordId);
 
 		final JsonNode expectedJson = data.get().get(recordId).toRawJSON();
 
@@ -430,14 +427,14 @@ public class DataModelsResourceTest extends
 
 		System.out.println("expected JSON = '" + objectMapper.writeValueAsString(expectedJson) + "'");
 
-		assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", json),
-				equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", expectedJson)));
-		assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion", json),
-				equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion", expectedJson)));
-		assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ", json),
-				equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ", expectedJson)));
-		assertThat(getValueNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld", json).size(),
-				equalTo(getValueNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld", expectedJson).size()));
+		Assert.assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", json),
+				CoreMatchers.equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", expectedJson)));
+		Assert.assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion", json),
+				CoreMatchers.equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion", expectedJson)));
+		Assert.assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ", json),
+				CoreMatchers.equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ", expectedJson)));
+		Assert.assertThat(getValueNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld", json).size(),
+				CoreMatchers.equalTo(getValueNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld", expectedJson).size()));
 
 		// clean up
 
@@ -474,20 +471,20 @@ public class DataModelsResourceTest extends
 		schemasResourceTestUtils.deleteObject(schema);
 		claszesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(recordClass);
 
-		LOG.debug("end get XML data test");
+		DataModelsResourceTest.LOG.debug("end get XML data test");
 	}
 
 	@Test
 	public void testDataMissing() throws Exception {
 
-		LOG.debug("start get data missing test");
+		DataModelsResourceTest.LOG.debug("start get data missing test");
 
 		final Response response = target("42", "data").request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
 
-		assertThat("404 Not Found was expected", response.getStatus(), equalTo(404));
-		assertThat(response.hasEntity(), equalTo(false));
+		Assert.assertThat("404 Not Found was expected", response.getStatus(), CoreMatchers.equalTo(404));
+		Assert.assertThat(response.hasEntity(), CoreMatchers.equalTo(false));
 
-		LOG.debug("end get resource configuration data missing test");
+		DataModelsResourceTest.LOG.debug("end get resource configuration data missing test");
 	}
 
 	@Override
@@ -549,13 +546,13 @@ public class DataModelsResourceTest extends
 
 		updateRecordClass = claszesResourceTestUtils.createObject("clasz2.json");
 
-		Schema schema = persistedDataModel.getSchema();
+		final Schema schema = persistedDataModel.getSchema();
 		schema.setName(schema.getName() + " update");
 		schema.setRecordClass(updateRecordClass);
 
 		persistedDataModel.setSchema(schema);
 
-		String updateDataModelJSONString = objectMapper.writeValueAsString(persistedDataModel);
+		final String updateDataModelJSONString = objectMapper.writeValueAsString(persistedDataModel);
 		final DataModel expectedDataModel = objectMapper.readValue(updateDataModelJSONString, DataModel.class);
 		Assert.assertNotNull("the data model JSON string shouldn't be null", updateDataModelJSONString);
 

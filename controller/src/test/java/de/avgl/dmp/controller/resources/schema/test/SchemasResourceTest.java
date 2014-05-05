@@ -66,7 +66,7 @@ public class SchemasResourceTest extends
 
 		for (int i = 1; i < 6; i++) {
 
-			if(i == 2 || i == 4) {
+			if (i == 2 || i == 4) {
 
 				// exclude attributes from internal model schema (because they should already exist)
 
@@ -87,7 +87,7 @@ public class SchemasResourceTest extends
 
 		for (int j = 1; j < 4; j++) {
 
-			if(j == 2) {
+			if (j == 2) {
 
 				// exclude attribute paths from internal model schema (because they should already exist)
 

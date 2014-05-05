@@ -1,10 +1,5 @@
 package de.avgl.dmp.controller.resources.schema.test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.everyItem;
-import static org.hamcrest.Matchers.isIn;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -16,12 +11,11 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import de.avgl.dmp.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
-import de.avgl.dmp.persistence.service.schema.test.utils.AttributeServiceTestUtils;
-import de.avgl.dmp.persistence.service.schema.test.utils.ClaszServiceTestUtils;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.MultiPart;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,6 +33,7 @@ import de.avgl.dmp.controller.resources.schema.test.utils.AttributesResourceTest
 import de.avgl.dmp.controller.resources.schema.test.utils.ClaszesResourceTestUtils;
 import de.avgl.dmp.controller.resources.schema.test.utils.SchemasResourceTestUtils;
 import de.avgl.dmp.controller.resources.test.ResourceTest;
+import de.avgl.dmp.controller.test.GuicedTest;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
@@ -75,7 +70,7 @@ public class PNXSchemaTest extends ResourceTest {
 	public PNXSchemaTest() {
 		super(null);
 
-		this.mapper = injector.getInstance(ObjectMapper.class);
+		mapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 		dataModelsResourceTestUtils = new DataModelsResourceTestUtils();
 		attributesResourceTestUtils = new AttributesResourceTestUtils();
@@ -112,8 +107,8 @@ public class PNXSchemaTest extends ResourceTest {
 			actual.path(attributeNames);
 		}
 
-		assertThat(actual.attributePaths, everyItem(isIn(expected.attributePaths)));
-		assertThat(expected.attributePaths, everyItem(isIn(actual.attributePaths)));
+		MatcherAssert.assertThat(actual.attributePaths, Matchers.everyItem(Matchers.isIn(expected.attributePaths)));
+		MatcherAssert.assertThat(expected.attributePaths, Matchers.everyItem(Matchers.isIn(actual.attributePaths)));
 
 		// clean-up
 
@@ -187,10 +182,10 @@ public class PNXSchemaTest extends ResourceTest {
 				.invoke();
 		final Resource resource = mapper.readValue(resourceResponse.readEntity(String.class), Resource.class);
 
-		assertThat(resourceResponse.getStatus(), equalTo(201));
-		assertThat(resource.getName(), equalTo(name));
-		assertThat(resource.getDescription(), equalTo(description));
-		assertThat(resource.getType(), equalTo(ResourceType.FILE));
+		MatcherAssert.assertThat(resourceResponse.getStatus(), Matchers.equalTo(201));
+		MatcherAssert.assertThat(resource.getName(), Matchers.equalTo(name));
+		MatcherAssert.assertThat(resource.getDescription(), Matchers.equalTo(description));
+		MatcherAssert.assertThat(resource.getType(), Matchers.equalTo(ResourceType.FILE));
 
 		return resource;
 	}
@@ -222,10 +217,10 @@ public class PNXSchemaTest extends ResourceTest {
 		final Response dataModelResponse = target("datamodels").request().buildPost(Entity.json(dataModelAsString)).invoke();
 		final DataModel dataModel = mapper.readValue(dataModelResponse.readEntity(String.class), DataModel.class);
 
-		assertThat(dataModelResponse.getStatus(), equalTo(201));
-		assertThat(dataModel.getDataResource(), equalTo(resource));
-		assertThat(dataModel.getConfiguration().getName(), equalTo(name));
-		assertThat(dataModel.getConfiguration().getDescription(), equalTo(description));
+		MatcherAssert.assertThat(dataModelResponse.getStatus(), Matchers.equalTo(201));
+		MatcherAssert.assertThat(dataModel.getDataResource(), Matchers.equalTo(resource));
+		MatcherAssert.assertThat(dataModel.getConfiguration().getName(), Matchers.equalTo(name));
+		MatcherAssert.assertThat(dataModel.getConfiguration().getDescription(), Matchers.equalTo(description));
 
 		return dataModel;
 	}

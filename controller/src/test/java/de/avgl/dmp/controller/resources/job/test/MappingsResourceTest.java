@@ -231,12 +231,12 @@ public class MappingsResourceTest extends
 		filtersResourceTestUtils.deleteObject(updateFilter);
 		componentsResourceTestUtils.deleteObject(transformationComponent);
 		componentsResourceTestUtils.deleteObject(updateTransformationComponent);
-		
+
 		if (!function.equals(updateFunction)) {
-			
+
 			functionsResourceTestUtils.deleteObject(updateFunction);
 		}
-		
+
 		attributePathsResourceTestUtils.deleteObject(updateInputAttributePath);
 	}
 

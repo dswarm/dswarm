@@ -66,9 +66,9 @@ public class ComponentsResourceTest extends
 	@Override
 	protected Component updateObject(final Component actualComponent) throws Exception {
 
-		Function componentFunction = actualComponent.getFunction();
+		final Function componentFunction = actualComponent.getFunction();
 
-		String functionName = componentFunction.getName() + " update function";
+		final String functionName = componentFunction.getName() + " update function";
 
 		componentFunction.setName(functionName);
 

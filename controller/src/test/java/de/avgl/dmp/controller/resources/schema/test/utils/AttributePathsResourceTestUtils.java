@@ -25,9 +25,9 @@ public class AttributePathsResourceTestUtils extends
 
 	@Override
 	public void compareObjects(final AttributePath expectedObject, final AttributePath actualObject) {
-		
+
 		// note: expected object need to be patched here
-		
+
 		// attribute path was already retrieved by attribute path string (maybe + attributes where created, because they
 		// didn't exist before)
 		// => replace dummy id'ed attributes with real ids by attribute uri
@@ -48,7 +48,7 @@ public class AttributePathsResourceTestUtils extends
 				for (final Attribute attribute : attributePath) {
 
 					// note: one could even collect all attribute ids and replace them by their actual ones
-					
+
 					if (attribute.getId().longValue() < 0) {
 
 						attributeURIsFromDummyIdsFromObjectFromJSON.add(attribute.getUri());
@@ -85,7 +85,7 @@ public class AttributePathsResourceTestUtils extends
 				expectedObject.setAttributePath(newAttributePath);
 			}
 		}
-		
+
 		super.compareObjects(expectedObject, actualObject);
 	}
 }

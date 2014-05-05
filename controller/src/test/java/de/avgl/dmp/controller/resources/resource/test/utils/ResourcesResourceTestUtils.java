@@ -40,7 +40,7 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 	}
 
 	@Override
-	public Resource createObject(String objectJSONString, Resource expectedObject) throws Exception {
+	public Resource createObject(final String objectJSONString, final Resource expectedObject) throws Exception {
 
 		Assert.assertNotNull("resource JSON string shouldn't be null", objectJSONString);
 
@@ -63,7 +63,7 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 
 		Assert.assertEquals("201 CREATED was expected", 201, response.getStatus());
 
-		String responseResourceString = response.readEntity(String.class);
+		final String responseResourceString = response.readEntity(String.class);
 
 		Assert.assertNotNull("resource shouldn't be null", responseResourceString);
 
@@ -102,7 +102,7 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 
 			Assert.assertNotNull("response resource JSON string shouldn't be null", responseResource2String);
 
-			Resource responseResource2 = objectMapper.readValue(responseResource2String, Resource.class);
+			final Resource responseResource2 = objectMapper.readValue(responseResource2String, Resource.class);
 
 			responseResource = responseResource2;
 
@@ -126,7 +126,7 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 
 		Assert.assertEquals("200 OK was expected", 201, response.getStatus());
 
-		String responseResourceString = response.readEntity(String.class);
+		final String responseResourceString = response.readEntity(String.class);
 
 		Assert.assertNotNull("resource shouldn't be null", responseResourceString);
 
@@ -193,8 +193,9 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 
 				final String attributeValue = attributeEntry.getValue().asText();
 
-//				Assert.assertTrue("the attribute values of '" + attributeKey + "' are not equal. expected = '" + attributeValue + "'; was = '"
-//						+ attributeValueNode.asText() + "'", attributeValue.equals(attributeValueNode.asText()));
+				// Assert.assertTrue("the attribute values of '" + attributeKey + "' are not equal. expected = '" + attributeValue
+				// + "'; was = '"
+				// + attributeValueNode.asText() + "'", attributeValue.equals(attributeValueNode.asText()));
 			}
 		}
 

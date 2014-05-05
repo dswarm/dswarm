@@ -49,7 +49,7 @@ public class AttributePathsResourceTest
 		actualAttribute2 = attributeResourceTestUtils.createObject("attribute7.json");
 
 		// manipulate attribute path attributes
-		String attributePathJSONString = DMPPersistenceUtil.getResourceAsString("attribute_path.json");
+		final String attributePathJSONString = DMPPersistenceUtil.getResourceAsString("attribute_path.json");
 		final ObjectNode attributePathJSON = objectMapper.readValue(attributePathJSONString, ObjectNode.class);
 
 		final ArrayNode attributessArray = objectMapper.createArrayNode();
@@ -73,16 +73,16 @@ public class AttributePathsResourceTest
 	@Test
 	public void testUniquenessOfAttributePaths() {
 
-		LOG.debug("start attribute paths uniqueness test");
+		AttributePathsResourceTest.LOG.debug("start attribute paths uniqueness test");
 
 		AttributePath attributePath1 = null;
 
 		try {
 
 			attributePath1 = pojoClassResourceTestUtils.createObject(objectJSONString, expectedObject);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 
-			LOG.error("coudln't create attribute path 1 for uniqueness test");
+			AttributePathsResourceTest.LOG.error("coudln't create attribute path 1 for uniqueness test");
 
 			Assert.assertTrue(false);
 		}
@@ -105,9 +105,9 @@ public class AttributePathsResourceTest
 			attributePath2 = objectMapper.readValue(responseString, pojoClass);
 
 			compareObjects(expectedObject, attributePath2);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 
-			LOG.error("couldn't create attribute path 2 for uniqueness test");
+			AttributePathsResourceTest.LOG.error("couldn't create attribute path 2 for uniqueness test");
 
 			Assert.assertTrue(false);
 		}
@@ -118,35 +118,35 @@ public class AttributePathsResourceTest
 
 		cleanUpDB(attributePath1);
 
-		LOG.debug("end attribute paths uniqueness test");
+		AttributePathsResourceTest.LOG.debug("end attribute paths uniqueness test");
 	}
 
 	@Override
 	public void testPUTObject() throws Exception {
 
-		LOG.debug("start attribute path update test");
+		AttributePathsResourceTest.LOG.debug("start attribute path update test");
 
 		AttributePath attributePath = null;
 
 		try {
 
 			attributePath = pojoClassResourceTestUtils.createObject(objectJSONString, expectedObject);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 
-			LOG.error("coudln't create attribute path for update test");
+			AttributePathsResourceTest.LOG.error("coudln't create attribute path for update test");
 
 			Assert.assertTrue(false);
 		}
 
 		Assert.assertNotNull("attribute path shouldn't be null in update test", attributePath);
 
-		Attribute actualAttribute3 = attributeResourceTestUtils.createObject("attribute3.json");
+		final Attribute actualAttribute3 = attributeResourceTestUtils.createObject("attribute3.json");
 
 		attributePath.addAttribute(actualAttribute3);
 
-		String attributePathJSONString = objectMapper.writeValueAsString(attributePath);
+		final String attributePathJSONString = objectMapper.writeValueAsString(attributePath);
 
-		AttributePath updateAttributePath = pojoClassResourceTestUtils.updateObject(attributePathJSONString, attributePath);
+		final AttributePath updateAttributePath = pojoClassResourceTestUtils.updateObject(attributePathJSONString, attributePath);
 
 		Assert.assertEquals("the persisted attribute path shoud be equal to the modified attribute path for update", updateAttributePath,
 				attributePath);
@@ -157,15 +157,15 @@ public class AttributePathsResourceTest
 
 		attributeResourceTestUtils.deleteObject(actualAttribute3);
 
-		LOG.debug("end attribute update test");
+		AttributePathsResourceTest.LOG.debug("end attribute update test");
 	}
 
 	@Test
 	public void testPUTObjectWExistingAttributePath() throws Exception {
 
-		LOG.debug("start attribute path update test with existing attribute path");
+		AttributePathsResourceTest.LOG.debug("start attribute path update test with existing attribute path");
 
-		Attribute actualAttribute3 = attributeResourceTestUtils.createObject("attribute3.json");
+		final Attribute actualAttribute3 = attributeResourceTestUtils.createObject("attribute3.json");
 
 		expectedObject.addAttribute(actualAttribute3);
 
@@ -176,16 +176,16 @@ public class AttributePathsResourceTest
 		try {
 
 			attributePath = pojoClassResourceTestUtils.createObject(objectJSONString, expectedObject);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 
-			LOG.error("coudln't create attribute path for update test");
+			AttributePathsResourceTest.LOG.error("coudln't create attribute path for update test");
 
 			Assert.assertTrue(false);
 		}
 
 		Assert.assertNotNull("attribute path shouldn't be null in update test", attributePath);
 
-		AttributePath retrievedAttributePath = pojoClassResourceTestUtils.getObjectAndCompare(attributePath);
+		final AttributePath retrievedAttributePath = pojoClassResourceTestUtils.getObjectAndCompare(attributePath);
 
 		// remove an attribute
 		retrievedAttributePath.removeAttribute(actualAttribute3, 2);
@@ -197,9 +197,9 @@ public class AttributePathsResourceTest
 		try {
 
 			modifiedAttributePath = pojoClassResourceTestUtils.createObject(attributePathJSONString, retrievedAttributePath);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 
-			LOG.error("coudln't create modified attribute path for update test");
+			AttributePathsResourceTest.LOG.error("coudln't create modified attribute path for update test");
 
 			Assert.assertTrue(false);
 		}
@@ -211,7 +211,7 @@ public class AttributePathsResourceTest
 
 		attributePathJSONString = objectMapper.writeValueAsString(modifiedAttributePath);
 
-		AttributePath updateAttributePath = pojoClassResourceTestUtils.updateObject(attributePathJSONString, modifiedAttributePath);
+		final AttributePath updateAttributePath = pojoClassResourceTestUtils.updateObject(attributePathJSONString, modifiedAttributePath);
 
 		// ids should differ
 		Assert.assertNotEquals("the persisted attribute path shoud not be equal to the modified attribute path for update", modifiedAttributePath,
@@ -230,7 +230,7 @@ public class AttributePathsResourceTest
 
 		attributeResourceTestUtils.deleteObject(actualAttribute3);
 
-		LOG.debug("end attribute update test with existing attribute path");
+		AttributePathsResourceTest.LOG.debug("end attribute update test with existing attribute path");
 	}
 
 	@After

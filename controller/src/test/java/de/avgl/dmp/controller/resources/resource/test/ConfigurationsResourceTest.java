@@ -15,7 +15,8 @@ public class ConfigurationsResourceTest
 
 	public ConfigurationsResourceTest() {
 
-		super(Configuration.class, ConfigurationService.class, "configurations", "controller_configuration.json", new ConfigurationsResourceTestUtils());
+		super(Configuration.class, ConfigurationService.class, "configurations", "controller_configuration.json",
+				new ConfigurationsResourceTestUtils());
 
 		updateObjectJSONFileName = "configuration2.json";
 	}
