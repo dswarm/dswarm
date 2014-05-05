@@ -59,6 +59,7 @@ import de.avgl.dmp.persistence.model.schema.MappingAttributePathInstance;
  * Creates a metamorph script from a given {@link Task}.
  * 
  * @author phorn
+ * @author niederl
  * @author tgaengler
  */
 public class MorphScriptBuilder {
@@ -187,61 +188,6 @@ public class MorphScriptBuilder {
 
 		return file;
 	}
-
-	// public MorphScriptBuilder apply(final List<Transformation> transformations) throws DMPConverterException {
-	// final DocumentBuilder docBuilder;
-	// try {
-	// docBuilder = DOC_FACTORY.newDocumentBuilder();
-	// } catch (ParserConfigurationException e) {
-	// throw new DMPConverterException(e.getMessage());
-	// }
-	//
-	// doc = docBuilder.newDocument();
-	// doc.setXmlVersion("1.0");
-	//
-	// final Element rootElement = doc.createElement("metamorph");
-	// rootElement.setAttribute("xmlns", "http://www.culturegraph.org/metamorph");
-	// rootElement.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-	// rootElement.setAttribute("xsi:schemaLocation", "http://www.culturegraph.org/metamorph metamorph.xsd");
-	// rootElement.setAttribute("entityMarker", ".");
-	// rootElement.setAttribute("version", "1");
-	// doc.appendChild(rootElement);
-	//
-	// final Element meta = doc.createElement("meta");
-	// rootElement.appendChild(meta);
-	//
-	// final Element metaName = doc.createElement("name");
-	// meta.appendChild(metaName);
-	//
-	// // final Element vars = doc.createElement("vars");
-	// // rootElement.appendChild(vars);
-	//
-	// final Element rules = doc.createElement("rules");
-	// rootElement.appendChild(rules);
-	//
-	// final List<String> metas = Lists.newArrayList();
-	//
-	// for (final Transformation transformation : transformations) {
-	// metas.add(transformation.getName());
-	//
-	// // for (final Element var: createVarDefinitions(transformation)) {
-	// // vars.appendChild(var);
-	// // }
-	//
-	// final Element data = createTransformation(transformation);
-	//
-	// rules.appendChild(data);
-	// }
-	//
-	// metaName.setTextContent(Joiner.on(", ").join(metas));
-	//
-	// return this;
-	// }
-
-	// public MorphScriptBuilder apply(final Transformation transformation) throws DMPConverterException {
-	//
-	// return apply(Lists.newArrayList(transformation));
-	// }
 
 	public MorphScriptBuilder apply(final Task task) throws DMPConverterException {
 
