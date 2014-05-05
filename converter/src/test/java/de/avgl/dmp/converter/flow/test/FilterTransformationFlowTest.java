@@ -1,7 +1,5 @@
 package de.avgl.dmp.converter.flow.test;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 
 import org.junit.Assert;
@@ -30,7 +28,8 @@ public class FilterTransformationFlowTest extends GuicedTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("test-mabxml.filter.result.json");
 
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = injector.getProvider(InternalModelServiceFactory.class);
+		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
+				.getProvider(InternalModelServiceFactory.class);
 
 		final TransformationFlow flow = TransformationFlow.fromFile("filtermorph.xml", internalModelServiceFactoryProvider);
 
@@ -39,7 +38,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 		final ArrayNode expectedJson = replaceKeyWithActualKey(expected, actual);
 		final String finalExpected = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(expectedJson);
 
-		assertEquals(finalExpected, actual);
+		Assert.assertEquals(finalExpected, actual);
 	}
 
 	@Test
@@ -47,7 +46,8 @@ public class FilterTransformationFlowTest extends GuicedTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("test-mabxml.filter.result.2.json");
 
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = injector.getProvider(InternalModelServiceFactory.class);
+		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
+				.getProvider(InternalModelServiceFactory.class);
 
 		final TransformationFlow flow = TransformationFlow.fromFile("filtermorph2.xml", internalModelServiceFactoryProvider);
 
@@ -56,7 +56,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 		final ArrayNode expectedJson = replaceKeyWithActualKey(expected, actual);
 		final String finalExpected = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(expectedJson);
 
-		assertEquals(finalExpected, actual);
+		Assert.assertEquals(finalExpected, actual);
 	}
 
 	/**
@@ -71,7 +71,8 @@ public class FilterTransformationFlowTest extends GuicedTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("test-mabxml.filter.result.3.json");
 
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = injector.getProvider(InternalModelServiceFactory.class);
+		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
+				.getProvider(InternalModelServiceFactory.class);
 
 		final TransformationFlow flow = TransformationFlow.fromFile("filtermorph3.xml", internalModelServiceFactoryProvider);
 
@@ -80,7 +81,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 		final ArrayNode expectedJson = replaceKeyWithActualKey(expected, actual);
 		final String finalExpected = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(expectedJson);
 
-		assertEquals(finalExpected, actual);
+		Assert.assertEquals(finalExpected, actual);
 	}
 
 	@Test
@@ -88,7 +89,8 @@ public class FilterTransformationFlowTest extends GuicedTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("test-mabxml.filter.result.4.json");
 
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = injector.getProvider(InternalModelServiceFactory.class);
+		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
+				.getProvider(InternalModelServiceFactory.class);
 
 		final TransformationFlow flow = TransformationFlow.fromFile("filtermorph4.xml", internalModelServiceFactoryProvider);
 
@@ -97,24 +99,25 @@ public class FilterTransformationFlowTest extends GuicedTest {
 		final ArrayNode expectedJson = replaceKeyWithActualKey(expected, actual);
 		final String finalExpected = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(expectedJson);
 
-		assertEquals(finalExpected, actual);
+		Assert.assertEquals(finalExpected, actual);
 	}
-	
+
 	@Test
 	public void testFilterEndToEndWithMorphScriptBuilder() throws Exception {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("test-mabxml.filter.morphscript.result.json");
 
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = injector.getProvider(InternalModelServiceFactory.class);
+		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
+				.getProvider(InternalModelServiceFactory.class);
 
 		final String request = DMPPersistenceUtil.getResourceAsString("task.filter.json");
-		
-		final ObjectMapper objectMapper = injector.getInstance(ObjectMapper.class);
-		
+
+		final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
+
 		final Task task = objectMapper.readValue(request, Task.class);
-		
+
 		final String morphScriptString = new MorphScriptBuilder().apply(task).toString();
-		
+
 		final TransformationFlow flow = TransformationFlow.fromString(morphScriptString, internalModelServiceFactoryProvider);
 
 		final String actual = flow.applyResource("test-mabxml.tuples.json");
@@ -122,7 +125,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 		final ArrayNode expectedJson = replaceKeyWithActualKey(expected, actual);
 		final String finalExpected = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(expectedJson);
 
-		assertEquals(finalExpected, actual);
+		Assert.assertEquals(finalExpected, actual);
 	}
 
 	private ArrayNode replaceKeyWithActualKey(final String expected, final String actual) throws JsonParseException, JsonMappingException,
@@ -136,11 +139,11 @@ public class FilterTransformationFlowTest extends GuicedTest {
 		ObjectNode expectedContentJson = null;
 		JsonNode typeNode = null;
 
-		for(final JsonNode expectedContentJsonCandidate : expectedContent) {
+		for (final JsonNode expectedContentJsonCandidate : expectedContent) {
 
 			final String expectedContentJsonFieldName = expectedContentJsonCandidate.fieldNames().next();
 
-			if(expectedContentJsonFieldName.equals("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")) {
+			if (expectedContentJsonFieldName.equals("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")) {
 
 				typeNode = expectedContentJsonCandidate;
 
@@ -167,20 +170,20 @@ public class FilterTransformationFlowTest extends GuicedTest {
 		Integer typeNodePosition = null;
 		int i = 0;
 
-		for(final JsonNode actualContentJsonCandidate : actualContent) {
+		for (final JsonNode actualContentJsonCandidate : actualContent) {
 
 			i++;
 
 			final String actualContentJsonFieldName = actualContentJsonCandidate.fieldNames().next();
 
-			if(actualContentJsonFieldName.equals("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")) {
+			if (actualContentJsonFieldName.equals("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")) {
 
 				typeNodePosition = i;
 
 				continue;
 			}
 
-			actualContentJson = (ObjectNode) actualContentJsonCandidate;
+			actualContentJson = actualContentJsonCandidate;
 		}
 
 		Assert.assertNotNull("the acutal content JSON shouldn't be null", actualContentJson);
@@ -190,11 +193,11 @@ public class FilterTransformationFlowTest extends GuicedTest {
 		newExpectedContentJson.put(actualContentJson.fieldNames().next(), expectedContentValue);
 		final ArrayNode newExpectedContent = DMPPersistenceUtil.getJSONObjectMapper().createArrayNode();
 
-		if(typeNode != null) {
+		if (typeNode != null) {
 
-			if(typeNodePosition != null) {
+			if (typeNodePosition != null) {
 
-				if(typeNodePosition == 1) {
+				if (typeNodePosition == 1) {
 
 					newExpectedContent.add(typeNode);
 					newExpectedContent.add(newExpectedContentJson);

@@ -1,21 +1,21 @@
 package de.avgl.dmp.converter.flow.test.xml;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.base.Optional;
 import com.google.common.collect.AbstractIterator;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.Provider;
 
@@ -64,12 +64,12 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 	private final AttributeServiceTestUtils		attributeServiceTestUtils;
 	private final AttributePathServiceTestUtils	attributePathServiceTestUtils;
-	private final SchemaServiceTestUtils	schemaServiceTestUtils;
+	private final SchemaServiceTestUtils		schemaServiceTestUtils;
 
 	public AbstractXMLTransformationFlowTest(final String taskJSONFileNameArg, final String expectedResultJSONFileNameArg, final String recordTagArg,
 			final String xmlNamespaceArg, final String exampleDataResourceFileNameArg) {
 
-		objectMapper = injector.getInstance(ObjectMapper.class);
+		objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 		taskJSONFileName = taskJSONFileNameArg;
 		expectedResultJSONFileName = expectedResultJSONFileNameArg;
@@ -89,7 +89,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		final String expected = DMPPersistenceUtil.getResourceAsString(expectedResultJSONFileName);
 
 		// process input data model
-		final ConfigurationService configurationService = injector.getInstance(ConfigurationService.class);
+		final ConfigurationService configurationService = GuicedTest.injector.getInstance(ConfigurationService.class);
 		final Configuration configuration = configurationService.createObjectTransactional().getObject();
 
 		configuration.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode(recordTag));
@@ -101,23 +101,23 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		configuration.addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode("xml"));
 
-		Configuration updatedConfiguration = configurationService.updateObjectTransactional(configuration).getObject();
+		final Configuration updatedConfiguration = configurationService.updateObjectTransactional(configuration).getObject();
 
-		final ResourceService resourceService = injector.getInstance(ResourceService.class);
+		final ResourceService resourceService = GuicedTest.injector.getInstance(ResourceService.class);
 		final Resource resource = resourceService.createObjectTransactional().getObject();
 		resource.setName(exampleDataResourceFileName);
 		resource.setType(ResourceType.FILE);
 		resource.addConfiguration(updatedConfiguration);
 
-		Resource updatedResource = resourceService.updateObjectTransactional(resource).getObject();
+		final Resource updatedResource = resourceService.updateObjectTransactional(resource).getObject();
 
-		final DataModelService dataModelService = injector.getInstance(DataModelService.class);
+		final DataModelService dataModelService = GuicedTest.injector.getInstance(DataModelService.class);
 		final DataModel inputDataModel = dataModelService.createObjectTransactional().getObject();
 
 		inputDataModel.setDataResource(updatedResource);
 		inputDataModel.setConfiguration(updatedConfiguration);
 
-		DataModel updatedInputDataModel = dataModelService.updateObjectTransactional(inputDataModel).getObject();
+		final DataModel updatedInputDataModel = dataModelService.updateObjectTransactional(inputDataModel).getObject();
 
 		final XMLSourceResourceGDMStmtsFlow flow2 = new XMLSourceResourceGDMStmtsFlow(updatedInputDataModel);
 
@@ -164,7 +164,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		// System.out.println(objectMapper.writeValueAsString(rdfModel.toJSON()));
 
 		// write model and retrieve tuples
-		final InternalGDMGraphService gdmService = injector.getInstance(InternalGDMGraphService.class);
+		final InternalGDMGraphService gdmService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
 		gdmService.createObject(updatedInputDataModel.getId(), gdmModel);
 
 		final Optional<Map<String, Model>> optionalModelMap = gdmService.getObjects(updatedInputDataModel.getId(), Optional.of(1));
@@ -176,17 +176,18 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		Assert.assertNotNull("the model map shouldn't be null", modelMap);
 
 		final Iterator<Tuple<String, JsonNode>> tuples = dataIterator(modelMap.entrySet().iterator());
-		
-//		final List<Tuple<String, JsonNode>> tuplesList = Lists.newLinkedList();
-//		
-//		while(tuples.hasNext()) {
-//			
-//			tuplesList.add(tuples.next());
-//		}
-//		
-//		final String tuplesJSON = objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true).writeValueAsString(tuplesList);
-//		
-//		System.out.println(tuplesJSON);
+
+		// final List<Tuple<String, JsonNode>> tuplesList = Lists.newLinkedList();
+		//
+		// while(tuples.hasNext()) {
+		//
+		// tuplesList.add(tuples.next());
+		// }
+		//
+		// final String tuplesJSON = objectMapper.configure(SerializationFeature.INDENT_OUTPUT,
+		// true).writeValueAsString(tuplesList);
+		//
+		// System.out.println(tuplesJSON);
 
 		final String inputDataModelJSONString = objectMapper.writeValueAsString(updatedInputDataModel);
 		final ObjectNode inputDataModelJSON = objectMapper.readValue(inputDataModelJSONString, ObjectNode.class);
@@ -206,7 +207,8 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
 
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = injector.getProvider(InternalModelServiceFactory.class);
+		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
+				.getProvider(InternalModelServiceFactory.class);
 
 		final TransformationFlow flow = TransformationFlow.fromTask(task, internalModelServiceFactoryProvider);
 
@@ -264,7 +266,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 			}
 		}
 
-		final SchemaService schemaService = injector.getInstance(SchemaService.class);
+		final SchemaService schemaService = GuicedTest.injector.getInstance(SchemaService.class);
 
 		schemaServiceTestUtils.removeAddedAttributePathsFromOutputModelSchema(outputDataModelSchema, attributes, attributePaths);
 
@@ -282,7 +284,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 			attributeServiceTestUtils.deleteObject(attribute);
 		}
 
-		final ClaszService claszService = injector.getInstance(ClaszService.class);
+		final ClaszService claszService = GuicedTest.injector.getInstance(ClaszService.class);
 
 		claszService.deleteObject(recordClass.getId());
 
@@ -307,9 +309,9 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		final ArrayNode actualKeyArray = (ArrayNode) actualElementInArray.get(actualKeyInArray);
 		ObjectNode actualJSON = null;
 
-		for(final JsonNode actualKeyArrayItem : actualKeyArray) {
+		for (final JsonNode actualKeyArrayItem : actualKeyArray) {
 
-			if(actualKeyArrayItem.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#type") != null) {
+			if (actualKeyArrayItem.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#type") != null) {
 
 				// don't take the type JSON object for comparison
 
@@ -321,7 +323,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		final String finalActualJSONString = objectMapper.writeValueAsString(actualJSON);
 
-		assertEquals(finalExpectedJSONString.length(), finalActualJSONString.length());
+		Assert.assertEquals(finalExpectedJSONString.length(), finalActualJSONString.length());
 	}
 
 	private Iterator<Tuple<String, JsonNode>> dataIterator(final Iterator<Map.Entry<String, Model>> triples) {

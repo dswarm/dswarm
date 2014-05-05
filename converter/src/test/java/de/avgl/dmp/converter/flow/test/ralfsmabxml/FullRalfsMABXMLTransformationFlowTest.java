@@ -2,7 +2,6 @@ package de.avgl.dmp.converter.flow.test.ralfsmabxml;
 
 import org.junit.Ignore;
 
-
 /**
  * @author tgaengler
  */
@@ -16,7 +15,7 @@ public class FullRalfsMABXMLTransformationFlowTest extends AbstractRalfsMABXMLTr
 	@Ignore
 	@Override
 	public void testXMLDataResourceEndToEnd() throws Exception {
-		
+
 		// TODO: enable when the time has come
 	}
 }

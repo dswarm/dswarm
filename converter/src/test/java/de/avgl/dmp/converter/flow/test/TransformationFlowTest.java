@@ -1,11 +1,5 @@
 package de.avgl.dmp.converter.flow.test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
 import java.io.File;
 import java.io.StringWriter;
 import java.net.URL;
@@ -19,8 +13,9 @@ import org.culturegraph.mf.stream.converter.JsonEncoder;
 import org.culturegraph.mf.stream.sink.ObjectJavaIoWriter;
 import org.culturegraph.mf.stream.source.FileOpener;
 import org.culturegraph.mf.types.Triple;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.Matchers;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -74,22 +69,22 @@ public class TransformationFlowTest extends GuicedTest {
 	@Test
 	public void testCSVDataResourceEndToEnd() throws Exception {
 
-		final ObjectMapper objectMapper = injector.getInstance(ObjectMapper.class);
+		final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 		final String taskJSONString = DMPPersistenceUtil.getResourceAsString("converter_task.csv.json");
 		final String expected = DMPPersistenceUtil.getResourceAsString("task-result.csv.json");
 
 		// process input data model
-		final ConfigurationService configurationService = injector.getInstance(ConfigurationService.class);
+		final ConfigurationService configurationService = GuicedTest.injector.getInstance(ConfigurationService.class);
 		final Configuration configuration = configurationService.createObjectTransactional().getObject();
 
 		configuration.setName("config1");
 		configuration.addParameter(ConfigurationStatics.COLUMN_DELIMITER, new TextNode(";"));
 		configuration.addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode("csv"));
 
-		Configuration updatedConfiguration = configurationService.updateObjectTransactional(configuration).getObject();
+		final Configuration updatedConfiguration = configurationService.updateObjectTransactional(configuration).getObject();
 
-		final ResourceService resourceService = injector.getInstance(ResourceService.class);
+		final ResourceService resourceService = GuicedTest.injector.getInstance(ResourceService.class);
 		final Resource resource = resourceService.createObjectTransactional().getObject();
 		resource.setName("test_csv.csv");
 		resource.setType(ResourceType.FILE);
@@ -100,15 +95,15 @@ public class TransformationFlowTest extends GuicedTest {
 
 		resource.addAttribute("path", resourceFile.getAbsolutePath());
 
-		Resource updatedResource = resourceService.updateObjectTransactional(resource).getObject();
+		final Resource updatedResource = resourceService.updateObjectTransactional(resource).getObject();
 
-		final DataModelService dataModelService = injector.getInstance(DataModelService.class);
+		final DataModelService dataModelService = GuicedTest.injector.getInstance(DataModelService.class);
 		final DataModel inputDataModel = dataModelService.createObjectTransactional().getObject();
 
 		inputDataModel.setDataResource(updatedResource);
 		inputDataModel.setConfiguration(updatedConfiguration);
 
-		DataModel updatedInputDataModel = dataModelService.updateObjectTransactional(inputDataModel).getObject();
+		final DataModel updatedInputDataModel = dataModelService.updateObjectTransactional(inputDataModel).getObject();
 
 		final CSVSourceResourceTriplesFlow flow2 = new CSVSourceResourceTriplesFlow(updatedInputDataModel);
 
@@ -117,7 +112,7 @@ public class TransformationFlowTest extends GuicedTest {
 		Assert.assertNotNull("CSV record triple list shouldn't be null", csvRecordTriples);
 		Assert.assertFalse("CSV record triple list shouldn't be empty", csvRecordTriples.isEmpty());
 
-		final InternalGDMGraphService gdmService = injector.getInstance(InternalGDMGraphService.class);
+		final InternalGDMGraphService gdmService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
 
 		// write CSV record triples
 		// for (final Triple triple : csvRecordTriples) {
@@ -175,17 +170,17 @@ public class TransformationFlowTest extends GuicedTest {
 
 		// manipulate input data model
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
-		((ObjectNode) taskJSON).put("input_data_model", inputDataModelJSON);
+		taskJSON.put("input_data_model", inputDataModelJSON);
 
 		// manipulate output data model (output data model = internal model (for now))
 		final long internalModelId = 1;
 		final DataModel outputDataModel = dataModelService.getObject(internalModelId);
 		final String outputDataModelJSONString = objectMapper.writeValueAsString(outputDataModel);
 		final ObjectNode outputDataModelJSON = objectMapper.readValue(outputDataModelJSONString, ObjectNode.class);
-		((ObjectNode) taskJSON).put("output_data_model", outputDataModelJSON);
+		taskJSON.put("output_data_model", outputDataModelJSON);
 
 		// manipulate attributes
-		final ObjectNode mappingJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) ((ObjectNode) taskJSON).get("job")).get("mappings")).get(0);
+		final ObjectNode mappingJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) taskJSON.get("job")).get("mappings")).get(0);
 
 		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(updatedInputDataModel);
 
@@ -214,7 +209,8 @@ public class TransformationFlowTest extends GuicedTest {
 
 		final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
 
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = injector.getProvider(InternalModelServiceFactory.class);
+		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
+				.getProvider(InternalModelServiceFactory.class);
 
 		final TransformationFlow flow = TransformationFlow.fromTask(task, internalModelServiceFactoryProvider);
 
@@ -243,7 +239,7 @@ public class TransformationFlowTest extends GuicedTest {
 					expectedDataResourceSchemaBaseURI + "description").asText();
 			final JsonNode actualNode = getRecordData(recordData, actualNodes, actualDataResourceSchemaBaseURI + "description");
 
-			assertThat(actualNode, is(notNullValue()));
+			Assert.assertThat(actualNode, CoreMatchers.is(Matchers.notNullValue()));
 
 			final ObjectNode expectedRecordData = (ObjectNode) expectedElementInArray.get(expectedKeyInArray).get(0);
 
@@ -261,8 +257,8 @@ public class TransformationFlowTest extends GuicedTest {
 				}
 			}
 
-			assertThat(actualRecordData.get(actualDataResourceSchemaBaseURI + "description").asText(),
-					equalTo(expectedRecordData.get(expectedDataResourceSchemaBaseURI + "description").asText()));
+			Assert.assertThat(actualRecordData.get(actualDataResourceSchemaBaseURI + "description").asText(),
+					Matchers.equalTo(expectedRecordData.get(expectedDataResourceSchemaBaseURI + "description").asText()));
 		}
 
 		// clean-up
@@ -302,7 +298,7 @@ public class TransformationFlowTest extends GuicedTest {
 		}
 
 		dataModelService.deleteObject(updatedInputDataModel.getId());
-		final SchemaService schemaService = injector.getInstance(SchemaService.class);
+		final SchemaService schemaService = GuicedTest.injector.getInstance(SchemaService.class);
 		final SchemaServiceTestUtils schemaServiceTestUtils = new SchemaServiceTestUtils();
 
 		schemaServiceTestUtils.removeAddedAttributePathsFromOutputModelSchema(outputDataModelSchema, attributes, attributePaths);
