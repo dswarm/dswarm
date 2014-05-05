@@ -29,7 +29,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema
 
 	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	private Map<Long, Attribute>					attributes		= Maps.newLinkedHashMap();
+	private final Map<Long, Attribute>				attributes		= Maps.newLinkedHashMap();
 
 	private final AttributeServiceTestUtils			attributeServiceTestUtils;
 	private final ClaszServiceTestUtils				claszServiceTestUtils;
@@ -149,12 +149,12 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema
 		try {
 
 			json = objectMapper.writeValueAsString(schema);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("schema json: " + json);
+		SchemaServiceTest.LOG.debug("schema json: " + json);
 
 		// clean up DB
 		deleteObject(schema.getId());

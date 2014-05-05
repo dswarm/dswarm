@@ -34,7 +34,7 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 	private final Map<Long, Function>				functions		= Maps.newLinkedHashMap();
 
 	private final FunctionServiceTestUtils			functionServiceTestUtils;
-	private final ComponentServiceTestUtils componentServiceTestUtils;
+	private final ComponentServiceTestUtils			componentServiceTestUtils;
 
 	public TransformationServiceTest() {
 
@@ -47,7 +47,7 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 	@Test
 	public void simpleTransformationTest() throws Exception {
 
-		LOG.debug("start simple transformation test");
+		TransformationServiceTest.LOG.debug("start simple transformation test");
 
 		final LinkedList<String> parameters = Lists.newLinkedList();
 
@@ -115,24 +115,24 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 		try {
 
 			json = objectMapper.writeValueAsString(updatedTransformation);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("transformation json: " + json);
+		TransformationServiceTest.LOG.debug("transformation json: " + json);
 
 		deleteObject(transformation.getId());
 		componentServiceTestUtils.checkDeletedComponent(component);
 		functionServiceTestUtils.deleteObject(function);
 
-		LOG.debug("end simple transformation test");
+		TransformationServiceTest.LOG.debug("end simple transformation test");
 	}
 
 	@Test
 	public void complexTransformationTest() throws Exception {
 
-		LOG.debug("start complex transformation test");
+		TransformationServiceTest.LOG.debug("start complex transformation test");
 
 		// previous component
 
@@ -217,7 +217,8 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 
 		outputComponents.add(component2);
 
-		final Component component = componentServiceTestUtils.createComponent(componentName, parameterMapping, function, inputComponents, outputComponents);
+		final Component component = componentServiceTestUtils.createComponent(componentName, parameterMapping, function, inputComponents,
+				outputComponents);
 
 		// transformation
 
@@ -301,42 +302,42 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 		try {
 
 			json = objectMapper.writeValueAsString(updatedTransformation);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("transformation json: " + json);
+		TransformationServiceTest.LOG.debug("transformation json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(component1);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("previous component json: " + json);
+		TransformationServiceTest.LOG.debug("previous component json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(component);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("main component json: " + json);
+		TransformationServiceTest.LOG.debug("main component json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(component2);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("next component json: " + json);
+		TransformationServiceTest.LOG.debug("next component json: " + json);
 
 		// clean-up
 		deleteObject(updatedTransformation.getId());
@@ -346,6 +347,6 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 			functionServiceTestUtils.deleteObject(functionToDelete);
 		}
 
-		LOG.debug("end complex transformation test");
+		TransformationServiceTest.LOG.debug("end complex transformation test");
 	}
 }

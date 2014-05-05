@@ -1,22 +1,19 @@
 package de.avgl.dmp.persistence.model.jsonschema;
 
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-
-
 public class JSOtherTest extends BaseJSTest<JSOther> {
 
-	private String nameSpace;
+	private String	nameSpace;
 
 	public JSOtherTest() {
 		super(JSOther.class);
 	}
 
+	@Override
 	@Before
 	public void setUp() throws Exception {
 
@@ -24,28 +21,27 @@ public class JSOtherTest extends BaseJSTest<JSOther> {
 		obj = new JSOther("foo", nameSpace);
 	}
 
-
 	@Test
 	public void testGetType() throws Exception {
 
-		assertThat(obj.getType(), equalTo("other"));
+		MatcherAssert.assertThat(obj.getType(), Matchers.equalTo("other"));
 	}
 
 	@Test
 	public void testGetProperties() throws Exception {
 
-		assertThat(obj.getProperties(), is(nullValue()));
+		MatcherAssert.assertThat(obj.getProperties(), Matchers.is(Matchers.nullValue()));
 	}
 
 	@Test
 	public void testGetNameSpace() throws Exception {
 
-		assertThat(obj.getNameSpace(), equalTo(nameSpace));
+		MatcherAssert.assertThat(obj.getNameSpace(), Matchers.equalTo(nameSpace));
 	}
 
 	@Test
 	public void testRenderInternal() throws Exception {
-		//TODO
+		// TODO
 
 	}
 }

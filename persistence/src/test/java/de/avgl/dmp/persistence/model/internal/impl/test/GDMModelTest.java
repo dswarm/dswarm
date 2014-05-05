@@ -36,12 +36,11 @@ public class GDMModelTest {
 		testToJSONInternal("test-complex-xml.gson", "http://data.slub-dresden.de/records/7fc13720-2859-477d-9127-5ec65f82220e",
 				"test-complex-xml.json");
 	}
-	
+
 	@Test
 	public void testToJSON3() {
 
-		testToJSONInternal("test-pnx.gson", "http://data.slub-dresden.de/datamodels/1/records/a95c0401-5acf-471d-aefb-14cdf0f5deb2",
-				"test-pnx.json");
+		testToJSONInternal("test-pnx.gson", "http://data.slub-dresden.de/datamodels/1/records/a95c0401-5acf-471d-aefb-14cdf0f5deb2", "test-pnx.json");
 	}
 
 	@Test
@@ -62,7 +61,7 @@ public class GDMModelTest {
 		String fileContent = null;
 		try {
 			fileContent = Resources.toString(fileURL, Charsets.UTF_8);
-		} catch (IOException e1) {
+		} catch (final IOException e1) {
 
 			Assert.assertFalse(true);
 		}
@@ -72,11 +71,11 @@ public class GDMModelTest {
 		Model model = null;
 		try {
 			model = mapper.readValue(fileContent, Model.class);
-		} catch (JsonParseException e1) {
+		} catch (final JsonParseException e1) {
 			Assert.assertFalse(true);
-		} catch (JsonMappingException e1) {
+		} catch (final JsonMappingException e1) {
 			Assert.assertFalse(true);
-		} catch (IOException e1) {
+		} catch (final IOException e1) {
 			Assert.assertFalse(true);
 		}
 
@@ -90,7 +89,7 @@ public class GDMModelTest {
 			jsonString = DMPPersistenceUtil.getJSONObjectMapper()
 			// .configure(SerializationFeature.INDENT_OUTPUT, true)
 					.writeValueAsString(jsonNode);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
@@ -104,7 +103,7 @@ public class GDMModelTest {
 		try {
 
 			expectedJsonString = DMPPersistenceUtil.getResourceAsString(expectedFileName);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 
 			e.printStackTrace();
 		}
@@ -128,7 +127,7 @@ public class GDMModelTest {
 		String fileContent = null;
 		try {
 			fileContent = Resources.toString(fileURL, Charsets.UTF_8);
-		} catch (IOException e1) {
+		} catch (final IOException e1) {
 
 			Assert.assertFalse(true);
 		}
@@ -138,11 +137,11 @@ public class GDMModelTest {
 		Model model = null;
 		try {
 			model = mapper.readValue(fileContent, Model.class);
-		} catch (JsonParseException e1) {
+		} catch (final JsonParseException e1) {
 			Assert.assertFalse(true);
-		} catch (JsonMappingException e1) {
+		} catch (final JsonMappingException e1) {
 			Assert.assertFalse(true);
-		} catch (IOException e1) {
+		} catch (final IOException e1) {
 			Assert.assertFalse(true);
 		}
 
@@ -163,7 +162,7 @@ public class GDMModelTest {
 			jsonString = DMPPersistenceUtil.getJSONObjectMapper()
 			// .configure(SerializationFeature.INDENT_OUTPUT, true)
 					.writeValueAsString(jsonNode);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
@@ -177,7 +176,7 @@ public class GDMModelTest {
 		try {
 
 			expectedJsonString = DMPPersistenceUtil.getResourceAsString(expectedFileName);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 
 			e.printStackTrace();
 		}

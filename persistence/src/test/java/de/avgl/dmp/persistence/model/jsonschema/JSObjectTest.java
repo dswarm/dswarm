@@ -3,10 +3,9 @@ package de.avgl.dmp.persistence.model.jsonschema;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 
 public class JSObjectTest extends BaseJSTest<JSObject> {
 
@@ -17,7 +16,7 @@ public class JSObjectTest extends BaseJSTest<JSObject> {
 	@Override
 	public void setUp() throws Exception {
 
-		List<JSElement> jsElements = new ArrayList<JSElement>(2);
+		final List<JSElement> jsElements = new ArrayList<JSElement>(2);
 
 		// TODO
 
@@ -26,28 +25,26 @@ public class JSObjectTest extends BaseJSTest<JSObject> {
 
 	@Test
 	public void testAdd() throws Exception {
-		//TODO
+		// TODO
 
 	}
 
-
-
 	@Test
 	public void testAddAll() throws Exception {
-		//TODO
+		// TODO
 
 	}
 
 	@Test
 	public void testIterator() throws Exception {
-		//TODO
+		// TODO
 
 	}
 
 	@Test
 	public void testGetType() throws Exception {
 
-		assertThat(obj.getType(), equalTo("object"));
+		MatcherAssert.assertThat(obj.getType(), Matchers.equalTo("object"));
 	}
 
 	@Test

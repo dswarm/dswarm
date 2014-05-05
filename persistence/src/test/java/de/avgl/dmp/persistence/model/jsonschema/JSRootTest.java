@@ -12,21 +12,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.hamcrest.Matcher;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Lists;
-import org.hamcrest.Matcher;
-import org.junit.Test;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-
 
 public class JSRootTest extends BaseJSTest<JSRoot> {
 
@@ -43,23 +38,23 @@ public class JSRootTest extends BaseJSTest<JSRoot> {
 		obj.add(aNull);
 		final JSElement qux = obj.withName("qux");
 
-		assertThat(qux.getProperties(), hasSize(1));
-		assertThat(qux.getProperties(), hasItem(aNull));
+		MatcherAssert.assertThat(qux.getProperties(), Matchers.hasSize(1));
+		MatcherAssert.assertThat(qux.getProperties(), Matchers.hasItem(aNull));
 	}
 
 	private void doRenderTest(final JsonNode jsonNode) throws IOException {
 
-		assertThat(jsonNode.get("title").asText(), equalTo(obj.getName()));
-		assertThat(jsonNode.get("type").asText(), equalTo(obj.getType()));
-		assertThat(jsonNode.get("properties").isObject(), equalTo(true));
+		MatcherAssert.assertThat(jsonNode.get("title").asText(), Matchers.equalTo(obj.getName()));
+		MatcherAssert.assertThat(jsonNode.get("type").asText(), Matchers.equalTo(obj.getType()));
+		MatcherAssert.assertThat(jsonNode.get("properties").isObject(), Matchers.equalTo(true));
 
 		final List<String> fields = Lists.newArrayList(jsonNode.get("properties").fieldNames());
-		final Matcher<Collection<String>> emptyMatcher = empty();
-		assertThat(fields, is(emptyMatcher));
+		final Matcher<Collection<String>> emptyMatcher = Matchers.empty();
+		MatcherAssert.assertThat(fields, Matchers.is(emptyMatcher));
 	}
 
 	private void doRenderTest(final InputStream inputStream) throws IOException {
-		doRenderTest(om.readTree(inputStream));
+		doRenderTest(BaseJSTest.om.readTree(inputStream));
 	}
 
 	private void doRenderTest(final ByteArrayOutputStream outputStream) throws IOException {
@@ -67,7 +62,7 @@ public class JSRootTest extends BaseJSTest<JSRoot> {
 	}
 
 	private void doRenderTest(final Reader reader) throws IOException {
-		doRenderTest(om.readTree(reader));
+		doRenderTest(BaseJSTest.om.readTree(reader));
 	}
 
 	private void doRenderTest(final StringWriter writer) throws IOException {
@@ -75,7 +70,7 @@ public class JSRootTest extends BaseJSTest<JSRoot> {
 	}
 
 	private void doRenderTest(final String rendered) throws IOException {
-		doRenderTest(om.readTree(rendered));
+		doRenderTest(BaseJSTest.om.readTree(rendered));
 	}
 
 	@Test
@@ -92,74 +87,70 @@ public class JSRootTest extends BaseJSTest<JSRoot> {
 		root.add(new JSArray(new JSOther("other", "namespace")));
 		root.add(jsObject);
 
-
 		final String render = root.render();
-		final JsonNode jsonNode = om.readTree(render);
+		final JsonNode jsonNode = BaseJSTest.om.readTree(render);
 
-		assertThat(jsonNode.get("title").asText(), equalTo("root"));
-		assertThat(jsonNode.get("type").asText(), equalTo("object"));
-		assertThat(jsonNode.get("properties").isObject(), equalTo(true));
+		MatcherAssert.assertThat(jsonNode.get("title").asText(), Matchers.equalTo("root"));
+		MatcherAssert.assertThat(jsonNode.get("type").asText(), Matchers.equalTo("object"));
+		MatcherAssert.assertThat(jsonNode.get("properties").isObject(), Matchers.equalTo(true));
 
 		final JsonNode rootProperties = jsonNode.get("properties");
 		final ArrayList<String> rootPropertyNames = Lists.newArrayList(rootProperties.fieldNames());
 
-		assertThat(rootPropertyNames, hasSize(3));
+		MatcherAssert.assertThat(rootPropertyNames, Matchers.hasSize(3));
 
 		final String stringFieldName = rootPropertyNames.get(0);
-		assertThat(stringFieldName, equalTo("string"));
+		MatcherAssert.assertThat(stringFieldName, Matchers.equalTo("string"));
 
 		final JsonNode string = rootProperties.get("string");
-		assertThat(string.isObject(), equalTo(true));
-		assertThat(string.get("type").asText(), equalTo("string"));
-
-
+		MatcherAssert.assertThat(string.isObject(), Matchers.equalTo(true));
+		MatcherAssert.assertThat(string.get("type").asText(), Matchers.equalTo("string"));
 
 		final String otherFieldName = rootPropertyNames.get(1);
-		assertThat(otherFieldName, equalTo("other"));
+		MatcherAssert.assertThat(otherFieldName, Matchers.equalTo("other"));
 
 		final JsonNode array = rootProperties.get("other");
-		assertThat(array.isObject(), equalTo(true));
-		assertThat(array.get("type").asText(), equalTo("array"));
+		MatcherAssert.assertThat(array.isObject(), Matchers.equalTo(true));
+		MatcherAssert.assertThat(array.get("type").asText(), Matchers.equalTo("array"));
 
 		final JsonNode items = array.get("items");
-		assertThat(items.isObject(), equalTo(true));
+		MatcherAssert.assertThat(items.isObject(), Matchers.equalTo(true));
 		final ArrayList<String> itemPropertyNames = Lists.newArrayList(items.fieldNames());
 
-		assertThat(itemPropertyNames, hasSize(1));
+		MatcherAssert.assertThat(itemPropertyNames, Matchers.hasSize(1));
 
 		final String otherOtherFieldName = itemPropertyNames.get(0);
-		assertThat(otherOtherFieldName, equalTo("other"));
+		MatcherAssert.assertThat(otherOtherFieldName, Matchers.equalTo("other"));
 		final JsonNode other = items.get("other");
 
-		assertThat(other.isObject(), equalTo(true));
-		assertThat(other.get("type").asText(), equalTo("other"));
-		assertThat(other.get("namespace").asText(), equalTo("namespace"));
-
+		MatcherAssert.assertThat(other.isObject(), Matchers.equalTo(true));
+		MatcherAssert.assertThat(other.get("type").asText(), Matchers.equalTo("other"));
+		MatcherAssert.assertThat(other.get("namespace").asText(), Matchers.equalTo("namespace"));
 
 		final String objectFieldName = rootPropertyNames.get(2);
-		assertThat(objectFieldName, equalTo("object"));
+		MatcherAssert.assertThat(objectFieldName, Matchers.equalTo("object"));
 
 		final JsonNode object = rootProperties.get("object");
-		assertThat(object.isObject(), equalTo(true));
-		assertThat(object.get("type").asText(), equalTo("object"));
-		assertThat(object.get("description").asText(), equalTo("description"));
+		MatcherAssert.assertThat(object.isObject(), Matchers.equalTo(true));
+		MatcherAssert.assertThat(object.get("type").asText(), Matchers.equalTo("object"));
+		MatcherAssert.assertThat(object.get("description").asText(), Matchers.equalTo("description"));
 
 		final JsonNode objectProperties = object.get("properties");
 		final ArrayList<String> objectPropertyNames = Lists.newArrayList(objectProperties.fieldNames());
 
-		assertThat(objectPropertyNames, hasSize(2));
+		MatcherAssert.assertThat(objectPropertyNames, Matchers.hasSize(2));
 
 		final String nullFieldName = objectPropertyNames.get(0);
-		assertThat(nullFieldName, equalTo("null"));
+		MatcherAssert.assertThat(nullFieldName, Matchers.equalTo("null"));
 
 		final JsonNode nNull = objectProperties.get("null");
-		assertThat(nNull.isNull(), equalTo(true));
+		MatcherAssert.assertThat(nNull.isNull(), Matchers.equalTo(true));
 
 		final String null2FieldName = objectPropertyNames.get(1);
-		assertThat(null2FieldName, equalTo("null2"));
+		MatcherAssert.assertThat(null2FieldName, Matchers.equalTo("null2"));
 
 		final JsonNode nNull2 = objectProperties.get("null2");
-		assertThat(nNull2.isNull(), equalTo(true));
+		MatcherAssert.assertThat(nNull2.isNull(), Matchers.equalTo(true));
 	}
 
 	@Test
@@ -172,50 +163,41 @@ public class JSRootTest extends BaseJSTest<JSRoot> {
 		final String render = obj.render();
 		doRenderTest(render);
 
-
-		obj.render(om, outputStream);
+		obj.render(BaseJSTest.om, outputStream);
 		doRenderTest(outputStream);
 		outputStream.reset();
 
-
-		obj.render(om, outputStream, JsonEncoding.UTF8);
+		obj.render(BaseJSTest.om, outputStream, JsonEncoding.UTF8);
 		doRenderTest(outputStream);
 		outputStream.reset();
 
-
-		obj.render(om, writer);
+		obj.render(BaseJSTest.om, writer);
 		doRenderTest(writer);
 		outputStream.reset();
 
-
 		tmpFile = File.createTempFile("dmp-test", "tmp");
-		obj.render(om, tmpFile, JsonEncoding.UTF8);
-		doRenderTest(om.readTree(tmpFile));
+		obj.render(BaseJSTest.om, tmpFile, JsonEncoding.UTF8);
+		doRenderTest(BaseJSTest.om.readTree(tmpFile));
 		tmpFile.deleteOnExit();
 
-
-		final JsonFactory factory = om.getFactory();
+		final JsonFactory factory = BaseJSTest.om.getFactory();
 
 		obj.render(factory, outputStream);
 		doRenderTest(outputStream);
 		outputStream.reset();
 
-
 		obj.render(factory, outputStream, JsonEncoding.UTF8);
 		doRenderTest(outputStream);
 		outputStream.reset();
-
 
 		obj.render(factory, writer);
 		doRenderTest(writer);
 		outputStream.reset();
 
-
 		tmpFile = File.createTempFile("dmp-test", "tmp");
 		obj.render(factory, tmpFile, JsonEncoding.UTF8);
-		doRenderTest(om.readTree(tmpFile));
+		doRenderTest(BaseJSTest.om.readTree(tmpFile));
 		tmpFile.deleteOnExit();
-
 
 		final JsonGenerator generator = factory.createGenerator(outputStream);
 		obj.render(generator);

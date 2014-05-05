@@ -15,7 +15,7 @@ public class FunctionTest extends GuicedTest {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(FunctionTest.class);
 
-	private final ObjectMapper						objectMapper	= injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleFunctionTest() throws Exception {
@@ -44,10 +44,11 @@ public class FunctionTest extends GuicedTest {
 		Assert.assertNotNull("the function description JSON shouldn't be null", function.getFunctionDescription());
 
 		final String functionDescriptionJSONString = objectMapper.writeValueAsString(function.getFunctionDescription());
-		
+
 		final String functionFunctionDescriptionJSONString = objectMapper.writeValueAsString(functionFunctionDescription);
 
-		Assert.assertEquals("the function description JSON strings are not equal", functionFunctionDescriptionJSONString, functionDescriptionJSONString);
+		Assert.assertEquals("the function description JSON strings are not equal", functionFunctionDescriptionJSONString,
+				functionDescriptionJSONString);
 		Assert.assertNotNull("the function parameters shouldn't be null", function.getParameters());
 		Assert.assertEquals("the function parameters' size are not equal", 1, function.getParameters().size());
 		Assert.assertEquals("the function parameter '" + functionParameter + "' are not equal", functionParameter, function.getParameters().get(0));
@@ -57,12 +58,12 @@ public class FunctionTest extends GuicedTest {
 		try {
 
 			json = objectMapper.writeValueAsString(function);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("function json: " + json);
+		FunctionTest.LOG.debug("function json: " + json);
 	}
 
 }

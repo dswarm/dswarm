@@ -28,7 +28,7 @@ public class MappingGroupTest extends GuicedTest {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(MappingGroupTest.class);
 
-	private final ObjectMapper						objectMapper	= injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleMappingTest() {
@@ -52,12 +52,12 @@ public class MappingGroupTest extends GuicedTest {
 		try {
 
 			json = objectMapper.writeValueAsString(mappingGroup);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("mapping group json: " + json);
+		MappingGroupTest.LOG.debug("mapping group json: " + json);
 	}
 
 	private Mapping simpleMapping() {
@@ -221,12 +221,12 @@ public class MappingGroupTest extends GuicedTest {
 		try {
 
 			json = objectMapper.writeValueAsString(mapping);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("simple mapping json: " + json);
+		MappingGroupTest.LOG.debug("simple mapping json: " + json);
 
 		return mapping;
 	}
@@ -609,62 +609,62 @@ public class MappingGroupTest extends GuicedTest {
 		try {
 
 			json = objectMapper.writeValueAsString(mapping);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("complex mapping json: " + json);
+		MappingGroupTest.LOG.debug("complex mapping json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(transformation2);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("transformation json: " + json);
+		MappingGroupTest.LOG.debug("transformation json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(transformation);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("clean-up transformation json: " + json);
+		MappingGroupTest.LOG.debug("clean-up transformation json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(component1);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("clean-up previous component json: " + json);
+		MappingGroupTest.LOG.debug("clean-up previous component json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(component);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("clean-up main component json: " + json);
+		MappingGroupTest.LOG.debug("clean-up main component json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(component2);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("clean-up next component json: " + json);
+		MappingGroupTest.LOG.debug("clean-up next component json: " + json);
 
 		return mapping;
 	}

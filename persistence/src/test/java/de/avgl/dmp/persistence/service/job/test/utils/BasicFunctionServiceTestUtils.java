@@ -7,7 +7,6 @@ import org.junit.Assert;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import de.avgl.dmp.persistence.model.job.Function;
-import de.avgl.dmp.persistence.model.job.FunctionType;
 import de.avgl.dmp.persistence.model.job.proxy.ProxyBasicFunction;
 import de.avgl.dmp.persistence.service.job.BasicFunctionService;
 import de.avgl.dmp.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestUtils;
@@ -55,7 +54,7 @@ public abstract class BasicFunctionServiceTestUtils<POJOCLASSPERSISTENCESERVICE 
 			try {
 
 				actualFunctionDescriptionJSONString = objectMapper.writeValueAsString(actualFunction.getFunctionDescription());
-			} catch (JsonProcessingException e) {
+			} catch (final JsonProcessingException e) {
 
 				Assert.assertTrue("something went wrong while serializing the actual " + pojoClassName + " description JSON", false);
 			}
@@ -67,7 +66,7 @@ public abstract class BasicFunctionServiceTestUtils<POJOCLASSPERSISTENCESERVICE 
 			try {
 
 				expectedFunctionDescriptionJSONString = objectMapper.writeValueAsString(expectedFunction.getFunctionDescription());
-			} catch (JsonProcessingException e) {
+			} catch (final JsonProcessingException e) {
 
 				Assert.assertTrue("something went wrong while serializing the expected " + pojoClassName + " description JSON", false);
 			}

@@ -1,12 +1,7 @@
 package de.avgl.dmp.persistence.service.schema.test.utils;
 
-import java.util.LinkedList;
-
 import org.junit.Assert;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.model.schema.AttributePathInstance;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttributePathInstance;
 import de.avgl.dmp.persistence.service.schema.AttributePathInstanceService;

@@ -1,24 +1,25 @@
 package de.avgl.dmp.persistence.service.schema.test;
 
-import de.avgl.dmp.persistence.service.schema.test.utils.ClaszServiceTestUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxyClasz;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
+import de.avgl.dmp.persistence.service.schema.test.utils.ClaszServiceTestUtils;
 import de.avgl.dmp.persistence.service.test.AdvancedJPAServiceTest;
 
 public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, ClaszService> {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(ClaszServiceTest.class);
 
-	private final ObjectMapper						objectMapper	= injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	private final ClaszServiceTestUtils claszServiceTestUtils;
+	private final ClaszServiceTestUtils				claszServiceTestUtils;
 
 	public ClaszServiceTest() {
 
@@ -30,13 +31,13 @@ public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, 
 	@Test
 	public void testSimpleAttribute() {
 
-		Clasz clasz = createObject("http://purl.org/ontology/bibo/Document").getObject();
+		final Clasz clasz = createObject("http://purl.org/ontology/bibo/Document").getObject();
 
 		clasz.setName("document");
 
 		updateObjectTransactional(clasz);
 
-		Clasz updatedClass = getObject(clasz);
+		final Clasz updatedClass = getObject(clasz);
 
 		Assert.assertNotNull("the attribute name of the updated resource shouldn't be null", updatedClass.getName());
 		Assert.assertEquals("the attribute's name are not equal", clasz.getName(), updatedClass.getName());
@@ -46,17 +47,17 @@ public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, 
 		try {
 
 			json = objectMapper.writeValueAsString(updatedClass);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("class json: " + json);
+		ClaszServiceTest.LOG.debug("class json: " + json);
 
 		// clean up DB
 		claszServiceTestUtils.deleteObject(clasz);
 	}
-	
+
 	@Test
 	public void testUniquenessOfClasses() {
 

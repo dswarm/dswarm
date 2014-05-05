@@ -1,24 +1,20 @@
 package de.avgl.dmp.persistence.model.jsonschema;
 
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.Matchers.sameInstance;
-
-
 public class JSArrayTest extends BaseJSTest<JSArray> {
 
-	private JSElement item;
+	private JSElement	item;
 
 	public JSArrayTest() {
 		super(JSArray.class);
 
 	}
 
+	@Override
 	@Before
 	public void setUp() throws Exception {
 
@@ -29,24 +25,24 @@ public class JSArrayTest extends BaseJSTest<JSArray> {
 	@Test
 	public void testGetType() throws Exception {
 
-		assertThat(obj.getType(), equalTo("array"));
+		MatcherAssert.assertThat(obj.getType(), Matchers.equalTo("array"));
 	}
 
 	@Test
 	public void testGetProperties() throws Exception {
 
-		assertThat(obj.getProperties(), is(nullValue()));
+		MatcherAssert.assertThat(obj.getProperties(), Matchers.is(Matchers.nullValue()));
 	}
 
 	@Test
 	public void testGetItem() throws Exception {
 
-		assertThat(obj.getItem(), is(sameInstance(item)));
+		MatcherAssert.assertThat(obj.getItem(), Matchers.is(Matchers.sameInstance(item)));
 	}
 
 	@Test
 	public void testRenderInternal() throws Exception {
-		//TODO
+		// TODO
 
 	}
 }

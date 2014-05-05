@@ -103,7 +103,7 @@ public class FunctionServiceTest extends IDBasicJPAServiceTest<ProxyFunction, Fu
 		try {
 
 			metafactureFunctionDescriptionsJSONString = DMPPersistenceUtil.getResourceAsString("functions.json");
-		} catch (IOException e) {
+		} catch (final IOException e) {
 
 			FunctionServiceTest.LOG.debug("something went wrong while reading the metafacture functions JSON file", e);
 
@@ -116,17 +116,17 @@ public class FunctionServiceTest extends IDBasicJPAServiceTest<ProxyFunction, Fu
 
 		try {
 			metafactureFunctionDescriptionsJSON = objectMapper.readValue(metafactureFunctionDescriptionsJSONString, ObjectNode.class);
-		} catch (JsonParseException e) {
+		} catch (final JsonParseException e) {
 
 			FunctionServiceTest.LOG.debug("something went wrong while deserializing the metafacture functions JSON string", e);
 
 			Assert.assertTrue("something went wrong while deserializing the metafacture functions JSON string", false);
-		} catch (JsonMappingException e) {
+		} catch (final JsonMappingException e) {
 
 			FunctionServiceTest.LOG.debug("something went wrong while deserializing the metafacture functions JSON string", e);
 
 			Assert.assertTrue("something went wrong while deserializing the metafacture functions JSON string", false);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 
 			FunctionServiceTest.LOG.debug("something went wrong while deserializing the metafacture functions JSON string", e);
 
@@ -135,16 +135,16 @@ public class FunctionServiceTest extends IDBasicJPAServiceTest<ProxyFunction, Fu
 
 		Assert.assertNotNull("the metafacture function descriptions JSON shouldn't be null", metafactureFunctionDescriptionsJSON);
 
-		JsonNode metafactureFunctionDescriptionsArrayNode = metafactureFunctionDescriptionsJSON.get("functions");
+		final JsonNode metafactureFunctionDescriptionsArrayNode = metafactureFunctionDescriptionsJSON.get("functions");
 
 		Assert.assertNotNull("the metafacture function descriptions array node shouldn't be null", metafactureFunctionDescriptionsArrayNode);
 
 		Assert.assertTrue("the metafacture function description array node should be an JSON array",
 				metafactureFunctionDescriptionsArrayNode.isArray());
 
-		ArrayNode metafactureFunctionDescriptionsArray = (ArrayNode) metafactureFunctionDescriptionsArrayNode;
+		final ArrayNode metafactureFunctionDescriptionsArray = (ArrayNode) metafactureFunctionDescriptionsArrayNode;
 
-		for (JsonNode metafactureFunctionDescriptionNode : metafactureFunctionDescriptionsArray) {
+		for (final JsonNode metafactureFunctionDescriptionNode : metafactureFunctionDescriptionsArray) {
 
 			final ObjectNode metafactureFunctionDescriptionJSON = (ObjectNode) metafactureFunctionDescriptionNode;
 

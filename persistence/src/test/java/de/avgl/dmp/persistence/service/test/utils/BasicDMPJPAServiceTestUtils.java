@@ -25,7 +25,7 @@ public abstract class BasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE ex
 			Assert.assertEquals("the " + pojoClassName + " names should be equal", expectedObject.getName(), actualObject.getName());
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}<br/>
 	 * Updates the name of the object.

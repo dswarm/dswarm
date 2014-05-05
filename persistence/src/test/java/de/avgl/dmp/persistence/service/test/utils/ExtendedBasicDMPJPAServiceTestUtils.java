@@ -9,7 +9,8 @@ import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
 public abstract class ExtendedBasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE extends ExtendedBasicDMPJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyExtendedBasicDMPJPAObject<POJOCLASS>, POJOCLASS extends ExtendedBasicDMPJPAObject>
 		extends BasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
 
-	public ExtendedBasicDMPJPAServiceTestUtils(final Class<POJOCLASS> pojoClassArg, final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg) {
+	public ExtendedBasicDMPJPAServiceTestUtils(final Class<POJOCLASS> pojoClassArg,
+			final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg) {
 
 		super(pojoClassArg, persistenceServiceClassArg);
 	}
@@ -26,7 +27,7 @@ public abstract class ExtendedBasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESE
 					actualObject.getDescription());
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}<br/>
 	 * Updates the name and description of the object.

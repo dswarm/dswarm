@@ -26,7 +26,7 @@ public class JobTest extends GuicedTest {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(JobTest.class);
 
-	private final ObjectMapper						objectMapper	= injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleJobTest() {
@@ -47,12 +47,12 @@ public class JobTest extends GuicedTest {
 		try {
 
 			json = objectMapper.writeValueAsString(job);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("job json: " + json);
+		JobTest.LOG.debug("job json: " + json);
 	}
 
 	private Mapping simpleMapping() {
@@ -195,12 +195,12 @@ public class JobTest extends GuicedTest {
 		try {
 
 			json = objectMapper.writeValueAsString(mapping);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("simple mapping json: " + json);
+		JobTest.LOG.debug("simple mapping json: " + json);
 
 		return mapping;
 	}
@@ -494,62 +494,62 @@ public class JobTest extends GuicedTest {
 		try {
 
 			json = objectMapper.writeValueAsString(mapping);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("complex mapping json: " + json);
+		JobTest.LOG.debug("complex mapping json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(transformation2);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("transformation json: " + json);
+		JobTest.LOG.debug("transformation json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(transformation);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("clean-up transformation json: " + json);
+		JobTest.LOG.debug("clean-up transformation json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(component1);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("clean-up previous component json: " + json);
+		JobTest.LOG.debug("clean-up previous component json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(component);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("clean-up main component json: " + json);
+		JobTest.LOG.debug("clean-up main component json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(component2);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("clean-up next component json: " + json);
+		JobTest.LOG.debug("clean-up next component json: " + json);
 
 		return mapping;
 	}

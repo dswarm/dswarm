@@ -60,25 +60,25 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<ProxyProject, Proj
 
 	private final Map<Long, Function>							functions						= Maps.newLinkedHashMap();
 
-	private Map<Long, Attribute>								attributes						= Maps.newLinkedHashMap();
+	private final Map<Long, Attribute>							attributes						= Maps.newLinkedHashMap();
 
-	private Map<Long, Clasz>									classes							= Maps.newLinkedHashMap();
+	private final Map<Long, Clasz>								classes							= Maps.newLinkedHashMap();
 
-	private Map<Long, AttributePath>							attributePaths					= Maps.newLinkedHashMap();
+	private final Map<Long, AttributePath>						attributePaths					= Maps.newLinkedHashMap();
 
-	private Map<Long, Component>								components						= Maps.newLinkedHashMap();
+	private final Map<Long, Component>							components						= Maps.newLinkedHashMap();
 
-	private Map<Long, Transformation>							transformations					= Maps.newLinkedHashMap();
+	private final Map<Long, Transformation>						transformations					= Maps.newLinkedHashMap();
 
-	private Map<Long, Mapping>									mappings						= Maps.newLinkedHashMap();
+	private final Map<Long, Mapping>							mappings						= Maps.newLinkedHashMap();
 
-	private Map<Long, Schema>									schemas							= Maps.newLinkedHashMap();
+	private final Map<Long, Schema>								schemas							= Maps.newLinkedHashMap();
 
-	private Map<Long, Resource>									resources						= Maps.newLinkedHashMap();
+	private final Map<Long, Resource>							resources						= Maps.newLinkedHashMap();
 
-	private Map<Long, Configuration>							configurations					= Maps.newLinkedHashMap();
+	private final Map<Long, Configuration>						configurations					= Maps.newLinkedHashMap();
 
-	private Map<Long, MappingAttributePathInstance>				mappingAttributePathInstances	= Maps.newLinkedHashMap();
+	private final Map<Long, MappingAttributePathInstance>		mappingAttributePathInstances	= Maps.newLinkedHashMap();
 
 	private final AttributeServiceTestUtils						attributeServiceTestUtils;
 	private final AttributePathServiceTestUtils					attributePathServiceTestUtils;
@@ -114,7 +114,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<ProxyProject, Proj
 	@Test
 	public void simpleProjectTest() throws Exception {
 
-		LOG.debug("start simple project test");
+		ProjectServiceTest.LOG.debug("start simple project test");
 
 		// mappings
 
@@ -304,12 +304,12 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<ProxyProject, Proj
 		try {
 
 			json = objectMapper.writeValueAsString(updatedProject);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("project json: " + json);
+		ProjectServiceTest.LOG.debug("project json: " + json);
 
 		deleteObject(updatedProject.getId());
 
@@ -375,7 +375,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<ProxyProject, Proj
 			configurationServiceTestUtils.deleteObject(configuration);
 		}
 
-		LOG.debug("end simple project test");
+		ProjectServiceTest.LOG.debug("end simple project test");
 	}
 
 	// /*@Test
@@ -753,12 +753,12 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<ProxyProject, Proj
 		try {
 
 			json = objectMapper.writeValueAsString(updatedMapping);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("mapping json: " + json);
+		ProjectServiceTest.LOG.debug("mapping json: " + json);
 
 		mappings.put(updatedMapping.getId(), updatedMapping);
 
@@ -1153,62 +1153,62 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<ProxyProject, Proj
 		try {
 
 			json = objectMapper.writeValueAsString(updatedMapping);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("mapping json: " + json);
+		ProjectServiceTest.LOG.debug("mapping json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(transformation2);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("transformation json: " + json);
+		ProjectServiceTest.LOG.debug("transformation json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(transformation);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("clean-up transformation json: " + json);
+		ProjectServiceTest.LOG.debug("clean-up transformation json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(component1);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("clean-up previous component json: " + json);
+		ProjectServiceTest.LOG.debug("clean-up previous component json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(component);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("clean-up main component json: " + json);
+		ProjectServiceTest.LOG.debug("clean-up main component json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(component2);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("clean-up next component json: " + json);
+		ProjectServiceTest.LOG.debug("clean-up next component json: " + json);
 
 		mappings.put(updatedMapping.getId(), updatedMapping);
 
@@ -1402,12 +1402,12 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<ProxyProject, Proj
 		try {
 
 			json = objectMapper.writeValueAsString(updatedDataModel);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("data model json: " + json);
+		ProjectServiceTest.LOG.debug("data model json: " + json);
 
 		return updatedDataModel;
 	}
@@ -1552,12 +1552,12 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<ProxyProject, Proj
 		try {
 
 			json = objectMapper.writeValueAsString(updatedDataModel);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("data model json: " + json);
+		ProjectServiceTest.LOG.debug("data model json: " + json);
 
 		return updatedDataModel;
 	}

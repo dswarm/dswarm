@@ -1,12 +1,8 @@
 package de.avgl.dmp.persistence.model.jsonschema;
 
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-
 
 public class JSStringTest extends BaseJSTest<JSString> {
 
@@ -17,12 +13,12 @@ public class JSStringTest extends BaseJSTest<JSString> {
 	@Test
 	public void testGetType() throws Exception {
 
-		assertThat(obj.getType(), equalTo("string"));
+		MatcherAssert.assertThat(obj.getType(), Matchers.equalTo("string"));
 	}
 
 	@Test
 	public void testGetProperties() throws Exception {
 
-		assertThat(obj.getProperties(), is(nullValue()));
+		MatcherAssert.assertThat(obj.getProperties(), Matchers.is(Matchers.nullValue()));
 	}
 }

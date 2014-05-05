@@ -16,7 +16,7 @@ public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<
 	protected final String							type;
 	protected final Class<JPASERVICEIMPL>			jpaServiceClass;
 	protected JPASERVICEIMPL						jpaService	= null;
-	
+
 	public BasicJPAServiceTest(final String type, final Class<JPASERVICEIMPL> jpaServiceClass) {
 
 		this.type = type;

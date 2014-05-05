@@ -8,24 +8,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.schema.Attribute;
-import de.avgl.dmp.persistence.service.schema.test.AttributeServiceTest;
-
 
 public class AttributeTest extends GuicedTest {
-	
-	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(AttributeTest.class);
-	
-	private final ObjectMapper						objectMapper = injector.getInstance(ObjectMapper.class);
-	
+
+	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(AttributeTest.class);
+
+	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+
 	@Test
 	public void simpleAttributeTest() {
-		
+
 		final String attributeId = "http://purl.org/dc/terms/title";
 		final String attributeName = "title";
-		
+
 		final Attribute dctermsTitle = new Attribute(attributeId);
 		dctermsTitle.setName(attributeName);
-		
+
 		Assert.assertNotNull("the attribute id shouldn't be null", dctermsTitle.getUri());
 		Assert.assertEquals("the attribute ids are not equal", attributeId, dctermsTitle.getUri());
 		Assert.assertNotNull("the attribute name shouldn't be null", dctermsTitle.getName());
@@ -34,14 +32,14 @@ public class AttributeTest extends GuicedTest {
 		String json = null;
 
 		try {
-			
+
 			json = objectMapper.writeValueAsString(dctermsTitle);
-		} catch (JsonProcessingException e) {
-			
+		} catch (final JsonProcessingException e) {
+
 			e.printStackTrace();
 		}
 
-		LOG.debug("attribute json: " + json);
+		AttributeTest.LOG.debug("attribute json: " + json);
 	}
 
 }

@@ -1,31 +1,29 @@
 package de.avgl.dmp.persistence.model.jsonschema;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class BaseJSTest<T extends JSElement> {
 
-	protected static ObjectMapper om;
+	protected static ObjectMapper	om;
 
-	private final Class<T> clazz;
+	private final Class<T>			clazz;
 
-	protected T obj;
+	protected T						obj;
 
-	protected BaseJSTest(Class<T> clazz) {
+	protected BaseJSTest(final Class<T> clazz) {
 
 		this.clazz = clazz;
 	}
 
 	@BeforeClass
-	public static void	startUp() throws Exception {
-		om = new ObjectMapper();
+	public static void startUp() throws Exception {
+		BaseJSTest.om = new ObjectMapper();
 	}
 
 	@Before
@@ -37,8 +35,8 @@ public abstract class BaseJSTest<T extends JSElement> {
 	@Test
 	public void testWithName() throws Exception {
 
-		assertThat(obj.withName("bar").getName(), equalTo("bar"));
-		assertThat(obj.withName("bar"), is(instanceOf(clazz)));
+		MatcherAssert.assertThat(obj.withName("bar").getName(), Matchers.equalTo("bar"));
+		MatcherAssert.assertThat(obj.withName("bar"), Matchers.is(Matchers.instanceOf(clazz)));
 	}
 
 }

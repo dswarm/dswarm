@@ -56,7 +56,7 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 
 		return updatedResource;
 	}
-	
+
 	/**
 	 * note: legacy
 	 * 

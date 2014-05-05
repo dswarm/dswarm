@@ -30,7 +30,7 @@ public class MappingAttributePathInstanceServiceTest extends
 
 	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	private Map<Long, Attribute>					attributes		= Maps.newLinkedHashMap();
+	private final Map<Long, Attribute>				attributes		= Maps.newLinkedHashMap();
 
 	private final AttributeServiceTestUtils			attributeServiceTestUtils;
 	private final AttributePathServiceTestUtils		attributePathServiceTestUtils;
@@ -66,19 +66,18 @@ public class MappingAttributePathInstanceServiceTest extends
 		System.out.println("attribute hasPart = '" + dctermsHasPart.toString());
 
 		final AttributePath attributePath1 = attributePathServiceTestUtils.createAttributePath(attributePath1Arg);
-		
+
 		// filter
-		
+
 		final String filterName = "my filter";
 
 		final String filterExpression = "SELECT ?identifier ?url\n" + "WHERE {\n" + "    ?record custmabxml:metadata ?metadata ;\n"
 				+ "            custmabxml:header ?header .\n" + "    ?header custmabxml:identifier ?identifier .\n"
 				+ "    ?metadata m:record ?mabrecord .\n" + "    ?mabrecord m:datafield ?dataField .\n" + "    ?dataField m:tag \"088\" ;\n"
 				+ "               m:ind1 \"a\" ;\n" + "               m:subfield ?subField .\n" + "    ?subField rdf:value ?url .\n" + "}";
-		
+
 		final Filter filter = filterServiceTestUtils.createFilter(filterName, filterExpression);
 
-		
 		final Integer ordinal = Integer.valueOf(1);
 
 		// mapping attribute path instance
@@ -111,34 +110,32 @@ public class MappingAttributePathInstanceServiceTest extends
 				.toAttributePath());
 		Assert.assertEquals("the attribute path's strings attribute path '" + attributePath1.getId() + "' are not equal",
 				attributePath1.toAttributePath(), updatedMappingAttributePathInstance.getAttributePath().toAttributePath());
-		Assert.assertNotNull(
-				"the mapping attribute path instance's ordinals of the updated mapping attribute path instance shouldn't be null",
+		Assert.assertNotNull("the mapping attribute path instance's ordinals of the updated mapping attribute path instance shouldn't be null",
 				updatedMappingAttributePathInstance.getAttributePath());
 		Assert.assertEquals("the mapping attribute path instance's ordinals are not equal", mappingAttributePathInstance.getOrdinal(),
 				updatedMappingAttributePathInstance.getOrdinal());
-		Assert.assertNotNull(
-				"the mapping attribute path instance's filters of the updated mapping attribute path instance shouldn't be null",
+		Assert.assertNotNull("the mapping attribute path instance's filters of the updated mapping attribute path instance shouldn't be null",
 				updatedMappingAttributePathInstance.getFilter());
 		Assert.assertEquals("the mapping attribute path instance's filters are not equal", mappingAttributePathInstance.getFilter(),
 				updatedMappingAttributePathInstance.getFilter());
-		Assert.assertEquals("the mapping attribute path instance's filter's expressions are not equal", mappingAttributePathInstance.getFilter().getExpression(),
-				updatedMappingAttributePathInstance.getFilter().getExpression());
+		Assert.assertEquals("the mapping attribute path instance's filter's expressions are not equal", mappingAttributePathInstance.getFilter()
+				.getExpression(), updatedMappingAttributePathInstance.getFilter().getExpression());
 
 		String json = null;
 
 		try {
 
 			json = objectMapper.writeValueAsString(mappingAttributePathInstance);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("mapping attribute path instance json: " + json);
+		MappingAttributePathInstanceServiceTest.LOG.debug("mapping attribute path instance json: " + json);
 
 		// clean up DB
 		deleteObject(mappingAttributePathInstance.getId());
-		
+
 		filterServiceTestUtils.deleteObject(filter);
 
 		attributePathServiceTestUtils.deleteObject(attributePath1);

@@ -3,23 +3,18 @@ package de.avgl.dmp.persistence.model.jsonschema;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.hamcrest.core.Is;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.sameInstance;
-import static org.hamcrest.core.Is.is;
-
 public class JSElementTest {
 
-	private TestJS js;
+	private TestJS			js;
 
-	private final String expectedName = "foo";
-	private final String expectedType = "test";
+	private final String	expectedName	= "foo";
+	private final String	expectedType	= "test";
 
 	private class TestJS extends JSElement {
 
@@ -27,7 +22,7 @@ public class JSElementTest {
 			super(expectedName);
 		}
 
-		private TestJS(String name) {
+		private TestJS(final String name) {
 			super(name);
 		}
 
@@ -45,7 +40,7 @@ public class JSElementTest {
 		}
 
 		@Override
-		public JSElement withName(String newName) {
+		public JSElement withName(final String newName) {
 			return new TestJS(newName);
 		}
 	}
@@ -59,7 +54,7 @@ public class JSElementTest {
 	@Test
 	public void testGetName() throws Exception {
 
-		assertThat(js.getName(), equalTo(expectedName));
+		MatcherAssert.assertThat(js.getName(), Matchers.equalTo(expectedName));
 	}
 
 	@Test
@@ -68,14 +63,14 @@ public class JSElementTest {
 		final String description = "description";
 		js.setDescription(description);
 
-		assertThat(js.getDescription(), equalTo(description));
-		assertThat(js.getDescription(), is(sameInstance(description)));
+		MatcherAssert.assertThat(js.getDescription(), Matchers.equalTo(description));
+		MatcherAssert.assertThat(js.getDescription(), Is.is(Matchers.sameInstance(description)));
 	}
 
 	@Test
 	public void testGetType() throws Exception {
 
-		assertThat(js.getType(), equalTo(expectedType));
+		MatcherAssert.assertThat(js.getType(), Matchers.equalTo(expectedType));
 	}
 
 	@Test
@@ -83,9 +78,9 @@ public class JSElementTest {
 
 		final List<JSElement> properties = js.getProperties();
 
-		assertThat(properties, is(instanceOf(List.class)));
-		assertThat(properties.size(), equalTo(1));
-		assertThat(properties, hasItem(js));
+		MatcherAssert.assertThat(properties, Is.is(Matchers.instanceOf(List.class)));
+		MatcherAssert.assertThat(properties.size(), Matchers.equalTo(1));
+		MatcherAssert.assertThat(properties, Matchers.hasItem(js));
 	}
 
 	@Test
@@ -95,30 +90,30 @@ public class JSElementTest {
 
 		final JSElement withName = js.withName(name);
 
-		assertThat(withName, is(instanceOf(TestJS.class)));
+		MatcherAssert.assertThat(withName, Is.is(Matchers.instanceOf(TestJS.class)));
 
 		final TestJS withNameJS = (TestJS) withName;
 
-		assertThat(withNameJS, is(not(sameInstance(js))));
+		MatcherAssert.assertThat(withNameJS, Is.is(Matchers.not(Matchers.sameInstance(js))));
 
-		assertThat(withNameJS.getName(), equalTo(name));
+		MatcherAssert.assertThat(withNameJS.getName(), Matchers.equalTo(name));
 	}
 
 	@Test
 	public void testRender() throws Exception {
-		//TODO
+		// TODO
 
 	}
 
 	@Test
 	public void testRenderDescription() throws Exception {
-		//TODO
+		// TODO
 
 	}
 
 	@Test
 	public void testRenderInternal() throws Exception {
-		//TODO
+		// TODO
 
 	}
 }

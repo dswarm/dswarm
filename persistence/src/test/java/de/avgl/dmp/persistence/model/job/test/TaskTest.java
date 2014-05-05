@@ -35,7 +35,7 @@ public class TaskTest extends GuicedTest {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(TaskTest.class);
 
-	private final ObjectMapper						objectMapper	= injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleTaskTest() {
@@ -57,12 +57,12 @@ public class TaskTest extends GuicedTest {
 		try {
 
 			json = objectMapper.writeValueAsString(task);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("task json: " + json);
+		TaskTest.LOG.debug("task json: " + json);
 	}
 
 	private DataModel createDataModel() {
@@ -176,12 +176,12 @@ public class TaskTest extends GuicedTest {
 		try {
 
 			json = objectMapper.writeValueAsString(dataModel);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("data model json: " + json);
+		TaskTest.LOG.debug("data model json: " + json);
 
 		return dataModel;
 	}
@@ -206,12 +206,12 @@ public class TaskTest extends GuicedTest {
 		try {
 
 			json = objectMapper.writeValueAsString(job);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("job json: " + json);
+		TaskTest.LOG.debug("job json: " + json);
 
 		return job;
 	}
@@ -356,12 +356,12 @@ public class TaskTest extends GuicedTest {
 		try {
 
 			json = objectMapper.writeValueAsString(mapping);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("simple mapping json: " + json);
+		TaskTest.LOG.debug("simple mapping json: " + json);
 
 		return mapping;
 	}
@@ -655,62 +655,62 @@ public class TaskTest extends GuicedTest {
 		try {
 
 			json = objectMapper.writeValueAsString(mapping);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("complex mapping json: " + json);
+		TaskTest.LOG.debug("complex mapping json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(transformation2);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("transformation json: " + json);
+		TaskTest.LOG.debug("transformation json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(transformation);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("clean-up transformation json: " + json);
+		TaskTest.LOG.debug("clean-up transformation json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(component1);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("clean-up previous component json: " + json);
+		TaskTest.LOG.debug("clean-up previous component json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(component);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("clean-up main component json: " + json);
+		TaskTest.LOG.debug("clean-up main component json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(component2);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("clean-up next component json: " + json);
+		TaskTest.LOG.debug("clean-up next component json: " + json);
 
 		return mapping;
 	}

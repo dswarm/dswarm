@@ -3,13 +3,13 @@ package de.avgl.dmp.persistence.service.schema.test.utils;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.Sets;
-import de.avgl.dmp.persistence.DMPPersistenceException;
-import de.avgl.dmp.persistence.model.schema.Attribute;
 import org.junit.Assert;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
+import de.avgl.dmp.persistence.DMPPersistenceException;
+import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
@@ -38,7 +38,7 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 
 		compareSchemas(expectedObject, actualObject);
 	}
-	
+
 	public Schema createSchema(final String name, final Set<AttributePath> attributePaths, final Clasz recordClass) throws Exception {
 
 		final Schema schema = new Schema();
@@ -57,8 +57,8 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 		return updatedSchema;
 	}
 
-	public void removeAddedAttributePathsFromOutputModelSchema(final Schema outputDataModelSchema, final Map<Long, Attribute> attributes, final Map<Long, AttributePath> attributePaths)
-			throws DMPPersistenceException {
+	public void removeAddedAttributePathsFromOutputModelSchema(final Schema outputDataModelSchema, final Map<Long, Attribute> attributes,
+			final Map<Long, AttributePath> attributePaths) throws DMPPersistenceException {
 
 		final Set<AttributePath> outputDataModelSchemaAttributePathRemovalCandidates = Sets.newHashSet();
 
@@ -122,7 +122,7 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 			claszesResourceTestUtils.compareObjects(expectedSchema.getRecordClass(), actualSchema.getRecordClass());
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}<br/>
 	 * Updates the name, attribute paths and record class of the schema.

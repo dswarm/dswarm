@@ -22,7 +22,7 @@ public class TransformationTest extends GuicedTest {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(TransformationTest.class);
 
-	private final ObjectMapper						objectMapper	= injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleTransformationTest() {
@@ -103,12 +103,12 @@ public class TransformationTest extends GuicedTest {
 		try {
 
 			json = objectMapper.writeValueAsString(transformation);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("transformation json: " + json);
+		TransformationTest.LOG.debug("transformation json: " + json);
 	}
 
 	@Test
@@ -293,42 +293,42 @@ public class TransformationTest extends GuicedTest {
 		try {
 
 			json = objectMapper.writeValueAsString(transformation);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("transformation json: " + json);
+		TransformationTest.LOG.debug("transformation json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(component1);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("previous component json: " + json);
+		TransformationTest.LOG.debug("previous component json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(component);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("main component json: " + json);
+		TransformationTest.LOG.debug("main component json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(component2);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("next component json: " + json);
+		TransformationTest.LOG.debug("next component json: " + json);
 	}
 
 }
