@@ -25,12 +25,12 @@ public class CSVSourceResourceTriplesFlow extends AbstractCSVResourceFlow<Immuta
 	}
 
 	public CSVSourceResourceTriplesFlow(final Configuration configuration) throws DMPConverterException {
-		
+
 		super(configuration);
 	}
 
 	public CSVSourceResourceTriplesFlow(final DataModel dataModel) throws DMPConverterException {
-		
+
 		super(dataModel);
 	}
 

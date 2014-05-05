@@ -9,16 +9,14 @@ import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
 /**
- * 
  * @author phorn
- *
  */
 @Description("Serialises an object as JSON")
 @In(StreamReceiver.class)
 @Out(String.class)
 public class RecordAwareJsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
 
-	private final StreamPipe<ObjectReceiver<String>> delegate;
+	private final StreamPipe<ObjectReceiver<String>>	delegate;
 
 	public RecordAwareJsonEncoder(final StreamPipe<ObjectReceiver<String>> delegate) {
 		this.delegate = delegate;

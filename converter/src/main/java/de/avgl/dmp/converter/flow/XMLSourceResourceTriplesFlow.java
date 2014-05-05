@@ -22,9 +22,8 @@ import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
 
 /**
  * Flow that transforms a given XML source into RDF triples.
- *
+ * 
  * @author tgaengler
- *
  */
 public class XMLSourceResourceTriplesFlow {
 
@@ -117,7 +116,8 @@ public class XMLSourceResourceTriplesFlow {
 
 		if (valueNode == null) {
 
-			LOG.debug("couldn't find value for parameter '" + key + "'; try to utilise default value for this parameter");
+			XMLSourceResourceTriplesFlow.LOG
+					.debug("couldn't find value for parameter '" + key + "'; try to utilise default value for this parameter");
 		}
 
 		return valueNode;

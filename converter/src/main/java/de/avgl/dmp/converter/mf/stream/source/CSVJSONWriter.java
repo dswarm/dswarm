@@ -7,14 +7,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
 /**
- * 
  * @author tgaengler
- *
  */
 public class CSVJSONWriter implements ObjectReceiver<JsonNode> {
 
-	private JsonNode json;
-	private boolean closed;
+	private JsonNode	json;
+	private boolean		closed;
 
 	@Override
 	public void process(final JsonNode json) {
@@ -23,18 +21,18 @@ public class CSVJSONWriter implements ObjectReceiver<JsonNode> {
 
 		// TODO write incoming json
 
-		if(this.json != null && this.json.size() > 0) {
+		if (this.json != null && this.json.size() > 0) {
 
 			// add only incoming data JSON object
 
 			final JsonNode dataJSON = this.json.get("data");
 
-			if(dataJSON == null) {
+			if (dataJSON == null) {
 
 				throw new MetafactureException("data JSON shouldn't be null");
 			}
 
-			if(!dataJSON.isArray()) {
+			if (!dataJSON.isArray()) {
 
 				throw new MetafactureException("data JSON should be an array");
 			}
@@ -65,7 +63,7 @@ public class CSVJSONWriter implements ObjectReceiver<JsonNode> {
 	@Override
 	public String toString() {
 
-		if(json != null) {
+		if (json != null) {
 
 			return json.toString();
 		}

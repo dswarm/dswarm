@@ -78,11 +78,11 @@ public class MorphScriptBuilder {
 	private static final String						INPUT_VARIABLE_IDENTIFIER			= "inputString";
 
 	private static final String						OUTPUT_VARIABLE_PREFIX_IDENTIFIER	= "__TRANSFORMATION_OUTPUT_VARIABLE__";
-	
+
 	private static final String						FILTER_VARIABLE_POSTFIX				= ".filtered";
 
 	private static final String						OCCURRENCE_VARIABLE_POSTFIX			= ".occurrence";
-	
+
 	static {
 		System.setProperty("javax.xml.transform.TransformerFactory", MorphScriptBuilder.TRANSFORMER_FACTORY_CLASS);
 		TRANSFORMER_FACTORY = TransformerFactory.newInstance();
@@ -328,23 +328,23 @@ public class MorphScriptBuilder {
 			final String inputAttributePathString = mappingAttributePathInstance.getAttributePath().toAttributePath();
 
 			final List<String> variablesFromInputAttributePaths = getParameterMappingKeys(inputAttributePathString, transformationComponent);
-			
+
 			final Integer ordinal = mappingAttributePathInstance.getOrdinal();
-			
+
 			String filterExpressionStringUnescaped = null;
-			
+
 			if (mappingAttributePathInstance.getFilter() != null) {
-			
+
 				final String filterExpressionString = mappingAttributePathInstance.getFilter().getExpression();
-			
+
 				if (filterExpressionString != null && !filterExpressionString.isEmpty()) {
-				
+
 					filterExpressionStringUnescaped = StringEscapeUtils.unescapeXml(filterExpressionString);
 				}
 			}
-			
-			final List<Element> inputAttributePathsToVars = addInputAttributePathVars(variablesFromInputAttributePaths, inputAttributePathString, rules,
-					inputAttributePaths, filterExpressionStringUnescaped, ordinal);
+
+			final List<Element> inputAttributePathsToVars = addInputAttributePathVars(variablesFromInputAttributePaths, inputAttributePathString,
+					rules, inputAttributePaths, filterExpressionStringUnescaped, ordinal);
 
 		}
 
@@ -368,7 +368,7 @@ public class MorphScriptBuilder {
 
 				if (parameterMapping.getKey() != null) {
 
-					if (parameterMapping.getKey().equals(INPUT_VARIABLE_IDENTIFIER)) {
+					if (parameterMapping.getKey().equals(MorphScriptBuilder.INPUT_VARIABLE_IDENTIFIER)) {
 
 						continue;
 					}
@@ -425,7 +425,7 @@ public class MorphScriptBuilder {
 			collection = doc.createElement("combine");
 
 			collection.setAttribute("name", "@" + collectionNameAttribute);
-			
+
 			collection.setAttribute("reset", "true");
 
 			final Iterator<String> iter = collectionSourceAttributes.iterator();
@@ -502,7 +502,7 @@ public class MorphScriptBuilder {
 
 	private List<Element> addInputAttributePathVars(final List<String> variables, final String inputAttributePathString, final Element rules,
 			final Map<String, List<String>> inputAttributePaths, final String filterExpressionString, final Integer ordinal) {
-		
+
 		if (variables == null || variables.isEmpty()) {
 
 			return null;
@@ -514,45 +514,45 @@ public class MorphScriptBuilder {
 
 		for (String variable : variables) {
 
-			if (variable.startsWith(OUTPUT_VARIABLE_PREFIX_IDENTIFIER)) {
+			if (variable.startsWith(MorphScriptBuilder.OUTPUT_VARIABLE_PREFIX_IDENTIFIER)) {
 
 				continue;
 			}
-			
+
 			if (ordinal != null && ordinal > 0) {
-				
+
 				final Element occurrenceData = doc.createElement("data");
-				
+
 				occurrenceData.setAttribute("name", "@" + variable);
-				
-				variable = variable + OCCURRENCE_VARIABLE_POSTFIX;
-				
+
+				variable = variable + MorphScriptBuilder.OCCURRENCE_VARIABLE_POSTFIX;
+
 				occurrenceData.setAttribute("source", "@" + variable);
-				
+
 				final Element occurrenceFunction = doc.createElement("occurrence");
-				
+
 				occurrenceFunction.setAttribute("only", String.valueOf(ordinal));
-				
+
 				occurrenceData.appendChild(occurrenceFunction);
-				
+
 				rules.appendChild(occurrenceData);
 			}
 
 			Map<String, String> filterExpressionMap = Maps.newHashMap();
 
-			ObjectMapper objectMapper = new ObjectMapper();
-			
+			final ObjectMapper objectMapper = new ObjectMapper();
+
 			if (filterExpressionString != null && !filterExpressionString.isEmpty()) {
-				
+
 				try {
 
 					filterExpressionMap = objectMapper.readValue(filterExpressionString, HashMap.class);
-				} catch (IOException e) {
+				} catch (final IOException e) {
 
-					LOG.debug("something went wrong while deserialize filter expression" + e);
+					MorphScriptBuilder.LOG.debug("something went wrong while deserialize filter expression" + e);
 				}
 			}
-			
+
 			if (filterExpressionMap == null || filterExpressionMap.isEmpty()) {
 
 				final Element data = doc.createElement("data");
@@ -568,37 +568,35 @@ public class MorphScriptBuilder {
 				combineAsFilter.setAttribute("reset", "false");
 				combineAsFilter.setAttribute("sameEntity", "true");
 				combineAsFilter.setAttribute("name", "@" + variable);
-				combineAsFilter.setAttribute("value", "${" + variable + FILTER_VARIABLE_POSTFIX + "}");
-				
+				combineAsFilter.setAttribute("value", "${" + variable + MorphScriptBuilder.FILTER_VARIABLE_POSTFIX + "}");
+
 				for (final Entry<String, String> filter : filterExpressionMap.entrySet()) {
-					
+
 					final Element combineAsFilterData = doc.createElement("data");
 					combineAsFilterData.setAttribute("source", StringEscapeUtils.unescapeXml(filter.getKey()));
-					
+
 					final Element combineAsFilterDataFunction = doc.createElement("equals");
 					combineAsFilterDataFunction.setAttribute("string", filter.getValue());
-					
+
 					combineAsFilterData.appendChild(combineAsFilterDataFunction);
 					combineAsFilter.appendChild(combineAsFilterData);
-					
+
 				}
-				
+
 				final Element combineAsFilterDataOut = doc.createElement("data");
-				combineAsFilterDataOut.setAttribute("name", variable + FILTER_VARIABLE_POSTFIX);
+				combineAsFilterDataOut.setAttribute("name", variable + MorphScriptBuilder.FILTER_VARIABLE_POSTFIX);
 				combineAsFilterDataOut.setAttribute("source", inputAttributePathStringXMLEscaped);
-				
+
 				combineAsFilter.appendChild(combineAsFilterDataOut);
-				
+
 				rules.appendChild(combineAsFilter);
-				
-				
+
 			}
-			
+
 			if (vars == null) {
 
 				vars = Lists.newArrayList();
 			}
-			
 
 			inputAttributePaths.put(inputAttributePathStringXMLEscaped, variables);
 		}
@@ -622,7 +620,7 @@ public class MorphScriptBuilder {
 
 		for (final String variable : variables) {
 
-			if (!variable.startsWith(OUTPUT_VARIABLE_PREFIX_IDENTIFIER)) {
+			if (!variable.startsWith(MorphScriptBuilder.OUTPUT_VARIABLE_PREFIX_IDENTIFIER)) {
 
 				continue;
 			}
@@ -665,7 +663,7 @@ public class MorphScriptBuilder {
 			final Map<String, List<String>> inputAttributePathVariablesMap, final Element rules) {
 
 		final String transformationOutputVariableIdentifier = determineTransformationOutputVariable(transformationComponent);
-		final String finalTransformationOutputVariableIdentifier = transformationOutputVariableIdentifier == null ? OUTPUT_VARIABLE_PREFIX_IDENTIFIER
+		final String finalTransformationOutputVariableIdentifier = transformationOutputVariableIdentifier == null ? MorphScriptBuilder.OUTPUT_VARIABLE_PREFIX_IDENTIFIER
 				: transformationOutputVariableIdentifier;
 
 		final Function transformationFunction = transformationComponent.getFunction();
@@ -725,7 +723,7 @@ public class MorphScriptBuilder {
 
 			for (final Entry<String, String> parameterMapping : componentParameterMapping.entrySet()) {
 
-				if (parameterMapping.getKey().equals(INPUT_VARIABLE_IDENTIFIER)) {
+				if (parameterMapping.getKey().equals(MorphScriptBuilder.INPUT_VARIABLE_IDENTIFIER)) {
 
 					inputStrings = parameterMapping.getValue().split(",");
 
@@ -736,7 +734,7 @@ public class MorphScriptBuilder {
 
 		// this is a list of variable names, which should be unique and ordered
 		final Set<String> sourceAttributes = new LinkedHashSet<String>();
-	
+
 		for (final String inputString : inputStrings) {
 
 			sourceAttributes.add(inputString);
@@ -810,7 +808,7 @@ public class MorphScriptBuilder {
 
 		if (transformationComponent == null) {
 
-			LOG.error("transformation component is null, couldn't identify transformation output variable identifier");
+			MorphScriptBuilder.LOG.error("transformation component is null, couldn't identify transformation output variable identifier");
 
 			return null;
 		}
@@ -819,21 +817,23 @@ public class MorphScriptBuilder {
 
 		if (parameterMappings == null) {
 
-			LOG.error("transformation component parameter mappings are null, couldn't identify transformation output variable identifier");
+			MorphScriptBuilder.LOG
+					.error("transformation component parameter mappings are null, couldn't identify transformation output variable identifier");
 
 			return null;
 		}
 
 		if (parameterMappings.isEmpty()) {
 
-			LOG.error("transformation component parameter mappings are empty, couldn't identify transformation output variable identifier");
+			MorphScriptBuilder.LOG
+					.error("transformation component parameter mappings are empty, couldn't identify transformation output variable identifier");
 
 			return null;
 		}
 
 		for (final String key : parameterMappings.keySet()) {
 
-			if (key.startsWith(OUTPUT_VARIABLE_PREFIX_IDENTIFIER)) {
+			if (key.startsWith(MorphScriptBuilder.OUTPUT_VARIABLE_PREFIX_IDENTIFIER)) {
 
 				// found output variable identifier
 
@@ -841,7 +841,7 @@ public class MorphScriptBuilder {
 			}
 		}
 
-		LOG.error("couldn't find transformation output variable identifier");
+		MorphScriptBuilder.LOG.error("couldn't find transformation output variable identifier");
 
 		return null;
 	}

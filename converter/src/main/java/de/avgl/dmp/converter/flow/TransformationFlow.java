@@ -269,7 +269,7 @@ public class TransformationFlow {
 
 				final String message = "couldn't persist the result of the transformation, because there is no output data model assigned at this task";
 
-				LOG.error(message);
+				TransformationFlow.LOG.error(message);
 
 				throw new DMPConverterException(message);
 			}

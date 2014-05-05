@@ -5,8 +5,6 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.vocabulary.RDF;
 import org.apache.commons.lang3.StringUtils;
 import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultStreamPipe;
@@ -22,6 +20,8 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.avgl.dmp.persistence.model.internal.rdf.RDFModel;
 import de.avgl.dmp.persistence.model.resource.DataModel;
@@ -45,14 +45,14 @@ public final class TripleEncoder extends DefaultStreamPipe<ObjectReceiver<RDFMod
 	private final Optional<DataModel>	dataModel;
 	private final Optional<String>		dataModelUri;
 
-	private String recordTypeUri;
+	private String						recordTypeUri;
 
 	public TripleEncoder(final Optional<DataModel> dataModel) {
 
 		super();
 
 		this.dataModel = dataModel;
-		this.dataModelUri = init(dataModel);
+		dataModelUri = init(dataModel);
 
 	}
 
@@ -80,9 +80,9 @@ public final class TripleEncoder extends DefaultStreamPipe<ObjectReceiver<RDFMod
 		// write triples
 		final RDFModel rdfModel;
 
-		if(recordTypeUri == null) {
+		if (recordTypeUri == null) {
 
-			rdfModel =new RDFModel(model, currentId);
+			rdfModel = new RDFModel(model, currentId);
 		} else {
 
 			rdfModel = new RDFModel(model, currentId, recordTypeUri);
@@ -165,13 +165,13 @@ public final class TripleEncoder extends DefaultStreamPipe<ObjectReceiver<RDFMod
 
 				// TODO: this is only a HOTFIX for creating resources from resource type uris
 
-				if(!RDF.type.getURI().equals(propertyUri)) {
+				if (!RDF.type.getURI().equals(propertyUri)) {
 
 					recordResource.addProperty(attributeProperty, value);
 				} else {
 
 					// check, whether value is really a URI
-					if(isValidUri(value)) {
+					if (isValidUri(value)) {
 
 						final Resource typeResource = ResourceFactory.createResource(value);
 
@@ -191,9 +191,9 @@ public final class TripleEncoder extends DefaultStreamPipe<ObjectReceiver<RDFMod
 	}
 
 	private Optional<String> init(final Optional<DataModel> dataModel) {
-		
-		if(!dataModel.isPresent()) {
-			
+
+		if (!dataModel.isPresent()) {
+
 			return Optional.fromNullable(StringUtils.stripEnd(DataModelUtils.determineDataModelSchemaBaseURI(null), "#"));
 		}
 

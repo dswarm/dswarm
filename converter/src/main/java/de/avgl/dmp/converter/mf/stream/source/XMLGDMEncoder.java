@@ -1,7 +1,5 @@
 package de.avgl.dmp.converter.mf.stream.source;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.net.URI;
 import java.util.Map;
 import java.util.Stack;
@@ -24,6 +22,7 @@ import org.xml.sax.SAXException;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -51,7 +50,7 @@ import de.avgl.dmp.persistence.model.types.Tuple;
 public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>> {
 
 	private String							currentId;
-	private Model							model;
+	private final Model						model;
 	private Resource						recordResource;
 	private ResourceNode					recordNode;
 	private Node							entityNode;
@@ -89,13 +88,13 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 	public XMLGDMEncoder(final Optional<DataModel> dataModel) {
 		super();
 
-		this.recordTagName = System.getProperty("org.culturegraph.metamorph.xml.recordtag");
+		recordTagName = System.getProperty("org.culturegraph.metamorph.xml.recordtag");
 		if (recordTagName == null) {
 			throw new MetafactureException("Missing name for the tag marking a record.");
 		}
 
 		this.dataModel = dataModel;
-		this.dataModelUri = init(dataModel);
+		dataModelUri = init(dataModel);
 
 		// init
 		elementURIStack = new Stack<>();
@@ -104,10 +103,10 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 
 	public XMLGDMEncoder(final String recordTagName, final Optional<DataModel> dataModel) {
 		super();
-		this.recordTagName = checkNotNull(recordTagName);
+		this.recordTagName = Preconditions.checkNotNull(recordTagName);
 
 		this.dataModel = dataModel;
-		this.dataModelUri = init(dataModel);
+		dataModelUri = init(dataModel);
 
 		// init
 		elementURIStack = new Stack<>();
@@ -165,7 +164,7 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 	@Override
 	public void characters(final char[] chars, final int start, final int length) throws SAXException {
 		if (inRecord) {
-			valueBuffer.append(TABS.matcher(new String(chars, start, length)).replaceAll(""));
+			valueBuffer.append(XMLGDMEncoder.TABS.matcher(new String(chars, start, length)).replaceAll(""));
 		}
 	}
 
@@ -240,6 +239,7 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 		getReceiver().process(gdmModel);
 	}
 
+	@Override
 	public void startEntity(final String name) {
 
 		// System.out.println("in start entity with name = '" + name + "'");
@@ -453,7 +453,7 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 
 	private long getNewNodeId() {
 
-		long newNodeId = nodeIdCounter;
+		final long newNodeId = nodeIdCounter;
 		nodeIdCounter++;
 
 		return newNodeId;
