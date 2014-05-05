@@ -7,26 +7,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.vocabulary.RDF;
-import de.avgl.dmp.persistence.util.RDFUtil;
 import org.culturegraph.mf.exceptions.MorphDefException;
-import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectPipe;
-import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.morph.Metamorph;
-import org.culturegraph.mf.stream.converter.JsonEncoder;
-import org.culturegraph.mf.stream.sink.ObjectJavaIoWriter;
-import org.culturegraph.mf.stream.source.ResourceOpener;
-import org.culturegraph.mf.stream.source.StringReader;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -40,6 +29,9 @@ import com.google.common.collect.Sets;
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.DMPMorphDefException;
@@ -49,7 +41,6 @@ import de.avgl.dmp.converter.mf.stream.reader.JsonNodeReader;
 import de.avgl.dmp.converter.morph.MorphScriptBuilder;
 import de.avgl.dmp.converter.pipe.StreamJsonCollapser;
 import de.avgl.dmp.converter.pipe.StreamUnflattener;
-import de.avgl.dmp.converter.reader.QucosaReader;
 import de.avgl.dmp.init.util.DMPStatics;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.internal.rdf.RDFModel;
@@ -64,7 +55,7 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
  * Flow that executes a given set of transformations on data of a given data model.
- *
+ * 
  * @author phorn
  * @author tgaengler
  */
@@ -120,13 +111,6 @@ public class TransformationFlow {
 		return script;
 	}
 
-	public String applyRecordDemo(final String record) {
-
-		final StringReader opener = new StringReader();
-
-		return applyDemo(record, opener);
-	}
-
 	public String applyRecord(final String record) throws DMPConverterException {
 
 		// TODO: convert JSON string to Iterator with tuples of string + JsonNode pairs
@@ -162,7 +146,7 @@ public class TransformationFlow {
 		String resourceString = null;
 
 		try {
-			
+
 			resourceString = DMPPersistenceUtil.getResourceAsString(resourcePath);
 		} catch (final IOException e) {
 
@@ -177,21 +161,6 @@ public class TransformationFlow {
 		}
 
 		return applyRecord(resourceString);
-	}
-
-	//
-	// String applyResourceDemo(final String resourcePath) {
-	//
-	// final ResourceOpener opener = new ResourceOpener();
-	//
-	// return applyDemo(resourcePath, opener);
-	// }
-
-	public String applyResourceDemo(final String resourcePath) {
-
-		final ResourceOpener opener = new ResourceOpener();
-
-		return applyDemo(resourcePath, opener);
 	}
 
 	public String apply(final Iterator<Tuple<String, JsonNode>> tuples, final ObjectPipe<Iterator<Tuple<String, JsonNode>>, StreamReceiver> opener,
@@ -241,11 +210,11 @@ public class TransformationFlow {
 
 			// TODO: this a WORKAROUND to insert a default type (bibo:Document) for records in the output data model
 
-			if(rdfModel.getRecordClassURI() == null) {
+			if (rdfModel.getRecordClassURI() == null) {
 
 				final Resource recordResource = model.getResource(rdfModel.getRecordURIs().iterator().next());
 
-				if(recordResource != null) {
+				if (recordResource != null) {
 
 					recordResource.addProperty(RDF.type, ResourceFactory.createResource("http://purl.org/ontology/bibo/Document"));
 				}
@@ -328,31 +297,6 @@ public class TransformationFlow {
 		final JsonNodeReader opener = new JsonNodeReader();
 
 		return apply(tuples, opener, writeResultToDatahub);
-	}
-
-	public String applyDemo(final String object, final DefaultObjectPipe<String, ObjectReceiver<Reader>> opener) {
-
-		final String recordDummy = "record";
-
-		final QucosaReader reader = new QucosaReader(recordDummy);
-
-		final StreamUnflattener unflattener = new StreamUnflattener(recordDummy);
-		final StreamJsonCollapser collapser = new StreamJsonCollapser();
-
-		final JsonEncoder converter = new JsonEncoder();
-		final StringWriter stringWriter = new StringWriter();
-		final ObjectJavaIoWriter<String> writer = new ObjectJavaIoWriter<>(stringWriter);
-
-		opener.setReceiver(reader).setReceiver(transformer).setReceiver(unflattener).setReceiver(collapser).setReceiver(converter)
-				.setReceiver(writer);
-
-		opener.process(object);
-
-		return stringWriter.toString();
-	}
-
-	public String applyDemo() {
-		return applyResourceDemo(TransformationFlow.DEFAULT_RESOURCE_PATH);
 	}
 
 	public static TransformationFlow fromString(final String morphScriptString,

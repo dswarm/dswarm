@@ -14,11 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.avgl.dmp.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
-import de.avgl.dmp.persistence.service.schema.test.utils.AttributeServiceTestUtils;
-import de.avgl.dmp.persistence.service.schema.test.utils.ClaszServiceTestUtils;
-import de.avgl.dmp.persistence.service.schema.test.utils.SchemaServiceTestUtils;
-
 import org.apache.commons.io.FileUtils;
 import org.culturegraph.mf.stream.converter.JsonEncoder;
 import org.culturegraph.mf.stream.sink.ObjectJavaIoWriter;
@@ -67,31 +62,14 @@ import de.avgl.dmp.persistence.service.internal.test.utils.InternalGDMGraphServi
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
-import de.avgl.dmp.persistence.service.schema.AttributePathService;
-import de.avgl.dmp.persistence.service.schema.AttributeService;
-import de.avgl.dmp.persistence.service.schema.ClaszService;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
+import de.avgl.dmp.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
+import de.avgl.dmp.persistence.service.schema.test.utils.AttributeServiceTestUtils;
+import de.avgl.dmp.persistence.service.schema.test.utils.ClaszServiceTestUtils;
+import de.avgl.dmp.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public class TransformationFlowTest extends GuicedTest {
-
-	@Ignore
-	@Test
-	public void testEndToEndDemo() throws Exception {
-
-		final String request = DMPPersistenceUtil.getResourceAsString("complex-request.json");
-		final String expected = DMPPersistenceUtil.getResourceAsString("complex-result.json");
-
-		// TODO:
-
-		// final Job job = injector.getInstance(JsonToPojoMapper.class).toJob(request);
-		// final TransformationFlow flow = TransformationFlow.fromJob(job);
-
-		final String actual = null;
-		// flow.applyDemo();
-
-		assertEquals(expected, actual);
-	}
 
 	@Test
 	public void testCSVDataResourceEndToEnd() throws Exception {
@@ -273,9 +251,9 @@ public class TransformationFlowTest extends GuicedTest {
 			final String actualKey = actualElement.fieldNames().next();
 			ObjectNode actualRecordData = null;
 
-			for(final JsonNode actualRecordDataCandidate : actualElement.get(actualKey)) {
+			for (final JsonNode actualRecordDataCandidate : actualElement.get(actualKey)) {
 
-				if(actualRecordDataCandidate.get(actualDataResourceSchemaBaseURI + "description") != null) {
+				if (actualRecordDataCandidate.get(actualDataResourceSchemaBaseURI + "description") != null) {
 
 					actualRecordData = (ObjectNode) actualRecordDataCandidate;
 
@@ -354,66 +332,6 @@ public class TransformationFlowTest extends GuicedTest {
 
 		// clean-up graph db
 		InternalGDMGraphServiceTestUtils.cleanGraphDB();
-	}
-
-	@Test
-	public void testMorphToEndDemo() throws Exception {
-
-		final String expected = DMPPersistenceUtil.getResourceAsString("complex-result.json");
-
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = injector.getProvider(InternalModelServiceFactory.class);
-
-		final TransformationFlow flow = TransformationFlow.fromFile("complex-metamorph.xml", internalModelServiceFactoryProvider);
-
-		final String actual = flow.applyDemo();
-
-		assertEquals(expected, actual);
-	}
-
-	@Test
-	public void testMorphRecursiveToEndDemo() throws Exception {
-
-		final String expected = DMPPersistenceUtil.getResourceAsString("complex-result.json");
-
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = injector.getProvider(InternalModelServiceFactory.class);
-
-		final TransformationFlow flow = TransformationFlow.fromFile("complex-metamorph-recursive.xml", internalModelServiceFactoryProvider);
-
-		flow.getScript();
-
-		final String actual = flow.applyDemo();
-
-		assertEquals(expected, actual);
-	}
-
-	@Test
-	public void testEndToEndByRecordStringExampleDemo() throws Exception {
-
-		final String request = DMPPersistenceUtil.getResourceAsString("qucosa_record.xml");
-		final String expected = DMPPersistenceUtil.getResourceAsString("complex-result.json");
-
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = injector.getProvider(InternalModelServiceFactory.class);
-
-		final TransformationFlow flow = TransformationFlow.fromFile("complex-metamorph.xml", internalModelServiceFactoryProvider);
-
-		final String actual = flow.applyRecordDemo(request);
-
-		assertEquals(expected, actual);
-	}
-
-	@Test
-	public void testEndToEndByRecordStringExampleDemo2() throws Exception {
-
-		final String request = DMPPersistenceUtil.getResourceAsString("qucosa-foaf.xml");
-		final String expected = DMPPersistenceUtil.getResourceAsString("complex-multiple-input-result.json");
-
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = injector.getProvider(InternalModelServiceFactory.class);
-
-		final TransformationFlow flow = TransformationFlow.fromFile("complex-metamorph-multiple-input.xml", internalModelServiceFactoryProvider);
-
-		final String actual = flow.applyRecordDemo(request);
-
-		assertEquals(expected, actual);
 	}
 
 	public void readCSVTest() throws Exception {
