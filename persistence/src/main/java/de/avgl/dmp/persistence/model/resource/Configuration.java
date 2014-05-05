@@ -280,7 +280,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 
 			if (parametersString == null) {
 
-				LOG.debug("parameters JSON string is null");
+				Configuration.LOG.debug("parameters JSON string is null");
 
 				if (fromScratch) {
 
@@ -297,7 +297,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 				parameters = DMPPersistenceUtil.getJSON(parametersString);
 			} catch (final DMPException e) {
 
-				LOG.debug("couldn't parse parameters JSON string for configuration '" + getId() + "'");
+				Configuration.LOG.debug("couldn't parse parameters JSON string for configuration '" + getId() + "'");
 			}
 
 			parametersInitialized = true;

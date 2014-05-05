@@ -145,14 +145,14 @@ public class GDMModel implements Model {
 
 		if (model == null) {
 
-			LOG.debug("model is null, can't convert model to JSON");
+			GDMModel.LOG.debug("model is null, can't convert model to JSON");
 
 			return null;
 		}
 
 		if (getRecordURIs() == null) {
 
-			LOG.debug("resource URI is null, can't convert model to JSON");
+			GDMModel.LOG.debug("resource URI is null, can't convert model to JSON");
 
 			return null;
 		}
@@ -162,7 +162,7 @@ public class GDMModel implements Model {
 
 		if (recordResource == null) {
 
-			LOG.debug("couldn't find record resource for record  uri '" + resourceURI + "' in model");
+			GDMModel.LOG.debug("couldn't find record resource for record  uri '" + resourceURI + "' in model");
 
 			return null;
 		}
@@ -174,7 +174,7 @@ public class GDMModel implements Model {
 
 		if (recordResourceNode == null) {
 
-			LOG.debug("couldn't find record resource node for record  uri '" + resourceURI + "' in model");
+			GDMModel.LOG.debug("couldn't find record resource node for record  uri '" + resourceURI + "' in model");
 
 			return null;
 		}
@@ -206,14 +206,14 @@ public class GDMModel implements Model {
 
 		if (model == null) {
 
-			LOG.debug("model is null, can't determine attribute paths from JSON");
+			GDMModel.LOG.debug("model is null, can't determine attribute paths from JSON");
 
 			return null;
 		}
 
 		if (recordURIs == null) {
 
-			LOG.debug("resource URIs are null, can't determine attribute paths from JSON");
+			GDMModel.LOG.debug("resource URIs are null, can't determine attribute paths from JSON");
 
 			return null;
 		}
@@ -226,7 +226,7 @@ public class GDMModel implements Model {
 
 		if (recordResource == null) {
 
-			LOG.debug("couldn't find record resource for record  uri '" + resourceURI + "' in model");
+			GDMModel.LOG.debug("couldn't find record resource for record  uri '" + resourceURI + "' in model");
 
 			return null;
 		}
@@ -238,7 +238,7 @@ public class GDMModel implements Model {
 
 		if (recordResourceNode == null) {
 
-			LOG.debug("couldn't find record resource node for record  uri '" + resourceURI + "' in model");
+			GDMModel.LOG.debug("couldn't find record resource node for record  uri '" + resourceURI + "' in model");
 
 			return null;
 		}
@@ -277,14 +277,14 @@ public class GDMModel implements Model {
 
 		if (model == null) {
 
-			LOG.debug("model is null, can't convert model to JSON");
+			GDMModel.LOG.debug("model is null, can't convert model to JSON");
 
 			return null;
 		}
 
 		if (getRecordURIs() == null) {
 
-			LOG.debug("resource URI is null, can't convert model to JSON");
+			GDMModel.LOG.debug("resource URI is null, can't convert model to JSON");
 
 			return null;
 		}
@@ -312,7 +312,7 @@ public class GDMModel implements Model {
 
 			if (recordResource == null) {
 
-				LOG.debug("couldn't find record resource for record  uri '" + resourceURI + "' in model");
+				GDMModel.LOG.debug("couldn't find record resource for record  uri '" + resourceURI + "' in model");
 
 				return null;
 			}
@@ -324,7 +324,7 @@ public class GDMModel implements Model {
 
 			if (recordResourceNode == null) {
 
-				LOG.debug("couldn't find record resource node for record  uri '" + resourceURI + "' in model");
+				GDMModel.LOG.debug("couldn't find record resource node for record  uri '" + resourceURI + "' in model");
 
 				return null;
 			}
@@ -492,8 +492,8 @@ public class GDMModel implements Model {
 		return json;
 	}
 
-	private Set<AttributePathHelper> determineAttributePaths(final JsonNode unnormalizedSchema, Set<AttributePathHelper> attributePaths,
-			AttributePathHelper attributePath) {
+	private Set<AttributePathHelper> determineAttributePaths(final JsonNode unnormalizedSchema, final Set<AttributePathHelper> attributePaths,
+			final AttributePathHelper attributePath) {
 
 		// note: simply copied from RDFModel
 		// TODO: create abstracted class for RDFModel + GDMModel to share methods
@@ -512,7 +512,7 @@ public class GDMModel implements Model {
 
 			final ObjectNode jsonObject = (ObjectNode) unnormalizedSchema;
 
-			Iterator<String> fieldNames = jsonObject.fieldNames();
+			final Iterator<String> fieldNames = jsonObject.fieldNames();
 
 			while (fieldNames.hasNext()) {
 

@@ -66,7 +66,7 @@ public abstract class ProxyBasicDMPJPAObject<POJOCLASS extends BasicDMPJPAObject
 
 		if (dmpObject == null) {
 
-			LOG.debug("couldn't set the name to the real/proxied object, because the real/proxied object is null");
+			ProxyBasicDMPJPAObject.LOG.debug("couldn't set the name to the real/proxied object, because the real/proxied object is null");
 
 			return;
 		}

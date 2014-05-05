@@ -21,7 +21,7 @@ public class Object {
 	public Object(final String literalOrURI) {
 
 		this.literalOrURI = literalOrURI;
-		this.jsonNode = null;
+		jsonNode = null;
 		isJsonNode = false;
 	}
 
@@ -33,7 +33,7 @@ public class Object {
 	public Object(final JsonNode jsonNode) {
 
 		this.jsonNode = jsonNode;
-		this.literalOrURI = null;
+		literalOrURI = null;
 		isJsonNode = true;
 	}
 

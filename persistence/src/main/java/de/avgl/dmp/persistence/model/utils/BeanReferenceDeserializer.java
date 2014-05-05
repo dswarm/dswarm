@@ -24,7 +24,8 @@ class BeanReferenceDeserializer extends BeanDeserializer {
 	 * Constructor used by {@link BeanDeserializerBuilder}.
 	 */
 	public BeanReferenceDeserializer(final BeanDeserializerBuilder builder, final BeanDescription beanDesc, final BeanPropertyMap properties,
-			final Map<String, SettableBeanProperty> backRefs, final HashSet<String> ignorableProps, final boolean ignoreAllUnknown, final boolean hasViews) {
+			final Map<String, SettableBeanProperty> backRefs, final HashSet<String> ignorableProps, final boolean ignoreAllUnknown,
+			final boolean hasViews) {
 
 		super(builder, beanDesc, properties, backRefs, ignorableProps, ignoreAllUnknown, hasViews);
 	}

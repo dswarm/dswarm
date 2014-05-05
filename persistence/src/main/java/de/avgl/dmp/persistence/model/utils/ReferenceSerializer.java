@@ -11,8 +11,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import de.avgl.dmp.persistence.model.DMPObject;
 
-public abstract class ReferenceSerializer<DMPOBJECTIMPL extends DMPObject<DMPOBJECTIDTYPE>, DMPOBJECTIDTYPE> extends
-		JsonSerializer<DMPOBJECTIMPL> {
+public abstract class ReferenceSerializer<DMPOBJECTIMPL extends DMPObject<DMPOBJECTIDTYPE>, DMPOBJECTIDTYPE> extends JsonSerializer<DMPOBJECTIMPL> {
 
 	@Override
 	public void serialize(final DMPOBJECTIMPL object, final JsonGenerator generator, final SerializerProvider provider) throws IOException {

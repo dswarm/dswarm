@@ -22,7 +22,7 @@ public class AttributePathHelperHelper {
 
 		final String attribute = ((TextNode) unnormalizedSchema).asText();
 
-		return addAttributePath(attribute, attributePaths, attributePath);
+		return AttributePathHelperHelper.addAttributePath(attribute, attributePaths, attributePath);
 	}
 
 	public static AttributePathHelper addAttributePath(final String attribute, final Set<AttributePathHelper> attributePaths,
@@ -116,14 +116,15 @@ public class AttributePathHelperHelper {
 		}
 
 		// only level attribute paths for next level
-		final List<AttributePathHelper> nextlevelAttributePaths = prepareAttributePathHelpers(levelRootAttributePaths, level + 1);
+		final List<AttributePathHelper> nextlevelAttributePaths = AttributePathHelperHelper.prepareAttributePathHelpers(levelRootAttributePaths,
+				level + 1);
 
 		return nextlevelAttributePaths;
 	}
 
 	public static boolean hasNextLevel(final List<AttributePathHelper> attributePaths, final int level) {
 
-		final List<AttributePathHelper> nextLevelAttributePaths = prepareAttributePathHelpers(attributePaths, level + 1);
+		final List<AttributePathHelper> nextLevelAttributePaths = AttributePathHelperHelper.prepareAttributePathHelpers(attributePaths, level + 1);
 
 		if (nextLevelAttributePaths != null && !nextLevelAttributePaths.isEmpty()) {
 

@@ -29,8 +29,8 @@ public class ProxyFunction extends ProxyBasicFunction<Function> {
 	}
 
 	/**
-	 * Creates a new proxy with the given real function and the type how the function was processed by the function persistence service,
-	 * e.g., {@link RetrievalType.CREATED}.
+	 * Creates a new proxy with the given real function and the type how the function was processed by the function persistence
+	 * service, e.g., {@link RetrievalType.CREATED}.
 	 * 
 	 * @param functionArg a function that was processed by the function persistence service
 	 * @param typeArg the type how this function was processed by the function persistence service

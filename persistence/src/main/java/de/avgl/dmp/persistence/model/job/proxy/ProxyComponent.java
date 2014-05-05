@@ -30,8 +30,8 @@ public class ProxyComponent extends ProxyExtendedBasicDMPJPAObject<Component> {
 	}
 
 	/**
-	 * Creates a new proxy with the given real component and the type how the component was processed by the component persistence service,
-	 * e.g., {@link RetrievalType.CREATED}.
+	 * Creates a new proxy with the given real component and the type how the component was processed by the component persistence
+	 * service, e.g., {@link RetrievalType.CREATED}.
 	 * 
 	 * @param componentArg a component that was processed by the component persistence service
 	 * @param typeArg the type how this component was processed by the component persistence service

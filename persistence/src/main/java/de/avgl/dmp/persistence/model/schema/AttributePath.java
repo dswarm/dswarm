@@ -200,7 +200,7 @@ public class AttributePath extends DMPJPAObject {
 				orderedAttributes = Lists.newLinkedList();
 			}
 
-			//if (!orderedAttributes.equals(attributesArg)) {
+			// if (!orderedAttributes.equals(attributesArg)) {
 			if (!DMPPersistenceUtil.getAttributeUtils().completeEquals(orderedAttributes, attributesArg)) {
 
 				orderedAttributes.clear();

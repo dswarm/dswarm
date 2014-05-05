@@ -1,6 +1,5 @@
 package de.avgl.dmp.persistence.model.proxy;
 
-import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import de.avgl.dmp.persistence.model.DMPJPAObject;
@@ -46,9 +45,9 @@ public abstract class ProxyDMPJPAObject<POJOCLASS extends DMPJPAObject> extends 
 	 */
 	@Override
 	public Long getId() {
-		
-		if(dmpObject == null) {
-			
+
+		if (dmpObject == null) {
+
 			return null;
 		}
 

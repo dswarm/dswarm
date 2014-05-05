@@ -1,6 +1,5 @@
 package de.avgl.dmp.persistence.service;
 
-
 /**
  * A factory for internal model service.
  * 
@@ -23,7 +22,7 @@ public interface InternalModelServiceFactory {
 	 * @return the RDF graph internal model service implementation
 	 */
 	/* @Named("Triple") */InternalModelService getInternalRDFGraphService();
-	
+
 	/**
 	 * Gets the GDM graph internal model service implementation.
 	 * 

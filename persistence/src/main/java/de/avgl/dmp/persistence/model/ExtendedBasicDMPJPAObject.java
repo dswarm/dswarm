@@ -49,6 +49,7 @@ public abstract class ExtendedBasicDMPJPAObject extends BasicDMPJPAObject {
 	@Override
 	public boolean completeEquals(final Object obj) {
 
-		return ExtendedBasicDMPJPAObject.class.isInstance(obj) && super.completeEquals(obj) && Objects.equal(((ExtendedBasicDMPJPAObject) obj).getDescription(), getDescription());
+		return ExtendedBasicDMPJPAObject.class.isInstance(obj) && super.completeEquals(obj)
+				&& Objects.equal(((ExtendedBasicDMPJPAObject) obj).getDescription(), getDescription());
 	}
 }

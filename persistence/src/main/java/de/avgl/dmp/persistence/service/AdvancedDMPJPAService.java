@@ -15,7 +15,6 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
 import de.avgl.dmp.persistence.model.proxy.ProxyAdvancedDMPJPAObject;
 import de.avgl.dmp.persistence.model.proxy.RetrievalType;
-import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttributePath;
 
 /**
  * A generic persistence service implementation for {@link AdvancedDMPJPAObject}s, i.e., where the identifier will be set on

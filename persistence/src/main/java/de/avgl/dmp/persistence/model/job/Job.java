@@ -10,7 +10,6 @@ import com.google.common.collect.Sets;
 
 import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.resource.DataModel;
-import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**

@@ -14,7 +14,6 @@ import de.avgl.dmp.persistence.service.AdvancedDMPJPAService;
  * A persistence service for {@link Clasz}es.
  * 
  * @author tgaengler
- *
  */
 public class ClaszService extends AdvancedDMPJPAService<ProxyClasz, Clasz> {
 

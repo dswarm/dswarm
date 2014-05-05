@@ -15,7 +15,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.glassfish.jersey.media.multipart.MultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
@@ -66,14 +65,10 @@ import de.avgl.dmp.persistence.util.RDFUtil;
 @Singleton
 public class InternalRDFGraphService implements InternalModelService {
 
-	private static final org.apache.log4j.Logger	LOG								= org.apache.log4j.Logger.getLogger(InternalRDFGraphService.class);
+	private static final org.apache.log4j.Logger	LOG								= org.apache.log4j.Logger
+																							.getLogger(InternalRDFGraphService.class);
 
 	private static final String						resourceIdentifier				= "rdf";
-
-	// /**
-	// * The graph database.
-	// */
-	// private final GraphDatabaseService database;
 
 	/**
 	 * The data model persistence service.

@@ -25,12 +25,9 @@ import de.avgl.dmp.persistence.model.types.Tuple;
 import de.avgl.dmp.persistence.service.job.ComponentService;
 
 /**
- * Custom logic to deserialize a {@link de.avgl.dmp.persistence.model.job.Transformation}.
- * The problem with the default databind/annotation based approach was, that
- * nested/recursive components, wouldn't work in the way, that they are looked up as needed.
- * Consider the following:
- *
- * <code>
+ * Custom logic to deserialize a {@link de.avgl.dmp.persistence.model.job.Transformation}. The problem with the default
+ * databind/annotation based approach was, that nested/recursive components, wouldn't work in the way, that they are looked up as
+ * needed. Consider the following: <code>
  * components: [{
  *     id: 1
  *     name: c1,
@@ -44,29 +41,25 @@ import de.avgl.dmp.persistence.service.job.ComponentService;
  *         id: 1
  *     }]
  * }
- * </code>
- *
- * The default deserializer could not differentiate between full components (main array)
- *  and reference-components ((in/out)put_components) and would eventually randomly
- *  choose one of these to be the actual component.
- *
- * This deserialzer first parses all main components and collects only the ids from the
- *  (in|out)put_components and later resolves them to the full components.
+ * </code> The default deserializer could not differentiate between full components (main array) and reference-components
+ * ((in/out)put_components) and would eventually randomly choose one of these to be the actual component. This deserialzer first
+ * parses all main components and collects only the ids from the (in|out)put_components and later resolves them to the full
+ * components.
  */
 public class TransformationDeserializer extends JsonDeserializer<Transformation> {
 
-	private static final String ID_KEY = "id";
-	private static final String NAME_KEY = "name";
-	private static final String DESCRIPTION_KEY = "description";
-	private static final String PARAMETERS_KEY = "parameters";
-	private static final String COMPONENTS_KEY = "components";
-	private static final String FUNCTION_KEY = "function";
-	private static final String FUNCTION_DESCRIPTION_KEY = "function_description";
-	private static final String PARAMETER_MAPPINGS_KEY = "parameter_mappings";
-	private static final String INPUT_COMPONENTS_KEY = "input_components";
-	private static final String OUTPUT_COMPONENTS_KEY = "output_components";
+	private static final String		ID_KEY						= "id";
+	private static final String		NAME_KEY					= "name";
+	private static final String		DESCRIPTION_KEY				= "description";
+	private static final String		PARAMETERS_KEY				= "parameters";
+	private static final String		COMPONENTS_KEY				= "components";
+	private static final String		FUNCTION_KEY				= "function";
+	private static final String		FUNCTION_DESCRIPTION_KEY	= "function_description";
+	private static final String		PARAMETER_MAPPINGS_KEY		= "parameter_mappings";
+	private static final String		INPUT_COMPONENTS_KEY		= "input_components";
+	private static final String		OUTPUT_COMPONENTS_KEY		= "output_components";
 
-	private DeserializationContext deserializationContext;
+	private DeserializationContext	deserializationContext;
 
 	@Override
 	public Transformation deserialize(final JsonParser jp, final DeserializationContext ctxt) throws IOException {
@@ -84,10 +77,10 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 					break;
 
 				case VALUE_STRING:
-					if (FUNCTION_DESCRIPTION_KEY.equals(currentFieldName)) {
-						setFunctionDescription(jp, transformation);
+					if (TransformationDeserializer.FUNCTION_DESCRIPTION_KEY.equals(currentFieldName)) {
+						TransformationDeserializer.setFunctionDescription(jp, transformation);
 					} else {
-						setStringValue(jp, transformation, currentFieldName);
+						TransformationDeserializer.setStringValue(jp, transformation, currentFieldName);
 					}
 					break;
 
@@ -96,15 +89,15 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 					break;
 
 				case START_ARRAY:
-					if (PARAMETERS_KEY.equals(currentFieldName)) {
-						setParameters(jp, transformation);
+					if (TransformationDeserializer.PARAMETERS_KEY.equals(currentFieldName)) {
+						TransformationDeserializer.setParameters(jp, transformation);
 					}
-					if (COMPONENTS_KEY.equals(currentFieldName)) {
+					if (TransformationDeserializer.COMPONENTS_KEY.equals(currentFieldName)) {
 						setComponents(jp, transformation);
 					}
 					break;
 
-				default:        // no-op
+				default: // no-op
 			}
 
 			currentToken = jp.nextToken();
@@ -115,6 +108,7 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 
 	/**
 	 * get a {@link de.avgl.dmp.persistence.service.job.ComponentService} from Guice
+	 * 
 	 * @param ctxt the deserialization context
 	 * @return the component service or throw an NPE if no service could be found
 	 */
@@ -126,25 +120,26 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 
 	/**
 	 * Set common string values (name, and description) for either a transformation or a component
+	 * 
 	 * @param jp the current json parser
 	 * @param object either the transformation or the component
 	 * @param currentFieldName the json field name
 	 * @throws IOException
 	 */
 	private static void setStringValue(final JsonParser jp, final ExtendedBasicDMPJPAObject object, final String currentFieldName) throws IOException {
-		if (NAME_KEY.equals(currentFieldName)) {
+		if (TransformationDeserializer.NAME_KEY.equals(currentFieldName)) {
 
 			object.setName(jp.getText());
 
-		} else if (DESCRIPTION_KEY.equals(currentFieldName)) {
+		} else if (TransformationDeserializer.DESCRIPTION_KEY.equals(currentFieldName)) {
 
 			object.setDescription(jp.getText());
 		}
 	}
 
 	/**
-	 * Set the function description of a transformation.
-	 *  Requires an object behind function_description.
+	 * Set the function description of a transformation. Requires an object behind function_description.
+	 * 
 	 * @param jp the current json parser
 	 * @param transformation the target {@code Transformation}
 	 * @throws IOException
@@ -154,13 +149,14 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 		if (treeNode.isObject()) {
 			transformation.setFunctionDescription((com.fasterxml.jackson.databind.node.ObjectNode) treeNode);
 		} else {
-			throw JsonMappingException.from(jp,
-					String.format("Cannot parse the function description for the Transformation [%s], because it is not a Json Object", transformation));
+			throw JsonMappingException.from(jp, String.format(
+					"Cannot parse the function description for the Transformation [%s], because it is not a Json Object", transformation));
 		}
 	}
 
 	/**
 	 * Set the parameter list of a transformation.
+	 * 
 	 * @param jp the current json parser
 	 * @param transformation the target {@code Transformation}
 	 * @throws IOException
@@ -179,13 +175,10 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 	}
 
 	/**
-	 * Set the components of a transformation.
-	 *  This will parse all components and cache them into a map.
-	 *  Simultaneously, it will parse the (in|out)put_components and build a map
-	 *  of {@code id -> (inIds, outIds)}.
-	 *  After having parsed all components, the actual input components and output
-	 *  components are resolved, linked, and finally inserted into each component.
-	 *
+	 * Set the components of a transformation. This will parse all components and cache them into a map. Simultaneously, it will
+	 * parse the (in|out)put_components and build a map of {@code id -> (inIds, outIds)}. After having parsed all components, the
+	 * actual input components and output components are resolved, linked, and finally inserted into each component.
+	 * 
 	 * @param jp the current json parser
 	 * @param transformation the target {@code Transformation}
 	 * @throws IOException
@@ -220,42 +213,41 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 						break;
 
 					case VALUE_STRING:
-						setStringValue(jp, currentComponent, currentFieldName);
+						TransformationDeserializer.setStringValue(jp, currentComponent, currentFieldName);
 						break;
 
 					case START_OBJECT:
-						if (FUNCTION_KEY.equals(currentFieldName)) {
-							setFunction(jp, currentComponent);
-						} else if(PARAMETER_MAPPINGS_KEY.equals(currentFieldName)) {
-							setParameterMappings(jp, currentComponent);
+						if (TransformationDeserializer.FUNCTION_KEY.equals(currentFieldName)) {
+							TransformationDeserializer.setFunction(jp, currentComponent);
+						} else if (TransformationDeserializer.PARAMETER_MAPPINGS_KEY.equals(currentFieldName)) {
+							TransformationDeserializer.setParameterMappings(jp, currentComponent);
 						}
 						break;
 
 					case VALUE_NUMBER_INT:
-						if (ID_KEY.equals(currentFieldName)) {
+						if (TransformationDeserializer.ID_KEY.equals(currentFieldName)) {
 							currentComponentId = jp.getLongValue();
 							components.put(currentComponentId, currentComponent);
 						}
 						break;
 
 					case START_ARRAY:
-						if (INPUT_COMPONENTS_KEY.equals(currentFieldName)) {
-							inputComponentsBuilder.addAll(parseNestedComponent(jp));
+						if (TransformationDeserializer.INPUT_COMPONENTS_KEY.equals(currentFieldName)) {
+							inputComponentsBuilder.addAll(TransformationDeserializer.parseNestedComponent(jp));
 						}
-						if (OUTPUT_COMPONENTS_KEY.equals(currentFieldName)) {
-							outputComponentsBuilder.addAll(parseNestedComponent(jp));
+						if (TransformationDeserializer.OUTPUT_COMPONENTS_KEY.equals(currentFieldName)) {
+							outputComponentsBuilder.addAll(TransformationDeserializer.parseNestedComponent(jp));
 						}
 						break;
 
-					default:         // no-op
+					default: // no-op
 				}
 
 				currentToken = jp.nextToken();
 			}
 
 			if (currentComponentId == null) {
-				throw JsonMappingException.from(jp,
-						String.format("This component [%s] is missing an ID", currentComponent));
+				throw JsonMappingException.from(jp, String.format("This component [%s] is missing an ID", currentComponent));
 			}
 
 			final List<Long> inputComponentIds = inputComponentsBuilder.build();
@@ -266,18 +258,19 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 			currentToken = jp.nextToken();
 		}
 
-		assignComponentIds(components);
+		TransformationDeserializer.assignComponentIds(components);
 
 		linkInOutComponents(components, inOutComponents);
 
-		addComponents(transformation, components);
+		TransformationDeserializer.addComponents(transformation, components);
 	}
 
 	/**
-	 * Set the function of a component.
-	 *  Delegates to annotation/databind based parsing of a {@link de.avgl.dmp.persistence.model.job.Function}
-	 * @param jp  the current json parser
-	 * @param component  the target {@code Component}
+	 * Set the function of a component. Delegates to annotation/databind based parsing of a
+	 * {@link de.avgl.dmp.persistence.model.job.Function}
+	 * 
+	 * @param jp the current json parser
+	 * @param component the target {@code Component}
 	 * @throws IOException
 	 */
 	private static void setFunction(final JsonParser jp, final Component component) throws IOException {
@@ -288,6 +281,7 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 
 	/**
 	 * Set the parameter mappings of a component.
+	 * 
 	 * @param jp the current json parser
 	 * @param component the target {@code Component}
 	 * @throws IOException
@@ -308,7 +302,7 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 					mappings.put(currentFieldName, jp.getText());
 					break;
 
-				default:         // no-op
+				default: // no-op
 			}
 
 			currentToken = jp.nextToken();
@@ -318,8 +312,9 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 	}
 
 	/**
-	 * Parse a component as a nested component, that has only the id field set.
-	 * Does not attempt to actually parse any of the component but the id.
+	 * Parse a component as a nested component, that has only the id field set. Does not attempt to actually parse any of the
+	 * component but the id.
+	 * 
 	 * @param jp the current json parser
 	 * @return a list found ids
 	 * @throws IOException
@@ -347,12 +342,12 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 						break;
 
 					case VALUE_NUMBER_INT:
-						if (ID_KEY.equals(currentFieldName)) {
+						if (TransformationDeserializer.ID_KEY.equals(currentFieldName)) {
 							ids.add(jp.getLongValue());
 						}
 						break;
 
-					default:         // no-op
+					default: // no-op
 				}
 
 				currentToken = jp.nextToken();
@@ -365,10 +360,9 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 	}
 
 	/**
-	 * Update the cache by making sure, that every component as a valid id set.
-	 * The reason behind this is, that {@code Component}s are compared only by their
-	 * ID, if they are compared in a shallow manner (e.g. when used in a {@code Set}).
-	 *
+	 * Update the cache by making sure, that every component as a valid id set. The reason behind this is, that {@code Component}s
+	 * are compared only by their ID, if they are compared in a shallow manner (e.g. when used in a {@code Set}).
+	 * 
 	 * @param components a map of (id -> {@code Component})
 	 */
 	private static void assignComponentIds(final Map<Long, Component> components) {
@@ -383,17 +377,15 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 	}
 
 	/**
-	 * Link all input and output components.
-	 * the input and output components are given as a list of ids and need
-	 * to be resolved to actual {@code Component}s.
-	 * This happens primarily against the components of the current Json or
-	 * against the database, if the component wasn't defined within the current Json.
-	 *
+	 * Link all input and output components. the input and output components are given as a list of ids and need to be resolved to
+	 * actual {@code Component}s. This happens primarily against the components of the current Json or against the database, if
+	 * the component wasn't defined within the current Json.
+	 * 
 	 * @param components a map of (id -> {@code Component})
 	 * @param inOutComponents a map of (id -> list ( inIds, outIds ) )
 	 */
 	private void linkInOutComponents(final Map<Long, Component> components, final Map<Long, Tuple<List<Long>, List<Long>>> inOutComponents) {
-		final ComponentService componentService = getComponentService(deserializationContext);
+		final ComponentService componentService = TransformationDeserializer.getComponentService(deserializationContext);
 
 		for (final Long componentId : components.keySet()) {
 
@@ -402,8 +394,9 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 				final List<Long> inputComponentIds = inOut.v1();
 				final List<Long> outputComponentIds = inOut.v2();
 
-				final List<Component> inputComponents = lookupComponents(inputComponentIds, components, componentService);
-				final List<Component> outputComponents = lookupComponents(outputComponentIds, components, componentService);
+				final List<Component> inputComponents = TransformationDeserializer.lookupComponents(inputComponentIds, components, componentService);
+				final List<Component> outputComponents = TransformationDeserializer
+						.lookupComponents(outputComponentIds, components, componentService);
 
 				final Component component = components.get(componentId);
 
@@ -420,8 +413,8 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 
 	/**
 	 * Set the components for a transformation.
-	 *
-	 * @param transformation  the target {@code Transformation}
+	 * 
+	 * @param transformation the target {@code Transformation}
 	 * @param components the target components, a map of (id -> {@code Component})
 	 */
 	private static void addComponents(final Transformation transformation, final Map<Long, Component> components) {
@@ -431,16 +424,15 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 	}
 
 	/**
-	 * Lookup {@code Component}s by its id.
-	 * First, look in the provided cache.
-	 * Second, go to the database
-	 * Third, ensure, that there is an ID set (Note: It might be, that this isn't necessary anymore)
-	 *
+	 * Lookup {@code Component}s by its id. First, look in the provided cache. Second, go to the database Third, ensure, that
+	 * there is an ID set (Note: It might be, that this isn't necessary anymore)
+	 * 
 	 * @param ids a list of components ids to lookup
 	 * @param components the current component cache, a map of (id -> {@code Component})
 	 * @param componentService the component service for database lookups
 	 */
-	private static LinkedList<Component> lookupComponents(final List<Long> ids, final Map<Long, Component> components, final ComponentService componentService) {
+	private static LinkedList<Component> lookupComponents(final List<Long> ids, final Map<Long, Component> components,
+			final ComponentService componentService) {
 		final LinkedList<Component> result = Lists.newLinkedList();
 
 		for (final Long id : ids) {

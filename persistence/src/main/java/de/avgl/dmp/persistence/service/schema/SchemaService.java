@@ -54,19 +54,19 @@ public class SchemaService extends BasicDMPJPAService<ProxySchema, Schema> {
 		final Set<AttributePath> attributePaths = object.getAttributePaths();
 		final Clasz recordClass = object.getRecordClass();
 
-//		if (attributePaths != null) {
-//
-//			for (final AttributePath attributePath : attributePaths) {
-//
-//				final AttributePath managedAttributePath = entityManager.merge(attributePath);
-//				updateObject.addAttributePath(managedAttributePath);
-//			}
-//
-//		} else {
-//			
-			updateObject.setAttributePaths(attributePaths);
-//		}
-		
+		// if (attributePaths != null) {
+		//
+		// for (final AttributePath attributePath : attributePaths) {
+		//
+		// final AttributePath managedAttributePath = entityManager.merge(attributePath);
+		// updateObject.addAttributePath(managedAttributePath);
+		// }
+		//
+		// } else {
+		//
+		updateObject.setAttributePaths(attributePaths);
+		// }
+
 		updateObject.setRecordClass(recordClass);
 
 		super.updateObjectInternal(object, updateObject, entityManager);

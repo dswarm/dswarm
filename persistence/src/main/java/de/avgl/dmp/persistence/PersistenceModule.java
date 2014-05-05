@@ -39,7 +39,7 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
 
 /**
  * The Guice configuration of the persistence module. Interface/classes that are registered here can be utilised for injection.
- *
+ * 
  * @author phorn
  * @author tgaengler
  */
@@ -57,7 +57,7 @@ public class PersistenceModule extends AbstractModule {
 		try {
 			properties.load(resource.openStream());
 		} catch (final IOException e) {
-			LOG.error("Could not load dmp.properties", e);
+			PersistenceModule.LOG.error("Could not load dmp.properties", e);
 		}
 
 		final String tdbPath = properties.getProperty("tdb_path", "target/h2");
@@ -92,7 +92,7 @@ public class PersistenceModule extends AbstractModule {
 
 	/**
 	 * Provides the metric registry to register objects for metric statistics.
-	 *
+	 * 
 	 * @return a {@link MetricRegistry} instance as singleton
 	 */
 	@Provides
@@ -109,7 +109,7 @@ public class PersistenceModule extends AbstractModule {
 
 	/**
 	 * Provides the event bus for event processing.
-	 *
+	 * 
 	 * @return a {@link EventBus} instance as singleton
 	 */
 	@Provides
@@ -128,6 +128,7 @@ public class PersistenceModule extends AbstractModule {
 	}
 
 	public static class DmpDeserializerModule extends SimpleModule {
+
 		public DmpDeserializerModule() {
 			super("DmpDeserializerModule");
 

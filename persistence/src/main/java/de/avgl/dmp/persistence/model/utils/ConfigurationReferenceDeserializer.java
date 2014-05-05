@@ -7,7 +7,6 @@ import de.avgl.dmp.persistence.service.BasicJPAService;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
-
 public class ConfigurationReferenceDeserializer extends ReferenceDeserializer<ProxyConfiguration, Configuration> {
 
 	@Override

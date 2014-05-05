@@ -50,7 +50,7 @@ public class Filter extends BasicDMPJPAObject {
 	 */
 	public void setExpression(final String expressionArg) {
 
-		this.expression = expressionArg;
+		expression = expressionArg;
 	}
 
 	@Override

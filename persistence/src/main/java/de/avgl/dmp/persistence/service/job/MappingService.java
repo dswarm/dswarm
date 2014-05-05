@@ -39,12 +39,9 @@ public class MappingService extends BasicDMPJPAService<ProxyMapping, Mapping> {
 	@Override
 	protected void prepareObjectForRemoval(final Mapping object) {
 
-		// should clear the relationship to the input attribute paths, output attribute path, input filter, output filter +
-		// transformation function
+		// should clear the relationship to the input attribute paths, output attribute path + transformation function
 		object.setInputAttributePaths(null);
 		object.setOutputAttributePath(null);
-//		object.setInputFilter(null);
-//		object.setOutputFilter(null);
 
 		final Component transformation = object.getTransformation();
 
@@ -65,14 +62,10 @@ public class MappingService extends BasicDMPJPAService<ProxyMapping, Mapping> {
 
 		final Set<MappingAttributePathInstance> inputAttributePaths = object.getInputAttributePaths();
 		final MappingAttributePathInstance outputAttributePath = object.getOutputAttributePath();
-//		final Filter inputFilter = object.getInputFilter();
-//		final Filter outputFilter = object.getOutputFilter();
 		final Component transformation = object.getTransformation();
 
 		updateObject.setInputAttributePaths(inputAttributePaths);
 		updateObject.setOutputAttributePath(outputAttributePath);
-//		updateObject.setInputFilter(inputFilter);
-//		updateObject.setOutputFilter(outputFilter);
 		updateObject.setTransformation(transformation);
 	}
 

@@ -1,7 +1,6 @@
 package de.avgl.dmp.persistence.service;
 
 import java.util.Map;
-import java.util.Set;
 
 import com.google.common.base.Optional;
 

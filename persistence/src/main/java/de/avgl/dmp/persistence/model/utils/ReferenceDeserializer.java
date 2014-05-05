@@ -48,7 +48,7 @@ abstract class ReferenceDeserializer<PROXYDMPJPAOBJECTIMPL extends ProxyDMPJPAOb
 
 			if (reference == null) {
 
-				LOG.debug("reference node is null");
+				ReferenceDeserializer.LOG.debug("reference node is null");
 
 				continue;
 			}
@@ -57,7 +57,7 @@ abstract class ReferenceDeserializer<PROXYDMPJPAOBJECTIMPL extends ProxyDMPJPAOb
 
 			if (idNode == null) {
 
-				LOG.debug("id node is null");
+				ReferenceDeserializer.LOG.debug("id node is null");
 
 				continue;
 			}
@@ -68,7 +68,7 @@ abstract class ReferenceDeserializer<PROXYDMPJPAOBJECTIMPL extends ProxyDMPJPAOb
 			try {
 				jpaService = getJpaService();
 			} catch (final DMPException e) {
-				LOG.error("Couldn't get JPAService", e);
+				ReferenceDeserializer.LOG.error("Couldn't get JPAService", e);
 				continue;
 			}
 
@@ -77,7 +77,7 @@ abstract class ReferenceDeserializer<PROXYDMPJPAOBJECTIMPL extends ProxyDMPJPAOb
 
 			if (object == null) {
 
-				LOG.debug("couldn't find " + jpaService.getClasz().getSimpleName() + " with id '" + id + "'");
+				ReferenceDeserializer.LOG.debug("couldn't find " + jpaService.getClasz().getSimpleName() + " with id '" + id + "'");
 
 				continue;
 			}

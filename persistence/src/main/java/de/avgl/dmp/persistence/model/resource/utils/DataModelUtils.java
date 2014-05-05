@@ -26,7 +26,7 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 
 	public static String determineDataModelSchemaBaseURI(final DataModel dataModel) {
 
-		final String dataResourceBaseURI = determineDataModelBaseURI(dataModel);
+		final String dataResourceBaseURI = DataModelUtils.determineDataModelBaseURI(dataModel);
 
 		if (dataResourceBaseURI == null) {
 
@@ -45,7 +45,8 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 
 		if (dataModel == null) {
 
-			LOG.error("data model shouldn't be really null at data model base uri determination; however I'll create a uri with a random uuid instead ...");
+			DataModelUtils.LOG
+					.error("data model shouldn't be really null at data model base uri determination; however I'll create a uri with a random uuid instead ...");
 
 			final StringBuilder sb = new StringBuilder();
 
@@ -79,19 +80,19 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 						uri = URI.create(dataResourceName);
 					} catch (final Exception e) {
 
-						LOG.debug("couldn't create uri from data resource path", e);
+						DataModelUtils.LOG.debug("couldn't create uri from data resource path", e);
 					}
 				} else {
 
-					LOG.warn("The data model [" + dataModel.getId() + "] is missing the data resource path string");
+					DataModelUtils.LOG.warn("The data model [" + dataModel.getId() + "] is missing the data resource path string");
 				}
 			} else {
 
-				LOG.warn("The data model [" + dataModel.getId() + "] is missing the data resource path");
+				DataModelUtils.LOG.warn("The data model [" + dataModel.getId() + "] is missing the data resource path");
 			}
 		} else {
 
-			LOG.warn("The data model [" + dataModel.getId() + "] is missing the data resource");
+			DataModelUtils.LOG.warn("The data model [" + dataModel.getId() + "] is missing the data resource");
 		}
 
 		final String dataResourceBaseURI;

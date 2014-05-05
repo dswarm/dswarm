@@ -34,7 +34,7 @@ import de.avgl.dmp.persistence.model.schema.utils.SchemaUtils;
 
 /**
  * A utility class for the persistence module.
- *
+ * 
  * @author tgaengler
  * @author phorn
  */
@@ -97,10 +97,10 @@ public final class DMPPersistenceUtil {
 	static {
 		MAPPER = new ObjectMapper();
 		final JaxbAnnotationModule module = new JaxbAnnotationModule();
-		MAPPER.registerModule(module).registerModule(new Hibernate4Module()).setSerializationInclusion(Include.NON_NULL)
+		DMPPersistenceUtil.MAPPER.registerModule(module).registerModule(new Hibernate4Module()).setSerializationInclusion(Include.NON_NULL)
 				.setSerializationInclusion(Include.NON_EMPTY);
 
-		FACTORY = MAPPER.getNodeFactory();
+		FACTORY = DMPPersistenceUtil.MAPPER.getNodeFactory();
 
 		ATTRIBUTEPATHUTILS = new AttributePathUtils();
 		ATTRIBUTEUTILS = new AttributeUtils();
@@ -120,7 +120,7 @@ public final class DMPPersistenceUtil {
 
 	/**
 	 * Retrieves a resource by the give path and converts its content to a string.
-	 *
+	 * 
 	 * @param resource a resource path
 	 * @return a string representation fo the content of the resource
 	 * @throws IOException
@@ -132,7 +132,7 @@ public final class DMPPersistenceUtil {
 
 	/**
 	 * Gets a JSON object from the given string.
-	 *
+	 * 
 	 * @param jsonString the string that holds a serialised JSON object.
 	 * @return the deserialised JSON object
 	 * @throws DMPException
@@ -140,7 +140,7 @@ public final class DMPPersistenceUtil {
 	public static ObjectNode getJSON(final String jsonString) throws DMPException {
 
 		try {
-			return MAPPER.readValue(jsonString, ObjectNode.class);
+			return DMPPersistenceUtil.MAPPER.readValue(jsonString, ObjectNode.class);
 		} catch (final IOException e) {
 
 			throw new DMPException("something went wrong while parsing the JSON string '" + jsonString + "'\n" + e.getMessage());
@@ -149,7 +149,7 @@ public final class DMPPersistenceUtil {
 
 	/**
 	 * Gets a JSON array from the given string.
-	 *
+	 * 
 	 * @param jsonString the string that holds a serialised JSON array.
 	 * @return the deserialised JSON array
 	 * @throws DMPException
@@ -157,7 +157,7 @@ public final class DMPPersistenceUtil {
 	public static ArrayNode getJSONArray(final String jsonString) throws DMPException {
 
 		try {
-			return MAPPER.readValue(jsonString, ArrayNode.class);
+			return DMPPersistenceUtil.MAPPER.readValue(jsonString, ArrayNode.class);
 		} catch (final IOException e) {
 
 			throw new DMPException("something went wrong while parsing the JSON string '" + jsonString + "'\n" + e.getMessage());
@@ -166,111 +166,112 @@ public final class DMPPersistenceUtil {
 
 	/**
 	 * Gets the object mapper that can be utilised to de-/serialise JSON nodes.
-	 *
+	 * 
 	 * @return the object mapper that can be utilised to de-/serialise JSON nodes
 	 */
 	public static ObjectMapper getJSONObjectMapper() {
 
-		return MAPPER;
+		return DMPPersistenceUtil.MAPPER;
 	}
 
 	/**
 	 * Gets the JSON node factory that can be utilised to create new JSON nodes (objects or arrays)
-	 *
+	 * 
 	 * @return JSON node factory that can be utilised to create new JSON nodes (objects or arrays)
 	 */
 	public static JsonNodeFactory getJSONFactory() {
 
-		return FACTORY;
+		return DMPPersistenceUtil.FACTORY;
 	}
 
 	public static AttributePathUtils getAttributePathUtils() {
 
-		return ATTRIBUTEPATHUTILS;
+		return DMPPersistenceUtil.ATTRIBUTEPATHUTILS;
 	}
 
 	public static AttributeUtils getAttributeUtils() {
 
-		return ATTRIBUTEUTILS;
+		return DMPPersistenceUtil.ATTRIBUTEUTILS;
 	}
 
 	public static ComponentUtils getComponentUtils() {
 
-		return COMPONENTUTILS;
+		return DMPPersistenceUtil.COMPONENTUTILS;
 	}
 
 	public static MappingUtils getMappingUtils() {
 
-		return MAPPINGUTILS;
+		return DMPPersistenceUtil.MAPPINGUTILS;
 	}
 
 	public static FunctionUtils getFunctionUtils() {
 
-		return FUNCTIONUTILS;
+		return DMPPersistenceUtil.FUNCTIONUTILS;
 	}
 
 	public static ResourceUtils getResourceUtils() {
 
-		return RESOURCEUTILS;
+		return DMPPersistenceUtil.RESOURCEUTILS;
 	}
 
 	public static ConfigurationUtils getConfigurationUtils() {
 
-		return CONFIGURATIONUTILS;
+		return DMPPersistenceUtil.CONFIGURATIONUTILS;
 	}
 
 	public static ClaszUtils getClaszUtils() {
 
-		return CLASZUTILS;
+		return DMPPersistenceUtil.CLASZUTILS;
 	}
 
 	public static SchemaUtils getSchemaUtils() {
 
-		return SCHEMAUTILS;
+		return DMPPersistenceUtil.SCHEMAUTILS;
 	}
 
 	public static TransformationUtils getTransformationUtils() {
 
-		return TRANSFORMATIONUTILS;
+		return DMPPersistenceUtil.TRANSFORMATIONUTILS;
 	}
 
 	public static FilterUtils getFilterUtils() {
 
-		return FILTERUTILS;
+		return DMPPersistenceUtil.FILTERUTILS;
 	}
 
 	public static DataModelUtils getDataModelUtils() {
 
-		return DATAMODELUTILS;
+		return DMPPersistenceUtil.DATAMODELUTILS;
 	}
 
 	public static JobUtils getJobUtils() {
 
-		return JOBUTILS;
+		return DMPPersistenceUtil.JOBUTILS;
 	}
 
 	public static MappingAttributePathInstanceUtils getMappingAttributePathInstanceUtils() {
 
-		return MAPPINGATTRIBUTEPATHINSTANCEUTILS;
+		return DMPPersistenceUtil.MAPPINGATTRIBUTEPATHINSTANCEUTILS;
 	}
 
 	/**
 	 * Gets the injector for dependency injection.
-	 *
+	 * 
 	 * @return the injector for dependency injection
 	 * @throws DMPException
 	 */
 	public static Injector getInjector() throws DMPException {
-		if (injector == null) {
+		if (DMPPersistenceUtil.injector == null) {
 			throw new DMPException("you should not use getInjector without providing it first. Try to use @Inject first.");
 		}
 
-		return injector;
+		return DMPPersistenceUtil.injector;
 	}
 
 	public static long generateRandomDummyId() {
 
-		long randomValue = LOWER_RANGE + (long) (random.nextDouble() * (UPPER_RANGE - LOWER_RANGE));
+		final long randomValue = DMPPersistenceUtil.LOWER_RANGE
+				+ (long) (DMPPersistenceUtil.random.nextDouble() * (DMPPersistenceUtil.UPPER_RANGE - DMPPersistenceUtil.LOWER_RANGE));
 
 		return randomValue;
 	}

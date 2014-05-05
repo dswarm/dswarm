@@ -14,7 +14,6 @@ import de.avgl.dmp.persistence.service.AdvancedDMPJPAService;
  * A persistence service for {@link Attribute}s.
  * 
  * @author tgaengler
- *
  */
 public class AttributeService extends AdvancedDMPJPAService<ProxyAttribute, Attribute> {
 
