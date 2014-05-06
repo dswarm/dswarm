@@ -16,29 +16,26 @@ import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
 
 public class InternalSchemaBuilder extends GuicedTest {
-	
-	
+
 	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(AttributePathBuilder.class);
 
-	private String prefixPaths = "";
-	
-	
-	
+	private String									prefixPaths		= "";
+
 	public Schema buildInternalSchema() {
-	
-		AttributePathBuilder builder = new AttributePathBuilder();
-		
-		Schema tempSchema = new Schema();
-				
+
+		final AttributePathBuilder builder = new AttributePathBuilder();
+
+		final Schema tempSchema = new Schema();
+
 		tempSchema.setRecordClass(builder.createClass(NameSpacePrefixRegistry.BIBO + "Document", "Document"));
-		
+
 		/*
-		// Example of how to use the normal API of the attribute path builder
-		biboDocumentSchema.addAttributePath(builder.start().add(DC + "creator").add(FOAF + "first_name").getPath());
-		*/
-		
+		 * // Example of how to use the normal API of the attribute path builder
+		 * biboDocumentSchema.addAttributePath(builder.start().add(DC + "creator").add(FOAF + "first_name").getPath());
+		 */
+
 		// basic properties used in DINI-AG Titeldaten recommendations
 		tempSchema.addAttributePath(builder.parsePrefixPath("dc:title"));
 		tempSchema.addAttributePath(builder.parsePrefixPath("rda:otherTitleInformation"));
@@ -72,7 +69,7 @@ public class InternalSchemaBuilder extends GuicedTest {
 		tempSchema.addAttributePath(builder.parsePrefixPath("isbd:1053"));
 		tempSchema.addAttributePath(builder.parsePrefixPath("bibo:edition"));
 		tempSchema.addAttributePath(builder.parsePrefixPath("dcterms:bibliographicCitation"));
-		
+
 		// extra (added to have some details on creator/contributor resources):
 		tempSchema.addAttributePath(builder.parsePrefixPath("dcterms:creator/rdf:type"));
 		tempSchema.addAttributePath(builder.parsePrefixPath("dcterms:creator/foaf:familyName"));
@@ -80,17 +77,17 @@ public class InternalSchemaBuilder extends GuicedTest {
 		tempSchema.addAttributePath(builder.parsePrefixPath("dcterms:contributor/rdf:type"));
 		tempSchema.addAttributePath(builder.parsePrefixPath("dcterms:contributor/foaf:familyName"));
 		tempSchema.addAttributePath(builder.parsePrefixPath("dcterms:contributor/foaf:givenName"));
-		
+
 		// This can be generated from an excel file Jan curates
-		
+
 		// store all parsed paths as an overview
 		prefixPaths = builder.getPrefixPaths();
-		
-		Schema persistentSchema = createSchema("Internal Schema", tempSchema.getAttributePaths(), tempSchema.getRecordClass());
-		
+
+		final Schema persistentSchema = createSchema("Internal Schema", tempSchema.getAttributePaths(), tempSchema.getRecordClass());
+
 		return persistentSchema;
 	}
-	
+
 	private Schema createSchema(final String name, final Set<AttributePath> attributePaths, final Clasz recordClass) {
 
 		final SchemaService schemaService = GuicedTest.injector.getInstance(SchemaService.class);
@@ -154,12 +151,12 @@ public class InternalSchemaBuilder extends GuicedTest {
 		try {
 
 			json = objectMapper.writeValueAsString(updatedSchema);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("schema json: " + json);
+		InternalSchemaBuilder.LOG.debug("schema json: " + json);
 
 		return updatedSchema;
 	}

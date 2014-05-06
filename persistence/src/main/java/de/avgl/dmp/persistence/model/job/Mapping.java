@@ -1,10 +1,5 @@
 package de.avgl.dmp.persistence.model.job;
 
-import static ch.lambdaj.Lambda.filter;
-import static ch.lambdaj.Lambda.having;
-import static ch.lambdaj.Lambda.on;
-import static org.hamcrest.Matchers.equalTo;
-
 import java.util.List;
 import java.util.Set;
 
@@ -20,6 +15,10 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.hamcrest.Matchers;
+
+import ch.lambdaj.Lambda;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.Sets;
@@ -148,13 +147,13 @@ public class Mapping extends BasicDMPJPAObject {
 			return null;
 		}
 
-		if (this.inputAttributePaths == null || this.inputAttributePaths.isEmpty()) {
+		if (inputAttributePaths == null || inputAttributePaths.isEmpty()) {
 
 			return null;
 		}
 
-		final List<MappingAttributePathInstance> inputAttributePathsFiltered = filter(
-				having(on(MappingAttributePathInstance.class).getId(), equalTo(id)), this.inputAttributePaths);
+		final List<MappingAttributePathInstance> inputAttributePathsFiltered = Lambda.filter(
+				Lambda.having(Lambda.on(MappingAttributePathInstance.class).getId(), Matchers.equalTo(id)), inputAttributePaths);
 
 		if (inputAttributePathsFiltered == null || inputAttributePathsFiltered.isEmpty()) {
 

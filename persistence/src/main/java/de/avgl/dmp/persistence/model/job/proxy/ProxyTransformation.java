@@ -29,8 +29,8 @@ public class ProxyTransformation extends ProxyBasicFunction<Transformation> {
 	}
 
 	/**
-	 * Creates a new proxy with the given real transformation and the type how the transformation was processed by the transformation persistence service,
-	 * e.g., {@link RetrievalType.CREATED}.
+	 * Creates a new proxy with the given real transformation and the type how the transformation was processed by the
+	 * transformation persistence service, e.g., {@link RetrievalType.CREATED}.
 	 * 
 	 * @param transformationArg a transformation that was processed by the transformation persistence service
 	 * @param typeArg the type how this transformation was processed by the transformation persistence service

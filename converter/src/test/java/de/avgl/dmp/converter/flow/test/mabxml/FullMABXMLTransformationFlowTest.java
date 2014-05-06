@@ -1,7 +1,5 @@
 package de.avgl.dmp.converter.flow.test.mabxml;
 
-
-
 /**
  * @author tgaengler
  */

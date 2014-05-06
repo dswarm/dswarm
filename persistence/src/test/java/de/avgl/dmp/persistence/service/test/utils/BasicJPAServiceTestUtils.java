@@ -92,6 +92,7 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 		return jpaService.getObjects();
 	}
 
+	@Override
 	public POJOCLASS getObject(final POJOCLASS expectedObject) {
 
 		POJOCLASS responseObject = null;
@@ -124,8 +125,8 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 
 		BasicJPAServiceTestUtils.LOG.debug("created new " + type + " with id = '" + proxyObject.getId() + "'");
 
-		POJOCLASS createdObject = proxyObject.getObject();
-		POJOCLASS objectWithUpdates = prepareObjectForUpdate(object, createdObject);
+		final POJOCLASS createdObject = proxyObject.getObject();
+		final POJOCLASS objectWithUpdates = prepareObjectForUpdate(object, createdObject);
 
 		try {
 
@@ -176,12 +177,12 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 	 * @return the updated object
 	 */
 	protected abstract POJOCLASS prepareObjectForUpdate(final POJOCLASS objectWithUpdates, final POJOCLASS object);
-	
+
 	protected PROXYPOJOCLASS createObject(final POJOCLASS object) throws DMPPersistenceException {
-		
+
 		return jpaService.createObjectTransactional();
 	}
-	
+
 	/**
 	 * Creates a new object of the concrete POJO class.
 	 * 
@@ -194,7 +195,7 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 
 		try {
 
-			object =  pojoClass.newInstance();
+			object = pojoClass.newInstance();
 		} catch (final InstantiationException | IllegalAccessException e) {
 
 			BasicJPAServiceTestUtils.LOG.error("something went wrong while " + pojoClassName + "object creation", e);

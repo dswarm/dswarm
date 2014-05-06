@@ -4,21 +4,20 @@ import java.io.File;
 import java.io.StringWriter;
 import java.net.URL;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
 import org.apache.commons.io.FileUtils;
 import org.culturegraph.mf.stream.sink.ObjectJavaIoWriter;
 import org.culturegraph.mf.stream.source.FileOpener;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
+
 import de.avgl.dmp.converter.flow.CSVResourceFlowFactory;
 import de.avgl.dmp.converter.flow.CSVSourceResourceCSVPreviewFlow;
 import de.avgl.dmp.converter.mf.stream.reader.CsvReader;
 import de.avgl.dmp.converter.mf.stream.source.CSVEncoder;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
-
-import static org.junit.Assert.assertEquals;
 
 public class CSVSourceResourceCSVPreviewFlowTest {
 
@@ -27,14 +26,15 @@ public class CSVSourceResourceCSVPreviewFlowTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("test_csv.csv");
 
-		final CSVSourceResourceCSVPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ';', "\n", CSVSourceResourceCSVPreviewFlow.class);
+		final CSVSourceResourceCSVPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ';', "\n",
+				CSVSourceResourceCSVPreviewFlow.class);
 
 		final URL url = Resources.getResource("test_csv.csv");
 		final File file = FileUtils.toFile(url);
 
 		final String actual = flow.applyFile(file.getAbsolutePath());
 
-		assertEquals(expected, actual);
+		Assert.assertEquals(expected, actual);
 	}
 
 	@Test

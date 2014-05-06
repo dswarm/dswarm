@@ -12,7 +12,6 @@ import de.avgl.dmp.persistence.model.job.proxy.ProxyFunction;
  * A persistence service for {@link Function}s.
  * 
  * @author tgaengler
- *
  */
 public class FunctionService extends BasicFunctionService<ProxyFunction, Function> {
 

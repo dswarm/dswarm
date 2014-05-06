@@ -153,7 +153,7 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 			}
 		}
 	}
-	
+
 	public void checkDeletedComponent(final Component component) {
 
 		Component deletedComponent = null;

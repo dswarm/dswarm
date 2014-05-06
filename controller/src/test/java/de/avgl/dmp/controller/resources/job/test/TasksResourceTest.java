@@ -1,7 +1,5 @@
 package de.avgl.dmp.controller.resources.job.test;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -15,13 +13,13 @@ import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.validation.SchemaFactory;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -37,6 +35,7 @@ import de.avgl.dmp.controller.resources.schema.test.utils.AttributesResourceTest
 import de.avgl.dmp.controller.resources.schema.test.utils.ClaszesResourceTestUtils;
 import de.avgl.dmp.controller.resources.schema.test.utils.SchemasResourceTestUtils;
 import de.avgl.dmp.controller.resources.test.ResourceTest;
+import de.avgl.dmp.controller.test.GuicedTest;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
@@ -69,7 +68,7 @@ public class TasksResourceTest extends ResourceTest {
 
 	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
 
-	private final ObjectMapper						objectMapper	= injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	private Configuration							configuration;
 
@@ -103,7 +102,7 @@ public class TasksResourceTest extends ResourceTest {
 	@Test
 	public void testTaskExecution() throws Exception {
 
-		LOG.debug("start task execution test");
+		TasksResourceTest.LOG.debug("start task execution test");
 
 		final String resourceFileName = "test-mabxml.xml";
 
@@ -153,10 +152,10 @@ public class TasksResourceTest extends ResourceTest {
 		final ObjectNode finalDataModelJSON = objectMapper.readValue(finalDataModelJSONString, ObjectNode.class);
 
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
-		((ObjectNode) taskJSON).put("input_data_model", finalDataModelJSON);
+		taskJSON.put("input_data_model", finalDataModelJSON);
 
 		// manipulate output data model (output data model = input data model (for now))
-		((ObjectNode) taskJSON).put("output_data_model", finalDataModelJSON);
+		taskJSON.put("output_data_model", finalDataModelJSON);
 
 		final String finalTaskJSONString = objectMapper.writeValueAsString(taskJSON);
 
@@ -184,7 +183,7 @@ public class TasksResourceTest extends ResourceTest {
 
 		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
 
-		LOG.debug("task execution response = '" + responseString + "'");
+		TasksResourceTest.LOG.debug("task execution response = '" + responseString + "'");
 
 		final String expectedResultString = DMPPersistenceUtil.getResourceAsString("controller_task-result.json");
 
@@ -196,9 +195,9 @@ public class TasksResourceTest extends ResourceTest {
 		final ArrayNode actualKeyArray = (ArrayNode) actualJSONArray.get(0).get("record_data");
 		ObjectNode actualJSON = null;
 
-		for(final JsonNode actualKeyArrayItem : actualKeyArray) {
+		for (final JsonNode actualKeyArrayItem : actualKeyArray) {
 
-			if(actualKeyArrayItem.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#type") != null) {
+			if (actualKeyArrayItem.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#type") != null) {
 
 				// don't take the type JSON object for comparison
 
@@ -212,7 +211,7 @@ public class TasksResourceTest extends ResourceTest {
 
 		final String finalActualJSONString = objectMapper.writeValueAsString(actualJSON);
 
-		assertEquals(finalExpectedJSONString.length(), finalActualJSONString.length());
+		Assert.assertEquals(finalExpectedJSONString.length(), finalActualJSONString.length());
 
 		dataModel = dataModelsResourceTestUtils.getObject(dataModel.getId());
 
@@ -225,7 +224,7 @@ public class TasksResourceTest extends ResourceTest {
 
 		recordClass = this.schema.getRecordClass();
 
-		LOG.debug("end task execution test");
+		TasksResourceTest.LOG.debug("end task execution test");
 	}
 
 	@After

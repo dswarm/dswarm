@@ -118,6 +118,7 @@ public class ComponentsResource extends ExtendedBasicDMPResource<ComponentsResou
 	 * @return the updated filter as JSON representation
 	 * @throws DMPControllerException
 	 */
+	@Override
 	@ApiOperation(value = "update component with given id ", notes = "Returns an updated Component object.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "component was successfully updated"),
 			@ApiResponse(code = 404, message = "could not find a component for the given id"),

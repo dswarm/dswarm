@@ -2,7 +2,6 @@ package de.avgl.dmp.converter.flow.test.mabxml.edgecases;
 
 import de.avgl.dmp.converter.flow.test.mabxml.AbstractMABXMLTransformationFlowTest;
 
-
 /**
  * @author tgaengler
  */

@@ -110,7 +110,7 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 
 		return super.getObjects();
 	}
-	
+
 	/**
 	 * This endpoint consumes a class as JSON representation and updates this class in the database.
 	 * 
@@ -119,6 +119,7 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 	 * @return the updated class as JSON representation
 	 * @throws DMPControllerException
 	 */
+	@Override
 	@ApiOperation(value = "update class with given id ", notes = "Returns an updated Clasz object.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "class was successfully updated"),
 			@ApiResponse(code = 201, message = "class was successfully persisted"),
@@ -127,7 +128,7 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateObject(@ApiParam(value = "class (as JSON)", required = true) final String jsonObjectString, 
+	public Response updateObject(@ApiParam(value = "class (as JSON)", required = true) final String jsonObjectString,
 			@ApiParam(value = "class identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
 
 		return super.updateObject(jsonObjectString, id);

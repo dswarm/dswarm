@@ -1,7 +1,5 @@
 package de.avgl.dmp.converter.mf.stream.source;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.net.URI;
 import java.util.Stack;
 import java.util.UUID;
@@ -22,6 +20,7 @@ import org.xml.sax.SAXException;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -50,7 +49,7 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 	private Resource							recordResource;
 	private Resource							entityResource;
 	private Stack<Tuple<Resource, Property>>	entityStack;
-	private final Stack<String>						elementURIStack;
+	private final Stack<String>					elementURIStack;
 
 	private static final Pattern				TABS			= Pattern.compile("\t+");
 
@@ -76,13 +75,13 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 	public XMLTripleEncoder(final Optional<DataModel> dataModel) {
 		super();
 
-		this.recordTagName = System.getProperty("org.culturegraph.metamorph.xml.recordtag");
+		recordTagName = System.getProperty("org.culturegraph.metamorph.xml.recordtag");
 		if (recordTagName == null) {
 			throw new MetafactureException("Missing name for the tag marking a record.");
 		}
 
 		this.dataModel = dataModel;
-		this.dataModelUri = init(dataModel);
+		dataModelUri = init(dataModel);
 
 		// init
 		elementURIStack = new Stack<>();
@@ -90,10 +89,10 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 
 	public XMLTripleEncoder(final String recordTagName, final Optional<DataModel> dataModel) {
 		super();
-		this.recordTagName = checkNotNull(recordTagName);
+		this.recordTagName = Preconditions.checkNotNull(recordTagName);
 
 		this.dataModel = dataModel;
-		this.dataModelUri = init(dataModel);
+		dataModelUri = init(dataModel);
 
 		// init
 		elementURIStack = new Stack<>();
@@ -150,7 +149,7 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 	@Override
 	public void characters(final char[] chars, final int start, final int length) throws SAXException {
 		if (inRecord) {
-			valueBuffer.append(TABS.matcher(new String(chars, start, length)).replaceAll(""));
+			valueBuffer.append(XMLTripleEncoder.TABS.matcher(new String(chars, start, length)).replaceAll(""));
 		}
 	}
 
@@ -208,22 +207,23 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 
 		// write triples
 		final RDFModel rdfModel = new RDFModel(model, currentId, recordType.getURI());
-		
-//		OutputStream os;
-//		try {
-//			os = new FileOutputStream("test.n3");
-//			
-//			rdfModel.getModel().write(os, "N3");
-//			
-//			final PrintStream printStream = new PrintStream(os);
-//			printStream.close();
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
+
+		// OutputStream os;
+		// try {
+		// os = new FileOutputStream("test.n3");
+		//
+		// rdfModel.getModel().write(os, "N3");
+		//
+		// final PrintStream printStream = new PrintStream(os);
+		// printStream.close();
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+
 		getReceiver().process(rdfModel);
 	}
 
+	@Override
 	public void startEntity(final String name) {
 
 		// System.out.println("in start entity with name = '" + name + "'");
@@ -380,11 +380,11 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 	private String mintUri(final String uri, final String localName) {
 
 		// allow has and slash uris
-		if(uri != null && uri.endsWith("/")) {
-			
+		if (uri != null && uri.endsWith("/")) {
+
 			return uri + localName;
 		}
-		
+
 		return uri + "#" + localName;
 	}
 }

@@ -8,14 +8,14 @@ import de.avgl.dmp.converter.DMPMorphDefException;
 
 /**
  * An exception handler for providing exact messages for wrong Metamorph definitions
- *
+ * 
  * @author phorn
  */
 @Provider
 public class DMPMorphDefExceptionHandler extends BaseExceptionHandler<DMPMorphDefException> {
 
 	@Override
-	public Response toResponse(DMPMorphDefException exception) {
+	public Response toResponse(final DMPMorphDefException exception) {
 
 		final String message = errorMessage(exception);
 		return createResponse(message);

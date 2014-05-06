@@ -42,22 +42,22 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 	private final Map<Long, Function>							functions						= Maps.newLinkedHashMap();
 
-	private Map<Long, Attribute>								attributes						= Maps.newLinkedHashMap();
+	private final Map<Long, Attribute>							attributes						= Maps.newLinkedHashMap();
 
-	private Map<Long, AttributePath>							attributePaths					= Maps.newLinkedHashMap();
+	private final Map<Long, AttributePath>						attributePaths					= Maps.newLinkedHashMap();
 
-	private Map<Long, Component>								components						= Maps.newLinkedHashMap();
+	private final Map<Long, Component>							components						= Maps.newLinkedHashMap();
 
-	private Map<Long, Transformation>							transformations					= Maps.newLinkedHashMap();
+	private final Map<Long, Transformation>						transformations					= Maps.newLinkedHashMap();
 
-	private Map<Long, MappingAttributePathInstance>				mappingAttributePathInstances	= Maps.newLinkedHashMap();
+	private final Map<Long, MappingAttributePathInstance>		mappingAttributePathInstances	= Maps.newLinkedHashMap();
 
 	private final AttributeServiceTestUtils						attributeServiceTestUtils;
 	private final AttributePathServiceTestUtils					attributePathServiceTestUtils;
 	private final FunctionServiceTestUtils						functionServiceTestUtils;
 	private final MappingAttributePathInstanceServiceTestUtils	mappingAttributePathInstanceServiceTestUtils;
 	private final ComponentServiceTestUtils						componentServiceTestUtils;
-	private final TransformationServiceTestUtils transformationServiceTestUtils;
+	private final TransformationServiceTestUtils				transformationServiceTestUtils;
 
 	public MappingServiceTest() {
 
@@ -74,7 +74,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 	@Test
 	public void simpleMappingTest() throws Exception {
 
-		LOG.debug("start simple mapping test");
+		MappingServiceTest.LOG.debug("start simple mapping test");
 
 		final LinkedList<String> parameters = Lists.newLinkedList();
 
@@ -106,8 +106,8 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		components.add(component);
 
-		final Transformation transformation = transformationServiceTestUtils.createTransformation(transformationName, transformationDescription, components,
-				transformationParameters);
+		final Transformation transformation = transformationServiceTestUtils.createTransformation(transformationName, transformationDescription,
+				components, transformationParameters);
 
 		// attribute paths
 
@@ -233,12 +233,12 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 		try {
 
 			json = objectMapper.writeValueAsString(updatedMapping);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("mapping json: " + json);
+		MappingServiceTest.LOG.debug("mapping json: " + json);
 
 		deleteObject(updatedMapping.getId());
 		transformationServiceTestUtils.deleteObject(transformation);
@@ -260,13 +260,13 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 			attributeServiceTestUtils.deleteObject(attribute);
 		}
 
-		LOG.debug("end simple mappping test");
+		MappingServiceTest.LOG.debug("end simple mappping test");
 	}
 
 	@Test
 	public void complexMappingTest() throws Exception {
 
-		LOG.debug("start complex mapping test");
+		MappingServiceTest.LOG.debug("start complex mapping test");
 
 		// previous component
 
@@ -299,7 +299,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 		parameterMapping1.put(functionParameterName3, componentVariableName3);
 
 		final Component component1 = componentServiceTestUtils.createComponent(component1Name, parameterMapping1, function1, null, null);
-		this.components.put(component1.getId(), component1);
+		components.put(component1.getId(), component1);
 
 		// next component
 
@@ -322,7 +322,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 		parameterMapping2.put(functionParameterName4, componentVariableName4);
 
 		final Component component2 = componentServiceTestUtils.createComponent(component2Name, parameterMapping2, function2, null, null);
-		this.components.put(component2.getId(), component2);
+		components.put(component2.getId(), component2);
 
 		// main component
 
@@ -355,7 +355,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		final Component component = componentServiceTestUtils.createComponent(componentName, parameterMapping, function, inputComponents,
 				outputComponents);
-		this.components.put(component2.getId(), component2);
+		components.put(component2.getId(), component2);
 
 		// transformation
 
@@ -373,8 +373,8 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		transformationParameters.add(transformationParameter);
 
-		final Transformation transformation = transformationServiceTestUtils.createTransformation(transformationName, transformationDescription, components,
-				transformationParameters);
+		final Transformation transformation = transformationServiceTestUtils.createTransformation(transformationName, transformationDescription,
+				components, transformationParameters);
 		transformations.put(transformation.getId(), transformation);
 
 		Assert.assertNotNull("the transformation components set shouldn't be null", transformation.getComponents());
@@ -472,8 +472,8 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 		transformation2Parameters.add(transformation2Parameter);
 		transformation2Parameters.add(transformation2Parameter2);
 
-		final Transformation transformation2 = transformationServiceTestUtils.createTransformation(transformation2Name, transformation2Description, components2,
-				transformation2Parameters);
+		final Transformation transformation2 = transformationServiceTestUtils.createTransformation(transformation2Name, transformation2Description,
+				components2, transformation2Parameters);
 
 		// attribute paths
 
@@ -648,62 +648,62 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 		try {
 
 			json = objectMapper.writeValueAsString(updatedMapping);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("mapping json: " + json);
+		MappingServiceTest.LOG.debug("mapping json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(transformation2);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("transformation json: " + json);
+		MappingServiceTest.LOG.debug("transformation json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(transformation);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("clean-up transformation json: " + json);
+		MappingServiceTest.LOG.debug("clean-up transformation json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(component1);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("clean-up previous component json: " + json);
+		MappingServiceTest.LOG.debug("clean-up previous component json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(component);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("clean-up main component json: " + json);
+		MappingServiceTest.LOG.debug("clean-up main component json: " + json);
 
 		try {
 
 			json = objectMapper.writeValueAsString(component2);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("clean-up next component json: " + json);
+		MappingServiceTest.LOG.debug("clean-up next component json: " + json);
 
 		// clean-up
 		deleteObject(updatedMapping.getId());
@@ -743,6 +743,6 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 			attributeServiceTestUtils.deleteObject(attribute);
 		}
 
-		LOG.debug("end complex mapping test");
+		MappingServiceTest.LOG.debug("end complex mapping test");
 	}
 }

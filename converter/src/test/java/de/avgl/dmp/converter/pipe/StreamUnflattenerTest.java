@@ -1,22 +1,22 @@
 package de.avgl.dmp.converter.pipe;
 
-import com.google.common.base.Joiner;
 import org.culturegraph.mf.framework.DefaultStreamReceiver;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import com.google.common.base.Joiner;
 
 public class StreamUnflattenerTest {
 
-	private DefaultStreamReceiver mockedReceiver;
-	private StreamUnflattener unflattener;
+	private DefaultStreamReceiver	mockedReceiver;
+	private StreamUnflattener		unflattener;
 
 	@Before
 	public void setUp() {
-		mockedReceiver = mock(DefaultStreamReceiver.class);
+		mockedReceiver = Mockito.mock(DefaultStreamReceiver.class);
 
 		unflattener = new StreamUnflattener();
 		unflattener.setReceiver(mockedReceiver);
@@ -24,32 +24,32 @@ public class StreamUnflattenerTest {
 
 	@After
 	public void tearDown() {
-		verifyNoMoreInteractions(mockedReceiver);
+		Mockito.verifyNoMoreInteractions(mockedReceiver);
 	}
 
 	@Test
 	public void testGetEntityMarker() throws Exception {
-		char expectedDefault = StreamUnflattener.DEFAULT_ENTITY_MARKER;
-		char expected = ';';
+		final char expectedDefault = StreamUnflattener.DEFAULT_ENTITY_MARKER;
+		final char expected = ';';
 
-		StreamUnflattener unflattenerDefault = new StreamUnflattener();
-		assertEquals("Zero-Arg constructor should set the default entity marker", expectedDefault, unflattenerDefault.getEntityMarker());
+		final StreamUnflattener unflattenerDefault = new StreamUnflattener();
+		Assert.assertEquals("Zero-Arg constructor should set the default entity marker", expectedDefault, unflattenerDefault.getEntityMarker());
 
-		StreamUnflattener unflattener = new StreamUnflattener(StreamUnflattener.DEFAULT_INITIAL_DISCARD, expected);
-		assertEquals("getEntityMarker should return the entity marker set via constructor", expected, unflattener.getEntityMarker());
+		final StreamUnflattener unflattener = new StreamUnflattener(StreamUnflattener.DEFAULT_INITIAL_DISCARD, expected);
+		Assert.assertEquals("getEntityMarker should return the entity marker set via constructor", expected, unflattener.getEntityMarker());
 	}
 
 	@Test
 	public void testGetInitialDiscard() throws Exception {
 
-		String expectedDefault = StreamUnflattener.DEFAULT_INITIAL_DISCARD;
-		String expected = "foobar";
+		final String expectedDefault = StreamUnflattener.DEFAULT_INITIAL_DISCARD;
+		final String expected = "foobar";
 
-		StreamUnflattener unflattenerDefault = new StreamUnflattener();
-		assertEquals("Zero-Arg constructor should set the default inital discard", expectedDefault, unflattenerDefault.getInitialDiscard());
+		final StreamUnflattener unflattenerDefault = new StreamUnflattener();
+		Assert.assertEquals("Zero-Arg constructor should set the default inital discard", expectedDefault, unflattenerDefault.getInitialDiscard());
 
-		StreamUnflattener unflattener = new StreamUnflattener(expected);
-		assertEquals("getInitialDiscard should return the initial discard set via constructor", expected, unflattener.getInitialDiscard());
+		final StreamUnflattener unflattener = new StreamUnflattener(expected);
+		Assert.assertEquals("getInitialDiscard should return the initial discard set via constructor", expected, unflattener.getInitialDiscard());
 	}
 
 	@Test
@@ -57,13 +57,13 @@ public class StreamUnflattenerTest {
 		final String expected = "foobar";
 
 		unflattener.startRecord(expected);
-		verify(mockedReceiver).startRecord(expected);
+		Mockito.verify(mockedReceiver).startRecord(expected);
 	}
 
 	@Test
 	public void testEndRecord() throws Exception {
 		unflattener.endRecord();
-		verify(mockedReceiver).endRecord();
+		Mockito.verify(mockedReceiver).endRecord();
 	}
 
 	@Test(expected = IllegalStateException.class)
@@ -83,7 +83,7 @@ public class StreamUnflattenerTest {
 
 		unflattener.literal(expectedName, expectedValue);
 
-		verify(mockedReceiver).literal(expectedName, expectedValue);
+		Mockito.verify(mockedReceiver).literal(expectedName, expectedValue);
 	}
 
 	@Test
@@ -96,8 +96,8 @@ public class StreamUnflattenerTest {
 
 		unflattener.literal(inName, expectedValue);
 
-		verify(mockedReceiver).startEntity(expectedEntity);
-		verify(mockedReceiver).literal(expectedName, expectedValue);
+		Mockito.verify(mockedReceiver).startEntity(expectedEntity);
+		Mockito.verify(mockedReceiver).literal(expectedName, expectedValue);
 	}
 
 	@Test
@@ -111,9 +111,9 @@ public class StreamUnflattenerTest {
 
 		unflattener.literal(inName, expectedValue);
 
-		verify(mockedReceiver).startEntity(expectedEntity1);
-		verify(mockedReceiver).startEntity(expectedEntity2);
-		verify(mockedReceiver).literal(expectedName, expectedValue);
+		Mockito.verify(mockedReceiver).startEntity(expectedEntity1);
+		Mockito.verify(mockedReceiver).startEntity(expectedEntity2);
+		Mockito.verify(mockedReceiver).literal(expectedName, expectedValue);
 	}
 
 	@Test
@@ -123,15 +123,15 @@ public class StreamUnflattenerTest {
 		final String initialDiscard = "baz";
 		final String expectedEntity = "qux";
 
-		StreamUnflattener unflattener = new StreamUnflattener(initialDiscard);
+		final StreamUnflattener unflattener = new StreamUnflattener(initialDiscard);
 		unflattener.setReceiver(mockedReceiver);
 
 		final String inName = Joiner.on(StreamUnflattener.DEFAULT_ENTITY_MARKER).join(initialDiscard, expectedEntity, expectedName);
 
 		unflattener.literal(inName, expectedValue);
 
-		verify(mockedReceiver).startEntity(expectedEntity);
-		verify(mockedReceiver).literal(expectedName, expectedValue);
+		Mockito.verify(mockedReceiver).startEntity(expectedEntity);
+		Mockito.verify(mockedReceiver).literal(expectedName, expectedValue);
 	}
 
 	@Test
@@ -149,16 +149,15 @@ public class StreamUnflattenerTest {
 
 		unflattener.literal(inName1, expectedValue1);
 
-		verify(mockedReceiver).startEntity(expectedEntity1);
-		verify(mockedReceiver).startEntity(expectedEntity21);
-		verify(mockedReceiver).literal(expectedName1, expectedValue1);
-
+		Mockito.verify(mockedReceiver).startEntity(expectedEntity1);
+		Mockito.verify(mockedReceiver).startEntity(expectedEntity21);
+		Mockito.verify(mockedReceiver).literal(expectedName1, expectedValue1);
 
 		unflattener.literal(inName2, expectedValue2);
 
-		verify(mockedReceiver).endEntity();
-		verify(mockedReceiver).startEntity(expectedEntity22);
-		verify(mockedReceiver).literal(expectedName2, expectedValue2);
+		Mockito.verify(mockedReceiver).endEntity();
+		Mockito.verify(mockedReceiver).startEntity(expectedEntity22);
+		Mockito.verify(mockedReceiver).literal(expectedName2, expectedValue2);
 	}
 
 	@Test
@@ -175,15 +174,14 @@ public class StreamUnflattenerTest {
 
 		unflattener.literal(inName1, expectedValue1);
 
-		verify(mockedReceiver).startEntity(expectedEntity1);
-		verify(mockedReceiver).startEntity(expectedEntity2);
-		verify(mockedReceiver).literal(expectedName1, expectedValue1);
-
+		Mockito.verify(mockedReceiver).startEntity(expectedEntity1);
+		Mockito.verify(mockedReceiver).startEntity(expectedEntity2);
+		Mockito.verify(mockedReceiver).literal(expectedName1, expectedValue1);
 
 		unflattener.literal(inName2, expectedValue2);
 
 		// no startEntity calls
-		verify(mockedReceiver).literal(expectedName2, expectedValue2);
+		Mockito.verify(mockedReceiver).literal(expectedName2, expectedValue2);
 	}
 
 	@Test
@@ -197,22 +195,22 @@ public class StreamUnflattenerTest {
 		final String expectedEntity3 = "corge";
 		final String expectedEntity22 = "quux";
 
-		final String inName1 = Joiner.on(StreamUnflattener.DEFAULT_ENTITY_MARKER).join(expectedEntity1, expectedEntity21, expectedEntity3, expectedName1);
+		final String inName1 = Joiner.on(StreamUnflattener.DEFAULT_ENTITY_MARKER).join(expectedEntity1, expectedEntity21, expectedEntity3,
+				expectedName1);
 		final String inName2 = Joiner.on(StreamUnflattener.DEFAULT_ENTITY_MARKER).join(expectedEntity1, expectedEntity22, expectedName2);
 
 		unflattener.literal(inName1, expectedValue1);
 
-		verify(mockedReceiver).startEntity(expectedEntity1);
-		verify(mockedReceiver).startEntity(expectedEntity21);
-		verify(mockedReceiver).startEntity(expectedEntity3);
-		verify(mockedReceiver).literal(expectedName1, expectedValue1);
-
+		Mockito.verify(mockedReceiver).startEntity(expectedEntity1);
+		Mockito.verify(mockedReceiver).startEntity(expectedEntity21);
+		Mockito.verify(mockedReceiver).startEntity(expectedEntity3);
+		Mockito.verify(mockedReceiver).literal(expectedName1, expectedValue1);
 
 		unflattener.literal(inName2, expectedValue2);
 
-		verify(mockedReceiver, times(2)).endEntity();
-		verify(mockedReceiver).startEntity(expectedEntity22);
-		verify(mockedReceiver).literal(expectedName2, expectedValue2);
+		Mockito.verify(mockedReceiver, Mockito.times(2)).endEntity();
+		Mockito.verify(mockedReceiver).startEntity(expectedEntity22);
+		Mockito.verify(mockedReceiver).literal(expectedName2, expectedValue2);
 	}
 
 	@Test
@@ -225,12 +223,11 @@ public class StreamUnflattenerTest {
 
 		unflattener.literal(inName, expectedValue);
 
-		verify(mockedReceiver).startEntity(expectedEntity);
-		verify(mockedReceiver).literal(expectedName, expectedValue);
-
+		Mockito.verify(mockedReceiver).startEntity(expectedEntity);
+		Mockito.verify(mockedReceiver).literal(expectedName, expectedValue);
 
 		unflattener.endRecord();
-		verify(mockedReceiver).endEntity();
-		verify(mockedReceiver).endRecord();
+		Mockito.verify(mockedReceiver).endEntity();
+		Mockito.verify(mockedReceiver).endRecord();
 	}
 }

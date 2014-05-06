@@ -4,8 +4,6 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.NotImplementedException;
-
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -101,13 +99,6 @@ public class InternalTripleService implements InternalModelService {
 		this.classService = classService;
 		this.attributePathService = attributePathService;
 		this.attributeService = attributeService;
-	}
-
-	@Deprecated
-	@Override
-	public Optional<Set<String>> getSchema(final Long resourceId, final Long configurationId) {
-
-		throw new NotImplementedException("schema retrieval via this method is not implemented yet, please utilise #getSchema(dataModelId) instead.");
 	}
 
 	/**

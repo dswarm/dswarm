@@ -12,7 +12,7 @@ public class DataModelServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 
 	private final ConfigurationServiceTestUtils	configurationsResourceTestUtils;
 
-	private final SchemaServiceTestUtils			schemasResourceTestUtils;
+	private final SchemaServiceTestUtils		schemasResourceTestUtils;
 
 	public DataModelServiceTestUtils() {
 
@@ -50,7 +50,7 @@ public class DataModelServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 			schemasResourceTestUtils.compareObjects(expectedDataModel.getSchema(), actualDataModel.getSchema());
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}<br/>
 	 * Updates the name, description, resource, configuration and schema of the data model.

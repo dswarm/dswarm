@@ -27,7 +27,7 @@ public final class ConverterHelperGDMHelper {
 	public static Map<String, ConverterHelper> addLiteralToConverterHelper(final Map<String, ConverterHelper> converterHelpers,
 			final String property, final Node gdmNode) {
 
-		checkConverterHelpers(converterHelpers, property);
+		ConverterHelperGDMHelper.checkConverterHelpers(converterHelpers, property);
 
 		converterHelpers.get(property).addLiteralOrURI(((LiteralNode) gdmNode).getValue());
 
@@ -44,10 +44,10 @@ public final class ConverterHelperGDMHelper {
 	 */
 	public static Map<String, ConverterHelper> addJSONNodeToConverterHelper(final Map<String, ConverterHelper> converterHelpers,
 			final String property, final JsonNode jsonNode) {
-		
+
 		// TODO: outsource to abstract converter helper helper
 
-		checkConverterHelpers(converterHelpers, property);
+		ConverterHelperGDMHelper.checkConverterHelpers(converterHelpers, property);
 
 		converterHelpers.get(property).addJsonNode(jsonNode);
 
@@ -65,7 +65,7 @@ public final class ConverterHelperGDMHelper {
 	public static Map<String, ConverterHelper> addURIResourceToConverterHelper(final Map<String, ConverterHelper> converterHelpers,
 			final String property, final Node gdmNode) {
 
-		checkConverterHelpers(converterHelpers, property);
+		ConverterHelperGDMHelper.checkConverterHelpers(converterHelpers, property);
 
 		converterHelpers.get(property).addLiteralOrURI(((ResourceNode) gdmNode).getUri());
 

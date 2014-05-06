@@ -26,7 +26,8 @@ public abstract class BasicFunctionService<PROXYFUNCTIONIMPL extends ProxyBasicF
 	 * @param clasz a concrete {@link Function} implementation
 	 * @param entityManagerProvider an entity manager provider
 	 */
-	protected BasicFunctionService(final Class<FUNCTIONIMPL> clasz, final Class<PROXYFUNCTIONIMPL> proxyClasz, final Provider<EntityManager> entityManagerProvider) {
+	protected BasicFunctionService(final Class<FUNCTIONIMPL> clasz, final Class<PROXYFUNCTIONIMPL> proxyClasz,
+			final Provider<EntityManager> entityManagerProvider) {
 
 		super(clasz, proxyClasz, entityManagerProvider);
 	}

@@ -30,8 +30,8 @@ public class ProxyProject extends ProxyExtendedBasicDMPJPAObject<Project> {
 	}
 
 	/**
-	 * Creates a new proxy with the given real project and the type how the project was processed by the project persistence service,
-	 * e.g., {@link RetrievalType.CREATED}.
+	 * Creates a new proxy with the given real project and the type how the project was processed by the project persistence
+	 * service, e.g., {@link RetrievalType.CREATED}.
 	 * 
 	 * @param projectArg a project that was processed by the project persistence service
 	 * @param typeArg the type how this project was processed by the project persistence service

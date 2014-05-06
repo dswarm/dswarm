@@ -29,7 +29,7 @@ public abstract class AdvancedDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE
 
 	@Override
 	protected PROXYPOJOCLASS createObject(final POJOCLASS object) throws DMPPersistenceException {
-		
+
 		return jpaService.createObjectTransactional(object);
 	}
 }

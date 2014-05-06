@@ -16,7 +16,6 @@ import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 
-
 public class XMLSourceResourceTriplesFlowTest extends GuicedTest {
 
 	private void testFlow(final XMLSourceResourceTriplesFlow flow, final String fileName) throws DMPConverterException {
@@ -79,15 +78,21 @@ public class XMLSourceResourceTriplesFlowTest extends GuicedTest {
 	@Test
 	public void testFromConfiguration3() throws Exception {
 
-		final DataModelService dataModelService = injector.getInstance(DataModelService.class);
+		final DataModelService dataModelService = GuicedTest.injector.getInstance(DataModelService.class);
 		final DataModel dataModel = dataModelService.createObjectTransactional().getObject();
 
-		dataModel.setConfiguration(new Configuration() {{
-			addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("record"));
-		}});
-		dataModel.setDataResource(new Resource() {{
-			addAttribute("path", "/tmp/file.record");
-		}});
+		dataModel.setConfiguration(new Configuration() {
+
+			{
+				addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("record"));
+			}
+		});
+		dataModel.setDataResource(new Resource() {
+
+			{
+				addAttribute("path", "/tmp/file.record");
+			}
+		});
 
 		final XMLSourceResourceTriplesFlow flow = new XMLSourceResourceTriplesFlow(dataModel);
 

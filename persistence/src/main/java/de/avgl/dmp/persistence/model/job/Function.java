@@ -351,7 +351,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 			if (functionDescriptionString == null) {
 
-				LOG.debug("function description JSON string is null");
+				Function.LOG.debug("function description JSON string is null");
 
 				if (fromScratch) {
 
@@ -368,7 +368,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 				functionDescription = DMPPersistenceUtil.getJSON(functionDescriptionString);
 			} catch (final DMPException e) {
 
-				LOG.debug("couldn't parse function description JSON string for function '" + getId() + "'");
+				Function.LOG.debug("couldn't parse function description JSON string for function '" + getId() + "'");
 			}
 
 			functionDescriptionInitialized = true;

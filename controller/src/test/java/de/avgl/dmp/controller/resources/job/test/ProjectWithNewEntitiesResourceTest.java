@@ -129,7 +129,7 @@ public class ProjectWithNewEntitiesResourceTest extends
 	@Test
 	public void testPOSTObjectsWithNewEntities() throws Exception {
 
-		LOG.debug("start POST " + pojoClassName + "s with new entities test");
+		ProjectWithNewEntitiesResourceTest.LOG.debug("start POST " + pojoClassName + "s with new entities test");
 
 		objectJSONString = DMPPersistenceUtil.getResourceAsString("project.w.new.entities.json");
 
@@ -455,6 +455,6 @@ public class ProjectWithNewEntitiesResourceTest extends
 			functionsResourceTestUtils.deleteObject(function);
 		}
 
-		LOG.debug("end POST " + pojoClassName + "s with new entities test");
+		ProjectWithNewEntitiesResourceTest.LOG.debug("end POST " + pojoClassName + "s with new entities test");
 	}
 }

@@ -45,7 +45,7 @@ import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 
 /**
  * A resource (controller service) for {@link Task}s.
- *
+ * 
  * @author tgaengler
  */
 @RequestScoped
@@ -81,7 +81,7 @@ public class TasksResource {
 	/**
 	 * Creates a new resource (controller service) for {@link Transformation}s with the provider of the transformation persistence
 	 * service, the object mapper and metrics registry.
-	 *
+	 * 
 	 * @param dataModelUtilArg the data model util
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
@@ -98,7 +98,7 @@ public class TasksResource {
 
 	/**
 	 * Builds a positive response with the given content.
-	 *
+	 * 
 	 * @param responseContent a response message
 	 * @return the response
 	 */
@@ -111,7 +111,7 @@ public class TasksResource {
 
 	/**
 	 * This endpoint executes the task that is given via its JSON representation and returns the result of the task execution.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one task
 	 * @return the result of the task execution
 	 * @throws IOException
@@ -134,7 +134,7 @@ public class TasksResource {
 
 		if (task == null) {
 
-			LOG.error("couldn't parse task JSON to Task");
+			TasksResource.LOG.error("couldn't parse task JSON to Task");
 
 			throw new DMPConverterException("couldn't parse task JSON to Task");
 		}
@@ -143,14 +143,14 @@ public class TasksResource {
 
 		if (job == null) {
 
-			LOG.error("there is no job for this task");
+			TasksResource.LOG.error("there is no job for this task");
 
 			throw new DMPConverterException("there is no job for this task");
 		}
 
 		if (job.getMappings() == null) {
 
-			LOG.error("there is are no mappings for this job of this task");
+			TasksResource.LOG.error("there is are no mappings for this job of this task");
 
 			throw new DMPConverterException("there is are no mappings for this job of this task");
 		}
@@ -159,7 +159,7 @@ public class TasksResource {
 
 		if (inputDataModel == null) {
 
-			LOG.error("there is no input data model for this task");
+			TasksResource.LOG.error("there is no input data model for this task");
 
 			throw new DMPConverterException("there is no input data model for this task");
 		}
@@ -168,7 +168,7 @@ public class TasksResource {
 
 		if (dataResource == null) {
 
-			LOG.error("there is no data resource for this input data model of this task");
+			TasksResource.LOG.error("there is no data resource for this input data model of this task");
 
 			throw new DMPConverterException("there is no data resource for this input data model of this task");
 		}
@@ -177,7 +177,7 @@ public class TasksResource {
 
 		if (configuration == null) {
 
-			LOG.error("there is no configuration for this input data model of this task");
+			TasksResource.LOG.error("there is no configuration for this input data model of this task");
 
 			throw new DMPConverterException("there is no configuration for this input data model of this task");
 		}
@@ -188,7 +188,7 @@ public class TasksResource {
 
 		if (!inputData.isPresent()) {
 
-			LOG.error("couldn't find input data for task execution");
+			TasksResource.LOG.error("couldn't find input data for task execution");
 
 			throw new DMPConverterException("couldn't find input data for task execution");
 		}
@@ -203,7 +203,7 @@ public class TasksResource {
 
 		if (result == null) {
 
-			LOG.debug("result of task execution is null");
+			TasksResource.LOG.debug("result of task execution is null");
 
 			return buildResponse(null);
 		}
@@ -215,14 +215,14 @@ public class TasksResource {
 
 			final String message = "couldn't deserialize result JSON from string";
 
-			LOG.error(message);
+			TasksResource.LOG.error(message);
 
 			throw new DMPControllerException(message);
 		}
 
 		if (resultJSON.size() <= 0) {
 
-			LOG.debug("result of task execution is empty");
+			TasksResource.LOG.debug("result of task execution is empty");
 
 			return buildResponse(null);
 		}
@@ -260,7 +260,7 @@ public class TasksResource {
 
 	/**
 	 * This endpoint executes the task that is given via its JSON representation and returns the result of the task execution.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one task
 	 * @return the result of the task execution
 	 * @throws IOException
@@ -281,7 +281,7 @@ public class TasksResource {
 
 		if (task == null) {
 
-			LOG.error("couldn't parse task JSON to Task");
+			TasksResource.LOG.error("couldn't parse task JSON to Task");
 
 			throw new DMPConverterException("couldn't parse task JSON to Task");
 		}
@@ -290,14 +290,14 @@ public class TasksResource {
 
 		if (job == null) {
 
-			LOG.error("there is no job for this task");
+			TasksResource.LOG.error("there is no job for this task");
 
 			throw new DMPConverterException("there is no job for this task");
 		}
 
 		if (job.getMappings() == null) {
 
-			LOG.error("there is are no mappings for this job of this task");
+			TasksResource.LOG.error("there is are no mappings for this job of this task");
 
 			throw new DMPConverterException("there is are no mappings for this job of this task");
 		}

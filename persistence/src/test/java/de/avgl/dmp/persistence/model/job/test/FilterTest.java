@@ -12,7 +12,7 @@ public class FilterTest extends GuicedTest {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(FilterTest.class);
 
-	private final ObjectMapper						objectMapper	= injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleFilterTest() {
@@ -23,7 +23,7 @@ public class FilterTest extends GuicedTest {
 				+ "               m:ind1 \"a\" ;\n" + "               m:subfield ?subField .\n" + "    ?subField rdf:value ?url .\n" + "}";
 
 		final Filter filter = new Filter();
-		//filter.setId(UUID.randomUUID().toString());
+		// filter.setId(UUID.randomUUID().toString());
 
 		filter.setExpression(expression);
 
@@ -32,11 +32,11 @@ public class FilterTest extends GuicedTest {
 		try {
 
 			json = objectMapper.writeValueAsString(filter);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("filter json: " + json);
+		FilterTest.LOG.debug("filter json: " + json);
 	}
 }

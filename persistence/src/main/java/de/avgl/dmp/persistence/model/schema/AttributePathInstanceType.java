@@ -13,7 +13,7 @@ package de.avgl.dmp.persistence.model.schema;
 public enum AttributePathInstanceType {
 
 	/**
-	 * The attribute path instance type to indicate functions ({@link Function}).
+	 * The attribute path instance type to indicate mapping attribute path instances ({@link MappingAttributePathInstance}).
 	 */
 	MappingAttributePathInstance("MappingAttributePathInstance");
 

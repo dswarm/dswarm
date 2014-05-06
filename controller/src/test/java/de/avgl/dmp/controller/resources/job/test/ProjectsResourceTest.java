@@ -386,7 +386,7 @@ public class ProjectsResourceTest extends
 
 		persistedProject.setMappings(updateMappings);
 
-		String updateProjectJSONString = objectMapper.writeValueAsString(persistedProject);
+		final String updateProjectJSONString = objectMapper.writeValueAsString(persistedProject);
 		final Project expectedProject = objectMapper.readValue(updateProjectJSONString, Project.class);
 		Assert.assertNotNull("the project JSON string shouldn't be null", updateProjectJSONString);
 
@@ -482,7 +482,7 @@ public class ProjectsResourceTest extends
 
 		for (int i = 1; i < 6; i++) {
 
-			if (i== 2 || i == 4) {
+			if (i == 2 || i == 4) {
 
 				// exclude attributes from internal model schema (because they should already exist)
 

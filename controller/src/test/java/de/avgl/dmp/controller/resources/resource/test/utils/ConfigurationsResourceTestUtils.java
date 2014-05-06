@@ -6,7 +6,8 @@ import de.avgl.dmp.persistence.model.resource.proxy.ProxyConfiguration;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.test.utils.ConfigurationServiceTestUtils;
 
-public class ConfigurationsResourceTestUtils extends ExtendedBasicDMPResourceTestUtils<ConfigurationServiceTestUtils, ConfigurationService, ProxyConfiguration, Configuration> {
+public class ConfigurationsResourceTestUtils extends
+		ExtendedBasicDMPResourceTestUtils<ConfigurationServiceTestUtils, ConfigurationService, ProxyConfiguration, Configuration> {
 
 	public ConfigurationsResourceTestUtils() {
 

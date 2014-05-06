@@ -5,8 +5,6 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 
-import de.avgl.dmp.persistence.service.schema.test.utils.AttributeServiceTestUtils;
-import de.avgl.dmp.persistence.service.schema.test.utils.ClaszServiceTestUtils;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -41,6 +39,8 @@ import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
 import de.avgl.dmp.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
+import de.avgl.dmp.persistence.service.schema.test.utils.AttributeServiceTestUtils;
+import de.avgl.dmp.persistence.service.schema.test.utils.ClaszServiceTestUtils;
 
 public class InternalGDMGraphServiceTest extends GuicedTest {
 
@@ -56,7 +56,7 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 	public void testReadGDMFromDB() throws Exception {
 
 		// process input data model
-		final ConfigurationService configurationService = injector.getInstance(ConfigurationService.class);
+		final ConfigurationService configurationService = GuicedTest.injector.getInstance(ConfigurationService.class);
 		final Configuration configuration = configurationService.createObjectTransactional().getObject();
 
 		// config for XML
@@ -64,9 +64,9 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 		configuration.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("record"));
 		configuration.addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode("xml"));
 
-		Configuration updatedConfiguration = configurationService.updateObjectTransactional(configuration).getObject();
+		final Configuration updatedConfiguration = configurationService.updateObjectTransactional(configuration).getObject();
 
-		final ResourceService resourceService = injector.getInstance(ResourceService.class);
+		final ResourceService resourceService = GuicedTest.injector.getInstance(ResourceService.class);
 		final Resource resource = resourceService.createObjectTransactional().getObject();
 		resource.setName("dmpf_bsp1.xml");
 		resource.setType(ResourceType.FILE);
@@ -77,15 +77,15 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 
 		resource.addAttribute("path", resourceFile.getAbsolutePath());
 
-		Resource updatedResource = resourceService.updateObjectTransactional(resource).getObject();
+		final Resource updatedResource = resourceService.updateObjectTransactional(resource).getObject();
 
-		final DataModelService dataModelService = injector.getInstance(DataModelService.class);
+		final DataModelService dataModelService = GuicedTest.injector.getInstance(DataModelService.class);
 		final DataModel dataModel = dataModelService.createObjectTransactional().getObject();
 
 		dataModel.setDataResource(updatedResource);
 		dataModel.setConfiguration(updatedConfiguration);
 
-		DataModel updatedDataModel = dataModelService.updateObjectTransactional(dataModel).getObject();
+		final DataModel updatedDataModel = dataModelService.updateObjectTransactional(dataModel).getObject();
 
 		final com.hp.hpl.jena.rdf.model.Model model = ModelFactory.createDefaultModel();
 
@@ -95,7 +95,7 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 		final RDFModel rdfModel = new RDFModel(model, "http://data.slub-dresden.de/datamodels/22/records/18d68601-0623-42b4-ad89-f8954cc25912",
 				"http://www.openarchives.org/OAI/2.0/recordType");
 
-		final InternalRDFGraphService rdfGraphService = injector.getInstance(InternalRDFGraphService.class);
+		final InternalRDFGraphService rdfGraphService = GuicedTest.injector.getInstance(InternalRDFGraphService.class);
 
 		rdfGraphService.createObject(dataModel.getId(), rdfModel);
 		// finished writing RDF statements to graph
@@ -108,7 +108,7 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 
 		final Schema schema = freshDataModel.getSchema();
 
-		final InternalGDMGraphService gdmGraphService = injector.getInstance(InternalGDMGraphService.class);
+		final InternalGDMGraphService gdmGraphService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
 
 		final Optional<Map<String, Model>> optionalModelMap = gdmGraphService.getObjects(updatedDataModel.getId(), Optional.<Integer> absent());
 
@@ -167,17 +167,17 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 		}
 
 		dataModelService.deleteObject(updatedDataModel.getId());
-		final SchemaService schemaService = injector.getInstance(SchemaService.class);
+		final SchemaService schemaService = GuicedTest.injector.getInstance(SchemaService.class);
 
 		schemaService.deleteObject(schema.getId());
-		
+
 		final AttributePathServiceTestUtils attributePathServiceTestUtils = new AttributePathServiceTestUtils();
 
 		for (final AttributePath attributePath : attributePaths.values()) {
 
 			attributePathServiceTestUtils.deleteObject(attributePath);
 		}
-		
+
 		final AttributeServiceTestUtils attributeServiceTestUtils = new AttributeServiceTestUtils();
 
 		for (final Attribute attribute : attributes.values()) {

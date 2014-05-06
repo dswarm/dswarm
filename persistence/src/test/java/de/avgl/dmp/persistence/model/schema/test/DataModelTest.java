@@ -22,7 +22,7 @@ public class DataModelTest extends GuicedTest {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(DataModelTest.class);
 
-	private final ObjectMapper						objectMapper	= injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleDataModelTest() {
@@ -120,9 +120,9 @@ public class DataModelTest extends GuicedTest {
 		parameters.put(parameterKey, parameterValue);
 
 		configuration.setParameters(parameters);
-		
+
 		resource.addConfiguration(configuration);
-		
+
 		// data model
 		final DataModel dataModel = new DataModel();
 		dataModel.setName("my data model");
@@ -136,12 +136,12 @@ public class DataModelTest extends GuicedTest {
 		try {
 
 			json = objectMapper.writeValueAsString(dataModel);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("data model json: " + json);
+		DataModelTest.LOG.debug("data model json: " + json);
 	}
 
 	private Attribute createAttribute(final String id, final String name) {

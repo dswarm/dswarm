@@ -1,10 +1,8 @@
 package de.avgl.dmp.converter.flow;
 
 import java.io.Reader;
-import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
-import java.util.List;
 
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
@@ -16,7 +14,6 @@ import com.google.common.base.Optional;
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.mf.stream.reader.CsvReader;
 import de.avgl.dmp.converter.mf.stream.source.BOMResourceOpener;
-import de.avgl.dmp.persistence.model.internal.rdf.RDFModel;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
@@ -47,9 +44,9 @@ public abstract class AbstractCSVResourceFlow<T> {
 	private final Optional<String>					dataModelId;
 
 	protected Optional<Integer>						atMost;
-	
-	protected final String									dataResourceBaseURI;
-	protected final String dataResourceSchemaBaseURI;
+
+	protected final String							dataResourceBaseURI;
+	protected final String							dataResourceSchemaBaseURI;
 
 	public AbstractCSVResourceFlow(final DataModel dataModel) throws DMPConverterException {
 
@@ -99,7 +96,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 		} catch (final UnsupportedCharsetException e) {
 			throw new DMPConverterException(String.format("Unsupported Encoding - [%s]", e.getCharsetName()));
 		}
-		
+
 		dataResourceBaseURI = DataModelUtils.determineDataModelBaseURI(dataModel);
 		dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
 	}
@@ -190,7 +187,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 
 		if (valueNode == null) {
 
-			LOG.debug("couldn't find value for parameter '" + key + "'; try to utilise default value for this parameter");
+			AbstractCSVResourceFlow.LOG.debug("couldn't find value for parameter '" + key + "'; try to utilise default value for this parameter");
 		}
 
 		return valueNode;
@@ -255,7 +252,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 
 		return apply(filePath, opener);
 	}
-	
+
 	public T applyResource(final String resourcePath) throws DMPConverterException {
 
 		final BOMResourceOpener opener = new BOMResourceOpener();

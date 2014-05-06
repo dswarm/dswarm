@@ -1,11 +1,10 @@
 package de.avgl.dmp.persistence.model.types;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Preconditions;
 
 /**
  *
@@ -19,14 +18,14 @@ public class Tuple<V1, V2> {
 
 	@JsonProperty("v1")
 	private final V1	v1;
-	
+
 	@JsonProperty("v2")
 	private final V2	v2;
 
 	@JsonCreator
 	public Tuple(@JsonProperty("v1") final V1 v1, @JsonProperty("v2") final V2 v2) {
-		this.v1 = checkNotNull(v1);
-		this.v2 = checkNotNull(v2);
+		this.v1 = Preconditions.checkNotNull(v1);
+		this.v2 = Preconditions.checkNotNull(v2);
 	}
 
 	public V1 v1() {

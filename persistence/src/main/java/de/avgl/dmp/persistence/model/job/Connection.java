@@ -14,13 +14,13 @@ public class Connection extends AdvancedDMPJPAObject {
 	 */
 	private static final long	serialVersionUID	= 1L;
 
-	private ConnectionType	type;
+	private ConnectionType		type;
 
 	@XmlTransient
-	private Component		source;
+	private Component			source;
 
 	@XmlTransient
-	private Component		target;
+	private Component			target;
 
 	public Connection(final String id) {
 
@@ -60,22 +60,22 @@ public class Connection extends AdvancedDMPJPAObject {
 	@XmlElement(name = "source")
 	public Long getSourceId() {
 
-		if (this.source == null) {
+		if (source == null) {
 
 			return null;
 		}
 
-		return this.source.getId();
+		return source.getId();
 	}
 
 	@XmlElement(name = "target")
 	public Long getTargetId() {
 
-		if (this.target == null) {
+		if (target == null) {
 
 			return null;
 		}
 
-		return this.target.getId();
+		return target.getId();
 	}
 }

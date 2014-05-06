@@ -1,7 +1,5 @@
 package de.avgl.dmp.controller.status;
 
-import static com.codahale.metrics.MetricRegistry.name;
-
 import java.lang.management.ManagementFactory;
 import java.util.Map;
 
@@ -57,20 +55,20 @@ public class DMPStatus {
 
 		registry = registryArg;
 
-		allRequestsMeter = registry.meter(name(ResourcesResource.class, "requests", "all"));
+		allRequestsMeter = registry.meter(MetricRegistry.name(ResourcesResource.class, "requests", "all"));
 
-		createNewResourceTimer = registry.timer(name(ResourcesResource.class, "post-requests", "resources", "create"));
-		updateResourceTimer = registry.timer(name(ResourcesResource.class, "put-requests", "resources", "update"));
-		deleteResourceTimer = registry.timer(name(ResourcesResource.class, "delete-requests", "resources", "delete"));
-		configurationsPreviewTimer = registry.timer(name(ResourcesResource.class, "post-requests", "configurations", "preview"));
-		createNewConfigurationsTimer = registry.timer(name(ResourcesResource.class, "post-requests", "configurations", "create"));
+		createNewResourceTimer = registry.timer(MetricRegistry.name(ResourcesResource.class, "post-requests", "resources", "create"));
+		updateResourceTimer = registry.timer(MetricRegistry.name(ResourcesResource.class, "put-requests", "resources", "update"));
+		deleteResourceTimer = registry.timer(MetricRegistry.name(ResourcesResource.class, "delete-requests", "resources", "delete"));
+		configurationsPreviewTimer = registry.timer(MetricRegistry.name(ResourcesResource.class, "post-requests", "configurations", "preview"));
+		createNewConfigurationsTimer = registry.timer(MetricRegistry.name(ResourcesResource.class, "post-requests", "configurations", "create"));
 
-		getAllResourcesTimer = registry.timer(name(ResourcesResource.class, "get-requests", "resources", "all"));
-		getSingleResourcesTimer = registry.timer(name(ResourcesResource.class, "get-requests", "resources", "specific"));
-		getAllConfigurationsTimer = registry.timer(name(ResourcesResource.class, "get-requests", "configurations", "all"));
-		getSingleConfigurationTimer = registry.timer(name(ResourcesResource.class, "get-requests", "configurations", "specific"));
-		getConfigurationsSchemaTimer = registry.timer(name(ResourcesResource.class, "get-requests", "configurations", "schema"));
-		getConfigurationsDataTimer = registry.timer(name(ResourcesResource.class, "get-requests", "configurations", "data"));
+		getAllResourcesTimer = registry.timer(MetricRegistry.name(ResourcesResource.class, "get-requests", "resources", "all"));
+		getSingleResourcesTimer = registry.timer(MetricRegistry.name(ResourcesResource.class, "get-requests", "resources", "specific"));
+		getAllConfigurationsTimer = registry.timer(MetricRegistry.name(ResourcesResource.class, "get-requests", "configurations", "all"));
+		getSingleConfigurationTimer = registry.timer(MetricRegistry.name(ResourcesResource.class, "get-requests", "configurations", "specific"));
+		getConfigurationsSchemaTimer = registry.timer(MetricRegistry.name(ResourcesResource.class, "get-requests", "configurations", "schema"));
+		getConfigurationsDataTimer = registry.timer(MetricRegistry.name(ResourcesResource.class, "get-requests", "configurations", "data"));
 	}
 
 	public Timer.Context createNewResource() {
@@ -82,12 +80,12 @@ public class DMPStatus {
 		allRequestsMeter.mark();
 		return updateResourceTimer.time();
 	}
-	
+
 	public Timer.Context deleteResource() {
 		allRequestsMeter.mark();
 		return deleteResourceTimer.time();
 	}
-	
+
 	/**
 	 * A generic create-method-timer creation method. Creates a timer for object creation of the given resource.
 	 * 
@@ -99,7 +97,7 @@ public class DMPStatus {
 
 		if (!createNewObjectTimers.containsKey(objectType)) {
 
-			final Timer createNewObjectTimer = registry.timer(name(clasz, "post-requests", objectType, "create"));
+			final Timer createNewObjectTimer = registry.timer(MetricRegistry.name(clasz, "post-requests", objectType, "create"));
 
 			createNewObjectTimers.put(objectType, createNewObjectTimer);
 		}
@@ -135,7 +133,7 @@ public class DMPStatus {
 
 		if (!getAllObjectsTimers.containsKey(objectType)) {
 
-			final Timer allObjectsTimer = registry.timer(name(clasz, "get-requests", objectType, "all"));
+			final Timer allObjectsTimer = registry.timer(MetricRegistry.name(clasz, "get-requests", objectType, "all"));
 
 			getAllObjectsTimers.put(objectType, allObjectsTimer);
 		}
@@ -161,7 +159,7 @@ public class DMPStatus {
 
 		if (!getObjectTimers.containsKey(objectType)) {
 
-			final Timer getObjectTimer = registry.timer(name(clasz, "get-requests", objectType, "specific"));
+			final Timer getObjectTimer = registry.timer(MetricRegistry.name(clasz, "get-requests", objectType, "specific"));
 
 			getObjectTimers.put(objectType, getObjectTimer);
 		}
@@ -182,7 +180,7 @@ public class DMPStatus {
 
 		if (!updateObjectTimers.containsKey(objectType)) {
 
-			final Timer updateObjectTimer = registry.timer(name(clasz, "put-requests", objectType, "specific"));
+			final Timer updateObjectTimer = registry.timer(MetricRegistry.name(clasz, "put-requests", objectType, "specific"));
 
 			updateObjectTimers.put(objectType, updateObjectTimer);
 		}
@@ -190,7 +188,7 @@ public class DMPStatus {
 		allRequestsMeter.mark();
 		return updateObjectTimers.get(objectType).time();
 	}
-	
+
 	public Timer.Context getAllConfigurations() {
 		allRequestsMeter.mark();
 		return getAllConfigurationsTimer.time();
@@ -212,7 +210,7 @@ public class DMPStatus {
 	}
 
 	/**
-	 * A generic delete-specific-object-method-timer creation method. Creates a timer for specific object deletion of the given 
+	 * A generic delete-specific-object-method-timer creation method. Creates a timer for specific object deletion of the given
 	 * resource.
 	 * 
 	 * @param objectType the resource type
@@ -223,7 +221,7 @@ public class DMPStatus {
 
 		if (!deleteObjectTimers.containsKey(objectType)) {
 
-			final Timer deleteObjectTimer = registry.timer(name(clasz, "delete-requests", objectType, "delete"));
+			final Timer deleteObjectTimer = registry.timer(MetricRegistry.name(clasz, "delete-requests", objectType, "delete"));
 
 			deleteObjectTimers.put(objectType, deleteObjectTimer);
 		}
@@ -231,7 +229,7 @@ public class DMPStatus {
 		allRequestsMeter.mark();
 		return deleteObjectTimers.get(objectType).time();
 	}
-	
+
 	public void stop(final Timer.Context context) {
 		context.stop();
 	}

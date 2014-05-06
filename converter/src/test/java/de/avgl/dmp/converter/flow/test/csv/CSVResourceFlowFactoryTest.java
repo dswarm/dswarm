@@ -2,10 +2,11 @@ package de.avgl.dmp.converter.flow.test.csv;
 
 import java.io.Reader;
 
-import com.fasterxml.jackson.databind.node.TextNode;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.junit.Test;
+
+import com.fasterxml.jackson.databind.node.TextNode;
 
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.AbstractCSVResourceFlow;
@@ -17,8 +18,9 @@ import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
 public class CSVResourceFlowFactoryTest {
 
 	private class TestFlow extends AbstractCSVResourceFlow<String> {
+
 		@Override
-		protected String process(ObjectPipe<String, ObjectReceiver<Reader>> opener, String obj, CsvReader pipe) {
+		protected String process(final ObjectPipe<String, ObjectReceiver<Reader>> opener, final String obj, final CsvReader pipe) {
 			return "";
 		}
 	}
@@ -38,8 +40,7 @@ public class CSVResourceFlowFactoryTest {
 
 	@Test(expected = DMPConverterException.class)
 	public void testNoConstructor2() throws Exception {
-		CSVResourceFlowFactory.fromConfigurationParameters("UTF-8", '\\', '"', ';', "\n",
-				TestFlow.class);
+		CSVResourceFlowFactory.fromConfigurationParameters("UTF-8", '\\', '"', ';', "\n", TestFlow.class);
 
 	}
 }

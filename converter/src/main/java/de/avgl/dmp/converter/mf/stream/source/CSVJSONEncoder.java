@@ -2,10 +2,6 @@ package de.avgl.dmp.converter.mf.stream.source;
 
 import java.util.List;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.collect.Lists;
 import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
@@ -14,13 +10,18 @@ import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Lists;
+
 import de.avgl.dmp.persistence.model.types.Tuple;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
  * Serialises an object as JSON. Records and entities are represented as objects unless their name ends with []. If the name ends
  * with [], an array is created.
- *
+ * 
  * @author tgaengler
  * @author phorn
  */
@@ -29,14 +30,14 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 @Out(JsonNode.class)
 public final class CSVJSONEncoder extends DefaultStreamPipe<ObjectReceiver<JsonNode>> {
 
-	private List<String>	header;
+	private List<String>				header;
 	private List<Tuple<String, String>>	values;
-	private ArrayNode		schemaJSON;
-	private ObjectNode		dataJSON;
+	private ArrayNode					schemaJSON;
+	private ObjectNode					dataJSON;
 
-	private boolean			withHeader;
-	private boolean			firstLine;
-	private boolean			firstLineInitialized;
+	private boolean						withHeader;
+	private boolean						firstLine;
+	private boolean						firstLineInitialized;
 
 	@Override
 	public void startRecord(final String id) {

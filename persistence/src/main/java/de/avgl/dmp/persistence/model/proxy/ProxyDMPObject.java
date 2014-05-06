@@ -22,7 +22,7 @@ import de.avgl.dmp.persistence.model.DMPObject;
 @XmlRootElement
 public abstract class ProxyDMPObject<POJOCLASS extends DMPObject<IDTYPE>, IDTYPE> implements Serializable {
 
-	protected final POJOCLASS		dmpObject;
+	protected final POJOCLASS	dmpObject;
 
 	private final RetrievalType	type;
 

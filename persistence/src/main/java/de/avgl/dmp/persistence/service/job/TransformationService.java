@@ -59,7 +59,7 @@ public class TransformationService extends BasicFunctionService<ProxyTransformat
 			}
 		}
 
-		LOG.debug("transformation after prepare for removal: " + ToStringBuilder.reflectionToString(object));
+		TransformationService.LOG.debug("transformation after prepare for removal: " + ToStringBuilder.reflectionToString(object));
 	}
 
 	/**

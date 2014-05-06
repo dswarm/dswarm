@@ -30,8 +30,8 @@ public class ProxyMapping extends ProxyBasicDMPJPAObject<Mapping> {
 	}
 
 	/**
-	 * Creates a new proxy with the given real mapping and the type how the mapping was processed by the mapping persistence service,
-	 * e.g., {@link RetrievalType.CREATED}.
+	 * Creates a new proxy with the given real mapping and the type how the mapping was processed by the mapping persistence
+	 * service, e.g., {@link RetrievalType.CREATED}.
 	 * 
 	 * @param mappingArg a mapping that was processed by the mapping persistence service
 	 * @param typeArg the type how this mapping was processed by the mapping persistence service

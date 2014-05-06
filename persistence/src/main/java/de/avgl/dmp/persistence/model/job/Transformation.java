@@ -21,7 +21,7 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
  * A transformation is a complex {@link Function} that consists of {@link Component}s.<br/>
  * <br/>
  * TODO: maybe add some methods to retrieve starting and finishing components
- *
+ * 
  * @author tgaengler
  */
 @XmlRootElement
@@ -59,12 +59,12 @@ public class Transformation extends Function {
 
 	private Transformation(final long idValue) {
 		super(FunctionType.Transformation);
-		this.id = idValue;
+		id = idValue;
 	}
 
 	/**
 	 * Gets the components of the transformation.
-	 *
+	 * 
 	 * @return the components of the transformation
 	 */
 	public Set<Component> getComponents() {
@@ -74,7 +74,7 @@ public class Transformation extends Function {
 
 	/**
 	 * Sets the components of the transformation
-	 *
+	 * 
 	 * @param componentsArg a new collection of components
 	 */
 	public void setComponents(final Set<Component> componentsArg) {
@@ -120,7 +120,7 @@ public class Transformation extends Function {
 	/**
 	 * Adds a new component to the collection of components of this transformation.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param component a new component
 	 */
 	public void addComponent(final Component component) {
@@ -147,7 +147,7 @@ public class Transformation extends Function {
 	/**
 	 * Removes an existing component from the collection of components of this transformation.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param component an existing component that should be removed
 	 */
 	public void removeComponent(final Component component) {
@@ -178,20 +178,21 @@ public class Transformation extends Function {
 	}
 
 	/**
-	 * Create a new {@code Transformation} as a copy from a existing transformation with a specific id.
-	 * <br>
+	 * Create a new {@code Transformation} as a copy from a existing transformation with a specific id. <br>
 	 * <b>Use with care!</b>
-	 * <p>This factory is to be used by
-	 *  {@link de.avgl.dmp.persistence.model.job.utils.TransformationDeserializer}
-	 *  to avoid reflection based access to a private/protected field, since
-	 *  the Json deserializer needs a way to set the id that was provided by the JSON.</p>
-	 * <p>The id is otherwise assigned by the database/Hibernate layer. You should
-	 *  never need this outside of {@code TransformationDeserializer}.</p>
-	 *
+	 * <p>
+	 * This factory is to be used by {@link de.avgl.dmp.persistence.model.job.utils.TransformationDeserializer} to avoid
+	 * reflection based access to a private/protected field, since the Json deserializer needs a way to set the id that was
+	 * provided by the JSON.
+	 * </p>
+	 * <p>
+	 * The id is otherwise assigned by the database/Hibernate layer. You should never need this outside of
+	 * {@code TransformationDeserializer}.
+	 * </p>
+	 * 
 	 * @param transformation the base transformation that will be copied
-	 * @param idValue  the target transformation's id value
-	 * @return a new transformation with the given id and all other attributes copied
-	 *  from the provided transformation.
+	 * @param idValue the target transformation's id value
+	 * @return a new transformation with the given id and all other attributes copied from the provided transformation.
 	 */
 	public static Transformation withId(final Transformation transformation, final long idValue) {
 		final Transformation newTransformation = new Transformation(idValue);

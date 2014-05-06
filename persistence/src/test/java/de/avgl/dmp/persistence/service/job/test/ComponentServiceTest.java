@@ -30,13 +30,13 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<ProxyComponent, 
 	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	private final Map<Long, Function>				functions		= Maps.newLinkedHashMap();
-	
+
 	private final FunctionServiceTestUtils			functionServiceTestUtils;
 
 	public ComponentServiceTest() {
 
 		super("component", ComponentService.class);
-		
+
 		functionServiceTestUtils = new FunctionServiceTestUtils();
 	}
 
@@ -47,7 +47,8 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<ProxyComponent, 
 
 		parameters.add("inputString");
 
-		final Function function = functionServiceTestUtils.createFunction("trim", "trims leading and trailing whitespaces from a given string", parameters);
+		final Function function = functionServiceTestUtils.createFunction("trim", "trims leading and trailing whitespaces from a given string",
+				parameters);
 
 		final String componentName = "my trim component";
 		final Map<String, String> parameterMapping = Maps.newLinkedHashMap();
@@ -82,12 +83,12 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<ProxyComponent, 
 		try {
 
 			json = objectMapper.writeValueAsString(updatedComponent);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("component json: " + json);
+		ComponentServiceTest.LOG.debug("component json: " + json);
 
 		// clean up DB
 		deleteObject(component.getId());
@@ -218,12 +219,12 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<ProxyComponent, 
 		try {
 
 			json = objectMapper.writeValueAsString(updatedComponent);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("component json: " + json);
+		ComponentServiceTest.LOG.debug("component json: " + json);
 
 		// clean-up
 		deleteObject(updatedComponent.getId());

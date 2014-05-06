@@ -89,13 +89,13 @@ public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 					try {
 
 						actualModelJSON = mapper.readValue(modelJSON, ArrayNode.class);
-					} catch (JsonParseException e) {
+					} catch (final JsonParseException e) {
 
 						Assert.assertTrue("something went wrong while deserializing the actual result", false);
-					} catch (JsonMappingException e) {
+					} catch (final JsonMappingException e) {
 
 						Assert.assertTrue("something went wrong while deserializing the actual result", false);
-					} catch (IOException e) {
+					} catch (final IOException e) {
 
 						Assert.assertTrue("something went wrong while deserializing the actual result", false);
 					}
@@ -110,7 +110,7 @@ public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 
 					final ObjectNode firstElementJSONObject = (ObjectNode) firstElementJSON;
 
-					Iterator<String> fieldNames = firstElementJSONObject.fieldNames();
+					final Iterator<String> fieldNames = firstElementJSONObject.fieldNames();
 
 					Assert.assertNotNull("the field names of the first element of the actual result JSON array shouldn't be null", fieldNames);
 					Assert.assertTrue("the field names of the first element of the actual result JSON array should at least contain one element",
@@ -147,14 +147,14 @@ public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 
 						try {
 							dataModelId = Long.valueOf(dataModelIdString);
-						} catch (NumberFormatException e) {
+						} catch (final NumberFormatException e) {
 
 							Assert.assertTrue("something went wrong while converting the data model id string to a number", false);
 						}
 
 						Assert.assertNotNull("the converted data model id should be a number", dataModelId);
 
-						expectedResultLength = expectedResult.length() + (offset * (dataModelIdString.length() -1));
+						expectedResultLength = expectedResult.length() + (offset * (dataModelIdString.length() - 1));
 					} else {
 
 						// data model id string is empty - this should never happen
@@ -220,7 +220,7 @@ public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 	@Test
 	public void testFromConfiguration3() throws Exception {
 
-		final DataModelService dataModelService = injector.getInstance(DataModelService.class);
+		final DataModelService dataModelService = GuicedTest.injector.getInstance(DataModelService.class);
 		final DataModel dataModel = dataModelService.createObjectTransactional().getObject();
 
 		dataModel.setConfiguration(new Configuration() {

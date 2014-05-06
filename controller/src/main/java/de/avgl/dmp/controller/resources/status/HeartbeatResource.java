@@ -11,21 +11,17 @@ import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
-
 @RequestScoped
 @Api(value = "/_ping", description = "Ping the server for a heartbeat.")
 @Path("_ping")
 public class HeartbeatResource {
 
-	private static final String RESPONSE = "pong";
+	private static final String	RESPONSE	= "pong";
 
 	@ApiOperation("send a ping, receive a pong")
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response getPong() {
-		return Response
-				.ok(RESPONSE)
-				.header(HttpHeaders.CACHE_CONTROL, "must-revalidate,no-cache,no-store")
-				.build();
+		return Response.ok(HeartbeatResource.RESPONSE).header(HttpHeaders.CACHE_CONTROL, "must-revalidate,no-cache,no-store").build();
 	}
 }

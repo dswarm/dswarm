@@ -9,12 +9,12 @@ import com.google.inject.servlet.ServletModule;
 
 import de.avgl.dmp.controller.doc.SwaggerConfig;
 import de.avgl.dmp.controller.servlet.filter.MetricsFilter;
-
-import static de.avgl.dmp.controller.utils.DMPControllerUtils.loadProperties;
+import de.avgl.dmp.controller.utils.DMPControllerUtils;
 
 /**
- * The Guice configuration of the servlet of the backend API. Mainly, servlets, filters and configuration properties are defined here.
- *
+ * The Guice configuration of the servlet of the backend API. Mainly, servlets, filters and configuration properties are defined
+ * here.
+ * 
  * @author phorn
  */
 public class DMPServletModule extends ServletModule {
@@ -32,9 +32,10 @@ public class DMPServletModule extends ServletModule {
 
 		bind(String.class).annotatedWith(Names.named("ApiVersion")).toInstance("1.0.1");
 
-		final Properties properties = loadProperties();
+		final Properties properties = DMPControllerUtils.loadProperties();
 
-		bind(String.class).annotatedWith(Names.named("ApiBaseUrl")).toInstance(properties.getProperty("swagger.base_url", "http://localhost:8087/dmp"));
+		bind(String.class).annotatedWith(Names.named("ApiBaseUrl")).toInstance(
+				properties.getProperty("swagger.base_url", "http://localhost:8087/dmp"));
 
 		serve("/api-docs").with(SwaggerConfig.class);
 		filter("/*").through(MetricsFilter.class);

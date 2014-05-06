@@ -30,8 +30,8 @@ public class ProxyAttributePath extends ProxyDMPJPAObject<AttributePath> {
 	}
 
 	/**
-	 * Creates a new proxy with the given real attribute path and the type how the attribute path was processed by the attribute path persistence service,
-	 * e.g., {@link RetrievalType.CREATED}.
+	 * Creates a new proxy with the given real attribute path and the type how the attribute path was processed by the attribute
+	 * path persistence service, e.g., {@link RetrievalType.CREATED}.
 	 * 
 	 * @param attributePathArg a attribute path that was processed by the attribute path persistence service
 	 * @param typeArg the type how this attribute path was processed by the attribute path persistence service

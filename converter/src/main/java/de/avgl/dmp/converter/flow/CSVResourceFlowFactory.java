@@ -1,24 +1,21 @@
 package de.avgl.dmp.converter.flow;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+
+import com.google.common.base.Preconditions;
 
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 
 /**
- * 
  * @author phorn
- *
  */
 public final class CSVResourceFlowFactory {
 
-	public static <T, U extends AbstractCSVResourceFlow<T>> U fromConfiguration(
-			final Configuration configuration,
-			final Class<U> clazz) throws DMPConverterException {
+	public static <T, U extends AbstractCSVResourceFlow<T>> U fromConfiguration(final Configuration configuration, final Class<U> clazz)
+			throws DMPConverterException {
 
 		final Constructor<U> constructor;
 		try {
@@ -42,12 +39,11 @@ public final class CSVResourceFlowFactory {
 			throw new DMPConverterException(e.getCause().getMessage());
 		}
 
-		return checkNotNull(flow, "something went wrong while apply configuration to resource");
+		return Preconditions.checkNotNull(flow, "something went wrong while apply configuration to resource");
 	}
-	
-	public static <T, U extends AbstractCSVResourceFlow<T>> U fromDataModel(
-			final DataModel dataModel,
-			final Class<U> clazz) throws DMPConverterException {
+
+	public static <T, U extends AbstractCSVResourceFlow<T>> U fromDataModel(final DataModel dataModel, final Class<U> clazz)
+			throws DMPConverterException {
 
 		final Constructor<U> constructor;
 		try {
@@ -71,15 +67,12 @@ public final class CSVResourceFlowFactory {
 			throw new DMPConverterException(e.getCause().getMessage());
 		}
 
-		return checkNotNull(flow, "something went wrong while apply data model to resource");
+		return Preconditions.checkNotNull(flow, "something went wrong while apply data model to resource");
 	}
-	
-	public static <T, U extends AbstractCSVResourceFlow<T>> U fromConfigurationParameters(
-			final String encoding, final Character escapeCharacter,
-			final Character quoteCharacter, final Character columnDelimiter,
-			final String rowDelimiter,
-			final Class<U> clazz) throws DMPConverterException {
 
+	public static <T, U extends AbstractCSVResourceFlow<T>> U fromConfigurationParameters(final String encoding, final Character escapeCharacter,
+			final Character quoteCharacter, final Character columnDelimiter, final String rowDelimiter, final Class<U> clazz)
+			throws DMPConverterException {
 
 		final Constructor<U> constructor;
 		try {
@@ -88,7 +81,6 @@ public final class CSVResourceFlowFactory {
 			e.printStackTrace();
 			throw new DMPConverterException("no Configuration constructor for class " + clazz.getSimpleName());
 		}
-
 
 		final U flow;
 		try {
@@ -104,6 +96,6 @@ public final class CSVResourceFlowFactory {
 			throw new DMPConverterException(e.getCause().getMessage());
 		}
 
-		return checkNotNull(flow, "something went wrong while apply configuration to resource");
+		return Preconditions.checkNotNull(flow, "something went wrong while apply configuration to resource");
 	}
 }

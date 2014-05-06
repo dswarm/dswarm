@@ -7,7 +7,6 @@ import de.avgl.dmp.persistence.service.InternalModelService;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 import de.avgl.dmp.persistence.service.internal.graph.InternalGDMGraphService;
 import de.avgl.dmp.persistence.service.internal.graph.InternalRDFGraphService;
-import de.avgl.dmp.persistence.service.internal.memorydb.InternalMemoryDbService;
 import de.avgl.dmp.persistence.service.internal.triple.InternalTripleService;
 
 /**
@@ -17,11 +16,6 @@ import de.avgl.dmp.persistence.service.internal.triple.InternalTripleService;
  */
 @Singleton
 public class InternalServiceFactoryImpl implements InternalModelServiceFactory {
-
-	/**
-	 * The memory DB internal model service implementation.
-	 */
-	private final InternalMemoryDbService	internalMemoryDbService;
 
 	/**
 	 * The triple internal model service implementation.
@@ -45,23 +39,12 @@ public class InternalServiceFactoryImpl implements InternalModelServiceFactory {
 	 * @param internalTripleService the triple internal model service implementation
 	 */
 	@Inject
-	public InternalServiceFactoryImpl(final InternalMemoryDbService internalMemoryDbService, final InternalTripleService internalTripleService,
-			final InternalRDFGraphService internalRDFGraphService, final InternalGDMGraphService internalGDMGraphService) {
+	public InternalServiceFactoryImpl(final InternalTripleService internalTripleService, final InternalRDFGraphService internalRDFGraphService,
+			final InternalGDMGraphService internalGDMGraphService) {
 
-		this.internalMemoryDbService = internalMemoryDbService;
 		this.internalTripleService = internalTripleService;
 		this.internalRDFGraphService = internalRDFGraphService;
 		this.internalGDMGraphService = internalGDMGraphService;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Deprecated
-	@Override
-	public InternalModelService getMemoryDbInternalService() {
-
-		return internalMemoryDbService;
 	}
 
 	/**

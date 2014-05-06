@@ -24,9 +24,9 @@ public final class CsvDecoder extends DefaultObjectPipe<CSVRecord, StreamReceive
 	private boolean		hasHeadersProcessed;
 	private String[]	header	= new String[0];
 	private int			count;
-	
-	private String									dataResourceBaseURI;
-	private String dataResourceSchemaBaseURI;
+
+	private String		dataResourceBaseURI;
+	private String		dataResourceSchemaBaseURI;
 
 	@Override
 	public void process(final CSVRecord record) {
@@ -47,17 +47,17 @@ public final class CsvDecoder extends DefaultObjectPipe<CSVRecord, StreamReceive
 				while (headerIter.hasNext()) {
 
 					final String headerColumnName = headerIter.next();
-					
+
 					final String headerColumnURI;
-					
-					if(dataResourceSchemaBaseURI != null) {
-						
+
+					if (dataResourceSchemaBaseURI != null) {
+
 						headerColumnURI = dataResourceSchemaBaseURI + headerColumnName;
 					} else {
-						
+
 						headerColumnURI = headerColumnName;
 					}
-					
+
 					header[i] = headerColumnURI;
 					i++;
 				}
@@ -103,14 +103,14 @@ public final class CsvDecoder extends DefaultObjectPipe<CSVRecord, StreamReceive
 
 		hasHeader = hasHeaderArg;
 	}
-	
+
 	public void setDataResourceBaseURI(final String dataResourceBaseURIArg) {
-		
+
 		dataResourceBaseURI = dataResourceBaseURIArg;
 	}
-	
+
 	public void setDataResourceSchemaBaseURI(final String dataResourceSchemaBaseURIArg) {
-		
+
 		dataResourceSchemaBaseURI = dataResourceSchemaBaseURIArg;
 	}
 }

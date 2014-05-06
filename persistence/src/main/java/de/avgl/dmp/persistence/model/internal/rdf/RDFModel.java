@@ -145,11 +145,13 @@ public class RDFModel implements Model {
 	 * 
 	 * @return the record class identifier
 	 */
+	@Override
 	public String getRecordClassURI() {
 
 		return recordClassURI;
 	}
 
+	@Override
 	public void setRecordURIs(final Set<String> recordURIsArg) {
 
 		recordURIs.clear();
@@ -168,14 +170,14 @@ public class RDFModel implements Model {
 
 		if (model == null) {
 
-			LOG.debug("model is null, can't convert model to JSON");
+			RDFModel.LOG.debug("model is null, can't convert model to JSON");
 
 			return null;
 		}
 
 		if (getRecordURIs() == null) {
 
-			LOG.debug("resource URI is null, can't convert model to JSON");
+			RDFModel.LOG.debug("resource URI is null, can't convert model to JSON");
 
 			return null;
 		}
@@ -189,7 +191,7 @@ public class RDFModel implements Model {
 
 		if (recordResource == null) {
 
-			LOG.debug("couldn't find record resource for record  uri '" + getRecordURIs() + "' in model");
+			RDFModel.LOG.debug("couldn't find record resource for record  uri '" + getRecordURIs() + "' in model");
 
 			return null;
 		}
@@ -209,14 +211,14 @@ public class RDFModel implements Model {
 
 		if (model == null) {
 
-			LOG.debug("model is null, can't convert model to JSON");
+			RDFModel.LOG.debug("model is null, can't convert model to JSON");
 
 			return null;
 		}
 
 		if (getRecordURIs() == null) {
 
-			LOG.debug("resource URI is null, can't convert model to JSON");
+			RDFModel.LOG.debug("resource URI is null, can't convert model to JSON");
 
 			return null;
 		}
@@ -247,7 +249,7 @@ public class RDFModel implements Model {
 
 			if (recordResource == null) {
 
-				LOG.debug("couldn't find record resource for record  uri '" + getRecordURIs() + "' in model");
+				RDFModel.LOG.debug("couldn't find record resource for record  uri '" + getRecordURIs() + "' in model");
 
 				return null;
 			}
@@ -292,14 +294,14 @@ public class RDFModel implements Model {
 
 		if (model == null) {
 
-			LOG.debug("model is null, can't determine attribute paths from JSON");
+			RDFModel.LOG.debug("model is null, can't determine attribute paths from JSON");
 
 			return null;
 		}
 
 		if (recordURIs == null) {
 
-			LOG.debug("resource URIs are null, can't determine attribute paths from JSON");
+			RDFModel.LOG.debug("resource URIs are null, can't determine attribute paths from JSON");
 
 			return null;
 		}
@@ -313,7 +315,7 @@ public class RDFModel implements Model {
 
 		if (recordResource == null) {
 
-			LOG.debug("couldn't find record resource for record  uri '" + getRecordURIs() + "' in model");
+			RDFModel.LOG.debug("couldn't find record resource for record  uri '" + getRecordURIs() + "' in model");
 
 			return null;
 		}
@@ -471,8 +473,8 @@ public class RDFModel implements Model {
 		return json;
 	}
 
-	private Set<AttributePathHelper> determineAttributePaths(final JsonNode unnormalizedSchema, Set<AttributePathHelper> attributePaths,
-			AttributePathHelper attributePath) {
+	private Set<AttributePathHelper> determineAttributePaths(final JsonNode unnormalizedSchema, final Set<AttributePathHelper> attributePaths,
+			final AttributePathHelper attributePath) {
 
 		if (ArrayNode.class.isInstance(unnormalizedSchema)) {
 
@@ -488,7 +490,7 @@ public class RDFModel implements Model {
 
 			final ObjectNode jsonObject = (ObjectNode) unnormalizedSchema;
 
-			Iterator<String> fieldNames = jsonObject.fieldNames();
+			final Iterator<String> fieldNames = jsonObject.fieldNames();
 
 			while (fieldNames.hasNext()) {
 

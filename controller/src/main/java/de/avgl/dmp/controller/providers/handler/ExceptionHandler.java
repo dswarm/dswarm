@@ -9,7 +9,6 @@ import de.avgl.dmp.controller.providers.BaseExceptionHandler;
  * A default exception handler for providing exceptions at client side of the backend API.
  * 
  * @author phorn
- *
  */
 @Provider
 public class ExceptionHandler extends BaseExceptionHandler<Exception> {

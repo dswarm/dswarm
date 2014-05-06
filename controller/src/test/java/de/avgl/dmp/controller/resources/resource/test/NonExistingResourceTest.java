@@ -16,13 +16,13 @@ public class NonExistingResourceTest extends ResourceTest {
 
 	public NonExistingResourceTest() {
 
-		super(resourceDirective);
+		super(NonExistingResourceTest.resourceDirective);
 	}
 
 	@Test
 	public void testNonExistingResource() throws Exception {
 
-		LOG.debug("expecting NotFoundException near this, because we are testing this exception here");
+		NonExistingResourceTest.LOG.debug("expecting NotFoundException near this, because we are testing this exception here");
 
 		final Response response = target().request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
 

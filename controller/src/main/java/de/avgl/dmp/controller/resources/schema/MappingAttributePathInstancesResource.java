@@ -121,6 +121,7 @@ public class MappingAttributePathInstancesResource
 	 * @return the updated mapping attribute path instance as JSON representation
 	 * @throws DMPControllerException
 	 */
+	@Override
 	@ApiOperation(value = "update mapping attribute path instance with given id ", notes = "Returns an updated MappingAttributePathInstance object.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "mapping attribute path instance was successfully updated"),
 			@ApiResponse(code = 404, message = "could not find a mapping attribute path instance for the given id"),

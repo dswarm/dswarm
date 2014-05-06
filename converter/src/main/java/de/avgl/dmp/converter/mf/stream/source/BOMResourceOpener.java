@@ -17,10 +17,8 @@ import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.stream.source.Opener;
 import org.culturegraph.mf.util.ResourceUtil;
 
-
 /**
- * Opens a file and passes a reader for it to the receiver.
- * It also checks and discards an UTF8 BOM.
+ * Opens a file and passes a reader for it to the receiver. It also checks and discards an UTF8 BOM.
  * 
  * @author phorn
  */
@@ -29,13 +27,13 @@ import org.culturegraph.mf.util.ResourceUtil;
 @Out(java.io.Reader.class)
 public class BOMResourceOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> implements Opener {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(BOMResourceOpener.class);
+	private static final org.apache.log4j.Logger	LOG			= org.apache.log4j.Logger.getLogger(BOMResourceOpener.class);
 
-	private String encoding = "UTF-8";
+	private String									encoding	= "UTF-8";
 
 	/**
 	 * Returns the encoding used to open the resource.
-	 *
+	 * 
 	 * @return current default setting
 	 */
 	public String getEncoding() {
@@ -44,9 +42,8 @@ public class BOMResourceOpener extends DefaultObjectPipe<String, ObjectReceiver<
 
 	/**
 	 * Sets the encoding used to open the resource.
-	 *
-	 * @param encoding
-	 *            new encoding
+	 * 
+	 * @param encoding new encoding
 	 */
 	public void setEncoding(final String encoding) {
 		this.encoding = encoding;
@@ -65,7 +62,6 @@ public class BOMResourceOpener extends DefaultObjectPipe<String, ObjectReceiver<
 			final Reader reader = new InputStreamReader(is, encoding);
 			getReceiver().process(reader);
 
-
 		} catch (final FileNotFoundException | UnsupportedEncodingException e) {
 			throw new MetafactureException(e);
 		} finally {
@@ -74,10 +70,9 @@ public class BOMResourceOpener extends DefaultObjectPipe<String, ObjectReceiver<
 					is.close();
 				}
 			} catch (final IOException e) {
-				LOG.error("IO error while closing file inputstream", e);
+				BOMResourceOpener.LOG.error("IO error while closing file inputstream", e);
 			}
 		}
 	}
-
 
 }

@@ -2,7 +2,6 @@ package de.avgl.dmp.converter.flow.test.mabxml;
 
 import de.avgl.dmp.converter.flow.test.xml.AbstractXMLTransformationFlowTest;
 
-
 /**
  * @author tgaengler
  */

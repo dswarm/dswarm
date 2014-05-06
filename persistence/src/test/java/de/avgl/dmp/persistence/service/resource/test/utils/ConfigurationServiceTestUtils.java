@@ -30,7 +30,7 @@ public class ConfigurationServiceTestUtils extends ExtendedBasicDMPJPAServiceTes
 
 		compareConfigurations(expectedObject, actualObject);
 	}
-	
+
 	public Configuration createConfiguration(final String name, final String description, final ObjectNode parameters) throws Exception {
 
 		final Configuration configuration = new Configuration();

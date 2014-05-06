@@ -3,6 +3,7 @@ package de.avgl.dmp.controller.resources.status;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Map;
+
 import javax.inject.Inject;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -24,14 +25,13 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
-
 @RequestScoped
 @Api(value = "/_health", description = "Perform some health checks, e.g. database connectivity.")
 @Path("_health")
 public class HealthResource {
 
-	private final HealthCheckRegistry healthCheckRegistry;
-	private final ObjectMapper objectMapper;
+	private final HealthCheckRegistry	healthCheckRegistry;
+	private final ObjectMapper			objectMapper;
 
 	@Inject
 	public HealthResource(final HealthCheckRegistry healthCheckRegistry, final ObjectMapper objectMapper) {
@@ -44,13 +44,9 @@ public class HealthResource {
 	@Path("{check: (\\w+)?}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response singleHealthCheck(
-			@ApiParam(value = "perform this health check (_all for doing all checks)", required = false, defaultValue = "_all", name = "check")
-			@PathParam("check")
-			final String check,
-			@ApiParam(value = "json pretty print", required = false, defaultValue = "false", name = "pretty")
-			@DefaultValue("false")
-			@QueryParam("pretty")
-			final boolean pretty) throws IOException {
+			@ApiParam(value = "perform this health check (_all for doing all checks)", required = false, defaultValue = "_all", name = "check") @PathParam("check") final String check,
+			@ApiParam(value = "json pretty print", required = false, defaultValue = "false", name = "pretty") @DefaultValue("false") @QueryParam("pretty") final boolean pretty)
+			throws IOException {
 
 		final StringWriter writer = new StringWriter();
 		final JsonGenerator generator = objectMapper.getFactory().createGenerator(writer);
@@ -78,10 +74,7 @@ public class HealthResource {
 		generator.flush();
 		generator.close();
 
-		return Response
-				.ok(writer.toString())
-				.header(HttpHeaders.CACHE_CONTROL, "must-revalidate,no-cache,no-store")
-				.build();
+		return Response.ok(writer.toString()).header(HttpHeaders.CACHE_CONTROL, "must-revalidate,no-cache,no-store").build();
 	}
 
 	private void renderHealthCheckResult(final JsonGenerator generator, final String checkName, final HealthCheck.Result result) throws IOException {
@@ -92,7 +85,8 @@ public class HealthResource {
 		} else {
 			generator.writeBooleanField("healthy", false);
 			generator.writeStringField("reason", result.getMessage());
-			@SuppressWarnings("ThrowableResultOfMethodCallIgnored") final Throwable error = result.getError();
+			@SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+			final Throwable error = result.getError();
 			if (error != null) {
 				generator.writeStringField("error", error.getMessage());
 			}

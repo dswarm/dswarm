@@ -25,7 +25,7 @@ public final class ConverterHelperJenaHelper {
 	public static Map<String, ConverterHelper> addLiteralToConverterHelper(final Map<String, ConverterHelper> converterHelpers,
 			final String property, final RDFNode rdfNode) {
 
-		checkConverterHelpers(converterHelpers, property);
+		ConverterHelperJenaHelper.checkConverterHelpers(converterHelpers, property);
 
 		converterHelpers.get(property).addLiteralOrURI(rdfNode.asLiteral().toString());
 
@@ -43,7 +43,7 @@ public final class ConverterHelperJenaHelper {
 	public static Map<String, ConverterHelper> addJSONNodeToConverterHelper(final Map<String, ConverterHelper> converterHelpers,
 			final String property, final JsonNode jsonNode) {
 
-		checkConverterHelpers(converterHelpers, property);
+		ConverterHelperJenaHelper.checkConverterHelpers(converterHelpers, property);
 
 		converterHelpers.get(property).addJsonNode(jsonNode);
 
@@ -61,7 +61,7 @@ public final class ConverterHelperJenaHelper {
 	public static Map<String, ConverterHelper> addURIResourceToConverterHelper(final Map<String, ConverterHelper> converterHelpers,
 			final String property, final RDFNode rdfNode) {
 
-		checkConverterHelpers(converterHelpers, property);
+		ConverterHelperJenaHelper.checkConverterHelpers(converterHelpers, property);
 
 		converterHelpers.get(property).addLiteralOrURI(rdfNode.asResource().getURI());
 

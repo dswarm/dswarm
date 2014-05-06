@@ -30,8 +30,8 @@ public class ProxyJob extends ProxyExtendedBasicDMPJPAObject<Job> {
 	}
 
 	/**
-	 * Creates a new proxy with the given real job and the type how the job was processed by the job persistence service,
-	 * e.g., {@link RetrievalType.CREATED}.
+	 * Creates a new proxy with the given real job and the type how the job was processed by the job persistence service, e.g.,
+	 * {@link RetrievalType.CREATED}.
 	 * 
 	 * @param jobArg a job that was processed by the job persistence service
 	 * @param typeArg the type how this job was processed by the job persistence service

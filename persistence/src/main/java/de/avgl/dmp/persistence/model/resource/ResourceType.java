@@ -6,7 +6,6 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
  * An enum for describing resource types, e.g., file.
  * 
  * @author tgaengler
- *
  */
 public enum ResourceType {
 
@@ -22,7 +21,7 @@ public enum ResourceType {
 
 	/**
 	 * Creates a new resource with the given name.
-	 *
+	 * 
 	 * @param name the name of the resource type
 	 */
 	private ResourceType(final String name) {
@@ -33,7 +32,7 @@ public enum ResourceType {
 	/**
 	 * Gets the name of the resource type.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @return the name of the resource type
 	 */
 	String getName() {
@@ -44,7 +43,7 @@ public enum ResourceType {
 	/**
 	 * Tries to get a resource type by its name.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param name the name of the resource type
 	 * @return the resource type that matches the given name
 	 * @throws DMPPersistenceException if the resource type by the given name is not part of this enumeration, i.e., this resource

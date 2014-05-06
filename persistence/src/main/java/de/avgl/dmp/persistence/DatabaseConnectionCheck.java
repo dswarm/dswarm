@@ -1,8 +1,8 @@
 package de.avgl.dmp.persistence;
 
-
 import java.math.BigInteger;
 import java.util.Map;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
@@ -11,16 +11,16 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-
 @Singleton
 public class DatabaseConnectionCheck {
 
-	private final Provider<EntityManager> entityManagerProvider;
-	private final String preferredTestQuery;
-	private final String jdbcUrl;
+	private final Provider<EntityManager>	entityManagerProvider;
+	private final String					preferredTestQuery;
+	private final String					jdbcUrl;
 
 	@Inject
-	public DatabaseConnectionCheck(final Provider<EntityManager> entityManagerProvider, final Provider<EntityManagerFactory> entityManagerFactoryProvider) {
+	public DatabaseConnectionCheck(final Provider<EntityManager> entityManagerProvider,
+			final Provider<EntityManagerFactory> entityManagerFactoryProvider) {
 
 		this.entityManagerProvider = entityManagerProvider;
 

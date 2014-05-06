@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import de.avgl.dmp.controller.resources.test.ResourceTest;
+import de.avgl.dmp.controller.test.GuicedTest;
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.DMPObject;
 import de.avgl.dmp.persistence.model.proxy.ProxyDMPObject;
@@ -55,13 +56,13 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 		persistenceServiceTestUtilsClass = persistenceServiceTestUtilsClassArg;
 
-		persistenceService = injector.getInstance(persistenceServiceClass);
+		persistenceService = GuicedTest.injector.getInstance(persistenceServiceClass);
 
-		persistenceServiceTestUtils = injector.getInstance(persistenceServiceTestUtilsClass);// createNewPersistenceServiceTestUtilsInstance();
+		persistenceServiceTestUtils = GuicedTest.injector.getInstance(persistenceServiceTestUtilsClass);// createNewPersistenceServiceTestUtilsInstance();
 		// injector.getInstance(persistenceServiceTestUtilsClass); -> doesn't seem to work right - how can I inject test class
 		// from other sub modules?
 
-		objectMapper = injector.getInstance(ObjectMapper.class);
+		objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 	}
 
 	public POJOCLASSPERSISTENCESERVICETESTUTILS getPersistenceServiceTestUtils() {
@@ -108,14 +109,14 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 			idEncoded = URLEncoder.encode(id.toString(), "UTF-8");
 		} catch (final UnsupportedEncodingException e) {
 
-			LOG.debug("couldn't encode id", e);
+			BasicResourceTestUtils.LOG.debug("couldn't encode id", e);
 
 			Assert.assertTrue(false);
 		}
 
 		Assert.assertNotNull("the id shouldn't be null", idEncoded);
 
-		LOG.debug("try to retrieve " + pojoClassName + " with id '" + idEncoded + "'");
+		BasicResourceTestUtils.LOG.debug("try to retrieve " + pojoClassName + " with id '" + idEncoded + "'");
 
 		final Response response = target(idEncoded).request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
 
@@ -182,7 +183,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 	public POJOCLASS updateObject(final String updateObjectJSONString, final POJOCLASS expectedObject) throws Exception {
 
-		POJOCLASSIDTYPE objectId = objectMapper.readValue(updateObjectJSONString, pojoClass).getId();
+		final POJOCLASSIDTYPE objectId = objectMapper.readValue(updateObjectJSONString, pojoClass).getId();
 
 		Assert.assertEquals("the id of the updeted object should be equal", objectId, expectedObject.getId());
 
@@ -214,7 +215,8 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 			if (toBeDeletedObject == null) {
 
-				LOG.info(pojoClassName + " with id '" + objectId + "' has already been deleted from DB or never existed there");
+				BasicResourceTestUtils.LOG
+						.info(pojoClassName + " with id '" + objectId + "' has already been deleted from DB or never existed there");
 
 				return;
 			}
@@ -229,7 +231,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 	public void deleteObjectViaPersistenceServiceTestUtils(final POJOCLASS object) {
 
-		if(object != null) {
+		if (object != null) {
 
 			persistenceServiceTestUtils.deleteObject(object);
 		}
@@ -255,7 +257,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 			object = persistenceServiceTestUtilsClass.newInstance();
 		} catch (final InstantiationException | IllegalAccessException e) {
 
-			LOG.error("something went wrong while " + persistenceServiceTestUtilsClass.getSimpleName() + "object creation", e);
+			BasicResourceTestUtils.LOG.error("something went wrong while " + persistenceServiceTestUtilsClass.getSimpleName() + "object creation", e);
 
 			return null;
 		}

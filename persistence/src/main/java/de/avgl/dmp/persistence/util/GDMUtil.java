@@ -203,12 +203,12 @@ public final class GDMUtil {
 			final ResourceNode castedResourceNode = (ResourceNode) resourceNode;
 			final String resourceURI = castedResourceNode.getUri();
 
-			return getResourceStatement(resourceURI, recordResource);
+			return GDMUtil.getResourceStatement(resourceURI, recordResource);
 		}
 
 		final Long resourceId = resourceNode.getId();
 
-		return getResourceStatement(resourceId, recordResource);
+		return GDMUtil.getResourceStatement(resourceId, recordResource);
 	}
 
 	/**

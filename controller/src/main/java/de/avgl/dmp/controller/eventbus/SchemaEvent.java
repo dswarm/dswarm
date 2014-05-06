@@ -1,8 +1,6 @@
 package de.avgl.dmp.controller.eventbus;
 
-import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
-import de.avgl.dmp.persistence.model.resource.Resource;
 
 public class SchemaEvent extends DataModelEvent {
 
@@ -23,12 +21,12 @@ public class SchemaEvent extends DataModelEvent {
 		}
 	}
 
-	private final SchemaType schemaType;
+	private final SchemaType	schemaType;
 
 	public SchemaEvent(final DataModel dataModel, final SchemaType schemaType) {
 
 		super(dataModel);
-		
+
 		this.schemaType = schemaType;
 	}
 

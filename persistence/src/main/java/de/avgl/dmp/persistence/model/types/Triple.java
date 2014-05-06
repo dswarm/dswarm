@@ -1,6 +1,6 @@
 package de.avgl.dmp.persistence.model.types;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Preconditions;
 
 /**
  *
@@ -11,14 +11,14 @@ public class Triple<V1, V2, V3> {
 		return new Triple<>(v1, v2, v3);
 	}
 
-	private final V1 v1;
-	private final V2 v2;
-	private final V3 v3;
+	private final V1	v1;
+	private final V2	v2;
+	private final V3	v3;
 
 	public Triple(final V1 v1, final V2 v2, final V3 v3) {
-		this.v1 = checkNotNull(v1);
-		this.v2 = checkNotNull(v2);
-		this.v3 = checkNotNull(v3);
+		this.v1 = Preconditions.checkNotNull(v1);
+		this.v2 = Preconditions.checkNotNull(v2);
+		this.v3 = Preconditions.checkNotNull(v3);
 	}
 
 	public V1 v1() {

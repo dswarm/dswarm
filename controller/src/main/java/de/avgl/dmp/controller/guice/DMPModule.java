@@ -18,7 +18,7 @@ import de.avgl.dmp.controller.utils.DataModelUtil;
 /**
  * The Guice configuration of the controller module. Interface/classes that are registered here can be utilised for injection.
  * Mainly event recorders, e.g., {@link XMLConverterEventRecorder}, are registered here.
- *
+ * 
  * @author phorn
  */
 public class DMPModule extends AbstractModule {

@@ -15,17 +15,15 @@ import de.avgl.dmp.persistence.model.internal.rdf.RDFModel;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
- *
  * @author tgaengler
- *
  */
 public class RDFModelTest {
 
 	@Test
 	public void testToJSON() {
 
-		testToJSONInternal("test-mabxml.n3",
-				"http://data.slub-dresden.de/resources/1/configurations/1/records/aa916dc1-231a-4552-89e3-822886715fa9", "test-mabxml.json");
+		testToJSONInternal("test-mabxml.n3", "http://data.slub-dresden.de/resources/1/configurations/1/records/aa916dc1-231a-4552-89e3-822886715fa9",
+				"test-mabxml.json");
 	}
 
 	@Test
@@ -34,7 +32,7 @@ public class RDFModelTest {
 		testToJSONInternal("test-complex-xml.n3",
 				"http://data.slub-dresden.de/resources/1/configurations/1/records/d5d85499-b4a4-42aa-b492-b2927ac37384", "test-complex-xml.json");
 	}
-	
+
 	@Test
 	public void testGetSchema() {
 
@@ -45,7 +43,7 @@ public class RDFModelTest {
 	private void testToJSONInternal(final String fileName, final String resourceURI, final String expectedFileName) {
 
 		// prepare
-//		final File file = new File(fileName);
+		// final File file = new File(fileName);
 		final Model model = ModelFactory.createDefaultModel();
 
 		final String testResourceUri = Resources.getResource(fileName).toString();
@@ -57,13 +55,13 @@ public class RDFModelTest {
 		String jsonString = null;
 		try {
 			jsonString = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(jsonNode);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
 		Assert.assertNotNull("the JSON string shouldn't be null", jsonString);
-		
+
 		// System.out.println(jsonString);
 
 		String expectedJsonString = null;
@@ -71,7 +69,7 @@ public class RDFModelTest {
 		try {
 
 			expectedJsonString = DMPPersistenceUtil.getResourceAsString(expectedFileName);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 
 			e.printStackTrace();
 		}
@@ -80,11 +78,11 @@ public class RDFModelTest {
 
 		// TODO: do proper comparison of the JSON objects
 	}
-	
+
 	private void testGetSchemaInternal(final String fileName, final String resourceURI, final String expectedFileName) {
 
 		// prepare
-//		final File file = new File(fileName);
+		// final File file = new File(fileName);
 		final Model model = ModelFactory.createDefaultModel();
 
 		final String testResourceUri = Resources.getResource(fileName).toString();
@@ -96,13 +94,13 @@ public class RDFModelTest {
 		String jsonString = null;
 		try {
 			jsonString = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(jsonNode);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
 		Assert.assertNotNull("the JSON string shouldn't be null", jsonString);
-		
+
 		// System.out.println(jsonString);
 
 		String expectedJsonString = null;
@@ -110,7 +108,7 @@ public class RDFModelTest {
 		try {
 
 			expectedJsonString = DMPPersistenceUtil.getResourceAsString(expectedFileName);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 
 			e.printStackTrace();
 		}

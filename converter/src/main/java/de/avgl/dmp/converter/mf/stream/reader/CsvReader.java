@@ -1,11 +1,12 @@
 package de.avgl.dmp.converter.mf.stream.reader;
 
-import com.google.common.base.Optional;
 import org.apache.commons.csv.CSVRecord;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
+
+import com.google.common.base.Optional;
 
 import de.avgl.dmp.converter.mf.framework.annotations.Record;
 import de.avgl.dmp.converter.mf.stream.converter.CsvDecoder;
@@ -14,7 +15,7 @@ import de.avgl.dmp.converter.mf.stream.converter.CsvLineReader;
 /**
  * Reads Csv files. First line can be interpreted as header.<br>
  * Inspired by org.culturegraph.mf.stream.reader.CsvReader
- *
+ * 
  * @author tgaengler
  * @author phorn
  */
@@ -24,12 +25,12 @@ import de.avgl.dmp.converter.mf.stream.converter.CsvLineReader;
 @Out(StreamReceiver.class)
 public final class CsvReader implements Reader<CSVRecord> {
 
-	private CsvLineReader	lineReader;
+	private CsvLineReader		lineReader;
 	private final CsvDecoder	decoder;
 
 	private void setLineReader(final CsvLineReader reader) {
 		lineReader = reader;
-		lineReader.setReceiver(this.decoder);
+		lineReader.setReceiver(decoder);
 	}
 
 	private CsvReader(final CsvLineReader lineReaderArg) {
@@ -49,9 +50,10 @@ public final class CsvReader implements Reader<CSVRecord> {
 		this(new CsvLineReader(escapeCharacter, quoteCharacter, columnSeparator, lineEnding));
 	}
 
-	public CsvReader(final char escapeCharacter, final char quoteCharacter, final char columnDelimiter, final String rowDelimiter, final int ignoreLines, final int discardRows, final Optional<Integer> atMost) {
+	public CsvReader(final char escapeCharacter, final char quoteCharacter, final char columnDelimiter, final String rowDelimiter,
+			final int ignoreLines, final int discardRows, final Optional<Integer> atMost) {
 
-		this(new CsvLineReader(escapeCharacter, quoteCharacter, columnDelimiter , rowDelimiter, ignoreLines, discardRows, atMost));
+		this(new CsvLineReader(escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter, ignoreLines, discardRows, atMost));
 	}
 
 	public CsvDecoder getDecoder() {
@@ -105,14 +107,14 @@ public final class CsvReader implements Reader<CSVRecord> {
 
 		return this;
 	}
-	
+
 	public CsvReader setDataResourceBaseURI(final String dataResourceBaseURI) {
 
 		decoder.setDataResourceBaseURI(dataResourceBaseURI);
 
 		return this;
 	}
-	
+
 	public CsvReader setDataResourceSchemaBaseURI(final String dataResourceSchemaBaseURI) {
 
 		decoder.setDataResourceSchemaBaseURI(dataResourceSchemaBaseURI);

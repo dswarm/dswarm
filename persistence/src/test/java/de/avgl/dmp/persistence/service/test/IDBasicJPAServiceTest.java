@@ -29,13 +29,13 @@ public abstract class IDBasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPJPAOb
 	@Test
 	public void idGenerationTest() {
 
-		LOG.debug("start id generation test for " + type);
+		IDBasicJPAServiceTest.LOG.debug("start id generation test for " + type);
 
 		final Set<POJOCLASS> objectes = Sets.newLinkedHashSet();
 
 		for (int i = 0; i < 10; i++) {
 
-			PROXYPOJOCLASS proxyObject = createObject();
+			final PROXYPOJOCLASS proxyObject = createObject();
 
 			objectes.add(proxyObject.getObject());
 		}
@@ -48,6 +48,6 @@ public abstract class IDBasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPJPAOb
 			jpaService.deleteObject(object.getId());
 		}
 
-		LOG.debug("end id generation test for " + type);
+		IDBasicJPAServiceTest.LOG.debug("end id generation test for " + type);
 	}
 }

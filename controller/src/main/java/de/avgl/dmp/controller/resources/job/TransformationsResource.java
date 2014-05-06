@@ -35,7 +35,8 @@ import de.avgl.dmp.persistence.service.job.TransformationService;
 @RequestScoped
 @Api(value = "/transformations", description = "Operations about transformations.")
 @Path("transformations")
-public class TransformationsResource extends BasicFunctionsResource<TransformationsResourceUtils, TransformationService, ProxyTransformation, Transformation> {
+public class TransformationsResource extends
+		BasicFunctionsResource<TransformationsResourceUtils, TransformationService, ProxyTransformation, Transformation> {
 
 	/**
 	 * Creates a new resource (controller service) for {@link Transformation}s with the provider of the transformation persistence
@@ -117,6 +118,7 @@ public class TransformationsResource extends BasicFunctionsResource<Transformati
 	 * @return the updated transformation as JSON representation
 	 * @throws DMPControllerException
 	 */
+	@Override
 	@ApiOperation(value = "update transformation with given id ", notes = "Returns an updated Transformation object.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "transformation was successfully updated"),
 			@ApiResponse(code = 404, message = "could not find a transformation for the given id"),

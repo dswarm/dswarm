@@ -30,8 +30,8 @@ public class ProxyAttribute extends ProxyAdvancedDMPJPAObject<Attribute> {
 	}
 
 	/**
-	 * Creates a new proxy with the given real attribute and the type how the attribute was processed by the attribute persistence service, e.g.,
-	 * {@link RetrievalType.CREATED}.
+	 * Creates a new proxy with the given real attribute and the type how the attribute was processed by the attribute persistence
+	 * service, e.g., {@link RetrievalType.CREATED}.
 	 * 
 	 * @param attributeArg an attribute that was processed by the attribute persistence service
 	 * @param typeArg the type how this attribute was processed by the attribute persistence service

@@ -1,10 +1,5 @@
 package de.avgl.dmp.controller.resources.export.test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -18,11 +13,11 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import de.avgl.dmp.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -46,6 +41,8 @@ import de.avgl.dmp.controller.resources.schema.test.utils.ClaszesResourceTestUti
 import de.avgl.dmp.controller.resources.schema.test.utils.SchemasResourceTestUtils;
 import de.avgl.dmp.controller.resources.test.ResourceTest;
 import de.avgl.dmp.controller.servlet.DMPInjector;
+import de.avgl.dmp.controller.test.GuicedTest;
+import de.avgl.dmp.graph.rdf.utils.RDFUtils;
 import de.avgl.dmp.persistence.model.internal.Model;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
@@ -57,8 +54,8 @@ import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.service.InternalModelService;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
+import de.avgl.dmp.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
-import de.avgl.dmp.graph.rdf.utils.RDFUtils;
 
 /**
  * Created by tgaengler on 28/04/14.
@@ -83,11 +80,11 @@ public class RDFResourceTest extends ResourceTest {
 
 	private final DataModelsResourceTestUtils		dataModelsResourceTestUtils;
 
-	protected final ObjectMapper					objectMapper			= injector.getInstance(ObjectMapper.class);
+	protected final ObjectMapper					objectMapper			= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	private static final String						graphResourceIdentifier	= "rdf";
 
-	private final String							graphEndpoint			= injector.getInstance(Key.get(String.class,
+	private final String							graphEndpoint			= GuicedTest.injector.getInstance(Key.get(String.class,
 																					Names.named("dmp_graph_endpoint")));
 
 	public RDFResourceTest() {
@@ -106,7 +103,7 @@ public class RDFResourceTest extends ResourceTest {
 	@Test
 	public void testExportSingleGraphWCTNQuads() throws Exception {
 
-		LOG.debug("start export CSV data as application/n-quads test");
+		RDFResourceTest.LOG.debug("start export CSV data as application/n-quads test");
 
 		final DataModel csvDataModel = loadCSVData();
 
@@ -132,24 +129,25 @@ public class RDFResourceTest extends ResourceTest {
 
 		final long statementsInExportedRDFModel = RDFUtils.determineDatasetSize(dataset);
 
-		LOG.debug("exported '" + statementsInExportedRDFModel + "' statements");
+		RDFResourceTest.LOG.debug("exported '" + statementsInExportedRDFModel + "' statements");
 
 		Assert.assertEquals("expected 114 exported statements", 114, statementsInExportedRDFModel);
 
 		tearDownCSVData(csvDataModel);
 
-		LOG.debug("end export CSV data as application/n-quads test");
+		RDFResourceTest.LOG.debug("end export CSV data as application/n-quads test");
 	}
 
 	@Test
 	public void testExportSingleGraphWCTOctetStream() throws Exception {
 
-		LOG.debug("start export CSV data as application/octet-stream test");
+		RDFResourceTest.LOG.debug("start export CSV data as application/octet-stream test");
 
 		final DataModel csvDataModel = loadCSVData();
 
 		// GET the request
-		final Response response = graphTarget("/getall").queryParam("format", "application/n-quads").request().accept(MediaType.APPLICATION_OCTET_STREAM).get(Response.class);
+		final Response response = graphTarget("/getall").queryParam("format", "application/n-quads").request()
+				.accept(MediaType.APPLICATION_OCTET_STREAM).get(Response.class);
 
 		Assert.assertEquals("expected 200", 200, response.getStatus());
 
@@ -170,22 +168,22 @@ public class RDFResourceTest extends ResourceTest {
 
 		final long statementsInExportedRDFModel = RDFUtils.determineDatasetSize(dataset);
 
-		LOG.debug("exported '" + statementsInExportedRDFModel + "' statements");
+		RDFResourceTest.LOG.debug("exported '" + statementsInExportedRDFModel + "' statements");
 
 		Assert.assertEquals("expected 114 exported statements", 114, statementsInExportedRDFModel);
 
 		tearDownCSVData(csvDataModel);
 
-		LOG.debug("end export CSV data as application/octet-stream test");
+		RDFResourceTest.LOG.debug("end export CSV data as application/octet-stream test");
 	}
 
 	private DataModel loadCSVData() throws Exception {
 
-		LOG.debug("start load CSV data");
+		RDFResourceTest.LOG.debug("start load CSV data");
 
 		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("resource.json");
 
-		final Resource expectedResource = injector.getInstance(ObjectMapper.class).readValue(resourceJSONString, Resource.class);
+		final Resource expectedResource = GuicedTest.injector.getInstance(ObjectMapper.class).readValue(resourceJSONString, Resource.class);
 
 		final URL fileURL = Resources.getResource("test_csv.csv");
 		final File resourceFile = FileUtils.toFile(fileURL);
@@ -213,9 +211,9 @@ public class RDFResourceTest extends ResourceTest {
 		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
 		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getId(), Optional.of(atMost));
 
-		assertTrue(data.isPresent());
-		assertFalse(data.get().isEmpty());
-		assertThat(data.get().size(), equalTo(atMost));
+		Assert.assertTrue(data.isPresent());
+		Assert.assertFalse(data.get().isEmpty());
+		Assert.assertThat(data.get().size(), CoreMatchers.equalTo(atMost));
 
 		final String recordId = data.get().keySet().iterator().next();
 
@@ -223,7 +221,7 @@ public class RDFResourceTest extends ResourceTest {
 
 		final ObjectNode associativeJsonArray = objectMapper.readValue(associativeJsonArrayString, ObjectNode.class);
 
-		assertThat(associativeJsonArray.size(), equalTo(atMost));
+		Assert.assertThat(associativeJsonArray.size(), CoreMatchers.equalTo(atMost));
 
 		final JsonNode json = associativeJsonArray.get(recordId);
 
@@ -233,18 +231,18 @@ public class RDFResourceTest extends ResourceTest {
 
 		Assert.assertNotNull("the data resource schema base uri shouldn't be null", dataResourceSchemaBaseURI);
 
-		assertThat(getValue(dataResourceSchemaBaseURI + "id", json),
-				equalTo(getValue(dataResourceSchemaBaseURI + "id", data.get().get(recordId).toRawJSON())));
-		assertThat(getValue(dataResourceSchemaBaseURI + "year", json),
-				equalTo(getValue(dataResourceSchemaBaseURI + "year", data.get().get(recordId).toRawJSON())));
-		assertThat(getValue(dataResourceSchemaBaseURI + "description", json),
-				equalTo(getValue(dataResourceSchemaBaseURI + "description", data.get().get(recordId).toRawJSON())));
-		assertThat(getValue(dataResourceSchemaBaseURI + "name", json),
-				equalTo(getValue(dataResourceSchemaBaseURI + "name", data.get().get(recordId).toRawJSON())));
-		assertThat(getValue(dataResourceSchemaBaseURI + "isbn", json),
-				equalTo(getValue(dataResourceSchemaBaseURI + "isbn", data.get().get(recordId).toRawJSON())));
+		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "id", json),
+				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "id", data.get().get(recordId).toRawJSON())));
+		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "year", json),
+				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "year", data.get().get(recordId).toRawJSON())));
+		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "description", json),
+				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "description", data.get().get(recordId).toRawJSON())));
+		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "name", json),
+				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "name", data.get().get(recordId).toRawJSON())));
+		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "isbn", json),
+				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "isbn", data.get().get(recordId).toRawJSON())));
 
-		LOG.debug("end load CSV data");
+		RDFResourceTest.LOG.debug("end load CSV data");
 
 		return dataModel;
 	}
@@ -346,9 +344,9 @@ public class RDFResourceTest extends ResourceTest {
 
 		WebTarget target = graphClient().target(graphEndpoint);
 
-		if (graphResourceIdentifier != null) {
+		if (RDFResourceTest.graphResourceIdentifier != null) {
 
-			target = target.path(graphResourceIdentifier);
+			target = target.path(RDFResourceTest.graphResourceIdentifier);
 		}
 
 		return target;

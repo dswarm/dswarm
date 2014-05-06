@@ -184,14 +184,14 @@ public class SchemaEventRecorder {
 
 			final ProxyAttributePath proxyAttributePath = attributePathService.createOrGetObjectTransactional(attributes);
 
-			if(proxyAttributePath == null) {
+			if (proxyAttributePath == null) {
 
 				throw new DMPPersistenceException("couldn't create or retrieve attribute path");
 			}
 
 			final AttributePath attributePath = proxyAttributePath.getObject();
 
-			if(attributePath == null) {
+			if (attributePath == null) {
 
 				throw new DMPPersistenceException("couldn't create or retrieve attribute path");
 			}
@@ -223,7 +223,7 @@ public class SchemaEventRecorder {
 		final JsonNode jsonPath = resource.getAttribute("path");
 
 		if (jsonPath == null) {
-			LOG.warn("resource does not have a path attribute, did you miss to upload a file?");
+			SchemaEventRecorder.LOG.warn("resource does not have a path attribute, did you miss to upload a file?");
 			return Optional.absent();
 		}
 
@@ -237,7 +237,7 @@ public class SchemaEventRecorder {
 			result = flow.applyFile(filePath);
 
 		} catch (final DMPConverterException e) {
-			LOG.error("could not transform CSV", e);
+			SchemaEventRecorder.LOG.error("could not transform CSV", e);
 			return Optional.absent();
 		}
 
@@ -249,14 +249,14 @@ public class SchemaEventRecorder {
 
 		if (event.getSchemaType() != SchemaEvent.SchemaType.CSV) {
 
-			LOG.info("currently, only CSV is supported. Please come back later");
+			SchemaEventRecorder.LOG.info("currently, only CSV is supported. Please come back later");
 			return;
 		}
 
 		try {
 			createSchemaFromCsv(event);
 		} catch (final DMPPersistenceException | DMPConverterException e) {
-			LOG.error("could not persist schema", e);
+			SchemaEventRecorder.LOG.error("could not persist schema", e);
 		}
 	}
 }

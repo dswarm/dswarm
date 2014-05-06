@@ -12,7 +12,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.glassfish.jersey.media.multipart.MultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
@@ -71,11 +70,6 @@ public class InternalGDMGraphService implements InternalModelService {
 
 	private static final String						resourceIdentifier				= "gdm";
 
-	// /**
-	// * The graph database.
-	// */
-	// private final GraphDatabaseService database;
-
 	/**
 	 * The data model persistence service.
 	 */
@@ -125,13 +119,6 @@ public class InternalGDMGraphService implements InternalModelService {
 		this.attributeService = attributeService;
 
 		graphEndpoint = graphEndpointArg;
-	}
-
-	@Deprecated
-	@Override
-	public Optional<Set<String>> getSchema(final Long resourceId, final Long configurationId) {
-
-		throw new NotImplementedException("schema retrieval via this method is not implemented yet, please utilise #getSchema(dataModelId) instead.");
 	}
 
 	/**
@@ -204,7 +191,7 @@ public class InternalGDMGraphService implements InternalModelService {
 				}
 			}
 		}
-		
+
 		addAttributePaths(finalDataModel, gdmModel.getAttributePaths());
 
 		writeGDMToDB(realModel, resourceGraphURI);
@@ -299,7 +286,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 			final de.avgl.dmp.graph.json.Model recordModel = new de.avgl.dmp.graph.json.Model();
 			recordModel.addResource(recordResource);
-			
+
 			final Model rdfModel = new GDMModel(recordModel, recordResource.getUri());
 
 			modelMap.put(recordResource.getUri(), rdfModel);
@@ -432,7 +419,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		return proxyUpdatedDataModel.getObject();
 	}
-	
+
 	private DataModel addAttributePaths(final DataModel dataModel, final Set<AttributePathHelper> attributePathHelpers)
 			throws DMPPersistenceException {
 
@@ -443,7 +430,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			return dataModel;
 		}
 
-		if(attributePathHelpers.isEmpty()) {
+		if (attributePathHelpers.isEmpty()) {
 
 			InternalGDMGraphService.LOG.debug("there are no attribute paths from data model '" + dataModel.getId() + "'");
 		}
@@ -454,7 +441,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 			final LinkedList<String> attributePathFromHelper = attributePathHelper.getAttributePath();
 
-			if(attributePathFromHelper.isEmpty()) {
+			if (attributePathFromHelper.isEmpty()) {
 
 				InternalGDMGraphService.LOG.debug("there are no attributes for this attribute path from data model '" + dataModel.getId() + "'");
 			}

@@ -5,11 +5,11 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import org.junit.Assert;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.schema.Attribute;
@@ -29,32 +29,32 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 		final LinkedList<String> attributePath32 = Lists.newLinkedList();
 		attributePath32.add("http://purl.org/dc/terms/creator");
 		attributePath32.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-		excludeAttributePaths.add(attributePath32);
+		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath32);
 
 		final LinkedList<String> attributePath33 = Lists.newLinkedList();
 		attributePath33.add("http://purl.org/dc/terms/creator");
 		attributePath33.add("http://xmlns.com/foaf/0.1/familyName");
-		excludeAttributePaths.add(attributePath33);
+		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath33);
 
 		final LinkedList<String> attributePath34 = Lists.newLinkedList();
 		attributePath34.add("http://purl.org/dc/terms/creator");
 		attributePath34.add("http://xmlns.com/foaf/0.1/givenName");
-		excludeAttributePaths.add(attributePath34);
+		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath34);
 
 		final LinkedList<String> attributePath35 = Lists.newLinkedList();
 		attributePath35.add("http://purl.org/dc/terms/contributor");
 		attributePath35.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-		excludeAttributePaths.add(attributePath35);
+		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath35);
 
 		final LinkedList<String> attributePath36 = Lists.newLinkedList();
 		attributePath36.add("http://purl.org/dc/terms/contributor");
 		attributePath36.add("http://xmlns.com/foaf/0.1/familyName");
-		excludeAttributePaths.add(attributePath36);
+		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath36);
 
 		final LinkedList<String> attributePath37 = Lists.newLinkedList();
 		attributePath37.add("http://purl.org/dc/terms/contributor");
 		attributePath37.add("http://xmlns.com/foaf/0.1/givenName");
-		excludeAttributePaths.add(attributePath37);
+		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath37);
 	}
 
 	public AttributePathServiceTestUtils() {
@@ -91,7 +91,7 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 
 		final AttributePath attributePath = new AttributePath(attributePathArg);
 
-		AttributePath updatedAttributePath = createObject(attributePath, attributePath);
+		final AttributePath updatedAttributePath = createObject(attributePath, attributePath);
 
 		return updatedAttributePath;
 	}
@@ -115,7 +115,7 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 	}
 
 	@Override
-	public void deleteObject(AttributePath object) {
+	public void deleteObject(final AttributePath object) {
 
 		if (object == null) {
 
@@ -140,7 +140,7 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 
 		if (orderedAttributes != null && !orderedAttributes.isEmpty()) {
 
-			for (final LinkedList<String> excludeAttributePath : excludeAttributePaths) {
+			for (final LinkedList<String> excludeAttributePath : AttributePathServiceTestUtils.excludeAttributePaths) {
 
 				if (excludeAttributePath.size() != orderedAttributes.size()) {
 
@@ -159,7 +159,7 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 
 					while (iter.hasNext()) {
 
-						Attribute orderedAttribute = iter.next();
+						final Attribute orderedAttribute = iter.next();
 
 						if (orderedAttribute.getUri() == null) {
 

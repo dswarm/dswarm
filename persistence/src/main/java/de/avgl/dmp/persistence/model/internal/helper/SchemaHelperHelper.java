@@ -19,10 +19,9 @@ public final class SchemaHelperHelper {
 	 * @param rdfNode the RDF node to contains the literal
 	 * @return the map of converter helpers
 	 */
-	public static Map<String, SchemaHelper> addPropertyToSchemaHelpers(final Map<String, SchemaHelper> schemaHelpers,
-			final String property) {
+	public static Map<String, SchemaHelper> addPropertyToSchemaHelpers(final Map<String, SchemaHelper> schemaHelpers, final String property) {
 
-		checkSchemaHelpers(schemaHelpers, property);
+		SchemaHelperHelper.checkSchemaHelpers(schemaHelpers, property);
 
 		return schemaHelpers;
 	}
@@ -35,10 +34,10 @@ public final class SchemaHelperHelper {
 	 * @param jsonNode the JSON node
 	 * @return the map of converter helpers
 	 */
-	public static Map<String, SchemaHelper> addJSONNodeToSchemaHelper(final Map<String, SchemaHelper> schemaHelpers,
-			final String property, final JsonNode jsonNode) {
+	public static Map<String, SchemaHelper> addJSONNodeToSchemaHelper(final Map<String, SchemaHelper> schemaHelpers, final String property,
+			final JsonNode jsonNode) {
 
-		checkSchemaHelpers(schemaHelpers, property);
+		SchemaHelperHelper.checkSchemaHelpers(schemaHelpers, property);
 
 		schemaHelpers.get(property).addJsonNode(jsonNode);
 

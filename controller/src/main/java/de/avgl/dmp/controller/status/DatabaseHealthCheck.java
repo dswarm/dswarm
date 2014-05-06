@@ -1,6 +1,5 @@
 package de.avgl.dmp.controller.status;
 
-
 import com.codahale.metrics.health.HealthCheck;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -9,7 +8,8 @@ import de.avgl.dmp.persistence.DatabaseConnectionCheck;
 
 @Singleton
 public class DatabaseHealthCheck extends HealthCheck {
-	private final DatabaseConnectionCheck database;
+
+	private final DatabaseConnectionCheck	database;
 
 	@Inject
 	public DatabaseHealthCheck(final DatabaseConnectionCheck database) {

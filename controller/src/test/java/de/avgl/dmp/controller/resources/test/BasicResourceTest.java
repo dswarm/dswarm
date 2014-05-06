@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
 
 import de.avgl.dmp.controller.resources.test.utils.BasicResourceTestUtils;
+import de.avgl.dmp.controller.test.GuicedTest;
 import de.avgl.dmp.persistence.model.DMPObject;
 import de.avgl.dmp.persistence.model.proxy.ProxyDMPObject;
 import de.avgl.dmp.persistence.service.BasicJPAService;
@@ -40,7 +41,7 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 
 	protected final POJOCLASSPERSISTENCESERVICE			persistenceService;
 
-	protected final ObjectMapper						objectMapper				= injector.getInstance(ObjectMapper.class);
+	protected final ObjectMapper						objectMapper				= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	protected final String								objectJSONFileName;
 
@@ -62,7 +63,7 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 
 		pojoClassName = pojoClass.getSimpleName();
 
-		persistenceService = injector.getInstance(persistenceServiceClass);
+		persistenceService = GuicedTest.injector.getInstance(persistenceServiceClass);
 		objectJSONFileName = objectJSONFileNameArg;
 
 		pojoClassResourceTestUtils = pojoClassResourceTestUtilsArg;
@@ -78,23 +79,23 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 	@Test
 	public void testPOSTObjects() throws Exception {
 
-		LOG.debug("start POST " + pojoClassName + "s test");
+		BasicResourceTest.LOG.debug("start POST " + pojoClassName + "s test");
 
 		final POJOCLASS actualObject = createObjectInternal();
 
 		cleanUpDB(actualObject);
 
-		LOG.debug("end POST " + pojoClassName + "s test");
+		BasicResourceTest.LOG.debug("end POST " + pojoClassName + "s test");
 	}
 
 	@Test
 	public void testGETObjects() throws Exception {
 
-		LOG.debug("start GET " + pojoClassName + "s test");
+		BasicResourceTest.LOG.debug("start GET " + pojoClassName + "s test");
 
 		final POJOCLASS actualObject = createObjectInternal();
 
-		LOG.debug("try to retrieve " + pojoClassName + "s");
+		BasicResourceTest.LOG.debug("try to retrieve " + pojoClassName + "s");
 
 		final Response response = target().request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
 
@@ -110,13 +111,13 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 
 		cleanUpDB(actualObject);
 
-		LOG.debug("end GET " + pojoClassName + "s");
+		BasicResourceTest.LOG.debug("end GET " + pojoClassName + "s");
 	}
 
 	@Test
 	public void testGETObject() throws Exception {
 
-		LOG.debug("start GET " + pojoClassName + " test");
+		BasicResourceTest.LOG.debug("start GET " + pojoClassName + " test");
 
 		final POJOCLASS actualObject = createObjectInternal();
 
@@ -124,14 +125,14 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 
 		cleanUpDB(responseObject);
 
-		LOG.debug("end GET " + pojoClassName);
+		BasicResourceTest.LOG.debug("end GET " + pojoClassName);
 	}
 
 	@Test
 	public void testPUTObject() throws Exception {
-		LOG.debug("start PUT " + pojoClassName + " test");
+		BasicResourceTest.LOG.debug("start PUT " + pojoClassName + " test");
 
-		POJOCLASS persistedObject = createObjectInternal();
+		final POJOCLASS persistedObject = createObjectInternal();
 
 		String idEncoded = null;
 
@@ -140,7 +141,7 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 			idEncoded = URLEncoder.encode(persistedObject.getId().toString(), "UTF-8");
 		} catch (final UnsupportedEncodingException e) {
 
-			LOG.debug("couldn't encode id", e);
+			BasicResourceTest.LOG.debug("couldn't encode id", e);
 
 			Assert.assertTrue(false);
 		}
@@ -149,7 +150,7 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 
 		final POJOCLASS updatedObject = updateObject(persistedObject);
 
-		LOG.debug("try to retrieve updated " + pojoClassName + " with id '" + idEncoded + "'");
+		BasicResourceTest.LOG.debug("try to retrieve updated " + pojoClassName + " with id '" + idEncoded + "'");
 
 		final Response response = target(idEncoded).request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
 
@@ -168,13 +169,13 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 
 		cleanUpDB(responseObject);
 
-		LOG.debug("end PUT " + pojoClassName);
+		BasicResourceTest.LOG.debug("end PUT " + pojoClassName);
 	}
 
 	@Test
 	public void testDELETEObject() throws Exception {
 
-		LOG.debug("start DELETE " + pojoClassName + " test");
+		BasicResourceTest.LOG.debug("start DELETE " + pojoClassName + " test");
 
 		final POJOCLASS actualObject = createObjectInternal();
 
@@ -186,14 +187,14 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 			idEncoded = URLEncoder.encode(actualObject.getId().toString(), "UTF-8");
 		} catch (final UnsupportedEncodingException e) {
 
-			LOG.debug("couldn't encode id", e);
+			BasicResourceTest.LOG.debug("couldn't encode id", e);
 
 			Assert.assertTrue(false);
 		}
 
 		Assert.assertNotNull("the id shouldn't be null", idEncoded);
 
-		LOG.debug("try to retrieve " + pojoClassName + " with id '" + idEncoded + "'");
+		BasicResourceTest.LOG.debug("try to retrieve " + pojoClassName + " with id '" + idEncoded + "'");
 
 		final Response response = target(idEncoded).request().delete();
 
@@ -203,7 +204,7 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 
 		Assert.assertNull(deletedObject);
 
-		LOG.debug("end DELETE " + pojoClassName);
+		BasicResourceTest.LOG.debug("end DELETE " + pojoClassName);
 	}
 
 	protected boolean compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) {

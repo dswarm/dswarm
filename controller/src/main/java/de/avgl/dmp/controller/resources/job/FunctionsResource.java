@@ -117,6 +117,7 @@ public class FunctionsResource extends BasicFunctionsResource<FunctionsResourceU
 	 * @return the updated function as JSON representation
 	 * @throws DMPControllerException
 	 */
+	@Override
 	@ApiOperation(value = "update function with given id ", notes = "Returns an updated Function object.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "function was successfully updated"),
 			@ApiResponse(code = 404, message = "could not find a function for the given id"),

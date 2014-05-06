@@ -1,7 +1,5 @@
 package de.avgl.dmp.converter.mf.stream.reader;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
@@ -14,6 +12,7 @@ import org.culturegraph.mf.framework.StreamReceiver;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 
 import de.avgl.dmp.persistence.model.types.Tuple;
 
@@ -49,7 +48,7 @@ public class JsonNodeReader extends DefaultObjectPipe<Iterator<Tuple<String, Jso
 			try {
 				processArrayNode(receiver, tuple.v2());
 			} catch (final IOException e) {
-				LOG.error(e.getMessage(), e);
+				JsonNodeReader.LOG.error(e.getMessage(), e);
 			}
 
 			if (recordPrefix.isPresent()) {
@@ -60,7 +59,7 @@ public class JsonNodeReader extends DefaultObjectPipe<Iterator<Tuple<String, Jso
 	}
 
 	private void processObjectNode(final StreamReceiver receiver, final JsonNode jsonNode) throws IOException {
-		checkArgument(jsonNode.isObject(), "we need an object for a record entry");
+		Preconditions.checkArgument(jsonNode.isObject(), "we need an object for a record entry");
 
 		final Iterator<Map.Entry<String, JsonNode>> entryIterator = jsonNode.fields();
 
@@ -72,7 +71,7 @@ public class JsonNodeReader extends DefaultObjectPipe<Iterator<Tuple<String, Jso
 	}
 
 	private void processArrayNode(final StreamReceiver receiver, final JsonNode jsonNode) throws IOException {
-		checkArgument(jsonNode.isArray(), "we need an array for a record entry");
+		Preconditions.checkArgument(jsonNode.isArray(), "we need an array for a record entry");
 
 		final ArrayNode jsonArray = (ArrayNode) jsonNode;
 

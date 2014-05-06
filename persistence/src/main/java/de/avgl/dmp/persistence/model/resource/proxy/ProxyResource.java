@@ -30,8 +30,8 @@ public class ProxyResource extends ProxyExtendedBasicDMPJPAObject<Resource> {
 	}
 
 	/**
-	 * Creates a new proxy with the given real data resource and the type how the data resource was processed by the data resource persistence service,
-	 * e.g., {@link RetrievalType.CREATED}.
+	 * Creates a new proxy with the given real data resource and the type how the data resource was processed by the data resource
+	 * persistence service, e.g., {@link RetrievalType.CREATED}.
 	 * 
 	 * @param resourceArg a data resource that was processed by the data resource persistence service
 	 * @param typeArg the type how this data resource was processed by the data resource persistence service

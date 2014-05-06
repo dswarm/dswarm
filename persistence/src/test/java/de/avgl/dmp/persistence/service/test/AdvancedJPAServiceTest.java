@@ -32,7 +32,7 @@ public abstract class AdvancedJPAServiceTest<PROXYPOJOCLASS extends ProxyAdvance
 		Assert.assertNotNull(type + " shouldn't be null", proxyObject);
 		Assert.assertNotNull(type + " id shouldn't be null", proxyObject.getId());
 
-		LOG.debug("created new " + type + " with id = '" + proxyObject.getId() + "'");
+		AdvancedJPAServiceTest.LOG.debug("created new " + type + " with id = '" + proxyObject.getId() + "'");
 
 		return proxyObject;
 	}

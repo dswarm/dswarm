@@ -4,18 +4,16 @@ import org.culturegraph.mf.framework.DefaultStreamReceiver;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.mockito.Mockito.*;
+import org.mockito.Mockito;
 
 public class StreamJsonCollapserTest {
 
-	private DefaultStreamReceiver mockedReceiver;
-	private StreamJsonCollapser collapser;
-
+	private DefaultStreamReceiver	mockedReceiver;
+	private StreamJsonCollapser		collapser;
 
 	@Before
 	public void setUp() throws Exception {
-		mockedReceiver = mock(DefaultStreamReceiver.class);
+		mockedReceiver = Mockito.mock(DefaultStreamReceiver.class);
 
 		collapser = new StreamJsonCollapser();
 		collapser.setReceiver(mockedReceiver);
@@ -23,7 +21,7 @@ public class StreamJsonCollapserTest {
 
 	@After
 	public void tearDown() throws Exception {
-		verifyNoMoreInteractions(mockedReceiver);
+		Mockito.verifyNoMoreInteractions(mockedReceiver);
 	}
 
 	@Test
@@ -31,13 +29,13 @@ public class StreamJsonCollapserTest {
 		final String expected = "foobar";
 
 		collapser.startRecord(expected);
-		verify(mockedReceiver).startRecord(expected);
+		Mockito.verify(mockedReceiver).startRecord(expected);
 	}
 
 	@Test
 	public void testEndRecord() throws Exception {
 		collapser.endRecord();
-		verify(mockedReceiver).endRecord();
+		Mockito.verify(mockedReceiver).endRecord();
 	}
 
 	@Test
@@ -45,13 +43,13 @@ public class StreamJsonCollapserTest {
 		final String expected = "foobar";
 
 		collapser.startEntity(expected);
-		verify(mockedReceiver).startEntity(expected);
+		Mockito.verify(mockedReceiver).startEntity(expected);
 	}
 
 	@Test
 	public void testEndEntity() throws Exception {
 		collapser.endRecord();
-		verify(mockedReceiver).endRecord();
+		Mockito.verify(mockedReceiver).endRecord();
 	}
 
 	@Test
@@ -74,10 +72,10 @@ public class StreamJsonCollapserTest {
 
 		collapser.endRecord();
 
-		verify(mockedReceiver).startRecord(recordIdentifier);
-		verify(mockedReceiver).literal(expectedName1, expectedValue);
-		verify(mockedReceiver).literal(expectedName2,expectedValue);
-		verify(mockedReceiver).endRecord();
+		Mockito.verify(mockedReceiver).startRecord(recordIdentifier);
+		Mockito.verify(mockedReceiver).literal(expectedName1, expectedValue);
+		Mockito.verify(mockedReceiver).literal(expectedName2, expectedValue);
+		Mockito.verify(mockedReceiver).endRecord();
 	}
 
 	@Test
@@ -94,12 +92,12 @@ public class StreamJsonCollapserTest {
 
 		collapser.endRecord();
 
-		verify(mockedReceiver).startRecord(recordIdentifier);
-		verify(mockedReceiver).startEntity(expectedName + StreamJsonCollapser.ARRAY_MARKER);
-		verify(mockedReceiver).literal(expectedName, expectedValue1);
-		verify(mockedReceiver).literal(expectedName, expectedValue2);
-		verify(mockedReceiver).endEntity();
-		verify(mockedReceiver).endRecord();
+		Mockito.verify(mockedReceiver).startRecord(recordIdentifier);
+		Mockito.verify(mockedReceiver).startEntity(expectedName + StreamJsonCollapser.ARRAY_MARKER);
+		Mockito.verify(mockedReceiver).literal(expectedName, expectedValue1);
+		Mockito.verify(mockedReceiver).literal(expectedName, expectedValue2);
+		Mockito.verify(mockedReceiver).endEntity();
+		Mockito.verify(mockedReceiver).endRecord();
 	}
 
 }

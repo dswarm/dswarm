@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.proxy.ProxyConfiguration;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
@@ -16,7 +17,7 @@ public class ConfigurationServiceTest extends IDBasicJPAServiceTest<ProxyConfigu
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(ConfigurationServiceTest.class);
 
-	private final ObjectMapper						objectMapper	= injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	public ConfigurationServiceTest() {
 
@@ -26,7 +27,7 @@ public class ConfigurationServiceTest extends IDBasicJPAServiceTest<ProxyConfigu
 	@Test
 	public void testSimpleConfiguration() {
 
-		Configuration configuration = createObject().getObject();
+		final Configuration configuration = createObject().getObject();
 
 		configuration.setName("my configuration");
 		configuration.setDescription("configuration description");
@@ -40,7 +41,7 @@ public class ConfigurationServiceTest extends IDBasicJPAServiceTest<ProxyConfigu
 
 		updateObjectTransactional(configuration);
 
-		Configuration updatedConfiguration = getObject(configuration);
+		final Configuration updatedConfiguration = getObject(configuration);
 
 		Assert.assertNotNull("the configuration name of the updated resource shouldn't be null", updatedConfiguration.getName());
 		Assert.assertEquals("the configuration' names of the resource are not equal", configuration.getName(), updatedConfiguration.getName());
@@ -57,12 +58,12 @@ public class ConfigurationServiceTest extends IDBasicJPAServiceTest<ProxyConfigu
 
 		try {
 			json = objectMapper.writeValueAsString(updatedConfiguration);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		LOG.debug("configuration json: " + json);
+		ConfigurationServiceTest.LOG.debug("configuration json: " + json);
 
 		// clean up DB
 		deleteObject(configuration.getId());

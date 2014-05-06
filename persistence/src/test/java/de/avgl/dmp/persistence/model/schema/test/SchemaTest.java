@@ -16,7 +16,7 @@ public class SchemaTest extends GuicedTest {
 
 	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(SchemaTest.class);
 
-	private final ObjectMapper						objectMapper	= injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleSchemaTest() {
@@ -34,7 +34,7 @@ public class SchemaTest extends GuicedTest {
 		final Attribute dctermsHasPart = createAttribute(dctermsHasPartId, dctermsHasPartName);
 
 		final AttributePath attributePath1 = new AttributePath();
-		//attributePath1.setId(UUID.randomUUID().toString());
+		// attributePath1.setId(UUID.randomUUID().toString());
 
 		attributePath1.addAttribute(dctermsTitle);
 		attributePath1.addAttribute(dctermsHasPart);
@@ -53,7 +53,7 @@ public class SchemaTest extends GuicedTest {
 		final Attribute foafName = createAttribute(foafNameId, foafNameName);
 
 		final AttributePath attributePath2 = new AttributePath();
-		//attributePath2.setId(UUID.randomUUID().toString());
+		// attributePath2.setId(UUID.randomUUID().toString());
 
 		attributePath2.addAttribute(dctermsCreator);
 		attributePath2.addAttribute(foafName);
@@ -66,22 +66,22 @@ public class SchemaTest extends GuicedTest {
 		final Attribute dctermsCreated = createAttribute(dctermsCreatedId, dctermsCreatedName);
 
 		final AttributePath attributePath3 = new AttributePath();
-		//attributePath3.setId(UUID.randomUUID().toString());
+		// attributePath3.setId(UUID.randomUUID().toString());
 
 		attributePath3.addAttribute(dctermsCreated);
-		
+
 		// record class
-		
+
 		final String biboDocumentId = "http://purl.org/ontology/bibo/Document";
 		final String biboDocumentName = "document";
-		
+
 		final Clasz biboDocument = new Clasz(biboDocumentId, biboDocumentName);
-		
+
 		// schema
-		
+
 		final Schema schema = new Schema();
-		//schema.setId(UUID.randomUUID().toString());
-		
+		// schema.setId(UUID.randomUUID().toString());
+
 		schema.addAttributePath(attributePath1);
 		schema.addAttributePath(attributePath2);
 		schema.addAttributePath(attributePath3);
@@ -92,12 +92,12 @@ public class SchemaTest extends GuicedTest {
 		try {
 
 			json = objectMapper.writeValueAsString(schema);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
 		}
 
-		LOG.debug("schema json: " + json);
+		SchemaTest.LOG.debug("schema json: " + json);
 	}
 
 	private Attribute createAttribute(final String id, final String name) {

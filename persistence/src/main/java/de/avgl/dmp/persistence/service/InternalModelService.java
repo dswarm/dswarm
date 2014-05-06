@@ -1,7 +1,6 @@
 package de.avgl.dmp.persistence.service;
 
 import java.util.Map;
-import java.util.Set;
 
 import com.google.common.base.Optional;
 
@@ -17,9 +16,6 @@ import de.avgl.dmp.persistence.model.schema.Schema;
  * @author tgaengler
  */
 public interface InternalModelService {
-
-	@Deprecated
-	Optional<Set<String>> getSchema(Long resourceId, Long configurationId);
 
 	/**
 	 * Persists an object (model) to a data model.

@@ -1,5 +1,7 @@
 package de.avgl.dmp.persistence.service.schema.test.utils;
 
+import java.util.Set;
+
 import com.google.common.collect.Sets;
 
 import de.avgl.dmp.persistence.model.schema.Clasz;
@@ -7,15 +9,13 @@ import de.avgl.dmp.persistence.model.schema.proxy.ProxyClasz;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
 import de.avgl.dmp.persistence.service.test.utils.AdvancedDMPJPAServiceTestUtils;
 
-import java.util.Set;
-
 public class ClaszServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<ClaszService, ProxyClasz, Clasz> {
 
 	public static final Set<String>	excludeClasses	= Sets.newHashSet();
 
 	static {
 
-		excludeClasses.add("http://purl.org/ontology/bibo/Document");
+		ClaszServiceTestUtils.excludeClasses.add("http://purl.org/ontology/bibo/Document");
 	}
 
 	public ClaszServiceTestUtils() {
@@ -26,13 +26,13 @@ public class ClaszServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<ClaszS
 	public Clasz createClass(final String id, final String name) throws Exception {
 
 		final Clasz clasz = new Clasz(id, name);
-		Clasz updatedClasz = createObject(clasz, clasz);
+		final Clasz updatedClasz = createObject(clasz, clasz);
 
 		return updatedClasz;
 	}
 
 	@Override
-	public void deleteObject(Clasz object) {
+	public void deleteObject(final Clasz object) {
 
 		if (object == null) {
 
@@ -44,7 +44,7 @@ public class ClaszServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<ClaszS
 			return;
 		}
 
-		if (excludeClasses.contains(object.getUri())) {
+		if (ClaszServiceTestUtils.excludeClasses.contains(object.getUri())) {
 
 			// don't delete attributes that should be kept
 

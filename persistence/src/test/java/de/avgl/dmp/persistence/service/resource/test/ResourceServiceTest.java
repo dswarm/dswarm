@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
+import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.ResourceType;
@@ -25,22 +26,22 @@ public class ResourceServiceTest extends IDBasicJPAServiceTest<ProxyResource, Re
 	final String									attributeValue	= "/path/to/file.end";
 
 	private final ResourceServiceTestUtils			resourceServiceTestUtils;
-	
+
 	public ResourceServiceTest() {
 
 		super("resource", ResourceService.class);
-		
+
 		resourceServiceTestUtils = new ResourceServiceTestUtils();
 	}
 
 	@Test
 	public void testSimpleResource() {
 
-		Resource resource = createSimpleResource();
+		final Resource resource = createSimpleResource();
 
 		updateObjectTransactional(resource);
 
-		Resource updatedResource = getObject(resource);
+		final Resource updatedResource = getObject(resource);
 
 		checkSimpleResource(resource, updatedResource);
 
@@ -53,7 +54,7 @@ public class ResourceServiceTest extends IDBasicJPAServiceTest<ProxyResource, Re
 
 		final Resource resource = createSimpleResource();
 
-		final ConfigurationService configurationService = injector.getInstance(ConfigurationService.class);
+		final ConfigurationService configurationService = GuicedTest.injector.getInstance(ConfigurationService.class);
 
 		Assert.assertNotNull("configuration service shouldn't be null", configurationService);
 
@@ -160,11 +161,11 @@ public class ResourceServiceTest extends IDBasicJPAServiceTest<ProxyResource, Re
 			resourceJSON = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(updatedResource3);
 		} catch (final JsonProcessingException e) {
 
-			LOG.debug("couldn't transform resource object to JSON string.\n" + e.getMessage());
+			ResourceServiceTest.LOG.debug("couldn't transform resource object to JSON string.\n" + e.getMessage());
 		}
 
-		LOG.debug("resource configurations size: " + updatedResource3.getConfigurations().size());
-		LOG.debug("resource JSON: " + resourceJSON);
+		ResourceServiceTest.LOG.debug("resource configurations size: " + updatedResource3.getConfigurations().size());
+		ResourceServiceTest.LOG.debug("resource JSON: " + resourceJSON);
 
 		// clean up DB
 		configurationService.deleteObject(configurationId);
