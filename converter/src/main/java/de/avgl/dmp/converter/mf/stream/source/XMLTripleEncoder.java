@@ -220,6 +220,9 @@ public final class XMLTripleEncoder extends DefaultXmlPipe<ObjectReceiver<RDFMod
 		// e.printStackTrace();
 		// }
 
+		// reset id
+		currentId = null;
+
 		getReceiver().process(rdfModel);
 	}
 
