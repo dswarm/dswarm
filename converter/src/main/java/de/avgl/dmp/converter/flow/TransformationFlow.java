@@ -63,15 +63,13 @@ public class TransformationFlow {
 
 	private static final org.apache.log4j.Logger		LOG						= org.apache.log4j.Logger.getLogger(TransformationFlow.class);
 
-	public static final String							DEFAULT_RESOURCE_PATH	= "qucosa_record.xml";
+	private final Metamorph transformer;
 
-	private final Metamorph								transformer;
+	private final String script;
 
-	private final String								script;
+	private final Optional<DataModel> outputDataModel;
 
-	private final Optional<DataModel>					outputDataModel;
-
-	private final Provider<InternalModelServiceFactory>	internalModelServiceFactoryProvider;
+	private final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider;
 
 	public TransformationFlow(final Metamorph transformer, final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
 
@@ -119,6 +117,7 @@ public class TransformationFlow {
 		try {
 
 			tuplesList = DMPPersistenceUtil.getJSONObjectMapper().readValue(record, new TypeReference<List<Tuple<String, JsonNode>>>() {
+
 			});
 		} catch (final JsonParseException e) {
 

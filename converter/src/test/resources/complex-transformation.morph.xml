@@ -1,0 +1,35 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+	<meta>
+		<name>mapping14</name>
+	</meta>
+	<rules>
+		<data name="@firstName" source="http://purl.org/dc/terms/creator&#30;http://xmlns.com/foaf/0.1/firstName"/>
+		<data name="@givenName" source="http://purl.org/dc/terms/creator&#30;http://xmlns.com/foaf/0.1/givenName"/>
+		<data name="@familyName" source="http://purl.org/dc/terms/creator&#30;http://xmlns.com/foaf/0.1/familyName"/>
+		<data name="@title" source="http://purl.org/dc/terms/creator&#30;http://xmlns.com/foaf/0.1/title"/>
+		<data name="http://purl.org/dc/terms/creator&#30;http://xmlns.com/foaf/0.1/name" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
+		<combine name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" reset="true" value="${title},${givenName},${component17}">
+			<data name="title" source="@title"/>
+			<data name="givenName" source="@givenName"/>
+			<data name="component17" source="@component17"/>
+		</combine>
+		<combine name="@component17" reset="true" value="_${component15} ${component13}_">
+			<data name="component15" source="@component15"/>
+			<data name="component13" source="@component13"/>
+		</combine>
+		<replace name="@component12" pattern="=" with="">
+			<data source="@familyName"/>
+			<data source="@firstName"/>
+		</replace>
+		<data name="@component15" source="@firstName">
+			<replace pattern="=" with=""/>
+		</data>
+		<data name="@component13" source="@component14">
+			<trim/>
+		</data>
+		<data name="@component14" source="@component12">
+			<trim/>
+		</data>
+	</rules>
+</metamorph>
