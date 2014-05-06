@@ -277,17 +277,7 @@ public class MorphScriptBuilder {
 
 			final Integer ordinal = mappingAttributePathInstance.getOrdinal();
 
-			String filterExpressionStringUnescaped = null;
-
-			if (mappingAttributePathInstance.getFilter() != null) {
-
-				final String filterExpressionString = mappingAttributePathInstance.getFilter().getExpression();
-
-				if (filterExpressionString != null && !filterExpressionString.isEmpty()) {
-
-					filterExpressionStringUnescaped = StringEscapeUtils.unescapeXml(filterExpressionString);
-				}
-			}
+			final String filterExpressionStringUnescaped = getFilterExpression(mappingAttributePathInstance);
 
 			final List<Element> inputAttributePathsToVars = addInputAttributePathVars(variablesFromInputAttributePaths, inputAttributePathString,
 					rules, inputAttributePaths, filterExpressionStringUnescaped, ordinal);
@@ -465,39 +455,17 @@ public class MorphScriptBuilder {
 				continue;
 			}
 
-			if (ordinal != null && ordinal > 0) {
+			final String manipulatedVariable;
 
-				final Element occurrenceData = doc.createElement("data");
+			if (checkOrdinal(ordinal)) {
 
-				occurrenceData.setAttribute("name", "@" + variable);
+				manipulatedVariable = addOrdinalFilter(ordinal, variable, rules);
+			} else {
 
-				variable = variable + MorphScriptBuilder.OCCURRENCE_VARIABLE_POSTFIX;
-
-				occurrenceData.setAttribute("source", "@" + variable);
-
-				final Element occurrenceFunction = doc.createElement("occurrence");
-
-				occurrenceFunction.setAttribute("only", String.valueOf(ordinal));
-
-				occurrenceData.appendChild(occurrenceFunction);
-
-				rules.appendChild(occurrenceData);
+				manipulatedVariable = variable;
 			}
 
-			Map<String, String> filterExpressionMap = Maps.newHashMap();
-
-			final ObjectMapper objectMapper = new ObjectMapper();
-
-			if (filterExpressionString != null && !filterExpressionString.isEmpty()) {
-
-				try {
-
-					filterExpressionMap = objectMapper.readValue(filterExpressionString, HashMap.class);
-				} catch (final IOException e) {
-
-					MorphScriptBuilder.LOG.debug("something went wrong while deserialize filter expression" + e);
-				}
-			}
+			final Map<String, String> filterExpressionMap = extractFilterExpressions(filterExpressionString);
 
 			if (filterExpressionMap == null || filterExpressionMap.isEmpty()) {
 
@@ -507,36 +475,9 @@ public class MorphScriptBuilder {
 				data.setAttribute("name", "@" + variable);
 
 				rules.appendChild(data);
-
 			} else {
 
-				final Element combineAsFilter = doc.createElement("combine");
-				combineAsFilter.setAttribute("reset", "false");
-				combineAsFilter.setAttribute("sameEntity", "true");
-				combineAsFilter.setAttribute("name", "@" + variable);
-				combineAsFilter.setAttribute("value", "${" + variable + MorphScriptBuilder.FILTER_VARIABLE_POSTFIX + "}");
-
-				for (final Entry<String, String> filter : filterExpressionMap.entrySet()) {
-
-					final Element combineAsFilterData = doc.createElement("data");
-					combineAsFilterData.setAttribute("source", StringEscapeUtils.unescapeXml(filter.getKey()));
-
-					final Element combineAsFilterDataFunction = doc.createElement("equals");
-					combineAsFilterDataFunction.setAttribute("string", filter.getValue());
-
-					combineAsFilterData.appendChild(combineAsFilterDataFunction);
-					combineAsFilter.appendChild(combineAsFilterData);
-
-				}
-
-				final Element combineAsFilterDataOut = doc.createElement("data");
-				combineAsFilterDataOut.setAttribute("name", variable + MorphScriptBuilder.FILTER_VARIABLE_POSTFIX);
-				combineAsFilterDataOut.setAttribute("source", inputAttributePathStringXMLEscaped);
-
-				combineAsFilter.appendChild(combineAsFilterDataOut);
-
-				rules.appendChild(combineAsFilter);
-
+				addFilter(filterExpressionString, inputAttributePathStringXMLEscaped, manipulatedVariable, filterExpressionMap, rules);
 			}
 
 			if (vars == null) {
@@ -596,9 +537,41 @@ public class MorphScriptBuilder {
 			return;
 		}
 
+		final MappingAttributePathInstance inputMappingAttributePathInstance = inputMappingAttributePathInstances.iterator().next();
+		final String inputAttributePathStringXMLEscaped = StringEscapeUtils.escapeXml(inputMappingAttributePathInstance.getAttributePath()
+				.toAttributePath());
+		final String filterExpression = getFilterExpression(inputMappingAttributePathInstance);
+		final Integer ordinal = inputMappingAttributePathInstance.getOrdinal();
+
+		final String inputVariable;
+		final boolean isOrdinalValid = checkOrdinal(ordinal);
+		final Map<String, String> filterExpressionMap = extractFilterExpressions(filterExpression);
+
+		String var1000 = "var1000";
+		boolean takeVariable = false;
+
+		if(isOrdinalValid) {
+
+			var1000 = addOrdinalFilter(ordinal, var1000, rules);
+			takeVariable = true;
+		}
+
+		if(filterExpressionMap != null && !filterExpressionMap.isEmpty()) {
+
+			addFilter(filterExpression, inputAttributePathStringXMLEscaped, var1000, filterExpressionMap, rules);
+			takeVariable = true;
+		}
+
+		if(!takeVariable) {
+
+			inputVariable = inputAttributePathStringXMLEscaped;
+		} else {
+
+			inputVariable = "@" + var1000;
+		}
+
 		final Element data = doc.createElement("data");
-		data.setAttribute("source",
-				StringEscapeUtils.escapeXml(inputMappingAttributePathInstances.iterator().next().getAttributePath().toAttributePath()));
+		data.setAttribute("source", inputVariable);
 
 		data.setAttribute("name", StringEscapeUtils.escapeXml(outputMappingAttributePathInstance.getAttributePath().toAttributePath()));
 
@@ -790,5 +763,102 @@ public class MorphScriptBuilder {
 		MorphScriptBuilder.LOG.error("couldn't find transformation output variable identifier");
 
 		return null;
+	}
+
+	private String getFilterExpression(final MappingAttributePathInstance mappingAttributePathInstance) {
+
+		if (mappingAttributePathInstance.getFilter() != null) {
+
+			final String filterExpressionString = mappingAttributePathInstance.getFilter().getExpression();
+
+			if (filterExpressionString != null && !filterExpressionString.isEmpty()) {
+
+				return StringEscapeUtils.unescapeXml(filterExpressionString);
+			}
+		}
+
+		return null;
+	}
+
+	private boolean checkOrdinal(final Integer ordinal) {
+
+		if (ordinal != null && ordinal > 0) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+	private String addOrdinalFilter(final Integer ordinal, final String variable, final Element rules) {
+
+		final Element occurrenceData = doc.createElement("data");
+
+		occurrenceData.setAttribute("name", "@" + variable);
+
+		final String manipulatedVariable = variable + MorphScriptBuilder.OCCURRENCE_VARIABLE_POSTFIX;
+
+		occurrenceData.setAttribute("source", "@" + manipulatedVariable);
+
+		final Element occurrenceFunction = doc.createElement("occurrence");
+
+		occurrenceFunction.setAttribute("only", String.valueOf(ordinal));
+
+		occurrenceData.appendChild(occurrenceFunction);
+
+		rules.appendChild(occurrenceData);
+
+		return manipulatedVariable;
+	}
+
+	private void addFilter(final String filterExpressionString, final String inputAttributePathStringXMLEscaped, final String variable,
+			final Map<String, String> filterExpressionMap, final Element rules) {
+
+		final Element combineAsFilter = doc.createElement("combine");
+		combineAsFilter.setAttribute("reset", "false");
+		combineAsFilter.setAttribute("sameEntity", "true");
+		combineAsFilter.setAttribute("name", "@" + variable);
+		combineAsFilter.setAttribute("value", "${" + variable + MorphScriptBuilder.FILTER_VARIABLE_POSTFIX + "}");
+
+		for (final Entry<String, String> filter : filterExpressionMap.entrySet()) {
+
+			final Element combineAsFilterData = doc.createElement("data");
+			combineAsFilterData.setAttribute("source", StringEscapeUtils.unescapeXml(filter.getKey()));
+
+			final Element combineAsFilterDataFunction = doc.createElement("equals");
+			combineAsFilterDataFunction.setAttribute("string", filter.getValue());
+
+			combineAsFilterData.appendChild(combineAsFilterDataFunction);
+			combineAsFilter.appendChild(combineAsFilterData);
+
+		}
+
+		final Element combineAsFilterDataOut = doc.createElement("data");
+		combineAsFilterDataOut.setAttribute("name", variable + MorphScriptBuilder.FILTER_VARIABLE_POSTFIX);
+		combineAsFilterDataOut.setAttribute("source", inputAttributePathStringXMLEscaped);
+
+		combineAsFilter.appendChild(combineAsFilterDataOut);
+
+		rules.appendChild(combineAsFilter);
+	}
+
+	private Map<String, String> extractFilterExpressions(final String filterExpressionString) {
+
+		Map<String, String> filterExpressionMap = Maps.newHashMap();
+
+		final ObjectMapper objectMapper = new ObjectMapper();
+
+		if (filterExpressionString != null && !filterExpressionString.isEmpty()) {
+
+			try {
+
+				filterExpressionMap = objectMapper.readValue(filterExpressionString, HashMap.class);
+			} catch (final IOException e) {
+
+				MorphScriptBuilder.LOG.debug("something went wrong while deserializing filter expression" + e);
+			}
+		}
+
+		return filterExpressionMap;
 	}
 }

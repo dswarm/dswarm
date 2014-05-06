@@ -236,6 +236,9 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 		// e.printStackTrace();
 		// }
 
+		// reset id
+		currentId = null;
+
 		getReceiver().process(gdmModel);
 	}
 
@@ -413,7 +416,14 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 				sb.append("http://data.slub-dresden.de/records/");
 			}
 
-			return sb.append(UUID.randomUUID()).toString();
+			final UUID uuid = UUID.randomUUID();
+
+			if(uuid == null) {
+
+				throw new MetafactureException("couldn't mint an uuid");
+			}
+
+			return sb.append(uuid.toString()).toString();
 		}
 
 		// create uri with help of given record id

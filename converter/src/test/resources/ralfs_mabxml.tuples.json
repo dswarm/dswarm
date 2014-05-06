@@ -1,5 +1,6 @@
 [{
-    "http://data.slub-dresden.de/datamodels/2/records/7c866954-e3e5-485b-a2c6-714c3f032582": [{
+    "v1": "http://data.slub-dresden.de/datamodels/2/records/f499ab99-21e3-4b42-ac43-3c35e30c1faf",
+    "v2": [{
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.openarchives.org/OAI/2.0/recordType"
     }, {
         "http://www.openarchives.org/OAI/2.0/header": [{
@@ -277,7 +278,7 @@
                         }, {
                             "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code": "a"
                         }, {
-                            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "http://swbplus.bsz-bw.de/bsz112113605inh.htm"
+                            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "http://dx.doi.org/bsz112113605inh.htm"
                         }]
                     }],
                     [{
@@ -20112,7 +20113,8 @@
         }]
     }]
 }, {
-    "http://data.slub-dresden.de/datamodels/2/records/80223eb0-2177-47b5-944d-d6e4cdfa5c12": [{
+    "v1": "http://data.slub-dresden.de/datamodels/2/records/315ac631-c321-4447-8d49-40cb4cec7c75",
+    "v2": [{
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.openarchives.org/OAI/2.0/recordType"
     }, {
         "http://www.openarchives.org/OAI/2.0/header": [{
@@ -25045,7 +25047,8 @@
         }]
     }]
 }, {
-    "http://data.slub-dresden.de/datamodels/2/records/6cf33c78-c53a-4709-92af-9a927e36d85e": [{
+    "v1": "http://data.slub-dresden.de/datamodels/2/records/69112f3a-74d2-4734-9ca4-afaec41336cb",
+    "v2": [{
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.openarchives.org/OAI/2.0/recordType"
     }, {
         "http://www.openarchives.org/OAI/2.0/header": [{
