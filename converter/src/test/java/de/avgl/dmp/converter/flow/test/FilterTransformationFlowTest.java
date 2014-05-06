@@ -186,7 +186,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 			actualContentJson = actualContentJsonCandidate;
 		}
 
-		Assert.assertNotNull("the acutal content JSON shouldn't be null", actualContentJson);
+		Assert.assertNotNull("the actual content JSON shouldn't be null", actualContentJson);
 		Assert.assertTrue("the actual content JSON should be a JSON object", actualContentJson.isObject());
 
 		final ObjectNode newExpectedContentJson = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();

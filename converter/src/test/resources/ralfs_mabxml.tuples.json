@@ -278,7 +278,7 @@
                         }, {
                             "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code": "a"
                         }, {
-                            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "http://swbplus.bsz-bw.de/bsz112113605inh.htm"
+                            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "http://dx.doi.org/bsz112113605inh.htm"
                         }]
                     }],
                     [{
