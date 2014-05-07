@@ -651,41 +651,31 @@ public class MorphScriptBuilder {
 			}
 		}
 
-		// this is a list of variable names, which should be unique and ordered
-		final Set<String> sourceAttributes = new LinkedHashSet<String>();
+		// this is a list of input variable names related to current component, which should be unique and ordered
+		final Set<String> inputVariables = new LinkedHashSet<String>();
 
 		for (final String inputString : inputStrings) {
 
-			sourceAttributes.add(inputString);
+			inputVariables.add(inputString);
 		}
 
+		// if no inputString is set, take input component name
 		if (component.getInputComponents() != null && !component.getInputComponents().isEmpty()) {
 
 			for (final Component inputComponent : component.getInputComponents()) {
 
-				sourceAttributes.add("component" + inputComponent.getId());
+				inputVariables.add(inputComponent.getName());
 			}
-		} else {
+		} 
 
-			// take input attribute path variable
-
-			if (inputAttributePathVariablesMap != null && !inputAttributePathVariablesMap.isEmpty()) {
-
-				sourceAttributes.add(inputAttributePathVariablesMap.entrySet().iterator().next().getValue().iterator().next());
-			}
-		}
-
-		if (sourceAttributes.isEmpty()) {
+		if (inputVariables.isEmpty()) {
 
 			// couldn't identify an input variable or an input attribute path
 
 			return;
 		}
 
-		if (sourceAttributes.size() > 1) {
-
-			// TODO: [@tgaengler] multiple identified input variables doesn't really mean that the component refers to a
-			// collection, or?
+		if (inputVariables.size() > 1) {
 
 			String collectionNameAttribute = null;
 
@@ -697,10 +687,10 @@ public class MorphScriptBuilder {
 				collectionNameAttribute = transformationOutputVariableIdentifier;
 			} else {
 
-				collectionNameAttribute = "component" + component.getId();
+				collectionNameAttribute = component.getName();
 			}
 
-			final Element collection = createCollectionTag(component, collectionNameAttribute, sourceAttributes);
+			final Element collection = createCollectionTag(component, collectionNameAttribute, inputVariables);
 
 			rules.appendChild(collection);
 
@@ -715,10 +705,10 @@ public class MorphScriptBuilder {
 			dataNameAttribute = transformationOutputVariableIdentifier;
 		} else {
 
-			dataNameAttribute = "component" + component.getId();
+			dataNameAttribute = component.getName();
 		}
 
-		final Element data = createDataTag(component, dataNameAttribute, sourceAttributes.iterator().next());
+		final Element data = createDataTag(component, dataNameAttribute, inputVariables.iterator().next());
 
 		rules.appendChild(data);
 	}

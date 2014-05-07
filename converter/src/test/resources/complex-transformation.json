@@ -15,7 +15,7 @@
             ],
             "components": [
               {
-                "name": "my replace component",
+                "name": "component_id_12",
                 "function": {
                   "type": "Function",
                   "name": "replace",
@@ -29,7 +29,7 @@
                 "id": 12,
                 "output_components": [
                   {
-                    "name": "my trim component",
+                    "name": "component_id_14",
                     "function": {
                       "type": "Function",
                       "name": "trim",
@@ -39,12 +39,13 @@
                     "id": 14,
                     "input_components": [
                       {
-                        "id": 12
+                        "id": 12,
+                        "name": "component_id_12"
                       }
                     ],
                     "output_components": [
                       {
-                        "name": "my lower case component",
+                        "name": "component_id_13",
                         "function": {
                           "type": "Function",
                           "name": "lower_case",
@@ -54,12 +55,14 @@
                         "id": 13,
                         "input_components": [
                           {
-                            "id": 14
+                            "id": 14,
+                            "name": "component_id_14"
                           }
                         ],
                         "output_components": [
                           {
-                            "id": 17
+                            "id": 17,
+                            "name": "component_id_17"
                           }
                         ]
                       }
@@ -73,27 +76,7 @@
                 }
               },
               {
-                "name": "my trim component",
-                "function": {
-                  "type": "Function",
-                  "name": "trim",
-                  "description": "trims leading and trailing whitespaces from a given string",
-                  "id": 12
-                },
-                "id": 13,
-                "input_components": [
-                  {
-                    "id": 14
-                  }
-                ],
-                "output_components": [
-                  {
-                    "id": 17
-                  }
-                ]
-              },
-              {
-                "name": "my trim component",
+                "name": "component_id_14",
                 "function": {
                   "type": "Function",
                   "name": "trim",
@@ -103,12 +86,13 @@
                 "id": 14,
                 "input_components": [
                   {
-                    "id": 12
+                    "id": 12,
+                    "name": "component_id_12"
                   }
                 ],
                 "output_components": [
                   {
-                    "name": "my lower case component",
+                    "name": "component_id_13",
                     "function": {
                       "type": "Function",
                       "name": "lower_case",
@@ -118,19 +102,21 @@
                     "id": 13,
                     "input_components": [
                       {
-                        "id": 14
+                        "id": 14,
+                        "name": "component_id_14"
                       }
                     ],
                     "output_components": [
                       {
-                        "id": 17
+                        "id": 17,
+                        "name": "component_id_17"
                       }
                     ]
                   }
                 ]
               },
               {
-                "name": "my replace component",
+                "name": "component_id_15",
                 "function": {
                   "type": "Function",
                   "name": "replace",
@@ -144,7 +130,8 @@
                 "id": 15,
                 "output_components": [
                   {
-                    "id": 16
+                    "id": 16,
+                    "name": "component_id_16"
                   }
                 ],
                 "parameter_mappings": {
@@ -154,7 +141,7 @@
                 }
               },
               {
-                "name": "my concat component",
+                "name": "component_id_17",
                 "function": {
                   "type": "Function",
                   "name": "concat",
@@ -169,25 +156,58 @@
                 "id": 17,
                 "input_components": [
                   {
-                    "id": 15
+                    "id": 15,
+                    "name": "component_id_15"
                   },
                   {
-                    "id": 13
+                    "id": 13,
+                    "name": "component_id_13"
                   }
                 ],
                 "output_components": [
                   {
-                    "id": 18
+                    "id": 18,
+                    "name": "component_id_18"
                   }
                 ],
                 "parameter_mappings": {
+                  "inputString": "component_id_13,component_id_15",
                   "delimiter": " ",
                   "prefix": "_",
                   "postfix": "_"
                 }
               },
               {
-                "name": "my concat component 2",
+                "name": "component_id_13",
+                "function": {
+                  "type": "Function",
+                  "name": "case",
+                  "description": "Upper/lower-case transformation.",
+                  "id": 2,
+                  "parameters": [
+                    "to",
+                    "language"
+                  ]
+                },
+                "id": 13,
+                "input_components": [
+                  {
+                    "id": 14,
+                    "name": "component_id_14"
+                  }
+                ],
+                "output_components": [
+                  {
+                    "id": 17,
+                    "name": "component_id_17"
+                  }
+                ],
+                "parameter_mappings": {
+                  "to": "lower"
+                }
+              },
+              {
+                "name": "component_id_18",
                 "function": {
                   "type": "Function",
                   "name": "concat",
@@ -202,11 +222,12 @@
                 "id": 18,
                 "input_components": [
                   {
-                    "id": 17
+                    "id": 17,
+                    "name": "component_id_17"
                   }
                 ],
                 "parameter_mappings": {
-                  "inputString": "title,givenName",
+                  "inputString": "component_id_17,title,givenName",
                   "delimiter": ","
                 }
               }
