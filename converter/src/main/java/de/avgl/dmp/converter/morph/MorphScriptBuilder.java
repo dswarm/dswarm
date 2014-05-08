@@ -232,7 +232,7 @@ public class MorphScriptBuilder {
 		return this;
 	}
 
-	private void createTransformation(final Element rules, final Mapping mapping) {
+	private void createTransformation(final Element rules, final Mapping mapping) throws DMPConverterException {
 
 		// first handle the parameter mapping from the attribute paths of the mapping to the transformation component
 
@@ -579,7 +579,7 @@ public class MorphScriptBuilder {
 	}
 
 	private void processTransformationComponentFunction(final Component transformationComponent, final Mapping mapping,
-			final Map<String, List<String>> inputAttributePathVariablesMap, final Element rules) {
+			final Map<String, List<String>> inputAttributePathVariablesMap, final Element rules) throws DMPConverterException {
 
 		final String transformationOutputVariableIdentifier = determineTransformationOutputVariable(transformationComponent);
 		final String finalTransformationOutputVariableIdentifier = transformationOutputVariableIdentifier == null ? MorphScriptBuilder.OUTPUT_VARIABLE_PREFIX_IDENTIFIER
@@ -632,7 +632,7 @@ public class MorphScriptBuilder {
 	}
 
 	private void processComponent(final Component component, final Map<String, List<String>> inputAttributePathVariablesMap,
-			final String transformationOutputVariableIdentifier, final Element rules) {
+			final String transformationOutputVariableIdentifier, final Element rules) throws DMPConverterException {
 
 		String[] inputStrings = {};
 
@@ -651,7 +651,7 @@ public class MorphScriptBuilder {
 			}
 		}
 
-		// this is a list of variable names, which should be unique and ordered
+		// this is a list of input variable names related to current component, which should be unique and ordered
 		final Set<String> sourceAttributes = new LinkedHashSet<String>();
 
 		for (final String inputString : inputStrings) {
@@ -659,21 +659,26 @@ public class MorphScriptBuilder {
 			sourceAttributes.add(inputString);
 		}
 
+		// if no inputString is set, take input component name
 		if (component.getInputComponents() != null && !component.getInputComponents().isEmpty()) {
 
 			for (final Component inputComponent : component.getInputComponents()) {
 
-				sourceAttributes.add("component" + inputComponent.getId());
+				sourceAttributes.add(getComponentName(inputComponent));
+				
 			}
-		} else {
-
-			// take input attribute path variable
-
-			if (inputAttributePathVariablesMap != null && !inputAttributePathVariablesMap.isEmpty()) {
-
-				sourceAttributes.add(inputAttributePathVariablesMap.entrySet().iterator().next().getValue().iterator().next());
-			}
-		}
+		} 
+		
+		// TODO: [@niederl] verify if an use case for this code exists
+//		else {
+//			
+//			// take input attribute path variable
+//			
+//			if (inputAttributePathVariablesMap != null && !inputAttributePathVariablesMap.isEmpty()) {
+//				
+//				sourceAttributes.add(inputAttributePathVariablesMap.entrySet().iterator().next().getValue().iterator().next());
+//			}
+//		}
 
 		if (sourceAttributes.isEmpty()) {
 
@@ -683,7 +688,7 @@ public class MorphScriptBuilder {
 		}
 
 		if (sourceAttributes.size() > 1) {
-
+			
 			// TODO: [@tgaengler] multiple identified input variables doesn't really mean that the component refers to a
 			// collection, or?
 
@@ -697,7 +702,8 @@ public class MorphScriptBuilder {
 				collectionNameAttribute = transformationOutputVariableIdentifier;
 			} else {
 
-				collectionNameAttribute = "component" + component.getId();
+				collectionNameAttribute = getComponentName(component);
+				
 			}
 
 			final Element collection = createCollectionTag(component, collectionNameAttribute, sourceAttributes);
@@ -714,13 +720,30 @@ public class MorphScriptBuilder {
 			// dataNameAttribute = getKeyParameterMapping(outputAttributePath, transformationComponent);
 			dataNameAttribute = transformationOutputVariableIdentifier;
 		} else {
+			
+			dataNameAttribute = getComponentName(component);
 
-			dataNameAttribute = "component" + component.getId();
 		}
 
 		final Element data = createDataTag(component, dataNameAttribute, sourceAttributes.iterator().next());
 
 		rules.appendChild(data);
+	}
+
+	private String getComponentName(Component component) throws DMPConverterException {
+
+		final String componentName = component.getName();
+		
+		if (componentName != null && !componentName.isEmpty()) {
+
+			return componentName;
+		} else {
+			
+			LOG.error("component name (an id assigned by frontend) doesn't exist");
+			
+			throw new DMPConverterException("component name doesn't exist");
+		}
+		
 	}
 
 	private String determineTransformationOutputVariable(final Component transformationComponent) {
@@ -783,6 +806,16 @@ public class MorphScriptBuilder {
 	private boolean checkOrdinal(final Integer ordinal) {
 
 		if (ordinal != null && ordinal > 0) {
+
+			return true;
+		}
+
+		return false;
+	}
+	
+	private boolean checkComponentName(final String componentName) {
+
+		if (componentName != null && !componentName.isEmpty()) {
 
 			return true;
 		}
