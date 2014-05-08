@@ -652,11 +652,11 @@ public class MorphScriptBuilder {
 		}
 
 		// this is a list of input variable names related to current component, which should be unique and ordered
-		final Set<String> inputVariables = new LinkedHashSet<String>();
+		final Set<String> sourceAttributes = new LinkedHashSet<String>();
 
 		for (final String inputString : inputStrings) {
 
-			inputVariables.add(inputString);
+			sourceAttributes.add(inputString);
 		}
 
 		// if no inputString is set, take input component name
@@ -664,18 +664,40 @@ public class MorphScriptBuilder {
 
 			for (final Component inputComponent : component.getInputComponents()) {
 
-				inputVariables.add(inputComponent.getName());
+				final String inputComponentName = inputComponent.getName();
+				
+				if (checkComponentName(inputComponentName)) {
+					
+					sourceAttributes.add(inputComponentName);
+				} else {
+					
+					MorphScriptBuilder.LOG.error("name of input component (an id assigned by frontend) doesn't exist");
+				}
 			}
 		} 
+		
+		// TODO: [@niederl] verify if an use case for this code exists
+//		else {
+//			
+//			// take input attribute path variable
+//			
+//			if (inputAttributePathVariablesMap != null && !inputAttributePathVariablesMap.isEmpty()) {
+//				
+//				sourceAttributes.add(inputAttributePathVariablesMap.entrySet().iterator().next().getValue().iterator().next());
+//			}
+//		}
 
-		if (inputVariables.isEmpty()) {
+		if (sourceAttributes.isEmpty()) {
 
 			// couldn't identify an input variable or an input attribute path
 
 			return;
 		}
 
-		if (inputVariables.size() > 1) {
+		if (sourceAttributes.size() > 1) {
+			
+			// TODO: [@tgaengler] multiple identified input variables doesn't really mean that the component refers to a
+			// collection, or?
 
 			String collectionNameAttribute = null;
 
@@ -687,10 +709,18 @@ public class MorphScriptBuilder {
 				collectionNameAttribute = transformationOutputVariableIdentifier;
 			} else {
 
-				collectionNameAttribute = component.getName();
+				final String componentName = component.getName();
+				
+				if (checkComponentName(componentName)) {
+					
+					collectionNameAttribute = componentName;
+				} else {
+					
+					MorphScriptBuilder.LOG.error("component name (an id assigned by frontend) doesn't exist");
+				}
 			}
 
-			final Element collection = createCollectionTag(component, collectionNameAttribute, inputVariables);
+			final Element collection = createCollectionTag(component, collectionNameAttribute, sourceAttributes);
 
 			rules.appendChild(collection);
 
@@ -705,10 +735,18 @@ public class MorphScriptBuilder {
 			dataNameAttribute = transformationOutputVariableIdentifier;
 		} else {
 
-			dataNameAttribute = component.getName();
+			final String componentName = component.getName();
+			
+			if (checkComponentName(componentName)) {
+				
+				dataNameAttribute = componentName;
+			} else {
+				
+				MorphScriptBuilder.LOG.error("component name (an id assigned by frontend) doesn't exist");
+			}
 		}
 
-		final Element data = createDataTag(component, dataNameAttribute, inputVariables.iterator().next());
+		final Element data = createDataTag(component, dataNameAttribute, sourceAttributes.iterator().next());
 
 		rules.appendChild(data);
 	}
@@ -773,6 +811,16 @@ public class MorphScriptBuilder {
 	private boolean checkOrdinal(final Integer ordinal) {
 
 		if (ordinal != null && ordinal > 0) {
+
+			return true;
+		}
+
+		return false;
+	}
+	
+	private boolean checkComponentName(final String componentName) {
+
+		if (componentName != null && !componentName.isEmpty()) {
 
 			return true;
 		}

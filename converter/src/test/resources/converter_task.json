@@ -16,7 +16,7 @@
                     "type": "Transformation",
                     "components": [{
                         "id": 1,
-                        "name": "substring",
+                        "name": "component_id_1",
                         "description": "Returns a substring",
                         "function": {
                             "type": "Function",
@@ -48,7 +48,7 @@
                         },
                         "output_components": [{
                             "id": 2,
-                            "name": "normalize-utf8",
+                            "name": "component_id_2",
                             "function": {
                                 "type": "Function",
                                 "id": 260,
@@ -64,7 +64,7 @@
                             }],
                             "output_components": [{
                                 "id": 3,
-                                "name": "htmlanchor",
+                                "name": "component_id_3",
                                 "description": "Create an HTML anchor.",
                                 "function": {
                                     "type": "Function",
@@ -104,7 +104,7 @@
                         }]
                     }, {
                         "id": 2,
-                        "name": "normalize-utf8",
+                        "name": "component_id_2",
                         "function": {
                             "type": "Function",
                             "id": 260,
@@ -116,11 +116,12 @@
                             }
                         },
                         "input_components": [{
-                            "id": 1
+                            "id": 1,
+                            "name": "component_id_1"
                         }],
                         "output_components": [{
                             "id": 3,
-                            "name": "htmlanchor",
+                            "name": "component_id_3",
                             "description": "Create an HTML anchor.",
                             "function": {
                                 "type": "Function",
@@ -159,7 +160,7 @@
                         }]
                     }, {
                         "id": 3,
-                        "name": "htmlanchor",
+                        "name": "component_id_3",
                         "description": "Create an HTML anchor.",
                         "function": {
                             "type": "Function",
@@ -188,7 +189,8 @@
                             }
                         },
                         "input_components": [{
-                            "id": 2
+                            "id": 2,
+                            "name": "component_id_2"
                         }],
                         "parameter_mappings": {
                             "prefix": "http://av.gl/dmp",

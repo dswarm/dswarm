@@ -61,8 +61,7 @@
                         ],
                         "output_components": [
                           {
-                            "id": 17,
-                            "name": "component_id_17"
+                            "id": 17
                           }
                         ]
                       }
@@ -108,8 +107,7 @@
                     ],
                     "output_components": [
                       {
-                        "id": 17,
-                        "name": "component_id_17"
+                        "id": 17
                       }
                     ]
                   }
@@ -130,8 +128,7 @@
                 "id": 15,
                 "output_components": [
                   {
-                    "id": 16,
-                    "name": "component_id_16"
+                    "id": 16
                   }
                 ],
                 "parameter_mappings": {
@@ -166,8 +163,7 @@
                 ],
                 "output_components": [
                   {
-                    "id": 18,
-                    "name": "component_id_18"
+                    "id": 18
                   }
                 ],
                 "parameter_mappings": {
@@ -198,8 +194,7 @@
                 ],
                 "output_components": [
                   {
-                    "id": 17,
-                    "name": "component_id_17"
+                    "id": 17
                   }
                 ],
                 "parameter_mappings": {
