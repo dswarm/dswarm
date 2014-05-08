@@ -34,7 +34,7 @@ import com.google.common.collect.Sets;
 
 import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
-import de.avgl.dmp.persistence.model.utils.SetComponentReferenceSerializer;
+import de.avgl.dmp.persistence.model.representation.SetComponentReferenceSerializer;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**

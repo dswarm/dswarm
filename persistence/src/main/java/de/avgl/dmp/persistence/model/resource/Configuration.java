@@ -20,7 +20,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Objects;
@@ -28,8 +27,7 @@ import com.google.common.collect.Sets;
 
 import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
-import de.avgl.dmp.persistence.model.utils.ResourceReferenceDeserializer;
-import de.avgl.dmp.persistence.model.utils.SetResourceReferenceSerializer;
+import de.avgl.dmp.persistence.model.representation.SetResourceReferenceSerializer;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -58,7 +56,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	@JoinTable(name = "RESOURCES_CONFIGURATIONS", joinColumns = { @JoinColumn(name = "CONFIGURATION_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "RESOURCE_ID", referencedColumnName = "ID") })
 	@JsonSerialize(using = SetResourceReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	@JsonDeserialize(using = ResourceReferenceDeserializer.class)
+	//@JsonDeserialize(using = ResourceReferenceDeserializer.class)
 	@XmlIDREF
 	@XmlList
 	// @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})

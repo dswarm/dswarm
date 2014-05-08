@@ -78,12 +78,6 @@ public final class DMPPersistenceUtil {
 
 	private static final MappingAttributePathInstanceUtils	MAPPINGATTRIBUTEPATHINSTANCEUTILS;
 
-	/**
-	 * The injector for dependency injection.
-	 */
-	@SuppressWarnings("StaticNonFinalField")
-	public static transient Injector						injector;
-
 	private static final long								LOWER_RANGE	= -9223372036854775808L;	// assign
 																									// lower
 																									// range
@@ -252,20 +246,6 @@ public final class DMPPersistenceUtil {
 	public static MappingAttributePathInstanceUtils getMappingAttributePathInstanceUtils() {
 
 		return DMPPersistenceUtil.MAPPINGATTRIBUTEPATHINSTANCEUTILS;
-	}
-
-	/**
-	 * Gets the injector for dependency injection.
-	 * 
-	 * @return the injector for dependency injection
-	 * @throws DMPException
-	 */
-	public static Injector getInjector() throws DMPException {
-		if (DMPPersistenceUtil.injector == null) {
-			throw new DMPException("you should not use getInjector without providing it first. Try to use @Inject first.");
-		}
-
-		return DMPPersistenceUtil.injector;
 	}
 
 	public static long generateRandomDummyId() {

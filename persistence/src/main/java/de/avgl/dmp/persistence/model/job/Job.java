@@ -52,8 +52,6 @@ public class Job extends ExtendedBasicDMPJPAObject {
 	 */
 	public void setMappings(final Set<Mapping> mappingsArg) {
 
-		mappings = mappingsArg;
-
 		if (mappingsArg == null && mappings != null) {
 
 			mappings.clear();

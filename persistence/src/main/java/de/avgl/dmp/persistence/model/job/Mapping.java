@@ -77,26 +77,6 @@ public class Mapping extends BasicDMPJPAObject {
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private Component							transformation;
 
-	// /**
-	// * The input filter of this mapping.
-	// */
-	// @XmlElement(name = "input_filter")
-	// @ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
-	// CascadeType.REFRESH })
-	// @JoinColumn(name = "INPUT_FILTER")
-	// @JsonInclude(JsonInclude.Include.NON_NULL)
-	// private Filter inputFilter;
-
-	// /**
-	// * The output filter of this mapping.
-	// */
-	// @XmlElement(name = "output_filter")
-	// @ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
-	// CascadeType.REFRESH })
-	// @JoinColumn(name = "OUTPUT_FILTER")
-	// @JsonInclude(JsonInclude.Include.NON_NULL)
-	// private Filter outputFilter;
-
 	/**
 	 * Gets the input attribute paths of the mapping.
 	 * 
@@ -239,46 +219,6 @@ public class Mapping extends BasicDMPJPAObject {
 		transformation = transformationArg;
 	}
 
-	// /**
-	// * Gets the input filter of the mapping.
-	// *
-	// * @return the input filter of the mapping
-	// */
-	// public Filter getInputFilter() {
-	//
-	// return inputFilter;
-	// }
-	//
-	// /**
-	// * Sets the input filter of the mapping.
-	// *
-	// * @param inputFilterArg a new input filter
-	// */
-	// public void setInputFilter(final Filter inputFilterArg) {
-	//
-	// inputFilter = inputFilterArg;
-	// }
-	//
-	// /**
-	// * Gets the output filter of the mapping.
-	// *
-	// * @return the output filter of the mapping
-	// */
-	// public Filter getOutputFilter() {
-	//
-	// return outputFilter;
-	// }
-	//
-	// /**
-	// * Sets the output filter of the mapping.
-	// *
-	// * @param outputFilterArg a new output filter
-	// */
-	// public void setOutputFilter(final Filter outputFilterArg) {
-	//
-	// outputFilter = outputFilterArg;
-	// }
-
 	@Override
 	public boolean equals(final Object obj) {
 
@@ -295,7 +235,5 @@ public class Mapping extends BasicDMPJPAObject {
 				&& DMPPersistenceUtil.getMappingAttributePathInstanceUtils().completeEquals(((Mapping) obj).getOutputAttributePath(),
 						getOutputAttributePath())
 				&& DMPPersistenceUtil.getComponentUtils().completeEquals(((Mapping) obj).getTransformation(), getTransformation());
-		// && DMPPersistenceUtil.getFilterUtils().completeEquals(((Mapping) obj).getInputFilter(), getInputFilter())
-		// && DMPPersistenceUtil.getFilterUtils().completeEquals(((Mapping) obj).getOutputFilter(), getOutputFilter());
 	}
 }
