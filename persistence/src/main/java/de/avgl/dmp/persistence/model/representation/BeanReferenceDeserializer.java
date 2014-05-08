@@ -1,4 +1,4 @@
-package de.avgl.dmp.persistence.model.utils;
+package de.avgl.dmp.persistence.model.representation;
 
 import java.io.IOException;
 import java.util.HashSet;

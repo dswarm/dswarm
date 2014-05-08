@@ -127,11 +127,6 @@ public class InternalGDMGraphService implements InternalModelService {
 	@Override
 	public void createObject(final Long dataModelId, final Object model) throws DMPPersistenceException {
 
-		// if (database == null) {
-		//
-		// throw new DMPPersistenceException("couldn't establish connection to DB, i.e., cannot add new model to DB");
-		// }
-
 		if (dataModelId == null) {
 
 			throw new DMPPersistenceException("data model id shouldn't be null");
@@ -202,11 +197,6 @@ public class InternalGDMGraphService implements InternalModelService {
 	 */
 	@Override
 	public Optional<Map<String, Model>> getObjects(final Long dataModelId, final Optional<Integer> atMost) throws DMPPersistenceException {
-
-		// if (database == null) {
-		//
-		// throw new DMPPersistenceException("couldn't establish connection to DB, i.e., cannot retrieve model from DB");
-		// }
 
 		if (dataModelId == null) {
 
@@ -303,11 +293,6 @@ public class InternalGDMGraphService implements InternalModelService {
 	@Override
 	public void deleteObject(final Long dataModelId) throws DMPPersistenceException {
 
-		// if (database == null) {
-		//
-		// throw new DMPPersistenceException("couldn't establish connection to DB, i.e., cannot remove model from DB");
-		// }
-
 		if (dataModelId == null) {
 
 			throw new DMPPersistenceException("data model id shouldn't be null");
@@ -375,7 +360,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		if (schema.getRecordClass() != null) {
 
-			if (schema.getRecordClass().getId().equals(recordClassUri)) {
+			if (schema.getRecordClass().getUri().equals(recordClassUri)) {
 
 				// nothing to do, record class is already set
 

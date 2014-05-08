@@ -1,4 +1,4 @@
-package de.avgl.dmp.persistence.model.utils;
+package de.avgl.dmp.persistence.model.representation;
 
 import de.avgl.dmp.persistence.model.resource.Resource;
 
