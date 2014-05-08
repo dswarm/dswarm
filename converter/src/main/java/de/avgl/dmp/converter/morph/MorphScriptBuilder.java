@@ -47,6 +47,7 @@ import com.google.common.io.CharSource;
 import com.google.common.io.Resources;
 
 import de.avgl.dmp.converter.DMPConverterException;
+import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.init.util.DMPStatics;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Function;
@@ -664,15 +665,14 @@ public class MorphScriptBuilder {
 
 			for (final Component inputComponent : component.getInputComponents()) {
 
-				final String inputComponentName = inputComponent.getName();
-				
-				if (checkComponentName(inputComponentName)) {
+				try {
 					
-					sourceAttributes.add(inputComponentName);
-				} else {
+					sourceAttributes.add(getComponentName(inputComponent));
+				} catch (DMPConverterException e) {
 					
-					MorphScriptBuilder.LOG.error("name of input component (an id assigned by frontend) doesn't exist");
+					LOG.error("name of input component (an id assigned by frontend) doesn't exist");
 				}
+				
 			}
 		} 
 		
@@ -709,15 +709,14 @@ public class MorphScriptBuilder {
 				collectionNameAttribute = transformationOutputVariableIdentifier;
 			} else {
 
-				final String componentName = component.getName();
-				
-				if (checkComponentName(componentName)) {
+				try {
 					
-					collectionNameAttribute = componentName;
-				} else {
+					collectionNameAttribute = getComponentName(component);
+				} catch (DMPConverterException e) {
 					
-					MorphScriptBuilder.LOG.error("component name (an id assigned by frontend) doesn't exist");
+					LOG.error("component name (an id assigned by frontend) doesn't exist");
 				}
+				
 			}
 
 			final Element collection = createCollectionTag(component, collectionNameAttribute, sourceAttributes);
@@ -734,21 +733,34 @@ public class MorphScriptBuilder {
 			// dataNameAttribute = getKeyParameterMapping(outputAttributePath, transformationComponent);
 			dataNameAttribute = transformationOutputVariableIdentifier;
 		} else {
-
-			final String componentName = component.getName();
 			
-			if (checkComponentName(componentName)) {
+			try {
 				
-				dataNameAttribute = componentName;
-			} else {
+				dataNameAttribute = getComponentName(component);
+			} catch (DMPConverterException e) {
 				
-				MorphScriptBuilder.LOG.error("component name (an id assigned by frontend) doesn't exist");
+				LOG.error("component name (an id assigned by frontend) doesn't exist");
 			}
+
 		}
 
 		final Element data = createDataTag(component, dataNameAttribute, sourceAttributes.iterator().next());
 
 		rules.appendChild(data);
+	}
+
+	private String getComponentName(Component component) throws DMPConverterException {
+
+		final String componentName = component.getName();
+		
+		if (componentName != null && !componentName.isEmpty()) {
+
+			return componentName;
+		} else {
+			
+			throw new DMPConverterException("component name doesn't exist");
+		}
+		
 	}
 
 	private String determineTransformationOutputVariable(final Component transformationComponent) {
