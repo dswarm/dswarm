@@ -47,7 +47,6 @@ import com.google.common.io.CharSource;
 import com.google.common.io.Resources;
 
 import de.avgl.dmp.converter.DMPConverterException;
-import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.init.util.DMPStatics;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Function;
@@ -233,7 +232,7 @@ public class MorphScriptBuilder {
 		return this;
 	}
 
-	private void createTransformation(final Element rules, final Mapping mapping) {
+	private void createTransformation(final Element rules, final Mapping mapping) throws DMPConverterException {
 
 		// first handle the parameter mapping from the attribute paths of the mapping to the transformation component
 
@@ -580,7 +579,7 @@ public class MorphScriptBuilder {
 	}
 
 	private void processTransformationComponentFunction(final Component transformationComponent, final Mapping mapping,
-			final Map<String, List<String>> inputAttributePathVariablesMap, final Element rules) {
+			final Map<String, List<String>> inputAttributePathVariablesMap, final Element rules) throws DMPConverterException {
 
 		final String transformationOutputVariableIdentifier = determineTransformationOutputVariable(transformationComponent);
 		final String finalTransformationOutputVariableIdentifier = transformationOutputVariableIdentifier == null ? MorphScriptBuilder.OUTPUT_VARIABLE_PREFIX_IDENTIFIER
@@ -633,7 +632,7 @@ public class MorphScriptBuilder {
 	}
 
 	private void processComponent(final Component component, final Map<String, List<String>> inputAttributePathVariablesMap,
-			final String transformationOutputVariableIdentifier, final Element rules) {
+			final String transformationOutputVariableIdentifier, final Element rules) throws DMPConverterException {
 
 		String[] inputStrings = {};
 
@@ -665,13 +664,7 @@ public class MorphScriptBuilder {
 
 			for (final Component inputComponent : component.getInputComponents()) {
 
-				try {
-					
-					sourceAttributes.add(getComponentName(inputComponent));
-				} catch (DMPConverterException e) {
-					
-					LOG.error("name of input component (an id assigned by frontend) doesn't exist");
-				}
+				sourceAttributes.add(getComponentName(inputComponent));
 				
 			}
 		} 
@@ -709,13 +702,7 @@ public class MorphScriptBuilder {
 				collectionNameAttribute = transformationOutputVariableIdentifier;
 			} else {
 
-				try {
-					
-					collectionNameAttribute = getComponentName(component);
-				} catch (DMPConverterException e) {
-					
-					LOG.error("component name (an id assigned by frontend) doesn't exist");
-				}
+				collectionNameAttribute = getComponentName(component);
 				
 			}
 
@@ -734,13 +721,7 @@ public class MorphScriptBuilder {
 			dataNameAttribute = transformationOutputVariableIdentifier;
 		} else {
 			
-			try {
-				
-				dataNameAttribute = getComponentName(component);
-			} catch (DMPConverterException e) {
-				
-				LOG.error("component name (an id assigned by frontend) doesn't exist");
-			}
+			dataNameAttribute = getComponentName(component);
 
 		}
 
@@ -757,6 +738,8 @@ public class MorphScriptBuilder {
 
 			return componentName;
 		} else {
+			
+			LOG.error("component name (an id assigned by frontend) doesn't exist");
 			
 			throw new DMPConverterException("component name doesn't exist");
 		}
