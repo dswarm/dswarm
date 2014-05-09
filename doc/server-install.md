@@ -20,6 +20,35 @@ su
 apt-get install --no-install-recommends --yes mysql-server nginx tomcat7 openjdk-7-jdk
 ```
 
+- note: neo4j suggest to install oracle-jdk instead of openjdk, to do so, please execute the following commands (see also http://community.linuxmint.com/tutorial/view/1414)
+
+```
+su
+add-apt-repository ppa:webupd8team/java
+apt-get update
+apt-get install oracle-java7-installer
+```
+
+- you can check your java version with
+
+```
+java -version
+```
+
+- if it's not oracle-jdk, then
+
+```
+su
+update-java-alternatives -s java-7-oracle
+```
+
+- optionally, you can also set the environment variables to oracle-jdk with
+
+```
+su
+apt-get install oracle-java7-set-default
+```
+
 **2**. install system packages required for building the software
 
 ```
@@ -132,6 +161,28 @@ echo 'CATALINA_OPTS="-Xms4G -Xmx4G -XX:+CMSClassUnloadingEnabled -XX:+UseConcMar
 
 **9**. setup neo4j
 
+increase file handlers at `/etc/security/limits.conf`
+
+```
+root   soft    nofile  40000
+root   hard    nofile  40000
+```
+
+plus add `ulimit -n 40000` into your neo4j service script (under `/etc/init.d', e.g., `/etc/init.d/neo4j-service`) before starting the daemon
+
+edit `/etc/neo4j/neo4j.properties` and:
+
+- insert some storage tweaks (from http://blog.bruggen.com/2014/02/some-neo4j-import-tweaks-what-and-where.html)
+
+```
+use_memory_mapped_buffers=true
+neostore.nodestore.db.mapped_memory=1024M
+neostore.relationshipstore.db.mapped_memory=4G
+neostore.propertystore.db.mapped_memory=1024M
+neostore.propertystore.db.strings.mapped_memory=1024M
+cache_type=weak
+```
+
 edit `/etc/neo4j/neo4j-server.properties` and:
 
 - at line 12, change the database location
@@ -150,6 +201,21 @@ org.neo4j.server.webadmin.rrdb.location=/data/neo4j/data/rrd
 
 ```
 org.neo4j.server.thirdparty_jaxrs_classes=de.avgl.dmp.graph.resources=/graph
+```
+
+edit `/etc/neo4j/neo4j-wrapper.conf` and:
+
+- insert an additional parameter (if your server is x64)
+
+```
+wrapper.java.additional.1=-d64
+```
+
+- tweak the java heap space size to an appropriate value according to your server ram memory, e.g.,
+
+```
+wrapper.java.initmemory=512
+wrapper.java.maxmemory=8192
 ```
 
 edit `/etc/neo4j/logging.properties` and change line 54 to be
