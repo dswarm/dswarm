@@ -165,6 +165,6 @@ public class JsonNodeReader extends DefaultObjectPipe<Iterator<Tuple<String, Jso
 
 	private boolean checkValue(final JsonNode jsonNode) {
 
-		return jsonNode.isArray() && jsonNode.elements().next().isObject();
+		return jsonNode.isArray() && jsonNode.elements().hasNext() && jsonNode.elements().next().isObject();
 	}
 }
