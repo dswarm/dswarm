@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.google.common.collect.Lists;
+import de.avgl.dmp.persistence.model.internal.helper.AttributePathHelper;
 import org.apache.commons.io.FileUtils;
 import org.culturegraph.mf.stream.converter.JsonEncoder;
 import org.culturegraph.mf.stream.sink.ObjectJavaIoWriter;
@@ -114,14 +117,6 @@ public class TransformationFlowTest extends GuicedTest {
 
 		final InternalGDMGraphService gdmService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
 
-		// write CSV record triples
-		// for (final Triple triple : csvRecordTriples) {
-		//
-		// final MemoryDBInputModel mdbim = new MemoryDBInputModel(triple);
-		//
-		// memoryDbService.createObject(updatedInputDataModel.getId(), mdbim);
-		// }
-
 		// convert result to GDM
 		final Map<Long, de.avgl.dmp.graph.json.Resource> recordResources = Maps.newHashMap();
 
@@ -139,10 +134,23 @@ public class TransformationFlowTest extends GuicedTest {
 
 			final ResourceNode subject = (ResourceNode) recordResource.getStatements().iterator().next().getSubject();
 
-			recordResource.addStatement(subject, property, new LiteralNode(triple.getObject()));
+			if (triple.getObject() != null && !triple.getObject().equals("")) {
+
+				recordResource.addStatement(subject, property, new LiteralNode(triple.getObject()));
+			}
 		}
 
 		final GDMModel gdmModel = new GDMModel(model, null, recordClassURI);
+
+		// System.out.println(objectMapper.writeValueAsString(gdmModel.getSchema()));
+		//
+		// for (final AttributePathHelper attributePathHelper : gdmModel.getAttributePaths()) {
+		//
+		// System.out.println(attributePathHelper.toString());
+		// }
+		//
+//		System.out.println(objectMapper.configure(SerializationFeature.INDENT_OUTPUT,
+//		true).writeValueAsString(gdmModel.toJSON()));
 
 		gdmService.createObject(inputDataModel.getId(), gdmModel);
 		// finished writing CSV statements to graph
@@ -162,6 +170,18 @@ public class TransformationFlowTest extends GuicedTest {
 		Assert.assertFalse("CSV record model map shouldn't be empty", optionalModelMap.get().isEmpty());
 
 		final Iterator<Tuple<String, JsonNode>> tuples = dataIterator(optionalModelMap.get().entrySet().iterator());
+
+//		final List<Tuple<String, JsonNode>> tuplesList = Lists.newLinkedList();
+//
+//		while (tuples.hasNext()) {
+//
+//		tuplesList.add(tuples.next());
+//		}
+//
+//		final String tuplesJSON = objectMapper.configure(SerializationFeature.INDENT_OUTPUT,
+//		true).writeValueAsString(tuplesList);
+//
+//		System.out.println(tuplesJSON);
 
 		Assert.assertNotNull("CSV record tuples iterator shouldn't be null", tuples);
 

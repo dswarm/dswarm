@@ -1,0 +1,263 @@
+[{
+    "http://data.slub-dresden.de/datamodels/2/records/bdb22f7d-43a1-4646-9b64-ad1aabdfc418": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "2343"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "blub"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#description": "blub blub"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#isbn": "65786576576"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#year": "1960"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/440dae7b-0ee2-4e26-b672-d4162abd5950": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "7654"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "plök"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#description": "plök plök"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#isbn": "23000543645"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#year": "2013"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/6a3b5cf6-4bc7-4095-b999-ee92a1b832ab": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "4567"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "bar"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#description": "bar bar"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#isbn": "98554234654"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#year": "1940"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/6675ffa9-fa51-476a-80d5-ff62eab0c55b": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "3490"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "muh"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#description": "muh muh"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#isbn": "77744488866"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#year": "1975"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/9e456b92-1e96-46ca-9436-fa978ee0498f": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "9843"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "brumm"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#description": "brumm brumm"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#isbn": "33399944455"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#year": "2003"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/4daa7bc8-629b-4a9b-9f7b-7e9f94ccfb5b": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "7890"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "gluck"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#description": "gluck gluck"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#isbn": "23423098098"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#year": "2001"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/6ec3471b-9baf-4fb5-95fb-8ce56088464a": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "5687"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "mäh"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#isbn": "66633344455"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#year": "1923"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/d1002eb3-1c5a-4ecf-802b-d83bf7c40c7f": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "5432"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "quäk"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#description": "quäk quäk"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#isbn": "45645688800"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#year": "1913"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/b6d779a4-0959-414a-ab9b-3a2364cfa9ff": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "9876"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "quick"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#description": "quick quick"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#isbn": "34500034534"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#year": "2001"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/51788101-e6a4-442e-aef9-45f49bd78254": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "8765"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "quack"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#description": "quack quack"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#isbn": "45645600456"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#year": "2010"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/e54ae714-6dbc-4ef5-825e-327611426cf3": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "7430"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "kikeriki"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#description": "kikeriki kikeriki"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#isbn": "44466622288"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#year": "1987"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/31650622-5ba5-4a7b-91a2-59753d61cb5c": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "5678"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "hup"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#description": "hup hup"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#isbn": "14387986635"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#year": "1910"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/2fd67830-a13a-4247-ac22-dd594fef9e58": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "3467"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "wauwau"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#description": "wauwau wauwau"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#isbn": "22266644488"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#year": "1999"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/ffed520a-4010-4f28-84bf-969fda8cc354": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "1234"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "bla"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#description": "bla bla"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#isbn": "76587658765"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#year": "1970"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/68b2d402-fd06-4486-9fde-7c7e708ddb3d": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "3456"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "foo"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#description": "foo foo"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#isbn": "35435435435"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#year": "1980"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/d60dce69-66da-4c1b-bd62-2b03459fd957": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "6789"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "möp"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#isbn": "23549870012"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#year": "1911"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/2633f04f-80e4-4804-bc71-1787a98b72a2": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "1289"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "miau"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#description": "miau miau"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#isbn": "11188822277"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#year": "1990"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/90f88353-ef78-450e-99d4-dd507f3832e3": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "4321"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "piep"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#description": "piep piep"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#isbn": "56723423466"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#year": "1928"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/8493d96f-f13a-40f1-a84c-08341ac85bd2": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "6543"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "quietsch"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#description": "quietsch quietsch"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#isbn": "23400999234"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#year": "1956"
+    }]
+}]

@@ -75,17 +75,12 @@ public class CSVConverterEventRecorder {
 
 				final ResourceNode subject = (ResourceNode) recordResource.getStatements().iterator().next().getSubject();
 
-				recordResource.addStatement(subject, property, new LiteralNode(triple.getObject()));
+				if (triple.getObject() != null && !triple.getObject().equals("")) {
 
-				// final MemoryDBInputModel mdbim = new MemoryDBInputModel(triple);
-				//
-				// try {
-				//
-				// internalServiceFactory.getMemoryDbInternalService().createObject(dataModel.getId(), mdbim);
-				// } catch (final DMPPersistenceException e) {
-				//
-				// e.printStackTrace();
-				// }
+					// add only non-null/non-empty triples
+
+					recordResource.addStatement(subject, property, new LiteralNode(triple.getObject()));
+				}
 			}
 
 			final GDMModel gdmModel = new GDMModel(model, null, recordClassURI);

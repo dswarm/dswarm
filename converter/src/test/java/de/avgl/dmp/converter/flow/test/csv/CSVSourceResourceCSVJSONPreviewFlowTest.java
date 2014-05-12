@@ -19,7 +19,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	@Test
 	public void testEndToEnd() throws Exception {
 
-		final String expected = DMPPersistenceUtil.getResourceAsString("test_csv.json");
+		final String expected = DMPPersistenceUtil.getResourceAsString("test_csv.preview.json");
 
 		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ';',
 				"\n", CSVSourceResourceCSVJSONPreviewFlow.class);
