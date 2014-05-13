@@ -17,7 +17,6 @@ import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 
-import de.avgl.dmp.persistence.mapping.JsonToPojoMapper;
 import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.model.job.utils.TransformationDeserializer;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
@@ -69,8 +68,6 @@ public class PersistenceModule extends AbstractModule {
 
 		bind(String.class).annotatedWith(Names.named("dmp_graph_endpoint")).toInstance(graphEndpoint);
 		bind(GraphDatabaseConfig.class).toInstance(gdbConfig);
-
-		bind(JsonToPojoMapper.class);
 
 		bind(ResourceService.class).in(Scopes.SINGLETON);
 		bind(ConfigurationService.class).in(Scopes.SINGLETON);

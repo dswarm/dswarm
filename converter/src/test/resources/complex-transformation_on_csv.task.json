@@ -74,9 +74,11 @@
                             "inputString": "component1399902207393,component1399902243185"
                         },
                         "input_components": [{
-                            "id": -1399902207492
+                            "id": -1399902207492,
+                            "name": "component1399902207393"
                         }, {
-                            "id": -1399902243289
+                            "id": -1399902243289,
+                            "name": "component1399902243185"
                         }]
                     }, {
                         "id": -1399902243289,
@@ -114,8 +116,8 @@
                     }]
                 },
                 "parameter_mappings": {
-                    "description": "http://data.slub-dresden.de/resources/23/schema#description",
-                    "id": "http://data.slub-dresden.de/resources/23/schema#id",
+                    "description": "http://data.slub-dresden.de/resources/1/schema#description",
+                    "id": "http://data.slub-dresden.de/resources/1/schema#id",
                     "__TRANSFORMATION_OUTPUT_VARIABLE__1": "http://purl.org/ontology/bibo/shortTitle"
                 }
             },
@@ -127,7 +129,7 @@
                     "id": 383,
                     "attributes": [{
                         "name": "description",
-                        "uri": "http://data.slub-dresden.de/resources/23/schema#description",
+                        "uri": "http://data.slub-dresden.de/resources/1/schema#description",
                         "id": 168
                     }]
                 }
@@ -139,7 +141,7 @@
                     "id": 381,
                     "attributes": [{
                         "name": "id",
-                        "uri": "http://data.slub-dresden.de/resources/23/schema#id",
+                        "uri": "http://data.slub-dresden.de/resources/1/schema#id",
                         "id": 166
                     }]
                 }
@@ -191,41 +193,41 @@
                 "id": 383,
                 "attributes": [{
                     "name": "description",
-                    "uri": "http://data.slub-dresden.de/resources/23/schema#description",
+                    "uri": "http://data.slub-dresden.de/resources/1/schema#description",
                     "id": 168
                 }]
             }, {
                 "id": 384,
                 "attributes": [{
                     "name": "isbn",
-                    "uri": "http://data.slub-dresden.de/resources/23/schema#isbn",
+                    "uri": "http://data.slub-dresden.de/resources/1/schema#isbn",
                     "id": 169
                 }]
             }, {
                 "id": 381,
                 "attributes": [{
                     "name": "id",
-                    "uri": "http://data.slub-dresden.de/resources/23/schema#id",
+                    "uri": "http://data.slub-dresden.de/resources/1/schema#id",
                     "id": 166
                 }]
             }, {
                 "id": 382,
                 "attributes": [{
                     "name": "name",
-                    "uri": "http://data.slub-dresden.de/resources/23/schema#name",
+                    "uri": "http://data.slub-dresden.de/resources/1/schema#name",
                     "id": 167
                 }]
             }, {
                 "id": 385,
                 "attributes": [{
                     "name": "year",
-                    "uri": "http://data.slub-dresden.de/resources/23/schema#year",
+                    "uri": "http://data.slub-dresden.de/resources/1/schema#year",
                     "id": 170
                 }]
             }],
             "record_class": {
                 "name": "record type",
-                "uri": "http://data.slub-dresden.de/resources/23/schema#RecordType",
+                "uri": "http://data.slub-dresden.de/resources/1/schema#RecordType",
                 "id": 19
             }
         },

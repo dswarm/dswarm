@@ -1,0 +1,21 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+	<meta>
+		<name>mapping-1399902065098</name>
+	</meta>
+	<rules>
+		<data name="@description" source="http://data.slub-dresden.de/resources/1/schema#description"/>
+		<data name="@id" source="http://data.slub-dresden.de/resources/1/schema#id"/>
+		<data name="http://purl.org/ontology/bibo/shortTitle" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
+		<data name="@component1399902207393" source="@description">
+			<constant value="bla"/>
+		</data>
+		<data name="@component1399902243185" source="@id">
+			<case to="upper"/>
+		</data>
+		<combine name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" reset="true" value="${component1399902207393},${component1399902243185}">
+			<data name="component1399902207393" source="@component1399902207393"/>
+			<data name="component1399902243185" source="@component1399902243185"/>
+		</combine>
+	</rules>
+</metamorph>

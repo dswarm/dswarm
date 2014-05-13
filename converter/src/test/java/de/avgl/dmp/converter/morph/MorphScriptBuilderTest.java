@@ -21,7 +21,7 @@ public class MorphScriptBuilderTest extends GuicedTest {
 
 		final String morphScriptString = new MorphScriptBuilder().apply(task).toString();
 
-		// TODO: do proper result comparision to make this a real test
+		// TODO: do proper result comparison to make this a real test
 
 		// System.out.println(morphScriptString);
 
