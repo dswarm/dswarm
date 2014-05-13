@@ -1,7 +1,9 @@
 package de.avgl.dmp.converter.flow;
 
 import java.io.Reader;
+import java.util.LinkedList;
 
+import com.google.common.collect.Lists;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.stream.converter.StreamToTriples;
@@ -46,8 +48,9 @@ public class CSVSourceResourceTriplesFlow extends AbstractCSVResourceFlow<Immuta
 
 	private static class ListTripleReceiver implements ObjectReceiver<Triple> {
 
-		private ImmutableList.Builder<Triple>	builder	= ImmutableList.builder();
-		private ImmutableList<Triple>			collection;
+		// to keep the original order
+		private LinkedList<Triple> builder = Lists.newLinkedList();
+		private ImmutableList<Triple> collection;
 
 		@Override
 		public void process(final Triple obj) {
@@ -56,7 +59,7 @@ public class CSVSourceResourceTriplesFlow extends AbstractCSVResourceFlow<Immuta
 
 		@Override
 		public void resetStream() {
-			builder = ImmutableList.builder();
+			builder = Lists.newLinkedList();
 		}
 
 		@Override
@@ -72,7 +75,7 @@ public class CSVSourceResourceTriplesFlow extends AbstractCSVResourceFlow<Immuta
 		}
 
 		private void buildCollection() {
-			collection = builder.build();
+			collection = ImmutableList.copyOf(builder);
 		}
 	}
 }

@@ -1,0 +1,6 @@
+["http://data.slub-dresden.de/resources/1/schema#id",
+    "http://data.slub-dresden.de/resources/1/schema#isbn",
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "http://data.slub-dresden.de/resources/1/schema#description",
+    "http://data.slub-dresden.de/resources/1/schema#name",
+    "http://data.slub-dresden.de/resources/1/schema#year"]

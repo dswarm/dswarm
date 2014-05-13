@@ -38,7 +38,7 @@ public class GDMModel implements Model {
 	private static final org.apache.log4j.Logger	LOG							= org.apache.log4j.Logger.getLogger(GDMModel.class);
 
 	private final de.avgl.dmp.graph.json.Model		model;
-	private final Set<String>						recordURIs;
+	private final Set<String>						recordURIs = Sets.newLinkedHashSet();
 	private final String							recordClassURI;
 
 	private boolean									areRecordURIsInitialized	= false;
@@ -51,7 +51,6 @@ public class GDMModel implements Model {
 	public GDMModel(final de.avgl.dmp.graph.json.Model modelArg) {
 
 		model = modelArg;
-		recordURIs = Sets.newHashSet();
 		recordClassURI = null;
 	}
 
@@ -64,7 +63,6 @@ public class GDMModel implements Model {
 	public GDMModel(final de.avgl.dmp.graph.json.Model modelArg, final String recordURIArg) {
 
 		model = modelArg;
-		recordURIs = Sets.newHashSet();
 
 		if (recordURIArg != null) {
 
@@ -84,7 +82,6 @@ public class GDMModel implements Model {
 	public GDMModel(final de.avgl.dmp.graph.json.Model modelArg, final String recordURIArg, final String recordClassURIArg) {
 
 		model = modelArg;
-		recordURIs = Sets.newHashSet();
 
 		if (recordURIArg != null) {
 

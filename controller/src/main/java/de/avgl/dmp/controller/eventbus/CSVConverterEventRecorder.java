@@ -55,7 +55,7 @@ public class CSVConverterEventRecorder {
 		if (result != null) {
 
 			// convert result to GDM
-			final Map<Long, de.avgl.dmp.graph.json.Resource> recordResources = Maps.newHashMap();
+			final Map<Long, de.avgl.dmp.graph.json.Resource> recordResources = Maps.newLinkedHashMap();
 
 			final de.avgl.dmp.graph.json.Model model = new de.avgl.dmp.graph.json.Model();
 
@@ -76,16 +76,6 @@ public class CSVConverterEventRecorder {
 				final ResourceNode subject = (ResourceNode) recordResource.getStatements().iterator().next().getSubject();
 
 				recordResource.addStatement(subject, property, new LiteralNode(triple.getObject()));
-
-				// final MemoryDBInputModel mdbim = new MemoryDBInputModel(triple);
-				//
-				// try {
-				//
-				// internalServiceFactory.getMemoryDbInternalService().createObject(dataModel.getId(), mdbim);
-				// } catch (final DMPPersistenceException e) {
-				//
-				// e.printStackTrace();
-				// }
 			}
 
 			final GDMModel gdmModel = new GDMModel(model, null, recordClassURI);
