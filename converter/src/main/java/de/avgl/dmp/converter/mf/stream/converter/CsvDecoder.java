@@ -12,7 +12,7 @@ import org.culturegraph.mf.framework.annotations.Out;
 
 /**
  * Decodes lines of CSV files.
- * 
+ *
  * @author tgaengler
  */
 @Description("Decodes lines of CSV files.")
@@ -67,8 +67,10 @@ public final class CsvDecoder extends DefaultObjectPipe<CSVRecord, StreamReceive
 
 				header = new String[size];
 
+				final String schemaPrefix = dataResourceSchemaBaseURI != null ? dataResourceSchemaBaseURI : "";
+
 				for (int i = 0; i < size; i++) {
-					header[i] = String.valueOf(i);
+					header[i] = String.format("%s%s%d", schemaPrefix, "column", i + 1);
 				}
 			}
 

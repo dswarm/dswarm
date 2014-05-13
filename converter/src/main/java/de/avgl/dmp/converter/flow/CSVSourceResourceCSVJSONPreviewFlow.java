@@ -16,7 +16,7 @@ import de.avgl.dmp.persistence.model.resource.DataModel;
 
 /**
  * Flow that reads and parses a given CSV document and returns a preview of its content as JSON representation.
- * 
+ *
  * @author tgaengler
  * @author phorn
  */
@@ -39,7 +39,6 @@ public class CSVSourceResourceCSVJSONPreviewFlow extends AbstractCSVResourceFlow
 	@Override
 	protected String process(final ObjectPipe<String, ObjectReceiver<Reader>> opener, final String obj, final CsvReader pipe) {
 
-		// TODO: process header from configuration
 		final CSVJSONEncoder encoder = new CSVJSONEncoder();
 		encoder.withHeader();
 
