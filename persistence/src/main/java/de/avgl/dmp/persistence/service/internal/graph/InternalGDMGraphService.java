@@ -260,7 +260,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			throw new DMPPersistenceException("couldn't find records for record class'" + recordClassUri + "' in data model '" + dataModelId + "'");
 		}
 
-		final Map<String, Model> modelMap = Maps.newHashMap();
+		final Map<String, Model> modelMap = Maps.newLinkedHashMap();
 
 		int i = 0;
 

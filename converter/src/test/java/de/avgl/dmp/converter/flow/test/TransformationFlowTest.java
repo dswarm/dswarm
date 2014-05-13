@@ -118,7 +118,7 @@ public class TransformationFlowTest extends GuicedTest {
 		final InternalGDMGraphService gdmService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
 
 		// convert result to GDM
-		final Map<Long, de.avgl.dmp.graph.json.Resource> recordResources = Maps.newHashMap();
+		final Map<Long, de.avgl.dmp.graph.json.Resource> recordResources = Maps.newLinkedHashMap();
 
 		final de.avgl.dmp.graph.json.Model model = new de.avgl.dmp.graph.json.Model();
 
@@ -134,10 +134,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 			final ResourceNode subject = (ResourceNode) recordResource.getStatements().iterator().next().getSubject();
 
-			if (triple.getObject() != null && !triple.getObject().equals("")) {
-
-				recordResource.addStatement(subject, property, new LiteralNode(triple.getObject()));
-			}
+			recordResource.addStatement(subject, property, new LiteralNode(triple.getObject()));
 		}
 
 		final GDMModel gdmModel = new GDMModel(model, null, recordClassURI);
