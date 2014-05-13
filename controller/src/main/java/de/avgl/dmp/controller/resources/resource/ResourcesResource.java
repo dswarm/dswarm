@@ -71,7 +71,7 @@ import de.avgl.dmp.persistence.service.resource.ResourceService;
 
 /**
  * A resource (controller service) for {@link Resource}s.
- * 
+ *
  * @author tgaengler
  * @author phorn
  */
@@ -100,7 +100,7 @@ public class ResourcesResource {
 	 * Creates a new resource (controller service) for {@link Resource}s with the provider of the resource persistence service,
 	 * the provider of configuration persistence service, the provider of data model persistence service, the object mapper,
 	 * metrics registry, event bus provider and data model util.
-	 * 
+	 *
 	 * @param dmpStatusArg a metrics registry
 	 * @param objectMapperArg an object mapper
 	 * @param resourceServiceProviderArg the provider for the resource persistence service
@@ -124,7 +124,7 @@ public class ResourcesResource {
 
 	/**
 	 * Builds a positive response with the given content.
-	 * 
+	 *
 	 * @param responseContent a response message
 	 * @return the response
 	 */
@@ -135,7 +135,7 @@ public class ResourcesResource {
 
 	/**
 	 * Builds a positive "created" response with the given content at the given response URI.
-	 * 
+	 *
 	 * @param responseContent a response message
 	 * @param responseURI a URI
 	 * @return the response
@@ -171,7 +171,7 @@ public class ResourcesResource {
 	/**
 	 * This endpoint processes (uploades) the input stream and creates a new resource object with related metadata that will be
 	 * returned as JSON representation.
-	 * 
+	 *
 	 * @param uploadedInputStream the input stream that should be uploaded
 	 * @param fileDetail file metadata
 	 * @param name the name of the resource
@@ -235,7 +235,7 @@ public class ResourcesResource {
 
 	/**
 	 * This endpoint returns a list of all resources as JSON representation.
-	 * 
+	 *
 	 * @return a list of all resources as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -291,7 +291,7 @@ public class ResourcesResource {
 
 	/**
 	 * This endpoint returns a resource as JSON representation for the provided resource identifier.
-	 * 
+	 *
 	 * @param id a resource identifier
 	 * @return a JSON representation of a resource
 	 */
@@ -336,7 +336,7 @@ public class ResourcesResource {
 	/**
 	 * This endpoint processes (uploades) the input stream and update an existing resource object with related metadata that will
 	 * be returned as JSON representation.
-	 * 
+	 *
 	 * @param uploadedInputStream the input stream that should be uploaded
 	 * @param fileDetail file metadata
 	 * @param name the name of the resource
@@ -395,7 +395,7 @@ public class ResourcesResource {
 
 	/**
 	 * This endpoint deletes a resource that matches the given id.
-	 * 
+	 *
 	 * @param id a resource identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
 	 *         went wrong
@@ -443,7 +443,7 @@ public class ResourcesResource {
 
 	/**
 	 * Returns the content of the uploaded resource line-wise.
-	 * 
+	 *
 	 * @param id a resource identifier
 	 * @param atMost the number of lines that should be returned at most
 	 * @param encoding the encoding of the uploaded resource
@@ -533,7 +533,7 @@ public class ResourcesResource {
 
 	/**
 	 * This endpoint delivers all configurations that are related to this resource.
-	 * 
+	 *
 	 * @param id a resource identifier
 	 * @return a JSON representation of a list of configurations
 	 * @throws DMPControllerException
@@ -604,7 +604,7 @@ public class ResourcesResource {
 	 * note: [@tgaengler] the processing of a given data resource with a given configuration has been moved to
 	 * {@link DataModelsResource}, i.e., the result of this operation should only be the addition of the given configuration,
 	 * however, not the processing of this combination.
-	 * 
+	 *
 	 * @param id a resource identifier
 	 * @param jsonObjectString a JSON representation of a configuration.
 	 * @return a JSON representation of the added configuration
@@ -693,7 +693,7 @@ public class ResourcesResource {
 
 	/**
 	 * This endpoint delivers a configuration for the given resource identifier and configuration identifier.
-	 * 
+	 *
 	 * @param id a resource identifier
 	 * @param configurationId a configuration identifier
 	 * @return a JSON representation of the matched configuration
@@ -741,7 +741,7 @@ public class ResourcesResource {
 	/**
 	 * note: [@tgaengler] this operation should be moved to {@link DataModelsResource} and there should be a generic preview
 	 * operation
-	 * 
+	 *
 	 * @param id
 	 * @param jsonObjectString
 	 * @return
@@ -761,7 +761,7 @@ public class ResourcesResource {
 		final Timer.Context context = dmpStatus.configurationsPreview();
 
 		ResourcesResource.LOG.debug("try to apply configuration for resource with id '" + id + "'");
-		ResourcesResource.LOG.debug("try to recieve resource with id '" + id + "' for csv configuration preview");
+		ResourcesResource.LOG.debug("try to receive resource with id '" + id + "' for csv configuration preview");
 
 		final Optional<Resource> resourceOptional = dataModelUtil.fetchResource(id);
 
@@ -796,7 +796,7 @@ public class ResourcesResource {
 	/**
 	 * note: [@tgaengler] this operation should be moved to {@link DataModelsResource} and there should be a generic preview
 	 * operation
-	 * 
+	 *
 	 * @param id
 	 * @param jsonObjectString
 	 * @return
@@ -850,7 +850,7 @@ public class ResourcesResource {
 
 	/**
 	 * Process stores the input stream and creates and persists a new resource with the related metadata.
-	 * 
+	 *
 	 * @param uploadInputedStream an input stream that should be uploaded
 	 * @param fileDetail metadata of the given input stream
 	 * @param name the name of the resource
@@ -947,7 +947,7 @@ public class ResourcesResource {
 
 	/**
 	 * Process stores the input stream and update a resource with the related metadata.
-	 * 
+	 *
 	 * @param uploadInputedStream an input stream that should be uploaded
 	 * @param fileDetail metadata of the given input stream
 	 * @param name the name of the resource
@@ -1004,7 +1004,7 @@ public class ResourcesResource {
 
 	/**
 	 * Adds and persists a configuration to the given resource.
-	 * 
+	 *
 	 * @param resource a resource
 	 * @param configurationJSONString a JSON representation of a new configuration
 	 * @return the new configuration
@@ -1133,7 +1133,7 @@ public class ResourcesResource {
 
 	/**
 	 * Persists a new configuration in the database.
-	 * 
+	 *
 	 * @param configurationService the configuration persistence service
 	 * @return the new persisted configuration
 	 * @throws DMPControllerException
@@ -1236,7 +1236,7 @@ public class ResourcesResource {
 
 	/**
 	 * Deserializes the given string that holds a JSON object of a configuration.
-	 * 
+	 *
 	 * @param configurationJSONString a string that holds a JSON object of a configuration
 	 * @return the deserialized configuration
 	 * @throws DMPControllerException

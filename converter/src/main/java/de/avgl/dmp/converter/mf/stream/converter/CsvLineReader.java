@@ -18,10 +18,11 @@ import org.culturegraph.mf.framework.annotations.Out;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.PeekingIterator;
 
 /**
  * Processes input from a reader line by line. Inspired by org.culturegraph.mf.stream.converter.LineReader
- * 
+ *
  * @author tgaengler
  * @author phorn
  */
@@ -114,26 +115,32 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 		}
 	}
 
-	private Iterator<CSVRecord> getInternalCSVIter(final CSVParser parser) {
+	private PeekingIterator<CSVRecord> getInternalCSVIter(final CSVParser parser) {
 		final Iterator<CSVRecord> csvIter = parser.iterator();
 
 		if (atMost.isPresent()) {
 
 			final int headerRows = hasHeader ? 1 : 0;
-			return Iterators.limit(csvIter, atMost.get() + headerRows + discardRows);
+			final Iterator<CSVRecord> limitedIterator = Iterators.limit(csvIter, atMost.get() + headerRows + discardRows);
+			return Iterators.peekingIterator(limitedIterator);
 		}
 
-		return csvIter;
+		return Iterators.peekingIterator(csvIter);
 	}
 
-	private void processHeaders(final Iterator<CSVRecord> iterator, final ObjectReceiver<CSVRecord> receiver) {
-		if (hasHeader) {
-			if (!iterator.hasNext()) {
-				throw new MetafactureException("cannot find any rows to use as header row");
-			}
-
-			receiver.process(iterator.next());
+	private void processHeaders(final PeekingIterator<CSVRecord> iterator, final ObjectReceiver<CSVRecord> receiver) {
+		if (!iterator.hasNext()) {
+			throw new MetafactureException("cannot find any rows to use as header row");
 		}
+
+		final CSVRecord record;
+		if (hasHeader) {
+			record = iterator.next();
+		} else {
+			record = iterator.peek();
+		}
+
+		receiver.process(record);
 	}
 
 	private void processDiscardRows(final Iterator<CSVRecord> iterator) {
@@ -155,7 +162,7 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 		final Reader actualReader = getInternalReader(reader);
 		final CSVParser csvParser = getInternalParser(actualReader);
 
-		final Iterator<CSVRecord> csvIter = getInternalCSVIter(csvParser);
+		final PeekingIterator<CSVRecord> csvIter = getInternalCSVIter(csvParser);
 
 		processHeaders(csvIter, receiver);
 		processDiscardRows(csvIter);

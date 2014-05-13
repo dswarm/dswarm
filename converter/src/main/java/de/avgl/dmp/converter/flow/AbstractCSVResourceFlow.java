@@ -43,6 +43,8 @@ public abstract class AbstractCSVResourceFlow<T> {
 
 	private final Optional<String>					dataModelId;
 
+	private final boolean firstRowIsHeaders;
+
 	protected Optional<Integer>						atMost;
 
 	protected final String							dataResourceBaseURI;
@@ -63,24 +65,26 @@ public abstract class AbstractCSVResourceFlow<T> {
 			throw new DMPConverterException("the data model shouldn't be null");
 		}
 
-		if (dataModel.getConfiguration() == null) {
+		final Configuration configuration = dataModel.getConfiguration();
+
+		if (configuration == null) {
 
 			throw new DMPConverterException("the data model configuration shouldn't be null");
 		}
 
-		if (dataModel.getConfiguration().getParameters() == null) {
+		if (configuration.getParameters() == null) {
 
 			throw new DMPConverterException("the data model configuration parameters shouldn't be null");
 		}
 
-		final Optional<String> encodingOptional = getStringParameter(dataModel.getConfiguration(), ConfigurationStatics.ENCODING);
-		final Optional<Character> escapeCharacterOptional = getCharParameter(dataModel.getConfiguration(), ConfigurationStatics.ESCAPE_CHARACTER);
-		final Optional<Character> quoteCharacterOptional = getCharParameter(dataModel.getConfiguration(), ConfigurationStatics.QUOTE_CHARACTER);
-		final Optional<Character> columnDelimiterOptional = getCharParameter(dataModel.getConfiguration(), ConfigurationStatics.COLUMN_DELIMITER);
-		final Optional<String> rowDelimiterOptional = getStringParameter(dataModel.getConfiguration(), ConfigurationStatics.ROW_DELIMITER);
-		final Optional<Integer> ignoreLinesOptional = getNumberParameter(dataModel.getConfiguration(), ConfigurationStatics.IGNORE_LINES);
-		final Optional<Integer> discardRowsOptional = getNumberParameter(dataModel.getConfiguration(), ConfigurationStatics.DISCARD_ROWS);
-		final Optional<Integer> atMostOptional = getNumberParameter(dataModel.getConfiguration(), ConfigurationStatics.AT_MOST);
+		final Optional<String> encodingOptional = getStringParameter(configuration, ConfigurationStatics.ENCODING);
+		final Optional<Character> escapeCharacterOptional = getCharParameter(configuration, ConfigurationStatics.ESCAPE_CHARACTER);
+		final Optional<Character> quoteCharacterOptional = getCharParameter(configuration, ConfigurationStatics.QUOTE_CHARACTER);
+		final Optional<Character> columnDelimiterOptional = getCharParameter(configuration, ConfigurationStatics.COLUMN_DELIMITER);
+		final Optional<String> rowDelimiterOptional = getStringParameter(configuration, ConfigurationStatics.ROW_DELIMITER);
+		final Optional<Integer> ignoreLinesOptional = getNumberParameter(configuration, ConfigurationStatics.IGNORE_LINES);
+		final Optional<Integer> discardRowsOptional = getNumberParameter(configuration, ConfigurationStatics.DISCARD_ROWS);
+		final Optional<Integer> atMostOptional = getNumberParameter(configuration, ConfigurationStatics.AT_MOST);
 
 		this.encoding = encodingOptional.or(ConfigurationStatics.DEFAULT_ENCODING);
 		this.escapeCharacter = escapeCharacterOptional.or(ConfigurationStatics.DEFAULT_ESCAPE_CHARACTER);
@@ -90,6 +94,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 		this.ignoreLines = ignoreLinesOptional.or(ConfigurationStatics.DEFAULT_IGNORE_LINES);
 		this.discardRows = discardRowsOptional.or(ConfigurationStatics.DEFAULT_DISCARD_ROWS);
 		this.atMost = atMostOptional;
+		this.firstRowIsHeaders = getBooleanParameter(configuration, ConfigurationStatics.FIRST_ROW_IS_HEADINGS, ConfigurationStatics.DEFAULT_FIRST_ROW_IS_HEADINGS);
 
 		try {
 			Charset.forName(this.encoding);
@@ -113,6 +118,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 		this.ignoreLines = ConfigurationStatics.DEFAULT_IGNORE_LINES;
 		this.discardRows = ConfigurationStatics.DEFAULT_DISCARD_ROWS;
 		this.atMost = Optional.absent();
+		this.firstRowIsHeaders = true;
 
 		this.dataModelId = null;
 		this.dataResourceBaseURI = null;
@@ -148,6 +154,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 		this.ignoreLines = ignoreLinesOptional.or(ConfigurationStatics.DEFAULT_IGNORE_LINES);
 		this.discardRows = discardRowsOptional.or(ConfigurationStatics.DEFAULT_DISCARD_ROWS);
 		this.atMost = atMostOptional;
+		this.firstRowIsHeaders = getBooleanParameter(configuration, ConfigurationStatics.FIRST_ROW_IS_HEADINGS, ConfigurationStatics.DEFAULT_FIRST_ROW_IS_HEADINGS);
 
 		try {
 			Charset.forName(this.encoding);
@@ -155,7 +162,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 			throw new DMPConverterException(String.format("Unsupported Encoding - [%s]", e.getCharsetName()));
 		}
 
-		this.dataModelId = null;
+		this.dataModelId = Optional.absent();
 		this.dataResourceBaseURI = null;
 		this.dataResourceSchemaBaseURI = null;
 	}
@@ -170,6 +177,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 		this.ignoreLines = ConfigurationStatics.DEFAULT_IGNORE_LINES;
 		this.discardRows = ConfigurationStatics.DEFAULT_DISCARD_ROWS;
 		this.atMost = Optional.absent();
+		this.firstRowIsHeaders = ConfigurationStatics.DEFAULT_FIRST_ROW_IS_HEADINGS;
 
 		this.dataModelId = null;
 		this.dataResourceBaseURI = null;
@@ -242,6 +250,21 @@ public abstract class AbstractCSVResourceFlow<T> {
 		return Optional.of(intValue);
 	}
 
+	private boolean getBooleanParameter(final Configuration configuration, final String key, final boolean defaultValue) throws DMPConverterException {
+		final JsonNode jsonNode = getParameterValue(configuration, key);
+		if (jsonNode == null) {
+			return defaultValue;
+		}
+
+		if (!jsonNode.isBoolean()) {
+			return jsonNode.booleanValue();
+		}
+
+		final String text = jsonNode.asText();
+
+		return Boolean.valueOf(text);
+	}
+
 	public T applyFile(final String filePath) throws DMPConverterException {
 
 		final FileOpener opener = new FileOpener();
@@ -265,8 +288,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 		// set parsing attributes
 		final CsvReader reader = new CsvReader(escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter, ignoreLines, discardRows, atMost);
 
-		// TODO: process header from configuration
-		reader.setHeader(true);
+		reader.setHeader(firstRowIsHeaders);
 		reader.setDataResourceBaseURI(dataResourceBaseURI);
 		reader.setDataResourceSchemaBaseURI(dataResourceSchemaBaseURI);
 

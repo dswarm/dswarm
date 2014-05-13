@@ -4,7 +4,7 @@ import com.google.common.base.Charsets;
 
 /**
  * Holds references for keys of configuration parameters and default values of configuration parameters.
- * 
+ *
  * @author tgaengler
  */
 public interface ConfigurationStatics {
@@ -60,6 +60,11 @@ public interface ConfigurationStatics {
 	public static final String		XML_NAMESPACE				= "xml_namespace";
 
 	/**
+	 * If true, the first row contains the column headers.
+	 */
+	public static final String FIRST_ROW_IS_HEADINGS = "first_row_is_headings";
+
+	/**
 	 * The default encoding that should be applied to interpret the data resource.
 	 */
 	public static final String		DEFAULT_ENCODING			= Charsets.UTF_8.name();
@@ -93,6 +98,11 @@ public interface ConfigurationStatics {
 	 * The default number of rows that should be discarded at the beginning of a CSV data resource.
 	 */
 	public static final int			DEFAULT_DISCARD_ROWS		= 0;
+
+	/**
+	 * The default value for FIRST_ROW_IS_HEADINGS
+	 */
+	public static final boolean DEFAULT_FIRST_ROW_IS_HEADINGS = true;
 
 	/**
 	 * The storage type of the data resource.
