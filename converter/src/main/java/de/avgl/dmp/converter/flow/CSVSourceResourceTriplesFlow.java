@@ -48,9 +48,8 @@ public class CSVSourceResourceTriplesFlow extends AbstractCSVResourceFlow<Immuta
 
 	private static class ListTripleReceiver implements ObjectReceiver<Triple> {
 
-		// to keep the original order
-		private LinkedList<Triple> builder = Lists.newLinkedList();
-		private ImmutableList<Triple> collection;
+		private ImmutableList.Builder<Triple>	builder	= ImmutableList.builder();
+		private ImmutableList<Triple>			collection;
 
 		@Override
 		public void process(final Triple obj) {
@@ -59,7 +58,7 @@ public class CSVSourceResourceTriplesFlow extends AbstractCSVResourceFlow<Immuta
 
 		@Override
 		public void resetStream() {
-			builder = Lists.newLinkedList();
+			builder = ImmutableList.builder();
 		}
 
 		@Override
@@ -75,7 +74,7 @@ public class CSVSourceResourceTriplesFlow extends AbstractCSVResourceFlow<Immuta
 		}
 
 		private void buildCollection() {
-			collection = ImmutableList.copyOf(builder);
+			collection = builder.build();
 		}
 	}
 }

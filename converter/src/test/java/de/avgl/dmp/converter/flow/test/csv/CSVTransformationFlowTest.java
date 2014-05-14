@@ -16,8 +16,7 @@ import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 /**
- * @author tgaengler
- * Created by tgaengler on 13/05/14.
+ * @author tgaengler Created by tgaengler on 13/05/14.
  */
 public class CSVTransformationFlowTest extends GuicedTest {
 
@@ -28,12 +27,14 @@ public class CSVTransformationFlowTest extends GuicedTest {
 
 		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
 				.getProvider(InternalModelServiceFactory.class);
-		
+
 		final String finalTaskJSONString = DMPPersistenceUtil.getResourceAsString("complex-transformation_on_csv.task.json");
 		final ObjectMapper objectMapper = DMPPersistenceUtil.getJSONObjectMapper();
 
-		final ObjectMapper objectMapper2 = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL)
-				.setSerializationInclusion(JsonInclude.Include.NON_EMPTY).configure(SerializationFeature.INDENT_OUTPUT, true);
+		// looks like that the utilised ObjectMappers getting a bit mixed, i.e., actual sometimes delivers a result that is not in
+		// pretty print and sometimes it is in pretty print ... (that's why the reformatting of both - expected and actual)
+		final ObjectMapper objectMapper2 = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL).configure(
+				SerializationFeature.INDENT_OUTPUT, true);
 
 		final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
 
@@ -47,6 +48,7 @@ public class CSVTransformationFlowTest extends GuicedTest {
 
 		final ArrayNode expectedArray = objectMapper2.readValue(expected, ArrayNode.class);
 		final String finalExpected = objectMapper2.writeValueAsString(expectedArray);
+
 		Assert.assertEquals(finalExpected.length(), finalActual.length());
 	}
 
