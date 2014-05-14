@@ -224,7 +224,6 @@ public class MorphScriptBuilder {
 			metas.add(MorphScriptBuilder.MAPPING_PREFIX + mapping.getId());
 
 			createTransformation(rules, mapping);
-
 		}
 
 		metaName.setTextContent(Joiner.on(", ").join(metas));
@@ -281,7 +280,6 @@ public class MorphScriptBuilder {
 
 			final List<Element> inputAttributePathsToVars = addInputAttributePathVars(variablesFromInputAttributePaths, inputAttributePathString,
 					rules, inputAttributePaths, filterExpressionStringUnescaped, ordinal);
-
 		}
 
 		final String outputAttributePath = mapping.getOutputAttributePath().getAttributePath().toAttributePath();
@@ -385,7 +383,6 @@ public class MorphScriptBuilder {
 				collectionData.setAttribute("name", sourceAttribute);
 
 				collection.appendChild(collectionData);
-
 			}
 
 			if (parameters.get("postfix") != null) {
@@ -550,19 +547,19 @@ public class MorphScriptBuilder {
 		String var1000 = "var1000";
 		boolean takeVariable = false;
 
-		if(isOrdinalValid) {
+		if (isOrdinalValid) {
 
 			var1000 = addOrdinalFilter(ordinal, var1000, rules);
 			takeVariable = true;
 		}
 
-		if(filterExpressionMap != null && !filterExpressionMap.isEmpty()) {
+		if (filterExpressionMap != null && !filterExpressionMap.isEmpty()) {
 
 			addFilter(filterExpression, inputAttributePathStringXMLEscaped, var1000, filterExpressionMap, rules);
 			takeVariable = true;
 		}
 
-		if(!takeVariable) {
+		if (!takeVariable) {
 
 			inputVariable = inputAttributePathStringXMLEscaped;
 		} else {
@@ -615,10 +612,26 @@ public class MorphScriptBuilder {
 
 				final Set<Component> components = transformation.getComponents();
 
-				if (components == null) {
+				if (components == null || components.isEmpty()) {
 
 					MorphScriptBuilder.LOG.debug("transformation component's transformation's components for mapping '" + mapping.getId()
 							+ "' are empty");
+
+					if (inputAttributePathVariablesMap != null && !inputAttributePathVariablesMap.isEmpty()) {
+
+						// map input attribute path variable to output attribute path variable
+
+						final String dataSourceAttribute = inputAttributePathVariablesMap.entrySet().iterator().next().getValue().iterator().next();
+
+						final Element data = doc.createElement("data");
+
+						data.setAttribute("source", "@" + dataSourceAttribute);
+
+						data.setAttribute("name", "@" + transformationOutputVariableIdentifier);
+
+						rules.appendChild(data);
+					}
+
 					return;
 				}
 
@@ -660,35 +673,36 @@ public class MorphScriptBuilder {
 		}
 
 		// if no inputString is set, take input component name
-		if (component.getInputComponents() != null && !component.getInputComponents().isEmpty()) {
+		if (sourceAttributes.isEmpty() && component.getInputComponents() != null && !component.getInputComponents().isEmpty()) {
 
 			for (final Component inputComponent : component.getInputComponents()) {
 
 				sourceAttributes.add(getComponentName(inputComponent));
-				
+
 			}
-		} 
-		
-		// TODO: [@niederl] verify if an use case for this code exists
-//		else {
-//			
-//			// take input attribute path variable
-//			
-//			if (inputAttributePathVariablesMap != null && !inputAttributePathVariablesMap.isEmpty()) {
-//				
-//				sourceAttributes.add(inputAttributePathVariablesMap.entrySet().iterator().next().getValue().iterator().next());
-//			}
-//		}
+		}
+		// or input attribute path variable
+		else if (sourceAttributes.isEmpty()) {
+
+			// take input attribute path variable
+
+			if (inputAttributePathVariablesMap != null && !inputAttributePathVariablesMap.isEmpty()) {
+
+				sourceAttributes.add(inputAttributePathVariablesMap.entrySet().iterator().next().getValue().iterator().next());
+			}
+		}
 
 		if (sourceAttributes.isEmpty()) {
 
 			// couldn't identify an input variable or an input attribute path
 
+			MorphScriptBuilder.LOG.debug("couldn't identify any input variable or input attribute path");
+
 			return;
 		}
 
 		if (sourceAttributes.size() > 1) {
-			
+
 			// TODO: [@tgaengler] multiple identified input variables doesn't really mean that the component refers to a
 			// collection, or?
 
@@ -698,12 +712,10 @@ public class MorphScriptBuilder {
 
 				// the end has been reached
 
-				// collectionNameAttribute = getKeyParameterMapping(outputAttributePath, transformationComponent);
 				collectionNameAttribute = transformationOutputVariableIdentifier;
 			} else {
 
 				collectionNameAttribute = getComponentName(component);
-				
 			}
 
 			final Element collection = createCollectionTag(component, collectionNameAttribute, sourceAttributes);
@@ -717,12 +729,10 @@ public class MorphScriptBuilder {
 
 		if (component.getOutputComponents() == null || component.getOutputComponents().isEmpty()) {
 
-			// dataNameAttribute = getKeyParameterMapping(outputAttributePath, transformationComponent);
 			dataNameAttribute = transformationOutputVariableIdentifier;
 		} else {
-			
-			dataNameAttribute = getComponentName(component);
 
+			dataNameAttribute = getComponentName(component);
 		}
 
 		final Element data = createDataTag(component, dataNameAttribute, sourceAttributes.iterator().next());
@@ -733,17 +743,17 @@ public class MorphScriptBuilder {
 	private String getComponentName(Component component) throws DMPConverterException {
 
 		final String componentName = component.getName();
-		
+
 		if (componentName != null && !componentName.isEmpty()) {
 
 			return componentName;
 		} else {
-			
+
 			LOG.error("component name (an id assigned by frontend) doesn't exist");
-			
+
 			throw new DMPConverterException("component name doesn't exist");
 		}
-		
+
 	}
 
 	private String determineTransformationOutputVariable(final Component transformationComponent) {
@@ -812,7 +822,7 @@ public class MorphScriptBuilder {
 
 		return false;
 	}
-	
+
 	private boolean checkComponentName(final String componentName) {
 
 		if (componentName != null && !componentName.isEmpty()) {
