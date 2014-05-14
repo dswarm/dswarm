@@ -104,7 +104,7 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 
 	private CSVParser getInternalParser(final Reader reader) {
 		final CSVFormat csvFormat = CSVFormat.newFormat(columnSeparator).withQuoteChar(quoteCharacter).withEscape(escapeCharacter)
-				.withRecordSeparator(lineEnding);
+				.withRecordSeparator(lineEnding).withIgnoreEmptyLines(true);
 
 		try {
 

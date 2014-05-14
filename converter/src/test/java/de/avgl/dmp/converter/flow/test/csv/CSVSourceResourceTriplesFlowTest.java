@@ -23,22 +23,18 @@ import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
 
 public class CSVSourceResourceTriplesFlowTest {
 
-	private void testFlow(final CSVSourceResourceTriplesFlow flow) throws DMPConverterException {
+	private void testFlow(final CSVSourceResourceTriplesFlow flow, final String fileName, final int rowNumbers, final int columnNumbers, final Matcher<String> predicateMatcher) throws DMPConverterException {
 		final ResourceOpener opener = new ResourceOpener();
 
-		@SuppressWarnings("unchecked")
-		final Matcher<String> predicateMatcher = CoreMatchers.anyOf(CoreMatchers.equalTo("id"), CoreMatchers.equalTo("name"),
-				CoreMatchers.equalTo("description"), CoreMatchers.equalTo("isbn"), CoreMatchers.equalTo("year"));
-
 		final List<String> subjects = new ArrayList<String>();
-		for (int i = 1; i <= 19; i++) {
-			for (int j = 0; j < 5; j++) {
+		for (int i = 1; i <= rowNumbers; i++) {
+			for (int j = 0; j < columnNumbers; j++) {
 				subjects.add(String.valueOf(i));
 			}
 		}
 		final Iterator<String> subjectsIterator = subjects.iterator();
 
-		final ImmutableList<Triple> triples = flow.apply("test_csv.csv", opener);
+		final ImmutableList<Triple> triples = flow.apply(fileName, opener);
 		for (final Triple triple : triples) {
 			MatcherAssert.assertThat(triple.getSubject(), CoreMatchers.equalTo(subjectsIterator.next()));
 			MatcherAssert.assertThat(triple.getPredicate(), predicateMatcher);
@@ -54,7 +50,35 @@ public class CSVSourceResourceTriplesFlowTest {
 		final CSVSourceResourceTriplesFlow flow = CSVResourceFlowFactory.fromConfigurationParameters("UTF-8", '\\', '"', ';', "\n",
 				CSVSourceResourceTriplesFlow.class);
 
-		testFlow(flow);
+		@SuppressWarnings("unchecked")
+		final Matcher<String> predicateMatcher = CoreMatchers.anyOf(CoreMatchers.equalTo("id"), CoreMatchers.equalTo("name"),
+				CoreMatchers.equalTo("description"), CoreMatchers.equalTo("isbn"), CoreMatchers.equalTo("year"));
+
+		testFlow(flow, "test_csv.csv", 19, 5, predicateMatcher);
+	}
+
+	@Test
+	public void testEndToEnd2() throws Exception {
+
+		final CSVSourceResourceTriplesFlow flow = CSVResourceFlowFactory.fromConfigurationParameters("UTF-8", '\\', '"', ',', "\n",
+				CSVSourceResourceTriplesFlow.class);
+
+		@SuppressWarnings("unchecked")
+		final Matcher<String> predicateMatcher = CoreMatchers.anyOf(CoreMatchers.equalTo("spalte1"), CoreMatchers.equalTo("spalte2"));
+
+		testFlow(flow, "space_ending2.csv", 2, 2, predicateMatcher);
+	}
+
+	@Test
+	public void testEndToEnd3() throws Exception {
+
+		final CSVSourceResourceTriplesFlow flow = CSVResourceFlowFactory.fromConfigurationParameters("UTF-8", '\\', '"', ',', "\n",
+				CSVSourceResourceTriplesFlow.class);
+
+		@SuppressWarnings("unchecked")
+		final Matcher<String> predicateMatcher = CoreMatchers.anyOf(CoreMatchers.equalTo("spalte1"), CoreMatchers.equalTo("spalte2"));
+
+		testFlow(flow, "space_ending.csv", 2, 2, predicateMatcher);
 	}
 
 	@Test
@@ -69,7 +93,11 @@ public class CSVSourceResourceTriplesFlowTest {
 
 		final CSVSourceResourceTriplesFlow flow = CSVResourceFlowFactory.fromConfiguration(configuration, CSVSourceResourceTriplesFlow.class);
 
-		testFlow(flow);
+		@SuppressWarnings("unchecked")
+		final Matcher<String> predicateMatcher = CoreMatchers.anyOf(CoreMatchers.equalTo("id"), CoreMatchers.equalTo("name"),
+				CoreMatchers.equalTo("description"), CoreMatchers.equalTo("isbn"), CoreMatchers.equalTo("year"));
+
+		testFlow(flow, "test_csv.csv", 19, 5, predicateMatcher);
 	}
 
 	@Test(expected = DMPConverterException.class)
@@ -94,7 +122,11 @@ public class CSVSourceResourceTriplesFlowTest {
 
 		final CSVSourceResourceTriplesFlow flow = new CSVSourceResourceTriplesFlow(configuration);
 
-		testFlow(flow);
+		@SuppressWarnings("unchecked")
+		final Matcher<String> predicateMatcher = CoreMatchers.anyOf(CoreMatchers.equalTo("id"), CoreMatchers.equalTo("name"),
+				CoreMatchers.equalTo("description"), CoreMatchers.equalTo("isbn"), CoreMatchers.equalTo("year"));
+
+		testFlow(flow, "test_csv.csv", 19, 5, predicateMatcher);
 	}
 
 }

@@ -1,0 +1,31 @@
+[{
+    "v1": "http://data.slub-dresden.de/datamodels/2/records/15a6857b-6811-403b-a6e8-ddec6e589a9c",
+    "v2": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "1"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#val1": "dOnald DUCK"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#val2": "a a a b"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#val3": "9783183057139"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#val4": "der#hund"
+    }]
+}, {
+    "v1": "http://data.slub-dresden.de/datamodels/2/records/8094f4d7-4190-474e-a9a4-18d53b0420a4",
+    "v2": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "2"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#val1": "der Pe "
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#val2": "1 1"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#val3": "3183057131"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#val4": "öü@#|"
+    }]
+}]
