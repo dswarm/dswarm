@@ -33,6 +33,13 @@ public final class CsvDecoder extends DefaultObjectPipe<CSVRecord, StreamReceive
 
 		assert !isClosed();
 
+		if(record.size() == 1 && record.get(0).trim().isEmpty()) {
+
+			// do nothing an return (?)
+
+			return;
+		}
+
 		if (!hasHeadersProcessed) {
 			if (hasHeader) {
 
