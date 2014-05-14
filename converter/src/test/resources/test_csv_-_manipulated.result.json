@@ -1,0 +1,115 @@
+[{
+    "http://data.slub-dresden.de/datamodels/2/records/f0b4e2a7-d955-45a3-97fa-a0d89958b611": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }, {
+        "http://purl.org/ontology/bibo/shortTitle": "bla,3456"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/c03e66ff-b66d-404e-b1fd-cce62074716a": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }, {
+        "http://purl.org/ontology/bibo/shortTitle": "bla,4567"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/253e36f4-3542-4214-b9c0-540001312c0f": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }, {
+        "http://purl.org/ontology/bibo/shortTitle": "bla,3467"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/8c86fad0-1b90-46c8-9498-400764f3a45d": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }, {
+        "http://purl.org/ontology/bibo/shortTitle": "bla,3490"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/44a3323a-2ba5-4f71-b294-7e74336f13ad": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }, {
+        "http://purl.org/ontology/bibo/shortTitle": "bla,6543"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/5b0ee082-fb7f-40ed-ace3-133bcfa4e0ca": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }, {
+        "http://purl.org/ontology/bibo/shortTitle": "bla,6789"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/fadf7131-7e03-4de2-a143-058ac89564b7": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }, {
+        "http://purl.org/ontology/bibo/shortTitle": "bla,7654"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/6021c5b8-dd45-42d5-8cc3-ff99941694b3": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }, {
+        "http://purl.org/ontology/bibo/shortTitle": "bla,5678"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/5415d7d4-f4ae-474f-85bd-d6b39a9043e6": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }, {
+        "http://purl.org/ontology/bibo/shortTitle": "bla,7430"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/25480841-36b2-4a4b-9b76-4e1215f1ccf6": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }, {
+        "http://purl.org/ontology/bibo/shortTitle": "bla,5432"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/975e0838-53ca-4098-8f3f-32fc5918ff86": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }, {
+        "http://purl.org/ontology/bibo/shortTitle": "bla,4321"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/3db92ca2-e533-4d4b-b64e-21efd85fb73f": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }, {
+        "http://purl.org/ontology/bibo/shortTitle": "bla,9876"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/7030bfdb-895e-4a5f-8dad-2650d71f8264": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }, {
+        "http://purl.org/ontology/bibo/shortTitle": "bla,1234"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/20ccc88b-98ce-422e-bb18-fa24feb7d733": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }, {
+        "http://purl.org/ontology/bibo/shortTitle": "bla,5687"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/eaf103f2-5c25-4b3e-aedf-62e58959ee29": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }, {
+        "http://purl.org/ontology/bibo/shortTitle": "bla,8765"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/f5484da0-69e6-4473-9208-438286d0822c": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }, {
+        "http://purl.org/ontology/bibo/shortTitle": "bla,7890"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/4448e051-44e4-4cb1-bc2d-0b4dd287a827": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }, {
+        "http://purl.org/ontology/bibo/shortTitle": "bla,2343"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/ce715229-5910-4bf6-a698-822c63a1d913": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }, {
+        "http://purl.org/ontology/bibo/shortTitle": "bla,9843"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/3ea43042-bf37-41e4-9815-eaefc47039ac": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }, {
+        "http://purl.org/ontology/bibo/shortTitle": "bla,1289"
+    }]
+}]
