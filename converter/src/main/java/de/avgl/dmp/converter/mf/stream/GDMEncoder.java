@@ -37,13 +37,13 @@ import de.avgl.dmp.persistence.model.resource.utils.DataModelUtils;
 import de.avgl.dmp.persistence.model.types.Tuple;
 
 /**
- * Converts records to RDF triples.
+ * Converts records to GDM-JSON.
  * 
  * @author polowins
  * @author tgaengler
  * @author phorn
  */
-@Description("converts records into GDM-JSON")
+@Description("converts records to GDM-JSON")
 @In(StreamReceiver.class)
 @Out(GDMModel.class)
 public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>> {
@@ -60,15 +60,9 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 	private final Optional<DataModel>		dataModel;
 	private final Optional<String>			dataModelUri;
-
-
-	/**
-	 * record tag URI should be unique
-	 */
-	private String							initialRecordTypeUri		= "testUri_to_be_replaced_in_GDM_ENCODER";
 	
 	private long							nodeIdCounter	= 1;
-	private final Predicate					rdfType			= new Predicate(RDF.type.getURI());
+	//private final Predicate					rdfType			= new Predicate(RDF.type.getURI());
 	private final Map<String, Predicate>	predicates		= Maps.newHashMap();
 	private final Map<String, ResourceNode>	types			= Maps.newHashMap();
 	private final Map<String, AtomicLong>	valueCounter	= Maps.newHashMap();
@@ -99,19 +93,6 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 		recordResource = new Resource(currentId);
 		recordNode = new ResourceNode(currentId);
 		
-		// init
-		//entityStack = new Stack<>(); // TODO use stack when statements for deeper hierarchy levels are possible
-		
-		// TODO: determine record type and create type triple with it
-		if (recordType == null) {
-
-			final String recordTypeUri = initialRecordTypeUri + "Type";
-
-			recordType = getType(recordTypeUri);
-		}
-		
-		
-		addStatement(recordNode, rdfType, recordType);
 	}
 
 	@Override
@@ -124,13 +105,13 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 		// write triples
 		final GDMModel gdmModel;
 
-		if (recordType.getUri() == null) {
+		//if (recordType.getUri() == null) {
 
 			gdmModel = new GDMModel(internalGDMModel, currentId);
-		} else {
+		//} else {
 
-			gdmModel = new GDMModel(internalGDMModel, currentId, recordType.getUri());
-		}
+			//gdmModel = new GDMModel(internalGDMModel, currentId, recordType.getUri());
+		//}
 
 		getReceiver().process(gdmModel);
 	}
