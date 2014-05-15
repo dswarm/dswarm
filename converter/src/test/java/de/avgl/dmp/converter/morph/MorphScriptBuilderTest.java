@@ -24,7 +24,22 @@ public class MorphScriptBuilderTest extends GuicedTest {
 		// TODO: do proper result comparison to make this a real test
 
 		// System.out.println(morphScriptString);
+	}
 
+	@Test
+	public void testSubstringMappingToMorph() throws Exception {
+
+		final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
+
+		final String request = DMPPersistenceUtil.getResourceAsString("substring.task.json");
+
+		final Task task = objectMapper.readValue(request, Task.class);
+
+		final String morphScriptString = new MorphScriptBuilder().apply(task).toString();
+
+		// TODO: do proper result comparison to make this a real test
+
+		System.out.println(morphScriptString);
 	}
 
 }

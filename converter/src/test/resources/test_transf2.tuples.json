@@ -1,0 +1,39 @@
+[ {
+    "v1" : "http://data.slub-dresden.de/datamodels/2/records/6c6d50f7-9713-4927-a6f1-7fdc4d8f5a3d",
+    "v2" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id" : "1"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#val1" : "charlie"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#val2" : "brown"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#val3" : "?#@ &ä"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#val4" : "cA"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#val5" : "isbn13-9783183057139"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#val6" : "isbn10-3183057131"
+    } ]
+}, {
+    "v1" : "http://data.slub-dresden.de/datamodels/2/records/1ea5b991-f061-45fc-aba9-5604cb23c3bb",
+    "v2" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id" : "2"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#val1" : "schroeder"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#val2" : ""
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#val3" : "12 23"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#val4" : "cA"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#val5" : "isbn13-9783183057139"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#val6" : "isbn10-3183057131"
+    } ]
+} ]
