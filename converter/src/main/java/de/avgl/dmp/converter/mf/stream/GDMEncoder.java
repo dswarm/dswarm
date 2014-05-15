@@ -58,10 +58,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 	
 	private String							recordTypeUri;
 	
-	private long							nodeIdCounter	= 1;
-	//private final Predicate					rdfType			= new Predicate(RDF.type.getURI());
 	private final Map<String, Predicate>	predicates		= Maps.newHashMap();
-	private final Map<String, ResourceNode>	types			= Maps.newHashMap();
 	private final Map<String, AtomicLong>	valueCounter	= Maps.newHashMap();
 	private final Map<String, String>		uris			= Maps.newHashMap();
 
@@ -315,13 +312,6 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 		return uri + "#" + localName;
 	}
 	
-	/*private long getNewNodeId() {
-
-		final long newNodeId = nodeIdCounter;
-		nodeIdCounter++;
-
-		return newNodeId;
-	}*/
 
 	private Predicate getPredicate(final String predicateId) {
 
@@ -337,19 +327,6 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 		return predicates.get(predicateURI);
 	}
 	
-	/*private ResourceNode getType(final String typeId) {
-
-		final String typeURI = getURI(typeId);
-
-		if (!types.containsKey(typeURI)) {
-
-			final ResourceNode type = new ResourceNode(typeURI);
-
-			types.put(typeURI, type);
-		}
-
-		return types.get(typeURI);
-	}*/
 
 	private void addStatement(final Node subject, final Predicate predicate, final Node object) {
 
