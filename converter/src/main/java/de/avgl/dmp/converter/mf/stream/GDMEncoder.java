@@ -53,15 +53,9 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 	private Resource						recordResource;
 	private ResourceNode					recordNode;
 	private Node							entityNode;
-	private Stack<Tuple<Node, Predicate>>	entityStack;
-	private final Stack<String>				elementURIStack;
+	//private Stack<Tuple<Node, Predicate>>	entityStack;
+	//private final Stack<String>			elementURIStack; // TODO use stack when statements for deeper hierarchy levels are possible
 
-	private static final Pattern			TABS			= Pattern.compile("\t+");
-	
-	
-	private boolean							inRecord;
-	private StringBuilder					valueBuffer		= new StringBuilder();
-	private String							uri;
 	private ResourceNode					recordType;
 
 	private final Optional<DataModel>		dataModel;
@@ -88,7 +82,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 		dataModelUri = init(dataModel);
 		
 		// init
-		elementURIStack = new Stack<>();
+		// elementURIStack = new Stack<>(); // TODO use stack when statements for deeper hierarchy levels are possible
 		internalGDMModel = new Model();
 
 	}
@@ -106,7 +100,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 		recordNode = new ResourceNode(currentId);
 		
 		// init
-		entityStack = new Stack<>();
+		//entityStack = new Stack<>(); // TODO use stack when statements for deeper hierarchy levels are possible
 		
 		// TODO: determine record type and create type triple with it
 		if (recordType == null) {
@@ -124,8 +118,6 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 	public void endRecord() {
 
 		assert !isClosed();
-		
-		inRecord = false;
 
 		internalGDMModel.addResource(recordResource);
 
@@ -150,30 +142,6 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		assert !isClosed();
 
-		// bnode or url
-		entityNode = new Node(getNewNodeId());
-
-		final Predicate entityPredicate = getPredicate(name);
-
-		// write sub resource statement
-		if (!entityStack.isEmpty()) {
-
-			final Tuple<Node, Predicate> parentEntityTuple = entityStack.peek();
-
-			addStatement(parentEntityTuple.v1(), entityPredicate, entityNode);
-		} else {
-
-			addStatement(recordNode, entityPredicate, entityNode);
-		}
-
-		// sub resource type
-		final ResourceNode entityType = getType(name + "Type");
-
-		addStatement(entityNode, rdfType, entityType);
-
-		entityStack.push(new Tuple<>(entityNode, entityPredicate));
-
-		// System.out.println("in start entity with entity stact size: '" + entityStack.size() + "'");
 	}
 
 	@Override
@@ -182,27 +150,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 		// System.out.println("in end entity");
 
 		assert !isClosed();
-
-		// write sub resource
-		final Tuple<Node, Predicate> entityTuple = entityStack.pop();
-
-		// System.out.println("in end entity with entity stact size: '" + entityStack.size() + "'");
-
-		// add entity resource to parent entity resource (or to record resource, if there is no parent entity)
-		if (!entityStack.isEmpty()) {
-
-			entityNode = entityStack.peek().v1();
-
-			final Tuple<Node, Predicate> parentEntityTuple = entityStack.peek();
-
-			// addStatement(parentEntityTuple.v1(), entityTuple.v2(), entityTuple.v1());
-		} else {
-
-			entityNode = null;
-
-			// addStatement(recordNode, entityTuple.v2(), entityTuple.v1());
-		}
-
+	
 	}
 
 	@Override
