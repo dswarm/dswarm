@@ -2,10 +2,8 @@ package de.avgl.dmp.converter.mf.stream;
 
 import java.net.URI;
 import java.util.Map;
-import java.util.Stack;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
 
@@ -20,7 +18,6 @@ import org.culturegraph.mf.framework.annotations.Out;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
-
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -34,7 +31,6 @@ import de.avgl.dmp.graph.json.ResourceNode;
 import de.avgl.dmp.persistence.model.internal.gdm.GDMModel;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.utils.DataModelUtils;
-import de.avgl.dmp.persistence.model.types.Tuple;
 
 /**
  * Converts records to GDM-JSON.
@@ -52,14 +48,15 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 	private final Model						internalGDMModel;
 	private Resource						recordResource;
 	private ResourceNode					recordNode;
-	private Node							entityNode;
 	//private Stack<Tuple<Node, Predicate>>	entityStack;
 	//private final Stack<String>			elementURIStack; // TODO use stack when statements for deeper hierarchy levels are possible
 
-	private ResourceNode					recordType;
+	// not used: private ResourceNode					recordType;
 
 	private final Optional<DataModel>		dataModel;
 	private final Optional<String>			dataModelUri;
+	
+	private String							recordTypeUri;
 	
 	private long							nodeIdCounter	= 1;
 	//private final Predicate					rdfType			= new Predicate(RDF.type.getURI());
@@ -105,13 +102,13 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 		// write triples
 		final GDMModel gdmModel;
 
-		//if (recordType.getUri() == null) {
+		if (recordTypeUri == null) {
 
 			gdmModel = new GDMModel(internalGDMModel, currentId);
-		//} else {
+		} else {
 
-			//gdmModel = new GDMModel(internalGDMModel, currentId, recordType.getUri());
-		//}
+			gdmModel = new GDMModel(internalGDMModel, currentId, recordTypeUri);
+		}
 
 		getReceiver().process(gdmModel);
 	}
@@ -145,21 +142,61 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 		// name = predicate
 		// value = literal or object
 		// TODO: only literals atm, i.e., how to determine other resources?
+		// => still valid: how to determine other resources!
+		// ==> @phorn proposed to utilise "<" ">" to identify resource ids (uris)
+		if (name == null) {
+
+			return;
+		}
+
+		final String propertyUri;
+
+		if (isValidUri(name)) {
+
+			propertyUri = name;
+		} else {
+
+			propertyUri = mintUri(dataModelUri.get(), name);
+		}
+
 		if (value != null && !value.isEmpty()) {
-			final Predicate attributeProperty = getPredicate(name);
+
+			final Predicate attributeProperty = getPredicate(propertyUri);
 			final LiteralNode literalObject = new LiteralNode(value);
 
-			if (null != entityNode) {
+			if (null != recordResource) {
 
-				addStatement(entityNode, attributeProperty, literalObject);
-			} else if (null != recordResource) {
+				// TODO: this is only a HOTFIX for creating resources from resource type uris
 
-				addStatement(recordNode, attributeProperty, literalObject);
+				if (!RDF.type.getURI().equals(propertyUri)) {
+
+					//recordResource.addProperty(attributeProperty, value);
+					recordResource.addStatement(recordNode, attributeProperty, literalObject);
+				} else {
+
+					// check, whether value is really a URI
+					if (isValidUri(value)) {
+
+						final ResourceNode typeResource = new ResourceNode(value);//ResourceFactory.createResource(value);
+						
+						
+
+						//recordResource.addStatement(entityNode, attributeProperty, typeResource);
+						addStatement(recordNode, attributeProperty, typeResource);
+
+						recordTypeUri = value;
+					} else {
+
+						//recordResource.addStatement(entityNode, attributeProperty, literalObject);
+						addStatement(recordNode, attributeProperty, literalObject);
+					}
+				}
 			} else {
 
 				throw new MetafactureException("couldn't get a resource for adding this property");
 			}
 		}
+				
 	}
 
 	private Optional<String> init(final Optional<DataModel> dataModel) {
@@ -278,13 +315,13 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 		return uri + "#" + localName;
 	}
 	
-	private long getNewNodeId() {
+	/*private long getNewNodeId() {
 
 		final long newNodeId = nodeIdCounter;
 		nodeIdCounter++;
 
 		return newNodeId;
-	}
+	}*/
 
 	private Predicate getPredicate(final String predicateId) {
 
@@ -300,7 +337,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 		return predicates.get(predicateURI);
 	}
 	
-	private ResourceNode getType(final String typeId) {
+	/*private ResourceNode getType(final String typeId) {
 
 		final String typeURI = getURI(typeId);
 
@@ -312,7 +349,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 		}
 
 		return types.get(typeURI);
-	}
+	}*/
 
 	private void addStatement(final Node subject, final Predicate predicate, final Node object) {
 
