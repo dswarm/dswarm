@@ -256,7 +256,7 @@ public class TransformationFlow {
 			if (outputDataModel.isPresent() && outputDataModel.get().getId() != null) {
 
 				// write result to graph db
-				final InternalModelService internalModelService = internalModelServiceFactoryProvider.get().getInternalRDFGraphService();
+				final InternalModelService internalModelService = internalModelServiceFactoryProvider.get().getInternalGDMGraphService();
 
 				try {
 
