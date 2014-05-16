@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datei xmlns="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd
+http://www.ddb.de/professionell/mabxml/mabxml-1.xsd">
+	<datensatz id="ID946451494" typ="h" status="n" mabVersion="M2.0">
+		<feld nr="001" ind=" ">946451494</feld>
+		<feld nr="004" ind=" ">19980605</feld>
+		<feld nr="030" ind=" ">a|1iar|z|||37</feld>
+		<feld nr="036" ind="a">DE</feld>
+		<feld nr="050" ind=" ">a|a|||||||||||</feld>
+		<feld nr="051" ind=" ">m|||z||</feld>
+		<feld nr="070" ind="a">292</feld>
+		<feld nr="100" ind="b">Ginsbach, Julia</feld>
+		<feld nr="102" ind="a">11547577X</feld>
+		<feld nr="104" ind="b">Liebers, Andrea</feld>
+		<feld nr="106" ind="a">111570204</feld>
+		<feld nr="331" ind=" "><ns>Die</ns> schÃ¶ne Lau</feld>
+		<feld nr="335" ind=" ">nach dem Stuttgarter HutzelmÃ¤nnlein von Eduart MÃ¶rike</feld>
+		<feld nr="359" ind=" ">Julia Ginsbach (Bilder) ; Andrea Liebers (Text)</feld>
+		<feld nr="410" ind=" ">Leinfelden-Echterdingen</feld>
+		<feld nr="412" ind=" ">DRW-Verl. Weinbrenner</feld>
+		<feld nr="425" ind=" ">1995</feld>
+		<feld nr="425" ind="a">1995</feld>
+		<feld nr="433" ind=" ">[28] S.</feld>
+		<feld nr="434" ind=" ">Ã¼berw. Ill.</feld>
+		<feld nr="435" ind=" ">27 cm</feld>
+		<feld nr="540" ind="a">ISBN 3-87181-371-0 Pp. : DM 24.80</feld>
+		<feld nr="544" ind="a">DBL<tf/>1996 B 2108</feld>
+		<feld nr="544" ind="a">DBF<tf/>1996 B 2108</feld>
+		<feld nr="574" ind=" ">96,A07,0146</feld>
+		<feld nr="700" ind=" ">|07</feld>
+		<feld nr="800" ind=" ">118583107           MÃ¶rike, Eduard</feld>
+		<feld nr="805" ind="b"><ns>Das</ns> Stuttgarter HutzelmÃ¤nnchen</feld>
+	</datensatz>
+</datei>

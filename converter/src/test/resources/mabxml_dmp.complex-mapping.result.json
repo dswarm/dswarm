@@ -1,0 +1,7 @@
+[{
+    "http://data.slub-dresden.de/datamodels/2/records/68f327aa-652e-4b60-8fd1-8dee40118933": [{
+        "http://purl.org/dc/elements/1.1/title": ["19980605###004", "DBL###544", "118583107           MÃ¶rike, Eduard###805", "m|||z||###051", "1996 B 2108###544", "11547577X###102", "96,A07,0146###700", "27 cm###435", "a|a|||||||||||###050", "Ginsbach, Julia###100", "a|1iar|z|||37###030", "111570204###106", "nach dem Stuttgarter HutzelmÃ¤nnlein von Eduart MÃ¶rike###335", "|07###800", " schÃ¶ne Lau###331", "1996 B 2108###574", "Leinfelden-Echterdingen###410", "[28] S.###433", "Liebers, Andrea###104", "ISBN 3-87181-371-0 Pp. : DM 24.80###540", "DE###036", "DRW-Verl. Weinbrenner###412", "1995###425", "946451494###001", "292###070", "Julia Ginsbach (Bilder) ; Andrea Liebers (Text)###359", "Ã¼berw. Ill.###434"]
+    }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }]
+}]

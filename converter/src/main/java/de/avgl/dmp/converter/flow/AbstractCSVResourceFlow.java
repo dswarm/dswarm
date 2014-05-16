@@ -234,7 +234,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 			return Optional.absent();
 		}
 
-		if (!jsonNode.isNumber()) {
+		if (jsonNode.isNumber()) {
 			return Optional.of(jsonNode.asInt());
 		}
 
@@ -256,7 +256,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 			return defaultValue;
 		}
 
-		if (!jsonNode.isBoolean()) {
+		if (jsonNode.isBoolean()) {
 			return jsonNode.booleanValue();
 		}
 

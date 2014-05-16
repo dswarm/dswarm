@@ -64,7 +64,7 @@ public class CSVSourceResourceCSVPreviewFlowTest {
 
 		final String resultOutput = stringWriter.toString();
 
-		Assert.assertNotNull("the result output shoudln't be null", resultOutput);
+		Assert.assertNotNull("the result output shouldn't be null", resultOutput);
 
 		final String expectedResult = DMPPersistenceUtil.getResourceAsString("test_csv.csv");
 

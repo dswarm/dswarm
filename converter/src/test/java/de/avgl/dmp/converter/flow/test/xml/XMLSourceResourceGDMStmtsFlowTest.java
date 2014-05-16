@@ -48,7 +48,7 @@ public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 				Assert.assertNotNull("the GDM model shouldn't be null", model);
 
 				// serialise model as JSON (pretty print)
-				final ObjectMapper mapper = DMPPersistenceUtil.getJSONObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, true);
+				final ObjectMapper mapper = DMPPersistenceUtil.getJSONObjectMapper().copy().configure(SerializationFeature.INDENT_OUTPUT, true);
 
 				String modelJSON = null;
 
