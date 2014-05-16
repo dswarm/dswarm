@@ -190,7 +190,7 @@ public class TransformationFlow {
 
 		final ObjectMapper objectMapper = DMPPersistenceUtil.getJSONObjectMapper();
 		// final ArrayNode result = objectMapper.createArrayNode();
-		final Set<String> recordURIs = Sets.newHashSet();
+		final Set<String> recordURIs = Sets.newLinkedHashSet();
 
 		for (final GDMModel gdmModel : gdmModels) {
 
