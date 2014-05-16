@@ -1,0 +1,43 @@
+[{
+    "http://data.slub-dresden.de/datamodels/2/records/15a6857b-6811-403b-a6e8-ddec6e589a9c": [{
+        "http://purl.org/dc/elements/1.1/title": "dOnald DUCK, No. 1"
+    }, {
+        "http://rdvocab.info/Elements/otherTitleInformation": [
+            "der", "hund"
+        ]
+    }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/zzz4f4d7-4190-474e-a9a4-18d53b0420a4": [{
+        "http://purl.org/dc/elements/1.1/title": "der Pe (2)"
+    }, {
+        "http://rdvocab.info/Elements/otherTitleInformation": "ghkjhjkhjhjk"
+    }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/bbbf4d7-4190-474e-a9a4-18d53b0420a4": [{
+        "http://purl.org/dc/elements/1.1/title": "Eintrag Nr. 3"
+    }, {
+        "http://rdvocab.info/Elements/otherTitleInformation": "hjkhkjkhkj"
+    }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/aaaf4d7-4190-474e-a9a4-18d53b0420a4": [{
+        "http://purl.org/dc/elements/1.1/title": "Vierter Eintrag"
+    }, {
+        "http://rdvocab.info/Elements/otherTitleInformation": "adfsgfga"
+    }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/dddd4d7-4190-474e-a9a4-18d53b0420a4": [{
+        "http://purl.org/dc/elements/1.1/title": "5. Eintrag"
+    }, {
+        "http://rdvocab.info/Elements/otherTitleInformation": "zzzzzzz"
+    }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }]
+}]

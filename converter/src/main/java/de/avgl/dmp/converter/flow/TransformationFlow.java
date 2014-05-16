@@ -27,23 +27,22 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.google.inject.Provider;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.DMPMorphDefException;
-import de.avgl.dmp.converter.mf.stream.RDFModelReceiver;
-import de.avgl.dmp.converter.mf.stream.TripleEncoder;
+import de.avgl.dmp.converter.mf.stream.GDMEncoder;
+import de.avgl.dmp.converter.mf.stream.GDMModelReceiver;
 import de.avgl.dmp.converter.mf.stream.reader.JsonNodeReader;
 import de.avgl.dmp.converter.morph.MorphScriptBuilder;
 import de.avgl.dmp.converter.pipe.StreamJsonCollapser;
 import de.avgl.dmp.converter.pipe.StreamUnflattener;
+import de.avgl.dmp.graph.json.Predicate;
+import de.avgl.dmp.graph.json.Resource;
+import de.avgl.dmp.graph.json.ResourceNode;
 import de.avgl.dmp.init.util.DMPStatics;
 import de.avgl.dmp.persistence.DMPPersistenceException;
-import de.avgl.dmp.persistence.model.internal.rdf.RDFModel;
+import de.avgl.dmp.persistence.model.internal.gdm.GDMModel;
 import de.avgl.dmp.persistence.model.job.Task;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.schema.Clasz;
@@ -58,6 +57,8 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
  * 
  * @author phorn
  * @author tgaengler
+ * @author sreichert
+ * @author polowins
  */
 public class TransformationFlow {
 
@@ -169,8 +170,8 @@ public class TransformationFlow {
 
 		final StreamUnflattener unflattener = new StreamUnflattener("", DMPStatics.ATTRIBUTE_DELIMITER);
 		final StreamJsonCollapser collapser = new StreamJsonCollapser();
-		final TripleEncoder converter = new TripleEncoder(outputDataModel);
-		final RDFModelReceiver writer = new RDFModelReceiver();
+		final GDMEncoder converter = new GDMEncoder(outputDataModel);
+		final GDMModelReceiver writer = new GDMModelReceiver();
 
 		opener.setReceiver(transformer).setReceiver(unflattener).setReceiver(collapser).setReceiver(converter).setReceiver(writer);
 
@@ -180,46 +181,51 @@ public class TransformationFlow {
 
 		// return stringWriter.toString();
 
-		final ImmutableList<RDFModel> rdfModels = writer.getCollection();
+		final ImmutableList<GDMModel> gdmModels = writer.getCollection();
 
-		final Model model = ModelFactory.createDefaultModel();
+		final de.avgl.dmp.graph.json.Model model = new de.avgl.dmp.graph.json.Model();
 		String recordClassUri = null;
 
 		// transform to FE friendly JSON => or use Model#toJSON() ;)
 
 		final ObjectMapper objectMapper = DMPPersistenceUtil.getJSONObjectMapper();
 		// final ArrayNode result = objectMapper.createArrayNode();
-		final Set<String> recordURIs = Sets.newHashSet();
+		final Set<String> recordURIs = Sets.newLinkedHashSet();
 
-		for (final RDFModel rdfModel : rdfModels) {
+		for (final GDMModel gdmModel : gdmModels) {
 
 			// result.add(rdfModel.toRawJSON());
 
-			if (rdfModel.getModel() == null) {
+			if (gdmModel.getModel() == null) {
 
 				continue;
 			}
 
-			model.add(rdfModel.getModel());
+			
+			for (final de.avgl.dmp.graph.json.Resource jsonResource : gdmModel.getModel().getResources()){
+			    model.addResource(jsonResource);
+			    
+			   }
 
 			if (recordClassUri == null) {
 
-				recordClassUri = rdfModel.getRecordClassURI();
+				recordClassUri = gdmModel.getRecordClassURI();
 			}
 
 			// TODO: this a WORKAROUND to insert a default type (bibo:Document) for records in the output data model
 
-			if (rdfModel.getRecordClassURI() == null) {
+			if (gdmModel.getRecordClassURI() == null) {
 
-				final Resource recordResource = model.getResource(rdfModel.getRecordURIs().iterator().next());
+				final Resource recordResource = model.getResource(gdmModel.getRecordURIs().iterator().next());
 
 				if (recordResource != null) {
 
-					recordResource.addProperty(RDF.type, ResourceFactory.createResource("http://purl.org/ontology/bibo/Document"));
+					// TODO check this: subject OK?
+					recordResource.addStatement(new ResourceNode(recordResource.getUri()), new Predicate(RDF.type.getURI()), new ResourceNode("http://purl.org/ontology/bibo/Document"));
 				}
 			}
 
-			recordURIs.add(rdfModel.getRecordURIs().iterator().next());
+			recordURIs.add(gdmModel.getRecordURIs().iterator().next());
 		}
 
 		if (recordClassUri == null) {
@@ -242,19 +248,19 @@ public class TransformationFlow {
 
 		// note: we may don't really need the record class uri here (I guess), because we can provide the record identifiers
 		// separately
-		final RDFModel rdfModel = new RDFModel(model, null, recordClassUri);
-		rdfModel.setRecordURIs(recordURIs);
+		final GDMModel gdmModel = new GDMModel(model, null, recordClassUri);
+		gdmModel.setRecordURIs(recordURIs);
 
 		if (writeResultToDatahub) {
 
 			if (outputDataModel.isPresent() && outputDataModel.get().getId() != null) {
 
 				// write result to graph db
-				final InternalModelService internalModelService = internalModelServiceFactoryProvider.get().getInternalRDFGraphService();
+				final InternalModelService internalModelService = internalModelServiceFactoryProvider.get().getInternalGDMGraphService();
 
 				try {
 
-					internalModelService.createObject(outputDataModel.get().getId(), rdfModel);
+					internalModelService.createObject(outputDataModel.get().getId(), gdmModel);
 				} catch (final DMPPersistenceException e1) {
 
 					final String message = "couldn't persist the result of the transformation: " + e1.getMessage();
@@ -278,7 +284,7 @@ public class TransformationFlow {
 
 		try {
 
-			resultString = objectMapper.writeValueAsString(rdfModel.toJSON());
+			resultString = objectMapper.writeValueAsString(gdmModel.toJSON());
 		} catch (final JsonProcessingException e) {
 
 			final String message = "couldn't convert result into JSON";
