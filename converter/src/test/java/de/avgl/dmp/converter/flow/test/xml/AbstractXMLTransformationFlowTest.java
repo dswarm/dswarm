@@ -182,7 +182,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		final Iterator<Tuple<String, JsonNode>> tuples = dataIterator(modelMap.entrySet().iterator());
 
 //		final List<Tuple<String, JsonNode>> tuplesList = Lists.newLinkedList();
-
+//
 //		while(tuples.hasNext()) {
 //
 //		tuplesList.add(tuples.next());
