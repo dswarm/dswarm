@@ -1,0 +1,106 @@
+[{
+    "v1": "http://data.slub-dresden.de/datamodels/2/records/26d3e1fa-14e5-40e7-be32-a40cfb1ea9f6",
+    "v2": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "123"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "Otto"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#nummer": "43452345"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#jahr": "1960"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#farbe": "pink"
+    }]
+}, {
+    "v1": "http://data.slub-dresden.de/datamodels/2/records/e4072a6f-7ff6-42aa-89d7-d9a98e5205af",
+    "v2": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "234"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "Karl"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#nummer": "45634255"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#jahr": "1970"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#farbe": "blau"
+    }]
+}, {
+    "v1": "http://data.slub-dresden.de/datamodels/2/records/87af98ac-afb4-45fb-b228-3e0afd506064",
+    "v2": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "345"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "Erna"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#nummer": "48569736"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#jahr": "1980"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#farbe": "gr�n"
+    }]
+}, {
+    "v1": "http://data.slub-dresden.de/datamodels/2/records/dc38d87a-c56f-4352-b889-4c87b3ced9d7",
+    "v2": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "456"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "Jana"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#nummer": "45253668"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#jahr": "1950"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#farbe": "gelb"
+    }]
+}, {
+    "v1": "http://data.slub-dresden.de/datamodels/2/records/b49e9e9a-aa20-40f9-b7fa-77c5b1f2270b",
+    "v2": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "567"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "Lulu"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#nummer": "42449475"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#jahr": "1990"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#farbe": "wei�"
+    }]
+}, {
+    "v1": "http://data.slub-dresden.de/datamodels/2/records/bf98271a-1e05-49a5-aba8-c2a8f73eeeec",
+    "v2": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "678"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "Gerd"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#nummer": "42220585"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#jahr": "1940"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#farbe": "grau"
+    }]
+}, {
+    "v1": "http://data.slub-dresden.de/datamodels/2/records/834c984b-b1e5-4572-abcd-372a7a5d3adc",
+    "v2": [{
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#id": "789"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#name": "Mark"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#nummer": "45830568"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#jahr": "2000"
+    }, {
+        "http://data.slub-dresden.de/resources/1/schema#farbe": "rosa"
+    }]
+}]
