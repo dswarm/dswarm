@@ -108,7 +108,7 @@ public class GDMModel implements Model {
 	 */
 	public Set<String> getRecordURIs() {
 
-		if (recordURIs == null || recordURIs.isEmpty()) {
+		if (recordURIs.isEmpty()) {
 
 			if (!areRecordURIsInitialized) {
 
@@ -287,11 +287,6 @@ public class GDMModel implements Model {
 		}
 
 		final Iterator<String> iter = getRecordURIs().iterator();
-
-		if (iter == null) {
-
-			return null;
-		}
 
 		if (!iter.hasNext()) {
 

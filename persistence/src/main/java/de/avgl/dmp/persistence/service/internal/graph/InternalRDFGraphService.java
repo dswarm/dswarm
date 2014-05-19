@@ -407,7 +407,7 @@ public class InternalRDFGraphService implements InternalModelService {
 
 		if (attributePathHelpers == null) {
 
-			InternalRDFGraphService.LOG.debug("couldn't datermine attribute paths from data model '" + dataModel.getId() + "'");
+			InternalRDFGraphService.LOG.debug("couldn't determine attribute paths from data model '" + dataModel.getId() + "'");
 
 			return dataModel;
 		}
@@ -589,12 +589,7 @@ public class InternalRDFGraphService implements InternalModelService {
 
 	private WebTarget target() {
 
-		WebTarget target = client().target(graphEndpoint);
-
-		if (InternalRDFGraphService.resourceIdentifier != null) {
-
-			target = target.path(InternalRDFGraphService.resourceIdentifier);
-		}
+		WebTarget target = client().target(graphEndpoint).path(InternalRDFGraphService.resourceIdentifier);
 
 		return target;
 	}
