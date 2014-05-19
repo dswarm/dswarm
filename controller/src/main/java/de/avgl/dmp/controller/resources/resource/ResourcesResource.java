@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.EventBus;
-import com.google.common.io.Files;
 import com.google.common.io.LineProcessor;
 import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
@@ -71,7 +71,7 @@ import de.avgl.dmp.persistence.service.resource.ResourceService;
 
 /**
  * A resource (controller service) for {@link Resource}s.
- *
+ * 
  * @author tgaengler
  * @author phorn
  */
@@ -100,13 +100,12 @@ public class ResourcesResource {
 	 * Creates a new resource (controller service) for {@link Resource}s with the provider of the resource persistence service,
 	 * the provider of configuration persistence service, the provider of data model persistence service, the object mapper,
 	 * metrics registry, event bus provider and data model util.
-	 *
+	 * 
 	 * @param dmpStatusArg a metrics registry
 	 * @param objectMapperArg an object mapper
 	 * @param resourceServiceProviderArg the provider for the resource persistence service
 	 * @param configurationServiceProviderArg the provider for the configuration persistence service
 	 * @param eventBusProviderArg an event bus provider
-	 * @param dataModelServiceArg the provider for the data model persistence service
 	 * @param dataModelUtilArg the data model util
 	 */
 	@Inject
@@ -124,7 +123,7 @@ public class ResourcesResource {
 
 	/**
 	 * Builds a positive response with the given content.
-	 *
+	 * 
 	 * @param responseContent a response message
 	 * @return the response
 	 */
@@ -135,7 +134,7 @@ public class ResourcesResource {
 
 	/**
 	 * Builds a positive "created" response with the given content at the given response URI.
-	 *
+	 * 
 	 * @param responseContent a response message
 	 * @param responseURI a URI
 	 * @return the response
@@ -171,7 +170,7 @@ public class ResourcesResource {
 	/**
 	 * This endpoint processes (uploades) the input stream and creates a new resource object with related metadata that will be
 	 * returned as JSON representation.
-	 *
+	 * 
 	 * @param uploadedInputStream the input stream that should be uploaded
 	 * @param fileDetail file metadata
 	 * @param name the name of the resource
@@ -210,8 +209,8 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't create new resource");
 		}
 
-		ResourcesResource.LOG.debug("created new resource '" + name + "' for file '" + fileDetail.getFileName() + "' = '"
-				+ ToStringBuilder.reflectionToString(resource) + "'");
+		ResourcesResource.LOG.debug("created new resource '" + name + "' for file '" + fileDetail.getFileName() + "' ");
+		ResourcesResource.LOG.trace("= '" + ToStringBuilder.reflectionToString(resource) + "'");
 
 		final String resourceJSON;
 
@@ -227,7 +226,8 @@ public class ResourcesResource {
 		final URI baseURI = uri.getRequestUri();
 		final URI resourceURI = URI.create(baseURI.toString() + "/" + resource.getId());
 
-		ResourcesResource.LOG.debug("created new resource at '" + resourceURI.toString() + "' with content '" + resourceJSON + "'");
+		ResourcesResource.LOG.debug("created new resource at '" + resourceURI.toString() + "' with content ");
+		ResourcesResource.LOG.trace("'" + resourceJSON + "'");
 
 		dmpStatus.stop(context);
 		return buildResponseCreated(resourceJSON, resourceURI, proxyResource.getType(), "resource");
@@ -235,7 +235,7 @@ public class ResourcesResource {
 
 	/**
 	 * This endpoint returns a list of all resources as JSON representation.
-	 *
+	 * 
 	 * @return a list of all resources as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -270,7 +270,8 @@ public class ResourcesResource {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		ResourcesResource.LOG.debug("got all resources = ' = '" + ToStringBuilder.reflectionToString(resources) + "'");
+		ResourcesResource.LOG.debug("got all resources ");
+		ResourcesResource.LOG.trace("= '" + ToStringBuilder.reflectionToString(resources) + "'");
 
 		final String resourcesJSON;
 
@@ -283,7 +284,8 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't transform resources list object to JSON string.\n" + e.getMessage());
 		}
 
-		ResourcesResource.LOG.debug("return all resources '" + resourcesJSON + "'");
+		ResourcesResource.LOG.debug("return all resources ");
+		ResourcesResource.LOG.trace("'" + resourcesJSON + "'");
 
 		dmpStatus.stop(context);
 		return buildResponse(resourcesJSON);
@@ -291,7 +293,7 @@ public class ResourcesResource {
 
 	/**
 	 * This endpoint returns a resource as JSON representation for the provided resource identifier.
-	 *
+	 * 
 	 * @param id a resource identifier
 	 * @return a JSON representation of a resource
 	 */
@@ -327,7 +329,8 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't transform resource object to JSON string.\n" + e.getMessage());
 		}
 
-		ResourcesResource.LOG.debug("return resource with id '" + id + "' and content '" + resourceJSON + "'");
+		ResourcesResource.LOG.debug("return resource with id '" + id + "' and content ");
+		ResourcesResource.LOG.trace("'" + resourceJSON + "'");
 
 		dmpStatus.stop(context);
 		return buildResponse(resourceJSON);
@@ -336,7 +339,7 @@ public class ResourcesResource {
 	/**
 	 * This endpoint processes (uploades) the input stream and update an existing resource object with related metadata that will
 	 * be returned as JSON representation.
-	 *
+	 * 
 	 * @param uploadedInputStream the input stream that should be uploaded
 	 * @param fileDetail file metadata
 	 * @param name the name of the resource
@@ -387,7 +390,8 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't transform resource object to JSON string");
 		}
 
-		ResourcesResource.LOG.debug("updated resource with id '" + id + "' and JSON content '" + resourceJSON + "'");
+		ResourcesResource.LOG.debug("updated resource with id '" + id + "' ");
+		ResourcesResource.LOG.trace("and JSON content '" + resourceJSON + "'");
 
 		dmpStatus.stop(context);
 		return buildResponse(resourceJSON);
@@ -395,7 +399,7 @@ public class ResourcesResource {
 
 	/**
 	 * This endpoint deletes a resource that matches the given id.
-	 *
+	 * 
 	 * @param id a resource identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
 	 *         went wrong
@@ -435,7 +439,7 @@ public class ResourcesResource {
 			return Response.status(Status.CONFLICT).build();
 		}
 
-		ResourcesResource.LOG.debug("deletion of resourse with id '" + id + "' was successfull");
+		ResourcesResource.LOG.debug("deletion of resource with id '" + id + "' was successful");
 
 		dmpStatus.stop(context);
 		return Response.status(Status.NO_CONTENT).build();
@@ -443,7 +447,7 @@ public class ResourcesResource {
 
 	/**
 	 * Returns the content of the uploaded resource line-wise.
-	 *
+	 * 
 	 * @param id a resource identifier
 	 * @param atMost the number of lines that should be returned at most
 	 * @param encoding the encoding of the uploaded resource
@@ -485,7 +489,7 @@ public class ResourcesResource {
 
 		final List<String> lines;
 		try {
-			lines = Files.readLines(new File(filePath), Charset.forName(encoding), new LineProcessor<List<String>>() {
+			lines = com.google.common.io.Files.readLines(new File(filePath), Charset.forName(encoding), new LineProcessor<List<String>>() {
 
 				private final ImmutableList.Builder<String>	lines			= ImmutableList.builder();
 				private int									linesProcessed	= 1;
@@ -533,7 +537,7 @@ public class ResourcesResource {
 
 	/**
 	 * This endpoint delivers all configurations that are related to this resource.
-	 *
+	 * 
 	 * @param id a resource identifier
 	 * @return a JSON representation of a list of configurations
 	 * @throws DMPControllerException
@@ -561,8 +565,8 @@ public class ResourcesResource {
 
 		final Resource resource = resourceOptional.get();
 
-		ResourcesResource.LOG.debug("got resource with id '" + id.toString() + "' for resource configurations retrieval = '"
-				+ ToStringBuilder.reflectionToString(resource) + "'");
+		ResourcesResource.LOG.debug("got resource with id '" + id.toString() + "' for resource configurations retrieval ");
+		ResourcesResource.LOG.trace("= '" + ToStringBuilder.reflectionToString(resource) + "'");
 
 		final Set<Configuration> configurations = resource.getConfigurations();
 
@@ -574,8 +578,8 @@ public class ResourcesResource {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		ResourcesResource.LOG.debug("got resource configurations for resource with id '" + id.toString() + "' = '"
-				+ ToStringBuilder.reflectionToString(configurations) + "'");
+		ResourcesResource.LOG.debug("got resource configurations for resource with id '" + id.toString() + "' ");
+		ResourcesResource.LOG.trace("= '" + ToStringBuilder.reflectionToString(configurations) + "'");
 
 		final String configurationsJSON;
 
@@ -588,8 +592,8 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't transform resource configurations set to JSON string.\n" + e.getMessage());
 		}
 
-		ResourcesResource.LOG.debug("return resource configurations for resource with id '" + id.toString() + "' and content '" + configurationsJSON
-				+ "'");
+		ResourcesResource.LOG.debug("return resource configurations for resource with id '" + id.toString() + "' ");
+		ResourcesResource.LOG.trace("and content '" + configurationsJSON + "'");
 
 		dmpStatus.stop(context);
 		return buildResponse(configurationsJSON);
@@ -604,7 +608,7 @@ public class ResourcesResource {
 	 * note: [@tgaengler] the processing of a given data resource with a given configuration has been moved to
 	 * {@link DataModelsResource}, i.e., the result of this operation should only be the addition of the given configuration,
 	 * however, not the processing of this combination.
-	 *
+	 * 
 	 * @param id a resource identifier
 	 * @param jsonObjectString a JSON representation of a configuration.
 	 * @return a JSON representation of the added configuration
@@ -656,8 +660,8 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't add configuration to resource with id '" + id + "'");
 		}
 
-		ResourcesResource.LOG.debug("added new configuration to resource with id '" + id + "' = '"
-				+ ToStringBuilder.reflectionToString(configuration) + "'");
+		ResourcesResource.LOG.debug("added new configuration to resource with id '" + id + "' ");
+		ResourcesResource.LOG.trace("= '" + ToStringBuilder.reflectionToString(configuration) + "'");
 
 		final JsonNode jsStorageType = configuration.getParameters().get("storage_type");
 		if (jsStorageType != null) {
@@ -685,7 +689,8 @@ public class ResourcesResource {
 		final URI baseURI = uri.getRequestUri();
 		final URI configurationURI = URI.create(baseURI.toString() + "/" + configuration.getId());
 
-		ResourcesResource.LOG.debug("return new configuration at '" + configurationURI.toString() + "' with content '" + configurationJSON + "'");
+		ResourcesResource.LOG.debug("return new configuration at '" + configurationURI.toString() + "' ");
+		ResourcesResource.LOG.trace("with content '" + configurationJSON + "'");
 
 		dmpStatus.stop(context);
 		return buildResponseCreated(configurationJSON, configurationURI, proxyConfiguration.getType(), "configuration");
@@ -693,7 +698,7 @@ public class ResourcesResource {
 
 	/**
 	 * This endpoint delivers a configuration for the given resource identifier and configuration identifier.
-	 *
+	 * 
 	 * @param id a resource identifier
 	 * @param configurationId a configuration identifier
 	 * @return a JSON representation of the matched configuration
@@ -731,8 +736,8 @@ public class ResourcesResource {
 			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
 		}
 
-		ResourcesResource.LOG.debug("return configuration with id '" + configurationId + "' for resource with id '" + id + "' and content '"
-				+ configurationJSON + "'");
+		ResourcesResource.LOG.debug("return configuration with id '" + configurationId + "' for resource with id '" + id + "' ");
+		ResourcesResource.LOG.trace("and content '" + configurationJSON + "'");
 
 		dmpStatus.stop(context);
 		return buildResponse(configurationJSON);
@@ -741,7 +746,7 @@ public class ResourcesResource {
 	/**
 	 * note: [@tgaengler] this operation should be moved to {@link DataModelsResource} and there should be a generic preview
 	 * operation
-	 *
+	 * 
 	 * @param id
 	 * @param jsonObjectString
 	 * @return
@@ -773,8 +778,8 @@ public class ResourcesResource {
 
 		final Resource resource = resourceOptional.get();
 
-		ResourcesResource.LOG.debug("found resource with id '" + id + "' for csv configuration preview = '"
-				+ ToStringBuilder.reflectionToString(resource) + "'");
+		ResourcesResource.LOG.debug("found resource with id '" + id + "' for csv configuration preview ");
+		ResourcesResource.LOG.trace("= '" + ToStringBuilder.reflectionToString(resource) + "'");
 		ResourcesResource.LOG.debug("try to apply configuration to resource with id '" + id + "'");
 
 		final String result = applyConfigurationForCSVPreview(resource, jsonObjectString);
@@ -796,7 +801,7 @@ public class ResourcesResource {
 	/**
 	 * note: [@tgaengler] this operation should be moved to {@link DataModelsResource} and there should be a generic preview
 	 * operation
-	 *
+	 * 
 	 * @param id
 	 * @param jsonObjectString
 	 * @return
@@ -828,8 +833,8 @@ public class ResourcesResource {
 
 		final Resource resource = resourceOptional.get();
 
-		ResourcesResource.LOG.debug("found resource with id '" + id + "' for csv json configuration preview = '"
-				+ ToStringBuilder.reflectionToString(resource) + "'");
+		ResourcesResource.LOG.debug("found resource with id '" + id + "' for csv json configuration preview ");
+		ResourcesResource.LOG.trace("= '" + ToStringBuilder.reflectionToString(resource) + "'");
 		ResourcesResource.LOG.debug("try to apply configuration to resource with id '" + id + "'");
 
 		final String result = applyConfigurationForCSVJSONPreview(resource, jsonObjectString);
@@ -850,7 +855,7 @@ public class ResourcesResource {
 
 	/**
 	 * Process stores the input stream and creates and persists a new resource with the related metadata.
-	 *
+	 * 
 	 * @param uploadInputedStream an input stream that should be uploaded
 	 * @param fileDetail metadata of the given input stream
 	 * @param name the name of the resource
@@ -898,24 +903,23 @@ public class ResourcesResource {
 
 		resource.setType(ResourceType.FILE);
 
-		// String fileType = null;
+		String fileType = null;
 
-		// TODO: Files.probeContentType is JDK 1.7 only -> will be re-enabled when JDK 1.7 is support again
-		// try {
-		//
-		// fileType = Files.probeContentType(file.toPath());
-		// } catch (IOException e1) {
-		//
-		// LOG.debug("couldn't determine file type from file '" + file.getAbsolutePath() + "'");
-		// }
+		try {
+
+			fileType = Files.probeContentType(file.toPath());
+		} catch (IOException e1) {
+
+			ResourcesResource.LOG.debug("couldn't determine file type from file '" + file.getAbsolutePath() + "'");
+		}
 
 		final ObjectNode attributes = new ObjectNode(objectMapper.getNodeFactory());
 		attributes.put("path", file.getAbsolutePath());
 
-		// if (fileType != null) {
-		//
-		// attributes.put("filetype", fileType);
-		// }
+		if (fileType != null) {
+
+			attributes.put("filetype", fileType);
+		}
 
 		attributes.put("filesize", fileDetail.getSize());
 
@@ -947,7 +951,7 @@ public class ResourcesResource {
 
 	/**
 	 * Process stores the input stream and update a resource with the related metadata.
-	 *
+	 * 
 	 * @param uploadInputedStream an input stream that should be uploaded
 	 * @param fileDetail metadata of the given input stream
 	 * @param name the name of the resource
@@ -1004,7 +1008,7 @@ public class ResourcesResource {
 
 	/**
 	 * Adds and persists a configuration to the given resource.
-	 *
+	 * 
 	 * @param resource a resource
 	 * @param configurationJSONString a JSON representation of a new configuration
 	 * @return the new configuration
@@ -1133,7 +1137,7 @@ public class ResourcesResource {
 
 	/**
 	 * Persists a new configuration in the database.
-	 *
+	 * 
 	 * @param configurationService the configuration persistence service
 	 * @return the new persisted configuration
 	 * @throws DMPControllerException
@@ -1236,7 +1240,7 @@ public class ResourcesResource {
 
 	/**
 	 * Deserializes the given string that holds a JSON object of a configuration.
-	 *
+	 * 
 	 * @param configurationJSONString a string that holds a JSON object of a configuration
 	 * @return the deserialized configuration
 	 * @throws DMPControllerException

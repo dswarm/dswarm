@@ -127,14 +127,7 @@ public class RDFResource {
 
 	private WebTarget target() {
 
-		WebTarget target = client().target(graphEndpoint);
-
-		if (RDFResource.resourceIdentifier != null) {
-
-			target = target.path(RDFResource.resourceIdentifier);
-		}
-
-		return target;
+		return client().target(graphEndpoint).path(RDFResource.resourceIdentifier);
 	}
 
 	private WebTarget target(final String... path) {

@@ -282,7 +282,8 @@ public class AttributePathsResource extends BasicIDResource<AttributePathsResour
 		}
 
 		AttributePathsResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with attribute path '" + objectFromJSON.toAttributePath()
-				+ "' = '" + ToStringBuilder.reflectionToString(object) + "'");
+				+ "' ");
+		AttributePathsResource.LOG.trace("= '" + ToStringBuilder.reflectionToString(object) + "'");
 
 		return object;
 	}

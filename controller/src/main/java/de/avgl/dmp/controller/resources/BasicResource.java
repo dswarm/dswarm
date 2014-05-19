@@ -116,8 +116,8 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
 		}
-		BasicResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "' = '"
-				+ ToStringBuilder.reflectionToString(object) + "'");
+		BasicResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "'");
+		BasicResource.LOG.trace(" = '" + ToStringBuilder.reflectionToString(object) + "'");
 
 		final String objectJSON;
 		try {
@@ -129,7 +129,8 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			throw new DMPControllerException("couldn't transform " + pojoClassResourceUtils.getClaszName() + " to JSON string.\n" + e.getMessage());
 		}
 
-		BasicResource.LOG.debug("return " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "' = '" + objectJSON + "'");
+		BasicResource.LOG.debug("return " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "'");
+		BasicResource.LOG.trace(" = '" + objectJSON + "'");
 
 		dmpStatus.stop(context);
 		return buildResponse(objectJSON);
@@ -172,7 +173,8 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			throw new DMPControllerException("couldn't add " + pojoClassResourceUtils.getClaszName());
 		}
 
-		BasicResource.LOG.debug("added new " + pojoClassResourceUtils.getClaszName() + " = '" + ToStringBuilder.reflectionToString(object) + "'");
+		BasicResource.LOG.debug("added new " + pojoClassResourceUtils.getClaszName() + " with id = '" + object.getId() + "' ");
+		BasicResource.LOG.trace(" = '" + ToStringBuilder.reflectionToString(object) + "'");
 
 		final String objectJSON;
 
@@ -195,8 +197,8 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			throw new DMPControllerException("something went wrong, while minting the URL of the new " + pojoClassResourceUtils.getClaszName());
 		}
 
-		BasicResource.LOG.debug("return new " + pojoClassResourceUtils.getClaszName() + " at '" + objectURI.toString() + "' with content '"
-				+ objectJSON + "'");
+		BasicResource.LOG.debug("return new " + pojoClassResourceUtils.getClaszName() + " at '" + objectURI.toString() + "'");
+		BasicResource.LOG.trace("with content '" + objectJSON + "'");
 
 		dmpStatus.stop(context);
 
@@ -274,8 +276,8 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			throw new DMPControllerException("couldn't update " + pojoClassResourceUtils.getClaszName() + " '" + id + "'");
 		}
 
-		BasicResource.LOG.debug("updated " + pojoClassResourceUtils.getClaszName() + " '" + id + "' = '" + ToStringBuilder.reflectionToString(object)
-				+ "'");
+		BasicResource.LOG.debug("updated " + pojoClassResourceUtils.getClaszName() + " '" + id + "'");
+		BasicResource.LOG.trace(" = '" + ToStringBuilder.reflectionToString(object) + "'");
 
 		final String objectJSON;
 
@@ -288,8 +290,8 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			throw new DMPControllerException("couldn't transform " + pojoClassResourceUtils.getClaszName() + " to JSON string.\n" + e.getMessage());
 		}
 
-		BasicResource.LOG.debug("return updated " + pojoClassResourceUtils.getClaszName() + " with id '" + object.getId() + "' = '" + objectJSON
-				+ "'");
+		BasicResource.LOG.debug("return updated " + pojoClassResourceUtils.getClaszName() + " with id '" + object.getId() + "'");
+		BasicResource.LOG.trace(" = '" + objectJSON + "'");
 
 		dmpStatus.stop(context);
 
@@ -357,7 +359,8 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		BasicResource.LOG.debug("got all " + pojoClassResourceUtils.getClaszName() + "s = ' = '" + ToStringBuilder.reflectionToString(objects) + "'");
+		BasicResource.LOG.debug("got all " + pojoClassResourceUtils.getClaszName() + "s ");
+		BasicResource.LOG.trace(" = '" + ToStringBuilder.reflectionToString(objects) + "'");
 
 		final String objectsJSON;
 
@@ -371,7 +374,8 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 					+ e.getMessage());
 		}
 
-		BasicResource.LOG.debug("return all " + pojoClassResourceUtils.getClaszName() + "s '" + objectsJSON + "'");
+		BasicResource.LOG.debug("return all " + pojoClassResourceUtils.getClaszName() + "s ");
+		BasicResource.LOG.trace("'" + objectsJSON + "'");
 
 		dmpStatus.stop(context);
 		return buildResponse(objectsJSON);
@@ -404,8 +408,8 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
 		}
-		BasicResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "' = '"
-				+ ToStringBuilder.reflectionToString(object) + "'");
+		BasicResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "' ");
+		BasicResource.LOG.trace(" = '" + ToStringBuilder.reflectionToString(object) + "'");
 
 		persistenceService.deleteObject(id);
 
@@ -419,7 +423,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			return Response.status(Status.CONFLICT).build();
 		}
 
-		BasicResource.LOG.debug("deletion of " + pojoClassResourceUtils.getClaszName() + " with id '" + id + " was successfull");
+		BasicResource.LOG.debug("deletion of " + pojoClassResourceUtils.getClaszName() + " with id '" + id + " was successful");
 
 		dmpStatus.stop(context);
 		return Response.status(Status.NO_CONTENT).build();
@@ -576,8 +580,8 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			return null;
 		}
 
-		BasicResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "' = '"
-				+ ToStringBuilder.reflectionToString(object) + "'");
+		BasicResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "' ");
+		BasicResource.LOG.trace("= '" + ToStringBuilder.reflectionToString(object) + "'");
 
 		return object;
 
