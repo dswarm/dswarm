@@ -76,8 +76,8 @@ public abstract class AdvancedDMPResource<POJOCLASSRESOURCEUTILS extends Advance
 			return null;
 		}
 
-		AdvancedDMPResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with uri '" + objectFromJSON.getUri() + "' = '"
-				+ ToStringBuilder.reflectionToString(object) + "'");
+		AdvancedDMPResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with uri '" + objectFromJSON.getUri() + "'");
+		AdvancedDMPResource.LOG.trace(" = '" + ToStringBuilder.reflectionToString(object) + "'");
 
 		return object;
 	}

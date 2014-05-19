@@ -615,12 +615,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 	private WebTarget target() {
 
-		WebTarget target = client().target(graphEndpoint);
-
-		if (InternalGDMGraphService.resourceIdentifier != null) {
-
-			target = target.path(InternalGDMGraphService.resourceIdentifier);
-		}
+		WebTarget target = client().target(graphEndpoint).path(InternalGDMGraphService.resourceIdentifier);
 
 		return target;
 	}

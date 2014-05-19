@@ -230,7 +230,8 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 			throw new DMPControllerException("couldn't transform data to JSON string.\n" + e.getMessage());
 		}
 
-		DataModelsResource.LOG.debug("return data for data model with id '" + id + "' and content '" + jsonString + "'");
+		DataModelsResource.LOG.debug("return data for data model with id '" + id + "' ");
+		DataModelsResource.LOG.trace("and content '" + jsonString + "'");
 
 		// dmpStatus.stop(context);
 		return buildResponse(jsonString);

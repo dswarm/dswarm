@@ -239,8 +239,8 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 		if (updateObject != null) {
 
-			BasicJPAService.LOG.debug("updated " + className + " with id '" + updateObject.getId() + "' in the database = '"
-					+ ToStringBuilder.reflectionToString(updateObject) + "' " + transactionType);
+			BasicJPAService.LOG.debug("updated " + className + " with id '" + updateObject.getId() + "' in the database " + transactionType);
+			BasicJPAService.LOG.trace("= '" + ToStringBuilder.reflectionToString(updateObject) + "'");
 		} else {
 
 			BasicJPAService.LOG.debug("couldn't updated " + className + " with id '" + object.getId() + "' in the database " + transactionType);
@@ -312,9 +312,8 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 		if (entity != null) {
 
-			BasicJPAService.LOG.debug("found " + className + " with id '" + id + "' in the database = '" + ToStringBuilder.reflectionToString(entity)
-					+ "'");
-
+			BasicJPAService.LOG.debug("found " + className + " with id '" + id + "' in the database");
+			BasicJPAService.LOG.trace(" = '" + ToStringBuilder.reflectionToString(entity) + "'");
 		} else {
 
 			BasicJPAService.LOG.debug("couldn't find " + className + " with id '" + id + "' in the database");
