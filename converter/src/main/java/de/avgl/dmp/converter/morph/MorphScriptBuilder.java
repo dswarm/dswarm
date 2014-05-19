@@ -349,11 +349,11 @@ public class MorphScriptBuilder {
 			String delimiterString = ", ";
 
 			if (parameters.get("prefix") != null) {
-				valueString = parameters.get("prefix").toString();
+				valueString = parameters.get("prefix");
 			}
 
 			if (parameters.get("delimiter") != null) {
-				delimiterString = parameters.get("delimiter").toString();
+				delimiterString = parameters.get("delimiter");
 			}
 
 			collection = doc.createElement("combine");
@@ -386,7 +386,7 @@ public class MorphScriptBuilder {
 			}
 
 			if (parameters.get("postfix") != null) {
-				valueString += parameters.get("postfix").toString();
+				valueString += parameters.get("postfix");
 			}
 
 			collection.setAttribute("value", valueString);
