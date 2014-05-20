@@ -22,7 +22,7 @@
 		<!-- <h2.version>1.3.173</h2.version> -->
 		<hibernate-core.version>4.1.2.Final</hibernate-core.version>
 		<hibernate-entitymanager.version>4.1.2.Final</hibernate-entitymanager.version>
-		<hibernate-validator.version>5.0.1.Final</hibernate-validator.version>
+		<hibernate-validator.version>5.1.1.Final</hibernate-validator.version>
 		<hibernate-ehcache.version>4.1.2.Final</hibernate-ehcache.version>
 		<ehcache.version>2.7.2</ehcache.version>
 		<hibernate4-maven-plugin.version>1.0.3</hibernate4-maven-plugin.version>
@@ -166,26 +166,6 @@
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-all</artifactId>
 			<version>1.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.jena</groupId>
-			<artifactId>apache-jena-libs</artifactId>
-			<type>pom</type>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>slf4j-log4j12</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>log4j</artifactId>
-					<groupId>log4j</groupId>
-				</exclusion>
-			</exclusions>
-			<version>2.11.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.culturegraph</groupId>

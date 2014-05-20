@@ -16,12 +16,10 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.google.common.io.Resources;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.internal.Model;
 import de.avgl.dmp.persistence.model.internal.gdm.GDMModel;
-import de.avgl.dmp.persistence.model.internal.rdf.RDFModel;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
@@ -32,7 +30,6 @@ import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.service.internal.graph.InternalGDMGraphService;
-import de.avgl.dmp.persistence.service.internal.graph.InternalRDFGraphService;
 import de.avgl.dmp.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
@@ -41,6 +38,7 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
 import de.avgl.dmp.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
 import de.avgl.dmp.persistence.service.schema.test.utils.AttributeServiceTestUtils;
 import de.avgl.dmp.persistence.service.schema.test.utils.ClaszServiceTestUtils;
+import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 
 public class InternalGDMGraphServiceTest extends GuicedTest {
 
@@ -87,15 +85,14 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 
 		final DataModel updatedDataModel = dataModelService.updateObjectTransactional(dataModel).getObject();
 
-		final com.hp.hpl.jena.rdf.model.Model model = ModelFactory.createDefaultModel();
+		final String testResourceString = DMPPersistenceUtil.getResourceAsString("dmpf_bsp1.json");
+		final de.avgl.dmp.graph.json.Model model = de.avgl.dmp.graph.json.util.Util.getJSONObjectMapper().readValue(testResourceString,
+				de.avgl.dmp.graph.json.Model.class);
 
-		final String testResourceUri = Resources.getResource("dmpf_bsp1.n3").toString();
-		model.read(testResourceUri, "N3");
-
-		final RDFModel rdfModel = new RDFModel(model, "http://data.slub-dresden.de/datamodels/22/records/18d68601-0623-42b4-ad89-f8954cc25912",
+		final GDMModel rdfModel = new GDMModel(model, "http://data.slub-dresden.de/datamodels/22/records/18d68601-0623-42b4-ad89-f8954cc25912",
 				"http://www.openarchives.org/OAI/2.0/recordType");
 
-		final InternalRDFGraphService rdfGraphService = GuicedTest.injector.getInstance(InternalRDFGraphService.class);
+		final InternalGDMGraphService rdfGraphService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
 
 		rdfGraphService.createObject(dataModel.getId(), rdfModel);
 		// finished writing RDF statements to graph
