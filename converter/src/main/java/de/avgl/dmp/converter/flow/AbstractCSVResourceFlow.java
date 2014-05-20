@@ -41,8 +41,6 @@ public abstract class AbstractCSVResourceFlow<T> {
 
 	private final int								discardRows;
 
-	private final Optional<String>					dataModelId;
-
 	private final boolean firstRowIsHeaders;
 
 	protected Optional<Integer>						atMost;
@@ -51,14 +49,6 @@ public abstract class AbstractCSVResourceFlow<T> {
 	protected final String							dataResourceSchemaBaseURI;
 
 	public AbstractCSVResourceFlow(final DataModel dataModel) throws DMPConverterException {
-
-		if (dataModel != null && dataModel.getId() != null) {
-
-			this.dataModelId = Optional.of(dataModel.getId().toString());
-		} else {
-
-			this.dataModelId = Optional.absent();
-		}
 
 		if (dataModel == null) {
 
@@ -120,7 +110,6 @@ public abstract class AbstractCSVResourceFlow<T> {
 		this.atMost = Optional.absent();
 		this.firstRowIsHeaders = true;
 
-		this.dataModelId = null;
 		this.dataResourceBaseURI = null;
 		this.dataResourceSchemaBaseURI = null;
 	}
@@ -162,7 +151,6 @@ public abstract class AbstractCSVResourceFlow<T> {
 			throw new DMPConverterException(String.format("Unsupported Encoding - [%s]", e.getCharsetName()));
 		}
 
-		this.dataModelId = Optional.absent();
 		this.dataResourceBaseURI = null;
 		this.dataResourceSchemaBaseURI = null;
 	}
@@ -179,7 +167,6 @@ public abstract class AbstractCSVResourceFlow<T> {
 		this.atMost = Optional.absent();
 		this.firstRowIsHeaders = ConfigurationStatics.DEFAULT_FIRST_ROW_IS_HEADINGS;
 
-		this.dataModelId = null;
 		this.dataResourceBaseURI = null;
 		this.dataResourceSchemaBaseURI = null;
 	}
@@ -289,7 +276,6 @@ public abstract class AbstractCSVResourceFlow<T> {
 		final CsvReader reader = new CsvReader(escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter, ignoreLines, discardRows, atMost);
 
 		reader.setHeader(firstRowIsHeaders);
-		reader.setDataResourceBaseURI(dataResourceBaseURI);
 		reader.setDataResourceSchemaBaseURI(dataResourceSchemaBaseURI);
 
 		final CsvReader pipe = opener.setReceiver(reader);

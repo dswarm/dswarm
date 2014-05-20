@@ -282,7 +282,7 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 		assert !isClosed();
 
 		// write sub resource
-		final Tuple<Node, Predicate> entityTuple = entityStack.pop();
+		entityStack.pop();
 
 		// System.out.println("in end entity with entity stact size: '" + entityStack.size() + "'");
 
@@ -290,15 +290,9 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 		if (!entityStack.isEmpty()) {
 
 			entityNode = entityStack.peek().v1();
-
-			final Tuple<Node, Predicate> parentEntityTuple = entityStack.peek();
-
-			// addStatement(parentEntityTuple.v1(), entityTuple.v2(), entityTuple.v1());
 		} else {
 
 			entityNode = null;
-
-			// addStatement(recordNode, entityTuple.v2(), entityTuple.v1());
 		}
 	}
 

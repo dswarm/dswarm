@@ -113,11 +113,6 @@ public final class CsvDecoder extends DefaultObjectPipe<CSVRecord, StreamReceive
 		hasHeader = hasHeaderArg;
 	}
 
-	public void setDataResourceBaseURI(final String dataResourceBaseURIArg) {
-
-		dataResourceBaseURI = dataResourceBaseURIArg;
-	}
-
 	public void setDataResourceSchemaBaseURI(final String dataResourceSchemaBaseURIArg) {
 
 		dataResourceSchemaBaseURI = dataResourceSchemaBaseURIArg;

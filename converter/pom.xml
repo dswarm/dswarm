@@ -8,7 +8,6 @@
 		<artifactId>dmp</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
-	<groupId>de.avgl.dmp</groupId>
 	<artifactId>converter</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>

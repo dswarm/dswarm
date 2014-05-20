@@ -10,7 +10,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -39,6 +39,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
@@ -266,9 +267,7 @@ public class MorphScriptBuilder {
 
 		final Map<String, List<String>> inputAttributePaths = Maps.newLinkedHashMap();
 
-		for (final Iterator<MappingAttributePathInstance> iterator = inputAttributePathInstances.iterator(); iterator.hasNext();) {
-
-			final MappingAttributePathInstance mappingAttributePathInstance = iterator.next();
+		for (final MappingAttributePathInstance mappingAttributePathInstance : inputAttributePathInstances) {
 
 			final String inputAttributePathString = mappingAttributePathInstance.getAttributePath().toAttributePath();
 
@@ -278,15 +277,15 @@ public class MorphScriptBuilder {
 
 			final String filterExpressionStringUnescaped = getFilterExpression(mappingAttributePathInstance);
 
-			final List<Element> inputAttributePathsToVars = addInputAttributePathVars(variablesFromInputAttributePaths, inputAttributePathString,
-					rules, inputAttributePaths, filterExpressionStringUnescaped, ordinal);
+			addInputAttributePathVars(variablesFromInputAttributePaths, inputAttributePathString, rules, inputAttributePaths,
+					filterExpressionStringUnescaped, ordinal);
 		}
 
 		final String outputAttributePath = mapping.getOutputAttributePath().getAttributePath().toAttributePath();
 
 		final List<String> variablesFromOutputAttributePath = getParameterMappingKeys(outputAttributePath, transformationComponent);
 
-		final Element dataOutput = addOutputAttributePathMapping(variablesFromOutputAttributePath, outputAttributePath, rules);
+		addOutputAttributePathMapping(variablesFromOutputAttributePath, outputAttributePath, rules);
 
 		processTransformationComponentFunction(transformationComponent, mapping, inputAttributePaths, rules);
 	}
@@ -433,15 +432,13 @@ public class MorphScriptBuilder {
 		return parameterMappingKeys;
 	}
 
-	private List<Element> addInputAttributePathVars(final List<String> variables, final String inputAttributePathString, final Element rules,
+	private void addInputAttributePathVars(final List<String> variables, final String inputAttributePathString, final Element rules,
 			final Map<String, List<String>> inputAttributePaths, final String filterExpressionString, final Integer ordinal) {
 
 		if (variables == null || variables.isEmpty()) {
 
-			return null;
+			return;
 		}
-
-		List<Element> vars = null;
 
 		final String inputAttributePathStringXMLEscaped = StringEscapeUtils.escapeXml(inputAttributePathString);
 
@@ -474,25 +471,18 @@ public class MorphScriptBuilder {
 				rules.appendChild(data);
 			} else {
 
-				addFilter(filterExpressionString, inputAttributePathStringXMLEscaped, manipulatedVariable, filterExpressionMap, rules);
-			}
-
-			if (vars == null) {
-
-				vars = Lists.newArrayList();
+				addFilter(inputAttributePathStringXMLEscaped, manipulatedVariable, filterExpressionMap, rules);
 			}
 
 			inputAttributePaths.put(inputAttributePathStringXMLEscaped, variables);
 		}
-
-		return vars;
 	}
 
-	private Element addOutputAttributePathMapping(final List<String> variables, final String outputAttributePathString, final Element rules) {
+	private void addOutputAttributePathMapping(final List<String> variables, final String outputAttributePathString, final Element rules) {
 
 		if (variables == null || variables.isEmpty()) {
 
-			return null;
+			return;
 		}
 
 		// .ESCAPE_XML11.with(NumericEntityEscaper.between(0x7f, Integer.MAX_VALUE)).translate( <- also doesn't work
@@ -514,8 +504,6 @@ public class MorphScriptBuilder {
 			dataOutput.setAttribute("name", outputAttributePathStringXMLEscaped);
 			rules.appendChild(dataOutput);
 		}
-
-		return null;
 	}
 
 	private void mapInputAttributePathToOutputAttributePath(final Mapping mapping, final Element rules) {
@@ -555,7 +543,7 @@ public class MorphScriptBuilder {
 
 		if (filterExpressionMap != null && !filterExpressionMap.isEmpty()) {
 
-			addFilter(filterExpression, inputAttributePathStringXMLEscaped, var1000, filterExpressionMap, rules);
+			addFilter(inputAttributePathStringXMLEscaped, var1000, filterExpressionMap, rules);
 			takeVariable = true;
 		}
 
@@ -665,12 +653,9 @@ public class MorphScriptBuilder {
 		}
 
 		// this is a list of input variable names related to current component, which should be unique and ordered
-		final Set<String> sourceAttributes = new LinkedHashSet<String>();
+		final Set<String> sourceAttributes = new LinkedHashSet<>();
 
-		for (final String inputString : inputStrings) {
-
-			sourceAttributes.add(inputString);
-		}
+		Collections.addAll(sourceAttributes, inputStrings);
 
 		// if no inputString is set, take input component name
 		if (sourceAttributes.isEmpty() && component.getInputComponents() != null && !component.getInputComponents().isEmpty()) {
@@ -706,7 +691,7 @@ public class MorphScriptBuilder {
 			// TODO: [@tgaengler] multiple identified input variables doesn't really mean that the component refers to a
 			// collection, or?
 
-			String collectionNameAttribute = null;
+			final String collectionNameAttribute;
 
 			if (component.getOutputComponents() == null || component.getOutputComponents().isEmpty()) {
 
@@ -725,7 +710,7 @@ public class MorphScriptBuilder {
 			return;
 		}
 
-		String dataNameAttribute = null;
+		final String dataNameAttribute;
 
 		if (component.getOutputComponents() == null || component.getOutputComponents().isEmpty()) {
 
@@ -815,22 +800,14 @@ public class MorphScriptBuilder {
 
 	private boolean checkOrdinal(final Integer ordinal) {
 
-		if (ordinal != null && ordinal > 0) {
+		return ordinal != null && ordinal > 0;
 
-			return true;
-		}
-
-		return false;
 	}
 
 	private boolean checkComponentName(final String componentName) {
 
-		if (componentName != null && !componentName.isEmpty()) {
+		return componentName != null && !componentName.isEmpty();
 
-			return true;
-		}
-
-		return false;
 	}
 
 	private String addOrdinalFilter(final Integer ordinal, final String variable, final Element rules) {
@@ -854,7 +831,7 @@ public class MorphScriptBuilder {
 		return manipulatedVariable;
 	}
 
-	private void addFilter(final String filterExpressionString, final String inputAttributePathStringXMLEscaped, final String variable,
+	private void addFilter(final String inputAttributePathStringXMLEscaped, final String variable,
 			final Map<String, String> filterExpressionMap, final Element rules) {
 
 		final Element combineAsFilter = doc.createElement("combine");
@@ -895,7 +872,9 @@ public class MorphScriptBuilder {
 
 			try {
 
-				filterExpressionMap = objectMapper.readValue(filterExpressionString, HashMap.class);
+				filterExpressionMap = objectMapper.readValue(filterExpressionString, new TypeReference<Map<String, String>>() {
+
+				});
 			} catch (final IOException e) {
 
 				MorphScriptBuilder.LOG.debug("something went wrong while deserializing filter expression" + e);
