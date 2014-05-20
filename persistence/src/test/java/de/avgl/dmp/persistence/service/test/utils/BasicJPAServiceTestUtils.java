@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.hibernate.service.jdbc.connections.internal.C3P0ConnectionProvider;
 import org.junit.Assert;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -66,7 +67,7 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 
 			final JsonNode responseObjectJSON = responseObjectsJSONIter.next();
 
-			final POJOCLASS responseObject = objectMapper.readValue(((ObjectNode) responseObjectJSON).toString(), pojoClass);
+			final POJOCLASS responseObject = objectMapper.readValue(responseObjectJSON.toString(), pojoClass);
 
 			responseObjects.put(responseObject.getId(), responseObject);
 		}

@@ -20,7 +20,7 @@ public class AttributePathHelperHelper {
 	public static AttributePathHelper addAttributePath(final JsonNode unnormalizedSchema, final Set<AttributePathHelper> attributePaths,
 			final AttributePathHelper attributePath) {
 
-		final String attribute = ((TextNode) unnormalizedSchema).asText();
+		final String attribute = unnormalizedSchema.asText();
 
 		return AttributePathHelperHelper.addAttributePath(attribute, attributePaths, attributePath);
 	}
