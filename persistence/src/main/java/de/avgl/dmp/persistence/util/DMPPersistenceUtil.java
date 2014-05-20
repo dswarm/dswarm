@@ -249,10 +249,8 @@ public final class DMPPersistenceUtil {
 
 	public static long generateRandomDummyId() {
 
-		final long randomValue = DMPPersistenceUtil.LOWER_RANGE
+		return DMPPersistenceUtil.LOWER_RANGE
 				+ (long) (DMPPersistenceUtil.random.nextDouble() * (DMPPersistenceUtil.UPPER_RANGE - DMPPersistenceUtil.LOWER_RANGE));
-
-		return randomValue;
 	}
 
 }

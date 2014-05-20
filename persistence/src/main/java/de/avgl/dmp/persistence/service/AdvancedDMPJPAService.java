@@ -89,8 +89,6 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 			AdvancedDMPJPAService.LOG.debug(className + " with uri '" + uri
 					+ "' exists already in the database, will return the existing object, instead creating a new one");
 
-			newObject = existingObject;
-
 			return createNewProxyObject(existingObject, RetrievalType.RETRIEVED);
 		}
 	}
