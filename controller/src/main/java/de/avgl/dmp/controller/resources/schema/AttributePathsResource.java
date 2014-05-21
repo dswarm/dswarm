@@ -202,7 +202,7 @@ public class AttributePathsResource extends BasicIDResource<AttributePathsResour
 
 					// note: one could even collect all attribute ids and replace them by their actual ones
 
-					if (attribute.getId().longValue() < 0) {
+					if (attribute.getId() < 0) {
 
 						attributeURIsFromDummyIdsFromObjectFromJSON.add(attribute.getUri());
 					}

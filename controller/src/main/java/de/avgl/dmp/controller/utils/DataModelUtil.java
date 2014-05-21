@@ -147,7 +147,7 @@ public class DataModelUtil {
 			return Optional.absent();
 		}
 
-		String schemaJSONString = null;;
+		String schemaJSONString = null;
 		try {
 
 			schemaJSONString = objectMapper.writeValueAsString(schemaOptional.get());
