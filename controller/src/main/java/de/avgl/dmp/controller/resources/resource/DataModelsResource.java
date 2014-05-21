@@ -3,6 +3,7 @@ package de.avgl.dmp.controller.resources.resource;
 import java.util.Iterator;
 
 import javax.inject.Inject;
+import javax.swing.text.html.parser.Entity;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
