@@ -172,6 +172,7 @@ public class AttributePath extends DMPJPAObject {
 	 * 
 	 * @param attributesArg a new attribute path (ordered list of attributes)
 	 */
+	@XmlElement(name = "attributes")
 	public void setAttributePath(final LinkedList<Attribute> attributesArg) {
 
 		if (attributesArg == null && orderedAttributes != null) {

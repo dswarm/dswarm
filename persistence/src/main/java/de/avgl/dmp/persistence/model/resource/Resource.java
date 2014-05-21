@@ -133,6 +133,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 	 * 
 	 * @param attributes new attributes
 	 */
+	@XmlElement(name = "resource_attributes")
 	public void setAttributes(final ObjectNode attributes) {
 
 		this.attributes = attributes;
