@@ -39,7 +39,7 @@ public class MorphScriptBuilderTest extends GuicedTest {
 
 		// TODO: do proper result comparison to make this a real test
 
-		System.out.println(morphScriptString);
+		// System.out.println(morphScriptString);
 	}
 
 }
