@@ -31,7 +31,7 @@
 		<maven-clean-plugin.version>2.5</maven-clean-plugin.version>
 		<maven-install-plugin.version>2.5.1</maven-install-plugin.version>
 		<maven-surefire-plugin.version>2.17</maven-surefire-plugin.version>
-		<maven-checkstyle-plugin.version>2.12.1</maven-checkstyle-plugin.version>
+		<maven-checkstyle-plugin.version>2.11</maven-checkstyle-plugin.version>
 		<maven-version-plugin.version>2.1</maven-version-plugin.version>
 		<maven-pmd-plugin.version>3.1</maven-pmd-plugin.version>
 		<maven-resources-plugin.version>2.6</maven-resources-plugin.version>
