@@ -84,12 +84,8 @@ public class DMPObjectUtils<POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCL
 
 		final boolean equalsResult = existingObject.equals(newObject);
 
-		if (!equalsResult) {
+		return equalsResult && existingObject.completeEquals(newObject);
 
-			return false;
-		}
-
-		return existingObject.completeEquals(newObject);
 	}
 
 }

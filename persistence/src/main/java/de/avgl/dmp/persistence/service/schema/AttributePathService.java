@@ -94,8 +94,6 @@ public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, 
 			return new ProxyAttributePath(newObject);
 		} else {
 
-			newObject = existingObject;
-
 			AttributePathService.LOG.debug("attribute path with path '" + object.toAttributePath()
 					+ "' exists already in the database. Will return the existing object, instead of creating a new one");
 

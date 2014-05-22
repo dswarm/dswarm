@@ -171,7 +171,7 @@ public class Mapping extends BasicDMPJPAObject {
 	 * 
 	 * @param inputAttributePath an existing input attribute path that should be removed
 	 */
-	public void removeInputAttributePath(final AttributePath inputAttributePath) {
+	public void removeInputAttributePath(final MappingAttributePathInstance inputAttributePath) {
 
 		if (inputAttributePaths != null && inputAttributePath != null && inputAttributePaths.contains(inputAttributePath)) {
 

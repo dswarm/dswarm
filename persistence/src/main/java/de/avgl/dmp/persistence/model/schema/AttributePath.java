@@ -500,7 +500,7 @@ public class AttributePath extends DMPJPAObject {
 
 					for (final JsonNode attributeIdNode : orderedAttributesJSON) {
 
-						final Attribute attribute = getAttribute(Long.valueOf(attributeIdNode.asLong()));
+						final Attribute attribute = getAttribute(attributeIdNode.asLong());
 
 						if (null != attribute) {
 

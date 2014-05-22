@@ -1,6 +1,5 @@
 package de.avgl.dmp.persistence.model.schema;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -57,8 +56,8 @@ public class NameSpacePrefixRegistry {
 
 		final Set<Entry<String, String>> entrySet = prefixes.entrySet();
 
-		for (final Iterator<Entry<String, String>> iterator = entrySet.iterator(); iterator.hasNext();) {
-			final Entry<String, String> entry = iterator.next();
+		for (final Entry<String, String> entry : entrySet) {
+
 			s += entry.getKey() + " : " + entry.getValue();
 		}
 
