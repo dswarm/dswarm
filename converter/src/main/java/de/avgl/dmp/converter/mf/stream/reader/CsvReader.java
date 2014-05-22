@@ -108,13 +108,6 @@ public final class CsvReader implements Reader<CSVRecord> {
 		return this;
 	}
 
-	public CsvReader setDataResourceBaseURI(final String dataResourceBaseURI) {
-
-		decoder.setDataResourceBaseURI(dataResourceBaseURI);
-
-		return this;
-	}
-
 	public CsvReader setDataResourceSchemaBaseURI(final String dataResourceSchemaBaseURI) {
 
 		decoder.setDataResourceSchemaBaseURI(dataResourceSchemaBaseURI);

@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import javax.annotation.Nullable;
 
+import de.avgl.dmp.persistence.util.GDMUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultStreamPipe;
@@ -20,7 +21,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
-import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.avgl.dmp.graph.json.LiteralNode;
 import de.avgl.dmp.graph.json.Model;
@@ -165,7 +165,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 				// TODO: this is only a HOTFIX for creating resources from resource type uris
 
-				if (!RDF.type.getURI().equals(propertyUri)) {
+				if (!GDMUtil.RDF_type.equals(propertyUri)) {
 
 					//recordResource.addProperty(attributeProperty, value);
 					recordResource.addStatement(recordNode, attributeProperty, literalObject);

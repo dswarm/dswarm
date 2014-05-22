@@ -10,7 +10,6 @@ import org.hamcrest.Matchers;
 import ch.lambdaj.Lambda;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.collect.Lists;
 
 import de.avgl.dmp.init.util.DMPStatics;
@@ -20,7 +19,7 @@ public class AttributePathHelperHelper {
 	public static AttributePathHelper addAttributePath(final JsonNode unnormalizedSchema, final Set<AttributePathHelper> attributePaths,
 			final AttributePathHelper attributePath) {
 
-		final String attribute = ((TextNode) unnormalizedSchema).asText();
+		final String attribute = unnormalizedSchema.asText();
 
 		return AttributePathHelperHelper.addAttributePath(attribute, attributePaths, attributePath);
 	}
@@ -98,9 +97,7 @@ public class AttributePathHelperHelper {
 		}
 
 		// sort
-		final List<AttributePathHelper> orderedAttributePaths = Lambda.sort(filteredAttributePaths, Lambda.on(AttributePathHelper.class).length());
-
-		return orderedAttributePaths;
+		return Lambda.sort(filteredAttributePaths, Lambda.on(AttributePathHelper.class).length());
 	}
 
 	public static List<AttributePathHelper> getNextAttributePathHelpersForLevelRootAttributePath(final List<AttributePathHelper> attributePaths,
@@ -116,21 +113,13 @@ public class AttributePathHelperHelper {
 		}
 
 		// only level attribute paths for next level
-		final List<AttributePathHelper> nextlevelAttributePaths = AttributePathHelperHelper.prepareAttributePathHelpers(levelRootAttributePaths,
-				level + 1);
-
-		return nextlevelAttributePaths;
+		return AttributePathHelperHelper.prepareAttributePathHelpers(levelRootAttributePaths, level + 1);
 	}
 
 	public static boolean hasNextLevel(final List<AttributePathHelper> attributePaths, final int level) {
 
 		final List<AttributePathHelper> nextLevelAttributePaths = AttributePathHelperHelper.prepareAttributePathHelpers(attributePaths, level + 1);
 
-		if (nextLevelAttributePaths != null && !nextLevelAttributePaths.isEmpty()) {
-
-			return true;
-		}
-
-		return false;
+		return nextLevelAttributePaths != null && !nextLevelAttributePaths.isEmpty();
 	}
 }

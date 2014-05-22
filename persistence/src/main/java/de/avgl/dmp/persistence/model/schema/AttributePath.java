@@ -172,6 +172,7 @@ public class AttributePath extends DMPJPAObject {
 	 * 
 	 * @param attributesArg a new attribute path (ordered list of attributes)
 	 */
+	@XmlElement(name = "attributes")
 	public void setAttributePath(final LinkedList<Attribute> attributesArg) {
 
 		if (attributesArg == null && orderedAttributes != null) {
@@ -500,7 +501,7 @@ public class AttributePath extends DMPJPAObject {
 
 					for (final JsonNode attributeIdNode : orderedAttributesJSON) {
 
-						final Attribute attribute = getAttribute(Long.valueOf(attributeIdNode.asLong()));
+						final Attribute attribute = getAttribute(attributeIdNode.asLong());
 
 						if (null != attribute) {
 

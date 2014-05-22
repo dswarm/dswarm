@@ -47,7 +47,7 @@ public abstract class BasicIDResourceUtils<POJOCLASSPERSISTENCESERVICE extends B
 	}
 
 	@Override
-	protected void checkObjectId(final JsonNode idNode, final ObjectNode objectJSON) {
+	protected void checkObjectId(final JsonNode idNode) {
 
 		if (idNode.canConvertToLong()) {
 
@@ -55,7 +55,7 @@ public abstract class BasicIDResourceUtils<POJOCLASSPERSISTENCESERVICE extends B
 
 			if (longId < 0) {
 
-				addDummyIdCandidate(Long.valueOf(longId));
+				addDummyIdCandidate(longId);
 			}
 		}
 	}

@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import de.avgl.dmp.persistence.util.GDMUtil;
 import org.culturegraph.mf.exceptions.MorphDefException;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
@@ -27,7 +28,6 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.google.inject.Provider;
-import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.DMPMorphDefException;
@@ -62,15 +62,15 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
  */
 public class TransformationFlow {
 
-	private static final org.apache.log4j.Logger		LOG						= org.apache.log4j.Logger.getLogger(TransformationFlow.class);
+	private static final org.apache.log4j.Logger		LOG	= org.apache.log4j.Logger.getLogger(TransformationFlow.class);
 
-	private final Metamorph transformer;
+	private final Metamorph								transformer;
 
-	private final String script;
+	private final String								script;
 
-	private final Optional<DataModel> outputDataModel;
+	private final Optional<DataModel>					outputDataModel;
 
-	private final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider;
+	private final Provider<InternalModelServiceFactory>	internalModelServiceFactoryProvider;
 
 	public TransformationFlow(final Metamorph transformer, final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
 
@@ -122,18 +122,18 @@ public class TransformationFlow {
 			});
 		} catch (final JsonParseException e) {
 
-			// TODO: log something
+			TransformationFlow.LOG.debug("couldn't parse the transformation result tuples to a JSON string");
 		} catch (final JsonMappingException e) {
 
-			// TODO: log something
+			TransformationFlow.LOG.debug("couldn't map the transformation result tuples to a JSON string");
 		} catch (final IOException e) {
 
-			// TODO: log something
+			TransformationFlow.LOG.debug("something went wrong while processing the transformation result tuples to a JSON string");
 		}
 
 		if (tuplesList == null) {
 
-			// TODO: log something
+			TransformationFlow.LOG.debug("couldn't process the transformation result tuples to a JSON string");
 
 			return null;
 		}
@@ -201,11 +201,10 @@ public class TransformationFlow {
 				continue;
 			}
 
-			
-			for (final de.avgl.dmp.graph.json.Resource jsonResource : gdmModel.getModel().getResources()){
-			    model.addResource(jsonResource);
-			    
-			   }
+			for (final de.avgl.dmp.graph.json.Resource jsonResource : gdmModel.getModel().getResources()) {
+				model.addResource(jsonResource);
+
+			}
 
 			if (recordClassUri == null) {
 
@@ -221,7 +220,8 @@ public class TransformationFlow {
 				if (recordResource != null) {
 
 					// TODO check this: subject OK?
-					recordResource.addStatement(new ResourceNode(recordResource.getUri()), new Predicate(RDF.type.getURI()), new ResourceNode("http://purl.org/ontology/bibo/Document"));
+					recordResource.addStatement(new ResourceNode(recordResource.getUri()), new Predicate(GDMUtil.RDF_type), new ResourceNode(
+							"http://purl.org/ontology/bibo/Document"));
 				}
 			}
 

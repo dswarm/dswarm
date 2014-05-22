@@ -14,7 +14,6 @@ import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
-import com.google.inject.Injector;
 
 import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.persistence.model.job.utils.ComponentUtils;
@@ -250,10 +249,8 @@ public final class DMPPersistenceUtil {
 
 	public static long generateRandomDummyId() {
 
-		final long randomValue = DMPPersistenceUtil.LOWER_RANGE
+		return DMPPersistenceUtil.LOWER_RANGE
 				+ (long) (DMPPersistenceUtil.random.nextDouble() * (DMPPersistenceUtil.UPPER_RANGE - DMPPersistenceUtil.LOWER_RANGE));
-
-		return randomValue;
 	}
 
 }

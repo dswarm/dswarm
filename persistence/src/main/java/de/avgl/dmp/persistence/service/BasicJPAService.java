@@ -138,9 +138,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 		persistObject(object, entityManager);
 
-		final PROXYPOJOCLASS proxyObject = createNewProxyObject(object);
-
-		return proxyObject;
+		return createNewProxyObject(object);
 	}
 
 	/**

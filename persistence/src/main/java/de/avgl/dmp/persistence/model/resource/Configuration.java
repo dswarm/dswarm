@@ -14,6 +14,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -87,6 +88,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	 * 
 	 * @return the configuration parameters
 	 */
+	@XmlElement(name = "parameters")
 	public ObjectNode getParameters() {
 
 		initParameters(false);
@@ -99,6 +101,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	 * 
 	 * @param parameters new configuration parameters
 	 */
+	@XmlElement(name = "parameters")
 	public void setParameters(final ObjectNode parameters) {
 
 		this.parameters = parameters;

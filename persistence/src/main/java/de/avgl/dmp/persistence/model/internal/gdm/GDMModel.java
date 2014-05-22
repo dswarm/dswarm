@@ -193,9 +193,7 @@ public class GDMModel implements Model {
 			return null;
 		}
 
-		final JsonNode schema = determineSchema(attributePaths);
-
-		return schema;
+		return determineSchema(attributePaths);
 	}
 
 	@Override
@@ -476,9 +474,7 @@ public class GDMModel implements Model {
 
 			final SchemaHelper schemaHelper = schemaHelpers.values().iterator().next();
 
-			final JsonNode result = schemaHelper.build(DMPPersistenceUtil.getJSONObjectMapper().createObjectNode());
-
-			return result;
+			return schemaHelper.build(DMPPersistenceUtil.getJSONObjectMapper().createObjectNode());
 		}
 
 		return json;

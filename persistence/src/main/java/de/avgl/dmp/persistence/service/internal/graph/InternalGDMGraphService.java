@@ -59,7 +59,7 @@ import de.avgl.dmp.persistence.util.GDMUtil;
 /**
  * A internal model service implementation for RDF triples.<br/>
  * Currently, the Neo4j database is utilised.
- *
+ * 
  * @author tgaengler
  */
 @Singleton
@@ -99,7 +99,7 @@ public class InternalGDMGraphService implements InternalModelService {
 	/**
 	 * /** Creates a new internal triple service with the given data model persistence service, schema persistence service, class
 	 * persistence service and the endpoint to access the graph database.
-	 *
+	 * 
 	 * @param dataModelService the data model persistence service
 	 * @param schemaService the schema persistence service
 	 * @param classService the class persistence service
@@ -345,7 +345,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 	/**
 	 * Adds the record class to the schema of the data model.
-	 *
+	 * 
 	 * @param dataModelId the identifier of the data model
 	 * @param recordClassUri the identifier of the record class
 	 * @throws DMPPersistenceException
@@ -366,8 +366,6 @@ public class InternalGDMGraphService implements InternalModelService {
 
 				return dataModel;
 			}
-
-			recordClass = schema.getRecordClass();
 		} else {
 
 			// create new class
@@ -487,10 +485,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final Schema schema;
 
-		if (dataModel.getSchema() != null) {
-
-			schema = dataModel.getSchema();
-		} else {
+		if (dataModel.getSchema() == null) {
 
 			// create new schema
 			final ProxySchema proxySchema = schemaService.get().createObjectTransactional();
@@ -615,9 +610,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 	private WebTarget target() {
 
-		WebTarget target = client().target(graphEndpoint).path(InternalGDMGraphService.resourceIdentifier);
-
-		return target;
+		return client().target(graphEndpoint).path(InternalGDMGraphService.resourceIdentifier);
 	}
 
 	private WebTarget target(final String... path) {

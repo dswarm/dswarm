@@ -315,17 +315,8 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 
 	public boolean hasObjectAlreadyBeenProcessed(final POJOCLASSIDTYPE objectId) {
 
-		if (processedObjectIds == null) {
+		return processedObjectIds != null && processedObjectIds.contains(objectId);
 
-			return false;
-		}
-
-		if (!processedObjectIds.contains(objectId)) {
-
-			return false;
-		}
-
-		return true;
 	}
 
 	protected abstract ObjectNode replaceDummyId(final JsonNode idNode, final POJOCLASSIDTYPE dummyId, final POJOCLASSIDTYPE realId,
@@ -333,27 +324,14 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 
 	protected boolean areDummyIdCandidatesEmpty(final Set<POJOCLASSIDTYPE> dummyIdCandidates) {
 
-		if (dummyIdCandidates == null || dummyIdCandidates.isEmpty()) {
+		return dummyIdCandidates == null || dummyIdCandidates.isEmpty();
 
-			return true;
-		}
-
-		return false;
 	}
 
 	protected boolean checkObject(final POJOCLASS object, final Set<POJOCLASSIDTYPE> dummyIdCandidates) {
 
-		if (hasObjectAlreadyBeenProcessed(object.getId())) {
+		return hasObjectAlreadyBeenProcessed(object.getId()) || areDummyIdCandidatesEmpty(dummyIdCandidates);
 
-			return true;
-		}
-
-		if (areDummyIdCandidatesEmpty(dummyIdCandidates)) {
-
-			return true;
-		}
-
-		return false;
 	}
 
 	protected JsonNode createNewObjectForDummyId(final POJOCLASS object, final JsonNode jsonNode, final Set<POJOCLASSIDTYPE> dummyIdCandidates)
@@ -403,7 +381,7 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 		return jsonNode;
 	}
 
-	protected abstract void checkObjectId(final JsonNode idNode, final ObjectNode objectJSON);
+	protected abstract void checkObjectId(final JsonNode idNode);
 
 	protected abstract ObjectNode addDummyId(final ObjectNode objectJSON);
 
@@ -420,7 +398,7 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 
 			// check id and add it to the dummy id candidates, if it is a dummy id
 
-			checkObjectId(idNode, objectJSON);
+			checkObjectId(idNode);
 		}
 
 		final Iterator<Entry<String, JsonNode>> iter = objectJSON.fields();

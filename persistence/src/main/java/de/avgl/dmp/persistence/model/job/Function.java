@@ -154,6 +154,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	 * 
 	 * @param parametersArg new parameters of the function
 	 */
+	@XmlElement(name = "parameters")
 	public void setParameters(final LinkedList<String> parametersArg) {
 
 		if (parametersArg == null && parameters != null) {

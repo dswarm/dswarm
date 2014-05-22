@@ -8,7 +8,6 @@
 		<artifactId>dmp</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
-	<groupId>de.avgl.dmp</groupId>
 	<artifactId>controller</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
@@ -16,10 +15,10 @@
 	<url>http://avantgarde-labs.de</url>
 
 	<properties>
-		<jersey.version>2.4</jersey.version>
-		<h2k.version>2.3.0-b01</h2k.version>
-		<jetty.version>9.1.0.v20131115</jetty.version>
-		<maven.tomcat.version>2.2</maven.tomcat.version>
+		<h2k.version>2.3.0-b05</h2k.version>
+		<jetty-maven-plugin.version>9.2.0.RC0</jetty-maven-plugin.version>
+		<maven-tomcat-plugin.version>2.2</maven-tomcat-plugin.version>
+		<grizzly-http-servlet.version>2.3.8</grizzly-http-servlet.version>
 	</properties>
 
 	<build>
@@ -53,7 +52,7 @@
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-				<version>${jetty.version}</version>
+				<version>${jetty-maven-plugin.version}</version>
 				<configuration>
 					<httpConnector>
 						<port>8086</port>
@@ -66,7 +65,7 @@
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
-				<version>${maven.tomcat.version}</version>
+				<version>${maven-tomcat-plugin.version}</version>
 				<configuration>
 					<port>8087</port>
 					<path>/dmp</path>
@@ -143,7 +142,23 @@
 		<!-- Jersey dependencies -->
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-servlet-core</artifactId>
+			<version>${jersey.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>guava</artifactId>
+					<groupId>com.google.guava</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>hk2-api</artifactId>
+					<groupId>org.glassfish.hk2</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-grizzly2-http</artifactId>
+			<version>${jersey.version}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>guava</artifactId>
@@ -158,11 +173,12 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-servlet</artifactId>
+			<version>${jersey.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.grizzly</groupId>
 			<artifactId>grizzly-http-servlet</artifactId>
-			<version>2.3.3</version>
+			<version>${grizzly-http-servlet.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -178,6 +194,7 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-multipart</artifactId>
+			<version>${jersey.version}</version>
 		</dependency>
 
 		<!-- swagger for API docu -->
@@ -190,10 +207,6 @@
 				<exclusion>
 					<groupId>org.slf4j</groupId>
 					<artifactId>slf4j-simple</artifactId>
-				</exclusion>
-				<exclusion>
-					<artifactId>jackson-jaxrs-json-provider</artifactId>
-					<groupId>com.fasterxml.jackson.jaxrs</groupId>
 				</exclusion>
 				<exclusion>
 					<artifactId>jackson-jaxrs-json-provider</artifactId>
@@ -243,6 +256,14 @@
 					<artifactId>guava</artifactId>
 					<groupId>com.google.guava</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>jersey-media-multipart</artifactId>
+					<groupId>org.glassfish.jersey.media</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jersey-container-servlet-core</artifactId>
+					<groupId>org.glassfish.jersey.containers</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
@@ -279,13 +300,6 @@
 			</exclusions>
 		</dependency>
 
-		<!-- XSD parser XSOM -->
-		<dependency>
-			<groupId>com.sun.xsom</groupId>
-			<artifactId>xsom</artifactId>
-			<version>20110809</version>
-		</dependency>
-
 		<dependency>
 			<groupId>de.avgl.dmp</groupId>
 			<artifactId>graph</artifactId>
@@ -296,21 +310,34 @@
 					<artifactId>apache-jena-libs</artifactId>
 					<groupId>org.apache.jena</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>jersey-multipart</artifactId>
+					<groupId>com.sun.jersey.contribs</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.jena</groupId>
+			<artifactId>apache-jena-libs</artifactId>
+			<type>pom</type>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-log4j12</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
+			<version>2.11.1</version>
+		</dependency>
 	</dependencies>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.glassfish.jersey</groupId>
-				<artifactId>jersey-bom</artifactId>
-				<version>${jersey.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 
 	<profiles>
 		<profile>
