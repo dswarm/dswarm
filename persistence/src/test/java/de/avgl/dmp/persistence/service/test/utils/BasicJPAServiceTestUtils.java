@@ -5,13 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.hibernate.service.jdbc.connections.internal.C3P0ConnectionProvider;
 import org.junit.Assert;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Maps;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
