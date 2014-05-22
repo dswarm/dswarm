@@ -14,7 +14,6 @@ import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
-import com.google.inject.Injector;
 
 import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.persistence.model.job.utils.ComponentUtils;
