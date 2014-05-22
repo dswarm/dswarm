@@ -1,9 +1,7 @@
 package de.avgl.dmp.converter.flow;
 
 import java.io.Reader;
-import java.util.LinkedList;
 
-import com.google.common.collect.Lists;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.stream.converter.StreamToTriples;
