@@ -89,6 +89,7 @@ public class EmbeddedServer {
 		EmbeddedServer.LOG.info("Starting backend web server (grizzly)");
 
 		final HttpServer server = GrizzlyHttpServerFactory.createHttpServer(getBaseUri(), false);
+		server.getListener("grizzly").setDefaultErrorPageGenerator(new DMPErrorPageGenerator());
 		server.getListener("grizzly").setMaxFormPostSize(Integer.MAX_VALUE);
 
 		final WebappContext context = new WebappContext("DMP 2000 Backend", getContextPath());

@@ -66,7 +66,7 @@ public class AttributePathsResourceUtils extends BasicIDResourceUtils<AttributeP
 					continue;
 				}
 
-				if (dummyIdCandidates.contains(object.getId()) || (object.getId() != null && object.getId().longValue() < 0)) {
+				if (dummyIdCandidates.contains(object.getId()) || (object.getId() != null && object.getId() < 0)) {
 
 					final AttributesResourceUtils attributesResourceUtils = utilsFactory.get(AttributesResourceUtils.class);
 

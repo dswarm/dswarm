@@ -56,15 +56,15 @@
 		<maxallowedviolations>7000</maxallowedviolations>
 		<google.guava.version>17.0</google.guava.version>
 		<google.collections.version>1.0</google.collections.version>
-		<jackson.version>2.3.2</jackson.version>
+		<jackson.version>2.3.3</jackson.version>
 		<apache.commons.version>3.3.2</apache.commons.version>
 		<commons-io.version>2.4</commons-io.version>
 		<guice.version>3.0</guice.version>
 		<metrics.version>3.0.2</metrics.version>
 		<metafacture-core.version>2.0.0</metafacture-core.version>
-		<swagger.version>1.3.2</swagger.version>
+		<swagger.version>1.3.5</swagger.version>
 		<javaee.version>7.0</javaee.version>
-		<jersey.version>2.4</jersey.version>
+		<jersey.version>2.8</jersey.version>
 	</properties>
 
 	<repositories>

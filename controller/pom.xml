@@ -8,7 +8,6 @@
 		<artifactId>dmp</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
-	<groupId>de.avgl.dmp</groupId>
 	<artifactId>controller</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
@@ -19,7 +18,7 @@
 		<h2k.version>2.3.0-b05</h2k.version>
 		<jetty-maven-plugin.version>9.2.0.RC0</jetty-maven-plugin.version>
 		<maven-tomcat-plugin.version>2.2</maven-tomcat-plugin.version>
-		<grizzly-http-servlet.version>2.3.3</grizzly-http-servlet.version>
+		<grizzly-http-servlet.version>2.3.8</grizzly-http-servlet.version>
 	</properties>
 
 	<build>
@@ -214,10 +213,6 @@
 					<groupId>com.fasterxml.jackson.jaxrs</groupId>
 				</exclusion>
 				<exclusion>
-					<artifactId>jackson-jaxrs-json-provider</artifactId>
-					<groupId>com.fasterxml.jackson.jaxrs</groupId>
-				</exclusion>
-				<exclusion>
 					<artifactId>jackson-databind</artifactId>
 					<groupId>com.fasterxml.jackson.core</groupId>
 				</exclusion>
@@ -314,6 +309,10 @@
 				<exclusion>
 					<artifactId>apache-jena-libs</artifactId>
 					<groupId>org.apache.jena</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jersey-multipart</artifactId>
+					<groupId>com.sun.jersey.contribs</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
