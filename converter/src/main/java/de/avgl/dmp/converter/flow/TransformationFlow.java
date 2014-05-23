@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import de.avgl.dmp.persistence.util.GDMUtil;
 import org.culturegraph.mf.exceptions.MorphDefException;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
@@ -27,7 +28,6 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.google.inject.Provider;
-import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.DMPMorphDefException;
@@ -220,7 +220,7 @@ public class TransformationFlow {
 				if (recordResource != null) {
 
 					// TODO check this: subject OK?
-					recordResource.addStatement(new ResourceNode(recordResource.getUri()), new Predicate(RDF.type.getURI()), new ResourceNode(
+					recordResource.addStatement(new ResourceNode(recordResource.getUri()), new Predicate(GDMUtil.RDF_type), new ResourceNode(
 							"http://purl.org/ontology/bibo/Document"));
 				}
 			}

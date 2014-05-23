@@ -29,6 +29,8 @@ public final class GDMUtil {
 
 	public static final String RDF_type = RDF_NS + "type";
 
+	public static final String RDF_value = RDF_NS + "value";
+
 	/**
 	 * Gets all resources for the given record class identifier in the given GDM model.
 	 *
