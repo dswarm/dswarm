@@ -59,10 +59,6 @@ public class PersistenceModule extends AbstractModule {
 			PersistenceModule.LOG.error("Could not load dmp.properties", e);
 		}
 
-		final String tdbPath = properties.getProperty("tdb_path", "target/h2");
-
-		bind(String.class).annotatedWith(Names.named("TdbPath")).toInstance(tdbPath);
-
 		final String graphEndpoint = properties.getProperty("dmp_graph_endpoint", "http://localhost:7474/graph");
 		final GraphDatabaseConfig gdbConfig = new GraphDatabaseConfig(graphEndpoint);
 
