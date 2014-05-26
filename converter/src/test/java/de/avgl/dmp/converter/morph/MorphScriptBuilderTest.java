@@ -18,14 +18,14 @@ public class MorphScriptBuilderTest extends GuicedTest {
 		final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 		final String request = DMPPersistenceUtil.getResourceAsString("complex-transformation.json");
+		
+		final String result = DMPPersistenceUtil.getResourceAsString("complex-transformation.morph.xml");
 
 		final Task task = objectMapper.readValue(request, Task.class);
 
 		final String morphScriptString = new MorphScriptBuilder().apply(task).toString();
 
-		// TODO: do proper result comparison to make this a real test
-
-		// System.out.println(morphScriptString);
+		Assert.assertEquals(result, morphScriptString);
 	}
 
 	@Test
@@ -34,14 +34,14 @@ public class MorphScriptBuilderTest extends GuicedTest {
 		final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 		final String request = DMPPersistenceUtil.getResourceAsString("substring.task.json");
+		
+		final String result = DMPPersistenceUtil.getResourceAsString("substring.task.morph.xml");
 
 		final Task task = objectMapper.readValue(request, Task.class);
 
 		final String morphScriptString = new MorphScriptBuilder().apply(task).toString();
 
-		// TODO: do proper result comparison to make this a real test
-
-		// System.out.println(morphScriptString);
+		Assert.assertEquals(result, morphScriptString);
 	}
 	
 	@Test
@@ -51,7 +51,7 @@ public class MorphScriptBuilderTest extends GuicedTest {
 
 		final String request = DMPPersistenceUtil.getResourceAsString("demo_csv.multiple_mappings.task.json");
 		
-		final String result = DMPPersistenceUtil.getResourceAsString("demo_csv.multiple_mappings.task.result.json");
+		final String result = DMPPersistenceUtil.getResourceAsString("demo_csv.multiple_mappings.task.result.xml");
 
 		final Task task = objectMapper.readValue(request, Task.class);
 
