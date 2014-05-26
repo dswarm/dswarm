@@ -53,6 +53,7 @@
 		<google.guava.version>17.0</google.guava.version>
 		<google.collections.version>1.0</google.collections.version>
 		<jackson.version>2.3.3</jackson.version>
+		<slf4j.api.version>1.7.7</slf4j.api.version>
 		<apache.commons.version>3.3.2</apache.commons.version>
 		<commons-io.version>2.4</commons-io.version>
 		<guice.version>3.0</guice.version>
@@ -487,6 +488,11 @@
 			<scope>test</scope>
 		</dependency>
 		<!-- Logging dependencies -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.api.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
