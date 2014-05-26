@@ -450,7 +450,7 @@ public class MorphScriptBuilder {
 				continue;
 			}
 			
-			if (checkForDuplicateVarDatas(variable, rules)) {
+			if (checkForDuplicateVarDatas(variable, rules, inputAttributePathStringXMLEscaped)) {
 				
 				continue;
 			}
@@ -816,17 +816,21 @@ public class MorphScriptBuilder {
 
 	}
 	
-	private boolean checkForDuplicateVarDatas(final String variable, final Element rules) {
+	private boolean checkForDuplicateVarDatas(final String variable, final Element rules, final String inputAttributePathStringXMLEscaped) {
 		
 		final NodeList dataElements = rules.getElementsByTagName("data");
 		
 		String dataNameValue;
 		
+		String dataSourceValue;
+		
 		for (int i = 0; i < dataElements.getLength(); i++) {
 			
 			dataNameValue = dataElements.item(i).getAttributes().getNamedItem("name").getNodeValue();
 			
-			if (dataNameValue.equals("@" + variable)) {
+			dataSourceValue = dataElements.item(i).getAttributes().getNamedItem("source").getNodeValue();
+			
+			if (dataNameValue.equals("@" + variable) && dataSourceValue.equals(inputAttributePathStringXMLEscaped)) {
 				
 				return true;
 			}
