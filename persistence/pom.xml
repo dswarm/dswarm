@@ -164,6 +164,10 @@
 					<artifactId>hamcrest-all</artifactId>
 					<groupId>org.hamcrest</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>hamcrest-core</artifactId>
+					<groupId>org.hamcrest</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -233,6 +237,10 @@
 					<artifactId>commons-lang</artifactId>
 					<groupId>commons-lang</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>paranamer</artifactId>
+					<groupId>com.thoughtworks.paranamer</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<!-- jackson -->
@@ -284,6 +292,17 @@
 				<exclusion>
 					<artifactId>jackson-annotations</artifactId>
 					<groupId>com.fasterxml.jackson.core</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>hamcrest-core</artifactId>
+					<groupId>org.hamcrest</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>

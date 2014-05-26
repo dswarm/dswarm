@@ -89,7 +89,6 @@ public class EmbeddedServer {
 		EmbeddedServer.LOG.info("Starting backend web server (grizzly)");
 
 		final HttpServer server = GrizzlyHttpServerFactory.createHttpServer(getBaseUri(), false);
-		server.getListener("grizzly").setDefaultErrorPageGenerator(new DMPErrorPageGenerator());
 		server.getListener("grizzly").setMaxFormPostSize(Integer.MAX_VALUE);
 
 		final WebappContext context = new WebappContext("DMP 2000 Backend", getContextPath());
@@ -99,6 +98,7 @@ public class EmbeddedServer {
 		final ServletRegistration servletRegistration = context.addServlet("ServletContainer", ServletContainer.class);
 		servletRegistration.addMapping("/*");
 		servletRegistration.setInitParameter("javax.ws.rs.Application", "de.avgl.dmp.controller.providers.DMPApplication");
+		servletRegistration.setInitParameter("jersey.config.server.response.setStatusOverSendError", "true");
 
 		final FilterRegistration registration = context.addFilter("GuiceFilter", GuiceFilter.class);
 		registration.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), "/*");

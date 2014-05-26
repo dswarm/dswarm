@@ -15,7 +15,7 @@
 	<url>http://avantgarde-labs.de</url>
 
 	<properties>
-		<h2k.version>2.3.0-b05</h2k.version>
+		<h2k.version>2.2.0</h2k.version>
 		<jetty-maven-plugin.version>9.2.0.RC0</jetty-maven-plugin.version>
 		<maven-tomcat-plugin.version>2.2</maven-tomcat-plugin.version>
 		<grizzly-http-servlet.version>2.3.8</grizzly-http-servlet.version>
