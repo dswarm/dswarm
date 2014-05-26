@@ -23,25 +23,27 @@ import de.avgl.dmp.persistence.model.proxy.ProxyDMPObject;
 import de.avgl.dmp.persistence.service.BasicJPAService;
 import de.avgl.dmp.persistence.service.test.utils.BasicJPAServiceTestUtils;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTILS extends BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE>
 		extends ResourceTest {
 
-	private static final org.apache.log4j.Logger				LOG	= org.apache.log4j.Logger.getLogger(BasicResourceTestUtils.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BasicResourceTestUtils.class);
 
-	protected final Class<POJOCLASS>							pojoClass;
+	protected final Class<POJOCLASS> pojoClass;
 
-	protected final String										pojoClassName;
+	protected final String pojoClassName;
 
-	protected final POJOCLASSPERSISTENCESERVICE					persistenceService;
+	protected final POJOCLASSPERSISTENCESERVICE persistenceService;
 
-	protected final POJOCLASSPERSISTENCESERVICETESTUTILS		persistenceServiceTestUtils;
+	protected final POJOCLASSPERSISTENCESERVICETESTUTILS persistenceServiceTestUtils;
 
-	protected final Class<POJOCLASSPERSISTENCESERVICE>			persistenceServiceClass;
+	protected final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClass;
 
-	protected final Class<POJOCLASSPERSISTENCESERVICETESTUTILS>	persistenceServiceTestUtilsClass;
+	protected final Class<POJOCLASSPERSISTENCESERVICETESTUTILS> persistenceServiceTestUtilsClass;
 
-	protected final ObjectMapper								objectMapper;
+	protected final ObjectMapper objectMapper;
 
 	public BasicResourceTestUtils(final String resourceIdentifier, final Class<POJOCLASS> pojoClassArg,
 			final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg,
@@ -58,7 +60,8 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 		persistenceService = GuicedTest.injector.getInstance(persistenceServiceClass);
 
-		persistenceServiceTestUtils = GuicedTest.injector.getInstance(persistenceServiceTestUtilsClass);// createNewPersistenceServiceTestUtilsInstance();
+		persistenceServiceTestUtils = GuicedTest.injector
+				.getInstance(persistenceServiceTestUtilsClass);// createNewPersistenceServiceTestUtilsInstance();
 		// injector.getInstance(persistenceServiceTestUtilsClass); -> doesn't seem to work right - how can I inject test class
 		// from other sub modules?
 

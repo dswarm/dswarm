@@ -26,8 +26,6 @@ import de.avgl.dmp.persistence.service.job.MappingService;
  */
 public class MappingsResourceUtils extends BasicDMPResourceUtils<MappingService, ProxyMapping, Mapping> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(MappingsResourceUtils.class);
-
 	@Inject
 	public MappingsResourceUtils(final Provider<MappingService> persistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg,
 			final ResourceUtilsFactory utilsFactory) {

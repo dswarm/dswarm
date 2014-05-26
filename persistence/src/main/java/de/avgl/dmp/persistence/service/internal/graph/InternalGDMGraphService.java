@@ -55,6 +55,8 @@ import de.avgl.dmp.persistence.service.schema.ClaszService;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 import de.avgl.dmp.persistence.util.GDMUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A internal model service implementation for RDF triples.<br/>
@@ -65,41 +67,40 @@ import de.avgl.dmp.persistence.util.GDMUtil;
 @Singleton
 public class InternalGDMGraphService implements InternalModelService {
 
-	private static final org.apache.log4j.Logger	LOG								= org.apache.log4j.Logger
-																							.getLogger(InternalGDMGraphService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(InternalGDMGraphService.class);
 
-	private static final String						resourceIdentifier				= "gdm";
+	private static final String resourceIdentifier = "gdm";
 
 	/**
 	 * The data model persistence service.
 	 */
-	private final Provider<DataModelService>		dataModelService;
+	private final Provider<DataModelService> dataModelService;
 
 	/**
 	 * The schema persistence service.
 	 */
-	private final Provider<SchemaService>			schemaService;
+	private final Provider<SchemaService> schemaService;
 
 	/**
 	 * The class persistence service.
 	 */
-	private final Provider<ClaszService>			classService;
+	private final Provider<ClaszService> classService;
 
-	private final Provider<AttributePathService>	attributePathService;
+	private final Provider<AttributePathService> attributePathService;
 
-	private final Provider<AttributeService>		attributeService;
+	private final Provider<AttributeService> attributeService;
 
 	/**
 	 * The data model graph URI pattern
 	 */
-	private static final String						DATA_MODEL_GRAPH_URI_PATTERN	= "http://data.slub-dresden.de/datamodel/{datamodelid}/data";
+	private static final String DATA_MODEL_GRAPH_URI_PATTERN = "http://data.slub-dresden.de/datamodel/{datamodelid}/data";
 
-	private final String							graphEndpoint;
+	private final String graphEndpoint;
 
 	/**
 	 * /** Creates a new internal triple service with the given data model persistence service, schema persistence service, class
 	 * persistence service and the endpoint to access the graph database.
-	 * 
+	 *
 	 * @param dataModelService the data model persistence service
 	 * @param schemaService the schema persistence service
 	 * @param classService the class persistence service

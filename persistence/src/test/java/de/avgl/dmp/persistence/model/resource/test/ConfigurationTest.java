@@ -17,8 +17,6 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
  */
 public class ConfigurationTest extends GuicedTest {
 
-	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(ConfigurationTest.class);
-
 	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test

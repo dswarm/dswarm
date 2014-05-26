@@ -22,19 +22,21 @@ import de.avgl.dmp.persistence.service.schema.MappingAttributePathInstanceServic
 import de.avgl.dmp.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
 import de.avgl.dmp.persistence.service.schema.test.utils.AttributeServiceTestUtils;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MappingAttributePathInstanceServiceTest extends
 		IDBasicJPAServiceTest<ProxyMappingAttributePathInstance, MappingAttributePathInstance, MappingAttributePathInstanceService> {
 
-	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(SchemaServiceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SchemaServiceTest.class);
 
-	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	private final Map<Long, Attribute>				attributes		= Maps.newLinkedHashMap();
+	private final Map<Long, Attribute> attributes = Maps.newLinkedHashMap();
 
-	private final AttributeServiceTestUtils			attributeServiceTestUtils;
-	private final AttributePathServiceTestUtils		attributePathServiceTestUtils;
-	private final FilterServiceTestUtils			filterServiceTestUtils;
+	private final AttributeServiceTestUtils     attributeServiceTestUtils;
+	private final AttributePathServiceTestUtils attributePathServiceTestUtils;
+	private final FilterServiceTestUtils        filterServiceTestUtils;
 
 	public MappingAttributePathInstanceServiceTest() {
 

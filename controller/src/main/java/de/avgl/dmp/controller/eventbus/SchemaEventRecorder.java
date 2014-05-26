@@ -38,17 +38,19 @@ import de.avgl.dmp.persistence.service.schema.AttributePathService;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class SchemaEventRecorder {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(SchemaEventRecorder.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SchemaEventRecorder.class);
 
-	private final AttributePathService				attributePathService;
-	private final AttributeService					attributeService;
-	private final ClaszService						claszService;
-	private final DataModelService					dataModelService;
-	private final SchemaService						schemaService;
+	private final AttributePathService attributePathService;
+	private final AttributeService     attributeService;
+	private final ClaszService         claszService;
+	private final DataModelService     dataModelService;
+	private final SchemaService        schemaService;
 
 	@Inject
 	public SchemaEventRecorder(final AttributePathService attributePathService, final AttributeService attributeService,

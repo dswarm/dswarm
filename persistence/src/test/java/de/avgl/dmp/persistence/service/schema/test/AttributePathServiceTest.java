@@ -19,15 +19,17 @@ import de.avgl.dmp.persistence.service.schema.AttributePathService;
 import de.avgl.dmp.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
 import de.avgl.dmp.persistence.service.schema.test.utils.AttributeServiceTestUtils;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttributePath, AttributePath, AttributePathService> {
 
-	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(AttributePathServiceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AttributePathServiceTest.class);
 
-	private final AttributeServiceTestUtils			attributeServiceTestUtils;
-	private final AttributePathServiceTestUtils		attributePathServiceTestUtils;
+	private final AttributeServiceTestUtils     attributeServiceTestUtils;
+	private final AttributePathServiceTestUtils attributePathServiceTestUtils;
 
-	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	public AttributePathServiceTest() {
 

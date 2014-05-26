@@ -24,8 +24,6 @@ import de.avgl.dmp.persistence.service.resource.ResourceService;
  */
 public class ResourcesResourceUtils extends ExtendedBasicDMPResourceUtils<ResourceService, ProxyResource, Resource> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ResourcesResourceUtils.class);
-
 	@Inject
 	public ResourcesResourceUtils(final Provider<ResourceService> persistenceServiceProviderArg,
 			final Provider<ObjectMapper> objectMapperProviderArg, final ResourceUtilsFactory utilsFactory) {

@@ -8,12 +8,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.schema.Clasz;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ClaszTest extends GuicedTest {
 
-	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(ClaszTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ClaszTest.class);
 
-	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleClaszTest() {

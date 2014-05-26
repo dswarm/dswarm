@@ -15,11 +15,13 @@ import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttribute;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
 import de.avgl.dmp.persistence.service.schema.test.utils.AttributeServiceTestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AttributesResourceTest extends
 		BasicResourceTest<AttributesResourceTestUtils, AttributeServiceTestUtils, AttributeService, ProxyAttribute, Attribute, Long> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributesResourceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AttributesResourceTest.class);
 
 	public AttributesResourceTest() {
 

@@ -36,6 +36,8 @@ import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.representation.SetComponentReferenceSerializer;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A component is part of a concrete {@link Transformation} (i.e. a component belongs to concrete transformation and is not
@@ -56,7 +58,7 @@ public class Component extends ExtendedBasicDMPJPAObject {
 	 */
 	private static final long						serialVersionUID	= 1L;
 
-	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(Component.class);
+	private static final Logger LOG = LoggerFactory.getLogger(Component.class);
 
 	/**
 	 * The input components collection.
@@ -68,19 +70,20 @@ public class Component extends ExtendedBasicDMPJPAObject {
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@XmlIDREF
 	@XmlList
-	private Set<Component>							inputComponents;
+	private Set<Component> inputComponents;
 
 	/**
 	 * The output components collection.
 	 */
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { /* CascadeType.DETACH, CascadeType.MERGE, */CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinTable(name = "OUTPUT_COMPONENTS_INPUT_COMPONENTS", joinColumns = { @JoinColumn(name = "INPUT_COMPONENT_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "OUTPUT_COMPONENT_ID", referencedColumnName = "ID") })
+	@JoinTable(name = "OUTPUT_COMPONENTS_INPUT_COMPONENTS", joinColumns = { @JoinColumn(name = "INPUT_COMPONENT_ID", referencedColumnName = "ID") },
+			inverseJoinColumns = { @JoinColumn(name = "OUTPUT_COMPONENT_ID", referencedColumnName = "ID") })
 	@XmlElement(name = "output_components")
 	@JsonSerialize(using = SetComponentReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@XmlIDREF
 	@XmlList
-	private Set<Component>							outputComponents;
+	private Set<Component> outputComponents;
 
 	/**
 	 * The function that is instantiated by this component.
@@ -93,25 +96,25 @@ public class Component extends ExtendedBasicDMPJPAObject {
 	// @JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
 	// @XmlIDREF
 	// @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
-	private Function								function;
+	private Function function;
 
 	/**
 	 * The map of parameter mappings.
 	 */
 	@Transient
-	private Map<String, String>						parameterMappings;
+	private Map<String, String> parameterMappings;
 
 	/**
 	 * The JSON object of the parameter mappings map.
 	 */
 	@Transient
-	private ObjectNode								parameterMappingsJSON;
+	private ObjectNode parameterMappingsJSON;
 
 	/**
 	 * A flag that indicates, whether the parameter mappings are initialized or not.
 	 */
 	@Transient
-	private boolean									parameterMappingsInitialized;
+	private boolean parameterMappingsInitialized;
 
 	/**
 	 * The string that holds the serialised JSON object of the parameter mappings map.
@@ -120,7 +123,7 @@ public class Component extends ExtendedBasicDMPJPAObject {
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "PARAMETER_MAPPINGS", columnDefinition = "VARCHAR(4000)", length = 4000)
-	private String									parameterMappingsString;
+	private String parameterMappingsString;
 
 	// @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH })
 	// @JoinColumn(name = "transformation")
@@ -136,7 +139,7 @@ public class Component extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the input components collection.
-	 * 
+	 *
 	 * @return the input components collection
 	 */
 	public Set<Component> getInputComponents() {
@@ -146,7 +149,7 @@ public class Component extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the input components collections.
-	 * 
+	 *
 	 * @param inputComponentsArg the new input components collection
 	 */
 	public void setInputComponents(final Set<Component> inputComponentsArg) {
@@ -189,7 +192,7 @@ public class Component extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Adds a new input component to the collection of input components of this component.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param inputComponent a new input component
 	 */
 	public void addInputComponent(final Component inputComponent) {

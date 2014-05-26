@@ -13,8 +13,6 @@ import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
 @XmlRootElement
 public abstract class ProxyAdvancedDMPJPAObject<POJOCLASS extends AdvancedDMPJPAObject> extends ProxyBasicDMPJPAObject<POJOCLASS> {
 
-	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(ProxyAdvancedDMPJPAObject.class);
-
 	/**
 	 *
 	 */

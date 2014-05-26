@@ -28,8 +28,6 @@ import de.avgl.dmp.persistence.service.schema.AttributePathService;
  */
 public class AttributePathsResourceUtils extends BasicIDResourceUtils<AttributePathService, ProxyAttributePath, AttributePath> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributePathsResourceUtils.class);
-
 	@Inject
 	public AttributePathsResourceUtils(final Provider<AttributePathService> persistenceServiceProviderArg,
 			final Provider<ObjectMapper> objectMapperProviderArg, final ResourceUtilsFactory utilsFactory) {

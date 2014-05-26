@@ -20,22 +20,24 @@ import de.avgl.dmp.persistence.model.schema.NameSpacePrefixRegistry;
 import de.avgl.dmp.persistence.service.schema.AttributePathService;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AttributePathBuilder extends GuicedTest {
 
-	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(AttributePathBuilder.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AttributePathBuilder.class);
 
-	private AttributePath							pathUnderConstruction;
+	private AttributePath pathUnderConstruction;
 
-	private LinkedList<Attribute>					attributeList;
+	private LinkedList<Attribute> attributeList;
 
-	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	private final Map<Long, Attribute>				attributes		= Maps.newLinkedHashMap();
+	private final Map<Long, Attribute> attributes = Maps.newLinkedHashMap();
 
-	private final NameSpacePrefixRegistry			registry;
+	private final NameSpacePrefixRegistry registry;
 
-	private String									prefixPaths		= "";
+	private String prefixPaths = "";
 
 	public AttributePathBuilder() {
 

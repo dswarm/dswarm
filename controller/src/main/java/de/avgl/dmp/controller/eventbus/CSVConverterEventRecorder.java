@@ -21,13 +21,15 @@ import de.avgl.dmp.persistence.model.internal.gdm.GDMModel;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.utils.DataModelUtils;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class CSVConverterEventRecorder {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(CSVConverterEventRecorder.class);
+	private static final Logger LOG = LoggerFactory.getLogger(CSVConverterEventRecorder.class);
 
-	private final InternalModelServiceFactory		internalServiceFactory;
+	private final InternalModelServiceFactory internalServiceFactory;
 
 	@Inject
 	public CSVConverterEventRecorder(final InternalModelServiceFactory internalServiceFactory, final EventBus eventBus) {

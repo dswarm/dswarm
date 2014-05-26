@@ -51,6 +51,8 @@ import de.avgl.dmp.persistence.model.types.Tuple;
 import de.avgl.dmp.persistence.service.InternalModelService;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Flow that executes a given set of transformations on data of a given data model.
@@ -62,15 +64,15 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
  */
 public class TransformationFlow {
 
-	private static final org.apache.log4j.Logger		LOG	= org.apache.log4j.Logger.getLogger(TransformationFlow.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TransformationFlow.class);
 
-	private final Metamorph								transformer;
+	private final Metamorph transformer;
 
-	private final String								script;
+	private final String script;
 
-	private final Optional<DataModel>					outputDataModel;
+	private final Optional<DataModel> outputDataModel;
 
-	private final Provider<InternalModelServiceFactory>	internalModelServiceFactoryProvider;
+	private final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider;
 
 	public TransformationFlow(final Metamorph transformer, final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
 

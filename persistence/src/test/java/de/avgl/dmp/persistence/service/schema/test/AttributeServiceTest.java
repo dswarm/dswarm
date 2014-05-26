@@ -11,12 +11,14 @@ import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttribute;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
 import de.avgl.dmp.persistence.service.test.AdvancedJPAServiceTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AttributeServiceTest extends AdvancedJPAServiceTest<ProxyAttribute, Attribute, AttributeService> {
 
-	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(AttributeServiceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AttributeServiceTest.class);
 
-	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	public AttributeServiceTest() {
 

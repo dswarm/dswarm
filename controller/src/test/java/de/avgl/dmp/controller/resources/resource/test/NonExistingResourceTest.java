@@ -7,12 +7,14 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.avgl.dmp.controller.resources.test.ResourceTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class NonExistingResourceTest extends ResourceTest {
 
-	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(NonExistingResourceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(NonExistingResourceTest.class);
 
-	private static final String						resourceDirective	= "blablub";
+	private static final String resourceDirective = "blablub";
 
 	public NonExistingResourceTest() {
 

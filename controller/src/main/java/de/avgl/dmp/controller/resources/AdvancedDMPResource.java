@@ -10,6 +10,8 @@ import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
 import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.proxy.ProxyAdvancedDMPJPAObject;
 import de.avgl.dmp.persistence.service.AdvancedDMPJPAService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A generic resource (controller service) implementation for {@link BasicDMPJPAObject}s, i.e., objects where the identifier will
@@ -23,12 +25,12 @@ import de.avgl.dmp.persistence.service.AdvancedDMPJPAService;
 public abstract class AdvancedDMPResource<POJOCLASSRESOURCEUTILS extends AdvancedDMPResourceUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends AdvancedDMPJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyAdvancedDMPJPAObject<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
 		extends BasicDMPResource<POJOCLASSRESOURCEUTILS, POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AdvancedDMPResource.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AdvancedDMPResource.class);
 
 	/**
 	 * Creates a new resource (controller service) for the given concrete POJO class with the provider of the concrete persistence
 	 * service, the object mapper and metrics registry.
-	 * 
+	 *
 	 * @param clasz a concrete POJO class
 	 * @param persistenceServiceProviderArg the concrete persistence service that is related to the concrete POJO class
 	 * @param objectMapperArg an object mapper

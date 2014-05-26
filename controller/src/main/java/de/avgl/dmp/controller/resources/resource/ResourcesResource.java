@@ -68,6 +68,8 @@ import de.avgl.dmp.persistence.model.resource.proxy.ProxyConfiguration;
 import de.avgl.dmp.persistence.model.resource.proxy.ProxyResource;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A resource (controller service) for {@link Resource}s.
@@ -80,27 +82,27 @@ import de.avgl.dmp.persistence.service.resource.ResourceService;
 @Path("/resources")
 public class ResourcesResource {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ResourcesResource.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ResourcesResource.class);
 
 	@Context
-	UriInfo											uri;
+	UriInfo uri;
 
-	private final Provider<EventBus>				eventBusProvider;
+	private final Provider<EventBus> eventBusProvider;
 
-	private final Provider<ResourceService>			resourceServiceProvider;
+	private final Provider<ResourceService> resourceServiceProvider;
 
-	private final Provider<ConfigurationService>	configurationServiceProvider;
+	private final Provider<ConfigurationService> configurationServiceProvider;
 
-	private final DMPStatus							dmpStatus;
+	private final DMPStatus dmpStatus;
 
-	private final ObjectMapper						objectMapper;
-	private final DataModelUtil						dataModelUtil;
+	private final ObjectMapper  objectMapper;
+	private final DataModelUtil dataModelUtil;
 
 	/**
 	 * Creates a new resource (controller service) for {@link Resource}s with the provider of the resource persistence service,
 	 * the provider of configuration persistence service, the provider of data model persistence service, the object mapper,
 	 * metrics registry, event bus provider and data model util.
-	 * 
+	 *
 	 * @param dmpStatusArg a metrics registry
 	 * @param objectMapperArg an object mapper
 	 * @param resourceServiceProviderArg the provider for the resource persistence service
@@ -123,7 +125,7 @@ public class ResourcesResource {
 
 	/**
 	 * Builds a positive response with the given content.
-	 * 
+	 *
 	 * @param responseContent a response message
 	 * @return the response
 	 */
@@ -134,7 +136,7 @@ public class ResourcesResource {
 
 	/**
 	 * Builds a positive "created" response with the given content at the given response URI.
-	 * 
+	 *
 	 * @param responseContent a response message
 	 * @param responseURI a URI
 	 * @return the response
@@ -170,7 +172,7 @@ public class ResourcesResource {
 	/**
 	 * This endpoint processes (uploades) the input stream and creates a new resource object with related metadata that will be
 	 * returned as JSON representation.
-	 * 
+	 *
 	 * @param uploadedInputStream the input stream that should be uploaded
 	 * @param fileDetail file metadata
 	 * @param name the name of the resource
@@ -179,7 +181,8 @@ public class ResourcesResource {
 	 * @throws DMPControllerException
 	 */
 	@POST
-	@ApiOperation(value = "upload new data resource", notes = "Returns a new Resource object, when upload was successfully.", response = Resource.class)
+	@ApiOperation(value = "upload new data resource", notes = "Returns a new Resource object, when upload was successfully.",
+			response = Resource.class)
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "data resource was successfully uploaded and stored"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@Consumes(MediaType.MULTIPART_FORM_DATA)

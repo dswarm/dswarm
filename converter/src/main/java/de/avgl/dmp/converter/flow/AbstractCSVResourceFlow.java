@@ -18,6 +18,8 @@ import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
 import de.avgl.dmp.persistence.model.resource.utils.DataModelUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author phorn
@@ -25,28 +27,28 @@ import de.avgl.dmp.persistence.model.resource.utils.DataModelUtils;
  */
 public abstract class AbstractCSVResourceFlow<T> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AbstractCSVResourceFlow.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AbstractCSVResourceFlow.class);
 
-	private final String							encoding;
+	private final String encoding;
 
-	private final Character							escapeCharacter;
+	private final Character escapeCharacter;
 
-	private final Character							quoteCharacter;
+	private final Character quoteCharacter;
 
-	private final Character							columnDelimiter;
+	private final Character columnDelimiter;
 
-	private final String							rowDelimiter;
+	private final String rowDelimiter;
 
-	private final int								ignoreLines;
+	private final int ignoreLines;
 
-	private final int								discardRows;
+	private final int discardRows;
 
 	private final boolean firstRowIsHeaders;
 
-	protected Optional<Integer>						atMost;
+	protected Optional<Integer> atMost;
 
-	protected final String							dataResourceBaseURI;
-	protected final String							dataResourceSchemaBaseURI;
+	protected final String dataResourceBaseURI;
+	protected final String dataResourceSchemaBaseURI;
 
 	public AbstractCSVResourceFlow(final DataModel dataModel) throws DMPConverterException {
 

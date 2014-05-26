@@ -16,6 +16,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.Sets;
 
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A transformation is a complex {@link Function} that consists of {@link Component}s.<br/>
@@ -32,12 +34,12 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 @Table(name = "TRANSFORMATION")
 public class Transformation extends Function {
 
-	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(Transformation.class);
+	private static final Logger LOG = LoggerFactory.getLogger(Transformation.class);
 
 	/**
 	 *
 	 */
-	private static final long						serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The components of the transformation.
@@ -47,7 +49,7 @@ public class Transformation extends Function {
 	@JoinColumn(name = "TRANSFORMATION", referencedColumnName = "ID")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@XmlList
-	private Set<Component>							components;
+	private Set<Component> components;
 
 	/**
 	 * Creates a new transformation.
@@ -64,7 +66,7 @@ public class Transformation extends Function {
 
 	/**
 	 * Gets the components of the transformation.
-	 * 
+	 *
 	 * @return the components of the transformation
 	 */
 	public Set<Component> getComponents() {
@@ -74,7 +76,7 @@ public class Transformation extends Function {
 
 	/**
 	 * Sets the components of the transformation
-	 * 
+	 *
 	 * @param componentsArg a new collection of components
 	 */
 	public void setComponents(final Set<Component> componentsArg) {

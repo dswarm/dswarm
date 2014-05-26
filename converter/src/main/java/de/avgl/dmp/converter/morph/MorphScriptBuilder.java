@@ -34,6 +34,8 @@ import javax.xml.validation.SchemaFactory;
 
 import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -65,25 +67,25 @@ import de.avgl.dmp.persistence.model.schema.MappingAttributePathInstance;
  */
 public class MorphScriptBuilder {
 
-	private static final org.apache.log4j.Logger	LOG									= org.apache.log4j.Logger.getLogger(MorphScriptBuilder.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MorphScriptBuilder.class);
 
-	private static final String						MAPPING_PREFIX						= "mapping";
+	private static final String MAPPING_PREFIX = "mapping";
 
-	private static final DocumentBuilderFactory		DOC_FACTORY							= DocumentBuilderFactory.newInstance();
+	private static final DocumentBuilderFactory DOC_FACTORY = DocumentBuilderFactory.newInstance();
 
-	private static final String						SCHEMA_PATH							= "schemata/metamorph.xsd";
+	private static final String SCHEMA_PATH = "schemata/metamorph.xsd";
 
-	private static final TransformerFactory			TRANSFORMER_FACTORY;
+	private static final TransformerFactory TRANSFORMER_FACTORY;
 
-	private static final String						TRANSFORMER_FACTORY_CLASS			= "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl";
+	private static final String TRANSFORMER_FACTORY_CLASS = "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl";
 
-	private static final String						INPUT_VARIABLE_IDENTIFIER			= "inputString";
+	private static final String INPUT_VARIABLE_IDENTIFIER = "inputString";
 
-	private static final String						OUTPUT_VARIABLE_PREFIX_IDENTIFIER	= "__TRANSFORMATION_OUTPUT_VARIABLE__";
+	private static final String OUTPUT_VARIABLE_PREFIX_IDENTIFIER = "__TRANSFORMATION_OUTPUT_VARIABLE__";
 
-	private static final String						FILTER_VARIABLE_POSTFIX				= ".filtered";
+	private static final String FILTER_VARIABLE_POSTFIX = ".filtered";
 
-	private static final String						OCCURRENCE_VARIABLE_POSTFIX			= ".occurrence";
+	private static final String OCCURRENCE_VARIABLE_POSTFIX = ".occurrence";
 
 	static {
 		System.setProperty("javax.xml.transform.TransformerFactory", MorphScriptBuilder.TRANSFORMER_FACTORY_CLASS);
@@ -120,7 +122,7 @@ public class MorphScriptBuilder {
 		}
 	}
 
-	private Document								doc;
+	private Document doc;
 
 	private Element varDefinition(final String key, final String value) {
 		final Element var = doc.createElement("var");

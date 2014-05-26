@@ -15,6 +15,8 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.internal.gdm.GDMModel;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An event recorder for converting XML documents.
@@ -25,16 +27,17 @@ import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 @Singleton
 public class XMLConverterEventRecorder {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(XMLConverterEventRecorder.class);
+	private static final Logger LOG = LoggerFactory.getLogger(XMLConverterEventRecorder.class
+	);
 
 	/**
 	 * The internal model service factory
 	 */
-	private final InternalModelServiceFactory		internalServiceFactory;
+	private final InternalModelServiceFactory internalServiceFactory;
 
 	/**
 	 * Creates a new event recorder for converting XML documents with the given internal model service factory and event bus.
-	 * 
+	 *
 	 * @param internalModelServiceFactory an internal model service factory
 	 * @param eventBus an event bus, where this event record will be registered
 	 */
@@ -47,7 +50,7 @@ public class XMLConverterEventRecorder {
 
 	/**
 	 * Processes the XML document of the data model of the given event and persists the converted data.
-	 * 
+	 *
 	 * @param event an converter event that provides a data model
 	 */
 	@Subscribe

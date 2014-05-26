@@ -10,8 +10,6 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 public class JsonNodesOpener extends DefaultObjectPipe<String, ObjectReceiver<JsonNode>> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(JsonNodesOpener.class);
-
 	public JsonNodesOpener() {
 	}
 

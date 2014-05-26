@@ -19,12 +19,10 @@ import de.avgl.dmp.persistence.service.BasicIDJPAService;
 public abstract class BasicIDResource<POJOCLASSRESOURCEUTILS extends BasicIDResourceUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends BasicIDJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyDMPJPAObject<POJOCLASS>, POJOCLASS extends DMPJPAObject>
 		extends BasicResource<POJOCLASSRESOURCEUTILS, POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS, Long> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(BasicIDResource.class);
-
 	/**
 	 * Creates a new resource (controller service) for the given concrete POJO class with the provider of the concrete persistence
 	 * service, the object mapper and metrics registry.
-	 * 
+	 *
 	 * @param clasz a concrete POJO class
 	 * @param persistenceServiceProviderArg the concrete persistence service that is related to the concrete POJO class
 	 * @param objectMapperArg an object mapper

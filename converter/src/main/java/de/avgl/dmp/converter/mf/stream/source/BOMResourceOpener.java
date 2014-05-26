@@ -16,6 +16,8 @@ import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.stream.source.Opener;
 import org.culturegraph.mf.util.ResourceUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Opens a file and passes a reader for it to the receiver. It also checks and discards an UTF8 BOM.
@@ -27,13 +29,13 @@ import org.culturegraph.mf.util.ResourceUtil;
 @Out(java.io.Reader.class)
 public class BOMResourceOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> implements Opener {
 
-	private static final org.apache.log4j.Logger	LOG			= org.apache.log4j.Logger.getLogger(BOMResourceOpener.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BOMResourceOpener.class);
 
-	private String									encoding	= "UTF-8";
+	private String encoding = "UTF-8";
 
 	/**
 	 * Returns the encoding used to open the resource.
-	 * 
+	 *
 	 * @return current default setting
 	 */
 	public String getEncoding() {
@@ -42,7 +44,7 @@ public class BOMResourceOpener extends DefaultObjectPipe<String, ObjectReceiver<
 
 	/**
 	 * Sets the encoding used to open the resource.
-	 * 
+	 *
 	 * @param encoding new encoding
 	 */
 	public void setEncoding(final String encoding) {

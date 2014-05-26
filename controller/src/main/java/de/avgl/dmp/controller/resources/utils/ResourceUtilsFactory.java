@@ -2,6 +2,9 @@ package de.avgl.dmp.controller.resources.utils;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -36,15 +39,14 @@ import de.avgl.dmp.controller.resources.schema.utils.SchemasResourceUtils;
 @Singleton
 public class ResourceUtilsFactory {
 
-	private static final org.apache.log4j.Logger													LOG					= org.apache.log4j.Logger
-																																.getLogger(ResourceUtilsFactory.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ResourceUtilsFactory.class);
 
-	private static final String																		PROVIDER_NOT_FOUND	= "Cannot find a Provider of %s";
-	private static final String																		PROVIDER_CAST_FAIL	= "Cannot cast %s to Provider of %s";
-	private static final String																		INSTANCE_CAST_FAIL	= "Cannot cast %s to %s";
+	private static final String PROVIDER_NOT_FOUND = "Cannot find a Provider of %s";
+	private static final String PROVIDER_CAST_FAIL = "Cannot cast %s to Provider of %s";
+	private static final String INSTANCE_CAST_FAIL = "Cannot cast %s to %s";
 
-	private final Map<Class<? extends BasicResourceUtils>, BasicResourceUtils>						instances			= Maps.newHashMapWithExpectedSize(13);
-	private final Map<Class<? extends BasicResourceUtils>, Provider<? extends BasicResourceUtils>>	providers			= Maps.newHashMapWithExpectedSize(13);
+	private final Map<Class<? extends BasicResourceUtils>, BasicResourceUtils>                     instances = Maps.newHashMapWithExpectedSize(13);
+	private final Map<Class<? extends BasicResourceUtils>, Provider<? extends BasicResourceUtils>> providers = Maps.newHashMapWithExpectedSize(13);
 
 	@Inject
 	public ResourceUtilsFactory(final Provider<AttributePathsResourceUtils> attributePathsResourceUtilsProvider,

@@ -24,6 +24,8 @@ import de.avgl.dmp.persistence.model.DMPObject;
 import de.avgl.dmp.persistence.model.proxy.ProxyDMPObject;
 import de.avgl.dmp.persistence.model.proxy.RetrievalType;
 import de.avgl.dmp.persistence.service.BasicJPAService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A generic resource (controller service), whose concrete implementations can be derived with a given implementation of
@@ -40,25 +42,25 @@ import de.avgl.dmp.persistence.service.BasicJPAService;
  */
 public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResourceUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(BasicResource.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BasicResource.class);
 
-	protected final POJOCLASSRESOURCEUTILS			pojoClassResourceUtils;
+	protected final POJOCLASSRESOURCEUTILS pojoClassResourceUtils;
 
 	/**
 	 * The metrics registry.
 	 */
-	protected final DMPStatus						dmpStatus;
+	protected final DMPStatus dmpStatus;
 
 	/**
 	 * The base URI of this resource.
 	 */
 	@Context
-	UriInfo											uri;
+	UriInfo uri;
 
 	/**
 	 * Creates a new resource (controller service) for the given concrete POJO class with the provider of the concrete persistence
 	 * service, the object mapper and metrics registry.
-	 * 
+	 *
 	 * @param clasz a concrete POJO class
 	 * @param persistenceServiceProviderArg the concrete persistence service that is related to the concrete POJO class
 	 * @param objectMapperArg an object mapper
@@ -72,7 +74,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * Gets the concrete POJO class of this resource (controller service).
-	 * 
+	 *
 	 * @return the concrete POJO class
 	 */
 	public Class<POJOCLASS> getClasz() {
@@ -82,7 +84,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * Builds a positive response with the given content.
-	 * 
+	 *
 	 * @param responseContent a response message
 	 * @return the response
 	 */
@@ -93,7 +95,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * This endpoint returns an object of the type of the POJO class as JSON representation for the provided object id.
-	 * 
+	 *
 	 * @param id an object id
 	 * @return a JSON representation of an object of the type of the POJO class
 	 */

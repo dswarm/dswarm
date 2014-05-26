@@ -38,6 +38,8 @@ import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttributePath;
 import de.avgl.dmp.persistence.service.schema.AttributePathService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A resource (controller service) for {@link AttributePath}s.
@@ -49,12 +51,12 @@ import de.avgl.dmp.persistence.service.schema.AttributePathService;
 @Path("attributepaths")
 public class AttributePathsResource extends BasicIDResource<AttributePathsResourceUtils, AttributePathService, ProxyAttributePath, AttributePath> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributePathsResource.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AttributePathsResource.class);
 
 	/**
 	 * Creates a new resource (controller service) for {@link AttributePath}s with the provider of the attribute path persistence
 	 * service, the object mapper and metrics registry.
-	 * 
+	 *
 	 * @param attributePathServiceProviderArg the attribute path persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
@@ -67,7 +69,7 @@ public class AttributePathsResource extends BasicIDResource<AttributePathsResour
 
 	/**
 	 * This endpoint returns an attribute path as JSON representation for the provided attribute paths identifier.
-	 * 
+	 *
 	 * @param id an attribute path identifier
 	 * @return a JSON representation of an attribute path
 	 */
@@ -87,7 +89,7 @@ public class AttributePathsResource extends BasicIDResource<AttributePathsResour
 
 	/**
 	 * This endpoint consumes an attribute path as JSON representation and persists this attribute path in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one attribute path
 	 * @return the persisted attribute path as JSON representation
 	 * @throws DMPControllerException

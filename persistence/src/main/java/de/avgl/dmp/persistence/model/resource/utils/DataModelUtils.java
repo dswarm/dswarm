@@ -11,6 +11,8 @@ import de.avgl.dmp.graph.json.ResourceNode;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.utils.ExtendedBasicDMPJPAObjectUtils;
 import de.avgl.dmp.persistence.util.GDMUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A utility class for {@link DataModel}s and related entities.
@@ -19,7 +21,7 @@ import de.avgl.dmp.persistence.util.GDMUtil;
  */
 public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataModel> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(DataModelUtils.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DataModelUtils.class);
 
 	public static String determineDataModelSchemaBaseURI(final DataModel dataModel) {
 

@@ -25,6 +25,8 @@ import com.wordnik.swagger.annotations.ApiResponses;
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.persistence.GraphDatabaseConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by tgaengler on 28/04/14.
@@ -36,18 +38,18 @@ import de.avgl.dmp.persistence.GraphDatabaseConfig;
 @Path("rdf")
 public class RDFResource {
 
-	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(RDFResource.class);
+	private static final Logger LOG = LoggerFactory.getLogger(RDFResource.class);
 
-	private static final String						resourceIdentifier	= "rdf";
+	private static final String resourceIdentifier = "rdf";
 
-	private static final MediaType					N_QUADS_TYPE		= new MediaType("application", "n-quads");
+	private static final MediaType N_QUADS_TYPE = new MediaType("application", "n-quads");
 
 	/**
 	 * The metrics registry.
 	 */
-	private final DMPStatus							dmpStatus;
+	private final DMPStatus dmpStatus;
 
-	private final String							graphEndpoint;
+	private final String graphEndpoint;
 
 	@Inject
 	public RDFResource(final DMPStatus dmpStatusArg, final GraphDatabaseConfig graphEndpointArg) {
@@ -58,10 +60,11 @@ public class RDFResource {
 
 	/**
 	 * for triggering a download
-	 * 
+	 *
 	 * @throws DMPControllerException
 	 */
-	@ApiOperation(value = "exports all data from the graph DB in the given RDF serialisation format", notes = "Returns exported data in the given RDF serialisation format.")
+	@ApiOperation(value = "exports all data from the graph DB in the given RDF serialisation format",
+			notes = "Returns exported data in the given RDF serialisation format.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "export was successfully processed"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@GET

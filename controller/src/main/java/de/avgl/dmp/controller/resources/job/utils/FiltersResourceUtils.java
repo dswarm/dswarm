@@ -20,8 +20,6 @@ import de.avgl.dmp.persistence.service.job.FilterService;
  */
 public class FiltersResourceUtils extends BasicDMPResourceUtils<FilterService, ProxyFilter, Filter> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(FiltersResourceUtils.class);
-
 	@Inject
 	public FiltersResourceUtils(final Provider<FilterService> persistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg,
 			final ResourceUtilsFactory utilsFactory) {

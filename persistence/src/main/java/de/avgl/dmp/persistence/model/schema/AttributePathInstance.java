@@ -45,8 +45,6 @@ public abstract class AttributePathInstance extends BasicDMPJPAObject {
 	 */
 	private static final long						serialVersionUID	= 1L;
 
-	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(AttributePathInstance.class);
-
 	/**
 	 * The attribute path instance type, e.g., mapping attribute path instance (
 	 * {@link AttributePathInstanceType#MappingAttributePathInstance}).
