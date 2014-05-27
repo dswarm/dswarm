@@ -4,13 +4,23 @@
         <name>mapping69, mapping67, mapping68</name>
     </meta>
     <rules>
-        <data name="@feld_nr" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr"/>
+        <combine name="@feld_nr" reset="false" sameEntity="true" value="${feld_nr.filtered}">
+            <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
+                <equals string="540"/>
+            </data>
+            <data name="feld_nr.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr"/>
+        </combine>
         <data name="http://purl.org/dc/elements/1.1/creator" source="@__TRANSFORMATION_OUTPUT_VARIABLE__5"/>
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__5" source="@feld_nr"/>
         <data name="@feld_type" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
         <data name="http://purl.org/dc/elements/1.1/creator" source="@__TRANSFORMATION_OUTPUT_VARIABLE__6"/>
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__6" source="@feld_type"/>
-        <data name="@feld_value" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+        <combine name="@feld_value" reset="false" sameEntity="true" value="${feld_value.filtered}">
+            <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value">
+                <equals string="Ginsbach, Julia"/>
+            </data>
+            <data name="feld_value.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+        </combine>
         <data name="http://purl.org/dc/elements/1.1/contributor" source="@__TRANSFORMATION_OUTPUT_VARIABLE__7"/>
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__7" source="@feld_value"/>
     </rules>

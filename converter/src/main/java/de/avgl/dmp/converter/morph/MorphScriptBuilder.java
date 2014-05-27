@@ -801,7 +801,7 @@ public class MorphScriptBuilder {
 
 			if (filterExpressionString != null && !filterExpressionString.isEmpty()) {
 
-				return StringEscapeUtils.unescapeJava(StringEscapeUtils.unescapeXml(filterExpressionString));
+				return StringEscapeUtils.unescapeXml(filterExpressionString);
 			}
 		}
 
