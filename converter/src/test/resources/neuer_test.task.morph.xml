@@ -1,0 +1,17 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+    <meta>
+        <name>mapping69, mapping67, mapping68</name>
+    </meta>
+    <rules>
+        <data name="@feld_nr" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr"/>
+        <data name="http://purl.org/dc/elements/1.1/creator" source="@__TRANSFORMATION_OUTPUT_VARIABLE__5"/>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__5" source="@feld_nr"/>
+        <data name="@feld_type" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+        <data name="http://purl.org/dc/elements/1.1/creator" source="@__TRANSFORMATION_OUTPUT_VARIABLE__6"/>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__6" source="@feld_type"/>
+        <data name="@feld_value" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+        <data name="http://purl.org/dc/elements/1.1/contributor" source="@__TRANSFORMATION_OUTPUT_VARIABLE__7"/>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__7" source="@feld_value"/>
+    </rules>
+</metamorph>

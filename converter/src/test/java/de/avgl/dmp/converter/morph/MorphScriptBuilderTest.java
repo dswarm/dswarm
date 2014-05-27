@@ -1,7 +1,6 @@
 package de.avgl.dmp.converter.morph;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -60,4 +59,19 @@ public class MorphScriptBuilderTest extends GuicedTest {
 		Assert.assertEquals(result, morphScriptString);
 	}
 
+	@Test
+	public void testFilterEncodingMappingToMorph() throws Exception {
+
+		final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
+
+		final String request = DMPPersistenceUtil.getResourceAsString("neuer_test.task.json");
+
+		final String result = DMPPersistenceUtil.getResourceAsString("neuer_test.task.morph.xml");
+
+		final Task task = objectMapper.readValue(request, Task.class);
+
+		final String morphScriptString = new MorphScriptBuilder().apply(task).toString();
+
+		Assert.assertEquals(result, morphScriptString);
+	}
 }
