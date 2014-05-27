@@ -1,0 +1,19 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+	<meta>
+		<name>mapping-1401205958391</name>
+	</meta>
+	<rules>
+		<combine name="@feld_value" reset="false" sameEntity="true" value="${feld_value.filtered}">
+			<data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
+				<equals string="p"/>
+			</data>
+			<data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
+				<equals string="077"/>
+			</data>
+			<data name="feld_value.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+		</combine>
+		<data name="http://purl.org/dc/elements/1.1/creator" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
+		<data name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" source="@feld_value"/>
+	</rules>
+</metamorph>
