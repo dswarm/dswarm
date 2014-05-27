@@ -4,10 +4,10 @@
 	<statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>
 
 	<appender name="FAT" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${logging_root_path}/logs/dmp/trace/messages.log</file>
+		<file>${logging_root_path}/dmp/trace/messages.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<!-- daily rollover -->
-			<fileNamePattern>${logging_root_path}/logs/dmp/trace/messages.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<fileNamePattern>${logging_root_path}/dmp/trace/messages.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
 			<timeBasedFileNamingAndTriggeringPolicy
 					class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
 				<!-- or whenever the file size reaches 100MB -->
@@ -26,9 +26,9 @@
 	</appender>
 
 	<appender name="FAD" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${logging_root_path}/logs/dmp/debug/messages.log</file>
+		<file>${logging_root_path}/dmp/debug/messages.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${logging_root_path}/logs/dmp/debug/messages.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<fileNamePattern>${logging_root_path}/dmp/debug/messages.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
 			<timeBasedFileNamingAndTriggeringPolicy
 					class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
 				<maxFileSize>50MB</maxFileSize>
@@ -45,9 +45,9 @@
 	</appender>
 
 	<appender name="FAI" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${logging_root_path}/logs/dmp/info/messages.log</file>
+		<file>${logging_root_path}/dmp/info/messages.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${logging_root_path}/logs/dmp/info/messages.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<fileNamePattern>${logging_root_path}/dmp/info/messages.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
 			<timeBasedFileNamingAndTriggeringPolicy
 					class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
 				<maxFileSize>50MB</maxFileSize>
@@ -64,9 +64,9 @@
 	</appender>
 
 	<appender name="FAW" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${logging_root_path}/logs/dmp/warn/messages.log</file>
+		<file>${logging_root_path}/dmp/warn/messages.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${logging_root_path}/logs/dmp/warn/messages.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<fileNamePattern>${logging_root_path}/dmp/warn/messages.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
 			<timeBasedFileNamingAndTriggeringPolicy
 					class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
 				<maxFileSize>50MB</maxFileSize>
@@ -83,9 +83,9 @@
 	</appender>
 
 	<appender name="FAE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${logging_root_path}/logs/dmp/error/messages.log</file>
+		<file>${logging_root_path}/dmp/error/messages.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${logging_root_path}/logs/dmp/error/messages.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<fileNamePattern>${logging_root_path}/dmp/error/messages.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
 			<timeBasedFileNamingAndTriggeringPolicy
 					class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
 				<maxFileSize>50MB</maxFileSize>
@@ -102,9 +102,9 @@
 	</appender>
 
 	<appender name="DEFAULT" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${logging_root_path}/logs/default/info/messages.log</file>
+		<file>${logging_root_path}/default/info/messages.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${logging_root_path}/logs/default/info/messages.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<fileNamePattern>${logging_root_path}/default/info/messages.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
 			<timeBasedFileNamingAndTriggeringPolicy
 					class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
 				<maxFileSize>50MB</maxFileSize>
