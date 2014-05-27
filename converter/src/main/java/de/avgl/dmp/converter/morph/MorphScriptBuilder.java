@@ -39,6 +39,8 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -68,25 +70,25 @@ import de.avgl.dmp.persistence.model.schema.MappingAttributePathInstance;
  */
 public class MorphScriptBuilder {
 
-	private static final Logger LOG = LoggerFactory.getLogger(MorphScriptBuilder.class);
+	private static final Logger					LOG									= LoggerFactory.getLogger(MorphScriptBuilder.class);
 
-	private static final String MAPPING_PREFIX = "mapping";
+	private static final String					MAPPING_PREFIX						= "mapping";
 
-	private static final DocumentBuilderFactory DOC_FACTORY = DocumentBuilderFactory.newInstance();
+	private static final DocumentBuilderFactory	DOC_FACTORY							= DocumentBuilderFactory.newInstance();
 
-	private static final String SCHEMA_PATH = "schemata/metamorph.xsd";
+	private static final String					SCHEMA_PATH							= "schemata/metamorph.xsd";
 
-	private static final TransformerFactory TRANSFORMER_FACTORY;
+	private static final TransformerFactory		TRANSFORMER_FACTORY;
 
-	private static final String TRANSFORMER_FACTORY_CLASS = "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl";
+	private static final String					TRANSFORMER_FACTORY_CLASS			= "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl";
 
-	private static final String INPUT_VARIABLE_IDENTIFIER = "inputString";
+	private static final String					INPUT_VARIABLE_IDENTIFIER			= "inputString";
 
-	private static final String OUTPUT_VARIABLE_PREFIX_IDENTIFIER = "__TRANSFORMATION_OUTPUT_VARIABLE__";
+	private static final String					OUTPUT_VARIABLE_PREFIX_IDENTIFIER	= "__TRANSFORMATION_OUTPUT_VARIABLE__";
 
-	private static final String FILTER_VARIABLE_POSTFIX = ".filtered";
+	private static final String					FILTER_VARIABLE_POSTFIX				= ".filtered";
 
-	private static final String OCCURRENCE_VARIABLE_POSTFIX = ".occurrence";
+	private static final String					OCCURRENCE_VARIABLE_POSTFIX			= ".occurrence";
 
 	static {
 		System.setProperty("javax.xml.transform.TransformerFactory", MorphScriptBuilder.TRANSFORMER_FACTORY_CLASS);
@@ -123,7 +125,7 @@ public class MorphScriptBuilder {
 		}
 	}
 
-	private Document doc;
+	private Document							doc;
 
 	private Element varDefinition(final String key, final String value) {
 		final Element var = doc.createElement("var");
@@ -451,9 +453,9 @@ public class MorphScriptBuilder {
 
 				continue;
 			}
-			
+
 			if (checkForDuplicateVarDatas(variable, rules, inputAttributePathStringXMLEscaped)) {
-				
+
 				continue;
 			}
 
@@ -799,7 +801,7 @@ public class MorphScriptBuilder {
 
 			if (filterExpressionString != null && !filterExpressionString.isEmpty()) {
 
-				return StringEscapeUtils.unescapeXml(filterExpressionString);
+				return StringEscapeUtils.unescapeJava(StringEscapeUtils.unescapeXml(filterExpressionString));
 			}
 		}
 
@@ -817,27 +819,65 @@ public class MorphScriptBuilder {
 		return componentName != null && !componentName.isEmpty();
 
 	}
-	
+
 	private boolean checkForDuplicateVarDatas(final String variable, final Element rules, final String inputAttributePathStringXMLEscaped) {
-		
+
 		final NodeList dataElements = rules.getElementsByTagName("data");
-		
+
 		String dataNameValue;
-		
+
 		String dataSourceValue;
-		
+
 		for (int i = 0; i < dataElements.getLength(); i++) {
-			
-			dataNameValue = dataElements.item(i).getAttributes().getNamedItem("name").getNodeValue();
-			
-			dataSourceValue = dataElements.item(i).getAttributes().getNamedItem("source").getNodeValue();
-			
+
+			final Node dataNode = dataElements.item(i);
+
+			if (dataNode == null) {
+
+				continue;
+			}
+
+			final NamedNodeMap dataNamedNodeMap = dataNode.getAttributes();
+
+			if (dataNamedNodeMap == null) {
+
+				continue;
+			}
+
+			final Node nameNode = dataNamedNodeMap.getNamedItem("name");
+
+			if (nameNode == null) {
+
+				continue;
+			}
+
+			dataNameValue = nameNode.getNodeValue();
+
+			if (dataNameValue == null) {
+
+				continue;
+			}
+
+			final Node sourceNode = dataNamedNodeMap.getNamedItem("source");
+
+			if (sourceNode == null) {
+
+				continue;
+			}
+
+			dataSourceValue = sourceNode.getNodeValue();
+
+			if (dataSourceValue == null) {
+
+				continue;
+			}
+
 			if (dataNameValue.equals("@" + variable) && dataSourceValue.equals(inputAttributePathStringXMLEscaped)) {
-				
+
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -862,8 +902,8 @@ public class MorphScriptBuilder {
 		return manipulatedVariable;
 	}
 
-	private void addFilter(final String inputAttributePathStringXMLEscaped, final String variable,
-			final Map<String, String> filterExpressionMap, final Element rules) {
+	private void addFilter(final String inputAttributePathStringXMLEscaped, final String variable, final Map<String, String> filterExpressionMap,
+			final Element rules) {
 
 		final Element combineAsFilter = doc.createElement("combine");
 		combineAsFilter.setAttribute("reset", "false");
