@@ -20,18 +20,20 @@ import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttributePath;
 import de.avgl.dmp.persistence.service.schema.AttributePathService;
 import de.avgl.dmp.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AttributePathsResourceTest
 		extends
 		BasicResourceTest<AttributePathsResourceTestUtils, AttributePathServiceTestUtils, AttributePathService, ProxyAttributePath, AttributePath, Long> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributePathsResourceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AttributePathsResourceTest.class);
 
-	private final AttributesResourceTestUtils		attributeResourceTestUtils;
+	private final AttributesResourceTestUtils attributeResourceTestUtils;
 
-	private Attribute								actualAttribute1;
+	private Attribute actualAttribute1;
 
-	private Attribute								actualAttribute2;
+	private Attribute actualAttribute2;
 
 	public AttributePathsResourceTest() {
 

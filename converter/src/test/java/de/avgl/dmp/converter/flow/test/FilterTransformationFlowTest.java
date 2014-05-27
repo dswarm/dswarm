@@ -60,12 +60,10 @@ public class FilterTransformationFlowTest extends GuicedTest {
 	}
 
 	/**
-	 * TODO: fix this - this test doesn't work yet as expected - or? - i.e. we need to find the entity boarder to be able to
-	 * combine it with an index (occurrence)
+	 * selects the 2nd value of the 2nd match
 	 * 
 	 * @throws Exception
 	 */
-	@Ignore
 	@Test
 	public void testFilterEndToEndWithMultipleResultsAndRepeatableElements() throws Exception {
 

@@ -24,8 +24,6 @@ import de.avgl.dmp.persistence.service.resource.ConfigurationService;
  */
 public class ConfigurationsResourceUtils extends ExtendedBasicDMPResourceUtils<ConfigurationService, ProxyConfiguration, Configuration> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ConfigurationsResourceUtils.class);
-
 	@Inject
 	public ConfigurationsResourceUtils(final ResourceUtilsFactory utilsFactory, final Provider<ConfigurationService> persistenceServiceProviderArg,
 			final Provider<ObjectMapper> objectMapperProviderArg) {

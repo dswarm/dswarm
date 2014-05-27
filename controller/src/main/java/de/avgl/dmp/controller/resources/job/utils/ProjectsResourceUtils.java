@@ -27,8 +27,6 @@ import de.avgl.dmp.persistence.service.job.ProjectService;
  */
 public class ProjectsResourceUtils extends ExtendedBasicDMPResourceUtils<ProjectService, ProxyProject, Project> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ProjectsResourceUtils.class);
-
 	@Inject
 	public ProjectsResourceUtils(final Provider<ProjectService> persistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg,
 			final ResourceUtilsFactory utilsFactory) {

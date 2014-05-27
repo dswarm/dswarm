@@ -1,13 +1,13 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
-	<meta>
-		<name>mapping-1400167067416</name>
-	</meta>
-	<rules>
-		<data name="@val6" source="http://data.slub-dresden.de/resources/1/schema#val6"/>
-		<data name="http://rdvocab.info/Elements/otherTitleInformation" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
-		<data name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" source="@val6">
-			<substring end="7" start="1"/>
-		</data>
-	</rules>
+    <meta>
+        <name>mapping-1400167067416</name>
+    </meta>
+    <rules>
+        <data name="@val6" source="http://data.slub-dresden.de/resources/1/schema#val6"/>
+        <data name="http://rdvocab.info/Elements/otherTitleInformation" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" source="@val6">
+            <substring end="7" start="1"/>
+        </data>
+    </rules>
 </metamorph>

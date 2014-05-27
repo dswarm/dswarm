@@ -19,8 +19,6 @@ import de.avgl.dmp.persistence.service.schema.AttributeService;
  */
 public class AttributesResourceUtils extends AdvancedDMPResourceUtils<AttributeService, ProxyAttribute, Attribute> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributesResourceUtils.class);
-
 	@Inject
 	public AttributesResourceUtils(final Provider<AttributeService> persistenceServiceProviderArg,
 			final Provider<ObjectMapper> objectMapperProviderArg, final ResourceUtilsFactory utilsFactory) {

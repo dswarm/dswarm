@@ -45,24 +45,26 @@ import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.resource.ResourceService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ResourcesResourceTest extends ResourceTest {
 
-	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(ResourcesResourceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ResourcesResourceTest.class);
 
-	private String									resourceJSONString		= null;
-	private File									resourceFile			= null;
-	private Resource								expectedResource		= null;
-	private Resource								actualResource			= null;
-	private Set<Configuration>						exceptedConfigurations	= null;
+	private String             resourceJSONString     = null;
+	private File               resourceFile           = null;
+	private Resource           expectedResource       = null;
+	private Resource           actualResource         = null;
+	private Set<Configuration> exceptedConfigurations = null;
 
-	private final ConfigurationService				configurationService	= GuicedTest.injector.getInstance(ConfigurationService.class);
+	private final ConfigurationService configurationService = GuicedTest.injector.getInstance(ConfigurationService.class);
 
-	private final ResourceService					resourceService			= GuicedTest.injector.getInstance(ResourceService.class);
+	private final ResourceService resourceService = GuicedTest.injector.getInstance(ResourceService.class);
 
-	private final ObjectMapper						objectMapper			= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	private final ConfigurationsResourceTestUtils	configurationsResourceTestUtils;
+	private final ConfigurationsResourceTestUtils configurationsResourceTestUtils;
 
 	public ResourcesResourceTest() {
 		super("resources");

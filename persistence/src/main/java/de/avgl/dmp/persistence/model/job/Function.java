@@ -32,6 +32,8 @@ import com.google.common.collect.Lists;
 import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A function is a method that can be executed on data via a {@link Job} execution (i.e. a {@link Task}). A function mainly
@@ -57,7 +59,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	 */
 	private static final long						serialVersionUID	= 1L;
 
-	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(Function.class);
+	private static final Logger LOG = LoggerFactory.getLogger(Function.class);
 
 	/**
 	 * A string that holds the serialised JSON object of a function description.
@@ -65,37 +67,37 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "FUNCTION_DESCRIPTION", columnDefinition = "VARCHAR(4000)", length = 4000)
-	private String									functionDescriptionString;
+	private String functionDescriptionString;
 
 	/**
 	 * A function description as JSON object.
 	 */
 	@Transient
-	private ObjectNode								functionDescription;
+	private ObjectNode functionDescription;
 
 	/**
 	 * A flag that indicates, whether the function description is initialised or not.
 	 */
 	@Transient
-	private boolean									functionDescriptionInitialized;
+	private boolean functionDescriptionInitialized;
 
 	/**
 	 * A list of parameters.
 	 */
 	@Transient
-	private LinkedList<String>						parameters;
+	private LinkedList<String> parameters;
 
 	/**
 	 * A JSON array of the parameter list.
 	 */
 	@Transient
-	private ArrayNode								parametersJSON;
+	private ArrayNode parametersJSON;
 
 	/**
 	 * A flag that indicates, whether the parameters are initialized or not.
 	 */
 	@Transient
-	private boolean									parametersInitialized;
+	private boolean parametersInitialized;
 
 	/**
 	 * A string that hold the serialised JSON object of the parameters.
@@ -104,7 +106,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "PARAMETERS", columnDefinition = "VARCHAR(4000)", length = 4000)
-	private String									parametersString;
+	private String parametersString;
 
 	/**
 	 * The function type, e.g., function ({@link FunctionType#Function}) or transformation ({@link FunctionType#Transformation}).
@@ -116,7 +118,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	// @JsonIgnore
 	@Column(name = "FUNCTION_TYPE")
 	@Enumerated(EnumType.STRING)
-	private FunctionType						functionType;
+	private FunctionType functionType;
 
 	/**
 	 * Creates a new function.
@@ -128,7 +130,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Creates a new function with the given function type, i.e. function or transformation.
-	 * 
+	 *
 	 * @param functionTypeArg the type of the function
 	 */
 	public Function(final FunctionType functionTypeArg) {
@@ -138,7 +140,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the parameters of the function.
-	 * 
+	 *
 	 * @return the parameters of the function
 	 */
 	@XmlElement(name = "parameters")
@@ -151,9 +153,10 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the parameters of the function.
-	 * 
+	 *
 	 * @param parametersArg new parameters of the function
 	 */
+	@XmlElement(name = "parameters")
 	public void setParameters(final LinkedList<String> parametersArg) {
 
 		if (parametersArg == null && parameters != null) {
@@ -180,7 +183,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Adds a new parameter to the parameters lists of the function
-	 * 
+	 *
 	 * @param parameter a new parameter
 	 */
 	public void addParameter(final String parameter) {
@@ -205,7 +208,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the machine processable function description
-	 * 
+	 *
 	 * @return the machine processable function description
 	 */
 	@XmlElement(name = "function_description")
@@ -218,7 +221,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the machine processable function description
-	 * 
+	 *
 	 * @param functionDescriptionArg a new machine processable function description
 	 */
 	public void setFunctionDescription(final ObjectNode functionDescriptionArg) {
@@ -231,7 +234,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Gets the function type, e.g., function ({@link FunctionType#Function}) or transformation (
 	 * {@link FunctionType#Transformation}).
-	 * 
+	 *
 	 * @return the function type
 	 */
 	public FunctionType getFunctionType() {

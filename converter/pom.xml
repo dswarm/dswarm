@@ -8,7 +8,6 @@
 		<artifactId>dmp</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
-	<groupId>de.avgl.dmp</groupId>
 	<artifactId>converter</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
@@ -114,25 +113,22 @@
 			<artifactId>jsr305</artifactId>
 			<version>2.0.3</version>
 		</dependency>
+		<!-- for xml handling in morph script builder -->
 		<dependency>
-			<groupId>org.apache.jena</groupId>
-			<artifactId>apache-jena-libs</artifactId>
-			<type>pom</type>
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+			<version>2.11.0</version>
+		</dependency>
+		<dependency>
+			<groupId>xalan</groupId>
+			<artifactId>xalan</artifactId>
+			<version>2.7.1</version>
 			<exclusions>
 				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>log4j</artifactId>
-					<groupId>log4j</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>slf4j-log4j12</artifactId>
-					<groupId>org.slf4j</groupId>
+					<artifactId>xml-apis</artifactId>
+					<groupId>xml-apis</groupId>
 				</exclusion>
 			</exclusions>
-			<version>2.11.1</version>
 		</dependency>
 	</dependencies>
 </project>

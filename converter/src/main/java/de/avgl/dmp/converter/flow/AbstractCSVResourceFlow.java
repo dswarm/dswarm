@@ -18,6 +18,8 @@ import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
 import de.avgl.dmp.persistence.model.resource.utils.DataModelUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author phorn
@@ -25,40 +27,30 @@ import de.avgl.dmp.persistence.model.resource.utils.DataModelUtils;
  */
 public abstract class AbstractCSVResourceFlow<T> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AbstractCSVResourceFlow.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AbstractCSVResourceFlow.class);
 
-	private final String							encoding;
+	private final String encoding;
 
-	private final Character							escapeCharacter;
+	private final Character escapeCharacter;
 
-	private final Character							quoteCharacter;
+	private final Character quoteCharacter;
 
-	private final Character							columnDelimiter;
+	private final Character columnDelimiter;
 
-	private final String							rowDelimiter;
+	private final String rowDelimiter;
 
-	private final int								ignoreLines;
+	private final int ignoreLines;
 
-	private final int								discardRows;
-
-	private final Optional<String>					dataModelId;
+	private final int discardRows;
 
 	private final boolean firstRowIsHeaders;
 
-	protected Optional<Integer>						atMost;
+	protected Optional<Integer> atMost;
 
-	protected final String							dataResourceBaseURI;
-	protected final String							dataResourceSchemaBaseURI;
+	protected final String dataResourceBaseURI;
+	protected final String dataResourceSchemaBaseURI;
 
 	public AbstractCSVResourceFlow(final DataModel dataModel) throws DMPConverterException {
-
-		if (dataModel != null && dataModel.getId() != null) {
-
-			this.dataModelId = Optional.of(dataModel.getId().toString());
-		} else {
-
-			this.dataModelId = Optional.absent();
-		}
 
 		if (dataModel == null) {
 
@@ -120,7 +112,6 @@ public abstract class AbstractCSVResourceFlow<T> {
 		this.atMost = Optional.absent();
 		this.firstRowIsHeaders = true;
 
-		this.dataModelId = null;
 		this.dataResourceBaseURI = null;
 		this.dataResourceSchemaBaseURI = null;
 	}
@@ -162,7 +153,6 @@ public abstract class AbstractCSVResourceFlow<T> {
 			throw new DMPConverterException(String.format("Unsupported Encoding - [%s]", e.getCharsetName()));
 		}
 
-		this.dataModelId = Optional.absent();
 		this.dataResourceBaseURI = null;
 		this.dataResourceSchemaBaseURI = null;
 	}
@@ -179,7 +169,6 @@ public abstract class AbstractCSVResourceFlow<T> {
 		this.atMost = Optional.absent();
 		this.firstRowIsHeaders = ConfigurationStatics.DEFAULT_FIRST_ROW_IS_HEADINGS;
 
-		this.dataModelId = null;
 		this.dataResourceBaseURI = null;
 		this.dataResourceSchemaBaseURI = null;
 	}
@@ -289,7 +278,6 @@ public abstract class AbstractCSVResourceFlow<T> {
 		final CsvReader reader = new CsvReader(escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter, ignoreLines, discardRows, atMost);
 
 		reader.setHeader(firstRowIsHeaders);
-		reader.setDataResourceBaseURI(dataResourceBaseURI);
 		reader.setDataResourceSchemaBaseURI(dataResourceSchemaBaseURI);
 
 		final CsvReader pipe = opener.setReceiver(reader);

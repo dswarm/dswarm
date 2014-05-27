@@ -19,8 +19,6 @@ import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
 @Table(name = "ATTRIBUTE")
 public class Attribute extends AdvancedDMPJPAObject {
 
-	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(Attribute.class);
-
 	/**
 	 * All attribute paths that utilise this attribute
 	 */

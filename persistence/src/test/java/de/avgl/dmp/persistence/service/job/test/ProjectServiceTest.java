@@ -50,48 +50,49 @@ import de.avgl.dmp.persistence.service.schema.test.utils.MappingAttributePathIns
 import de.avgl.dmp.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ProjectServiceTest extends IDBasicJPAServiceTest<ProxyProject, Project, ProjectService> {
 
-	private static final org.apache.log4j.Logger				LOG								= org.apache.log4j.Logger
-																										.getLogger(ProjectServiceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ProjectServiceTest.class);
 
-	private final ObjectMapper									objectMapper					= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	private final Map<Long, Function>							functions						= Maps.newLinkedHashMap();
+	private final Map<Long, Function> functions = Maps.newLinkedHashMap();
 
-	private final Map<Long, Attribute>							attributes						= Maps.newLinkedHashMap();
+	private final Map<Long, Attribute> attributes = Maps.newLinkedHashMap();
 
-	private final Map<Long, Clasz>								classes							= Maps.newLinkedHashMap();
+	private final Map<Long, Clasz> classes = Maps.newLinkedHashMap();
 
-	private final Map<Long, AttributePath>						attributePaths					= Maps.newLinkedHashMap();
+	private final Map<Long, AttributePath> attributePaths = Maps.newLinkedHashMap();
 
-	private final Map<Long, Component>							components						= Maps.newLinkedHashMap();
+	private final Map<Long, Component> components = Maps.newLinkedHashMap();
 
-	private final Map<Long, Transformation>						transformations					= Maps.newLinkedHashMap();
+	private final Map<Long, Transformation> transformations = Maps.newLinkedHashMap();
 
-	private final Map<Long, Mapping>							mappings						= Maps.newLinkedHashMap();
+	private final Map<Long, Mapping> mappings = Maps.newLinkedHashMap();
 
-	private final Map<Long, Schema>								schemas							= Maps.newLinkedHashMap();
+	private final Map<Long, Schema> schemas = Maps.newLinkedHashMap();
 
-	private final Map<Long, Resource>							resources						= Maps.newLinkedHashMap();
+	private final Map<Long, Resource> resources = Maps.newLinkedHashMap();
 
-	private final Map<Long, Configuration>						configurations					= Maps.newLinkedHashMap();
+	private final Map<Long, Configuration> configurations = Maps.newLinkedHashMap();
 
-	private final Map<Long, MappingAttributePathInstance>		mappingAttributePathInstances	= Maps.newLinkedHashMap();
+	private final Map<Long, MappingAttributePathInstance> mappingAttributePathInstances = Maps.newLinkedHashMap();
 
-	private final AttributeServiceTestUtils						attributeServiceTestUtils;
-	private final AttributePathServiceTestUtils					attributePathServiceTestUtils;
-	private final FunctionServiceTestUtils						functionServiceTestUtils;
-	private final MappingAttributePathInstanceServiceTestUtils	mappingAttributePathInstanceServiceTestUtils;
-	private final ComponentServiceTestUtils						componentServiceTestUtils;
-	private final TransformationServiceTestUtils				transformationServiceTestUtils;
-	private final SchemaServiceTestUtils						schemaServiceTestUtils;
-	private final ConfigurationServiceTestUtils					configurationServiceTestUtils;
-	private final ResourceServiceTestUtils						resourceServiceTestUtils;
-	private final ClaszServiceTestUtils							claszServiceTestUtils;
-	private final MappingServiceTestUtils						mappingServiceTestUtils;
-	private final DataModelServiceTestUtils						dataModelServiceTestUtils;
+	private final AttributeServiceTestUtils                    attributeServiceTestUtils;
+	private final AttributePathServiceTestUtils                attributePathServiceTestUtils;
+	private final FunctionServiceTestUtils                     functionServiceTestUtils;
+	private final MappingAttributePathInstanceServiceTestUtils mappingAttributePathInstanceServiceTestUtils;
+	private final ComponentServiceTestUtils                    componentServiceTestUtils;
+	private final TransformationServiceTestUtils               transformationServiceTestUtils;
+	private final SchemaServiceTestUtils                       schemaServiceTestUtils;
+	private final ConfigurationServiceTestUtils                configurationServiceTestUtils;
+	private final ResourceServiceTestUtils                     resourceServiceTestUtils;
+	private final ClaszServiceTestUtils                        claszServiceTestUtils;
+	private final MappingServiceTestUtils                      mappingServiceTestUtils;
+	private final DataModelServiceTestUtils                    dataModelServiceTestUtils;
 
 	public ProjectServiceTest() {
 

@@ -17,15 +17,17 @@ import de.avgl.dmp.persistence.service.resource.ResourceService;
 import de.avgl.dmp.persistence.service.resource.test.utils.ResourceServiceTestUtils;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ResourceServiceTest extends IDBasicJPAServiceTest<ProxyResource, Resource, ResourceService> {
 
-	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(ResourceServiceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ResourceServiceTest.class);
 
-	final String									attributeKey	= "path";
-	final String									attributeValue	= "/path/to/file.end";
+	final String attributeKey   = "path";
+	final String attributeValue = "/path/to/file.end";
 
-	private final ResourceServiceTestUtils			resourceServiceTestUtils;
+	private final ResourceServiceTestUtils resourceServiceTestUtils;
 
 	public ResourceServiceTest() {
 

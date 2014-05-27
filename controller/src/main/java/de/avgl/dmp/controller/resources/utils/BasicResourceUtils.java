@@ -23,6 +23,8 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.DMPObject;
 import de.avgl.dmp.persistence.model.proxy.ProxyDMPObject;
 import de.avgl.dmp.persistence.service.BasicJPAService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author tgaengler
@@ -32,26 +34,26 @@ import de.avgl.dmp.persistence.service.BasicJPAService;
  */
 public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE> {
 
-	private static final org.apache.log4j.Logger			LOG						= org.apache.log4j.Logger.getLogger(BasicResourceUtils.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BasicResourceUtils.class);
 
-	protected final Class<POJOCLASS>						pojoClass;
+	protected final Class<POJOCLASS> pojoClass;
 
-	protected final Class<POJOCLASSIDTYPE>					pojoClassIdType;
+	protected final Class<POJOCLASSIDTYPE> pojoClassIdType;
 
-	protected final String									pojoClassName;
+	protected final String pojoClassName;
 
-	protected final Provider<POJOCLASSPERSISTENCESERVICE>	persistenceServiceProvider;
+	protected final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProvider;
 
-	protected final Provider<ObjectMapper>					objectMapperProvider;
+	protected final Provider<ObjectMapper> objectMapperProvider;
 
-	protected final ResourceUtilsFactory					utilsFactory;
+	protected final ResourceUtilsFactory utilsFactory;
 
 	// TODO: this might be not the best solution ...
-	protected final Set<String>								toBeSkippedJsonNodes	= Sets.newHashSet();
+	protected final Set<String> toBeSkippedJsonNodes = Sets.newHashSet();
 
-	private Set<POJOCLASSIDTYPE>							processedObjectIds;
+	private Set<POJOCLASSIDTYPE> processedObjectIds;
 
-	private Set<POJOCLASSIDTYPE>							dummyIdCandidates;
+	private Set<POJOCLASSIDTYPE> dummyIdCandidates;
 
 	public BasicResourceUtils(final Class<POJOCLASS> pojoClassArg, final Class<POJOCLASSIDTYPE> pojoClassIdTypeArg,
 			final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg,
@@ -78,7 +80,7 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 
 	/**
 	 * Gets the concrete POJO class of this resource (controller service).
-	 * 
+	 *
 	 * @return the concrete POJO class
 	 */
 	public Class<POJOCLASS> getClasz() {
@@ -315,17 +317,8 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 
 	public boolean hasObjectAlreadyBeenProcessed(final POJOCLASSIDTYPE objectId) {
 
-		if (processedObjectIds == null) {
+		return processedObjectIds != null && processedObjectIds.contains(objectId);
 
-			return false;
-		}
-
-		if (!processedObjectIds.contains(objectId)) {
-
-			return false;
-		}
-
-		return true;
 	}
 
 	protected abstract ObjectNode replaceDummyId(final JsonNode idNode, final POJOCLASSIDTYPE dummyId, final POJOCLASSIDTYPE realId,
@@ -333,27 +326,14 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 
 	protected boolean areDummyIdCandidatesEmpty(final Set<POJOCLASSIDTYPE> dummyIdCandidates) {
 
-		if (dummyIdCandidates == null || dummyIdCandidates.isEmpty()) {
+		return dummyIdCandidates == null || dummyIdCandidates.isEmpty();
 
-			return true;
-		}
-
-		return false;
 	}
 
 	protected boolean checkObject(final POJOCLASS object, final Set<POJOCLASSIDTYPE> dummyIdCandidates) {
 
-		if (hasObjectAlreadyBeenProcessed(object.getId())) {
+		return hasObjectAlreadyBeenProcessed(object.getId()) || areDummyIdCandidatesEmpty(dummyIdCandidates);
 
-			return true;
-		}
-
-		if (areDummyIdCandidatesEmpty(dummyIdCandidates)) {
-
-			return true;
-		}
-
-		return false;
 	}
 
 	protected JsonNode createNewObjectForDummyId(final POJOCLASS object, final JsonNode jsonNode, final Set<POJOCLASSIDTYPE> dummyIdCandidates)
@@ -403,7 +383,7 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 		return jsonNode;
 	}
 
-	protected abstract void checkObjectId(final JsonNode idNode, final ObjectNode objectJSON);
+	protected abstract void checkObjectId(final JsonNode idNode);
 
 	protected abstract ObjectNode addDummyId(final ObjectNode objectJSON);
 
@@ -420,7 +400,7 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 
 			// check id and add it to the dummy id candidates, if it is a dummy id
 
-			checkObjectId(idNode, objectJSON);
+			checkObjectId(idNode);
 		}
 
 		final Iterator<Entry<String, JsonNode>> iter = objectJSON.fields();

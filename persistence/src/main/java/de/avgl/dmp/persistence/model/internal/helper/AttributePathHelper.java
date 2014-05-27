@@ -60,16 +60,6 @@ public class AttributePathHelper {
 	@Override
 	public boolean equals(final java.lang.Object obj) {
 
-		if (obj == null) {
-
-			return false;
-		}
-
-		if (toString().equals(obj.toString())) {
-
-			return true;
-		}
-
-		return false;
+		return obj != null && AttributePathHelper.class.isInstance(obj) && toString().equals(obj.toString());
 	}
 }

@@ -16,7 +16,6 @@ public final class SchemaHelperHelper {
 	 * 
 	 * @param schemaHelpers a map of converter helpers
 	 * @param property the property, where the literal belongs to
-	 * @param rdfNode the RDF node to contains the literal
 	 * @return the map of converter helpers
 	 */
 	public static Map<String, SchemaHelper> addPropertyToSchemaHelpers(final Map<String, SchemaHelper> schemaHelpers, final String property) {

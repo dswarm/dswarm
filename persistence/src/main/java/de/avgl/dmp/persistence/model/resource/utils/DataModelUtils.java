@@ -5,15 +5,14 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.avgl.dmp.graph.json.Predicate;
 import de.avgl.dmp.graph.json.ResourceNode;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.utils.ExtendedBasicDMPJPAObjectUtils;
+import de.avgl.dmp.persistence.util.GDMUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A utility class for {@link DataModel}s and related entities.
@@ -22,7 +21,7 @@ import de.avgl.dmp.persistence.model.utils.ExtendedBasicDMPJPAObjectUtils;
  */
 public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataModel> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(DataModelUtils.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DataModelUtils.class);
 
 	public static String determineDataModelSchemaBaseURI(final DataModel dataModel) {
 
@@ -143,47 +142,6 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 		return dataResourceBaseURI;
 	}
 
-	public static Resource mintRecordResource(final Long identifier, final DataModel dataModel, final Map<Long, Resource> recordResources,
-			final Model model, final String recordClassURI) {
-
-		if (identifier != null) {
-
-			if (recordResources.containsKey(identifier)) {
-
-				return recordResources.get(identifier);
-			}
-		}
-
-		// mint completely new uri
-
-		final StringBuilder sb = new StringBuilder();
-
-		if (dataModel != null) {
-
-			// create uri from resource id and configuration id and random uuid
-
-			sb.append("http://data.slub-dresden.de/datamodels/").append(dataModel.getId()).append("/records/");
-		} else {
-
-			// create uri from random uuid
-
-			sb.append("http://data.slub-dresden.de/records/");
-		}
-
-		final String recordURI = sb.append(UUID.randomUUID()).toString();
-		final Resource recordResource = ResourceFactory.createResource(recordURI);
-
-		if (identifier != null) {
-
-			recordResources.put(identifier, recordResource);
-		}
-
-		// add resource type statement to model
-		model.add(recordResource, RDF.type, ResourceFactory.createResource(recordClassURI));
-
-		return recordResource;
-	}
-
 	public static de.avgl.dmp.graph.json.Resource mintRecordResource(final Long identifier, final DataModel dataModel,
 			final Map<Long, de.avgl.dmp.graph.json.Resource> recordResources, final de.avgl.dmp.graph.json.Model model,
 			final ResourceNode recordClassNode) {
@@ -221,7 +179,7 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 		}
 
 		// add resource type statement to model
-		recordResource.addStatement(new ResourceNode(recordResource.getUri()), new Predicate(RDF.type.getURI()), recordClassNode);
+		recordResource.addStatement(new ResourceNode(recordResource.getUri()), new Predicate(GDMUtil.RDF_type), recordClassNode);
 		model.addResource(recordResource);
 
 		return recordResource;

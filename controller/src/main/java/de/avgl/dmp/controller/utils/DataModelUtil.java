@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,12 +41,12 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
 @Singleton
 public class DataModelUtil {
 
-	private static final org.apache.log4j.Logger		LOG	= org.apache.log4j.Logger.getLogger(DataModelUtil.class);
-	private final ObjectMapper							objectMapper;
-	private final Provider<ResourceService>				resourceServiceProvider;
-	private final Provider<InternalModelServiceFactory>	internalServiceFactoryProvider;
-	private final Provider<SchemaService>				schemaServiceProvider;
-	private final Provider<DataModelService>			dataModelServiceProvider;
+	private static final Logger LOG = LoggerFactory.getLogger(DataModelUtil.class);
+	private final ObjectMapper                          objectMapper;
+	private final Provider<ResourceService>             resourceServiceProvider;
+	private final Provider<InternalModelServiceFactory> internalServiceFactoryProvider;
+	private final Provider<SchemaService>               schemaServiceProvider;
+	private final Provider<DataModelService>            dataModelServiceProvider;
 
 	@Inject
 	public DataModelUtil(final ObjectMapper objectMapper, final Provider<ResourceService> resourceServiceProvider,
@@ -58,17 +61,17 @@ public class DataModelUtil {
 
 	/**
 	 * Gets the data of the given data model.
-	 * 
+	 *
 	 * @param dataModelId the identifier of the data model.
 	 * @return the data of the given data model
 	 */
 	public Optional<Iterator<Tuple<String, JsonNode>>> getData(final long dataModelId) {
-		return getData(dataModelId, Optional.<Integer> absent());
+		return getData(dataModelId, Optional.<Integer>absent());
 	}
 
 	/**
 	 * Gets the data of the given data model and maximum in the given amount.
-	 * 
+	 *
 	 * @param dataModelId the identifer of the data model
 	 * @param atMost the number of records that should be retrieved
 	 * @return the data of the given data model
@@ -98,7 +101,7 @@ public class DataModelUtil {
 			maybeTriples = internalService.getObjects(dataModelId, atMost);
 		} catch (final DMPPersistenceException e1) {
 
-			DataModelUtil.LOG.debug(e1);
+			DataModelUtil.LOG.debug("couldn't find data", e1);
 			return Optional.absent();
 		}
 
@@ -147,7 +150,7 @@ public class DataModelUtil {
 			return Optional.absent();
 		}
 
-		String schemaJSONString = null;;
+		String schemaJSONString = null;
 		try {
 
 			schemaJSONString = objectMapper.writeValueAsString(schemaOptional.get());

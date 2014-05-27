@@ -25,8 +25,6 @@ import de.avgl.dmp.persistence.service.schema.MappingAttributePathInstanceServic
 public class MappingAttributePathInstancesResourceUtils extends
 		AttributePathInstancesResourceUtils<MappingAttributePathInstanceService, ProxyMappingAttributePathInstance, MappingAttributePathInstance> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(MappingAttributePathInstancesResourceUtils.class);
-
 	@Inject
 	public MappingAttributePathInstancesResourceUtils(final Provider<MappingAttributePathInstanceService> persistenceServiceProviderArg,
 			final Provider<ObjectMapper> objectMapperProviderArg, final ResourceUtilsFactory utilsFactory) {

@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
 
-import org.apache.log4j.LogManager;
+import ch.qos.logback.classic.LoggerContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.log4j.InstrumentedAppender;
+import com.codahale.metrics.logback.InstrumentedAppender;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.common.eventbus.EventBus;
 import com.google.common.io.Resources;
@@ -44,7 +46,7 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
  */
 public class PersistenceModule extends AbstractModule {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(PersistenceModule.class);
+	private static final Logger LOG = LoggerFactory.getLogger(PersistenceModule.class);
 
 	/**
 	 * registers all persistence services and other related properties etc.
@@ -58,10 +60,6 @@ public class PersistenceModule extends AbstractModule {
 		} catch (final IOException e) {
 			PersistenceModule.LOG.error("Could not load dmp.properties", e);
 		}
-
-		final String tdbPath = properties.getProperty("tdb_path", "target/h2");
-
-		bind(String.class).annotatedWith(Names.named("TdbPath")).toInstance(tdbPath);
 
 		final String graphEndpoint = properties.getProperty("dmp_graph_endpoint", "http://localhost:7474/graph");
 		final GraphDatabaseConfig gdbConfig = new GraphDatabaseConfig(graphEndpoint);
@@ -89,19 +87,27 @@ public class PersistenceModule extends AbstractModule {
 
 	/**
 	 * Provides the metric registry to register objects for metric statistics.
-	 * 
+	 *
 	 * @return a {@link MetricRegistry} instance as singleton
 	 */
 	@Provides
 	@Singleton
 	protected MetricRegistry provideMetricRegistry() {
-		final MetricRegistry metricRegistry = new MetricRegistry();
+		final MetricRegistry registry = new MetricRegistry();
 
-		final InstrumentedAppender appender = new InstrumentedAppender(metricRegistry);
-		appender.activateOptions();
-		LogManager.getRootLogger().addAppender(appender);
+//		final InstrumentedAppender appender = new InstrumentedAppender(metricRegistry);
+//		appender.activateOptions();
+//		LogManager.getRootLogger().addAppender(appender);
 
-		return metricRegistry;
+		final LoggerContext factory = (LoggerContext) LoggerFactory.getILoggerFactory();
+		final ch.qos.logback.classic.Logger root = factory.getLogger(Logger.ROOT_LOGGER_NAME);
+
+		final InstrumentedAppender metrics = new InstrumentedAppender(registry);
+		metrics.setContext(root.getLoggerContext());
+		metrics.start();
+		root.addAppender(metrics);
+
+		return registry;
 	}
 
 	/**

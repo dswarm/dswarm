@@ -20,8 +20,6 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 public abstract class BasicIDResourceUtils<POJOCLASSPERSISTENCESERVICE extends BasicIDJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyDMPJPAObject<POJOCLASS>, POJOCLASS extends DMPJPAObject>
 		extends BasicResourceUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS, Long> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(BasicIDResourceUtils.class);
-
 	public BasicIDResourceUtils(final Class<POJOCLASS> pojoClassArg, final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
 			final Provider<ObjectMapper> objectMapperProviderArg, final ResourceUtilsFactory utilsFactory) {
 
@@ -47,7 +45,7 @@ public abstract class BasicIDResourceUtils<POJOCLASSPERSISTENCESERVICE extends B
 	}
 
 	@Override
-	protected void checkObjectId(final JsonNode idNode, final ObjectNode objectJSON) {
+	protected void checkObjectId(final JsonNode idNode) {
 
 		if (idNode.canConvertToLong()) {
 
@@ -55,7 +53,7 @@ public abstract class BasicIDResourceUtils<POJOCLASSPERSISTENCESERVICE extends B
 
 			if (longId < 0) {
 
-				addDummyIdCandidate(Long.valueOf(longId));
+				addDummyIdCandidate(longId);
 			}
 		}
 	}

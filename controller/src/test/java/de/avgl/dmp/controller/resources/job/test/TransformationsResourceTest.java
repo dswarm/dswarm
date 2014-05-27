@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.avgl.dmp.controller.resources.job.test.utils.ComponentsResourceTestUtils;
 import de.avgl.dmp.controller.resources.job.test.utils.FunctionsResourceTestUtils;
 import de.avgl.dmp.controller.resources.job.test.utils.TransformationsResourceTestUtils;
-import de.avgl.dmp.controller.resources.schema.test.AttributesResourceTest;
 import de.avgl.dmp.controller.resources.test.BasicResourceTest;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Function;
@@ -26,21 +25,19 @@ public class TransformationsResourceTest
 		extends
 		BasicResourceTest<TransformationsResourceTestUtils, TransformationServiceTestUtils, TransformationService, ProxyTransformation, Transformation, Long> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributesResourceTest.class);
+	private final FunctionsResourceTestUtils functionsResourceTestUtils;
 
-	private final FunctionsResourceTestUtils		functionsResourceTestUtils;
+	private final ComponentsResourceTestUtils componentsResourceTestUtils;
 
-	private final ComponentsResourceTestUtils		componentsResourceTestUtils;
+	private final TransformationsResourceTestUtils transformationsResourceTestUtils;
 
-	private final TransformationsResourceTestUtils	transformationsResourceTestUtils;
+	private Function function;
 
-	private Function								function;
+	private Component component;
 
-	private Component								component;
+	private Function updateFunction;
 
-	private Function								updateFunction;
-
-	private Component								updateComponent;
+	private Component updateComponent;
 
 	public TransformationsResourceTest() {
 

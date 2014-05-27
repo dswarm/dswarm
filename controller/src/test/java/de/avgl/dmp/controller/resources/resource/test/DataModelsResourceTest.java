@@ -52,43 +52,45 @@ import de.avgl.dmp.persistence.service.internal.test.utils.InternalGDMGraphServi
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.resource.test.utils.DataModelServiceTestUtils;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DataModelsResourceTest extends
 		BasicResourceTest<DataModelsResourceTestUtils, DataModelServiceTestUtils, DataModelService, ProxyDataModel, DataModel, Long> {
 
-	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(DataModelsResourceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DataModelsResourceTest.class);
 
-	private final AttributesResourceTestUtils		attributesResourceTestUtils;
+	private final AttributesResourceTestUtils attributesResourceTestUtils;
 
-	private final ClaszesResourceTestUtils			claszesResourceTestUtils;
+	private final ClaszesResourceTestUtils claszesResourceTestUtils;
 
-	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
+	private final AttributePathsResourceTestUtils attributePathsResourceTestUtils;
 
-	private final ResourcesResourceTestUtils		resourcesResourceTestUtils;
+	private final ResourcesResourceTestUtils resourcesResourceTestUtils;
 
-	private final ConfigurationsResourceTestUtils	configurationsResourceTestUtils;
+	private final ConfigurationsResourceTestUtils configurationsResourceTestUtils;
 
-	private final SchemasResourceTestUtils			schemasResourceTestUtils;
+	private final SchemasResourceTestUtils schemasResourceTestUtils;
 
-	private final DataModelsResourceTestUtils		dataModelsResourceTestUtils;
+	private final DataModelsResourceTestUtils dataModelsResourceTestUtils;
 
-	private final Map<Long, Attribute>				attributes			= Maps.newHashMap();
+	private final Map<Long, Attribute> attributes = Maps.newHashMap();
 
-	private final Map<Long, AttributePath>			attributePaths		= Maps.newLinkedHashMap();
+	private final Map<Long, AttributePath> attributePaths = Maps.newLinkedHashMap();
 
-	private Clasz									recordClass;
+	private Clasz recordClass;
 
-	private Clasz									updateRecordClass	= null;
+	private Clasz updateRecordClass = null;
 
-	private Schema									schema;
+	private Schema schema;
 
-	private Configuration							configuration;
+	private Configuration configuration;
 
-	private Configuration							updateConfiguration	= null;
+	private Configuration updateConfiguration = null;
 
-	private Resource								resource;
+	private Resource resource;
 
-	private Resource								updateResource		= null;
+	private Resource updateResource = null;
 
 	public DataModelsResourceTest() {
 

@@ -15,6 +15,8 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
 import de.avgl.dmp.persistence.model.proxy.ProxyAdvancedDMPJPAObject;
 import de.avgl.dmp.persistence.model.proxy.RetrievalType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A generic persistence service implementation for {@link AdvancedDMPJPAObject}s, i.e., where the identifier will be set on
@@ -26,11 +28,11 @@ import de.avgl.dmp.persistence.model.proxy.RetrievalType;
 public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvancedDMPJPAObject<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
 		extends BasicDMPJPAService<PROXYPOJOCLASS, POJOCLASS> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AdvancedDMPJPAService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AdvancedDMPJPAService.class);
 
 	/**
 	 * Creates a new persistence service for the given concrete POJO class and the entity manager provider.
-	 * 
+	 *
 	 * @param clasz a concrete POJO class
 	 * @param entityManagerProvider an entity manager provider
 	 */
@@ -42,7 +44,7 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 
 	/**
 	 * Create and persist an object of the specific class with the given identifier.<br>
-	 * 
+	 *
 	 * @param uri the identifier of the object
 	 * @return the persisted object of the specific class
 	 */
@@ -56,7 +58,7 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 
 	/**
 	 * Create and persist an object of the specific class with the given identifier.<br>
-	 * 
+	 *
 	 * @param id the identifier of the object
 	 * @return the persisted object of the specific class
 	 */
@@ -88,8 +90,6 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 
 			AdvancedDMPJPAService.LOG.debug(className + " with uri '" + uri
 					+ "' exists already in the database, will return the existing object, instead creating a new one");
-
-			newObject = existingObject;
 
 			return createNewProxyObject(existingObject, RetrievalType.RETRIEVED);
 		}

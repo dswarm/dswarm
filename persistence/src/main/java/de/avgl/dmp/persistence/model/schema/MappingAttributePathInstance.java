@@ -16,6 +16,8 @@ import com.google.common.base.Objects;
 
 import de.avgl.dmp.persistence.model.job.Filter;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author tgaengler
@@ -28,12 +30,12 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 @Table(name = "MAPPING_ATTRIBUTE_PATH_INSTANCE")
 public class MappingAttributePathInstance extends AttributePathInstance {
 
-	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(MappingAttributePathInstance.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MappingAttributePathInstance.class);
 
 	/**
 	 *
 	 */
-	private static final long						serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The filter of this mapping attribute path instance.
@@ -42,7 +44,7 @@ public class MappingAttributePathInstance extends AttributePathInstance {
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "FILTER")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private Filter									filter;
+	private Filter filter;
 
 	/**
 	 * The (optional) ordinal of this mapping attribute path instance.
@@ -50,7 +52,7 @@ public class MappingAttributePathInstance extends AttributePathInstance {
 	@XmlElement(name = "ordinal")
 	@Column(name = "ORDINAL")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private Integer									ordinal;
+	private Integer ordinal;
 
 	/**
 	 * Creates a new mapping attribute path instance.
@@ -62,7 +64,7 @@ public class MappingAttributePathInstance extends AttributePathInstance {
 
 	/**
 	 * Gets the filter of the mapping attribute path instance.
-	 * 
+	 *
 	 * @return the filter of the mapping attribute path instance
 	 */
 	public Filter getFilter() {
@@ -72,7 +74,7 @@ public class MappingAttributePathInstance extends AttributePathInstance {
 
 	/**
 	 * Sets the filter of the mapping attribute path instance.
-	 * 
+	 *
 	 * @param filterArg a new filter
 	 */
 	public void setFilter(final Filter filterArg) {

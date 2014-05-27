@@ -15,6 +15,8 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
 import de.avgl.dmp.persistence.model.types.Tuple;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author phorn
@@ -22,8 +24,8 @@ import de.avgl.dmp.persistence.model.types.Tuple;
  */
 public class JsonNodeReader extends DefaultObjectPipe<Iterator<Tuple<String, JsonNode>>, StreamReceiver> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(JsonNodeReader.class);
-	private final Optional<String>					recordPrefix;
+	private static final Logger LOG = LoggerFactory.getLogger(JsonNodeReader.class);
+	private final Optional<String> recordPrefix;
 
 	public JsonNodeReader() {
 		this(null);

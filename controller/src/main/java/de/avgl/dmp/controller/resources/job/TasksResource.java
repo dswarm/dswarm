@@ -42,6 +42,8 @@ import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.types.Tuple;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A resource (controller service) for {@link Task}s.
@@ -53,35 +55,35 @@ import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 @Path("/tasks")
 public class TasksResource {
 
-	private static final org.apache.log4j.Logger		LOG	= org.apache.log4j.Logger.getLogger(TasksResource.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TasksResource.class);
 
 	/**
 	 * The base URI of this resource.
 	 */
 	@Context
-	UriInfo												uri;
+	UriInfo uri;
 
 	/**
 	 * The data model util.
 	 */
-	private final DataModelUtil							dataModelUtil;
+	private final DataModelUtil dataModelUtil;
 
 	/**
 	 * The metrics registry.
 	 */
-	private final DMPStatus								dmpStatus;
+	private final DMPStatus dmpStatus;
 
 	/**
 	 * The object mapper that can be utilised to de-/serialise JSON nodes.
 	 */
-	private final ObjectMapper							objectMapper;
+	private final ObjectMapper objectMapper;
 
-	private final Provider<InternalModelServiceFactory>	internalModelServiceFactoryProvider;
+	private final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider;
 
 	/**
 	 * Creates a new resource (controller service) for {@link Transformation}s with the provider of the transformation persistence
 	 * service, the object mapper and metrics registry.
-	 * 
+	 *
 	 * @param dataModelUtilArg the data model util
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
@@ -98,7 +100,7 @@ public class TasksResource {
 
 	/**
 	 * Builds a positive response with the given content.
-	 * 
+	 *
 	 * @param responseContent a response message
 	 * @return the response
 	 */
@@ -111,7 +113,7 @@ public class TasksResource {
 
 	/**
 	 * This endpoint executes the task that is given via its JSON representation and returns the result of the task execution.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one task
 	 * @return the result of the task execution
 	 * @throws IOException

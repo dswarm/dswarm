@@ -10,7 +10,6 @@ import ch.lambdaj.Lambda;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.avgl.dmp.graph.json.Model;
 import de.avgl.dmp.graph.json.Node;
@@ -18,17 +17,25 @@ import de.avgl.dmp.graph.json.NodeType;
 import de.avgl.dmp.graph.json.Resource;
 import de.avgl.dmp.graph.json.ResourceNode;
 import de.avgl.dmp.graph.json.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author tgaengler
  */
 public final class GDMUtil {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(GDMUtil.class);
+	private static final Logger LOG = LoggerFactory.getLogger(GDMUtil.class);
+
+	public static final String RDF_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+
+	public static final String RDF_type = RDF_NS + "type";
+
+	public static final String RDF_value = RDF_NS + "value";
 
 	/**
 	 * Gets all resources for the given record class identifier in the given GDM model.
-	 * 
+	 *
 	 * @param recordClassURI the record class identifier
 	 * @param model the GDM model
 	 * @return
@@ -86,7 +93,7 @@ public final class GDMUtil {
 
 			// determine all statements that are type statements
 			final List<Statement> resourceTypeStatements = Lambda.filter(
-					Lambda.having(Lambda.on(Statement.class).getPredicate().getUri(), Matchers.equalTo(RDF.type.getURI())), thisResourceStatements);
+					Lambda.having(Lambda.on(Statement.class).getPredicate().getUri(), Matchers.equalTo(RDF_type)), thisResourceStatements);
 
 			if (resourceTypeStatements == null || resourceTypeStatements.isEmpty()) {
 

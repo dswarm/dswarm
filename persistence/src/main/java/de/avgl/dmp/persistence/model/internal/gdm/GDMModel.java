@@ -29,23 +29,25 @@ import de.avgl.dmp.persistence.model.internal.helper.SchemaHelper;
 import de.avgl.dmp.persistence.model.internal.helper.SchemaHelperHelper;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 import de.avgl.dmp.persistence.util.GDMUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author tgaengler
  */
 public class GDMModel implements Model {
 
-	private static final org.apache.log4j.Logger	LOG							= org.apache.log4j.Logger.getLogger(GDMModel.class);
+	private static final Logger LOG = LoggerFactory.getLogger(GDMModel.class);
 
-	private final de.avgl.dmp.graph.json.Model		model;
-	private final Set<String>						recordURIs = Sets.newLinkedHashSet();
-	private final String							recordClassURI;
+	private final de.avgl.dmp.graph.json.Model model;
+	private final Set<String> recordURIs = Sets.newLinkedHashSet();
+	private final String recordClassURI;
 
-	private boolean									areRecordURIsInitialized	= false;
+	private boolean areRecordURIsInitialized = false;
 
 	/**
 	 * Creates a new {@link GDMModel} with a given GDM model instance.
-	 * 
+	 *
 	 * @param modelArg a GDM model instance that hold the GDM data
 	 */
 	public GDMModel(final de.avgl.dmp.graph.json.Model modelArg) {
@@ -56,7 +58,7 @@ public class GDMModel implements Model {
 
 	/**
 	 * Creates a new {@link GDMModel} with a given GDM model instance and an identifier of the record.
-	 * 
+	 *
 	 * @param modelArg a GDM model instance that hold the RDF data
 	 * @param recordURIArg the record identifier
 	 */
@@ -74,7 +76,7 @@ public class GDMModel implements Model {
 
 	/**
 	 * Creates a new {@link GDMModel} with a given GDM model instance and an identifier of the record.
-	 * 
+	 *
 	 * @param modelArg a GDM model instance that hold the RDF data
 	 * @param recordURIArg the record identifier
 	 * @param recordClassURIArg the URI of the record class
@@ -93,7 +95,7 @@ public class GDMModel implements Model {
 
 	/**
 	 * Gets the GDM model with the GDM data.
-	 * 
+	 *
 	 * @return the GDM model with the GDM data
 	 */
 	public de.avgl.dmp.graph.json.Model getModel() {
@@ -103,12 +105,12 @@ public class GDMModel implements Model {
 
 	/**
 	 * Gets the record identifiers.
-	 * 
+	 *
 	 * @return the record identifiers
 	 */
 	public Set<String> getRecordURIs() {
 
-		if (recordURIs == null || recordURIs.isEmpty()) {
+		if (recordURIs.isEmpty()) {
 
 			if (!areRecordURIsInitialized) {
 
@@ -193,9 +195,7 @@ public class GDMModel implements Model {
 			return null;
 		}
 
-		final JsonNode schema = determineSchema(attributePaths);
-
-		return schema;
+		return determineSchema(attributePaths);
 	}
 
 	@Override
@@ -287,11 +287,6 @@ public class GDMModel implements Model {
 		}
 
 		final Iterator<String> iter = getRecordURIs().iterator();
-
-		if (iter == null) {
-
-			return null;
-		}
 
 		if (!iter.hasNext()) {
 
@@ -481,9 +476,7 @@ public class GDMModel implements Model {
 
 			final SchemaHelper schemaHelper = schemaHelpers.values().iterator().next();
 
-			final JsonNode result = schemaHelper.build(DMPPersistenceUtil.getJSONObjectMapper().createObjectNode());
-
-			return result;
+			return schemaHelper.build(DMPPersistenceUtil.getJSONObjectMapper().createObjectNode());
 		}
 
 		return json;

@@ -55,46 +55,47 @@ import de.avgl.dmp.persistence.service.schema.ClaszService;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 import de.avgl.dmp.persistence.util.GDMUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A internal model service implementation for RDF triples.<br/>
  * Currently, the Neo4j database is utilised.
- *
+ * 
  * @author tgaengler
  */
 @Singleton
 public class InternalGDMGraphService implements InternalModelService {
 
-	private static final org.apache.log4j.Logger	LOG								= org.apache.log4j.Logger
-																							.getLogger(InternalGDMGraphService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(InternalGDMGraphService.class);
 
-	private static final String						resourceIdentifier				= "gdm";
+	private static final String resourceIdentifier = "gdm";
 
 	/**
 	 * The data model persistence service.
 	 */
-	private final Provider<DataModelService>		dataModelService;
+	private final Provider<DataModelService> dataModelService;
 
 	/**
 	 * The schema persistence service.
 	 */
-	private final Provider<SchemaService>			schemaService;
+	private final Provider<SchemaService> schemaService;
 
 	/**
 	 * The class persistence service.
 	 */
-	private final Provider<ClaszService>			classService;
+	private final Provider<ClaszService> classService;
 
-	private final Provider<AttributePathService>	attributePathService;
+	private final Provider<AttributePathService> attributePathService;
 
-	private final Provider<AttributeService>		attributeService;
+	private final Provider<AttributeService> attributeService;
 
 	/**
 	 * The data model graph URI pattern
 	 */
-	private static final String						DATA_MODEL_GRAPH_URI_PATTERN	= "http://data.slub-dresden.de/datamodel/{datamodelid}/data";
+	private static final String DATA_MODEL_GRAPH_URI_PATTERN = "http://data.slub-dresden.de/datamodel/{datamodelid}/data";
 
-	private final String							graphEndpoint;
+	private final String graphEndpoint;
 
 	/**
 	 * /** Creates a new internal triple service with the given data model persistence service, schema persistence service, class
@@ -345,7 +346,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 	/**
 	 * Adds the record class to the schema of the data model.
-	 *
+	 * 
 	 * @param dataModelId the identifier of the data model
 	 * @param recordClassUri the identifier of the record class
 	 * @throws DMPPersistenceException
@@ -366,8 +367,6 @@ public class InternalGDMGraphService implements InternalModelService {
 
 				return dataModel;
 			}
-
-			recordClass = schema.getRecordClass();
 		} else {
 
 			// create new class
@@ -487,10 +486,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final Schema schema;
 
-		if (dataModel.getSchema() != null) {
-
-			schema = dataModel.getSchema();
-		} else {
+		if (dataModel.getSchema() == null) {
 
 			// create new schema
 			final ProxySchema proxySchema = schemaService.get().createObjectTransactional();
@@ -615,14 +611,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 	private WebTarget target() {
 
-		WebTarget target = client().target(graphEndpoint);
-
-		if (InternalGDMGraphService.resourceIdentifier != null) {
-
-			target = target.path(InternalGDMGraphService.resourceIdentifier);
-		}
-
-		return target;
+		return client().target(graphEndpoint).path(InternalGDMGraphService.resourceIdentifier);
 	}
 
 	private WebTarget target(final String... path) {

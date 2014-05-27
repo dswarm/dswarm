@@ -5,6 +5,8 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A class is a type. In a graph a node or edge can have a type, e.g., foaf:Document.
@@ -18,12 +20,12 @@ import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
 @Table(name = "CLASS")
 public class Clasz extends AdvancedDMPJPAObject {
 
-	private static final org.apache.log4j.Logger	LOG					= org.apache.log4j.Logger.getLogger(Clasz.class);
+	private static final Logger LOG = LoggerFactory.getLogger(Clasz.class);
 
 	/**
 	 *
 	 */
-	private static final long						serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Creates new class with no identifier.
@@ -35,7 +37,7 @@ public class Clasz extends AdvancedDMPJPAObject {
 
 	/**
 	 * Creates a new class with the given identifier.
-	 * 
+	 *
 	 * @param id a class identifier
 	 */
 	public Clasz(final String id) {
@@ -45,7 +47,7 @@ public class Clasz extends AdvancedDMPJPAObject {
 
 	/**
 	 * Creates a new class with the given identifier and name-
-	 * 
+	 *
 	 * @param id a class identifier
 	 * @param name a class name
 	 */

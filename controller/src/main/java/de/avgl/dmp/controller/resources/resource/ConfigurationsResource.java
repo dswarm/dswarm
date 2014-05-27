@@ -40,8 +40,6 @@ import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 public class ConfigurationsResource extends
 		ExtendedBasicDMPResource<ConfigurationsResourceUtils, ConfigurationService, ProxyConfiguration, Configuration> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ConfigurationsResource.class);
-
 	/**
 	 * Creates a new resource (controller service) for {@link Configuration}s with the provider of the component persistence
 	 * service, the object mapper and metrics registry.

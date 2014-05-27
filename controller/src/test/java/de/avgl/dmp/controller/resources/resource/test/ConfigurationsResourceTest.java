@@ -11,8 +11,6 @@ public class ConfigurationsResourceTest
 		extends
 		BasicResourceTest<ConfigurationsResourceTestUtils, ConfigurationServiceTestUtils, ConfigurationService, ProxyConfiguration, Configuration, Long> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ConfigurationsResourceTest.class);
-
 	public ConfigurationsResourceTest() {
 
 		super(Configuration.class, ConfigurationService.class, "configurations", "controller_configuration.json",

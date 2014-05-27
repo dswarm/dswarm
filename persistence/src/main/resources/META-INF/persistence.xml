@@ -40,12 +40,12 @@ http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
 			<!-- <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"
 				/> -->
 			<property name="hibernate.connection.shutdown" value="true" />
-			<property name="hibernate.hbm2ddl.auto" value="none" />
+			<!-- <property name="hibernate.hbm2ddl.auto" value="none" /> -->
 
 			<!-- Echo all executed SQL to stdout -->
 			<property name="hibernate.show_sql" value="true" />
 
-			<property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider" />
+			<property name="hibernate.cache.region.factory_class" value="org.hibernate.cache.internal.NoCachingRegionFactory" />
 
 			<!-- for enabling L2 caching -->
 			<!-- <property name="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory"
@@ -60,7 +60,7 @@ http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
 
 			<!-- connection pooling with c3p0 -->
 			<property name="hibernate.connection.provider_class"
-					  value="org.hibernate.connection.C3P0ConnectionProvider" />
+					  value="org.hibernate.service.jdbc.connections.internal.C3P0ConnectionProvider" />
 
 			<property name="hibernate.c3p0.max_size" value="20" />
 			<property name="hibernate.c3p0.min_size" value="5" />

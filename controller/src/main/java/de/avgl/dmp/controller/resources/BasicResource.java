@@ -24,6 +24,8 @@ import de.avgl.dmp.persistence.model.DMPObject;
 import de.avgl.dmp.persistence.model.proxy.ProxyDMPObject;
 import de.avgl.dmp.persistence.model.proxy.RetrievalType;
 import de.avgl.dmp.persistence.service.BasicJPAService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A generic resource (controller service), whose concrete implementations can be derived with a given implementation of
@@ -40,25 +42,25 @@ import de.avgl.dmp.persistence.service.BasicJPAService;
  */
 public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResourceUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(BasicResource.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BasicResource.class);
 
-	protected final POJOCLASSRESOURCEUTILS			pojoClassResourceUtils;
+	protected final POJOCLASSRESOURCEUTILS pojoClassResourceUtils;
 
 	/**
 	 * The metrics registry.
 	 */
-	protected final DMPStatus						dmpStatus;
+	protected final DMPStatus dmpStatus;
 
 	/**
 	 * The base URI of this resource.
 	 */
 	@Context
-	UriInfo											uri;
+	UriInfo uri;
 
 	/**
 	 * Creates a new resource (controller service) for the given concrete POJO class with the provider of the concrete persistence
 	 * service, the object mapper and metrics registry.
-	 * 
+	 *
 	 * @param clasz a concrete POJO class
 	 * @param persistenceServiceProviderArg the concrete persistence service that is related to the concrete POJO class
 	 * @param objectMapperArg an object mapper
@@ -72,7 +74,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * Gets the concrete POJO class of this resource (controller service).
-	 * 
+	 *
 	 * @return the concrete POJO class
 	 */
 	public Class<POJOCLASS> getClasz() {
@@ -82,7 +84,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * Builds a positive response with the given content.
-	 * 
+	 *
 	 * @param responseContent a response message
 	 * @return the response
 	 */
@@ -93,7 +95,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * This endpoint returns an object of the type of the POJO class as JSON representation for the provided object id.
-	 * 
+	 *
 	 * @param id an object id
 	 * @return a JSON representation of an object of the type of the POJO class
 	 */
@@ -116,8 +118,8 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
 		}
-		BasicResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "' = '"
-				+ ToStringBuilder.reflectionToString(object) + "'");
+		BasicResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "'");
+		BasicResource.LOG.trace(" = '" + ToStringBuilder.reflectionToString(object) + "'");
 
 		final String objectJSON;
 		try {
@@ -129,7 +131,8 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			throw new DMPControllerException("couldn't transform " + pojoClassResourceUtils.getClaszName() + " to JSON string.\n" + e.getMessage());
 		}
 
-		BasicResource.LOG.debug("return " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "' = '" + objectJSON + "'");
+		BasicResource.LOG.debug("return " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "'");
+		BasicResource.LOG.trace(" = '" + objectJSON + "'");
 
 		dmpStatus.stop(context);
 		return buildResponse(objectJSON);
@@ -172,7 +175,8 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			throw new DMPControllerException("couldn't add " + pojoClassResourceUtils.getClaszName());
 		}
 
-		BasicResource.LOG.debug("added new " + pojoClassResourceUtils.getClaszName() + " = '" + ToStringBuilder.reflectionToString(object) + "'");
+		BasicResource.LOG.debug("added new " + pojoClassResourceUtils.getClaszName() + " with id = '" + object.getId() + "' ");
+		BasicResource.LOG.trace(" = '" + ToStringBuilder.reflectionToString(object) + "'");
 
 		final String objectJSON;
 
@@ -195,8 +199,8 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			throw new DMPControllerException("something went wrong, while minting the URL of the new " + pojoClassResourceUtils.getClaszName());
 		}
 
-		BasicResource.LOG.debug("return new " + pojoClassResourceUtils.getClaszName() + " at '" + objectURI.toString() + "' with content '"
-				+ objectJSON + "'");
+		BasicResource.LOG.debug("return new " + pojoClassResourceUtils.getClaszName() + " at '" + objectURI.toString() + "'");
+		BasicResource.LOG.trace("with content '" + objectJSON + "'");
 
 		dmpStatus.stop(context);
 
@@ -274,8 +278,8 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			throw new DMPControllerException("couldn't update " + pojoClassResourceUtils.getClaszName() + " '" + id + "'");
 		}
 
-		BasicResource.LOG.debug("updated " + pojoClassResourceUtils.getClaszName() + " '" + id + "' = '" + ToStringBuilder.reflectionToString(object)
-				+ "'");
+		BasicResource.LOG.debug("updated " + pojoClassResourceUtils.getClaszName() + " '" + id + "'");
+		BasicResource.LOG.trace(" = '" + ToStringBuilder.reflectionToString(object) + "'");
 
 		final String objectJSON;
 
@@ -288,8 +292,8 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			throw new DMPControllerException("couldn't transform " + pojoClassResourceUtils.getClaszName() + " to JSON string.\n" + e.getMessage());
 		}
 
-		BasicResource.LOG.debug("return updated " + pojoClassResourceUtils.getClaszName() + " with id '" + object.getId() + "' = '" + objectJSON
-				+ "'");
+		BasicResource.LOG.debug("return updated " + pojoClassResourceUtils.getClaszName() + " with id '" + object.getId() + "'");
+		BasicResource.LOG.trace(" = '" + objectJSON + "'");
 
 		dmpStatus.stop(context);
 
@@ -357,7 +361,8 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		BasicResource.LOG.debug("got all " + pojoClassResourceUtils.getClaszName() + "s = ' = '" + ToStringBuilder.reflectionToString(objects) + "'");
+		BasicResource.LOG.debug("got all " + pojoClassResourceUtils.getClaszName() + "s ");
+		BasicResource.LOG.trace(" = '" + ToStringBuilder.reflectionToString(objects) + "'");
 
 		final String objectsJSON;
 
@@ -371,7 +376,8 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 					+ e.getMessage());
 		}
 
-		BasicResource.LOG.debug("return all " + pojoClassResourceUtils.getClaszName() + "s '" + objectsJSON + "'");
+		BasicResource.LOG.debug("return all " + pojoClassResourceUtils.getClaszName() + "s ");
+		BasicResource.LOG.trace("'" + objectsJSON + "'");
 
 		dmpStatus.stop(context);
 		return buildResponse(objectsJSON);
@@ -404,8 +410,8 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
 		}
-		BasicResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "' = '"
-				+ ToStringBuilder.reflectionToString(object) + "'");
+		BasicResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "' ");
+		BasicResource.LOG.trace(" = '" + ToStringBuilder.reflectionToString(object) + "'");
 
 		persistenceService.deleteObject(id);
 
@@ -419,7 +425,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			return Response.status(Status.CONFLICT).build();
 		}
 
-		BasicResource.LOG.debug("deletion of " + pojoClassResourceUtils.getClaszName() + " with id '" + id + " was successfull");
+		BasicResource.LOG.debug("deletion of " + pojoClassResourceUtils.getClaszName() + " with id '" + id + " was successful");
 
 		dmpStatus.stop(context);
 		return Response.status(Status.NO_CONTENT).build();
@@ -576,8 +582,8 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			return null;
 		}
 
-		BasicResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "' = '"
-				+ ToStringBuilder.reflectionToString(object) + "'");
+		BasicResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "' ");
+		BasicResource.LOG.trace("= '" + ToStringBuilder.reflectionToString(object) + "'");
 
 		return object;
 

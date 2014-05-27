@@ -24,8 +24,6 @@ import de.avgl.dmp.persistence.service.job.ComponentService;
  */
 public class ComponentsResourceUtils extends ExtendedBasicDMPResourceUtils<ComponentService, ProxyComponent, Component> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ComponentsResourceUtils.class);
-
 	@Inject
 	public ComponentsResourceUtils(final Provider<ComponentService> persistenceServiceProviderArg,
 			final Provider<ObjectMapper> objectMapperProviderArg, final ResourceUtilsFactory utilsFactory) {

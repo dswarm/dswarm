@@ -39,8 +39,6 @@ import de.avgl.dmp.persistence.service.schema.AttributeService;
 @Path("attributes")
 public class AttributesResource extends AdvancedDMPResource<AttributesResourceUtils, AttributeService, ProxyAttribute, Attribute> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributesResource.class);
-
 	/**
 	 * Creates a new resource (controller service) for {@link Attribute}s with the provider of the attribute persistence service,
 	 * the object mapper and metrics registry.
