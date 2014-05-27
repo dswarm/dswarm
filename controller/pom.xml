@@ -149,10 +149,6 @@
 					<artifactId>guava</artifactId>
 					<groupId>com.google.guava</groupId>
 				</exclusion>
-				<exclusion>
-					<artifactId>hk2-api</artifactId>
-					<groupId>org.glassfish.hk2</groupId>
-				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -163,10 +159,6 @@
 				<exclusion>
 					<artifactId>guava</artifactId>
 					<groupId>com.google.guava</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>hk2-api</artifactId>
-					<groupId>org.glassfish.hk2</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>

@@ -24,17 +24,19 @@ import de.avgl.dmp.persistence.service.job.TransformationService;
 import de.avgl.dmp.persistence.service.job.test.utils.ComponentServiceTestUtils;
 import de.avgl.dmp.persistence.service.job.test.utils.FunctionServiceTestUtils;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransformation, Transformation, TransformationService> {
 
-	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(TransformationServiceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TransformationServiceTest.class);
 
-	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	private final Map<Long, Function>				functions		= Maps.newLinkedHashMap();
+	private final Map<Long, Function> functions = Maps.newLinkedHashMap();
 
-	private final FunctionServiceTestUtils			functionServiceTestUtils;
-	private final ComponentServiceTestUtils			componentServiceTestUtils;
+	private final FunctionServiceTestUtils  functionServiceTestUtils;
+	private final ComponentServiceTestUtils componentServiceTestUtils;
 
 	public TransformationServiceTest() {
 

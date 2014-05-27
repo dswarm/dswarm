@@ -19,12 +19,10 @@ import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
 public abstract class ExtendedBasicDMPResource<POJOCLASSRESOURCEUTILS extends ExtendedBasicDMPResourceUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends ExtendedBasicDMPJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyExtendedBasicDMPJPAObject<POJOCLASS>, POJOCLASS extends ExtendedBasicDMPJPAObject>
 		extends BasicDMPResource<POJOCLASSRESOURCEUTILS, POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ExtendedBasicDMPResource.class);
-
 	/**
 	 * Creates a new resource (controller service) for the given concrete POJO class with the provider of the concrete persistence
 	 * service, the object mapper and metrics registry.
-	 * 
+	 *
 	 * @param clasz a concrete POJO class
 	 * @param persistenceServiceProviderArg the concrete persistence service that is related to the concrete POJO class
 	 * @param objectMapperArg an object mapper

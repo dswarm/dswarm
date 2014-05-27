@@ -7,15 +7,17 @@ import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.DMPObject;
 import de.avgl.dmp.persistence.model.proxy.ProxyDMPObject;
 import de.avgl.dmp.persistence.service.BasicJPAService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, JPASERVICEIMPL extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSIDTYPE>
 		extends GuicedTest {
 
-	private static final org.apache.log4j.Logger	LOG			= org.apache.log4j.Logger.getLogger(BasicJPAServiceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BasicJPAServiceTest.class);
 
-	protected final String							type;
-	protected final Class<JPASERVICEIMPL>			jpaServiceClass;
-	protected JPASERVICEIMPL						jpaService	= null;
+	protected final String                type;
+	protected final Class<JPASERVICEIMPL> jpaServiceClass;
+	protected JPASERVICEIMPL jpaService = null;
 
 	public BasicJPAServiceTest(final String type, final Class<JPASERVICEIMPL> jpaServiceClass) {
 

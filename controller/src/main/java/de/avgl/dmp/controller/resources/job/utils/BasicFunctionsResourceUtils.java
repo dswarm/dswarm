@@ -19,8 +19,6 @@ import de.avgl.dmp.persistence.service.job.BasicFunctionService;
 public abstract class BasicFunctionsResourceUtils<POJOCLASSPERSISTENCESERVICE extends BasicFunctionService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyBasicFunction<POJOCLASS>, POJOCLASS extends Function>
 		extends ExtendedBasicDMPResourceUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(BasicFunctionsResourceUtils.class);
-
 	public BasicFunctionsResourceUtils(final Class<POJOCLASS> pojoClassArg,
 			final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg,
 			final ResourceUtilsFactory utilsFactory) {

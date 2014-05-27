@@ -11,6 +11,8 @@ import org.apache.commons.io.FileUtils;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.init.util.DMPUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A utility class for the controller module.
@@ -19,7 +21,7 @@ import de.avgl.dmp.init.util.DMPUtil;
  */
 public final class DMPControllerUtils {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(DMPControllerUtils.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DMPControllerUtils.class);
 
 	/**
 	 * Write a given input source stream into the file with the given file name at the given directory postfix (relative file

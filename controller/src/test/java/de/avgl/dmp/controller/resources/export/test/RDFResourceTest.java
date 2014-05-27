@@ -56,6 +56,8 @@ import de.avgl.dmp.persistence.service.InternalModelService;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 import de.avgl.dmp.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by tgaengler on 28/04/14.
@@ -64,28 +66,28 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
  */
 public class RDFResourceTest extends ResourceTest {
 
-	private static final org.apache.log4j.Logger	LOG						= org.apache.log4j.Logger.getLogger(RDFResourceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(RDFResourceTest.class);
 
-	private final AttributesResourceTestUtils		attributesResourceTestUtils;
+	private final AttributesResourceTestUtils attributesResourceTestUtils;
 
-	private final ClaszesResourceTestUtils			claszesResourceTestUtils;
+	private final ClaszesResourceTestUtils claszesResourceTestUtils;
 
-	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
+	private final AttributePathsResourceTestUtils attributePathsResourceTestUtils;
 
-	private final ResourcesResourceTestUtils		resourcesResourceTestUtils;
+	private final ResourcesResourceTestUtils resourcesResourceTestUtils;
 
-	private final ConfigurationsResourceTestUtils	configurationsResourceTestUtils;
+	private final ConfigurationsResourceTestUtils configurationsResourceTestUtils;
 
-	private final SchemasResourceTestUtils			schemasResourceTestUtils;
+	private final SchemasResourceTestUtils schemasResourceTestUtils;
 
-	private final DataModelsResourceTestUtils		dataModelsResourceTestUtils;
+	private final DataModelsResourceTestUtils dataModelsResourceTestUtils;
 
-	protected final ObjectMapper					objectMapper			= GuicedTest.injector.getInstance(ObjectMapper.class);
+	protected final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	private static final String						graphResourceIdentifier	= "rdf";
+	private static final String graphResourceIdentifier = "rdf";
 
-	private final String							graphEndpoint			= GuicedTest.injector.getInstance(Key.get(String.class,
-																					Names.named("dmp_graph_endpoint")));
+	private final String graphEndpoint = GuicedTest.injector.getInstance(Key.get(String.class,
+			Names.named("dmp_graph_endpoint")));
 
 	public RDFResourceTest() {
 

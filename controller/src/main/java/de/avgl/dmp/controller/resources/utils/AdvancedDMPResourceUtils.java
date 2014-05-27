@@ -19,8 +19,6 @@ import de.avgl.dmp.persistence.service.AdvancedDMPJPAService;
 public abstract class AdvancedDMPResourceUtils<POJOCLASSPERSISTENCESERVICE extends AdvancedDMPJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyAdvancedDMPJPAObject<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
 		extends BasicDMPResourceUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AdvancedDMPResourceUtils.class);
-
 	public AdvancedDMPResourceUtils(final Class<POJOCLASS> pojoClassArg, final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
 			final Provider<ObjectMapper> objectMapperProviderArg, final ResourceUtilsFactory utilsFactoryArg) {
 

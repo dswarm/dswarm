@@ -19,8 +19,6 @@ import de.avgl.dmp.persistence.service.schema.ClaszService;
  */
 public class ClaszesResourceUtils extends AdvancedDMPResourceUtils<ClaszService, ProxyClasz, Clasz> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ClaszesResourceUtils.class);
-
 	@Inject
 	public ClaszesResourceUtils(final Provider<ClaszService> persistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg,
 			final ResourceUtilsFactory utilsFactory) {

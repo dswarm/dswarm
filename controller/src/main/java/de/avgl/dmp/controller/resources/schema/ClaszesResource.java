@@ -38,8 +38,6 @@ import de.avgl.dmp.persistence.service.schema.ClaszService;
 @Path("classes")
 public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, ClaszService, ProxyClasz, Clasz> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ClaszesResource.class);
-
 	/**
 	 * Creates a new resource (controller service) for {@link Clasz}s with the provider of the class persistence service, the
 	 * object mapper and metrics registry.

@@ -38,12 +38,10 @@ import de.avgl.dmp.persistence.service.job.ProjectService;
 @Path("projects")
 public class ProjectsResource extends ExtendedBasicDMPResource<ProjectsResourceUtils, ProjectService, ProxyProject, Project> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ProjectsResource.class);
-
 	/**
 	 * Creates a new resource (controller service) for {@link Project}s with the provider of the project persistence service, the
 	 * object mapper and metrics registry.
-	 * 
+	 *
 	 * @param projectServiceProviderArg the project persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
@@ -56,7 +54,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectsResourceU
 
 	/**
 	 * This endpoint returns a project as JSON representation for the provided project identifier.
-	 * 
+	 *
 	 * @param id a project identifier
 	 * @return a JSON representation of a project
 	 */

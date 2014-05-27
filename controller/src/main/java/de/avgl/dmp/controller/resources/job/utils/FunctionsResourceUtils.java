@@ -23,8 +23,6 @@ import de.avgl.dmp.persistence.service.job.FunctionService;
  */
 public class FunctionsResourceUtils extends BasicFunctionsResourceUtils<FunctionService, ProxyFunction, Function> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(FunctionsResourceUtils.class);
-
 	@Inject
 	public FunctionsResourceUtils(final Provider<FunctionService> persistenceServiceProviderArg,
 			final Provider<ObjectMapper> objectMapperProviderArg, final ResourceUtilsFactory utilsFactory) {

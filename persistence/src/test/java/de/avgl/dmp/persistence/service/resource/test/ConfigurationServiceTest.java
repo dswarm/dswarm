@@ -12,12 +12,14 @@ import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.proxy.ProxyConfiguration;
 import de.avgl.dmp.persistence.service.resource.ConfigurationService;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ConfigurationServiceTest extends IDBasicJPAServiceTest<ProxyConfiguration, Configuration, ConfigurationService> {
 
-	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(ConfigurationServiceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ConfigurationServiceTest.class);
 
-	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	public ConfigurationServiceTest() {
 

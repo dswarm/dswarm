@@ -10,12 +10,14 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FunctionTest extends GuicedTest {
 
-	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(FunctionTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(FunctionTest.class);
 
-	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleFunctionTest() throws Exception {

@@ -31,23 +31,21 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 public class SchemasResourceTest extends
 		BasicResourceTest<SchemasResourceTestUtils, SchemaServiceTestUtils, SchemaService, ProxySchema, Schema, Long> {
 
-	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(SchemasResourceTest.class);
+	private final AttributesResourceTestUtils attributesResourceTestUtils;
 
-	private final AttributesResourceTestUtils		attributesResourceTestUtils;
+	private final ClaszesResourceTestUtils claszesResourceTestUtils;
 
-	private final ClaszesResourceTestUtils			claszesResourceTestUtils;
+	private final AttributePathsResourceTestUtils attributePathsResourceTestUtils;
 
-	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
+	private final SchemasResourceTestUtils schemasResourceTestUtils;
 
-	private final SchemasResourceTestUtils			schemasResourceTestUtils;
+	final Map<Long, Attribute> attributes = Maps.newHashMap();
 
-	final Map<Long, Attribute>						attributes		= Maps.newHashMap();
+	final Map<Long, AttributePath> attributePaths = Maps.newLinkedHashMap();
 
-	final Map<Long, AttributePath>					attributePaths	= Maps.newLinkedHashMap();
+	private Clasz recordClass;
 
-	private Clasz									recordClass;
-
-	private Clasz									recordClass2;
+	private Clasz recordClass2;
 
 	public SchemasResourceTest() {
 

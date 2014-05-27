@@ -25,8 +25,6 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
  */
 public class SchemasResourceUtils extends BasicDMPResourceUtils<SchemaService, ProxySchema, Schema> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(SchemasResourceUtils.class);
-
 	@Inject
 	public SchemasResourceUtils(final Provider<SchemaService> persistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg,
 			final ResourceUtilsFactory utilsFactory) {

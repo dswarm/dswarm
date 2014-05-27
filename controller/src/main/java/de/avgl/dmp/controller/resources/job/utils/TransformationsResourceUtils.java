@@ -23,8 +23,6 @@ import de.avgl.dmp.persistence.service.job.TransformationService;
  */
 public class TransformationsResourceUtils extends BasicFunctionsResourceUtils<TransformationService, ProxyTransformation, Transformation> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(TransformationsResourceUtils.class);
-
 	@Inject
 	public TransformationsResourceUtils(final Provider<TransformationService> persistenceServiceProviderArg,
 			final Provider<ObjectMapper> objectMapperProviderArg, final ResourceUtilsFactory utilsFactory) {

@@ -47,38 +47,40 @@ import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TasksResourceTest extends ResourceTest {
 
-	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(TasksResourceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TasksResourceTest.class);
 
-	private String									taskJSONString	= null;
+	private String taskJSONString = null;
 
-	private final ResourcesResourceTestUtils		resourcesResourceTestUtils;
+	private final ResourcesResourceTestUtils resourcesResourceTestUtils;
 
-	private final ConfigurationsResourceTestUtils	configurationsResourceTestUtils;
+	private final ConfigurationsResourceTestUtils configurationsResourceTestUtils;
 
-	private final DataModelsResourceTestUtils		dataModelsResourceTestUtils;
+	private final DataModelsResourceTestUtils dataModelsResourceTestUtils;
 
-	private final SchemasResourceTestUtils			schemasResourceTestUtils;
+	private final SchemasResourceTestUtils schemasResourceTestUtils;
 
-	private final ClaszesResourceTestUtils			classesResourceTestUtils;
+	private final ClaszesResourceTestUtils classesResourceTestUtils;
 
-	private final AttributesResourceTestUtils		attributesResourceTestUtils;
+	private final AttributesResourceTestUtils attributesResourceTestUtils;
 
-	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
+	private final AttributePathsResourceTestUtils attributePathsResourceTestUtils;
 
-	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	private Configuration							configuration;
+	private Configuration configuration;
 
-	private Resource								resource;
+	private Resource resource;
 
-	private DataModel								dataModel;
+	private DataModel dataModel;
 
-	private Schema									schema;
+	private Schema schema;
 
-	private Clasz									recordClass;
+	private Clasz recordClass;
 
 	public TasksResourceTest() {
 

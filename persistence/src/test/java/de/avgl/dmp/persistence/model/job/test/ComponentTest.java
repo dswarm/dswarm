@@ -14,12 +14,14 @@ import com.google.common.collect.Sets;
 import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Function;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ComponentTest extends GuicedTest {
 
-	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(ComponentTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ComponentTest.class);
 
-	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleComponentTest() {

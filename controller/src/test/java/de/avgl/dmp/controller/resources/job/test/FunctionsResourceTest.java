@@ -3,7 +3,6 @@ package de.avgl.dmp.controller.resources.job.test;
 import org.junit.Assert;
 
 import de.avgl.dmp.controller.resources.job.test.utils.FunctionsResourceTestUtils;
-import de.avgl.dmp.controller.resources.schema.test.AttributesResourceTest;
 import de.avgl.dmp.controller.resources.test.BasicResourceTest;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.proxy.ProxyFunction;
@@ -13,9 +12,7 @@ import de.avgl.dmp.persistence.service.job.test.utils.FunctionServiceTestUtils;
 public class FunctionsResourceTest extends
 		BasicResourceTest<FunctionsResourceTestUtils, FunctionServiceTestUtils, FunctionService, ProxyFunction, Function, Long> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(AttributesResourceTest.class);
-
-	private final FunctionsResourceTestUtils		functionsResourceTestUtils;
+	private final FunctionsResourceTestUtils functionsResourceTestUtils;
 
 	public FunctionsResourceTest() {
 

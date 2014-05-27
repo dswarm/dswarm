@@ -15,16 +15,14 @@ import de.avgl.dmp.controller.utils.DMPControllerUtils;
  */
 public class Main {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(Main.class);
-
 	/**
 	 * The (embedded) backend web server.
 	 */
-	private EmbeddedServer							server;
+	private EmbeddedServer server;
 
 	/**
 	 * Inits the properties for the backend web server.
-	 * 
+	 *
 	 * @param properties user properties
 	 */
 	private Main(final Properties properties) {
@@ -38,7 +36,7 @@ public class Main {
 
 	/**
 	 * Gets the base URI of the backend API.
-	 * 
+	 *
 	 * @return the base URI of the backend API
 	 */
 	public String getBaseUri() {

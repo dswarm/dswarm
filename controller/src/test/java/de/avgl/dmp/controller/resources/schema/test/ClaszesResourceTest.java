@@ -15,10 +15,12 @@ import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxyClasz;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
 import de.avgl.dmp.persistence.service.schema.test.utils.ClaszServiceTestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ClaszesResourceTest extends BasicResourceTest<ClaszesResourceTestUtils, ClaszServiceTestUtils, ClaszService, ProxyClasz, Clasz, Long> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(ClaszesResourceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ClaszesResourceTest.class);
 
 	public ClaszesResourceTest() {
 

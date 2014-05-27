@@ -17,13 +17,15 @@ import de.avgl.dmp.graph.json.NodeType;
 import de.avgl.dmp.graph.json.Resource;
 import de.avgl.dmp.graph.json.ResourceNode;
 import de.avgl.dmp.graph.json.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author tgaengler
  */
 public final class GDMUtil {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(GDMUtil.class);
+	private static final Logger LOG = LoggerFactory.getLogger(GDMUtil.class);
 
 	public static final String RDF_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 

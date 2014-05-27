@@ -14,6 +14,8 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.model.job.proxy.ProxyTransformation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A persistence service for {@link Transformation}s.
@@ -22,11 +24,11 @@ import de.avgl.dmp.persistence.model.job.proxy.ProxyTransformation;
  */
 public class TransformationService extends BasicFunctionService<ProxyTransformation, Transformation> {
 
-	private static final org.apache.log4j.Logger	LOG	= org.apache.log4j.Logger.getLogger(TransformationService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TransformationService.class);
 
 	/**
 	 * Creates a new transformation persistence service with the given entity manager provider.
-	 * 
+	 *
 	 * @param entityManagerProvider an entity manager provider
 	 */
 	@Inject

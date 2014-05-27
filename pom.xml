@@ -49,14 +49,11 @@
 		<org.umlgraph.doclet.version>5.1</org.umlgraph.doclet.version>
 		<java.source.version>1.7</java.source.version>
 		<java.target.version>1.7</java.target.version>
-		<slf4j.log4j.version>1.7.7</slf4j.log4j.version>
-		<slf4j.log4j.api.version>1.7.7</slf4j.log4j.api.version>
-		<apache.log4j.version>1.2.17</apache.log4j.version>
-		<commons.logging.version>1.1.3</commons.logging.version>
 		<maxallowedviolations>7000</maxallowedviolations>
 		<google.guava.version>17.0</google.guava.version>
 		<google.collections.version>1.0</google.collections.version>
 		<jackson.version>2.3.3</jackson.version>
+		<slf4j.api.version>1.7.7</slf4j.api.version>
 		<apache.commons.version>3.3.2</apache.commons.version>
 		<commons-io.version>2.4</commons-io.version>
 		<guice.version>3.0</guice.version>
@@ -65,6 +62,7 @@
 		<swagger.version>1.3.5</swagger.version>
 		<javaee.version>7.0</javaee.version>
 		<jersey.version>2.8</jersey.version>
+		<logback.version>1.1.2</logback.version>
 	</properties>
 
 	<repositories>
@@ -489,26 +487,22 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${slf4j.log4j.version}</version>
-		</dependency>
+		<!-- Logging dependencies -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.log4j.api.version}</version>
+			<version>${slf4j.api.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>${apache.log4j.version}</version>
-		</dependency>
-		<!-- Logging dependencies -->
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>${commons.logging.version}</version>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
@@ -591,12 +585,16 @@
 		</dependency>
 		<dependency>
 			<groupId>com.codahale.metrics</groupId>
-			<artifactId>metrics-log4j</artifactId>
+			<artifactId>metrics-logback</artifactId>
 			<version>${metrics.version}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
 					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>logback-classic</artifactId>
+					<groupId>ch.qos.logback</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>

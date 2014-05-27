@@ -21,12 +21,14 @@ import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.MappingAttributePathInstance;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JobTest extends GuicedTest {
 
-	private static final org.apache.log4j.Logger	LOG				= org.apache.log4j.Logger.getLogger(JobTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(JobTest.class);
 
-	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleJobTest() {
