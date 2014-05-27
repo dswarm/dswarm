@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -450,6 +451,11 @@ public class MorphScriptBuilder {
 
 				continue;
 			}
+			
+			if (checkForDuplicateVarDatas(variable, rules, inputAttributePathStringXMLEscaped)) {
+				
+				continue;
+			}
 
 			final String manipulatedVariable;
 
@@ -810,6 +816,29 @@ public class MorphScriptBuilder {
 
 		return componentName != null && !componentName.isEmpty();
 
+	}
+	
+	private boolean checkForDuplicateVarDatas(final String variable, final Element rules, final String inputAttributePathStringXMLEscaped) {
+		
+		final NodeList dataElements = rules.getElementsByTagName("data");
+		
+		String dataNameValue;
+		
+		String dataSourceValue;
+		
+		for (int i = 0; i < dataElements.getLength(); i++) {
+			
+			dataNameValue = dataElements.item(i).getAttributes().getNamedItem("name").getNodeValue();
+			
+			dataSourceValue = dataElements.item(i).getAttributes().getNamedItem("source").getNodeValue();
+			
+			if (dataNameValue.equals("@" + variable) && dataSourceValue.equals(inputAttributePathStringXMLEscaped)) {
+				
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	private String addOrdinalFilter(final Integer ordinal, final String variable, final Element rules) {
