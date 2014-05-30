@@ -1,6 +1,7 @@
 package de.avgl.dmp.persistence.service.internal.graph;
 
 import java.io.IOException;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
@@ -55,6 +56,7 @@ import de.avgl.dmp.persistence.service.schema.ClaszService;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 import de.avgl.dmp.persistence.util.GDMUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -176,7 +178,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 				if (recordResources != null) {
 
-					final Set<String> recordURIs = Sets.newHashSet();
+					final LinkedHashSet<String> recordURIs = Sets.newLinkedHashSet();
 
 					for (final Resource recordResource : recordResources) {
 
