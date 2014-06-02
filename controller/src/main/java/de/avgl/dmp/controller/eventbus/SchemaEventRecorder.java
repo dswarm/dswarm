@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import de.avgl.dmp.controller.DMPControllerException;
 import org.culturegraph.mf.types.Triple;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -247,7 +248,7 @@ public class SchemaEventRecorder {
 	}
 
 	@Subscribe
-	public void convertSchema(final SchemaEvent event) {
+	public void convertSchema(final SchemaEvent event) throws DMPControllerException {
 
 		if (event.getSchemaType() != SchemaEvent.SchemaType.CSV) {
 
@@ -258,7 +259,19 @@ public class SchemaEventRecorder {
 		try {
 			createSchemaFromCsv(event);
 		} catch (final DMPPersistenceException | DMPConverterException e) {
-			SchemaEventRecorder.LOG.error("could not persist schema", e);
+
+			final String message = "could not persist schema";
+
+			SchemaEventRecorder.LOG.error(message, e);
+
+			throw new DMPControllerException(message + " " + e.getMessage(), e);
+		}  catch (final Exception e) {
+
+			final String message = "really couldn't convert the schema";
+
+			SchemaEventRecorder.LOG.error(message, e);
+
+			throw new DMPControllerException(message + " " + e.getMessage(), e);
 		}
 	}
 }

@@ -477,6 +477,116 @@ public class DataModelsResourceTest extends
 	}
 
 	@Test
+	public void testDMPPersistenceExceptionAtXMLData() throws Exception {
+
+		DataModelsResourceTest.LOG.debug("start throw DMPPersistenceException at XML data test");
+
+		// prepare resource
+		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("test-mabxml-resource2.json");
+
+		final Resource expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
+
+		final URL fileURL = Resources.getResource("test-mabxml2.xml");
+		final File resourceFile = FileUtils.toFile(fileURL);
+
+		final String configurationJSONString = DMPPersistenceUtil.getResourceAsString("xml-configuration.json");
+
+		// add resource and config
+		final Resource resource = resourcesResourceTestUtils.uploadResource(resourceFile, expectedResource);
+
+		final Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
+
+		final DataModel dataModel1 = new DataModel();
+		dataModel1.setName("my data model");
+		dataModel1.setDescription("my data model description");
+		dataModel1.setDataResource(resource);
+		dataModel1.setConfiguration(configuration);
+
+		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
+
+		final DataModel dataModel = pojoClassResourceTestUtils.createObject(dataModelJSONString, dataModel1);
+
+		final int atMost = 1;
+
+		final InternalModelServiceFactory serviceFactory = DMPInjector.injector.getInstance(Key.get(InternalModelServiceFactory.class));
+		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
+		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getId(), Optional.of(atMost));
+
+		Assert.assertTrue(data.isPresent());
+		Assert.assertFalse(data.get().isEmpty());
+		Assert.assertThat(data.get().size(), CoreMatchers.equalTo(atMost));
+
+		final String recordId = data.get().keySet().iterator().next();
+
+		final Response response = target(String.valueOf(dataModel.getId()), "data").queryParam("atMost", atMost).request()
+				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+
+		// final String assoziativeJsonArrayString = response.readEntity(String.class);
+		//
+		// System.out.println("result = '" + assoziativeJsonArrayString + "'");
+
+		final ObjectNode assoziativeJsonArray = response.readEntity(ObjectNode.class);
+
+		Assert.assertThat(assoziativeJsonArray.size(), CoreMatchers.equalTo(atMost));
+
+		final JsonNode json = assoziativeJsonArray.get(recordId);
+
+		final JsonNode expectedJson = data.get().get(recordId).toRawJSON();
+
+		Assert.assertNotNull("the expected data JSON shouldn't be null", expectedJson);
+
+		System.out.println("expected JSON = '" + objectMapper.writeValueAsString(expectedJson) + "'");
+
+		Assert.assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", json),
+				CoreMatchers.equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", expectedJson)));
+		Assert.assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion", json),
+				CoreMatchers.equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion", expectedJson)));
+		Assert.assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ", json),
+				CoreMatchers.equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ", expectedJson)));
+		Assert.assertThat(getValueNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld", json).size(),
+				CoreMatchers.equalTo(getValueNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld", expectedJson).size()));
+
+		// clean up
+
+		final Schema schema = dataModel.getSchema();
+		final Clasz recordClass = schema.getRecordClass();
+
+		cleanUpDB(dataModel);
+
+		if (schema != null) {
+
+			final Set<AttributePath> attributePaths = schema.getAttributePaths();
+
+			if (attributePaths != null) {
+
+				for (final AttributePath attributePath : attributePaths) {
+
+					this.attributePaths.put(attributePath.getId(), attributePath);
+
+					final Set<Attribute> attributes = attributePath.getAttributes();
+
+					if (attributes != null) {
+
+						for (final Attribute attribute : attributes) {
+
+							this.attributes.put(attribute.getId(), attribute);
+						}
+					}
+				}
+			}
+		}
+
+		resourcesResourceTestUtils.deleteObject(resource);
+		configurationsResourceTestUtils.deleteObject(configuration);
+		schemasResourceTestUtils.deleteObject(schema);
+		claszesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(recordClass);
+
+		DataModelsResourceTest.LOG.debug("end throw DMPPersistenceException at XML data test");
+	}
+
+	@Test
 	public void testDataMissing() throws Exception {
 
 		DataModelsResourceTest.LOG.debug("start get data missing test");
