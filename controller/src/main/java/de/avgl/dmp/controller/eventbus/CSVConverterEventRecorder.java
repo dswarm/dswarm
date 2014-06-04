@@ -9,6 +9,7 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.CSVResourceFlowFactory;
 import de.avgl.dmp.converter.flow.CSVSourceResourceTriplesFlow;
@@ -32,14 +33,14 @@ public class CSVConverterEventRecorder {
 	private final InternalModelServiceFactory internalServiceFactory;
 
 	@Inject
-	public CSVConverterEventRecorder(final InternalModelServiceFactory internalServiceFactory, final EventBus eventBus) {
+	public CSVConverterEventRecorder(final InternalModelServiceFactory internalServiceFactory/*, final EventBus eventBus */) {
 
 		this.internalServiceFactory = internalServiceFactory;
-		eventBus.register(this);
+		// eventBus.register(this);
 	}
 
-	@Subscribe
-	public void convertConfiguration(final CSVConverterEvent event) {
+	//@Subscribe
+	public void convertConfiguration(final CSVConverterEvent event) throws DMPControllerException {
 
 		final DataModel dataModel = event.getDataModel();
 
@@ -50,8 +51,20 @@ public class CSVConverterEventRecorder {
 			final String path = dataModel.getDataResource().getAttribute("path").asText();
 			result = flow.applyFile(path);
 
-		} catch (DMPConverterException | NullPointerException e) {
-			e.printStackTrace();
+		} catch (final DMPConverterException | NullPointerException e) {
+
+			final String message = "couldn't convert the CSV data of data model '" + dataModel.getId() + "'";
+
+			CSVConverterEventRecorder.LOG.error(message, e);
+
+			throw new DMPControllerException(message + " " + e.getMessage(), e);
+		}  catch (final Exception e) {
+
+			final String message = "really couldn't convert the CSV data of data model '" + dataModel.getId() + "'";
+
+			CSVConverterEventRecorder.LOG.error(message, e);
+
+			throw new DMPControllerException(message + " " + e.getMessage(), e);
 		}
 
 		if (result != null) {
@@ -87,7 +100,11 @@ public class CSVConverterEventRecorder {
 				internalServiceFactory.getInternalGDMGraphService().createObject(dataModel.getId(), gdmModel);
 			} catch (final DMPPersistenceException e) {
 
-				CSVConverterEventRecorder.LOG.error("couldn't persist the converted data of data model '" + dataModel.getId() + "'", e);
+				final String message = "couldn't persist the converted CSV data of data model '" + dataModel.getId() + "'";
+
+				CSVConverterEventRecorder.LOG.error(message, e);
+
+				throw new DMPControllerException(message + " " + e.getMessage(), e);
 			}
 		}
 	}

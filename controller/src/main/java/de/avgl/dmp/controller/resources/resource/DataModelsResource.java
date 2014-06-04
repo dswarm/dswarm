@@ -32,9 +32,12 @@ import com.wordnik.swagger.annotations.ApiResponses;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.eventbus.CSVConverterEvent;
+import de.avgl.dmp.controller.eventbus.CSVConverterEventRecorder;
 import de.avgl.dmp.controller.eventbus.SchemaEvent;
 import de.avgl.dmp.controller.eventbus.XMLConverterEvent;
+import de.avgl.dmp.controller.eventbus.XMLConverterEventRecorder;
 import de.avgl.dmp.controller.eventbus.XMLSchemaEvent;
+import de.avgl.dmp.controller.eventbus.XMLSchemaEventRecorder;
 import de.avgl.dmp.controller.resources.ExtendedBasicDMPResource;
 import de.avgl.dmp.controller.resources.resource.utils.DataModelsResourceUtils;
 import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
@@ -72,6 +75,10 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 	 */
 	private final DataModelUtil dataModelUtil;
 
+	private final Provider<XMLSchemaEventRecorder> xmlSchemaEventRecorderProvider;
+	private final Provider<CSVConverterEventRecorder> csvConverterEventRecorderProvider;
+	private final Provider<XMLConverterEventRecorder> xmlConvertEventRecorderProvider;
+
 	/**
 	 * Creates a new resource (controller service) for {@link DataModel}s with the provider of the data model persistence service,
 	 * the object mapper, metrics registry, event bus provider and data model util.
@@ -84,12 +91,15 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 	 */
 	@Inject
 	public DataModelsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg, final Provider<EventBus> eventBusProviderArg,
-			final DataModelUtil dataModelUtilArg) throws DMPControllerException {
+			final DataModelUtil dataModelUtilArg, final Provider<XMLSchemaEventRecorder> xmlSchemaEventRecorderProviderArg, final Provider<CSVConverterEventRecorder> csvConverterEventRecorderProviderArg, final Provider<XMLConverterEventRecorder> xmlConverterEventRecorderProviderArg) throws DMPControllerException {
 
 		super(utilsFactory.reset().get(DataModelsResourceUtils.class), dmpStatusArg);
 
 		eventBusProvider = eventBusProviderArg;
 		dataModelUtil = dataModelUtilArg;
+		xmlSchemaEventRecorderProvider = xmlSchemaEventRecorderProviderArg;
+		csvConverterEventRecorderProvider = csvConverterEventRecorderProviderArg;
+		xmlConvertEventRecorderProvider = xmlConverterEventRecorderProviderArg;
 	}
 
 	/**
@@ -354,15 +364,27 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 			switch (storageType) {
 				case "schema":
 
-					eventBusProvider.get().post(new XMLSchemaEvent(configuration, dataModel.getDataResource()));
+					//eventBusProvider.get().post(new XMLSchemaEvent(configuration, dataModel.getDataResource()));
+
+					final XMLSchemaEvent xmlSchemaEvent = new XMLSchemaEvent(configuration, dataModel.getDataResource());
+					xmlSchemaEventRecorderProvider.get().convertConfiguration(xmlSchemaEvent);
+
 					break;
 				case "csv":
 
-					eventBusProvider.get().post(new CSVConverterEvent(dataModel));
+					//eventBusProvider.get().post(new CSVConverterEvent(dataModel));
+
+					final CSVConverterEvent csvConverterEvent = new CSVConverterEvent(dataModel);
+					csvConverterEventRecorderProvider.get().convertConfiguration(csvConverterEvent);
+
 					break;
 				case "xml":
 
-					eventBusProvider.get().post(new XMLConverterEvent(dataModel));
+					//eventBusProvider.get().post(new XMLConverterEvent(dataModel));
+
+					final XMLConverterEvent xmlConverterEvent = new XMLConverterEvent(dataModel);
+					xmlConvertEventRecorderProvider.get().processDataModel(xmlConverterEvent);
+
 					break;
 			}
 		}

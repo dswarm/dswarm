@@ -3,9 +3,11 @@ package de.avgl.dmp.controller.resources.resource.test;
 import java.io.File;
 import java.net.URL;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -58,39 +60,39 @@ import org.slf4j.LoggerFactory;
 public class DataModelsResourceTest extends
 		BasicResourceTest<DataModelsResourceTestUtils, DataModelServiceTestUtils, DataModelService, ProxyDataModel, DataModel, Long> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(DataModelsResourceTest.class);
+	private static final Logger						LOG					= LoggerFactory.getLogger(DataModelsResourceTest.class);
 
-	private final AttributesResourceTestUtils attributesResourceTestUtils;
+	private final AttributesResourceTestUtils		attributesResourceTestUtils;
 
-	private final ClaszesResourceTestUtils claszesResourceTestUtils;
+	private final ClaszesResourceTestUtils			claszesResourceTestUtils;
 
-	private final AttributePathsResourceTestUtils attributePathsResourceTestUtils;
+	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
 
-	private final ResourcesResourceTestUtils resourcesResourceTestUtils;
+	private final ResourcesResourceTestUtils		resourcesResourceTestUtils;
 
-	private final ConfigurationsResourceTestUtils configurationsResourceTestUtils;
+	private final ConfigurationsResourceTestUtils	configurationsResourceTestUtils;
 
-	private final SchemasResourceTestUtils schemasResourceTestUtils;
+	private final SchemasResourceTestUtils			schemasResourceTestUtils;
 
-	private final DataModelsResourceTestUtils dataModelsResourceTestUtils;
+	private final DataModelsResourceTestUtils		dataModelsResourceTestUtils;
 
-	private final Map<Long, Attribute> attributes = Maps.newHashMap();
+	private final Map<Long, Attribute>				attributes			= Maps.newHashMap();
 
-	private final Map<Long, AttributePath> attributePaths = Maps.newLinkedHashMap();
+	private final Map<Long, AttributePath>			attributePaths		= Maps.newLinkedHashMap();
 
-	private Clasz recordClass;
+	private Clasz									recordClass;
 
-	private Clasz updateRecordClass = null;
+	private Clasz									updateRecordClass	= null;
 
-	private Schema schema;
+	private Schema									schema;
 
-	private Configuration configuration;
+	private Configuration							configuration;
 
-	private Configuration updateConfiguration = null;
+	private Configuration							updateConfiguration	= null;
 
-	private Resource resource;
+	private Resource								resource;
 
-	private Resource updateResource = null;
+	private Resource								updateResource		= null;
 
 	public DataModelsResourceTest() {
 
@@ -487,6 +489,109 @@ public class DataModelsResourceTest extends
 		Assert.assertThat(response.hasEntity(), CoreMatchers.equalTo(false));
 
 		DataModelsResourceTest.LOG.debug("end get resource configuration data missing test");
+	}
+
+	@Test
+	public void testExceptionAtXMLData() throws Exception {
+
+		DataModelsResourceTest.LOG.debug("start throw Exception at XML data test");
+
+		// prepare resource
+		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("test-mabxml-resource2.json");
+
+		final Resource expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
+
+		final URL fileURL = Resources.getResource("test-mabxml2.xml");
+		final File resourceFile = FileUtils.toFile(fileURL);
+
+		final String configurationJSONString = DMPPersistenceUtil.getResourceAsString("xml-configuration.json");
+
+		// add resource and config
+		final Resource resource = resourcesResourceTestUtils.uploadResource(resourceFile, expectedResource);
+
+		final Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
+
+		final DataModel dataModel1 = new DataModel();
+		dataModel1.setName("my data model");
+		dataModel1.setDescription("my data model description");
+		dataModel1.setDataResource(resource);
+		dataModel1.setConfiguration(configuration);
+
+		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
+
+		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+				.post(Entity.json(dataModelJSONString));
+
+		Assert.assertEquals("500 was expected", 500, response.getStatus());
+
+		final String body = response.readEntity(String.class);
+
+		Assert.assertEquals("{\"status\":\"nok\",\"status_code\":500,\"error\":\" 1; XML document structures must start and end within the same entity.\"}", body);
+
+		// clean up
+
+		List<DataModel> dataModels = pojoClassResourceTestUtils.getPersistenceServiceTestUtils().getObjects();
+
+		Assert.assertNotNull(dataModels);
+
+		DataModel dataModel = null;
+
+		for (final DataModel dataModel2 : dataModels) {
+
+			if (dataModel2.getId() > 1) {
+
+				dataModel = dataModel2;
+
+				break;
+			}
+		}
+
+		Assert.assertNotNull(dataModel);
+
+		final Schema schema = dataModel.getSchema();
+
+		Clasz recordClass = null;
+
+		if (schema != null) {
+
+			recordClass = schema.getRecordClass();
+		}
+
+		cleanUpDB(dataModel);
+
+		if (schema != null) {
+
+			final Set<AttributePath> attributePaths = schema.getAttributePaths();
+
+			if (attributePaths != null) {
+
+				for (final AttributePath attributePath : attributePaths) {
+
+					this.attributePaths.put(attributePath.getId(), attributePath);
+
+					final Set<Attribute> attributes = attributePath.getAttributes();
+
+					if (attributes != null) {
+
+						for (final Attribute attribute : attributes) {
+
+							this.attributes.put(attribute.getId(), attribute);
+						}
+					}
+				}
+			}
+		}
+
+		resourcesResourceTestUtils.deleteObject(resource);
+		configurationsResourceTestUtils.deleteObject(configuration);
+		schemasResourceTestUtils.deleteObject(schema);
+
+		if (recordClass != null) {
+
+			claszesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(recordClass);
+		}
+
+		DataModelsResourceTest.LOG.debug("end throw Exception at XML data test");
 	}
 
 	@Override
