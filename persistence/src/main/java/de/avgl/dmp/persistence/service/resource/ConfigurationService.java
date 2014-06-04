@@ -52,10 +52,12 @@ public class ConfigurationService extends ExtendedBasicDMPJPAService<ProxyConfig
 
 		super.updateObjectInternal(object, updateObject, entityManager);
 
-		final Set<Resource> resources = object.getResources();
+		// TODO: disable resource updating for now (until resource id ref resolution is implemented)
+
+		// final Set<Resource> resources = object.getResources();
 		final ObjectNode parameters = object.getParameters();
 
-		updateObject.setResources(resources);
+		// updateObject.setResources(resources);
 		updateObject.setParameters(parameters);
 	}
 
