@@ -43,10 +43,10 @@ public class XMLConverterEventRecorder {
 	 * @param eventBus an event bus, where this event record will be registered
 	 */
 	@Inject
-	public XMLConverterEventRecorder(final InternalModelServiceFactory internalModelServiceFactory, final EventBus eventBus) {
+	public XMLConverterEventRecorder(final InternalModelServiceFactory internalModelServiceFactory/*, final EventBus eventBus */) {
 
 		internalServiceFactory = internalModelServiceFactory;
-		eventBus.register(this);
+		// eventBus.register(this);
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class XMLConverterEventRecorder {
 	 *
 	 * @param event an converter event that provides a data model
 	 */
-	@Subscribe
+	// @Subscribe
 	public void processDataModel(final XMLConverterEvent event) throws DMPControllerException {
 
 		final DataModel dataModel = event.getDataModel();

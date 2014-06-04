@@ -33,13 +33,13 @@ public class CSVConverterEventRecorder {
 	private final InternalModelServiceFactory internalServiceFactory;
 
 	@Inject
-	public CSVConverterEventRecorder(final InternalModelServiceFactory internalServiceFactory, final EventBus eventBus) {
+	public CSVConverterEventRecorder(final InternalModelServiceFactory internalServiceFactory/*, final EventBus eventBus */) {
 
 		this.internalServiceFactory = internalServiceFactory;
-		eventBus.register(this);
+		// eventBus.register(this);
 	}
 
-	@Subscribe
+	//@Subscribe
 	public void convertConfiguration(final CSVConverterEvent event) throws DMPControllerException {
 
 		final DataModel dataModel = event.getDataModel();

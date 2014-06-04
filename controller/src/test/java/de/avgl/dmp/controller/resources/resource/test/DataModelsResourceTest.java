@@ -3,9 +3,11 @@ package de.avgl.dmp.controller.resources.resource.test;
 import java.io.File;
 import java.net.URL;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -58,39 +60,39 @@ import org.slf4j.LoggerFactory;
 public class DataModelsResourceTest extends
 		BasicResourceTest<DataModelsResourceTestUtils, DataModelServiceTestUtils, DataModelService, ProxyDataModel, DataModel, Long> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(DataModelsResourceTest.class);
+	private static final Logger						LOG					= LoggerFactory.getLogger(DataModelsResourceTest.class);
 
-	private final AttributesResourceTestUtils attributesResourceTestUtils;
+	private final AttributesResourceTestUtils		attributesResourceTestUtils;
 
-	private final ClaszesResourceTestUtils claszesResourceTestUtils;
+	private final ClaszesResourceTestUtils			claszesResourceTestUtils;
 
-	private final AttributePathsResourceTestUtils attributePathsResourceTestUtils;
+	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
 
-	private final ResourcesResourceTestUtils resourcesResourceTestUtils;
+	private final ResourcesResourceTestUtils		resourcesResourceTestUtils;
 
-	private final ConfigurationsResourceTestUtils configurationsResourceTestUtils;
+	private final ConfigurationsResourceTestUtils	configurationsResourceTestUtils;
 
-	private final SchemasResourceTestUtils schemasResourceTestUtils;
+	private final SchemasResourceTestUtils			schemasResourceTestUtils;
 
-	private final DataModelsResourceTestUtils dataModelsResourceTestUtils;
+	private final DataModelsResourceTestUtils		dataModelsResourceTestUtils;
 
-	private final Map<Long, Attribute> attributes = Maps.newHashMap();
+	private final Map<Long, Attribute>				attributes			= Maps.newHashMap();
 
-	private final Map<Long, AttributePath> attributePaths = Maps.newLinkedHashMap();
+	private final Map<Long, AttributePath>			attributePaths		= Maps.newLinkedHashMap();
 
-	private Clasz recordClass;
+	private Clasz									recordClass;
 
-	private Clasz updateRecordClass = null;
+	private Clasz									updateRecordClass	= null;
 
-	private Schema schema;
+	private Schema									schema;
 
-	private Configuration configuration;
+	private Configuration							configuration;
 
-	private Configuration updateConfiguration = null;
+	private Configuration							updateConfiguration	= null;
 
-	private Resource resource;
+	private Resource								resource;
 
-	private Resource updateResource = null;
+	private Resource								updateResource		= null;
 
 	public DataModelsResourceTest() {
 
@@ -477,9 +479,22 @@ public class DataModelsResourceTest extends
 	}
 
 	@Test
-	public void testDMPPersistenceExceptionAtXMLData() throws Exception {
+	public void testDataMissing() throws Exception {
 
-		DataModelsResourceTest.LOG.debug("start throw DMPPersistenceException at XML data test");
+		DataModelsResourceTest.LOG.debug("start get data missing test");
+
+		final Response response = target("42", "data").request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+
+		Assert.assertThat("404 Not Found was expected", response.getStatus(), CoreMatchers.equalTo(404));
+		Assert.assertThat(response.hasEntity(), CoreMatchers.equalTo(false));
+
+		DataModelsResourceTest.LOG.debug("end get resource configuration data missing test");
+	}
+
+	@Test
+	public void testExceptionAtXMLData() throws Exception {
+
+		DataModelsResourceTest.LOG.debug("start throw Exception at XML data test");
 
 		// prepare resource
 		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("test-mabxml-resource2.json");
@@ -504,54 +519,43 @@ public class DataModelsResourceTest extends
 
 		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
 
-		final DataModel dataModel = pojoClassResourceTestUtils.createObject(dataModelJSONString, dataModel1);
+		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+				.post(Entity.json(dataModelJSONString));
 
-		final int atMost = 1;
+		Assert.assertEquals("500 was expected", 500, response.getStatus());
 
-		final InternalModelServiceFactory serviceFactory = DMPInjector.injector.getInstance(Key.get(InternalModelServiceFactory.class));
-		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
-		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getId(), Optional.of(atMost));
+		final String body = response.readEntity(String.class);
 
-		Assert.assertTrue(data.isPresent());
-		Assert.assertFalse(data.get().isEmpty());
-		Assert.assertThat(data.get().size(), CoreMatchers.equalTo(atMost));
-
-		final String recordId = data.get().keySet().iterator().next();
-
-		final Response response = target(String.valueOf(dataModel.getId()), "data").queryParam("atMost", atMost).request()
-				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
-
-		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
-
-		// final String assoziativeJsonArrayString = response.readEntity(String.class);
-		//
-		// System.out.println("result = '" + assoziativeJsonArrayString + "'");
-
-		final ObjectNode assoziativeJsonArray = response.readEntity(ObjectNode.class);
-
-		Assert.assertThat(assoziativeJsonArray.size(), CoreMatchers.equalTo(atMost));
-
-		final JsonNode json = assoziativeJsonArray.get(recordId);
-
-		final JsonNode expectedJson = data.get().get(recordId).toRawJSON();
-
-		Assert.assertNotNull("the expected data JSON shouldn't be null", expectedJson);
-
-		System.out.println("expected JSON = '" + objectMapper.writeValueAsString(expectedJson) + "'");
-
-		Assert.assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", json),
-				CoreMatchers.equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", expectedJson)));
-		Assert.assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion", json),
-				CoreMatchers.equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion", expectedJson)));
-		Assert.assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ", json),
-				CoreMatchers.equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ", expectedJson)));
-		Assert.assertThat(getValueNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld", json).size(),
-				CoreMatchers.equalTo(getValueNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld", expectedJson).size()));
+		Assert.assertEquals("{\"status\":\"nok\",\"status_code\":500,\"error\":\" 1; XML document structures must start and end within the same entity.\"}", body);
 
 		// clean up
 
+		List<DataModel> dataModels = pojoClassResourceTestUtils.getPersistenceServiceTestUtils().getObjects();
+
+		Assert.assertNotNull(dataModels);
+
+		DataModel dataModel = null;
+
+		for (final DataModel dataModel2 : dataModels) {
+
+			if (dataModel2.getId() > 1) {
+
+				dataModel = dataModel2;
+
+				break;
+			}
+		}
+
+		Assert.assertNotNull(dataModel);
+
 		final Schema schema = dataModel.getSchema();
-		final Clasz recordClass = schema.getRecordClass();
+
+		Clasz recordClass = null;
+
+		if (schema != null) {
+
+			recordClass = schema.getRecordClass();
+		}
 
 		cleanUpDB(dataModel);
 
@@ -581,22 +585,13 @@ public class DataModelsResourceTest extends
 		resourcesResourceTestUtils.deleteObject(resource);
 		configurationsResourceTestUtils.deleteObject(configuration);
 		schemasResourceTestUtils.deleteObject(schema);
-		claszesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(recordClass);
 
-		DataModelsResourceTest.LOG.debug("end throw DMPPersistenceException at XML data test");
-	}
+		if (recordClass != null) {
 
-	@Test
-	public void testDataMissing() throws Exception {
+			claszesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(recordClass);
+		}
 
-		DataModelsResourceTest.LOG.debug("start get data missing test");
-
-		final Response response = target("42", "data").request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
-
-		Assert.assertThat("404 Not Found was expected", response.getStatus(), CoreMatchers.equalTo(404));
-		Assert.assertThat(response.hasEntity(), CoreMatchers.equalTo(false));
-
-		DataModelsResourceTest.LOG.debug("end get resource configuration data missing test");
+		DataModelsResourceTest.LOG.debug("end throw Exception at XML data test");
 	}
 
 	@Override

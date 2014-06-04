@@ -55,7 +55,7 @@ public class SchemaEventRecorder {
 
 	@Inject
 	public SchemaEventRecorder(final AttributePathService attributePathService, final AttributeService attributeService,
-			final ClaszService claszService, final DataModelService dataModelService, final SchemaService schemaService, final EventBus eventBus) {
+			final ClaszService claszService, final DataModelService dataModelService, final SchemaService schemaService/*, final EventBus eventBus */) {
 
 		this.attributePathService = attributePathService;
 		this.attributeService = attributeService;
@@ -63,7 +63,7 @@ public class SchemaEventRecorder {
 		this.dataModelService = dataModelService;
 		this.schemaService = schemaService;
 
-		eventBus.register(this);
+		// eventBus.register(this);
 	}
 
 	private void createSchemaFromCsv(final SchemaEvent event) throws DMPPersistenceException, DMPConverterException {
@@ -247,7 +247,7 @@ public class SchemaEventRecorder {
 		return Optional.of(result);
 	}
 
-	@Subscribe
+	// @Subscribe
 	public void convertSchema(final SchemaEvent event) throws DMPControllerException {
 
 		if (event.getSchemaType() != SchemaEvent.SchemaType.CSV) {
