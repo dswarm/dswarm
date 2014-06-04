@@ -170,7 +170,9 @@ public class ConfigurationsResource extends
 
 		object.setParameters(parameters);
 
-		object.setResources(objectFromJSON.getResources());
+		// TODO: disable resource updating for now (until resource id ref resolution is implemented)
+
+		// object.setResources(objectFromJSON.getResources());
 
 		return object;
 	}
