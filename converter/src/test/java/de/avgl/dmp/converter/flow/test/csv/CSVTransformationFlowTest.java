@@ -147,4 +147,68 @@ public class CSVTransformationFlowTest extends GuicedTest {
 
 		Assert.assertEquals(finalExpected.length(), finalActual.length());
 	}
+	
+	@Test
+	public void testCSVOneMappingWithMultipleFunctions() throws Exception {
+
+		final String expected = DMPPersistenceUtil.getResourceAsString("dd-528.csv.task.result.json");
+
+		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
+				.getProvider(InternalModelServiceFactory.class);
+
+		final String finalTaskJSONString = DMPPersistenceUtil.getResourceAsString("dd-528.csv.task.json");
+		final ObjectMapper objectMapper = DMPPersistenceUtil.getJSONObjectMapper();
+
+		// looks like that the utilised ObjectMappers getting a bit mixed, i.e., actual sometimes delivers a result that is not in
+		// pretty print and sometimes it is in pretty print ... (that's why the reformatting of both - expected and actual)
+		final ObjectMapper objectMapper2 = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL).configure(
+				SerializationFeature.INDENT_OUTPUT, true);
+
+		final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
+
+		final TransformationFlow flow = TransformationFlow.fromTask(task, internalModelServiceFactoryProvider);
+
+		flow.getScript();
+
+		final String actual = flow.applyResource("test_transf.tuples.json");
+		final ArrayNode array = objectMapper2.readValue(actual, ArrayNode.class);
+		final String finalActual = objectMapper2.writeValueAsString(array);
+
+		final ArrayNode expectedArray = objectMapper2.readValue(expected, ArrayNode.class);
+		final String finalExpected = objectMapper2.writeValueAsString(expectedArray);
+
+		Assert.assertEquals(finalExpected.length(), finalActual.length());
+	}
+	
+	@Test
+	public void testCSVMultipleMappingsWithAlmostAllFunctions() throws Exception {
+
+		final String expected = DMPPersistenceUtil.getResourceAsString("almost.all.functions.complex.test.csv.result.json");
+
+		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
+				.getProvider(InternalModelServiceFactory.class);
+
+		final String finalTaskJSONString = DMPPersistenceUtil.getResourceAsString("almost.all.functions.complex.test.csv.task.json");
+		final ObjectMapper objectMapper = DMPPersistenceUtil.getJSONObjectMapper();
+
+		// looks like that the utilised ObjectMappers getting a bit mixed, i.e., actual sometimes delivers a result that is not in
+		// pretty print and sometimes it is in pretty print ... (that's why the reformatting of both - expected and actual)
+		final ObjectMapper objectMapper2 = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL).configure(
+				SerializationFeature.INDENT_OUTPUT, true);
+
+		final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
+
+		final TransformationFlow flow = TransformationFlow.fromTask(task, internalModelServiceFactoryProvider);
+
+		flow.getScript();
+
+		final String actual = flow.applyResource("almost.all.functions.complex.test.csv.tuples.json");
+		final ArrayNode array = objectMapper2.readValue(actual, ArrayNode.class);
+		final String finalActual = objectMapper2.writeValueAsString(array);
+
+		final ArrayNode expectedArray = objectMapper2.readValue(expected, ArrayNode.class);
+		final String finalExpected = objectMapper2.writeValueAsString(expectedArray);
+
+		Assert.assertEquals(finalExpected.length(), finalActual.length());
+	}
 }
