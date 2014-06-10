@@ -18,7 +18,7 @@ import com.google.common.collect.Lists;
 
 /**
  * Serialises an object as CSV. Records and entities are represented as objects.
- * 
+ *
  * @author tgaengler
  */
 @Description("Serialises an object as CSV")
@@ -72,7 +72,11 @@ public final class CSVEncoder extends DefaultStreamPipe<ObjectReceiver<String>> 
 
 		// create CSV printer
 
-		csvPrinter = new CSVPrinter(writer, csvFormat);
+		try {
+			csvPrinter = new CSVPrinter(writer, csvFormat);
+		} catch (final IOException e) {
+			throw new RuntimeException(e);
+		}
 
 		// TODO: workaround (?)
 
