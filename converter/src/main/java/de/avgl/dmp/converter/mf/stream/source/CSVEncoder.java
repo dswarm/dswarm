@@ -42,7 +42,7 @@ public final class CSVEncoder extends DefaultStreamPipe<ObjectReceiver<String>> 
 		final char escapeCharacter = '\\';
 		final char quoteCharacter = '"';
 		final char columnSeparator = ';';
-		final String lineEnding = "\n";
+		final String lineEnding = System.getProperty("line.separator");
 
 		csvFormat = CSVFormat.newFormat(columnSeparator).withCommentStart('#').withQuoteChar(quoteCharacter).withEscape(escapeCharacter)
 				.withRecordSeparator(lineEnding);
