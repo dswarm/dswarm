@@ -535,7 +535,7 @@
                 "output_components": [{"id": -1402409348142}],
                 "description": "{\"x\":\"attributes\",\"y\":0}",
                 "parameter_mappings": {
-                  "delimiter": "|",
+                  "delimiter": "\\|",
                   "inputString": "attributes__6__"
                 }
               },
@@ -572,7 +572,7 @@
                 "input_components": [{"id": -1402409341740}],
                 "description": "{\"x\":\"attributes\",\"y\":1}",
                 "parameter_mappings": {
-                  "only": "6",
+                  "only": "4",
                   "sameEntity": "true",
                   "inputString": "component1402409341363"
                 }
