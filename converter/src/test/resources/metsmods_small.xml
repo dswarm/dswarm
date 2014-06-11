@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mets:mets xmlns:mets="http://www.loc.gov/METS/" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dwork="http://www.ub.uni-heidelberg.de/__NO_SUCH_SCHEMA__" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/mets/mets.xsd http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd http://purl.org/dc/elements/1.1/ http://dublincore.org/schemas/xmls/qdc/2008/02/11/dc.xsd">
+  <mets:dmdSec ID="dmd">
+    <mets:mdWrap MDTYPE="MODS">
+      <mets:xmlData>
+        <mods:mods>
+          <mods:titleInfo>
+            <mods:title own="">L' art: revue hebdomadaire illustrée</mods:title>
+          </mods:titleInfo>
+          <mods:originInfo>
+            <mods:dateIssued keyDate="yes" encoding="w3cdtf">1875</mods:dateIssued>
+            <mods:dateIssued>1875 (Teil 1)</mods:dateIssued>
+          </mods:originInfo>
+          <mods:physicalDescription>
+            <mods:digitalOrigin>reformatted digital</mods:digitalOrigin>
+          </mods:physicalDescription>
+          <mods:language>
+            <mods:languageTerm type="code" authority="iso639-2b">fre</mods:languageTerm>
+          </mods:language>
+          <mods:relatedItem type="host">
+            <mods:recordInfo>
+              <mods:recordIdentifier>urn:nbn:de:bsz:16-diglit-166698</mods:recordIdentifier>
+            </mods:recordInfo>
+          </mods:relatedItem>
+          <mods:part type="host" order="1">
+            <mods:detail>
+              <mods:number>1</mods:number>
+            </mods:detail>
+          </mods:part>
+          <mods:relatedItem type="series" lang="ger" dwork_name="projekturl">
+            <mods:titleInfo>
+              <mods:title>Informationen zur Zeitschrift</mods:title>
+            </mods:titleInfo>
+            <mods:location>
+              <mods:url>http://art.uni-hd.de</mods:url>
+            </mods:location>
+          </mods:relatedItem>
+          <mods:relatedItem type="series" lang="eng" dwork_name="projekturl">
+            <mods:titleInfo>
+              <mods:title>Further information on the journal</mods:title>
+            </mods:titleInfo>
+            <mods:location>
+              <mods:url>http://art.uni-hd.de</mods:url>
+            </mods:location>
+          </mods:relatedItem>
+          <mods:relatedItem type="series">
+            <mods:titleInfo>
+              <mods:title>Druckschriften</mods:title>
+            </mods:titleInfo>
+            <mods:recordInfo>
+              <mods:recordIdentifier source="UBH">druckschriften</mods:recordIdentifier>
+            </mods:recordInfo>
+          </mods:relatedItem>
+          <mods:relatedItem type="series">
+            <mods:titleInfo>
+              <mods:title>Heidelberger historische Bestände — digital: Illustrierte Kunst- und Satirezeitschriften des 19. und frühen 20. Jahrhunderts</mods:title>
+            </mods:titleInfo>
+            <mods:recordInfo>
+              <mods:recordIdentifier source="UBH">sammlung5</mods:recordIdentifier>
+            </mods:recordInfo>
+          </mods:relatedItem>
+          <mods:location>
+            <mods:shelfLocator>C 4816-2 Gross RES</mods:shelfLocator>
+            <mods:url access="object in context">http://digi.ub.uni-heidelberg.de/diglit/art1875_1</mods:url>
+          </mods:location>
+          <mods:note type="shelf number" lang="ger" displayLabel="Signatur">C 4816-2 Gross RES</mods:note>
+          <mods:note type="shelf number" lang="eng" displayLabel="Shelf number">C 4816-2 Gross RES</mods:note>
+          <mods:recordInfo>
+            <mods:recordIdentifier source="swb-ppn">368306917</mods:recordIdentifier>
+          </mods:recordInfo>
+          <mods:identifier type="urn">urn:nbn:de:bsz:16-diglit-166707</mods:identifier>
+          <mods:abstract lang="ger" html="">
+</mods:abstract>
+          <mods:abstract lang="eng" html="">
+</mods:abstract>
+          <mods:note type="creation/production credits" lang="ger">
+</mods:note>
+          <mods:note type="creation/production credits" lang="eng">
+</mods:note>
+        </mods:mods>
+      </mets:xmlData>
+    </mets:mdWrap>
+  </mets:dmdSec>
+  <mets:dmdSec ID="dmd__dc">
+    <mets:mdWrap MDTYPE="DC" MIMETYPE="text/xml" LABEL="Dublin Core Metadata">
+      <mets:xmlData>
+        <dc:title>L' art: revue hebdomadaire illustrée</dc:title>
+        <dc:date>1875</dc:date>
+        <dcterms:issued>1875</dcterms:issued>
+        <dc:date>1875 (Teil 1)</dc:date>
+        <dcterms:issued>1875 (Teil 1)</dcterms:issued>
+        <dcterms:isPartOf>Sammlung5 - Kunstzeitschriften</dcterms:isPartOf>
+        <dc:language>fre</dc:language>
+        <dc:type>Text</dc:type>
+        <dc:identifier>urn:nbn:de:bsz:16-diglit-166698</dc:identifier>
+      </mets:xmlData>
+    </mets:mdWrap>
+  </mets:dmdSec>
+  <mets:dmdSec ID="dmd__dwork">
+    <mets:mdWrap MDTYPE="OTHER" MIMETYPE="text/xml" LABEL="dwork specific" OTHERMDTYPE="private/dwork">
+      <mets:xmlData>
+        <dwork:dwork>
+          <dwork:projectname>art1875_1</dwork:projectname>
+          <dwork:introImageUrl>http://digi.ub.uni-heidelberg.de/diglitData/introimage/art1875_1.jpg</dwork:introImageUrl>
+          <dwork:layoutTemplate>druck</dwork:layoutTemplate>
+          <dwork:sammlung>5</dwork:sammlung>
+          <dwork:geschuetzt />
+          <dwork:kein_oai />
+          <dwork:kein_urn />
+          <dwork:lizenz />
+          <dwork:footer>UB+DFG</dwork:footer>
+        </dwork:dwork>
+      </mets:xmlData>
+    </mets:mdWrap>
+  </mets:dmdSec>
+  </mets:mets>
