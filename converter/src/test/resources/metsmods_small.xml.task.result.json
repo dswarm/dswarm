@@ -1,0 +1,9 @@
+[{"http://data.slub-dresden.de/datamodels/4/records/9a1b69b1-1e90-4851-a63d-99df75b4b4a2": [
+      {"http://purl.org/dc/elements/1.1/title": "L' art: revue hebdomadaire illustrée"},
+      {"http://purl.org/ontology/bibo/edition": "1875"},
+      {"http://purl.org/dc/terms/alternative": [
+          "[(C 4816-2 Gross RES#ger)+Signatur]",
+          "[(C 4816-2 Gross RES#eng)+Shelf number]"
+        ]},
+      {"http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"}
+    ]}]

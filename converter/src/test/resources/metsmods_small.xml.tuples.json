@@ -1,0 +1,282 @@
+[ {
+  "v1" : "http://data.slub-dresden.de/datamodels/4/records/9a1b69b1-1e90-4851-a63d-99df75b4b4a2",
+  "v2" : [ {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#modsType"
+  }, {
+    "http://www.loc.gov/mods/v3#titleInfo" : [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#titleInfoType"
+    }, {
+      "http://www.loc.gov/mods/v3#title" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#titleType"
+      }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "L' art: revue hebdomadaire illustrée"
+      } ]
+    } ]
+  }, {
+    "http://www.loc.gov/mods/v3#originInfo" : [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#originInfoType"
+    }, {
+      "http://www.loc.gov/mods/v3#dateIssued" : [ [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#dateIssuedType"
+      }, {
+        "http://www.loc.gov/mods/v3#keyDate" : "yes"
+      }, {
+        "http://www.loc.gov/mods/v3#encoding" : "w3cdtf"
+      }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "1875"
+      } ], [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#dateIssuedType"
+      }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "1875 (Teil 1)"
+      } ] ]
+    } ]
+  }, {
+    "http://www.loc.gov/mods/v3#physicalDescription" : [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#physicalDescriptionType"
+    }, {
+      "http://www.loc.gov/mods/v3#digitalOrigin" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#digitalOriginType"
+      }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "reformatted digital"
+      } ]
+    } ]
+  }, {
+    "http://www.loc.gov/mods/v3#language" : [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#languageType"
+    }, {
+      "http://www.loc.gov/mods/v3#languageTerm" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#languageTermType"
+      }, {
+        "http://www.loc.gov/mods/v3#type" : "code"
+      }, {
+        "http://www.loc.gov/mods/v3#authority" : "iso639-2b"
+      }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "fre"
+      } ]
+    } ]
+  }, {
+    "http://www.loc.gov/mods/v3#relatedItem" : [ [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#relatedItemType"
+    }, {
+      "http://www.loc.gov/mods/v3#type" : "host"
+    }, {
+      "http://www.loc.gov/mods/v3#recordInfo" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#recordInfoType"
+      }, {
+        "http://www.loc.gov/mods/v3#recordIdentifier" : [ {
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#recordIdentifierType"
+        }, {
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "urn:nbn:de:bsz:16-diglit-166698"
+        } ]
+      } ]
+    } ], [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#relatedItemType"
+    }, {
+      "http://www.loc.gov/mods/v3#type" : "series"
+    }, {
+      "http://www.loc.gov/mods/v3#lang" : "ger"
+    }, {
+      "http://www.loc.gov/mods/v3#dwork_name" : "projekturl"
+    }, {
+      "http://www.loc.gov/mods/v3#titleInfo" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#titleInfoType"
+      }, {
+        "http://www.loc.gov/mods/v3#title" : [ {
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#titleType"
+        }, {
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Informationen zur Zeitschrift"
+        } ]
+      } ]
+    }, {
+      "http://www.loc.gov/mods/v3#location" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#locationType"
+      }, {
+        "http://www.loc.gov/mods/v3#url" : [ {
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#urlType"
+        }, {
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "http://art.uni-hd.de"
+        } ]
+      } ]
+    } ], [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#relatedItemType"
+    }, {
+      "http://www.loc.gov/mods/v3#type" : "series"
+    }, {
+      "http://www.loc.gov/mods/v3#lang" : "eng"
+    }, {
+      "http://www.loc.gov/mods/v3#dwork_name" : "projekturl"
+    }, {
+      "http://www.loc.gov/mods/v3#titleInfo" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#titleInfoType"
+      }, {
+        "http://www.loc.gov/mods/v3#title" : [ {
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#titleType"
+        }, {
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Further information on the journal"
+        } ]
+      } ]
+    }, {
+      "http://www.loc.gov/mods/v3#location" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#locationType"
+      }, {
+        "http://www.loc.gov/mods/v3#url" : [ {
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#urlType"
+        }, {
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "http://art.uni-hd.de"
+        } ]
+      } ]
+    } ], [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#relatedItemType"
+    }, {
+      "http://www.loc.gov/mods/v3#type" : "series"
+    }, {
+      "http://www.loc.gov/mods/v3#titleInfo" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#titleInfoType"
+      }, {
+        "http://www.loc.gov/mods/v3#title" : [ {
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#titleType"
+        }, {
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Druckschriften"
+        } ]
+      } ]
+    }, {
+      "http://www.loc.gov/mods/v3#recordInfo" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#recordInfoType"
+      }, {
+        "http://www.loc.gov/mods/v3#recordIdentifier" : [ {
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#recordIdentifierType"
+        }, {
+          "http://www.loc.gov/mods/v3#source" : "UBH"
+        }, {
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "druckschriften"
+        } ]
+      } ]
+    } ], [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#relatedItemType"
+    }, {
+      "http://www.loc.gov/mods/v3#type" : "series"
+    }, {
+      "http://www.loc.gov/mods/v3#titleInfo" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#titleInfoType"
+      }, {
+        "http://www.loc.gov/mods/v3#title" : [ {
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#titleType"
+        }, {
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Heidelberger historische Bestände — digital: Illustrierte Kunst- und Satirezeitschriften des 19. und frühen 20. Jahrhunderts"
+        } ]
+      } ]
+    }, {
+      "http://www.loc.gov/mods/v3#recordInfo" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#recordInfoType"
+      }, {
+        "http://www.loc.gov/mods/v3#recordIdentifier" : [ {
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#recordIdentifierType"
+        }, {
+          "http://www.loc.gov/mods/v3#source" : "UBH"
+        }, {
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "sammlung5"
+        } ]
+      } ]
+    } ] ]
+  }, {
+    "http://www.loc.gov/mods/v3#part" : [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#partType"
+    }, {
+      "http://www.loc.gov/mods/v3#type" : "host"
+    }, {
+      "http://www.loc.gov/mods/v3#order" : "1"
+    }, {
+      "http://www.loc.gov/mods/v3#detail" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#detailType"
+      }, {
+        "http://www.loc.gov/mods/v3#number" : [ {
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#numberType"
+        }, {
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "1"
+        } ]
+      } ]
+    } ]
+  }, {
+    "http://www.loc.gov/mods/v3#location" : [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#locationType"
+    }, {
+      "http://www.loc.gov/mods/v3#shelfLocator" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#shelfLocatorType"
+      }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "C 4816-2 Gross RES"
+      } ]
+    }, {
+      "http://www.loc.gov/mods/v3#url" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#urlType"
+      }, {
+        "http://www.loc.gov/mods/v3#access" : "object in context"
+      }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "http://digi.ub.uni-heidelberg.de/diglit/art1875_1"
+      } ]
+    } ]
+  }, {
+    "http://www.loc.gov/mods/v3#note" : [ [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#noteType"
+    }, {
+      "http://www.loc.gov/mods/v3#type" : "shelf number"
+    }, {
+      "http://www.loc.gov/mods/v3#lang" : "ger"
+    }, {
+      "http://www.loc.gov/mods/v3#displayLabel" : "Signatur"
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "C 4816-2 Gross RES"
+    } ], [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#noteType"
+    }, {
+      "http://www.loc.gov/mods/v3#type" : "shelf number"
+    }, {
+      "http://www.loc.gov/mods/v3#lang" : "eng"
+    }, {
+      "http://www.loc.gov/mods/v3#displayLabel" : "Shelf number"
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "C 4816-2 Gross RES"
+    } ], [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#noteType"
+    }, {
+      "http://www.loc.gov/mods/v3#type" : "creation/production credits"
+    }, {
+      "http://www.loc.gov/mods/v3#lang" : "ger"
+    } ], [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#noteType"
+    }, {
+      "http://www.loc.gov/mods/v3#type" : "creation/production credits"
+    }, {
+      "http://www.loc.gov/mods/v3#lang" : "eng"
+    } ] ]
+  }, {
+    "http://www.loc.gov/mods/v3#recordInfo" : [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#recordInfoType"
+    }, {
+      "http://www.loc.gov/mods/v3#recordIdentifier" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#recordIdentifierType"
+      }, {
+        "http://www.loc.gov/mods/v3#source" : "swb-ppn"
+      }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "368306917"
+      } ]
+    } ]
+  }, {
+    "http://www.loc.gov/mods/v3#identifier" : [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#identifierType"
+    }, {
+      "http://www.loc.gov/mods/v3#type" : "urn"
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "urn:nbn:de:bsz:16-diglit-166707"
+    } ]
+  }, {
+    "http://www.loc.gov/mods/v3#abstract" : [ [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#abstractType"
+    }, {
+      "http://www.loc.gov/mods/v3#lang" : "ger"
+    } ], [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.loc.gov/mods/v3#abstractType"
+    }, {
+      "http://www.loc.gov/mods/v3#lang" : "eng"
+    } ] ]
+  } ]
+} ]
