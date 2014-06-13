@@ -6,7 +6,6 @@ import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.node.BooleanNode;
@@ -28,28 +27,25 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
  */
 public class CSVSourceResourceCSVJSONPreviewFlowTest {
 
-	private static final String baseDir = "csv_config" + System.getProperty("file.separator"); 
-	
-	
+	private static final String	baseDir	= "csv_config" + System.getProperty("file.separator");
+
 	@Test
 	public void testEndToEnd() throws Exception {
 
-		final String csvPath = "test_csv.csv";		
+		final String csvPath = "test_csv.csv";
 		final String expectedPath = "test_csv.preview.json";
 
-		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(
-				Charsets.UTF_8.name(), '\\', '"', ';', "\n", CSVSourceResourceCSVJSONPreviewFlow.class);
+		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ';',
+				"\n", CSVSourceResourceCSVJSONPreviewFlow.class);
 		flow.withLimit(50);
 
-		runTest(csvPath, expectedPath, flow);		
+		runTest(csvPath, expectedPath, flow);
 	}
-	
 
-	
 	@Test
 	public void testNoHeaders() throws Exception {
-		
-		final String csvPath = "test_csv.csv";		
+
+		final String csvPath = "test_csv.csv";
 		final String expectedPath = "test_csv_no_headers.json";
 
 		final Configuration configuration = new Configuration();
@@ -61,304 +57,288 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 		configuration.addParameter(ConfigurationStatics.ROW_DELIMITER, new TextNode("\n"));
 		configuration.addParameter(ConfigurationStatics.FIRST_ROW_IS_HEADINGS, BooleanNode.FALSE);
 
-		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfiguration(configuration, CSVSourceResourceCSVJSONPreviewFlow.class);
+		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfiguration(configuration,
+				CSVSourceResourceCSVJSONPreviewFlow.class);
 		flow.withLimit(50);
-		
+
 		runTest(csvPath, expectedPath, flow);
-		
+
 	}
-	
-	
 
 	/**
-	 * e.g.
-	 * 1;2;3 
-	 * a;b;"c;d"
+	 * e.g.<br />
+	 * 1;2;3 <br />
+	 * a;b;"c;d"<br />
 	 * 
 	 * @throws Exception
 	 */
 	@Test
 	public void testCoumnDelimiterInQuotes() throws Exception {
 
-		final String csvPath = baseDir + "coumnDelimiterInQuotes.csv";		
-		final String expectedPath = baseDir + "coumnDelimiterInQuotes.preview.json";
-		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(
-				Charsets.UTF_8.name(), '\\', '"', ';', "\n", CSVSourceResourceCSVJSONPreviewFlow.class);
-		
+		final String csvPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "coumnDelimiterInQuotes.csv";
+		final String expectedPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "coumnDelimiterInQuotes.preview.json";
+		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ';',
+				"\n", CSVSourceResourceCSVJSONPreviewFlow.class);
+
 		runTest(csvPath, expectedPath, flow);
 	}
-	
-	
+
 	/**
-	 * e.g.
-	 * 1;2;3 
-	 * a;b;""
+	 * e.g.<br />
+	 * 1;2;3<br />
+	 * a;b;""<br />
 	 * 
 	 * @throws Exception
 	 */
 	@Test
 	public void testEmptyColumnQuoted() throws Exception {
 
-		final String csvPath = baseDir + "emptyColumnQuoted.csv";		
-		final String expectedPath = baseDir + "emptyColumnQuoted.preview.json";
-		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(
-				Charsets.UTF_8.name(), '\\', '"', ';', "\n", CSVSourceResourceCSVJSONPreviewFlow.class);
-		
-		runTest(csvPath, expectedPath, flow);	
+		final String csvPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "emptyColumnQuoted.csv";
+		final String expectedPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "emptyColumnQuoted.preview.json";
+		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ';',
+				"\n", CSVSourceResourceCSVJSONPreviewFlow.class);
+
+		runTest(csvPath, expectedPath, flow);
 	}
-	
-	
+
 	/**
-	 * e.g.
-	 * 1;2;3 
-	 * a;b;" "
+	 * e.g.<br />
+	 * 1;2;3<br />
+	 * a;b;" "<br />
 	 * 
 	 * @throws Exception
 	 */
 	@Test
 	public void testWhitespaceQuoted() throws Exception {
 
-		final String csvPath = baseDir + "whitespaceQuoted.csv";		
-		final String expectedPath = baseDir + "whitespaceQuoted.preview.json";
-		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(
-				Charsets.UTF_8.name(), '\\', '"', ';', "\n", CSVSourceResourceCSVJSONPreviewFlow.class);
-		
-		runTest(csvPath, expectedPath, flow);	
+		final String csvPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "whitespaceQuoted.csv";
+		final String expectedPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "whitespaceQuoted.preview.json";
+		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ';',
+				"\n", CSVSourceResourceCSVJSONPreviewFlow.class);
+
+		runTest(csvPath, expectedPath, flow);
 	}
-	
-	
+
 	/**
-	 * e.g.
-	 * "1"; "2";"3" 
-	 * "a";"b";"c"
+	 * e.g.<br />
+	 * "1"; "2";"3"<br />
+	 * "a";"b";"c"<br />
 	 * 
 	 * @throws Exception
 	 */
 	@Test
 	public void testWhitespaceBeforeQuoteInHeader() throws Exception {
 
-		final String csvPath = baseDir + "whitespaceBeforeQuoteInHeader.csv";		
-		final String expectedPath = baseDir + "whitespaceBeforeQuoteInHeader.preview.json";
-		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(
-				Charsets.UTF_8.name(), '\\', '"', ';', "\n", CSVSourceResourceCSVJSONPreviewFlow.class);
-		
-		runTest(csvPath, expectedPath, flow);	
+		final String csvPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "whitespaceBeforeQuoteInHeader.csv";
+		final String expectedPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "whitespaceBeforeQuoteInHeader.preview.json";
+		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ';',
+				"\n", CSVSourceResourceCSVJSONPreviewFlow.class);
+
+		runTest(csvPath, expectedPath, flow);
 	}
-	
-	
+
 	/**
-	 * e.g.
-	 * "1";"2" ;"3" 
-	 * "a";"b";"c"
+	 * e.g.<br />
+	 * "1";"2" ;"3"<br />
+	 * "a";"b";"c"<br />
 	 * 
 	 * @throws Exception
 	 */
 	@Test
 	public void testWhitespaceAfterQuoteInHeader() throws Exception {
 
-		final String csvPath = baseDir + "whitespaceAfterQuoteInHeader.csv";		
-		final String expectedPath = baseDir + "whitespaceAfterQuoteInHeader.preview.json";
-		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(
-				Charsets.UTF_8.name(), '\\', '"', ';', "\n", CSVSourceResourceCSVJSONPreviewFlow.class);
-		
-		runTest(csvPath, expectedPath, flow);	
+		final String csvPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "whitespaceAfterQuoteInHeader.csv";
+		final String expectedPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "whitespaceAfterQuoteInHeader.preview.json";
+		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ';',
+				"\n", CSVSourceResourceCSVJSONPreviewFlow.class);
+
+		runTest(csvPath, expectedPath, flow);
 	}
-	
-	
-	
+
 	/**
-	 * e.g.
-	 * 1;2;3 
-	 * a;b;c
-	 * <br /> 
-	 *  
+	 * e.g.<br />
+	 * 1;2;3<br />
+	 * a;b;c<br />
+	 * <br />
+	 * 
 	 * @throws Exception
 	 */
 	@Test
 	public void testTrailingEmptyRows() throws Exception {
 
-		final String csvPath = baseDir + "trailingEmptyRows.csv";		
-		final String expectedPath = baseDir + "trailingEmptyRows.preview.json";
-		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(
-				Charsets.UTF_8.name(), '\\', '"', ';', "\n", CSVSourceResourceCSVJSONPreviewFlow.class);
-		
+		final String csvPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "trailingEmptyRows.csv";
+		final String expectedPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "trailingEmptyRows.preview.json";
+		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ';',
+				"\n", CSVSourceResourceCSVJSONPreviewFlow.class);
+
 		runTest(csvPath, expectedPath, flow);
-	}	
-	
-		
+	}
+
 	/**
-	 * e.g.
-	 * 1;2;3
-	 * <br />  
-	 * a;b;c
-	 *  
+	 * e.g.<br />
+	 * 1;2;3<br />
+	 * <br />
+	 * a;b;c<br />
+	 * 
 	 * @throws Exception
 	 */
 	@Test
 	public void testIntermediateEmptyRows() throws Exception {
 
-		final String csvPath = baseDir + "intermediateEmptyRows.csv";		
-		final String expectedPath = baseDir + "intermediateEmptyRows.preview.json";
-		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(
-				Charsets.UTF_8.name(), '\\', '"', ';', "\n", CSVSourceResourceCSVJSONPreviewFlow.class);
-		
-		runTest(csvPath, expectedPath, flow);
-	}	
+		final String csvPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "intermediateEmptyRows.csv";
+		final String expectedPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "intermediateEmptyRows.preview.json";
+		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ';',
+				"\n", CSVSourceResourceCSVJSONPreviewFlow.class);
 
-	
+		runTest(csvPath, expectedPath, flow);
+	}
+
 	/**
-	 * e.g.
-	 * 1;2;3 
-	 * a;b
-	 *  
+	 * e.g.<br />
+	 * 1;2;3<br />
+	 * a;b<br />
+	 * 
 	 * @throws Exception
 	 */
 	@Test(expected = DMPConverterException.class)
 	public void testMissingColumn() throws Exception {
 
-		final String csvPath = baseDir + "missingColumn.csv";		
-		final String expectedPath = baseDir + "missingColumn.preview.json";
-		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(
-				Charsets.UTF_8.name(), '\\', '"', ';', "\n", CSVSourceResourceCSVJSONPreviewFlow.class);
-		
-		runTest(csvPath, expectedPath, flow);
-	}	
+		final String csvPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "missingColumn.csv";
+		final String expectedPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "missingColumn.preview.json";
+		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ';',
+				"\n", CSVSourceResourceCSVJSONPreviewFlow.class);
 
-	
+		runTest(csvPath, expectedPath, flow);
+	}
+
 	/**
-	 * e.g.
-	 * 1;2;3 
-	 * a;b;c;d
-	 *  
+	 * e.g.<br />
+	 * 1;2;3 <br />
+	 * a;b;c;d<br />
+	 * 
 	 * @throws Exception
 	 */
 	@Test(expected = DMPConverterException.class)
 	public void testSuperfluousColumn() throws Exception {
 
-		final String csvPath = baseDir + "superfluousColumn.csv";		
-		final String expectedPath = baseDir + "superfluousColumn.preview.json";
-		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(
-				Charsets.UTF_8.name(), '\\', '"', ';', "\n", CSVSourceResourceCSVJSONPreviewFlow.class);
-		
+		final String csvPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "superfluousColumn.csv";
+		final String expectedPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "superfluousColumn.preview.json";
+		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ';',
+				"\n", CSVSourceResourceCSVJSONPreviewFlow.class);
+
 		runTest(csvPath, expectedPath, flow);
-	}	
-	
-	
+	}
+
 	/**
-	 * e.g.
-	 * 1;2;3 
-	 * a;b;\"c1\" c2
-	 *  
+	 * e.g.<br />
+	 * 1;2;3<br />
+	 * a;b;\"c1\" c2<br />
+	 * 
 	 * @throws Exception
 	 */
 	@Test
 	public void testEscapedQuote() throws Exception {
 
-		final String csvPath = baseDir + "escapedQuote.csv";		
-		final String expectedPath = baseDir + "escapedQuote.preview.json";
-		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(
-				Charsets.UTF_8.name(), '\\', '"', ';', "\n", CSVSourceResourceCSVJSONPreviewFlow.class);
-		
+		final String csvPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "escapedQuote.csv";
+		final String expectedPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "escapedQuote.preview.json";
+		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ';',
+				"\n", CSVSourceResourceCSVJSONPreviewFlow.class);
+
 		runTest(csvPath, expectedPath, flow);
 	}
-	
-	
+
 	/**
-	 * e.g.
-	 * 1;2;3 
-	 * a;b;"c1 EOL 
-	 * c2"
-	 *  
-	 * Sandro: this test may fail on unix if the csv file is converted to EOL=LF
-	 *  
+	 * e.g.<br />
+	 * 1;2;3 <br />
+	 * a;b;"c1 EOL <br />
+	 * c2" <br />
+	 * <br />
+	 * In case this test fails, check whether .gitattributes contains the following line:<br />
+	 * *_CRLF.csv text eol=crlf
+	 * 
 	 * @throws Exception
 	 */
 	@Test
-	@Ignore("Test fails on some but not all UNIX platforms.")
 	public void testNewlineCharInQuotes() throws Exception {
 
-		final String csvPath = baseDir + "newlineSurroundedByQuotes_CRLF.csv";
-		final String expectedPath = baseDir + "newlineSurroundedByQuotes.preview_CRLF.json";
-		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(
-				Charsets.UTF_8.name(), '\\', '"', ';', "\r\n", CSVSourceResourceCSVJSONPreviewFlow.class);
-		
+		final String csvPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "newlineCharInQuotes_CRLF.csv";
+		final String expectedPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "newlineCharInQuotes.preview_CRLF.json";
+		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ';',
+				"\r\n", CSVSourceResourceCSVJSONPreviewFlow.class);
+
 		runTest(csvPath, expectedPath, flow);
 	}
-	
-	
+
 	/**
-	 * e.g.
-	 * 1;2;3 
-	 * a;b;c1 EOL 
-	 * c2
-	 *    
+	 * e.g.<br />
+	 * 1;2;3<br />
+	 * a;b;c1 EOL<br />
+	 * c2<br />
+	 * 
 	 * @throws Exception
 	 */
 	@Test(expected = DMPConverterException.class)
 	public void testNewlineCharWithoutQuotes() throws Exception {
 
-		final String csvPath = baseDir + "newlineWithoutQuotes_CRLF.csv";		
-		final String expectedPath = baseDir + "newlineWithoutQuotes.preview_CRLF.json";
-		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(
-				Charsets.UTF_8.name(), '\\', '"', ';', "\r\n", CSVSourceResourceCSVJSONPreviewFlow.class);
-		
+		final String csvPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "newlineWithoutQuotes_CRLF.csv";
+		final String expectedPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "newlineWithoutQuotes.preview_CRLF.json";
+		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ';',
+				"\r\n", CSVSourceResourceCSVJSONPreviewFlow.class);
+
 		runTest(csvPath, expectedPath, flow);
 	}
-	
-	
+
 	/**
-	 * e.g.
-	 * 1;2;3 
-	 * a;b EOL
-	 * ;c
-	 *    
+	 * e.g.<br />
+	 * 1;2;3<br />
+	 * a;b EOL<br />
+	 * ;c<br />
+	 * 
 	 * @throws Exception
 	 */
 	@Test(expected = DMPConverterException.class)
 	public void testNewlineCharWithoutQuotesEndOfColumn() throws Exception {
 
-		final String csvPath = baseDir + "newlineWithoutQuotesEndOfColumn_CRLF.csv";		
-		final String expectedPath = baseDir + "newlineWithoutQuotesEndOfColumn.preview_CRLF.json";
-		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(
-				Charsets.UTF_8.name(), '\\', '"', ';', "\r\n", CSVSourceResourceCSVJSONPreviewFlow.class);
-		
+		final String csvPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "newlineWithoutQuotesEndOfColumn_CRLF.csv";
+		final String expectedPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "newlineWithoutQuotesEndOfColumn.preview_CRLF.json";
+		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ';',
+				"\r\n", CSVSourceResourceCSVJSONPreviewFlow.class);
+
 		runTest(csvPath, expectedPath, flow);
 	}
-	
-	
+
 	/**
-	 * e.g.
-	 * 1;2;3 
-	 * a;b;ʤ
-	 *    
+	 * e.g.<br />
+	 * 1;2;3<br />
+	 * a;b;ʤ<br />
+	 * 
 	 * @throws Exception
 	 */
 	@Test
 	public void testUTF8Char() throws Exception {
 
-		final String csvPath = baseDir + "UTF-8.csv";		
-		final String expectedPath = baseDir + "UTF-8.preview.json";
-		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(
-				Charsets.UTF_8.name(), '\\', '"', ';', "\n", CSVSourceResourceCSVJSONPreviewFlow.class);
-		
+		final String csvPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "UTF-8.csv";
+		final String expectedPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "UTF-8.preview.json";
+		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ';',
+				"\n", CSVSourceResourceCSVJSONPreviewFlow.class);
+
 		runTest(csvPath, expectedPath, flow);
 	}
-	
 
 	/**
-	 * e.g.
-	 * csv-comment line 1
-	 * csv-comment line 2
-	 * 1;2;3 
-	 * a;b;c
-	 *    
+	 * e.g.<br />
+	 * csv-comment line 1<br />
+	 * csv-comment line 2<br />
+	 * 1;2;3<br />
+	 * a;b;c<br />
+	 * 
 	 * @throws Exception
 	 */
 	@Test
 	public void testIgnoreFirstTwoLines() throws Exception {
-		
-		final String csvPath = baseDir + "ignoreFirstTwoLines.csv";		
-		final String expectedPath = baseDir + "ignoreFirstTwoLines.preview.json";
+
+		final String csvPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "ignoreFirstTwoLines.csv";
+		final String expectedPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "ignoreFirstTwoLines.preview.json";
 
 		final Configuration configuration = new Configuration();
 
@@ -370,27 +350,26 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 		configuration.addParameter(ConfigurationStatics.FIRST_ROW_IS_HEADINGS, BooleanNode.TRUE);
 		configuration.addParameter(ConfigurationStatics.IGNORE_LINES, new IntNode(2));
 
-		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfiguration(configuration, CSVSourceResourceCSVJSONPreviewFlow.class);
-				
+		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfiguration(configuration,
+				CSVSourceResourceCSVJSONPreviewFlow.class);
+
 		runTest(csvPath, expectedPath, flow);
-		
 	}
-	
 
 	/**
-	 * e.g.
-	 * 1;2;3 
-	 * a;b;c
-	 * d;e;f
-	 * g;h;i
-	 *    
+	 * e.g.<br />
+	 * 1;2;3<br />
+	 * a;b;c<br />
+	 * d;e;f<br />
+	 * g;h;i<br />
+	 * 
 	 * @throws Exception
 	 */
 	@Test
 	public void testAtMostTwoRows() throws Exception {
-		
-		final String csvPath = baseDir + "atMostTwoRows.csv";		
-		final String expectedPath = baseDir + "atMostTwoRows.preview.json";
+
+		final String csvPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "atMostTwoRows.csv";
+		final String expectedPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "atMostTwoRows.preview.json";
 
 		final Configuration configuration = new Configuration();
 
@@ -401,27 +380,27 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 		configuration.addParameter(ConfigurationStatics.ROW_DELIMITER, new TextNode("\n"));
 		configuration.addParameter(ConfigurationStatics.FIRST_ROW_IS_HEADINGS, BooleanNode.TRUE);
 
-		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfiguration(configuration, CSVSourceResourceCSVJSONPreviewFlow.class);
+		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfiguration(configuration,
+				CSVSourceResourceCSVJSONPreviewFlow.class);
 		flow.withLimit(2);
-		
-		runTest(csvPath, expectedPath, flow);		
+
+		runTest(csvPath, expectedPath, flow);
 	}
-	
 
 	/**
-	 * e.g.
-	 * 1;2;3 
-	 * a;b;c
-	 * d;e;f
-	 * g;h;i
-	 *    
+	 * e.g.<br />
+	 * 1;2;3<br />
+	 * a;b;c<br />
+	 * d;e;f<br />
+	 * g;h;i<br />
+	 * 
 	 * @throws Exception
 	 */
 	@Test
 	public void testDiscardInitialTwoRows() throws Exception {
-		
-		final String csvPath = baseDir + "discardInitialTwoRows.csv";		
-		final String expectedPath = baseDir + "discardInitialTwoRows.preview.json";
+
+		final String csvPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "discardInitialTwoRows.csv";
+		final String expectedPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "discardInitialTwoRows.preview.json";
 
 		final Configuration configuration = new Configuration();
 
@@ -433,17 +412,15 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 		configuration.addParameter(ConfigurationStatics.FIRST_ROW_IS_HEADINGS, BooleanNode.TRUE);
 		configuration.addParameter(ConfigurationStatics.DISCARD_ROWS, new IntNode(2));
 
-		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfiguration(configuration, CSVSourceResourceCSVJSONPreviewFlow.class);
-		
-		runTest(csvPath, expectedPath, flow);		
+		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfiguration(configuration,
+				CSVSourceResourceCSVJSONPreviewFlow.class);
+
+		runTest(csvPath, expectedPath, flow);
 	}
 
+	private void runTest(final String csvPath, final String expectedPath, final CSVSourceResourceCSVJSONPreviewFlow flow) throws IOException,
+			DMPConverterException {
 
-
-
-	private void runTest(final String csvPath, final String expectedPath, CSVSourceResourceCSVJSONPreviewFlow flow)
-			throws IOException, DMPConverterException {
-		
 		final String expected = DMPPersistenceUtil.getResourceAsString(expectedPath);
 
 		final URL url = Resources.getResource(csvPath);
@@ -453,8 +430,5 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 
 		Assert.assertEquals(expected.trim(), actual.trim());
 	}
-	
-	
-	
 
 }
