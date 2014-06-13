@@ -1,13 +1,17 @@
 package de.avgl.dmp.controller.resources.schema.test;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Test;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -24,6 +28,7 @@ import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxySchema;
+import de.avgl.dmp.persistence.model.schema.utils.SchemaUtils;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
 import de.avgl.dmp.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
@@ -31,21 +36,21 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 public class SchemasResourceTest extends
 		BasicResourceTest<SchemasResourceTestUtils, SchemaServiceTestUtils, SchemaService, ProxySchema, Schema, Long> {
 
-	private final AttributesResourceTestUtils attributesResourceTestUtils;
+	private final AttributesResourceTestUtils		attributesResourceTestUtils;
 
-	private final ClaszesResourceTestUtils claszesResourceTestUtils;
+	private final ClaszesResourceTestUtils			claszesResourceTestUtils;
 
-	private final AttributePathsResourceTestUtils attributePathsResourceTestUtils;
+	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
 
-	private final SchemasResourceTestUtils schemasResourceTestUtils;
+	private final SchemasResourceTestUtils			schemasResourceTestUtils;
 
-	final Map<Long, Attribute> attributes = Maps.newHashMap();
+	final Map<Long, Attribute>						attributes		= Maps.newHashMap();
 
-	final Map<Long, AttributePath> attributePaths = Maps.newLinkedHashMap();
+	final Map<Long, AttributePath>					attributePaths	= Maps.newLinkedHashMap();
 
-	private Clasz recordClass;
+	private Clasz									recordClass;
 
-	private Clasz recordClass2;
+	private Clasz									recordClass2;
 
 	public SchemasResourceTest() {
 
@@ -155,6 +160,114 @@ public class SchemasResourceTest extends
 
 			claszesResourceTestUtils.deleteObject(recordClass2);
 		}
+	}
+
+	@Test
+	public void testAddAttributePath() throws Exception {
+
+		final Schema schema = createObjectInternal();
+
+		final String schemaBaseURI = SchemaUtils.determineSchemaURI(schema.getId());
+		final String attributeName1 = "attribute one";
+		final String attributeName2 = "attribute2";
+		final String attributeName3 = "a3";
+
+		final ArrayNode attributeNamesJSONArray = objectMapper.createArrayNode();
+		attributeNamesJSONArray.add(attributeName1);
+		attributeNamesJSONArray.add(attributeName2);
+		attributeNamesJSONArray.add(attributeName3);
+
+		final String attributeNamesJSONArrayString = objectMapper.writeValueAsString(attributeNamesJSONArray);
+
+		final Response response = target().path("/" + schema.getId()).request(MediaType.APPLICATION_JSON_TYPE)
+				.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(attributeNamesJSONArrayString));
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+
+		final String responseString = response.readEntity(String.class);
+
+		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
+
+		System.out.println(responseString);
+
+		final Schema updatedSchema = objectMapper.readValue(responseString, Schema.class);
+
+		final String attributeURI1 = SchemaUtils.mintAttributeURI(attributeName1, schemaBaseURI);
+		final String attributeURI2 = SchemaUtils.mintAttributeURI(attributeName2, schemaBaseURI);
+		final String attributeURI3 = SchemaUtils.mintAttributeURI(attributeName3, schemaBaseURI);
+
+		final LinkedList<String> attributeURIs = Lists.newLinkedList();
+		attributeURIs.add(attributeURI1);
+		attributeURIs.add(attributeURI2);
+		attributeURIs.add(attributeURI3);
+
+		Assert.assertNotNull(updatedSchema);
+
+		final Set<AttributePath> attributePaths = updatedSchema.getAttributePaths();
+
+		Assert.assertNotNull(attributePaths);
+
+		boolean foundAttributePath = false;
+
+		for (final AttributePath attributePath : attributePaths) {
+
+			final LinkedList<Attribute> attributes = attributePath.getAttributePath();
+
+			Assert.assertNotNull(attributes);
+
+			final Iterator<String> attributeURIsIter = attributeURIs.iterator();
+
+			boolean match = false;
+
+			for (final Attribute attribute : attributes) {
+
+				if (!attributeURIsIter.hasNext()) {
+
+					match = false;
+
+					break;
+				}
+
+				final String attributeURI = attributeURIsIter.next();
+
+				if (!attribute.getUri().equals(attributeURI)) {
+
+					match = false;
+
+					break;
+				}
+
+				match = true;
+			}
+
+			if (match == true && attributeURIs.size() == attributes.size()) {
+
+				foundAttributePath = true;
+
+				break;
+			}
+		}
+
+		Assert.assertTrue(foundAttributePath);
+
+		// prepare tear down
+
+		for (final AttributePath attributePath : attributePaths) {
+
+			this.attributePaths.put(attributePath.getId(), attributePath);
+
+			final Set<Attribute> attributes = attributePath.getAttributes();
+
+			if (attributes != null) {
+
+				for (final Attribute attribute : attributes) {
+
+					this.attributes.put(attribute.getId(), attribute);
+				}
+			}
+		}
+		
+		cleanUpDB(updatedSchema);
 	}
 
 	@After
