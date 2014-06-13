@@ -1,0 +1,64 @@
+[ {
+  "v1" : "http://data.slub-dresden.de/datamodels/107/records/8cbb958b-dc12-40b1-9ae4-cfab55f6059d",
+  "v2" : [ {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/1/schema#RecordType"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#title" : "title X"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#subtitle" : " and the 1"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#sn" : "Öß'äü"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#givenname" : "Jim"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#isbn" : "ISBN 978-3-86680-192-9"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#language" : "en"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#attributes" : "a||b|"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#date" : "2013/31/05"
+  } ]
+}, {
+  "v1" : "http://data.slub-dresden.de/datamodels/107/records/a41e2a41-95fc-4d13-826e-1451e3dfc4f5",
+  "v2" : [ {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/1/schema#RecordType"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#title" : "title Y"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#subtitle" : ""
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#sn" : "Èuhg"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#givenname" : "Jack"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#isbn" : "978-3-86680-192-9"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#language" : "en"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#attributes" : "||b|c"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#date" : "2014/01/01"
+  } ]
+}, {
+  "v1" : "http://data.slub-dresden.de/datamodels/107/records/de943644-0591-401f-a286-ba90e65e637f",
+  "v2" : [ {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/1/schema#RecordType"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#title" : "title Z"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#subtitle" : "(Part 3)"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#sn" : "Ú'üöäßí"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#givenname" : "Jonny"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#isbn" : "ISBN 978-3-86680-192-9 (note)"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#language" : "en"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#attributes" : "|||"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#date" : "2012/31/12"
+  } ]
+} ]

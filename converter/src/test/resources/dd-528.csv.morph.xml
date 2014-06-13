@@ -1,0 +1,19 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+    <meta>
+        <name>mapping-1401873549954</name>
+    </meta>
+    <rules>
+        <data name="@val4__0__" source="http://data.slub-dresden.de/resources/1/schema#val4"/>
+        <data name="http://purl.org/dc/elements/1.1/title" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
+        <data name="@component1401873587659" source="@component1401873556606">
+            <compose postfix="\\$\$$`}{[" prefix="\\@\@@{`é="/>
+        </data>
+        <data name="@component1401873556606" source="@val4__0__">
+            <split delimiter="#"/>
+        </data>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" source="@component1401873587659">
+            <occurrence only="2"/>
+        </data>
+    </rules>
+</metamorph>
