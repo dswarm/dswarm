@@ -42,25 +42,25 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResourceUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(BasicResource.class);
+	private static final Logger				LOG	= LoggerFactory.getLogger(BasicResource.class);
 
-	protected final POJOCLASSRESOURCEUTILS pojoClassResourceUtils;
+	protected final POJOCLASSRESOURCEUTILS	pojoClassResourceUtils;
 
 	/**
 	 * The metrics registry.
 	 */
-	protected final DMPStatus dmpStatus;
+	protected final DMPStatus				dmpStatus;
 
 	/**
 	 * The base URI of this resource.
 	 */
 	@Context
-	UriInfo uri;
+	UriInfo									uri;
 
 	/**
 	 * Creates a new resource (controller service) for the given concrete POJO class with the provider of the concrete persistence
 	 * service, the object mapper and metrics registry.
-	 *
+	 * 
 	 * @param clasz a concrete POJO class
 	 * @param persistenceServiceProviderArg the concrete persistence service that is related to the concrete POJO class
 	 * @param objectMapperArg an object mapper
@@ -74,7 +74,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * Gets the concrete POJO class of this resource (controller service).
-	 *
+	 * 
 	 * @return the concrete POJO class
 	 */
 	public Class<POJOCLASS> getClasz() {
@@ -84,7 +84,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * Builds a positive response with the given content.
-	 *
+	 * 
 	 * @param responseContent a response message
 	 * @return the response
 	 */
@@ -95,7 +95,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * This endpoint returns an object of the type of the POJO class as JSON representation for the provided object id.
-	 *
+	 * 
 	 * @param id an object id
 	 * @return a JSON representation of an object of the type of the POJO class
 	 */
@@ -550,22 +550,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 		final POJOCLASS preparedObject = prepareObjectForUpdate(objectFromJSON, object);
 
-		// update the persistent object in the DB
-
-		final POJOCLASSPERSISTENCESERVICE persistenceService = pojoClassResourceUtils.getPersistenceService();
-
-		try {
-
-			final PROXYPOJOCLASS proxyPreparedObject = persistenceService.updateObjectTransactional(preparedObject);
-
-			return proxyPreparedObject;
-		} catch (final DMPPersistenceException e) {
-
-			BasicResource.LOG.debug("something went wrong while updating " + pojoClassResourceUtils.getClaszName() + "  for id '" + id + "'");
-
-			throw new DMPControllerException("something went wrong while updating" + pojoClassResourceUtils.getClaszName() + "  for id '" + id
-					+ "'\n" + e.getMessage());
-		}
+		return updateObject(preparedObject, id);
 	}
 
 	protected POJOCLASS retrieveObject(final POJOCLASSIDTYPE id, final String jsonObjectString) throws DMPControllerException {
@@ -587,5 +572,25 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 		return object;
 
+	}
+
+	protected PROXYPOJOCLASS updateObject(final POJOCLASS preparedObject, final POJOCLASSIDTYPE id) throws DMPControllerException {
+
+		// update the persistent object in the DB
+
+		final POJOCLASSPERSISTENCESERVICE persistenceService = pojoClassResourceUtils.getPersistenceService();
+
+		try {
+
+			final PROXYPOJOCLASS proxyPreparedObject = persistenceService.updateObjectTransactional(preparedObject);
+
+			return proxyPreparedObject;
+		} catch (final DMPPersistenceException e) {
+
+			BasicResource.LOG.debug("something went wrong while updating " + pojoClassResourceUtils.getClaszName() + "  for id '" + id + "'");
+
+			throw new DMPControllerException("something went wrong while updating" + pojoClassResourceUtils.getClaszName() + "  for id '" + id
+					+ "'\n" + e.getMessage());
+		}
 	}
 }
