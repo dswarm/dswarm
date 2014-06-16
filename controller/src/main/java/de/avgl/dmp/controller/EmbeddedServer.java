@@ -96,7 +96,7 @@ public class EmbeddedServer {
 		final HttpServer server = GrizzlyHttpServerFactory.createHttpServer(getBaseUri(), false);
 		server.getListener("grizzly").setMaxFormPostSize(Integer.MAX_VALUE);
 
-		final WebappContext context = new WebappContext("DMP 2000 Backend", getContextPath());
+		final WebappContext context = new WebappContext("d:swarm Backend", getContextPath());
 
 		context.addListener(DMPInjector.class);
 
