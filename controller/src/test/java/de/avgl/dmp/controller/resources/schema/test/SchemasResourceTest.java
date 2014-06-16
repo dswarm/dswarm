@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -64,6 +65,9 @@ public class SchemasResourceTest extends
 
 	@Override
 	public void prepare() throws Exception {
+
+		// note: due to the exclusion of various attribute and attribute path (that already exist in the database) - the resulted
+		// schema doesn't fully reflect the schema as it is present in the schema.json example
 
 		super.prepare();
 
@@ -220,6 +224,8 @@ public class SchemasResourceTest extends
 			boolean match = false;
 
 			for (final Attribute attribute : attributes) {
+				
+				Assert.assertNotNull(attribute.getName());
 
 				if (!attributeURIsIter.hasNext()) {
 
@@ -266,7 +272,117 @@ public class SchemasResourceTest extends
 				}
 			}
 		}
-		
+
+		cleanUpDB(updatedSchema);
+	}
+
+	@Test
+	public void testAddAttributePath2() throws Exception {
+
+		final Schema schema = createObjectInternal();
+
+		objectMapper.writeValueAsString(schema);
+
+		final String schemaBaseURI = SchemaUtils.determineSchemaURI(schema.getId());
+		final String attributeName1 = "attribute one";
+
+		final AttributePath baseAttributePath = schema.getAttributePaths().iterator().next();
+		final Long baseAttributePathId = baseAttributePath.getId();
+
+		final Form form = new Form();
+		form.param("attribute_name", attributeName1);
+
+		final Response response = target().path("/" + schema.getId() + "/attributepaths/" + baseAttributePathId)
+				.request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+				.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+
+		final String responseString = response.readEntity(String.class);
+
+		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
+
+		System.out.println(responseString);
+
+		final Schema updatedSchema = objectMapper.readValue(responseString, Schema.class);
+
+		final String attributeURI1 = SchemaUtils.mintAttributeURI(attributeName1, schemaBaseURI);
+
+		final LinkedList<String> attributeURIs = Lists.newLinkedList();
+
+		for (final Attribute attribute : baseAttributePath.getAttributePath()) {
+
+			attributeURIs.add(attribute.getUri());
+		}
+
+		attributeURIs.add(attributeURI1);
+
+		Assert.assertNotNull(updatedSchema);
+
+		final Set<AttributePath> attributePaths = updatedSchema.getAttributePaths();
+
+		Assert.assertNotNull(attributePaths);
+
+		boolean foundAttributePath = false;
+
+		for (final AttributePath attributePath : attributePaths) {
+
+			final LinkedList<Attribute> attributes = attributePath.getAttributePath();
+
+			Assert.assertNotNull(attributes);
+
+			final Iterator<String> attributeURIsIter = attributeURIs.iterator();
+
+			boolean match = false;
+
+			for (final Attribute attribute : attributes) {
+
+				if (!attributeURIsIter.hasNext()) {
+
+					match = false;
+
+					break;
+				}
+
+				final String attributeURI = attributeURIsIter.next();
+
+				if (!attribute.getUri().equals(attributeURI)) {
+
+					match = false;
+
+					break;
+				}
+
+				match = true;
+			}
+
+			if (match == true && attributeURIs.size() == attributes.size()) {
+
+				foundAttributePath = true;
+
+				break;
+			}
+		}
+
+		Assert.assertTrue(foundAttributePath);
+
+		// prepare tear down
+
+		for (final AttributePath attributePath : attributePaths) {
+
+			this.attributePaths.put(attributePath.getId(), attributePath);
+
+			final Set<Attribute> attributes = attributePath.getAttributes();
+
+			if (attributes != null) {
+
+				for (final Attribute attribute : attributes) {
+
+					this.attributes.put(attribute.getId(), attribute);
+				}
+			}
+		}
+
 		cleanUpDB(updatedSchema);
 	}
 
