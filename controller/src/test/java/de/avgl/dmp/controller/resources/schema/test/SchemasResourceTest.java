@@ -279,8 +279,6 @@ public class SchemasResourceTest extends
 
 		final Schema schema = createObjectInternal();
 
-		objectMapper.writeValueAsString(schema);
-
 		final String schemaBaseURI = SchemaUtils.determineSchemaURI(schema.getId());
 		final String attributeName1 = "attribute one";
 
