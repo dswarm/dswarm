@@ -192,8 +192,6 @@ public class SchemasResourceTest extends
 
 		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
 
-		System.out.println(responseString);
-
 		final Schema updatedSchema = objectMapper.readValue(responseString, Schema.class);
 
 		final String attributeURI1 = SchemaUtils.mintAttributeURI(attributeName1, schemaBaseURI);
@@ -224,7 +222,7 @@ public class SchemasResourceTest extends
 			boolean match = false;
 
 			for (final Attribute attribute : attributes) {
-				
+
 				Assert.assertNotNull(attribute.getName());
 
 				if (!attributeURIsIter.hasNext()) {
@@ -301,8 +299,6 @@ public class SchemasResourceTest extends
 		final String responseString = response.readEntity(String.class);
 
 		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
-
-		System.out.println(responseString);
 
 		final Schema updatedSchema = objectMapper.readValue(responseString, Schema.class);
 
