@@ -41,7 +41,7 @@ public class HealthResource {
 
 	@ApiOperation("do a health check (includes check for database connection)")
 	@GET
-	@Path("{check: (\\w+)?}")
+	@Path("/{check: (\\w+)?}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response singleHealthCheck(
 			@ApiParam(value = "perform this health check (_all for doing all checks)", required = false, defaultValue = "_all", name = "check") @PathParam("check") final String check,
