@@ -1,22 +1,22 @@
 package de.avgl.dmp.converter.flow.test.xml;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Provider;
+
 import de.avgl.dmp.converter.GuicedTest;
 import de.avgl.dmp.converter.flow.TransformationFlow;
 import de.avgl.dmp.persistence.model.job.Task;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
-import org.junit.Assert;
-import org.junit.Test;
 
 /**
- * @author tgaengler
- *
- * Created by tgaengler on 16/05/14.
+ * @author tgaengler Created by tgaengler on 16/05/14.
  */
 public class XMLTransformationFlowTest extends GuicedTest {
 
@@ -37,21 +37,22 @@ public class XMLTransformationFlowTest extends GuicedTest {
 
 		testXMLTaskWithTuples("tgtest_mabxml_mo_proj.task.result.json", "tgtest_mabxml_mo_proj.task.json", "test-mabxml.tuples.json");
 	}
-	
+
 	@Test
 	public void testMabxmlOneMappingWithFilterAndMultipleFunctions() throws Exception {
 
 		testXMLTaskWithTuples("dd-528.mabxml.task.result.json", "dd-528.mabxml.task.json", "mabxml_dmp.tuples.json");
 	}
-	
+
 	@Test
 	public void testMetsmodsXmlWithFilterAndMapping() throws Exception {
 
 		testXMLTaskWithTuples("metsmods_small.xml.task.result.json", "metsmods_small.xml.task.json", "metsmods_small.xml.tuples.json");
 	}
-	
-	private void testXMLTaskWithTuples(final String taskResultJSONFileName, final String taskJSONFileName, final String tuplesJSONFileName) throws Exception {
-		
+
+	private void testXMLTaskWithTuples(final String taskResultJSONFileName, final String taskJSONFileName, final String tuplesJSONFileName)
+			throws Exception {
+
 		final String expected = DMPPersistenceUtil.getResourceAsString(taskResultJSONFileName);
 
 		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
@@ -79,7 +80,7 @@ public class XMLTransformationFlowTest extends GuicedTest {
 		final String finalExpected = objectMapper2.writeValueAsString(expectedArray);
 
 		Assert.assertEquals(finalExpected.length(), finalActual.length());
-		
+
 	}
-	
+
 }

@@ -21,6 +21,8 @@ import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hamcrest.Matchers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.lambdaj.Lambda;
 
@@ -33,8 +35,6 @@ import com.wordnik.swagger.annotations.ApiModel;
 import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A data resource describes attributes of a specific amount of data. A data resource can be, e.g., an XML or CSV document, a SQL
@@ -53,16 +53,16 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 	/**
 	 *
 	 */
-	private static final long						serialVersionUID	= 1L;
+	private static final long	serialVersionUID	= 1L;
 
-	private static final Logger LOG = LoggerFactory.getLogger(Resource.class);
+	private static final Logger	LOG					= LoggerFactory.getLogger(Resource.class);
 
 	/**
 	 * The type of the resource, e.g., file.
 	 */
 	@Column(name = "TYPE")
 	@Enumerated(EnumType.STRING)
-	private ResourceType type;
+	private ResourceType		type;
 
 	/**
 	 * A string that holds the serialised JSON object for attributes.
@@ -70,19 +70,19 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "attributes", columnDefinition = "VARCHAR(4000)", length = 4000)
-	private String attributesString;
+	private String				attributesString;
 
 	/**
 	 * A JSON object for attributes.
 	 */
 	@Transient
-	private ObjectNode attributes;
+	private ObjectNode			attributes;
 
 	/**
 	 * A flag that indicates, whether the attributes are initialised or not.
 	 */
 	@Transient
-	private boolean attributesInitialized;
+	private boolean				attributesInitialized;
 
 	/**
 	 * All configurations of the resource.
@@ -95,11 +95,11 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 	@XmlIDREF
 	@XmlList
 	// @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
-	private Set<Configuration> configurations;
+	private Set<Configuration>	configurations;
 
 	/**
 	 * Gets the resource type.
-	 *
+	 * 
 	 * @return the resource type
 	 */
 	public ResourceType getType() {
@@ -109,7 +109,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the resource type
-	 *
+	 * 
 	 * @param type a new resource type
 	 */
 	public void setType(final ResourceType type) {
@@ -119,7 +119,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets all attributes of the data resource.
-	 *
+	 * 
 	 * @return all attributes of the data resource
 	 */
 	@XmlElement(name = "resource_attributes")
@@ -132,7 +132,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the attributes of the data resource.
-	 *
+	 * 
 	 * @param attributes new attributes
 	 */
 	@XmlElement(name = "resource_attributes")
@@ -145,7 +145,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Adds a new attribute to the attributes of the data resource.
-	 *
+	 * 
 	 * @param key the key of the attribute
 	 * @param value the value of the attribute
 	 */
@@ -163,7 +163,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets a specific attribute by the given attribute key.
-	 *
+	 * 
 	 * @param key an attribute key
 	 * @return the value of the matched attribute or null.
 	 */
@@ -181,7 +181,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets all configurations of the resource.
-	 *
+	 * 
 	 * @return all configurations of the resource
 	 */
 	public Set<Configuration> getConfigurations() {
@@ -191,7 +191,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets all configurations of the resource.
-	 *
+	 * 
 	 * @param configurationsArg all configurations of the resource
 	 */
 	public void setConfigurations(final Set<Configuration> configurationsArg) {

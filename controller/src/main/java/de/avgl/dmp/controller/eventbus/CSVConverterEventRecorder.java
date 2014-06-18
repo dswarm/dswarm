@@ -3,9 +3,10 @@ package de.avgl.dmp.controller.eventbus;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.Maps;
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -22,24 +23,22 @@ import de.avgl.dmp.persistence.model.internal.gdm.GDMModel;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.utils.DataModelUtils;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Singleton
 public class CSVConverterEventRecorder {
 
-	private static final Logger LOG = LoggerFactory.getLogger(CSVConverterEventRecorder.class);
+	private static final Logger					LOG	= LoggerFactory.getLogger(CSVConverterEventRecorder.class);
 
-	private final InternalModelServiceFactory internalServiceFactory;
+	private final InternalModelServiceFactory	internalServiceFactory;
 
 	@Inject
-	public CSVConverterEventRecorder(final InternalModelServiceFactory internalServiceFactory/*, final EventBus eventBus */) {
+	public CSVConverterEventRecorder(final InternalModelServiceFactory internalServiceFactory/* , final EventBus eventBus */) {
 
 		this.internalServiceFactory = internalServiceFactory;
 		// eventBus.register(this);
 	}
 
-	//@Subscribe
+	// @Subscribe
 	public void convertConfiguration(final CSVConverterEvent event) throws DMPControllerException {
 
 		final DataModel dataModel = event.getDataModel();
@@ -58,7 +57,7 @@ public class CSVConverterEventRecorder {
 			CSVConverterEventRecorder.LOG.error(message, e);
 
 			throw new DMPControllerException(message + " " + e.getMessage(), e);
-		}  catch (final Exception e) {
+		} catch (final Exception e) {
 
 			final String message = "really couldn't convert the CSV data of data model '" + dataModel.getId() + "'";
 

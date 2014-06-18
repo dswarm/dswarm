@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.google.common.collect.Lists;
-import de.avgl.dmp.persistence.model.internal.helper.AttributePathHelper;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -157,15 +154,15 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		final GDMModel gdmModel = new GDMModel(model, null, recordClassUri);
 
-//		System.out.println(objectMapper.writeValueAsString(gdmModel.getSchema()));
-//
-//		for(final AttributePathHelper attributePathHelper : gdmModel.getAttributePaths()) {
-//
-//		System.out.println(attributePathHelper.toString());
-//		}
-//
-//		System.out.println(objectMapper.configure(SerializationFeature.INDENT_OUTPUT,
-//				true).writeValueAsString(gdmModel.toJSON()));
+		// System.out.println(objectMapper.writeValueAsString(gdmModel.getSchema()));
+		//
+		// for(final AttributePathHelper attributePathHelper : gdmModel.getAttributePaths()) {
+		//
+		// System.out.println(attributePathHelper.toString());
+		// }
+		//
+		// System.out.println(objectMapper.configure(SerializationFeature.INDENT_OUTPUT,
+		// true).writeValueAsString(gdmModel.toJSON()));
 
 		// write model and retrieve tuples
 		final InternalGDMGraphService gdmService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
@@ -181,17 +178,17 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		final Iterator<Tuple<String, JsonNode>> tuples = dataIterator(modelMap.entrySet().iterator());
 
-//		final List<Tuple<String, JsonNode>> tuplesList = Lists.newLinkedList();
-//
-//		while(tuples.hasNext()) {
-//
-//		tuplesList.add(tuples.next());
-//		}
-//
-//		final String tuplesJSON = objectMapper.configure(SerializationFeature.INDENT_OUTPUT,
-//		true).writeValueAsString(tuplesList);
-//
-//		System.out.println(tuplesJSON);
+		// final List<Tuple<String, JsonNode>> tuplesList = Lists.newLinkedList();
+		//
+		// while(tuples.hasNext()) {
+		//
+		// tuplesList.add(tuples.next());
+		// }
+		//
+		// final String tuplesJSON = objectMapper.configure(SerializationFeature.INDENT_OUTPUT,
+		// true).writeValueAsString(tuplesList);
+		//
+		// System.out.println(tuplesJSON);
 
 		final String inputDataModelJSONString = objectMapper.writeValueAsString(updatedInputDataModel);
 		final ObjectNode inputDataModelJSON = objectMapper.readValue(inputDataModelJSONString, ObjectNode.class);

@@ -7,6 +7,8 @@ import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,33 +34,31 @@ import de.avgl.dmp.persistence.service.schema.test.utils.AttributePathServiceTes
 import de.avgl.dmp.persistence.service.schema.test.utils.AttributeServiceTestUtils;
 import de.avgl.dmp.persistence.service.schema.test.utils.MappingAttributePathInstanceServiceTestUtils;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapping, MappingService> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(MappingServiceTest.class);
+	private static final Logger									LOG								= LoggerFactory.getLogger(MappingServiceTest.class);
 
-	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper									objectMapper					= GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	private final Map<Long, Function> functions = Maps.newLinkedHashMap();
+	private final Map<Long, Function>							functions						= Maps.newLinkedHashMap();
 
-	private final Map<Long, Attribute> attributes = Maps.newLinkedHashMap();
+	private final Map<Long, Attribute>							attributes						= Maps.newLinkedHashMap();
 
-	private final Map<Long, AttributePath> attributePaths = Maps.newLinkedHashMap();
+	private final Map<Long, AttributePath>						attributePaths					= Maps.newLinkedHashMap();
 
-	private final Map<Long, Component> components = Maps.newLinkedHashMap();
+	private final Map<Long, Component>							components						= Maps.newLinkedHashMap();
 
-	private final Map<Long, Transformation> transformations = Maps.newLinkedHashMap();
+	private final Map<Long, Transformation>						transformations					= Maps.newLinkedHashMap();
 
-	private final Map<Long, MappingAttributePathInstance> mappingAttributePathInstances = Maps.newLinkedHashMap();
+	private final Map<Long, MappingAttributePathInstance>		mappingAttributePathInstances	= Maps.newLinkedHashMap();
 
-	private final AttributeServiceTestUtils                    attributeServiceTestUtils;
-	private final AttributePathServiceTestUtils                attributePathServiceTestUtils;
-	private final FunctionServiceTestUtils                     functionServiceTestUtils;
-	private final MappingAttributePathInstanceServiceTestUtils mappingAttributePathInstanceServiceTestUtils;
-	private final ComponentServiceTestUtils                    componentServiceTestUtils;
-	private final TransformationServiceTestUtils               transformationServiceTestUtils;
+	private final AttributeServiceTestUtils						attributeServiceTestUtils;
+	private final AttributePathServiceTestUtils					attributePathServiceTestUtils;
+	private final FunctionServiceTestUtils						functionServiceTestUtils;
+	private final MappingAttributePathInstanceServiceTestUtils	mappingAttributePathInstanceServiceTestUtils;
+	private final ComponentServiceTestUtils						componentServiceTestUtils;
+	private final TransformationServiceTestUtils				transformationServiceTestUtils;
 
 	public MappingServiceTest() {
 

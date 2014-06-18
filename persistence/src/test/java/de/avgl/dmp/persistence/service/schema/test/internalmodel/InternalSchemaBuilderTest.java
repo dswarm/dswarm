@@ -6,6 +6,8 @@ import java.util.Set;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,18 +17,16 @@ import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Schema;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class InternalSchemaBuilderTest extends GuicedTest {
 
-	private static final Logger LOG = LoggerFactory.getLogger(InternalSchemaBuilderTest.class);
+	private static final Logger			LOG				= LoggerFactory.getLogger(InternalSchemaBuilderTest.class);
 
-	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper			objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	private final Map<Long, Attribute> attributes = Maps.newLinkedHashMap();
+	private final Map<Long, Attribute>	attributes		= Maps.newLinkedHashMap();
 
-	private static final String NL = System.lineSeparator();
+	private static final String			NL				= System.lineSeparator();
 
 	@Ignore
 	@Test

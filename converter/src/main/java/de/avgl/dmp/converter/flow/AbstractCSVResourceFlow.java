@@ -7,6 +7,8 @@ import java.nio.charset.UnsupportedCharsetException;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.stream.source.FileOpener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Optional;
@@ -18,8 +20,6 @@ import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
 import de.avgl.dmp.persistence.model.resource.utils.DataModelUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author phorn
@@ -27,28 +27,28 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractCSVResourceFlow<T> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(AbstractCSVResourceFlow.class);
+	private static final Logger	LOG	= LoggerFactory.getLogger(AbstractCSVResourceFlow.class);
 
-	private final String encoding;
+	private final String		encoding;
 
-	private final Character escapeCharacter;
+	private final Character		escapeCharacter;
 
-	private final Character quoteCharacter;
+	private final Character		quoteCharacter;
 
-	private final Character columnDelimiter;
+	private final Character		columnDelimiter;
 
-	private final String rowDelimiter;
+	private final String		rowDelimiter;
 
-	private final int ignoreLines;
+	private final int			ignoreLines;
 
-	private final int discardRows;
+	private final int			discardRows;
 
-	private final boolean firstRowIsHeaders;
+	private final boolean		firstRowIsHeaders;
 
-	protected Optional<Integer> atMost;
+	protected Optional<Integer>	atMost;
 
-	protected final String dataResourceBaseURI;
-	protected final String dataResourceSchemaBaseURI;
+	protected final String		dataResourceBaseURI;
+	protected final String		dataResourceSchemaBaseURI;
 
 	public AbstractCSVResourceFlow(final DataModel dataModel) throws DMPConverterException {
 
@@ -86,7 +86,8 @@ public abstract class AbstractCSVResourceFlow<T> {
 		this.ignoreLines = ignoreLinesOptional.or(ConfigurationStatics.DEFAULT_IGNORE_LINES);
 		this.discardRows = discardRowsOptional.or(ConfigurationStatics.DEFAULT_DISCARD_ROWS);
 		this.atMost = atMostOptional;
-		this.firstRowIsHeaders = getBooleanParameter(configuration, ConfigurationStatics.FIRST_ROW_IS_HEADINGS, ConfigurationStatics.DEFAULT_FIRST_ROW_IS_HEADINGS);
+		this.firstRowIsHeaders = getBooleanParameter(configuration, ConfigurationStatics.FIRST_ROW_IS_HEADINGS,
+				ConfigurationStatics.DEFAULT_FIRST_ROW_IS_HEADINGS);
 
 		try {
 			Charset.forName(this.encoding);
@@ -145,7 +146,8 @@ public abstract class AbstractCSVResourceFlow<T> {
 		this.ignoreLines = ignoreLinesOptional.or(ConfigurationStatics.DEFAULT_IGNORE_LINES);
 		this.discardRows = discardRowsOptional.or(ConfigurationStatics.DEFAULT_DISCARD_ROWS);
 		this.atMost = atMostOptional;
-		this.firstRowIsHeaders = getBooleanParameter(configuration, ConfigurationStatics.FIRST_ROW_IS_HEADINGS, ConfigurationStatics.DEFAULT_FIRST_ROW_IS_HEADINGS);
+		this.firstRowIsHeaders = getBooleanParameter(configuration, ConfigurationStatics.FIRST_ROW_IS_HEADINGS,
+				ConfigurationStatics.DEFAULT_FIRST_ROW_IS_HEADINGS);
 
 		try {
 			Charset.forName(this.encoding);

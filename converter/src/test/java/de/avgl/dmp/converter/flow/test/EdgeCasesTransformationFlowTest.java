@@ -9,15 +9,12 @@ import org.junit.Test;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Provider;
 
 import de.avgl.dmp.converter.GuicedTest;
 import de.avgl.dmp.converter.flow.TransformationFlow;
-import de.avgl.dmp.converter.morph.MorphScriptBuilder;
-import de.avgl.dmp.persistence.model.job.Task;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 

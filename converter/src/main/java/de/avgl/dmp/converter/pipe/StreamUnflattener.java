@@ -101,7 +101,7 @@ public class StreamUnflattener extends DefaultStreamPipe<StreamReceiver> {
 	@Override
 	public void endRecord() {
 		assert !isClosed();
-		for (int i = currentLevel; i --> 0;) {
+		for (int i = currentLevel; i-- > 0;) {
 			getReceiver().endEntity();
 		}
 
@@ -162,7 +162,7 @@ public class StreamUnflattener extends DefaultStreamPipe<StreamReceiver> {
 				continue;
 			}
 
-			for (int ii = currentLevel; ii --> i;) {
+			for (int ii = currentLevel; ii-- > i;) {
 				getReceiver().endEntity();
 			}
 

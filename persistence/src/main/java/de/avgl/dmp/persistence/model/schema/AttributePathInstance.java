@@ -43,7 +43,7 @@ public abstract class AttributePathInstance extends BasicDMPJPAObject {
 	/**
 	 *
 	 */
-	private static final long						serialVersionUID	= 1L;
+	private static final long			serialVersionUID	= 1L;
 
 	/**
 	 * The attribute path instance type, e.g., mapping attribute path instance (
@@ -56,13 +56,13 @@ public abstract class AttributePathInstance extends BasicDMPJPAObject {
 	// @JsonIgnore
 	@Column(name = "ATTRIBUTE_PATH_INSTANCE_TYPE")
 	@Enumerated(EnumType.STRING)
-	private AttributePathInstanceType				attributePathInstanceType;
+	private AttributePathInstanceType	attributePathInstanceType;
 
 	@XmlElement(name = "attribute_path")
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "ATTRIBUTE_PATH")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private AttributePath							attributePath;
+	private AttributePath				attributePath;
 
 	public AttributePathInstance() {
 

@@ -4,18 +4,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import de.avgl.dmp.controller.DMPControllerException;
 import org.culturegraph.mf.types.Triple;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.CSVResourceFlowFactory;
 import de.avgl.dmp.converter.flow.CSVSourceResourceTriplesFlow;
@@ -39,23 +39,25 @@ import de.avgl.dmp.persistence.service.schema.AttributePathService;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Singleton
 public class SchemaEventRecorder {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SchemaEventRecorder.class);
+	private static final Logger			LOG	= LoggerFactory.getLogger(SchemaEventRecorder.class);
 
-	private final AttributePathService attributePathService;
-	private final AttributeService     attributeService;
-	private final ClaszService         claszService;
-	private final DataModelService     dataModelService;
-	private final SchemaService        schemaService;
+	private final AttributePathService	attributePathService;
+	private final AttributeService		attributeService;
+	private final ClaszService			claszService;
+	private final DataModelService		dataModelService;
+	private final SchemaService			schemaService;
 
 	@Inject
 	public SchemaEventRecorder(final AttributePathService attributePathService, final AttributeService attributeService,
-			final ClaszService claszService, final DataModelService dataModelService, final SchemaService schemaService/*, final EventBus eventBus */) {
+			final ClaszService claszService, final DataModelService dataModelService, final SchemaService schemaService/*
+																														 * , final
+																														 * EventBus
+																														 * eventBus
+																														 */) {
 
 		this.attributePathService = attributePathService;
 		this.attributeService = attributeService;
@@ -265,7 +267,7 @@ public class SchemaEventRecorder {
 			SchemaEventRecorder.LOG.error(message, e);
 
 			throw new DMPControllerException(message + " " + e.getMessage(), e);
-		}  catch (final Exception e) {
+		} catch (final Exception e) {
 
 			final String message = "really couldn't convert the schema";
 

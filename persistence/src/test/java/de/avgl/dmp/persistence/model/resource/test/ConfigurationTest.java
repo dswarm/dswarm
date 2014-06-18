@@ -17,7 +17,7 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
  */
 public class ConfigurationTest extends GuicedTest {
 
-	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper	objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleConfigurationTest() throws IOException {

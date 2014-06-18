@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,20 +24,18 @@ import de.avgl.dmp.persistence.service.schema.test.utils.AttributePathServiceTes
 import de.avgl.dmp.persistence.service.schema.test.utils.AttributeServiceTestUtils;
 import de.avgl.dmp.persistence.service.schema.test.utils.ClaszServiceTestUtils;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema, SchemaService> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SchemaServiceTest.class);
+	private static final Logger					LOG				= LoggerFactory.getLogger(SchemaServiceTest.class);
 
-	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper					objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	private final Map<Long, Attribute> attributes = Maps.newLinkedHashMap();
+	private final Map<Long, Attribute>			attributes		= Maps.newLinkedHashMap();
 
-	private final AttributeServiceTestUtils     attributeServiceTestUtils;
-	private final ClaszServiceTestUtils         claszServiceTestUtils;
-	private final AttributePathServiceTestUtils attributePathServiceTestUtils;
+	private final AttributeServiceTestUtils		attributeServiceTestUtils;
+	private final ClaszServiceTestUtils			claszServiceTestUtils;
+	private final AttributePathServiceTestUtils	attributePathServiceTestUtils;
 
 	public SchemaServiceTest() {
 

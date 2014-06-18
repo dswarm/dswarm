@@ -4,19 +4,19 @@ import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Sets;
 
 import de.avgl.dmp.persistence.model.DMPJPAObject;
 import de.avgl.dmp.persistence.model.proxy.ProxyDMPJPAObject;
 import de.avgl.dmp.persistence.service.BasicIDJPAService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public abstract class IDBasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPJPAObject<POJOCLASS>, POJOCLASS extends DMPJPAObject, JPASERVICEIMPL extends BasicIDJPAService<PROXYPOJOCLASS, POJOCLASS>>
 		extends BasicJPAServiceTest<PROXYPOJOCLASS, POJOCLASS, JPASERVICEIMPL, Long> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(IDBasicJPAServiceTest.class);
+	private static final Logger	LOG	= LoggerFactory.getLogger(IDBasicJPAServiceTest.class);
 
 	public IDBasicJPAServiceTest(final String type, final Class<JPASERVICEIMPL> jpaServiceClass) {
 

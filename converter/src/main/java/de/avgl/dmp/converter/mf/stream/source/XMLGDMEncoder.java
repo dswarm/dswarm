@@ -9,7 +9,6 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
 
-import de.avgl.dmp.persistence.util.GDMUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultXmlPipe;
@@ -37,6 +36,7 @@ import de.avgl.dmp.persistence.model.internal.gdm.GDMModel;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.utils.DataModelUtils;
 import de.avgl.dmp.persistence.model.types.Tuple;
+import de.avgl.dmp.persistence.util.GDMUtil;
 
 /**
  * Converts XML records to GDM triples.
@@ -80,10 +80,10 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 
 	private long							nodeIdCounter	= 1;
 	private final Predicate					rdfType			= new Predicate(GDMUtil.RDF_type);
-	private final Map<String, Predicate>    predicates   = Maps.newHashMap();
-	private final Map<String, ResourceNode> types        = Maps.newHashMap();
-	private final Map<String, AtomicLong>   valueCounter = Maps.newHashMap();
-	private final Map<String, String>       uris         = Maps.newHashMap();
+	private final Map<String, Predicate>	predicates		= Maps.newHashMap();
+	private final Map<String, ResourceNode>	types			= Maps.newHashMap();
+	private final Map<String, AtomicLong>	valueCounter	= Maps.newHashMap();
+	private final Map<String, String>		uris			= Maps.newHashMap();
 
 	public XMLGDMEncoder(final Optional<DataModel> dataModel) {
 		super();
@@ -412,7 +412,7 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 
 			final UUID uuid = UUID.randomUUID();
 
-			if(uuid == null) {
+			if (uuid == null) {
 
 				throw new MetafactureException("couldn't mint an uuid");
 			}

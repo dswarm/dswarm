@@ -20,6 +20,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hamcrest.Matchers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.lambdaj.Lambda;
 
@@ -33,8 +35,6 @@ import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.init.util.DMPStatics;
 import de.avgl.dmp.persistence.model.DMPJPAObject;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * An attribute path is an ordered list of {@link Attribute}s.
@@ -51,9 +51,9 @@ public class AttributePath extends DMPJPAObject {
 	/**
 	 *
 	 */
-	private static final long						serialVersionUID				= 1L;
+	private static final long		serialVersionUID				= 1L;
 
-	private static final Logger LOG = LoggerFactory.getLogger(AttributePath.class);
+	private static final Logger		LOG								= LoggerFactory.getLogger(AttributePath.class);
 
 	/**
 	 * All utilised attributes of this attribute path.
@@ -63,28 +63,27 @@ public class AttributePath extends DMPJPAObject {
 	@JsonIgnore
 	@Access(AccessType.FIELD)
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinTable(name = "ATTRIBUTES_ATTRIBUTE_PATHS", joinColumns = { @JoinColumn(name = "ATTRIBUTE_PATH_ID", referencedColumnName = "ID") },
-			inverseJoinColumns = { @JoinColumn(name = "ATTRIBUTE_ID", referencedColumnName = "ID") })
-	private Set<Attribute> attributes;                                                                                // =
+	@JoinTable(name = "ATTRIBUTES_ATTRIBUTE_PATHS", joinColumns = { @JoinColumn(name = "ATTRIBUTE_PATH_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "ATTRIBUTE_ID", referencedColumnName = "ID") })
+	private Set<Attribute>			attributes;																	// =
 	// Sets.newCopyOnWriteArraySet();
 
 	/**
 	 * all attributes of this attribute path as ordered list.
 	 */
 	@Transient
-	private LinkedList<Attribute> orderedAttributes;
+	private LinkedList<Attribute>	orderedAttributes;
 
 	/**
 	 * A JSON object of the ordered list of attributes.
 	 */
 	@Transient
-	private ArrayNode orderedAttributesJSON;
+	private ArrayNode				orderedAttributesJSON;
 
 	/**
 	 * A flag that indicates, whether the attributes are initialised or not.
 	 */
 	@Transient
-	private boolean orderedAttributesInitialized = false;
+	private boolean					orderedAttributesInitialized	= false;
 
 	/**
 	 * A string that holds the serialised JSON object of the attribute path (ordered list of attributes).
@@ -93,7 +92,7 @@ public class AttributePath extends DMPJPAObject {
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "ATTRIBUTE_PATH", columnDefinition = "VARCHAR(4000)", length = 4000)
-	private String attributePath;
+	private String					attributePath;
 
 	/**
 	 * All schemas that utilise this attribute path
@@ -113,7 +112,7 @@ public class AttributePath extends DMPJPAObject {
 
 	/**
 	 * Creates a new attribute path with the given ordered list of attributes.
-	 *
+	 * 
 	 * @param attributesArg an ordered list of attributes
 	 */
 	public AttributePath(final LinkedList<Attribute> attributesArg) {
@@ -134,7 +133,7 @@ public class AttributePath extends DMPJPAObject {
 	 * Gets the utilised attributes of this attribute path.<br/>
 	 * note: this is not the ordered list of attributes, i.e., the attribute path; these are only the utilised attributes, i.e.,
 	 * an attribute can occur multiple times in an attribute path.
-	 *
+	 * 
 	 * @return the utilised attributes of this attribute path
 	 */
 	public Set<Attribute> getAttributes() {
@@ -144,7 +143,7 @@ public class AttributePath extends DMPJPAObject {
 
 	/**
 	 * Gets the attribute path, i.e., the ordered list of attributes.
-	 *
+	 * 
 	 * @return the attribute path
 	 */
 	@XmlElement(name = "attributes")

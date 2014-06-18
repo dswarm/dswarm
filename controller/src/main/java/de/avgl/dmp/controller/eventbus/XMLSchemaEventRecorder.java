@@ -1,7 +1,5 @@
 package de.avgl.dmp.controller.eventbus;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -15,7 +13,7 @@ public class XMLSchemaEventRecorder {
 	private final SchemaService	schemaService;
 
 	@Inject
-	public XMLSchemaEventRecorder(final SchemaService schemaService/*, final EventBus eventBus */) {
+	public XMLSchemaEventRecorder(final SchemaService schemaService/* , final EventBus eventBus */) {
 
 		this.schemaService = schemaService;
 

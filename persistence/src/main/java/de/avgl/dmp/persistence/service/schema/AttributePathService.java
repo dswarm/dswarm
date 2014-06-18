@@ -8,6 +8,9 @@ import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.TypedQuery;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;
@@ -18,8 +21,6 @@ import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttributePath;
 import de.avgl.dmp.persistence.service.BasicIDJPAService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A persistence service for {@link AttributePath}s.
@@ -28,11 +29,11 @@ import org.slf4j.LoggerFactory;
  */
 public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, AttributePath> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(AttributePathService.class);
+	private static final Logger	LOG	= LoggerFactory.getLogger(AttributePathService.class);
 
 	/**
 	 * Creates a new attribute path persistence service with the given entity manager provider.
-	 *
+	 * 
 	 * @param entityManagerProvider an entity manager provider
 	 */
 	@Inject
@@ -43,7 +44,7 @@ public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, 
 
 	/**
 	 * Creates an attribute path with the given ordered list of attributes or returns the existing one from the DB.
-	 *
+	 * 
 	 * @param attributes an ordered list of attributes
 	 * @return the persisted or matched attribute path from DB
 	 * @throws DMPPersistenceException
@@ -58,7 +59,7 @@ public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, 
 
 	/**
 	 * Tries to retrieve an attribute path object for the given ordered list of attribute paths
-	 *
+	 * 
 	 * @param attributePathJSONArrayString
 	 * @return
 	 * @throws DMPPersistenceException

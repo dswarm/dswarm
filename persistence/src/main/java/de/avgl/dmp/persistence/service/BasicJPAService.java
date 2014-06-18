@@ -10,6 +10,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;
@@ -18,8 +20,6 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.DMPObject;
 import de.avgl.dmp.persistence.model.proxy.ProxyDMPObject;
 import de.avgl.dmp.persistence.model.proxy.RetrievalType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A generic persistence service implementation, whose concrete implementations can be derived with a given implementation of
@@ -32,36 +32,36 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(BasicJPAService.class);
+	private static final Logger				LOG	= LoggerFactory.getLogger(BasicJPAService.class);
 
 	/**
 	 * The concrete POJO class of this persistence service.
 	 */
-	protected final Class<POJOCLASS> clasz;
+	protected final Class<POJOCLASS>		clasz;
 
 	/**
 	 * The name of the concrete POJO class this persistence service.
 	 */
-	protected final String className;
+	protected final String					className;
 
 	/**
 	 * The concrete proxy POJO class of this persistence service.
 	 */
-	protected final Class<PROXYPOJOCLASS> proxyClasz;
+	protected final Class<PROXYPOJOCLASS>	proxyClasz;
 
 	/**
 	 * The name of the concrete proxy POJO class this persistence service.
 	 */
-	protected final String proxyClassName;
+	protected final String					proxyClassName;
 
 	/**
 	 * The entity manager provider (powered by Guice).
 	 */
-	private final Provider<EntityManager> entityManagerProvider;
+	private final Provider<EntityManager>	entityManagerProvider;
 
 	/**
 	 * Creates a new persistence service for the given concrete POJO class and the entity manager provider.
-	 *
+	 * 
 	 * @param clasz a concrete POJO class
 	 * @param entityManagerProvider an entity manager provider
 	 */
@@ -78,7 +78,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 	/**
 	 * Acquire a new or reused EntityManager with its cache cleared
-	 *
+	 * 
 	 * @return the EntityManager
 	 */
 	protected EntityManager acquire() {
@@ -87,7 +87,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 	/**
 	 * Acquire a new or reused EntityManager
-	 *
+	 * 
 	 * @param clear true if the EM's cache should be cleared
 	 * @return the EntityManager
 	 */
@@ -103,7 +103,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 	/**
 	 * Gets the concrete POJO class of this persistence service.
-	 *
+	 * 
 	 * @return the concrete POJO class
 	 */
 	public Class<POJOCLASS> getClasz() {
@@ -113,7 +113,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 	/**
 	 * Create and persist an object of the specific class transactional.<br>
-	 *
+	 * 
 	 * @return the persisted object of the specific class
 	 */
 	@Transactional(rollbackOn = Exception.class)

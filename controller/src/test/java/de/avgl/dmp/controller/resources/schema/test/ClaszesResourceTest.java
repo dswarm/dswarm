@@ -6,6 +6,8 @@ import javax.ws.rs.core.Response;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -15,12 +17,10 @@ import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxyClasz;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
 import de.avgl.dmp.persistence.service.schema.test.utils.ClaszServiceTestUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ClaszesResourceTest extends BasicResourceTest<ClaszesResourceTestUtils, ClaszServiceTestUtils, ClaszService, ProxyClasz, Clasz, Long> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ClaszesResourceTest.class);
+	private static final Logger	LOG	= LoggerFactory.getLogger(ClaszesResourceTest.class);
 
 	public ClaszesResourceTest() {
 

@@ -7,7 +7,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import javax.annotation.Nullable;
 
-import de.avgl.dmp.persistence.util.GDMUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultStreamPipe;
@@ -31,6 +30,7 @@ import de.avgl.dmp.graph.json.ResourceNode;
 import de.avgl.dmp.persistence.model.internal.gdm.GDMModel;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.utils.DataModelUtils;
+import de.avgl.dmp.persistence.util.GDMUtil;
 
 /**
  * Converts records to GDM-JSON.
@@ -48,16 +48,16 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 	private final Model						internalGDMModel;
 	private Resource						recordResource;
 	private ResourceNode					recordNode;
-	//private Stack<Tuple<Node, Predicate>>	entityStack;
-	//private final Stack<String>			elementURIStack; // TODO use stack when statements for deeper hierarchy levels are possible
+	// private Stack<Tuple<Node, Predicate>> entityStack;
+	// private final Stack<String> elementURIStack; // TODO use stack when statements for deeper hierarchy levels are possible
 
-	// not used: private ResourceNode					recordType;
+	// not used: private ResourceNode recordType;
 
 	private final Optional<DataModel>		dataModel;
 	private final Optional<String>			dataModelUri;
-	
+
 	private String							recordTypeUri;
-	
+
 	private final Map<String, Predicate>	predicates		= Maps.newHashMap();
 	private final Map<String, AtomicLong>	valueCounter	= Maps.newHashMap();
 	private final Map<String, String>		uris			= Maps.newHashMap();
@@ -65,10 +65,10 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 	public GDMEncoder(final Optional<DataModel> dataModel) {
 
 		super();
-		
+
 		this.dataModel = dataModel;
 		dataModelUri = init(dataModel);
-		
+
 		// init
 		// elementURIStack = new Stack<>(); // TODO use stack when statements for deeper hierarchy levels are possible
 		internalGDMModel = new Model();
@@ -86,7 +86,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		recordResource = new Resource(currentId);
 		recordNode = new ResourceNode(currentId);
-		
+
 	}
 
 	@Override
@@ -112,7 +112,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 	@Override
 	public void startEntity(final String name) {
-		
+
 		// System.out.println("in start entity with name = '" + name + "'");
 
 		assert !isClosed();
@@ -125,7 +125,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 		// System.out.println("in end entity");
 
 		assert !isClosed();
-	
+
 	}
 
 	@Override
@@ -167,24 +167,22 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 				if (!GDMUtil.RDF_type.equals(propertyUri)) {
 
-					//recordResource.addProperty(attributeProperty, value);
+					// recordResource.addProperty(attributeProperty, value);
 					recordResource.addStatement(recordNode, attributeProperty, literalObject);
 				} else {
 
 					// check, whether value is really a URI
 					if (isValidUri(value)) {
 
-						final ResourceNode typeResource = new ResourceNode(value);//ResourceFactory.createResource(value);
-						
-						
+						final ResourceNode typeResource = new ResourceNode(value);// ResourceFactory.createResource(value);
 
-						//recordResource.addStatement(entityNode, attributeProperty, typeResource);
+						// recordResource.addStatement(entityNode, attributeProperty, typeResource);
 						addStatement(recordNode, attributeProperty, typeResource);
 
 						recordTypeUri = value;
 					} else {
 
-						//recordResource.addStatement(entityNode, attributeProperty, literalObject);
+						// recordResource.addStatement(entityNode, attributeProperty, literalObject);
 						addStatement(recordNode, attributeProperty, literalObject);
 					}
 				}
@@ -193,7 +191,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 				throw new MetafactureException("couldn't get a resource for adding this property");
 			}
 		}
-				
+
 	}
 
 	private Optional<String> init(final Optional<DataModel> dataModel) {
@@ -211,7 +209,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 			}
 		});
 	}
-	
+
 	private String mintDataModelTermUri(@Nullable final String uri, @Nullable final String localName) {
 
 		final boolean canUseLocalName = !Strings.isNullOrEmpty(localName);
@@ -311,7 +309,6 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		return uri + "#" + localName;
 	}
-	
 
 	private Predicate getPredicate(final String predicateId) {
 
@@ -326,7 +323,6 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		return predicates.get(predicateURI);
 	}
-	
 
 	private void addStatement(final Node subject, final Predicate predicate, final Node object) {
 
@@ -352,7 +348,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		recordResource.addStatement(subject, predicate, object, order);
 	}
-	
+
 	private String getURI(final String id) {
 
 		if (!uris.containsKey(id)) {

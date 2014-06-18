@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.google.common.collect.Lists;
-import de.avgl.dmp.persistence.model.internal.helper.AttributePathHelper;
 import org.apache.commons.io.FileUtils;
 import org.culturegraph.mf.stream.converter.JsonEncoder;
 import org.culturegraph.mf.stream.sink.ObjectJavaIoWriter;
@@ -146,8 +143,8 @@ public class TransformationFlowTest extends GuicedTest {
 		// System.out.println(attributePathHelper.toString());
 		// }
 		//
-//		System.out.println(objectMapper.configure(SerializationFeature.INDENT_OUTPUT,
-//		true).writeValueAsString(gdmModel.toJSON()));
+		// System.out.println(objectMapper.configure(SerializationFeature.INDENT_OUTPUT,
+		// true).writeValueAsString(gdmModel.toJSON()));
 
 		gdmService.createObject(inputDataModel.getId(), gdmModel);
 		// finished writing CSV statements to graph
@@ -168,17 +165,17 @@ public class TransformationFlowTest extends GuicedTest {
 
 		final Iterator<Tuple<String, JsonNode>> tuples = dataIterator(optionalModelMap.get().entrySet().iterator());
 
-//		final List<Tuple<String, JsonNode>> tuplesList = Lists.newLinkedList();
-//
-//		while (tuples.hasNext()) {
-//
-//		tuplesList.add(tuples.next());
-//		}
-//
-//		final String tuplesJSON = objectMapper.configure(SerializationFeature.INDENT_OUTPUT,
-//		true).writeValueAsString(tuplesList);
-//
-//		System.out.println(tuplesJSON);
+		// final List<Tuple<String, JsonNode>> tuplesList = Lists.newLinkedList();
+		//
+		// while (tuples.hasNext()) {
+		//
+		// tuplesList.add(tuples.next());
+		// }
+		//
+		// final String tuplesJSON = objectMapper.configure(SerializationFeature.INDENT_OUTPUT,
+		// true).writeValueAsString(tuplesList);
+		//
+		// System.out.println(tuplesJSON);
 
 		Assert.assertNotNull("CSV record tuples iterator shouldn't be null", tuples);
 

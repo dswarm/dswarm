@@ -6,6 +6,8 @@ import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,25 +35,23 @@ import de.avgl.dmp.persistence.service.schema.test.utils.ClaszServiceTestUtils;
 import de.avgl.dmp.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, DataModel, DataModelService> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(DataModelServiceTest.class);
+	private static final Logger					LOG				= LoggerFactory.getLogger(DataModelServiceTest.class);
 
-	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper					objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	private final Map<Long, Attribute> attributes = Maps.newLinkedHashMap();
+	private final Map<Long, Attribute>			attributes		= Maps.newLinkedHashMap();
 
-	private final Map<Long, AttributePath> attributePaths = Maps.newLinkedHashMap();
+	private final Map<Long, AttributePath>		attributePaths	= Maps.newLinkedHashMap();
 
-	private final AttributeServiceTestUtils     attributeServiceTestUtils;
-	private final ClaszServiceTestUtils         claszServiceTestUtils;
-	private final AttributePathServiceTestUtils attributePathServiceTestUtils;
-	private final SchemaServiceTestUtils        schemaServiceTestUtils;
-	private final ConfigurationServiceTestUtils configurationServiceTestUtils;
-	private final ResourceServiceTestUtils      resourceServiceTestUtils;
+	private final AttributeServiceTestUtils		attributeServiceTestUtils;
+	private final ClaszServiceTestUtils			claszServiceTestUtils;
+	private final AttributePathServiceTestUtils	attributePathServiceTestUtils;
+	private final SchemaServiceTestUtils		schemaServiceTestUtils;
+	private final ConfigurationServiceTestUtils	configurationServiceTestUtils;
+	private final ResourceServiceTestUtils		resourceServiceTestUtils;
 
 	public DataModelServiceTest() {
 

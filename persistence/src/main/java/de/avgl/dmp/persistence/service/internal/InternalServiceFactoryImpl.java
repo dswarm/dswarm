@@ -22,7 +22,7 @@ public class InternalServiceFactoryImpl implements InternalModelServiceFactory {
 
 	/**
 	 * Creates a new internal model service factory with the given memory DB and triple internal model service implementations.
-	 *
+	 * 
 	 * @param internalGDMGraphService the GDM graph internal model service implementation
 	 */
 	@Inject

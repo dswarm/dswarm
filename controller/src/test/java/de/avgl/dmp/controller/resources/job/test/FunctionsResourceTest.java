@@ -12,7 +12,7 @@ import de.avgl.dmp.persistence.service.job.test.utils.FunctionServiceTestUtils;
 public class FunctionsResourceTest extends
 		BasicResourceTest<FunctionsResourceTestUtils, FunctionServiceTestUtils, FunctionService, ProxyFunction, Function, Long> {
 
-	private final FunctionsResourceTestUtils functionsResourceTestUtils;
+	private final FunctionsResourceTestUtils	functionsResourceTestUtils;
 
 	public FunctionsResourceTest() {
 

@@ -10,6 +10,8 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.lambdaj.Lambda;
 
@@ -30,14 +32,12 @@ import de.avgl.dmp.persistence.model.job.Mapping;
 import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.types.Tuple;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class CustomTransformationDeserializerTest extends GuicedTest {
 
-	private static final Logger LOG = LoggerFactory.getLogger(CustomTransformationDeserializerTest.class);
+	private static final Logger	LOG	= LoggerFactory.getLogger(CustomTransformationDeserializerTest.class);
 
-	private ObjectMapper objectMapper;
+	private ObjectMapper		objectMapper;
 
 	@Before
 	public void setUp() throws Exception {

@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,21 +20,19 @@ import de.avgl.dmp.persistence.model.DMPObject;
 import de.avgl.dmp.persistence.model.proxy.ProxyDMPObject;
 import de.avgl.dmp.persistence.service.BasicJPAService;
 import de.avgl.dmp.persistence.service.test.BasicJPAServiceTest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE>
 		extends BasicJPAServiceTest<PROXYPOJOCLASS, POJOCLASS, POJOCLASSPERSISTENCESERVICE, POJOCLASSIDTYPE> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(BasicJPAServiceTestUtils.class);
+	private static final Logger							LOG	= LoggerFactory.getLogger(BasicJPAServiceTestUtils.class);
 
-	protected final Class<POJOCLASS> pojoClass;
+	protected final Class<POJOCLASS>					pojoClass;
 
-	protected final String pojoClassName;
+	protected final String								pojoClassName;
 
-	protected final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClass;
+	protected final Class<POJOCLASSPERSISTENCESERVICE>	persistenceServiceClass;
 
-	protected final ObjectMapper objectMapper;
+	protected final ObjectMapper						objectMapper;
 
 	public BasicJPAServiceTestUtils(final Class<POJOCLASS> pojoClassArg, final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg) {
 

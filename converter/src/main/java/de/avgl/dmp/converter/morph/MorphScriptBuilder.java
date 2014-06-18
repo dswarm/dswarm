@@ -447,7 +447,7 @@ public class MorphScriptBuilder {
 
 		final String inputAttributePathStringXMLEscaped = StringEscapeUtils.escapeXml(inputAttributePathString);
 
-		for (String variable : variables) {
+		for (final String variable : variables) {
 
 			if (variable.startsWith(MorphScriptBuilder.OUTPUT_VARIABLE_PREFIX_IDENTIFIER)) {
 
@@ -735,7 +735,7 @@ public class MorphScriptBuilder {
 		rules.appendChild(data);
 	}
 
-	private String getComponentName(Component component) throws DMPConverterException {
+	private String getComponentName(final Component component) throws DMPConverterException {
 
 		final String componentName = component.getName();
 
@@ -744,7 +744,7 @@ public class MorphScriptBuilder {
 			return componentName;
 		} else {
 
-			LOG.error("component name (an id assigned by frontend) doesn't exist");
+			MorphScriptBuilder.LOG.error("component name (an id assigned by frontend) doesn't exist");
 
 			throw new DMPConverterException("component name doesn't exist");
 		}

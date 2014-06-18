@@ -3,6 +3,8 @@ package de.avgl.dmp.persistence.service.schema.test.internalmodel;
 import java.util.Set;
 
 import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,16 +16,14 @@ import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.NameSpacePrefixRegistry;
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.service.schema.SchemaService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class InternalSchemaBuilder extends GuicedTest {
 
-	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper	objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	private static final Logger LOG = LoggerFactory.getLogger(AttributePathBuilder.class);
+	private static final Logger	LOG				= LoggerFactory.getLogger(AttributePathBuilder.class);
 
-	private String prefixPaths = "";
+	private String				prefixPaths		= "";
 
 	public Schema buildInternalSchema() {
 

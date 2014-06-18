@@ -16,7 +16,7 @@ import de.avgl.dmp.persistence.model.resource.DataModel;
 
 /**
  * Flow that reads and parses a given CSV document and returns a preview of its content as JSON representation.
- *
+ * 
  * @author tgaengler
  * @author phorn
  */

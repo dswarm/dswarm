@@ -24,7 +24,7 @@ import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
 
 /**
  * Processes input from a reader line by line. Inspired by org.culturegraph.mf.stream.converter.LineReader
- *
+ * 
  * @author tgaengler
  * @author phorn
  */
@@ -44,7 +44,7 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 	private final boolean			hasHeader;
 
 	public CsvLineReader() {
-//		this('\\', '"', ',', "\r\n");
+		// this('\\', '"', ',', "\r\n");
 		this(ConfigurationStatics.DEFAULT_ESCAPE_CHARACTER, ConfigurationStatics.DEFAULT_QUOTE_CHARACTER,
 				ConfigurationStatics.DEFAULT_COLUMN_DELIMITER, ConfigurationStatics.DEFAULT_ROW_DELIMITER);
 	}

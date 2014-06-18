@@ -19,6 +19,9 @@ import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -30,8 +33,6 @@ import de.avgl.dmp.init.DMPException;
 import de.avgl.dmp.persistence.model.ExtendedBasicDMPJPAObject;
 import de.avgl.dmp.persistence.model.representation.SetResourceReferenceSerializer;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A configuration contains information on how to process a given {@link Resource} into a {@link DataModel}, e.g., delimiter etc.
@@ -48,23 +49,22 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	/**
 	 *
 	 */
-	private static final long						serialVersionUID	= 1L;
+	private static final long	serialVersionUID	= 1L;
 
-	private static final Logger LOG = LoggerFactory.getLogger(Configuration.class);
+	private static final Logger	LOG					= LoggerFactory.getLogger(Configuration.class);
 
 	/**
 	 * The related resources.
 	 */
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinTable(name = "RESOURCES_CONFIGURATIONS", joinColumns = { @JoinColumn(name = "CONFIGURATION_ID", referencedColumnName = "ID") },
-			inverseJoinColumns = { @JoinColumn(name = "RESOURCE_ID", referencedColumnName = "ID") })
+	@JoinTable(name = "RESOURCES_CONFIGURATIONS", joinColumns = { @JoinColumn(name = "CONFIGURATION_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "RESOURCE_ID", referencedColumnName = "ID") })
 	@JsonSerialize(using = SetResourceReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	//@JsonDeserialize(using = ResourceReferenceDeserializer.class)
+	// @JsonDeserialize(using = ResourceReferenceDeserializer.class)
 	@XmlIDREF
 	@XmlList
 	// @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
-	private Set<Resource> resources;
+	private Set<Resource>		resources;
 
 	/**
 	 * A string that holds a serialised JSON object of configuration parameters.
@@ -72,23 +72,23 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "parameters", columnDefinition = "VARCHAR(4000)", length = 4000)
-	private String parametersString;
+	private String				parametersString;
 
 	/**
 	 * A JSON object of configuration parameters.
 	 */
 	@Transient
-	private ObjectNode parameters;
+	private ObjectNode			parameters;
 
 	/**
 	 * A flag that indicates, whether the configuration parameters are initialised or not.
 	 */
 	@Transient
-	private boolean parametersInitialized;
+	private boolean				parametersInitialized;
 
 	/**
 	 * Gets the configuration parameters.
-	 *
+	 * 
 	 * @return the configuration parameters
 	 */
 	@XmlElement(name = "parameters")
@@ -101,7 +101,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the configuration parameters.
-	 *
+	 * 
 	 * @param parameters new configuration parameters
 	 */
 	@XmlElement(name = "parameters")
@@ -114,7 +114,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Adds a new configuration parameter.
-	 *
+	 * 
 	 * @param key the key of the configuration parameter
 	 * @param value the value of the configuration parameter
 	 */
@@ -132,7 +132,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the configuration parameter for the given key.
-	 *
+	 * 
 	 * @param key a configuration parameter key
 	 * @return the value of the matched configuration parameter or null
 	 */
@@ -145,7 +145,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the resources that are related to this configuration
-	 *
+	 * 
 	 * @return the resources that are related to this configuration
 	 */
 	public Set<Resource> getResources() {
@@ -155,7 +155,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the resources of this configuration
-	 *
+	 * 
 	 * @param resourcesArg a new collection of resources
 	 */
 	public void setResources(final Set<Resource> resourcesArg) {

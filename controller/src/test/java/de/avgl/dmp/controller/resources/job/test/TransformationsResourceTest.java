@@ -25,19 +25,19 @@ public class TransformationsResourceTest
 		extends
 		BasicResourceTest<TransformationsResourceTestUtils, TransformationServiceTestUtils, TransformationService, ProxyTransformation, Transformation, Long> {
 
-	private final FunctionsResourceTestUtils functionsResourceTestUtils;
+	private final FunctionsResourceTestUtils		functionsResourceTestUtils;
 
-	private final ComponentsResourceTestUtils componentsResourceTestUtils;
+	private final ComponentsResourceTestUtils		componentsResourceTestUtils;
 
-	private final TransformationsResourceTestUtils transformationsResourceTestUtils;
+	private final TransformationsResourceTestUtils	transformationsResourceTestUtils;
 
-	private Function function;
+	private Function								function;
 
-	private Component component;
+	private Component								component;
 
-	private Function updateFunction;
+	private Function								updateFunction;
 
-	private Component updateComponent;
+	private Component								updateComponent;
 
 	public TransformationsResourceTest() {
 

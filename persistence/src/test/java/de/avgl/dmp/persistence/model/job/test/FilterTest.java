@@ -1,20 +1,20 @@
 package de.avgl.dmp.persistence.model.job.test;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.job.Filter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class FilterTest extends GuicedTest {
 
-	private static final Logger LOG = LoggerFactory.getLogger(FilterTest.class);
+	private static final Logger	LOG				= LoggerFactory.getLogger(FilterTest.class);
 
-	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper	objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleFilterTest() {

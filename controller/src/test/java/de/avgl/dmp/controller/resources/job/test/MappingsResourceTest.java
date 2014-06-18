@@ -36,43 +36,43 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 public class MappingsResourceTest extends
 		BasicResourceTest<MappingsResourceTestUtils, MappingServiceTestUtils, MappingService, ProxyMapping, Mapping, Long> {
 
-	private final FiltersResourceTestUtils filtersResourceTestUtils;
+	private final FiltersResourceTestUtils							filtersResourceTestUtils;
 
-	private final FunctionsResourceTestUtils functionsResourceTestUtils;
+	private final FunctionsResourceTestUtils						functionsResourceTestUtils;
 
-	private final TransformationsResourceTestUtils transformationsResourceTestUtils;
+	private final TransformationsResourceTestUtils					transformationsResourceTestUtils;
 
-	private final ComponentsResourceTestUtils componentsResourceTestUtils;
+	private final ComponentsResourceTestUtils						componentsResourceTestUtils;
 
-	private final AttributesResourceTestUtils attributesResourceTestUtils;
+	private final AttributesResourceTestUtils						attributesResourceTestUtils;
 
-	private final AttributePathsResourceTestUtils attributePathsResourceTestUtils;
+	private final AttributePathsResourceTestUtils					attributePathsResourceTestUtils;
 
-	private final MappingsResourceTestUtils mappingsResourceTestUtils;
+	private final MappingsResourceTestUtils							mappingsResourceTestUtils;
 
-	private final MappingAttributePathInstancesResourceTestUtils mappingAttributePathInstancesResourceTestUtils;
+	private final MappingAttributePathInstancesResourceTestUtils	mappingAttributePathInstancesResourceTestUtils;
 
-	private Function function;
+	private Function												function;
 
-	private Function updateFunction;
+	private Function												updateFunction;
 
-	private Filter updateFilter;
+	private Filter													updateFilter;
 
-	private Component component;
+	private Component												component;
 
-	private Transformation transformation;
+	private Transformation											transformation;
 
-	private Component transformationComponent;
+	private Component												transformationComponent;
 
-	private Component updateTransformationComponent;
+	private Component												updateTransformationComponent;
 
-	private AttributePath updateInputAttributePath;
+	private AttributePath											updateInputAttributePath;
 
-	final Map<Long, Attribute> attributes = Maps.newHashMap();
+	final Map<Long, Attribute>										attributes						= Maps.newHashMap();
 
-	final Map<Long, AttributePath> attributePaths = Maps.newLinkedHashMap();
+	final Map<Long, AttributePath>									attributePaths					= Maps.newLinkedHashMap();
 
-	final Map<Long, MappingAttributePathInstance> mappingAttributePathInstances = Maps.newLinkedHashMap();
+	final Map<Long, MappingAttributePathInstance>					mappingAttributePathInstances	= Maps.newLinkedHashMap();
 
 	public MappingsResourceTest() {
 

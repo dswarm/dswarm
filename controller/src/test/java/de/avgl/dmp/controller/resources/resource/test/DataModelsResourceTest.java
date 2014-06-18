@@ -16,6 +16,8 @@ import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,8 +56,6 @@ import de.avgl.dmp.persistence.service.internal.test.utils.InternalGDMGraphServi
 import de.avgl.dmp.persistence.service.resource.DataModelService;
 import de.avgl.dmp.persistence.service.resource.test.utils.DataModelServiceTestUtils;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class DataModelsResourceTest extends
 		BasicResourceTest<DataModelsResourceTestUtils, DataModelServiceTestUtils, DataModelService, ProxyDataModel, DataModel, Long> {
@@ -526,11 +526,12 @@ public class DataModelsResourceTest extends
 
 		final String body = response.readEntity(String.class);
 
-		Assert.assertEquals("{\"status\":\"nok\",\"status_code\":500,\"error\":\" 1; XML document structures must start and end within the same entity.\"}", body);
+		Assert.assertEquals(
+				"{\"status\":\"nok\",\"status_code\":500,\"error\":\" 1; XML document structures must start and end within the same entity.\"}", body);
 
 		// clean up
 
-		List<DataModel> dataModels = pojoClassResourceTestUtils.getPersistenceServiceTestUtils().getObjects();
+		final List<DataModel> dataModels = pojoClassResourceTestUtils.getPersistenceServiceTestUtils().getObjects();
 
 		Assert.assertNotNull(dataModels);
 
