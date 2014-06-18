@@ -2,20 +2,20 @@ package de.avgl.dmp.persistence.model.schema.test;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.schema.Clasz;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ClaszTest extends GuicedTest {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ClaszTest.class);
+	private static final Logger	LOG				= LoggerFactory.getLogger(ClaszTest.class);
 
-	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper	objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleClaszTest() {

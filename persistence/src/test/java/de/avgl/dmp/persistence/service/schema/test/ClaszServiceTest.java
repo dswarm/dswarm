@@ -2,6 +2,8 @@ package de.avgl.dmp.persistence.service.schema.test;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,16 +14,14 @@ import de.avgl.dmp.persistence.model.schema.proxy.ProxyClasz;
 import de.avgl.dmp.persistence.service.schema.ClaszService;
 import de.avgl.dmp.persistence.service.schema.test.utils.ClaszServiceTestUtils;
 import de.avgl.dmp.persistence.service.test.AdvancedJPAServiceTest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, ClaszService> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ClaszServiceTest.class);
+	private static final Logger			LOG				= LoggerFactory.getLogger(ClaszServiceTest.class);
 
-	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper			objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	private final ClaszServiceTestUtils claszServiceTestUtils;
+	private final ClaszServiceTestUtils	claszServiceTestUtils;
 
 	public ClaszServiceTest() {
 

@@ -12,7 +12,7 @@ import org.culturegraph.mf.framework.annotations.Out;
 
 /**
  * Decodes lines of CSV files.
- *
+ * 
  * @author tgaengler
  */
 @Description("Decodes lines of CSV files.")
@@ -33,7 +33,7 @@ public final class CsvDecoder extends DefaultObjectPipe<CSVRecord, StreamReceive
 
 		assert !isClosed();
 
-		if(record.size() == 1 && record.get(0).trim().isEmpty()) {
+		if (record.size() == 1 && record.get(0).trim().isEmpty()) {
 
 			// do nothing an return (?)
 

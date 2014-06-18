@@ -1,8 +1,9 @@
 package de.avgl.dmp.converter;
 
-import com.google.inject.AbstractModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.inject.AbstractModule;
 
 /**
  * The Guice configuration of the converter module. Interface/classes that are registered here can be utilised for injection.
@@ -11,7 +12,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ConverterModule extends AbstractModule {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ConverterModule.class);
+	private static final Logger	LOG	= LoggerFactory.getLogger(ConverterModule.class);
 
 	@Override
 	protected void configure() {

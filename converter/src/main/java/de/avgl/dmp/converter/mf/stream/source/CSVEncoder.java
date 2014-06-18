@@ -18,7 +18,7 @@ import com.google.common.collect.Lists;
 
 /**
  * Serialises an object as CSV. Records and entities are represented as objects.
- *
+ * 
  * @author tgaengler
  */
 @Description("Serialises an object as CSV")

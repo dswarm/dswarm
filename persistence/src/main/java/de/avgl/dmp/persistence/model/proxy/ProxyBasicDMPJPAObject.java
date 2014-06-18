@@ -2,9 +2,10 @@ package de.avgl.dmp.persistence.model.proxy;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import de.avgl.dmp.persistence.model.BasicDMPJPAObject;
 
 /**
  * An abstract proxy POJO class for where the real objects can have a name and where the identifier of the real object should be
@@ -15,16 +16,16 @@ import org.slf4j.LoggerFactory;
 @XmlRootElement
 public abstract class ProxyBasicDMPJPAObject<POJOCLASS extends BasicDMPJPAObject> extends ProxyDMPJPAObject<POJOCLASS> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ProxyBasicDMPJPAObject.class);
+	private static final Logger	LOG					= LoggerFactory.getLogger(ProxyBasicDMPJPAObject.class);
 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long	serialVersionUID	= 1L;
 
 	/**
 	 * Default constructor for handing over a freshly created object, i.e., no updated or already existing object.
-	 *
+	 * 
 	 * @param basicDMPJPAObjectArg a freshly created object
 	 */
 	public ProxyBasicDMPJPAObject(final POJOCLASS basicDMPJPAObjectArg) {
@@ -35,7 +36,7 @@ public abstract class ProxyBasicDMPJPAObject<POJOCLASS extends BasicDMPJPAObject
 	/**
 	 * Creates a new proxy with the given real object and the type how the object was processed by the persistence service, e.g.,
 	 * {@link RetrievalType.CREATED}.
-	 *
+	 * 
 	 * @param basicDMPJPAObjectArg an object that was processed by a persistence service
 	 * @param typeArg the type how this object was processed by the persistence service
 	 */

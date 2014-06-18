@@ -8,6 +8,9 @@ import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.TypedQuery;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;
 
@@ -15,8 +18,6 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
 import de.avgl.dmp.persistence.model.proxy.ProxyAdvancedDMPJPAObject;
 import de.avgl.dmp.persistence.model.proxy.RetrievalType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A generic persistence service implementation for {@link AdvancedDMPJPAObject}s, i.e., where the identifier will be set on
@@ -28,11 +29,11 @@ import org.slf4j.LoggerFactory;
 public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvancedDMPJPAObject<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
 		extends BasicDMPJPAService<PROXYPOJOCLASS, POJOCLASS> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(AdvancedDMPJPAService.class);
+	private static final Logger	LOG	= LoggerFactory.getLogger(AdvancedDMPJPAService.class);
 
 	/**
 	 * Creates a new persistence service for the given concrete POJO class and the entity manager provider.
-	 *
+	 * 
 	 * @param clasz a concrete POJO class
 	 * @param entityManagerProvider an entity manager provider
 	 */
@@ -44,7 +45,7 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 
 	/**
 	 * Create and persist an object of the specific class with the given identifier.<br>
-	 *
+	 * 
 	 * @param uri the identifier of the object
 	 * @return the persisted object of the specific class
 	 */
@@ -58,7 +59,7 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 
 	/**
 	 * Create and persist an object of the specific class with the given identifier.<br>
-	 *
+	 * 
 	 * @param id the identifier of the object
 	 * @return the persisted object of the specific class
 	 */

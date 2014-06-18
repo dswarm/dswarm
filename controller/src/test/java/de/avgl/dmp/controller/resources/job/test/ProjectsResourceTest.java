@@ -48,75 +48,75 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
 public class ProjectsResourceTest extends
 		BasicResourceTest<ProjectsResourceTestUtils, ProjectServiceTestUtils, ProjectService, ProxyProject, Project, Long> {
 
-	private final FunctionsResourceTestUtils functionsResourceTestUtils;
+	private final FunctionsResourceTestUtils						functionsResourceTestUtils;
 
-	private final TransformationsResourceTestUtils transformationsResourceTestUtils;
+	private final TransformationsResourceTestUtils					transformationsResourceTestUtils;
 
-	private final ComponentsResourceTestUtils componentsResourceTestUtils;
+	private final ComponentsResourceTestUtils						componentsResourceTestUtils;
 
-	private final AttributesResourceTestUtils attributesResourceTestUtils;
+	private final AttributesResourceTestUtils						attributesResourceTestUtils;
 
-	private final AttributePathsResourceTestUtils attributePathsResourceTestUtils;
+	private final AttributePathsResourceTestUtils					attributePathsResourceTestUtils;
 
-	private final ClaszesResourceTestUtils claszesResourceTestUtils;
+	private final ClaszesResourceTestUtils							claszesResourceTestUtils;
 
-	private final ResourcesResourceTestUtils resourcesResourceTestUtils;
+	private final ResourcesResourceTestUtils						resourcesResourceTestUtils;
 
-	private final ConfigurationsResourceTestUtils configurationsResourceTestUtils;
+	private final ConfigurationsResourceTestUtils					configurationsResourceTestUtils;
 
-	private final SchemasResourceTestUtils schemasResourceTestUtils;
+	private final SchemasResourceTestUtils							schemasResourceTestUtils;
 
-	private final DataModelsResourceTestUtils dataModelsResourceTestUtils;
+	private final DataModelsResourceTestUtils						dataModelsResourceTestUtils;
 
-	private final MappingsResourceTestUtils mappingsResourceTestUtils;
+	private final MappingsResourceTestUtils							mappingsResourceTestUtils;
 
-	private final ProjectsResourceTestUtils projectsResourceTestUtils;
+	private final ProjectsResourceTestUtils							projectsResourceTestUtils;
 
-	private final MappingAttributePathInstancesResourceTestUtils mappingAttributePathInstancesResourceTestUtils;
+	private final MappingAttributePathInstancesResourceTestUtils	mappingAttributePathInstancesResourceTestUtils;
 
-	private Function function;
+	private Function												function;
 
-	private Function updateFunction;
+	private Function												updateFunction;
 
-	private Component component;
+	private Component												component;
 
-	private Component updateComponent;
+	private Component												updateComponent;
 
-	private Component updateTransformationComponent;
+	private Component												updateTransformationComponent;
 
-	private Transformation transformation;
+	private Transformation											transformation;
 
-	private Transformation updateTransformation;
+	private Transformation											updateTransformation;
 
-	private Component transformationComponent;
+	private Component												transformationComponent;
 
-	final Map<Long, Attribute> attributes = Maps.newHashMap();
+	final Map<Long, Attribute>										attributes						= Maps.newHashMap();
 
-	final Map<Long, AttributePath> attributePaths = Maps.newLinkedHashMap();
+	final Map<Long, AttributePath>									attributePaths					= Maps.newLinkedHashMap();
 
-	final Map<Long, MappingAttributePathInstance> mappingAttributePathInstances = Maps.newLinkedHashMap();
+	final Map<Long, MappingAttributePathInstance>					mappingAttributePathInstances	= Maps.newLinkedHashMap();
 
-	private Clasz recordClass;
+	private Clasz													recordClass;
 
-	private Clasz updateRecordClass;
+	private Clasz													updateRecordClass;
 
-	private Schema schema;
+	private Schema													schema;
 
-	private Schema updateSchema;
+	private Schema													updateSchema;
 
-	private Configuration configuration;
+	private Configuration											configuration;
 
-	private Configuration updateConfiguration;
+	private Configuration											updateConfiguration;
 
-	private Resource resource;
+	private Resource												resource;
 
-	private Resource updateResource;
+	private Resource												updateResource;
 
-	private Mapping updateMapping;
+	private Mapping													updateMapping;
 
-	private final Map<Long, DataModel> dataModels = Maps.newHashMap();
+	private final Map<Long, DataModel>								dataModels						= Maps.newHashMap();
 
-	private final Map<Long, Mapping> mappings = Maps.newHashMap();
+	private final Map<Long, Mapping>								mappings						= Maps.newHashMap();
 
 	public ProjectsResourceTest() {
 

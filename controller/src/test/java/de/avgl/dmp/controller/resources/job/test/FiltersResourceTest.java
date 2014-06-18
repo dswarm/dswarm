@@ -32,8 +32,8 @@ public class FiltersResourceTest extends
 
 		final String finalJSONString = DMPPersistenceUtil.getResourceAsString("broken_filter.json");
 
-		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE)
-				.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(finalJSONString));
+		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+				.post(Entity.json(finalJSONString));
 
 		Assert.assertEquals("500", 500, response.getStatus());
 

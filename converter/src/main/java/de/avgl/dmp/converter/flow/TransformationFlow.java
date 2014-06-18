@@ -12,11 +12,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import de.avgl.dmp.persistence.util.GDMUtil;
 import org.culturegraph.mf.exceptions.MorphDefException;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.morph.Metamorph;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -51,8 +52,7 @@ import de.avgl.dmp.persistence.model.types.Tuple;
 import de.avgl.dmp.persistence.service.InternalModelService;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import de.avgl.dmp.persistence.util.GDMUtil;
 
 /**
  * Flow that executes a given set of transformations on data of a given data model.
@@ -64,15 +64,15 @@ import org.slf4j.LoggerFactory;
  */
 public class TransformationFlow {
 
-	private static final Logger LOG = LoggerFactory.getLogger(TransformationFlow.class);
+	private static final Logger							LOG	= LoggerFactory.getLogger(TransformationFlow.class);
 
-	private final Metamorph transformer;
+	private final Metamorph								transformer;
 
-	private final String script;
+	private final String								script;
 
-	private final Optional<DataModel> outputDataModel;
+	private final Optional<DataModel>					outputDataModel;
 
-	private final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider;
+	private final Provider<InternalModelServiceFactory>	internalModelServiceFactoryProvider;
 
 	public TransformationFlow(final Metamorph transformer, final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
 

@@ -12,6 +12,8 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.Timer;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,8 +26,6 @@ import de.avgl.dmp.persistence.model.DMPObject;
 import de.avgl.dmp.persistence.model.proxy.ProxyDMPObject;
 import de.avgl.dmp.persistence.model.proxy.RetrievalType;
 import de.avgl.dmp.persistence.service.BasicJPAService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A generic resource (controller service), whose concrete implementations can be derived with a given implementation of

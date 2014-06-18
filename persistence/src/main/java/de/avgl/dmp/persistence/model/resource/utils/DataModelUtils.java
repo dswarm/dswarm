@@ -23,7 +23,7 @@ import de.avgl.dmp.persistence.util.GDMUtil;
  */
 public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataModel> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(DataModelUtils.class);
+	private static final Logger	LOG	= LoggerFactory.getLogger(DataModelUtils.class);
 
 	public static String determineDataModelSchemaBaseURI(final DataModel dataModel) {
 
@@ -73,20 +73,18 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 				final String path = pathNode.asText();
 
 				if (path != null) {
-					
-					
-					//FIXME DD-533 "/" does not work for windows paths which are "\" (or escaped as "\\")
+
+					// FIXME DD-533 "/" does not work for windows paths which are "\" (or escaped as "\\")
 					if (path.contains(File.separator)) {
-					
+
 						// e.g. C:\DMP\datamanagement-platform\converter\target\test-classes\test_csv.csv
 						// return /test_csv.csv
-						dataResourceName = "/" + path.substring(path.lastIndexOf(File.separator)+1, path.length());
+						dataResourceName = "/" + path.substring(path.lastIndexOf(File.separator) + 1, path.length());
 
-					}
-					else {
-					
+					} else {
+
 						dataResourceName = path.substring(path.lastIndexOf("/"), path.length());
-					}					
+					}
 
 					try {
 

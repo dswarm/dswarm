@@ -23,7 +23,8 @@ import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
 
 public class CSVSourceResourceTriplesFlowTest {
 
-	private void testFlow(final CSVSourceResourceTriplesFlow flow, final String fileName, final int rowNumbers, final int columnNumbers, final Matcher<String> predicateMatcher) throws DMPConverterException {
+	private void testFlow(final CSVSourceResourceTriplesFlow flow, final String fileName, final int rowNumbers, final int columnNumbers,
+			final Matcher<String> predicateMatcher) throws DMPConverterException {
 		final ResourceOpener opener = new ResourceOpener();
 
 		final List<String> subjects = new ArrayList<String>();

@@ -5,6 +5,8 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
@@ -14,8 +16,6 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Transformation;
 import de.avgl.dmp.persistence.model.job.proxy.ProxyTransformation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A persistence service for {@link Transformation}s.
@@ -24,11 +24,11 @@ import org.slf4j.LoggerFactory;
  */
 public class TransformationService extends BasicFunctionService<ProxyTransformation, Transformation> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(TransformationService.class);
+	private static final Logger	LOG	= LoggerFactory.getLogger(TransformationService.class);
 
 	/**
 	 * Creates a new transformation persistence service with the given entity manager provider.
-	 *
+	 * 
 	 * @param entityManagerProvider an entity manager provider
 	 */
 	@Inject

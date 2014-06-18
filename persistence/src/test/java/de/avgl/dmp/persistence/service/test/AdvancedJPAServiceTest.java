@@ -1,18 +1,18 @@
 package de.avgl.dmp.persistence.service.test;
 
 import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.AdvancedDMPJPAObject;
 import de.avgl.dmp.persistence.model.proxy.ProxyAdvancedDMPJPAObject;
 import de.avgl.dmp.persistence.service.AdvancedDMPJPAService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public abstract class AdvancedJPAServiceTest<PROXYPOJOCLASS extends ProxyAdvancedDMPJPAObject<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject, JPASERVICEIMPL extends AdvancedDMPJPAService<PROXYPOJOCLASS, POJOCLASS>>
 		extends IDBasicJPAServiceTest<PROXYPOJOCLASS, POJOCLASS, JPASERVICEIMPL> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(AdvancedJPAServiceTest.class);
+	private static final Logger	LOG	= LoggerFactory.getLogger(AdvancedJPAServiceTest.class);
 
 	public AdvancedJPAServiceTest(final String type, final Class<JPASERVICEIMPL> jpaServiceClass) {
 

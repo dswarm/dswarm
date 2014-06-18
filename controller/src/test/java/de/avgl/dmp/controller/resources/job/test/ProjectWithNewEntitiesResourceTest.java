@@ -10,6 +10,8 @@ import javax.ws.rs.core.Response;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -46,35 +48,33 @@ import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.service.job.ProjectService;
 import de.avgl.dmp.persistence.service.job.test.utils.ProjectServiceTestUtils;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ProjectWithNewEntitiesResourceTest extends
 		BasicResourceTest<ProjectsResourceTestUtils, ProjectServiceTestUtils, ProjectService, ProxyProject, Project, Long> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(AttributesResourceTest.class);
+	private static final Logger										LOG	= LoggerFactory.getLogger(AttributesResourceTest.class);
 
-	private final FunctionsResourceTestUtils functionsResourceTestUtils;
+	private final FunctionsResourceTestUtils						functionsResourceTestUtils;
 
-	private final TransformationsResourceTestUtils transformationsResourceTestUtils;
+	private final TransformationsResourceTestUtils					transformationsResourceTestUtils;
 
-	private final AttributesResourceTestUtils attributesResourceTestUtils;
+	private final AttributesResourceTestUtils						attributesResourceTestUtils;
 
-	private final AttributePathsResourceTestUtils attributePathsResourceTestUtils;
+	private final AttributePathsResourceTestUtils					attributePathsResourceTestUtils;
 
-	private final ClaszesResourceTestUtils claszesResourceTestUtils;
+	private final ClaszesResourceTestUtils							claszesResourceTestUtils;
 
-	private final ResourcesResourceTestUtils resourcesResourceTestUtils;
+	private final ResourcesResourceTestUtils						resourcesResourceTestUtils;
 
-	private final ConfigurationsResourceTestUtils configurationsResourceTestUtils;
+	private final ConfigurationsResourceTestUtils					configurationsResourceTestUtils;
 
-	private final SchemasResourceTestUtils schemasResourceTestUtils;
+	private final SchemasResourceTestUtils							schemasResourceTestUtils;
 
-	private final DataModelsResourceTestUtils dataModelsResourceTestUtils;
+	private final DataModelsResourceTestUtils						dataModelsResourceTestUtils;
 
-	private final MappingsResourceTestUtils mappingsResourceTestUtils;
+	private final MappingsResourceTestUtils							mappingsResourceTestUtils;
 
-	private final MappingAttributePathInstancesResourceTestUtils mappingAttributePathInstancesResourceTestUtils;
+	private final MappingAttributePathInstancesResourceTestUtils	mappingAttributePathInstancesResourceTestUtils;
 
 	public ProjectWithNewEntitiesResourceTest() {
 

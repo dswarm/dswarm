@@ -6,6 +6,8 @@ import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,18 +24,16 @@ import de.avgl.dmp.persistence.model.job.proxy.ProxyComponent;
 import de.avgl.dmp.persistence.service.job.ComponentService;
 import de.avgl.dmp.persistence.service.job.test.utils.FunctionServiceTestUtils;
 import de.avgl.dmp.persistence.service.test.IDBasicJPAServiceTest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ComponentServiceTest extends IDBasicJPAServiceTest<ProxyComponent, Component, ComponentService> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ComponentServiceTest.class);
+	private static final Logger				LOG				= LoggerFactory.getLogger(ComponentServiceTest.class);
 
-	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper				objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	private final Map<Long, Function> functions = Maps.newLinkedHashMap();
+	private final Map<Long, Function>		functions		= Maps.newLinkedHashMap();
 
-	private final FunctionServiceTestUtils functionServiceTestUtils;
+	private final FunctionServiceTestUtils	functionServiceTestUtils;
 
 	public ComponentServiceTest() {
 

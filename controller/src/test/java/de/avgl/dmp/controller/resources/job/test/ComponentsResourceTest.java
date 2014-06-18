@@ -17,10 +17,10 @@ import de.avgl.dmp.persistence.service.job.test.utils.ComponentServiceTestUtils;
 public class ComponentsResourceTest extends
 		BasicResourceTest<ComponentsResourceTestUtils, ComponentServiceTestUtils, ComponentService, ProxyComponent, Component, Long> {
 
-	private final FunctionsResourceTestUtils  functionsResourceTestUtils;
-	private final ComponentsResourceTestUtils componentsResourceTestUtils;
+	private final FunctionsResourceTestUtils	functionsResourceTestUtils;
+	private final ComponentsResourceTestUtils	componentsResourceTestUtils;
 
-	private Function function;
+	private Function							function;
 
 	public ComponentsResourceTest() {
 

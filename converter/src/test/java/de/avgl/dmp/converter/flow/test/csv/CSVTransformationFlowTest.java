@@ -43,20 +43,22 @@ public class CSVTransformationFlowTest extends GuicedTest {
 
 		testCSVTaskWithTuples("demo_csv.multiple_mappings.result.json", "demo_csv.multiple_mappings.task.json", "demo_csv.tuples.json");
 	}
-	
+
 	@Test
 	public void testCSVOneMappingWithMultipleFunctions() throws Exception {
 
 		testCSVTaskWithTuples("dd-528.csv.task.result.json", "dd-528.csv.task.json", "test_transf.tuples.json");
 	}
-	
+
 	@Test
 	public void testCSVMultipleMappingsWithAlmostAllFunctions() throws Exception {
 
-		testCSVTaskWithTuples("almost.all.functions.complex.test.csv.result.json", "almost.all.functions.complex.test.csv.task.json", "almost.all.functions.complex.test.csv.tuples.json");
+		testCSVTaskWithTuples("almost.all.functions.complex.test.csv.result.json", "almost.all.functions.complex.test.csv.task.json",
+				"almost.all.functions.complex.test.csv.tuples.json");
 	}
-	
-	private void testCSVTaskWithTuples(final String taskResultJSONFileName, final String taskJSONFileName, final String tuplesJSONFileName) throws Exception {
+
+	private void testCSVTaskWithTuples(final String taskResultJSONFileName, final String taskJSONFileName, final String tuplesJSONFileName)
+			throws Exception {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString(taskResultJSONFileName);
 

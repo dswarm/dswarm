@@ -7,6 +7,8 @@ import java.util.UUID;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,14 +19,12 @@ import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.model.job.Transformation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TransformationTest extends GuicedTest {
 
-	private static final Logger LOG = LoggerFactory.getLogger(TransformationTest.class);
+	private static final Logger	LOG				= LoggerFactory.getLogger(TransformationTest.class);
 
-	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper	objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleTransformationTest() {
