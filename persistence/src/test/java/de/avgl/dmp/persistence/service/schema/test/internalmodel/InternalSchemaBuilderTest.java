@@ -21,13 +21,13 @@ public class InternalSchemaBuilderTest extends GuicedTest {
 
 	//private static final String			NL				= System.lineSeparator();
 
-	//@Ignore
+	@Ignore
 	@Test
 	public void buildInternalSchema() {
 		buildSchema(new BiboDocumentSchemaBuilder());
 	}
 
-	//@Ignore
+	@Ignore
 	@Test
 	public void buildERMSchema() {
 		buildSchema(new BibrmContractItemSchemaBuilder());

@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
@@ -512,7 +513,8 @@ public class DataModelsResourceTest extends
 		final Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
 
 		final DataModel dataModel1 = new DataModel();
-		dataModel1.setName("my data model");
+		String dataModelName = UUID.randomUUID().toString();
+		dataModel1.setName(dataModelName);
 		dataModel1.setDescription("my data model description");
 		dataModel1.setDataResource(resource);
 		dataModel1.setConfiguration(configuration);
@@ -539,7 +541,7 @@ public class DataModelsResourceTest extends
 
 		for (final DataModel dataModel2 : dataModels) {
 
-			if (dataModel2.getId() > 1) {
+			   if (dataModel2.getName().equals(dataModelName)) {
 
 				dataModel = dataModel2;
 
