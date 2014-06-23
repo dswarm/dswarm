@@ -2,9 +2,9 @@
 
 DIR="$( dirname "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" )"
 
-MYSQL_PW=${MYSQL_PW:="dmp_mysql"}
+MYSQL_PW=${MYSQL_PW:="dmp"}
 MYSQL_UN=${MYSQL_UN:="dmp"}
-MYSQL_DB=${MYSQL_DB:="dmp_dev"}
+MYSQL_DB=${MYSQL_DB:="dmp"}
 
 NEO4J_URL=${NEO4J_URL:="http://localhost:7474/graph"}
 

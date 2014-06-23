@@ -17,7 +17,7 @@ _Note: some commands require user input, this is no unattended installation_
 
 ```
 su
-apt-get install --no-install-recommends --yes mysql-server nginx tomcat7 openjdk-7-jdk
+apt-get install --no-install-recommends --yes mysql-server nginx tomcat7 openjdk-7-jdk curl
 ```
 
 - note: neo4j suggest to install oracle-jdk instead of openjdk, to do so, please execute the following commands (see also http://community.linuxmint.com/tutorial/view/1414)
@@ -106,12 +106,18 @@ in the same file, same sections, change `datadir` to `/data/mysql` (around line 
 datadir         = /data/mysql
 ```
 
-and add this directory to AppArmor
+add this directory to AppArmor
 
 ```
 su
 echo "alias /var/lib/mysql/ -> /data/mysql/," >> /etc/apparmor.d/tunables/alias
 /etc/init.d/apparmor reload
+```
+
+and copy whole MySQL data directory to new location
+
+```
+cp -pr /var/lib/mysql/ /data/mysql/
 ```
 
 
@@ -261,7 +267,23 @@ git clone --depth 1 --branch master git@git.slub-dresden.de:dmp/dmp-graph.git
 git clone --depth 1 --branch builds/unstable git@git.slub-dresden.de:dmp/dmp-backoffice-web.git
 ```
 
-**13**. build neo4j extension
+**13**. optional: update MySQL properties
+
+If you use a different user name or password in step 6 (setup MySQL), you need to update the following files accordingly.
+Open `datamanagement-platform/dev-tools/reset-dbs.bash` and change the default values for `MYSQL_PW` and `MYSQL_UN` to yours.
+Open `datamanagement-platform/pom.xml` and go to profile with id `SDVDSWARM01` (around lines 440-450) and change the default values for `rdb.username` and `rdb.password` to yours.
+
+In case you want to use a different maven build profile than `SDVDSWARM01` for the backend, e.g. the default `DEV`, you need to open `datamanagement-platform/dmp.properties` and add the following lines (with your login).
+
+```
+db.mysql.username=dmp
+db.mysql.password=dmp
+```
+
+Remember to not check in your local configuration. See footnote A for further information.
+
+
+**14**. build neo4j extension
 
 ```
 pushd dmp-graph
@@ -270,7 +292,9 @@ popd
 mv dmp-graph/target/graph-1.0-jar-with-dependencies.jar dmp-graph.jar
 ```
 
-**14**. build backend
+
+
+**15**. build backend
 
 ```
 pushd datamanagement-platform
@@ -281,7 +305,7 @@ popd; popd
 mv datamanagement-platform/controller/target/controller-0.1-SNAPSHOT.war dmp.war
 ```
 
-**15**. build frontend
+**16**. build frontend
 
 ```
 pushd dmp-backoffice-web; pushd yo
@@ -298,7 +322,7 @@ popd
 **These steps require root level access**
 
 
-**16**. wire everything together
+**17**. wire everything together
 
 lookout for the correct path (/home/user)
 
@@ -311,7 +335,7 @@ cp /home/user/dmp-graph.jar /usr/share/neo4j/plugins/
 ```
 
 
-**17**. restart everything, if needed
+**18**. restart everything, if needed
 
 ```
 su
@@ -321,6 +345,14 @@ su
 /etc/init.d/tomcat7 restart
 ```
 
+**19**. initialize/reset database
+
+When running the backend the first time, the MySQL database needs to be initialized. When updated, a reset is required in case the schema or initial data has changed.
+lookout for the correct path (/home/user)
+
+```
+/home/user/datamanagement-platform/dev-tools/reset-dbs.bash
+```
 
 # updates
 
@@ -332,4 +364,41 @@ pushd dmp-graph; git pull; popd
 pushd dmp-backoffice-web; git pull; popd
 ```
 
-**2**. repeat steps 13 to 17 from installation as necessary
+**2**. repeat steps 14 to 19 from installation as necessary
+
+
+# footnotes
+
+**A**. How to avoid checking in a local configuration.
+
+There are several ways to tell git not to check in local modifications of  (configuration) files. Both have disadvantages.
+
+***A1***. assume unchanged
+
+Tell git to flag the file `dmp.properties` as assume unchanged by 
+
+```
+git update-index --assume-unchanged dmp.properties
+```
+
+If you want to commit changes made on `dmp.properties`, you'll have to first call
+
+```
+git update-index --no-assume-unchanged dmp.properties
+```
+
+before staging and committing changes. In case there are upstream changes, they will be merged and the assume unchanged flag gets removed. Conflicts will be shown. 
+
+ ***A2***. local ignore
+ 
+Alternatively, git ignore the file locally
+ 
+```
+echo "dmp.properties" >> .git/info/exclude
+```
+
+If you want to commit changes made on `dmp.properties`, you'll have to force add by
+
+```
+git add -f dmp.properties
+```
