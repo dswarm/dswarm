@@ -7,6 +7,8 @@ import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.stream.converter.xml.XmlDecoder;
 import org.culturegraph.mf.stream.source.StringReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Optional;
@@ -19,8 +21,6 @@ import de.avgl.dmp.persistence.model.internal.gdm.GDMModel;
 import de.avgl.dmp.persistence.model.resource.Configuration;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Flow that transforms a given XML source into RDF triples.
@@ -29,10 +29,10 @@ import org.slf4j.LoggerFactory;
  */
 public class XMLSourceResourceGDMStmtsFlow {
 
-	private static final Logger LOG = LoggerFactory.getLogger(XMLSourceResourceGDMStmtsFlow.class);
+	private static final Logger			LOG	= LoggerFactory.getLogger(XMLSourceResourceGDMStmtsFlow.class);
 
-	private final Optional<String>    recordTagName;
-	private final Optional<DataModel> dataModel;
+	private final Optional<String>		recordTagName;
+	private final Optional<DataModel>	dataModel;
 
 	public XMLSourceResourceGDMStmtsFlow(final DataModel dataModel) throws DMPConverterException {
 

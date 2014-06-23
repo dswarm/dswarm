@@ -1,8 +1,12 @@
 package de.avgl.dmp.persistence.model.resource.utils;
 
+import java.io.File;
 import java.net.URI;
 import java.util.Map;
 import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -11,8 +15,6 @@ import de.avgl.dmp.graph.json.ResourceNode;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.utils.ExtendedBasicDMPJPAObjectUtils;
 import de.avgl.dmp.persistence.util.GDMUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A utility class for {@link DataModel}s and related entities.
@@ -21,7 +23,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataModel> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(DataModelUtils.class);
+	private static final Logger	LOG	= LoggerFactory.getLogger(DataModelUtils.class);
 
 	public static String determineDataModelSchemaBaseURI(final DataModel dataModel) {
 
@@ -72,7 +74,17 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 
 				if (path != null) {
 
-					dataResourceName = path.substring(path.lastIndexOf("/"), path.length());
+					// FIXME DD-533 "/" does not work for windows paths which are "\" (or escaped as "\\")
+					if (path.contains(File.separator)) {
+
+						// e.g. C:\DMP\datamanagement-platform\converter\target\test-classes\test_csv.csv
+						// return /test_csv.csv
+						dataResourceName = "/" + path.substring(path.lastIndexOf(File.separator) + 1, path.length());
+
+					} else {
+
+						dataResourceName = path.substring(path.lastIndexOf("/"), path.length());
+					}
 
 					try {
 

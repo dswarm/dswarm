@@ -15,14 +15,14 @@ import org.glassfish.grizzly.servlet.ServletRegistration;
 import org.glassfish.grizzly.servlet.WebappContext;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.servlet.ServletContainer;
-
-import com.google.inject.servlet.GuiceFilter;
-
-import de.avgl.dmp.controller.servlet.DMPInjector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
+
+import com.google.inject.servlet.GuiceFilter;
+
+import de.avgl.dmp.controller.servlet.DMPInjector;
 
 /**
  * The embedded web server for the backend API.<br/>
@@ -33,47 +33,47 @@ import org.slf4j.MarkerFactory;
  */
 public class EmbeddedServer {
 
-	private static Marker fatal = MarkerFactory.getMarker("FATAL");
-	private static final Logger LOG = LoggerFactory.getLogger(EmbeddedServer.class);
+	private static Marker			fatal					= MarkerFactory.getMarker("FATAL");
+	private static final Logger		LOG						= LoggerFactory.getLogger(EmbeddedServer.class);
 
 	/**
 	 * The name of the property for the context path of the backend API at the backend web server.
 	 */
-	public static final String CONTEXT_PATH_PROPERTY = "dmp.http.context_path";
+	public static final String		CONTEXT_PATH_PROPERTY	= "dmp.http.context_path";
 
 	/**
 	 * The name of the property for the port of the backend web server.
 	 */
-	public static final String HTTP_PORT_PROPERTY = "dmp.http.port";
+	public static final String		HTTP_PORT_PROPERTY		= "dmp.http.port";
 
 	/**
 	 * The name of the property for the hostname or ip of the backend web server.
 	 */
-	public static final String HTTP_HOST_PROPERTY = "dmp.http.host";
+	public static final String		HTTP_HOST_PROPERTY		= "dmp.http.host";
 
 	/**
 	 * The default port of the backend web server.
 	 */
-	protected static final int DEFAULT_PORT = 8087;
+	protected static final int		DEFAULT_PORT			= 8087;
 
 	/**
 	 * The default ip of the backend web server.
 	 */
-	protected static final String DEFAULT_HOST = "127.0.0.1";
+	protected static final String	DEFAULT_HOST			= "127.0.0.1";
 
 	/**
 	 * The default context path of the backend API at the backend web server.
 	 */
-	protected static final String DEFAULT_CONTEXT_PATH = "/dmp";
+	protected static final String	DEFAULT_CONTEXT_PATH	= "/dmp";
 
 	/**
 	 * The backend web server.
 	 */
-	private HttpServer httpServer;
+	private HttpServer				httpServer;
 
 	/**
 	 * Starts the backend web server.
-	 *
+	 * 
 	 * @return the backend web server.
 	 * @throws IOException
 	 */
@@ -84,7 +84,7 @@ public class EmbeddedServer {
 
 	/**
 	 * Starts the backend web server.
-	 *
+	 * 
 	 * @param skipStart a flag that indicates, whether the backend web server should be really started or not
 	 * @return the backend web server
 	 * @throws IOException
@@ -96,7 +96,7 @@ public class EmbeddedServer {
 		final HttpServer server = GrizzlyHttpServerFactory.createHttpServer(getBaseUri(), false);
 		server.getListener("grizzly").setMaxFormPostSize(Integer.MAX_VALUE);
 
-		final WebappContext context = new WebappContext("DMP 2000 Backend", getContextPath());
+		final WebappContext context = new WebappContext("d:swarm Backend", getContextPath());
 
 		context.addListener(DMPInjector.class);
 
@@ -254,7 +254,7 @@ public class EmbeddedServer {
 					keepAliveLatch.await();
 				} catch (final InterruptedException ignore) {
 
-					EmbeddedServer.LOG.error(fatal, "The backend web server execution thread was interrupted.");
+					EmbeddedServer.LOG.error(EmbeddedServer.fatal, "The backend web server execution thread was interrupted.");
 				}
 			}
 		}, "dmp/grizzly");

@@ -7,6 +7,8 @@ import javax.ws.rs.core.Response;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -20,20 +22,18 @@ import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttributePath;
 import de.avgl.dmp.persistence.service.schema.AttributePathService;
 import de.avgl.dmp.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class AttributePathsResourceTest
 		extends
 		BasicResourceTest<AttributePathsResourceTestUtils, AttributePathServiceTestUtils, AttributePathService, ProxyAttributePath, AttributePath, Long> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(AttributePathsResourceTest.class);
+	private static final Logger					LOG	= LoggerFactory.getLogger(AttributePathsResourceTest.class);
 
-	private final AttributesResourceTestUtils attributeResourceTestUtils;
+	private final AttributesResourceTestUtils	attributeResourceTestUtils;
 
-	private Attribute actualAttribute1;
+	private Attribute							actualAttribute1;
 
-	private Attribute actualAttribute2;
+	private Attribute							actualAttribute2;
 
 	public AttributePathsResourceTest() {
 

@@ -1,7 +1,6 @@
 package de.avgl.dmp.converter.flow.test.csv;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -21,7 +20,6 @@ import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
  */
 public class CSVTransformationFlowTestSorted extends GuicedTest {
 
-	
 	@Test
 	public void testCSVEndToEndWithJobThatConsistsOfTwoMappingWhereOneMappingIsASimpleMapping() throws Exception {
 

@@ -3,12 +3,14 @@ package de.avgl.dmp.controller.eventbus;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.Maps;
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.CSVResourceFlowFactory;
 import de.avgl.dmp.converter.flow.CSVSourceResourceTriplesFlow;
@@ -21,25 +23,23 @@ import de.avgl.dmp.persistence.model.internal.gdm.GDMModel;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.utils.DataModelUtils;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Singleton
 public class CSVConverterEventRecorder {
 
-	private static final Logger LOG = LoggerFactory.getLogger(CSVConverterEventRecorder.class);
+	private static final Logger					LOG	= LoggerFactory.getLogger(CSVConverterEventRecorder.class);
 
-	private final InternalModelServiceFactory internalServiceFactory;
+	private final InternalModelServiceFactory	internalServiceFactory;
 
 	@Inject
-	public CSVConverterEventRecorder(final InternalModelServiceFactory internalServiceFactory, final EventBus eventBus) {
+	public CSVConverterEventRecorder(final InternalModelServiceFactory internalServiceFactory/* , final EventBus eventBus */) {
 
 		this.internalServiceFactory = internalServiceFactory;
-		eventBus.register(this);
+		// eventBus.register(this);
 	}
 
-	@Subscribe
-	public void convertConfiguration(final CSVConverterEvent event) {
+	// @Subscribe
+	public void convertConfiguration(final CSVConverterEvent event) throws DMPControllerException {
 
 		final DataModel dataModel = event.getDataModel();
 
@@ -50,8 +50,20 @@ public class CSVConverterEventRecorder {
 			final String path = dataModel.getDataResource().getAttribute("path").asText();
 			result = flow.applyFile(path);
 
-		} catch (DMPConverterException | NullPointerException e) {
-			e.printStackTrace();
+		} catch (final DMPConverterException | NullPointerException e) {
+
+			final String message = "couldn't convert the CSV data of data model '" + dataModel.getId() + "'";
+
+			CSVConverterEventRecorder.LOG.error(message, e);
+
+			throw new DMPControllerException(message + " " + e.getMessage(), e);
+		} catch (final Exception e) {
+
+			final String message = "really couldn't convert the CSV data of data model '" + dataModel.getId() + "'";
+
+			CSVConverterEventRecorder.LOG.error(message, e);
+
+			throw new DMPControllerException(message + " " + e.getMessage(), e);
 		}
 
 		if (result != null) {
@@ -87,7 +99,11 @@ public class CSVConverterEventRecorder {
 				internalServiceFactory.getInternalGDMGraphService().createObject(dataModel.getId(), gdmModel);
 			} catch (final DMPPersistenceException e) {
 
-				CSVConverterEventRecorder.LOG.error("couldn't persist the converted data of data model '" + dataModel.getId() + "'", e);
+				final String message = "couldn't persist the converted CSV data of data model '" + dataModel.getId() + "'";
+
+				CSVConverterEventRecorder.LOG.error(message, e);
+
+				throw new DMPControllerException(message + " " + e.getMessage(), e);
 			}
 		}
 	}

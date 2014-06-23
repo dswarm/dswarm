@@ -20,9 +20,11 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.PeekingIterator;
 
+import de.avgl.dmp.persistence.model.resource.utils.ConfigurationStatics;
+
 /**
  * Processes input from a reader line by line. Inspired by org.culturegraph.mf.stream.converter.LineReader
- *
+ * 
  * @author tgaengler
  * @author phorn
  */
@@ -42,7 +44,9 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 	private final boolean			hasHeader;
 
 	public CsvLineReader() {
-		this('\\', '"', ',', "\r\n");
+		// this('\\', '"', ',', "\r\n");
+		this(ConfigurationStatics.DEFAULT_ESCAPE_CHARACTER, ConfigurationStatics.DEFAULT_QUOTE_CHARACTER,
+				ConfigurationStatics.DEFAULT_COLUMN_DELIMITER, ConfigurationStatics.DEFAULT_ROW_DELIMITER);
 	}
 
 	public CsvLineReader(final Character escapeCharacterArg, final Character quoteCharacterArg, final Character columnDelimiter,
@@ -104,7 +108,7 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 
 	private CSVParser getInternalParser(final Reader reader) {
 		final CSVFormat csvFormat = CSVFormat.newFormat(columnSeparator).withQuoteChar(quoteCharacter).withEscape(escapeCharacter)
-				.withRecordSeparator(lineEnding).withIgnoreEmptyLines(true);
+				.withRecordSeparator(lineEnding).withIgnoreEmptyLines(true).withIgnoreSurroundingSpaces(true);
 
 		try {
 

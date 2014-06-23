@@ -16,7 +16,7 @@ public abstract class ProxyAdvancedDMPJPAObject<POJOCLASS extends AdvancedDMPJPA
 	/**
 	 *
 	 */
-	private static final long						serialVersionUID	= 1L;
+	private static final long	serialVersionUID	= 1L;
 
 	/**
 	 * Default constructor for handing over a freshly created object, i.e., no updated or already existing object.

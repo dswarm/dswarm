@@ -24,22 +24,22 @@ public class MappingAttributePathInstancesResourceTest
 		extends
 		BasicResourceTest<MappingAttributePathInstancesResourceTestUtils, MappingAttributePathInstanceServiceTestUtils, MappingAttributePathInstanceService, ProxyMappingAttributePathInstance, MappingAttributePathInstance, Long> {
 
-	private final AttributesResourceTestUtils                    attributeResourceTestUtils;
-	private final AttributePathsResourceTestUtils                attributePathResourceTestUtils;
-	private final FiltersResourceTestUtils                       filterResourceTestUtils;
-	private final MappingAttributePathInstancesResourceTestUtils mappingAttributePathInstanceResourceTestUtils;
+	private final AttributesResourceTestUtils						attributeResourceTestUtils;
+	private final AttributePathsResourceTestUtils					attributePathResourceTestUtils;
+	private final FiltersResourceTestUtils							filterResourceTestUtils;
+	private final MappingAttributePathInstancesResourceTestUtils	mappingAttributePathInstanceResourceTestUtils;
 
-	private Attribute actualAttribute1;
+	private Attribute												actualAttribute1;
 
-	private Attribute actualAttribute2;
+	private Attribute												actualAttribute2;
 
-	private Attribute attributeFromUpdate;
+	private Attribute												attributeFromUpdate;
 
-	private AttributePath attributePath;
+	private AttributePath											attributePath;
 
-	private Filter filter;
+	private Filter													filter;
 
-	private Filter filterFromUpdate;
+	private Filter													filterFromUpdate;
 
 	public MappingAttributePathInstancesResourceTest() {
 

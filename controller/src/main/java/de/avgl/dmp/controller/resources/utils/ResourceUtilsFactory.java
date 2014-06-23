@@ -39,14 +39,15 @@ import de.avgl.dmp.controller.resources.schema.utils.SchemasResourceUtils;
 @Singleton
 public class ResourceUtilsFactory {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ResourceUtilsFactory.class);
+	private static final Logger																		LOG					= LoggerFactory
+																																.getLogger(ResourceUtilsFactory.class);
 
-	private static final String PROVIDER_NOT_FOUND = "Cannot find a Provider of %s";
-	private static final String PROVIDER_CAST_FAIL = "Cannot cast %s to Provider of %s";
-	private static final String INSTANCE_CAST_FAIL = "Cannot cast %s to %s";
+	private static final String																		PROVIDER_NOT_FOUND	= "Cannot find a Provider of %s";
+	private static final String																		PROVIDER_CAST_FAIL	= "Cannot cast %s to Provider of %s";
+	private static final String																		INSTANCE_CAST_FAIL	= "Cannot cast %s to %s";
 
-	private final Map<Class<? extends BasicResourceUtils>, BasicResourceUtils>                     instances = Maps.newHashMapWithExpectedSize(13);
-	private final Map<Class<? extends BasicResourceUtils>, Provider<? extends BasicResourceUtils>> providers = Maps.newHashMapWithExpectedSize(13);
+	private final Map<Class<? extends BasicResourceUtils>, BasicResourceUtils>						instances			= Maps.newHashMapWithExpectedSize(13);
+	private final Map<Class<? extends BasicResourceUtils>, Provider<? extends BasicResourceUtils>>	providers			= Maps.newHashMapWithExpectedSize(13);
 
 	@Inject
 	public ResourceUtilsFactory(final Provider<AttributePathsResourceUtils> attributePathsResourceUtilsProvider,

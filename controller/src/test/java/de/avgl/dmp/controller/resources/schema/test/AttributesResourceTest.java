@@ -6,6 +6,8 @@ import javax.ws.rs.core.Response;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -15,13 +17,11 @@ import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.proxy.ProxyAttribute;
 import de.avgl.dmp.persistence.service.schema.AttributeService;
 import de.avgl.dmp.persistence.service.schema.test.utils.AttributeServiceTestUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class AttributesResourceTest extends
 		BasicResourceTest<AttributesResourceTestUtils, AttributeServiceTestUtils, AttributeService, ProxyAttribute, Attribute, Long> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(AttributesResourceTest.class);
+	private static final Logger	LOG	= LoggerFactory.getLogger(AttributesResourceTest.class);
 
 	public AttributesResourceTest() {
 

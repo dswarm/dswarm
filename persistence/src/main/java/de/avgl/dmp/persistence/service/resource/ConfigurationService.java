@@ -1,7 +1,5 @@
 package de.avgl.dmp.persistence.service.resource;
 
-import java.util.Set;
-
 import javax.persistence.EntityManager;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -10,7 +8,6 @@ import com.google.inject.Provider;
 
 import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.resource.Configuration;
-import de.avgl.dmp.persistence.model.resource.Resource;
 import de.avgl.dmp.persistence.model.resource.proxy.ProxyConfiguration;
 import de.avgl.dmp.persistence.service.ExtendedBasicDMPJPAService;
 
@@ -52,10 +49,12 @@ public class ConfigurationService extends ExtendedBasicDMPJPAService<ProxyConfig
 
 		super.updateObjectInternal(object, updateObject, entityManager);
 
-		final Set<Resource> resources = object.getResources();
+		// TODO: disable resource updating for now (until resource id ref resolution is implemented)
+
+		// final Set<Resource> resources = object.getResources();
 		final ObjectNode parameters = object.getParameters();
 
-		updateObject.setResources(resources);
+		// updateObject.setResources(resources);
 		updateObject.setParameters(parameters);
 	}
 

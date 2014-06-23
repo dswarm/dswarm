@@ -3,11 +3,13 @@ package de.avgl.dmp.controller.eventbus;
 import java.util.Collection;
 import java.util.List;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.converter.DMPConverterException;
 import de.avgl.dmp.converter.flow.XMLSourceResourceGDMStmtsFlow;
 import de.avgl.dmp.graph.json.Resource;
@@ -15,8 +17,6 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.internal.gdm.GDMModel;
 import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.service.InternalModelServiceFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * An event recorder for converting XML documents.
@@ -27,34 +27,33 @@ import org.slf4j.LoggerFactory;
 @Singleton
 public class XMLConverterEventRecorder {
 
-	private static final Logger LOG = LoggerFactory.getLogger(XMLConverterEventRecorder.class
-	);
+	private static final Logger					LOG	= LoggerFactory.getLogger(XMLConverterEventRecorder.class);
 
 	/**
 	 * The internal model service factory
 	 */
-	private final InternalModelServiceFactory internalServiceFactory;
+	private final InternalModelServiceFactory	internalServiceFactory;
 
 	/**
 	 * Creates a new event recorder for converting XML documents with the given internal model service factory and event bus.
-	 *
+	 * 
 	 * @param internalModelServiceFactory an internal model service factory
 	 * @param eventBus an event bus, where this event record will be registered
 	 */
 	@Inject
-	public XMLConverterEventRecorder(final InternalModelServiceFactory internalModelServiceFactory, final EventBus eventBus) {
+	public XMLConverterEventRecorder(final InternalModelServiceFactory internalModelServiceFactory/* , final EventBus eventBus */) {
 
 		internalServiceFactory = internalModelServiceFactory;
-		eventBus.register(this);
+		// eventBus.register(this);
 	}
 
 	/**
 	 * Processes the XML document of the data model of the given event and persists the converted data.
-	 *
+	 * 
 	 * @param event an converter event that provides a data model
 	 */
-	@Subscribe
-	public void processDataModel(final XMLConverterEvent event) {
+	// @Subscribe
+	public void processDataModel(final XMLConverterEvent event) throws DMPControllerException {
 
 		final DataModel dataModel = event.getDataModel();
 
@@ -98,7 +97,18 @@ public class XMLConverterEventRecorder {
 
 		} catch (final DMPConverterException | NullPointerException e) {
 
-			XMLConverterEventRecorder.LOG.error("couldn't convert the XML data of data model '" + dataModel.getId() + "'", e);
+			final String message = "couldn't convert the XML data of data model '" + dataModel.getId() + "'";
+
+			XMLConverterEventRecorder.LOG.error(message, e);
+
+			throw new DMPControllerException(message + " " + e.getMessage(), e);
+		} catch (final Exception e) {
+
+			final String message = "really couldn't convert the XML data of data model '" + dataModel.getId() + "'";
+
+			XMLConverterEventRecorder.LOG.error(message, e);
+
+			throw new DMPControllerException(message + " " + e.getMessage(), e);
 		}
 
 		if (result != null) {
@@ -108,7 +118,11 @@ public class XMLConverterEventRecorder {
 				internalServiceFactory.getInternalGDMGraphService().createObject(dataModel.getId(), result);
 			} catch (final DMPPersistenceException e) {
 
-				XMLConverterEventRecorder.LOG.error("couldn't persist the converted data of data model '" + dataModel.getId() + "'", e);
+				final String message = "couldn't persist the converted data of data model '" + dataModel.getId() + "'";
+
+				XMLConverterEventRecorder.LOG.error(message, e);
+
+				throw new DMPControllerException(message + " " + e.getMessage(), e);
 			}
 		}
 	}

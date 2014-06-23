@@ -7,22 +7,22 @@ import javax.ws.rs.client.WebTarget;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.avgl.dmp.controller.EmbeddedServer;
 import de.avgl.dmp.controller.providers.handler.ExceptionHandler;
 import de.avgl.dmp.controller.servlet.DMPInjector;
 import de.avgl.dmp.controller.test.GuicedTest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ResourceTest extends GuicedTest {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ResourceTest.class);
+	private static final Logger		LOG		= LoggerFactory.getLogger(ResourceTest.class);
 
-	protected static EmbeddedServer grizzlyServer;
+	protected static EmbeddedServer	grizzlyServer;
 
-	protected String resourceIdentifier;
-	protected static final int port = 9998;
+	protected String				resourceIdentifier;
+	protected static final int		port	= 9998;
 
 	public ResourceTest(final String resourceIdentifier) {
 

@@ -55,8 +55,8 @@ public class SwaggerConfig extends JerseyJaxrsConfig {
 
 		super.init(servletConfig);
 
-		final ApiInfo info = new ApiInfo("DMP 2000 Backend", /* title */
-		"This is the DMP 2000 Backend server.", /* description */
+		final ApiInfo info = new ApiInfo("d:swarm Backend", /* title */
+		"This is the d:swarm Backend server.", /* description */
 		"http://helloreverb.com/terms/", /* TOS Url */
 		"tgaengler@avantgarde-labs.de", /* Contact */
 		"Apache 2.0", /* license */

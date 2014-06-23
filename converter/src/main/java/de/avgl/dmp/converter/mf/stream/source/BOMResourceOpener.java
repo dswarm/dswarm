@@ -29,13 +29,13 @@ import org.slf4j.LoggerFactory;
 @Out(java.io.Reader.class)
 public class BOMResourceOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> implements Opener {
 
-	private static final Logger LOG = LoggerFactory.getLogger(BOMResourceOpener.class);
+	private static final Logger	LOG			= LoggerFactory.getLogger(BOMResourceOpener.class);
 
-	private String encoding = "UTF-8";
+	private String				encoding	= "UTF-8";
 
 	/**
 	 * Returns the encoding used to open the resource.
-	 *
+	 * 
 	 * @return current default setting
 	 */
 	public String getEncoding() {
@@ -44,7 +44,7 @@ public class BOMResourceOpener extends DefaultObjectPipe<String, ObjectReceiver<
 
 	/**
 	 * Sets the encoding used to open the resource.
-	 *
+	 * 
 	 * @param encoding new encoding
 	 */
 	public void setEncoding(final String encoding) {

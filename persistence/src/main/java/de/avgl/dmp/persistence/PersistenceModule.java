@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
 
-import ch.qos.logback.classic.LoggerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.LoggerContext;
 
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.logback.InstrumentedAppender;
@@ -46,7 +47,7 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
  */
 public class PersistenceModule extends AbstractModule {
 
-	private static final Logger LOG = LoggerFactory.getLogger(PersistenceModule.class);
+	private static final Logger	LOG	= LoggerFactory.getLogger(PersistenceModule.class);
 
 	/**
 	 * registers all persistence services and other related properties etc.
@@ -87,7 +88,7 @@ public class PersistenceModule extends AbstractModule {
 
 	/**
 	 * Provides the metric registry to register objects for metric statistics.
-	 *
+	 * 
 	 * @return a {@link MetricRegistry} instance as singleton
 	 */
 	@Provides
@@ -95,9 +96,9 @@ public class PersistenceModule extends AbstractModule {
 	protected MetricRegistry provideMetricRegistry() {
 		final MetricRegistry registry = new MetricRegistry();
 
-//		final InstrumentedAppender appender = new InstrumentedAppender(metricRegistry);
-//		appender.activateOptions();
-//		LogManager.getRootLogger().addAppender(appender);
+		// final InstrumentedAppender appender = new InstrumentedAppender(metricRegistry);
+		// appender.activateOptions();
+		// LogManager.getRootLogger().addAppender(appender);
 
 		final LoggerContext factory = (LoggerContext) LoggerFactory.getILoggerFactory();
 		final ch.qos.logback.classic.Logger root = factory.getLogger(Logger.ROOT_LOGGER_NAME);

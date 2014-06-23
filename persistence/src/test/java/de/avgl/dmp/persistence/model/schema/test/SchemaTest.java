@@ -2,6 +2,8 @@ package de.avgl.dmp.persistence.model.schema.test;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,14 +13,12 @@ import de.avgl.dmp.persistence.model.schema.Attribute;
 import de.avgl.dmp.persistence.model.schema.AttributePath;
 import de.avgl.dmp.persistence.model.schema.Clasz;
 import de.avgl.dmp.persistence.model.schema.Schema;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class SchemaTest extends GuicedTest {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SchemaTest.class);
+	private static final Logger	LOG				= LoggerFactory.getLogger(SchemaTest.class);
 
-	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper	objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleSchemaTest() {

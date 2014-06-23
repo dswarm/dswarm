@@ -14,59 +14,58 @@ public class MorphScriptBuilderTest extends GuicedTest {
 	@Test
 	public void testComplexMappingToMorph() throws Exception {
 
-		final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
-
-		final String request = DMPPersistenceUtil.getResourceAsString("complex-transformation.json");
-		
-		final String result = DMPPersistenceUtil.getResourceAsString("complex-transformation.morph.xml");
-
-		final Task task = objectMapper.readValue(request, Task.class);
-
-		final String morphScriptString = new MorphScriptBuilder().apply(task).toString();
-
-		Assert.assertEquals(result, morphScriptString);
+		compareTaskGeneratedMorphscript("complex-transformation.json", "complex-transformation.morph.xml");
 	}
 
 	@Test
 	public void testSubstringMappingToMorph() throws Exception {
 
-		final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
-
-		final String request = DMPPersistenceUtil.getResourceAsString("substring.task.json");
-		
-		final String result = DMPPersistenceUtil.getResourceAsString("substring.task.morph.xml");
-
-		final Task task = objectMapper.readValue(request, Task.class);
-
-		final String morphScriptString = new MorphScriptBuilder().apply(task).toString();
-
-		Assert.assertEquals(result, morphScriptString);
+		compareTaskGeneratedMorphscript("substring.task.json", "substring.task.morph.xml");
 	}
-	
+
 	@Test
 	public void testDublicateDatasMappingToMorph() throws Exception {
 
-		final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
-
-		final String request = DMPPersistenceUtil.getResourceAsString("demo_csv.multiple_mappings.task.json");
-		
-		final String result = DMPPersistenceUtil.getResourceAsString("demo_csv.multiple_mappings.task.result.xml");
-
-		final Task task = objectMapper.readValue(request, Task.class);
-
-		final String morphScriptString = new MorphScriptBuilder().apply(task).toString();
-
-		Assert.assertEquals(result, morphScriptString);
+		compareTaskGeneratedMorphscript("demo_csv.multiple_mappings.task.json", "demo_csv.multiple_mappings.task.result.xml");
 	}
 
 	@Test
 	public void testFilterEncodingMappingToMorph() throws Exception {
 
+		compareTaskGeneratedMorphscript("neuer_test.task.json", "neuer_test.task.morph.xml");
+	}
+
+	@Test
+	public void testCSVOneMappingWithMultipleFunctionsToMorph() throws Exception {
+
+		compareTaskGeneratedMorphscript("dd-528.csv.task.json", "dd-528.csv.morph.xml");
+	}
+
+	@Test
+	public void testCSVMultipleMappingsWithAlmostAllFunctionsToMorph() throws Exception {
+
+		compareTaskGeneratedMorphscript("almost.all.functions.complex.test.csv.task.json", "almost.all.functions.complex.test.csv.morph.xml");
+	}
+
+	@Test
+	public void testMetsmodsXmlWithFilterAndMappingToMorph() throws Exception {
+
+		compareTaskGeneratedMorphscript("metsmods_small.xml.task.json", "metsmods_small.xml.morph.xml");
+	}
+
+	@Test
+	public void testMabxmlOneMappingWithFilterAndMultipleFunctionsToMorph() throws Exception {
+
+		compareTaskGeneratedMorphscript("dd-528.mabxml.task.json", "dd-528.mabxml.morph.xml");
+	}
+
+	private void compareTaskGeneratedMorphscript(final String taskJSONFileName, final String morphFileName) throws Exception {
+
 		final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
-		final String request = DMPPersistenceUtil.getResourceAsString("neuer_test.task.json");
+		final String request = DMPPersistenceUtil.getResourceAsString(taskJSONFileName);
 
-		final String result = DMPPersistenceUtil.getResourceAsString("neuer_test.task.morph.xml");
+		final String result = DMPPersistenceUtil.getResourceAsString(morphFileName);
 
 		final Task task = objectMapper.readValue(request, Task.class);
 

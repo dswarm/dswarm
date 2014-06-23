@@ -21,7 +21,7 @@ public abstract class BasicDMPResource<POJOCLASSRESOURCEUTILS extends BasicDMPRe
 	/**
 	 * Creates a new resource (controller service) for the given concrete POJO class with the provider of the concrete persistence
 	 * service, the object mapper and metrics registry.
-	 *
+	 * 
 	 * @param clasz a concrete POJO class
 	 * @param persistenceServiceProviderArg the concrete persistence service that is related to the concrete POJO class
 	 * @param objectMapperArg an object mapper

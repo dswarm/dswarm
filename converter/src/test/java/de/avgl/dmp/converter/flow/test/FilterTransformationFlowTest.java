@@ -3,7 +3,6 @@ package de.avgl.dmp.converter.flow.test;
 import java.io.IOException;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonParseException;

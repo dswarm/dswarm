@@ -2,6 +2,8 @@ package de.avgl.dmp.persistence.model.job.test;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,14 +12,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.job.Function;
 import de.avgl.dmp.persistence.util.DMPPersistenceUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class FunctionTest extends GuicedTest {
 
-	private static final Logger LOG = LoggerFactory.getLogger(FunctionTest.class);
+	private static final Logger	LOG				= LoggerFactory.getLogger(FunctionTest.class);
 
-	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper	objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleFunctionTest() throws Exception {

@@ -5,6 +5,8 @@ import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,14 +16,12 @@ import com.google.common.collect.Sets;
 import de.avgl.dmp.persistence.GuicedTest;
 import de.avgl.dmp.persistence.model.job.Component;
 import de.avgl.dmp.persistence.model.job.Function;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ComponentTest extends GuicedTest {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ComponentTest.class);
+	private static final Logger	LOG				= LoggerFactory.getLogger(ComponentTest.class);
 
-	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper	objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleComponentTest() {

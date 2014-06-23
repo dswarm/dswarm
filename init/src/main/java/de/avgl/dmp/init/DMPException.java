@@ -2,7 +2,6 @@ package de.avgl.dmp.init;
 
 /**
  * The exception class for DMP exceptions.<br>
- *
  */
 
 public class DMPException extends Exception {
@@ -10,11 +9,11 @@ public class DMPException extends Exception {
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long	serialVersionUID	= 1L;
 
 	/**
 	 * Creates a new DMP exception with the given exception message.
-	 *
+	 * 
 	 * @param exception the exception message
 	 */
 	public DMPException(final String exception) {
@@ -23,11 +22,10 @@ public class DMPException extends Exception {
 	}
 
 	/**
-	 * Creates a new DMP exception with the given exception message
-	 * and a cause.
-	 *
+	 * Creates a new DMP exception with the given exception message and a cause.
+	 * 
 	 * @param message the exception message
-	 * @param cause   a previously thrown exception, causing this one
+	 * @param cause a previously thrown exception, causing this one
 	 */
 	public DMPException(final String message, final Throwable cause) {
 		super(message, cause);

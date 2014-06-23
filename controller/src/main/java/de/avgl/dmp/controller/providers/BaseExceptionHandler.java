@@ -4,10 +4,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * A generic exception handler for providing exceptions at client side of the backend API.
@@ -17,11 +18,11 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class BaseExceptionHandler<E extends Exception> implements ExceptionMapper<E> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(BaseExceptionHandler.class);
+	private static final Logger	LOG	= LoggerFactory.getLogger(BaseExceptionHandler.class);
 
 	/**
 	 * Creates a response with the given message and status as payload.
-	 *
+	 * 
 	 * @param message the exception message
 	 * @param status the HTTP status code
 	 * @return the exception response

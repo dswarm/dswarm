@@ -1,2 +1,5 @@
 # Automatically normalize line endings for all text-based files
 * text=auto
+
+# Always checkout csv files with trailing _CRLF in file name as crlf
+*_CRLF.* text eol=crlf

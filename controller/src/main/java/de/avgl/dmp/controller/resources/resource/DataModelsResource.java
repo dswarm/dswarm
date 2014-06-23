@@ -16,6 +16,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -32,9 +35,12 @@ import com.wordnik.swagger.annotations.ApiResponses;
 
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.eventbus.CSVConverterEvent;
+import de.avgl.dmp.controller.eventbus.CSVConverterEventRecorder;
 import de.avgl.dmp.controller.eventbus.SchemaEvent;
 import de.avgl.dmp.controller.eventbus.XMLConverterEvent;
+import de.avgl.dmp.controller.eventbus.XMLConverterEventRecorder;
 import de.avgl.dmp.controller.eventbus.XMLSchemaEvent;
+import de.avgl.dmp.controller.eventbus.XMLSchemaEventRecorder;
 import de.avgl.dmp.controller.resources.ExtendedBasicDMPResource;
 import de.avgl.dmp.controller.resources.resource.utils.DataModelsResourceUtils;
 import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
@@ -47,8 +53,6 @@ import de.avgl.dmp.persistence.model.resource.DataModel;
 import de.avgl.dmp.persistence.model.resource.proxy.ProxyDataModel;
 import de.avgl.dmp.persistence.model.types.Tuple;
 import de.avgl.dmp.persistence.service.resource.DataModelService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A resource (controller service) for {@link DataModel}s.
@@ -60,22 +64,26 @@ import org.slf4j.LoggerFactory;
 @Path("datamodels")
 public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResourceUtils, DataModelService, ProxyDataModel, DataModel> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(DataModelsResource.class);
+	private static final Logger							LOG	= LoggerFactory.getLogger(DataModelsResource.class);
 
 	/**
 	 * An event bus provider
 	 */
-	private final Provider<EventBus> eventBusProvider;
+	private final Provider<EventBus>					eventBusProvider;
 
 	/**
 	 * The data model util
 	 */
-	private final DataModelUtil dataModelUtil;
+	private final DataModelUtil							dataModelUtil;
+
+	private final Provider<XMLSchemaEventRecorder>		xmlSchemaEventRecorderProvider;
+	private final Provider<CSVConverterEventRecorder>	csvConverterEventRecorderProvider;
+	private final Provider<XMLConverterEventRecorder>	xmlConvertEventRecorderProvider;
 
 	/**
 	 * Creates a new resource (controller service) for {@link DataModel}s with the provider of the data model persistence service,
 	 * the object mapper, metrics registry, event bus provider and data model util.
-	 *
+	 * 
 	 * @param dataModelServiceProviderArg the data model persistence service provider
 	 * @param objectMapper an object mapper
 	 * @param dmpStatus an metrics registry
@@ -84,17 +92,22 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 	 */
 	@Inject
 	public DataModelsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg, final Provider<EventBus> eventBusProviderArg,
-			final DataModelUtil dataModelUtilArg) throws DMPControllerException {
+			final DataModelUtil dataModelUtilArg, final Provider<XMLSchemaEventRecorder> xmlSchemaEventRecorderProviderArg,
+			final Provider<CSVConverterEventRecorder> csvConverterEventRecorderProviderArg,
+			final Provider<XMLConverterEventRecorder> xmlConverterEventRecorderProviderArg) throws DMPControllerException {
 
 		super(utilsFactory.reset().get(DataModelsResourceUtils.class), dmpStatusArg);
 
 		eventBusProvider = eventBusProviderArg;
 		dataModelUtil = dataModelUtilArg;
+		xmlSchemaEventRecorderProvider = xmlSchemaEventRecorderProviderArg;
+		csvConverterEventRecorderProvider = csvConverterEventRecorderProviderArg;
+		xmlConvertEventRecorderProvider = xmlConverterEventRecorderProviderArg;
 	}
 
 	/**
 	 * This endpoint returns a data model as JSON representation for the provided data model identifier.
-	 *
+	 * 
 	 * @param id a data model identifier
 	 * @return a JSON representation of a data model
 	 */
@@ -116,14 +129,12 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 	 * This endpoint consumes a data model as JSON representation and persists this data model in the database, i.e., the data
 	 * resource of this data model will be processed re. the parameters in the configuration of the data model. Thereby, the
 	 * schema of the data will be created as well.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one data model
 	 * @return the persisted data model as JSON representation
 	 * @throws DMPControllerException
 	 */
-	@ApiOperation(value = "create a new data model",
-			notes = "Returns a new DataModel object. The data resource of this data model will be processed re. the parameters in the configuration of the data model. Thereby, the schema of the data will be created as well. ",
-			response = DataModel.class)
+	@ApiOperation(value = "create a new data model", notes = "Returns a new DataModel object. The data resource of this data model will be processed re. the parameters in the configuration of the data model. Thereby, the schema of the data will be created as well. ", response = DataModel.class)
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "data model was successfully persisted"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@POST
@@ -354,15 +365,27 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 			switch (storageType) {
 				case "schema":
 
-					eventBusProvider.get().post(new XMLSchemaEvent(configuration, dataModel.getDataResource()));
+					// eventBusProvider.get().post(new XMLSchemaEvent(configuration, dataModel.getDataResource()));
+
+					final XMLSchemaEvent xmlSchemaEvent = new XMLSchemaEvent(configuration, dataModel.getDataResource());
+					xmlSchemaEventRecorderProvider.get().convertConfiguration(xmlSchemaEvent);
+
 					break;
 				case "csv":
 
-					eventBusProvider.get().post(new CSVConverterEvent(dataModel));
+					// eventBusProvider.get().post(new CSVConverterEvent(dataModel));
+
+					final CSVConverterEvent csvConverterEvent = new CSVConverterEvent(dataModel);
+					csvConverterEventRecorderProvider.get().convertConfiguration(csvConverterEvent);
+
 					break;
 				case "xml":
 
-					eventBusProvider.get().post(new XMLConverterEvent(dataModel));
+					// eventBusProvider.get().post(new XMLConverterEvent(dataModel));
+
+					final XMLConverterEvent xmlConverterEvent = new XMLConverterEvent(dataModel);
+					xmlConvertEventRecorderProvider.get().processDataModel(xmlConverterEvent);
+
 					break;
 			}
 		}

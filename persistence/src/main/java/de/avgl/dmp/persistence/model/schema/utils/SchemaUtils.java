@@ -1,5 +1,7 @@
 package de.avgl.dmp.persistence.model.schema.utils;
 
+import com.google.common.net.UrlEscapers;
+
 import de.avgl.dmp.persistence.model.schema.Schema;
 import de.avgl.dmp.persistence.model.utils.BasicDMPJPAObjectUtils;
 
@@ -34,6 +36,18 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		}
 
 		return relativeURIPart;
+	}
+
+	public static String determineSchemaURI(final Long schemaId) {
+
+		return "http://data.slub-dresden.de/schemas/" + schemaId + "/";
+	}
+
+	public static String mintAttributeURI(final String attributeName, final String schemaBaseURI) {
+
+		final String attributeNameURLEncoded = UrlEscapers.urlFormParameterEscaper().escape(attributeName);
+
+		return schemaBaseURI + attributeNameURLEncoded;
 	}
 
 }

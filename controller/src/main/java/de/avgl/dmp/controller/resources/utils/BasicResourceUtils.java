@@ -8,6 +8,9 @@ import java.util.Set;
 
 import javax.inject.Provider;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -23,8 +26,6 @@ import de.avgl.dmp.persistence.DMPPersistenceException;
 import de.avgl.dmp.persistence.model.DMPObject;
 import de.avgl.dmp.persistence.model.proxy.ProxyDMPObject;
 import de.avgl.dmp.persistence.service.BasicJPAService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author tgaengler
@@ -34,26 +35,26 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(BasicResourceUtils.class);
+	private static final Logger								LOG						= LoggerFactory.getLogger(BasicResourceUtils.class);
 
-	protected final Class<POJOCLASS> pojoClass;
+	protected final Class<POJOCLASS>						pojoClass;
 
-	protected final Class<POJOCLASSIDTYPE> pojoClassIdType;
+	protected final Class<POJOCLASSIDTYPE>					pojoClassIdType;
 
-	protected final String pojoClassName;
+	protected final String									pojoClassName;
 
-	protected final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProvider;
+	protected final Provider<POJOCLASSPERSISTENCESERVICE>	persistenceServiceProvider;
 
-	protected final Provider<ObjectMapper> objectMapperProvider;
+	protected final Provider<ObjectMapper>					objectMapperProvider;
 
-	protected final ResourceUtilsFactory utilsFactory;
+	protected final ResourceUtilsFactory					utilsFactory;
 
 	// TODO: this might be not the best solution ...
-	protected final Set<String> toBeSkippedJsonNodes = Sets.newHashSet();
+	protected final Set<String>								toBeSkippedJsonNodes	= Sets.newHashSet();
 
-	private Set<POJOCLASSIDTYPE> processedObjectIds;
+	private Set<POJOCLASSIDTYPE>							processedObjectIds;
 
-	private Set<POJOCLASSIDTYPE> dummyIdCandidates;
+	private Set<POJOCLASSIDTYPE>							dummyIdCandidates;
 
 	public BasicResourceUtils(final Class<POJOCLASS> pojoClassArg, final Class<POJOCLASSIDTYPE> pojoClassIdTypeArg,
 			final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg,
@@ -80,7 +81,7 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 
 	/**
 	 * Gets the concrete POJO class of this resource (controller service).
-	 *
+	 * 
 	 * @return the concrete POJO class
 	 */
 	public Class<POJOCLASS> getClasz() {

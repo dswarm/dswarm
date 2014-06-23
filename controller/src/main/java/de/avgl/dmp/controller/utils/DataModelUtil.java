@@ -41,12 +41,12 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
 @Singleton
 public class DataModelUtil {
 
-	private static final Logger LOG = LoggerFactory.getLogger(DataModelUtil.class);
-	private final ObjectMapper                          objectMapper;
-	private final Provider<ResourceService>             resourceServiceProvider;
-	private final Provider<InternalModelServiceFactory> internalServiceFactoryProvider;
-	private final Provider<SchemaService>               schemaServiceProvider;
-	private final Provider<DataModelService>            dataModelServiceProvider;
+	private static final Logger							LOG	= LoggerFactory.getLogger(DataModelUtil.class);
+	private final ObjectMapper							objectMapper;
+	private final Provider<ResourceService>				resourceServiceProvider;
+	private final Provider<InternalModelServiceFactory>	internalServiceFactoryProvider;
+	private final Provider<SchemaService>				schemaServiceProvider;
+	private final Provider<DataModelService>			dataModelServiceProvider;
 
 	@Inject
 	public DataModelUtil(final ObjectMapper objectMapper, final Provider<ResourceService> resourceServiceProvider,
@@ -61,17 +61,17 @@ public class DataModelUtil {
 
 	/**
 	 * Gets the data of the given data model.
-	 *
+	 * 
 	 * @param dataModelId the identifier of the data model.
 	 * @return the data of the given data model
 	 */
 	public Optional<Iterator<Tuple<String, JsonNode>>> getData(final long dataModelId) {
-		return getData(dataModelId, Optional.<Integer>absent());
+		return getData(dataModelId, Optional.<Integer> absent());
 	}
 
 	/**
 	 * Gets the data of the given data model and maximum in the given amount.
-	 *
+	 * 
 	 * @param dataModelId the identifer of the data model
 	 * @param atMost the number of records that should be retrieved
 	 * @return the data of the given data model

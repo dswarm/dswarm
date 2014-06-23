@@ -8,6 +8,8 @@ import javax.annotation.Nullable;
 
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -15,8 +17,6 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
 import de.avgl.dmp.persistence.model.types.Tuple;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author phorn
@@ -24,8 +24,8 @@ import org.slf4j.LoggerFactory;
  */
 public class JsonNodeReader extends DefaultObjectPipe<Iterator<Tuple<String, JsonNode>>, StreamReceiver> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(JsonNodeReader.class);
-	private final Optional<String> recordPrefix;
+	private static final Logger		LOG	= LoggerFactory.getLogger(JsonNodeReader.class);
+	private final Optional<String>	recordPrefix;
 
 	public JsonNodeReader() {
 		this(null);
