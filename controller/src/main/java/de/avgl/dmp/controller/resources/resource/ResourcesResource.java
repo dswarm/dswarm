@@ -86,8 +86,6 @@ public class ResourcesResource {
 	@Context
 	UriInfo											uri;
 
-	private final Provider<XMLSchemaEventRecorder> xmlSchemaEventRecorderProvider;
-
 	private final Provider<ResourceService>			resourceServiceProvider;
 
 	private final Provider<ConfigurationService>	configurationServiceProvider;
@@ -113,7 +111,6 @@ public class ResourcesResource {
 			final Provider<ResourceService> resourceServiceProviderArg, final Provider<ConfigurationService> configurationServiceProviderArg,
 			final Provider<XMLSchemaEventRecorder> xmlSchemaEventRecorderProviderArg, final DataModelUtil dataModelUtilArg) {
 
-		xmlSchemaEventRecorderProvider = xmlSchemaEventRecorderProviderArg;
 		resourceServiceProvider = resourceServiceProviderArg;
 		configurationServiceProvider = configurationServiceProviderArg;
 		dmpStatus = dmpStatusArg;
