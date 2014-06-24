@@ -113,26 +113,6 @@ public class PersistenceModule extends AbstractModule {
 		return registry;
 	}
 
-	/**
-	 * Provides the event bus for event processing.
-	 *
-	 * @return a {@link EventBus} instance as singleton
-	 */
-	@Provides
-	@Singleton
-	protected EventBus provideEventBus() {
-		// final ExecutorService executorService = Executors.newCachedThreadPool();
-
-		// return new AsyncEventBus(executorService);
-
-		// synchronous event bus
-		// TODO: [@tgaengler] currently, we switched back to the synchronous event bus, which might not be optional for scaling or
-		// where
-		// asynchronous event handling is really required => so, we should think about how to replace/enhance this mechanism in
-		// the near future (maybe replace the event bus with akka (or similar frameworks))
-		return new EventBus();
-	}
-
 	public static class DmpDeserializerModule extends SimpleModule {
 
 		public DmpDeserializerModule() {

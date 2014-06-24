@@ -25,14 +25,9 @@ public class GuicedTest {
 
 		class TestModule extends PersistenceModule {
 
-			@Override
-			protected EventBus provideEventBus() {
-				return new EventBus();
-			}
-
 			/**
 			 * Provides the {@link com.fasterxml.jackson.databind.ObjectMapper} instance for JSON de-/serialisation.
-			 * 
+			 *
 			 * @return a {@link com.fasterxml.jackson.databind.ObjectMapper} instance as singleton
 			 */
 			@Provides
