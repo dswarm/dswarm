@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.common.collect.Lists;
 import com.google.inject.servlet.RequestScoped;
@@ -54,7 +55,7 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
 
 /**
  * A resource (controller service) for {@link Schema}s.
- * 
+ *
  * @author tgaengler
  * @author jpolowinski
  */
@@ -66,26 +67,28 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	private static final Logger			LOG	= LoggerFactory.getLogger(SchemasResource.class);
 
 	private final ResourceUtilsFactory	utilsFactory;
+	private final ObjectMapper objectMapper;
 
 	/**
 	 * Creates a new resource (controller service) for {@link Schema}s with the provider of the schema persistence service, the
 	 * object mapper and metrics registry.
-	 * 
+	 *
 	 * @param schemaServiceProviderArg the schema persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public SchemasResource(final ResourceUtilsFactory utilsFactoryArg, final DMPStatus dmpStatusArg) throws DMPControllerException {
+	public SchemasResource(final ResourceUtilsFactory utilsFactoryArg, final ObjectMapper objectMapperArg, final DMPStatus dmpStatusArg) throws DMPControllerException {
 
 		super(utilsFactoryArg.reset().get(SchemasResourceUtils.class), dmpStatusArg);
 
 		utilsFactory = utilsFactoryArg;
+		objectMapper = objectMapperArg;
 	}
 
 	/**
 	 * This endpoint returns a schema as JSON representation for the provided schema identifier.
-	 * 
+	 *
 	 * @param id a schema identifier
 	 * @return a JSON representation of a schema
 	 */
@@ -104,7 +107,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 	/**
 	 * This endpoint consumes a schema as JSON representation and persists this schema in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one schema
 	 * @return the persisted schema as JSON representation
 	 * @throws DMPControllerException
@@ -123,7 +126,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 	/**
 	 * This endpoint returns a list of all schemas as JSON representation.
-	 * 
+	 *
 	 * @return a list of all schemas as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -141,7 +144,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 	/**
 	 * This endpoint consumes a schema as JSON representation and updates this schema in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one schema
 	 * @param id a schema identifier
 	 * @return the updated schema as JSON representation
@@ -165,7 +168,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	/**
 	 * This endpoint consumes an ordered list of attribute names (of an attribute path) as JSON (array) representation and creates
 	 * an attribute path (incl. attributes) from them an updates the schema with this attribute path in the database.
-	 * 
+	 *
 	 * @param attributeNamesJSONArrayString an ordered list of attribute names (of an attribute path) as JSON (array)
 	 *            representation
 	 * @param id a schema identifier
@@ -234,7 +237,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	/**
 	 * This endpoint consumes an attribute name and creates an attribute path (incl. new attribute) with help of the given
 	 * attribute path (by id) and the freshly created attribute, and updates the schema with this attribute path in the database.
-	 * 
+	 *
 	 * @param schemaId a schema identifier
 	 * @param attributePathId a attribute path identifier
 	 * @param attributeName the name of the attribute that should be created and added at the end of the given attribute path
@@ -247,11 +250,12 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@POST
 	@Path("/{schemaid}/attributepaths/{attributepathid}")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addAttribute(@ApiParam(value = "schema identifier", required = true) @PathParam("schemaid") final Long schemaId,
 			@ApiParam(value = "attribute path identifier", required = true) @PathParam("attributepathid") final Long attributePathId,
-			@ApiParam(value = "attribute name", required = true) @FormParam("attribute_name") final String attributeName)
-			throws DMPControllerException {
+			@ApiParam(value = "attribute name", required = true) final String attributeNameJson)
+			throws DMPControllerException, IOException {
 
 		final SchemaService persistenceService = pojoClassResourceUtils.getPersistenceService();
 		final Schema object = persistenceService.getObject(schemaId);
@@ -272,6 +276,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 		final AttributePath baseAttributePath = getAttributePath(attributePathId, attributePathService);
 		final LinkedList<Attribute> baseAttributes = baseAttributePath.getAttributePath();
 
+		final String attributeName = objectMapper.readTree(attributeNameJson).path("attribute_name").asText();
 		final Attribute newAttribute = createOrGetAttribute(attributeName, schemaId);
 
 		final LinkedList<Attribute> attributes = Lists.newLinkedList(baseAttributes);
@@ -310,7 +315,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 	/**
 	 * This endpoint deletes a schema that matches the given id.
-	 * 
+	 *
 	 * @param id a schema identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
 	 *         went wrong

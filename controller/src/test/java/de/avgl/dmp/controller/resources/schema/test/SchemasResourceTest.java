@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -285,12 +284,13 @@ public class SchemasResourceTest extends
 		final AttributePath baseAttributePath = schema.getAttributePaths().iterator().next();
 		final Long baseAttributePathId = baseAttributePath.getId();
 
-		final Form form = new Form();
-		form.param("attribute_name", attributeName1);
+		final Map<String, String> jsonMap = Maps.newHashMap();
+		jsonMap.put("attribute_name", attributeName1);
+		final String payloadJson = objectMapper.writeValueAsString(jsonMap);
 
 		final Response response = target().path("/" + schema.getId() + "/attributepaths/" + baseAttributePathId)
 				.request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
+				.post(Entity.entity(payloadJson, MediaType.APPLICATION_JSON_TYPE));
 
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
 

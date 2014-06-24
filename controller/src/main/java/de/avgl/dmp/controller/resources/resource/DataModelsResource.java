@@ -35,6 +35,8 @@ import com.wordnik.swagger.annotations.ApiResponses;
 import de.avgl.dmp.controller.DMPControllerException;
 import de.avgl.dmp.controller.eventbus.CSVConverterEvent;
 import de.avgl.dmp.controller.eventbus.CSVConverterEventRecorder;
+import de.avgl.dmp.controller.eventbus.SchemaEvent;
+import de.avgl.dmp.controller.eventbus.SchemaEventRecorder;
 import de.avgl.dmp.controller.eventbus.XMLConverterEvent;
 import de.avgl.dmp.controller.eventbus.XMLConverterEventRecorder;
 import de.avgl.dmp.controller.eventbus.XMLSchemaEvent;
@@ -69,6 +71,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 	 */
 	private final DataModelUtil							dataModelUtil;
 
+	private final Provider<SchemaEventRecorder>			schemaEventRecorderProvider;
 	private final Provider<XMLSchemaEventRecorder>		xmlSchemaEventRecorderProvider;
 	private final Provider<CSVConverterEventRecorder>	csvConverterEventRecorderProvider;
 	private final Provider<XMLConverterEventRecorder>	xmlConvertEventRecorderProvider;
@@ -85,13 +88,15 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 	 */
 	@Inject
 	public DataModelsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg,
-			final DataModelUtil dataModelUtilArg, final Provider<XMLSchemaEventRecorder> xmlSchemaEventRecorderProviderArg,
+			final DataModelUtil dataModelUtilArg, final Provider<SchemaEventRecorder> schemaEventRecorderProviderArg,
+			final Provider<XMLSchemaEventRecorder> xmlSchemaEventRecorderProviderArg,
 			final Provider<CSVConverterEventRecorder> csvConverterEventRecorderProviderArg,
 			final Provider<XMLConverterEventRecorder> xmlConverterEventRecorderProviderArg) throws DMPControllerException {
 
 		super(utilsFactory.reset().get(DataModelsResourceUtils.class), dmpStatusArg);
 
 		dataModelUtil = dataModelUtilArg;
+		schemaEventRecorderProvider = schemaEventRecorderProviderArg;
 		xmlSchemaEventRecorderProvider = xmlSchemaEventRecorderProviderArg;
 		csvConverterEventRecorderProvider = csvConverterEventRecorderProviderArg;
 		xmlConvertEventRecorderProvider = xmlConverterEventRecorderProviderArg;
@@ -347,6 +352,14 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 		final JsonNode jsStorageType = configuration.getParameters().get("storage_type");
 		if (jsStorageType != null) {
 			final String storageType = jsStorageType.asText();
+
+			try {
+				final SchemaEvent.SchemaType type = SchemaEvent.SchemaType.fromString(storageType);
+				final SchemaEvent schemaEvent = new SchemaEvent(dataModel, type);
+				schemaEventRecorderProvider.get().convertSchema(schemaEvent);
+			} catch (final IllegalArgumentException e) {
+				DataModelsResource.LOG.warn("could not determine schema type", e);
+			}
 
 			switch (storageType) {
 				case "schema":
