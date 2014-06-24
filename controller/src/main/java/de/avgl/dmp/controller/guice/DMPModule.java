@@ -5,6 +5,7 @@ import com.codahale.metrics.health.jvm.ThreadDeadlockHealthCheck;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import com.google.inject.name.Names;
 
 import de.avgl.dmp.controller.eventbus.CSVConverterEventRecorder;
 import de.avgl.dmp.controller.eventbus.SchemaEventRecorder;
@@ -13,12 +14,13 @@ import de.avgl.dmp.controller.eventbus.XMLSchemaEventRecorder;
 import de.avgl.dmp.controller.resources.utils.ResourceUtilsFactory;
 import de.avgl.dmp.controller.status.DMPStatus;
 import de.avgl.dmp.controller.status.DatabaseHealthCheck;
+import de.avgl.dmp.controller.status.MetricsReporter;
 import de.avgl.dmp.controller.utils.DataModelUtil;
 
 /**
  * The Guice configuration of the controller module. Interface/classes that are registered here can be utilised for injection.
  * Mainly event recorders, e.g., {@link XMLConverterEventRecorder}, are registered here.
- * 
+ *
  * @author phorn
  */
 public class DMPModule extends AbstractModule {
@@ -37,7 +39,11 @@ public class DMPModule extends AbstractModule {
 		bind(DataModelUtil.class);
 		bind(ResourceUtilsFactory.class);
 
+		bind(MetricsReporter.class);
 		bind(DMPStatus.class);
+
+		// TODO: read from config
+		bind(Integer.class).annotatedWith(Names.named("reporting.interval")).toInstance(60);
 	}
 
 	@Provides

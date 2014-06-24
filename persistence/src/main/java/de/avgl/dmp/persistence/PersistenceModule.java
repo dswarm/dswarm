@@ -41,7 +41,7 @@ import de.avgl.dmp.persistence.service.schema.SchemaService;
 
 /**
  * The Guice configuration of the persistence module. Interface/classes that are registered here can be utilised for injection.
- * 
+ *
  * @author phorn
  * @author tgaengler
  */
@@ -63,9 +63,11 @@ public class PersistenceModule extends AbstractModule {
 		}
 
 		final String graphEndpoint = properties.getProperty("dmp_graph_endpoint", "http://localhost:7474/graph");
-		final GraphDatabaseConfig gdbConfig = new GraphDatabaseConfig(graphEndpoint);
-
 		bind(String.class).annotatedWith(Names.named("dmp_graph_endpoint")).toInstance(graphEndpoint);
+		final String reportingEsHost = properties.getProperty("reporting_es_host", "localhost:9200");
+		bind(String.class).annotatedWith(Names.named("reporting.es.host")).toInstance(reportingEsHost);
+
+		final GraphDatabaseConfig gdbConfig = new GraphDatabaseConfig(graphEndpoint);
 		bind(GraphDatabaseConfig.class).toInstance(gdbConfig);
 
 		bind(ResourceService.class).in(Scopes.SINGLETON);
@@ -88,7 +90,7 @@ public class PersistenceModule extends AbstractModule {
 
 	/**
 	 * Provides the metric registry to register objects for metric statistics.
-	 * 
+	 *
 	 * @return a {@link MetricRegistry} instance as singleton
 	 */
 	@Provides
@@ -113,7 +115,7 @@ public class PersistenceModule extends AbstractModule {
 
 	/**
 	 * Provides the event bus for event processing.
-	 * 
+	 *
 	 * @return a {@link EventBus} instance as singleton
 	 */
 	@Provides
