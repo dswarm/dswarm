@@ -19,6 +19,7 @@
 		<jetty-maven-plugin.version>9.2.0.RC0</jetty-maven-plugin.version>
 		<maven-tomcat-plugin.version>2.2</maven-tomcat-plugin.version>
 		<grizzly-http-servlet.version>2.3.8</grizzly-http-servlet.version>
+		<es-metrics-reporter.version>2.0</es-metrics-reporter.version>
 	</properties>
 
 	<build>
@@ -290,6 +291,11 @@
 					<groupId>org.slf4j</groupId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.elasticsearch</groupId>
+			<artifactId>metrics-elasticsearch-reporter</artifactId>
+			<version>${es-metrics-reporter.version}</version>
 		</dependency>
 
 		<dependency>

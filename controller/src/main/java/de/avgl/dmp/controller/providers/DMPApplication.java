@@ -22,7 +22,7 @@ import de.avgl.dmp.controller.servlet.DMPInjector;
 /**
  * The configuration for the backend API. Packages with (web) resources, API feature classes (e.g. {@link MultiPartFeature}) etc.
  * can be registered here.
- * 
+ *
  * @author phorn
  * @author tgaengler
  */
@@ -31,25 +31,34 @@ class DMPApplication extends ResourceConfig {
 
 	/**
 	 * Creates a new backend API configuration with the given service locator (H2K service registry).
-	 * 
+	 *
 	 * @param serviceLocator a H2K service registry
 	 */
 	@Inject
 	public DMPApplication(final ServiceLocator serviceLocator) {
 
-		packages("de.avgl.dmp.controller.resources", "com.wordnik.swagger.jersey.listing");
+		setApplicationName("d:swarm");
+
+		registerDMPResources();
+		registerSwaggerResources();
+		buildGuiceBridge(serviceLocator);
+
+		registerClasses(DMPAppEventListener.class);
+	}
+
+	private void registerDMPResources() {
+		packages("de.avgl.dmp.controller.resources");
 		registerClasses(DMPJsonExceptionHandler.class, DMPMorphDefExceptionHandler.class, ExceptionHandler.class,
-				WebApplicationExceptionHandler.class, CorsResponseFilter.class);
-		register(MultiPartFeature.class);
+				WebApplicationExceptionHandler.class, CorsResponseFilter.class, MultiPartFeature.class);
+	}
 
-		// swagger
-		register(ApiListingResourceJSON.class);
-		register(JerseyApiDeclarationProvider.class);
-		register(JerseyResourceListingProvider.class);
+	private void registerSwaggerResources() {
+		packages("com.wordnik.swagger.jersey.listing");
+		registerClasses(ApiListingResourceJSON.class, JerseyApiDeclarationProvider.class, JerseyResourceListingProvider.class);
+	}
 
-		// initialize injectors...
+	private void buildGuiceBridge(final ServiceLocator serviceLocator) {
 		GuiceBridge.getGuiceBridge().initializeGuiceBridge(serviceLocator);
-
 		final GuiceIntoHK2Bridge guiceBridge = serviceLocator.getService(GuiceIntoHK2Bridge.class);
 		guiceBridge.bridgeGuiceInjector(DMPInjector.injector);
 	}

@@ -5,7 +5,7 @@ premise:
 - three additional partitions: /data/log, /data/mysql, /data/neo4j
 - let the $HOME of the less privileged user be '/home/user'
 - all commands boxes start as the less privileges user and in their $HOME.
-- Requiring root is explicitly markes (with `su` rather than `sudo ...`)
+- Requiring root is explicitly marked (with `su` rather than `sudo ...`)
 
 _Note: some commands require user input, this is no unattended installation_
 
@@ -86,7 +86,7 @@ npm install -g grunt-cli karma bower
 **6**. setup MySQL
 
 ```
-echo <<EOT | mysql -uroot -p
+cat <<EOT | mysql -uroot -p
 CREATE DATABASE IF NOT EXISTS dmp DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_bin;
 CREATE USER 'dmp'@'localhost' IDENTIFIED BY 'dmp';
 GRANT ALL PRIVILEGES ON dmp.* TO 'dmp'@localhost IDENTIFIED BY 'dmp';
@@ -228,7 +228,7 @@ then, create a symlink from the previous log location to the external partition
 
 ```
 su
-mv /var/lib/neo4j/data/{log,-old}
+mv /var/lib/neo4j/data/log{,-old}
 ln -s /data/neo4j/log /var/lib/neo4j/data/log
 mkdir /data/neo4j/log
 ```

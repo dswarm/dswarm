@@ -23,14 +23,9 @@ public class GuicedTest {
 
 		class TestModule extends PersistenceModule {
 
-			@Override
-			protected EventBus provideEventBus() {
-				return new EventBus();
-			}
-
 			/**
 			 * Provides the {@link ObjectMapper} instance for JSON de-/serialisation.
-			 * 
+			 *
 			 * @return a {@link ObjectMapper} instance as singleton
 			 */
 			@Provides

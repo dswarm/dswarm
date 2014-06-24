@@ -437,6 +437,7 @@
 				<rdb.username>dmp</rdb.username>
 				<rdb.password>dmp_mysql</rdb.password>
 				<dmp_graph_endpoint>http://194.95.145.12:7474/graph</dmp_graph_endpoint>
+				<reporting_es_host>194.95.145.16:9200</reporting_es_host>
 			</properties>
 		</profile>
 		<profile>
@@ -447,6 +448,7 @@
 				<rdb.username>dmp</rdb.username>
 				<rdb.password>dmp</rdb.password>
 				<dmp_graph_endpoint>http://127.0.0.1:7474/graph</dmp_graph_endpoint>
+				<reporting_es_host>194.95.145.16:9200</reporting_es_host>
 			</properties>
 		</profile>
 		<profile>
@@ -457,6 +459,7 @@
 				<rdb.username>${db.mysql.username}</rdb.username>
 				<rdb.password>${db.mysql.password}</rdb.password>
 				<dmp_graph_endpoint>${dmp_graph_endpoint}</dmp_graph_endpoint>
+				<reporting_es_host>194.95.145.16:9200</reporting_es_host>
 			</properties>
 		</profile>
 		<profile>
