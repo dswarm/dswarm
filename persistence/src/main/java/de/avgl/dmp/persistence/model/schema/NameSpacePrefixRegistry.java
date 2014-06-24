@@ -9,6 +9,7 @@ import com.google.common.collect.Maps;
 public class NameSpacePrefixRegistry {
 
 	public static final String			RDF			= "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+	public static final String			RDFS		= "http://www.w3.org/2000/01/rdf-schema#";
 	public static final String			RDA			= "http://rdvocab.info/Elements/";
 	public static final String			FOAF		= "http://xmlns.com/foaf/0.1/";
 	public static final String			DC			= "http://purl.org/dc/elements/1.1/";
@@ -17,6 +18,7 @@ public class NameSpacePrefixRegistry {
 	public static final String			ISBD		= "http://iflastandards.info/ns/isbd/elements/";
 	public static final String			OWL			= "http://www.w3.org/2002/07/owl#";
 	public static final String			UMBEL		= "http://umbel.org/umbel#";
+	public static final String			BIBRM		= "http://vocab.ub.uni-leipzig.de/bibrm/";
 
 	private final Map<String, String>	namespaces	= Maps.newLinkedHashMap();
 	private final Map<String, String>	prefixes	= Maps.newLinkedHashMap();
@@ -26,6 +28,7 @@ public class NameSpacePrefixRegistry {
 		super();
 
 		registerNameSpace("rdf", NameSpacePrefixRegistry.RDF);
+		registerNameSpace("rdfs", NameSpacePrefixRegistry.RDFS);
 		registerNameSpace("owl", NameSpacePrefixRegistry.OWL);
 		registerNameSpace("rda", NameSpacePrefixRegistry.RDA);
 		registerNameSpace("foaf", NameSpacePrefixRegistry.FOAF);
@@ -34,6 +37,7 @@ public class NameSpacePrefixRegistry {
 		registerNameSpace("bibo", NameSpacePrefixRegistry.BIBO);
 		registerNameSpace("isbd", NameSpacePrefixRegistry.ISBD);
 		registerNameSpace("umbel", NameSpacePrefixRegistry.UMBEL);
+		registerNameSpace("bibrm", NameSpacePrefixRegistry.BIBRM);
 	}
 
 	public void registerNameSpace(final String prefix, final String uri) {
