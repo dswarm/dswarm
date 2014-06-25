@@ -1,4 +1,4 @@
-package de.avgl.dmp;
+package org.dswarm;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;

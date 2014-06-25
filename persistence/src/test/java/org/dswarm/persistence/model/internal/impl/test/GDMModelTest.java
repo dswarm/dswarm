@@ -14,8 +14,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
 
-import de.avgl.dmp.graph.json.Model;
-import de.avgl.dmp.graph.json.util.Util;
+import org.dswarm.graph.json.Model;
+import org.dswarm.graph.json.util.Util;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 

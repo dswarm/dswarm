@@ -32,8 +32,8 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
-import de.avgl.dmp.graph.json.Resource;
-import de.avgl.dmp.graph.json.util.Util;
+import org.dswarm.graph.json.Resource;
+import org.dswarm.graph.json.util.Util;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
@@ -146,7 +146,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final GDMModel gdmModel = (GDMModel) model;
 
-		final de.avgl.dmp.graph.json.Model realModel = gdmModel.getModel();
+		final org.dswarm.graph.json.Model realModel = gdmModel.getModel();
 
 		if (realModel == null) {
 
@@ -237,7 +237,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final String recordClassUri = recordClass.getUri();
 
-		final de.avgl.dmp.graph.json.Model model = readGDMFromDB(recordClassUri, resourceGraphURI);
+		final org.dswarm.graph.json.Model model = readGDMFromDB(recordClassUri, resourceGraphURI);
 
 		if (model == null) {
 
@@ -276,7 +276,7 @@ public class InternalGDMGraphService implements InternalModelService {
 				}
 			}
 
-			final de.avgl.dmp.graph.json.Model recordModel = new de.avgl.dmp.graph.json.Model();
+			final org.dswarm.graph.json.Model recordModel = new org.dswarm.graph.json.Model();
 			recordModel.addResource(recordResource);
 
 			final Model rdfModel = new GDMModel(recordModel, recordResource.getUri());
@@ -520,7 +520,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		return dataModel;
 	}
 
-	private void writeGDMToDB(final de.avgl.dmp.graph.json.Model model, final String resourceGraphUri) throws DMPPersistenceException {
+	private void writeGDMToDB(final org.dswarm.graph.json.Model model, final String resourceGraphUri) throws DMPPersistenceException {
 
 		final WebTarget target = target("/put");
 
@@ -550,7 +550,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		}
 	}
 
-	private de.avgl.dmp.graph.json.Model readGDMFromDB(final String recordClassUri, final String resourceGraphUri) throws DMPPersistenceException {
+	private org.dswarm.graph.json.Model readGDMFromDB(final String recordClassUri, final String resourceGraphUri) throws DMPPersistenceException {
 
 		final WebTarget target = target("/get");
 
@@ -584,11 +584,11 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final ObjectMapper gdmObjectMapper = Util.getJSONObjectMapper();
 
-		final de.avgl.dmp.graph.json.Model model;
+		final org.dswarm.graph.json.Model model;
 
 		try {
 
-			model = gdmObjectMapper.readValue(body, de.avgl.dmp.graph.json.Model.class);
+			model = gdmObjectMapper.readValue(body, org.dswarm.graph.json.Model.class);
 		} catch (final JsonParseException e) {
 
 			throw new DMPPersistenceException("something went wrong, while parsing the JSON string");

@@ -34,9 +34,9 @@ import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.CSVSourceResourceTriplesFlow;
 import org.dswarm.converter.flow.TransformationFlow;
 import org.dswarm.converter.mf.stream.reader.CsvReader;
-import de.avgl.dmp.graph.json.LiteralNode;
-import de.avgl.dmp.graph.json.Predicate;
-import de.avgl.dmp.graph.json.ResourceNode;
+import org.dswarm.graph.json.LiteralNode;
+import org.dswarm.graph.json.Predicate;
+import org.dswarm.graph.json.ResourceNode;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.job.Task;
@@ -115,9 +115,9 @@ public class TransformationFlowTest extends GuicedTest {
 		final InternalGDMGraphService gdmService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
 
 		// convert result to GDM
-		final Map<Long, de.avgl.dmp.graph.json.Resource> recordResources = Maps.newLinkedHashMap();
+		final Map<Long, org.dswarm.graph.json.Resource> recordResources = Maps.newLinkedHashMap();
 
-		final de.avgl.dmp.graph.json.Model model = new de.avgl.dmp.graph.json.Model();
+		final org.dswarm.graph.json.Model model = new org.dswarm.graph.json.Model();
 
 		final String dataResourceBaseSchemaURI = DataModelUtils.determineDataModelSchemaBaseURI(inputDataModel);
 		final String recordClassURI = dataResourceBaseSchemaURI + "RecordType";
@@ -125,7 +125,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 		for (final org.culturegraph.mf.types.Triple triple : csvRecordTriples) {
 
-			final de.avgl.dmp.graph.json.Resource recordResource = DataModelUtils.mintRecordResource(Long.valueOf(triple.getSubject()),
+			final org.dswarm.graph.json.Resource recordResource = DataModelUtils.mintRecordResource(Long.valueOf(triple.getSubject()),
 					inputDataModel, recordResources, model, recordClasz);
 			final Predicate property = new Predicate(triple.getPredicate());
 

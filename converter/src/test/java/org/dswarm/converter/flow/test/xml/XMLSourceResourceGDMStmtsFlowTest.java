@@ -23,7 +23,7 @@ import com.google.common.io.Resources;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.XMLSourceResourceGDMStmtsFlow;
-import de.avgl.dmp.graph.json.Model;
+import org.dswarm.graph.json.Model;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;

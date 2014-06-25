@@ -13,12 +13,12 @@ import ch.lambdaj.Lambda;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import de.avgl.dmp.graph.json.Model;
-import de.avgl.dmp.graph.json.Node;
-import de.avgl.dmp.graph.json.NodeType;
-import de.avgl.dmp.graph.json.Resource;
-import de.avgl.dmp.graph.json.ResourceNode;
-import de.avgl.dmp.graph.json.Statement;
+import org.dswarm.graph.json.Model;
+import org.dswarm.graph.json.Node;
+import org.dswarm.graph.json.NodeType;
+import org.dswarm.graph.json.Resource;
+import org.dswarm.graph.json.ResourceNode;
+import org.dswarm.graph.json.Statement;
 
 /**
  * @author tgaengler

@@ -26,12 +26,12 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 
-import de.avgl.dmp.graph.json.LiteralNode;
-import de.avgl.dmp.graph.json.Model;
-import de.avgl.dmp.graph.json.Node;
-import de.avgl.dmp.graph.json.Predicate;
-import de.avgl.dmp.graph.json.Resource;
-import de.avgl.dmp.graph.json.ResourceNode;
+import org.dswarm.graph.json.LiteralNode;
+import org.dswarm.graph.json.Model;
+import org.dswarm.graph.json.Node;
+import org.dswarm.graph.json.Predicate;
+import org.dswarm.graph.json.Resource;
+import org.dswarm.graph.json.ResourceNode;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;

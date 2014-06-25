@@ -3,7 +3,7 @@
 		 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
 	<filter>
-		<filter-name>de.avgl.dmp.Application</filter-name>
+		<filter-name>org.dswarm.Application</filter-name>
 		<filter-class>org.glassfish.jersey.servlet.ServletContainer</filter-class>
 		<init-param>
 			<param-name>javax.ws.rs.Application</param-name>
@@ -20,7 +20,7 @@
 	</filter>
 
 	<filter-mapping>
-		<filter-name>de.avgl.dmp.Application</filter-name>
+		<filter-name>org.dswarm.Application</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 

@@ -86,8 +86,8 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 		final DataModel updatedDataModel = dataModelService.updateObjectTransactional(dataModel).getObject();
 
 		final String testResourceString = DMPPersistenceUtil.getResourceAsString("dmpf_bsp1.json");
-		final de.avgl.dmp.graph.json.Model model = de.avgl.dmp.graph.json.util.Util.getJSONObjectMapper().readValue(testResourceString,
-				de.avgl.dmp.graph.json.Model.class);
+		final org.dswarm.graph.json.Model model = org.dswarm.graph.json.util.Util.getJSONObjectMapper().readValue(testResourceString,
+				org.dswarm.graph.json.Model.class);
 
 		final GDMModel rdfModel = new GDMModel(model, "http://data.slub-dresden.de/datamodels/22/records/18d68601-0623-42b4-ad89-f8954cc25912",
 				"http://www.openarchives.org/OAI/2.0/recordType");
@@ -126,7 +126,7 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 		Assert.assertTrue("the record model should be a GDMModel", GDMModel.class.isInstance(recordModel));
 
 		final GDMModel gdmRecordModel = (GDMModel) recordModel;
-		final de.avgl.dmp.graph.json.Model realRecordModel = gdmRecordModel.getModel();
+		final org.dswarm.graph.json.Model realRecordModel = gdmRecordModel.getModel();
 
 		Assert.assertNotNull("the real record model shouldn't be null", realRecordModel);
 		Assert.assertEquals("wrong size of the record model; expected '2601'", 2601, realRecordModel.size());

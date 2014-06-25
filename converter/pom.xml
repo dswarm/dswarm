@@ -36,13 +36,13 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>de.avgl.dmp</groupId>
-			<artifactId>init</artifactId>
+			<groupId>org.dswarm</groupId>
+			<artifactId>dswarm-init</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>de.avgl.dmp</groupId>
-			<artifactId>persistence</artifactId>
+			<groupId>org.dswarm</groupId>
+			<artifactId>dswarm-persistence</artifactId>
 			<version>0.1-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
@@ -52,8 +52,8 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>de.avgl.dmp</groupId>
-			<artifactId>persistence</artifactId>
+			<groupId>org.dswarm</groupId>
+			<artifactId>dswarm-persistence</artifactId>
 			<version>0.1-SNAPSHOT</version>
 			<type>test-jar</type>
 			<scope>test</scope>

@@ -14,10 +14,10 @@ import org.dswarm.controller.DMPControllerException;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.flow.CSVResourceFlowFactory;
 import org.dswarm.converter.flow.CSVSourceResourceTriplesFlow;
-import de.avgl.dmp.graph.json.LiteralNode;
-import de.avgl.dmp.graph.json.Predicate;
-import de.avgl.dmp.graph.json.Resource;
-import de.avgl.dmp.graph.json.ResourceNode;
+import org.dswarm.graph.json.LiteralNode;
+import org.dswarm.graph.json.Predicate;
+import org.dswarm.graph.json.Resource;
+import org.dswarm.graph.json.ResourceNode;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
@@ -69,9 +69,9 @@ public class CSVConverterEventRecorder {
 		if (result != null) {
 
 			// convert result to GDM
-			final Map<Long, de.avgl.dmp.graph.json.Resource> recordResources = Maps.newLinkedHashMap();
+			final Map<Long, org.dswarm.graph.json.Resource> recordResources = Maps.newLinkedHashMap();
 
-			final de.avgl.dmp.graph.json.Model model = new de.avgl.dmp.graph.json.Model();
+			final org.dswarm.graph.json.Model model = new org.dswarm.graph.json.Model();
 
 			final String dataResourceBaseSchemaURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
 			final String recordClassURI = dataResourceBaseSchemaURI + "RecordType";

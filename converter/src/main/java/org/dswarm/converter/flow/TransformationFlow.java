@@ -38,9 +38,9 @@ import org.dswarm.converter.mf.stream.reader.JsonNodeReader;
 import org.dswarm.converter.morph.MorphScriptBuilder;
 import org.dswarm.converter.pipe.StreamJsonCollapser;
 import org.dswarm.converter.pipe.StreamUnflattener;
-import de.avgl.dmp.graph.json.Predicate;
-import de.avgl.dmp.graph.json.Resource;
-import de.avgl.dmp.graph.json.ResourceNode;
+import org.dswarm.graph.json.Predicate;
+import org.dswarm.graph.json.Resource;
+import org.dswarm.graph.json.ResourceNode;
 import org.dswarm.init.util.DMPStatics;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
@@ -185,7 +185,7 @@ public class TransformationFlow {
 
 		final ImmutableList<GDMModel> gdmModels = writer.getCollection();
 
-		final de.avgl.dmp.graph.json.Model model = new de.avgl.dmp.graph.json.Model();
+		final org.dswarm.graph.json.Model model = new org.dswarm.graph.json.Model();
 		String recordClassUri = null;
 
 		// transform to FE friendly JSON => or use Model#toJSON() ;)
@@ -203,7 +203,7 @@ public class TransformationFlow {
 				continue;
 			}
 
-			for (final de.avgl.dmp.graph.json.Resource jsonResource : gdmModel.getModel().getResources()) {
+			for (final org.dswarm.graph.json.Resource jsonResource : gdmModel.getModel().getResources()) {
 				model.addResource(jsonResource);
 
 			}

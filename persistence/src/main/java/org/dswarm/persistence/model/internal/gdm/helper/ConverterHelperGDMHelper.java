@@ -4,9 +4,9 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import de.avgl.dmp.graph.json.LiteralNode;
-import de.avgl.dmp.graph.json.Node;
-import de.avgl.dmp.graph.json.ResourceNode;
+import org.dswarm.graph.json.LiteralNode;
+import org.dswarm.graph.json.Node;
+import org.dswarm.graph.json.ResourceNode;
 import org.dswarm.persistence.model.internal.helper.ConverterHelper;
 
 /**

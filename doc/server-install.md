@@ -206,7 +206,7 @@ org.neo4j.server.webadmin.rrdb.location=/data/neo4j/data/rrd
 - at line 75 and add our graph extension
 
 ```
-org.neo4j.server.thirdparty_jaxrs_classes=de.avgl.dmp.graph.resources=/graph
+org.neo4j.server.thirdparty_jaxrs_classes=org.dswarm.graph.resources=/graph
 ```
 
 edit `/etc/neo4j/neo4j-wrapper.conf` and:

@@ -18,11 +18,11 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-import de.avgl.dmp.graph.json.LiteralNode;
-import de.avgl.dmp.graph.json.Node;
-import de.avgl.dmp.graph.json.Resource;
-import de.avgl.dmp.graph.json.ResourceNode;
-import de.avgl.dmp.graph.json.Statement;
+import org.dswarm.graph.json.LiteralNode;
+import org.dswarm.graph.json.Node;
+import org.dswarm.graph.json.Resource;
+import org.dswarm.graph.json.ResourceNode;
+import org.dswarm.graph.json.Statement;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.internal.gdm.helper.ConverterHelperGDMHelper;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
@@ -40,7 +40,7 @@ public class GDMModel implements Model {
 
 	private static final Logger					LOG							= LoggerFactory.getLogger(GDMModel.class);
 
-	private final de.avgl.dmp.graph.json.Model	model;
+	private final org.dswarm.graph.json.Model	model;
 	private final Set<String>					recordURIs					= Sets.newLinkedHashSet();
 	private final String						recordClassURI;
 
@@ -51,7 +51,7 @@ public class GDMModel implements Model {
 	 *
 	 * @param modelArg a GDM model instance that hold the GDM data
 	 */
-	public GDMModel(final de.avgl.dmp.graph.json.Model modelArg) {
+	public GDMModel(final org.dswarm.graph.json.Model modelArg) {
 
 		model = modelArg;
 		recordClassURI = null;
@@ -63,7 +63,7 @@ public class GDMModel implements Model {
 	 * @param modelArg a GDM model instance that hold the RDF data
 	 * @param recordURIArg the record identifier
 	 */
-	public GDMModel(final de.avgl.dmp.graph.json.Model modelArg, final String recordURIArg) {
+	public GDMModel(final org.dswarm.graph.json.Model modelArg, final String recordURIArg) {
 
 		model = modelArg;
 
@@ -82,7 +82,7 @@ public class GDMModel implements Model {
 	 * @param recordURIArg the record identifier
 	 * @param recordClassURIArg the URI of the record class
 	 */
-	public GDMModel(final de.avgl.dmp.graph.json.Model modelArg, final String recordURIArg, final String recordClassURIArg) {
+	public GDMModel(final org.dswarm.graph.json.Model modelArg, final String recordURIArg, final String recordClassURIArg) {
 
 		model = modelArg;
 
@@ -99,7 +99,7 @@ public class GDMModel implements Model {
 	 *
 	 * @return the GDM model with the GDM data
 	 */
-	public de.avgl.dmp.graph.json.Model getModel() {
+	public org.dswarm.graph.json.Model getModel() {
 
 		return model;
 	}

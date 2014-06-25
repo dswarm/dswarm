@@ -44,7 +44,7 @@ import org.dswarm.controller.resources.schema.test.utils.SchemasResourceTestUtil
 import org.dswarm.controller.resources.test.ResourceTest;
 import org.dswarm.controller.servlet.DMPInjector;
 import org.dswarm.controller.test.GuicedTest;
-import de.avgl.dmp.graph.rdf.utils.RDFUtils;
+import org.dswarm.graph.rdf.utils.RDFUtils;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;

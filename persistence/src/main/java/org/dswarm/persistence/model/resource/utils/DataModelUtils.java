@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import de.avgl.dmp.graph.json.Predicate;
-import de.avgl.dmp.graph.json.ResourceNode;
+import org.dswarm.graph.json.Predicate;
+import org.dswarm.graph.json.ResourceNode;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.utils.ExtendedBasicDMPJPAObjectUtils;
 import org.dswarm.persistence.util.GDMUtil;
@@ -154,8 +154,8 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 		return dataResourceBaseURI;
 	}
 
-	public static de.avgl.dmp.graph.json.Resource mintRecordResource(final Long identifier, final DataModel dataModel,
-			final Map<Long, de.avgl.dmp.graph.json.Resource> recordResources, final de.avgl.dmp.graph.json.Model model,
+	public static org.dswarm.graph.json.Resource mintRecordResource(final Long identifier, final DataModel dataModel,
+			final Map<Long, org.dswarm.graph.json.Resource> recordResources, final org.dswarm.graph.json.Model model,
 			final ResourceNode recordClassNode) {
 
 		if (identifier != null) {
@@ -183,7 +183,7 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 		}
 
 		final String recordURI = sb.append(UUID.randomUUID()).toString();
-		final de.avgl.dmp.graph.json.Resource recordResource = new de.avgl.dmp.graph.json.Resource(recordURI);
+		final org.dswarm.graph.json.Resource recordResource = new org.dswarm.graph.json.Resource(recordURI);
 
 		if (identifier != null) {
 

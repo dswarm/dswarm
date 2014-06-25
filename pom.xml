@@ -222,7 +222,7 @@
 							<version>${google.collections.version}</version>
 						</dependency>
 						<dependency>
-							<groupId>de.avgl.dmp</groupId>
+							<groupId>org.dswarm</groupId>
 							<artifactId>init</artifactId>
 							<version>0.1-SNAPSHOT</version>
 						</dependency>
@@ -251,7 +251,7 @@
 					</configuration>
 					<dependencies>
 						<dependency>
-							<groupId>de.avgl.dmp</groupId>
+							<groupId>org.dswarm</groupId>
 							<artifactId>init</artifactId>
 							<version>0.1-SNAPSHOT</version>
 						</dependency>
@@ -263,7 +263,7 @@
 					<version>${maven-site-plugin.version}</version>
 					<dependencies>
 						<dependency>
-							<groupId>de.avgl.dmp</groupId>
+							<groupId>org.dswarm</groupId>
 							<artifactId>init</artifactId>
 							<version>0.1-SNAPSHOT</version>
 						</dependency>

@@ -84,8 +84,8 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>de.avgl.dmp</groupId>
-			<artifactId>init</artifactId>
+			<groupId>org.dswarm</groupId>
+			<artifactId>dswarm-init</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -277,8 +277,8 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>de.avgl.dmp.graph</groupId>
-			<artifactId>json</artifactId>
+			<groupId>org.dswarm</groupId>
+			<artifactId>graph-json</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>

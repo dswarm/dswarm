@@ -127,20 +127,20 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		Assert.assertFalse("GDM model list shouldn't be empty", gdmModels.isEmpty());
 
 		// write RDF models at once
-		final de.avgl.dmp.graph.json.Model model = new de.avgl.dmp.graph.json.Model();
+		final org.dswarm.graph.json.Model model = new org.dswarm.graph.json.Model();
 		String recordClassUri = null;
 
 		for (final GDMModel gdmModel : gdmModels) {
 
 			Assert.assertNotNull("the GDM statements of the GDM model shouldn't be null", gdmModel.getModel());
 
-			final de.avgl.dmp.graph.json.Model aModel = gdmModel.getModel();
+			final org.dswarm.graph.json.Model aModel = gdmModel.getModel();
 
 			Assert.assertNotNull("the resources of the GDM model shouldn't be null", aModel.getResources());
 
-			final Collection<de.avgl.dmp.graph.json.Resource> resources = aModel.getResources();
+			final Collection<org.dswarm.graph.json.Resource> resources = aModel.getResources();
 
-			for (final de.avgl.dmp.graph.json.Resource aResource : resources) {
+			for (final org.dswarm.graph.json.Resource aResource : resources) {
 
 				model.addResource(aResource);
 

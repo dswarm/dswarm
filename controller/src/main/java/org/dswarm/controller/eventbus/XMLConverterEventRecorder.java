@@ -12,7 +12,7 @@ import com.google.inject.Singleton;
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.flow.XMLSourceResourceGDMStmtsFlow;
-import de.avgl.dmp.graph.json.Resource;
+import org.dswarm.graph.json.Resource;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
@@ -67,14 +67,14 @@ public class XMLConverterEventRecorder {
 			final List<GDMModel> gdmModels = flow.applyResource(path);
 
 			// write GDM models at once
-			final de.avgl.dmp.graph.json.Model model = new de.avgl.dmp.graph.json.Model();
+			final org.dswarm.graph.json.Model model = new org.dswarm.graph.json.Model();
 			String recordClassUri = null;
 
 			for (final GDMModel gdmModel : gdmModels) {
 
 				if (gdmModel.getModel() != null) {
 
-					final de.avgl.dmp.graph.json.Model aModel = gdmModel.getModel();
+					final org.dswarm.graph.json.Model aModel = gdmModel.getModel();
 
 					if (aModel.getResources() != null) {
 

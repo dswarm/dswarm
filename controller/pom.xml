@@ -124,18 +124,18 @@
 	<dependencies>
 		<!-- other project module dependencies -->
 		<dependency>
-			<groupId>de.avgl.dmp</groupId>
-			<artifactId>converter</artifactId>
+			<groupId>org.dswarm</groupId>
+			<artifactId>dswarm-converter</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>de.avgl.dmp</groupId>
-			<artifactId>init</artifactId>
+			<groupId>org.dswarm</groupId>
+			<artifactId>dswarm-init</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>de.avgl.dmp</groupId>
-			<artifactId>persistence</artifactId>
+			<groupId>org.dswarm</groupId>
+			<artifactId>dswarm-persistence</artifactId>
 			<version>0.1-SNAPSHOT</version>
 			<type>test-jar</type>
 			<scope>test</scope>
@@ -299,7 +299,7 @@
 		</dependency>
 
 		<dependency>
-			<groupId>de.avgl.dmp</groupId>
+			<groupId>org.dswarm</groupId>
 			<artifactId>graph</artifactId>
 			<version>1.0</version>
 			<scope>test</scope>
