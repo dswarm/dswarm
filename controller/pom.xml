@@ -4,15 +4,15 @@
 		xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>de.avgl.dmp</groupId>
-		<artifactId>dmp</artifactId>
+		<groupId>org.dswarm</groupId>
+		<artifactId>dswarm-parent</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>controller</artifactId>
+	<artifactId>dswarm-controller</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>DMP - Controller</name>
-	<url>http://avantgarde-labs.de</url>
+	<name>d:swarm - Controller</name>
+	<url>http://dswarm.org/</url>
 
 	<properties>
 		<h2k.version>2.2.0</h2k.version>
@@ -36,7 +36,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<mainClass>de.avgl.dmp.controller.Main</mainClass>
+					<mainClass>org.dswarm.controller.Main</mainClass>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -45,7 +45,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>de.avgl.dmp.controller.Main</mainClass>
+							<mainClass>org.dswarm.controller.Main</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
@@ -97,7 +97,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>de.avgl.dmp.controller.Main</mainClass>
+							<mainClass>org.dswarm.controller.Main</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
@@ -124,18 +124,18 @@
 	<dependencies>
 		<!-- other project module dependencies -->
 		<dependency>
-			<groupId>de.avgl.dmp</groupId>
-			<artifactId>converter</artifactId>
+			<groupId>org.dswarm</groupId>
+			<artifactId>dswarm-converter</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>de.avgl.dmp</groupId>
-			<artifactId>init</artifactId>
+			<groupId>org.dswarm</groupId>
+			<artifactId>dswarm-init</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>de.avgl.dmp</groupId>
-			<artifactId>persistence</artifactId>
+			<groupId>org.dswarm</groupId>
+			<artifactId>dswarm-persistence</artifactId>
 			<version>0.1-SNAPSHOT</version>
 			<type>test-jar</type>
 			<scope>test</scope>
@@ -299,7 +299,7 @@
 		</dependency>
 
 		<dependency>
-			<groupId>de.avgl.dmp</groupId>
+			<groupId>org.dswarm</groupId>
 			<artifactId>graph</artifactId>
 			<version>1.0</version>
 			<scope>test</scope>

@@ -1,0 +1,14 @@
+package org.dswarm.converter.flow.test.ralfsmabxml;
+
+import org.dswarm.converter.flow.test.xml.AbstractXMLTransformationFlowTest;
+
+/**
+ * @author tgaengler
+ */
+public abstract class AbstractRalfsMABXMLTransformationFlowTest extends AbstractXMLTransformationFlowTest {
+
+	public AbstractRalfsMABXMLTransformationFlowTest(final String taskJSONFileName, final String taskResultJSONFileName) {
+
+		super(taskJSONFileName, taskResultJSONFileName, "record", null, "dmpf_bsp1.xml");
+	}
+}

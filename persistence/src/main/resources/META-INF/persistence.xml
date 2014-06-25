@@ -7,20 +7,20 @@ http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 
 		<!-- classes -->
-		<class>de.avgl.dmp.persistence.model.resource.Resource</class>
-		<class>de.avgl.dmp.persistence.model.resource.Configuration</class>
-		<class>de.avgl.dmp.persistence.model.resource.DataModel</class>
-		<class>de.avgl.dmp.persistence.model.schema.Attribute</class>
-		<class>de.avgl.dmp.persistence.model.schema.AttributePath</class>
-		<class>de.avgl.dmp.persistence.model.schema.Clasz</class>
-		<class>de.avgl.dmp.persistence.model.schema.Schema</class>
-		<class>de.avgl.dmp.persistence.model.job.Component</class>
-		<class>de.avgl.dmp.persistence.model.job.Filter</class>
-		<class>de.avgl.dmp.persistence.model.job.Function</class>
-		<class>de.avgl.dmp.persistence.model.job.Mapping</class>
-		<class>de.avgl.dmp.persistence.model.job.Project</class>
-		<class>de.avgl.dmp.persistence.model.job.Transformation</class>
-		<class>de.avgl.dmp.persistence.model.schema.MappingAttributePathInstance</class>
+		<class>org.dswarm.persistence.model.resource.Resource</class>
+		<class>org.dswarm.persistence.model.resource.Configuration</class>
+		<class>org.dswarm.persistence.model.resource.DataModel</class>
+		<class>org.dswarm.persistence.model.schema.Attribute</class>
+		<class>org.dswarm.persistence.model.schema.AttributePath</class>
+		<class>org.dswarm.persistence.model.schema.Clasz</class>
+		<class>org.dswarm.persistence.model.schema.Schema</class>
+		<class>org.dswarm.persistence.model.job.Component</class>
+		<class>org.dswarm.persistence.model.job.Filter</class>
+		<class>org.dswarm.persistence.model.job.Function</class>
+		<class>org.dswarm.persistence.model.job.Mapping</class>
+		<class>org.dswarm.persistence.model.job.Project</class>
+		<class>org.dswarm.persistence.model.job.Transformation</class>
+		<class>org.dswarm.persistence.model.schema.MappingAttributePathInstance</class>
 
 		<!-- if you want to selectively cache entities using the @Cacheable annotation -->
 		<!-- <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode> -->
