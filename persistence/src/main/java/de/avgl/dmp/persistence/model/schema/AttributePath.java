@@ -63,7 +63,7 @@ public class AttributePath extends DMPJPAObject {
 	@JsonIgnore
 	@Access(AccessType.FIELD)
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinTable(name = "ATTRIBUTES_ATTRIBUTE_PATHS", joinColumns = { @JoinColumn(name = "ATTRIBUTE_PATH_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "ATTRIBUTE_ID", referencedColumnName = "ID") })
+	@JoinTable(name = "ATTRIBUTE_PATHS_ATTRIBUTES", joinColumns = { @JoinColumn(name = "ATTRIBUTE_PATH_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "ATTRIBUTE_ID", referencedColumnName = "ID") })
 	private Set<Attribute>			attributes;																	// =
 	// Sets.newCopyOnWriteArraySet();
 

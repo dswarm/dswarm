@@ -57,7 +57,8 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	 * The related resources.
 	 */
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinTable(name = "RESOURCES_CONFIGURATIONS", joinColumns = { @JoinColumn(name = "CONFIGURATION_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "RESOURCE_ID", referencedColumnName = "ID") })
+	@JoinTable(name = "CONFIGURATIONS_RESOURCES", joinColumns = { @JoinColumn(name = "CONFIGURATION_ID", referencedColumnName = "ID") },
+			inverseJoinColumns = { @JoinColumn(name = "RESOURCE_ID", referencedColumnName = "ID") })
 	@JsonSerialize(using = SetResourceReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	// @JsonDeserialize(using = ResourceReferenceDeserializer.class)
