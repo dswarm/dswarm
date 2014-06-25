@@ -58,12 +58,12 @@ INSERT INTO `ATTRIBUTE` (`ID`, `NAME`, `URI`) VALUES
 -- Truncate table before insert `ATTRIBUTES_ATTRIBUTE_PATHS`
 --
 
-TRUNCATE TABLE `ATTRIBUTES_ATTRIBUTE_PATHS`;
+TRUNCATE TABLE `ATTRIBUTE_PATHS_ATTRIBUTES`;
 --
 -- Dumping data for table `ATTRIBUTES_ATTRIBUTE_PATHS`
 --
 
-INSERT INTO `ATTRIBUTES_ATTRIBUTE_PATHS` (`ATTRIBUTE_PATH_ID`, `ATTRIBUTE_ID`) VALUES
+INSERT INTO `ATTRIBUTE_PATHS_ATTRIBUTES` (`ATTRIBUTE_PATH_ID`, `ATTRIBUTE_ID`) VALUES
 (1, 1),
 (34, 1),
 (37, 1),
@@ -164,17 +164,15 @@ INSERT INTO `ATTRIBUTE_PATH` (`ID`, `ATTRIBUTE_PATH`) VALUES
 -- Truncate table before insert `ATTRIBUTE_PATHS_SCHEMAS`
 --
 
-TRUNCATE TABLE `ATTRIBUTE_PATHS_SCHEMAS`;
+TRUNCATE TABLE `SCHEMAS_ATTRIBUTE_PATHS`;
 --
 -- Dumping data for table `ATTRIBUTE_PATHS_SCHEMAS`
 --
 
-INSERT INTO `ATTRIBUTE_PATHS_SCHEMAS` (`SCHEMA_ID`, `ATTRIBUTE_PATH_ID`) VALUES
+INSERT INTO `SCHEMAS_ATTRIBUTE_PATHS` (`SCHEMA_ID`, `ATTRIBUTE_PATH_ID`) VALUES
 (1, 1),
-(2, 1),
 (1, 2),
 (1, 3),
-(2, 3),
 (1, 4),
 (2, 5),
 (2, 6),
@@ -225,8 +223,6 @@ INSERT INTO `CLASS` (`ID`, `NAME`, `URI`) VALUES
 (1, 'ContractItem', 'http://vocab.ub.uni-leipzig.de/bibrm/ContractItem'),
 (2, 'Document', 'http://purl.org/ontology/bibo/Document');
 
-
-
 TRUNCATE TABLE `DATA_SCHEMA`;
 --
 -- Dumping data for table `DATA_SCHEMA`
@@ -241,8 +237,6 @@ INSERT INTO `DATA_SCHEMA` (`ID`, `NAME`, `RECORD_CLASS`) VALUES
 --
 
 TRUNCATE TABLE `DATA_MODEL`;
-
-
 INSERT INTO `DATA_MODEL` (ID, NAME, DESCRIPTION, CONFIGURATION, DATA_RESOURCE, DATA_SCHEMA) VALUES
 (1,'Internal Data Model ContractItem', 'Internal Data Model ContractItem', null, null, 1),
 (2,'Internal Data Model BiboDocument', 'Internal Data Model BiboDocument', null, null, 2);

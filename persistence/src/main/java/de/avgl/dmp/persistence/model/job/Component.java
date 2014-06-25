@@ -77,7 +77,8 @@ public class Component extends ExtendedBasicDMPJPAObject {
 	 * The output components collection.
 	 */
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { /* CascadeType.DETACH, CascadeType.MERGE, */CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinTable(name = "OUTPUT_COMPONENTS_INPUT_COMPONENTS", joinColumns = { @JoinColumn(name = "INPUT_COMPONENT_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "OUTPUT_COMPONENT_ID", referencedColumnName = "ID") })
+	@JoinTable(name = "INPUT_COMPONENTS_OUTPUT_COMPONENTS", joinColumns = { @JoinColumn(name = "INPUT_COMPONENT_ID", referencedColumnName = "ID") },
+			inverseJoinColumns = { @JoinColumn(name = "OUTPUT_COMPONENT_ID", referencedColumnName = "ID") })
 	@XmlElement(name = "output_components")
 	@JsonSerialize(using = SetComponentReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
