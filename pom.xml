@@ -223,7 +223,7 @@
 						</dependency>
 						<dependency>
 							<groupId>org.dswarm</groupId>
-							<artifactId>init</artifactId>
+							<artifactId>dswarm-init</artifactId>
 							<version>0.1-SNAPSHOT</version>
 						</dependency>
 					</dependencies>
@@ -252,7 +252,7 @@
 					<dependencies>
 						<dependency>
 							<groupId>org.dswarm</groupId>
-							<artifactId>init</artifactId>
+							<artifactId>dswarm-init</artifactId>
 							<version>0.1-SNAPSHOT</version>
 						</dependency>
 					</dependencies>
@@ -264,7 +264,7 @@
 					<dependencies>
 						<dependency>
 							<groupId>org.dswarm</groupId>
-							<artifactId>init</artifactId>
+							<artifactId>dswarm-init</artifactId>
 							<version>0.1-SNAPSHOT</version>
 						</dependency>
 					</dependencies>
