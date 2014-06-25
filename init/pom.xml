@@ -4,17 +4,16 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>de.avgl.dmp</groupId>
-		<artifactId>dmp</artifactId>
+		<groupId>org.dswarm</groupId>
+		<artifactId>dswarm-parent</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
-	<groupId>de.avgl.dmp</groupId>
-	<artifactId>init</artifactId>
+	<artifactId>dswarm-init</artifactId>
 	<version>0.1-SNAPSHOT</version>
-	<name>DMP - Initialization</name>
+	<name>d:swarm - Initialization</name>
 	<packaging>jar</packaging>
-	<url>http://www.avantgarde-labs.de</url>
-	
+	<url>http://dswarm.org/</url>
+
 	<properties>
 		<project.root>${basedir}/..</project.root>
 	</properties>

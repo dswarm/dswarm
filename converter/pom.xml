@@ -4,15 +4,15 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>de.avgl.dmp</groupId>
-		<artifactId>dmp</artifactId>
+		<groupId>org.dswarm</groupId>
+		<artifactId>dswarm-parent</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>converter</artifactId>
+	<artifactId>dswarm-converter</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<url>http://avantgarde-labs.de</url>
-	<name>DMP - Transformations Converter</name>
+	<url>http://dswarm.org/</url>
+	<name>d:swarm - Transformations Converter</name>
 
 	<properties>
 		<commons-csv.version>1.0-SNAPSHOT</commons-csv.version>

@@ -4,15 +4,15 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>de.avgl.dmp</groupId>
-		<artifactId>dmp</artifactId>
+		<groupId>org.dswarm</groupId>
+		<artifactId>dswarm-parent</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>persistence</artifactId>
+	<artifactId>dswarm-persistence</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>DMP - Persistence</name>
-	<url>http://avantgarde-labs.de</url>
+	<name>d:swarm - Persistence</name>
+	<url>http://dswarm.org/</url>
 
 	<properties>
 		<project.root>${basedir}/..</project.root>
