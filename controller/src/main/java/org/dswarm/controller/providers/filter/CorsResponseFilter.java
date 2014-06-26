@@ -32,6 +32,6 @@ public class CorsResponseFilter implements ContainerResponseFilter {
 		headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, OPTIONS, HEAD, PUT, POST, DELETE, PATCH");
 		headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "accept, origin, x-requested-with, content-type");
 
-		headers.add(HttpHeaders.X_POWERED_BY, "DMP/2000");
+		headers.add(HttpHeaders.X_POWERED_BY, "d:swarm");
 	}
 }

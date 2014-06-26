@@ -303,7 +303,7 @@ mvn -U -PSDVDSWARM01 -DskipTests clean install
 pushd controller
 mvn -U -PSDVDSWARM01 -DskipTests war:war
 popd; popd
-mv datamanagement-platform/controller/target/controller-0.1-SNAPSHOT.war dmp.war
+mv datamanagement-platform/controller/target/dswarm-controller-0.1-SNAPSHOT.war dmp.war
 ```
 
 **16**. build frontend

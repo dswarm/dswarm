@@ -120,7 +120,7 @@
 		</encoder>
 	</appender>
 
-	<logger name="de.avgl">
+	<logger name="dswarm">
 		<appender-ref ref="FAT"/>
 		<appender-ref ref="FAD"/>
 		<appender-ref ref="FAI"/>
