@@ -1,4 +1,4 @@
-package org.dswarm;
+package org.dswarm.converter;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
