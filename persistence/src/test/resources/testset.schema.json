@@ -1,0 +1,11 @@
+[ {
+  "http://data.slub-dresden.de/resources/1/schema#number" : [ "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" ]
+}, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", {
+  "http://data.slub-dresden.de/resources/1/schema#color" : [ "http://www.w3.org/1999/02/22-rdf-syntax-ns#value", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" ]
+}, {
+  "http://data.slub-dresden.de/resources/1/schema#name" : [ "http://www.w3.org/1999/02/22-rdf-syntax-ns#value", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" ]
+}, {
+  "http://data.slub-dresden.de/resources/1/schema#extra" : [ "http://www.w3.org/1999/02/22-rdf-syntax-ns#value", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" ]
+}, {
+  "http://data.slub-dresden.de/resources/1/schema#date" : [ "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" ]
+} ]

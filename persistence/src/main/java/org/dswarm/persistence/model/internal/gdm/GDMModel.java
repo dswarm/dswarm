@@ -48,7 +48,7 @@ public class GDMModel implements Model {
 
 	/**
 	 * Creates a new {@link GDMModel} with a given GDM model instance.
-	 *
+	 * 
 	 * @param modelArg a GDM model instance that hold the GDM data
 	 */
 	public GDMModel(final org.dswarm.graph.json.Model modelArg) {
@@ -59,7 +59,7 @@ public class GDMModel implements Model {
 
 	/**
 	 * Creates a new {@link GDMModel} with a given GDM model instance and an identifier of the record.
-	 *
+	 * 
 	 * @param modelArg a GDM model instance that hold the RDF data
 	 * @param recordURIArg the record identifier
 	 */
@@ -77,7 +77,7 @@ public class GDMModel implements Model {
 
 	/**
 	 * Creates a new {@link GDMModel} with a given GDM model instance and an identifier of the record.
-	 *
+	 * 
 	 * @param modelArg a GDM model instance that hold the RDF data
 	 * @param recordURIArg the record identifier
 	 * @param recordClassURIArg the URI of the record class
@@ -96,7 +96,7 @@ public class GDMModel implements Model {
 
 	/**
 	 * Gets the GDM model with the GDM data.
-	 *
+	 * 
 	 * @return the GDM model with the GDM data
 	 */
 	public org.dswarm.graph.json.Model getModel() {
@@ -106,7 +106,7 @@ public class GDMModel implements Model {
 
 	/**
 	 * Gets the record identifiers.
-	 *
+	 * 
 	 * @return the record identifiers
 	 */
 	public Set<String> getRecordURIs() {
@@ -216,36 +216,43 @@ public class GDMModel implements Model {
 			return null;
 		}
 
-		// TODO: enable attribute path retrieval from all records, currently, only one record is utilised for schema determination
+		final Set<AttributePathHelper> attributePaths = Sets.newCopyOnWriteArraySet();
 
-		final String resourceURI = getRecordURIs().iterator().next();
+		// attribute path retrieval from all records
+		for(final String resourceURI : getRecordURIs()) {
 
-		final Resource recordResource = model.getResource(resourceURI);
+			final Resource recordResource = model.getResource(resourceURI);
 
-		if (recordResource == null) {
+			if (recordResource == null) {
 
-			GDMModel.LOG.debug("couldn't find record resource for record  uri '" + resourceURI + "' in model");
+				GDMModel.LOG.debug("couldn't find record resource for record  uri '" + resourceURI + "' in model");
 
-			return null;
+				continue;
+			}
+
+			final ObjectNode json = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
+
+			// determine record resource node from statements of the record resource
+			final ResourceNode recordResourceNode = GDMUtil.getResourceNode(resourceURI, recordResource);
+
+			if (recordResourceNode == null) {
+
+				GDMModel.LOG.debug("couldn't find record resource node for record  uri '" + resourceURI + "' in model");
+
+				continue;
+			}
+
+			final JsonNode result = determineUnnormalizedSchema(recordResource, recordResourceNode, json, json);
+
+			Set<AttributePathHelper> recordAttributePaths = Sets.newCopyOnWriteArraySet();
+
+			recordAttributePaths = determineAttributePaths(result, recordAttributePaths, new AttributePathHelper());
+
+			if(recordAttributePaths != null && !recordAttributePaths.isEmpty()) {
+
+				attributePaths.addAll(recordAttributePaths);
+			}
 		}
-
-		final ObjectNode json = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
-
-		// determine record resource node from statements of the record resource
-		final ResourceNode recordResourceNode = GDMUtil.getResourceNode(resourceURI, recordResource);
-
-		if (recordResourceNode == null) {
-
-			GDMModel.LOG.debug("couldn't find record resource node for record  uri '" + resourceURI + "' in model");
-
-			return null;
-		}
-
-		final JsonNode result = determineUnnormalizedSchema(recordResource, recordResourceNode, json, json);
-
-		Set<AttributePathHelper> attributePaths = Sets.newCopyOnWriteArraySet();
-
-		attributePaths = determineAttributePaths(result, attributePaths, new AttributePathHelper());
 
 		return attributePaths;
 	}
