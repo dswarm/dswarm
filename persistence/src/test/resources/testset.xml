@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listRecords>
+	<record>
+		<name>Theo</name>
+		<number>201</number>
+		<color>grün</color>
+		<date>20.11.2013</date>
+	</record>
+	<record>
+		<name>Gisbert</name>
+		<number>234</number>
+		<color>blau</color>
+		<date>20.01.2010</date>
+	</record>
+	<record>
+		<name>Willi</name>
+		<number>345</number>
+		<color>grün</color>
+		<date>10.12.2013</date>
+	</record>
+	<record>
+		<name>Paule</name>
+		<number>333</number>
+		<color>grün</color>
+		<date>10.10.2013</date>
+		<extra>extra</extra>
+	</record>
+	<record>
+		<name>Peter</name>
+		<number>344</number>
+		<color>grün</color>
+		<date>18.12.2013</date>
+	</record>
+	<record>
+		<name>Wladimir</name>
+		<number>3</number>
+		<color>grün</color>
+		<date>20.12.2013</date>
+	</record>
+	<record>
+		<name>Jule</name>
+		<number>34</number>
+		<color>schwarz</color>
+		<date>18.12.2009</date>
+	</record>
+</listRecords>
+	

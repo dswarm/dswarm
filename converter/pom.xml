@@ -12,7 +12,7 @@
 	<version>0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<url>http://dswarm.org/</url>
-	<name>d:swarm - Transformations Converter</name>
+	<name>d:swarm - Converter</name>
 
 	<properties>
 		<commons-csv.version>1.0-SNAPSHOT</commons-csv.version>
