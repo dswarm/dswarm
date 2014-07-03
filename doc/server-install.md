@@ -237,6 +237,7 @@ su
 mv /var/lib/neo4j/data/log{,-old}
 ln -s /data/neo4j/log /var/lib/neo4j/data/log
 mkdir /data/neo4j/log
+chown -R neo4j:adm /data/neo4j/log
 ```
 
 * * *
