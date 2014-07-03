@@ -1,6 +1,7 @@
 package org.dswarm.controller.resources.schema;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -17,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +56,7 @@ import org.dswarm.persistence.service.schema.SchemaService;
 
 /**
  * A resource (controller service) for {@link Schema}s.
- *
+ * 
  * @author tgaengler
  * @author jpolowinski
  */
@@ -66,18 +68,19 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	private static final Logger			LOG	= LoggerFactory.getLogger(SchemasResource.class);
 
 	private final ResourceUtilsFactory	utilsFactory;
-	private final ObjectMapper objectMapper;
+	private final ObjectMapper			objectMapper;
 
 	/**
 	 * Creates a new resource (controller service) for {@link Schema}s with the provider of the schema persistence service, the
 	 * object mapper and metrics registry.
-	 *
-	 * @param schemaServiceProviderArg the schema persistence service provider
+	 * 
+	 * @param utilsFactoryArg the utils factory
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public SchemasResource(final ResourceUtilsFactory utilsFactoryArg, final ObjectMapper objectMapperArg, final DMPStatus dmpStatusArg) throws DMPControllerException {
+	public SchemasResource(final ResourceUtilsFactory utilsFactoryArg, final ObjectMapper objectMapperArg, final DMPStatus dmpStatusArg)
+			throws DMPControllerException {
 
 		super(utilsFactoryArg.reset().get(SchemasResourceUtils.class), dmpStatusArg);
 
@@ -87,7 +90,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 	/**
 	 * This endpoint returns a schema as JSON representation for the provided schema identifier.
-	 *
+	 * 
 	 * @param id a schema identifier
 	 * @return a JSON representation of a schema
 	 */
@@ -106,7 +109,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 	/**
 	 * This endpoint consumes a schema as JSON representation and persists this schema in the database.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one schema
 	 * @return the persisted schema as JSON representation
 	 * @throws DMPControllerException
@@ -125,7 +128,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 	/**
 	 * This endpoint returns a list of all schemas as JSON representation.
-	 *
+	 * 
 	 * @return a list of all schemas as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -143,7 +146,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 	/**
 	 * This endpoint consumes a schema as JSON representation and updates this schema in the database.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one schema
 	 * @param id a schema identifier
 	 * @return the updated schema as JSON representation
@@ -165,16 +168,17 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	}
 
 	/**
-	 * This endpoint consumes an ordered list of attribute names (of an attribute path) as JSON (array) representation and creates
-	 * an attribute path (incl. attributes) from them an updates the schema with this attribute path in the database.
-	 *
-	 * @param attributeNamesJSONArrayString an ordered list of attribute names (of an attribute path) as JSON (array)
-	 *            representation
+	 * This endpoint consumes an ordered list of attribute descriptions - names + URIs - (of an attribute path) as JSON (array)
+	 * representation and creates an attribute path (incl. attributes) from them an updates the schema with this attribute path in
+	 * the database.
+	 * 
+	 * @param attributeDescriptionsJSONArrayString an ordered list of attribute descriptions - names + URIs - (of an attribute
+	 *            path) as JSON (array) representation
 	 * @param id a schema identifier
 	 * @return the updated schema as JSON representation
 	 * @throws DMPControllerException
 	 */
-	@ApiOperation(value = "create attribute path from the given attribute names and update schema with this attribute path", notes = "Returns an updated Schema object.")
+	@ApiOperation(value = "create attribute path from the given attribute descriptions (names + URIs) and update schema with this attribute path", notes = "Returns an updated Schema object.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "schema was successfully updated"),
 			@ApiResponse(code = 404, message = "could not find a schema for the given id"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
@@ -183,10 +187,10 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addAttributePath(
-			@ApiParam(value = "an ordered list of attribute names (of an attribute path) as JSON (array)", required = true) final String attributeNamesJSONArrayString,
+			@ApiParam(value = "an ordered list of attribute descriptions - names + URIs + (of an attribute path) as JSON (array)", required = true) final String attributeDescriptionsJSONArrayString,
 			@ApiParam(value = "schema identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
 
-		SchemasResource.LOG.debug("try to create attribute path from '" + attributeNamesJSONArrayString + "' and add it to "
+		SchemasResource.LOG.debug("try to create attribute path from '" + attributeDescriptionsJSONArrayString + "' and add it to "
 				+ pojoClassResourceUtils.getClaszName() + " with id '" + id + "'");
 
 		final SchemaService persistenceService = pojoClassResourceUtils.getPersistenceService();
@@ -202,7 +206,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 		SchemasResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "'");
 		SchemasResource.LOG.trace(" = '" + ToStringBuilder.reflectionToString(object) + "'");
 
-		final AttributePath attributePath = createAttributePath(attributeNamesJSONArrayString, id);
+		final AttributePath attributePath = createAttributePath(attributeDescriptionsJSONArrayString, id);
 
 		object.addAttributePath(attributePath);
 
@@ -236,10 +240,11 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	/**
 	 * This endpoint consumes an attribute name and creates an attribute path (incl. new attribute) with help of the given
 	 * attribute path (by id) and the freshly created attribute, and updates the schema with this attribute path in the database.
-	 *
+	 * 
 	 * @param schemaId a schema identifier
 	 * @param attributePathId a attribute path identifier
-	 * @param attributeName the name of the attribute that should be created and added at the end of the given attribute path
+	 * @param attributeDescriptionJSONString the name of the attribute that should be created and added at the end of the given
+	 *            attribute path
 	 * @return the updated schema as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -253,8 +258,8 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addAttribute(@ApiParam(value = "schema identifier", required = true) @PathParam("schemaid") final Long schemaId,
 			@ApiParam(value = "attribute path identifier", required = true) @PathParam("attributepathid") final Long attributePathId,
-			@ApiParam(value = "attribute name", required = true) final String attributeNameJson)
-			throws DMPControllerException, IOException {
+			@ApiParam(value = "attribute description (name + URI)", required = true) final String attributeDescriptionJSONString)
+			throws DMPControllerException {
 
 		final SchemaService persistenceService = pojoClassResourceUtils.getPersistenceService();
 		final Schema object = persistenceService.getObject(schemaId);
@@ -275,8 +280,26 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 		final AttributePath baseAttributePath = getAttributePath(attributePathId, attributePathService);
 		final LinkedList<Attribute> baseAttributes = baseAttributePath.getAttributePath();
 
-		final String attributeName = objectMapper.readTree(attributeNameJson).path("attribute_name").asText();
-		final Attribute newAttribute = createOrGetAttribute(attributeName, schemaId);
+		final ObjectNode attributeDescriptionJSON;
+
+		try {
+
+			attributeDescriptionJSON = objectMapper.readValue(attributeDescriptionJSONString, ObjectNode.class);
+		} catch (IOException e) {
+
+			throw new DMPControllerException("couldn't parse attribute description (name + URI)");
+		}
+
+		if (attributeDescriptionJSON == null) {
+
+			throw new DMPControllerException("there is no attribute description");
+		}
+
+		final String schemaBaseURI = SchemaUtils.determineSchemaURI(schemaId);
+		final AttributesResourceUtils attributeResourceUtils = utilsFactory.get(AttributesResourceUtils.class);
+		final AttributeService attributeService = attributeResourceUtils.getPersistenceService();
+
+		final Attribute newAttribute = createOrGetAttribute(attributeDescriptionJSON, schemaBaseURI, attributeService);
 
 		final LinkedList<Attribute> attributes = Lists.newLinkedList(baseAttributes);
 		attributes.add(newAttribute);
@@ -314,7 +337,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 	/**
 	 * This endpoint deletes a schema that matches the given id.
-	 *
+	 * 
 	 * @param id a schema identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
 	 *         went wrong
@@ -354,43 +377,44 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 		return object;
 	}
 
-	private AttributePath createAttributePath(final String attributeNamesJSONArrayString, final Long id) throws DMPControllerException {
+	private AttributePath createAttributePath(final String attributeDescriptionsJSONArrayString, final Long id) throws DMPControllerException {
 
-		if (attributeNamesJSONArrayString == null) {
+		if (attributeDescriptionsJSONArrayString == null) {
 
-			final String message = "attribute names JSON array string shouldn't be null";
+			final String message = "attribute descriptions JSON array string shouldn't be null";
 
 			SchemasResource.LOG.error(message);
 
 			throw new DMPControllerException(message);
 		}
 
-		ArrayNode attributeNamesJSONArray = null;
+		ArrayNode attributeDescriptionsJSONArray = null;
 
 		try {
 
-			attributeNamesJSONArray = pojoClassResourceUtils.getObjectMapper().readValue(attributeNamesJSONArrayString, ArrayNode.class);
+			attributeDescriptionsJSONArray = pojoClassResourceUtils.getObjectMapper()
+					.readValue(attributeDescriptionsJSONArrayString, ArrayNode.class);
 		} catch (final IOException e) {
 
-			final String message = "couldn't deserialize attribute names JSON array";
+			final String message = "couldn't deserialize attribute descriptions JSON array";
 
 			SchemasResource.LOG.error(message);
 
 			throw new DMPControllerException(message);
 		}
 
-		if (attributeNamesJSONArray == null) {
+		if (attributeDescriptionsJSONArray == null) {
 
-			final String message = "attribute names JSON array shouldn't be null";
+			final String message = "attribute descriptions JSON array shouldn't be null";
 
 			SchemasResource.LOG.error(message);
 
 			throw new DMPControllerException(message);
 		}
 
-		if (attributeNamesJSONArray.size() <= 0) {
+		if (attributeDescriptionsJSONArray.size() <= 0) {
 
-			final String message = "attribute names JSON array shouldn't be empty";
+			final String message = "attribute descriptions JSON array shouldn't be empty";
 
 			SchemasResource.LOG.error(message);
 
@@ -402,10 +426,9 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 		final AttributeService attributeService = attributeResourceUtils.getPersistenceService();
 		final LinkedList<Attribute> attributes = Lists.newLinkedList();
 
-		for (final JsonNode attributeNameNode : attributeNamesJSONArray) {
+		for (final JsonNode attributeDescriptionNode : attributeDescriptionsJSONArray) {
 
-			final String attributeName = attributeNameNode.asText();
-			final Attribute attribute = createOrGetAttribute(attributeName, schemaBaseURI, attributeService);
+			final Attribute attribute = createOrGetAttribute(attributeDescriptionNode, schemaBaseURI, attributeService);
 
 			attributes.add(attribute);
 		}
@@ -456,37 +479,10 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 		return attributePath;
 	}
 
-	private Attribute createOrGetAttribute(final String attributeName, final Long schemaId) throws DMPControllerException {
-
-		if (attributeName == null) {
-
-			final String message = "attribute name does not exists";
-
-			SchemasResource.LOG.error(message);
-
-			throw new DMPControllerException(message);
-		}
-
-		if (attributeName.trim().isEmpty()) {
-
-			final String message = "attribute name is an empty string";
-
-			SchemasResource.LOG.error(message);
-
-			throw new DMPControllerException(message);
-		}
-
-		final String schemaBaseURI = SchemaUtils.determineSchemaURI(schemaId);
-		final AttributesResourceUtils attributeResourceUtils = utilsFactory.get(AttributesResourceUtils.class);
-		final AttributeService attributeService = attributeResourceUtils.getPersistenceService();
-
-		return createOrGetAttribute(attributeName, schemaBaseURI, attributeService);
-	}
-
-	private Attribute createOrGetAttribute(final String attributeName, final String schemaBaseURI, final AttributeService attributeService)
+	private Attribute createOrGetAttribute(final String attributeName, final String attributeBaseURI, final AttributeService attributeService)
 			throws DMPControllerException {
 
-		final String attributeURI = SchemaUtils.mintAttributeURI(attributeName, schemaBaseURI);
+		final String attributeURI = SchemaUtils.mintAttributeURI(attributeName, attributeBaseURI);
 
 		ProxyAttribute proxyAttribute = null;
 
@@ -583,6 +579,77 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 		}
 
 		return attributePath;
+	}
+
+	private Attribute createOrGetAttribute(final JsonNode attributeDescriptionNode, final String schemaBaseURI,
+			final AttributeService attributeService) throws DMPControllerException {
+
+		final JsonNode attributeNameNode = attributeDescriptionNode.get("name");
+		final JsonNode attributeURINode = attributeDescriptionNode.get("uri");
+
+		final String attributeName;
+
+		if (attributeNameNode != null) {
+
+			attributeName = attributeNameNode.asText();
+		} else {
+
+			throw new DMPControllerException("there is no name for this attribute");
+		}
+
+		if (attributeName == null) {
+
+			final String message = "attribute name does not exists";
+
+			SchemasResource.LOG.error(message);
+
+			throw new DMPControllerException(message);
+		}
+
+		if (attributeName.trim().isEmpty()) {
+
+			final String message = "attribute name is an empty string";
+
+			SchemasResource.LOG.error(message);
+
+			throw new DMPControllerException(message);
+		}
+
+		final String attributeBaseURI;
+
+		if (attributeURINode != null) {
+
+			final String tempAttributeBaseURI = attributeURINode.asText();
+
+			boolean validURI = false;
+
+			try {
+
+				final URI attributeBaseURIObject = URI.create(tempAttributeBaseURI);
+
+				if (attributeBaseURIObject != null && attributeBaseURIObject.getScheme() != null) {
+
+					validURI = true;
+				}
+			} catch (final IllegalArgumentException e) {
+
+				validURI = false;
+			}
+
+			if (!validURI) {
+
+				throw new DMPControllerException("'" + tempAttributeBaseURI + "' is not a valid URI");
+			}
+
+			attributeBaseURI = tempAttributeBaseURI;
+		} else {
+
+			attributeBaseURI = schemaBaseURI;
+		}
+
+		final Attribute attribute = createOrGetAttribute(attributeName, attributeBaseURI, attributeService);
+
+		return attribute;
 	}
 
 }

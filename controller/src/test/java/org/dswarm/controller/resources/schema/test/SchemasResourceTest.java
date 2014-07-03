@@ -175,12 +175,15 @@ public class SchemasResourceTest extends
 		final String attributeName2 = "attribute2";
 		final String attributeName3 = "a3";
 
-		final ArrayNode attributeNamesJSONArray = objectMapper.createArrayNode();
-		attributeNamesJSONArray.add(attributeName1);
-		attributeNamesJSONArray.add(attributeName2);
-		attributeNamesJSONArray.add(attributeName3);
+		final ArrayNode attributeDescriptionsJSONArray = objectMapper.createArrayNode();
+		final ObjectNode attributeDescriptionJSON1 = createAttributeDescription(attributeName1, schemaBaseURI);
+		final ObjectNode attributeDescriptionJSON2 = createAttributeDescription(attributeName2, schemaBaseURI);
+		final ObjectNode attributeDescriptionJSON3 = createAttributeDescription(attributeName3, null);
+		attributeDescriptionsJSONArray.add(attributeDescriptionJSON1);
+		attributeDescriptionsJSONArray.add(attributeDescriptionJSON2);
+		attributeDescriptionsJSONArray.add(attributeDescriptionJSON3);
 
-		final String attributeNamesJSONArrayString = objectMapper.writeValueAsString(attributeNamesJSONArray);
+		final String attributeNamesJSONArrayString = objectMapper.writeValueAsString(attributeDescriptionsJSONArray);
 
 		final Response response = target().path("/" + schema.getId()).request(MediaType.APPLICATION_JSON_TYPE)
 				.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(attributeNamesJSONArrayString));
@@ -285,7 +288,8 @@ public class SchemasResourceTest extends
 		final Long baseAttributePathId = baseAttributePath.getId();
 
 		final Map<String, String> jsonMap = Maps.newHashMap();
-		jsonMap.put("attribute_name", attributeName1);
+		jsonMap.put("name", attributeName1);
+		jsonMap.put("uri", schemaBaseURI);
 		final String payloadJson = objectMapper.writeValueAsString(jsonMap);
 
 		final Response response = target().path("/" + schema.getId() + "/attributepaths/" + baseAttributePathId)
@@ -448,5 +452,18 @@ public class SchemasResourceTest extends
 		Assert.assertEquals("persisted and updated schema name should be equal", updateSchema.getName(), updateSchemaNameString);
 
 		return updateSchema;
+	}
+
+	private ObjectNode createAttributeDescription(final String name, final String uri) {
+
+		final ObjectNode attributeDescriptionJSON = objectMapper.createObjectNode();
+		attributeDescriptionJSON.put("name", name);
+
+		if(uri != null) {
+
+			attributeDescriptionJSON.put("uri", uri);
+		}
+
+		return attributeDescriptionJSON;
 	}
 }

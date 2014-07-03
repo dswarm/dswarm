@@ -245,9 +245,9 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 			try {
 
-				final URI _uri = URI.create(identifier);
+				final URI uri = URI.create(identifier);
 
-				return _uri != null && _uri.getScheme() != null;
+				return uri != null && uri.getScheme() != null;
 			} catch (final IllegalArgumentException e) {
 
 				return false;
