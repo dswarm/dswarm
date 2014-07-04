@@ -1,0 +1,586 @@
+{
+    "name": "remove mapping test",
+    "description": "my project description",
+    "id": 1,
+    "input_data_model": {
+        "name": "atMostTwoRows.csv + my configuration name data model",
+        "description": " data model of resource 'atMostTwoRows.csv' and configuration ' my configuration name'",
+        "configuration": {
+            "name": "my configuration name",
+            "description": "my configuration description",
+            "id": 1,
+            "resources": [{
+                "id": 1
+            }],
+            "parameters": {
+                "column_delimiter": ";",
+                "escape_character": "\\",
+                "quote_character": "\"",
+                "first_row_is_headings": true,
+                "column_names": "columnN",
+                "storage_type": "csv"
+            }
+        },
+        "schema": {
+            "name": "atMostTwoRows.csv schema",
+            "id": 3,
+            "attribute_paths": [{
+                "id": 1,
+                "attributes": [{
+                    "name": "type",
+                    "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                    "id": 1
+                }]
+            }, {
+                "id": 40,
+                "attributes": [{
+                    "name": "first",
+                    "uri": "http://data.slub-dresden.de/resources/1/schema#first",
+                    "id": 36
+                }]
+            }, {
+                "id": 41,
+                "attributes": [{
+                    "name": "last",
+                    "uri": "http://data.slub-dresden.de/resources/1/schema#last",
+                    "id": 37
+                }]
+            }, {
+                "id": 42,
+                "attributes": [{
+                    "name": "address",
+                    "uri": "http://data.slub-dresden.de/resources/1/schema#address",
+                    "id": 38
+                }]
+            }, {
+                "id": 43,
+                "attributes": [{
+                    "name": "city",
+                    "uri": "http://data.slub-dresden.de/resources/1/schema#city",
+                    "id": 39
+                }]
+            }, {
+                "id": 44,
+                "attributes": [{
+                    "name": "zip",
+                    "uri": "http://data.slub-dresden.de/resources/1/schema#zip",
+                    "id": 40
+                }]
+            }],
+            "record_class": {
+                "name": "record type",
+                "uri": "http://data.slub-dresden.de/resources/1/schema#RecordType",
+                "id": 3
+            }
+        },
+        "id": 3,
+        "data_resource": {
+            "name": "atMostTwoRows.csv",
+            "description": "my resource description",
+            "type": "FILE",
+            "id": 1,
+            "resource_attributes": {
+                "path": "C:\\DMP\\datamanagement-platform\\init\\..\\tmp\\resources\\atMostTwoRows.csv",
+                "filetype": "application/vnd.ms-excel",
+                "filesize": -1
+            },
+            "configurations": [{
+                "name": "my configuration name",
+                "description": "my configuration description",
+                "id": 1,
+                "resources": [{
+                    "id": 1
+                }],
+                "parameters": {
+                    "column_delimiter": ";",
+                    "escape_character": "\\",
+                    "quote_character": "\"",
+                    "first_row_is_headings": true,
+                    "column_names": "columnN",
+                    "storage_type": "csv"
+                }
+            }]
+        }
+    },
+    "mappings": [{
+        "id": -1404297542685,
+        "name": "type-to-type",
+        "input_attribute_paths": [{
+            "type": "MappingAttributePathInstance",
+            "name": "input mapping attribute path instance",
+            "id": -1404297542690,
+            "attribute_path": {
+                "id": 1,
+                "attributes": [{
+                    "name": "type",
+                    "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                    "id": 1
+                }]
+            }
+        }],
+        "output_attribute_path": {
+            "type": "MappingAttributePathInstance",
+            "name": "output mapping attribute path instance",
+            "id": -1404297542691,
+            "attribute_path": {
+                "id": 1,
+                "attributes": [{
+                    "name": "type",
+                    "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                    "id": 1
+                }]
+            }
+        }
+    }, {
+        "id": -1404297555465,
+        "name": "first+last-to-contributor",
+        "transformation": {
+            "name": "transformation",
+            "description": "transformation",
+            "function": {
+                "name": "transformation",
+                "description": "transformation",
+                "type": "Transformation",
+                "components": [{
+                    "function": {
+                        "name": "concat",
+                        "description": "Collects all received values and concatenates them on record end.",
+                        "id": 23,
+                        "function_description": {
+                            "name": "concat",
+                            "dsl": "metafacture",
+                            "reference": "concat",
+                            "description": "Collects all received values and concatenates them on record end.",
+                            "parameters": {
+                                "delimiter": {
+                                    "type": "text"
+                                },
+                                "prefix": {
+                                    "type": "text",
+                                    "optional": true
+                                },
+                                "postfix": {
+                                    "type": "text",
+                                    "optional": true
+                                }
+                            }
+                        },
+                        "parameters": ["delimiter", "prefix", "postfix"],
+                        "type": "Function"
+                    },
+                    "name": "component1404297589976",
+                    "id": -1404297589660,
+                    "description": "{\"x\":\"first\",\"y\":0}",
+                    "parameter_mappings": {
+                        "delimiter": " ",
+                        "inputString": "first,last"
+                    }
+                }]
+            },
+            "parameter_mappings": {
+                "first": "http://data.slub-dresden.de/resources/1/schema#first",
+                "__TRANSFORMATION_OUTPUT_VARIABLE__2": "http://purl.org/dc/elements/1.1/contributor",
+                "last": "http://data.slub-dresden.de/resources/1/schema#last"
+            }
+        },
+        "input_attribute_paths": [{
+            "type": "MappingAttributePathInstance",
+            "name": "input mapping attribute path instance",
+            "id": -1404297555484,
+            "attribute_path": {
+                "id": 40,
+                "attributes": [{
+                    "name": "first",
+                    "uri": "http://data.slub-dresden.de/resources/1/schema#first",
+                    "id": 36
+                }]
+            },
+            "filter": {
+                "id": -1404297573850,
+                "expression": "{\"http://data.slub-dresden.de/resources/1/schema#last\":\"Doe\"}"
+            }
+        }, {
+            "type": "MappingAttributePathInstance",
+            "name": "input mapping attribute path instance",
+            "id": -1404297560848,
+            "attribute_path": {
+                "id": 41,
+                "attributes": [{
+                    "name": "last",
+                    "uri": "http://data.slub-dresden.de/resources/1/schema#last",
+                    "id": 37
+                }]
+            },
+            "filter": {
+                "id": -1404297585033,
+                "expression": "{\"http://data.slub-dresden.de/resources/1/schema#city\":\"Anytown\"}"
+            }
+        }],
+        "output_attribute_path": {
+            "type": "MappingAttributePathInstance",
+            "name": "output mapping attribute path instance",
+            "id": -1404297555485,
+            "attribute_path": {
+                "id": 11,
+                "attributes": [{
+                    "name": "contributor",
+                    "uri": "http://purl.org/dc/elements/1.1/contributor",
+                    "id": 11
+                }]
+            }
+        }
+    }, {
+        "id": -1404297608676,
+        "name": "city-to-shortTitle",
+        "input_attribute_paths": [{
+            "type": "MappingAttributePathInstance",
+            "name": "input mapping attribute path instance",
+            "id": -1404297608749,
+            "attribute_path": {
+                "id": 43,
+                "attributes": [{
+                    "name": "city",
+                    "uri": "http://data.slub-dresden.de/resources/1/schema#city",
+                    "id": 39
+                }]
+            }
+        }],
+        "output_attribute_path": {
+            "type": "MappingAttributePathInstance",
+            "name": "output mapping attribute path instance",
+            "id": -1404297608750,
+            "attribute_path": {
+                "id": 7,
+                "attributes": [{
+                    "name": "shortTitle",
+                    "uri": "http://purl.org/ontology/bibo/shortTitle",
+                    "id": 7
+                }]
+            }
+        }
+    }],
+    "functions": [{
+        "name": "concat",
+        "description": "Collects all received values and concatenates them on record end.",
+        "id": 23,
+        "function_description": {
+            "name": "concat",
+            "dsl": "metafacture",
+            "reference": "concat",
+            "description": "Collects all received values and concatenates them on record end.",
+            "parameters": {
+                "delimiter": {
+                    "type": "text"
+                },
+                "prefix": {
+                    "type": "text",
+                    "optional": true
+                },
+                "postfix": {
+                    "type": "text",
+                    "optional": true
+                }
+            }
+        },
+        "parameters": ["delimiter", "prefix", "postfix"],
+        "type": "Function"
+    }],
+    "output_data_model": {
+        "name": "Internal Data Model BiboDocument",
+        "description": "Internal Data Model BiboDocument",
+        "schema": {
+            "name": "bibo:Document-Schema (KIM-Titeldaten)",
+            "id": 2,
+            "attribute_paths": [{
+                "id": 37,
+                "attributes": [{
+                    "name": "contributor",
+                    "uri": "http://purl.org/dc/terms/contributor",
+                    "id": 10
+                }, {
+                    "name": "type",
+                    "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                    "id": 1
+                }]
+            }, {
+                "id": 38,
+                "attributes": [{
+                    "name": "contributor",
+                    "uri": "http://purl.org/dc/terms/contributor",
+                    "id": 10
+                }, {
+                    "name": "familyName",
+                    "uri": "http://xmlns.com/foaf/0.1/familyName",
+                    "id": 34
+                }]
+            }, {
+                "id": 39,
+                "attributes": [{
+                    "name": "contributor",
+                    "uri": "http://purl.org/dc/terms/contributor",
+                    "id": 10
+                }, {
+                    "name": "givenName",
+                    "uri": "http://xmlns.com/foaf/0.1/givenName",
+                    "id": 35
+                }]
+            }, {
+                "id": 33,
+                "attributes": [{
+                    "name": "bibliographicCitation",
+                    "uri": "http://purl.org/dc/terms/bibliographicCitation",
+                    "id": 33
+                }]
+            }, {
+                "id": 34,
+                "attributes": [{
+                    "name": "creator",
+                    "uri": "http://purl.org/dc/terms/creator",
+                    "id": 8
+                }, {
+                    "name": "type",
+                    "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                    "id": 1
+                }]
+            }, {
+                "id": 35,
+                "attributes": [{
+                    "name": "creator",
+                    "uri": "http://purl.org/dc/terms/creator",
+                    "id": 8
+                }, {
+                    "name": "familyName",
+                    "uri": "http://xmlns.com/foaf/0.1/familyName",
+                    "id": 34
+                }]
+            }, {
+                "id": 36,
+                "attributes": [{
+                    "name": "creator",
+                    "uri": "http://purl.org/dc/terms/creator",
+                    "id": 8
+                }, {
+                    "name": "givenName",
+                    "uri": "http://xmlns.com/foaf/0.1/givenName",
+                    "id": 35
+                }]
+            }, {
+                "id": 3,
+                "attributes": [{
+                    "name": "title",
+                    "uri": "http://purl.org/dc/elements/1.1/title",
+                    "id": 3
+                }]
+            }, {
+                "id": 1,
+                "attributes": [{
+                    "name": "type",
+                    "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                    "id": 1
+                }]
+            }, {
+                "id": 7,
+                "attributes": [{
+                    "name": "shortTitle",
+                    "uri": "http://purl.org/ontology/bibo/shortTitle",
+                    "id": 7
+                }]
+            }, {
+                "id": 8,
+                "attributes": [{
+                    "name": "creator",
+                    "uri": "http://purl.org/dc/terms/creator",
+                    "id": 8
+                }]
+            }, {
+                "id": 5,
+                "attributes": [{
+                    "name": "otherTitleInformation",
+                    "uri": "http://rdvocab.info/Elements/otherTitleInformation",
+                    "id": 5
+                }]
+            }, {
+                "id": 6,
+                "attributes": [{
+                    "name": "alternative",
+                    "uri": "http://purl.org/dc/terms/alternative",
+                    "id": 6
+                }]
+            }, {
+                "id": 11,
+                "attributes": [{
+                    "name": "contributor",
+                    "uri": "http://purl.org/dc/elements/1.1/contributor",
+                    "id": 11
+                }]
+            }, {
+                "id": 12,
+                "attributes": [{
+                    "name": "publicationStatement",
+                    "uri": "http://rdvocab.info/Elements/publicationStatement",
+                    "id": 12
+                }]
+            }, {
+                "id": 9,
+                "attributes": [{
+                    "name": "creator",
+                    "uri": "http://purl.org/dc/elements/1.1/creator",
+                    "id": 9
+                }]
+            }, {
+                "id": 10,
+                "attributes": [{
+                    "name": "contributor",
+                    "uri": "http://purl.org/dc/terms/contributor",
+                    "id": 10
+                }]
+            }, {
+                "id": 15,
+                "attributes": [{
+                    "name": "issued",
+                    "uri": "http://purl.org/dc/terms/issued",
+                    "id": 15
+                }]
+            }, {
+                "id": 16,
+                "attributes": [{
+                    "name": "sameAs",
+                    "uri": "http://www.w3.org/2002/07/owl#sameAs",
+                    "id": 16
+                }]
+            }, {
+                "id": 13,
+                "attributes": [{
+                    "name": "placeOfPublication",
+                    "uri": "http://rdvocab.info/Elements/placeOfPublication",
+                    "id": 13
+                }]
+            }, {
+                "id": 14,
+                "attributes": [{
+                    "name": "publisher",
+                    "uri": "http://purl.org/dc/elements/1.1/publisher",
+                    "id": 14
+                }]
+            }, {
+                "id": 20,
+                "attributes": [{
+                    "name": "lccn",
+                    "uri": "http://purl.org/ontology/bibo/lccn",
+                    "id": 20
+                }]
+            }, {
+                "id": 19,
+                "attributes": [{
+                    "name": "eissn",
+                    "uri": "http://purl.org/ontology/bibo/eissn",
+                    "id": 19
+                }]
+            }, {
+                "id": 18,
+                "attributes": [{
+                    "name": "issn",
+                    "uri": "http://purl.org/ontology/bibo/issn",
+                    "id": 18
+                }]
+            }, {
+                "id": 17,
+                "attributes": [{
+                    "name": "isLike",
+                    "uri": "http://umbel.org/umbel#isLike",
+                    "id": 17
+                }]
+            }, {
+                "id": 24,
+                "attributes": [{
+                    "name": "hasPart",
+                    "uri": "http://purl.org/dc/terms/hasPart",
+                    "id": 24
+                }]
+            }, {
+                "id": 23,
+                "attributes": [{
+                    "name": "medium",
+                    "uri": "http://purl.org/dc/terms/medium",
+                    "id": 23
+                }]
+            }, {
+                "id": 22,
+                "attributes": [{
+                    "name": "isbn",
+                    "uri": "http://purl.org/ontology/bibo/isbn",
+                    "id": 22
+                }]
+            }, {
+                "id": 21,
+                "attributes": [{
+                    "name": "oclcnum",
+                    "uri": "http://purl.org/ontology/bibo/oclcnum",
+                    "id": 21
+                }]
+            }, {
+                "id": 28,
+                "attributes": [{
+                    "name": "precededBy",
+                    "uri": "http://rdvocab.info/Elements/precededBy",
+                    "id": 28
+                }]
+            }, {
+                "id": 27,
+                "attributes": [{
+                    "name": "isFormatOf",
+                    "uri": "http://purl.org/dc/terms/isFormatOf",
+                    "id": 27
+                }]
+            }, {
+                "id": 26,
+                "attributes": [{
+                    "name": "hasVersion",
+                    "uri": "http://purl.org/dc/terms/hasVersion",
+                    "id": 26
+                }]
+            }, {
+                "id": 25,
+                "attributes": [{
+                    "name": "isPartOf",
+                    "uri": "http://purl.org/dc/terms/isPartOf",
+                    "id": 25
+                }]
+            }, {
+                "id": 32,
+                "attributes": [{
+                    "name": "edition",
+                    "uri": "http://purl.org/ontology/bibo/edition",
+                    "id": 32
+                }]
+            }, {
+                "id": 31,
+                "attributes": [{
+                    "name": "1053",
+                    "uri": "http://iflastandards.info/ns/isbd/elements/1053",
+                    "id": 31
+                }]
+            }, {
+                "id": 30,
+                "attributes": [{
+                    "name": "language",
+                    "uri": "http://purl.org/dc/terms/language",
+                    "id": 30
+                }]
+            }, {
+                "id": 29,
+                "attributes": [{
+                    "name": "succeededBy",
+                    "uri": "http://rdvocab.info/Elements/succeededBy",
+                    "id": 29
+                }]
+            }],
+            "record_class": {
+                "name": "Document",
+                "uri": "http://purl.org/ontology/bibo/Document",
+                "id": 2
+            }
+        },
+        "id": 2
+    }
+}
