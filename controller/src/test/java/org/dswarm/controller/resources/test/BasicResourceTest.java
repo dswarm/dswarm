@@ -2,6 +2,7 @@ package org.dswarm.controller.resources.test;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Set;
 
 import javax.ws.rs.core.MediaType;
@@ -95,6 +96,8 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 
 		BasicResourceTest.LOG.debug("start GET " + pojoClassName + "s test");
 
+		List<POJOCLASS> testIndependentPersistedObjects = pojoClassResourceTestUtils.getObjects();
+				
 		final POJOCLASS actualObject = createObjectInternal();
 
 		BasicResourceTest.LOG.debug("try to retrieve " + pojoClassName + "s");
@@ -106,6 +109,7 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 		final String responseObjects = response.readEntity(String.class);
 
 		expectedObjects = Sets.newHashSet();
+		expectedObjects.addAll(testIndependentPersistedObjects);
 		expectedObjects.add(actualObject);
 
 		pojoClassResourceTestUtils.reset();

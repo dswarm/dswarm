@@ -77,6 +77,8 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 
 	public void compareObjects(final Set<POJOCLASS> expectedObjects, final Map<POJOCLASSIDTYPE, POJOCLASS> actualObjects) {
 
+		Assert.assertEquals("different number of " + pojoClassName + " objects.", expectedObjects.size(), actualObjects.size());
+		
 		for (final POJOCLASS expectedObject : expectedObjects) {
 
 			final POJOCLASS actualObject = actualObjects.get(expectedObject.getId());
