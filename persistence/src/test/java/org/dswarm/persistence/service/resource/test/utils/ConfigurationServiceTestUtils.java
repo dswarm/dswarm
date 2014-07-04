@@ -1,6 +1,7 @@
 package org.dswarm.persistence.service.resource.test.utils;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -8,11 +9,13 @@ import org.junit.Assert;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.proxy.ProxyConfiguration;
+import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.service.resource.ConfigurationService;
 import org.dswarm.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestUtils;
 
@@ -23,12 +26,19 @@ public class ConfigurationServiceTestUtils extends ExtendedBasicDMPJPAServiceTes
 		super(Configuration.class, ConfigurationService.class);
 	}
 
+	/**
+	 * {@inheritDoc} <br />
+	 * Assert that both {@link Configuration}s have no or equal parameters. TODO compareConfigurations
+	 */
 	@Override
-	public void compareObjects(final Configuration expectedObject, final Configuration actualObject) {
+	public void compareObjects(final Configuration expectedConfiguration, final Configuration actualConfiguration) {
 
-		super.compareObjects(expectedObject, actualObject);
+		super.compareObjects(expectedConfiguration, actualConfiguration);
 
-		compareConfigurations(expectedObject, actualObject);
+		Assert.assertEquals("parameters are not equal", expectedConfiguration.getParameters(), actualConfiguration.getParameters());
+
+		// TODO SR: we may compare resources here but need to make sure not to run into cycles since resources link to
+		// configurations...
 	}
 
 	public Configuration createConfiguration(final String name, final String description, final ObjectNode parameters) throws Exception {
@@ -45,36 +55,6 @@ public class ConfigurationServiceTestUtils extends ExtendedBasicDMPJPAServiceTes
 		Assert.assertNotNull("updated configuration id shouldn't be null", updatedConfiguration.getId());
 
 		return updatedConfiguration;
-	}
-
-	private void compareConfigurations(final Configuration expectedConfiguration, final Configuration actualConfiguration) {
-
-		Assert.assertNotNull("parameters are null", actualConfiguration.getParameters());
-		Assert.assertEquals("parameters are not equal", expectedConfiguration.getParameters(), actualConfiguration.getParameters());
-
-		final ObjectNode parameters = expectedConfiguration.getParameters();
-
-		final Iterator<Entry<String, JsonNode>> parameterEntriesIter = parameters.fields();
-
-		final ObjectNode responseParameters = actualConfiguration.getParameters();
-
-		Assert.assertNotNull("response parameters shouldn't be null", responseParameters);
-
-		while (parameterEntriesIter.hasNext()) {
-
-			final Entry<String, JsonNode> parameterEntry = parameterEntriesIter.next();
-
-			final String parameterKey = parameterEntry.getKey();
-
-			final JsonNode parameterValueNode = responseParameters.get(parameterKey);
-
-			Assert.assertNotNull("parameter '" + parameterKey + "' is not part of the response configuration parameters", parameterValueNode);
-
-			final String parameterValue = parameterEntry.getValue().asText();
-
-			Assert.assertTrue("the parameter values of '" + parameterKey + "' are not equal. expected = '" + parameterValue + "'; was = '"
-					+ parameterValueNode.asText() + "'", parameterValue.equals(parameterValueNode.asText()));
-		}
 	}
 
 	/**

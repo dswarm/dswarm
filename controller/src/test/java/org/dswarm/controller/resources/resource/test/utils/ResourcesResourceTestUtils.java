@@ -108,7 +108,7 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 
 		}
 
-		compareObjects(expectedObject, responseResource);
+		persistenceServiceTestUtils.compareObjects(expectedObject, responseResource);
 
 		return responseResource;
 	}
@@ -132,7 +132,7 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 
 		final Resource responseResource = objectMapper.readValue(responseResourceString, Resource.class);
 
-		compareResources(expectedResource, responseResource);
+		persistenceServiceTestUtils.compareObjects(expectedResource, responseResource);
 
 		return responseResource;
 	}
@@ -159,62 +159,5 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 
 		return responseConfiguration;
 	}
-
-	private void compareResources(final Resource expectedResource, final Resource actualResource) {
-
-		if (expectedResource.getAttributes() != null) {
-
-			Assert.assertNotNull("attributes are null", actualResource.getAttributes());
-
-			final ObjectNode attributes = expectedResource.getAttributes();
-
-			final Iterator<Entry<String, JsonNode>> attributeEntriesIter = attributes.fields();
-
-			final ObjectNode responseAttributes = actualResource.getAttributes();
-
-			Assert.assertNotNull("response attributes shouldn't be null", responseAttributes);
-
-			while (attributeEntriesIter.hasNext()) {
-
-				final Entry<String, JsonNode> attributeEntry = attributeEntriesIter.next();
-
-				final String attributeKey = attributeEntry.getKey();
-
-				if (attributeKey.equals("path")) {
-
-					// skip path attribute
-
-					continue;
-				}
-
-				final JsonNode attributeValueNode = responseAttributes.get(attributeKey);
-
-				Assert.assertNotNull("attribute '" + attributeKey + "' is not part of the response resource attributes", attributeValueNode);
-
-				final String attributeValue = attributeEntry.getValue().asText();
-
-				// Assert.assertTrue("the attribute values of '" + attributeKey + "' are not equal. expected = '" + attributeValue
-				// + "'; was = '"
-				// + attributeValueNode.asText() + "'", attributeValue.equals(attributeValueNode.asText()));
-			}
-		}
-
-		if (expectedResource.getConfigurations() != null && !expectedResource.getConfigurations().isEmpty()) {
-
-			final Set<Configuration> actualConfigurations = actualResource.getConfigurations();
-
-			Assert.assertNotNull("configurations of actual resource '" + actualResource.getId() + "' shouldn't be null", actualConfigurations);
-			Assert.assertFalse("configurations of actual resource '" + actualResource.getId() + "' shouldn't be empty",
-					actualConfigurations.isEmpty());
-
-			final Map<Long, Configuration> actualConfigurationsMap = Maps.newHashMap();
-
-			for (final Configuration actualConfiguration : actualConfigurations) {
-
-				actualConfigurationsMap.put(actualConfiguration.getId(), actualConfiguration);
-			}
-
-			configurationsResourceTestUtils.compareObjects(expectedResource.getConfigurations(), actualConfigurationsMap);
-		}
-	}
+	
 }

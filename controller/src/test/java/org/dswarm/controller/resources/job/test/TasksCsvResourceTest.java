@@ -3,6 +3,7 @@ package org.dswarm.controller.resources.job.test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -12,23 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.FileUtils;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matchers;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
-import com.google.common.collect.Maps;
-import com.google.common.io.Resources;
-
+import org.apache.tika.Tika;
 import org.dswarm.controller.resources.resource.test.utils.ConfigurationsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
@@ -50,6 +35,23 @@ import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.Matchers;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.TextNode;
+import com.google.common.collect.Maps;
+import com.google.common.io.Resources;
 
 public class TasksCsvResourceTest extends ResourceTest {
 
@@ -117,6 +119,30 @@ public class TasksCsvResourceTest extends ResourceTest {
 		final URL fileURL = Resources.getResource(resourceFileName);
 		final File resourceFile = FileUtils.toFile(fileURL);
 
+		final ObjectNode attributes1 = new ObjectNode(objectMapper.getNodeFactory());
+		attributes1.put("path", resourceFile.getAbsolutePath());
+
+		String fileType = null;
+
+		Tika tika = new Tika();
+		try {
+			fileType = tika.detect(resourceFile);
+//			fileType = Files.probeContentType(resourceFile.toPath());
+		} catch (final IOException e1) {
+
+			LOG.debug("couldn't determine file type from file '" + resourceFile.getAbsolutePath() + "'");
+		}
+
+		if (fileType != null) {
+
+			attributes1.put("filetype", fileType);
+		}
+
+		// hint: size is not important to know since its value is skipped in the comparison of actual and expected resource
+		attributes1.put("filesize", -1);
+
+		res1.setAttributes(attributes1);
+
 		// upload data resource
 		resource = resourcesResourceTestUtils.uploadResource(resourceFile, res1);
 
@@ -140,7 +166,8 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 		final String dataModelJSONString = objectMapper.writeValueAsString(data1);
 
-		dataModel = dataModelsResourceTestUtils.createObject(dataModelJSONString, data1);
+		// do not compare dataModelJSONString with data1 since the schema is automatically created, comparison would fail.
+		dataModel = dataModelsResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
 
 		Assert.assertNotNull("the data model shouldn't be null", dataModel);
 		Assert.assertNotNull("the data model schema shouldn't be null", dataModel.getSchema());
@@ -197,6 +224,8 @@ public class TasksCsvResourceTest extends ResourceTest {
 		final Response response = target().queryParam("persist", Boolean.TRUE).request(MediaType.APPLICATION_JSON_TYPE)
 				.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(finalTaskJSONString));
 
+		// SR Start checking response
+
 		Assert.assertEquals("200 Created was expected", 200, response.getStatus());
 
 		final String responseString = response.readEntity(String.class);
@@ -232,6 +261,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 					.asText();
 			final JsonNode actualNode = getRecordData(recordData, actualJSONArray, actualDataResourceSchemaBaseURI + "description");
 
+			// SR TODO use Assert.assertNotNull here?
 			Assert.assertThat(actualNode, CoreMatchers.is(Matchers.notNullValue()));
 
 			final ObjectNode expectedRecordData = (ObjectNode) expectedNode.get("record_data").get(0);

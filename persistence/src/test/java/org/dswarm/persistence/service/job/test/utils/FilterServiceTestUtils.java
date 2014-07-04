@@ -14,12 +14,16 @@ public class FilterServiceTestUtils extends BasicDMPJPAServiceTestUtils<FilterSe
 		super(Filter.class, FilterService.class);
 	}
 
+	/**
+	 * {@inheritDoc} <br />
+	 * Assert the filter expressions are equal.  
+	 */
 	@Override
-	public void compareObjects(final Filter expectedObject, final Filter actualObject) {
+	public void compareObjects(final Filter expectedFilter, final Filter actualFilter) {
 
-		super.compareObjects(expectedObject, actualObject);
+		super.compareObjects(expectedFilter, actualFilter);
 
-		compareFilters(expectedObject, actualObject);
+		Assert.assertEquals("the filter expressions should be equal", expectedFilter.getExpression(), actualFilter.getExpression());
 	}
 
 	public Filter createFilter(final String name, final String expression) throws Exception {
@@ -34,14 +38,7 @@ public class FilterServiceTestUtils extends BasicDMPJPAServiceTestUtils<FilterSe
 		return updatedFilter;
 	}
 
-	private void compareFilters(final Filter expectedFilter, final Filter actualFilter) {
-
-		if (expectedFilter.getExpression() != null) {
-
-			Assert.assertNotNull("the filter expression shouldn't be null", actualFilter.getExpression());
-			Assert.assertEquals(expectedFilter.getExpression(), actualFilter.getExpression());
-		}
-	}
+	
 
 	/**
 	 * {@inheritDoc}<br/>

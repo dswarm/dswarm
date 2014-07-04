@@ -64,12 +64,25 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 		attributeResourceTestUtils = new AttributeServiceTestUtils();
 	}
 
+	/**
+	 * {@inheritDoc} <br />
+	 * Assert that both {@link AttributePath}s have either no {@link Attribute}s or {@link Attribute}s are equal. See {@link BasicJPAServiceTestUtils#compareObjects(Set, Map)} for details
+	 * 
+	 * @param expectedObject
+	 * @param actualObject
+	 */
 	@Override
 	public void compareObjects(final AttributePath expectedObject, final AttributePath actualObject) {
 
 		super.compareObjects(expectedObject, actualObject);
 
-		if (expectedObject.getAttributes() != null && !expectedObject.getAttributes().isEmpty()) {
+		if (expectedObject.getAttributes() == null || expectedObject.getAttributes().isEmpty()) {
+
+			boolean actualHasNoAttributes = actualObject.getAttributes() == null || actualObject.getAttributes().isEmpty();
+			Assert.assertTrue("the actual attribute path should not have any attributes", actualHasNoAttributes);
+
+		} else {
+			// !null && !empty
 
 			final Set<Attribute> actualAttributes = actualObject.getAttributes();
 

@@ -1,10 +1,14 @@
 package org.dswarm.persistence.service.resource.test.utils;
 
+import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
+import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
+import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 import org.dswarm.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestUtils;
+import org.junit.Assert;
 
 public class DataModelServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils<DataModelService, ProxyDataModel, DataModel> {
 
@@ -23,30 +27,46 @@ public class DataModelServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 		schemasResourceTestUtils = new SchemaServiceTestUtils();
 	}
 
+	/**
+	 * {@inheritDoc} <br />
+	 * Assert that either both data models have no {@link Resource} or their resources are equal, see
+	 * {@link ResourceServiceTestUtils#compareObjects(Resource, Resource)}. <br />
+	 * Assert that either both data models have no {@link Configuration} or their configurations are equal, see
+	 * {@link ConfigurationServiceTestUtils#compareObjects(Configuration, Configuration)}. <br />
+	 * Assert that either both data models have no {@link Schema} or their schemata are equal, see
+	 * {@link SchemaServiceTestUtils#compareObjects(Schema, Schema)}. <br />
+	 */
 	@Override
-	public void compareObjects(final DataModel expectedObject, final DataModel actualObject) {
+	public void compareObjects(final DataModel expectedDataModel, final DataModel actualDataModel) {
 
-		super.compareObjects(expectedObject, actualObject);
-
-		compareDataModels(expectedObject, actualObject);
-	}
-
-	private void compareDataModels(final DataModel expectedDataModel, final DataModel actualDataModel) {
+		super.compareObjects(expectedDataModel, actualDataModel);
 
 		// TODO: re-enable reference deserializer or manually retrieve objects by from DB
 
-		if (expectedDataModel.getDataResource() != null) {
+		// check resource
+		if (expectedDataModel.getDataResource() == null) {
 
+			Assert.assertNull("the actual data model shouldn't have a resource", actualDataModel.getDataResource());
+
+		} else {
 			resourcesResourceTestUtils.compareObjects(expectedDataModel.getDataResource(), actualDataModel.getDataResource());
 		}
 
-		if (expectedDataModel.getConfiguration() != null) {
+		// check configuration
+		if (expectedDataModel.getConfiguration() == null) {
 
+			Assert.assertNull("the actual data model shouldn't have a configuration", actualDataModel.getConfiguration());
+
+		} else {
 			configurationsResourceTestUtils.compareObjects(expectedDataModel.getConfiguration(), actualDataModel.getConfiguration());
 		}
 
-		if (expectedDataModel.getSchema() != null) {
+		// check schema
+		if (expectedDataModel.getSchema() == null) {
 
+			Assert.assertNull("the actual data model shouldn't have a schema", actualDataModel.getSchema());
+
+		} else {
 			schemasResourceTestUtils.compareObjects(expectedDataModel.getSchema(), actualDataModel.getSchema());
 		}
 	}

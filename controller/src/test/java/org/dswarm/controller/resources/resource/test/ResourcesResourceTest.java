@@ -9,7 +9,6 @@ import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.ws.rs.client.Entity;
@@ -17,6 +16,16 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.FileUtils;
+import org.dswarm.controller.resources.resource.test.utils.ConfigurationsResourceTestUtils;
+import org.dswarm.controller.resources.test.ResourceTest;
+import org.dswarm.controller.test.GuicedTest;
+import org.dswarm.persistence.DMPPersistenceException;
+import org.dswarm.persistence.model.resource.Configuration;
+import org.dswarm.persistence.model.resource.Resource;
+import org.dswarm.persistence.service.resource.ConfigurationService;
+import org.dswarm.persistence.service.resource.ResourceService;
+import org.dswarm.persistence.service.resource.test.utils.ResourceServiceTestUtils;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import org.hamcrest.CoreMatchers;
@@ -38,16 +47,6 @@ import com.google.common.io.Resources;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
 
-import org.dswarm.controller.resources.resource.test.utils.ConfigurationsResourceTestUtils;
-import org.dswarm.controller.resources.test.ResourceTest;
-import org.dswarm.controller.test.GuicedTest;
-import org.dswarm.persistence.DMPPersistenceException;
-import org.dswarm.persistence.model.resource.Configuration;
-import org.dswarm.persistence.model.resource.Resource;
-import org.dswarm.persistence.service.resource.ConfigurationService;
-import org.dswarm.persistence.service.resource.ResourceService;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
-
 public class ResourcesResourceTest extends ResourceTest {
 
 	private static final Logger						LOG						= LoggerFactory.getLogger(ResourcesResourceTest.class);
@@ -65,11 +64,13 @@ public class ResourcesResourceTest extends ResourceTest {
 	private final ObjectMapper						objectMapper			= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	private final ConfigurationsResourceTestUtils	configurationsResourceTestUtils;
+	private final ResourceServiceTestUtils			resourceServiceTestUtils;
 
 	public ResourcesResourceTest() {
 		super("resources");
 
 		configurationsResourceTestUtils = new ConfigurationsResourceTestUtils();
+		resourceServiceTestUtils = new ResourceServiceTestUtils();
 	}
 
 	@Before
@@ -82,12 +83,13 @@ public class ResourcesResourceTest extends ResourceTest {
 		resourceFile = FileUtils.toFile(fileURL);
 	}
 
+
 	@Test
 	public void testResourceUpload() throws Exception {
 
 		ResourcesResourceTest.LOG.debug("start resource upload test");
 
-		final String resourceJSON = testResourceUploadInteral(resourceFile, expectedResource);
+		final String resourceJSON = resourceUploadInteral(resourceFile, expectedResource);
 
 		ResourcesResourceTest.LOG.debug("created resource = '" + resourceJSON + "'");
 
@@ -109,7 +111,7 @@ public class ResourcesResourceTest extends ResourceTest {
 		final URL fileURL = Resources.getResource("utf8dmpf04.n3");
 		resourceFile = FileUtils.toFile(fileURL);
 
-		final String resourceJSON = testResourceUploadInteral(resourceFile, expectedResource);
+		final String resourceJSON = resourceUploadInteral(resourceFile, expectedResource);
 
 		ResourcesResourceTest.LOG.debug("created resource = '" + resourceJSON + "'");
 
@@ -120,12 +122,13 @@ public class ResourcesResourceTest extends ResourceTest {
 		ResourcesResourceTest.LOG.debug("end resource upload test 2");
 	}
 
+
 	@Test
-	public void getResource() throws Exception {
+	public void testGetResource() throws Exception {
 
 		ResourcesResourceTest.LOG.debug("start get resource test");
 
-		final String resourceJSON = testResourceUploadInteral(resourceFile, expectedResource);
+		final String resourceJSON = resourceUploadInteral(resourceFile, expectedResource);
 
 		ResourcesResourceTest.LOG.debug("created resource = '" + resourceJSON + "'");
 
@@ -148,12 +151,13 @@ public class ResourcesResourceTest extends ResourceTest {
 		ResourcesResourceTest.LOG.debug("end get resource test");
 	}
 
+
 	@Test
 	public void testGetResourceLines() throws Exception {
 
 		ResourcesResourceTest.LOG.debug("start get resource lines test");
 
-		final String resourceJSON = testResourceUploadInteral(resourceFile, expectedResource);
+		final String resourceJSON = resourceUploadInteral(resourceFile, expectedResource);
 
 		ResourcesResourceTest.LOG.debug("created resource = '" + resourceJSON + "'");
 
@@ -218,7 +222,7 @@ public class ResourcesResourceTest extends ResourceTest {
 		final URL fileURL = Resources.getResource("test-mabxml.xml");
 		resourceFile = FileUtils.toFile(fileURL);
 
-		final String resourceJSON = testResourceUploadInteral(resourceFile, expectedResource);
+		final String resourceJSON = resourceUploadInteral(resourceFile, expectedResource);
 
 		ResourcesResourceTest.LOG.debug("created resource = '" + resourceJSON + "'");
 
@@ -270,10 +274,10 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		ResourcesResourceTest.LOG.debug("end xml resource lines test");
 	}
-
+	
 
 	@Test
-	public void getResourceConfigurations() throws Exception {
+	public void testGetResourceConfigurations() throws Exception {
 
 		ResourcesResourceTest.LOG.debug("start get resource configurations test");
 
@@ -291,7 +295,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		for (int i = 0; i < numberOfIterations; i++) {
 
-			getResourcesInternal(actualResource.getId(), expectedResource);
+			getResourcesInternal(actualResource.getId());
 		}
 
 		for (int i = 0; i < numberOfIterations; i++) {
@@ -303,7 +307,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		for (int i = 0; i < numberOfIterations; i++) {
 
-			getResourcesInternal(actualResource.getId(), expectedResource);
+			getResourcesInternal(actualResource.getId());
 
 			Thread.sleep(sleepTime);
 		}
@@ -313,8 +317,9 @@ public class ResourcesResourceTest extends ResourceTest {
 		ResourcesResourceTest.LOG.debug("end get resource configurations test");
 	}
 
+	// FIXME cross-test dependencies: test can not be run separately, need to run #testGetResources() first.
 	@Test
-	public void curlGetResourceConfigurations() throws Exception {
+	public void testCurlGetResourceConfigurations() throws Exception {
 
 		ResourcesResourceTest.LOG.debug("start curl get resource configurations test");
 
@@ -332,7 +337,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		for (int i = 0; i < numberOfIterations; i++) {
 
-			curlGetResourcesInternal(actualResource.getId(), expectedResource);
+			curlGetResourcesInternal(actualResource.getId());
 		}
 
 		for (int i = 0; i < numberOfIterations; i++) {
@@ -344,7 +349,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		for (int i = 0; i < numberOfIterations; i++) {
 
-			curlGetResourcesInternal(actualResource.getId(), expectedResource);
+			curlGetResourcesInternal(actualResource.getId());
 
 			Thread.sleep(sleepTime);
 		}
@@ -354,12 +359,13 @@ public class ResourcesResourceTest extends ResourceTest {
 		ResourcesResourceTest.LOG.debug("end curl get resource configurations test");
 	}
 
+
 	@Test
-	public void getResourceConfigurations2() throws Exception {
+	public void testGetResourceConfigurations2() throws Exception {
 
 		ResourcesResourceTest.LOG.debug("start get resource configurations test 2");
 
-		final String resourceJSON = testResourceUploadInteral(resourceFile, expectedResource);
+		final String resourceJSON = resourceUploadInteral(resourceFile, expectedResource);
 
 		ResourcesResourceTest.LOG.debug("created resource = '" + resourceJSON + "'");
 
@@ -380,8 +386,9 @@ public class ResourcesResourceTest extends ResourceTest {
 		ResourcesResourceTest.LOG.debug("end get resource configurations test 2");
 	}
 
+
 	@Test
-	public void addResourceConfiguration() throws Exception {
+	public void testAddResourceConfiguration() throws Exception {
 
 		ResourcesResourceTest.LOG.debug("start add resource configuration test");
 
@@ -399,8 +406,9 @@ public class ResourcesResourceTest extends ResourceTest {
 		ResourcesResourceTest.LOG.debug("end add resource configuration test");
 	}
 
+
 	@Test
-	public void getResourceConfiguration() throws Exception {
+	public void testGetResourceConfiguration() throws Exception {
 
 		ResourcesResourceTest.LOG.debug("start get resource configuration test");
 
@@ -432,12 +440,13 @@ public class ResourcesResourceTest extends ResourceTest {
 		ResourcesResourceTest.LOG.debug("end get resource configuration test");
 	}
 
+	//FIXME cross-test dependencies: ignoring this test crashes #testCurlGetResourceConfigurations()!!	
 	@Test
-	public void getResources() throws Exception {
+	public void testGetResources() throws Exception {
 
 		ResourcesResourceTest.LOG.debug("start get resources test");
 
-		final String resourceJSON = testResourceUploadInteral(resourceFile, expectedResource);
+		final String resourceJSON = resourceUploadInteral(resourceFile, expectedResource);
 
 		ResourcesResourceTest.LOG.debug("created resource = '" + resourceJSON + "'");
 
@@ -446,7 +455,7 @@ public class ResourcesResourceTest extends ResourceTest {
 		Assert.assertNotNull("resource shouldn't be null", resource);
 		Assert.assertNotNull("resource id shouldn't be null", resource.getId());
 
-		final String resource2JSON = testResourceUploadInteral(resourceFile, expectedResource);
+		final String resource2JSON = resourceUploadInteral(resourceFile, expectedResource);
 
 		ResourcesResourceTest.LOG.debug("created resource = '" + resource2JSON + "'");
 
@@ -471,18 +480,20 @@ public class ResourcesResourceTest extends ResourceTest {
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
 		// Assert.assertEquals("resources JSONs are not equal", resourcesJSONArray.toString(), responseResources);
 
+		//FIXME if we do not call cleanUpDB(resource),  testCurlGetResourceConfigurations() crashes. 
 		cleanUpDB(resource);
 		cleanUpDB(resource2);
 
 		ResourcesResourceTest.LOG.debug("end get resources test");
 	}
 
+
 	@Test
 	public void testPOSTConfigurationCSVPreview() throws Exception {
 
 		ResourcesResourceTest.LOG.debug("start post configuration CSV preview test");
 
-		final String resourceJSON = testResourceUploadInteral(resourceFile, expectedResource);
+		final String resourceJSON = resourceUploadInteral(resourceFile, expectedResource);
 
 		ResourcesResourceTest.LOG.debug("created resource = '" + resourceJSON + "'");
 
@@ -507,12 +518,13 @@ public class ResourcesResourceTest extends ResourceTest {
 		ResourcesResourceTest.LOG.debug("end post configuration CSV preview test");
 	}
 
+
 	@Test
 	public void testPOSTConfigurationCSVJSONPreview() throws Exception {
 
 		ResourcesResourceTest.LOG.debug("start post configuration CSV JSON preview test");
 
-		final String resourceJSON = testResourceUploadInteral(resourceFile, expectedResource);
+		final String resourceJSON = resourceUploadInteral(resourceFile, expectedResource);
 
 		ResourcesResourceTest.LOG.debug("created resource = '" + resourceJSON + "'");
 
@@ -537,15 +549,25 @@ public class ResourcesResourceTest extends ResourceTest {
 		ResourcesResourceTest.LOG.debug("start post configuration CSV JSON preview test");
 	}
 
+	/**
+	 * Add a resource {@code resourceFile} to db, modify its name and description, update the modified resource via API PUT,
+	 * assert the modified resource is updated in db.
+	 * 
+	 * @throws Exception
+	 */
+
 	@Test
 	public void testPUTResource() throws Exception {
 
 		ResourcesResourceTest.LOG.debug("start put resource test");
 
-		final String createResourceJSON = testResourceUploadInteral(resourceFile, expectedResource);
+		// Start prepare
+		// create resource
+		final String createResourceJSON = resourceUploadInteral(resourceFile, expectedResource);
 
 		ResourcesResourceTest.LOG.debug("created resource for update = '" + createResourceJSON + "'");
 
+		// check created resource
 		final Resource createResource = objectMapper.readValue(createResourceJSON, Resource.class);
 
 		Assert.assertNotNull("resource shouldn't be null", createResource);
@@ -560,15 +582,16 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		Assert.assertEquals("200 OK was expected", 200, createResponse.getStatus());
 		Assert.assertEquals("resource JSONs are not equal", createResourceJSON, createResourceString);
+		// End prepare
 
+		// modify resource
 		expectedResource.setName(expectedResource.getName() + " update");
 		expectedResource.setDescription(expectedResource.getDescription() + " update");
+		
+		// update resource (test PUT in API)
+		final String updateResourceJSON = resourceUpdateInteral(resourceFile, expectedResource, createResource.getId());
 
-		final Configuration configuration = configurationsResourceTestUtils.createObject("configuration2.json");
-		expectedResource.addConfiguration(configuration);
-
-		final String updateResourceJSON = testResourceUpdateInteral(resourceFile, expectedResource, createResource.getId());
-
+		// check response
 		ResourcesResourceTest.LOG.debug("update resource = '" + updateResourceJSON + "'");
 
 		final Resource updateResource = objectMapper.readValue(updateResourceJSON, Resource.class);
@@ -578,6 +601,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		ResourcesResourceTest.LOG.debug("try to retrieve updated resource '" + updateResource.getId() + "'");
 
+		// get updated resource via API and compare to result from updating the resource
 		final Response updateResponse = target(String.valueOf(updateResource.getId())).request().accept(MediaType.APPLICATION_JSON_TYPE)
 				.get(Response.class);
 
@@ -586,18 +610,19 @@ public class ResourcesResourceTest extends ResourceTest {
 		Assert.assertEquals("200 OK was expected", 200, updateResponse.getStatus());
 		Assert.assertEquals("resource JSONs are not equal", updateResourceJSON, updateResourceString);
 
+		// cleanup
 		cleanUpDB(updateResource);
-		configurationsResourceTestUtils.deleteObject(configuration);
 
 		ResourcesResourceTest.LOG.debug("end put resource test");
 	}
+
 
 	@Test
 	public void testDELETEResource() throws Exception {
 
 		ResourcesResourceTest.LOG.debug("start DELETE resource test");
 
-		final String resourceJSON = testResourceUploadInteral(resourceFile, expectedResource);
+		final String resourceJSON = resourceUploadInteral(resourceFile, expectedResource);
 
 		ResourcesResourceTest.LOG.debug("created resource = '" + resourceJSON + "'");
 
@@ -621,7 +646,7 @@ public class ResourcesResourceTest extends ResourceTest {
 		ResourcesResourceTest.LOG.debug("end DELETE resource test");
 	}
 
-	private String testResourceUploadInteral(final File resourceFile, final Resource expectedResource) throws Exception {
+	private String resourceUploadInteral(final File resourceFile, final Resource expectedResource) throws Exception {
 
 		final FormDataMultiPart form = new FormDataMultiPart();
 		form.field("name", resourceFile.getName());
@@ -640,17 +665,16 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final Resource responseResource = objectMapper.readValue(responseResourceString, Resource.class);
 
-		compareResource(expectedResource, responseResource);
+		resourceServiceTestUtils.compareObjects(expectedResource, responseResource);
 
 		return responseResourceString;
 	}
 
-	private String testResourceUpdateInteral(final File resourceFile, final Resource expectedResource, final Long id) throws Exception {
+	private String resourceUpdateInteral(final File resourceFile, final Resource expectedResource, final Long id) throws Exception {
 
 		final FormDataMultiPart form = new FormDataMultiPart();
-		form.field("name", resourceFile.getName() + " update");
-		form.field("filename", resourceFile.getName() + " update");
-		form.field("description", "this is a description update");
+		form.field("name", expectedResource.getName());
+		form.field("description", expectedResource.getDescription());
 		form.bodyPart(new FileDataBodyPart("file", resourceFile, MediaType.MULTIPART_FORM_DATA_TYPE));
 
 		final Response response = target(String.valueOf(id)).request(MediaType.MULTIPART_FORM_DATA_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
@@ -664,7 +688,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final Resource responseResource = objectMapper.readValue(responseResourceString, Resource.class);
 
-		compareResource(expectedResource, responseResource);
+		resourceServiceTestUtils.compareObjects(expectedResource, responseResource);
 
 		return responseResourceString;
 	}
@@ -672,7 +696,7 @@ public class ResourcesResourceTest extends ResourceTest {
 	private Resource addResourceConfigurationInternal(final File resourceFile, final String configurationFileName, final Resource expectedResource)
 			throws Exception {
 
-		final String resourceJSON = testResourceUploadInteral(resourceFile, expectedResource);
+		final String resourceJSON = resourceUploadInteral(resourceFile, expectedResource);
 
 		ResourcesResourceTest.LOG.debug("created resource = '" + resourceJSON + "'");
 
@@ -744,7 +768,7 @@ public class ResourcesResourceTest extends ResourceTest {
 		configurationsResourceTestUtils.evaluateObjects(resourceConfigurationsJSON, exceptedConfigurations);
 	}
 
-	private void getResourcesInternal(final Long resourceId, final Resource expectedResource) throws Exception {
+	private void getResourcesInternal(final Long resourceId) throws Exception {
 
 		final Response response = target(String.valueOf(resourceId)).request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
 
@@ -755,41 +779,14 @@ public class ResourcesResourceTest extends ResourceTest {
 		evaluateGetResourcesInternal(responseResourceJSON);
 	}
 
-	private void curlGetResourcesInternal(final Long resourceId, final Resource expectedResource) throws Exception {
+	private void curlGetResourcesInternal(final Long resourceId) throws Exception {
 
 		final String responseResourceJSON = executeCommand("curl -G -H \"Content-Type: application/json\" -H \"Accepted: application/json\" "
 				+ baseUri() + "/resources/" + resourceId.toString());
 
 		evaluateGetResourcesInternal(responseResourceJSON);
 	}
-
-	private void compareResource(final Resource expectedResource, final Resource responseResource) {
-
-		Assert.assertNotNull("resource shouldn't be null", responseResource);
-		Assert.assertNotNull("resource name shouldn't be null", responseResource.getName());
-		Assert.assertEquals("the resource names should be equal", expectedResource.getName(), responseResource.getName());
-		Assert.assertNotNull("resource description shouldn't be null", responseResource.getDescription());
-		Assert.assertEquals("the resource descriptions should be equal", expectedResource.getDescription(), responseResource.getDescription());
-		Assert.assertNotNull("resource type shouldn't be null", responseResource.getType());
-		Assert.assertEquals("the resource types should be equal", expectedResource.getType(), responseResource.getType());
-		Assert.assertNotNull("resource attributes shouldn't be null", responseResource.getAttributes());
-
-		final Iterator<Entry<String, JsonNode>> attributesJSONNodeIter = expectedResource.getAttributes().fields();
-
-		while (attributesJSONNodeIter.hasNext()) {
-
-			final Entry<String, JsonNode> attributeJSONEntry = attributesJSONNodeIter.next();
-			final String attributeKey = attributeJSONEntry.getKey();
-
-			Assert.assertNotNull("resource attribute '" + attributeKey + "' shouldn't be null", responseResource.getAttribute(attributeKey));
-
-			if (!"path".equals(attributeKey) && !"filesize".equals(attributeKey)) {
-
-				Assert.assertEquals("the resource " + attributeKey + "s should be equal", expectedResource.getAttribute(attributeKey),
-						responseResource.getAttribute(attributeKey));
-			}
-		}
-	}
+	
 
 	private void prepareGetResourceConfigurations() throws Exception {
 
@@ -863,8 +860,9 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		ResourcesResourceTest.LOG.debug("try to retrieve configurations of resource '" + updatedComplexResource.getId() + "'");
 
-		expectedResource = expectedComplexResource;
+		// expected==actual since to use updated ids from db in expected.
 		actualResource = updatedComplexResource;
+		expectedResource = actualResource ;
 		exceptedConfigurations = createdConfigurations;
 	}
 
@@ -887,8 +885,8 @@ public class ResourcesResourceTest extends ResourceTest {
 		final Resource responseResource = objectMapper.readValue(responseResourceJSON, Resource.class);
 
 		Assert.assertNotNull("the response resource shouldn't be null", responseResource);
-
-		compareResource(expectedResource, responseResource);
+		
+		resourceServiceTestUtils.compareObjects(expectedResource, responseResource);
 
 		Assert.assertNotNull(responseResource.getConfigurations());
 

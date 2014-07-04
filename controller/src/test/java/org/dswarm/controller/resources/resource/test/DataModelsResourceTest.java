@@ -267,9 +267,9 @@ public class DataModelsResourceTest extends
 		DataModelsResourceTest.LOG.debug("start get CSV data test");
 
 		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("resource.json");
-
-		final Resource expectedResource = GuicedTest.injector.getInstance(ObjectMapper.class).readValue(resourceJSONString, Resource.class);
-
+				
+		final Resource expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
+		
 		final URL fileURL = Resources.getResource("test_csv.csv");
 		final File resourceFile = FileUtils.toFile(fileURL);
 
@@ -288,7 +288,7 @@ public class DataModelsResourceTest extends
 
 		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
 
-		final DataModel dataModel = pojoClassResourceTestUtils.createObject(dataModelJSONString, dataModel1);
+		final DataModel dataModel = pojoClassResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
 
 		final int atMost = 1;
 
@@ -397,7 +397,7 @@ public class DataModelsResourceTest extends
 
 		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
 
-		final DataModel dataModel = pojoClassResourceTestUtils.createObject(dataModelJSONString, dataModel1);
+		final DataModel dataModel = pojoClassResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
 
 		final int atMost = 1;
 

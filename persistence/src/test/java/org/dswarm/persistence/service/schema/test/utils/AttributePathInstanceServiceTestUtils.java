@@ -20,31 +20,35 @@ public abstract class AttributePathInstanceServiceTestUtils<POJOCLASSPERSISTENCE
 		attributePathServiceTestUtils = new AttributePathServiceTestUtils();
 	}
 
+	/**
+	 * {@inheritDoc} <br />
+	 * Assert both object's {@link AttributePathInstanceType}s are equal. <br />
+	 * Assert that either both objects have no {@link AttributePath}s, or (in case {@link AttributePath}s are present),
+	 * both {@link AttributePath} have either no {@link Attribute}s or the same number of {@link Attribute}s and the
+	 * {@link Attribute}s are equal regarding id and name.
+	 * 
+	 * @param expectedObject
+	 * @param actualObject
+	 */
 	@Override
 	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) {
 
 		super.compareObjects(expectedObject, actualObject);
 
-		compareAttributePathInstances(expectedObject, actualObject);
-	}
+		Assert.assertEquals("the " + pojoClassName + " attribute path instance types should be equal",
+				expectedObject.getAttributePathInstanceType(), actualObject.getAttributePathInstanceType());
 
-	private void compareAttributePathInstances(final POJOCLASS expectedAttributePathInstance, final POJOCLASS actualAttributePathInstance) {
+		if (expectedObject.getAttributePath() == null) {
 
-		if (expectedAttributePathInstance.getAttributePathInstanceType() != null) {
+			Assert.assertNull("the actual attribute path instance should be null", actualObject.getAttributePath());
 
-			Assert.assertNotNull("the " + pojoClassName + " attribute path instance type shouldn't be null",
-					actualAttributePathInstance.getAttributePathInstanceType());
+		} else {
 
-			Assert.assertEquals("the " + pojoClassName + " attribute path instance types are not equal",
-					expectedAttributePathInstance.getAttributePathInstanceType(), actualAttributePathInstance.getAttributePathInstanceType());
-		}
-
-		if (expectedAttributePathInstance.getAttributePath() != null) {
-
-			attributePathServiceTestUtils.compareObjects(expectedAttributePathInstance.getAttributePath(),
-					actualAttributePathInstance.getAttributePath());
+			attributePathServiceTestUtils.compareObjects(expectedObject.getAttributePath(),
+					actualObject.getAttributePath());
 		}
 	}
+
 
 	/**
 	 * {@inheritDoc}<br/>

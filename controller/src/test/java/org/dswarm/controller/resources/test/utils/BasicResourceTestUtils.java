@@ -135,6 +135,13 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 		return responseObject;
 	}
 
+	/**
+	 * Load file containing JSON string and call {@link #createObject(String, DMPObject)} to create it in db.
+	 *  
+	 * @param objectJSONFileName name of file containing JSON string of object to be created 
+	 * @return the object returned by {@link #createObject(String, DMPObject)}.
+	 * @throws Exception
+	 */
 	public POJOCLASS createObject(final String objectJSONFileName) throws Exception {
 
 		final String objectJSONString = DMPPersistenceUtil.getResourceAsString(objectJSONFileName);
@@ -161,6 +168,30 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 		return actualObject;
 	}
+	
+	/**
+	 * Creates the object in db and asserts the response status is '201 created' but does not compare the response with the JSON string.
+	 * 
+	 * 
+	 * @param objectJSONString the JSON string of the object to be created
+	 * @return the actual object as created in db, never null.
+	 * @throws Exception
+	 */
+	public POJOCLASS createObjectWithoutComparison(final String objectJSONString) throws Exception {
+
+		final Response response = executeCreateObject(objectJSONString);
+
+		Assert.assertEquals("201 Created was expected", 201, response.getStatus());
+
+		final String responseString = response.readEntity(String.class);
+
+		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
+
+		final POJOCLASS actualObject = objectMapper.readValue(responseString, pojoClass);
+
+		return actualObject;
+	}
+	
 
 	public Response executeCreateObject(final String objectJSONString) throws Exception {
 

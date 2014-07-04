@@ -15,17 +15,19 @@ public abstract class ExtendedBasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESE
 		super(pojoClassArg, persistenceServiceClassArg);
 	}
 
+	
+	/**
+	 * {@inheritDoc} <br />
+	 * Assert that both objects have no or equal descriptions.
+	 * 
+	 */
 	@Override
 	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) {
 
 		super.compareObjects(expectedObject, actualObject);
-
-		if (expectedObject.getDescription() != null) {
-
-			Assert.assertNotNull("the " + pojoClassName + " description shouldn't be null", actualObject.getDescription());
-			Assert.assertEquals("the " + pojoClassName + " descriptions should be equal", expectedObject.getDescription(),
-					actualObject.getDescription());
-		}
+		
+		Assert.assertEquals("the " + pojoClassName + " descriptions should be equal", expectedObject.getDescription(),
+					actualObject.getDescription());		
 	}
 
 	/**

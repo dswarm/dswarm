@@ -46,6 +46,12 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 		objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 	}
 
+	/**
+	 * Assert that neither {@code expectedObject} nor {@code actualObject} is null.
+	 * 
+	 * @param expectedObject 
+	 * @param actualObject
+	 */
 	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) {
 
 		Assert.assertNotNull("excepted " + pojoClassName + " shouldn't be null", expectedObject);
@@ -75,8 +81,18 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 		compareObjects(expectedObjects, responseObjects);
 	}
 
+	/**
+	 * Assert that expectedObjects and actualObjects have the same size.<br />
+	 * Assert that both collections contain equal objects regarding id and name.
+	 * 
+	 * @param expectedObjects
+	 * @param actualObjects
+	 */
 	public void compareObjects(final Set<POJOCLASS> expectedObjects, final Map<POJOCLASSIDTYPE, POJOCLASS> actualObjects) {
 
+		Assert.assertNotNull("expected objects shouldn't be null", expectedObjects);
+		Assert.assertNotNull("actual objects shouldn't be null", actualObjects);
+		
 		Assert.assertEquals("different number of " + pojoClassName + " objects.", expectedObjects.size(), actualObjects.size());
 		
 		for (final POJOCLASS expectedObject : expectedObjects) {

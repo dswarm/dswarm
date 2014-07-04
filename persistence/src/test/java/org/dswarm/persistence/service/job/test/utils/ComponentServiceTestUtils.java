@@ -4,18 +4,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.junit.Assert;
-
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-
 import org.dswarm.persistence.model.job.Component;
 import org.dswarm.persistence.model.job.Function;
-import org.dswarm.persistence.model.job.FunctionType;
 import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.job.proxy.ProxyComponent;
 import org.dswarm.persistence.service.job.ComponentService;
 import org.dswarm.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestUtils;
+import org.junit.Assert;
+
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils<ComponentService, ProxyComponent, Component> {
 
@@ -63,38 +61,72 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 
 		return updatedComponent;
 	}
-
+	
+	
+	/**
+	 * {@inheritDoc} <br/>
+	 * Assert either both components have no {@link Function} or {@link Function}s are equal: see
+	 * {@link BasicFunctionServiceTestUtils#compareObjects(Function, Function)} and
+	 * {@link TransformationServiceTestUtils#compareObjects(Transformation, Transformation)} for details. <br />
+	 * Assert either both components have no input components or input components are equal regarding
+	 * {@link BasicJPAServiceTestUtils#compareObjects(Set, Map)} <br />
+	 * Assert either both components have no output components or output components are equal regarding
+	 * {@link BasicJPAServiceTestUtils#compareObjects(Set, Map)} <br />
+	 * Assert either both components have no or the same number of parameter mappings and parameter mapping keys and values are
+	 * pairwise equal.
+	 */
 	@Override
-	public void compareObjects(final Component expectedObject, final Component actualObject) {
+	public void compareObjects(final Component expectedComponent, final Component actualComponent) {
 
-		if (expectedObject != null && expectedObject.getId() != null) {
+		// Start skip already checked objects
+		if (expectedComponent != null && expectedComponent.getId() != null) {
 
-			if (checkedExpectedComponents.contains(expectedObject.getId())) {
+			if (checkedExpectedComponents.contains(expectedComponent.getId())) {
 
+				// SR FIXME why do we return here? we may have seen the expectedObject before but get a different actualObject
+				// that needs to be compared to the one already known.
+				// Furthermore, even if we have already seen expected A and actual B, how do we know that we already compared A
+				// with B? previous calls may have been
+				// A, C
+				// D, B
+				// current: A, B
 				return;
 			}
 
-			checkedExpectedComponents.add(expectedObject.getId());
+			checkedExpectedComponents.add(expectedComponent.getId());
 		}
 
-		if (actualObject != null && actualObject.getId() != null) {
+		if (actualComponent != null && actualComponent.getId() != null) {
 
-			if (checkedActualComponents.contains(actualObject.getId())) {
+			if (checkedActualComponents.contains(actualComponent.getId())) {
 
+				// SR FIXME why do we return here? see above
 				return;
 			}
 
-			checkedActualComponents.add(actualObject.getId());
+			checkedActualComponents.add(actualComponent.getId());
 		}
+		// End skip already checked objects
+		
+		// basic comparison
+		super.compareObjects(expectedComponent, actualComponent);
 
-		super.compareObjects(expectedObject, actualObject);
 
-		compareComponents(expectedObject, actualObject);
-	}
+		// Start compare parts of components 
+		// function
+		if (expectedComponent.getFunction() == null) {
 
-	private void compareComponents(final Component expectedComponent, final Component actualComponent) {
+			Assert.assertNull("the function of actual component '" + actualComponent.getId() + "' should be null", actualComponent.getFunction());
 
-		if (expectedComponent.getFunction() != null) {
+		} else {
+
+			Assert.assertNotNull("the function of actual component '" + actualComponent.getId() + "' shouldn't be null",
+					actualComponent.getFunction());
+
+			Assert.assertNotNull("function type of component must not be null", expectedComponent.getFunction().getFunctionType());
+
+			Assert.assertEquals("the function types are not equal", expectedComponent.getFunction().getFunctionType(), actualComponent.getFunction()
+					.getFunctionType());
 
 			switch (expectedComponent.getFunction().getFunctionType()) {
 
@@ -105,31 +137,51 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 					break;
 				case Transformation:
 
-					Assert.assertNotNull("the function shouldn't be null", actualComponent.getFunction());
-
-					Assert.assertEquals("the function types are not equal", FunctionType.Transformation, actualComponent.getFunction()
-							.getFunctionType());
-
 					transformationsResourceTestUtils.compareObjects((Transformation) expectedComponent.getFunction(),
 							(Transformation) actualComponent.getFunction());
 
 					break;
+				default:
+					Assert.assertTrue("unknown function type.", false);
 			}
 
 		}
 
-		if (expectedComponent.getInputComponents() != null && !expectedComponent.getInputComponents().isEmpty()) {
+		// input components
+		if (expectedComponent.getInputComponents() == null || expectedComponent.getInputComponents().isEmpty()) {
 
-			prepareCompareComponents(actualComponent.getId(), expectedComponent.getInputComponents(), actualComponent.getInputComponents(), "input");
+			boolean actualComponentHasNoInputComponents = (actualComponent.getInputComponents() == null || actualComponent.getInputComponents()
+					.isEmpty());
+			Assert.assertTrue("actual component should not have any input components", actualComponentHasNoInputComponents);
+
+		} else { // (!null && !empty)
+
+			prepareAndCompareComponents(actualComponent.getId(), expectedComponent.getInputComponents(), actualComponent.getInputComponents(),
+					"input");
 		}
 
-		if (expectedComponent.getOutputComponents() != null && !expectedComponent.getOutputComponents().isEmpty()) {
+		// output components
+		if (expectedComponent.getOutputComponents() == null || expectedComponent.getOutputComponents().isEmpty()) {
 
-			prepareCompareComponents(actualComponent.getId(), expectedComponent.getOutputComponents(), actualComponent.getOutputComponents(),
+			boolean actualComponentHasNoOutputComponents = (actualComponent.getOutputComponents() == null || actualComponent.getOutputComponents()
+					.isEmpty());
+			Assert.assertTrue("actual component should not have any output components", actualComponentHasNoOutputComponents);
+
+		} else { // (!null && !empty)
+
+			prepareAndCompareComponents(actualComponent.getId(), expectedComponent.getOutputComponents(), actualComponent.getOutputComponents(),
 					"output");
 		}
 
-		if (expectedComponent.getParameterMappings() != null && !expectedComponent.getParameterMappings().isEmpty()) {
+		// parameter mappings
+		if (expectedComponent.getParameterMappings() == null || expectedComponent.getParameterMappings().isEmpty()) {
+
+			boolean actualComponentHasNoParameterMappings = (actualComponent.getParameterMappings() == null || actualComponent.getParameterMappings()
+					.isEmpty());
+			Assert.assertTrue("actual component should not have any parameter mappings", actualComponentHasNoParameterMappings);
+
+		} else {
+			// (!null && !empty)
 
 			final Map<String, String> actualParameterMappings = actualComponent.getParameterMappings();
 
@@ -137,6 +189,8 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 					actualParameterMappings);
 			Assert.assertFalse("parameter mappings of actual component '" + actualComponent.getId() + "' shouldn't be empty",
 					actualParameterMappings.isEmpty());
+			Assert.assertEquals("different number of parameter mappings", expectedComponent.getParameterMappings().size(), actualComponent
+					.getParameterMappings().size());
 
 			for (final Entry<String, String> expectedParameterMappingEntry : expectedComponent.getParameterMappings().entrySet()) {
 
@@ -148,11 +202,13 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 				final String expectedParameterValue = expectedParameterMappingEntry.getValue();
 				final String actualParameterValue = actualParameterMappings.get(expectedParameterKey);
 
-				Assert.assertEquals("the parameter mapping for '" + expectedParameterKey + "' are not equal; is '" + actualParameterValue
+				Assert.assertEquals("the parameter mappings for '" + expectedParameterKey + "' are not equal; is '" + actualParameterValue
 						+ "' but should be '" + expectedParameterValue + "'", expectedParameterValue, actualParameterValue);
 			}
 		}
+		// End compare parts of components
 	}
+
 
 	public void checkDeletedComponent(final Component component) {
 
@@ -164,7 +220,14 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 
 	}
 
-	private void prepareCompareComponents(final Long actualComponentId, final Set<Component> expectedComponents,
+	/**
+	 * @see {@link BasicJPAServiceTestUtils#compareObjects(Set, Map)}
+	 * @param actualComponentId
+	 * @param expectedComponents
+	 * @param actualComponents
+	 * @param type
+	 */
+	private void prepareAndCompareComponents(final Long actualComponentId, final Set<Component> expectedComponents,
 			final Set<Component> actualComponents, final String type) {
 
 		Assert.assertNotNull(type + " components of actual component '" + actualComponentId + "' shouldn't be null", actualComponents);

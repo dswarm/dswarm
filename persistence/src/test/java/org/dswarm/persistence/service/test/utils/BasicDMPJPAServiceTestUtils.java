@@ -14,16 +14,20 @@ public abstract class BasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE ex
 		super(pojoClassArg, persistenceServiceClassArg);
 	}
 
-	@Override
+	/**
+	 * {@inheritDoc} <br />
+	 * Assert that their names are equal.
+	 * 
+	 * @param expectedObject 
+	 * @param actualObject
+	 */
+	 @Override
 	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) {
 
 		super.compareObjects(expectedObject, actualObject);
 
-		if (expectedObject.getName() != null) {
+		Assert.assertEquals("the " + pojoClassName + " names should be equal", expectedObject.getName(), actualObject.getName());
 
-			Assert.assertNotNull("the " + pojoClassName + " name shouldn't be null", actualObject.getName());
-			Assert.assertEquals("the " + pojoClassName + " names should be equal", expectedObject.getName(), actualObject.getName());
-		}
 	}
 
 	/**

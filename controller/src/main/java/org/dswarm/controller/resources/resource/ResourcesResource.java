@@ -30,6 +30,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.tika.Tika;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
@@ -851,8 +852,6 @@ public class ResourcesResource {
 	private ProxyResource createResource(final InputStream uploadInputedStream, final FormDataContentDisposition fileDetail, final String name,
 			final String description) throws DMPControllerException {
 
-		final File file = DMPControllerUtils.writeToFile(uploadInputedStream, fileDetail.getFileName(), "resources");
-
 		final ResourceService resourceService = resourceServiceProvider.get();
 
 		ProxyResource proxyResource;
@@ -878,60 +877,13 @@ public class ResourcesResource {
 
 			throw new DMPControllerException("fresh resource shouldn't be null");
 		}
-
-		resource.setName(name);
-
-		if (description != null) {
-
-			resource.setDescription(description);
-		}
-
-		resource.setType(ResourceType.FILE);
-
-		String fileType = null;
-
-		try {
-
-			fileType = Files.probeContentType(file.toPath());
-		} catch (final IOException e1) {
-
-			ResourcesResource.LOG.debug("couldn't determine file type from file '" + file.getAbsolutePath() + "'");
-		}
-
-		final ObjectNode attributes = new ObjectNode(objectMapper.getNodeFactory());
-		attributes.put("path", file.getAbsolutePath());
-
-		if (fileType != null) {
-
-			attributes.put("filetype", fileType);
-		}
-
-		attributes.put("filesize", fileDetail.getSize());
-
-		resource.setAttributes(attributes);
-
-		final ProxyResource updatedResource;
-
-		try {
-
-			updatedResource = resourceService.updateObjectTransactional(resource);
-
-			if (updatedResource == null) {
-
-				throw new DMPControllerException("something went wrong while resource updating");
-			}
-
-			final RetrievalType type = proxyResource.getType();
-
-			proxyResource = new ProxyResource(updatedResource.getObject(), type);
-		} catch (final DMPPersistenceException e) {
-
-			ResourcesResource.LOG.debug("something went wrong while resource updating");
-
-			throw new DMPControllerException("something went wrong while resource updating\n" + e.getMessage());
-		}
-
-		return proxyResource;
+		
+		ProxyResource refreshedResource = refreshResource(resource, uploadInputedStream, fileDetail, name, description);
+		
+		// re-wrap with correct type (created)
+		ProxyResource refreshedProxyResource = new ProxyResource(refreshedResource.getObject(), proxyResource.getType());
+	
+		return refreshedProxyResource;
 	}
 
 	/**
@@ -961,14 +913,31 @@ public class ResourcesResource {
 		}
 
 		resource.setType(ResourceType.FILE);
-
-		final ObjectNode attributes = new ObjectNode(objectMapper.getNodeFactory());
+		
+		// update attributes		
+		ObjectNode attributes = resource.getAttributes();
+		if (attributes == null){
+			attributes = new ObjectNode(objectMapper.getNodeFactory());
+		}
+		
 		attributes.put("path", file.getAbsolutePath());
-
 		attributes.put("filesize", fileDetail.getSize());
-
+		
+		String fileType = null;
+		Tika tika = new Tika();
+		try {
+			fileType = tika.detect(file);
+//			fileType = Files.probeContentType(file.toPath());
+		} catch (final IOException e1) {
+			ResourcesResource.LOG.debug("couldn't determine file type from file '" + file.getAbsolutePath() + "'");
+		}
+		if (fileType != null) {
+			attributes.put("filetype", fileType);
+		}
+		
 		resource.setAttributes(attributes);
 
+		// update resource
 		final ProxyResource updatedResource;
 
 		try {

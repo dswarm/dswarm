@@ -3,6 +3,7 @@ package org.dswarm.controller.resources.job.test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,6 +15,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.validation.SchemaFactory;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.tika.Tika;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -116,6 +118,31 @@ public class TasksResourceTest extends ResourceTest {
 		final URL fileURL = Resources.getResource(resourceFileName);
 		final File resourceFile = FileUtils.toFile(fileURL);
 
+
+		final ObjectNode attributes1 = new ObjectNode(objectMapper.getNodeFactory());
+		attributes1.put("path", resourceFile.getAbsolutePath());
+
+		String fileType = null;
+		Tika tika = new Tika();
+		try {
+			fileType = tika.detect(resourceFile);
+//			fileType = Files.probeContentType(resourceFile.toPath());
+		} catch (final IOException e1) {
+
+			LOG.debug("couldn't determine file type from file '" + resourceFile.getAbsolutePath() + "'");
+		}
+		
+		if (fileType != null) {
+
+			attributes1.put("filetype", fileType);
+		}
+		
+		// hint: size is not important to know since its value is skipped in the comparison of actual and expected resource
+		attributes1.put("filesize", -1);
+
+		res1.setAttributes(attributes1);
+		
+		
 		// upload data resource
 		resource = resourcesResourceTestUtils.uploadResource(resourceFile, res1);
 
@@ -138,9 +165,12 @@ public class TasksResourceTest extends ResourceTest {
 		data1.setDataResource(resource);
 		data1.setConfiguration(configuration);
 
+				//		TODO: add schema to data1
+
 		final String dataModelJSONString = objectMapper.writeValueAsString(data1);
 
-		dataModel = dataModelsResourceTestUtils.createObject(dataModelJSONString, data1);
+		
+		dataModel = dataModelsResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
 
 		Assert.assertNotNull("the data model shouldn't be null", dataModel);
 

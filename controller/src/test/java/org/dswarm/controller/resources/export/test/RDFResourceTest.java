@@ -205,7 +205,7 @@ public class RDFResourceTest extends ResourceTest {
 
 		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
 
-		final DataModel dataModel = dataModelsResourceTestUtils.createObject(dataModelJSONString, dataModel1);
+		final DataModel dataModel = dataModelsResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
 
 		final int atMost = 1;
 
