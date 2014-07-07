@@ -237,6 +237,7 @@ su
 mv /var/lib/neo4j/data/log{,-old}
 ln -s /data/neo4j/log /var/lib/neo4j/data/log
 mkdir /data/neo4j/log
+chown -R neo4j:adm /data/neo4j/log
 ```
 
 * * *
@@ -302,7 +303,7 @@ mvn -U -PSDVDSWARM01 -DskipTests clean install
 pushd controller
 mvn -U -PSDVDSWARM01 -DskipTests war:war
 popd; popd
-mv datamanagement-platform/controller/target/controller-0.1-SNAPSHOT.war dmp.war
+mv datamanagement-platform/controller/target/dswarm-controller-0.1-SNAPSHOT.war dmp.war
 ```
 
 **16**. build frontend
