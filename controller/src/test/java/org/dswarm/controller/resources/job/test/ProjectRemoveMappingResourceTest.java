@@ -1,5 +1,7 @@
 package org.dswarm.controller.resources.job.test;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Set;
 
@@ -7,16 +9,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.collect.Maps;
-
+import org.dswarm.controller.resources.job.test.utils.FiltersResourceTestUtils;
 import org.dswarm.controller.resources.job.test.utils.FunctionsResourceTestUtils;
 import org.dswarm.controller.resources.job.test.utils.MappingsResourceTestUtils;
 import org.dswarm.controller.resources.job.test.utils.ProjectsResourceTestUtils;
@@ -24,7 +17,6 @@ import org.dswarm.controller.resources.job.test.utils.TransformationsResourceTes
 import org.dswarm.controller.resources.resource.test.utils.ConfigurationsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
-import org.dswarm.controller.resources.schema.test.AttributesResourceTest;
 import org.dswarm.controller.resources.schema.test.utils.AttributePathsResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.AttributesResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.ClaszesResourceTestUtils;
@@ -32,6 +24,7 @@ import org.dswarm.controller.resources.schema.test.utils.MappingAttributePathIns
 import org.dswarm.controller.resources.schema.test.utils.SchemasResourceTestUtils;
 import org.dswarm.controller.resources.test.BasicResourceTest;
 import org.dswarm.persistence.model.job.Component;
+import org.dswarm.persistence.model.job.Filter;
 import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.Mapping;
 import org.dswarm.persistence.model.job.Project;
@@ -47,12 +40,21 @@ import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.service.job.ProjectService;
 import org.dswarm.persistence.service.job.test.utils.ProjectServiceTestUtils;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class ProjectWithNewEntitiesResourceTest extends
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+
+public class ProjectRemoveMappingResourceTest extends
 		BasicResourceTest<ProjectsResourceTestUtils, ProjectServiceTestUtils, ProjectService, ProxyProject, Project, Long> {
 
-	private static final Logger										LOG	= LoggerFactory.getLogger(AttributesResourceTest.class);
+	private static final Logger										LOG								= LoggerFactory
+																											.getLogger(ProjectRemoveMappingResourceTest.class);
 
 	private final FunctionsResourceTestUtils						functionsResourceTestUtils;
 
@@ -74,11 +76,23 @@ public class ProjectWithNewEntitiesResourceTest extends
 
 	private final MappingsResourceTestUtils							mappingsResourceTestUtils;
 
+	private final ProjectsResourceTestUtils							projectsResourceTestUtils;
+
 	private final MappingAttributePathInstancesResourceTestUtils	mappingAttributePathInstancesResourceTestUtils;
 
-	public ProjectWithNewEntitiesResourceTest() {
+	private final FiltersResourceTestUtils							filterResourceTestUtils;
 
-		super(Project.class, ProjectService.class, "projects", "project.json", new ProjectsResourceTestUtils());
+	final Map<Long, Attribute>										attributes						= Maps.newHashMap();
+
+	final Map<Long, AttributePath>									attributePaths					= Maps.newLinkedHashMap();
+
+	final Map<Long, MappingAttributePathInstance>					mappingAttributePathInstances	= Maps.newLinkedHashMap();
+
+	private Project													initiallyPersistedProject		= null;
+
+	public ProjectRemoveMappingResourceTest() {
+
+		super(Project.class, ProjectService.class, "projects", "project_to_remove_mapping_from_with_dummy_IDs.json", new ProjectsResourceTestUtils());
 
 		functionsResourceTestUtils = new FunctionsResourceTestUtils();
 		attributesResourceTestUtils = new AttributesResourceTestUtils();
@@ -90,119 +104,109 @@ public class ProjectWithNewEntitiesResourceTest extends
 		schemasResourceTestUtils = new SchemasResourceTestUtils();
 		dataModelsResourceTestUtils = new DataModelsResourceTestUtils();
 		mappingsResourceTestUtils = new MappingsResourceTestUtils();
+		projectsResourceTestUtils = new ProjectsResourceTestUtils();
 		mappingAttributePathInstancesResourceTestUtils = new MappingAttributePathInstancesResourceTestUtils();
+		filterResourceTestUtils = new FiltersResourceTestUtils();
 	}
 
-	@Ignore
-	@Test
 	@Override
-	public void testPOSTObjects() throws Exception {
+	public void prepare() throws Exception {
+		super.prepare();
 
-	}
+		// persist project via API since dummy IDs need to be replaced with the ones used in database
+		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+				.post(Entity.json(objectJSONString));
+		Assert.assertEquals("201 Created was expected", 201, response.getStatus());
 
-	@Ignore
-	@Test
-	@Override
-	public void testGETObjects() throws Exception {
+		final String responseString = response.readEntity(String.class);
+		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
 
-	}
-
-	@Ignore
-	@Test
-	@Override
-	public void testGETObject() throws Exception {
-
-	}
-
-	@Ignore
-	@Test
-	@Override
-	public void testPUTObject() throws Exception {
-
-	}
-
-	@Ignore
-	@Test
-	@Override
-	public void testDELETEObject() throws Exception {
-
+		initiallyPersistedProject = objectMapper.readValue(responseString, Project.class);
+		Assert.assertNotNull("the response project shouldn't be null", initiallyPersistedProject);
 	}
 
 	/**
-	 * Test the replacement of dummy IDs generated by the front end  
+	 * Simulate a user loading an already persisted project in front end, removing a mapping (that contains filters and functions)
+	 * and saving the updated project (by putting the whole project JSON).<br />
+	 * <br />
+	 * It is intended that the mapping is removed from the project only, i.e. the relation between the project and the mapping is
+	 * removed but the mapping itself and all of its parts (like functions and filters) are still present in the database (to be used in other projects).
 	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void testPOSTObjectsWithNewEntities() throws Exception {
+	public void testPUTProjectWithRemovedMapping() throws Exception {
 
-		ProjectWithNewEntitiesResourceTest.LOG.debug("start POST " + pojoClassName + "s with new entities test");
+		// Start simulate user removing a mapping from the given project
+		final String initiallyPersistedProjectJSONString = objectMapper.writeValueAsString(initiallyPersistedProject);
+		final Project modifiedProject = objectMapper.readValue(initiallyPersistedProjectJSONString, Project.class);
 
-		objectJSONString = DMPPersistenceUtil.getResourceAsString("project.w.new.entities.json");
+		final Set<Mapping> persistedMappings = modifiedProject.getMappings();
+		final Set<Mapping> reducedMappings = Sets.newHashSet();
+		final String mappingToBeRemovedFromProjectName ="first+last-to-contributor";
+		Mapping mappingToBeRemovedFromProject = null;
 
-		// START configuration preparation
+		for (final Mapping mapping : persistedMappings) {
 
-		final Configuration configuration = configurationsResourceTestUtils.createObject("configuration2.json");
+			// the mapping to be removed (by the user in front end)
+			if (mapping.getName().equals(mappingToBeRemovedFromProjectName)) {
+				mappingToBeRemovedFromProject = mapping;
+				continue;
+			}
 
-		// END configuration preparation
+			reducedMappings.add(mapping);
+		}
 
-		// START resource preparation
+		Assert.assertNotNull("could not find mapping to be removed \"" + mappingToBeRemovedFromProjectName + "\"" , mappingToBeRemovedFromProject);
+				
+		// re-inject mappings
+		modifiedProject.setMappings(reducedMappings);
+		final String modifiedProjectJSONString = objectMapper.writeValueAsString(modifiedProject);
 
-		// prepare resource json for configuration ids manipulation
-		String resourceJSONString = DMPPersistenceUtil.getResourceAsString("resource1.json");
-		final ObjectNode resourceJSON = objectMapper.readValue(resourceJSONString, ObjectNode.class);
+		// End simulate user removing a mapping from the given project
+		// Start simulate user pushing button 'save project' in front end
 
-		final ArrayNode configurationsArray = objectMapper.createArrayNode();
+		String idEncoded = null;
+		try {
 
-		final String persistedConfigurationJSONString = objectMapper.writeValueAsString(configuration);
-		final ObjectNode persistedConfigurationJSON = objectMapper.readValue(persistedConfigurationJSONString, ObjectNode.class);
+			idEncoded = URLEncoder.encode(initiallyPersistedProject.getId().toString(), "UTF-8");
+		} catch (final UnsupportedEncodingException e) {
 
-		configurationsArray.add(persistedConfigurationJSON);
+			ProjectRemoveMappingResourceTest.LOG.debug("couldn't encode id", e);
 
-		resourceJSON.put("configurations", configurationsArray);
+			Assert.assertTrue(false);
+		}
 
-		// re-init expect resource
-		resourceJSONString = objectMapper.writeValueAsString(resourceJSON);
-		final Resource expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
+		final Response response = target(idEncoded).request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+				.put(Entity.json(modifiedProjectJSONString));
 
-		Assert.assertNotNull("expected resource shouldn't be null", expectedResource);
+		// End simulate user pushing button 'save project' in front end
+		// Start check response
 
-		final Resource resource = resourcesResourceTestUtils.createObject(resourceJSONString, expectedResource);
-
-		// END resource preparation
-
-		// prepare project json for input data model resource and configuration manipulation
-		final ObjectNode projectJSON = objectMapper.readValue(objectJSONString, ObjectNode.class);
-		final ObjectNode dataModelJSON = (ObjectNode) projectJSON.get("input_data_model");
-
-		final String finalResourceJSONString = objectMapper.writeValueAsString(resource);
-		final ObjectNode finalResourceJSON = objectMapper.readValue(finalResourceJSONString, ObjectNode.class);
-
-		dataModelJSON.put("data_resource", finalResourceJSON);
-
-		final String finalConfigurationJSONString = objectMapper.writeValueAsString(resource.getConfigurations().iterator().next());
-		final ObjectNode finalConfigurationJSON = objectMapper.readValue(finalConfigurationJSONString, ObjectNode.class);
-
-		dataModelJSON.put("configuration", finalConfigurationJSON);
-
-		objectJSONString = objectMapper.writeValueAsString(projectJSON);
-
-		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(Entity.json(objectJSONString));
-
-		Assert.assertEquals("201 Created was expected", 201, response.getStatus());
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
 
 		final String responseString = response.readEntity(String.class);
-
 		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
 
-		final Project actualObject = objectMapper.readValue(responseString, pojoClass);
+		final Project updatedPersistedProject = objectMapper.readValue(responseString, Project.class);
+		Assert.assertNotNull("the response project shouldn't be null", updatedPersistedProject);
 
-		Assert.assertNotNull("the response project shouldn't be null", actualObject);
+		// make sure the project does not contain (the reference to) the mapping anymore
+		projectsResourceTestUtils.compareObjects(modifiedProject, updatedPersistedProject);
 
-		// TODO: do comparison/check somehow
+		// End check response
+		// Start check db
 
-		final DataModel inputDataModel = actualObject.getInputDataModel();
+		// the mapping itself must still be present in database
+		Assert.assertNotNull("mapping to be removed \"" + mappingToBeRemovedFromProjectName + "\" has no ID", mappingToBeRemovedFromProject.getId());
+		final Mapping persistedMappingToBeRemovedFromProject = mappingsResourceTestUtils.getObject(mappingToBeRemovedFromProject.getId());
+		mappingsResourceTestUtils.compareObjects(mappingToBeRemovedFromProject, persistedMappingToBeRemovedFromProject);
+		
+	}
+
+	@After
+	public void tearDown2() throws Exception {
+		final DataModel inputDataModel = initiallyPersistedProject.getInputDataModel();
 
 		Resource inputDataResource = null;
 		Configuration inputConfiguration = null;
@@ -212,6 +216,7 @@ public class ProjectWithNewEntitiesResourceTest extends
 		final Map<Long, AttributePath> attributePaths = Maps.newHashMap();
 		final Map<Long, Attribute> attributes = Maps.newHashMap();
 		final Map<Long, Clasz> claszes = Maps.newHashMap();
+		final Map<Long, Filter> filter = Maps.newHashMap();
 
 		if (inputDataModel != null) {
 
@@ -250,7 +255,7 @@ public class ProjectWithNewEntitiesResourceTest extends
 			}
 		}
 
-		final DataModel outputDataModel = actualObject.getOutputDataModel();
+		final DataModel outputDataModel = initiallyPersistedProject.getOutputDataModel();
 
 		Schema outputSchema = null;
 
@@ -293,7 +298,7 @@ public class ProjectWithNewEntitiesResourceTest extends
 		final Map<Long, Function> functions = Maps.newHashMap();
 		Transformation transformation = null;
 
-		final Set<Mapping> projectMappings = actualObject.getMappings();
+		final Set<Mapping> projectMappings = initiallyPersistedProject.getMappings();
 
 		if (projectMappings != null) {
 
@@ -355,6 +360,12 @@ public class ProjectWithNewEntitiesResourceTest extends
 								}
 							}
 						}
+
+						final Filter singleFilter = inputMappingAttributePathInstance.getFilter();
+						if (singleFilter != null) {
+							filter.put(singleFilter.getId(), singleFilter);
+						}
+
 					}
 				}
 
@@ -385,7 +396,7 @@ public class ProjectWithNewEntitiesResourceTest extends
 			}
 		}
 
-		final Set<Function> projectFunctions = actualObject.getFunctions();
+		final Set<Function> projectFunctions = initiallyPersistedProject.getFunctions();
 
 		if (projectFunctions != null) {
 
@@ -395,7 +406,7 @@ public class ProjectWithNewEntitiesResourceTest extends
 			}
 		}
 
-		cleanUpDB(actualObject);
+		cleanUpDB(initiallyPersistedProject);
 
 		if (inputDataModel != null) {
 
@@ -462,6 +473,39 @@ public class ProjectWithNewEntitiesResourceTest extends
 			functionsResourceTestUtils.deleteObject(function);
 		}
 
-		ProjectWithNewEntitiesResourceTest.LOG.debug("end POST " + pojoClassName + "s with new entities test");
+		for (final Filter singleFilter : filter.values()) {
+			filterResourceTestUtils.deleteObject(singleFilter);
+		}
 	}
+
+	@Ignore
+	@Test
+	@Override
+	public void testPOSTObjects() throws Exception {
+	}
+
+	@Ignore
+	@Test
+	@Override
+	public void testGETObjects() throws Exception {
+	}
+
+	@Ignore
+	@Test
+	@Override
+	public void testGETObject() throws Exception {
+	}
+
+	@Ignore
+	@Test
+	@Override
+	public void testDELETEObject() throws Exception {
+	}
+
+	@Ignore
+	@Test
+	@Override
+	public void testPUTObject() throws Exception {
+	}
+
 }

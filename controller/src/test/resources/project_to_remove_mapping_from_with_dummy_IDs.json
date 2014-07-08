@@ -1,0 +1,331 @@
+{
+    "name": "remove mapping test",
+    "description": "my project description",
+    "id": 1,
+    "input_data_model": {
+        "id": -3827342345685,
+        "name": "atMostTwoRows.csv + my configuration name data model",
+        "description": " data model of resource 'atMostTwoRows.csv' and configuration ' my configuration name'",
+        "configuration": {
+            "name": "my configuration name",
+            "description": "my configuration description",
+            "id": 1,
+            "resources": [{
+                "id": 1
+            }],
+            "parameters": {
+                "column_delimiter": ";",
+                "escape_character": "\\",
+                "quote_character": "\"",
+                "first_row_is_headings": true,
+                "column_names": "columnN",
+                "storage_type": "csv"
+            }
+        },
+        "schema": {
+            "name": "atMostTwoRows.csv schema",
+            "id": -4183243486324374530,
+            "attribute_paths": [{
+                "id": -4070983487343468340,
+                "attributes": [{
+                    "name": "type",
+                    "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                    "id": -2323909237623843453
+                }]
+            }, {
+                "id": -1900003333342,
+                "attributes": [{
+                    "name": "first",
+                    "uri": "http://data.slub-dresden.de/resources/1/schema#first",
+                    "id": -1477449935555
+                }]
+            }, {
+                "id": -2226663338888,
+                "attributes": [{
+                    "name": "last",
+                    "uri": "http://data.slub-dresden.de/resources/1/schema#last",
+                    "id": -4488557733222
+                }]
+            }, {
+                "id": -2226663338884,
+                "attributes": [{
+                    "name": "address",
+                    "uri": "http://data.slub-dresden.de/resources/1/schema#address",
+                    "id": -1909343643642
+                }]
+            }, {
+                "id": -2885555444444,
+                "attributes": [{
+                    "name": "city",
+                    "uri": "http://data.slub-dresden.de/resources/1/schema#city",
+                    "id": -2638233333322
+                }]
+            }, {
+                "id": -2226663338885,
+                "attributes": [{
+                    "name": "zip",
+                    "uri": "http://data.slub-dresden.de/resources/1/schema#zip",
+                    "id": -2778325723712
+                }]
+            }],
+            "record_class": {
+                "name": "record type",
+                "uri": "http://data.slub-dresden.de/resources/1/schema#RecordType",
+                "id": -2784723475632
+            }
+        },
+        "data_resource": {
+            "name": "atMostTwoRows.csv",
+            "description": "my resource description",
+            "type": "FILE",
+            "id": 1,
+            "resource_attributes": {
+                "path": "C:\\DMP\\datamanagement-platform\\init\\..\\tmp\\resources\\atMostTwoRows.csv",
+                "filetype": "application/vnd.ms-excel",
+                "filesize": -1
+            },
+            "configurations": [{
+                "name": "my configuration name",
+                "description": "my configuration description",
+                "id": 1,
+                "resources": [{
+                    "id": 1
+                }],
+                "parameters": {
+                    "column_delimiter": ";",
+                    "escape_character": "\\",
+                    "quote_character": "\"",
+                    "first_row_is_headings": true,
+                    "column_names": "columnN",
+                    "storage_type": "csv"
+                }
+            }]
+        }
+    },
+    "mappings": [{
+        "id": -1404297542685,
+        "name": "type-to-type",
+        "input_attribute_paths": [{
+            "type": "MappingAttributePathInstance",
+            "name": "input mapping attribute path instance",
+			"id": -1932847464374,
+            "attribute_path": {
+                "id": -4070983487343468340,
+                "attributes": [{
+                    "name": "type",
+                    "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                    "id": -2323909237623843453
+                }]
+            }
+        }],
+        "output_attribute_path": {
+            "type": "MappingAttributePathInstance",
+            "name": "output mapping attribute path instance",
+            "id": -1983743456345,
+			"attribute_path": {
+				"id": -4070983487343468340,
+                "attributes": [{
+                    "name": "type",
+                    "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                    "id": -2323909237623843453
+                }]
+            }
+        }
+    }, {
+        "id": -1404297555465,
+        "name": "first+last-to-contributor",
+        "transformation": {
+            "name": "transformation",
+            "description": "transformation",
+            "function": {
+                "name": "transformation",
+                "description": "transformation",
+                "type": "Transformation",
+                "components": [{
+                    "function": {
+                        "name": "concat",
+                        "description": "Collects all received values and concatenates them on record end.",
+                        "id": -1498234535465,
+                        "function_description": {
+                            "name": "concat",
+                            "dsl": "metafacture",
+                            "reference": "concat",
+                            "description": "Collects all received values and concatenates them on record end.",
+                            "parameters": {
+                                "delimiter": {
+                                    "type": "text"
+                                },
+                                "prefix": {
+                                    "type": "text",
+                                    "optional": true
+                                },
+                                "postfix": {
+                                    "type": "text",
+                                    "optional": true
+                                }
+                            }
+                        },
+                        "parameters": ["delimiter", "prefix", "postfix"],
+                        "type": "Function"
+                    },
+                    "name": "component1404297589976",
+                    "id": -1404297589660,
+                    "description": "{\"x\":\"first\",\"y\":0}",
+                    "parameter_mappings": {
+                        "delimiter": " ",
+                        "inputString": "first,last"
+                    }
+                }]
+            },
+            "parameter_mappings": {
+                "first": "http://data.slub-dresden.de/resources/1/schema#first",
+                "__TRANSFORMATION_OUTPUT_VARIABLE__2": "http://purl.org/dc/elements/1.1/contributor",
+                "last": "http://data.slub-dresden.de/resources/1/schema#last"
+            }
+        },
+        "input_attribute_paths": [{
+            "type": "MappingAttributePathInstance",
+            "name": "input mapping attribute path instance",
+            "id": -1404297555484,
+            "attribute_path": {
+                "id": -1900003333342,
+                "attributes": [{
+                    "name": "first",
+                    "uri": "http://data.slub-dresden.de/resources/1/schema#first",
+                    "id": -1477449935555
+                }]
+            },
+            "filter": {
+                "id": -1404297573850,
+                "expression": "{\"http://data.slub-dresden.de/resources/1/schema#last\":\"Doe\"}"
+            }
+        }, {
+            "type": "MappingAttributePathInstance",
+            "name": "input mapping attribute path instance",
+            "id": -1404297560848,
+            "attribute_path": {
+                "id": -2226663338888,
+                "attributes": [{
+                    "name": "last",
+                    "uri": "http://data.slub-dresden.de/resources/1/schema#last",
+                    "id": -4488557733222
+                }]
+            },
+            "filter": {
+                "id": -1404297585033,
+                "expression": "{\"http://data.slub-dresden.de/resources/1/schema#city\":\"Anytown\"}"
+            }
+        }],
+        "output_attribute_path": {
+            "type": "MappingAttributePathInstance",
+            "name": "output mapping attribute path instance",
+            "id": -1404297555485,
+            "attribute_path": {
+                "id": -1982346346725,
+                "attributes": [{
+                    "name": "contributor",
+                    "uri": "http://purl.org/dc/elements/1.1/contributor",
+                    "id": -1493589346285
+                }]
+            }
+        }
+    }, {
+        "id": -1404297608676,
+        "name": "city-to-shortTitle",
+        "input_attribute_paths": [{
+            "type": "MappingAttributePathInstance",
+            "name": "input mapping attribute path instance",
+            "id": -1404297608749,
+            "attribute_path": {
+                "id": -2885555444444,
+                "attributes": [{
+                    "name": "city",
+                    "uri": "http://data.slub-dresden.de/resources/1/schema#city",
+                    "id": -2638233333322
+                }]
+            }
+        }],
+        "output_attribute_path": {
+            "type": "MappingAttributePathInstance",
+            "name": "output mapping attribute path instance",
+            "id": -1404297608750,
+            "attribute_path": {
+                "id": -4000912660033554444,
+                "attributes": [{
+                    "name": "shortTitle",
+                    "uri": "http://purl.org/ontology/bibo/shortTitle",
+                    "id": -4887733664466222111
+                }]
+            }
+        }
+    }],
+    "functions": [{
+        "name": "concat",
+        "description": "Collects all received values and concatenates them on record end.",
+        "id": -1498234535465,
+        "function_description": {
+            "name": "concat",
+            "dsl": "metafacture",
+            "reference": "concat",
+            "description": "Collects all received values and concatenates them on record end.",
+            "parameters": {
+                "delimiter": {
+                    "type": "text"
+                },
+                "prefix": {
+                    "type": "text",
+                    "optional": true
+                },
+                "postfix": {
+                    "type": "text",
+                    "optional": true
+                }
+            }
+        },
+        "parameters": ["delimiter", "prefix", "postfix"],
+        "type": "Function"
+    }],
+    "output_data_model": {
+        "id": -2943462344562,
+        "name": "Internal Data Model BiboDocument TEST",
+        "description": "Internal Data Model BiboDocument TEST",
+        "schema": {
+            "name": "bibo:Document-Schema (KIM-Titeldaten) TEST",
+            "id": -2062991439511256064,
+            "attribute_paths": [{
+                "id": -4070983487343468340,
+                "attributes": [{
+                    "name": "type",
+                    "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                    "id": -2323909237623843453
+                }]
+            }, {
+                "id": -4000912660033554444,
+                "attributes": [{
+                    "name": "shortTitle",
+                    "uri": "http://purl.org/ontology/bibo/shortTitle",
+                    "id": -4887733664466222111
+                }]
+            }, {
+                "id": -1982346346725,
+                "attributes": [{
+                    "name": "contributor",
+                    "uri": "http://purl.org/dc/elements/1.1/contributor",
+                    "id": -1493589346285
+                }]
+            }, {
+                "id": -1834782374475347233,
+                "attributes": [{
+                    "name": "publicationStatement",
+                    "uri": "http://rdvocab.info/Elements/publicationStatement",
+                    "id": -2093473426437434652
+                }]
+            }],
+            "record_class": {
+                "name": "Document",
+                "uri": "http://purl.org/ontology/bibo/Document",
+                "id": -3399570177189678080
+            }
+        }
+    }
+}
