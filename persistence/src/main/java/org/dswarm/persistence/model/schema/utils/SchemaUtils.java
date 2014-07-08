@@ -38,16 +38,16 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		return relativeURIPart;
 	}
 
-	public static String determineSchemaURI(final Long schemaId) {
+	public static String determineSchemaNamespaceURI(final Long schemaId) {
 
 		return "http://data.slub-dresden.de/schemas/" + schemaId + "/";
 	}
 
-	public static String mintAttributeURI(final String attributeName, final String schemaBaseURI) {
+	public static String mintAttributeURI(final String attributeName, final String namespaceURI) {
 
 		final String attributeNameURLEncoded = UrlEscapers.urlFormParameterEscaper().escape(attributeName);
 
-		return schemaBaseURI + attributeNameURLEncoded;
+		return namespaceURI + attributeNameURLEncoded;
 	}
 
 }

@@ -170,14 +170,17 @@ public class SchemasResourceTest extends
 
 		final Schema schema = createObjectInternal();
 
-		final String schemaBaseURI = SchemaUtils.determineSchemaURI(schema.getId());
+		final String schemaNamespaceURI = SchemaUtils.determineSchemaNamespaceURI(schema.getId());
 		final String attributeName1 = "attribute one";
 		final String attributeName2 = "attribute2";
 		final String attributeName3 = "a3";
+		final String attributeUri1 = SchemaUtils.mintAttributeURI(attributeName1, schemaNamespaceURI);
+		final String attributeUri2 = SchemaUtils.mintAttributeURI(attributeName2, schemaNamespaceURI);
+		final String attributeUri3 = SchemaUtils.mintAttributeURI(attributeName3, schemaNamespaceURI);
 
 		final ArrayNode attributeDescriptionsJSONArray = objectMapper.createArrayNode();
-		final ObjectNode attributeDescriptionJSON1 = createAttributeDescription(attributeName1, schemaBaseURI);
-		final ObjectNode attributeDescriptionJSON2 = createAttributeDescription(attributeName2, schemaBaseURI);
+		final ObjectNode attributeDescriptionJSON1 = createAttributeDescription(attributeName1, attributeUri1);
+		final ObjectNode attributeDescriptionJSON2 = createAttributeDescription(attributeName2, attributeUri2);
 		final ObjectNode attributeDescriptionJSON3 = createAttributeDescription(attributeName3, null);
 		attributeDescriptionsJSONArray.add(attributeDescriptionJSON1);
 		attributeDescriptionsJSONArray.add(attributeDescriptionJSON2);
@@ -196,14 +199,10 @@ public class SchemasResourceTest extends
 
 		final Schema updatedSchema = objectMapper.readValue(responseString, Schema.class);
 
-		final String attributeURI1 = SchemaUtils.mintAttributeURI(attributeName1, schemaBaseURI);
-		final String attributeURI2 = SchemaUtils.mintAttributeURI(attributeName2, schemaBaseURI);
-		final String attributeURI3 = SchemaUtils.mintAttributeURI(attributeName3, schemaBaseURI);
-
 		final LinkedList<String> attributeURIs = Lists.newLinkedList();
-		attributeURIs.add(attributeURI1);
-		attributeURIs.add(attributeURI2);
-		attributeURIs.add(attributeURI3);
+		attributeURIs.add(attributeUri1);
+		attributeURIs.add(attributeUri2);
+		attributeURIs.add(attributeUri3);
 
 		Assert.assertNotNull(updatedSchema);
 
@@ -281,15 +280,16 @@ public class SchemasResourceTest extends
 
 		final Schema schema = createObjectInternal();
 
-		final String schemaBaseURI = SchemaUtils.determineSchemaURI(schema.getId());
+		final String schemaNamespaceURI = SchemaUtils.determineSchemaNamespaceURI(schema.getId());
 		final String attributeName1 = "attribute one";
+		final String attributeUri1 = SchemaUtils.mintAttributeURI(attributeName1, schemaNamespaceURI);
 
 		final AttributePath baseAttributePath = schema.getAttributePaths().iterator().next();
 		final Long baseAttributePathId = baseAttributePath.getId();
 
 		final Map<String, String> jsonMap = Maps.newHashMap();
 		jsonMap.put("name", attributeName1);
-		jsonMap.put("uri", schemaBaseURI);
+		jsonMap.put("uri", attributeUri1);
 		final String payloadJson = objectMapper.writeValueAsString(jsonMap);
 
 		final Response response = target().path("/" + schema.getId() + "/attributepaths/" + baseAttributePathId)
@@ -304,8 +304,6 @@ public class SchemasResourceTest extends
 
 		final Schema updatedSchema = objectMapper.readValue(responseString, Schema.class);
 
-		final String attributeURI1 = SchemaUtils.mintAttributeURI(attributeName1, schemaBaseURI);
-
 		final LinkedList<String> attributeURIs = Lists.newLinkedList();
 
 		for (final Attribute attribute : baseAttributePath.getAttributePath()) {
@@ -313,7 +311,7 @@ public class SchemasResourceTest extends
 			attributeURIs.add(attribute.getUri());
 		}
 
-		attributeURIs.add(attributeURI1);
+		attributeURIs.add(attributeUri1);
 
 		Assert.assertNotNull(updatedSchema);
 
