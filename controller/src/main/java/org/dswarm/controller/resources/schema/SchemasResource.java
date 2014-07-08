@@ -295,11 +295,11 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 			throw new DMPControllerException("there is no attribute description");
 		}
 
-		final String schemaBaseURI = SchemaUtils.determineSchemaURI(schemaId);
+		final String schemaNamespaceURI = SchemaUtils.determineSchemaNamespaceURI(schemaId);
 		final AttributesResourceUtils attributeResourceUtils = utilsFactory.get(AttributesResourceUtils.class);
 		final AttributeService attributeService = attributeResourceUtils.getPersistenceService();
 
-		final Attribute newAttribute = createOrGetAttribute(attributeDescriptionJSON, schemaBaseURI, attributeService);
+		final Attribute newAttribute = createOrGetAttribute(attributeDescriptionJSON, schemaNamespaceURI, attributeService);
 
 		final LinkedList<Attribute> attributes = Lists.newLinkedList(baseAttributes);
 		attributes.add(newAttribute);
@@ -421,14 +421,14 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 			throw new DMPControllerException(message);
 		}
 
-		final String schemaBaseURI = SchemaUtils.determineSchemaURI(id);
+		final String schemaNamespaceURI = SchemaUtils.determineSchemaNamespaceURI(id);
 		final AttributesResourceUtils attributeResourceUtils = utilsFactory.get(AttributesResourceUtils.class);
 		final AttributeService attributeService = attributeResourceUtils.getPersistenceService();
 		final LinkedList<Attribute> attributes = Lists.newLinkedList();
 
 		for (final JsonNode attributeDescriptionNode : attributeDescriptionsJSONArray) {
 
-			final Attribute attribute = createOrGetAttribute(attributeDescriptionNode, schemaBaseURI, attributeService);
+			final Attribute attribute = createOrGetAttribute(attributeDescriptionNode, schemaNamespaceURI, attributeService);
 
 			attributes.add(attribute);
 		}
@@ -579,7 +579,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 		return attributePath;
 	}
 
-	private Attribute createOrGetAttribute(final JsonNode attributeDescriptionNode, final String schemaBaseURI,
+	private Attribute createOrGetAttribute(final JsonNode attributeDescriptionNode, final String schemaNamespaceURI,
 			final AttributeService attributeService) throws DMPControllerException {
 
 		final JsonNode attributeNameNode = attributeDescriptionNode.get("name");
@@ -623,9 +623,9 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 			try {
 
-				final URI attributeBaseURIObject = URI.create(tempAttributeURI);
+				final URI attributeURIObject = URI.create(tempAttributeURI);
 
-				if (attributeBaseURIObject != null && attributeBaseURIObject.getScheme() != null) {
+				if (attributeURIObject != null && attributeURIObject.getScheme() != null) {
 
 					validURI = true;
 				}
@@ -642,7 +642,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 			attributeURI = tempAttributeURI;
 		} else {
 
-			attributeURI = SchemaUtils.mintAttributeURI(attributeName, schemaBaseURI);
+			attributeURI = SchemaUtils.mintAttributeURI(attributeName, schemaNamespaceURI);
 		}
 
 		final Attribute attribute = createOrGetAttribute(attributeName, attributeURI, attributeService);
