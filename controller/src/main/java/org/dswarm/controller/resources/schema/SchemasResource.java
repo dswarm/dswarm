@@ -479,10 +479,8 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 		return attributePath;
 	}
 
-	private Attribute createOrGetAttribute(final String attributeName, final String attributeBaseURI, final AttributeService attributeService)
+	private Attribute createOrGetAttribute(final String attributeName, final String attributeURI, final AttributeService attributeService)
 			throws DMPControllerException {
-
-		final String attributeURI = SchemaUtils.mintAttributeURI(attributeName, attributeBaseURI);
 
 		ProxyAttribute proxyAttribute = null;
 
@@ -615,17 +613,17 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 			throw new DMPControllerException(message);
 		}
 
-		final String attributeBaseURI;
+		final String attributeURI;
 
 		if (attributeURINode != null) {
 
-			final String tempAttributeBaseURI = attributeURINode.asText();
+			final String tempAttributeURI = attributeURINode.asText();
 
 			boolean validURI = false;
 
 			try {
 
-				final URI attributeBaseURIObject = URI.create(tempAttributeBaseURI);
+				final URI attributeBaseURIObject = URI.create(tempAttributeURI);
 
 				if (attributeBaseURIObject != null && attributeBaseURIObject.getScheme() != null) {
 
@@ -638,16 +636,16 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 			if (!validURI) {
 
-				throw new DMPControllerException("'" + tempAttributeBaseURI + "' is not a valid URI");
+				throw new DMPControllerException("'" + tempAttributeURI + "' is not a valid URI");
 			}
 
-			attributeBaseURI = tempAttributeBaseURI;
+			attributeURI = tempAttributeURI;
 		} else {
 
-			attributeBaseURI = schemaBaseURI;
+			attributeURI = SchemaUtils.mintAttributeURI(attributeName, schemaBaseURI);
 		}
 
-		final Attribute attribute = createOrGetAttribute(attributeName, attributeBaseURI, attributeService);
+		final Attribute attribute = createOrGetAttribute(attributeName, attributeURI, attributeService);
 
 		return attribute;
 	}
