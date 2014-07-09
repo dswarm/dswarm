@@ -460,7 +460,7 @@ public class ResourcesResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getResourcePlain(@ApiParam(value = "data resource identifier", required = true) @PathParam("id") final Long id,
 			@ApiParam(value = "number of lines limit", defaultValue = "50") @DefaultValue("50") @QueryParam("atMost") final int atMost,
-			@ApiParam(value = "data resource encoding", defaultValue = "50") @DefaultValue("UTF-8") @QueryParam("encoding") final String encoding)
+			@ApiParam(value = "data resource encoding", defaultValue = "UTF-8") @DefaultValue("UTF-8") @QueryParam("encoding") final String encoding)
 			throws DMPControllerException {
 		final Timer.Context context = dmpStatus.getSingleResource();
 
