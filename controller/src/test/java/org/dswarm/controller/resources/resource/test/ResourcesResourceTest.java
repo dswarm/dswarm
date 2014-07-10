@@ -207,6 +207,72 @@ public class ResourcesResourceTest extends ResourceTest {
 	}
 
 	@Test
+	public void testGetXMLResourceLines() throws Exception {
+
+		ResourcesResourceTest.LOG.debug("start get xml resource lines test");
+
+		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("test-mabxml-resource.json");
+
+		expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
+
+		final URL fileURL = Resources.getResource("test-mabxml.xml");
+		resourceFile = FileUtils.toFile(fileURL);
+
+		final String resourceJSON = testResourceUploadInteral(resourceFile, expectedResource);
+
+		ResourcesResourceTest.LOG.debug("created resource = '" + resourceJSON + "'");
+
+		final Resource resource = objectMapper.readValue(resourceJSON, Resource.class);
+
+		Assert.assertNotNull("resource shouldn't be null", resource);
+		Assert.assertNotNull("resource id shouldn't be null", resource.getId());
+
+		ResourcesResourceTest.LOG.debug("try to retrieve resource '" + resource.getId() + "'");
+
+		final List<String> expectedLines = Files.readLines(resourceFile, Charset.forName("UTF-8"));
+
+		Response response = target(String.valueOf(resource.getId()), "lines").request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+
+		Iterator<String> expectedIter = expectedLines.iterator();
+
+		JsonNode responseResource = response.readEntity(JsonNode.class);
+		Iterator<JsonNode> actualIter = responseResource.get("lines").elements();
+
+		while (actualIter.hasNext()) {
+			final String expected = expectedIter.next();
+			final String actual = actualIter.next().asText();
+
+			Assert.assertThat(actual, CoreMatchers.equalTo(expected));
+		}
+
+		Assert.assertThat(responseResource.get("name").asText(), CoreMatchers.equalTo(resource.getName()));
+		Assert.assertThat(responseResource.get("description").asText(), CoreMatchers.equalTo(resource.getDescription()));
+
+		response = target(String.valueOf(resource.getId()), "lines").queryParam("atMost", 3).request().accept(MediaType.APPLICATION_JSON_TYPE)
+				.get(Response.class);
+
+		expectedIter = Iterables.limit(expectedLines, 3).iterator();
+
+		responseResource = response.readEntity(JsonNode.class);
+		actualIter = responseResource.get("lines").elements();
+
+		while (actualIter.hasNext()) {
+			final String expected = expectedIter.next();
+			final String actual = actualIter.next().asText();
+
+			Assert.assertThat(actual, CoreMatchers.equalTo(expected));
+		}
+
+		Assert.assertThat(responseResource.get("name").asText(), CoreMatchers.equalTo(resource.getName()));
+		Assert.assertThat(responseResource.get("description").asText(), CoreMatchers.equalTo(resource.getDescription()));
+
+		cleanUpDB(resource);
+
+		ResourcesResourceTest.LOG.debug("end xml resource lines test");
+	}
+
+
+	@Test
 	public void getResourceConfigurations() throws Exception {
 
 		ResourcesResourceTest.LOG.debug("start get resource configurations test");
