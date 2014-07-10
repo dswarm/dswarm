@@ -16,6 +16,10 @@ SET foreign_key_checks = 0;
 
     drop table if exists CONFIGURATIONS_RESOURCES;
 
+    drop table if exists CONTENT_SCHEMA;
+
+    drop table if exists CONTENT_SCHEMAS_KEY_ATTRIBUTE_PATHS;
+
     drop table if exists DATA_MODEL;
 
     drop table if exists DATA_SCHEMA;
@@ -100,6 +104,20 @@ SET foreign_key_checks = 0;
         CONFIGURATION_ID bigint not null,
         RESOURCE_ID bigint not null,
         primary key (CONFIGURATION_ID, RESOURCE_ID)
+    ) ENGINE=InnoDB;
+
+    create table CONTENT_SCHEMA (
+        ID bigint not null auto_increment,
+        NAME varchar(255),
+        KEY_ATTRIBUTE_PATHS VARCHAR(4000),
+        VALUE_ATTRIBUTE_PATH bigint,
+        primary key (ID)
+    ) ENGINE=InnoDB;
+
+    create table CONTENT_SCHEMAS_KEY_ATTRIBUTE_PATHS (
+        CONTENT_SCHEMA_ID bigint not null,
+        ATTRIBUTE_PATH_ID bigint not null,
+        primary key (CONTENT_SCHEMA_ID, ATTRIBUTE_PATH_ID)
     ) ENGINE=InnoDB;
 
     create table DATA_MODEL (
@@ -245,6 +263,24 @@ SET foreign_key_checks = 0;
         add constraint FK_1umqe7aqc5k80n1pixjv34vpi 
         foreign key (CONFIGURATION_ID) 
         references CONFIGURATION (ID);
+
+    alter table CONTENT_SCHEMA 
+        add index FK_9l1ily6bu8wklhep4d4t99qmh (VALUE_ATTRIBUTE_PATH), 
+        add constraint FK_9l1ily6bu8wklhep4d4t99qmh 
+        foreign key (VALUE_ATTRIBUTE_PATH) 
+        references ATTRIBUTE_PATH (ID);
+
+    alter table CONTENT_SCHEMAS_KEY_ATTRIBUTE_PATHS 
+        add index FK_tj0i0nwfn9gyv3n5q7fqk0gm8 (ATTRIBUTE_PATH_ID), 
+        add constraint FK_tj0i0nwfn9gyv3n5q7fqk0gm8 
+        foreign key (ATTRIBUTE_PATH_ID) 
+        references ATTRIBUTE_PATH (ID);
+
+    alter table CONTENT_SCHEMAS_KEY_ATTRIBUTE_PATHS 
+        add index FK_trtfg1bqeqgys2vjad9n22ahj (CONTENT_SCHEMA_ID), 
+        add constraint FK_trtfg1bqeqgys2vjad9n22ahj 
+        foreign key (CONTENT_SCHEMA_ID) 
+        references CONTENT_SCHEMA (ID);
 
     alter table DATA_MODEL 
         add index FK_hpe71t1t2cy8817cq6jcval7v (CONFIGURATION), 
