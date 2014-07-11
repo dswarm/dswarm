@@ -3,23 +3,22 @@ package org.dswarm.persistence.service.schema.test.internalmodel;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.dswarm.persistence.GuicedTest;
+import org.dswarm.persistence.model.schema.AttributePath;
+import org.dswarm.persistence.model.schema.Schema;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.dswarm.persistence.GuicedTest;
-import org.dswarm.persistence.model.schema.AttributePath;
-import org.dswarm.persistence.model.schema.Schema;
-
 public class InternalSchemaBuilderTest extends GuicedTest {
 
-	//private static final Logger			LOG				= LoggerFactory.getLogger(InternalSchemaBuilderTest.class);
+	// private static final Logger LOG = LoggerFactory.getLogger(InternalSchemaBuilderTest.class);
 
-	private final ObjectMapper			objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper	objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	//private static final String			NL				= System.lineSeparator();
+	// private static final String NL = System.lineSeparator();
 
 	@Ignore
 	@Test
@@ -33,7 +32,7 @@ public class InternalSchemaBuilderTest extends GuicedTest {
 		buildSchema(new BibrmContractItemSchemaBuilder());
 	}
 
-	private void buildSchema(SchemaBuilder schemaBuilder) {
+	private void buildSchema(final SchemaBuilder schemaBuilder) {
 
 		final Schema schema = schemaBuilder.buildSchema();
 

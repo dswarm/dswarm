@@ -5,14 +5,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.dswarm.init.util.DMPStatics;
 import org.hamcrest.Matchers;
 
 import ch.lambdaj.Lambda;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Lists;
-
-import org.dswarm.init.util.DMPStatics;
 
 public class AttributePathHelperHelper {
 

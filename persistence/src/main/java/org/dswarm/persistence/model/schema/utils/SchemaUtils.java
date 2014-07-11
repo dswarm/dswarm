@@ -1,9 +1,9 @@
 package org.dswarm.persistence.model.schema.utils;
 
-import com.google.common.net.UrlEscapers;
-
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.utils.BasicDMPJPAObjectUtils;
+
+import com.google.common.net.UrlEscapers;
 
 /**
  * @author tgaengler

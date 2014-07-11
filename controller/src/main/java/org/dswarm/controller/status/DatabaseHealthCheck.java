@@ -1,10 +1,10 @@
 package org.dswarm.controller.status;
 
+import org.dswarm.persistence.DatabaseConnectionCheck;
+
 import com.codahale.metrics.health.HealthCheck;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.dswarm.persistence.DatabaseConnectionCheck;
 
 @Singleton
 public class DatabaseHealthCheck extends HealthCheck {

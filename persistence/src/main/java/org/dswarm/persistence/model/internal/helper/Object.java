@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * A helper object for RDF to JSON transformation.
- *
+ * 
  * @author tgaengler
  */
 public class Object {
@@ -15,7 +15,7 @@ public class Object {
 
 	/**
 	 * Creates a new helper object with a given literal or URI.
-	 *
+	 * 
 	 * @param literalOrURI a literal or URI
 	 */
 	public Object(final String literalOrURI) {
@@ -27,7 +27,7 @@ public class Object {
 
 	/**
 	 * Creates a new helper object with a given JSON node.
-	 *
+	 * 
 	 * @param jsonNode a JSON node
 	 */
 	public Object(final JsonNode jsonNode) {
@@ -39,7 +39,7 @@ public class Object {
 
 	/**
 	 * Returns true, if this helper object wraps a JSON node; otherwise false.
-	 *
+	 * 
 	 * @return true, if this helper object wraps a JSON node; otherwise false
 	 */
 	public boolean isJsonNode() {
@@ -49,7 +49,7 @@ public class Object {
 
 	/**
 	 * Gets the literal or URI of this helper object.
-	 *
+	 * 
 	 * @return the literal or URI
 	 */
 	public String getLiteralOrURI() {
@@ -59,7 +59,7 @@ public class Object {
 
 	/**
 	 * Gets the JSON node of this helper object.
-	 *
+	 * 
 	 * @return the JSON node
 	 */
 	public JsonNode getJsonNode() {

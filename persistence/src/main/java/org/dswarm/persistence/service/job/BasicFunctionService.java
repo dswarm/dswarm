@@ -4,16 +4,16 @@ import java.util.LinkedList;
 
 import javax.persistence.EntityManager;
 
-import com.google.inject.Provider;
-
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.proxy.ProxyBasicFunction;
 import org.dswarm.persistence.service.ExtendedBasicDMPJPAService;
 
+import com.google.inject.Provider;
+
 /**
  * A generic persistence service for {@link Function}s.
- *
+ * 
  * @author tgaengler
  * @param <FUNCTIONIMPL> a concrete {@link Function} implementation
  */
@@ -22,7 +22,7 @@ public abstract class BasicFunctionService<PROXYFUNCTIONIMPL extends ProxyBasicF
 
 	/**
 	 * Creates a new persistence service for the given concrete {@link Function} implementation and the entity manager provider.
-	 *
+	 * 
 	 * @param clasz a concrete {@link Function} implementation
 	 * @param entityManagerProvider an entity manager provider
 	 */

@@ -4,7 +4,7 @@ import com.google.common.base.Charsets;
 
 /**
  * Holds references for keys of configuration parameters and default values of configuration parameters.
- *
+ * 
  * @author tgaengler
  */
 public interface ConfigurationStatics {

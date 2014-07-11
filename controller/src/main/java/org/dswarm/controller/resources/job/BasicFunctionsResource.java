@@ -9,7 +9,7 @@ import org.dswarm.persistence.service.job.BasicFunctionService;
 
 /**
  * A generic resource (controller service) for {@link Function}s.
- *
+ * 
  * @author tgaengler
  * @param <POJOCLASSPERSISTENCESERVICE> the concrete {@link Function} persistence service of the resource that is related to the
  *            concrete {@link Function} class
@@ -21,7 +21,7 @@ public abstract class BasicFunctionsResource<POJOCLASSRESOURCEUTILS extends Basi
 	/**
 	 * Creates a new resource (controller service) for the given concrete {@link Function} class with the provider of the concrete
 	 * {@link Function} persistence service, the object mapper and metrics registry.
-	 *
+	 * 
 	 * @param clasz a concrete {@link Function} class
 	 * @param persistenceServiceProviderArg the concrete persistence service that is related to the concrete {@link Function}
 	 *            class

@@ -6,6 +6,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.dswarm.persistence.GuicedTest;
+import org.dswarm.persistence.PersistenceModule;
+import org.dswarm.persistence.model.job.Component;
+import org.dswarm.persistence.model.job.Function;
+import org.dswarm.persistence.model.job.FunctionType;
+import org.dswarm.persistence.model.job.Mapping;
+import org.dswarm.persistence.model.job.Transformation;
+import org.dswarm.persistence.model.resource.Configuration;
+import org.dswarm.persistence.model.types.Tuple;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -22,16 +31,6 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.io.CharSource;
 import com.google.common.io.Resources;
-
-import org.dswarm.persistence.GuicedTest;
-import org.dswarm.persistence.PersistenceModule;
-import org.dswarm.persistence.model.job.Component;
-import org.dswarm.persistence.model.job.Function;
-import org.dswarm.persistence.model.job.FunctionType;
-import org.dswarm.persistence.model.job.Mapping;
-import org.dswarm.persistence.model.job.Transformation;
-import org.dswarm.persistence.model.resource.Configuration;
-import org.dswarm.persistence.model.types.Tuple;
 
 public class CustomTransformationDeserializerTest extends GuicedTest {
 

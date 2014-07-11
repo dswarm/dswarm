@@ -24,7 +24,7 @@ public class GuicedTest {
 
 			/**
 			 * Provides the {@link ObjectMapper} instance for JSON de-/serialisation.
-			 *
+			 * 
 			 * @return a {@link ObjectMapper} instance as singleton
 			 */
 			@Provides

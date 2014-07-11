@@ -12,13 +12,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.google.inject.servlet.RequestScoped;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
-
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.schema.utils.MappingAttributePathInstancesResourceUtils;
 import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
@@ -27,9 +20,16 @@ import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxyMappingAttributePathInstance;
 import org.dswarm.persistence.service.schema.MappingAttributePathInstanceService;
 
+import com.google.inject.servlet.RequestScoped;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
+
 /**
  * A resource (controller service) for {@link MappingAttributePathInstance}s.
- *
+ * 
  * @author tgaengler
  */
 @RequestScoped
@@ -42,7 +42,7 @@ public class MappingAttributePathInstancesResource
 	/**
 	 * Creates a new resource (controller service) for {@link MappingAttributePathInstance}s with the provider of the mapping
 	 * attribute path instance persistence service, the object mapper and metrics registry.
-	 *
+	 * 
 	 * @param utilsFactory
 	 * @param dmpStatusArg
 	 * @throws DMPControllerException
@@ -56,7 +56,7 @@ public class MappingAttributePathInstancesResource
 	/**
 	 * This endpoint returns a mapping attribute path instance as JSON representation for the provided mapping attribute path
 	 * instance identifier.
-	 *
+	 * 
 	 * @param id a mapping attribute path instance identifier
 	 * @return a JSON representation of a mapping attribute path instance
 	 */
@@ -76,7 +76,7 @@ public class MappingAttributePathInstancesResource
 
 	/**
 	 * This endpoint consumes a filter as JSON representation and persists this filter in the database.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one filter
 	 * @return the persisted filter as JSON representation
 	 * @throws DMPControllerException
@@ -96,7 +96,7 @@ public class MappingAttributePathInstancesResource
 
 	/**
 	 * This endpoint returns a list of all functions as JSON representation.
-	 *
+	 * 
 	 * @return a list of all functions as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -115,7 +115,7 @@ public class MappingAttributePathInstancesResource
 	/**
 	 * This endpoint consumes a mapping attribute path instance as JSON representation and updates this mapping attribute path
 	 * instance in the database.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one mapping attribute path instance
 	 * @param id a mapping attribute path instance identifier
 	 * @return the updated mapping attribute path instance as JSON representation
@@ -139,7 +139,7 @@ public class MappingAttributePathInstancesResource
 
 	/**
 	 * This endpoint deletes a mapping attribute path instance that matches the given id.
-	 *
+	 * 
 	 * @param id a mapping attribute path instance identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
 	 *         went wrong

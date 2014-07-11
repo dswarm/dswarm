@@ -2,15 +2,14 @@ package org.dswarm.persistence.model.resource.test;
 
 import java.io.IOException;
 
+import org.dswarm.persistence.GuicedTest;
+import org.dswarm.persistence.model.resource.Configuration;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import org.dswarm.persistence.GuicedTest;
-import org.dswarm.persistence.model.resource.Configuration;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * Created by tgaengler on 21/05/14.

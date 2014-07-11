@@ -5,20 +5,19 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.dswarm.persistence.model.resource.Configuration;
+import org.dswarm.persistence.model.resource.Resource;
+import org.dswarm.persistence.model.resource.ResourceType;
+import org.dswarm.persistence.model.resource.proxy.ProxyResource;
+import org.dswarm.persistence.service.resource.ResourceService;
+import org.dswarm.persistence.service.test.utils.BasicJPAServiceTestUtils;
+import org.dswarm.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestUtils;
 import org.junit.Assert;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
-import org.dswarm.persistence.model.resource.Configuration;
-import org.dswarm.persistence.model.resource.Resource;
-import org.dswarm.persistence.model.resource.ResourceType;
-import org.dswarm.persistence.model.resource.proxy.ProxyResource;
-import org.dswarm.persistence.service.resource.ResourceService;
-import org.dswarm.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestUtils;
-
 
 public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils<ResourceService, ProxyResource, Resource> {
 
@@ -32,10 +31,9 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 	}
 
 	/**
-	 * {@inheritDoc} <br /> 
-	 * Assert that both {@link Resource}s have either no attributes or equal collections, i.e. the same number of
-	 * attributes and the same pairs of keys and values; the attributes with keys 'path' and 'filesize' are not part of the
-	 * comparison. <br />
+	 * {@inheritDoc} <br />
+	 * Assert that both {@link Resource}s have either no attributes or equal collections, i.e. the same number of attributes and
+	 * the same pairs of keys and values; the attributes with keys 'path' and 'filesize' are not part of the comparison. <br />
 	 * Assert that both {@link Resource}s have either no or equal configurations, see
 	 * {@link BasicJPAServiceTestUtils#compareObjects(Set, Map)} for details.
 	 */
@@ -97,7 +95,8 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 		// compare configurations
 		if (expectedResource.getConfigurations() == null || expectedResource.getConfigurations().isEmpty()) {
 
-			boolean actualResourceHasNoConfiguration = (actualResource.getConfigurations() == null || actualResource.getConfigurations().isEmpty());
+			final boolean actualResourceHasNoConfiguration = (actualResource.getConfigurations() == null || actualResource.getConfigurations()
+					.isEmpty());
 			Assert.assertTrue("the actual resource shouldn't have any configurations", actualResourceHasNoConfiguration);
 
 		} else { // !null && !empty
@@ -130,10 +129,10 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 		resource.setAttributes(attributes);
 		resource.setConfigurations(configurations);
 
-		//clone resource since it gets it configuration removed while beeing prepared for creation (update)
+		// clone resource since it gets it configuration removed while beeing prepared for creation (update)
 		final String resourceJSONString = objectMapper.writeValueAsString(resource);
 		final Resource expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
-		
+
 		final Resource updatedResource = createObject(resource, expectedResource);
 
 		Assert.assertNotNull("updated resource shouldn't be null", updatedResource);
@@ -199,7 +198,6 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 				.getConfigurations().size());
 	}
 
-	
 	/**
 	 * {@inheritDoc}
 	 */

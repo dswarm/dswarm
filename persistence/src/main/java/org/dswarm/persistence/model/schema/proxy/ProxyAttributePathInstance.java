@@ -8,7 +8,7 @@ import org.dswarm.persistence.model.schema.AttributePathInstance;
 
 /**
  * An abstract proxy class for {@link AttributePathInstance}s.
- *
+ * 
  * @author tgaengler
  */
 @XmlRootElement
@@ -22,7 +22,7 @@ public abstract class ProxyAttributePathInstance<POJOCLASS extends AttributePath
 	/**
 	 * Default constructor for handing over a freshly created attribute path instance, i.e., no updated or already existing
 	 * attribute path instance.
-	 *
+	 * 
 	 * @param attributePathInstanceArg a freshly created attribute path instance
 	 */
 	public ProxyAttributePathInstance(final POJOCLASS attributePathInstanceArg) {
@@ -33,7 +33,7 @@ public abstract class ProxyAttributePathInstance<POJOCLASS extends AttributePath
 	/**
 	 * Creates a new proxy with the given real attribute path instance and the type how the attribute path instance was processed
 	 * by the attribute path instance persistence service, e.g., {@link RetrievalType.CREATED}.
-	 *
+	 * 
 	 * @param attributePathInstanceArg a attribute path instance that was processed by the attribute path instance persistence
 	 *            service
 	 * @param typeArg the type how this attribute path instance was processed by the attribute path instance persistence service

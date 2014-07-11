@@ -14,18 +14,18 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.google.common.collect.Sets;
-
 import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.google.common.collect.Sets;
 
 /**
  * A project is a container that hold the current working state of a job creation, i.e., it knows all relevant parts of a
  * {@link Job}, e.g., a collection of {@link Mapping}s, the sample input {@link DataModel}, the output {@link DataModel} and other
  * related settings.
- *
+ * 
  * @author tgaengler
  */
 @XmlRootElement
@@ -86,7 +86,7 @@ public class Project extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the sample input data model.
-	 *
+	 * 
 	 * @return the sample input data model
 	 */
 	public DataModel getInputDataModel() {
@@ -96,7 +96,7 @@ public class Project extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the sample input data model
-	 *
+	 * 
 	 * @param inputDataModel a new sample input data model
 	 */
 	public void setInputDataModel(final DataModel inputDataModel) {
@@ -106,7 +106,7 @@ public class Project extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the output data model.
-	 *
+	 * 
 	 * @return the output data model
 	 */
 	public DataModel getOutputDataModel() {
@@ -116,7 +116,7 @@ public class Project extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the output data model
-	 *
+	 * 
 	 * @param outputDataModel a new output data model
 	 */
 	public void setOutputDataModel(final DataModel outputDataModel) {
@@ -126,7 +126,7 @@ public class Project extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the mappings of the project.
-	 *
+	 * 
 	 * @return the mappings of the project
 	 */
 	public Set<Mapping> getMappings() {
@@ -136,7 +136,7 @@ public class Project extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the mappings of the project.
-	 *
+	 * 
 	 * @param mappingsArg a new collection of mappings
 	 */
 	public void setMappings(final Set<Mapping> mappingsArg) {
@@ -163,7 +163,7 @@ public class Project extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the functions of the project.
-	 *
+	 * 
 	 * @return the functions of the project
 	 */
 	public Set<Function> getFunctions() {
@@ -173,7 +173,7 @@ public class Project extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the functions of the
-	 *
+	 * 
 	 * @param functionsArg
 	 */
 	public void setFunctions(final Set<Function> functionsArg) {

@@ -3,12 +3,11 @@ package org.dswarm.controller.resources.resource.test;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.dswarm.controller.resources.test.ResourceTest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.dswarm.controller.resources.test.ResourceTest;
 
 public class NonExistingResourceTest extends ResourceTest {
 

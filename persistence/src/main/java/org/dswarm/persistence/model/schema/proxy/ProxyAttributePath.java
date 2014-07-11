@@ -8,7 +8,7 @@ import org.dswarm.persistence.model.schema.AttributePath;
 
 /**
  * A proxy class for {@link AttributePath}s.
- *
+ * 
  * @author tgaengler
  */
 @XmlRootElement
@@ -21,7 +21,7 @@ public class ProxyAttributePath extends ProxyDMPJPAObject<AttributePath> {
 
 	/**
 	 * Default constructor for handing over a freshly created attribute path, i.e., no updated or already existing attribute path.
-	 *
+	 * 
 	 * @param attributePathArg a freshly created attribute path
 	 */
 	public ProxyAttributePath(final AttributePath attributePathArg) {
@@ -32,7 +32,7 @@ public class ProxyAttributePath extends ProxyDMPJPAObject<AttributePath> {
 	/**
 	 * Creates a new proxy with the given real attribute path and the type how the attribute path was processed by the attribute
 	 * path persistence service, e.g., {@link RetrievalType.CREATED}.
-	 *
+	 * 
 	 * @param attributePathArg a attribute path that was processed by the attribute path persistence service
 	 * @param typeArg the type how this attribute path was processed by the attribute path persistence service
 	 */

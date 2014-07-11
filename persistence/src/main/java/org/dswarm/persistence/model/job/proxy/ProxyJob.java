@@ -8,7 +8,7 @@ import org.dswarm.persistence.model.proxy.RetrievalType;
 
 /**
  * A proxy class for {@link Job}s.
- *
+ * 
  * @author tgaengler
  */
 @XmlRootElement
@@ -21,7 +21,7 @@ public class ProxyJob extends ProxyExtendedBasicDMPJPAObject<Job> {
 
 	/**
 	 * Default constructor for handing over a freshly created job, i.e., no updated or already existing job.
-	 *
+	 * 
 	 * @param jobArg a freshly created job
 	 */
 	public ProxyJob(final Job jobArg) {
@@ -32,7 +32,7 @@ public class ProxyJob extends ProxyExtendedBasicDMPJPAObject<Job> {
 	/**
 	 * Creates a new proxy with the given real job and the type how the job was processed by the job persistence service, e.g.,
 	 * {@link RetrievalType.CREATED}.
-	 *
+	 * 
 	 * @param jobArg a job that was processed by the job persistence service
 	 * @param typeArg the type how this job was processed by the job persistence service
 	 */

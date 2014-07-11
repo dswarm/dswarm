@@ -1,13 +1,12 @@
 package org.dswarm.converter.morph;
 
+import org.dswarm.converter.GuicedTest;
+import org.dswarm.persistence.model.job.Task;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.dswarm.converter.GuicedTest;
-import org.dswarm.persistence.model.job.Task;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class MorphScriptBuilderTest extends GuicedTest {
 

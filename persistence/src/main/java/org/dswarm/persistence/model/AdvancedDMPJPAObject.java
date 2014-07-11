@@ -10,7 +10,7 @@ import com.google.common.base.Objects;
 
 /**
  * The abstract POJO class for entities where the uri of the entity should be provided at object creation.
- *
+ * 
  * @author tgaengler
  */
 @XmlRootElement

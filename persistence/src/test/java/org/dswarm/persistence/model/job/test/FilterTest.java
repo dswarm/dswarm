@@ -1,14 +1,13 @@
 package org.dswarm.persistence.model.job.test;
 
+import org.dswarm.persistence.GuicedTest;
+import org.dswarm.persistence.model.job.Filter;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.dswarm.persistence.GuicedTest;
-import org.dswarm.persistence.model.job.Filter;
 
 public class FilterTest extends GuicedTest {
 

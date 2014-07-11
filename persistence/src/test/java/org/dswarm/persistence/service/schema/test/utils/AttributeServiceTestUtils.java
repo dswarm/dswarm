@@ -2,12 +2,12 @@ package org.dswarm.persistence.service.schema.test.utils;
 
 import java.util.Set;
 
-import com.google.common.collect.Sets;
-
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
 import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.test.utils.AdvancedDMPJPAServiceTestUtils;
+
+import com.google.common.collect.Sets;
 
 public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<AttributeService, ProxyAttribute, Attribute> {
 

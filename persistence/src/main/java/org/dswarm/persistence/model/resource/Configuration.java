@@ -19,6 +19,10 @@ import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.dswarm.init.DMPException;
+import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
+import org.dswarm.persistence.model.representation.SetResourceReferenceSerializer;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,14 +33,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
 
-import org.dswarm.init.DMPException;
-import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
-import org.dswarm.persistence.model.representation.SetResourceReferenceSerializer;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
-
 /**
  * A configuration contains information on how to process a given {@link Resource} into a {@link DataModel}, e.g., delimiter etc.
- *
+ * 
  * @author tgaengler
  */
 @XmlRootElement
@@ -57,8 +56,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	 * The related resources.
 	 */
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinTable(name = "CONFIGURATIONS_RESOURCES", joinColumns = { @JoinColumn(name = "CONFIGURATION_ID", referencedColumnName = "ID") },
-			inverseJoinColumns = { @JoinColumn(name = "RESOURCE_ID", referencedColumnName = "ID") })
+	@JoinTable(name = "CONFIGURATIONS_RESOURCES", joinColumns = { @JoinColumn(name = "CONFIGURATION_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "RESOURCE_ID", referencedColumnName = "ID") })
 	@JsonSerialize(using = SetResourceReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	// @JsonDeserialize(using = ResourceReferenceDeserializer.class)
@@ -89,7 +87,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the configuration parameters.
-	 *
+	 * 
 	 * @return the configuration parameters
 	 */
 	@XmlElement(name = "parameters")
@@ -102,7 +100,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the configuration parameters.
-	 *
+	 * 
 	 * @param parameters new configuration parameters
 	 */
 	@XmlElement(name = "parameters")
@@ -115,7 +113,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Adds a new configuration parameter.
-	 *
+	 * 
 	 * @param key the key of the configuration parameter
 	 * @param value the value of the configuration parameter
 	 */
@@ -133,7 +131,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the configuration parameter for the given key.
-	 *
+	 * 
 	 * @param key a configuration parameter key
 	 * @return the value of the matched configuration parameter or null
 	 */
@@ -146,7 +144,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the resources that are related to this configuration
-	 *
+	 * 
 	 * @return the resources that are related to this configuration
 	 */
 	public Set<Resource> getResources() {
@@ -156,7 +154,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the resources of this configuration
-	 *
+	 * 
 	 * @param resourcesArg a new collection of resources
 	 */
 	public void setResources(final Set<Resource> resourcesArg) {
@@ -198,7 +196,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Adds a new resource to the collection of resources of this configuration.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param resource a new export definition revision
 	 */
 	public void addResource(final Resource resource) {
@@ -221,7 +219,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Replaces an existing resource, i.e., the resource with the same identifier will be replaced.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param resource an existing, updated resource
 	 */
 	public void replaceResource(final Resource resource) {
@@ -248,7 +246,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Removes an existing resource from the collection of resources of this configuration.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param resource an existing resource that should be removed
 	 */
 	public void removeResource(final Resource resource) {
@@ -276,7 +274,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Initialises the configuration parameters from the string that holds the serialised JSON object of the configuration
 	 * parameters.
-	 *
+	 * 
 	 * @param fromScratch flag that indicates, whether the configuration parameters should be initialised from scratch or not
 	 */
 	private void initParameters(final boolean fromScratch) {

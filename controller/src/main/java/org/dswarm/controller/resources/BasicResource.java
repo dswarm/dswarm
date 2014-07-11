@@ -12,12 +12,6 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.codahale.metrics.Timer;
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.utils.BasicResourceUtils;
 import org.dswarm.controller.status.DMPStatus;
@@ -26,13 +20,18 @@ import org.dswarm.persistence.model.DMPObject;
 import org.dswarm.persistence.model.proxy.ProxyDMPObject;
 import org.dswarm.persistence.model.proxy.RetrievalType;
 import org.dswarm.persistence.service.BasicJPAService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.codahale.metrics.Timer;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
  * A generic resource (controller service), whose concrete implementations can be derived with a given implementation of
  * {@link DMPObject} and the related identifier type. This service delivers basic controller layer functionality to create a new
  * object or retrieve existing ones.<br/>
  * TODO: implement update an existing object and delete existing objects
- *
+ * 
  * @author tgaengler
  * @author fniederlein
  * @param <POJOCLASSPERSISTENCESERVICE> the concrete persistence service of the resource that is related to the concrete POJO
@@ -60,7 +59,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 	/**
 	 * Creates a new resource (controller service) for the given concrete POJO class with the provider of the concrete persistence
 	 * service, the object mapper and metrics registry.
-	 *
+	 * 
 	 * @param clasz a concrete POJO class
 	 * @param persistenceServiceProviderArg the concrete persistence service that is related to the concrete POJO class
 	 * @param objectMapperArg an object mapper
@@ -74,7 +73,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * Gets the concrete POJO class of this resource (controller service).
-	 *
+	 * 
 	 * @return the concrete POJO class
 	 */
 	public Class<POJOCLASS> getClasz() {
@@ -84,7 +83,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * Builds a positive response with the given content.
-	 *
+	 * 
 	 * @param responseContent a response message
 	 * @return the response
 	 */
@@ -95,7 +94,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * This endpoint returns an object of the type of the POJO class as JSON representation for the provided object id.
-	 *
+	 * 
 	 * @param id an object id
 	 * @return a JSON representation of an object of the type of the POJO class
 	 */
@@ -141,7 +140,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 	/**
 	 * This endpoint consumes an object of the type of the POJO class as JSON representation and persists this object in the
 	 * database.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one object of the type of the POJO class
 	 * @return the persisted object as JSON representation
 	 * @throws DMPControllerException
@@ -234,7 +233,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 	/**
 	 * This endpoint consumes an object of the type of the POJO class as JSON representation and update this object in the
 	 * database.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one object of the type of the POJO class
 	 * @param id an object id
 	 * @return the persisted object as JSON representation
@@ -328,7 +327,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * This endpoint returns a list of all objects of the type of the POJO class as JSON representation.
-	 *
+	 * 
 	 * @return a list of all objects of the type of the POJO class as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -385,7 +384,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * This endpoint deletes an object identified by the id.
-	 *
+	 * 
 	 * @param id an object id
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
 	 *         went wrong
@@ -433,7 +432,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * Creates the resource URI for the given object.
-	 *
+	 * 
 	 * @param object an object
 	 * @return the resource URI for the given object
 	 */
@@ -458,7 +457,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * Prepares a given object with information from an object that was received via an API request.
-	 *
+	 * 
 	 * @param objectFromJSON an object that was received via an API request
 	 * @param object the given object
 	 * @return the updated object
@@ -467,7 +466,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * Persists a new object that was received via an API request into the database.
-	 *
+	 * 
 	 * @param objectJSONString
 	 * @return
 	 * @throws DMPControllerException
@@ -531,7 +530,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * Persists an existing object that was received via an API request into the database.
-	 *
+	 * 
 	 * @param objectJSONString
 	 * @param id
 	 * @return

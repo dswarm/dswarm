@@ -9,6 +9,7 @@ import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.job.proxy.ProxyComponent;
 import org.dswarm.persistence.service.job.ComponentService;
+import org.dswarm.persistence.service.test.utils.BasicJPAServiceTestUtils;
 import org.dswarm.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestUtils;
 import org.junit.Assert;
 
@@ -61,8 +62,7 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 
 		return updatedComponent;
 	}
-	
-	
+
 	/**
 	 * {@inheritDoc} <br/>
 	 * Assert either both components have no {@link Function} or {@link Function}s are equal: see
@@ -107,12 +107,11 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 			checkedActualComponents.add(actualComponent.getId());
 		}
 		// End skip already checked objects
-		
+
 		// basic comparison
 		super.compareObjects(expectedComponent, actualComponent);
 
-
-		// Start compare parts of components 
+		// Start compare parts of components
 		// function
 		if (expectedComponent.getFunction() == null) {
 
@@ -150,7 +149,7 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 		// input components
 		if (expectedComponent.getInputComponents() == null || expectedComponent.getInputComponents().isEmpty()) {
 
-			boolean actualComponentHasNoInputComponents = (actualComponent.getInputComponents() == null || actualComponent.getInputComponents()
+			final boolean actualComponentHasNoInputComponents = (actualComponent.getInputComponents() == null || actualComponent.getInputComponents()
 					.isEmpty());
 			Assert.assertTrue("actual component should not have any input components", actualComponentHasNoInputComponents);
 
@@ -163,8 +162,8 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 		// output components
 		if (expectedComponent.getOutputComponents() == null || expectedComponent.getOutputComponents().isEmpty()) {
 
-			boolean actualComponentHasNoOutputComponents = (actualComponent.getOutputComponents() == null || actualComponent.getOutputComponents()
-					.isEmpty());
+			final boolean actualComponentHasNoOutputComponents = (actualComponent.getOutputComponents() == null || actualComponent
+					.getOutputComponents().isEmpty());
 			Assert.assertTrue("actual component should not have any output components", actualComponentHasNoOutputComponents);
 
 		} else { // (!null && !empty)
@@ -176,8 +175,8 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 		// parameter mappings
 		if (expectedComponent.getParameterMappings() == null || expectedComponent.getParameterMappings().isEmpty()) {
 
-			boolean actualComponentHasNoParameterMappings = (actualComponent.getParameterMappings() == null || actualComponent.getParameterMappings()
-					.isEmpty());
+			final boolean actualComponentHasNoParameterMappings = (actualComponent.getParameterMappings() == null || actualComponent
+					.getParameterMappings().isEmpty());
 			Assert.assertTrue("actual component should not have any parameter mappings", actualComponentHasNoParameterMappings);
 
 		} else {
@@ -208,7 +207,6 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 		}
 		// End compare parts of components
 	}
-
 
 	public void checkDeletedComponent(final Component component) {
 

@@ -3,15 +3,15 @@ package org.dswarm.persistence.model.job;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  * A task is an executable {@link Job}, i.e., a job with a concrete input {@link DataModel} and output {@link DataModel}.
- *
+ * 
  * @author tgaengler
  */
 @XmlRootElement
@@ -50,7 +50,7 @@ public class Task extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the input data model.
-	 *
+	 * 
 	 * @return the input data model
 	 */
 	public DataModel getInputDataModel() {
@@ -60,7 +60,7 @@ public class Task extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the input data model.
-	 *
+	 * 
 	 * @param inputDataModelArg a new input data model
 	 */
 	public void setInputDataModel(final DataModel inputDataModelArg) {
@@ -70,7 +70,7 @@ public class Task extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the output data model.
-	 *
+	 * 
 	 * @return the output data model
 	 */
 	public DataModel getOutputDataModel() {
@@ -80,7 +80,7 @@ public class Task extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the output data model.
-	 *
+	 * 
 	 * @param outputDataModelArg a new output data model
 	 */
 	public void setOutputDataModel(final DataModel outputDataModelArg) {
@@ -90,7 +90,7 @@ public class Task extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the job of the task.
-	 *
+	 * 
 	 * @return the job of the task
 	 */
 	public Job getJob() {
@@ -100,7 +100,7 @@ public class Task extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the job of the task.
-	 *
+	 * 
 	 * @param jobArg a new job
 	 */
 	public void setJob(final Job jobArg) {

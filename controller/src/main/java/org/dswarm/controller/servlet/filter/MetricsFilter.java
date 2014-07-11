@@ -24,7 +24,7 @@ import com.google.inject.Singleton;
 
 /**
  * The filter for the metrics measuring.
- *
+ * 
  * @author phorn
  */
 @Singleton

@@ -4,7 +4,7 @@ package org.dswarm.persistence.model.job;
  * The function type enum. A function type indicates the function type of a function. Currently, the function types are mapped to
  * specialised function implementations, i.e., {@link FunctionType#Function} to {@link Function} and
  * {@link FunctionType#Transformation} to {@link Transformation}.<br>
- *
+ * 
  * @author tgaengler (created), Mar 18, 2013
  * @author $Author$ (last changed)
  * @version $Rev$, $Date$<br>
@@ -30,7 +30,7 @@ public enum FunctionType {
 
 	/**
 	 * Gets the name of the function type.
-	 *
+	 * 
 	 * @return the name of the function type
 	 */
 	public String getName() {
@@ -40,7 +40,7 @@ public enum FunctionType {
 
 	/**
 	 * Creates a new function type with the given name.
-	 *
+	 * 
 	 * @param nameArg the name of the function type.
 	 */
 	private FunctionType(final String nameArg) {
@@ -51,7 +51,7 @@ public enum FunctionType {
 	/**
 	 * Gets the function type by the given name, e.g. 'FUNCTION' or 'TRANSFORMATION'.<br>
 	 * Created by: ydeng
-	 *
+	 * 
 	 * @param name the name of the function type
 	 * @return the appropriated function type
 	 */
@@ -71,7 +71,7 @@ public enum FunctionType {
 	/**
 	 * {@inheritDoc}<br>
 	 * Returns the name of the function type.
-	 *
+	 * 
 	 * @see java.lang.Enum#toString()
 	 */
 	@Override

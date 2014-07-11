@@ -12,13 +12,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.google.inject.servlet.RequestScoped;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
-
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.AdvancedDMPResource;
 import org.dswarm.controller.resources.schema.utils.ClaszesResourceUtils;
@@ -28,9 +21,16 @@ import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.proxy.ProxyClasz;
 import org.dswarm.persistence.service.schema.ClaszService;
 
+import com.google.inject.servlet.RequestScoped;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
+
 /**
  * A resource (controller service) for {@link Clasz}es.
- *
+ * 
  * @author tgaengler
  */
 @RequestScoped
@@ -41,7 +41,7 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 	/**
 	 * Creates a new resource (controller service) for {@link Clasz}s with the provider of the class persistence service, the
 	 * object mapper and metrics registry.
-	 *
+	 * 
 	 * @param claszServiceProviderArg the class persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
@@ -54,7 +54,7 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 
 	/**
 	 * This endpoint returns a class as JSON representation for the provided class identifier.<br/>
-	 *
+	 * 
 	 * @param id a class identifier
 	 * @return a JSON representation of a class
 	 */
@@ -73,7 +73,7 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 
 	/**
 	 * This endpoint consumes a class as JSON representation and persists this class in the database.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one class
 	 * @return the persisted class as JSON representation
 	 * @throws DMPControllerException
@@ -93,7 +93,7 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 
 	/**
 	 * This endpoint returns a list of all classes as JSON representation.
-	 *
+	 * 
 	 * @return a list of all classes as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -111,7 +111,7 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 
 	/**
 	 * This endpoint consumes a class as JSON representation and updates this class in the database.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one class
 	 * @param id a class identifier
 	 * @return the updated class as JSON representation
@@ -134,7 +134,7 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 
 	/**
 	 * This endpoint deletes a class that matches the given id.
-	 *
+	 * 
 	 * @param id a class identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
 	 *         went wrong

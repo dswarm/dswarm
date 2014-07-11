@@ -15,7 +15,7 @@ public class DMPConverterException extends DMPException {
 
 	/**
 	 * Creates a new DMP converter exception with the given exception message.
-	 *
+	 * 
 	 * @param exception the exception message
 	 */
 	public DMPConverterException(final String exception) {

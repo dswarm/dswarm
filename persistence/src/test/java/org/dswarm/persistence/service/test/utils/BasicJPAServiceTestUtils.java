@@ -5,6 +5,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.dswarm.persistence.DMPPersistenceException;
+import org.dswarm.persistence.GuicedTest;
+import org.dswarm.persistence.model.DMPObject;
+import org.dswarm.persistence.model.proxy.ProxyDMPObject;
+import org.dswarm.persistence.service.BasicJPAService;
+import org.dswarm.persistence.service.test.BasicJPAServiceTest;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,13 +19,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.common.collect.Maps;
-
-import org.dswarm.persistence.DMPPersistenceException;
-import org.dswarm.persistence.GuicedTest;
-import org.dswarm.persistence.model.DMPObject;
-import org.dswarm.persistence.model.proxy.ProxyDMPObject;
-import org.dswarm.persistence.service.BasicJPAService;
-import org.dswarm.persistence.service.test.BasicJPAServiceTest;
 
 public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE>
 		extends BasicJPAServiceTest<PROXYPOJOCLASS, POJOCLASS, POJOCLASSPERSISTENCESERVICE, POJOCLASSIDTYPE> {
@@ -49,7 +48,7 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 	/**
 	 * Assert that neither {@code expectedObject} nor {@code actualObject} is null.
 	 * 
-	 * @param expectedObject 
+	 * @param expectedObject
 	 * @param actualObject
 	 */
 	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) {
@@ -92,9 +91,9 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 
 		Assert.assertNotNull("expected objects shouldn't be null", expectedObjects);
 		Assert.assertNotNull("actual objects shouldn't be null", actualObjects);
-		
+
 		Assert.assertEquals("different number of " + pojoClassName + " objects.", expectedObjects.size(), actualObjects.size());
-		
+
 		for (final POJOCLASS expectedObject : expectedObjects) {
 
 			final POJOCLASS actualObject = actualObjects.get(expectedObject.getId());
@@ -190,7 +189,7 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 
 	/**
 	 * Prepares a given object with information from an object with updates.
-	 *
+	 * 
 	 * @param objectWithUpdates an object with updates
 	 * @param object the given object
 	 * @return the updated object
@@ -204,7 +203,7 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 
 	/**
 	 * Creates a new object of the concrete POJO class.
-	 *
+	 * 
 	 * @return a new instance of the concrete POJO class
 	 * @throws DMPPersistenceException if something went wrong.
 	 */

@@ -16,14 +16,14 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.dswarm.persistence.model.BasicDMPJPAObject;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.common.base.Objects;
-
-import org.dswarm.persistence.model.BasicDMPJPAObject;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * @author tgaengler
@@ -71,7 +71,7 @@ public abstract class AttributePathInstance extends BasicDMPJPAObject {
 
 	/**
 	 * Creates a new attribute path instance with the given attribute path instance type.
-	 *
+	 * 
 	 * @param attributePathInstanceTypeArg the type of the attribute path instance
 	 */
 	public AttributePathInstance(final AttributePathInstanceType attributePathInstanceTypeArg) {

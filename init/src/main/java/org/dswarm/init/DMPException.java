@@ -13,7 +13,7 @@ public class DMPException extends Exception {
 
 	/**
 	 * Creates a new DMP exception with the given exception message.
-	 *
+	 * 
 	 * @param exception the exception message
 	 */
 	public DMPException(final String exception) {
@@ -23,7 +23,7 @@ public class DMPException extends Exception {
 
 	/**
 	 * Creates a new DMP exception with the given exception message and a cause.
-	 *
+	 * 
 	 * @param message the exception message
 	 * @param cause a previously thrown exception, causing this one
 	 */

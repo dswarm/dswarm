@@ -1,10 +1,5 @@
 package org.dswarm.controller.resources.job.test;
 
-import org.junit.After;
-import org.junit.Assert;
-
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import org.dswarm.controller.resources.job.test.utils.ComponentsResourceTestUtils;
 import org.dswarm.controller.resources.job.test.utils.FunctionsResourceTestUtils;
 import org.dswarm.controller.resources.test.BasicResourceTest;
@@ -13,6 +8,10 @@ import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.proxy.ProxyComponent;
 import org.dswarm.persistence.service.job.ComponentService;
 import org.dswarm.persistence.service.job.test.utils.ComponentServiceTestUtils;
+import org.junit.After;
+import org.junit.Assert;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class ComponentsResourceTest extends
 		BasicResourceTest<ComponentsResourceTestUtils, ComponentServiceTestUtils, ComponentService, ProxyComponent, Component, Long> {

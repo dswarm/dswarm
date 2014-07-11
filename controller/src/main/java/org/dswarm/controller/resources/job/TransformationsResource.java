@@ -12,13 +12,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.google.inject.servlet.RequestScoped;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
-
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.job.utils.TransformationsResourceUtils;
 import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
@@ -27,9 +20,16 @@ import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.job.proxy.ProxyTransformation;
 import org.dswarm.persistence.service.job.TransformationService;
 
+import com.google.inject.servlet.RequestScoped;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
+
 /**
  * A resource (controller service) for {@link Transformation}s.
- *
+ * 
  * @author tgaengler
  */
 @RequestScoped
@@ -41,7 +41,7 @@ public class TransformationsResource extends
 	/**
 	 * Creates a new resource (controller service) for {@link Transformation}s with the provider of the transformation persistence
 	 * service, the object mapper and metrics registry.
-	 *
+	 * 
 	 * @param transformationServiceProviderArg the transformation persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
@@ -54,7 +54,7 @@ public class TransformationsResource extends
 
 	/**
 	 * This endpoint returns a transformation as JSON representation for the provided transformation identifier.
-	 *
+	 * 
 	 * @param id a transformation identifier
 	 * @return a JSON representation of a transformation
 	 */
@@ -74,7 +74,7 @@ public class TransformationsResource extends
 
 	/**
 	 * This endpoint consumes a transformation as JSON representation and persists this transformation in the database.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one transformation
 	 * @return the persisted transformation as JSON representation
 	 * @throws DMPControllerException
@@ -94,7 +94,7 @@ public class TransformationsResource extends
 
 	/**
 	 * This endpoint returns a list of all transformations as JSON representation.
-	 *
+	 * 
 	 * @return a list of all transformations as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -112,7 +112,7 @@ public class TransformationsResource extends
 
 	/**
 	 * This endpoint consumes a transformation as JSON representation and updates this transformation in the database.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one transformation
 	 * @param id a transformation identifier
 	 * @return the updated transformation as JSON representation
@@ -135,7 +135,7 @@ public class TransformationsResource extends
 
 	/**
 	 * This endpoint deletes a transformation that matches the given id.
-	 *
+	 * 
 	 * @param id a transformation identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
 	 *         went wrong

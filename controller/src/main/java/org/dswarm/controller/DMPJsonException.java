@@ -12,7 +12,7 @@ public class DMPJsonException extends DMPControllerException {
 
 	/**
 	 * Creates a new DMP exception with the given exception message and a cause.
-	 *
+	 * 
 	 * @param message the exception message
 	 * @param cause a previously thrown exception, causing this one
 	 */

@@ -11,14 +11,13 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.dswarm.persistence.model.job.Filter;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.base.Objects;
-
-import org.dswarm.persistence.model.job.Filter;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * @author tgaengler
@@ -65,7 +64,7 @@ public class MappingAttributePathInstance extends AttributePathInstance {
 
 	/**
 	 * Gets the filter of the mapping attribute path instance.
-	 *
+	 * 
 	 * @return the filter of the mapping attribute path instance
 	 */
 	public Filter getFilter() {
@@ -75,7 +74,7 @@ public class MappingAttributePathInstance extends AttributePathInstance {
 
 	/**
 	 * Sets the filter of the mapping attribute path instance.
-	 *
+	 * 
 	 * @param filterArg a new filter
 	 */
 	public void setFilter(final Filter filterArg) {

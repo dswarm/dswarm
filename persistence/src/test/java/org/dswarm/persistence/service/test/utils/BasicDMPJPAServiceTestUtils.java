@@ -1,10 +1,9 @@
 package org.dswarm.persistence.service.test.utils;
 
-import org.junit.Assert;
-
 import org.dswarm.persistence.model.BasicDMPJPAObject;
 import org.dswarm.persistence.model.proxy.ProxyBasicDMPJPAObject;
 import org.dswarm.persistence.service.BasicDMPJPAService;
+import org.junit.Assert;
 
 public abstract class BasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE extends BasicDMPJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyBasicDMPJPAObject<POJOCLASS>, POJOCLASS extends BasicDMPJPAObject>
 		extends BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS, Long> {
@@ -18,10 +17,10 @@ public abstract class BasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE ex
 	 * {@inheritDoc} <br />
 	 * Assert that their names are equal.
 	 * 
-	 * @param expectedObject 
+	 * @param expectedObject
 	 * @param actualObject
 	 */
-	 @Override
+	@Override
 	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) {
 
 		super.compareObjects(expectedObject, actualObject);

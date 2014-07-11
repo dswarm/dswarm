@@ -14,6 +14,9 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.dswarm.controller.DMPControllerException;
+import org.dswarm.controller.status.DMPStatus;
+import org.dswarm.persistence.GraphDatabaseConfig;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +27,9 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
-import org.dswarm.controller.DMPControllerException;
-import org.dswarm.controller.status.DMPStatus;
-import org.dswarm.persistence.GraphDatabaseConfig;
-
 /**
  * Created by tgaengler on 28/04/14.
- *
+ * 
  * @author tgaengler
  */
 @RequestScoped
@@ -60,7 +59,7 @@ public class RDFResource {
 
 	/**
 	 * for triggering a download
-	 *
+	 * 
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "exports all data from the graph DB in the given RDF serialisation format", notes = "Returns exported data in the given RDF serialisation format.")

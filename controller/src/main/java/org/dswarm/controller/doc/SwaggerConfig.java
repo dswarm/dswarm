@@ -12,7 +12,7 @@ import com.wordnik.swagger.model.ApiInfo;
 /**
  * The configuration for the documentation generation application Swagger. It is utilised for generating the documentation of the
  * backend API.
- *
+ * 
  * @author tgaengler
  * @author phorn
  */
@@ -36,7 +36,7 @@ public class SwaggerConfig extends JerseyJaxrsConfig {
 
 	/**
 	 * Creates a new Swagger configuration with the given version and base URI of the backend API.
-	 *
+	 * 
 	 * @param apiVersion the version of the backend API
 	 * @param apiBaseUrl the base URI of the backend API
 	 */

@@ -5,14 +5,14 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.google.common.base.Objects;
-
 import org.dswarm.persistence.model.BasicDMPJPAObject;
+
+import com.google.common.base.Objects;
 
 /**
  * A filter is a graph pattern for reducing records. It can be applied at the beginning or the end of a {@link Transformation}
  * instantiation, i.e., a {@link Mapping}, to filter incoming or outgoing records.
- *
+ * 
  * @author tgaengler
  */
 @XmlRootElement
@@ -35,7 +35,7 @@ public class Filter extends BasicDMPJPAObject {
 
 	/**
 	 * Gets the filter expression.
-	 *
+	 * 
 	 * @return the filter expression
 	 */
 	public String getExpression() {
@@ -45,7 +45,7 @@ public class Filter extends BasicDMPJPAObject {
 
 	/**
 	 * Sets the filter expression
-	 *
+	 * 
 	 * @param expressionArg a new filter expression
 	 */
 	public void setExpression(final String expressionArg) {

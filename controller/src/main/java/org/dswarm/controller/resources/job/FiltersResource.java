@@ -12,13 +12,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.google.inject.servlet.RequestScoped;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
-
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.BasicDMPResource;
 import org.dswarm.controller.resources.job.utils.FiltersResourceUtils;
@@ -28,9 +21,16 @@ import org.dswarm.persistence.model.job.Filter;
 import org.dswarm.persistence.model.job.proxy.ProxyFilter;
 import org.dswarm.persistence.service.job.FilterService;
 
+import com.google.inject.servlet.RequestScoped;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
+
 /**
  * A resource (controller service) for {@link Filter}s.
- *
+ * 
  * @author tgaengler
  * @author fniederlein
  */
@@ -42,7 +42,7 @@ public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, Filt
 	/**
 	 * Creates a new resource (controller service) for {@link Filter}s with the provider of the filter persistence service, the
 	 * object mapper and metrics registry.
-	 *
+	 * 
 	 * @param filterServiceProviderArg the filter persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
@@ -55,7 +55,7 @@ public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, Filt
 
 	/**
 	 * This endpoint returns a filter as JSON representation for the provided filter identifier.
-	 *
+	 * 
 	 * @param id a filter identifier
 	 * @return a JSON representation of a filter
 	 */
@@ -74,7 +74,7 @@ public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, Filt
 
 	/**
 	 * This endpoint consumes a filter as JSON representation and persists this filter in the database.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one filter
 	 * @return the persisted filter as JSON representation
 	 * @throws DMPControllerException
@@ -93,7 +93,7 @@ public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, Filt
 
 	/**
 	 * This endpoint returns a list of all filters as JSON representation.
-	 *
+	 * 
 	 * @return a list of all filters as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -111,7 +111,7 @@ public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, Filt
 
 	/**
 	 * This endpoint consumes a filter as JSON representation and updates this filter in the database.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one filter
 	 * @param id a filter identifier
 	 * @return the updated filter as JSON representation
@@ -134,7 +134,7 @@ public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, Filt
 
 	/**
 	 * This endpoint deletes a filter that matches the given id.
-	 *
+	 * 
 	 * @param id a filter identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
 	 *         went wrong

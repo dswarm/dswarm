@@ -83,7 +83,6 @@ public class ResourcesResourceTest extends ResourceTest {
 		resourceFile = FileUtils.toFile(fileURL);
 	}
 
-
 	@Test
 	public void testResourceUpload() throws Exception {
 
@@ -122,7 +121,6 @@ public class ResourcesResourceTest extends ResourceTest {
 		ResourcesResourceTest.LOG.debug("end resource upload test 2");
 	}
 
-
 	@Test
 	public void testGetResource() throws Exception {
 
@@ -150,7 +148,6 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		ResourcesResourceTest.LOG.debug("end get resource test");
 	}
-
 
 	@Test
 	public void testGetResourceLines() throws Exception {
@@ -274,7 +271,6 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		ResourcesResourceTest.LOG.debug("end xml resource lines test");
 	}
-	
 
 	@Test
 	public void testGetResourceConfigurations() throws Exception {
@@ -359,7 +355,6 @@ public class ResourcesResourceTest extends ResourceTest {
 		ResourcesResourceTest.LOG.debug("end curl get resource configurations test");
 	}
 
-
 	@Test
 	public void testGetResourceConfigurations2() throws Exception {
 
@@ -386,7 +381,6 @@ public class ResourcesResourceTest extends ResourceTest {
 		ResourcesResourceTest.LOG.debug("end get resource configurations test 2");
 	}
 
-
 	@Test
 	public void testAddResourceConfiguration() throws Exception {
 
@@ -405,7 +399,6 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		ResourcesResourceTest.LOG.debug("end add resource configuration test");
 	}
-
 
 	@Test
 	public void testGetResourceConfiguration() throws Exception {
@@ -440,7 +433,7 @@ public class ResourcesResourceTest extends ResourceTest {
 		ResourcesResourceTest.LOG.debug("end get resource configuration test");
 	}
 
-	//FIXME cross-test dependencies: ignoring this test crashes #testCurlGetResourceConfigurations()!!	
+	// FIXME cross-test dependencies: ignoring this test crashes #testCurlGetResourceConfigurations()!!
 	@Test
 	public void testGetResources() throws Exception {
 
@@ -480,13 +473,12 @@ public class ResourcesResourceTest extends ResourceTest {
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
 		// Assert.assertEquals("resources JSONs are not equal", resourcesJSONArray.toString(), responseResources);
 
-		//FIXME if we do not call cleanUpDB(resource),  testCurlGetResourceConfigurations() crashes. 
+		// FIXME if we do not call cleanUpDB(resource), testCurlGetResourceConfigurations() crashes.
 		cleanUpDB(resource);
 		cleanUpDB(resource2);
 
 		ResourcesResourceTest.LOG.debug("end get resources test");
 	}
-
 
 	@Test
 	public void testPOSTConfigurationCSVPreview() throws Exception {
@@ -517,7 +509,6 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		ResourcesResourceTest.LOG.debug("end post configuration CSV preview test");
 	}
-
 
 	@Test
 	public void testPOSTConfigurationCSVJSONPreview() throws Exception {
@@ -587,7 +578,7 @@ public class ResourcesResourceTest extends ResourceTest {
 		// modify resource
 		expectedResource.setName(expectedResource.getName() + " update");
 		expectedResource.setDescription(expectedResource.getDescription() + " update");
-		
+
 		// update resource (test PUT in API)
 		final String updateResourceJSON = resourceUpdateInteral(resourceFile, expectedResource, createResource.getId());
 
@@ -615,7 +606,6 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		ResourcesResourceTest.LOG.debug("end put resource test");
 	}
-
 
 	@Test
 	public void testDELETEResource() throws Exception {
@@ -786,7 +776,6 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		evaluateGetResourcesInternal(responseResourceJSON);
 	}
-	
 
 	private void prepareGetResourceConfigurations() throws Exception {
 
@@ -862,7 +851,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		// expected==actual since to use updated ids from db in expected.
 		actualResource = updatedComplexResource;
-		expectedResource = actualResource ;
+		expectedResource = actualResource;
 		exceptedConfigurations = createdConfigurations;
 	}
 
@@ -885,7 +874,7 @@ public class ResourcesResourceTest extends ResourceTest {
 		final Resource responseResource = objectMapper.readValue(responseResourceJSON, Resource.class);
 
 		Assert.assertNotNull("the response resource shouldn't be null", responseResource);
-		
+
 		resourceServiceTestUtils.compareObjects(expectedResource, responseResource);
 
 		Assert.assertNotNull(responseResource.getConfigurations());

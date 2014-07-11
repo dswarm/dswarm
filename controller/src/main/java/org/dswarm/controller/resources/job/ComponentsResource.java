@@ -12,13 +12,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.google.inject.servlet.RequestScoped;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
-
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.ExtendedBasicDMPResource;
 import org.dswarm.controller.resources.job.utils.ComponentsResourceUtils;
@@ -28,9 +21,16 @@ import org.dswarm.persistence.model.job.Component;
 import org.dswarm.persistence.model.job.proxy.ProxyComponent;
 import org.dswarm.persistence.service.job.ComponentService;
 
+import com.google.inject.servlet.RequestScoped;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
+
 /**
  * A resource (controller service) for {@link Component}s.
- *
+ * 
  * @author tgaengler
  */
 @RequestScoped
@@ -41,7 +41,7 @@ public class ComponentsResource extends ExtendedBasicDMPResource<ComponentsResou
 	/**
 	 * Creates a new resource (controller service) for {@link Component}s with the provider of the component persistence service,
 	 * the object mapper and metrics registry.
-	 *
+	 * 
 	 * @param componentServiceProviderArg the component persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
@@ -54,7 +54,7 @@ public class ComponentsResource extends ExtendedBasicDMPResource<ComponentsResou
 
 	/**
 	 * This endpoint returns a component as JSON representation for the provided component identifier.
-	 *
+	 * 
 	 * @param id a component identifier
 	 * @return a JSON representation of a component
 	 */
@@ -74,7 +74,7 @@ public class ComponentsResource extends ExtendedBasicDMPResource<ComponentsResou
 
 	/**
 	 * This endpoint consumes a component as JSON representation and persists this component in the database.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one component
 	 * @return the persisted component as JSON representation
 	 * @throws DMPControllerException
@@ -94,7 +94,7 @@ public class ComponentsResource extends ExtendedBasicDMPResource<ComponentsResou
 
 	/**
 	 * This endpoint returns a list of all components as JSON representation.
-	 *
+	 * 
 	 * @return a list of all components as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -112,7 +112,7 @@ public class ComponentsResource extends ExtendedBasicDMPResource<ComponentsResou
 
 	/**
 	 * This endpoint consumes a component as JSON representation and updates this component in the database.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one component
 	 * @param id a component identifier
 	 * @return the updated filter as JSON representation
@@ -135,7 +135,7 @@ public class ComponentsResource extends ExtendedBasicDMPResource<ComponentsResou
 
 	/**
 	 * This endpoint deletes a component that matches the given id.
-	 *
+	 * 
 	 * @param id a component identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
 	 *         went wrong

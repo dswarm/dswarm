@@ -4,6 +4,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.dswarm.graph.json.Model;
+import org.dswarm.graph.json.Node;
+import org.dswarm.graph.json.NodeType;
+import org.dswarm.graph.json.Resource;
+import org.dswarm.graph.json.ResourceNode;
+import org.dswarm.graph.json.Statement;
 import org.hamcrest.Matchers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,13 +18,6 @@ import ch.lambdaj.Lambda;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-
-import org.dswarm.graph.json.Model;
-import org.dswarm.graph.json.Node;
-import org.dswarm.graph.json.NodeType;
-import org.dswarm.graph.json.Resource;
-import org.dswarm.graph.json.ResourceNode;
-import org.dswarm.graph.json.Statement;
 
 /**
  * @author tgaengler
@@ -35,7 +34,7 @@ public final class GDMUtil {
 
 	/**
 	 * Gets all resources for the given record class identifier in the given GDM model.
-	 *
+	 * 
 	 * @param recordClassURI the record class identifier
 	 * @param model the GDM model
 	 * @return
@@ -135,7 +134,7 @@ public final class GDMUtil {
 
 	/**
 	 * Gets resource node for the given resource identifier in the given record resource.
-	 *
+	 * 
 	 * @param resourceURI the resource identifier
 	 * @param model the GDM model
 	 * @return
@@ -191,7 +190,7 @@ public final class GDMUtil {
 
 	/**
 	 * Gets all statements for the given resource node in the given record resource.
-	 *
+	 * 
 	 * @param resourceURI the resource identifier
 	 * @param model the GDM model
 	 * @return
@@ -220,7 +219,7 @@ public final class GDMUtil {
 
 	/**
 	 * Gets all statements for the given resource identifier in the given record resource.
-	 *
+	 * 
 	 * @param resourceURI the resource identifier
 	 * @param model the GDM model
 	 * @return
@@ -273,7 +272,7 @@ public final class GDMUtil {
 
 	/**
 	 * Gets all statements for the given resource identifier in the given record resource.
-	 *
+	 * 
 	 * @param resourceId the resource identifier
 	 * @param model the GDM model
 	 * @return

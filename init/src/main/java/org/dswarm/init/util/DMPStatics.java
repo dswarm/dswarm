@@ -2,7 +2,7 @@ package org.dswarm.init.util;
 
 /**
  * Holds references for static fields.
- *
+ * 
  * @author tgaengler
  */
 public interface DMPStatics {

@@ -9,7 +9,7 @@ import org.dswarm.persistence.service.schema.AttributePathInstanceService;
 
 /**
  * A generic resource (controller service) for {@link AttributePathInstance}s.
- *
+ * 
  * @author tgaengler
  * @param <POJOCLASSRESOURCEUTILS>
  * @param <POJOCLASSPERSISTENCESERVICE> the concrete {@link AttributePathInstance} persistence service of the resource that is
@@ -23,7 +23,7 @@ public abstract class AttributePathInstancesResource<POJOCLASSRESOURCEUTILS exte
 	/**
 	 * Creates a new resource (controller service) for the given concrete {@link AttributePathInstance} class with the provider of
 	 * the concrete {@link AttributePathInstance} persistence service, the object mapper and metrics registry.
-	 *
+	 * 
 	 * @param pojoClassResourceUtilsArg
 	 * @param dmpStatusArg
 	 */

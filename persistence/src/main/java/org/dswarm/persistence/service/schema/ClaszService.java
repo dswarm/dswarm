@@ -2,24 +2,24 @@ package org.dswarm.persistence.service.schema;
 
 import javax.persistence.EntityManager;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.proxy.ProxyClasz;
 import org.dswarm.persistence.service.AdvancedDMPJPAService;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+
 /**
  * A persistence service for {@link Clasz}es.
- *
+ * 
  * @author tgaengler
  */
 public class ClaszService extends AdvancedDMPJPAService<ProxyClasz, Clasz> {
 
 	/**
 	 * Creates a new class persistence service with the given entity manager provider.
-	 *
+	 * 
 	 * @param entityManagerProvider an entity manager provider
 	 */
 	@Inject

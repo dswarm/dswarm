@@ -5,7 +5,7 @@ import org.dswarm.persistence.model.utils.BasicDMPJPAObjectUtils;
 
 /**
  * TODO: include Transformation.completeEquals somehow
- *
+ * 
  * @author tgaengler
  */
 public final class JobUtils extends BasicDMPJPAObjectUtils<Job> {

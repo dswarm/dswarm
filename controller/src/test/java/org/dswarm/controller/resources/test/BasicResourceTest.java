@@ -8,6 +8,13 @@ import java.util.Set;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.dswarm.controller.resources.test.utils.BasicResourceTestUtils;
+import org.dswarm.controller.test.GuicedTest;
+import org.dswarm.persistence.model.DMPObject;
+import org.dswarm.persistence.model.proxy.ProxyDMPObject;
+import org.dswarm.persistence.service.BasicJPAService;
+import org.dswarm.persistence.service.test.utils.BasicJPAServiceTestUtils;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,14 +23,6 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
-
-import org.dswarm.controller.resources.test.utils.BasicResourceTestUtils;
-import org.dswarm.controller.test.GuicedTest;
-import org.dswarm.persistence.model.DMPObject;
-import org.dswarm.persistence.model.proxy.ProxyDMPObject;
-import org.dswarm.persistence.service.BasicJPAService;
-import org.dswarm.persistence.service.test.utils.BasicJPAServiceTestUtils;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * @author tgaengler
@@ -96,8 +95,8 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 
 		BasicResourceTest.LOG.debug("start GET " + pojoClassName + "s test");
 
-		List<POJOCLASS> testIndependentPersistedObjects = pojoClassResourceTestUtils.getObjects();
-				
+		final List<POJOCLASS> testIndependentPersistedObjects = pojoClassResourceTestUtils.getObjects();
+
 		final POJOCLASS actualObject = createObjectInternal();
 
 		BasicResourceTest.LOG.debug("try to retrieve " + pojoClassName + "s");

@@ -2,6 +2,12 @@ package org.dswarm.converter.flow.test;
 
 import java.io.IOException;
 
+import org.dswarm.converter.GuicedTest;
+import org.dswarm.converter.flow.TransformationFlow;
+import org.dswarm.converter.morph.MorphScriptBuilder;
+import org.dswarm.persistence.model.job.Task;
+import org.dswarm.persistence.service.InternalModelServiceFactory;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,13 +18,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Provider;
-
-import org.dswarm.converter.GuicedTest;
-import org.dswarm.converter.flow.TransformationFlow;
-import org.dswarm.converter.morph.MorphScriptBuilder;
-import org.dswarm.persistence.model.job.Task;
-import org.dswarm.persistence.service.InternalModelServiceFactory;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class FilterTransformationFlowTest extends GuicedTest {
 
@@ -60,7 +59,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 
 	/**
 	 * selects the 2nd value of the 2nd match
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Test

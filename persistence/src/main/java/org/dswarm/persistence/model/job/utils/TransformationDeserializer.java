@@ -5,6 +5,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
+import org.dswarm.persistence.model.job.Component;
+import org.dswarm.persistence.model.job.Function;
+import org.dswarm.persistence.model.job.Transformation;
+import org.dswarm.persistence.model.types.Tuple;
+import org.dswarm.persistence.service.job.ComponentService;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.core.TreeNode;
@@ -16,13 +23,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.Key;
-
-import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
-import org.dswarm.persistence.model.job.Component;
-import org.dswarm.persistence.model.job.Function;
-import org.dswarm.persistence.model.job.Transformation;
-import org.dswarm.persistence.model.types.Tuple;
-import org.dswarm.persistence.service.job.ComponentService;
 
 /**
  * Custom logic to deserialize a {@link org.dswarm.persistence.model.job.Transformation}. The problem with the default
@@ -108,7 +108,7 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 
 	/**
 	 * get a {@link org.dswarm.persistence.service.job.ComponentService} from Guice
-	 *
+	 * 
 	 * @param ctxt the deserialization context
 	 * @return the component service or throw an NPE if no service could be found
 	 */
@@ -120,7 +120,7 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 
 	/**
 	 * Set common string values (name, and description) for either a transformation or a component
-	 *
+	 * 
 	 * @param jp the current json parser
 	 * @param object either the transformation or the component
 	 * @param currentFieldName the json field name
@@ -139,7 +139,7 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 
 	/**
 	 * Set the function description of a transformation. Requires an object behind function_description.
-	 *
+	 * 
 	 * @param jp the current json parser
 	 * @param transformation the target {@code Transformation}
 	 * @throws IOException
@@ -156,7 +156,7 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 
 	/**
 	 * Set the parameter list of a transformation.
-	 *
+	 * 
 	 * @param jp the current json parser
 	 * @param transformation the target {@code Transformation}
 	 * @throws IOException
@@ -178,7 +178,7 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 	 * Set the components of a transformation. This will parse all components and cache them into a map. Simultaneously, it will
 	 * parse the (in|out)put_components and build a map of {@code id -> (inIds, outIds)}. After having parsed all components, the
 	 * actual input components and output components are resolved, linked, and finally inserted into each component.
-	 *
+	 * 
 	 * @param jp the current json parser
 	 * @param transformation the target {@code Transformation}
 	 * @throws IOException
@@ -268,7 +268,7 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 	/**
 	 * Set the function of a component. Delegates to annotation/databind based parsing of a
 	 * {@link org.dswarm.persistence.model.job.Function}
-	 *
+	 * 
 	 * @param jp the current json parser
 	 * @param component the target {@code Component}
 	 * @throws IOException
@@ -281,7 +281,7 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 
 	/**
 	 * Set the parameter mappings of a component.
-	 *
+	 * 
 	 * @param jp the current json parser
 	 * @param component the target {@code Component}
 	 * @throws IOException
@@ -314,7 +314,7 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 	/**
 	 * Parse a component as a nested component, that has only the id field set. Does not attempt to actually parse any of the
 	 * component but the id.
-	 *
+	 * 
 	 * @param jp the current json parser
 	 * @return a list found ids
 	 * @throws IOException
@@ -362,7 +362,7 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 	/**
 	 * Update the cache by making sure, that every component as a valid id set. The reason behind this is, that {@code Component}s
 	 * are compared only by their ID, if they are compared in a shallow manner (e.g. when used in a {@code Set}).
-	 *
+	 * 
 	 * @param components a map of (id -> {@code Component})
 	 */
 	private static void assignComponentIds(final Map<Long, Component> components) {
@@ -380,7 +380,7 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 	 * Link all input and output components. the input and output components are given as a list of ids and need to be resolved to
 	 * actual {@code Component}s. This happens primarily against the components of the current Json or against the database, if
 	 * the component wasn't defined within the current Json.
-	 *
+	 * 
 	 * @param components a map of (id -> {@code Component})
 	 * @param inOutComponents a map of (id -> list ( inIds, outIds ) )
 	 */
@@ -413,7 +413,7 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 
 	/**
 	 * Set the components for a transformation.
-	 *
+	 * 
 	 * @param transformation the target {@code Transformation}
 	 * @param components the target components, a map of (id -> {@code Component})
 	 */
@@ -426,7 +426,7 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 	/**
 	 * Lookup {@code Component}s by its id. First, look in the provided cache. Second, go to the database Third, ensure, that
 	 * there is an ID set (Note: It might be, that this isn't necessary anymore)
-	 *
+	 * 
 	 * @param ids a list of components ids to lookup
 	 * @param components the current component cache, a map of (id -> {@code Component})
 	 * @param componentService the component service for database lookups

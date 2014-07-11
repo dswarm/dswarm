@@ -8,7 +8,7 @@ import org.dswarm.persistence.model.schema.Attribute;
 
 /**
  * A proxy class for {@link Attribute}s.
- *
+ * 
  * @author tgaengler
  */
 @XmlRootElement
@@ -21,7 +21,7 @@ public class ProxyAttribute extends ProxyAdvancedDMPJPAObject<Attribute> {
 
 	/**
 	 * Default constructor for handing over a freshly created attribute, i.e., no updated or already existing attribute.
-	 *
+	 * 
 	 * @param attributeArg a freshly created attribute
 	 */
 	public ProxyAttribute(final Attribute attributeArg) {
@@ -32,7 +32,7 @@ public class ProxyAttribute extends ProxyAdvancedDMPJPAObject<Attribute> {
 	/**
 	 * Creates a new proxy with the given real attribute and the type how the attribute was processed by the attribute persistence
 	 * service, e.g., {@link RetrievalType.CREATED}.
-	 *
+	 * 
 	 * @param attributeArg an attribute that was processed by the attribute persistence service
 	 * @param typeArg the type how this attribute was processed by the attribute persistence service
 	 */

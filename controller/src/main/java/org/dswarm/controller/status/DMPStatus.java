@@ -3,6 +3,9 @@ package org.dswarm.controller.status;
 import java.lang.management.ManagementFactory;
 import java.util.Map;
 
+import org.dswarm.controller.resources.BasicResource;
+import org.dswarm.controller.resources.resource.ResourcesResource;
+
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
@@ -10,12 +13,9 @@ import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.dswarm.controller.resources.BasicResource;
-import org.dswarm.controller.resources.resource.ResourcesResource;
-
 /**
  * A metrics registry for the backend API. Every method of every resource can be registered here for statistical purpose.
- *
+ * 
  * @author phorn
  * @author tgaengler
  */
@@ -47,7 +47,7 @@ public class DMPStatus {
 
 	/**
 	 * Creates a new metrics registry for the backend API.
-	 *
+	 * 
 	 * @param registryArg a metrics registry (that will be wrapped)
 	 */
 	@Inject
@@ -88,7 +88,7 @@ public class DMPStatus {
 
 	/**
 	 * A generic create-method-timer creation method. Creates a timer for object creation of the given resource.
-	 *
+	 * 
 	 * @param objectType the resource type
 	 * @param clasz the resource class
 	 * @return a new timing context (timer)
@@ -124,7 +124,7 @@ public class DMPStatus {
 	/**
 	 * A generic retrieve-all-objects-method-timer creation method. Creates a timer for all objects retrieval of the given
 	 * resource.
-	 *
+	 * 
 	 * @param objectType the resource type
 	 * @param clasz the resource class
 	 * @return a new timing context (timer)
@@ -150,7 +150,7 @@ public class DMPStatus {
 	/**
 	 * A generic retrieve-specific-object-method-timer creation method. Creates a timer for specific object retrieval of the given
 	 * resource.
-	 *
+	 * 
 	 * @param objectType the resource type
 	 * @param clasz the resource class
 	 * @return a new timing context (timer)
@@ -171,7 +171,7 @@ public class DMPStatus {
 	/**
 	 * A generic update-specific-object-method-timer creation method. Creates a timer for specific object update of the given
 	 * resource.
-	 *
+	 * 
 	 * @param objectType the resource type
 	 * @param clasz the resource class
 	 * @return a new timing context (timer)
@@ -212,7 +212,7 @@ public class DMPStatus {
 	/**
 	 * A generic delete-specific-object-method-timer creation method. Creates a timer for specific object deletion of the given
 	 * resource.
-	 *
+	 * 
 	 * @param objectType the resource type
 	 * @param clasz the resource class
 	 * @return a new timing context (timer)

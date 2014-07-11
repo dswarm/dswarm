@@ -7,7 +7,7 @@ import org.dswarm.controller.providers.BaseExceptionHandler;
 
 /**
  * A default exception handler for providing exceptions at client side of the backend API.
- *
+ * 
  * @author phorn
  */
 @Provider

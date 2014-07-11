@@ -71,7 +71,7 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 		// compare mappings
 		if (expectedProject.getMappings() == null || expectedProject.getMappings().isEmpty()) {
 
-			boolean actualProjectHasNoMappings = (actualProject.getMappings() == null || actualProject.getMappings().isEmpty());
+			final boolean actualProjectHasNoMappings = (actualProject.getMappings() == null || actualProject.getMappings().isEmpty());
 			Assert.assertTrue("the actual project '" + actualProject.getId() + "' shouldn't have any mappings", actualProjectHasNoMappings);
 
 		} else { // !null && !empty
@@ -94,7 +94,7 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 		// compare functions
 		if (expectedProject.getFunctions() == null || expectedProject.getFunctions().isEmpty()) {
 
-			boolean actualProjectHasNoFunctions = (actualProject.getFunctions() == null || actualProject.getFunctions().isEmpty());
+			final boolean actualProjectHasNoFunctions = (actualProject.getFunctions() == null || actualProject.getFunctions().isEmpty());
 			Assert.assertTrue("the actual project '" + actualProject.getId() + "' shouldn't have any functions", actualProjectHasNoFunctions);
 
 		} else { // !null && !empty

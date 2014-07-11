@@ -1,11 +1,13 @@
 package org.dswarm.persistence.service.schema.test.utils;
 
-import org.junit.Assert;
-
+import org.dswarm.persistence.model.schema.Attribute;
+import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.AttributePathInstance;
+import org.dswarm.persistence.model.schema.AttributePathInstanceType;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttributePathInstance;
 import org.dswarm.persistence.service.schema.AttributePathInstanceService;
 import org.dswarm.persistence.service.test.utils.BasicDMPJPAServiceTestUtils;
+import org.junit.Assert;
 
 public abstract class AttributePathInstanceServiceTestUtils<POJOCLASSPERSISTENCESERVICE extends AttributePathInstanceService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyAttributePathInstance<POJOCLASS>, POJOCLASS extends AttributePathInstance>
 		extends BasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
@@ -23,9 +25,9 @@ public abstract class AttributePathInstanceServiceTestUtils<POJOCLASSPERSISTENCE
 	/**
 	 * {@inheritDoc} <br />
 	 * Assert both object's {@link AttributePathInstanceType}s are equal. <br />
-	 * Assert that either both objects have no {@link AttributePath}s, or (in case {@link AttributePath}s are present),
-	 * both {@link AttributePath} have either no {@link Attribute}s or the same number of {@link Attribute}s and the
-	 * {@link Attribute}s are equal regarding id and name.
+	 * Assert that either both objects have no {@link AttributePath}s, or (in case {@link AttributePath}s are present), both
+	 * {@link AttributePath} have either no {@link Attribute}s or the same number of {@link Attribute}s and the {@link Attribute}s
+	 * are equal regarding id and name.
 	 * 
 	 * @param expectedObject
 	 * @param actualObject
@@ -35,8 +37,8 @@ public abstract class AttributePathInstanceServiceTestUtils<POJOCLASSPERSISTENCE
 
 		super.compareObjects(expectedObject, actualObject);
 
-		Assert.assertEquals("the " + pojoClassName + " attribute path instance types should be equal",
-				expectedObject.getAttributePathInstanceType(), actualObject.getAttributePathInstanceType());
+		Assert.assertEquals("the " + pojoClassName + " attribute path instance types should be equal", expectedObject.getAttributePathInstanceType(),
+				actualObject.getAttributePathInstanceType());
 
 		if (expectedObject.getAttributePath() == null) {
 
@@ -44,11 +46,9 @@ public abstract class AttributePathInstanceServiceTestUtils<POJOCLASSPERSISTENCE
 
 		} else {
 
-			attributePathServiceTestUtils.compareObjects(expectedObject.getAttributePath(),
-					actualObject.getAttributePath());
+			attributePathServiceTestUtils.compareObjects(expectedObject.getAttributePath(), actualObject.getAttributePath());
 		}
 	}
-
 
 	/**
 	 * {@inheritDoc}<br/>

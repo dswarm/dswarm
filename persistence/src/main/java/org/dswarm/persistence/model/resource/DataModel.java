@@ -9,16 +9,16 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  * A (input) data model consists of a {@link Resource} and a {@link Configuration} that has been applied to the data resource to
  * produce the data model. Thereby, a schema that describes the relationships between the data was derived or manually set.
- *
+ * 
  * @author tgaengler
  */
 @XmlRootElement
@@ -66,7 +66,7 @@ public class DataModel extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the data resource.
-	 *
+	 * 
 	 * @return the data resource
 	 */
 	public Resource getDataResource() {
@@ -76,7 +76,7 @@ public class DataModel extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the data resource.
-	 *
+	 * 
 	 * @param dataResourceArg a new data resource
 	 */
 	public void setDataResource(final Resource dataResourceArg) {
@@ -86,7 +86,7 @@ public class DataModel extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the configuration.
-	 *
+	 * 
 	 * @return the configuration
 	 */
 	public Configuration getConfiguration() {
@@ -96,7 +96,7 @@ public class DataModel extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the configuration.
-	 *
+	 * 
 	 * @param configurationArg a new configuration
 	 */
 	public void setConfiguration(final Configuration configurationArg) {
@@ -106,7 +106,7 @@ public class DataModel extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the data schema.
-	 *
+	 * 
 	 * @return the data schema
 	 */
 	public Schema getSchema() {
@@ -116,7 +116,7 @@ public class DataModel extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the data schema
-	 *
+	 * 
 	 * @param schemaArg a new data schema
 	 */
 	public void setSchema(final Schema schemaArg) {

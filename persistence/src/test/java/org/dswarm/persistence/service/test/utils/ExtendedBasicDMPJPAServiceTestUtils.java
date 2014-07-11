@@ -1,10 +1,9 @@
 package org.dswarm.persistence.service.test.utils;
 
-import org.junit.Assert;
-
 import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
 import org.dswarm.persistence.model.proxy.ProxyExtendedBasicDMPJPAObject;
 import org.dswarm.persistence.service.ExtendedBasicDMPJPAService;
+import org.junit.Assert;
 
 public abstract class ExtendedBasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE extends ExtendedBasicDMPJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyExtendedBasicDMPJPAObject<POJOCLASS>, POJOCLASS extends ExtendedBasicDMPJPAObject>
 		extends BasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
@@ -15,19 +14,16 @@ public abstract class ExtendedBasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESE
 		super(pojoClassArg, persistenceServiceClassArg);
 	}
 
-	
 	/**
 	 * {@inheritDoc} <br />
 	 * Assert that both objects have no or equal descriptions.
-	 * 
 	 */
 	@Override
 	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) {
 
 		super.compareObjects(expectedObject, actualObject);
-		
-		Assert.assertEquals("the " + pojoClassName + " descriptions should be equal", expectedObject.getDescription(),
-					actualObject.getDescription());		
+
+		Assert.assertEquals("the " + pojoClassName + " descriptions should be equal", expectedObject.getDescription(), actualObject.getDescription());
 	}
 
 	/**

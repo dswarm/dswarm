@@ -59,8 +59,8 @@ public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<Mapping
 		// input attribute paths
 		if (expectedMapping.getInputAttributePaths() == null || expectedMapping.getInputAttributePaths().isEmpty()) {
 
-			boolean actualMappingHasNoInputAttributePaths = (actualMapping.getInputAttributePaths() == null || actualMapping.getInputAttributePaths()
-					.isEmpty());
+			final boolean actualMappingHasNoInputAttributePaths = (actualMapping.getInputAttributePaths() == null || actualMapping
+					.getInputAttributePaths().isEmpty());
 			Assert.assertTrue("actual mapping '" + actualMapping.getId() + "' shouldn't have input attribute paths",
 					actualMappingHasNoInputAttributePaths);
 

@@ -6,6 +6,11 @@ import java.util.List;
 
 import org.culturegraph.mf.stream.source.ResourceOpener;
 import org.culturegraph.mf.types.Triple;
+import org.dswarm.converter.DMPConverterException;
+import org.dswarm.converter.flow.CSVResourceFlowFactory;
+import org.dswarm.converter.flow.CSVSourceResourceTriplesFlow;
+import org.dswarm.persistence.model.resource.Configuration;
+import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
@@ -14,12 +19,6 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.collect.ImmutableList;
-
-import org.dswarm.converter.DMPConverterException;
-import org.dswarm.converter.flow.CSVResourceFlowFactory;
-import org.dswarm.converter.flow.CSVSourceResourceTriplesFlow;
-import org.dswarm.persistence.model.resource.Configuration;
-import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 
 public class CSVSourceResourceTriplesFlowTest {
 

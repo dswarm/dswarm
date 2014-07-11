@@ -15,6 +15,20 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.dswarm.controller.DMPControllerException;
+import org.dswarm.controller.status.DMPStatus;
+import org.dswarm.controller.utils.DataModelUtil;
+import org.dswarm.converter.DMPConverterException;
+import org.dswarm.converter.flow.TransformationFlow;
+import org.dswarm.converter.morph.MorphScriptBuilder;
+import org.dswarm.persistence.model.job.Job;
+import org.dswarm.persistence.model.job.Task;
+import org.dswarm.persistence.model.job.Transformation;
+import org.dswarm.persistence.model.resource.Configuration;
+import org.dswarm.persistence.model.resource.DataModel;
+import org.dswarm.persistence.model.resource.Resource;
+import org.dswarm.persistence.model.types.Tuple;
+import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,24 +45,9 @@ import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
-import org.dswarm.controller.DMPControllerException;
-import org.dswarm.controller.status.DMPStatus;
-import org.dswarm.controller.utils.DataModelUtil;
-import org.dswarm.converter.DMPConverterException;
-import org.dswarm.converter.flow.TransformationFlow;
-import org.dswarm.converter.morph.MorphScriptBuilder;
-import org.dswarm.persistence.model.job.Job;
-import org.dswarm.persistence.model.job.Task;
-import org.dswarm.persistence.model.job.Transformation;
-import org.dswarm.persistence.model.resource.Configuration;
-import org.dswarm.persistence.model.resource.DataModel;
-import org.dswarm.persistence.model.resource.Resource;
-import org.dswarm.persistence.model.types.Tuple;
-import org.dswarm.persistence.service.InternalModelServiceFactory;
-
 /**
  * A resource (controller service) for {@link Task}s.
- *
+ * 
  * @author tgaengler
  */
 @RequestScoped
@@ -84,7 +83,7 @@ public class TasksResource {
 	/**
 	 * Creates a new resource (controller service) for {@link Transformation}s with the provider of the transformation persistence
 	 * service, the object mapper and metrics registry.
-	 *
+	 * 
 	 * @param dataModelUtilArg the data model util
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
@@ -101,7 +100,7 @@ public class TasksResource {
 
 	/**
 	 * Builds a positive response with the given content.
-	 *
+	 * 
 	 * @param responseContent a response message
 	 * @return the response
 	 */
@@ -114,7 +113,7 @@ public class TasksResource {
 
 	/**
 	 * This endpoint executes the task that is given via its JSON representation and returns the result of the task execution.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one task
 	 * @return the result of the task execution
 	 * @throws IOException
@@ -263,7 +262,7 @@ public class TasksResource {
 
 	/**
 	 * This endpoint executes the task that is given via its JSON representation and returns the result of the task execution.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one task
 	 * @return the result of the task execution
 	 * @throws IOException

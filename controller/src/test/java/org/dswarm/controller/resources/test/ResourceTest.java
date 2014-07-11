@@ -4,16 +4,15 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
+import org.dswarm.controller.EmbeddedServer;
+import org.dswarm.controller.providers.handler.ExceptionHandler;
+import org.dswarm.controller.servlet.DMPInjector;
+import org.dswarm.controller.test.GuicedTest;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.dswarm.controller.EmbeddedServer;
-import org.dswarm.controller.providers.handler.ExceptionHandler;
-import org.dswarm.controller.servlet.DMPInjector;
-import org.dswarm.controller.test.GuicedTest;
 
 public class ResourceTest extends GuicedTest {
 

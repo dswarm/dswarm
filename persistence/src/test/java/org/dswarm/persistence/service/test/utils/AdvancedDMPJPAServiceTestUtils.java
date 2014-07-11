@@ -1,11 +1,10 @@
 package org.dswarm.persistence.service.test.utils;
 
-import org.junit.Assert;
-
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.AdvancedDMPJPAObject;
 import org.dswarm.persistence.model.proxy.ProxyAdvancedDMPJPAObject;
 import org.dswarm.persistence.service.AdvancedDMPJPAService;
+import org.junit.Assert;
 
 public abstract class AdvancedDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE extends AdvancedDMPJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyAdvancedDMPJPAObject<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
 		extends BasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
@@ -19,7 +18,7 @@ public abstract class AdvancedDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE
 	 * {@inheritDoc} <br />
 	 * Assert that their URIs are equal. <br />
 	 * 
-	 * @param expectedObject 
+	 * @param expectedObject
 	 * @param actualObject
 	 */
 	@Override

@@ -3,7 +3,6 @@ package org.dswarm.controller.resources.job.test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -40,7 +39,6 @@ import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -124,13 +122,13 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 		String fileType = null;
 
-		Tika tika = new Tika();
+		final Tika tika = new Tika();
 		try {
 			fileType = tika.detect(resourceFile);
-//			fileType = Files.probeContentType(resourceFile.toPath());
+			// fileType = Files.probeContentType(resourceFile.toPath());
 		} catch (final IOException e1) {
 
-			LOG.debug("couldn't determine file type from file '" + resourceFile.getAbsolutePath() + "'");
+			TasksCsvResourceTest.LOG.debug("couldn't determine file type from file '" + resourceFile.getAbsolutePath() + "'");
 		}
 
 		if (fileType != null) {

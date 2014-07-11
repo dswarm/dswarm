@@ -2,9 +2,8 @@ package org.dswarm.controller.resources.job.test;
 
 import java.io.IOException;
 
-import org.junit.Before;
-
 import org.dswarm.controller.resources.test.ResourceTest;
+import org.junit.Before;
 
 public class JobsResourceTest extends ResourceTest {
 

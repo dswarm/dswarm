@@ -4,6 +4,13 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.dswarm.persistence.GuicedTest;
+import org.dswarm.persistence.model.job.Function;
+import org.dswarm.persistence.model.job.FunctionType;
+import org.dswarm.persistence.model.job.proxy.ProxyFunction;
+import org.dswarm.persistence.service.job.FunctionService;
+import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -17,14 +24,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
-
-import org.dswarm.persistence.GuicedTest;
-import org.dswarm.persistence.model.job.Function;
-import org.dswarm.persistence.model.job.FunctionType;
-import org.dswarm.persistence.model.job.proxy.ProxyFunction;
-import org.dswarm.persistence.service.job.FunctionService;
-import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class FunctionServiceTest extends IDBasicJPAServiceTest<ProxyFunction, Function, FunctionService> {
 

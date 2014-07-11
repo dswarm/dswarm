@@ -4,7 +4,7 @@ import org.dswarm.persistence.model.resource.DataModel;
 
 /**
  * An (abstract) event that provides a {@link DataModel}.
- *
+ * 
  * @author tgaengler
  */
 public abstract class DataModelEvent {
@@ -16,7 +16,7 @@ public abstract class DataModelEvent {
 
 	/**
 	 * Creates a new data model event with the given data model.
-	 *
+	 * 
 	 * @param dataModel a data model that can be utilised for further processing
 	 */
 	public DataModelEvent(final DataModel dataModel) {
@@ -26,7 +26,7 @@ public abstract class DataModelEvent {
 
 	/**
 	 * Gets the data model of the event for further processing.
-	 *
+	 * 
 	 * @return the data model of the event for further processing
 	 */
 	public DataModel getDataModel() {

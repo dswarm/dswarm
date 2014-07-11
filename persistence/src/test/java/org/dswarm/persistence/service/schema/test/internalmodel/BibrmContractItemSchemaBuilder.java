@@ -5,9 +5,9 @@ import org.dswarm.persistence.model.schema.Schema;
 
 public class BibrmContractItemSchemaBuilder extends SchemaBuilder {
 
+	// private static final Logger LOG = LoggerFactory.getLogger(ERMSchemaBuilder.class);
 
-	//private static final Logger	LOG				= LoggerFactory.getLogger(ERMSchemaBuilder.class);
-
+	@Override
 	public Schema buildSchema() {
 
 		final AttributePathBuilder builder = new AttributePathBuilder();
@@ -22,7 +22,8 @@ public class BibrmContractItemSchemaBuilder extends SchemaBuilder {
 		 */
 
 		// basic properties for ERM example
-		//tempSchema.addAttributePath(builder.parsePrefixPath("bibrm:hasItem")); // this needs to go to the schema of Contract itself
+		// tempSchema.addAttributePath(builder.parsePrefixPath("bibrm:hasItem")); // this needs to go to the schema of Contract
+		// itself
 		tempSchema.addAttributePath(builder.parsePrefixPath("rdf:type"));
 		tempSchema.addAttributePath(builder.parsePrefixPath("bibrm:EISSN"));
 		tempSchema.addAttributePath(builder.parsePrefixPath("dc:title"));
@@ -33,11 +34,13 @@ public class BibrmContractItemSchemaBuilder extends SchemaBuilder {
 		// store all parsed paths as an overview
 		prefixPaths = builder.getPrefixPaths();
 
-		final Schema persistentSchema = createSchema("bibrm:ContractItem-Schema (ERM-Scenario)", tempSchema.getAttributePaths(), tempSchema.getRecordClass());
+		final Schema persistentSchema = createSchema("bibrm:ContractItem-Schema (ERM-Scenario)", tempSchema.getAttributePaths(),
+				tempSchema.getRecordClass());
 
 		return persistentSchema;
 	}
 
+	@Override
 	public String getPrefixPaths() {
 		return prefixPaths;
 	}

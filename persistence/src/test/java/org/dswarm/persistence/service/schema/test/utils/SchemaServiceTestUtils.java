@@ -44,7 +44,7 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 
 		if (expectedSchema.getAttributePaths() == null || expectedSchema.getAttributePaths().isEmpty()) {
 
-			boolean actualSchemaHasNoAttributePaths = (actualSchema.getAttributePaths() == null || actualSchema.getAttributePaths().isEmpty());
+			final boolean actualSchemaHasNoAttributePaths = (actualSchema.getAttributePaths() == null || actualSchema.getAttributePaths().isEmpty());
 			Assert.assertTrue("the actual schema '" + actualSchema.getId() + "' shouldn't have attribute paths", actualSchemaHasNoAttributePaths);
 
 		} else { // !null && !empty
@@ -133,7 +133,6 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 		jpaService.updateObjectTransactional(outputDataModelSchema);
 	}
 
-	
 	/**
 	 * {@inheritDoc}<br/>
 	 * Updates the name, attribute paths and record class of the schema.

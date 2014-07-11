@@ -12,14 +12,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.servlet.RequestScoped;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
-
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.ExtendedBasicDMPResource;
 import org.dswarm.controller.resources.resource.utils.ConfigurationsResourceUtils;
@@ -29,9 +21,17 @@ import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.proxy.ProxyConfiguration;
 import org.dswarm.persistence.service.resource.ConfigurationService;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.servlet.RequestScoped;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
+
 /**
  * A resource (controller service) for {@link Configuration}s.
- *
+ * 
  * @author tgaengler
  */
 @RequestScoped
@@ -43,7 +43,7 @@ public class ConfigurationsResource extends
 	/**
 	 * Creates a new resource (controller service) for {@link Configuration}s with the provider of the component persistence
 	 * service, the object mapper and metrics registry.
-	 *
+	 * 
 	 * @param persistenceServiceProviderArg the component persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
@@ -56,7 +56,7 @@ public class ConfigurationsResource extends
 
 	/**
 	 * This endpoint returns a configuration as JSON representation for the provided configuration identifier.
-	 *
+	 * 
 	 * @param id a configuration identifier
 	 * @return a JSON representation of a configuration
 	 */
@@ -76,7 +76,7 @@ public class ConfigurationsResource extends
 
 	/**
 	 * This endpoint consumes a configuration as JSON representation and persists this configuration in the database.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one configuration
 	 * @return the persisted configuration as JSON representation
 	 * @throws DMPControllerException
@@ -96,7 +96,7 @@ public class ConfigurationsResource extends
 
 	/**
 	 * This endpoint returns a list of all configurations as JSON representation.
-	 *
+	 * 
 	 * @return a list of all configurations as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -114,7 +114,7 @@ public class ConfigurationsResource extends
 
 	/**
 	 * This endpoint deletes a configuration that matches the given id.
-	 *
+	 * 
 	 * @param id a configuration identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
 	 *         went wrong
@@ -136,7 +136,7 @@ public class ConfigurationsResource extends
 
 	/**
 	 * This endpoint consumes a configuration as JSON representation and updates this configuration in the database.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one configuration
 	 * @param id a configuration identifier
 	 * @return the updated configuration as JSON representation

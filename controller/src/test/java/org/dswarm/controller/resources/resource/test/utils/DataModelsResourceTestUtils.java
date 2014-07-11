@@ -3,13 +3,12 @@ package org.dswarm.controller.resources.resource.test.utils;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.junit.Assert;
-
 import org.dswarm.controller.resources.test.utils.ExtendedBasicDMPResourceTestUtils;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.service.resource.test.utils.DataModelServiceTestUtils;
+import org.junit.Assert;
 
 public class DataModelsResourceTestUtils extends
 		ExtendedBasicDMPResourceTestUtils<DataModelServiceTestUtils, DataModelService, ProxyDataModel, DataModel> {

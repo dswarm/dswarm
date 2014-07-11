@@ -8,7 +8,7 @@ import org.dswarm.converter.DMPMorphDefException;
 
 /**
  * An exception handler for providing exact messages for wrong Metamorph definitions
- *
+ * 
  * @author phorn
  */
 @Provider

@@ -11,7 +11,7 @@ import org.dswarm.controller.providers.BaseExceptionHandler;
 
 /**
  * An exception handler for providing JSON exceptions at client side of the backend API
- *
+ * 
  * @author phorn
  */
 @Provider
