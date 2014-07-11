@@ -18,6 +18,7 @@ import org.dswarm.persistence.model.resource.utils.ResourceUtils;
 import org.dswarm.persistence.model.schema.utils.AttributePathUtils;
 import org.dswarm.persistence.model.schema.utils.AttributeUtils;
 import org.dswarm.persistence.model.schema.utils.ClaszUtils;
+import org.dswarm.persistence.model.schema.utils.ContentSchemaUtils;
 import org.dswarm.persistence.model.schema.utils.MappingAttributePathInstanceUtils;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 
@@ -67,6 +68,8 @@ public final class DMPPersistenceUtil {
 
 	private static final SchemaUtils						SCHEMAUTILS;
 
+	private static final ContentSchemaUtils					CONTENTSCHEMAUTILS;
+
 	private static final TransformationUtils				TRANSFORMATIONUTILS;
 
 	private static final FilterUtils						FILTERUTILS;
@@ -78,13 +81,13 @@ public final class DMPPersistenceUtil {
 	private static final MappingAttributePathInstanceUtils	MAPPINGATTRIBUTEPATHINSTANCEUTILS;
 
 	private static final long								LOWER_RANGE	= -9223372036854775808L;	// assign
-																									// lower
-																									// range
-																									// value
+	// lower
+	// range
+	// value
 	private static final long								UPPER_RANGE	= -1;						// assign
-																									// upper
-																									// range
-																									// value
+	// upper
+	// range
+	// value
 	private static final Random								random		= new SecureRandom();
 
 	static {
@@ -104,6 +107,7 @@ public final class DMPPersistenceUtil {
 		CONFIGURATIONUTILS = new ConfigurationUtils();
 		CLASZUTILS = new ClaszUtils();
 		SCHEMAUTILS = new SchemaUtils();
+		CONTENTSCHEMAUTILS = new ContentSchemaUtils();
 		TRANSFORMATIONUTILS = new TransformationUtils();
 		FILTERUTILS = new FilterUtils();
 		DATAMODELUTILS = new DataModelUtils();
@@ -220,6 +224,11 @@ public final class DMPPersistenceUtil {
 	public static SchemaUtils getSchemaUtils() {
 
 		return DMPPersistenceUtil.SCHEMAUTILS;
+	}
+
+	public static ContentSchemaUtils getContentSchemaUtils() {
+
+		return DMPPersistenceUtil.CONTENTSCHEMAUTILS;
 	}
 
 	public static TransformationUtils getTransformationUtils() {

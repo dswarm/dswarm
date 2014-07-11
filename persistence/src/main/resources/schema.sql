@@ -133,6 +133,7 @@ SET foreign_key_checks = 0;
     create table DATA_SCHEMA (
         ID bigint not null auto_increment,
         NAME varchar(255),
+        CONTENT_SCHEMA bigint,
         RECORD_CLASS bigint,
         primary key (ID)
     ) ENGINE=InnoDB;
@@ -271,14 +272,14 @@ SET foreign_key_checks = 0;
         references ATTRIBUTE_PATH (ID);
 
     alter table CONTENT_SCHEMAS_KEY_ATTRIBUTE_PATHS 
-        add index FK_tj0i0nwfn9gyv3n5q7fqk0gm8 (ATTRIBUTE_PATH_ID), 
-        add constraint FK_tj0i0nwfn9gyv3n5q7fqk0gm8 
+        add index FK_4r9rcnjvsc47fkrftfw7dfb7u (ATTRIBUTE_PATH_ID), 
+        add constraint FK_4r9rcnjvsc47fkrftfw7dfb7u 
         foreign key (ATTRIBUTE_PATH_ID) 
         references ATTRIBUTE_PATH (ID);
 
     alter table CONTENT_SCHEMAS_KEY_ATTRIBUTE_PATHS 
-        add index FK_trtfg1bqeqgys2vjad9n22ahj (CONTENT_SCHEMA_ID), 
-        add constraint FK_trtfg1bqeqgys2vjad9n22ahj 
+        add index FK_9j4vcly1i6pmvvs7349hj6fin (CONTENT_SCHEMA_ID), 
+        add constraint FK_9j4vcly1i6pmvvs7349hj6fin 
         foreign key (CONTENT_SCHEMA_ID) 
         references CONTENT_SCHEMA (ID);
 
@@ -299,6 +300,12 @@ SET foreign_key_checks = 0;
         add constraint FK_id7ig90c37glf3njn0928o0v0 
         foreign key (DATA_SCHEMA) 
         references DATA_SCHEMA (ID);
+
+    alter table DATA_SCHEMA 
+        add index FK_4d0x8vrycw2wftldagmv875vq (CONTENT_SCHEMA), 
+        add constraint FK_4d0x8vrycw2wftldagmv875vq 
+        foreign key (CONTENT_SCHEMA) 
+        references CONTENT_SCHEMA (ID);
 
     alter table DATA_SCHEMA 
         add index FK_67hdhd4o40jypqxwdcq7tai28 (RECORD_CLASS), 

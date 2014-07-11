@@ -37,14 +37,24 @@ public class ContentSchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<C
 		compareContentSchemas(expectedObject, actualObject);
 	}
 
-	public ContentSchema createSchema(final String name, final LinkedList<AttributePath> keyAttributePaths, final AttributePath valueAttributePath)
-			throws Exception {
+	public ContentSchema createContentSchema(final String name, final LinkedList<AttributePath> keyAttributePaths,
+			final AttributePath valueAttributePath) throws Exception {
 
 		final ContentSchema contentSchema = new ContentSchema();
 
 		contentSchema.setName(name);
 		contentSchema.setKeyAttributePaths(keyAttributePaths);
 		contentSchema.setValueAttributePath(valueAttributePath);
+
+		return createContentSchemaInternal(contentSchema);
+	}
+
+	public ContentSchema createContentSchema(final ContentSchema contentSchema) throws Exception {
+
+		return createContentSchemaInternal(contentSchema);
+	}
+
+	private ContentSchema createContentSchemaInternal(ContentSchema contentSchema) throws Exception {
 
 		// update content schema
 

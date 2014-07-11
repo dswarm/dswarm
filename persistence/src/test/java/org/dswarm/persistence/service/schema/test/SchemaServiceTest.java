@@ -3,6 +3,18 @@ package org.dswarm.persistence.service.schema.test;
 import java.util.LinkedList;
 import java.util.Map;
 
+import org.dswarm.persistence.model.schema.ContentSchema;
+import org.dswarm.persistence.service.schema.test.utils.ContentSchemaServiceTestUtils;
+import org.junit.Assert;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
@@ -14,15 +26,6 @@ import org.dswarm.persistence.service.schema.test.utils.AttributePathServiceTest
 import org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtils;
 import org.dswarm.persistence.service.schema.test.utils.ClaszServiceTestUtils;
 import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
-import org.junit.Assert;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema, SchemaService> {
 
@@ -34,6 +37,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema
 
 	private final AttributeServiceTestUtils		attributeServiceTestUtils;
 	private final ClaszServiceTestUtils			claszServiceTestUtils;
+	private final ContentSchemaServiceTestUtils contentSchemaServiceTestUtils;
 	private final AttributePathServiceTestUtils	attributePathServiceTestUtils;
 
 	public SchemaServiceTest() {
@@ -43,6 +47,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema
 		attributeServiceTestUtils = new AttributeServiceTestUtils();
 		attributePathServiceTestUtils = new AttributePathServiceTestUtils();
 		claszServiceTestUtils = new ClaszServiceTestUtils();
+		contentSchemaServiceTestUtils = new ContentSchemaServiceTestUtils();
 	}
 
 	@Test
@@ -114,6 +119,36 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema
 
 		final Clasz biboDocument = claszServiceTestUtils.createClass(biboDocumentId, biboDocumentName);
 
+		// START content schema
+
+		// value attribute path
+
+		final String rdfValueId = "http://www.w3.org/1999/02/22-rdf-syntax-ns#value";
+		final String rdfValueName = "value";
+
+		final Attribute rdfValue = attributeServiceTestUtils.createAttribute(rdfValueId, rdfValueName);
+		attributes.put(rdfValue.getId(), rdfValue);
+
+		final LinkedList<Attribute> rdfValueAPList = Lists.newLinkedList();
+		rdfValueAPList.add(rdfValue);
+
+		final AttributePath rdfValueAP = attributePathServiceTestUtils.createAttributePath(rdfValueAPList);
+
+		// content schema
+
+		final ContentSchema dummyContentSchema = new ContentSchema();
+
+		dummyContentSchema.setName("my content schema");
+		dummyContentSchema.addKeyAttributePath(attributePath1);
+		dummyContentSchema.addKeyAttributePath(attributePath2);
+		dummyContentSchema.addKeyAttributePath(attributePath3);
+		dummyContentSchema.setValueAttributePath(rdfValueAP);
+
+		final ContentSchema contentSchema = contentSchemaServiceTestUtils.createContentSchema(dummyContentSchema);
+
+		// END content schema
+
+
 		// schema
 
 		final Schema schema = createObject().getObject();
@@ -123,6 +158,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema
 		schema.addAttributePath(attributePath2);
 		schema.addAttributePath(attributePath3);
 		schema.setRecordClass(biboDocument);
+		schema.setContentSchema(contentSchema);
 
 		// update schema
 
@@ -144,6 +180,8 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema
 				attributePath1.toAttributePath(), updatedSchema.getAttributePath(attributePath1.getId()).toAttributePath());
 		Assert.assertNotNull("the record class of the updated schema shouldn't be null", updatedSchema.getRecordClass());
 		Assert.assertEquals("the recod classes are not equal", schema.getRecordClass(), updatedSchema.getRecordClass());
+		Assert.assertNotNull("the content schema of the updated schema shouldn't be null", updatedSchema.getContentSchema());
+		Assert.assertEquals("the content schemata are not equal", schema.getContentSchema(), updatedSchema.getContentSchema());
 
 		String json = null;
 
@@ -161,10 +199,12 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema
 		deleteObject(schema.getId());
 
 		claszServiceTestUtils.deleteObject(biboDocument);
+		contentSchemaServiceTestUtils.deleteObject(contentSchema);
 
 		attributePathServiceTestUtils.deleteObject(attributePath1);
 		attributePathServiceTestUtils.deleteObject(attributePath2);
 		attributePathServiceTestUtils.deleteObject(attributePath3);
+		attributePathServiceTestUtils.deleteObject(rdfValueAP);
 
 		for (final Attribute attribute : attributes.values()) {
 

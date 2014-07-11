@@ -10,6 +10,7 @@ import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
 import org.dswarm.persistence.service.schema.AttributePathService;
 import org.dswarm.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -87,5 +88,38 @@ public class AttributePathsResourceTestUtils extends
 		}
 
 		super.compareObjects(expectedObject, actualObject);
+	}
+
+	public AttributePath prepareAttributePath(final String attributePathJSONFileName, final Map<Long, AttributePath> attributePaths,
+			final Map<Long, Attribute> attributes) throws Exception {
+
+		String attributePathJSONString = DMPPersistenceUtil.getResourceAsString(attributePathJSONFileName);
+		final AttributePath attributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
+
+		final LinkedList<Attribute> attributePathAttributes = attributePath.getAttributePath();
+		final LinkedList<Attribute> newAttributes = Lists.newLinkedList();
+
+		for (final Attribute attribute : attributePathAttributes) {
+
+			for (final Attribute newAttribute : attributes.values()) {
+
+				if (attribute.getUri().equals(newAttribute.getUri())) {
+
+					newAttributes.add(newAttribute);
+
+					break;
+				}
+			}
+		}
+
+		attributePath.setAttributePath(newAttributes);
+
+		attributePathJSONString = objectMapper.writeValueAsString(attributePath);
+		final AttributePath expectedAttributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
+		final AttributePath actualAttributePath = createObject(attributePathJSONString, expectedAttributePath);
+
+		attributePaths.put(actualAttributePath.getId(), actualAttributePath);
+
+		return actualAttributePath;
 	}
 }

@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
+import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
 import org.dswarm.persistence.service.BasicDMPJPAService;
@@ -42,6 +43,7 @@ public class SchemaService extends BasicDMPJPAService<ProxySchema, Schema> {
 		// should clear the relationship to the attribute paths + record class
 		object.setAttributePaths(null);
 		object.setRecordClass(null);
+		object.setContentSchema(null);
 	}
 
 	/**
@@ -53,6 +55,7 @@ public class SchemaService extends BasicDMPJPAService<ProxySchema, Schema> {
 
 		final Set<AttributePath> attributePaths = object.getAttributePaths();
 		final Clasz recordClass = object.getRecordClass();
+		final ContentSchema contentSchema = object.getContentSchema();
 
 		// if (attributePaths != null) {
 		//
@@ -68,6 +71,7 @@ public class SchemaService extends BasicDMPJPAService<ProxySchema, Schema> {
 		// }
 
 		updateObject.setRecordClass(recordClass);
+		updateObject.setContentSchema(contentSchema);
 
 		super.updateObjectInternal(object, updateObject, entityManager);
 	}

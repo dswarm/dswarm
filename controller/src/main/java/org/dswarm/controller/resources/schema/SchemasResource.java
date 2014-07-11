@@ -18,7 +18,23 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.dswarm.persistence.model.schema.ContentSchema;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.google.common.collect.Lists;
+import com.google.inject.servlet.RequestScoped;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
+
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.BasicDMPResource;
 import org.dswarm.controller.resources.schema.utils.AttributePathsResourceUtils;
@@ -38,20 +54,6 @@ import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.service.schema.AttributePathService;
 import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.schema.SchemaService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.collect.Lists;
-import com.google.inject.servlet.RequestScoped;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
 
 /**
  * A resource (controller service) for {@link Schema}s.
@@ -358,7 +360,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 	/**
 	 * {@inheritDoc}<br/>
-	 * Updates the name, attribute paths and record class of the schema.
+	 * Updates the name, attribute paths and record class and (optionally) content schema of the schema.
 	 */
 	@Override
 	protected Schema prepareObjectForUpdate(final Schema objectFromJSON, final Schema object) {
@@ -372,6 +374,10 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 		final Clasz recordClass = objectFromJSON.getRecordClass();
 
 		object.setRecordClass(recordClass);
+
+		final ContentSchema contentSchema = objectFromJSON.getContentSchema();
+
+		object.setContentSchema(contentSchema);
 
 		return object;
 	}

@@ -9,6 +9,17 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.dswarm.controller.resources.schema.test.utils.ContentSchemasResourceTestUtils;
+import org.dswarm.persistence.model.schema.ContentSchema;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Test;
+
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
 import org.dswarm.controller.resources.schema.test.utils.AttributePathsResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.AttributesResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.ClaszesResourceTestUtils;
@@ -23,14 +34,6 @@ import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Test;
-
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 public class SchemasResourceTest extends
 		BasicResourceTest<SchemasResourceTestUtils, SchemaServiceTestUtils, SchemaService, ProxySchema, Schema, Long> {
@@ -43,6 +46,8 @@ public class SchemasResourceTest extends
 
 	private final SchemasResourceTestUtils			schemasResourceTestUtils;
 
+	private final ContentSchemasResourceTestUtils	contentSchemasResourceTestUtils;
+
 	final Map<Long, Attribute>						attributes		= Maps.newHashMap();
 
 	final Map<Long, AttributePath>					attributePaths	= Maps.newLinkedHashMap();
@@ -50,6 +55,8 @@ public class SchemasResourceTest extends
 	private Clasz									recordClass;
 
 	private Clasz									recordClass2;
+
+	private ContentSchema							contentSchema;
 
 	public SchemasResourceTest() {
 
@@ -59,6 +66,7 @@ public class SchemasResourceTest extends
 		claszesResourceTestUtils = new ClaszesResourceTestUtils();
 		attributePathsResourceTestUtils = new AttributePathsResourceTestUtils();
 		schemasResourceTestUtils = new SchemasResourceTestUtils();
+		contentSchemasResourceTestUtils = new ContentSchemasResourceTestUtils();
 	}
 
 	@Override
@@ -80,9 +88,7 @@ public class SchemasResourceTest extends
 
 			final String attributeJSONFileName = "attribute" + i + ".json";
 
-			final Attribute actualAttribute = attributesResourceTestUtils.createObject(attributeJSONFileName);
-
-			attributes.put(actualAttribute.getId(), actualAttribute);
+			attributesResourceTestUtils.prepareAttribute(attributeJSONFileName, attributes);
 		}
 
 		recordClass = claszesResourceTestUtils.createObject("clasz1.json");
@@ -101,52 +107,67 @@ public class SchemasResourceTest extends
 
 			final String attributePathJSONFileName = "attribute_path" + j + ".json";
 
-			String attributePathJSONString = DMPPersistenceUtil.getResourceAsString(attributePathJSONFileName);
-			final AttributePath attributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
-
-			final LinkedList<Attribute> attributes = attributePath.getAttributePath();
-			final LinkedList<Attribute> newAttributes = Lists.newLinkedList();
-
-			for (final Attribute attribute : attributes) {
-
-				for (final Attribute newAttribute : this.attributes.values()) {
-
-					if (attribute.getUri().equals(newAttribute.getUri())) {
-
-						newAttributes.add(newAttribute);
-
-						break;
-					}
-				}
-			}
-
-			attributePath.setAttributePath(newAttributes);
-
-			attributePathJSONString = objectMapper.writeValueAsString(attributePath);
-			final AttributePath expectedAttributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
-			final AttributePath actualAttributePath = attributePathsResourceTestUtils.createObject(attributePathJSONString, expectedAttributePath);
-
-			attributePaths.put(actualAttributePath.getId(), actualAttributePath);
+			attributePathsResourceTestUtils.prepareAttributePath(attributePathJSONFileName, attributePaths, attributes);
 		}
 
 		// manipulate attribute paths (incl. their attributes)
-		final ArrayNode attributePathsArray = objectMapper.createArrayNode();
+		final ArrayNode schemaAttributePathsArray = objectMapper.createArrayNode();
 
 		for (final AttributePath attributePath : attributePaths.values()) {
 
 			final String attributePathJSONString = objectMapper.writeValueAsString(attributePath);
 			final ObjectNode attributePathJSON = objectMapper.readValue(attributePathJSONString, ObjectNode.class);
 
-			attributePathsArray.add(attributePathJSON);
+			schemaAttributePathsArray.add(attributePathJSON);
 		}
 
-		objectJSON.put("attribute_paths", attributePathsArray);
+		objectJSON.put("attribute_paths", schemaAttributePathsArray);
+
+		// START content schema
+
+		final String contentSchemaJSONString = DMPPersistenceUtil.getResourceAsString("content_schema.json");
+		final ObjectNode contentSchemaJSON = objectMapper.readValue(contentSchemaJSONString, ObjectNode.class);
+
+		// manipulate key attribute paths (incl. their attributes)
+		final ArrayNode keyAttributePathsArray = objectMapper.createArrayNode();
+
+		for (final AttributePath attributePath : attributePaths.values()) {
+
+			final String attributePathJSONString = objectMapper.writeValueAsString(attributePath);
+			final ObjectNode attributePathJSON = objectMapper.readValue(attributePathJSONString, ObjectNode.class);
+
+			keyAttributePathsArray.add(attributePathJSON);
+		}
+
+		contentSchemaJSON.put("key_attribute_paths", keyAttributePathsArray);
+
+		attributesResourceTestUtils.prepareAttribute("attribute8.json", attributes);
+		AttributePath valueAttributePath = attributePathsResourceTestUtils.prepareAttributePath("attribute_path8.json", attributePaths, attributes);
+
+		// manipulate value attribute path
+		final String valueAttributePathJSONString = objectMapper.writeValueAsString(valueAttributePath);
+		final ObjectNode valueAttributePathJSON = objectMapper.readValue(valueAttributePathJSONString, ObjectNode.class);
+
+		contentSchemaJSON.put("value_attribute_path", valueAttributePathJSON);
+
+		final String finalContentSchemaJSONString = objectMapper.writeValueAsString(contentSchemaJSON);
+		final ContentSchema expectedContentSchema = objectMapper.readValue(finalContentSchemaJSONString, ContentSchema.class);
+
+		contentSchema = contentSchemasResourceTestUtils.createObject(finalContentSchemaJSONString, expectedContentSchema);
+
+		// END content schema
 
 		// manipulate record class
 		final String recordClassJSONString = objectMapper.writeValueAsString(recordClass);
 		final ObjectNode recordClassJSON = objectMapper.readValue(recordClassJSONString, ObjectNode.class);
 
 		objectJSON.put("record_class", recordClassJSON);
+
+		// manipulate content schema
+		final String persistentContentSchemaJSONString = objectMapper.writeValueAsString(contentSchema);
+		final ObjectNode persistentContentSchemaJSON = objectMapper.readValue(persistentContentSchemaJSONString, ObjectNode.class);
+
+		objectJSON.put("content_schema", persistentContentSchemaJSON);
 
 		// re-init expect object
 		objectJSONString = objectMapper.writeValueAsString(objectJSON);
@@ -244,7 +265,7 @@ public class SchemasResourceTest extends
 				match = true;
 			}
 
-			if (match == true && attributeURIs.size() == attributes.size()) {
+			if (match && attributeURIs.size() == attributes.size()) {
 
 				foundAttributePath = true;
 
@@ -351,7 +372,7 @@ public class SchemasResourceTest extends
 				match = true;
 			}
 
-			if (match == true && attributeURIs.size() == attributes.size()) {
+			if (match && attributeURIs.size() == attributes.size()) {
 
 				foundAttributePath = true;
 
@@ -383,6 +404,8 @@ public class SchemasResourceTest extends
 
 	@After
 	public void tearDown2() throws Exception {
+
+		contentSchemasResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(contentSchema);
 
 		for (final AttributePath attributePath : attributePaths.values()) {
 

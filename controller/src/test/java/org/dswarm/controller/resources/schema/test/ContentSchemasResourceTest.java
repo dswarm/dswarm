@@ -21,7 +21,6 @@ import org.junit.Assert;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 public class ContentSchemasResourceTest
@@ -66,7 +65,7 @@ public class ContentSchemasResourceTest
 
 			final String attributeJSONFileName = "attribute" + i + ".json";
 
-			prepareAttribute(attributeJSONFileName);
+			attributesResourceTestUtils.prepareAttribute(attributeJSONFileName, attributes);
 		}
 
 		// prepare content schema json for key attribute path ids manipulation
@@ -83,7 +82,7 @@ public class ContentSchemasResourceTest
 
 			final String attributePathJSONFileName = "attribute_path" + j + ".json";
 
-			prepareAttributePath(attributePathJSONFileName);
+			attributePathsResourceTestUtils.prepareAttributePath(attributePathJSONFileName, attributePaths, attributes);
 		}
 
 		// manipulate key attribute paths (incl. their attributes)
@@ -99,8 +98,8 @@ public class ContentSchemasResourceTest
 
 		objectJSON.put("key_attribute_paths", attributePathsArray);
 
-		prepareAttribute("attribute8.json");
-		AttributePath valueAttributePath = prepareAttributePath("attribute_path8.json");
+		attributesResourceTestUtils.prepareAttribute("attribute8.json", attributes);
+		AttributePath valueAttributePath = attributePathsResourceTestUtils.prepareAttributePath("attribute_path8.json", attributePaths, attributes);
 
 		// manipulate value attribute path
 		final String valueAttributePathJSONString = objectMapper.writeValueAsString(valueAttributePath);
@@ -154,9 +153,9 @@ public class ContentSchemasResourceTest
 		// value attribute path update (with a non-persistent attribute)
 		final String blaPropertyId = "http://purl.org/ontology/bibo/blaproperty";
 		final String blaPropertyName = "blaproperty";
-		prepareAttribute("attribute9.json");
+		attributesResourceTestUtils.prepareAttribute("attribute9.json", attributes);
 
-		final AttributePath blaPropertyAP = prepareAttributePath("attribute_path9.json");
+		final AttributePath blaPropertyAP = attributePathsResourceTestUtils.prepareAttributePath("attribute_path9.json", attributePaths, attributes);
 		persistedContentSchema.setValueAttributePath(blaPropertyAP);
 
 		String updateContentSchemaJSONString = objectMapper.writeValueAsString(persistedContentSchema);
@@ -183,44 +182,5 @@ public class ContentSchemasResourceTest
 		Assert.assertEquals("persisted and updated content schema name should be equal", updateContentSchema.getName(), updateSchemaNameString);
 
 		return updateContentSchema;
-	}
-
-	private void prepareAttribute(final String attributeJSONFileName) throws Exception {
-
-		final Attribute actualAttribute = attributesResourceTestUtils.createObject(attributeJSONFileName);
-
-		attributes.put(actualAttribute.getId(), actualAttribute);
-	}
-
-	private AttributePath prepareAttributePath(final String attributePathJSONFileName) throws Exception {
-
-		String attributePathJSONString = DMPPersistenceUtil.getResourceAsString(attributePathJSONFileName);
-		final AttributePath attributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
-
-		final LinkedList<Attribute> attributes = attributePath.getAttributePath();
-		final LinkedList<Attribute> newAttributes = Lists.newLinkedList();
-
-		for (final Attribute attribute : attributes) {
-
-			for (final Attribute newAttribute : this.attributes.values()) {
-
-				if (attribute.getUri().equals(newAttribute.getUri())) {
-
-					newAttributes.add(newAttribute);
-
-					break;
-				}
-			}
-		}
-
-		attributePath.setAttributePath(newAttributes);
-
-		attributePathJSONString = objectMapper.writeValueAsString(attributePath);
-		final AttributePath expectedAttributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
-		final AttributePath actualAttributePath = attributePathsResourceTestUtils.createObject(attributePathJSONString, expectedAttributePath);
-
-		attributePaths.put(actualAttributePath.getId(), actualAttributePath);
-
-		return actualAttributePath;
 	}
 }
