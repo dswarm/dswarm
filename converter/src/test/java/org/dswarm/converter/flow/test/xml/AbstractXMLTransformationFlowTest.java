@@ -28,10 +28,10 @@ import org.dswarm.persistence.service.internal.test.utils.InternalGDMGraphServic
 import org.dswarm.persistence.service.resource.ConfigurationService;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.service.resource.ResourceService;
-import org.dswarm.persistence.service.schema.ClaszService;
 import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
 import org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtils;
+import org.dswarm.persistence.service.schema.test.utils.ClaszServiceTestUtils;
 import org.dswarm.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.junit.Assert;
@@ -64,6 +64,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 	private final AttributeServiceTestUtils		attributeServiceTestUtils;
 	private final AttributePathServiceTestUtils	attributePathServiceTestUtils;
 	private final SchemaServiceTestUtils		schemaServiceTestUtils;
+	private final ClaszServiceTestUtils classServiceTestUtils;
 
 	public AbstractXMLTransformationFlowTest(final String taskJSONFileNameArg, final String expectedResultJSONFileNameArg, final String recordTagArg,
 			final String xmlNamespaceArg, final String exampleDataResourceFileNameArg) {
@@ -79,6 +80,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		attributeServiceTestUtils = new AttributeServiceTestUtils();
 		attributePathServiceTestUtils = new AttributePathServiceTestUtils();
 		schemaServiceTestUtils = new SchemaServiceTestUtils();
+		classServiceTestUtils = new ClaszServiceTestUtils();
 	}
 
 	@Test
@@ -284,9 +286,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 			attributeServiceTestUtils.deleteObject(attribute);
 		}
 
-		final ClaszService claszService = GuicedTest.injector.getInstance(ClaszService.class);
-
-		claszService.deleteObject(recordClass.getId());
+		classServiceTestUtils.deleteObject(recordClass);
 
 		configurationService.deleteObject(updatedConfiguration.getId());
 		resourceService.deleteObject(updatedResource.getId());

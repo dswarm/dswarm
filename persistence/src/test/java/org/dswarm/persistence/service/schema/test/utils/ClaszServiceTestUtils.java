@@ -16,6 +16,8 @@ public class ClaszServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<ClaszS
 	static {
 
 		ClaszServiceTestUtils.excludeClasses.add("http://purl.org/ontology/bibo/Document");
+		ClaszServiceTestUtils.excludeClasses.add("http://vocab.ub.uni-leipzig.de/bibrm/ContractItem");
+		ClaszServiceTestUtils.excludeClasses.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType");
 	}
 
 	public ClaszServiceTestUtils() {
@@ -46,7 +48,7 @@ public class ClaszServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<ClaszS
 
 		if (ClaszServiceTestUtils.excludeClasses.contains(object.getUri())) {
 
-			// don't delete attributes that should be kept
+			// don't delete classes that should be kept
 
 			return;
 		}
