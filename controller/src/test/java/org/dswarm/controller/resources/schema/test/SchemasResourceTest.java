@@ -141,7 +141,8 @@ public class SchemasResourceTest extends
 
 		contentSchemaJSON.put("key_attribute_paths", keyAttributePathsArray);
 
-		attributesResourceTestUtils.prepareAttribute("attribute8.json", attributes);
+		final Attribute rdfValue = attributesResourceTestUtils.getObject((long) 43);
+		attributes.put(rdfValue.getId(), rdfValue);
 		AttributePath valueAttributePath = attributePathsResourceTestUtils.prepareAttributePath("attribute_path8.json", attributePaths, attributes);
 
 		// manipulate value attribute path
