@@ -152,7 +152,7 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 
 					final Set<Attribute> attributesToDelete = attributePath.getAttributes();
 
-					if (attributePathsToDelete != null) {
+					if (attributesToDelete != null) {
 
 						for (final Attribute attribute : attributesToDelete) {
 

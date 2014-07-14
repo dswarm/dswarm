@@ -54,6 +54,54 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 		attributePath37.add("http://purl.org/dc/terms/contributor");
 		attributePath37.add("http://xmlns.com/foaf/0.1/givenName");
 		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath37);
+
+		final LinkedList<String> attributePath45 = Lists.newLinkedList();
+		attributePath45.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
+		attributePath45.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath45);
+
+		final LinkedList<String> attributePath46 = Lists.newLinkedList();
+		attributePath46.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
+		attributePath46.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr");
+		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath46);
+
+		final LinkedList<String> attributePath47 = Lists.newLinkedList();
+		attributePath47.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
+		attributePath47.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind");
+		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath47);
+
+		final LinkedList<String> attributePath48 = Lists.newLinkedList();
+		attributePath48.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
+		attributePath48.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#value");
+		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath48);
+
+		final LinkedList<String> attributePath49 = Lists.newLinkedList();
+		attributePath49.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
+		attributePath49.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns");
+		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath49);
+
+		final LinkedList<String> attributePath50 = Lists.newLinkedList();
+		attributePath50.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
+		attributePath50.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns");
+		attributePath50.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath50);
+
+		final LinkedList<String> attributePath51 = Lists.newLinkedList();
+		attributePath51.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
+		attributePath51.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns");
+		attributePath51.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#value");
+		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath51);
+
+		final LinkedList<String> attributePath52 = Lists.newLinkedList();
+		attributePath52.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
+		attributePath52.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf");
+		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath52);
+
+		final LinkedList<String> attributePath53 = Lists.newLinkedList();
+		attributePath53.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
+		attributePath53.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf");
+		attributePath53.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath53);
 	}
 
 	public AttributePathServiceTestUtils() {

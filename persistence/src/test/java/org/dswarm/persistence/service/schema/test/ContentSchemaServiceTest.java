@@ -34,7 +34,6 @@ public class ContentSchemaServiceTest extends IDBasicJPAServiceTest<ProxyContent
 	private final ObjectMapper					objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	private final Map<Long, Attribute>			attributes		= Maps.newLinkedHashMap();
-	private final Map<Long, AttributePath>		attributePaths	= Maps.newLinkedHashMap();
 
 	private final AttributeServiceTestUtils		attributeServiceTestUtils;
 	private final AttributePathServiceTestUtils	attributePathServiceTestUtils;
