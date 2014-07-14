@@ -2,17 +2,17 @@ package org.dswarm.persistence.service.schema;
 
 import javax.persistence.EntityManager;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.job.Filter;
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxyMappingAttributePathInstance;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+
 /**
  * A persistence service for {@link MappingAttributePathInstance}s.
- *
+ * 
  * @author tgaengler
  */
 public class MappingAttributePathInstanceService extends
@@ -20,7 +20,7 @@ public class MappingAttributePathInstanceService extends
 
 	/**
 	 * Creates a new mapping attribute path instance persistence service with the given entity manager provider.
-	 *
+	 * 
 	 * @param entityManagerProvider an entity manager provider
 	 */
 	@Inject

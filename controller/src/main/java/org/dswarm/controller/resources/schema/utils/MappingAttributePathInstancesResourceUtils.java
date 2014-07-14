@@ -4,10 +4,6 @@ import java.util.Set;
 
 import javax.inject.Provider;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Inject;
-
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.job.utils.FiltersResourceUtils;
 import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
@@ -15,6 +11,10 @@ import org.dswarm.persistence.model.job.Filter;
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxyMappingAttributePathInstance;
 import org.dswarm.persistence.service.schema.MappingAttributePathInstanceService;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.inject.Inject;
 
 /**
  * @author tgaengler

@@ -8,21 +8,20 @@ import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.TypedQuery;
 
+import org.dswarm.persistence.DMPPersistenceException;
+import org.dswarm.persistence.model.AdvancedDMPJPAObject;
+import org.dswarm.persistence.model.proxy.ProxyAdvancedDMPJPAObject;
+import org.dswarm.persistence.model.proxy.RetrievalType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;
 
-import org.dswarm.persistence.DMPPersistenceException;
-import org.dswarm.persistence.model.AdvancedDMPJPAObject;
-import org.dswarm.persistence.model.proxy.ProxyAdvancedDMPJPAObject;
-import org.dswarm.persistence.model.proxy.RetrievalType;
-
 /**
  * A generic persistence service implementation for {@link AdvancedDMPJPAObject}s, i.e., where the identifier will be set on
  * object creation.
- *
+ * 
  * @author tgaengler
  * @param <POJOCLASS> a concrete POJO class
  */
@@ -33,7 +32,7 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 
 	/**
 	 * Creates a new persistence service for the given concrete POJO class and the entity manager provider.
-	 *
+	 * 
 	 * @param clasz a concrete POJO class
 	 * @param entityManagerProvider an entity manager provider
 	 */
@@ -45,7 +44,7 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 
 	/**
 	 * Create and persist an object of the specific class with the given identifier.<br>
-	 *
+	 * 
 	 * @param uri the identifier of the object
 	 * @return the persisted object of the specific class
 	 */
@@ -59,7 +58,7 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 
 	/**
 	 * Create and persist an object of the specific class with the given identifier.<br>
-	 *
+	 * 
 	 * @param id the identifier of the object
 	 * @return the persisted object of the specific class
 	 */
@@ -174,7 +173,7 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 
 	/**
 	 * Creates a new object of the concrete POJO class with the given identifier.
-	 *
+	 * 
 	 * @param id an object identifier
 	 * @return the new instance of the concrete POJO class
 	 * @throws DMPPersistenceException if something went wrong at object creation

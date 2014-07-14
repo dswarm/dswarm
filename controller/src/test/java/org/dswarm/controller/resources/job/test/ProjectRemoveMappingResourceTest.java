@@ -130,7 +130,8 @@ public class ProjectRemoveMappingResourceTest extends
 	 * and saving the updated project (by putting the whole project JSON).<br />
 	 * <br />
 	 * It is intended that the mapping is removed from the project only, i.e. the relation between the project and the mapping is
-	 * removed but the mapping itself and all of its parts (like functions and filters) are still present in the database (to be used in other projects).
+	 * removed but the mapping itself and all of its parts (like functions and filters) are still present in the database (to be
+	 * used in other projects).
 	 * 
 	 * @throws Exception
 	 */
@@ -143,7 +144,7 @@ public class ProjectRemoveMappingResourceTest extends
 
 		final Set<Mapping> persistedMappings = modifiedProject.getMappings();
 		final Set<Mapping> reducedMappings = Sets.newHashSet();
-		final String mappingToBeRemovedFromProjectName ="first+last-to-contributor";
+		final String mappingToBeRemovedFromProjectName = "first+last-to-contributor";
 		Mapping mappingToBeRemovedFromProject = null;
 
 		for (final Mapping mapping : persistedMappings) {
@@ -157,8 +158,8 @@ public class ProjectRemoveMappingResourceTest extends
 			reducedMappings.add(mapping);
 		}
 
-		Assert.assertNotNull("could not find mapping to be removed \"" + mappingToBeRemovedFromProjectName + "\"" , mappingToBeRemovedFromProject);
-				
+		Assert.assertNotNull("could not find mapping to be removed \"" + mappingToBeRemovedFromProjectName + "\"", mappingToBeRemovedFromProject);
+
 		// re-inject mappings
 		modifiedProject.setMappings(reducedMappings);
 		final String modifiedProjectJSONString = objectMapper.writeValueAsString(modifiedProject);
@@ -201,7 +202,7 @@ public class ProjectRemoveMappingResourceTest extends
 		Assert.assertNotNull("mapping to be removed \"" + mappingToBeRemovedFromProjectName + "\" has no ID", mappingToBeRemovedFromProject.getId());
 		final Mapping persistedMappingToBeRemovedFromProject = mappingsResourceTestUtils.getObject(mappingToBeRemovedFromProject.getId());
 		mappingsResourceTestUtils.compareObjects(mappingToBeRemovedFromProject, persistedMappingToBeRemovedFromProject);
-		
+
 	}
 
 	@After

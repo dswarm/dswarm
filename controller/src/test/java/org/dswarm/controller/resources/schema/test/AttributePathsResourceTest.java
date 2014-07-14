@@ -4,15 +4,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import org.dswarm.controller.resources.schema.test.utils.AttributePathsResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.AttributesResourceTestUtils;
 import org.dswarm.controller.resources.test.BasicResourceTest;
@@ -22,6 +13,14 @@ import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
 import org.dswarm.persistence.service.schema.AttributePathService;
 import org.dswarm.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class AttributePathsResourceTest
 		extends

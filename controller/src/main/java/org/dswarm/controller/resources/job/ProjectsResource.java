@@ -12,13 +12,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.google.inject.servlet.RequestScoped;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
-
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.ExtendedBasicDMPResource;
 import org.dswarm.controller.resources.job.utils.ProjectsResourceUtils;
@@ -28,9 +21,16 @@ import org.dswarm.persistence.model.job.Project;
 import org.dswarm.persistence.model.job.proxy.ProxyProject;
 import org.dswarm.persistence.service.job.ProjectService;
 
+import com.google.inject.servlet.RequestScoped;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
+
 /**
  * A resource (controller service) for {@link Project}s.
- *
+ * 
  * @author tgaengler
  */
 @RequestScoped
@@ -41,7 +41,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectsResourceU
 	/**
 	 * Creates a new resource (controller service) for {@link Project}s with the provider of the project persistence service, the
 	 * object mapper and metrics registry.
-	 *
+	 * 
 	 * @param projectServiceProviderArg the project persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
@@ -54,7 +54,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectsResourceU
 
 	/**
 	 * This endpoint returns a project as JSON representation for the provided project identifier.
-	 *
+	 * 
 	 * @param id a project identifier
 	 * @return a JSON representation of a project
 	 */
@@ -76,7 +76,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectsResourceU
 	 * elements, e.g., mappings will be persisted as well) in the database. <br/>
 	 * Note: please utilise negative 'long' values for assigning a dummy id to an object. The same dummy id addresses the same
 	 * object for a certain domain model class.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one project
 	 * @return the persisted project as JSON representation
 	 * @throws DMPControllerException
@@ -95,7 +95,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectsResourceU
 
 	/**
 	 * This endpoint returns a list of all projects as JSON representation.
-	 *
+	 * 
 	 * @return a list of all projects as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -113,7 +113,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectsResourceU
 
 	/**
 	 * This endpoint consumes a project as JSON representation and updates this project in the database.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one project
 	 * @param id a project identifier
 	 * @return the updated project as JSON representation
@@ -136,7 +136,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectsResourceU
 
 	/**
 	 * This endpoint deletes a project that matches the given id.
-	 *
+	 * 
 	 * @param id a project identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
 	 *         went wrong

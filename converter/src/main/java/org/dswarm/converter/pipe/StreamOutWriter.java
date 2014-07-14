@@ -9,7 +9,7 @@ import org.culturegraph.mf.framework.annotations.Out;
 /**
  * Leaves the event stream untouched but writes it to stdout, for debugging. The {@link StreamReceiver} may be {@code null}. In
  * this case {@code StreamOutWriter} behaves as a sink, just logging.
- *
+ * 
  * @author phorn
  */
 @Description("dumps events on stdout")

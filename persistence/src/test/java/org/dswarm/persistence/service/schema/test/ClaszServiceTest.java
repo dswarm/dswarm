@@ -1,5 +1,11 @@
 package org.dswarm.persistence.service.schema.test;
 
+import org.dswarm.persistence.GuicedTest;
+import org.dswarm.persistence.model.schema.Clasz;
+import org.dswarm.persistence.model.schema.proxy.ProxyClasz;
+import org.dswarm.persistence.service.schema.ClaszService;
+import org.dswarm.persistence.service.schema.test.utils.ClaszServiceTestUtils;
+import org.dswarm.persistence.service.test.AdvancedJPAServiceTest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -7,13 +13,6 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.dswarm.persistence.GuicedTest;
-import org.dswarm.persistence.model.schema.Clasz;
-import org.dswarm.persistence.model.schema.proxy.ProxyClasz;
-import org.dswarm.persistence.service.schema.ClaszService;
-import org.dswarm.persistence.service.schema.test.utils.ClaszServiceTestUtils;
-import org.dswarm.persistence.service.test.AdvancedJPAServiceTest;
 
 public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, ClaszService> {
 

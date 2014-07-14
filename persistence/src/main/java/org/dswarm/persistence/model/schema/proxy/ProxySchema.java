@@ -8,7 +8,7 @@ import org.dswarm.persistence.model.schema.Schema;
 
 /**
  * A proxy class for {@link Schema}s.
- *
+ * 
  * @author tgaengler
  */
 @XmlRootElement
@@ -21,7 +21,7 @@ public class ProxySchema extends ProxyBasicDMPJPAObject<Schema> {
 
 	/**
 	 * Default constructor for handing over a freshly created schema, i.e., no updated or already existing schema.
-	 *
+	 * 
 	 * @param schemaArg a freshly created schema
 	 */
 	public ProxySchema(final Schema schemaArg) {
@@ -32,7 +32,7 @@ public class ProxySchema extends ProxyBasicDMPJPAObject<Schema> {
 	/**
 	 * Creates a new proxy with the given real schema and the type how the schema was processed by the schema persistence service,
 	 * e.g., {@link RetrievalType.CREATED}.
-	 *
+	 * 
 	 * @param schemaArg a schema that was processed by the schema persistence service
 	 * @param typeArg the type how this schema was processed by the schema persistence service
 	 */

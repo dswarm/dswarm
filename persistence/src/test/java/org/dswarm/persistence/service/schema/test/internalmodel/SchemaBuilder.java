@@ -2,6 +2,12 @@ package org.dswarm.persistence.service.schema.test.internalmodel;
 
 import java.util.Set;
 
+import org.dswarm.persistence.DMPPersistenceException;
+import org.dswarm.persistence.GuicedTest;
+import org.dswarm.persistence.model.schema.AttributePath;
+import org.dswarm.persistence.model.schema.Clasz;
+import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.service.schema.SchemaService;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,18 +15,11 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.dswarm.persistence.DMPPersistenceException;
-import org.dswarm.persistence.GuicedTest;
-import org.dswarm.persistence.model.schema.AttributePath;
-import org.dswarm.persistence.model.schema.Clasz;
-import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.service.schema.SchemaService;
-
 public abstract class SchemaBuilder extends GuicedTest {
 
 	private final ObjectMapper	objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
-	private static final Logger	LOG	= LoggerFactory.getLogger(SchemaBuilder.class);
-	protected String	prefixPaths	= "";
+	private static final Logger	LOG				= LoggerFactory.getLogger(SchemaBuilder.class);
+	protected String			prefixPaths		= "";
 
 	public SchemaBuilder() {
 		super();
@@ -96,7 +95,7 @@ public abstract class SchemaBuilder extends GuicedTest {
 			e.printStackTrace();
 		}
 
-		LOG.debug("schema json: " + json);
+		SchemaBuilder.LOG.debug("schema json: " + json);
 
 		return updatedSchema;
 	}

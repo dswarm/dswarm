@@ -16,7 +16,7 @@ import com.google.common.collect.Maps;
  * class then constructs the flat structure produced by Metamorph and emits them in the proper hierarchy. So, one can use 'deep'
  * output names in Metamorh (e.g. &lt;data name="foo.bar%gt;), that pipe the result through an instance of StreamUnflattener and
  * continue to work with the desired hierarchical structure.
- *
+ * 
  * @author Paul Horn <phorn@avantgarde-labs.de>
  */
 public class StreamUnflattener extends DefaultStreamPipe<StreamReceiver> {
@@ -58,7 +58,7 @@ public class StreamUnflattener extends DefaultStreamPipe<StreamReceiver> {
 
 	/**
 	 * Constructs an instance with a given <code>initialDiscard</code> and <code>entityMarker</code>
-	 *
+	 * 
 	 * @param initialDiscard use this <code>initialDiscard</code>
 	 * @param entityMarker use this <code>entityMarker</code>
 	 */
@@ -69,7 +69,7 @@ public class StreamUnflattener extends DefaultStreamPipe<StreamReceiver> {
 
 	/**
 	 * Constructs an instance with a given <code>initialDiscard</code>
-	 *
+	 * 
 	 * @param initialDiscard use this <code>initialDiscard</code>
 	 */
 	public StreamUnflattener(final String initialDiscard) {
@@ -85,7 +85,7 @@ public class StreamUnflattener extends DefaultStreamPipe<StreamReceiver> {
 
 	/**
 	 * Forwards <code>startRecord</code> and discards any dangling entity trees
-	 *
+	 * 
 	 * @param identifier the record identifier
 	 */
 	@Override
@@ -115,7 +115,7 @@ public class StreamUnflattener extends DefaultStreamPipe<StreamReceiver> {
 
 	/**
 	 * Since StreamUnflattener expects a completely flat stream, startEntity is not defined.
-	 *
+	 * 
 	 * @param name the entity name
 	 */
 	@Override
@@ -135,7 +135,7 @@ public class StreamUnflattener extends DefaultStreamPipe<StreamReceiver> {
 	 * Forwards the literal and emits some entity levels, if necessary. The parameter name is split on {@link #getEntityMarker()}.
 	 * The resulting array is interpreted as a path into a tree and according to the current state, some new nodes of this tree
 	 * will be opened by calling <code>startEntity</code> and <code>endEntity</code>.
-	 *
+	 * 
 	 * @param name the literal name
 	 * @param value the literal value
 	 */

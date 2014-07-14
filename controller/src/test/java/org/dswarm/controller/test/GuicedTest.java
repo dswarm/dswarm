@@ -1,5 +1,7 @@
 package org.dswarm.controller.test;
 
+import org.dswarm.controller.guice.DMPModule;
+import org.dswarm.persistence.PersistenceModule;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
@@ -14,9 +16,6 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 import com.google.inject.persist.PersistService;
 import com.google.inject.persist.jpa.JpaPersistModule;
-
-import org.dswarm.controller.guice.DMPModule;
-import org.dswarm.persistence.PersistenceModule;
 
 public class GuicedTest {
 
@@ -36,7 +35,7 @@ public class GuicedTest {
 
 			/**
 			 * Provides the {@link ObjectMapper} instance for JSON de-/serialisation.
-			 *
+			 * 
 			 * @return a {@link ObjectMapper} instance as singleton
 			 */
 			@Provides

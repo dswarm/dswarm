@@ -4,19 +4,6 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.base.Optional;
-import com.google.common.collect.AbstractIterator;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.Singleton;
-
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.Model;
@@ -30,11 +17,23 @@ import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.service.resource.ResourceService;
 import org.dswarm.persistence.service.schema.SchemaService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Optional;
+import com.google.common.collect.AbstractIterator;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.Singleton;
 
 /**
  * A utility class for working with data ({@link Model}) and {@link Schema} of a {@link DataModel} (and other related parts of a
  * data model, .e.g, {@link Resource}s).
- *
+ * 
  * @author phorn
  * @author tgaengler
  */
@@ -61,7 +60,7 @@ public class DataModelUtil {
 
 	/**
 	 * Gets the data of the given data model.
-	 *
+	 * 
 	 * @param dataModelId the identifier of the data model.
 	 * @return the data of the given data model
 	 */
@@ -71,7 +70,7 @@ public class DataModelUtil {
 
 	/**
 	 * Gets the data of the given data model and maximum in the given amount.
-	 *
+	 * 
 	 * @param dataModelId the identifer of the data model
 	 * @param atMost the number of records that should be retrieved
 	 * @return the data of the given data model
@@ -176,7 +175,7 @@ public class DataModelUtil {
 
 	/**
 	 * Gets the resource for the given resource identifier.
-	 *
+	 * 
 	 * @param resourceId a resource identifier
 	 * @return (optional) the matched resource
 	 */
@@ -190,7 +189,7 @@ public class DataModelUtil {
 
 	/**
 	 * Gets the data model for the given data model identifier.
-	 *
+	 * 
 	 * @param dataModelId a data model identifier
 	 * @return (optional) the matched data model
 	 */
@@ -204,7 +203,7 @@ public class DataModelUtil {
 
 	/**
 	 * Gets the configuration for the given resource identifier and configuration identifier
-	 *
+	 * 
 	 * @param resourceId a resource identifier
 	 * @param configurationId a configuration identifier
 	 * @return (optional) the matched configuration
@@ -225,7 +224,7 @@ public class DataModelUtil {
 
 	/**
 	 * Gets the related configuration for the given data model identifier.
-	 *
+	 * 
 	 * @param dataModelId a data model identifier
 	 * @return (optional) the matched configuration
 	 */
@@ -245,7 +244,7 @@ public class DataModelUtil {
 
 	/**
 	 * Deletes the resource for the given resource identifier.
-	 *
+	 * 
 	 * @param resourceId a resource identifier
 	 */
 	public void deleteResource(final long resourceId) {

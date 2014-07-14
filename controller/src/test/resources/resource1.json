@@ -1,1 +1,23 @@
-{"id":2,"name":"test_csv.csv","type":"FILE","description":"blubblub","resource_attributes":{"filesize":766},"configurations":[{"id":1,"name":"foo","description":"bar","parameters":{"encoding":"UTF-8", "escape_character" : "\\", "quote_character" : "\"", "column_delimiter" : ";", "row_delimiter" : "\n"}}]}
+{
+    "id": 2,
+    "name": "test_csv.csv",
+    "type": "FILE",
+    "description": "blubblub",
+    "resource_attributes": {
+        "path": "dummy/path/to/test_csv.csv",
+		"filesize": 766,
+		"filetype": "text/csv"
+    },
+    "configurations": [{
+        "id": 1,
+        "name": "foo",
+        "description": "bar",
+        "parameters": {
+            "encoding": "UTF-8",
+            "escape_character": "\\",
+            "quote_character": "\"",
+            "column_delimiter": ";",
+            "row_delimiter": "\n"
+        }
+    }]
+}

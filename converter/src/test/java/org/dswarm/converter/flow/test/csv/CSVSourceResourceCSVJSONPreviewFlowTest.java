@@ -5,6 +5,12 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
+import org.dswarm.converter.DMPConverterException;
+import org.dswarm.converter.flow.CSVResourceFlowFactory;
+import org.dswarm.converter.flow.CSVSourceResourceCSVJSONPreviewFlow;
+import org.dswarm.persistence.model.resource.Configuration;
+import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,13 +19,6 @@ import com.fasterxml.jackson.databind.node.IntNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
-
-import org.dswarm.converter.DMPConverterException;
-import org.dswarm.converter.flow.CSVResourceFlowFactory;
-import org.dswarm.converter.flow.CSVSourceResourceCSVJSONPreviewFlow;
-import org.dswarm.persistence.model.resource.Configuration;
-import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * @author sreichert
@@ -69,7 +68,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * e.g.<br />
 	 * 1;2;3 <br />
 	 * a;b;"c;d"<br />
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -87,7 +86,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * e.g.<br />
 	 * 1;2;3<br />
 	 * a;b;""<br />
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -105,7 +104,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * e.g.<br />
 	 * 1;2;3<br />
 	 * a;b;" "<br />
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -123,7 +122,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * e.g.<br />
 	 * "1"; "2";"3"<br />
 	 * "a";"b";"c"<br />
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -141,7 +140,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * e.g.<br />
 	 * "1";"2" ;"3"<br />
 	 * "a";"b";"c"<br />
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -160,7 +159,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * 1;2;3<br />
 	 * a;b;c<br />
 	 * <br />
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -179,7 +178,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * 1;2;3<br />
 	 * <br />
 	 * a;b;c<br />
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -197,7 +196,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * e.g.<br />
 	 * 1;2;3<br />
 	 * a;b<br />
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Test(expected = DMPConverterException.class)
@@ -215,7 +214,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * e.g.<br />
 	 * 1;2;3 <br />
 	 * a;b;c;d<br />
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Test(expected = DMPConverterException.class)
@@ -233,7 +232,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * e.g.<br />
 	 * 1;2;3<br />
 	 * a;b;\"c1\" c2<br />
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -255,7 +254,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * <br />
 	 * In case this test fails, check whether .gitattributes contains the following line:<br />
 	 * *_CRLF.csv text eol=crlf
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -274,7 +273,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * 1;2;3<br />
 	 * a;b;c1 EOL<br />
 	 * c2<br />
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Test(expected = DMPConverterException.class)
@@ -293,7 +292,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * 1;2;3<br />
 	 * a;b EOL<br />
 	 * ;c<br />
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Test(expected = DMPConverterException.class)
@@ -311,7 +310,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * e.g.<br />
 	 * 1;2;3<br />
 	 * a;b;ʤ<br />
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -331,7 +330,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * csv-comment line 2<br />
 	 * 1;2;3<br />
 	 * a;b;c<br />
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -362,7 +361,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * a;b;c<br />
 	 * d;e;f<br />
 	 * g;h;i<br />
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -393,7 +392,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * a;b;c<br />
 	 * d;e;f<br />
 	 * g;h;i<br />
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Test

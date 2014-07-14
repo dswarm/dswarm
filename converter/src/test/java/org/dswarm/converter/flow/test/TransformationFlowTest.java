@@ -13,23 +13,6 @@ import org.culturegraph.mf.stream.converter.JsonEncoder;
 import org.culturegraph.mf.stream.sink.ObjectJavaIoWriter;
 import org.culturegraph.mf.stream.source.FileOpener;
 import org.culturegraph.mf.types.Triple;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matchers;
-import org.junit.Assert;
-import org.junit.Test;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
-import com.google.common.base.Charsets;
-import com.google.common.base.Optional;
-import com.google.common.collect.AbstractIterator;
-import com.google.common.collect.Maps;
-import com.google.common.io.Resources;
-import com.google.inject.Provider;
-
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.CSVSourceResourceTriplesFlow;
 import org.dswarm.converter.flow.TransformationFlow;
@@ -63,6 +46,22 @@ import org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtil
 import org.dswarm.persistence.service.schema.test.utils.ClaszServiceTestUtils;
 import org.dswarm.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.Matchers;
+import org.junit.Assert;
+import org.junit.Test;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.TextNode;
+import com.google.common.base.Charsets;
+import com.google.common.base.Optional;
+import com.google.common.collect.AbstractIterator;
+import com.google.common.collect.Maps;
+import com.google.common.io.Resources;
+import com.google.inject.Provider;
 
 public class TransformationFlowTest extends GuicedTest {
 

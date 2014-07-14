@@ -4,21 +4,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import ch.qos.logback.classic.LoggerContext;
-
-import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.logback.InstrumentedAppender;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.google.common.io.Resources;
-import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
-import com.google.inject.Scopes;
-import com.google.inject.Singleton;
-import com.google.inject.name.Names;
-
 import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.job.utils.TransformationDeserializer;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
@@ -37,10 +22,24 @@ import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.schema.ClaszService;
 import org.dswarm.persistence.service.schema.MappingAttributePathInstanceService;
 import org.dswarm.persistence.service.schema.SchemaService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.LoggerContext;
+
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.logback.InstrumentedAppender;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.google.common.io.Resources;
+import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+import com.google.inject.Scopes;
+import com.google.inject.Singleton;
+import com.google.inject.name.Names;
 
 /**
  * The Guice configuration of the persistence module. Interface/classes that are registered here can be utilised for injection.
- *
+ * 
  * @author phorn
  * @author tgaengler
  */
@@ -89,7 +88,7 @@ public class PersistenceModule extends AbstractModule {
 
 	/**
 	 * Provides the metric registry to register objects for metric statistics.
-	 *
+	 * 
 	 * @return a {@link MetricRegistry} instance as singleton
 	 */
 	@Provides

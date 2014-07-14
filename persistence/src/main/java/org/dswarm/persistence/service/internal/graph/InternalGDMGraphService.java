@@ -13,25 +13,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.glassfish.jersey.media.multipart.MultiPart;
-import org.glassfish.jersey.media.multipart.MultiPartFeature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.Singleton;
-import com.google.inject.name.Named;
-
 import org.dswarm.graph.json.Resource;
 import org.dswarm.graph.json.util.Util;
 import org.dswarm.persistence.DMPPersistenceException;
@@ -58,11 +39,29 @@ import org.dswarm.persistence.service.schema.ClaszService;
 import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.dswarm.persistence.util.GDMUtil;
+import org.glassfish.jersey.media.multipart.MultiPart;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 
 /**
  * A internal model service implementation for RDF triples.<br/>
  * Currently, the Neo4j database is utilised.
- *
+ * 
  * @author tgaengler
  */
 @Singleton
@@ -101,7 +100,7 @@ public class InternalGDMGraphService implements InternalModelService {
 	/**
 	 * /** Creates a new internal triple service with the given data model persistence service, schema persistence service, class
 	 * persistence service and the endpoint to access the graph database.
-	 *
+	 * 
 	 * @param dataModelService the data model persistence service
 	 * @param schemaService the schema persistence service
 	 * @param classService the class persistence service
@@ -347,7 +346,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 	/**
 	 * Adds the record class to the schema of the data model.
-	 *
+	 * 
 	 * @param dataModelId the identifier of the data model
 	 * @param recordClassUri the identifier of the record class
 	 * @throws DMPPersistenceException

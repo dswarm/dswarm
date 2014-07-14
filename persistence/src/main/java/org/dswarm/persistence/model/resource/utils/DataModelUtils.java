@@ -5,20 +5,19 @@ import java.net.URI;
 import java.util.Map;
 import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.JsonNode;
-
 import org.dswarm.graph.json.Predicate;
 import org.dswarm.graph.json.ResourceNode;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.utils.ExtendedBasicDMPJPAObjectUtils;
 import org.dswarm.persistence.util.GDMUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * A utility class for {@link DataModel}s and related entities.
- *
+ * 
  * @author tgaengler
  */
 public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataModel> {

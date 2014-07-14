@@ -3,11 +3,6 @@ package org.dswarm.persistence.service.schema.test.utils;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Assert;
-
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
@@ -16,6 +11,10 @@ import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
 import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.service.test.utils.BasicDMPJPAServiceTestUtils;
+import org.junit.Assert;
+
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaService, ProxySchema, Schema> {
 
@@ -31,12 +30,48 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 		claszesResourceTestUtils = new ClaszServiceTestUtils();
 	}
 
+	/**
+	 * {@inheritDoc} <br />
+	 * Assert that both {@link Schema}ta have either no or equal attribute paths, see
+	 * {@link AttributePathServiceTestUtils#compareObjects(Set, Map)} for details.<br />
+	 * Assert that both {@link Schema}ta have either no or equal record classes, see
+	 * {@link ClaszServiceTestUtils#compareObjects(Clasz, Clasz)} for details.<br />
+	 */
 	@Override
-	public void compareObjects(final Schema expectedObject, final Schema actualObject) {
+	public void compareObjects(final Schema expectedSchema, final Schema actualSchema) {
 
-		super.compareObjects(expectedObject, actualObject);
+		super.compareObjects(expectedSchema, actualSchema);
 
-		compareSchemas(expectedObject, actualObject);
+		if (expectedSchema.getAttributePaths() == null || expectedSchema.getAttributePaths().isEmpty()) {
+
+			final boolean actualSchemaHasNoAttributePaths = (actualSchema.getAttributePaths() == null || actualSchema.getAttributePaths().isEmpty());
+			Assert.assertTrue("the actual schema '" + actualSchema.getId() + "' shouldn't have attribute paths", actualSchemaHasNoAttributePaths);
+
+		} else { // !null && !empty
+
+			final Set<AttributePath> actualAttributePaths = actualSchema.getAttributePaths();
+
+			Assert.assertNotNull("attribute paths of actual schema '" + actualSchema.getId() + "' shouldn't be null", actualAttributePaths);
+			Assert.assertFalse("attribute paths of actual schema '" + actualSchema.getId() + "' shouldn't be empty", actualAttributePaths.isEmpty());
+
+			final Map<Long, AttributePath> actualAttributePathsMap = Maps.newHashMap();
+
+			for (final AttributePath actualAttributePath : actualAttributePaths) {
+
+				actualAttributePathsMap.put(actualAttributePath.getId(), actualAttributePath);
+			}
+
+			attributePathsResourceTestUtils.compareObjects(expectedSchema.getAttributePaths(), actualAttributePathsMap);
+		}
+
+		if (expectedSchema.getRecordClass() == null) {
+
+			Assert.assertNull("the actual schema '" + actualSchema.getId() + "' shouldn't have a record class", actualSchema.getRecordClass());
+
+		} else {
+
+			claszesResourceTestUtils.compareObjects(expectedSchema.getRecordClass(), actualSchema.getRecordClass());
+		}
 	}
 
 	public Schema createSchema(final String name, final Set<AttributePath> attributePaths, final Clasz recordClass) throws Exception {
@@ -96,31 +131,6 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 
 		// update output data model schema to persist possible changes
 		jpaService.updateObjectTransactional(outputDataModelSchema);
-	}
-
-	private void compareSchemas(final Schema expectedSchema, final Schema actualSchema) {
-
-		if (expectedSchema.getAttributePaths() != null && !expectedSchema.getAttributePaths().isEmpty()) {
-
-			final Set<AttributePath> actualAttributePaths = actualSchema.getAttributePaths();
-
-			Assert.assertNotNull("attribute paths of actual schema '" + actualSchema.getId() + "' shouldn't be null", actualAttributePaths);
-			Assert.assertFalse("attribute paths of actual schema '" + actualSchema.getId() + "' shouldn't be empty", actualAttributePaths.isEmpty());
-
-			final Map<Long, AttributePath> actualAttributePathsMap = Maps.newHashMap();
-
-			for (final AttributePath actualAttributePath : actualAttributePaths) {
-
-				actualAttributePathsMap.put(actualAttributePath.getId(), actualAttributePath);
-			}
-
-			attributePathsResourceTestUtils.compareObjects(expectedSchema.getAttributePaths(), actualAttributePathsMap);
-		}
-
-		if (expectedSchema.getRecordClass() != null) {
-
-			claszesResourceTestUtils.compareObjects(expectedSchema.getRecordClass(), actualSchema.getRecordClass());
-		}
 	}
 
 	/**

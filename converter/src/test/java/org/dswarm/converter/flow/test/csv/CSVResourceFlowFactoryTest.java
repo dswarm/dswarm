@@ -4,16 +4,15 @@ import java.io.Reader;
 
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
-import org.junit.Test;
-
-import com.fasterxml.jackson.databind.node.TextNode;
-
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.flow.AbstractCSVResourceFlow;
 import org.dswarm.converter.flow.CSVResourceFlowFactory;
 import org.dswarm.converter.mf.stream.reader.CsvReader;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
+import org.junit.Test;
+
+import com.fasterxml.jackson.databind.node.TextNode;
 
 public class CSVResourceFlowFactoryTest {
 

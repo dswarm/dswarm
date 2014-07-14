@@ -2,7 +2,7 @@ package org.dswarm.persistence.service;
 
 /**
  * A factory for internal model service.
- *
+ * 
  * @author tgaengler
  */
 public interface InternalModelServiceFactory {
@@ -11,7 +11,7 @@ public interface InternalModelServiceFactory {
 
 	/**
 	 * Gets the GDM graph internal model service implementation.
-	 *
+	 * 
 	 * @return the GDM graph internal model service implementation
 	 */
 	/* @Named("Triple") */InternalModelService getInternalGDMGraphService();

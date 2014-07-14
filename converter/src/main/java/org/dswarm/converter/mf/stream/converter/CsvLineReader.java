@@ -15,16 +15,15 @@ import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
+import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.PeekingIterator;
 
-import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
-
 /**
  * Processes input from a reader line by line. Inspired by org.culturegraph.mf.stream.converter.LineReader
- *
+ * 
  * @author tgaengler
  * @author phorn
  */

@@ -11,7 +11,7 @@ import com.google.common.collect.LinkedListMultimap;
 /**
  * Collapse several literals of the same name within on entity in such a way, that a following
  * {@link org.culturegraph.mf.stream.converter.JsonEncoder} will produce correct results.
- *
+ * 
  * @author Paul Horn <phorn@avantgarde-labs.de>
  */
 public class StreamJsonCollapser extends DefaultStreamPipe<StreamReceiver> {
@@ -52,7 +52,7 @@ public class StreamJsonCollapser extends DefaultStreamPipe<StreamReceiver> {
 	 * {@link LinkedListMultimap}. Subsequent calls to {@link StreamJsonCollapser#endEntity()} or
 	 * {@link StreamJsonCollapser#endRecord()} will flush the buffered value. If some name appeared multiple times, it will result
 	 * in a new array entity.
-	 *
+	 * 
 	 * @param name literal name (may appear multiple times)
 	 * @param value literal value
 	 */

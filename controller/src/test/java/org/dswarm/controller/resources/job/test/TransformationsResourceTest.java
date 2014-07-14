@@ -3,12 +3,6 @@ package org.dswarm.controller.resources.job.test;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.junit.After;
-import org.junit.Assert;
-
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import org.dswarm.controller.resources.job.test.utils.ComponentsResourceTestUtils;
 import org.dswarm.controller.resources.job.test.utils.FunctionsResourceTestUtils;
 import org.dswarm.controller.resources.job.test.utils.TransformationsResourceTestUtils;
@@ -20,6 +14,11 @@ import org.dswarm.persistence.model.job.proxy.ProxyTransformation;
 import org.dswarm.persistence.service.job.TransformationService;
 import org.dswarm.persistence.service.job.test.utils.TransformationServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
+import org.junit.After;
+import org.junit.Assert;
+
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class TransformationsResourceTest
 		extends

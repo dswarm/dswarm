@@ -3,9 +3,7 @@ package org.dswarm.persistence.service.schema.test.internalmodel;
 import org.dswarm.persistence.model.schema.NameSpacePrefixRegistry;
 import org.dswarm.persistence.model.schema.Schema;
 
-
-public class BiboDocumentSchemaBuilder extends
-SchemaBuilder {
+public class BiboDocumentSchemaBuilder extends SchemaBuilder {
 
 	@Override
 	public Schema buildSchema() {
@@ -68,7 +66,8 @@ SchemaBuilder {
 		// store all parsed paths as an overview
 		prefixPaths = builder.getPrefixPaths();
 
-		final Schema persistentSchema = createSchema("bibo:Document-Schema (KIM-Titeldaten)", tempSchema.getAttributePaths(), tempSchema.getRecordClass());
+		final Schema persistentSchema = createSchema("bibo:Document-Schema (KIM-Titeldaten)", tempSchema.getAttributePaths(),
+				tempSchema.getRecordClass());
 
 		return persistentSchema;
 	}

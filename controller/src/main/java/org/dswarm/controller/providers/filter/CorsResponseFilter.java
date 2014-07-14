@@ -13,7 +13,7 @@ import com.google.common.net.HttpHeaders;
 
 /**
  * A filter for providing the CORS headers of a HTTP response.
- *
+ * 
  * @author phorn
  */
 @Priority(Priorities.HEADER_DECORATOR)

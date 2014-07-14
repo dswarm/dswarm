@@ -5,19 +5,19 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.dswarm.persistence.model.resource.Configuration;
+import org.dswarm.persistence.model.resource.Resource;
+import org.dswarm.persistence.model.resource.ResourceType;
+import org.dswarm.persistence.model.resource.proxy.ProxyResource;
+import org.dswarm.persistence.service.resource.ResourceService;
+import org.dswarm.persistence.service.test.utils.BasicJPAServiceTestUtils;
+import org.dswarm.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestUtils;
 import org.junit.Assert;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
-import org.dswarm.persistence.model.resource.Configuration;
-import org.dswarm.persistence.model.resource.Resource;
-import org.dswarm.persistence.model.resource.ResourceType;
-import org.dswarm.persistence.model.resource.proxy.ProxyResource;
-import org.dswarm.persistence.service.resource.ResourceService;
-import org.dswarm.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestUtils;
 
 public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils<ResourceService, ProxyResource, Resource> {
 
@@ -30,12 +30,92 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 		configurationsResourceTestUtils = new ConfigurationServiceTestUtils();
 	}
 
+	/**
+	 * {@inheritDoc} <br />
+	 * Assert that both {@link Resource}s have either no attributes or equal collections, i.e. the same number of attributes and
+	 * the same pairs of keys and values; the attributes with keys 'path' and 'filesize' are not part of the comparison. <br />
+	 * Assert that both {@link Resource}s have either no or equal configurations, see
+	 * {@link BasicJPAServiceTestUtils#compareObjects(Set, Map)} for details.
+	 */
 	@Override
-	public void compareObjects(final Resource expectedObject, final Resource actualObject) {
+	public void compareObjects(final Resource expectedResource, final Resource actualResource) {
 
-		super.compareObjects(expectedObject, actualObject);
+		super.compareObjects(expectedResource, actualResource);
 
-		compareResources(expectedObject, actualObject);
+		final ObjectNode expectedAttributes = expectedResource.getAttributes();
+		final ObjectNode actualAttributes = actualResource.getAttributes();
+
+		// compare Attributes
+		if (expectedAttributes == null) {
+
+			Assert.assertNull("actual resource shouldn't have attributes", actualAttributes);
+
+		} else {
+
+			Assert.assertNotNull("actual attributes shouldn't be null", actualAttributes);
+
+			Assert.assertEquals("different number of attributes.", expectedAttributes.size(), actualAttributes.size());
+
+			final Iterator<Entry<String, JsonNode>> expectedAttributeEntriesIter = expectedAttributes.fields();
+
+			while (expectedAttributeEntriesIter.hasNext()) {
+
+				final Entry<String, JsonNode> expectedAttributeEntry = expectedAttributeEntriesIter.next();
+
+				final String expectedAttributeKey = expectedAttributeEntry.getKey();
+
+				final JsonNode actualAttributeValueNode = actualAttributes.get(expectedAttributeKey);
+
+				if (expectedAttributeKey.equals("path")) {
+
+					Assert.assertNotNull("the actual resource should have a path attribute", actualAttributeValueNode);
+
+					// skip comparison of attribute values
+					continue;
+				}
+				if (expectedAttributeKey.equals("filesize")) {
+
+					Assert.assertNotNull("the actual resource should have a filesize attribute", actualAttributeValueNode);
+
+					// skip comparison of attribute values
+					continue;
+				}
+
+				Assert.assertNotNull("attribute '" + expectedAttributeKey + "' is not part of the actual resource's attributes",
+						actualAttributeValueNode);
+
+				final String expectedAttributeValue = expectedAttributeEntry.getValue().asText();
+
+				Assert.assertEquals("the attribute values of '" + expectedAttributeKey + "' are not equal. ", expectedAttributeValue,
+						actualAttributeValueNode.asText());
+
+			}
+		}
+
+		// compare configurations
+		if (expectedResource.getConfigurations() == null || expectedResource.getConfigurations().isEmpty()) {
+
+			final boolean actualResourceHasNoConfiguration = (actualResource.getConfigurations() == null || actualResource.getConfigurations()
+					.isEmpty());
+			Assert.assertTrue("the actual resource shouldn't have any configurations", actualResourceHasNoConfiguration);
+
+		} else { // !null && !empty
+
+			final Set<Configuration> actualConfigurations = actualResource.getConfigurations();
+
+			Assert.assertNotNull("configurations of actual resource '" + actualResource.getId() + "' shouldn't be null", actualConfigurations);
+			Assert.assertFalse("configurations of actual resource '" + actualResource.getId() + "' shouldn't be empty",
+					actualConfigurations.isEmpty());
+
+			final Map<Long, Configuration> actualConfigurationsMap = Maps.newHashMap();
+
+			for (final Configuration actualConfiguration : actualConfigurations) {
+
+				actualConfigurationsMap.put(actualConfiguration.getId(), actualConfiguration);
+			}
+
+			configurationsResourceTestUtils.compareObjects(expectedResource.getConfigurations(), actualConfigurationsMap);
+		}
 	}
 
 	public Resource createResource(final String name, final String description, final ResourceType resourceType, final ObjectNode attributes,
@@ -49,7 +129,11 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 		resource.setAttributes(attributes);
 		resource.setConfigurations(configurations);
 
-		final Resource updatedResource = createObject(resource, resource);
+		// clone resource since it gets it configuration removed while beeing prepared for creation (update)
+		final String resourceJSONString = objectMapper.writeValueAsString(resource);
+		final Resource expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
+
+		final Resource updatedResource = createObject(resource, expectedResource);
 
 		Assert.assertNotNull("updated resource shouldn't be null", updatedResource);
 		Assert.assertNotNull("updated resource id shouldn't be null", updatedResource.getId());
@@ -59,7 +143,7 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 
 	/**
 	 * note: legacy
-	 *
+	 * 
 	 * @param resource
 	 * @param updatedResource
 	 * @param attributeKey
@@ -81,7 +165,7 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 
 	/**
 	 * note: legacy
-	 *
+	 * 
 	 * @param resource
 	 * @param updatedResource
 	 * @param parameterKey
@@ -102,7 +186,7 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 
 	/**
 	 * note: legacy
-	 *
+	 * 
 	 * @param resource
 	 * @param updatedResource
 	 */
@@ -112,63 +196,6 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 		Assert.assertEquals("the configurations of the resource are not equal", resource.getConfigurations(), updatedResource.getConfigurations());
 		Assert.assertEquals("the configurations' size of the resource are not equal", resource.getConfigurations().size(), updatedResource
 				.getConfigurations().size());
-	}
-
-	private void compareResources(final Resource expectedResource, final Resource actualResource) {
-
-		if (expectedResource.getAttributes() != null) {
-
-			Assert.assertNotNull("attributes are null", actualResource.getAttributes());
-
-			final ObjectNode attributes = expectedResource.getAttributes();
-
-			final Iterator<Entry<String, JsonNode>> attributeEntriesIter = attributes.fields();
-
-			final ObjectNode responseAttributes = actualResource.getAttributes();
-
-			Assert.assertNotNull("response attributes shouldn't be null", responseAttributes);
-
-			while (attributeEntriesIter.hasNext()) {
-
-				final Entry<String, JsonNode> attributeEntry = attributeEntriesIter.next();
-
-				final String attributeKey = attributeEntry.getKey();
-
-				if (attributeKey.equals("path") || attributeKey.equals("filesize")) {
-
-					// skip attribute
-
-					continue;
-				}
-
-				final JsonNode attributeValueNode = responseAttributes.get(attributeKey);
-
-				Assert.assertNotNull("attribute '" + attributeKey + "' is not part of the response resource attributes", attributeValueNode);
-
-				final String attributeValue = attributeEntry.getValue().asText();
-
-				Assert.assertTrue("the attribute values of '" + attributeKey + "' are not equal. expected = '" + attributeValue + "'; was = '"
-						+ attributeValueNode.asText() + "'", attributeValue.equals(attributeValueNode.asText()));
-			}
-		}
-
-		if (expectedResource.getConfigurations() != null && !expectedResource.getConfigurations().isEmpty()) {
-
-			final Set<Configuration> actualConfigurations = actualResource.getConfigurations();
-
-			Assert.assertNotNull("configurations of actual resource '" + actualResource.getId() + "' shouldn't be null", actualConfigurations);
-			Assert.assertFalse("configurations of actual resource '" + actualResource.getId() + "' shouldn't be empty",
-					actualConfigurations.isEmpty());
-
-			final Map<Long, Configuration> actualConfigurationsMap = Maps.newHashMap();
-
-			for (final Configuration actualConfiguration : actualConfigurations) {
-
-				actualConfigurationsMap.put(actualConfiguration.getId(), actualConfiguration);
-			}
-
-			configurationsResourceTestUtils.compareObjects(expectedResource.getConfigurations(), actualConfigurationsMap);
-		}
 	}
 
 	/**

@@ -8,6 +8,7 @@ import java.util.concurrent.CountDownLatch;
 import javax.servlet.DispatcherType;
 import javax.ws.rs.core.UriBuilder;
 
+import org.dswarm.controller.servlet.DMPInjector;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.StaticHttpHandler;
 import org.glassfish.grizzly.servlet.FilterRegistration;
@@ -22,12 +23,10 @@ import org.slf4j.MarkerFactory;
 
 import com.google.inject.servlet.GuiceFilter;
 
-import org.dswarm.controller.servlet.DMPInjector;
-
 /**
  * The embedded web server for the backend API.<br/>
  * note: currently, Grizzly is utilised
- *
+ * 
  * @author phorn
  * @author tgaengler
  */
@@ -73,7 +72,7 @@ public class EmbeddedServer {
 
 	/**
 	 * Starts the backend web server.
-	 *
+	 * 
 	 * @return the backend web server.
 	 * @throws IOException
 	 */
@@ -84,7 +83,7 @@ public class EmbeddedServer {
 
 	/**
 	 * Starts the backend web server.
-	 *
+	 * 
 	 * @param skipStart a flag that indicates, whether the backend web server should be really started or not
 	 * @return the backend web server
 	 * @throws IOException
@@ -132,7 +131,7 @@ public class EmbeddedServer {
 
 	/**
 	 * Gets the base URI of the backend API.
-	 *
+	 * 
 	 * @return the base URI
 	 */
 	public URI getBaseUri() {
@@ -142,7 +141,7 @@ public class EmbeddedServer {
 
 	/**
 	 * Gets the hostname or ip of the backend web server.
-	 *
+	 * 
 	 * @return host name or ip of the backend web server
 	 */
 	private String getHost() {
@@ -159,7 +158,7 @@ public class EmbeddedServer {
 
 	/**
 	 * Gets the context path of the backend API at the backend webserver.
-	 *
+	 * 
 	 * @return the context path of the backend API at the backend webserver
 	 */
 	private String getContextPath() {
@@ -182,7 +181,7 @@ public class EmbeddedServer {
 
 	/**
 	 * Gets the port of the backend web server.
-	 *
+	 * 
 	 * @return the port of the backend web server
 	 */
 	private int getPort() {
@@ -213,7 +212,7 @@ public class EmbeddedServer {
 
 	/**
 	 * Creates and starts the backend web server.
-	 *
+	 * 
 	 * @throws IOException
 	 */
 	public static void main(final String[] args) throws IOException {

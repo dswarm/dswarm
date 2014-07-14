@@ -19,6 +19,9 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.dswarm.init.DMPException;
+import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,15 +35,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 
-import org.dswarm.init.DMPException;
-import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
-
 /**
  * A function is a method that can be executed on data via a {@link Job} execution (i.e. a {@link Task}). A function mainly
  * consists of a collection of parameters and a machine processable function description. Complex functions are
  * {@link Transformation}s.
- *
+ * 
  * @author tgaengler
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = true, defaultImpl = Function.class)
@@ -131,7 +130,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Creates a new function with the given function type, i.e. function or transformation.
-	 *
+	 * 
 	 * @param functionTypeArg the type of the function
 	 */
 	public Function(final FunctionType functionTypeArg) {
@@ -141,7 +140,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the parameters of the function.
-	 *
+	 * 
 	 * @return the parameters of the function
 	 */
 	@XmlElement(name = "parameters")
@@ -154,7 +153,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the parameters of the function.
-	 *
+	 * 
 	 * @param parametersArg new parameters of the function
 	 */
 	@XmlElement(name = "parameters")
@@ -184,7 +183,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Adds a new parameter to the parameters lists of the function
-	 *
+	 * 
 	 * @param parameter a new parameter
 	 */
 	public void addParameter(final String parameter) {
@@ -209,7 +208,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the machine processable function description
-	 *
+	 * 
 	 * @return the machine processable function description
 	 */
 	@XmlElement(name = "function_description")
@@ -222,7 +221,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the machine processable function description
-	 *
+	 * 
 	 * @param functionDescriptionArg a new machine processable function description
 	 */
 	public void setFunctionDescription(final ObjectNode functionDescriptionArg) {
@@ -235,7 +234,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Gets the function type, e.g., function ({@link FunctionType#Function}) or transformation (
 	 * {@link FunctionType#Transformation}).
-	 *
+	 * 
 	 * @return the function type
 	 */
 	public FunctionType getFunctionType() {
@@ -278,7 +277,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Initialises the parameters list and JSON object from the string that holds the serialised JSON object of the parameters
 	 * list.
-	 *
+	 * 
 	 * @param fromScratch flag that indicates, whether the parameters should be initialised from scratch or not
 	 */
 	private void initParameters(final boolean fromScratch) {
@@ -346,7 +345,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Initialises the function description from the string that holds the serialised JSON object of the function description.
-	 *
+	 * 
 	 * @param fromScratch flag that indicates, whether the function description should be initialised from scratch or not
 	 */
 	private void initFunctionDescription(final boolean fromScratch) {

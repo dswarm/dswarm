@@ -1,5 +1,8 @@
 package org.dswarm.persistence.model.job.test;
 
+import org.dswarm.persistence.GuicedTest;
+import org.dswarm.persistence.model.job.Function;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -8,10 +11,6 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import org.dswarm.persistence.GuicedTest;
-import org.dswarm.persistence.model.job.Function;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class FunctionTest extends GuicedTest {
 

@@ -13,24 +13,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.FileUtils;
-import org.hamcrest.CoreMatchers;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import com.google.common.io.Resources;
-import com.google.inject.Key;
-
 import org.dswarm.controller.resources.resource.test.utils.ConfigurationsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
@@ -40,7 +22,6 @@ import org.dswarm.controller.resources.schema.test.utils.ClaszesResourceTestUtil
 import org.dswarm.controller.resources.schema.test.utils.SchemasResourceTestUtils;
 import org.dswarm.controller.resources.test.BasicResourceTest;
 import org.dswarm.controller.servlet.DMPInjector;
-import org.dswarm.controller.test.GuicedTest;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
@@ -57,6 +38,22 @@ import org.dswarm.persistence.service.internal.test.utils.InternalGDMGraphServic
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.service.resource.test.utils.DataModelServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
+import org.hamcrest.CoreMatchers;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import com.google.common.io.Resources;
+import com.google.inject.Key;
 
 public class DataModelsResourceTest extends
 		BasicResourceTest<DataModelsResourceTestUtils, DataModelServiceTestUtils, DataModelService, ProxyDataModel, DataModel, Long> {
@@ -268,7 +265,7 @@ public class DataModelsResourceTest extends
 
 		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("resource.json");
 
-		final Resource expectedResource = GuicedTest.injector.getInstance(ObjectMapper.class).readValue(resourceJSONString, Resource.class);
+		final Resource expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
 
 		final URL fileURL = Resources.getResource("test_csv.csv");
 		final File resourceFile = FileUtils.toFile(fileURL);
@@ -288,7 +285,7 @@ public class DataModelsResourceTest extends
 
 		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
 
-		final DataModel dataModel = pojoClassResourceTestUtils.createObject(dataModelJSONString, dataModel1);
+		final DataModel dataModel = pojoClassResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
 
 		final int atMost = 1;
 
@@ -397,7 +394,7 @@ public class DataModelsResourceTest extends
 
 		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
 
-		final DataModel dataModel = pojoClassResourceTestUtils.createObject(dataModelJSONString, dataModel1);
+		final DataModel dataModel = pojoClassResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
 
 		final int atMost = 1;
 
@@ -513,7 +510,7 @@ public class DataModelsResourceTest extends
 		final Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
 
 		final DataModel dataModel1 = new DataModel();
-		String dataModelName = UUID.randomUUID().toString();
+		final String dataModelName = UUID.randomUUID().toString();
 		dataModel1.setName(dataModelName);
 		dataModel1.setDescription("my data model description");
 		dataModel1.setDataResource(resource);
@@ -541,7 +538,7 @@ public class DataModelsResourceTest extends
 
 		for (final DataModel dataModel2 : dataModels) {
 
-			   if (dataModel2.getName().equals(dataModelName)) {
+			if (dataModel2.getName().equals(dataModelName)) {
 
 				dataModel = dataModel2;
 

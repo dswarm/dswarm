@@ -12,14 +12,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.servlet.RequestScoped;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
-
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.AdvancedDMPResource;
 import org.dswarm.controller.resources.schema.utils.AttributesResourceUtils;
@@ -29,9 +21,17 @@ import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
 import org.dswarm.persistence.service.schema.AttributeService;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.inject.servlet.RequestScoped;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
+
 /**
  * A resource (controller service) for {@link Attribute}s.
- *
+ * 
  * @author tgaengler
  */
 @RequestScoped
@@ -42,7 +42,7 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 	/**
 	 * Creates a new resource (controller service) for {@link Attribute}s with the provider of the attribute persistence service,
 	 * the object mapper and metrics registry.
-	 *
+	 * 
 	 * @param attributeServiceProviderArg the attribute persistence service provider
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
@@ -56,7 +56,7 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 
 	/**
 	 * This endpoint returns an attribute as JSON representation for the provided attribute identifier.<br/>
-	 *
+	 * 
 	 * @param id an attribute identifier
 	 * @return a JSON representation of an attribute
 	 */
@@ -76,7 +76,7 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 
 	/**
 	 * This endpoint consumes an attribute as JSON representation and persists this attribute in the database.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one attribute
 	 * @return the persisted attribute as JSON representation
 	 * @throws DMPControllerException
@@ -97,7 +97,7 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 
 	/**
 	 * This endpoint returns a list of all attributes as JSON representation.
-	 *
+	 * 
 	 * @return a list of all attributes as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -115,7 +115,7 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 
 	/**
 	 * This endpoint consumes an attribute as JSON representation and updates this attribute in the database.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one attribute
 	 * @param id an attribute identifier
 	 * @return the updated attribute as JSON representation
@@ -138,7 +138,7 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 
 	/**
 	 * This endpoint deletes a attribute that matches the given id.
-	 *
+	 * 
 	 * @param id an attribute identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
 	 *         went wrong

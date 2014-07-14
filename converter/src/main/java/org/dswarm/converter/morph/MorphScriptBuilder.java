@@ -34,6 +34,14 @@ import javax.xml.validation.SchemaFactory;
 
 import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.dswarm.converter.DMPConverterException;
+import org.dswarm.init.util.DMPStatics;
+import org.dswarm.persistence.model.job.Component;
+import org.dswarm.persistence.model.job.Function;
+import org.dswarm.persistence.model.job.Mapping;
+import org.dswarm.persistence.model.job.Task;
+import org.dswarm.persistence.model.job.Transformation;
+import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
@@ -52,18 +60,9 @@ import com.google.common.collect.Maps;
 import com.google.common.io.CharSource;
 import com.google.common.io.Resources;
 
-import org.dswarm.converter.DMPConverterException;
-import org.dswarm.init.util.DMPStatics;
-import org.dswarm.persistence.model.job.Component;
-import org.dswarm.persistence.model.job.Function;
-import org.dswarm.persistence.model.job.Mapping;
-import org.dswarm.persistence.model.job.Task;
-import org.dswarm.persistence.model.job.Transformation;
-import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
-
 /**
  * Creates a metamorph script from a given {@link Task}.
- *
+ * 
  * @author phorn
  * @author niederl
  * @author tgaengler

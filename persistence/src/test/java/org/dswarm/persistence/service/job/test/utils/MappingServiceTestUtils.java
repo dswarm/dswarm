@@ -3,59 +3,68 @@ package org.dswarm.persistence.service.job.test.utils;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Assert;
-
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-
+import org.dswarm.persistence.model.job.Component;
 import org.dswarm.persistence.model.job.Mapping;
 import org.dswarm.persistence.model.job.proxy.ProxyMapping;
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.service.job.MappingService;
 import org.dswarm.persistence.service.schema.test.utils.MappingAttributePathInstanceServiceTestUtils;
 import org.dswarm.persistence.service.test.utils.BasicDMPJPAServiceTestUtils;
+import org.junit.Assert;
+
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<MappingService, ProxyMapping, Mapping> {
 
-	private final ComponentServiceTestUtils						componentsResourceTestUtils;
+	private final ComponentServiceTestUtils						componentServiceTestUtils;
 
 	private final MappingAttributePathInstanceServiceTestUtils	mappingAttributePathInstanceServiceTestUtils;
-
-	// private final FiltersResourceTestUtils filtersResourceTestUtils;
 
 	private final Set<Long>										checkedExpectedAttributePaths	= Sets.newHashSet();
 
 	private final Set<Long>										checkedActualAttributePaths		= Sets.newHashSet();
 
-	// private final Set<Long> checkedExpectedFilters = Sets.newHashSet();
-	//
-	// private final Set<Long> checkedActualFilters = Sets.newHashSet();
-
 	public MappingServiceTestUtils() {
 
 		super(Mapping.class, MappingService.class);
 
-		componentsResourceTestUtils = new ComponentServiceTestUtils();
+		componentServiceTestUtils = new ComponentServiceTestUtils();
 		mappingAttributePathInstanceServiceTestUtils = new MappingAttributePathInstanceServiceTestUtils();
-		// filtersResourceTestUtils = new FiltersResourceTestUtils();
 	}
 
+	/**
+	 * {@inheritDoc} <br />
+	 * Assert that both mappings either have no or equal (transformation) components, see
+	 * {@link ComponentServiceTestUtils#compareObjects(Component, Component)}. <br />
+	 * Assert that both mappings either have no or equal input attribute paths, see {@link
+	 * BasicJPAServiceTestUtils.compareObjects(Set, Map)}. <br />
+	 * Assert that both mappings either have no or equal output attribute paths, see {@link
+	 * BasicJPAServiceTestUtils.compareObjects(Set, Map)}. <br />
+	 */
 	@Override
-	public void compareObjects(final Mapping expectedObject, final Mapping actualObject) {
+	public void compareObjects(final Mapping expectedMapping, final Mapping actualMapping) {
 
-		super.compareObjects(expectedObject, actualObject);
+		super.compareObjects(expectedMapping, actualMapping);
 
-		compareMappings(expectedObject, actualObject);
-	}
+		// transformation (component)
+		if (expectedMapping.getTransformation() == null) {
 
-	private void compareMappings(final Mapping expectedMapping, final Mapping actualMapping) {
+			Assert.assertNull("the actual mapping '" + actualMapping.getId() + "' shouldn't have a transformation", actualMapping.getTransformation());
 
-		if (expectedMapping.getTransformation() != null) {
-
-			componentsResourceTestUtils.compareObjects(expectedMapping.getTransformation(), actualMapping.getTransformation());
+		} else {
+			componentServiceTestUtils.compareObjects(expectedMapping.getTransformation(), actualMapping.getTransformation());
 		}
 
-		if (expectedMapping.getInputAttributePaths() != null && !expectedMapping.getInputAttributePaths().isEmpty()) {
+		// input attribute paths
+		if (expectedMapping.getInputAttributePaths() == null || expectedMapping.getInputAttributePaths().isEmpty()) {
+
+			final boolean actualMappingHasNoInputAttributePaths = (actualMapping.getInputAttributePaths() == null || actualMapping
+					.getInputAttributePaths().isEmpty());
+			Assert.assertTrue("actual mapping '" + actualMapping.getId() + "' shouldn't have input attribute paths",
+					actualMappingHasNoInputAttributePaths);
+
+		} else { // !null && !empty
 
 			final Set<MappingAttributePathInstance> actualInputAttributePaths = actualMapping.getInputAttributePaths();
 
@@ -70,6 +79,8 @@ public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<Mapping
 
 				if (checkAttributePath(actualInputAttributePath, checkedActualAttributePaths)) {
 
+					// SR FIXME why can we be sure we dont need to check this actualInputAttributePath? the last reset() may have
+					// been a while ago.
 					continue;
 				}
 
@@ -82,6 +93,8 @@ public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<Mapping
 
 				if (checkAttributePath(expectedInputAttributePath, checkedExpectedAttributePaths)) {
 
+					// SR FIXME why can we be sure we dont need to check this expectedInputAttributePath? the last reset() may
+					// have been a while ago.
 					continue;
 				}
 
@@ -92,34 +105,20 @@ public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<Mapping
 			mappingAttributePathInstanceServiceTestUtils.compareObjects(uncheckedExpectedInputAttributePaths, actualInputAttributePathsMap);
 		}
 
-		if (expectedMapping.getOutputAttributePath() != null) {
+		// output attribute paths
+		if (expectedMapping.getOutputAttributePath() == null) {
 
-			if (!checkAttributePath(expectedMapping.getOutputAttributePath(), checkedExpectedAttributePaths)
-					&& !checkAttributePath(actualMapping.getOutputAttributePath(), checkedActualAttributePaths)) {
+			Assert.assertNull("actual mapping '" + actualMapping.getId() + "' shouldn't have an output attribute path",
+					actualMapping.getOutputAttributePath());
 
-				mappingAttributePathInstanceServiceTestUtils.compareObjects(expectedMapping.getOutputAttributePath(),
-						actualMapping.getOutputAttributePath());
-			}
+			// SR FIXME why can we skip here?
+		} else if (!checkAttributePath(expectedMapping.getOutputAttributePath(), checkedExpectedAttributePaths)
+				&& !checkAttributePath(actualMapping.getOutputAttributePath(), checkedActualAttributePaths)) {
+
+			mappingAttributePathInstanceServiceTestUtils.compareObjects(expectedMapping.getOutputAttributePath(),
+					actualMapping.getOutputAttributePath());
 
 		}
-
-		// if (expectedMapping.getInputFilter() != null) {
-		//
-		// if (!checkFilter(expectedMapping.getInputFilter(), checkedExpectedFilters)
-		// && !checkFilter(actualMapping.getInputFilter(), checkedActualFilters)) {
-		//
-		// filtersResourceTestUtils.compareObjects(expectedMapping.getInputFilter(), actualMapping.getInputFilter());
-		// }
-		// }
-		//
-		// if (expectedMapping.getOutputFilter() != null) {
-		//
-		// if (!checkFilter(expectedMapping.getOutputFilter(), checkedExpectedFilters)
-		// && !checkFilter(actualMapping.getOutputFilter(), checkedActualFilters)) {
-		//
-		// filtersResourceTestUtils.compareObjects(expectedMapping.getOutputFilter(), actualMapping.getOutputFilter());
-		// }
-		// }
 	}
 
 	private boolean checkAttributePath(final MappingAttributePathInstance attributePath, final Set<Long> checkedAttributePaths) {
@@ -138,23 +137,6 @@ public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<Mapping
 
 		return false;
 	}
-
-	// private boolean checkFilter(final Filter filter, final Set<Long> checkedFilters) {
-	//
-	// if (filter != null && filter.getId() != null) {
-	//
-	// if (checkedFilters.contains(filter.getId())) {
-	//
-	// // filter was already checked
-	//
-	// return true;
-	// }
-	//
-	// checkedFilters.add(filter.getId());
-	// }
-	//
-	// return false;
-	// }
 
 	/**
 	 * {@inheritDoc}<br/>
@@ -182,6 +164,6 @@ public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<Mapping
 
 		mappingAttributePathInstanceServiceTestUtils.reset();
 		// filtersResourceTestUtils.reset();
-		componentsResourceTestUtils.reset();
+		componentServiceTestUtils.reset();
 	}
 }

@@ -6,6 +6,17 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.io.Charsets;
+import org.dswarm.converter.DMPConverterException;
+import org.dswarm.converter.GuicedTest;
+import org.dswarm.converter.flow.XMLSourceResourceGDMStmtsFlow;
+import org.dswarm.graph.json.Model;
+import org.dswarm.persistence.model.internal.gdm.GDMModel;
+import org.dswarm.persistence.model.resource.Configuration;
+import org.dswarm.persistence.model.resource.DataModel;
+import org.dswarm.persistence.model.resource.Resource;
+import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
+import org.dswarm.persistence.service.resource.DataModelService;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -19,18 +30,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.io.Resources;
-
-import org.dswarm.converter.DMPConverterException;
-import org.dswarm.converter.GuicedTest;
-import org.dswarm.converter.flow.XMLSourceResourceGDMStmtsFlow;
-import org.dswarm.graph.json.Model;
-import org.dswarm.persistence.model.internal.gdm.GDMModel;
-import org.dswarm.persistence.model.resource.Configuration;
-import org.dswarm.persistence.model.resource.DataModel;
-import org.dswarm.persistence.model.resource.Resource;
-import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
-import org.dswarm.persistence.service.resource.DataModelService;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 

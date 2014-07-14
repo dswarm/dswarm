@@ -5,25 +5,25 @@ import java.util.Set;
 
 import javax.persistence.EntityManager;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.job.Component;
 import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.proxy.ProxyComponent;
 import org.dswarm.persistence.service.ExtendedBasicDMPJPAService;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+
 /**
  * A persistence service for {@link Component}s.
- *
+ * 
  * @author tgaengler
  */
 public class ComponentService extends ExtendedBasicDMPJPAService<ProxyComponent, Component> {
 
 	/**
 	 * Creates a new component persistence service with the given entity manager provider.
-	 *
+	 * 
 	 * @param entityManagerProvider an entity manager provider
 	 */
 	@Inject

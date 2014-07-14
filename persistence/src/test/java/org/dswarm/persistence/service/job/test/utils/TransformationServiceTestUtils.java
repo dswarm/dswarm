@@ -4,14 +4,13 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Assert;
-
-import com.google.common.collect.Maps;
-
 import org.dswarm.persistence.model.job.Component;
 import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.job.proxy.ProxyTransformation;
 import org.dswarm.persistence.service.job.TransformationService;
+import org.junit.Assert;
+
+import com.google.common.collect.Maps;
 
 public class TransformationServiceTestUtils extends BasicFunctionServiceTestUtils<TransformationService, ProxyTransformation, Transformation> {
 
@@ -31,17 +30,30 @@ public class TransformationServiceTestUtils extends BasicFunctionServiceTestUtil
 		componentsResourceTestUtils = componentsResourceTestUtilsArg;
 	}
 
+	/**
+	 * {@inheritDoc} <br />
+	 * Assert both transformations have either no components or their components are equal, see
+	 * {@link org.dswarm.persistence.service.test.utils.BasicJPAServiceTestUtils#compareObjects(Set, Map)} for details.
+	 */
 	@Override
-	public void compareObjects(final Transformation expectedObject, final Transformation actualObject) {
+	public void compareObjects(final Transformation expectedTransformation, final Transformation actualTransformation) {
 
-		super.compareObjects(expectedObject, actualObject);
+		super.compareObjects(expectedTransformation, actualTransformation);
 
-		if (expectedObject.getComponents() != null && !expectedObject.getComponents().isEmpty()) {
+		if (expectedTransformation.getComponents() == null || expectedTransformation.getComponents().isEmpty()) {
 
-			final Set<Component> actualComponents = actualObject.getComponents();
+			final boolean actualTransformationHasNoComponents = (actualTransformation.getComponents() == null || actualTransformation.getComponents()
+					.isEmpty());
+			Assert.assertTrue("the actual transformation should not have any components", actualTransformationHasNoComponents);
 
-			Assert.assertNotNull("components of transformation '" + actualObject.getId() + "' shouldn't be null", actualComponents);
-			Assert.assertFalse("components of transformation '" + actualObject.getId() + "' shouldn't be empty", actualComponents.isEmpty());
+		} else {
+			// (!null && !empty)
+
+			final Set<Component> actualComponents = actualTransformation.getComponents();
+
+			Assert.assertNotNull("components of actual transformation '" + actualTransformation.getId() + "' shouldn't be null", actualComponents);
+			Assert.assertFalse("components of actual transformation '" + actualTransformation.getId() + "' shouldn't be empty",
+					actualComponents.isEmpty());
 
 			final Map<Long, Component> actualComponentsMap = Maps.newHashMap();
 
@@ -50,7 +62,7 @@ public class TransformationServiceTestUtils extends BasicFunctionServiceTestUtil
 				actualComponentsMap.put(actualComponent.getId(), actualComponent);
 			}
 
-			componentsResourceTestUtils.compareObjects(expectedObject.getComponents(), actualComponentsMap);
+			componentsResourceTestUtils.compareObjects(expectedTransformation.getComponents(), actualComponentsMap);
 		}
 	}
 

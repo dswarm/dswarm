@@ -14,21 +14,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.validation.SchemaFactory;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
-import com.google.common.collect.Maps;
-import com.google.common.io.Resources;
-
+import org.apache.tika.Tika;
 import org.dswarm.controller.resources.resource.test.utils.ConfigurationsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
@@ -49,6 +35,20 @@ import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.TextNode;
+import com.google.common.collect.Maps;
+import com.google.common.io.Resources;
 
 public class TasksResourceTest extends ResourceTest {
 
@@ -116,6 +116,29 @@ public class TasksResourceTest extends ResourceTest {
 		final URL fileURL = Resources.getResource(resourceFileName);
 		final File resourceFile = FileUtils.toFile(fileURL);
 
+		final ObjectNode attributes1 = new ObjectNode(objectMapper.getNodeFactory());
+		attributes1.put("path", resourceFile.getAbsolutePath());
+
+		String fileType = null;
+		final Tika tika = new Tika();
+		try {
+			fileType = tika.detect(resourceFile);
+			// fileType = Files.probeContentType(resourceFile.toPath());
+		} catch (final IOException e1) {
+
+			TasksResourceTest.LOG.debug("couldn't determine file type from file '" + resourceFile.getAbsolutePath() + "'");
+		}
+
+		if (fileType != null) {
+
+			attributes1.put("filetype", fileType);
+		}
+
+		// hint: size is not important to know since its value is skipped in the comparison of actual and expected resource
+		attributes1.put("filesize", -1);
+
+		res1.setAttributes(attributes1);
+
 		// upload data resource
 		resource = resourcesResourceTestUtils.uploadResource(resourceFile, res1);
 
@@ -138,9 +161,11 @@ public class TasksResourceTest extends ResourceTest {
 		data1.setDataResource(resource);
 		data1.setConfiguration(configuration);
 
+		// TODO: add schema to data1
+
 		final String dataModelJSONString = objectMapper.writeValueAsString(data1);
 
-		dataModel = dataModelsResourceTestUtils.createObject(dataModelJSONString, data1);
+		dataModel = dataModelsResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
 
 		Assert.assertNotNull("the data model shouldn't be null", dataModel);
 

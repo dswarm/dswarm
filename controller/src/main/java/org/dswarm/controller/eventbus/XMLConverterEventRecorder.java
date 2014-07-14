@@ -3,12 +3,6 @@ package org.dswarm.controller.eventbus;
 import java.util.Collection;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.flow.XMLSourceResourceGDMStmtsFlow;
@@ -17,10 +11,15 @@ import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * An event recorder for converting XML documents.
- *
+ * 
  * @author phorn
  * @author tgaengler
  */
@@ -36,7 +35,7 @@ public class XMLConverterEventRecorder {
 
 	/**
 	 * Creates a new event recorder for converting XML documents with the given internal model service factory and event bus.
-	 *
+	 * 
 	 * @param internalModelServiceFactory an internal model service factory
 	 * @param eventBus an event bus, where this event record will be registered
 	 */
@@ -49,7 +48,7 @@ public class XMLConverterEventRecorder {
 
 	/**
 	 * Processes the XML document of the data model of the given event and persists the converted data.
-	 *
+	 * 
 	 * @param event an converter event that provides a data model
 	 */
 	// @Subscribe

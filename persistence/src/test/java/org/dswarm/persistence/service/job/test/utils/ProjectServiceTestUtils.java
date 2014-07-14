@@ -3,56 +3,78 @@ package org.dswarm.persistence.service.job.test.utils;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Assert;
-
-import com.google.common.collect.Maps;
-
 import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.Mapping;
 import org.dswarm.persistence.model.job.Project;
 import org.dswarm.persistence.model.job.proxy.ProxyProject;
+import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.service.job.ProjectService;
 import org.dswarm.persistence.service.resource.test.utils.DataModelServiceTestUtils;
 import org.dswarm.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestUtils;
+import org.junit.Assert;
+
+import com.google.common.collect.Maps;
 
 public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils<ProjectService, ProxyProject, Project> {
 
-	private final FunctionServiceTestUtils	functionsResourceTestUtils;
+	private final FunctionServiceTestUtils	functionServiceTestUtils;
 
-	private final MappingServiceTestUtils	mappingsResourceTestUtils;
+	private final MappingServiceTestUtils	mappingServiceTestUtils;
 
-	private final DataModelServiceTestUtils	dataModelsResourceTestUtils;
+	private final DataModelServiceTestUtils	dataModelServiceTestUtils;
 
 	public ProjectServiceTestUtils() {
 
 		super(Project.class, ProjectService.class);
 
-		functionsResourceTestUtils = new FunctionServiceTestUtils();
-		mappingsResourceTestUtils = new MappingServiceTestUtils();
-		dataModelsResourceTestUtils = new DataModelServiceTestUtils();
+		functionServiceTestUtils = new FunctionServiceTestUtils();
+		mappingServiceTestUtils = new MappingServiceTestUtils();
+		dataModelServiceTestUtils = new DataModelServiceTestUtils();
 	}
 
+	/**
+	 * {@inheritDoc} <br />
+	 * Assert that both {@link Project}s have either no input {@link DataModel}s or their input {@link DataModel}s are equal, see
+	 * {@link DataModelServiceTestUtils#compareObjects(DataModel, DataModel)}. <br />
+	 * Assert that both {@link Project}s have either no output {@link DataModel}s or their output {@link DataModel}s are equal,
+	 * see {@link DataModelServiceTestUtils#compareObjects(DataModel, DataModel)}. <br />
+	 * Assert that both {@link Project}s have either no {@link Mapping}s or their {@link Mapping}s are equal, see
+	 * {@link MappingServiceTestUtils#compareObjects(Mapping, Mapping)}. <br />
+	 * Assert that both {@link Project}s have either no {@link Function}s or their {@link Function}s are equal, see
+	 * {@link FunctionServiceTestUtils#compareObjects(Function, Function)}. <br />
+	 */
 	@Override
-	public void compareObjects(final Project expectedObject, final Project actualObject) {
+	public void compareObjects(final Project expectedProject, final Project actualProject) {
 
-		super.compareObjects(expectedObject, actualObject);
+		super.compareObjects(expectedProject, actualProject);
 
-		compareProjects(expectedObject, actualObject);
-	}
+		// compare input data models
+		if (expectedProject.getInputDataModel() == null) {
 
-	private void compareProjects(final Project expectedProject, final Project actualProject) {
+			Assert.assertNull("the actual project '" + actualProject.getId() + "' should not have an input data model",
+					actualProject.getInputDataModel());
 
-		if (expectedProject.getInputDataModel() != null) {
-
-			dataModelsResourceTestUtils.compareObjects(expectedProject.getInputDataModel(), actualProject.getInputDataModel());
+		} else {
+			dataModelServiceTestUtils.compareObjects(expectedProject.getInputDataModel(), actualProject.getInputDataModel());
 		}
 
-		if (expectedProject.getOutputDataModel() != null) {
+		// compare output data models
+		if (expectedProject.getOutputDataModel() == null) {
 
-			dataModelsResourceTestUtils.compareObjects(expectedProject.getOutputDataModel(), actualProject.getOutputDataModel());
+			Assert.assertNull("the actual project '" + actualProject.getId() + "' should not have an output data model",
+					actualProject.getOutputDataModel());
+
+		} else {
+			dataModelServiceTestUtils.compareObjects(expectedProject.getOutputDataModel(), actualProject.getOutputDataModel());
 		}
 
-		if (expectedProject.getMappings() != null && !expectedProject.getMappings().isEmpty()) {
+		// compare mappings
+		if (expectedProject.getMappings() == null || expectedProject.getMappings().isEmpty()) {
+
+			final boolean actualProjectHasNoMappings = (actualProject.getMappings() == null || actualProject.getMappings().isEmpty());
+			Assert.assertTrue("the actual project '" + actualProject.getId() + "' shouldn't have any mappings", actualProjectHasNoMappings);
+
+		} else { // !null && !empty
 
 			final Set<Mapping> actualMappings = actualProject.getMappings();
 
@@ -66,10 +88,16 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 				actualMappingsMap.put(actualMapping.getId(), actualMapping);
 			}
 
-			mappingsResourceTestUtils.compareObjects(expectedProject.getMappings(), actualMappingsMap);
+			mappingServiceTestUtils.compareObjects(expectedProject.getMappings(), actualMappingsMap);
 		}
 
-		if (expectedProject.getFunctions() != null && !expectedProject.getFunctions().isEmpty()) {
+		// compare functions
+		if (expectedProject.getFunctions() == null || expectedProject.getFunctions().isEmpty()) {
+
+			final boolean actualProjectHasNoFunctions = (actualProject.getFunctions() == null || actualProject.getFunctions().isEmpty());
+			Assert.assertTrue("the actual project '" + actualProject.getId() + "' shouldn't have any functions", actualProjectHasNoFunctions);
+
+		} else { // !null && !empty
 
 			final Set<Function> actualFunctions = actualProject.getFunctions();
 
@@ -83,7 +111,7 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 				actualFunctionsMap.put(actualFunction.getId(), actualFunction);
 			}
 
-			functionsResourceTestUtils.compareObjects(expectedProject.getFunctions(), actualFunctionsMap);
+			functionServiceTestUtils.compareObjects(expectedProject.getFunctions(), actualFunctionsMap);
 		}
 	}
 
@@ -107,8 +135,8 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 	@Override
 	public void reset() {
 
-		dataModelsResourceTestUtils.reset();
-		functionsResourceTestUtils.reset();
-		mappingsResourceTestUtils.reset();
+		dataModelServiceTestUtils.reset();
+		functionServiceTestUtils.reset();
+		mappingServiceTestUtils.reset();
 	}
 }

@@ -3,14 +3,6 @@ package org.dswarm.controller.resources.job.test;
 import java.util.LinkedList;
 import java.util.Map;
 
-import org.junit.After;
-import org.junit.Assert;
-
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-
 import org.dswarm.controller.resources.job.test.utils.ComponentsResourceTestUtils;
 import org.dswarm.controller.resources.job.test.utils.FiltersResourceTestUtils;
 import org.dswarm.controller.resources.job.test.utils.FunctionsResourceTestUtils;
@@ -32,6 +24,13 @@ import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.service.job.MappingService;
 import org.dswarm.persistence.service.job.test.utils.MappingServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
+import org.junit.After;
+import org.junit.Assert;
+
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 public class MappingsResourceTest extends
 		BasicResourceTest<MappingsResourceTestUtils, MappingServiceTestUtils, MappingService, ProxyMapping, Mapping, Long> {

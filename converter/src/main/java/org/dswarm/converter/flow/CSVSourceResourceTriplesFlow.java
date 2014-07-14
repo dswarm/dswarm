@@ -6,13 +6,12 @@ import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.stream.converter.StreamToTriples;
 import org.culturegraph.mf.types.Triple;
-
-import com.google.common.collect.ImmutableList;
-
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.mf.stream.reader.CsvReader;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * @author phorn

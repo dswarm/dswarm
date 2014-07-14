@@ -5,17 +5,16 @@ import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
-
-import com.google.common.base.Optional;
-
 import org.dswarm.converter.mf.framework.annotations.Record;
 import org.dswarm.converter.mf.stream.converter.CsvDecoder;
 import org.dswarm.converter.mf.stream.converter.CsvLineReader;
 
+import com.google.common.base.Optional;
+
 /**
  * Reads Csv files. First line can be interpreted as header.<br>
  * Inspired by org.culturegraph.mf.stream.reader.CsvReader
- *
+ * 
  * @author tgaengler
  * @author phorn
  */

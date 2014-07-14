@@ -6,14 +6,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * A helper class with static methods for the converter helper.
- *
+ * 
  * @author tgaengler
  */
 public final class SchemaHelperHelper {
 
 	/**
 	 * Adds a literal to the converter helper of the given property.
-	 *
+	 * 
 	 * @param schemaHelpers a map of converter helpers
 	 * @param property the property, where the literal belongs to
 	 * @return the map of converter helpers
@@ -27,7 +27,7 @@ public final class SchemaHelperHelper {
 
 	/**
 	 * Adds a JSON node to the converter helper of the given property.
-	 *
+	 * 
 	 * @param schemaHelpers a map of converter helpers
 	 * @param property the property, where the JSON node belongs to
 	 * @param jsonNode the JSON node
@@ -46,7 +46,7 @@ public final class SchemaHelperHelper {
 	/**
 	 * Checks the map of converter helpers, whether it contains a converter helper entry for the given property. If the converter
 	 * helpers map doesn't contain an entry for this property, it will be added.
-	 *
+	 * 
 	 * @param schemaHelpers a map of converter helpers
 	 * @param property a property
 	 * @return the map of converter helpers

@@ -186,7 +186,6 @@ public class ProjectsResourceTest extends
 		// END project preparation
 	}
 
-
 	@Test
 	@Override
 	public void testPUTObject() throws Exception {
@@ -375,12 +374,12 @@ public class ProjectsResourceTest extends
 		// - attribute paths
 		updateMappingJSONString = objectMapper.writeValueAsString(updateMappingJSON);
 		final Mapping expectedMapping = objectMapper.readValue(updateMappingJSONString, Mapping.class);
-		
+
 		expectedMapping.setInputAttributePaths(persistedProject.getMappings().iterator().next().getInputAttributePaths());
 		expectedMapping.setOutputAttributePath(persistedProject.getMappings().iterator().next().getOutputAttributePath());
 
-		updateMappingJSONString = objectMapper.writeValueAsString(expectedMapping); 
-		
+		updateMappingJSONString = objectMapper.writeValueAsString(expectedMapping);
+
 		updateMapping = mappingsResourceTestUtils.createObject(updateMappingJSONString, expectedMapping);
 		final Set<Mapping> updateMappings = new LinkedHashSet<Mapping>();
 		updateMappings.add(updateMapping);

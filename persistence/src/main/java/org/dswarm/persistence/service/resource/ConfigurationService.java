@@ -2,25 +2,25 @@ package org.dswarm.persistence.service.resource;
 
 import javax.persistence.EntityManager;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.proxy.ProxyConfiguration;
 import org.dswarm.persistence.service.ExtendedBasicDMPJPAService;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+
 /**
  * A persistence service for {@link Configuration}s.
- *
+ * 
  * @author tgaengler
  */
 public class ConfigurationService extends ExtendedBasicDMPJPAService<ProxyConfiguration, Configuration> {
 
 	/**
 	 * Creates a new configuration persistence service with the given entity manager provider.
-	 *
+	 * 
 	 * @param entityManagerProvider an entity manager provider
 	 */
 	@Inject

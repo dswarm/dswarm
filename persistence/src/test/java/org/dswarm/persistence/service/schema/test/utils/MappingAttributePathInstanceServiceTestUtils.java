@@ -1,13 +1,12 @@
 package org.dswarm.persistence.service.schema.test.utils;
 
-import org.junit.Assert;
-
 import org.dswarm.persistence.model.job.Filter;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxyMappingAttributePathInstance;
 import org.dswarm.persistence.service.job.test.utils.FilterServiceTestUtils;
 import org.dswarm.persistence.service.schema.MappingAttributePathInstanceService;
+import org.junit.Assert;
 
 public class MappingAttributePathInstanceServiceTestUtils extends
 		AttributePathInstanceServiceTestUtils<MappingAttributePathInstanceService, ProxyMappingAttributePathInstance, MappingAttributePathInstance> {
@@ -21,12 +20,32 @@ public class MappingAttributePathInstanceServiceTestUtils extends
 		filtersResourceTestUtils = new FilterServiceTestUtils();
 	}
 
+	/**
+	 * {@inheritDoc}<br />
+	 * Assert ordinals are equal. <br />
+	 * Assert either no filters are present or filters are equal, see
+	 * {@link FilterServiceTestUtils#compareObjects(Filter, Filter)} for details.
+	 * 
+	 * @param expectedMappingAttributePathInstance
+	 * @param actualMappingAttributePathInstance
+	 */
 	@Override
-	public void compareObjects(final MappingAttributePathInstance expectedObject, final MappingAttributePathInstance actualObject) {
+	public void compareObjects(final MappingAttributePathInstance expectedMappingAttributePathInstance,
+			final MappingAttributePathInstance actualMappingAttributePathInstance) {
 
-		super.compareObjects(expectedObject, actualObject);
+		super.compareObjects(expectedMappingAttributePathInstance, actualMappingAttributePathInstance);
 
-		compareMappingAttributePathInstances(expectedObject, actualObject);
+		Assert.assertEquals("the ordinals of the mapping attribute path should be equal", expectedMappingAttributePathInstance.getOrdinal(),
+				actualMappingAttributePathInstance.getOrdinal());
+
+		if (expectedMappingAttributePathInstance.getFilter() == null) {
+
+			Assert.assertNull("the actual mapping attribute path instance should not have a filter", actualMappingAttributePathInstance.getFilter());
+
+		} else {
+
+			filtersResourceTestUtils.compareObjects(expectedMappingAttributePathInstance.getFilter(), actualMappingAttributePathInstance.getFilter());
+		}
 	}
 
 	public MappingAttributePathInstance createMappingAttributePathInstance(final String name, final AttributePath attributePath,
@@ -45,21 +64,6 @@ public class MappingAttributePathInstanceServiceTestUtils extends
 		Assert.assertNotNull(updatedMappingAttributePathInstance.getId());
 
 		return updatedMappingAttributePathInstance;
-	}
-
-	private void compareMappingAttributePathInstances(final MappingAttributePathInstance expectedMappingAttributePathInstance,
-			final MappingAttributePathInstance actualMappingAttributePathInstance) {
-
-		if (expectedMappingAttributePathInstance.getFilter() != null) {
-
-			filtersResourceTestUtils.compareObjects(expectedMappingAttributePathInstance.getFilter(), actualMappingAttributePathInstance.getFilter());
-		}
-
-		if (expectedMappingAttributePathInstance.getOrdinal() != null) {
-
-			Assert.assertEquals("the ordinals of the mapping attribute path should be equal", expectedMappingAttributePathInstance.getOrdinal(),
-					actualMappingAttributePathInstance.getOrdinal());
-		}
 	}
 
 	/**

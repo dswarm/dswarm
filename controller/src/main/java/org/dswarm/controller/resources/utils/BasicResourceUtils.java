@@ -8,6 +8,12 @@ import java.util.Set;
 
 import javax.inject.Provider;
 
+import org.dswarm.controller.DMPControllerException;
+import org.dswarm.controller.DMPJsonException;
+import org.dswarm.persistence.DMPPersistenceException;
+import org.dswarm.persistence.model.DMPObject;
+import org.dswarm.persistence.model.proxy.ProxyDMPObject;
+import org.dswarm.persistence.service.BasicJPAService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,13 +25,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
-
-import org.dswarm.controller.DMPControllerException;
-import org.dswarm.controller.DMPJsonException;
-import org.dswarm.persistence.DMPPersistenceException;
-import org.dswarm.persistence.model.DMPObject;
-import org.dswarm.persistence.model.proxy.ProxyDMPObject;
-import org.dswarm.persistence.service.BasicJPAService;
 
 /**
  * @author tgaengler
@@ -81,7 +80,7 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 
 	/**
 	 * Gets the concrete POJO class of this resource (controller service).
-	 *
+	 * 
 	 * @return the concrete POJO class
 	 */
 	public Class<POJOCLASS> getClasz() {
@@ -268,7 +267,7 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 
 	/**
 	 * Creates and persists a new object into the database.
-	 *
+	 * 
 	 * @param objectFromJSON the new object
 	 * @param persistenceService the related persistence service
 	 * @return the persisted object

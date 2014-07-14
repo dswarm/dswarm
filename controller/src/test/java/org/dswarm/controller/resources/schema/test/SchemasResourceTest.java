@@ -9,15 +9,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Test;
-
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-
 import org.dswarm.controller.resources.schema.test.utils.AttributePathsResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.AttributesResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.ClaszesResourceTestUtils;
@@ -32,6 +23,14 @@ import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Test;
+
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 public class SchemasResourceTest extends
 		BasicResourceTest<SchemasResourceTestUtils, SchemaServiceTestUtils, SchemaService, ProxySchema, Schema, Long> {
@@ -457,7 +456,7 @@ public class SchemasResourceTest extends
 		final ObjectNode attributeDescriptionJSON = objectMapper.createObjectNode();
 		attributeDescriptionJSON.put("name", name);
 
-		if(uri != null) {
+		if (uri != null) {
 
 			attributeDescriptionJSON.put("uri", uri);
 		}

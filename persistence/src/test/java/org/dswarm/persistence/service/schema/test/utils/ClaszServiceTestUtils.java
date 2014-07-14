@@ -2,12 +2,12 @@ package org.dswarm.persistence.service.schema.test.utils;
 
 import java.util.Set;
 
-import com.google.common.collect.Sets;
-
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.proxy.ProxyClasz;
 import org.dswarm.persistence.service.schema.ClaszService;
 import org.dswarm.persistence.service.test.utils.AdvancedDMPJPAServiceTestUtils;
+
+import com.google.common.collect.Sets;
 
 public class ClaszServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<ClaszService, ProxyClasz, Clasz> {
 

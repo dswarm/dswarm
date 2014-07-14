@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Opens a file and passes a reader for it to the receiver. It also checks and discards an UTF8 BOM.
- *
+ * 
  * @author phorn
  */
 @Description("Opens a file and checks for UTF8 BOM.")
@@ -35,7 +35,7 @@ public class BOMResourceOpener extends DefaultObjectPipe<String, ObjectReceiver<
 
 	/**
 	 * Returns the encoding used to open the resource.
-	 *
+	 * 
 	 * @return current default setting
 	 */
 	public String getEncoding() {
@@ -44,7 +44,7 @@ public class BOMResourceOpener extends DefaultObjectPipe<String, ObjectReceiver<
 
 	/**
 	 * Sets the encoding used to open the resource.
-	 *
+	 * 
 	 * @param encoding new encoding
 	 */
 	public void setEncoding(final String encoding) {

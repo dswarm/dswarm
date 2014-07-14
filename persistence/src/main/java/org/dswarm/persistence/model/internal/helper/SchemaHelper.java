@@ -2,17 +2,17 @@ package org.dswarm.persistence.model.internal.helper;
 
 import java.util.List;
 
+import org.dswarm.persistence.util.DMPPersistenceUtil;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.collect.Lists;
 
-import org.dswarm.persistence.util.DMPPersistenceUtil;
-
 /**
  * A converter helper for RDF to JSON transformation.
- *
+ * 
  * @author tgaengler
  */
 public class SchemaHelper {
@@ -29,7 +29,7 @@ public class SchemaHelper {
 
 	/**
 	 * Creates a new converter helper with the given property.
-	 *
+	 * 
 	 * @param property a property
 	 */
 	public SchemaHelper(final String property) {
@@ -40,7 +40,7 @@ public class SchemaHelper {
 
 	/**
 	 * Adds a JSON node to the object list.
-	 *
+	 * 
 	 * @param jsonNode a JSON node
 	 */
 	public void addJsonNode(final JsonNode jsonNode) {
@@ -50,7 +50,7 @@ public class SchemaHelper {
 
 	/**
 	 * Return true, if the object list consists of more than one object; otherwise false.
-	 *
+	 * 
 	 * @return true, if the object list consists of more than one object; otherwise false
 	 */
 	public boolean isArray() {
@@ -60,7 +60,7 @@ public class SchemaHelper {
 
 	/**
 	 * Serialises the property + object list to a JSON object.
-	 *
+	 * 
 	 * @param json the JSON object that should be filled
 	 * @return the filled JSON object
 	 */

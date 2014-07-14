@@ -15,7 +15,7 @@ public class DMPControllerException extends DMPException {
 
 	/**
 	 * Creates a new DMP controller exception with the given exception message.
-	 *
+	 * 
 	 * @param exception the exception message
 	 */
 	public DMPControllerException(final String exception) {
@@ -25,7 +25,7 @@ public class DMPControllerException extends DMPException {
 
 	/**
 	 * Creates a new DMP exception with the given exception message and a cause.
-	 *
+	 * 
 	 * @param message the exception message
 	 * @param cause a previously thrown exception, causing this one
 	 */

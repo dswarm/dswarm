@@ -6,12 +6,12 @@ import java.util.Set;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.dswarm.persistence.model.DMPJPAObject;
+
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.google.common.collect.Sets;
-
-import org.dswarm.persistence.model.DMPJPAObject;
 
 abstract class SetReferenceSerializer<DMPOBJECTIMPL extends DMPJPAObject> extends JsonSerializer<Set<DMPOBJECTIMPL>> {
 

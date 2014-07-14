@@ -1,5 +1,6 @@
 package org.dswarm.converter;
 
+import org.dswarm.persistence.PersistenceModule;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
@@ -14,8 +15,6 @@ import com.google.inject.Singleton;
 import com.google.inject.persist.PersistService;
 import com.google.inject.persist.jpa.JpaPersistModule;
 
-import org.dswarm.persistence.PersistenceModule;
-
 public class GuicedTest {
 
 	protected static transient Injector	injector;
@@ -26,7 +25,7 @@ public class GuicedTest {
 
 			/**
 			 * Provides the {@link com.fasterxml.jackson.databind.ObjectMapper} instance for JSON de-/serialisation.
-			 *
+			 * 
 			 * @return a {@link com.fasterxml.jackson.databind.ObjectMapper} instance as singleton
 			 */
 			@Provides

@@ -1,11 +1,10 @@
 package org.dswarm.persistence.service.test.utils;
 
-import org.junit.Assert;
-
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.AdvancedDMPJPAObject;
 import org.dswarm.persistence.model.proxy.ProxyAdvancedDMPJPAObject;
 import org.dswarm.persistence.service.AdvancedDMPJPAService;
+import org.junit.Assert;
 
 public abstract class AdvancedDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE extends AdvancedDMPJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyAdvancedDMPJPAObject<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
 		extends BasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
@@ -15,16 +14,20 @@ public abstract class AdvancedDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE
 		super(pojoClassArg, persistenceServiceClassArg);
 	}
 
+	/**
+	 * {@inheritDoc} <br />
+	 * Assert that their URIs are equal. <br />
+	 * 
+	 * @param expectedObject
+	 * @param actualObject
+	 */
 	@Override
 	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) {
 
 		super.compareObjects(expectedObject, actualObject);
 
-		if (expectedObject.getUri() != null) {
+		Assert.assertEquals("the " + pojoClassName + " uris should be equal", expectedObject.getUri(), actualObject.getUri());
 
-			Assert.assertNotNull("the " + pojoClassName + " uri shouldn't be null", actualObject.getUri());
-			Assert.assertEquals("the " + pojoClassName + " uris should be equal", expectedObject.getUri(), actualObject.getUri());
-		}
 	}
 
 	@Override

@@ -12,7 +12,7 @@ import org.culturegraph.mf.framework.annotations.Out;
 
 /**
  * Decodes lines of CSV files.
- *
+ * 
  * @author tgaengler
  */
 @Description("Decodes lines of CSV files.")

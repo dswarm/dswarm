@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.apache.commons.io.Charsets;
+import org.dswarm.graph.json.Model;
+import org.dswarm.graph.json.util.Util;
+import org.dswarm.persistence.model.internal.gdm.GDMModel;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,11 +17,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
-
-import org.dswarm.graph.json.Model;
-import org.dswarm.graph.json.util.Util;
-import org.dswarm.persistence.model.internal.gdm.GDMModel;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * @author tgaengler

@@ -12,7 +12,7 @@ import com.google.common.base.Objects;
 /**
  * The most abstract POJO class, i.e., this class is intended for inheritance. It only provides a getter for the identifier and
  * basic #hashCode and #equals implementations (by identifier).
- *
+ * 
  * @author tgaengler
  * @param <IDTYPE> the identifier type of the object
  */
@@ -27,7 +27,7 @@ public abstract class DMPObject<IDTYPE> implements Serializable {
 
 	/**
 	 * Gets the identifier of this object.
-	 *
+	 * 
 	 * @return the identifier of this object as the implemented identifier type
 	 */
 	public abstract IDTYPE getId();

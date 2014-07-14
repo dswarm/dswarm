@@ -3,11 +3,11 @@ package org.dswarm.converter.flow;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import com.google.common.base.Preconditions;
-
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
+
+import com.google.common.base.Preconditions;
 
 /**
  * @author phorn

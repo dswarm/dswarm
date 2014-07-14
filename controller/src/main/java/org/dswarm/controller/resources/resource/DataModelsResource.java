@@ -16,22 +16,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.base.Optional;
-import com.google.common.collect.Iterators;
-import com.google.inject.Provider;
-import com.google.inject.servlet.RequestScoped;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
-
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.eventbus.CSVConverterEvent;
 import org.dswarm.controller.eventbus.CSVConverterEventRecorder;
@@ -53,10 +37,25 @@ import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
 import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.resource.DataModelService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Optional;
+import com.google.common.collect.Iterators;
+import com.google.inject.Provider;
+import com.google.inject.servlet.RequestScoped;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 
 /**
  * A resource (controller service) for {@link DataModel}s.
- *
+ * 
  * @author tgaengler
  */
 @RequestScoped
@@ -79,7 +78,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 	/**
 	 * Creates a new resource (controller service) for {@link DataModel}s with the provider of the data model persistence service,
 	 * the object mapper, metrics registry, event bus provider and data model util.
-	 *
+	 * 
 	 * @param dataModelServiceProviderArg the data model persistence service provider
 	 * @param objectMapper an object mapper
 	 * @param dmpStatus an metrics registry
@@ -87,8 +86,8 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 	 * @param dataModelUtilArg the data model util
 	 */
 	@Inject
-	public DataModelsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg,
-			final DataModelUtil dataModelUtilArg, final Provider<SchemaEventRecorder> schemaEventRecorderProviderArg,
+	public DataModelsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg, final DataModelUtil dataModelUtilArg,
+			final Provider<SchemaEventRecorder> schemaEventRecorderProviderArg,
 			final Provider<XMLSchemaEventRecorder> xmlSchemaEventRecorderProviderArg,
 			final Provider<CSVConverterEventRecorder> csvConverterEventRecorderProviderArg,
 			final Provider<XMLConverterEventRecorder> xmlConverterEventRecorderProviderArg) throws DMPControllerException {
@@ -104,7 +103,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 
 	/**
 	 * This endpoint returns a data model as JSON representation for the provided data model identifier.
-	 *
+	 * 
 	 * @param id a data model identifier
 	 * @return a JSON representation of a data model
 	 */
@@ -126,7 +125,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 	 * This endpoint consumes a data model as JSON representation and persists this data model in the database, i.e., the data
 	 * resource of this data model will be processed re. the parameters in the configuration of the data model. Thereby, the
 	 * schema of the data will be created as well.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one data model
 	 * @return the persisted data model as JSON representation
 	 * @throws DMPControllerException
@@ -146,7 +145,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 
 	/**
 	 * This endpoint returns a list of all data models as JSON representation.
-	 *
+	 * 
 	 * @return a list of all data models as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -164,7 +163,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 
 	/**
 	 * This endpoint consumes a data model as JSON representation and updates this data model in the database.
-	 *
+	 * 
 	 * @param jsonObjectString a JSON representation of one data model
 	 * @param id a data model identifier
 	 * @return the updated data model as JSON representation
@@ -187,7 +186,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 
 	/**
 	 * Returns the data for a given data model.
-	 *
+	 * 
 	 * @param id the data model identifier
 	 * @param atMost the number of records that should be returned at most
 	 * @return the data for a given data model
@@ -251,7 +250,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 
 	/**
 	 * This endpoint deletes a data model that matches the given id.
-	 *
+	 * 
 	 * @param id a data model identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
 	 *         went wrong

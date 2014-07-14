@@ -10,13 +10,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.junit.Assert;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import org.dswarm.controller.resources.test.ResourceTest;
 import org.dswarm.controller.test.GuicedTest;
 import org.dswarm.persistence.DMPPersistenceException;
@@ -25,6 +18,12 @@ import org.dswarm.persistence.model.proxy.ProxyDMPObject;
 import org.dswarm.persistence.service.BasicJPAService;
 import org.dswarm.persistence.service.test.utils.BasicJPAServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
+import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTILS extends BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE>
 		extends ResourceTest {
@@ -135,6 +134,13 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 		return responseObject;
 	}
 
+	/**
+	 * Load file containing JSON string and call {@link #createObject(String, DMPObject)} to create it in db.
+	 * 
+	 * @param objectJSONFileName name of file containing JSON string of object to be created
+	 * @return the object returned by {@link #createObject(String, DMPObject)}.
+	 * @throws Exception
+	 */
 	public POJOCLASS createObject(final String objectJSONFileName) throws Exception {
 
 		final String objectJSONString = DMPPersistenceUtil.getResourceAsString(objectJSONFileName);
@@ -158,6 +164,29 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 		final POJOCLASS actualObject = objectMapper.readValue(responseString, pojoClass);
 
 		compareObjects(expectedObject, actualObject);
+
+		return actualObject;
+	}
+
+	/**
+	 * Creates the object in db and asserts the response status is '201 created' but does not compare the response with the JSON
+	 * string.
+	 * 
+	 * @param objectJSONString the JSON string of the object to be created
+	 * @return the actual object as created in db, never null.
+	 * @throws Exception
+	 */
+	public POJOCLASS createObjectWithoutComparison(final String objectJSONString) throws Exception {
+
+		final Response response = executeCreateObject(objectJSONString);
+
+		Assert.assertEquals("201 Created was expected", 201, response.getStatus());
+
+		final String responseString = response.readEntity(String.class);
+
+		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
+
+		final POJOCLASS actualObject = objectMapper.readValue(responseString, pojoClass);
 
 		return actualObject;
 	}
@@ -246,7 +275,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 	/**
 	 * Creates a new object of the concrete POJO class.
-	 *
+	 * 
 	 * @return a new instance of the concrete POJO class
 	 * @throws DMPPersistenceException if something went wrong.
 	 */

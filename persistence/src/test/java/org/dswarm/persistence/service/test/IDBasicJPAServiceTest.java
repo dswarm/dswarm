@@ -2,16 +2,15 @@ package org.dswarm.persistence.service.test;
 
 import java.util.Set;
 
+import org.dswarm.persistence.model.DMPJPAObject;
+import org.dswarm.persistence.model.proxy.ProxyDMPJPAObject;
+import org.dswarm.persistence.service.BasicIDJPAService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Sets;
-
-import org.dswarm.persistence.model.DMPJPAObject;
-import org.dswarm.persistence.model.proxy.ProxyDMPJPAObject;
-import org.dswarm.persistence.service.BasicIDJPAService;
 
 public abstract class IDBasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPJPAObject<POJOCLASS>, POJOCLASS extends DMPJPAObject, JPASERVICEIMPL extends BasicIDJPAService<PROXYPOJOCLASS, POJOCLASS>>
 		extends BasicJPAServiceTest<PROXYPOJOCLASS, POJOCLASS, JPASERVICEIMPL, Long> {

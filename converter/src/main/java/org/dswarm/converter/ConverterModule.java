@@ -7,7 +7,7 @@ import com.google.inject.AbstractModule;
 
 /**
  * The Guice configuration of the converter module. Interface/classes that are registered here can be utilised for injection.
- *
+ * 
  * @author phorn
  */
 public class ConverterModule extends AbstractModule {

@@ -1,5 +1,10 @@
 package org.dswarm.persistence.service.job.test;
 
+import org.dswarm.persistence.GuicedTest;
+import org.dswarm.persistence.model.job.Filter;
+import org.dswarm.persistence.model.job.proxy.ProxyFilter;
+import org.dswarm.persistence.service.job.FilterService;
+import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -7,12 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.dswarm.persistence.GuicedTest;
-import org.dswarm.persistence.model.job.Filter;
-import org.dswarm.persistence.model.job.proxy.ProxyFilter;
-import org.dswarm.persistence.service.job.FilterService;
-import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
 
 public class FilterServiceTest extends IDBasicJPAServiceTest<ProxyFilter, Filter, FilterService> {
 
