@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Optional;
 
 /**
- * Flow that transforms a given XML source into RDF triples.
+ * Flow that transforms a given XML source into GDM statements.
  * 
  * @author tgaengler
  */

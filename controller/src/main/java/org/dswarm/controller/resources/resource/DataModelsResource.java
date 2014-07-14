@@ -78,12 +78,15 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 	/**
 	 * Creates a new resource (controller service) for {@link DataModel}s with the provider of the data model persistence service,
 	 * the object mapper, metrics registry, event bus provider and data model util.
-	 * 
-	 * @param dataModelServiceProviderArg the data model persistence service provider
-	 * @param objectMapper an object mapper
-	 * @param dmpStatus an metrics registry
-	 * @param eventBusProviderArg an event bus provider
+	 *
+	 * @param utilsFactory
+	 * @param dmpStatusArg an metrics registry
 	 * @param dataModelUtilArg the data model util
+	 * @param schemaEventRecorderProviderArg
+	 * @param xmlSchemaEventRecorderProviderArg
+	 * @param csvConverterEventRecorderProviderArg
+	 * @param xmlConverterEventRecorderProviderArg
+	 * @throws DMPControllerException
 	 */
 	@Inject
 	public DataModelsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg, final DataModelUtil dataModelUtilArg,
@@ -378,6 +381,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 
 					break;
 				case "xml":
+				case "mabxml":
 
 					// eventBusProvider.get().post(new XMLConverterEvent(dataModel));
 

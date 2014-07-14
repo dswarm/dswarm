@@ -13,6 +13,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.dswarm.graph.json.Resource;
 import org.dswarm.graph.json.util.Util;
 import org.dswarm.persistence.DMPPersistenceException;
@@ -20,6 +21,7 @@ import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
 import org.dswarm.persistence.model.proxy.RetrievalType;
+import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
 import org.dswarm.persistence.model.schema.Attribute;
@@ -394,14 +396,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			schema.setRecordClass(recordClass);
 		}
 
-		final ProxyDataModel proxyUpdatedDataModel = dataModelService.get().updateObjectTransactional(dataModel);
-
-		if (proxyUpdatedDataModel == null) {
-
-			throw new DMPPersistenceException("couldn't update data model");
-		}
-
-		return proxyUpdatedDataModel.getObject();
+		return updateDataModel(dataModel);
 	}
 
 	private DataModel addAttributePaths(final DataModel dataModel, final Set<AttributePathHelper> attributePathHelpers)
@@ -417,6 +412,13 @@ public class InternalGDMGraphService implements InternalModelService {
 		if (attributePathHelpers.isEmpty()) {
 
 			InternalGDMGraphService.LOG.debug("there are no attribute paths from data model '" + dataModel.getId() + "'");
+		}
+
+		if(dataModel.getSchema().getId() == (long) 3) {
+
+			// mabxml schema is already there
+
+			return dataModel;
 		}
 
 		for (final AttributePathHelper attributePathHelper : attributePathHelpers) {
@@ -470,6 +472,10 @@ public class InternalGDMGraphService implements InternalModelService {
 			dataModel.getSchema().addAttributePath(attributePath);
 		}
 
+		return updateDataModel(dataModel);
+	}
+
+	private DataModel updateDataModel(DataModel dataModel) throws DMPPersistenceException {
 		final ProxyDataModel proxyUpdatedDataModel = dataModelService.get().updateObjectTransactional(dataModel);
 
 		if (proxyUpdatedDataModel == null) {
@@ -488,21 +494,48 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		if (dataModel.getSchema() == null) {
 
-			// create new schema
-			final ProxySchema proxySchema = schemaService.get().createObjectTransactional();
+			final Configuration configuration = dataModel.getConfiguration();
 
-			if (proxySchema != null) {
+			boolean isMabXml = false;
 
-				schema = proxySchema.getObject();
+			if (configuration != null) {
+
+				final JsonNode storageTypeJsonNode = configuration.getParameter("storage_type");
+
+				if (storageTypeJsonNode != null) {
+
+					final String storageType = storageTypeJsonNode.asText();
+
+					if (storageType != null && storageType.equals("mabxml")) {
+
+						isMabXml = true;
+					}
+				}
+			}
+
+			if (!isMabXml) {
+
+				// create new schema
+				final ProxySchema proxySchema = schemaService.get().createObjectTransactional();
+
+				if (proxySchema != null) {
+
+					schema = proxySchema.getObject();
+				} else {
+
+					schema = null;
+				}
 			} else {
 
-				schema = null;
+				// assign existing mabxml schema to data resource
+
+				schema = schemaService.get().getObject((long) 3);
 			}
 
 			dataModel.setSchema(schema);
 		}
 
-		return dataModel;
+		return updateDataModel(dataModel);
 	}
 
 	private DataModel getDataModel(final Long dataModelId) {
