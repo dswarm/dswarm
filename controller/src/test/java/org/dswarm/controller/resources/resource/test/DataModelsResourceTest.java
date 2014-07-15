@@ -58,44 +58,51 @@ import com.google.inject.Key;
 public class DataModelsResourceTest extends
 		BasicResourceTest<DataModelsResourceTestUtils, DataModelServiceTestUtils, DataModelService, ProxyDataModel, DataModel, Long> {
 
-	private static final Logger						LOG					= LoggerFactory.getLogger(DataModelsResourceTest.class);
+	private static final Logger				LOG					= LoggerFactory.getLogger(DataModelsResourceTest.class);
 
-	private final AttributesResourceTestUtils		attributesResourceTestUtils;
+	private AttributesResourceTestUtils		attributesResourceTestUtils;
 
-	private final ClaszesResourceTestUtils			claszesResourceTestUtils;
+	private ClaszesResourceTestUtils		claszesResourceTestUtils;
 
-	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
+	private AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
 
-	private final ResourcesResourceTestUtils		resourcesResourceTestUtils;
+	private ResourcesResourceTestUtils		resourcesResourceTestUtils;
 
-	private final ConfigurationsResourceTestUtils	configurationsResourceTestUtils;
+	private ConfigurationsResourceTestUtils	configurationsResourceTestUtils;
 
-	private final SchemasResourceTestUtils			schemasResourceTestUtils;
+	private SchemasResourceTestUtils		schemasResourceTestUtils;
 
-	private final DataModelsResourceTestUtils		dataModelsResourceTestUtils;
+	private DataModelsResourceTestUtils		dataModelsResourceTestUtils;
 
-	private final Map<Long, Attribute>				attributes			= Maps.newHashMap();
+	private final Map<Long, Attribute>		attributes			= Maps.newHashMap();
 
-	private final Map<Long, AttributePath>			attributePaths		= Maps.newLinkedHashMap();
+	private final Map<Long, AttributePath>	attributePaths		= Maps.newLinkedHashMap();
 
-	private Clasz									recordClass;
+	private Clasz							recordClass;
 
-	private Clasz									updateRecordClass	= null;
+	private Clasz							updateRecordClass	= null;
 
-	private Schema									schema;
+	private Schema							schema;
 
-	private Configuration							configuration;
+	private Configuration					configuration;
 
-	private Configuration							updateConfiguration	= null;
+	private Configuration					updateConfiguration	= null;
 
-	private Resource								resource;
+	private Resource						resource;
 
-	private Resource								updateResource		= null;
+	private Resource						updateResource		= null;
 
 	public DataModelsResourceTest() {
 
 		super(DataModel.class, DataModelService.class, "datamodels", "datamodel.json", new DataModelsResourceTestUtils());
+	}
 
+	@Override
+	protected void initObjects() {
+
+		super.initObjects();
+
+		pojoClassResourceTestUtils = new DataModelsResourceTestUtils();
 		attributesResourceTestUtils = new AttributesResourceTestUtils();
 		claszesResourceTestUtils = new ClaszesResourceTestUtils();
 		attributePathsResourceTestUtils = new AttributePathsResourceTestUtils();
@@ -105,8 +112,25 @@ public class DataModelsResourceTest extends
 		dataModelsResourceTestUtils = new DataModelsResourceTestUtils();
 	}
 
+	private void resetObjectVars() {
+
+		attributes.clear();
+		attributePaths.clear();
+		recordClass = null;
+		updateRecordClass = null;
+		schema = null;
+		configuration = null;
+		updateConfiguration = null;
+		resource = null;
+		updateResource = null;
+	}
+
 	@Override
 	public void prepare() throws Exception {
+
+		restartServer();
+		initObjects();
+		resetObjectVars();
 
 		super.prepare();
 

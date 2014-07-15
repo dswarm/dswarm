@@ -9,6 +9,9 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.dswarm.controller.resources.resource.test.utils.ConfigurationsResourceTestUtils;
+import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
+import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.ContentSchemasResourceTestUtils;
 import org.dswarm.persistence.model.schema.ContentSchema;
 import org.junit.After;
@@ -38,15 +41,15 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 public class SchemasResourceTest extends
 		BasicResourceTest<SchemasResourceTestUtils, SchemaServiceTestUtils, SchemaService, ProxySchema, Schema, Long> {
 
-	private final AttributesResourceTestUtils		attributesResourceTestUtils;
+	private AttributesResourceTestUtils		attributesResourceTestUtils;
 
-	private final ClaszesResourceTestUtils			claszesResourceTestUtils;
+	private ClaszesResourceTestUtils			claszesResourceTestUtils;
 
-	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
+	private AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
 
-	private final SchemasResourceTestUtils			schemasResourceTestUtils;
+	private SchemasResourceTestUtils			schemasResourceTestUtils;
 
-	private final ContentSchemasResourceTestUtils	contentSchemasResourceTestUtils;
+	private ContentSchemasResourceTestUtils	contentSchemasResourceTestUtils;
 
 	final Map<Long, Attribute>						attributes		= Maps.newHashMap();
 
@@ -61,7 +64,14 @@ public class SchemasResourceTest extends
 	public SchemasResourceTest() {
 
 		super(Schema.class, SchemaService.class, "schemas", "schema.json", new SchemasResourceTestUtils());
+	}
 
+	@Override
+	protected void initObjects() {
+
+		super.initObjects();
+
+		pojoClassResourceTestUtils = new SchemasResourceTestUtils();
 		attributesResourceTestUtils = new AttributesResourceTestUtils();
 		claszesResourceTestUtils = new ClaszesResourceTestUtils();
 		attributePathsResourceTestUtils = new AttributePathsResourceTestUtils();
@@ -69,8 +79,20 @@ public class SchemasResourceTest extends
 		contentSchemasResourceTestUtils = new ContentSchemasResourceTestUtils();
 	}
 
+	private void resetObjectVars() {
+
+		attributes.clear();
+		attributePaths.clear();
+		recordClass = null;
+		contentSchema = null;
+	}
+
 	@Override
 	public void prepare() throws Exception {
+
+		restartServer();
+		initObjects();
+		resetObjectVars();
 
 		// note: due to the exclusion of various attribute and attribute path (that already exist in the database) - the resulted
 		// schema doesn't fully reflect the schema as it is present in the schema.json example
@@ -443,7 +465,14 @@ public class SchemasResourceTest extends
 
 		attributesResourceTestUtils.compareObjects(expectedAttribute, attribute);
 
-		firstAttributePath.addAttribute(attribute);
+		LinkedList<Attribute> firstAttributePathAttributesList = firstAttributePath.getAttributePath();
+		firstAttributePathAttributesList.add(attribute);
+
+		final AttributePath newFirstAttributePath = attributePathsResourceTestUtils.getPersistenceServiceTestUtils().createAttributePath(firstAttributePathAttributesList);
+		Assert.assertNotNull(newFirstAttributePath);
+		attributePaths.put(newFirstAttributePath.getId(), newFirstAttributePath);
+		persistedSchema.removeAttributePath(firstAttributePath);
+		persistedSchema.addAttributePath(newFirstAttributePath);
 
 		// clasz update (with a non-persistent class)
 		final String biboBookId = "http://purl.org/ontology/bibo/Bookibook";
@@ -461,6 +490,7 @@ public class SchemasResourceTest extends
 		updateSchemaJSONString = objectMapper.writeValueAsString(updateSchemaJSON);
 
 		final Schema expectedSchema = objectMapper.readValue(updateSchemaJSONString, Schema.class);
+		expectedSchema.setContentSchema(null);
 
 		Assert.assertNotNull("the schema JSON string shouldn't be null", updateSchemaJSONString);
 

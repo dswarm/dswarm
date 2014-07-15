@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
 
+import org.dswarm.persistence.service.MaintainDBService;
 import org.dswarm.persistence.service.schema.ContentSchemaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,6 +86,7 @@ public class PersistenceModule extends AbstractModule {
 		bind(ProjectService.class).in(Scopes.SINGLETON);
 		bind(MappingAttributePathInstanceService.class).in(Scopes.SINGLETON);
 		bind(ContentSchemaService.class).in(Scopes.SINGLETON);
+		bind(MaintainDBService.class).in(Scopes.SINGLETON);
 
 		bind(InternalModelServiceFactory.class).to(InternalServiceFactoryImpl.class).in(Scopes.SINGLETON);
 	}
