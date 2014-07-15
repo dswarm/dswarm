@@ -2,6 +2,17 @@ package org.dswarm.controller.resources.job.test;
 
 import org.dswarm.controller.resources.job.test.utils.ComponentsResourceTestUtils;
 import org.dswarm.controller.resources.job.test.utils.FunctionsResourceTestUtils;
+import org.dswarm.controller.resources.job.test.utils.MappingsResourceTestUtils;
+import org.dswarm.controller.resources.job.test.utils.ProjectsResourceTestUtils;
+import org.dswarm.controller.resources.job.test.utils.TransformationsResourceTestUtils;
+import org.dswarm.controller.resources.resource.test.utils.ConfigurationsResourceTestUtils;
+import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
+import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
+import org.dswarm.controller.resources.schema.test.utils.AttributePathsResourceTestUtils;
+import org.dswarm.controller.resources.schema.test.utils.AttributesResourceTestUtils;
+import org.dswarm.controller.resources.schema.test.utils.ClaszesResourceTestUtils;
+import org.dswarm.controller.resources.schema.test.utils.MappingAttributePathInstancesResourceTestUtils;
+import org.dswarm.controller.resources.schema.test.utils.SchemasResourceTestUtils;
 import org.dswarm.controller.resources.test.BasicResourceTest;
 import org.dswarm.persistence.model.job.Component;
 import org.dswarm.persistence.model.job.Function;
@@ -16,8 +27,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class ComponentsResourceTest extends
 		BasicResourceTest<ComponentsResourceTestUtils, ComponentServiceTestUtils, ComponentService, ProxyComponent, Component, Long> {
 
-	private final FunctionsResourceTestUtils	functionsResourceTestUtils;
-	private final ComponentsResourceTestUtils	componentsResourceTestUtils;
+	private FunctionsResourceTestUtils	functionsResourceTestUtils;
+	private ComponentsResourceTestUtils	componentsResourceTestUtils;
 
 	private Function							function;
 
@@ -30,7 +41,26 @@ public class ComponentsResourceTest extends
 	}
 
 	@Override
+	protected void initObjects() {
+
+		super.initObjects();
+
+		pojoClassResourceTestUtils = new ComponentsResourceTestUtils();
+		functionsResourceTestUtils = new FunctionsResourceTestUtils();
+		componentsResourceTestUtils = new ComponentsResourceTestUtils();
+	}
+
+	private void resetObjectVars() {
+
+		function = null;
+	}
+
+	@Override
 	public void prepare() throws Exception {
+
+		restartServer();
+		initObjects();
+		resetObjectVars();
 
 		super.prepare();
 
