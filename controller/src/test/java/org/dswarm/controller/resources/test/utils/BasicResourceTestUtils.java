@@ -153,16 +153,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 	public POJOCLASS createObject(final String objectJSONString, final POJOCLASS expectedObject) throws Exception {
 
-		final Response response = executeCreateObject(objectJSONString);
-
-		Assert.assertEquals("201 Created was expected", 201, response.getStatus());
-
-		final String responseString = response.readEntity(String.class);
-
-		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
-
-		final POJOCLASS actualObject = objectMapper.readValue(responseString, pojoClass);
-
+		final POJOCLASS actualObject = createObjectWithoutComparison(objectJSONString);
 		compareObjects(expectedObject, actualObject);
 
 		return actualObject;
