@@ -43,6 +43,13 @@ public class XMLTransformationFlowTest extends GuicedTest {
 
 		testXMLTaskWithTuples("dd-528.mabxml.task.result.json", "dd-528.mabxml.task.json", "mabxml_dmp.tuples.json");
 	}
+	
+	@Test
+	public void testMabxmlConcatOneMappingOnFeldValueWithTwoFilters() throws Exception {
+
+		testXMLTaskWithTuples("dd-530.mabxml.task.result.json", "dd-530.mabxml.task.json", "test-mabxml.tuples.json");
+		testXMLMorphWithTuples("dd-530.mabxml.morph.result.json", "dd-530.mabxml.morph.xml", "test-mabxml.tuples.json");
+	}
 
 	@Test
 	public void testMetsmodsXmlWithFilterAndMapping() throws Exception {
@@ -69,6 +76,38 @@ public class XMLTransformationFlowTest extends GuicedTest {
 		final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
 
 		final TransformationFlow flow = TransformationFlow.fromTask(task, internalModelServiceFactoryProvider);
+
+		flow.getScript();
+
+		final String actual = flow.applyResource(tuplesJSONFileName);
+		final ArrayNode array = objectMapper2.readValue(actual, ArrayNode.class);
+		final String finalActual = objectMapper2.writeValueAsString(array);
+
+		final ArrayNode expectedArray = objectMapper2.readValue(expected, ArrayNode.class);
+		final String finalExpected = objectMapper2.writeValueAsString(expectedArray);
+
+		Assert.assertEquals(finalExpected.length(), finalActual.length());
+
+	}
+	
+	private void testXMLMorphWithTuples(final String resultJSONFileName, final String morphXMLFileName, final String tuplesJSONFileName)
+			throws Exception {
+
+		final String expected = DMPPersistenceUtil.getResourceAsString(resultJSONFileName);
+
+		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
+				.getProvider(InternalModelServiceFactory.class);
+
+		final String finalMorphXmlString = DMPPersistenceUtil.getResourceAsString(morphXMLFileName);
+
+		// looks like that the utilised ObjectMappers getting a bit mixed, i.e., actual sometimes delivers a result that is not in
+		// pretty print and sometimes it is in pretty print ... (that's why the reformatting of both - expected and actual)
+		final ObjectMapper objectMapper2 = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL).configure(
+				SerializationFeature.INDENT_OUTPUT, true);
+
+		//final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
+
+		final TransformationFlow flow = TransformationFlow.fromString(finalMorphXmlString, internalModelServiceFactoryProvider);
 
 		flow.getScript();
 

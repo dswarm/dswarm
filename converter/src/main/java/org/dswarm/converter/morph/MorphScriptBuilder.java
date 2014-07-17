@@ -934,21 +934,28 @@ public class MorphScriptBuilder {
 	}
 
 	private Map<String, String> extractFilterExpressions(final String filterExpressionString) {
+		
+		String[] filterStrings = {};
+
+		filterStrings = filterExpressionString.split(";");
 
 		Map<String, String> filterExpressionMap = Maps.newHashMap();
 
 		final ObjectMapper objectMapper = new ObjectMapper();
 
-		if (filterExpressionString != null && !filterExpressionString.isEmpty()) {
+		if (filterStrings != null && filterStrings.length > 0) {
 
-			try {
+			for (String filter : filterStrings) {
+				
+				try {
 
-				filterExpressionMap = objectMapper.readValue(filterExpressionString, new TypeReference<Map<String, String>>() {
+					filterExpressionMap = objectMapper.readValue(filter, new TypeReference<Map<String, String>>() {
 
-				});
-			} catch (final IOException e) {
+					});
+				} catch (final IOException e) {
 
-				MorphScriptBuilder.LOG.debug("something went wrong while deserializing filter expression" + e);
+					MorphScriptBuilder.LOG.debug("something went wrong while deserializing filter expression" + e);
+				}
 			}
 		}
 

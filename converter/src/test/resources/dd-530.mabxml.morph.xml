@@ -1,0 +1,33 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+    <meta>
+        <name>mapping-1402051926041</name>
+    </meta>
+    <rules>
+        <combine name="@feld_value__0__" reset="false" sameEntity="true" value="${feld_value__0__.filtered}">
+            <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
+                <equals string=" "/>
+            </data>
+            <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
+                <equals string="331"/>
+            </data>
+            <data name="feld_value__0__.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+        </combine>
+        <combine name="@feld_value__1__" reset="false" sameEntity="true" value="${feld_value__1__.filtered}">
+            <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
+                <equals string=" "/>
+            </data>
+            <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
+                <equals string="335"/>
+            </data>
+            <data name="feld_value__1__.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+        </combine>
+        <data name="http://purl.org/dc/elements/1.1/title" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
+        <combine name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" reset="true" value="${feld_value__0__} ${feld_value__1__}">
+            <data name="feld_value__0__" source="@feld_value__0__"/>
+            <data name="feld_value__1__" source="@feld_value__1__"/>
+        </combine>
+        <data name="http://purl.org/dc/elements/1.1/title1" source="@feld_value__0__"/>
+        <data name="http://purl.org/dc/elements/1.1/title2" source="@feld_value__1__"/>
+    </rules>
+</metamorph>
