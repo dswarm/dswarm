@@ -35,21 +35,21 @@ import com.google.common.collect.Maps;
 public class MappingsResourceTest extends
 		BasicResourceTest<MappingsResourceTestUtils, MappingServiceTestUtils, MappingService, ProxyMapping, Mapping, Long> {
 
-	private final FiltersResourceTestUtils							filtersResourceTestUtils;
+	private FiltersResourceTestUtils							filtersResourceTestUtils;
 
-	private final FunctionsResourceTestUtils						functionsResourceTestUtils;
+	private FunctionsResourceTestUtils						functionsResourceTestUtils;
 
-	private final TransformationsResourceTestUtils					transformationsResourceTestUtils;
+	private TransformationsResourceTestUtils					transformationsResourceTestUtils;
 
-	private final ComponentsResourceTestUtils						componentsResourceTestUtils;
+	private ComponentsResourceTestUtils						componentsResourceTestUtils;
 
-	private final AttributesResourceTestUtils						attributesResourceTestUtils;
+	private AttributesResourceTestUtils						attributesResourceTestUtils;
 
-	private final AttributePathsResourceTestUtils					attributePathsResourceTestUtils;
+	private AttributePathsResourceTestUtils					attributePathsResourceTestUtils;
 
-	private final MappingsResourceTestUtils							mappingsResourceTestUtils;
+	private MappingsResourceTestUtils							mappingsResourceTestUtils;
 
-	private final MappingAttributePathInstancesResourceTestUtils	mappingAttributePathInstancesResourceTestUtils;
+	private MappingAttributePathInstancesResourceTestUtils	mappingAttributePathInstancesResourceTestUtils;
 
 	private Function												function;
 
@@ -76,7 +76,14 @@ public class MappingsResourceTest extends
 	public MappingsResourceTest() {
 
 		super(Mapping.class, MappingService.class, "mappings", "mapping.json", new MappingsResourceTestUtils());
+	}
 
+	@Override
+	protected void initObjects() {
+
+		super.initObjects();
+
+		pojoClassResourceTestUtils = new MappingsResourceTestUtils();
 		filtersResourceTestUtils = new FiltersResourceTestUtils();
 		functionsResourceTestUtils = new FunctionsResourceTestUtils();
 		componentsResourceTestUtils = new ComponentsResourceTestUtils();
@@ -87,8 +94,27 @@ public class MappingsResourceTest extends
 		mappingAttributePathInstancesResourceTestUtils = new MappingAttributePathInstancesResourceTestUtils();
 	}
 
+	private void resetObjectVars() {
+
+		function = null;
+		updateFunction = null;
+		updateFilter = null;
+		component = null;
+		transformation = null;
+		transformationComponent = null;
+		updateTransformationComponent = null;
+		updateInputAttributePath = null;
+		attributes.clear();
+		attributePaths.clear();
+		mappingAttributePathInstances.clear();
+	}
+
 	@Override
 	public void prepare() throws Exception {
+
+		restartServer();
+		initObjects();
+		resetObjectVars();
 
 		super.prepare();
 

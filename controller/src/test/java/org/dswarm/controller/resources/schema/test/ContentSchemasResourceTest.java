@@ -7,9 +7,7 @@ import javax.ws.rs.core.Response;
 
 import org.dswarm.controller.resources.schema.test.utils.AttributePathsResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.AttributesResourceTestUtils;
-import org.dswarm.controller.resources.schema.test.utils.ClaszesResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.ContentSchemasResourceTestUtils;
-import org.dswarm.controller.resources.schema.test.utils.SchemasResourceTestUtils;
 import org.dswarm.controller.resources.test.BasicResourceTest;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
@@ -42,10 +40,6 @@ public class ContentSchemasResourceTest
 	public ContentSchemasResourceTest() {
 
 		super(ContentSchema.class, ContentSchemaService.class, "contentschemas", "content_schema.json", new ContentSchemasResourceTestUtils());
-
-		attributesResourceTestUtils = new AttributesResourceTestUtils();
-		attributePathsResourceTestUtils = new AttributePathsResourceTestUtils();
-		contentSchemasResourceTestUtils = new ContentSchemasResourceTestUtils();
 	}
 
 	@Override

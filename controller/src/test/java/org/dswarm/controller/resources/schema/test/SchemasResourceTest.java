@@ -9,11 +9,22 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.dswarm.controller.resources.resource.test.utils.ConfigurationsResourceTestUtils;
-import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
-import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
+import org.dswarm.controller.resources.schema.test.utils.AttributePathsResourceTestUtils;
+import org.dswarm.controller.resources.schema.test.utils.AttributesResourceTestUtils;
+import org.dswarm.controller.resources.schema.test.utils.ClaszesResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.ContentSchemasResourceTestUtils;
+import org.dswarm.controller.resources.schema.test.utils.SchemasResourceTestUtils;
+import org.dswarm.controller.resources.test.BasicResourceTest;
+import org.dswarm.persistence.model.schema.Attribute;
+import org.dswarm.persistence.model.schema.AttributePath;
+import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.ContentSchema;
+import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.model.schema.proxy.ProxySchema;
+import org.dswarm.persistence.model.schema.utils.SchemaUtils;
+import org.dswarm.persistence.service.schema.SchemaService;
+import org.dswarm.persistence.service.schema.test.utils.SchemaServiceTestUtils;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -22,21 +33,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
-import org.dswarm.controller.resources.schema.test.utils.AttributePathsResourceTestUtils;
-import org.dswarm.controller.resources.schema.test.utils.AttributesResourceTestUtils;
-import org.dswarm.controller.resources.schema.test.utils.ClaszesResourceTestUtils;
-import org.dswarm.controller.resources.schema.test.utils.SchemasResourceTestUtils;
-import org.dswarm.controller.resources.test.BasicResourceTest;
-import org.dswarm.persistence.model.schema.Attribute;
-import org.dswarm.persistence.model.schema.AttributePath;
-import org.dswarm.persistence.model.schema.Clasz;
-import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.model.schema.proxy.ProxySchema;
-import org.dswarm.persistence.model.schema.utils.SchemaUtils;
-import org.dswarm.persistence.service.schema.SchemaService;
-import org.dswarm.persistence.service.schema.test.utils.SchemaServiceTestUtils;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class SchemasResourceTest extends
 		BasicResourceTest<SchemasResourceTestUtils, SchemaServiceTestUtils, SchemaService, ProxySchema, Schema, Long> {

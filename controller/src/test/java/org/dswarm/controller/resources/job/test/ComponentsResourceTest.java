@@ -35,9 +35,6 @@ public class ComponentsResourceTest extends
 	public ComponentsResourceTest() {
 
 		super(Component.class, ComponentService.class, "components", "component.json", new ComponentsResourceTestUtils());
-
-		functionsResourceTestUtils = new FunctionsResourceTestUtils();
-		componentsResourceTestUtils = new ComponentsResourceTestUtils();
 	}
 
 	@Override
