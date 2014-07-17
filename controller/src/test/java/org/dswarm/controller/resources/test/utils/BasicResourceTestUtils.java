@@ -191,11 +191,6 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 		return actualObject;
 	}
 
-	public Response executeCreateObject(final String objectJSONString) throws Exception {
-
-		return target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(objectJSONString));
-	}
-
 	public POJOCLASS updateObject(final POJOCLASS persistedObject, final String updateObjectJSONFileName) throws Exception {
 
 		String updateObjectJSONString = DMPPersistenceUtil.getResourceAsString(updateObjectJSONFileName);
@@ -210,6 +205,11 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 		final POJOCLASS updatedObject = updateObject(updateObjectJSONString, expectedObject);
 
 		return updatedObject;
+	}
+
+	public Response executeCreateObject(final String objectJSONString) throws Exception {
+
+		return target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(objectJSONString));
 	}
 
 	public POJOCLASS updateObject(final String updateObjectJSONString, final POJOCLASS expectedObject) throws Exception {

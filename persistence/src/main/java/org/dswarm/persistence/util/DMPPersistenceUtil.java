@@ -3,6 +3,7 @@ package org.dswarm.persistence.util;
 import java.io.IOException;
 import java.net.URL;
 import java.security.SecureRandom;
+import java.util.List;
 import java.util.Random;
 
 import org.dswarm.init.DMPException;
@@ -18,6 +19,7 @@ import org.dswarm.persistence.model.resource.utils.ResourceUtils;
 import org.dswarm.persistence.model.schema.utils.AttributePathUtils;
 import org.dswarm.persistence.model.schema.utils.AttributeUtils;
 import org.dswarm.persistence.model.schema.utils.ClaszUtils;
+import org.dswarm.persistence.model.schema.utils.ContentSchemaUtils;
 import org.dswarm.persistence.model.schema.utils.MappingAttributePathInstanceUtils;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 
@@ -67,6 +69,8 @@ public final class DMPPersistenceUtil {
 
 	private static final SchemaUtils						SCHEMAUTILS;
 
+	private static final ContentSchemaUtils					CONTENTSCHEMAUTILS;
+
 	private static final TransformationUtils				TRANSFORMATIONUTILS;
 
 	private static final FilterUtils						FILTERUTILS;
@@ -78,13 +82,13 @@ public final class DMPPersistenceUtil {
 	private static final MappingAttributePathInstanceUtils	MAPPINGATTRIBUTEPATHINSTANCEUTILS;
 
 	private static final long								LOWER_RANGE	= -9223372036854775808L;	// assign
-																									// lower
-																									// range
-																									// value
+	// lower
+	// range
+	// value
 	private static final long								UPPER_RANGE	= -1;						// assign
-																									// upper
-																									// range
-																									// value
+	// upper
+	// range
+	// value
 	private static final Random								random		= new SecureRandom();
 
 	static {
@@ -104,6 +108,7 @@ public final class DMPPersistenceUtil {
 		CONFIGURATIONUTILS = new ConfigurationUtils();
 		CLASZUTILS = new ClaszUtils();
 		SCHEMAUTILS = new SchemaUtils();
+		CONTENTSCHEMAUTILS = new ContentSchemaUtils();
 		TRANSFORMATIONUTILS = new TransformationUtils();
 		FILTERUTILS = new FilterUtils();
 		DATAMODELUTILS = new DataModelUtils();
@@ -121,6 +126,18 @@ public final class DMPPersistenceUtil {
 	public static String getResourceAsString(final String resource) throws IOException {
 		final URL url = Resources.getResource(resource);
 		return Resources.toString(url, Charsets.UTF_8);
+	}
+
+	/**
+			* Retrieves a resource by the give path and converts its lines to strings.
+			*
+			* @param resource a resource path
+	* @return a line-wise string representation fo the content of the resource
+	* @throws IOException
+	*/
+	public static List<String> getResourceLinesAsString(final String resource) throws IOException {
+		final URL url = Resources.getResource(resource);
+		return Resources.readLines(url, Charsets.UTF_8);
 	}
 
 	/**
@@ -220,6 +237,11 @@ public final class DMPPersistenceUtil {
 	public static SchemaUtils getSchemaUtils() {
 
 		return DMPPersistenceUtil.SCHEMAUTILS;
+	}
+
+	public static ContentSchemaUtils getContentSchemaUtils() {
+
+		return DMPPersistenceUtil.CONTENTSCHEMAUTILS;
 	}
 
 	public static TransformationUtils getTransformationUtils() {

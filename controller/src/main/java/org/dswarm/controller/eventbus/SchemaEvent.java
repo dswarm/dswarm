@@ -17,6 +17,9 @@ public class SchemaEvent extends DataModelEvent {
 			if ("xml".equals(type)) {
 				return XSD;
 			}
+			if ("mabxml".equals(type)) {
+				return XSD;
+			}
 			throw new IllegalArgumentException("No schema type for [" + type + "]");
 		}
 	}

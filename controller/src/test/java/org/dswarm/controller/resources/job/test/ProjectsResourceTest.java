@@ -48,31 +48,31 @@ import com.google.common.collect.Maps;
 public class ProjectsResourceTest extends
 		BasicResourceTest<ProjectsResourceTestUtils, ProjectServiceTestUtils, ProjectService, ProxyProject, Project, Long> {
 
-	private final FunctionsResourceTestUtils						functionsResourceTestUtils;
+	private FunctionsResourceTestUtils						functionsResourceTestUtils;
 
-	private final TransformationsResourceTestUtils					transformationsResourceTestUtils;
+	private TransformationsResourceTestUtils					transformationsResourceTestUtils;
 
-	private final ComponentsResourceTestUtils						componentsResourceTestUtils;
+	private ComponentsResourceTestUtils						componentsResourceTestUtils;
 
-	private final AttributesResourceTestUtils						attributesResourceTestUtils;
+	private AttributesResourceTestUtils						attributesResourceTestUtils;
 
-	private final AttributePathsResourceTestUtils					attributePathsResourceTestUtils;
+	private AttributePathsResourceTestUtils					attributePathsResourceTestUtils;
 
-	private final ClaszesResourceTestUtils							claszesResourceTestUtils;
+	private ClaszesResourceTestUtils							claszesResourceTestUtils;
 
-	private final ResourcesResourceTestUtils						resourcesResourceTestUtils;
+	private ResourcesResourceTestUtils						resourcesResourceTestUtils;
 
-	private final ConfigurationsResourceTestUtils					configurationsResourceTestUtils;
+	private ConfigurationsResourceTestUtils					configurationsResourceTestUtils;
 
-	private final SchemasResourceTestUtils							schemasResourceTestUtils;
+	private SchemasResourceTestUtils							schemasResourceTestUtils;
 
-	private final DataModelsResourceTestUtils						dataModelsResourceTestUtils;
+	private DataModelsResourceTestUtils						dataModelsResourceTestUtils;
 
-	private final MappingsResourceTestUtils							mappingsResourceTestUtils;
+	private MappingsResourceTestUtils							mappingsResourceTestUtils;
 
-	private final ProjectsResourceTestUtils							projectsResourceTestUtils;
+	private ProjectsResourceTestUtils							projectsResourceTestUtils;
 
-	private final MappingAttributePathInstancesResourceTestUtils	mappingAttributePathInstancesResourceTestUtils;
+	private MappingAttributePathInstancesResourceTestUtils	mappingAttributePathInstancesResourceTestUtils;
 
 	private Function												function;
 
@@ -121,7 +121,14 @@ public class ProjectsResourceTest extends
 	public ProjectsResourceTest() {
 
 		super(Project.class, ProjectService.class, "projects", "project.json", new ProjectsResourceTestUtils());
+	}
 
+	@Override
+	protected void initObjects() {
+
+		super.initObjects();
+
+		pojoClassResourceTestUtils = new ProjectsResourceTestUtils();
 		functionsResourceTestUtils = new FunctionsResourceTestUtils();
 		componentsResourceTestUtils = new ComponentsResourceTestUtils();
 		attributesResourceTestUtils = new AttributesResourceTestUtils();
@@ -137,8 +144,38 @@ public class ProjectsResourceTest extends
 		mappingAttributePathInstancesResourceTestUtils = new MappingAttributePathInstancesResourceTestUtils();
 	}
 
+	private void resetObjectVars() {
+
+		function = null;
+		updateFunction = null;
+		component = null;
+		updateComponent = null;
+		updateTransformationComponent = null;
+		transformation = null;
+		updateTransformation = null;
+		transformationComponent = null;
+		attributes.clear();
+		attributePaths.clear();
+		mappingAttributePathInstances.clear();
+		recordClass = null;
+		updateRecordClass = null;
+		schema = null;
+		updateSchema = null;
+		configuration = null;
+		updateConfiguration = null;
+		resource = null;
+		updateResource = null;
+		updateMapping = null;
+		dataModels.clear();
+		mappings.clear();
+	}
+
 	@Override
 	public void prepare() throws Exception {
+
+		restartServer();
+		initObjects();
+		resetObjectVars();
 
 		super.prepare();
 

@@ -9,6 +9,7 @@ import org.dswarm.controller.resources.utils.BasicDMPResourceUtils;
 import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
+import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
 import org.dswarm.persistence.service.schema.SchemaService;
@@ -19,9 +20,6 @@ import com.google.inject.Inject;
 
 /**
  * @author tgaengler
- * @param <POJOCLASSPERSISTENCESERVICE>
- * @param <POJOCLASS>
- * @param <POJOCLASSIDTYPE>
  */
 public class SchemasResourceUtils extends BasicDMPResourceUtils<SchemaService, ProxySchema, Schema> {
 
@@ -68,6 +66,18 @@ public class SchemasResourceUtils extends BasicDMPResourceUtils<SchemaService, P
 			}
 
 			utilsFactory.get(ClaszesResourceUtils.class).replaceRelevantDummyIds(recordClasz, jsonNode, dummyIdCandidates);
+		}
+
+		final ContentSchema contentSchema = object.getContentSchema();
+
+		if (contentSchema != null) {
+
+			if (areDummyIdCandidatesEmpty(dummyIdCandidates)) {
+
+				return jsonNode;
+			}
+
+			utilsFactory.get(ContentSchemasResourceUtils.class).replaceRelevantDummyIds(contentSchema, jsonNode, dummyIdCandidates);
 		}
 
 		return jsonNode;

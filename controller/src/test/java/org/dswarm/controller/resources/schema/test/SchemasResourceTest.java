@@ -12,11 +12,13 @@ import javax.ws.rs.core.Response;
 import org.dswarm.controller.resources.schema.test.utils.AttributePathsResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.AttributesResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.ClaszesResourceTestUtils;
+import org.dswarm.controller.resources.schema.test.utils.ContentSchemasResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.SchemasResourceTestUtils;
 import org.dswarm.controller.resources.test.BasicResourceTest;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
+import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
@@ -35,13 +37,15 @@ import com.google.common.collect.Maps;
 public class SchemasResourceTest extends
 		BasicResourceTest<SchemasResourceTestUtils, SchemaServiceTestUtils, SchemaService, ProxySchema, Schema, Long> {
 
-	private final AttributesResourceTestUtils		attributesResourceTestUtils;
+	private AttributesResourceTestUtils		attributesResourceTestUtils;
 
-	private final ClaszesResourceTestUtils			claszesResourceTestUtils;
+	private ClaszesResourceTestUtils			claszesResourceTestUtils;
 
-	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
+	private AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
 
-	private final SchemasResourceTestUtils			schemasResourceTestUtils;
+	private SchemasResourceTestUtils			schemasResourceTestUtils;
+
+	private ContentSchemasResourceTestUtils	contentSchemasResourceTestUtils;
 
 	final Map<Long, Attribute>						attributes		= Maps.newHashMap();
 
@@ -51,18 +55,40 @@ public class SchemasResourceTest extends
 
 	private Clasz									recordClass2;
 
+	private ContentSchema							contentSchema;
+
 	public SchemasResourceTest() {
 
 		super(Schema.class, SchemaService.class, "schemas", "schema.json", new SchemasResourceTestUtils());
+	}
 
+	@Override
+	protected void initObjects() {
+
+		super.initObjects();
+
+		pojoClassResourceTestUtils = new SchemasResourceTestUtils();
 		attributesResourceTestUtils = new AttributesResourceTestUtils();
 		claszesResourceTestUtils = new ClaszesResourceTestUtils();
 		attributePathsResourceTestUtils = new AttributePathsResourceTestUtils();
 		schemasResourceTestUtils = new SchemasResourceTestUtils();
+		contentSchemasResourceTestUtils = new ContentSchemasResourceTestUtils();
+	}
+
+	private void resetObjectVars() {
+
+		attributes.clear();
+		attributePaths.clear();
+		recordClass = null;
+		contentSchema = null;
 	}
 
 	@Override
 	public void prepare() throws Exception {
+
+		restartServer();
+		initObjects();
+		resetObjectVars();
 
 		// note: due to the exclusion of various attribute and attribute path (that already exist in the database) - the resulted
 		// schema doesn't fully reflect the schema as it is present in the schema.json example
@@ -80,9 +106,7 @@ public class SchemasResourceTest extends
 
 			final String attributeJSONFileName = "attribute" + i + ".json";
 
-			final Attribute actualAttribute = attributesResourceTestUtils.createObject(attributeJSONFileName);
-
-			attributes.put(actualAttribute.getId(), actualAttribute);
+			attributesResourceTestUtils.prepareAttribute(attributeJSONFileName, attributes);
 		}
 
 		recordClass = claszesResourceTestUtils.createObject("clasz1.json");
@@ -101,52 +125,68 @@ public class SchemasResourceTest extends
 
 			final String attributePathJSONFileName = "attribute_path" + j + ".json";
 
-			String attributePathJSONString = DMPPersistenceUtil.getResourceAsString(attributePathJSONFileName);
-			final AttributePath attributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
-
-			final LinkedList<Attribute> attributes = attributePath.getAttributePath();
-			final LinkedList<Attribute> newAttributes = Lists.newLinkedList();
-
-			for (final Attribute attribute : attributes) {
-
-				for (final Attribute newAttribute : this.attributes.values()) {
-
-					if (attribute.getUri().equals(newAttribute.getUri())) {
-
-						newAttributes.add(newAttribute);
-
-						break;
-					}
-				}
-			}
-
-			attributePath.setAttributePath(newAttributes);
-
-			attributePathJSONString = objectMapper.writeValueAsString(attributePath);
-			final AttributePath expectedAttributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
-			final AttributePath actualAttributePath = attributePathsResourceTestUtils.createObject(attributePathJSONString, expectedAttributePath);
-
-			attributePaths.put(actualAttributePath.getId(), actualAttributePath);
+			attributePathsResourceTestUtils.prepareAttributePath(attributePathJSONFileName, attributePaths, attributes);
 		}
 
 		// manipulate attribute paths (incl. their attributes)
-		final ArrayNode attributePathsArray = objectMapper.createArrayNode();
+		final ArrayNode schemaAttributePathsArray = objectMapper.createArrayNode();
 
 		for (final AttributePath attributePath : attributePaths.values()) {
 
 			final String attributePathJSONString = objectMapper.writeValueAsString(attributePath);
 			final ObjectNode attributePathJSON = objectMapper.readValue(attributePathJSONString, ObjectNode.class);
 
-			attributePathsArray.add(attributePathJSON);
+			schemaAttributePathsArray.add(attributePathJSON);
 		}
 
-		objectJSON.put("attribute_paths", attributePathsArray);
+		objectJSON.put("attribute_paths", schemaAttributePathsArray);
+
+		// START content schema
+
+		final String contentSchemaJSONString = DMPPersistenceUtil.getResourceAsString("content_schema.json");
+		final ObjectNode contentSchemaJSON = objectMapper.readValue(contentSchemaJSONString, ObjectNode.class);
+
+		// manipulate key attribute paths (incl. their attributes)
+		final ArrayNode keyAttributePathsArray = objectMapper.createArrayNode();
+
+		for (final AttributePath attributePath : attributePaths.values()) {
+
+			final String attributePathJSONString = objectMapper.writeValueAsString(attributePath);
+			final ObjectNode attributePathJSON = objectMapper.readValue(attributePathJSONString, ObjectNode.class);
+
+			keyAttributePathsArray.add(attributePathJSON);
+		}
+
+		contentSchemaJSON.put("key_attribute_paths", keyAttributePathsArray);
+
+		final Attribute rdfValue = attributesResourceTestUtils.getObject((long) 43);
+		attributes.put(rdfValue.getId(), rdfValue);
+		AttributePath valueAttributePath = attributePathsResourceTestUtils.prepareAttributePath("attribute_path8.json", attributePaths, attributes);
+
+		// manipulate value attribute path
+		final String valueAttributePathJSONString = objectMapper.writeValueAsString(valueAttributePath);
+		final ObjectNode valueAttributePathJSON = objectMapper.readValue(valueAttributePathJSONString, ObjectNode.class);
+
+		contentSchemaJSON.put("value_attribute_path", valueAttributePathJSON);
+
+		final String finalContentSchemaJSONString = objectMapper.writeValueAsString(contentSchemaJSON);
+		final ContentSchema expectedContentSchema = objectMapper.readValue(finalContentSchemaJSONString, ContentSchema.class);
+
+		contentSchema = contentSchemasResourceTestUtils.createObject(finalContentSchemaJSONString, expectedContentSchema);
+
+		// END content schema
 
 		// manipulate record class
 		final String recordClassJSONString = objectMapper.writeValueAsString(recordClass);
 		final ObjectNode recordClassJSON = objectMapper.readValue(recordClassJSONString, ObjectNode.class);
 
 		objectJSON.put("record_class", recordClassJSON);
+
+		// manipulate content schema
+		final String persistentContentSchemaJSONString = objectMapper.writeValueAsString(contentSchema);
+		final ObjectNode persistentContentSchemaJSON = objectMapper.readValue(persistentContentSchemaJSONString, ObjectNode.class);
+
+		objectJSON.put("content_schema", persistentContentSchemaJSON);
 
 		// re-init expect object
 		objectJSONString = objectMapper.writeValueAsString(objectJSON);
@@ -244,7 +284,7 @@ public class SchemasResourceTest extends
 				match = true;
 			}
 
-			if (match == true && attributeURIs.size() == attributes.size()) {
+			if (match && attributeURIs.size() == attributes.size()) {
 
 				foundAttributePath = true;
 
@@ -351,7 +391,7 @@ public class SchemasResourceTest extends
 				match = true;
 			}
 
-			if (match == true && attributeURIs.size() == attributes.size()) {
+			if (match && attributeURIs.size() == attributes.size()) {
 
 				foundAttributePath = true;
 
@@ -383,6 +423,8 @@ public class SchemasResourceTest extends
 
 	@After
 	public void tearDown2() throws Exception {
+
+		contentSchemasResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(contentSchema);
 
 		for (final AttributePath attributePath : attributePaths.values()) {
 
@@ -419,7 +461,14 @@ public class SchemasResourceTest extends
 
 		attributesResourceTestUtils.compareObjects(expectedAttribute, attribute);
 
-		firstAttributePath.addAttribute(attribute);
+		LinkedList<Attribute> firstAttributePathAttributesList = firstAttributePath.getAttributePath();
+		firstAttributePathAttributesList.add(attribute);
+
+		final AttributePath newFirstAttributePath = attributePathsResourceTestUtils.getPersistenceServiceTestUtils().createAttributePath(firstAttributePathAttributesList);
+		Assert.assertNotNull(newFirstAttributePath);
+		attributePaths.put(newFirstAttributePath.getId(), newFirstAttributePath);
+		persistedSchema.removeAttributePath(firstAttributePath);
+		persistedSchema.addAttributePath(newFirstAttributePath);
 
 		// clasz update (with a non-persistent class)
 		final String biboBookId = "http://purl.org/ontology/bibo/Bookibook";
@@ -437,6 +486,7 @@ public class SchemasResourceTest extends
 		updateSchemaJSONString = objectMapper.writeValueAsString(updateSchemaJSON);
 
 		final Schema expectedSchema = objectMapper.readValue(updateSchemaJSONString, Schema.class);
+		expectedSchema.setContentSchema(null);
 
 		Assert.assertNotNull("the schema JSON string shouldn't be null", updateSchemaJSONString);
 

@@ -12,6 +12,7 @@ import com.google.common.collect.Sets;
 public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<AttributeService, ProxyAttribute, Attribute> {
 
 	public static final Set<String>	excludeAttributes	= Sets.newHashSet();
+	public static final Set<String>	excludeSubAttributes	= Sets.newHashSet();
 
 	static {
 
@@ -48,6 +49,16 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 		AttributeServiceTestUtils.excludeAttributes.add("http://purl.org/ontology/bibo/edition");
 		AttributeServiceTestUtils.excludeAttributes.add("http://purl.org/dc/terms/bibliographicCitation");
 		AttributeServiceTestUtils.excludeAttributes.add("http://xmlns.com/foaf/0.1/familyName");
+		AttributeServiceTestUtils.excludeAttributes.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id");
+		AttributeServiceTestUtils.excludeAttributes.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ");
+		AttributeServiceTestUtils.excludeAttributes.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status");
+		AttributeServiceTestUtils.excludeAttributes.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion");
+		AttributeServiceTestUtils.excludeAttributes.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
+		AttributeServiceTestUtils.excludeSubAttributes.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr");
+		AttributeServiceTestUtils.excludeSubAttributes.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind");
+		AttributeServiceTestUtils.excludeSubAttributes.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#value");
+		AttributeServiceTestUtils.excludeSubAttributes.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns");
+		AttributeServiceTestUtils.excludeSubAttributes.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf");
 	}
 
 	public AttributeServiceTestUtils() {
@@ -76,7 +87,7 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 			return;
 		}
 
-		if (AttributeServiceTestUtils.excludeAttributes.contains(object.getUri())) {
+		if (AttributeServiceTestUtils.excludeAttributes.contains(object.getUri()) || AttributeServiceTestUtils.excludeSubAttributes.contains(object.getUri())) {
 
 			// don't delete attributes that should be kept
 

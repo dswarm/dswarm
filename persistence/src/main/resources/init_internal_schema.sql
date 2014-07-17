@@ -52,7 +52,17 @@ INSERT INTO `ATTRIBUTE` (`ID`, `NAME`, `URI`) VALUES
 (32, 'edition', 'http://purl.org/ontology/bibo/edition'),
 (33, 'bibliographicCitation', 'http://purl.org/dc/terms/bibliographicCitation'),
 (34, 'familyName', 'http://xmlns.com/foaf/0.1/familyName'),
-(35, 'givenName', 'http://xmlns.com/foaf/0.1/givenName');
+(35, 'givenName', 'http://xmlns.com/foaf/0.1/givenName'),
+(36,'id','http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id'),
+(37,'typ','http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ'),
+(38,'status','http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status'),
+(39,'mabVersion','http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion'),
+(40,'feld','http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld'),
+(41,'nr','http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr'),
+(42,'ind','http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind'),
+(43,'value','http://www.w3.org/1999/02/22-rdf-syntax-ns#value'),
+(44,'ns','http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns'),
+(45,'tf','http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf');
 
 --
 -- Truncate table before insert `ATTRIBUTES_ATTRIBUTE_PATHS`
@@ -108,7 +118,30 @@ INSERT INTO `ATTRIBUTE_PATHS_ATTRIBUTES` (`ATTRIBUTE_PATH_ID`, `ATTRIBUTE_ID`) V
 (35, 34),
 (38, 34),
 (36, 35),
-(39, 35);
+(39, 35),
+(40,36),
+(41,37),
+(42,38),
+(43,39),
+(44,40),
+(45,40),
+(46,40),
+(47,40),
+(48,40),
+(49,40),
+(50,40),
+(51,40),
+(52,40),
+(53,40),
+(46,41),
+(47,42),
+(48,43),
+(51,43),
+(49,44),
+(50,44),
+(51,44),
+(52,45),
+(53,45);
 
 --
 -- Truncate table before insert `ATTRIBUTE_PATH`
@@ -158,7 +191,21 @@ INSERT INTO `ATTRIBUTE_PATH` (`ID`, `ATTRIBUTE_PATH`) VALUES
 (36, '[8,35]'),
 (37, '[10,1]'),
 (38, '[10,34]'),
-(39, '[10,35]');
+(39, '[10,35]'),
+(40,'[36]'),
+(41,'[37]'),
+(42,'[38]'),
+(43,'[39]'),
+(44,'[40]'),
+(45,'[40,1]'),
+(46,'[40,41]'),
+(47,'[40,42]'),
+(48,'[40,43]'),
+(49,'[40,44]'),
+(50,'[40,44,1]'),
+(51,'[40,44,43]'),
+(52,'[40,45]'),
+(53,'[40,45,1]');
 
 --
 -- Truncate table before insert `ATTRIBUTE_PATHS_SCHEMAS`
@@ -210,7 +257,21 @@ INSERT INTO `SCHEMAS_ATTRIBUTE_PATHS` (`SCHEMA_ID`, `ATTRIBUTE_PATH_ID`) VALUES
 (2, 36),
 (2, 37),
 (2, 38),
-(2, 39);
+(2, 39),
+(3,40),
+(3,41),
+(3,42),
+(3,43),
+(3,44),
+(3,45),
+(3,46),
+(3,47),
+(3,48),
+(3,49),
+(3,50),
+(3,51),
+(3,52),
+(3,53);
 
 --
 -- Truncate table before insert `CLASS`
@@ -223,16 +284,42 @@ TRUNCATE TABLE `CLASS`;
 
 INSERT INTO `CLASS` (`ID`, `NAME`, `URI`) VALUES
 (1, 'ContractItem', 'http://vocab.ub.uni-leipzig.de/bibrm/ContractItem'),
-(2, 'Document', 'http://purl.org/ontology/bibo/Document');
+(2, 'Document', 'http://purl.org/ontology/bibo/Document'),
+(3,'datensatzType','http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType');
+
+--
+-- Truncate table before insert `CONTENT_SCHEMAS_KEY_ATTRIBUTE_PATHS`
+--
+
+TRUNCATE TABLE `CONTENT_SCHEMAS_KEY_ATTRIBUTE_PATHS`;
+--
+-- Dumping data for table `CONTENT_SCHEMAS_KEY_ATTRIBUTE_PATHS`
+--
+
+INSERT INTO `CONTENT_SCHEMAS_KEY_ATTRIBUTE_PATHS` (`CONTENT_SCHEMA_ID`, `ATTRIBUTE_PATH_ID`) VALUES
+(1,46),(1,47);
+
+--
+-- Truncate table before insert `CONTENT_SCHEMA`
+--
+
+TRUNCATE TABLE `CONTENT_SCHEMA`;
+--
+-- Dumping data for table `CONTENT_SCHEMA`
+--
+
+INSERT INTO `CONTENT_SCHEMA` (`ID`, `NAME`, `KEY_ATTRIBUTE_PATHS`, `VALUE_ATTRIBUTE_PATH`) VALUES
+(1,'mab content schema','[46,47]',48);
 
 TRUNCATE TABLE `DATA_SCHEMA`;
 --
 -- Dumping data for table `DATA_SCHEMA`
 --
 
-INSERT INTO `DATA_SCHEMA` (`ID`, `NAME`, `RECORD_CLASS`) VALUES
-(1,'bibrm:ContractItem-Schema (ERM-Scenario)',1),
-(2,'bibo:Document-Schema (KIM-Titeldaten)',2);
+INSERT INTO `DATA_SCHEMA` (`ID`, `NAME`, `CONTENT_SCHEMA`, `RECORD_CLASS`) VALUES
+(1,'bibrm:ContractItem-Schema (ERM-Scenario)', null, 1),
+(2,'bibo:Document-Schema (KIM-Titeldaten)', null, 2),
+(3,'mabxml schema',1,3);
 
 --
 -- Truncate table before insert `DATA_MODEL`
@@ -241,6 +328,7 @@ INSERT INTO `DATA_SCHEMA` (`ID`, `NAME`, `RECORD_CLASS`) VALUES
 TRUNCATE TABLE `DATA_MODEL`;
 INSERT INTO `DATA_MODEL` (ID, NAME, DESCRIPTION, CONFIGURATION, DATA_RESOURCE, DATA_SCHEMA) VALUES
 (1,'Internal Data Model ContractItem', 'Internal Data Model ContractItem', null, null, 1),
-(2,'Internal Data Model BiboDocument', 'Internal Data Model BiboDocument', null, null, 2);
+(2,'Internal Data Model BiboDocument', 'Internal Data Model BiboDocument', null, null, 2),
+(3,'Internal Data Model mabxml', 'Internal Data Model mabxml', null, null, 3);
 
 SET FOREIGN_KEY_CHECKS=1;

@@ -23,36 +23,57 @@ public class MappingAttributePathInstancesResourceTest
 		extends
 		BasicResourceTest<MappingAttributePathInstancesResourceTestUtils, MappingAttributePathInstanceServiceTestUtils, MappingAttributePathInstanceService, ProxyMappingAttributePathInstance, MappingAttributePathInstance, Long> {
 
-	private final AttributesResourceTestUtils						attributeResourceTestUtils;
-	private final AttributePathsResourceTestUtils					attributePathResourceTestUtils;
-	private final FiltersResourceTestUtils							filterResourceTestUtils;
-	private final MappingAttributePathInstancesResourceTestUtils	mappingAttributePathInstanceResourceTestUtils;
+	private AttributesResourceTestUtils						attributeResourceTestUtils;
+	private AttributePathsResourceTestUtils					attributePathResourceTestUtils;
+	private FiltersResourceTestUtils						filterResourceTestUtils;
+	private MappingAttributePathInstancesResourceTestUtils	mappingAttributePathInstanceResourceTestUtils;
 
-	private Attribute												actualAttribute1;
+	private Attribute										actualAttribute1;
 
-	private Attribute												actualAttribute2;
+	private Attribute										actualAttribute2;
 
-	private Attribute												attributeFromUpdate;
+	private Attribute										attributeFromUpdate;
 
-	private AttributePath											attributePath;
+	private AttributePath									attributePath;
 
-	private Filter													filter;
+	private Filter											filter;
 
-	private Filter													filterFromUpdate;
+	private Filter											filterFromUpdate;
 
 	public MappingAttributePathInstancesResourceTest() {
 
 		super(MappingAttributePathInstance.class, MappingAttributePathInstanceService.class, "mappingattributepathinstances",
 				"mapping_attribute_path_instance.json", new MappingAttributePathInstancesResourceTestUtils());
+	}
 
+	@Override
+	protected void initObjects() {
+
+		super.initObjects();
+
+		pojoClassResourceTestUtils = new MappingAttributePathInstancesResourceTestUtils();
 		attributeResourceTestUtils = new AttributesResourceTestUtils();
 		attributePathResourceTestUtils = new AttributePathsResourceTestUtils();
 		filterResourceTestUtils = new FiltersResourceTestUtils();
 		mappingAttributePathInstanceResourceTestUtils = new MappingAttributePathInstancesResourceTestUtils();
 	}
 
+	private void resetObjectVars() {
+
+		actualAttribute1 = null;
+		actualAttribute2 = null;
+		attributeFromUpdate = null;
+		attributePath = null;
+		filter = null;
+		filterFromUpdate = null;
+	}
+
 	@Override
 	public void prepare() throws Exception {
+
+		restartServer();
+		initObjects();
+		resetObjectVars();
 
 		super.prepare();
 

@@ -8,11 +8,17 @@ import org.dswarm.controller.EmbeddedServer;
 import org.dswarm.controller.providers.handler.ExceptionHandler;
 import org.dswarm.controller.servlet.DMPInjector;
 import org.dswarm.controller.test.GuicedTest;
+import org.dswarm.persistence.service.MaintainDBService;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 public class ResourceTest extends GuicedTest {
 
@@ -23,13 +29,21 @@ public class ResourceTest extends GuicedTest {
 	protected String				resourceIdentifier;
 	protected static final int		port	= 9998;
 
+	protected MaintainDBService maintainDBService;
+
 	public ResourceTest(final String resourceIdentifier) {
 
 		this.resourceIdentifier = resourceIdentifier;
 	}
 
+	protected void initObjects() {
+
+		maintainDBService = GuicedTest.injector.getInstance(MaintainDBService.class);
+	}
+
 	@BeforeClass
 	public static void startUp() throws Exception {
+
 		GuicedTest.startUp();
 
 		System.setProperty(EmbeddedServer.CONTEXT_PATH_PROPERTY, "/test");
@@ -47,6 +61,15 @@ public class ResourceTest extends GuicedTest {
 
 		GuicedTest.tearDown();
 		ResourceTest.grizzlyServer.stop();
+	}
+
+	protected void restartServer() throws Exception {
+
+		GuicedTest.tearDown();
+		ResourceTest.grizzlyServer.stop();
+		GuicedTest.startUp();
+		DMPInjector.injector = GuicedTest.injector;
+		ResourceTest.grizzlyServer.start();
 	}
 
 	protected Client client() {
@@ -82,5 +105,26 @@ public class ResourceTest extends GuicedTest {
 
 	protected String baseUri() {
 		return ResourceTest.grizzlyServer.getBaseUri().toString();
+	}
+
+	protected String executeCommand(final String command) throws Exception {
+
+		final Process process = Runtime.getRuntime().exec(command);
+		final int exitStatus = process.waitFor();
+
+		Assert.assertEquals("exit status should be 0", 0, exitStatus);
+
+		final StringBuilder sb = new StringBuilder();
+
+		final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+		String line = reader.readLine();
+		while (line != null) {
+			sb.append(line);
+			line = reader.readLine();
+		}
+
+		ResourceTest.LOG.debug("got result from command execution '" + command + "' = '" + sb.toString() + "'");
+
+		return sb.toString();
 	}
 }

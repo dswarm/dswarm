@@ -3,18 +3,20 @@ package org.dswarm.persistence.service.schema.test.utils;
 import java.util.Map;
 import java.util.Set;
 
-import org.dswarm.persistence.DMPPersistenceException;
-import org.dswarm.persistence.model.schema.Attribute;
-import org.dswarm.persistence.model.schema.AttributePath;
-import org.dswarm.persistence.model.schema.Clasz;
-import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.model.schema.proxy.ProxySchema;
-import org.dswarm.persistence.service.schema.SchemaService;
-import org.dswarm.persistence.service.test.utils.BasicDMPJPAServiceTestUtils;
 import org.junit.Assert;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+
+import org.dswarm.persistence.DMPPersistenceException;
+import org.dswarm.persistence.model.schema.Attribute;
+import org.dswarm.persistence.model.schema.AttributePath;
+import org.dswarm.persistence.model.schema.Clasz;
+import org.dswarm.persistence.model.schema.ContentSchema;
+import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.model.schema.proxy.ProxySchema;
+import org.dswarm.persistence.service.schema.SchemaService;
+import org.dswarm.persistence.service.test.utils.BasicDMPJPAServiceTestUtils;
 
 public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaService, ProxySchema, Schema> {
 
@@ -22,12 +24,15 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 
 	private final ClaszServiceTestUtils			claszesResourceTestUtils;
 
+	private final ContentSchemaServiceTestUtils	contentSchemaServiceTestUtils;
+
 	public SchemaServiceTestUtils() {
 
 		super(Schema.class, SchemaService.class);
 
 		attributePathsResourceTestUtils = new AttributePathServiceTestUtils();
 		claszesResourceTestUtils = new ClaszServiceTestUtils();
+		contentSchemaServiceTestUtils = new ContentSchemaServiceTestUtils();
 	}
 
 	/**
@@ -71,6 +76,11 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 		} else {
 
 			claszesResourceTestUtils.compareObjects(expectedSchema.getRecordClass(), actualSchema.getRecordClass());
+		}
+
+		if (expectedSchema.getContentSchema() != null) {
+
+			contentSchemaServiceTestUtils.compareObjects(expectedSchema.getContentSchema(), actualSchema.getContentSchema());
 		}
 	}
 

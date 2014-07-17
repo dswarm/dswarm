@@ -1,43 +1,89 @@
 {
-    "id": 21,
     "name": "my schema",
+    "id": 3,
     "attribute_paths": [{
-        "id": 76,
+        "id": 40,
         "attributes": [{
-            "id": 86,
             "name": "title",
-            "uri": "http://purl.org/dc/terms/title"
+            "uri": "http://purl.org/dc/terms/title",
+            "id": 36
         }, {
-            "id": 87,
             "name": "hasPart",
-            "uri": "http://purl.org/dc/terms/hasPart"
+            "uri": "http://purl.org/dc/terms/hasPart",
+            "id": 24
         }, {
-            "id": 86,
             "name": "title",
-            "uri": "http://purl.org/dc/terms/title"
+            "uri": "http://purl.org/dc/terms/title",
+            "id": 36
         }]
     }, {
-        "id": 77,
+        "id": 41,
         "attributes": [{
-            "id": 88,
             "name": "creator",
-            "uri": "http://purl.org/dc/terms/creator"
+            "uri": "http://purl.org/dc/terms/creator",
+            "id": 8
         }, {
-            "id": 89,
             "name": "name",
-            "uri": "http://xmlns.com/foaf/0.1/name"
+            "uri": "http://xmlns.com/foaf/0.1/name",
+            "id": 37
         }]
     }, {
-        "id": 78,
+        "id": 42,
         "attributes": [{
-            "id": 90,
             "name": "created",
-            "uri": "http://purl.org/dc/terms/created"
+            "uri": "http://purl.org/dc/terms/created",
+            "id": 38
         }]
     }],
     "record_class": {
-        "id": 21,
         "name": "document",
-        "uri": "http://purl.org/ontology/bibo/Document"
+        "uri": "http://purl.org/ontology/bibo/Document",
+        "id": 2
+    },
+    "content_schema": {
+        "name": "my content schema",
+        "id": 1,
+        "key_attribute_paths": [{
+            "id": 40,
+            "attributes": [{
+                "name": "title",
+                "uri": "http://purl.org/dc/terms/title",
+                "id": 36
+            }, {
+                "name": "hasPart",
+                "uri": "http://purl.org/dc/terms/hasPart",
+                "id": 24
+            }, {
+                "name": "title",
+                "uri": "http://purl.org/dc/terms/title",
+                "id": 36
+            }]
+        }, {
+            "id": 41,
+            "attributes": [{
+                "name": "creator",
+                "uri": "http://purl.org/dc/terms/creator",
+                "id": 8
+            }, {
+                "name": "name",
+                "uri": "http://xmlns.com/foaf/0.1/name",
+                "id": 37
+            }]
+        }, {
+            "id": 42,
+            "attributes": [{
+                "name": "created",
+                "uri": "http://purl.org/dc/terms/created",
+                "id": 38
+            }]
+        }],
+        "value_attribute_path": {
+            "id": 43,
+            "attributes": [{
+                "name": "value",
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+                "id": 39
+            }]
+        }
     }
 }
