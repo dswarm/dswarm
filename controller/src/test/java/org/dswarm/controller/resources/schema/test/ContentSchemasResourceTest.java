@@ -7,7 +7,9 @@ import javax.ws.rs.core.Response;
 
 import org.dswarm.controller.resources.schema.test.utils.AttributePathsResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.AttributesResourceTestUtils;
+import org.dswarm.controller.resources.schema.test.utils.ClaszesResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.ContentSchemasResourceTestUtils;
+import org.dswarm.controller.resources.schema.test.utils.SchemasResourceTestUtils;
 import org.dswarm.controller.resources.test.BasicResourceTest;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
@@ -27,11 +29,11 @@ public class ContentSchemasResourceTest
 		extends
 		BasicResourceTest<ContentSchemasResourceTestUtils, ContentSchemaServiceTestUtils, ContentSchemaService, ProxyContentSchema, ContentSchema, Long> {
 
-	private final AttributesResourceTestUtils		attributesResourceTestUtils;
+	private AttributesResourceTestUtils		attributesResourceTestUtils;
 
-	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
+	private AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
 
-	private final ContentSchemasResourceTestUtils	contentSchemasResourceTestUtils;
+	private ContentSchemasResourceTestUtils	contentSchemasResourceTestUtils;
 
 	final Map<Long, Attribute>						attributes		= Maps.newHashMap();
 
@@ -47,7 +49,28 @@ public class ContentSchemasResourceTest
 	}
 
 	@Override
+	protected void initObjects() {
+
+		super.initObjects();
+
+		pojoClassResourceTestUtils = new ContentSchemasResourceTestUtils();
+		attributesResourceTestUtils = new AttributesResourceTestUtils();
+		attributePathsResourceTestUtils = new AttributePathsResourceTestUtils();
+		contentSchemasResourceTestUtils = new ContentSchemasResourceTestUtils();
+	}
+
+	private void resetObjectVars() {
+
+		attributes.clear();
+		attributePaths.clear();
+	}
+
+	@Override
 	public void prepare() throws Exception {
+
+		restartServer();
+		initObjects();
+		resetObjectVars();
 
 		// note: due to the exclusion of various attribute and attribute path (that already exist in the database) - the resulted
 		// content schema doesn't fully reflect the content schema as it is present in the schema.json example
