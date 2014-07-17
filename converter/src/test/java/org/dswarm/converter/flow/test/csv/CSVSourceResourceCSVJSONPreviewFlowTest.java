@@ -72,10 +72,10 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void testCoumnDelimiterInQuotes() throws Exception {
+	public void testColumnDelimiterInQuotes() throws Exception {
 
-		final String csvPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "coumnDelimiterInQuotes.csv";
-		final String expectedPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "coumnDelimiterInQuotes.preview.json";
+		final String csvPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "columnDelimiterInQuotes.csv";
+		final String expectedPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "columnDelimiterInQuotes.preview.json";
 		final CSVSourceResourceCSVJSONPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ';',
 				"\n", CSVSourceResourceCSVJSONPreviewFlow.class);
 
