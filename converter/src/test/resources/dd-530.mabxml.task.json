@@ -59,7 +59,7 @@
         },
         "input_attribute_paths": [{
             "type": "MappingAttributePathInstance",
-            "name": "input mapping attribute path instance",
+            "name": "feld_value__0__",
             "id": -1402051926047,
             "attribute_path": {
               "id": 46,
@@ -78,7 +78,31 @@
             },
             "filter": {
               "id": -1402051955808,
-              "expression": "{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind\":\" \",\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr\":\"331\"};{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind\":\" \",\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr\":\"335\"}"
+              "expression": "{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind\":\" \",\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr\":\"331\"}"
+            }
+          },
+          {
+            "type": "MappingAttributePathInstance",
+            "name": "feld_value__1__",
+            "id": -1402051926048,
+            "attribute_path": {
+              "id": 46,
+              "attributes": [
+                {
+                  "name": "feld",
+                  "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                  "id": 38
+                },
+                {
+                  "name": "value",
+                  "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+                  "id": 41
+                }
+              ]
+            },
+            "filter": {
+              "id": -1402051955808,
+              "expression": "{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind\":\" \",\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr\":\"335\"}"
             }
           }],
         "output_attribute_path": {

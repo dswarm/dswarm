@@ -276,8 +276,8 @@ public class MorphScriptBuilder {
 
 			final String inputAttributePathString = mappingAttributePathInstance.getAttributePath().toAttributePath();
 
-			final List<String> variablesFromInputAttributePaths = getParameterMappingKeys(inputAttributePathString, transformationComponent);
-
+			List<String> variablesFromInputAttributePaths = getParameterMappingKeys(inputAttributePathString, transformationComponent, mappingAttributePathInstance.getName());
+			
 			final Integer ordinal = mappingAttributePathInstance.getOrdinal();
 
 			final String filterExpressionStringUnescaped = getFilterExpression(mappingAttributePathInstance);
@@ -288,7 +288,7 @@ public class MorphScriptBuilder {
 
 		final String outputAttributePath = mapping.getOutputAttributePath().getAttributePath().toAttributePath();
 
-		final List<String> variablesFromOutputAttributePath = getParameterMappingKeys(outputAttributePath, transformationComponent);
+		final List<String> variablesFromOutputAttributePath = getParameterMappingKeys(outputAttributePath, transformationComponent, mapping.getOutputAttributePath().getName());
 
 		addOutputAttributePathMapping(variablesFromOutputAttributePath, outputAttributePath, rules);
 
@@ -414,23 +414,56 @@ public class MorphScriptBuilder {
 		}
 		return collection;
 	}
+	
+	private boolean checkForDuplicateParameterMappingAttributePaths(final Map<String, String> transformationParameterMapping, final String attributePathString) {
+		
+		int countDuplicate = 0;
+		
+		for (final Entry<String, String> parameterMapping : transformationParameterMapping.entrySet()) {
 
-	private List<String> getParameterMappingKeys(final String attributePathString, final Component transformationComponent) {
+			if (StringEscapeUtils.unescapeXml(parameterMapping.getValue()).equals(attributePathString)) {
+								
+				if (parameterMapping.getKey().startsWith(MorphScriptBuilder.OUTPUT_VARIABLE_PREFIX_IDENTIFIER)) {
+					
+					continue;
+				}
+				
+				if (++countDuplicate > 1) {
+					
+					return true;
+				}
+			
+			}
+		}	
+		
+		return false;
+	}
 
-		List<String> parameterMappingKeys = null;
+	private List<String> getParameterMappingKeys(final String attributePathString, final Component transformationComponent, final String attributePathInstanceName) {
+
+		List<String> parameterMappingKeys = null; 
 
 		final Map<String, String> transformationParameterMapping = transformationComponent.getParameterMappings();
 
 		for (final Entry<String, String> parameterMapping : transformationParameterMapping.entrySet()) {
 
 			if (StringEscapeUtils.unescapeXml(parameterMapping.getValue()).equals(attributePathString)) {
-
+				
 				if (parameterMappingKeys == null) {
 
 					parameterMappingKeys = Lists.newArrayList();
 				}
 
-				parameterMappingKeys.add(parameterMapping.getKey());
+				if (checkForDuplicateParameterMappingAttributePaths(transformationParameterMapping, attributePathString)) {
+					
+					if (!parameterMappingKeys.contains(attributePathInstanceName)) {
+					
+						parameterMappingKeys.add(attributePathInstanceName);
+					}
+				} else {
+					
+					parameterMappingKeys.add(parameterMapping.getKey());
+				}
 			}
 		}
 
@@ -934,28 +967,21 @@ public class MorphScriptBuilder {
 	}
 
 	private Map<String, String> extractFilterExpressions(final String filterExpressionString) {
-		
-		String[] filterStrings = {};
-
-		filterStrings = filterExpressionString.split(";");
 
 		Map<String, String> filterExpressionMap = Maps.newHashMap();
 
 		final ObjectMapper objectMapper = new ObjectMapper();
 
-		if (filterStrings != null && filterStrings.length > 0) {
+		if (filterExpressionString != null && !filterExpressionString.isEmpty()) {
 
-			for (String filter : filterStrings) {
-				
-				try {
+			try {
 
-					filterExpressionMap = objectMapper.readValue(filter, new TypeReference<Map<String, String>>() {
+				filterExpressionMap = objectMapper.readValue(filterExpressionString, new TypeReference<Map<String, String>>() {
 
-					});
-				} catch (final IOException e) {
+				});
+			} catch (final IOException e) {
 
-					MorphScriptBuilder.LOG.debug("something went wrong while deserializing filter expression" + e);
-				}
+				MorphScriptBuilder.LOG.debug("something went wrong while deserializing filter expression" + e);
 			}
 		}
 
