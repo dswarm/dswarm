@@ -106,7 +106,7 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 	}
 
 	private CSVParser getInternalParser(final Reader reader) {
-		final CSVFormat csvFormat = CSVFormat.newFormat(columnSeparator).withQuoteChar(quoteCharacter).withEscape(escapeCharacter)
+		final CSVFormat csvFormat = CSVFormat.newFormat(columnSeparator).withQuote(quoteCharacter).withEscape(escapeCharacter)
 				.withRecordSeparator(lineEnding).withIgnoreEmptyLines(true).withIgnoreSurroundingSpaces(true);
 
 		try {
