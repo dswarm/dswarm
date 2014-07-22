@@ -416,30 +416,6 @@ public class MorphScriptBuilder {
 		}
 		return collection;
 	}
-	
-	private boolean checkForDuplicateParameterMappingAttributePaths(final Map<String, String> transformationParameterMapping, final String attributePathString) {
-		
-		int countDuplicate = 0;
-		
-		for (final Entry<String, String> parameterMapping : transformationParameterMapping.entrySet()) {
-
-			if (StringEscapeUtils.unescapeXml(parameterMapping.getValue()).equals(attributePathString)) {
-								
-				if (parameterMapping.getKey().startsWith(MorphScriptBuilder.OUTPUT_VARIABLE_PREFIX_IDENTIFIER)) {
-					
-					continue;
-				}
-				
-				if (++countDuplicate > 1) {
-					
-					return true;
-				}
-			
-			}
-		}	
-		
-		return false;
-	}
 
 	private List<String> getParameterMappingKeys(final String attributePathString, final Component transformationComponent) {
 
