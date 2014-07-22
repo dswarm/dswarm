@@ -53,7 +53,7 @@ public class XMLTransformationFlowTest extends GuicedTest {
 	@Test
 	public void testMabxmlConcatOneMappingOnFeldValueWithTwoFiltersTask() throws Exception {
 
-		testXMLTaskWithTuples("dd-530.mabxml.task.result.json", "dd-530.mabxml.task.new.json", "test-mabxml.tuples.json");
+		testXMLTaskWithTuples("dd-530.mabxml.task.result.json", "dd-530.mabxml.task.json", "test-mabxml.tuples.json");
 	}
 
 	@Test
