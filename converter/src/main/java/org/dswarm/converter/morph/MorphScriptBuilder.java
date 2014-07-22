@@ -275,13 +275,15 @@ public class MorphScriptBuilder {
 
 			final String inputAttributePathString = mappingAttributePathInstance.getAttributePath().toAttributePath();
 
-			final List<String> variablesFromInputAttributePaths = getParameterMappingKeys(inputAttributePathString, transformationComponent);
-
+			List<String> variablesFromInputAttributePaths = getParameterMappingKeys(inputAttributePathString, transformationComponent);
+			
 			final Integer ordinal = mappingAttributePathInstance.getOrdinal();
 
 			final String filterExpressionStringUnescaped = getFilterExpression(mappingAttributePathInstance);
+			
+			final String mappingAttributePathInstanceName = mappingAttributePathInstance.getName();
 
-			addInputAttributePathVars(variablesFromInputAttributePaths, inputAttributePathString, rules, inputAttributePaths,
+			addInputAttributePathVars(variablesFromInputAttributePaths, inputAttributePathString, rules, inputAttributePaths, mappingAttributePathInstanceName,
 					filterExpressionStringUnescaped, ordinal);
 		}
 
@@ -416,14 +418,14 @@ public class MorphScriptBuilder {
 
 	private List<String> getParameterMappingKeys(final String attributePathString, final Component transformationComponent) {
 
-		List<String> parameterMappingKeys = null;
+		List<String> parameterMappingKeys = null; 
 
 		final Map<String, String> transformationParameterMapping = transformationComponent.getParameterMappings();
 
 		for (final Entry<String, String> parameterMapping : transformationParameterMapping.entrySet()) {
 
 			if (StringEscapeUtils.unescapeXml(parameterMapping.getValue()).equals(attributePathString)) {
-
+				
 				if (parameterMappingKeys == null) {
 
 					parameterMappingKeys = Lists.newArrayList();
@@ -437,7 +439,7 @@ public class MorphScriptBuilder {
 	}
 
 	private void addInputAttributePathVars(final List<String> variables, final String inputAttributePathString, final Element rules,
-			final Map<String, List<String>> inputAttributePaths, final String filterExpressionString, final Integer ordinal) {
+			final Map<String, List<String>> inputAttributePaths, final String mappingAttributePathInstanceName, final String filterExpressionString, final Integer ordinal) {
 
 		if (variables == null || variables.isEmpty()) {
 
@@ -446,45 +448,33 @@ public class MorphScriptBuilder {
 
 		final String inputAttributePathStringXMLEscaped = StringEscapeUtils.escapeXml(inputAttributePathString);
 
-		for (final String variable : variables) {
+		final String manipulatedVariable;
 
-			if (variable.startsWith(MorphScriptBuilder.OUTPUT_VARIABLE_PREFIX_IDENTIFIER)) {
+		if (checkOrdinal(ordinal)) {
 
-				continue;
-			}
+			manipulatedVariable = addOrdinalFilter(ordinal, mappingAttributePathInstanceName, rules);
+		} else {
 
-			if (checkForDuplicateVarDatas(variable, rules, inputAttributePathStringXMLEscaped)) {
-
-				continue;
-			}
-
-			final String manipulatedVariable;
-
-			if (checkOrdinal(ordinal)) {
-
-				manipulatedVariable = addOrdinalFilter(ordinal, variable, rules);
-			} else {
-
-				manipulatedVariable = variable;
-			}
-
-			final Map<String, String> filterExpressionMap = extractFilterExpressions(filterExpressionString);
-
-			if (filterExpressionMap == null || filterExpressionMap.isEmpty()) {
-
-				final Element data = doc.createElement("data");
-				data.setAttribute("source", inputAttributePathStringXMLEscaped);
-
-				data.setAttribute("name", "@" + variable);
-
-				rules.appendChild(data);
-			} else {
-
-				addFilter(inputAttributePathStringXMLEscaped, manipulatedVariable, filterExpressionMap, rules);
-			}
-
-			inputAttributePaths.put(inputAttributePathStringXMLEscaped, variables);
+			manipulatedVariable = mappingAttributePathInstanceName;
 		}
+
+		final Map<String, String> filterExpressionMap = extractFilterExpressions(filterExpressionString);
+
+		if (filterExpressionMap == null || filterExpressionMap.isEmpty()) {
+
+			final Element data = doc.createElement("data");
+			data.setAttribute("source", inputAttributePathStringXMLEscaped);
+
+			data.setAttribute("name", "@" + mappingAttributePathInstanceName);
+
+			rules.appendChild(data);
+		} else {
+
+			addFilter(inputAttributePathStringXMLEscaped, manipulatedVariable, filterExpressionMap, rules);
+		}
+
+		inputAttributePaths.put(inputAttributePathStringXMLEscaped, variables);
+
 	}
 
 	private void addOutputAttributePathMapping(final List<String> variables, final String outputAttributePathString, final Element rules) {

@@ -241,7 +241,7 @@
         "input_attribute_paths": [
           {
             "type": "MappingAttributePathInstance",
-            "name": "first name mapping attribute path instance",
+            "name": "firstName",
             "id": 8,
             "attribute_path": {
               "id": 8,
@@ -261,7 +261,7 @@
           },
           {
             "type": "MappingAttributePathInstance",
-            "name": "family name mapping attribute path instance",
+            "name": "familyName",
             "id": 9,
             "attribute_path": {
               "id": 9,
@@ -281,7 +281,7 @@
           },
           {
             "type": "MappingAttributePathInstance",
-            "name": "title mapping attribute path instance",
+            "name": "title",
             "id": 10,
             "attribute_path": {
               "id": 9,
@@ -301,7 +301,7 @@
           },
           {
             "type": "MappingAttributePathInstance",
-            "name": "given name mapping attribute path instance",
+            "name": "givenName",
             "id": 11,
             "attribute_path": {
               "id": 9,
