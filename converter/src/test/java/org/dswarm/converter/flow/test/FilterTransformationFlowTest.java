@@ -59,6 +59,8 @@ public class FilterTransformationFlowTest extends GuicedTest {
 	}
 
 	/**
+	 * FIXME: not working right now ...
+	 *
 	 * selects the 2nd value of the 2nd match
 	 * 
 	 * @throws Exception

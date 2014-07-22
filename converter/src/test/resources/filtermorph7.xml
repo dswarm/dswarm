@@ -11,7 +11,7 @@
 				 flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield"
 				 reset="true" includeSubEntities="true">
 			<if>
-				<all name="CONDITION_ALL" reset="true" flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield">
+				<all name="CONDITION_ALL" reset="true" flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield" includeSubEntities="true">
 					<data
 							source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag">
 						<equals string="088"/>
