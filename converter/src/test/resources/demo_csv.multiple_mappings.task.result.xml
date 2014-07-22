@@ -4,13 +4,14 @@
         <name>mapping11, mapping12, mapping13</name>
     </meta>
     <rules>
-        <data name="@jahr" source="http://data.slub-dresden.de/resources/1/schema#jahr"/>
+        <data name="@jahr__0__" source="http://data.slub-dresden.de/resources/1/schema#jahr"/>
         <data name="http://purl.org/dc/terms/issued" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
-        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" source="@jahr">
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" source="@jahr__0__">
             <replace pattern="19" with="16"/>
         </data>
+        <data name="@jahr__1__" source="http://data.slub-dresden.de/resources/1/schema#jahr"/>
         <data name="http://purl.org/dc/elements/1.1/title" source="@__TRANSFORMATION_OUTPUT_VARIABLE__2"/>
-        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__2" source="@jahr">
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__2" source="@jahr__1__">
             <replace pattern="19" with="17"/>
         </data>
         <data name="@nummer" source="http://data.slub-dresden.de/resources/1/schema#nummer"/>

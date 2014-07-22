@@ -54,7 +54,7 @@
                 "input_attribute_paths": [
                     {
                         "type": "MappingAttributePathInstance",
-                        "name": "input mapping attribute path instance",
+                        "name": "val4",
                         "id": -1399995970765,
                         "attribute_path": {
                             "id": 262,
@@ -103,7 +103,7 @@
                 "input_attribute_paths": [
                     {
                         "type": "MappingAttributePathInstance",
-                        "name": "input mapping attribute path instance",
+                        "name": "val1",
                         "id": -1399995984734,
                         "attribute_path": {
                             "id": 259,
