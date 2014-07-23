@@ -6,7 +6,7 @@
     <rules>
         <combine name="@feld_value__0__" reset="false" sameEntity="true" value="${feld_value__0__.filtered}">
             <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
-                <equals string="051"/>
+                <regexp match="051"/>
             </data>
             <data name="feld_value__0__.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
         </combine>
