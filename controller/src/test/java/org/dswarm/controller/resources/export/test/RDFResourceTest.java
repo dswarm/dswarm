@@ -41,7 +41,6 @@ import org.dswarm.controller.resources.schema.test.utils.AttributesResourceTestU
 import org.dswarm.controller.resources.schema.test.utils.ClaszesResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.SchemasResourceTestUtils;
 import org.dswarm.controller.resources.test.ResourceTest;
-import org.dswarm.controller.servlet.DMPInjector;
 import org.dswarm.controller.test.GuicedTest;
 import org.dswarm.graph.rdf.utils.RDFUtils;
 import org.dswarm.persistence.model.internal.Model;
@@ -60,7 +59,7 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * Created by tgaengler on 28/04/14.
- * 
+ *
  * @author tgaengler
  */
 public class RDFResourceTest extends ResourceTest {
@@ -86,7 +85,7 @@ public class RDFResourceTest extends ResourceTest {
 	private static final String						graphResourceIdentifier	= "rdf";
 
 	private final String							graphEndpoint			= GuicedTest.injector.getInstance(Key.get(String.class,
-																					Names.named("dmp_graph_endpoint")));
+																					Names.named("dswarm.db.graph.endpoint")));
 
 	public RDFResourceTest() {
 
@@ -208,7 +207,7 @@ public class RDFResourceTest extends ResourceTest {
 
 		final int atMost = 1;
 
-		final InternalModelServiceFactory serviceFactory = DMPInjector.injector.getInstance(Key.get(InternalModelServiceFactory.class));
+		final InternalModelServiceFactory serviceFactory = GuicedTest.injector.getInstance(Key.get(InternalModelServiceFactory.class));
 		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
 		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getId(), Optional.of(atMost));
 

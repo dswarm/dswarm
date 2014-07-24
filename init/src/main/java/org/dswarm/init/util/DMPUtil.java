@@ -1,12 +1,23 @@
 package org.dswarm.init.util;
 
 import java.io.File;
-import java.io.InputStream;
-import java.util.Properties;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import org.apache.commons.io.FileUtils;
 
+@Singleton
 public final class DMPUtil {
+
+	private final String tmpDir;
+	private final String separator;
+
+	@Inject
+	public DMPUtil(@Named("dswarm.paths.tmp") final String tmpDir, @Named("file.separator") final String separator) {
+		this.tmpDir = tmpDir;
+		this.separator = separator;
+	}
 
 	/**
 	 * Determines the temporary directory that should be utilised to store processed files temporarily for further utilisation.<br>
@@ -15,35 +26,12 @@ public final class DMPUtil {
 	 * @return the temporary directory
 	 * @throws Exception
 	 */
-	private static String getTmpDir(final String postfix) throws Exception {
-
-		final InputStream inStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("dmp.properties");
-		final Properties properties = new Properties();
-		properties.load(inStream);
-
-		final String tmpDirRoot = properties.getProperty("tmp_path");
-
-		final String javaIOTmpDir;
-
-		if (tmpDirRoot == null) {
-			javaIOTmpDir = System.getProperty("java.io.tmpdir");
-		} else {
-
-			if (postfix != null) {
-
-				javaIOTmpDir = tmpDirRoot + "/" + postfix;
-			} else {
-
-				javaIOTmpDir = tmpDirRoot;
-			}
+	private String getTmpDir(final String postfix) throws Exception {
+		if (postfix == null) {
+			return tmpDir;
 		}
 
-		if (javaIOTmpDir == null) {
-
-			throw new Exception("java.io.tmpdir system property shouldn't be null");
-		}
-
-		return javaIOTmpDir;
+		return String.format("%s%s%s", tmpDir, separator, postfix);
 	}
 
 	/**
@@ -55,9 +43,9 @@ public final class DMPUtil {
 	 * @return a new {@link File} instance with the given file name.
 	 * @throws Exception
 	 */
-	public static File createLocalTmpFile(final String fileName, final String directoryPostFix) throws Exception {
+	public File createLocalTmpFile(final String fileName, final String directoryPostFix) throws Exception {
 
-		final String javaIOTmpDir = DMPUtil.getTmpDir(directoryPostFix);
+		final String javaIOTmpDir = getTmpDir(directoryPostFix);
 
 		return FileUtils.getFile(javaIOTmpDir, fileName);
 	}

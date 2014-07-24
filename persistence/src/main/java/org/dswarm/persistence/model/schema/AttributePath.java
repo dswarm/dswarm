@@ -81,7 +81,7 @@ public class AttributePath extends DMPJPAObject {
 	 * A flag that indicates, whether the attributes are initialised or not.
 	 */
 	@Transient
-	private boolean					orderedAttributesInitialized	= false;
+	private boolean					orderedAttributesInitialized;
 
 	/**
 	 * A string that holds the serialised JSON object of the attribute path (ordered list of attributes).

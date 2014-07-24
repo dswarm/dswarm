@@ -79,7 +79,7 @@ public class ContentSchema extends BasicDMPJPAObject {
 	 * A flag that indicates, whether the key attribute paths are initialised or not.
 	 */
 	@Transient
-	private boolean						orderedKeyAttributePathsInitialized	= false;
+	private boolean						orderedKeyAttributePathsInitialized;
 
 	/**
 	 * A string that holds the serialised JSON object of the key attribute paths (ordered list of attribute paths).

@@ -15,8 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.dswarm.controller.EmbeddedServer;
+import org.dswarm.controller.ServerConfig;
 import org.dswarm.controller.providers.handler.ExceptionHandler;
-import org.dswarm.controller.servlet.DMPInjector;
 import org.dswarm.controller.test.GuicedTest;
 import org.dswarm.persistence.service.MaintainDBService;
 
@@ -27,7 +27,8 @@ public class ResourceTest extends GuicedTest {
 	protected static EmbeddedServer	grizzlyServer;
 
 	protected String				resourceIdentifier;
-	protected static final int		port	= 9998;
+
+	protected static final ServerConfig SERVER_CONFIG = new ServerConfig(9998, "127.0.0.1", "/test");
 
 	protected MaintainDBService		maintainDBService;
 
@@ -37,7 +38,6 @@ public class ResourceTest extends GuicedTest {
 	}
 
 	protected void initObjects() {
-
 		maintainDBService = GuicedTest.injector.getInstance(MaintainDBService.class);
 	}
 
@@ -46,13 +46,7 @@ public class ResourceTest extends GuicedTest {
 
 		GuicedTest.startUp();
 
-		System.setProperty(EmbeddedServer.CONTEXT_PATH_PROPERTY, "/test");
-		System.setProperty(EmbeddedServer.HTTP_HOST_PROPERTY, "127.0.0.1");
-		System.setProperty(EmbeddedServer.HTTP_PORT_PROPERTY, String.valueOf(ResourceTest.port));
-
-		DMPInjector.injector = GuicedTest.injector;
-
-		ResourceTest.grizzlyServer = new EmbeddedServer();
+		ResourceTest.grizzlyServer = new EmbeddedServer(GuicedTest.injector, SERVER_CONFIG);
 		ResourceTest.grizzlyServer.start();
 	}
 
@@ -68,8 +62,7 @@ public class ResourceTest extends GuicedTest {
 		GuicedTest.tearDown();
 		ResourceTest.grizzlyServer.stop();
 		GuicedTest.startUp();
-		DMPInjector.injector = GuicedTest.injector;
-		ResourceTest.grizzlyServer.start();
+		ResourceTest.grizzlyServer.start(GuicedTest.injector);
 	}
 
 	protected Client client() {

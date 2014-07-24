@@ -3,6 +3,7 @@ package org.dswarm.controller.resources.export;
 import java.io.InputStream;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -25,11 +26,10 @@ import org.slf4j.LoggerFactory;
 
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.status.DMPStatus;
-import org.dswarm.persistence.GraphDatabaseConfig;
 
 /**
  * Created by tgaengler on 28/04/14.
- * 
+ *
  * @author tgaengler
  */
 @RequestScoped
@@ -51,15 +51,15 @@ public class RDFResource {
 	private final String			graphEndpoint;
 
 	@Inject
-	public RDFResource(final DMPStatus dmpStatusArg, final GraphDatabaseConfig graphEndpointArg) {
+	public RDFResource(final DMPStatus dmpStatusArg, @Named("dswarm.db.graph.endpoint") final String graphEndpointArg) {
 
 		dmpStatus = dmpStatusArg;
-		graphEndpoint = graphEndpointArg.getEndpoint();
+		graphEndpoint = graphEndpointArg;
 	}
 
 	/**
 	 * for triggering a download
-	 * 
+	 *
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "exports all data from the graph DB in the given RDF serialisation format", notes = "Returns exported data in the given RDF serialisation format.")

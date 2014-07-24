@@ -85,6 +85,7 @@ public class ResourcesResource {
 	@Context
 	UriInfo											uri;
 
+	private final DMPControllerUtils controllerUtils;
 	private final Provider<ResourceService>			resourceServiceProvider;
 
 	private final Provider<ConfigurationService>	configurationServiceProvider;
@@ -107,10 +108,11 @@ public class ResourcesResource {
 	 * @param dataModelUtilArg the data model util
 	 */
 	@Inject
-	public ResourcesResource(final DMPStatus dmpStatusArg, final ObjectMapper objectMapperArg,
+	public ResourcesResource(final DMPStatus dmpStatusArg, final ObjectMapper objectMapperArg, final DMPControllerUtils controllerUtilsArg,
 			final Provider<ResourceService> resourceServiceProviderArg, final Provider<ConfigurationService> configurationServiceProviderArg,
 			final Provider<XMLSchemaEventRecorder> xmlSchemaEventRecorderProviderArg, final DataModelUtil dataModelUtilArg) {
 
+		controllerUtils = controllerUtilsArg;
 		resourceServiceProvider = resourceServiceProviderArg;
 		configurationServiceProvider = configurationServiceProviderArg;
 		dmpStatus = dmpStatusArg;
@@ -898,11 +900,11 @@ public class ResourcesResource {
 	private ProxyResource refreshResource(final Resource resource, final InputStream uploadInputedStream,
 			final FormDataContentDisposition fileDetail, final String name, final String description) throws DMPControllerException {
 
-		final File file = DMPControllerUtils.writeToFile(uploadInputedStream, fileDetail.getFileName(), "resources");
+		final File file = controllerUtils.writeToFile(uploadInputedStream, fileDetail.getFileName(), "resources");
 
 		final ResourceService resourceService = resourceServiceProvider.get();
 
-		ProxyResource proxyResource;
+		final ProxyResource proxyResource;
 
 		resource.setName(name);
 
@@ -928,7 +930,7 @@ public class ResourcesResource {
 			fileType = tika.detect(file);
 			// fileType = Files.probeContentType(file.toPath());
 		} catch (final IOException e1) {
-			ResourcesResource.LOG.debug("couldn't determine file type from file '" + file.getAbsolutePath() + "'");
+			ResourcesResource.LOG.debug("couldn't determine file type from file '{}'", file.getAbsolutePath());
 		}
 		if (fileType != null) {
 			attributes.put("filetype", fileType);

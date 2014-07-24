@@ -5,7 +5,6 @@ import com.codahale.metrics.health.jvm.ThreadDeadlockHealthCheck;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
-import com.google.inject.name.Names;
 
 import org.dswarm.controller.eventbus.CSVConverterEventRecorder;
 import org.dswarm.controller.eventbus.SchemaEventRecorder;
@@ -15,12 +14,13 @@ import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
 import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.controller.status.DatabaseHealthCheck;
 import org.dswarm.controller.status.MetricsReporter;
+import org.dswarm.controller.utils.DMPControllerUtils;
 import org.dswarm.controller.utils.DataModelUtil;
 
 /**
  * The Guice configuration of the controller module. Interface/classes that are registered here can be utilised for injection.
  * Mainly event recorders, e.g., {@link XMLConverterEventRecorder}, are registered here.
- * 
+ *
  * @author phorn
  */
 public class DMPModule extends AbstractModule {
@@ -42,8 +42,7 @@ public class DMPModule extends AbstractModule {
 		bind(MetricsReporter.class);
 		bind(DMPStatus.class);
 
-		// TODO: read from config
-		bind(Integer.class).annotatedWith(Names.named("reporting.interval")).toInstance(60);
+		bind(DMPControllerUtils.class);
 	}
 
 	@Provides

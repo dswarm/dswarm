@@ -16,7 +16,6 @@ import org.dswarm.controller.providers.handler.DMPJsonExceptionHandler;
 import org.dswarm.controller.providers.handler.DMPMorphDefExceptionHandler;
 import org.dswarm.controller.providers.handler.ExceptionHandler;
 import org.dswarm.controller.providers.handler.WebApplicationExceptionHandler;
-import org.dswarm.controller.servlet.DMPInjector;
 
 /**
  * The configuration for the backend API. Packages with (web) resources, API feature classes (e.g. {@link MultiPartFeature}) etc.
@@ -59,6 +58,6 @@ class DMPApplication extends ResourceConfig {
 	private void buildGuiceBridge(final ServiceLocator serviceLocator) {
 		GuiceBridge.getGuiceBridge().initializeGuiceBridge(serviceLocator);
 		final GuiceIntoHK2Bridge guiceBridge = serviceLocator.getService(GuiceIntoHK2Bridge.class);
-		guiceBridge.bridgeGuiceInjector(DMPInjector.injector);
+		guiceBridge.bridgeGuiceInjector(DMPInjector.getOrDefault());
 	}
 }
