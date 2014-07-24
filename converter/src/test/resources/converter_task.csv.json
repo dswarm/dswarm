@@ -16,7 +16,7 @@
             },
             "input_attribute_paths": [{
                 "type": "MappingAttributePathInstance",
-                "name": "input mapping attribute path instance",
+                "name": "description",
                 "id": 2,
                 "attribute_path": {
                     "attributes": [{

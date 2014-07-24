@@ -56,7 +56,7 @@
             },
             "input_attribute_paths": [{
                 "type": "MappingAttributePathInstance",
-                "name": "input mapping attribute path instance",
+                "name": "feld_value",
                 "id": -1400227649149,
                 "attribute_path": {
                     "id": 46,
@@ -72,7 +72,7 @@
                 }
             }, {
                 "type": "MappingAttributePathInstance",
-                "name": "input mapping attribute path instance",
+                "name": "feld_nr",
                 "id": -1400227664373,
                 "attribute_path": {
                     "id": 44,

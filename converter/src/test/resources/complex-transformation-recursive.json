@@ -1343,7 +1343,7 @@
     "id": 14,
     "input_attribute_paths": [{
         "type": "MappingAttributePathInstance",
-        "name": "first name mapping attribute path instance",
+        "name": "firstName",
         "id": 8,
         "type": "MappingAttributePathInstance",
         "attribute_path": {
@@ -1360,7 +1360,7 @@
         }
     }, {
         "type": "MappingAttributePathInstance",
-        "name": "family name mapping attribute path instance",
+        "name": "familyName",
         "id": 9,
         "type": "MappingAttributePathInstance",
         "attribute_path": {

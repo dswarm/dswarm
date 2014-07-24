@@ -1,9 +1,9 @@
 {
-  "name": "kjhgf",
+  "name": "xyz123",
   "description": "A Transformation",
   "job": {"mappings": [{
-        "id": -1401873549954,
-        "name": "kjhgf",
+        "id": -1402051926041,
+        "name": "xyz123",
         "transformation": {
           "name": "transformation",
           "description": "transformation",
@@ -14,42 +14,16 @@
             "components": [
               {
                 "function": {
-                  "name": "split",
-                  "description": "Split string based on a regular expression. Pattern syntax corresponds to Java Regular Expressions.",
-                  "id": 16,
+                  "name": "concat",
+                  "description": "Collects all received values and concatenates them on record end.",
+                  "id": 23,
                   "function_description": {
-                    "name": "split",
+                    "name": "concat",
                     "dsl": "metafacture",
-                    "reference": "split",
-                    "description": "Split string based on a regular expression. Pattern syntax corresponds to Java Regular Expressions.",
-                    "parameters": {"delimiter": {
-                        "type": "text",
-                        "description": "Regular expression, defining the split"
-                      }}
-                  },
-                  "parameters": ["delimiter"],
-                  "type": "Function"
-                },
-                "name": "component1401873556606",
-                "id": -1401873556517,
-                "output_components": [{"id": -1401873587776}],
-                "description": "{\"x\":\"val4\",\"y\":0}",
-                "parameter_mappings": {
-                  "delimiter": "#",
-                  "inputString": "val4__0__"
-                }
-              },
-              {
-                "function": {
-                  "name": "compose",
-                  "description": "Add pre- or postfix to a string.",
-                  "id": 3,
-                  "function_description": {
-                    "name": "compose",
-                    "dsl": "metafacture",
-                    "reference": "compose",
-                    "description": "Add pre- or postfix to a string.",
+                    "reference": "concat",
+                    "description": "Collects all received values and concatenates them on record end.",
                     "parameters": {
+                      "delimiter": {"type": "text"},
                       "prefix": {
                         "type": "text",
                         "optional": true
@@ -61,82 +35,80 @@
                     }
                   },
                   "parameters": [
+                    "delimiter",
                     "prefix",
                     "postfix"
                   ],
                   "type": "Function"
                 },
-                "name": "component1401873587659",
-                "id": -1401873587776,
-                "output_components": [{"id": -1401873608372}],
-                "input_components": [{"id": -1401873556517}],
-                "description": "{\"x\":\"val4\",\"y\":1}",
+                "name": "component1402409200787",
+                "id": -1402409200649,
+                "description": "{\"x\":\"title\",\"y\":0}",
                 "parameter_mappings": {
-                  "prefix": "\\\\@\\@@{`é=",
-                  "postfix": "\\\\$\\$$`}{[",
-                  "inputString": "component1401873556606"
-                }
-              },
-              {
-                "function": {
-                  "name": "occurrence",
-                  "description": "Filter by number of occurrence.",
-                  "id": 12,
-                  "function_description": {
-                    "name": "occurrence",
-                    "dsl": "metafacture",
-                    "reference": "occurrence",
-                    "description": "Filter by number of occurrence.",
-                    "parameters": {
-                      "only": {
-                        "type": "text",
-                        "pattern": "(lessThen |moreThen )?\\d+"
-                      },
-                      "sameEntity": {
-                        "type": "checkbox",
-                        "optional": true
-                      }
-                    }
-                  },
-                  "parameters": [
-                    "only",
-                    "sameEntity"
-                  ],
-                  "type": "Function"
-                },
-                "name": "component1401873609079",
-                "id": -1401873608372,
-                "input_components": [{"id": -1401873587776}],
-                "description": "{\"x\":\"val4\",\"y\":2}",
-                "parameter_mappings": {
-                  "only": "2",
-                  "inputString": "component1401873587659"
+                  "delimiter": " ",
+                  "inputString": "feld_value__0__,feld_value__1__"
                 }
               }
             ]
           },
           "parameter_mappings": {
             "__TRANSFORMATION_OUTPUT_VARIABLE__1": "http://purl.org/dc/elements/1.1/title",
-            "val4__0__": "http://data.slub-dresden.de/resources/1/schema#val4"
+            "feld_value__0__": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+            "feld_value__1__": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
           }
         },
         "input_attribute_paths": [{
             "type": "MappingAttributePathInstance",
-            "name": "val4__0__",
-            "id": -1401873549966,
+            "name": "feld_value__0__",
+            "id": -1402051926047,
             "attribute_path": {
-              "id": 56,
-              "attributes": [{
-                  "name": "val4",
-                  "uri": "http://data.slub-dresden.de/resources/1/schema#val4",
-                  "id": 48
-                }]
+              "id": 46,
+              "attributes": [
+                {
+                  "name": "feld",
+                  "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                  "id": 38
+                },
+                {
+                  "name": "value",
+                  "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+                  "id": 41
+                }
+              ]
+            },
+            "filter": {
+              "id": -1402051955808,
+              "expression": "{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind\":\" \",\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr\":\"331\"}"
+            }
+          },
+          {
+            "type": "MappingAttributePathInstance",
+            "name": "feld_value__1__",
+            "id": -1402051926048,
+            "attribute_path": {
+              "id": 46,
+              "attributes": [
+                {
+                  "name": "feld",
+                  "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                  "id": 38
+                },
+                {
+                  "name": "value",
+                  "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+                  "id": 41
+                }
+              ]
+            },
+            "filter": {
+              "id": -1402051955808,
+              "expression": "{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind\":\" \",\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr\":\"335\"}"
             }
           }],
         "output_attribute_path": {
           "type": "MappingAttributePathInstance",
           "name": "output mapping attribute path instance",
-          "id": -1401873549967,
+          "id": -1402051926048,
           "attribute_path": {
             "id": 1,
             "attributes": [{
@@ -148,34 +120,22 @@
         }
       }]},
   "input_data_model": {
-    "name": "test_transf.csv + new data model",
-    "description": " data model of resource 'test_transf.csv' and configuration ' new'",
+    "name": "mabxml_dmp.xml",
+    "description": "mabxml",
     "configuration": {
-      "name": "new",
-      "description": null,
-      "id": 60,
-      "resources": [{"id": 1}],
+      "name": "xml",
+      "description": "xml with id 64",
+      "id": 64,
+      "resources": [{"id": 64}],
       "parameters": {
-        "column_delimiter": ";",
-        "escape_character": "\\",
-        "quote_character": "\"",
-        "first_row_is_headings": true,
-        "column_names": "columnN",
-        "storage_type": "csv"
+        "storage_type": "xml",
+        "record_tag": "datensatz"
       }
     },
     "schema": {
-      "name": "test_transf.csv schema",
-      "id": 59,
+      "name": null,
+      "id": 63,
       "attribute_paths": [
-        {
-          "id": 54,
-          "attributes": [{
-              "name": "val2",
-              "uri": "http://data.slub-dresden.de/resources/1/schema#val2",
-              "id": 46
-            }]
-        },
         {
           "id": 20,
           "attributes": [{
@@ -185,84 +145,223 @@
             }]
         },
         {
-          "id": 53,
-          "attributes": [{
-              "name": "val1",
-              "uri": "http://data.slub-dresden.de/resources/1/schema#val1",
-              "id": 45
-            }]
-        },
-        {
-          "id": 56,
-          "attributes": [{
-              "name": "val4",
-              "uri": "http://data.slub-dresden.de/resources/1/schema#val4",
-              "id": 48
-            }]
-        },
-        {
-          "id": 55,
-          "attributes": [{
-              "name": "val3",
-              "uri": "http://data.slub-dresden.de/resources/1/schema#val3",
-              "id": 47
-            }]
-        },
-        {
-          "id": 52,
+          "id": 38,
           "attributes": [{
               "name": "id",
-              "uri": "http://data.slub-dresden.de/resources/1/schema#id",
-              "id": 44
+              "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id",
+              "id": 34
             }]
+        },
+        {
+          "id": 39,
+          "attributes": [{
+              "name": "typ",
+              "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ",
+              "id": 35
+            }]
+        },
+        {
+          "id": 40,
+          "attributes": [{
+              "name": "status",
+              "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status",
+              "id": 36
+            }]
+        },
+        {
+          "id": 50,
+          "attributes": [
+            {
+              "name": "feld",
+              "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+              "id": 38
+            },
+            {
+              "name": "tf",
+              "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
+              "id": 43
+            }
+          ]
+        },
+        {
+          "id": 49,
+          "attributes": [
+            {
+              "name": "feld",
+              "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+              "id": 38
+            },
+            {
+              "name": "ns",
+              "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
+              "id": 42
+            },
+            {
+              "name": "value",
+              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+              "id": 41
+            }
+          ]
+        },
+        {
+          "id": 51,
+          "attributes": [
+            {
+              "name": "feld",
+              "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+              "id": 38
+            },
+            {
+              "name": "tf",
+              "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
+              "id": 43
+            },
+            {
+              "name": "type",
+              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+              "id": 20
+            }
+          ]
+        },
+        {
+          "id": 45,
+          "attributes": [
+            {
+              "name": "feld",
+              "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+              "id": 38
+            },
+            {
+              "name": "ind",
+              "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind",
+              "id": 40
+            }
+          ]
+        },
+        {
+          "id": 46,
+          "attributes": [
+            {
+              "name": "feld",
+              "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+              "id": 38
+            },
+            {
+              "name": "value",
+              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+              "id": 41
+            }
+          ]
+        },
+        {
+          "id": 47,
+          "attributes": [
+            {
+              "name": "feld",
+              "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+              "id": 38
+            },
+            {
+              "name": "ns",
+              "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
+              "id": 42
+            }
+          ]
+        },
+        {
+          "id": 48,
+          "attributes": [
+            {
+              "name": "feld",
+              "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+              "id": 38
+            },
+            {
+              "name": "ns",
+              "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
+              "id": 42
+            },
+            {
+              "name": "type",
+              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+              "id": 20
+            }
+          ]
+        },
+        {
+          "id": 41,
+          "attributes": [{
+              "name": "mabVersion",
+              "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion",
+              "id": 37
+            }]
+        },
+        {
+          "id": 42,
+          "attributes": [{
+              "name": "feld",
+              "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+              "id": 38
+            }]
+        },
+        {
+          "id": 43,
+          "attributes": [
+            {
+              "name": "feld",
+              "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+              "id": 38
+            },
+            {
+              "name": "type",
+              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+              "id": 20
+            }
+          ]
+        },
+        {
+          "id": 44,
+          "attributes": [
+            {
+              "name": "feld",
+              "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+              "id": 38
+            },
+            {
+              "name": "nr",
+              "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
+              "id": 39
+            }
+          ]
         }
       ],
       "record_class": {
-        "name": "record type",
-        "uri": "http://data.slub-dresden.de/resources/1/schema#RecordType",
-        "id": 3
+        "name": "datensatzType",
+        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType",
+        "id": 2
       }
     },
-    "id": 71,
+    "id": 75,
     "data_resource": {
-      "name": "test_transf.csv",
-      "description": "2 records",
+      "name": "mabxml_dmp.xml",
+      "description": "mabxml",
       "type": "FILE",
-      "id": 1,
+      "id": 64,
       "resource_attributes": {
-        "path": "/home/dmp/tmp/tmp/resources/test_transf.csv",
+        "path": "/home/dmp/tmp/tmp/resources/mabxml_dmp.xml",
+        "filetype": "application/xml",
         "filesize": -1
       },
-      "configurations": [
-        {
-          "name": null,
-          "description": null,
-          "id": 45,
-          "resources": [{"id": 1}],
+      "configurations": [{
+          "name": "xml",
+          "description": "xml with id 64",
+          "id": 64,
+          "resources": [{"id": 64}],
           "parameters": {
-            "column_delimiter": ";",
-            "escape_character": "\\",
-            "quote_character": "\"",
-            "first_row_is_headings": true,
-            "column_names": "columnN",
-            "storage_type": "csv"
+            "storage_type": "xml",
+            "record_tag": "datensatz"
           }
-        },
-        {
-          "name": "new",
-          "description": null,
-          "id": 60,
-          "resources": [{"id": 1}],
-          "parameters": {
-            "column_delimiter": ";",
-            "escape_character": "\\",
-            "quote_character": "\"",
-            "first_row_is_headings": true,
-            "column_names": "columnN",
-            "storage_type": "csv"
-          }
-        }
-      ]
+        }]
     }
   },
   "output_data_model": {

@@ -20,7 +20,7 @@
         },
         "input_attribute_paths": [{
             "type": "MappingAttributePathInstance",
-            "name": "input mapping attribute path instance",
+            "name": "type__0__",
             "id": -1402408992696,
             "attribute_path": {
               "id": 20,
@@ -102,7 +102,7 @@
         "input_attribute_paths": [
           {
             "type": "MappingAttributePathInstance",
-            "name": "input mapping attribute path instance",
+            "name": "givenname__1__",
             "id": -1402409005651,
             "attribute_path": {
               "id": 1160,
@@ -115,7 +115,7 @@
           },
           {
             "type": "MappingAttributePathInstance",
-            "name": "input mapping attribute path instance",
+            "name": "sn__1__",
             "id": -1402409019528,
             "attribute_path": {
               "id": 1159,
@@ -300,7 +300,7 @@
         "input_attribute_paths": [
           {
             "type": "MappingAttributePathInstance",
-            "name": "input mapping attribute path instance",
+            "name": "subtitle__2__",
             "id": -1402409026756,
             "attribute_path": {
               "id": 1158,
@@ -313,7 +313,7 @@
           },
           {
             "type": "MappingAttributePathInstance",
-            "name": "input mapping attribute path instance",
+            "name": "title__2__",
             "id": -1402409035498,
             "attribute_path": {
               "id": 1157,
@@ -357,7 +357,7 @@
         },
         "input_attribute_paths": [{
             "type": "MappingAttributePathInstance",
-            "name": "input mapping attribute path instance",
+            "name": "givenname__3__",
             "id": -1402409053440,
             "attribute_path": {
               "id": 1160,
@@ -400,7 +400,7 @@
         },
         "input_attribute_paths": [{
             "type": "MappingAttributePathInstance",
-            "name": "input mapping attribute path instance",
+            "name": "sn__4__",
             "id": -1402409065602,
             "attribute_path": {
               "id": 1159,
@@ -476,7 +476,7 @@
         },
         "input_attribute_paths": [{
             "type": "MappingAttributePathInstance",
-            "name": "input mapping attribute path instance",
+            "name": "date__5__",
             "id": -1402409083401,
             "attribute_path": {
               "id": 1164,
@@ -647,7 +647,7 @@
         },
         "input_attribute_paths": [{
             "type": "MappingAttributePathInstance",
-            "name": "input mapping attribute path instance",
+            "name": "attributes__6__",
             "id": -1402409115212,
             "attribute_path": {
               "id": 1163,
@@ -723,7 +723,7 @@
         },
         "input_attribute_paths": [{
             "type": "MappingAttributePathInstance",
-            "name": "input mapping attribute path instance",
+            "name": "language__7__",
             "id": -1402409132867,
             "attribute_path": {
               "id": 1162,
@@ -805,7 +805,7 @@
         },
         "input_attribute_paths": [{
             "type": "MappingAttributePathInstance",
-            "name": "input mapping attribute path instance",
+            "name": "isbn__8__",
             "id": -1402409142892,
             "attribute_path": {
               "id": 1161,
@@ -929,7 +929,7 @@
         },
         "input_attribute_paths": [{
             "type": "MappingAttributePathInstance",
-            "name": "input mapping attribute path instance",
+            "name": "isbn__9__",
             "id": -1402409156564,
             "attribute_path": {
               "id": 1161,

@@ -41,7 +41,7 @@
                         "parameter_mappings": {
                             "with": "16",
                             "pattern": "19",
-                            "inputString": "jahr"
+                            "inputString": "jahr__0__"
                         }
                     }]
                 },
@@ -49,14 +49,14 @@
                 "input_components": null,
                 "output_components": null,
                 "parameter_mappings": {
-                    "jahr": "http://data.slub-dresden.de/resources/1/schema#jahr",
+                    "jahr__0__": "http://data.slub-dresden.de/resources/1/schema#jahr",
                     "__TRANSFORMATION_OUTPUT_VARIABLE__1": "http://purl.org/dc/terms/issued"
                 }
             },
             "id": 11,
             "input_attribute_paths": [{
                 "type": "MappingAttributePathInstance",
-                "name": "input mapping attribute path instance",
+                "name": "jahr__0__",
                 "id": 24,
                 "attribute_path": {
                     "id": 84,
@@ -119,7 +119,7 @@
                         "parameter_mappings": {
                             "with": "17",
                             "pattern": "19",
-                            "inputString": "jahr"
+                            "inputString": "jahr__1__"
                         }
                     }]
                 },
@@ -127,14 +127,14 @@
                 "input_components": null,
                 "output_components": null,
                 "parameter_mappings": {
-                    "jahr": "http://data.slub-dresden.de/resources/1/schema#jahr",
+                    "jahr__1__": "http://data.slub-dresden.de/resources/1/schema#jahr",
                     "__TRANSFORMATION_OUTPUT_VARIABLE__2": "http://purl.org/dc/elements/1.1/title"
                 }
             },
             "id": 12,
             "input_attribute_paths": [{
                 "type": "MappingAttributePathInstance",
-                "name": "input mapping attribute path instance",
+                "name": "jahr__1__",
                 "id": 26,
                 "attribute_path": {
                     "id": 84,
@@ -163,7 +163,7 @@
             "id": 13,
             "input_attribute_paths": [{
                 "type": "MappingAttributePathInstance",
-                "name": "input mapping attribute path instance",
+                "name": "nummer",
                 "id": 28,
                 "attribute_path": {
                     "id": 83,
