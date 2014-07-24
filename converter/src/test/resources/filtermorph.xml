@@ -13,7 +13,7 @@
 			<!-- filter elements -->
 			<if>
 				<all name="CONDITION_ALL" reset="true"
-					 flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld" includeSubEntities="true">
+					 flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" includeSubEntities="true">
 					<data
 							source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
 						<equals string="076"/>
