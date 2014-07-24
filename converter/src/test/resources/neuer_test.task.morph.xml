@@ -6,7 +6,7 @@
     <rules>
         <combine name="@feld_nr" reset="false" sameEntity="true" value="${feld_nr.filtered}">
             <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
-                <equals string="540"/>
+                <regexp match="540"/>
             </data>
             <data name="feld_nr.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr"/>
         </combine>
@@ -17,7 +17,7 @@
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__6" source="@feld_type"/>
         <combine name="@feld_value" reset="false" sameEntity="true" value="${feld_value.filtered}">
             <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value">
-                <equals string="Ginsbach, Julia"/>
+                <regexp match="Ginsbach, Julia"/>
             </data>
             <data name="feld_value.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
         </combine>

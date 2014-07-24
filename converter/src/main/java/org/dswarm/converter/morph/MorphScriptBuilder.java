@@ -905,8 +905,8 @@ public class MorphScriptBuilder {
 			final Element combineAsFilterData = doc.createElement("data");
 			combineAsFilterData.setAttribute("source", StringEscapeUtils.unescapeXml(filter.getKey()));
 
-			final Element combineAsFilterDataFunction = doc.createElement("equals");
-			combineAsFilterDataFunction.setAttribute("string", filter.getValue());
+			final Element combineAsFilterDataFunction = doc.createElement("regexp");
+			combineAsFilterDataFunction.setAttribute("match", filter.getValue());
 
 			combineAsFilterData.appendChild(combineAsFilterDataFunction);
 			combineAsFilter.appendChild(combineAsFilterData);

@@ -6,7 +6,7 @@
     <rules>
         <combine name="@originInfo_dateIssued_value__2__" reset="false" sameEntity="true" value="${originInfo_dateIssued_value__2__.filtered}">
             <data source="http://www.loc.gov/mods/v3#originInfo&#30;http://www.loc.gov/mods/v3#dateIssued&#30;http://www.loc.gov/mods/v3#keyDate">
-                <equals string="yes"/>
+                <regexp match="yes"/>
             </data>
             <data name="originInfo_dateIssued_value__2__.filtered" source="http://www.loc.gov/mods/v3#originInfo&#30;http://www.loc.gov/mods/v3#dateIssued&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
         </combine>
