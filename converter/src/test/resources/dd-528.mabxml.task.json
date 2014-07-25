@@ -142,7 +142,7 @@
             },
             "filter": {
               "id": -1402051955808,
-              "expression": "{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr\":\"051\"}"
+              "expression": "[{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr\":\"051\"}]"
             }
           }],
         "output_attribute_path": {

@@ -23,7 +23,7 @@
                 },
                 "filter": {
                     "name": null,
-                    "expression": "{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr\":\"100\"}",
+                    "expression": "[{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr\":\"100\"}]",
                     "id": 7
                 }
             }],
@@ -110,7 +110,7 @@
                 },
                 "filter": {
                     "name": null,
-                    "expression": "{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr\":\"501\"}",
+                    "expression": "[{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr\":\"501\"}]",
                     "id": 6
                 }
             }],

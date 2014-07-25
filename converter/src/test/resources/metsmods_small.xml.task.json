@@ -275,7 +275,7 @@
             },
             "filter": {
               "id": -1402483557058,
-              "expression": "{\"http://www.loc.gov/mods/v3#originInfo\\u001ehttp://www.loc.gov/mods/v3#dateIssued\\u001ehttp://www.loc.gov/mods/v3#keyDate\":\"yes\"}"
+              "expression": "[{\"http://www.loc.gov/mods/v3#originInfo\\u001ehttp://www.loc.gov/mods/v3#dateIssued\\u001ehttp://www.loc.gov/mods/v3#keyDate\":\"yes\"}]"
             }
           }],
         "output_attribute_path": {

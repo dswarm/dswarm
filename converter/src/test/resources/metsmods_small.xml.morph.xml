@@ -4,10 +4,14 @@
         <name>mapping-1402483539669, mapping-1402483329964, mapping-1402483505043</name>
     </meta>
     <rules>
-        <combine name="@originInfo_dateIssued_value__2__" reset="false" sameEntity="true" value="${originInfo_dateIssued_value__2__.filtered}">
-            <data source="http://www.loc.gov/mods/v3#originInfo&#30;http://www.loc.gov/mods/v3#dateIssued&#30;http://www.loc.gov/mods/v3#keyDate">
-                <regexp match="yes"/>
-            </data>
+        <combine flushWith="http://www.loc.gov/mods/v3#originInfo&#30;http://www.loc.gov/mods/v3#dateIssued" includeSubEntities="true" name="@originInfo_dateIssued_value__2__" reset="true" sameEntity="true" value="${originInfo_dateIssued_value__2__.filtered}">
+            <if>
+                <all flushWith="http://www.loc.gov/mods/v3#originInfo&#30;http://www.loc.gov/mods/v3#dateIssued&#30;http://www.loc.gov/mods/v3#keyDate" includeSubEntities="true" name="CONDITION_ALL" reset="true">
+                    <data source="http://www.loc.gov/mods/v3#originInfo&#30;http://www.loc.gov/mods/v3#dateIssued&#30;http://www.loc.gov/mods/v3#keyDate">
+                        <regexp match="yes"/>
+                    </data>
+                </all>
+            </if>
             <data name="originInfo_dateIssued_value__2__.filtered" source="http://www.loc.gov/mods/v3#originInfo&#30;http://www.loc.gov/mods/v3#dateIssued&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
         </combine>
         <data name="http://purl.org/ontology/bibo/edition" source="@__TRANSFORMATION_OUTPUT_VARIABLE__3"/>

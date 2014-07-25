@@ -1,29 +1,33 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <metamorph xmlns="http://www.culturegraph.org/metamorph"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;"
-	version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+		   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;"
+		   version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
 	<meta>
 		<name>mapping1</name>
 	</meta>
 	<rules>
 
-		<!-- <data name="out" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/> -->
+		<combine name="ok" value="${out}" sameEntity="true" reset="true" includeSubEntities="true"
+				 flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld">
 
-		<combine name="ok" value="${out}" sameEntity="true" reset="false">
-			
 			<!-- filter elements -->
-			<data
-				source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
-				<equals string="076" />
-			</data>
-			<data
-				source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
-				<equals string="v" />
-			</data>
+			<if>
+				<all name="CONDITION_ALL" reset="true"
+					 flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" includeSubEntities="true">
+					<data
+							source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
+						<equals string="076"/>
+					</data>
+					<data
+							source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
+						<equals string="v"/>
+					</data>
+				</all>
+			</if>
 
 			<!-- value of attribute path that should be selected for further processing -->
 			<data name="out"
-				source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value" />
+				  source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
 
 		</combine>
 
