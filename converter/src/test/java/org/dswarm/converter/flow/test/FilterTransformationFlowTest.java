@@ -172,6 +172,8 @@ public class FilterTransformationFlowTest extends GuicedTest {
 
 		final TransformationFlow flow = TransformationFlow.fromString(morphScriptString, internalModelServiceFactoryProvider);
 
+		flow.getScript();
+
 		final String actual = flow.applyResource("test-mabxml.tuples.json");
 
 		final ArrayNode expectedJson = replaceKeyWithActualKey(expected, actual);

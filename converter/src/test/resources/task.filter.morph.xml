@@ -8,13 +8,17 @@
 		<data name="@feldvalue" source="@feldvalue.occurrence">
 			<occurrence only="2"/>
 		</data>
-		<combine name="@feldvalue.occurrence" reset="false" sameEntity="true" value="${feldvalue.occurrence.filtered}">
-			<data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
-				<equals string="p"/>
-			</data>
-			<data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
-				<equals string="077"/>
-			</data>
+		<combine flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld" includeSubEntities="true" name="@feldvalue.occurrence" reset="true" sameEntity="true" value="${feldvalue.occurrence.filtered}">
+			<if>
+				<all flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" includeSubEntities="true" name="CONDITION_ALL" reset="true">
+					<data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
+						<regexp match="077"/>
+					</data>
+					<data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
+						<regexp match="p"/>
+					</data>
+				</all>
+			</if>
 			<data name="feldvalue.occurrence.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
 		</combine>
 		<data name="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>

@@ -32,8 +32,12 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.google.common.collect.Iterators;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.init.util.DMPStatics;
 import org.dswarm.persistence.model.job.Component;
@@ -276,15 +280,15 @@ public class MorphScriptBuilder {
 			final String inputAttributePathString = mappingAttributePathInstance.getAttributePath().toAttributePath();
 
 			List<String> variablesFromInputAttributePaths = getParameterMappingKeys(inputAttributePathString, transformationComponent);
-			
+
 			final Integer ordinal = mappingAttributePathInstance.getOrdinal();
 
 			final String filterExpressionStringUnescaped = getFilterExpression(mappingAttributePathInstance);
-			
+
 			final String mappingAttributePathInstanceName = mappingAttributePathInstance.getName();
 
-			addInputAttributePathVars(variablesFromInputAttributePaths, inputAttributePathString, rules, inputAttributePaths, mappingAttributePathInstanceName,
-					filterExpressionStringUnescaped, ordinal);
+			addInputAttributePathVars(variablesFromInputAttributePaths, inputAttributePathString, rules, inputAttributePaths,
+					mappingAttributePathInstanceName, filterExpressionStringUnescaped, ordinal);
 		}
 
 		final String outputAttributePath = mapping.getOutputAttributePath().getAttributePath().toAttributePath();
@@ -418,14 +422,14 @@ public class MorphScriptBuilder {
 
 	private List<String> getParameterMappingKeys(final String attributePathString, final Component transformationComponent) {
 
-		List<String> parameterMappingKeys = null; 
+		List<String> parameterMappingKeys = null;
 
 		final Map<String, String> transformationParameterMapping = transformationComponent.getParameterMappings();
 
 		for (final Entry<String, String> parameterMapping : transformationParameterMapping.entrySet()) {
 
 			if (StringEscapeUtils.unescapeXml(parameterMapping.getValue()).equals(attributePathString)) {
-				
+
 				if (parameterMappingKeys == null) {
 
 					parameterMappingKeys = Lists.newArrayList();
@@ -439,7 +443,8 @@ public class MorphScriptBuilder {
 	}
 
 	private void addInputAttributePathVars(final List<String> variables, final String inputAttributePathString, final Element rules,
-			final Map<String, List<String>> inputAttributePaths, final String mappingAttributePathInstanceName, final String filterExpressionString, final Integer ordinal) {
+			final Map<String, List<String>> inputAttributePaths, final String mappingAttributePathInstanceName, final String filterExpressionString,
+			final Integer ordinal) {
 
 		if (variables == null || variables.isEmpty()) {
 
@@ -895,10 +900,22 @@ public class MorphScriptBuilder {
 			final Element rules) {
 
 		final Element combineAsFilter = doc.createElement("combine");
-		combineAsFilter.setAttribute("reset", "false");
+		combineAsFilter.setAttribute("reset", "true");
 		combineAsFilter.setAttribute("sameEntity", "true");
+		combineAsFilter.setAttribute("includeSubEntities", "true");
 		combineAsFilter.setAttribute("name", "@" + variable);
 		combineAsFilter.setAttribute("value", "${" + variable + MorphScriptBuilder.FILTER_VARIABLE_POSTFIX + "}");
+
+		final String commonAttributePath = determineCommonAttributePath(inputAttributePathStringXMLEscaped, filterExpressionMap.keySet());
+
+		combineAsFilter.setAttribute("flushWith", commonAttributePath);
+
+		final Element filterIf = doc.createElement("if");
+		final Element filterAll = doc.createElement("all");
+		filterAll.setAttribute("name", "CONDITION_ALL");
+		filterAll.setAttribute("reset", "true");
+		filterAll.setAttribute("includeSubEntities", "true");
+		filterAll.setAttribute("flushWith", StringEscapeUtils.unescapeXml(Iterators.getLast(filterExpressionMap.keySet().iterator())));
 
 		for (final Entry<String, String> filter : filterExpressionMap.entrySet()) {
 
@@ -909,9 +926,11 @@ public class MorphScriptBuilder {
 			combineAsFilterDataFunction.setAttribute("match", filter.getValue());
 
 			combineAsFilterData.appendChild(combineAsFilterDataFunction);
-			combineAsFilter.appendChild(combineAsFilterData);
-
+			filterAll.appendChild(combineAsFilterData);
 		}
+
+		filterIf.appendChild(filterAll);
+		combineAsFilter.appendChild(filterIf);
 
 		final Element combineAsFilterDataOut = doc.createElement("data");
 		combineAsFilterDataOut.setAttribute("name", variable + MorphScriptBuilder.FILTER_VARIABLE_POSTFIX);
@@ -924,23 +943,68 @@ public class MorphScriptBuilder {
 
 	private Map<String, String> extractFilterExpressions(final String filterExpressionString) {
 
-		Map<String, String> filterExpressionMap = Maps.newHashMap();
+		Map<String, String> filterExpressionMap = Maps.newLinkedHashMap();
 
 		final ObjectMapper objectMapper = new ObjectMapper();
 
 		if (filterExpressionString != null && !filterExpressionString.isEmpty()) {
 
+			ArrayNode filterExpressionArray = null;
+
 			try {
 
-				filterExpressionMap = objectMapper.readValue(filterExpressionString, new TypeReference<Map<String, String>>() {
+				filterExpressionArray = objectMapper.readValue(filterExpressionString, ArrayNode.class);
 
-				});
 			} catch (final IOException e) {
 
 				MorphScriptBuilder.LOG.debug("something went wrong while deserializing filter expression" + e);
 			}
+
+			if (filterExpressionArray != null) {
+
+				for (final JsonNode filterExpressionNode : filterExpressionArray) {
+
+					final Iterator<Entry<String, JsonNode>> filterExpressionIter = filterExpressionNode.fields();
+
+					while (filterExpressionIter.hasNext()) {
+
+						final Entry<String, JsonNode> filterExpressionEntry = filterExpressionIter.next();
+						filterExpressionMap.put(filterExpressionEntry.getKey(), filterExpressionEntry.getValue().asText());
+					}
+				}
+			}
 		}
 
 		return filterExpressionMap;
+	}
+
+	private String determineCommonAttributePath(final String valueAttributePath, Set<String> filterAttributePaths) {
+
+		final String[] attributePaths = new String[filterAttributePaths.size() + 1];
+
+		attributePaths[0] = valueAttributePath;
+
+		int i = 1;
+
+		for (final String filterAttributePath : filterAttributePaths) {
+
+			attributePaths[i] = StringEscapeUtils.unescapeXml(filterAttributePath);
+
+			i++;
+		}
+
+		final String commonPrefix = StringUtils.getCommonPrefix(attributePaths);
+
+		if (!commonPrefix.endsWith(DMPStatics.ATTRIBUTE_DELIMITER.toString())) {
+
+			if(!commonPrefix.contains(DMPStatics.ATTRIBUTE_DELIMITER.toString())) {
+
+				return commonPrefix;
+			}
+
+			return commonPrefix.substring(0, commonPrefix.lastIndexOf(DMPStatics.ATTRIBUTE_DELIMITER));
+		}
+
+		return commonPrefix.substring(0, commonPrefix.length() - 1);
 	}
 }

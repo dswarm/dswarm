@@ -28,7 +28,7 @@
                         },
                         "filter": {
                             "name": null,
-                            "expression": "{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr\":\"540\"}",
+                            "expression": "[{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr\":\"540\"}]",
                             "id": 14
                         }
                     }
@@ -141,7 +141,7 @@
                         },
                         "filter": {
                             "name": null,
-                            "expression": "{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#value\":\"Ginsbach, Julia\"}",
+                            "expression": "[{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#value\":\"Ginsbach, Julia\"}]",
                             "id": 13
                         }
                     }

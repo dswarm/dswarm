@@ -78,7 +78,7 @@
             },
             "filter": {
               "id": -1402051955808,
-              "expression": "{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind\":\" \",\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr\":\"331\"}"
+              "expression": "[{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr\":\"331\"},{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind\":\" \"}]"
             }
           },
           {
@@ -102,7 +102,7 @@
             },
             "filter": {
               "id": -1402051955808,
-              "expression": "{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind\":\" \",\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr\":\"335\"}"
+              "expression": "[{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr\":\"335\"},{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind\":\" \"}]"
             }
           }],
         "output_attribute_path": {
