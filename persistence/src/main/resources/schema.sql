@@ -110,6 +110,7 @@ SET foreign_key_checks = 0;
         ID bigint not null auto_increment,
         NAME varchar(255),
         KEY_ATTRIBUTE_PATHS VARCHAR(4000),
+        RECORD_IDENTIFIER_ATTRIBUTE_PATH bigint,
         VALUE_ATTRIBUTE_PATH bigint,
         primary key (ID)
     ) ENGINE=InnoDB;
@@ -224,196 +225,202 @@ SET foreign_key_checks = 0;
         primary key (ID)
     ) ENGINE=InnoDB;
 
-    alter table ATTRIBUTE_PATHS_ATTRIBUTES
-        add index FK_fjtf2wiwdr5hoom410d37k76h (ATTRIBUTE_ID),
-        add constraint FK_fjtf2wiwdr5hoom410d37k76h
-        foreign key (ATTRIBUTE_ID)
+    alter table ATTRIBUTE_PATHS_ATTRIBUTES 
+        add index FK_fjtf2wiwdr5hoom410d37k76h (ATTRIBUTE_ID), 
+        add constraint FK_fjtf2wiwdr5hoom410d37k76h 
+        foreign key (ATTRIBUTE_ID) 
         references ATTRIBUTE (ID);
 
-    alter table ATTRIBUTE_PATHS_ATTRIBUTES
-        add index FK_25kn4b1qaajdntkiai3r37y3l (ATTRIBUTE_PATH_ID),
-        add constraint FK_25kn4b1qaajdntkiai3r37y3l
-        foreign key (ATTRIBUTE_PATH_ID)
+    alter table ATTRIBUTE_PATHS_ATTRIBUTES 
+        add index FK_25kn4b1qaajdntkiai3r37y3l (ATTRIBUTE_PATH_ID), 
+        add constraint FK_25kn4b1qaajdntkiai3r37y3l 
+        foreign key (ATTRIBUTE_PATH_ID) 
         references ATTRIBUTE_PATH (ID);
 
-    alter table ATTRIBUTE_PATH_INSTANCE
-        add index FK_6jt089wmlbkpdlj0x2rcxup8e (ATTRIBUTE_PATH),
-        add constraint FK_6jt089wmlbkpdlj0x2rcxup8e
-        foreign key (ATTRIBUTE_PATH)
+    alter table ATTRIBUTE_PATH_INSTANCE 
+        add index FK_6jt089wmlbkpdlj0x2rcxup8e (ATTRIBUTE_PATH), 
+        add constraint FK_6jt089wmlbkpdlj0x2rcxup8e 
+        foreign key (ATTRIBUTE_PATH) 
         references ATTRIBUTE_PATH (ID);
 
-    alter table COMPONENT
-        add index FK_ag5gnetntolrsj5c8x1pk0mbu (FUNCTION),
-        add constraint FK_ag5gnetntolrsj5c8x1pk0mbu
-        foreign key (FUNCTION)
+    alter table COMPONENT 
+        add index FK_ag5gnetntolrsj5c8x1pk0mbu (FUNCTION), 
+        add constraint FK_ag5gnetntolrsj5c8x1pk0mbu 
+        foreign key (FUNCTION) 
         references FUNCTION (ID);
 
-    alter table COMPONENT
-        add index FK_g82elj4ech037bcca6vqmufm1 (TRANSFORMATION),
-        add constraint FK_g82elj4ech037bcca6vqmufm1
-        foreign key (TRANSFORMATION)
+    alter table COMPONENT 
+        add index FK_g82elj4ech037bcca6vqmufm1 (TRANSFORMATION), 
+        add constraint FK_g82elj4ech037bcca6vqmufm1 
+        foreign key (TRANSFORMATION) 
         references TRANSFORMATION (ID);
 
-    alter table CONFIGURATIONS_RESOURCES
-        add index FK_dtfx2ekmub8eo4kgi3yfg0gyx (RESOURCE_ID),
-        add constraint FK_dtfx2ekmub8eo4kgi3yfg0gyx
-        foreign key (RESOURCE_ID)
+    alter table CONFIGURATIONS_RESOURCES 
+        add index FK_dtfx2ekmub8eo4kgi3yfg0gyx (RESOURCE_ID), 
+        add constraint FK_dtfx2ekmub8eo4kgi3yfg0gyx 
+        foreign key (RESOURCE_ID) 
         references RESOURCE (ID);
 
-    alter table CONFIGURATIONS_RESOURCES
-        add index FK_1umqe7aqc5k80n1pixjv34vpi (CONFIGURATION_ID),
-        add constraint FK_1umqe7aqc5k80n1pixjv34vpi
-        foreign key (CONFIGURATION_ID)
+    alter table CONFIGURATIONS_RESOURCES 
+        add index FK_1umqe7aqc5k80n1pixjv34vpi (CONFIGURATION_ID), 
+        add constraint FK_1umqe7aqc5k80n1pixjv34vpi 
+        foreign key (CONFIGURATION_ID) 
         references CONFIGURATION (ID);
 
-    alter table CONTENT_SCHEMA
-        add index FK_9l1ily6bu8wklhep4d4t99qmh (VALUE_ATTRIBUTE_PATH),
-        add constraint FK_9l1ily6bu8wklhep4d4t99qmh
-        foreign key (VALUE_ATTRIBUTE_PATH)
+    alter table CONTENT_SCHEMA 
+        add index FK_8agn2bar1meoko64cxj0f7uhq (RECORD_IDENTIFIER_ATTRIBUTE_PATH), 
+        add constraint FK_8agn2bar1meoko64cxj0f7uhq 
+        foreign key (RECORD_IDENTIFIER_ATTRIBUTE_PATH) 
         references ATTRIBUTE_PATH (ID);
 
-    alter table CONTENT_SCHEMAS_KEY_ATTRIBUTE_PATHS
-        add index FK_4r9rcnjvsc47fkrftfw7dfb7u (ATTRIBUTE_PATH_ID),
-        add constraint FK_4r9rcnjvsc47fkrftfw7dfb7u
-        foreign key (ATTRIBUTE_PATH_ID)
+    alter table CONTENT_SCHEMA 
+        add index FK_9l1ily6bu8wklhep4d4t99qmh (VALUE_ATTRIBUTE_PATH), 
+        add constraint FK_9l1ily6bu8wklhep4d4t99qmh 
+        foreign key (VALUE_ATTRIBUTE_PATH) 
         references ATTRIBUTE_PATH (ID);
 
-    alter table CONTENT_SCHEMAS_KEY_ATTRIBUTE_PATHS
-        add index FK_9j4vcly1i6pmvvs7349hj6fin (CONTENT_SCHEMA_ID),
-        add constraint FK_9j4vcly1i6pmvvs7349hj6fin
-        foreign key (CONTENT_SCHEMA_ID)
+    alter table CONTENT_SCHEMAS_KEY_ATTRIBUTE_PATHS 
+        add index FK_4r9rcnjvsc47fkrftfw7dfb7u (ATTRIBUTE_PATH_ID), 
+        add constraint FK_4r9rcnjvsc47fkrftfw7dfb7u 
+        foreign key (ATTRIBUTE_PATH_ID) 
+        references ATTRIBUTE_PATH (ID);
+
+    alter table CONTENT_SCHEMAS_KEY_ATTRIBUTE_PATHS 
+        add index FK_9j4vcly1i6pmvvs7349hj6fin (CONTENT_SCHEMA_ID), 
+        add constraint FK_9j4vcly1i6pmvvs7349hj6fin 
+        foreign key (CONTENT_SCHEMA_ID) 
         references CONTENT_SCHEMA (ID);
 
-    alter table DATA_MODEL
-        add index FK_hpe71t1t2cy8817cq6jcval7v (CONFIGURATION),
-        add constraint FK_hpe71t1t2cy8817cq6jcval7v
-        foreign key (CONFIGURATION)
+    alter table DATA_MODEL 
+        add index FK_hpe71t1t2cy8817cq6jcval7v (CONFIGURATION), 
+        add constraint FK_hpe71t1t2cy8817cq6jcval7v 
+        foreign key (CONFIGURATION) 
         references CONFIGURATION (ID);
 
-    alter table DATA_MODEL
-        add index FK_ixk5hb4bkl3vhu6agjra7mkr8 (DATA_RESOURCE),
-        add constraint FK_ixk5hb4bkl3vhu6agjra7mkr8
-        foreign key (DATA_RESOURCE)
+    alter table DATA_MODEL 
+        add index FK_ixk5hb4bkl3vhu6agjra7mkr8 (DATA_RESOURCE), 
+        add constraint FK_ixk5hb4bkl3vhu6agjra7mkr8 
+        foreign key (DATA_RESOURCE) 
         references RESOURCE (ID);
 
-    alter table DATA_MODEL
-        add index FK_id7ig90c37glf3njn0928o0v0 (DATA_SCHEMA),
-        add constraint FK_id7ig90c37glf3njn0928o0v0
-        foreign key (DATA_SCHEMA)
+    alter table DATA_MODEL 
+        add index FK_id7ig90c37glf3njn0928o0v0 (DATA_SCHEMA), 
+        add constraint FK_id7ig90c37glf3njn0928o0v0 
+        foreign key (DATA_SCHEMA) 
         references DATA_SCHEMA (ID);
 
-    alter table DATA_SCHEMA
-        add index FK_4d0x8vrycw2wftldagmv875vq (CONTENT_SCHEMA),
-        add constraint FK_4d0x8vrycw2wftldagmv875vq
-        foreign key (CONTENT_SCHEMA)
+    alter table DATA_SCHEMA 
+        add index FK_4d0x8vrycw2wftldagmv875vq (CONTENT_SCHEMA), 
+        add constraint FK_4d0x8vrycw2wftldagmv875vq 
+        foreign key (CONTENT_SCHEMA) 
         references CONTENT_SCHEMA (ID);
 
-    alter table DATA_SCHEMA
-        add index FK_67hdhd4o40jypqxwdcq7tai28 (RECORD_CLASS),
-        add constraint FK_67hdhd4o40jypqxwdcq7tai28
-        foreign key (RECORD_CLASS)
+    alter table DATA_SCHEMA 
+        add index FK_67hdhd4o40jypqxwdcq7tai28 (RECORD_CLASS), 
+        add constraint FK_67hdhd4o40jypqxwdcq7tai28 
+        foreign key (RECORD_CLASS) 
         references CLASS (ID);
 
-    alter table INPUT_COMPONENTS_OUTPUT_COMPONENTS
-        add index FK_1bye4g7e7ib5wbeg37mmkejnj (OUTPUT_COMPONENT_ID),
-        add constraint FK_1bye4g7e7ib5wbeg37mmkejnj
-        foreign key (OUTPUT_COMPONENT_ID)
+    alter table INPUT_COMPONENTS_OUTPUT_COMPONENTS 
+        add index FK_1bye4g7e7ib5wbeg37mmkejnj (OUTPUT_COMPONENT_ID), 
+        add constraint FK_1bye4g7e7ib5wbeg37mmkejnj 
+        foreign key (OUTPUT_COMPONENT_ID) 
         references COMPONENT (ID);
 
-    alter table INPUT_COMPONENTS_OUTPUT_COMPONENTS
-        add index FK_ew268gg7myf90otusn3nac4i (INPUT_COMPONENT_ID),
-        add constraint FK_ew268gg7myf90otusn3nac4i
-        foreign key (INPUT_COMPONENT_ID)
+    alter table INPUT_COMPONENTS_OUTPUT_COMPONENTS 
+        add index FK_ew268gg7myf90otusn3nac4i (INPUT_COMPONENT_ID), 
+        add constraint FK_ew268gg7myf90otusn3nac4i 
+        foreign key (INPUT_COMPONENT_ID) 
         references COMPONENT (ID);
 
-    alter table MAPPING
-        add index FK_h0b70ivxm1byvbabn6ic3slrp (OUTPUT_ATTRIBUTE_PATH),
-        add constraint FK_h0b70ivxm1byvbabn6ic3slrp
-        foreign key (OUTPUT_ATTRIBUTE_PATH)
+    alter table MAPPING 
+        add index FK_h0b70ivxm1byvbabn6ic3slrp (OUTPUT_ATTRIBUTE_PATH), 
+        add constraint FK_h0b70ivxm1byvbabn6ic3slrp 
+        foreign key (OUTPUT_ATTRIBUTE_PATH) 
         references MAPPING_ATTRIBUTE_PATH_INSTANCE (ID);
 
-    alter table MAPPING
-        add index FK_y31lfpmsdwyyjjubvff2p2tw (TRANSFORMATION),
-        add constraint FK_y31lfpmsdwyyjjubvff2p2tw
-        foreign key (TRANSFORMATION)
+    alter table MAPPING 
+        add index FK_y31lfpmsdwyyjjubvff2p2tw (TRANSFORMATION), 
+        add constraint FK_y31lfpmsdwyyjjubvff2p2tw 
+        foreign key (TRANSFORMATION) 
         references COMPONENT (ID);
 
-    alter table MAPPINGS_INPUT_ATTRIBUTE_PATHS
-        add index FK_jv70xguk23noytu5v3ukd4g48 (INPUT_ATTRIBUTE_PATH_ID),
-        add constraint FK_jv70xguk23noytu5v3ukd4g48
-        foreign key (INPUT_ATTRIBUTE_PATH_ID)
+    alter table MAPPINGS_INPUT_ATTRIBUTE_PATHS 
+        add index FK_jv70xguk23noytu5v3ukd4g48 (INPUT_ATTRIBUTE_PATH_ID), 
+        add constraint FK_jv70xguk23noytu5v3ukd4g48 
+        foreign key (INPUT_ATTRIBUTE_PATH_ID) 
         references MAPPING_ATTRIBUTE_PATH_INSTANCE (ID);
 
-    alter table MAPPINGS_INPUT_ATTRIBUTE_PATHS
-        add index FK_hsj1yogl36hm49mjh76khjkqe (MAPPING_ID),
-        add constraint FK_hsj1yogl36hm49mjh76khjkqe
-        foreign key (MAPPING_ID)
+    alter table MAPPINGS_INPUT_ATTRIBUTE_PATHS 
+        add index FK_hsj1yogl36hm49mjh76khjkqe (MAPPING_ID), 
+        add constraint FK_hsj1yogl36hm49mjh76khjkqe 
+        foreign key (MAPPING_ID) 
         references MAPPING (ID);
 
-    alter table MAPPING_ATTRIBUTE_PATH_INSTANCE
-        add index FK_gqbk1yvsk4obdq7awumondc49 (FILTER),
-        add constraint FK_gqbk1yvsk4obdq7awumondc49
-        foreign key (FILTER)
+    alter table MAPPING_ATTRIBUTE_PATH_INSTANCE 
+        add index FK_gqbk1yvsk4obdq7awumondc49 (FILTER), 
+        add constraint FK_gqbk1yvsk4obdq7awumondc49 
+        foreign key (FILTER) 
         references FILTER (ID);
 
-    alter table MAPPING_ATTRIBUTE_PATH_INSTANCE
-        add index FK_numa6haek9lnkkd2caq9nf7sv (ID),
-        add constraint FK_numa6haek9lnkkd2caq9nf7sv
-        foreign key (ID)
+    alter table MAPPING_ATTRIBUTE_PATH_INSTANCE 
+        add index FK_numa6haek9lnkkd2caq9nf7sv (ID), 
+        add constraint FK_numa6haek9lnkkd2caq9nf7sv 
+        foreign key (ID) 
         references ATTRIBUTE_PATH_INSTANCE (ID);
 
-    alter table PROJECT
-        add index FK_nswwcscg2guqjctk1omny3loj (INPUT_DATA_MODEL),
-        add constraint FK_nswwcscg2guqjctk1omny3loj
-        foreign key (INPUT_DATA_MODEL)
+    alter table PROJECT 
+        add index FK_nswwcscg2guqjctk1omny3loj (INPUT_DATA_MODEL), 
+        add constraint FK_nswwcscg2guqjctk1omny3loj 
+        foreign key (INPUT_DATA_MODEL) 
         references DATA_MODEL (ID);
 
-    alter table PROJECT
-        add index FK_6unsgihaswor2ftvtcwmwg4nc (OUTPUT_DATA_MODEL),
-        add constraint FK_6unsgihaswor2ftvtcwmwg4nc
-        foreign key (OUTPUT_DATA_MODEL)
+    alter table PROJECT 
+        add index FK_6unsgihaswor2ftvtcwmwg4nc (OUTPUT_DATA_MODEL), 
+        add constraint FK_6unsgihaswor2ftvtcwmwg4nc 
+        foreign key (OUTPUT_DATA_MODEL) 
         references DATA_MODEL (ID);
 
-    alter table PROJECTS_FUNCTIONS
-        add index FK_6ja5bqjo5suu7p0wa0ac1cxa8 (FUNCTION_ID),
-        add constraint FK_6ja5bqjo5suu7p0wa0ac1cxa8
-        foreign key (FUNCTION_ID)
+    alter table PROJECTS_FUNCTIONS 
+        add index FK_6ja5bqjo5suu7p0wa0ac1cxa8 (FUNCTION_ID), 
+        add constraint FK_6ja5bqjo5suu7p0wa0ac1cxa8 
+        foreign key (FUNCTION_ID) 
         references FUNCTION (ID);
 
-    alter table PROJECTS_FUNCTIONS
-        add index FK_nx7uw5jry35jr2rxhngkypf8 (PROJECT_ID),
-        add constraint FK_nx7uw5jry35jr2rxhngkypf8
-        foreign key (PROJECT_ID)
+    alter table PROJECTS_FUNCTIONS 
+        add index FK_nx7uw5jry35jr2rxhngkypf8 (PROJECT_ID), 
+        add constraint FK_nx7uw5jry35jr2rxhngkypf8 
+        foreign key (PROJECT_ID) 
         references PROJECT (ID);
 
-    alter table PROJECTS_MAPPINGS
-        add index FK_qhq2xm12uixmdqfaq1y3w8nht (MAPPING_ID),
-        add constraint FK_qhq2xm12uixmdqfaq1y3w8nht
-        foreign key (MAPPING_ID)
+    alter table PROJECTS_MAPPINGS 
+        add index FK_qhq2xm12uixmdqfaq1y3w8nht (MAPPING_ID), 
+        add constraint FK_qhq2xm12uixmdqfaq1y3w8nht 
+        foreign key (MAPPING_ID) 
         references MAPPING (ID);
 
-    alter table PROJECTS_MAPPINGS
-        add index FK_8qrhjdabvk1ty4s9wuikcun2h (PROJECT_ID),
-        add constraint FK_8qrhjdabvk1ty4s9wuikcun2h
-        foreign key (PROJECT_ID)
+    alter table PROJECTS_MAPPINGS 
+        add index FK_8qrhjdabvk1ty4s9wuikcun2h (PROJECT_ID), 
+        add constraint FK_8qrhjdabvk1ty4s9wuikcun2h 
+        foreign key (PROJECT_ID) 
         references PROJECT (ID);
 
-    alter table SCHEMAS_ATTRIBUTE_PATHS
-        add index FK_bn6agrogclcpeuvsua2ndpreu (ATTRIBUTE_PATH_ID),
-        add constraint FK_bn6agrogclcpeuvsua2ndpreu
-        foreign key (ATTRIBUTE_PATH_ID)
+    alter table SCHEMAS_ATTRIBUTE_PATHS 
+        add index FK_bn6agrogclcpeuvsua2ndpreu (ATTRIBUTE_PATH_ID), 
+        add constraint FK_bn6agrogclcpeuvsua2ndpreu 
+        foreign key (ATTRIBUTE_PATH_ID) 
         references ATTRIBUTE_PATH (ID);
 
-    alter table SCHEMAS_ATTRIBUTE_PATHS
-        add index FK_fs9dl6u7bs5fsd6wc08depa1a (SCHEMA_ID),
-        add constraint FK_fs9dl6u7bs5fsd6wc08depa1a
-        foreign key (SCHEMA_ID)
+    alter table SCHEMAS_ATTRIBUTE_PATHS 
+        add index FK_fs9dl6u7bs5fsd6wc08depa1a (SCHEMA_ID), 
+        add constraint FK_fs9dl6u7bs5fsd6wc08depa1a 
+        foreign key (SCHEMA_ID) 
         references DATA_SCHEMA (ID);
 
-    alter table TRANSFORMATION
-        add index FK_qk4t8c3cucrxqguipv9emdxpm (ID),
-        add constraint FK_qk4t8c3cucrxqguipv9emdxpm
-        foreign key (ID)
+    alter table TRANSFORMATION 
+        add index FK_qk4t8c3cucrxqguipv9emdxpm (ID), 
+        add constraint FK_qk4t8c3cucrxqguipv9emdxpm 
+        foreign key (ID) 
         references FUNCTION (ID);
 
 SET foreign_key_checks = 1;

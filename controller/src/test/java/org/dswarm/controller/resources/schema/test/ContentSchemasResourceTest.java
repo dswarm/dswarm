@@ -115,6 +115,19 @@ public class ContentSchemasResourceTest
 
 		objectJSON.put("key_attribute_paths", attributePathsArray);
 
+		// record identifier attribute path
+
+		attributesResourceTestUtils.prepareAttribute("attribute10.json", attributes);
+		final AttributePath recordIdentifierAttributePath = attributePathsResourceTestUtils.prepareAttributePath("attribute_path10.json", attributePaths, attributes);
+
+		// manipulate record identifier attribute path
+		final String recordIdentifierAttributePathJSONString = objectMapper.writeValueAsString(recordIdentifierAttributePath);
+		final ObjectNode recordIdentifierAttributePathJSON = objectMapper.readValue(recordIdentifierAttributePathJSONString, ObjectNode.class);
+
+		objectJSON.put("record_identifier_attribute_path", recordIdentifierAttributePathJSON);
+
+		// value attribute path
+
 		final Attribute rdfValue = attributesResourceTestUtils.getObject((long) 43);
 		attributes.put(rdfValue.getId(), rdfValue);
 		final AttributePath valueAttributePath = attributePathsResourceTestUtils.prepareAttributePath("attribute_path8.json", attributePaths,

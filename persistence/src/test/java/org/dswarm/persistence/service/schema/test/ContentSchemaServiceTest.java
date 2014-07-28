@@ -44,6 +44,20 @@ public class ContentSchemaServiceTest extends IDBasicJPAServiceTest<ProxyContent
 	@Test
 	public void testSimpleSchema() throws Exception {
 
+		// record identifier attribute path
+
+		final String dctermsIdentifierId = "http://purl.org/dc/terms/identifier";
+		final String dctermsIdentifierName = "identifier";
+
+		final Attribute dctermsIdentifier = attributeServiceTestUtils.createAttribute(dctermsIdentifierId, dctermsIdentifierName);
+		attributes.put(dctermsIdentifier.getId(), dctermsIdentifier);
+
+		final LinkedList<Attribute> dctermsIdentifierAPList = Lists.newLinkedList();
+
+		dctermsIdentifierAPList.add(dctermsIdentifier);
+
+		final AttributePath dctermsIdentifierAP = attributePathServiceTestUtils.createAttributePath(dctermsIdentifierAPList);
+
 		// key first attribute path
 
 		final Attribute dctermsTitle = attributeServiceTestUtils.createAttribute("http://purl.org/dc/terms/title", "title");
@@ -114,6 +128,7 @@ public class ContentSchemaServiceTest extends IDBasicJPAServiceTest<ProxyContent
 		final ContentSchema contentSchema = createObject().getObject();
 
 		contentSchema.setName("my content schema");
+		contentSchema.setRecordIdentifierAttributePath(dctermsIdentifierAP);
 		contentSchema.addKeyAttributePath(attributePath1);
 		contentSchema.addKeyAttributePath(attributePath2);
 		contentSchema.addKeyAttributePath(attributePath3);
@@ -123,6 +138,9 @@ public class ContentSchemaServiceTest extends IDBasicJPAServiceTest<ProxyContent
 
 		final ContentSchema updatedContentSchema = updateObjectTransactional(contentSchema).getObject();
 
+		Assert.assertNotNull("the record identifier attribute path of the updated content schema shouldn't be null", updatedContentSchema.getRecordIdentifierAttributePath());
+		Assert.assertEquals("the record identifier attribute paths are not equal", contentSchema.getRecordIdentifierAttributePath(),
+				updatedContentSchema.getRecordIdentifierAttributePath());
 		Assert.assertNotNull("the content schema's key attribute paths of the updated content schema shouldn't be null",
 				updatedContentSchema.getKeyAttributePaths());
 		Assert.assertEquals("the content schema's key attribute paths size are not equal", contentSchema.getKeyAttributePaths(),
@@ -160,6 +178,7 @@ public class ContentSchemaServiceTest extends IDBasicJPAServiceTest<ProxyContent
 		// clean up DB
 		deleteObject(contentSchema.getId());
 
+		attributePathServiceTestUtils.deleteObject(dctermsIdentifierAP);
 		attributePathServiceTestUtils.deleteObject(attributePath1);
 		attributePathServiceTestUtils.deleteObject(attributePath2);
 		attributePathServiceTestUtils.deleteObject(attributePath3);

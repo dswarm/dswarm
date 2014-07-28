@@ -55,6 +55,14 @@ public class ContentSchema extends BasicDMPJPAObject {
 	private static final Logger			LOG									= LoggerFactory.getLogger(AttributePath.class);
 
 	/**
+	 * The value attribute path of the content schema.
+	 */
+	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@JoinColumn(name = "RECORD_IDENTIFIER_ATTRIBUTE_PATH")
+	@XmlElement(name = "record_identifier_attribute_path")
+	private AttributePath				recordIdentifierAttributePath;
+
+	/**
 	 * All utilised attribute path of the key attribute paths.
 	 */
 	@JsonIgnore
@@ -107,13 +115,36 @@ public class ContentSchema extends BasicDMPJPAObject {
 
 	/**
 	 * Creates a new content schema with the given ordered list of key attribute paths and the value attribute path.
-	 * 
+	 *
+	 * @param recordIdentifierAttributePathArg the attribute path where the (legacy) record identifier is located
 	 * @param keyAttributePathsArg an ordered list of key attribute paths
+	 * @param valueAttributePath the attribute path where the values are located
 	 */
-	public ContentSchema(final LinkedList<AttributePath> keyAttributePathsArg, final AttributePath valueAttributePath) {
+	public ContentSchema(final AttributePath recordIdentifierAttributePathArg, final LinkedList<AttributePath> keyAttributePathsArg, final AttributePath valueAttributePath) {
 
+		setRecordIdentifierAttributePath(recordIdentifierAttributePathArg);
 		setKeyAttributePaths(keyAttributePathsArg);
 		setValueAttributePath(valueAttributePath);
+	}
+
+	/**
+	 * Gets the record identifier attribute path of the content schema.
+	 *
+	 * @return the record attribute path of the content schema
+	 */
+	public AttributePath getRecordIdentifierAttributePath() {
+
+		return recordIdentifierAttributePath;
+	}
+
+	/**
+	 * Sets the record identifier attribute path of the content schema.
+	 *
+	 * @param recordIdentifierAttributePathArg a new value attribute path
+	 */
+	public void setRecordIdentifierAttributePath(final AttributePath recordIdentifierAttributePathArg) {
+
+		recordIdentifierAttributePath = recordIdentifierAttributePathArg;
 	}
 
 	/**
@@ -420,6 +451,8 @@ public class ContentSchema extends BasicDMPJPAObject {
 
 		return ContentSchema.class.isInstance(obj)
 				&& super.completeEquals(obj)
+				&& DMPPersistenceUtil.getAttributePathUtils().completeEquals(((ContentSchema) obj).getRecordIdentifierAttributePath(),
+						getRecordIdentifierAttributePath())
 				&& DMPPersistenceUtil.getAttributePathUtils().completeEquals(((ContentSchema) obj).getUtilisedKeyAttributePaths(),
 						getUtilisedKeyAttributePaths())
 				&& DMPPersistenceUtil.getAttributePathUtils().completeEquals(((ContentSchema) obj).getKeyAttributePaths(), getKeyAttributePaths())

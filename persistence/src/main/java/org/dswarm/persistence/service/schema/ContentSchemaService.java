@@ -33,12 +33,13 @@ public class ContentSchemaService extends BasicDMPJPAService<ProxyContentSchema,
 
 	/**
 	 * {@inheritDoc}<br>
-	 * Clear the relationship to the key attribute paths + value attribute path.
+	 * Clear the relationship to the record identifier attribute path, the key attribute paths + value attribute path.
 	 */
 	@Override
 	protected void prepareObjectForRemoval(final ContentSchema object) {
 
-		// should clear the relationship to the key attribute paths + value attribute path
+		// should clear the relationship to record identifier attribute path, the key attribute paths + value attribute path
+		object.setRecordIdentifierAttributePath(null);
 		object.setKeyAttributePaths(null);
 		object.setValueAttributePath(null);
 	}
@@ -50,11 +51,12 @@ public class ContentSchemaService extends BasicDMPJPAService<ProxyContentSchema,
 	protected void updateObjectInternal(final ContentSchema object, final ContentSchema updateObject, final EntityManager entityManager)
 			throws DMPPersistenceException {
 
+		final AttributePath recordIdentifierAttributePath = object.getRecordIdentifierAttributePath();
 		final LinkedList<AttributePath> keyAttributePaths = object.getKeyAttributePaths();
 		final AttributePath valueAttributePath = object.getValueAttributePath();
 
+		updateObject.setRecordIdentifierAttributePath(recordIdentifierAttributePath);
 		updateObject.setKeyAttributePaths(keyAttributePaths);
-
 		updateObject.setValueAttributePath(valueAttributePath);
 
 		super.updateObjectInternal(object, updateObject, entityManager);
