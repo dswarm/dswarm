@@ -32,6 +32,12 @@ public class XMLTransformationFlowTest extends GuicedTest {
 	}
 
 	@Test
+	public void testMabxmlWFilterMapping2() throws Exception {
+
+		testXMLTaskWithTuples("mabxml_w_filter_2.task.result.json", "mabxml_w_filter_2.task.json", "mabxml_dmp.tuples.json");
+	}
+
+	@Test
 	public void testMabxmlWFilterMappings() throws Exception {
 
 		testXMLTaskWithTuples("tgtest_mabxml_mo_proj.task.result.json", "tgtest_mabxml_mo_proj.task.json", "test-mabxml.tuples.json");
