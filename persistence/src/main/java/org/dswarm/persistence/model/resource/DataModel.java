@@ -9,11 +9,11 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * A (input) data model consists of a {@link Resource} and a {@link Configuration} that has been applied to the data resource to

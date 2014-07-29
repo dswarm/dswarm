@@ -16,18 +16,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.dswarm.controller.DMPControllerException;
-import org.dswarm.controller.resources.BasicDMPResource;
-import org.dswarm.controller.resources.schema.utils.ContentSchemasResourceUtils;
-import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
-import org.dswarm.controller.status.DMPStatus;
-import org.dswarm.persistence.model.schema.AttributePath;
-import org.dswarm.persistence.model.schema.ContentSchema;
-import org.dswarm.persistence.model.schema.proxy.ProxyContentSchema;
-import org.dswarm.persistence.service.schema.ContentSchemaService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -38,6 +26,18 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.dswarm.controller.DMPControllerException;
+import org.dswarm.controller.resources.BasicDMPResource;
+import org.dswarm.controller.resources.schema.utils.ContentSchemasResourceUtils;
+import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
+import org.dswarm.controller.status.DMPStatus;
+import org.dswarm.persistence.model.schema.AttributePath;
+import org.dswarm.persistence.model.schema.ContentSchema;
+import org.dswarm.persistence.model.schema.proxy.ProxyContentSchema;
+import org.dswarm.persistence.service.schema.ContentSchemaService;
 
 /**
  * A resource (controller service) for {@link org.dswarm.persistence.model.schema.ContentSchema}s.

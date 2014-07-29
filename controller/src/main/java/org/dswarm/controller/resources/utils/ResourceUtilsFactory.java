@@ -2,14 +2,12 @@ package org.dswarm.controller.resources.utils;
 
 import java.util.Map;
 
-import org.dswarm.controller.resources.schema.utils.ContentSchemasResourceUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.job.utils.ComponentsResourceUtils;
@@ -24,6 +22,7 @@ import org.dswarm.controller.resources.resource.utils.ResourcesResourceUtils;
 import org.dswarm.controller.resources.schema.utils.AttributePathsResourceUtils;
 import org.dswarm.controller.resources.schema.utils.AttributesResourceUtils;
 import org.dswarm.controller.resources.schema.utils.ClaszesResourceUtils;
+import org.dswarm.controller.resources.schema.utils.ContentSchemasResourceUtils;
 import org.dswarm.controller.resources.schema.utils.MappingAttributePathInstancesResourceUtils;
 import org.dswarm.controller.resources.schema.utils.SchemasResourceUtils;
 
@@ -34,7 +33,7 @@ import org.dswarm.controller.resources.schema.utils.SchemasResourceUtils;
  * which are lazily loaded via standard {@code Provider}s and offers a {@code reset()} method, to reset the cache, effectively
  * creating a new scope, given that the Utils class itself are not Singleton-scoped. see
  * https://jira.slub-dresden.de/browse/DD-311
- *
+ * 
  * @author phorn
  */
 @Singleton
@@ -84,7 +83,7 @@ public class ResourceUtilsFactory {
 	/**
 	 * Reset the internal instance cache, effectively creating a new injection scope. You would use this within an constructor of
 	 * a Jersey Resource, for example.
-	 *
+	 * 
 	 * @return this instance for a fluent interface;
 	 */
 	public synchronized ResourceUtilsFactory reset() {
@@ -95,7 +94,7 @@ public class ResourceUtilsFactory {
 
 	/**
 	 * Get an instance of any BasicResourceUtils
-	 *
+	 * 
 	 * @param cls the class of the desired instance
 	 * @param <T> the type of the desired instance
 	 * @return an instance of T, guaranteed to be not null;

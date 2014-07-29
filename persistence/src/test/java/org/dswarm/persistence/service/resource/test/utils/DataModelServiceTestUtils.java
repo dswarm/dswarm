@@ -1,5 +1,7 @@
 package org.dswarm.persistence.service.resource.test.utils;
 
+import org.junit.Assert;
+
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
@@ -8,7 +10,6 @@ import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 import org.dswarm.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestUtils;
-import org.junit.Assert;
 
 public class DataModelServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils<DataModelService, ProxyDataModel, DataModel> {
 

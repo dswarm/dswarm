@@ -19,21 +19,20 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.dswarm.init.DMPException;
-import org.dswarm.init.util.DMPStatics;
-import org.dswarm.persistence.model.DMPJPAObject;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.hamcrest.Matchers;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import ch.lambdaj.Lambda;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import org.hamcrest.Matchers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.dswarm.init.DMPException;
+import org.dswarm.init.util.DMPStatics;
+import org.dswarm.persistence.model.DMPJPAObject;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * An attribute path is an ordered list of {@link Attribute}s.

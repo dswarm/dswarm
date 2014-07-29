@@ -2,16 +2,16 @@ package org.dswarm.converter.flow;
 
 import java.io.Reader;
 
+import com.google.common.base.Optional;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
+
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.mf.stream.reader.CsvReader;
 import org.dswarm.converter.mf.stream.source.CSVJSONEncoder;
 import org.dswarm.converter.mf.stream.source.CSVJSONWriter;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
-
-import com.google.common.base.Optional;
 
 /**
  * Flow that reads and parses a given CSV document and returns a preview of its content as JSON representation.

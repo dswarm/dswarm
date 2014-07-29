@@ -1,7 +1,6 @@
 package org.dswarm.persistence.service;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -9,15 +8,13 @@ import javax.persistence.Query;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.dswarm.persistence.DMPPersistenceException;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
+import com.google.inject.Provider;
+import com.google.inject.persist.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.Provider;
-import com.google.inject.persist.Transactional;
+import org.dswarm.persistence.DMPPersistenceException;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * @author tgaengler
@@ -162,7 +159,7 @@ public class MaintainDBService {
 	 * @param entityManager the entity manager
 	 * @param sqlScript a list of SQL statements
 	 */
-	private void executeSQLScript(EntityManager entityManager, List<String> sqlScript) {
+	private void executeSQLScript(final EntityManager entityManager, final List<String> sqlScript) {
 		for (final String sqlScriptLine : sqlScript) {
 
 			final Query query = entityManager.createNativeQuery(sqlScriptLine);

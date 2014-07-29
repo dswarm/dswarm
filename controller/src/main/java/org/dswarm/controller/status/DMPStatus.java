@@ -3,15 +3,15 @@ package org.dswarm.controller.status;
 import java.lang.management.ManagementFactory;
 import java.util.Map;
 
-import org.dswarm.controller.resources.BasicResource;
-import org.dswarm.controller.resources.resource.ResourcesResource;
-
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import org.dswarm.controller.resources.BasicResource;
+import org.dswarm.controller.resources.resource.ResourcesResource;
 
 /**
  * A metrics registry for the backend API. Every method of every resource can be registered here for statistical purpose.

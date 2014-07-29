@@ -3,12 +3,11 @@ package org.dswarm.converter.pipe;
 import java.util.List;
 import java.util.Map;
 
-import org.culturegraph.mf.framework.DefaultStreamPipe;
-import org.culturegraph.mf.framework.StreamReceiver;
-
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.culturegraph.mf.framework.DefaultStreamPipe;
+import org.culturegraph.mf.framework.StreamReceiver;
 
 /**
  * Reverse the effect of {@link org.culturegraph.mf.stream.pipe.StreamFlattener} The StreamFlattener is used by

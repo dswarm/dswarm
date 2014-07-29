@@ -1,9 +1,9 @@
 package org.dswarm.converter.mf.stream;
 
-import org.culturegraph.mf.framework.ObjectReceiver;
-import org.dswarm.persistence.model.internal.gdm.GDMModel;
-
 import com.google.common.collect.ImmutableList;
+import org.culturegraph.mf.framework.ObjectReceiver;
+
+import org.dswarm.persistence.model.internal.gdm.GDMModel;
 
 /**
  * @author tgaengler

@@ -2,13 +2,13 @@ package org.dswarm.persistence.service.job.test.utils;
 
 import java.util.LinkedList;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.junit.Assert;
+
 import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.proxy.ProxyBasicFunction;
 import org.dswarm.persistence.service.job.BasicFunctionService;
 import org.dswarm.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestUtils;
-import org.junit.Assert;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 public abstract class BasicFunctionServiceTestUtils<POJOCLASSPERSISTENCESERVICE extends BasicFunctionService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyBasicFunction<POJOCLASS>, POJOCLASS extends Function>
 		extends ExtendedBasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {

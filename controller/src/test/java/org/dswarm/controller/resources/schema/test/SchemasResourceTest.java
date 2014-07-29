@@ -9,6 +9,14 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Test;
+
 import org.dswarm.controller.resources.schema.test.utils.AttributePathsResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.AttributesResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.ClaszesResourceTestUtils;
@@ -25,37 +33,29 @@ import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Test;
-
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 public class SchemasResourceTest extends
 		BasicResourceTest<SchemasResourceTestUtils, SchemaServiceTestUtils, SchemaService, ProxySchema, Schema, Long> {
 
 	private AttributesResourceTestUtils		attributesResourceTestUtils;
 
-	private ClaszesResourceTestUtils			claszesResourceTestUtils;
+	private ClaszesResourceTestUtils		claszesResourceTestUtils;
 
 	private AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
 
-	private SchemasResourceTestUtils			schemasResourceTestUtils;
+	private SchemasResourceTestUtils		schemasResourceTestUtils;
 
 	private ContentSchemasResourceTestUtils	contentSchemasResourceTestUtils;
 
-	final Map<Long, Attribute>						attributes		= Maps.newHashMap();
+	final Map<Long, Attribute>				attributes		= Maps.newHashMap();
 
-	final Map<Long, AttributePath>					attributePaths	= Maps.newLinkedHashMap();
+	final Map<Long, AttributePath>			attributePaths	= Maps.newLinkedHashMap();
 
-	private Clasz									recordClass;
+	private Clasz							recordClass;
 
-	private Clasz									recordClass2;
+	private Clasz							recordClass2;
 
-	private ContentSchema							contentSchema;
+	private ContentSchema					contentSchema;
 
 	public SchemasResourceTest() {
 
@@ -161,7 +161,8 @@ public class SchemasResourceTest extends
 
 		final Attribute rdfValue = attributesResourceTestUtils.getObject((long) 43);
 		attributes.put(rdfValue.getId(), rdfValue);
-		AttributePath valueAttributePath = attributePathsResourceTestUtils.prepareAttributePath("attribute_path8.json", attributePaths, attributes);
+		final AttributePath valueAttributePath = attributePathsResourceTestUtils.prepareAttributePath("attribute_path8.json", attributePaths,
+				attributes);
 
 		// manipulate value attribute path
 		final String valueAttributePathJSONString = objectMapper.writeValueAsString(valueAttributePath);
@@ -461,10 +462,11 @@ public class SchemasResourceTest extends
 
 		attributesResourceTestUtils.compareObjects(expectedAttribute, attribute);
 
-		LinkedList<Attribute> firstAttributePathAttributesList = firstAttributePath.getAttributePath();
+		final LinkedList<Attribute> firstAttributePathAttributesList = firstAttributePath.getAttributePath();
 		firstAttributePathAttributesList.add(attribute);
 
-		final AttributePath newFirstAttributePath = attributePathsResourceTestUtils.getPersistenceServiceTestUtils().createAttributePath(firstAttributePathAttributesList);
+		final AttributePath newFirstAttributePath = attributePathsResourceTestUtils.getPersistenceServiceTestUtils().createAttributePath(
+				firstAttributePathAttributesList);
 		Assert.assertNotNull(newFirstAttributePath);
 		attributePaths.put(newFirstAttributePath.getId(), newFirstAttributePath);
 		persistedSchema.removeAttributePath(firstAttributePath);

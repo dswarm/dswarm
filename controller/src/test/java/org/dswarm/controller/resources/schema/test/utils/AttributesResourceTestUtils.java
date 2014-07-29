@@ -1,12 +1,12 @@
 package org.dswarm.controller.resources.schema.test.utils;
 
+import java.util.Map;
+
 import org.dswarm.controller.resources.test.utils.AdvancedDMPResourceTestUtils;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
 import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtils;
-
-import java.util.Map;
 
 public class AttributesResourceTestUtils extends AdvancedDMPResourceTestUtils<AttributeServiceTestUtils, AttributeService, ProxyAttribute, Attribute> {
 

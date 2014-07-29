@@ -6,6 +6,16 @@ import java.security.SecureRandom;
 import java.util.List;
 import java.util.Random;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
+import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
+
 import org.dswarm.init.DMPException;
 import org.dswarm.persistence.model.job.utils.ComponentUtils;
 import org.dswarm.persistence.model.job.utils.FilterUtils;
@@ -22,16 +32,6 @@ import org.dswarm.persistence.model.schema.utils.ClaszUtils;
 import org.dswarm.persistence.model.schema.utils.ContentSchemaUtils;
 import org.dswarm.persistence.model.schema.utils.MappingAttributePathInstanceUtils;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
-
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
-import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
 
 /**
  * A utility class for the persistence module.
@@ -129,12 +129,12 @@ public final class DMPPersistenceUtil {
 	}
 
 	/**
-			* Retrieves a resource by the give path and converts its lines to strings.
-			*
-			* @param resource a resource path
-	* @return a line-wise string representation fo the content of the resource
-	* @throws IOException
-	*/
+	 * Retrieves a resource by the give path and converts its lines to strings.
+	 * 
+	 * @param resource a resource path
+	 * @return a line-wise string representation fo the content of the resource
+	 * @throws IOException
+	 */
 	public static List<String> getResourceLinesAsString(final String resource) throws IOException {
 		final URL url = Resources.getResource(resource);
 		return Resources.readLines(url, Charsets.UTF_8);

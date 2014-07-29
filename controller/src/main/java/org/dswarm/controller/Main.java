@@ -3,8 +3,9 @@ package org.dswarm.controller;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.dswarm.controller.utils.DMPControllerUtils;
 import org.glassfish.grizzly.http.server.HttpServer;
+
+import org.dswarm.controller.utils.DMPControllerUtils;
 
 /**
  * The main class of the backend API. Wraps the backend web server where the backend API is located.

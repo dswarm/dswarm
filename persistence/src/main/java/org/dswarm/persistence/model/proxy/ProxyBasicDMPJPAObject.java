@@ -2,9 +2,10 @@ package org.dswarm.persistence.model.proxy;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.dswarm.persistence.model.BasicDMPJPAObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.dswarm.persistence.model.BasicDMPJPAObject;
 
 /**
  * An abstract proxy POJO class for where the real objects can have a name and where the identifier of the real object should be

@@ -5,6 +5,14 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Test;
+
 import org.dswarm.controller.resources.job.test.utils.ComponentsResourceTestUtils;
 import org.dswarm.controller.resources.job.test.utils.FunctionsResourceTestUtils;
 import org.dswarm.controller.resources.job.test.utils.MappingsResourceTestUtils;
@@ -36,21 +44,13 @@ import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.service.job.ProjectService;
 import org.dswarm.persistence.service.job.test.utils.ProjectServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Test;
-
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 public class ProjectsResourceTest extends
 		BasicResourceTest<ProjectsResourceTestUtils, ProjectServiceTestUtils, ProjectService, ProxyProject, Project, Long> {
 
 	private FunctionsResourceTestUtils						functionsResourceTestUtils;
 
-	private TransformationsResourceTestUtils					transformationsResourceTestUtils;
+	private TransformationsResourceTestUtils				transformationsResourceTestUtils;
 
 	private ComponentsResourceTestUtils						componentsResourceTestUtils;
 
@@ -58,65 +58,65 @@ public class ProjectsResourceTest extends
 
 	private AttributePathsResourceTestUtils					attributePathsResourceTestUtils;
 
-	private ClaszesResourceTestUtils							claszesResourceTestUtils;
+	private ClaszesResourceTestUtils						claszesResourceTestUtils;
 
 	private ResourcesResourceTestUtils						resourcesResourceTestUtils;
 
 	private ConfigurationsResourceTestUtils					configurationsResourceTestUtils;
 
-	private SchemasResourceTestUtils							schemasResourceTestUtils;
+	private SchemasResourceTestUtils						schemasResourceTestUtils;
 
 	private DataModelsResourceTestUtils						dataModelsResourceTestUtils;
 
-	private MappingsResourceTestUtils							mappingsResourceTestUtils;
+	private MappingsResourceTestUtils						mappingsResourceTestUtils;
 
-	private ProjectsResourceTestUtils							projectsResourceTestUtils;
+	private ProjectsResourceTestUtils						projectsResourceTestUtils;
 
 	private MappingAttributePathInstancesResourceTestUtils	mappingAttributePathInstancesResourceTestUtils;
 
-	private Function												function;
+	private Function										function;
 
-	private Function												updateFunction;
+	private Function										updateFunction;
 
-	private Component												component;
+	private Component										component;
 
-	private Component												updateComponent;
+	private Component										updateComponent;
 
-	private Component												updateTransformationComponent;
+	private Component										updateTransformationComponent;
 
-	private Transformation											transformation;
+	private Transformation									transformation;
 
-	private Transformation											updateTransformation;
+	private Transformation									updateTransformation;
 
-	private Component												transformationComponent;
+	private Component										transformationComponent;
 
-	final Map<Long, Attribute>										attributes						= Maps.newHashMap();
+	final Map<Long, Attribute>								attributes						= Maps.newHashMap();
 
-	final Map<Long, AttributePath>									attributePaths					= Maps.newLinkedHashMap();
+	final Map<Long, AttributePath>							attributePaths					= Maps.newLinkedHashMap();
 
-	final Map<Long, MappingAttributePathInstance>					mappingAttributePathInstances	= Maps.newLinkedHashMap();
+	final Map<Long, MappingAttributePathInstance>			mappingAttributePathInstances	= Maps.newLinkedHashMap();
 
-	private Clasz													recordClass;
+	private Clasz											recordClass;
 
-	private Clasz													updateRecordClass;
+	private Clasz											updateRecordClass;
 
-	private Schema													schema;
+	private Schema											schema;
 
-	private Schema													updateSchema;
+	private Schema											updateSchema;
 
-	private Configuration											configuration;
+	private Configuration									configuration;
 
-	private Configuration											updateConfiguration;
+	private Configuration									updateConfiguration;
 
-	private Resource												resource;
+	private Resource										resource;
 
-	private Resource												updateResource;
+	private Resource										updateResource;
 
-	private Mapping													updateMapping;
+	private Mapping											updateMapping;
 
-	private final Map<Long, DataModel>								dataModels						= Maps.newHashMap();
+	private final Map<Long, DataModel>						dataModels						= Maps.newHashMap();
 
-	private final Map<Long, Mapping>								mappings						= Maps.newHashMap();
+	private final Map<Long, Mapping>						mappings						= Maps.newHashMap();
 
 	public ProjectsResourceTest() {
 

@@ -1,10 +1,11 @@
 package org.dswarm.persistence.service.test;
 
 import junit.framework.Assert;
+import org.junit.Test;
+
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.service.MaintainDBService;
-import org.junit.Test;
 
 /**
  * @author tgaengler

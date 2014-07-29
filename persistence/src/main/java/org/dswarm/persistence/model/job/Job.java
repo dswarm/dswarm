@@ -5,12 +5,12 @@ import java.util.Set;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.google.common.collect.Sets;
+
 import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.google.common.collect.Sets;
 
 /**
  * A job is a collection of {@link Mapping}s that can be execution on a given input {@link DataModel} and be written to a given

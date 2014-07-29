@@ -6,13 +6,13 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 
+import com.google.common.io.Resources;
 import org.apache.commons.io.FileUtils;
-import org.dswarm.controller.DMPControllerException;
-import org.dswarm.init.util.DMPUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.io.Resources;
+import org.dswarm.controller.DMPControllerException;
+import org.dswarm.init.util.DMPUtil;
 
 /**
  * A utility class for the controller module.

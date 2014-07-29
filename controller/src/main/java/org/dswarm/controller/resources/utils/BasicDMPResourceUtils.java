@@ -2,11 +2,11 @@ package org.dswarm.controller.resources.utils;
 
 import javax.inject.Provider;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.dswarm.persistence.model.BasicDMPJPAObject;
 import org.dswarm.persistence.model.proxy.ProxyBasicDMPJPAObject;
 import org.dswarm.persistence.service.BasicDMPJPAService;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author tgaengler

@@ -1,8 +1,5 @@
 package org.dswarm.persistence;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
@@ -13,6 +10,8 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.persist.PersistService;
 import com.google.inject.persist.jpa.JpaPersistModule;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 
 public class GuicedTest {
 

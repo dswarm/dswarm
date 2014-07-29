@@ -5,7 +5,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.dswarm.persistence.model.proxy.ProxyBasicDMPJPAObject;
 import org.dswarm.persistence.model.proxy.RetrievalType;
 import org.dswarm.persistence.model.schema.ContentSchema;
-import org.dswarm.persistence.model.schema.Schema;
 
 /**
  * A proxy class for {@link org.dswarm.persistence.model.schema.ContentSchema}s.

@@ -4,6 +4,16 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import org.junit.Assert;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.job.Component;
@@ -13,16 +23,6 @@ import org.dswarm.persistence.model.job.proxy.ProxyComponent;
 import org.dswarm.persistence.service.job.ComponentService;
 import org.dswarm.persistence.service.job.test.utils.FunctionServiceTestUtils;
 import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
-import org.junit.Assert;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 public class ComponentServiceTest extends IDBasicJPAServiceTest<ProxyComponent, Component, ComponentService> {
 

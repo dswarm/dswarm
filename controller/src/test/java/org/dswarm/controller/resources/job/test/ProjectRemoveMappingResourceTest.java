@@ -9,6 +9,15 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.dswarm.controller.resources.job.test.utils.FiltersResourceTestUtils;
 import org.dswarm.controller.resources.job.test.utils.FunctionsResourceTestUtils;
 import org.dswarm.controller.resources.job.test.utils.MappingsResourceTestUtils;
@@ -40,15 +49,6 @@ import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.service.job.ProjectService;
 import org.dswarm.persistence.service.job.test.utils.ProjectServiceTestUtils;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 public class ProjectRemoveMappingResourceTest extends
 		BasicResourceTest<ProjectsResourceTestUtils, ProjectServiceTestUtils, ProjectService, ProxyProject, Project, Long> {

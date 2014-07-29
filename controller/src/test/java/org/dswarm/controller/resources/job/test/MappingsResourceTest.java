@@ -3,6 +3,13 @@ package org.dswarm.controller.resources.job.test;
 import java.util.LinkedList;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import org.junit.After;
+import org.junit.Assert;
+
 import org.dswarm.controller.resources.job.test.utils.ComponentsResourceTestUtils;
 import org.dswarm.controller.resources.job.test.utils.FiltersResourceTestUtils;
 import org.dswarm.controller.resources.job.test.utils.FunctionsResourceTestUtils;
@@ -24,22 +31,15 @@ import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.service.job.MappingService;
 import org.dswarm.persistence.service.job.test.utils.MappingServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.junit.After;
-import org.junit.Assert;
-
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 public class MappingsResourceTest extends
 		BasicResourceTest<MappingsResourceTestUtils, MappingServiceTestUtils, MappingService, ProxyMapping, Mapping, Long> {
 
-	private FiltersResourceTestUtils							filtersResourceTestUtils;
+	private FiltersResourceTestUtils						filtersResourceTestUtils;
 
 	private FunctionsResourceTestUtils						functionsResourceTestUtils;
 
-	private TransformationsResourceTestUtils					transformationsResourceTestUtils;
+	private TransformationsResourceTestUtils				transformationsResourceTestUtils;
 
 	private ComponentsResourceTestUtils						componentsResourceTestUtils;
 
@@ -47,31 +47,31 @@ public class MappingsResourceTest extends
 
 	private AttributePathsResourceTestUtils					attributePathsResourceTestUtils;
 
-	private MappingsResourceTestUtils							mappingsResourceTestUtils;
+	private MappingsResourceTestUtils						mappingsResourceTestUtils;
 
 	private MappingAttributePathInstancesResourceTestUtils	mappingAttributePathInstancesResourceTestUtils;
 
-	private Function												function;
+	private Function										function;
 
-	private Function												updateFunction;
+	private Function										updateFunction;
 
-	private Filter													updateFilter;
+	private Filter											updateFilter;
 
-	private Component												component;
+	private Component										component;
 
-	private Transformation											transformation;
+	private Transformation									transformation;
 
-	private Component												transformationComponent;
+	private Component										transformationComponent;
 
-	private Component												updateTransformationComponent;
+	private Component										updateTransformationComponent;
 
-	private AttributePath											updateInputAttributePath;
+	private AttributePath									updateInputAttributePath;
 
-	final Map<Long, Attribute>										attributes						= Maps.newHashMap();
+	final Map<Long, Attribute>								attributes						= Maps.newHashMap();
 
-	final Map<Long, AttributePath>									attributePaths					= Maps.newLinkedHashMap();
+	final Map<Long, AttributePath>							attributePaths					= Maps.newLinkedHashMap();
 
-	final Map<Long, MappingAttributePathInstance>					mappingAttributePathInstances	= Maps.newLinkedHashMap();
+	final Map<Long, MappingAttributePathInstance>			mappingAttributePathInstances	= Maps.newLinkedHashMap();
 
 	public MappingsResourceTest() {
 

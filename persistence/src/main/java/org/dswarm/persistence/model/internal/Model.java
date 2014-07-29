@@ -2,9 +2,9 @@ package org.dswarm.persistence.model.internal;
 
 import java.util.Set;
 
-import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
-
 import com.fasterxml.jackson.databind.JsonNode;
+
+import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
 
 /**
  * The model interface for holding and providing data for further processing.

@@ -1,18 +1,18 @@
 package org.dswarm.persistence.service.resource.test;
 
-import org.dswarm.persistence.GuicedTest;
-import org.dswarm.persistence.model.resource.Configuration;
-import org.dswarm.persistence.model.resource.proxy.ProxyConfiguration;
-import org.dswarm.persistence.service.resource.ConfigurationService;
-import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.dswarm.persistence.GuicedTest;
+import org.dswarm.persistence.model.resource.Configuration;
+import org.dswarm.persistence.model.resource.proxy.ProxyConfiguration;
+import org.dswarm.persistence.service.resource.ConfigurationService;
+import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
 
 public class ConfigurationServiceTest extends IDBasicJPAServiceTest<ProxyConfiguration, Configuration, ConfigurationService> {
 

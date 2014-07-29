@@ -6,16 +6,16 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import org.culturegraph.mf.framework.DefaultObjectPipe;
-import org.culturegraph.mf.framework.StreamReceiver;
-import org.dswarm.persistence.model.types.Tuple;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import org.culturegraph.mf.framework.DefaultObjectPipe;
+import org.culturegraph.mf.framework.StreamReceiver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.dswarm.persistence.model.types.Tuple;
 
 /**
  * @author phorn

@@ -3,7 +3,15 @@ package org.dswarm.persistence.service.schema.test.internalmodel;
 import java.util.LinkedList;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang.StringUtils;
+import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.schema.Attribute;
@@ -13,14 +21,6 @@ import org.dswarm.persistence.model.schema.NameSpacePrefixRegistry;
 import org.dswarm.persistence.service.schema.AttributePathService;
 import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.schema.ClaszService;
-import org.junit.Assert;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 public class AttributePathBuilder extends GuicedTest {
 

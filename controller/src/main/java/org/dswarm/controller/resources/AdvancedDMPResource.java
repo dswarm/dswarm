@@ -1,6 +1,9 @@
 package org.dswarm.controller.resources;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.utils.AdvancedDMPResourceUtils;
 import org.dswarm.controller.status.DMPStatus;
@@ -9,8 +12,6 @@ import org.dswarm.persistence.model.AdvancedDMPJPAObject;
 import org.dswarm.persistence.model.BasicDMPJPAObject;
 import org.dswarm.persistence.model.proxy.ProxyAdvancedDMPJPAObject;
 import org.dswarm.persistence.service.AdvancedDMPJPAService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A generic resource (controller service) implementation for {@link BasicDMPJPAObject}s, i.e., objects where the identifier will

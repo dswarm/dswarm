@@ -19,12 +19,6 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.dswarm.init.DMPException;
-import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
@@ -34,6 +28,12 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.dswarm.init.DMPException;
+import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * A function is a method that can be executed on data via a {@link Job} execution (i.e. a {@link Task}). A function mainly

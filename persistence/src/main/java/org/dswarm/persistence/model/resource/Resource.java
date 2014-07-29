@@ -20,20 +20,19 @@ import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.dswarm.init.DMPException;
-import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.hamcrest.Matchers;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import ch.lambdaj.Lambda;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
 import com.wordnik.swagger.annotations.ApiModel;
+import org.hamcrest.Matchers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.dswarm.init.DMPException;
+import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * A data resource describes attributes of a specific amount of data. A data resource can be, e.g., an XML or CSV document, a SQL

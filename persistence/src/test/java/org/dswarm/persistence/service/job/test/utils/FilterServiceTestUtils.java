@@ -1,10 +1,11 @@
 package org.dswarm.persistence.service.job.test.utils;
 
+import org.junit.Assert;
+
 import org.dswarm.persistence.model.job.Filter;
 import org.dswarm.persistence.model.job.proxy.ProxyFilter;
 import org.dswarm.persistence.service.job.FilterService;
 import org.dswarm.persistence.service.test.utils.BasicDMPJPAServiceTestUtils;
-import org.junit.Assert;
 
 public class FilterServiceTestUtils extends BasicDMPJPAServiceTestUtils<FilterService, ProxyFilter, Filter> {
 

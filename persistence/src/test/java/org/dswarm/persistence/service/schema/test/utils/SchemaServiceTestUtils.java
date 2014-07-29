@@ -3,16 +3,14 @@ package org.dswarm.persistence.service.schema.test.utils;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Assert;
-
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.junit.Assert;
 
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
-import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
 import org.dswarm.persistence.service.schema.SchemaService;

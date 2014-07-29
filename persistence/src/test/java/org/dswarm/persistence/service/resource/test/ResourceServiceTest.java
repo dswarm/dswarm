@@ -1,5 +1,12 @@
 package org.dswarm.persistence.service.resource.test;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.junit.Assert;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.resource.Configuration;
@@ -11,13 +18,6 @@ import org.dswarm.persistence.service.resource.ResourceService;
 import org.dswarm.persistence.service.resource.test.utils.ResourceServiceTestUtils;
 import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.junit.Assert;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class ResourceServiceTest extends IDBasicJPAServiceTest<ProxyResource, Resource, ResourceService> {
 

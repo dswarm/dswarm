@@ -12,6 +12,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.google.inject.servlet.RequestScoped;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
+
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.job.utils.FunctionsResourceUtils;
 import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
@@ -19,13 +26,6 @@ import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.proxy.ProxyFunction;
 import org.dswarm.persistence.service.job.FunctionService;
-
-import com.google.inject.servlet.RequestScoped;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
 
 /**
  * A resource (controller service) for {@link Function}s.

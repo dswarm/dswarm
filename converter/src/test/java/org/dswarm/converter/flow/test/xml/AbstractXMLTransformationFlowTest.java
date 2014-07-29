@@ -6,6 +6,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.TextNode;
+import com.google.common.base.Optional;
+import com.google.common.collect.AbstractIterator;
+import com.google.common.collect.Maps;
+import com.google.inject.Provider;
+import org.junit.Assert;
+import org.junit.Test;
+
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.TransformationFlow;
 import org.dswarm.converter.flow.XMLSourceResourceGDMStmtsFlow;
@@ -34,18 +46,6 @@ import org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtil
 import org.dswarm.persistence.service.schema.test.utils.ClaszServiceTestUtils;
 import org.dswarm.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.junit.Assert;
-import org.junit.Test;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
-import com.google.common.base.Optional;
-import com.google.common.collect.AbstractIterator;
-import com.google.common.collect.Maps;
-import com.google.inject.Provider;
 
 public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
@@ -64,7 +64,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 	private final AttributeServiceTestUtils		attributeServiceTestUtils;
 	private final AttributePathServiceTestUtils	attributePathServiceTestUtils;
 	private final SchemaServiceTestUtils		schemaServiceTestUtils;
-	private final ClaszServiceTestUtils classServiceTestUtils;
+	private final ClaszServiceTestUtils			classServiceTestUtils;
 
 	public AbstractXMLTransformationFlowTest(final String taskJSONFileNameArg, final String expectedResultJSONFileNameArg, final String recordTagArg,
 			final String xmlNamespaceArg, final String exampleDataResourceFileNameArg) {

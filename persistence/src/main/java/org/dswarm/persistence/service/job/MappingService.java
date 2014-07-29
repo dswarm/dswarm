@@ -4,15 +4,15 @@ import java.util.Set;
 
 import javax.persistence.EntityManager;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.job.Component;
 import org.dswarm.persistence.model.job.Mapping;
 import org.dswarm.persistence.model.job.proxy.ProxyMapping;
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.service.BasicDMPJPAService;
-
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 /**
  * A persistence service for {@link Mapping}s.

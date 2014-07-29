@@ -4,6 +4,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import org.junit.Assert;
+
 import org.dswarm.persistence.model.job.Component;
 import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.Transformation;
@@ -11,10 +15,6 @@ import org.dswarm.persistence.model.job.proxy.ProxyComponent;
 import org.dswarm.persistence.service.job.ComponentService;
 import org.dswarm.persistence.service.test.utils.BasicJPAServiceTestUtils;
 import org.dswarm.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestUtils;
-import org.junit.Assert;
-
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils<ComponentService, ProxyComponent, Component> {
 

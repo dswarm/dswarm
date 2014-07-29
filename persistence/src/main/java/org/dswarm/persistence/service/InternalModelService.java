@@ -2,12 +2,12 @@ package org.dswarm.persistence.service;
 
 import java.util.Map;
 
+import com.google.common.base.Optional;
+
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.schema.Schema;
-
-import com.google.common.base.Optional;
 
 /**
  * A service for persistence work with internal models, i.e., data of {@link DataModel}s.

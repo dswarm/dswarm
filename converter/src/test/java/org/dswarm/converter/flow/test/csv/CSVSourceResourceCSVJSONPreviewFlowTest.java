@@ -4,21 +4,21 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+import com.fasterxml.jackson.databind.node.BooleanNode;
+import com.fasterxml.jackson.databind.node.IntNode;
+import com.fasterxml.jackson.databind.node.TextNode;
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
 import org.apache.commons.io.FileUtils;
+import org.junit.Assert;
+import org.junit.Test;
+
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.flow.CSVResourceFlowFactory;
 import org.dswarm.converter.flow.CSVSourceResourceCSVJSONPreviewFlow;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.junit.Assert;
-import org.junit.Test;
-
-import com.fasterxml.jackson.databind.node.BooleanNode;
-import com.fasterxml.jackson.databind.node.IntNode;
-import com.fasterxml.jackson.databind.node.TextNode;
-import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
 
 /**
  * @author sreichert

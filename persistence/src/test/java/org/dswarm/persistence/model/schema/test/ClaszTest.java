@@ -1,14 +1,14 @@
 package org.dswarm.persistence.model.schema.test;
 
-import org.dswarm.persistence.GuicedTest;
-import org.dswarm.persistence.model.schema.Clasz;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.dswarm.persistence.GuicedTest;
+import org.dswarm.persistence.model.schema.Clasz;
 
 public class ClaszTest extends GuicedTest {
 

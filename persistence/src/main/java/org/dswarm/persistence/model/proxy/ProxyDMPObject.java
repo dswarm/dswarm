@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.dswarm.persistence.model.DMPObject;
-
 import com.google.common.base.Objects;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import org.dswarm.persistence.model.DMPObject;
 
 /**
  * The most abstract proxy POJO class, i.e., this class is intended for inheritance. It only provides a getter for the identifier

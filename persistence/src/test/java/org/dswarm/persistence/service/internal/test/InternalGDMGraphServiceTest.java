@@ -5,7 +5,18 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.node.TextNode;
+import com.google.common.base.Optional;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import com.google.common.io.Resources;
 import org.apache.commons.io.FileUtils;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
@@ -28,17 +39,6 @@ import org.dswarm.persistence.service.schema.test.utils.AttributePathServiceTest
 import org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtils;
 import org.dswarm.persistence.service.schema.test.utils.ClaszServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.node.TextNode;
-import com.google.common.base.Optional;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import com.google.common.io.Resources;
 
 public class InternalGDMGraphServiceTest extends GuicedTest {
 

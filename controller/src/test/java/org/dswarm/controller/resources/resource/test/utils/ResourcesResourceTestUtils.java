@@ -7,18 +7,18 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.google.common.io.Resources;
 import org.apache.commons.io.FileUtils;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
+import org.junit.Assert;
+
 import org.dswarm.controller.resources.test.utils.ExtendedBasicDMPResourceTestUtils;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.proxy.ProxyResource;
 import org.dswarm.persistence.service.resource.ResourceService;
 import org.dswarm.persistence.service.resource.test.utils.ResourceServiceTestUtils;
-import org.glassfish.jersey.media.multipart.FormDataMultiPart;
-import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
-import org.junit.Assert;
-
-import com.google.common.io.Resources;
 
 public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtils<ResourceServiceTestUtils, ResourceService, ProxyResource, Resource> {
 

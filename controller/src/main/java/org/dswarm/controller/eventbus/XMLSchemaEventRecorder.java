@@ -1,11 +1,11 @@
 package org.dswarm.controller.eventbus;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.service.schema.SchemaService;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 @Singleton
 public class XMLSchemaEventRecorder {

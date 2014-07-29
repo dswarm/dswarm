@@ -2,12 +2,12 @@ package org.dswarm.persistence.model.internal.helper;
 
 import java.util.List;
 
-import org.dswarm.persistence.util.DMPPersistenceUtil;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
+
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * A converter helper for RDF to JSON transformation.

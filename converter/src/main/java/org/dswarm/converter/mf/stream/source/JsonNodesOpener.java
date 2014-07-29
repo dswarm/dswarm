@@ -1,9 +1,8 @@
 package org.dswarm.converter.mf.stream.source;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * @author phorn

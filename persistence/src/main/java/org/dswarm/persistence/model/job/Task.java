@@ -3,11 +3,11 @@ package org.dswarm.persistence.model.job;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * A task is an executable {@link Job}, i.e., a job with a concrete input {@link DataModel} and output {@link DataModel}.

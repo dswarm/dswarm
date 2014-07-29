@@ -2,13 +2,13 @@ package org.dswarm.persistence.service.schema;
 
 import javax.persistence.EntityManager;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
 import org.dswarm.persistence.service.AdvancedDMPJPAService;
-
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 /**
  * A persistence service for {@link Attribute}s.
