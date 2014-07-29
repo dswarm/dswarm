@@ -3,6 +3,9 @@ package org.dswarm.persistence.service.job.test.utils;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.collect.Maps;
+import org.junit.Assert;
+
 import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.Mapping;
 import org.dswarm.persistence.model.job.Project;
@@ -11,9 +14,6 @@ import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.service.job.ProjectService;
 import org.dswarm.persistence.service.resource.test.utils.DataModelServiceTestUtils;
 import org.dswarm.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestUtils;
-import org.junit.Assert;
-
-import com.google.common.collect.Maps;
 
 public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils<ProjectService, ProxyProject, Project> {
 

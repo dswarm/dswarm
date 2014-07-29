@@ -2,13 +2,13 @@ package org.dswarm.controller.resources.job.utils;
 
 import javax.inject.Provider;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.dswarm.controller.resources.utils.ExtendedBasicDMPResourceUtils;
 import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
 import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.proxy.ProxyBasicFunction;
 import org.dswarm.persistence.service.job.BasicFunctionService;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author tgaengler

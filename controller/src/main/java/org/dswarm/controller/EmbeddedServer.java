@@ -8,7 +8,7 @@ import java.util.concurrent.CountDownLatch;
 import javax.servlet.DispatcherType;
 import javax.ws.rs.core.UriBuilder;
 
-import org.dswarm.controller.servlet.DMPInjector;
+import com.google.inject.servlet.GuiceFilter;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.StaticHttpHandler;
 import org.glassfish.grizzly.servlet.FilterRegistration;
@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
-import com.google.inject.servlet.GuiceFilter;
+import org.dswarm.controller.servlet.DMPInjector;
 
 /**
  * The embedded web server for the backend API.<br/>

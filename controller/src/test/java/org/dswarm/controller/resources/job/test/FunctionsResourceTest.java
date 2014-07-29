@@ -1,12 +1,13 @@
 package org.dswarm.controller.resources.job.test;
 
+import org.junit.Assert;
+
 import org.dswarm.controller.resources.job.test.utils.FunctionsResourceTestUtils;
 import org.dswarm.controller.resources.test.BasicResourceTest;
 import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.proxy.ProxyFunction;
 import org.dswarm.persistence.service.job.FunctionService;
 import org.dswarm.persistence.service.job.test.utils.FunctionServiceTestUtils;
-import org.junit.Assert;
 
 public class FunctionsResourceTest extends
 		BasicResourceTest<FunctionsResourceTestUtils, FunctionServiceTestUtils, FunctionService, ProxyFunction, Function, Long> {

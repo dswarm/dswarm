@@ -16,16 +16,15 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import ch.lambdaj.Lambda;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.google.common.collect.Sets;
+import org.hamcrest.Matchers;
+
 import org.dswarm.persistence.model.BasicDMPJPAObject;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.hamcrest.Matchers;
-
-import ch.lambdaj.Lambda;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.google.common.collect.Sets;
 
 /**
  * A mapping is an instantiation of a {@link Function} or {@link Transformation} with a given collection of input

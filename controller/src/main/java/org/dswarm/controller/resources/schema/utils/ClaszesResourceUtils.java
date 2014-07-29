@@ -2,14 +2,14 @@ package org.dswarm.controller.resources.schema.utils;
 
 import javax.inject.Provider;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.inject.Inject;
+
 import org.dswarm.controller.resources.utils.AdvancedDMPResourceUtils;
 import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.proxy.ProxyClasz;
 import org.dswarm.persistence.service.schema.ClaszService;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Inject;
 
 /**
  * @author tgaengler

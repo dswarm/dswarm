@@ -2,12 +2,12 @@ package org.dswarm.persistence.model.internal.gdm.helper;
 
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import org.dswarm.graph.json.LiteralNode;
 import org.dswarm.graph.json.Node;
 import org.dswarm.graph.json.ResourceNode;
 import org.dswarm.persistence.model.internal.helper.ConverterHelper;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * A helper class with static methods for the converter helper.

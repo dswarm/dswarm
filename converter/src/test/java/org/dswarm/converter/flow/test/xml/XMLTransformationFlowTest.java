@@ -1,18 +1,18 @@
 package org.dswarm.converter.flow.test.xml;
 
-import org.dswarm.converter.GuicedTest;
-import org.dswarm.converter.flow.TransformationFlow;
-import org.dswarm.persistence.model.job.Task;
-import org.dswarm.persistence.service.InternalModelServiceFactory;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Provider;
+import org.junit.Assert;
+import org.junit.Test;
+
+import org.dswarm.converter.GuicedTest;
+import org.dswarm.converter.flow.TransformationFlow;
+import org.dswarm.persistence.model.job.Task;
+import org.dswarm.persistence.service.InternalModelServiceFactory;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * @author tgaengler Created by tgaengler on 16/05/14.
@@ -48,25 +48,25 @@ public class XMLTransformationFlowTest extends GuicedTest {
 
 		testXMLTaskWithTuples("dd-528.mabxml.task.result.json", "dd-528.mabxml.task.json", "mabxml_dmp.tuples.json");
 	}
-	
+
 	@Test
 	public void testMabxmlConcatOneMappingOnFeldValueWithTwoFiltersMorph() throws Exception {
 
 		testXMLMorphWithTuples("dd-530.mabxml.morph.result.json", "dd-530.mabxml.morph.xml", "test-mabxml.tuples.json");
 	}
-	
+
 	@Test
 	public void testMabxmlConcatOneMappingOnFeldValueWithTwoFiltersTask() throws Exception {
 
 		testXMLTaskWithTuples("dd-530.mabxml.task.result.json", "dd-530.mabxml.task.json", "test-mabxml.tuples.json");
 	}
-	
+
 	@Test
 	public void testMabxmlFilterWithRegexMorph() throws Exception {
 
 		testXMLMorphWithTuples("dd-650.mabxml.morph.result.json", "dd-650.mabxml.morph.xml", "test-mabxml.tuples.json");
 	}
-	
+
 	@Test
 	public void testMabxmlFilterWithRegexTask() throws Exception {
 
@@ -111,7 +111,7 @@ public class XMLTransformationFlowTest extends GuicedTest {
 		Assert.assertEquals(finalExpected.length(), finalActual.length());
 
 	}
-	
+
 	private void testXMLMorphWithTuples(final String resultJSONFileName, final String morphXMLFileName, final String tuplesJSONFileName)
 			throws Exception {
 
@@ -127,7 +127,7 @@ public class XMLTransformationFlowTest extends GuicedTest {
 		final ObjectMapper objectMapper2 = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL).configure(
 				SerializationFeature.INDENT_OUTPUT, true);
 
-		//final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
+		// final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
 
 		final TransformationFlow flow = TransformationFlow.fromString(finalMorphXmlString, internalModelServiceFactoryProvider);
 

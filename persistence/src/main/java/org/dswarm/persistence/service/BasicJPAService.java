@@ -9,16 +9,16 @@ import javax.persistence.CacheRetrieveMode;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import com.google.inject.Provider;
+import com.google.inject.persist.Transactional;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.DMPObject;
 import org.dswarm.persistence.model.proxy.ProxyDMPObject;
 import org.dswarm.persistence.model.proxy.RetrievalType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.inject.Provider;
-import com.google.inject.persist.Transactional;
 
 /**
  * A generic persistence service implementation, whose concrete implementations can be derived with a given implementation of

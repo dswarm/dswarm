@@ -1,5 +1,7 @@
 package org.dswarm.persistence.service.schema.test.utils;
 
+import org.junit.Assert;
+
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.AttributePathInstance;
@@ -7,7 +9,6 @@ import org.dswarm.persistence.model.schema.AttributePathInstanceType;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttributePathInstance;
 import org.dswarm.persistence.service.schema.AttributePathInstanceService;
 import org.dswarm.persistence.service.test.utils.BasicDMPJPAServiceTestUtils;
-import org.junit.Assert;
 
 public abstract class AttributePathInstanceServiceTestUtils<POJOCLASSPERSISTENCESERVICE extends AttributePathInstanceService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyAttributePathInstance<POJOCLASS>, POJOCLASS extends AttributePathInstance>
 		extends BasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {

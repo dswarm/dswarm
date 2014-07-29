@@ -3,18 +3,18 @@ package org.dswarm.persistence.model.job.test;
 import java.util.Map;
 import java.util.Set;
 
-import org.dswarm.persistence.GuicedTest;
-import org.dswarm.persistence.model.job.Component;
-import org.dswarm.persistence.model.job.Function;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
+import org.dswarm.persistence.GuicedTest;
+import org.dswarm.persistence.model.job.Component;
+import org.dswarm.persistence.model.job.Function;
 
 public class ComponentTest extends GuicedTest {
 

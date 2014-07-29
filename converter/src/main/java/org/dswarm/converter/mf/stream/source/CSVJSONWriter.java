@@ -1,10 +1,9 @@
 package org.dswarm.converter.mf.stream.source;
 
-import org.culturegraph.mf.exceptions.MetafactureException;
-import org.culturegraph.mf.framework.ObjectReceiver;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import org.culturegraph.mf.exceptions.MetafactureException;
+import org.culturegraph.mf.framework.ObjectReceiver;
 
 /**
  * @author tgaengler

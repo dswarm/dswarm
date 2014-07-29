@@ -3,6 +3,11 @@ package org.dswarm.controller.eventbus;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.flow.XMLSourceResourceGDMStmtsFlow;
@@ -11,11 +16,6 @@ import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 /**
  * An event recorder for converting XML documents.

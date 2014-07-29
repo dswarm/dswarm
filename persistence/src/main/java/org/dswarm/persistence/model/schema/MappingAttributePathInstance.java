@@ -11,13 +11,13 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.dswarm.persistence.model.job.Filter;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.google.common.base.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.google.common.base.Objects;
+import org.dswarm.persistence.model.job.Filter;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * @author tgaengler

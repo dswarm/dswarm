@@ -12,6 +12,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.google.inject.servlet.RequestScoped;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
+
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.BasicDMPResource;
 import org.dswarm.controller.resources.job.utils.FiltersResourceUtils;
@@ -20,13 +27,6 @@ import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.model.job.Filter;
 import org.dswarm.persistence.model.job.proxy.ProxyFilter;
 import org.dswarm.persistence.service.job.FilterService;
-
-import com.google.inject.servlet.RequestScoped;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
 
 /**
  * A resource (controller service) for {@link Filter}s.

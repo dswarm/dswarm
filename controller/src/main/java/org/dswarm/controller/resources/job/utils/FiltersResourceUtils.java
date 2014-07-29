@@ -2,15 +2,15 @@ package org.dswarm.controller.resources.job.utils;
 
 import javax.inject.Provider;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.inject.Inject;
+
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.utils.BasicDMPResourceUtils;
 import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
 import org.dswarm.persistence.model.job.Filter;
 import org.dswarm.persistence.model.job.proxy.ProxyFilter;
 import org.dswarm.persistence.service.job.FilterService;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Inject;
 
 /**
  * @author tgaengler

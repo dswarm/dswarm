@@ -6,6 +6,9 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import org.dswarm.controller.resources.job.test.utils.FiltersResourceTestUtils;
 import org.dswarm.controller.resources.test.BasicResourceTest;
 import org.dswarm.persistence.model.job.Filter;
@@ -13,8 +16,6 @@ import org.dswarm.persistence.model.job.proxy.ProxyFilter;
 import org.dswarm.persistence.service.job.FilterService;
 import org.dswarm.persistence.service.job.test.utils.FilterServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.junit.Assert;
-import org.junit.Test;
 
 public class FiltersResourceTest extends
 		BasicResourceTest<FiltersResourceTestUtils, FilterServiceTestUtils, FilterService, ProxyFilter, Filter, Long> {

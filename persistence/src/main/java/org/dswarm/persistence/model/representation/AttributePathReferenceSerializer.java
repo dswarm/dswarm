@@ -6,11 +6,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.dswarm.persistence.model.schema.AttributePath;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+
+import org.dswarm.persistence.model.schema.AttributePath;
 
 public class AttributePathReferenceSerializer extends JsonSerializer<AttributePath> {
 

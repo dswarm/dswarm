@@ -33,19 +33,17 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.io.CharSource;
+import com.google.common.io.Resources;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.dswarm.converter.DMPConverterException;
-import org.dswarm.init.util.DMPStatics;
-import org.dswarm.persistence.model.job.Component;
-import org.dswarm.persistence.model.job.Function;
-import org.dswarm.persistence.model.job.Mapping;
-import org.dswarm.persistence.model.job.Task;
-import org.dswarm.persistence.model.job.Transformation;
-import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
@@ -56,13 +54,14 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.io.CharSource;
-import com.google.common.io.Resources;
+import org.dswarm.converter.DMPConverterException;
+import org.dswarm.init.util.DMPStatics;
+import org.dswarm.persistence.model.job.Component;
+import org.dswarm.persistence.model.job.Function;
+import org.dswarm.persistence.model.job.Mapping;
+import org.dswarm.persistence.model.job.Task;
+import org.dswarm.persistence.model.job.Transformation;
+import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 
 /**
  * Creates a metamorph script from a given {@link Task}.
@@ -279,7 +278,7 @@ public class MorphScriptBuilder {
 
 			final String inputAttributePathString = mappingAttributePathInstance.getAttributePath().toAttributePath();
 
-			List<String> variablesFromInputAttributePaths = getParameterMappingKeys(inputAttributePathString, transformationComponent);
+			final List<String> variablesFromInputAttributePaths = getParameterMappingKeys(inputAttributePathString, transformationComponent);
 
 			final Integer ordinal = mappingAttributePathInstance.getOrdinal();
 
@@ -943,7 +942,7 @@ public class MorphScriptBuilder {
 
 	private Map<String, String> extractFilterExpressions(final String filterExpressionString) {
 
-		Map<String, String> filterExpressionMap = Maps.newLinkedHashMap();
+		final Map<String, String> filterExpressionMap = Maps.newLinkedHashMap();
 
 		final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -978,7 +977,7 @@ public class MorphScriptBuilder {
 		return filterExpressionMap;
 	}
 
-	private String determineCommonAttributePath(final String valueAttributePath, Set<String> filterAttributePaths) {
+	private String determineCommonAttributePath(final String valueAttributePath, final Set<String> filterAttributePaths) {
 
 		final String[] attributePaths = new String[filterAttributePaths.size() + 1];
 
@@ -997,7 +996,7 @@ public class MorphScriptBuilder {
 
 		if (!commonPrefix.endsWith(DMPStatics.ATTRIBUTE_DELIMITER.toString())) {
 
-			if(!commonPrefix.contains(DMPStatics.ATTRIBUTE_DELIMITER.toString())) {
+			if (!commonPrefix.contains(DMPStatics.ATTRIBUTE_DELIMITER.toString())) {
 
 				return commonPrefix;
 			}

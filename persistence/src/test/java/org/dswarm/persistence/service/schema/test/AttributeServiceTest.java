@@ -1,17 +1,17 @@
 package org.dswarm.persistence.service.schema.test;
 
-import org.dswarm.persistence.GuicedTest;
-import org.dswarm.persistence.model.schema.Attribute;
-import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
-import org.dswarm.persistence.service.schema.AttributeService;
-import org.dswarm.persistence.service.test.AdvancedJPAServiceTest;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.dswarm.persistence.GuicedTest;
+import org.dswarm.persistence.model.schema.Attribute;
+import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
+import org.dswarm.persistence.service.schema.AttributeService;
+import org.dswarm.persistence.service.test.AdvancedJPAServiceTest;
 
 public class AttributeServiceTest extends AdvancedJPAServiceTest<ProxyAttribute, Attribute, AttributeService> {
 

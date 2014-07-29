@@ -12,12 +12,12 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.dswarm.persistence.util.DMPPersistenceUtil;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.google.common.collect.Sets;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * A transformation is a complex {@link Function} that consists of {@link Component}s.<br/>

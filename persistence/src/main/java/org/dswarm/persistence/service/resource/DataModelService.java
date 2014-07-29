@@ -2,6 +2,9 @@ package org.dswarm.persistence.service.resource;
 
 import javax.persistence.EntityManager;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
@@ -9,9 +12,6 @@ import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.service.ExtendedBasicDMPJPAService;
-
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 /**
  * A persistence service for {@link DataModel}s.

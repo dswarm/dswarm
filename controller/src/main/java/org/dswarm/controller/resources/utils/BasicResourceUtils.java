@@ -8,15 +8,6 @@ import java.util.Set;
 
 import javax.inject.Provider;
 
-import org.dswarm.controller.DMPControllerException;
-import org.dswarm.controller.DMPJsonException;
-import org.dswarm.persistence.DMPPersistenceException;
-import org.dswarm.persistence.model.DMPObject;
-import org.dswarm.persistence.model.proxy.ProxyDMPObject;
-import org.dswarm.persistence.service.BasicJPAService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -25,6 +16,15 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.dswarm.controller.DMPControllerException;
+import org.dswarm.controller.DMPJsonException;
+import org.dswarm.persistence.DMPPersistenceException;
+import org.dswarm.persistence.model.DMPObject;
+import org.dswarm.persistence.model.proxy.ProxyDMPObject;
+import org.dswarm.persistence.service.BasicJPAService;
 
 /**
  * @author tgaengler

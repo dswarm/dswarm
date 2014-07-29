@@ -2,20 +2,20 @@ package org.dswarm.converter.flow.test;
 
 import java.io.IOException;
 
-import org.dswarm.converter.GuicedTest;
-import org.dswarm.converter.flow.TransformationFlow;
-import org.dswarm.persistence.service.InternalModelServiceFactory;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Provider;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import org.dswarm.converter.GuicedTest;
+import org.dswarm.converter.flow.TransformationFlow;
+import org.dswarm.persistence.service.InternalModelServiceFactory;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class EdgeCasesTransformationFlowTest extends GuicedTest {
 

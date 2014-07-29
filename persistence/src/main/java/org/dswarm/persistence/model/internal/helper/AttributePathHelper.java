@@ -2,9 +2,9 @@ package org.dswarm.persistence.model.internal.helper;
 
 import java.util.LinkedList;
 
-import org.dswarm.init.util.DMPStatics;
-
 import com.google.common.collect.Lists;
+
+import org.dswarm.init.util.DMPStatics;
 
 public class AttributePathHelper {
 

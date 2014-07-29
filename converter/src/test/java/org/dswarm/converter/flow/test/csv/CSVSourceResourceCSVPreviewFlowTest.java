@@ -4,19 +4,19 @@ import java.io.File;
 import java.io.StringWriter;
 import java.net.URL;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
 import org.apache.commons.io.FileUtils;
 import org.culturegraph.mf.stream.sink.ObjectJavaIoWriter;
 import org.culturegraph.mf.stream.source.FileOpener;
+import org.junit.Assert;
+import org.junit.Test;
+
 import org.dswarm.converter.flow.CSVResourceFlowFactory;
 import org.dswarm.converter.flow.CSVSourceResourceCSVPreviewFlow;
 import org.dswarm.converter.mf.stream.reader.CsvReader;
 import org.dswarm.converter.mf.stream.source.CSVEncoder;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.junit.Assert;
-import org.junit.Test;
-
-import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
 
 public class CSVSourceResourceCSVPreviewFlowTest {
 

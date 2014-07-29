@@ -14,12 +14,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.google.common.collect.Sets;
+
 import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.google.common.collect.Sets;
 
 /**
  * A project is a container that hold the current working state of a job creation, i.e., it knows all relevant parts of a

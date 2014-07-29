@@ -6,6 +6,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import ch.lambdaj.Lambda;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.guice.GuiceInjectableValues;
+import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
+import com.google.common.io.CharSource;
+import com.google.common.io.Resources;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Before;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.PersistenceModule;
 import org.dswarm.persistence.model.job.Component;
@@ -15,22 +30,6 @@ import org.dswarm.persistence.model.job.Mapping;
 import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.types.Tuple;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import ch.lambdaj.Lambda;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.module.guice.GuiceInjectableValues;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
-import com.google.common.io.CharSource;
-import com.google.common.io.Resources;
 
 public class CustomTransformationDeserializerTest extends GuicedTest {
 

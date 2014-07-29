@@ -4,13 +4,14 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-import org.dswarm.controller.status.MetricsReporter;
 import org.glassfish.jersey.server.monitoring.ApplicationEvent;
 import org.glassfish.jersey.server.monitoring.ApplicationEventListener;
 import org.glassfish.jersey.server.monitoring.RequestEvent;
 import org.glassfish.jersey.server.monitoring.RequestEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.dswarm.controller.status.MetricsReporter;
 
 public class DMPAppEventListener implements ApplicationEventListener {
 

@@ -2,14 +2,14 @@ package org.dswarm.controller.guice;
 
 import java.util.Properties;
 
-import org.dswarm.controller.doc.SwaggerConfig;
-import org.dswarm.controller.servlet.filter.MetricsFilter;
-import org.dswarm.controller.utils.DMPControllerUtils;
-
 import com.google.inject.name.Names;
 import com.google.inject.persist.PersistFilter;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.ServletModule;
+
+import org.dswarm.controller.doc.SwaggerConfig;
+import org.dswarm.controller.servlet.filter.MetricsFilter;
+import org.dswarm.controller.utils.DMPControllerUtils;
 
 /**
  * The Guice configuration of the servlet of the backend API. Mainly, servlets, filters and configuration properties are defined

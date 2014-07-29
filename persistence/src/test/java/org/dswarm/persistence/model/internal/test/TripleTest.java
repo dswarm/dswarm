@@ -1,10 +1,11 @@
 package org.dswarm.persistence.model.internal.test;
 
-import org.dswarm.persistence.model.types.Triple;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import org.dswarm.persistence.model.types.Triple;
 
 public class TripleTest {
 

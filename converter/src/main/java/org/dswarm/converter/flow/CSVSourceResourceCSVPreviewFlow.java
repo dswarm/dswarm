@@ -6,6 +6,7 @@ import java.io.StringWriter;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.stream.sink.ObjectJavaIoWriter;
+
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.mf.stream.reader.CsvReader;
 import org.dswarm.converter.mf.stream.source.CSVEncoder;

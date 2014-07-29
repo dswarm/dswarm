@@ -1,12 +1,13 @@
 package org.dswarm.persistence.service.schema.test.utils;
 
+import org.junit.Assert;
+
 import org.dswarm.persistence.model.job.Filter;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxyMappingAttributePathInstance;
 import org.dswarm.persistence.service.job.test.utils.FilterServiceTestUtils;
 import org.dswarm.persistence.service.schema.MappingAttributePathInstanceService;
-import org.junit.Assert;
 
 public class MappingAttributePathInstanceServiceTestUtils extends
 		AttributePathInstanceServiceTestUtils<MappingAttributePathInstanceService, ProxyMappingAttributePathInstance, MappingAttributePathInstance> {

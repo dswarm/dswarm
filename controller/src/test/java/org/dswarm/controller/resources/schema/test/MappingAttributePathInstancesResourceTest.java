@@ -1,5 +1,10 @@
 package org.dswarm.controller.resources.schema.test;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.junit.After;
+import org.junit.Assert;
+
 import org.dswarm.controller.resources.job.test.utils.FiltersResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.AttributePathsResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.AttributesResourceTestUtils;
@@ -13,11 +18,6 @@ import org.dswarm.persistence.model.schema.proxy.ProxyMappingAttributePathInstan
 import org.dswarm.persistence.service.schema.MappingAttributePathInstanceService;
 import org.dswarm.persistence.service.schema.test.utils.MappingAttributePathInstanceServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.junit.After;
-import org.junit.Assert;
-
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class MappingAttributePathInstancesResourceTest
 		extends

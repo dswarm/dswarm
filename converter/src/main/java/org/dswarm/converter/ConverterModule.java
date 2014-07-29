@@ -1,9 +1,8 @@
 package org.dswarm.converter;
 
+import com.google.inject.AbstractModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.inject.AbstractModule;
 
 /**
  * The Guice configuration of the converter module. Interface/classes that are registered here can be utilised for injection.

@@ -19,19 +19,19 @@ import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.dswarm.init.DMPException;
-import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
-import org.dswarm.persistence.model.representation.SetResourceReferenceSerializer;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.dswarm.init.DMPException;
+import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
+import org.dswarm.persistence.model.representation.SetResourceReferenceSerializer;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * A configuration contains information on how to process a given {@link Resource} into a {@link DataModel}, e.g., delimiter etc.

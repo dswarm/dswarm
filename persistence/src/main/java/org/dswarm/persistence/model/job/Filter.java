@@ -5,9 +5,9 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.dswarm.persistence.model.BasicDMPJPAObject;
-
 import com.google.common.base.Objects;
+
+import org.dswarm.persistence.model.BasicDMPJPAObject;
 
 /**
  * A filter is a graph pattern for reducing records. It can be applied at the beginning or the end of a {@link Transformation}

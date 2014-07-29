@@ -4,19 +4,14 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-import org.dswarm.persistence.DMPPersistenceException;
-import org.dswarm.persistence.model.schema.Attribute;
+import com.google.common.collect.Maps;
+import org.junit.Assert;
+
 import org.dswarm.persistence.model.schema.AttributePath;
-import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.ContentSchema;
-import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.proxy.ProxyContentSchema;
 import org.dswarm.persistence.service.schema.ContentSchemaService;
 import org.dswarm.persistence.service.test.utils.BasicDMPJPAServiceTestUtils;
-import org.junit.Assert;
-
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 public class ContentSchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<ContentSchemaService, ProxyContentSchema, ContentSchema> {
 
@@ -54,7 +49,7 @@ public class ContentSchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<C
 		return createContentSchemaInternal(contentSchema);
 	}
 
-	private ContentSchema createContentSchemaInternal(ContentSchema contentSchema) throws Exception {
+	private ContentSchema createContentSchemaInternal(final ContentSchema contentSchema) throws Exception {
 
 		// update content schema
 

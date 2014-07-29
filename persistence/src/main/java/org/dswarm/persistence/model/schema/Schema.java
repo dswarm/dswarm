@@ -14,11 +14,9 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.hamcrest.Matchers;
-
 import ch.lambdaj.Lambda;
-
 import com.google.common.collect.Sets;
+import org.hamcrest.Matchers;
 
 import org.dswarm.persistence.model.BasicDMPJPAObject;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
@@ -69,7 +67,7 @@ public class Schema extends BasicDMPJPAObject {
 
 	/**
 	 * Gets all attribute paths of the schema.
-	 *
+	 * 
 	 * @return all attribute paths of the schema
 	 */
 	public Set<AttributePath> getAttributePaths() {
@@ -79,7 +77,7 @@ public class Schema extends BasicDMPJPAObject {
 
 	/**
 	 * Sets all attribute paths of the schema.
-	 *
+	 * 
 	 * @param attributePathsArg all attribute paths of the schema
 	 */
 	public void setAttributePaths(final Set<AttributePath> attributePathsArg) {
@@ -120,7 +118,7 @@ public class Schema extends BasicDMPJPAObject {
 
 	/**
 	 * Gets the attribute path for the given attribute path identifier.
-	 *
+	 * 
 	 * @param id an attribute path identifier
 	 * @return that matched attribute path or null
 	 */
@@ -150,7 +148,7 @@ public class Schema extends BasicDMPJPAObject {
 	/**
 	 * Adds a new attribute path to the collection of attribute paths of this schema.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param attributePath a new attribute path
 	 */
 	public void addAttributePath(final AttributePath attributePath) {
@@ -173,7 +171,7 @@ public class Schema extends BasicDMPJPAObject {
 	/**
 	 * Removes an existing attribute path from the collection of attribute paths of this export schema.<br>
 	 * Created by: tgaengler
-	 *
+	 * 
 	 * @param attributePath an existing attribute path that should be removed
 	 */
 	public void removeAttributePath(final AttributePath attributePath) {
@@ -188,7 +186,7 @@ public class Schema extends BasicDMPJPAObject {
 
 	/**
 	 * Gets the record class of the schema.
-	 *
+	 * 
 	 * @return the record class of the schema
 	 */
 	public Clasz getRecordClass() {
@@ -198,7 +196,7 @@ public class Schema extends BasicDMPJPAObject {
 
 	/**
 	 * Sets the record class of the schema.
-	 *
+	 * 
 	 * @param recordClassArg a new record class
 	 */
 	public void setRecordClass(final Clasz recordClassArg) {

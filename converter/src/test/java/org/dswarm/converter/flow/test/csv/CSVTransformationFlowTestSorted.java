@@ -1,18 +1,18 @@
 package org.dswarm.converter.flow.test.csv;
 
-import org.dswarm.converter.GuicedTest;
-import org.dswarm.converter.flow.TransformationFlow;
-import org.dswarm.persistence.model.job.Task;
-import org.dswarm.persistence.service.InternalModelServiceFactory;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Provider;
+import org.junit.Assert;
+import org.junit.Test;
+
+import org.dswarm.converter.GuicedTest;
+import org.dswarm.converter.flow.TransformationFlow;
+import org.dswarm.persistence.model.job.Task;
+import org.dswarm.persistence.service.InternalModelServiceFactory;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * @author polowins, based on CSVTransformationFlowTest

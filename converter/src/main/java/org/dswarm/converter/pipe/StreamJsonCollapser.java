@@ -3,10 +3,9 @@ package org.dswarm.converter.pipe;
 import java.util.Collection;
 import java.util.Map;
 
+import com.google.common.collect.LinkedListMultimap;
 import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
-
-import com.google.common.collect.LinkedListMultimap;
 
 /**
  * Collapse several literals of the same name within on entity in such a way, that a following

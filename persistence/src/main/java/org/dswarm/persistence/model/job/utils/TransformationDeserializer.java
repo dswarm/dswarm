@@ -5,13 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
-import org.dswarm.persistence.model.job.Component;
-import org.dswarm.persistence.model.job.Function;
-import org.dswarm.persistence.model.job.Transformation;
-import org.dswarm.persistence.model.types.Tuple;
-import org.dswarm.persistence.service.job.ComponentService;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.core.TreeNode;
@@ -23,6 +16,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.Key;
+
+import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
+import org.dswarm.persistence.model.job.Component;
+import org.dswarm.persistence.model.job.Function;
+import org.dswarm.persistence.model.job.Transformation;
+import org.dswarm.persistence.model.types.Tuple;
+import org.dswarm.persistence.service.job.ComponentService;
 
 /**
  * Custom logic to deserialize a {@link org.dswarm.persistence.model.job.Transformation}. The problem with the default

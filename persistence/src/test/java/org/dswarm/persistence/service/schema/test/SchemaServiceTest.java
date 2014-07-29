@@ -3,28 +3,27 @@ package org.dswarm.persistence.service.schema.test;
 import java.util.LinkedList;
 import java.util.Map;
 
-import org.dswarm.persistence.model.schema.ContentSchema;
-import org.dswarm.persistence.service.schema.test.utils.ContentSchemaServiceTestUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
+import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
 import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
 import org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtils;
 import org.dswarm.persistence.service.schema.test.utils.ClaszServiceTestUtils;
+import org.dswarm.persistence.service.schema.test.utils.ContentSchemaServiceTestUtils;
 import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
 
 public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema, SchemaService> {
@@ -37,7 +36,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema
 
 	private final AttributeServiceTestUtils		attributeServiceTestUtils;
 	private final ClaszServiceTestUtils			claszServiceTestUtils;
-	private final ContentSchemaServiceTestUtils contentSchemaServiceTestUtils;
+	private final ContentSchemaServiceTestUtils	contentSchemaServiceTestUtils;
 	private final AttributePathServiceTestUtils	attributePathServiceTestUtils;
 
 	public SchemaServiceTest() {
@@ -147,7 +146,6 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema
 		final ContentSchema contentSchema = contentSchemaServiceTestUtils.createContentSchema(dummyContentSchema);
 
 		// END content schema
-
 
 		// schema
 

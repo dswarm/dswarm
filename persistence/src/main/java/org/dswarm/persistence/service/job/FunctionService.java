@@ -2,11 +2,11 @@ package org.dswarm.persistence.service.job;
 
 import javax.persistence.EntityManager;
 
-import org.dswarm.persistence.model.job.Function;
-import org.dswarm.persistence.model.job.proxy.ProxyFunction;
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+
+import org.dswarm.persistence.model.job.Function;
+import org.dswarm.persistence.model.job.proxy.ProxyFunction;
 
 /**
  * A persistence service for {@link Function}s.

@@ -14,18 +14,18 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.dswarm.controller.DMPControllerException;
-import org.dswarm.controller.status.DMPStatus;
-import org.dswarm.persistence.GraphDatabaseConfig;
-import org.glassfish.jersey.media.multipart.MultiPartFeature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.dswarm.controller.DMPControllerException;
+import org.dswarm.controller.status.DMPStatus;
+import org.dswarm.persistence.GraphDatabaseConfig;
 
 /**
  * Created by tgaengler on 28/04/14.

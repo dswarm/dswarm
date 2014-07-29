@@ -3,29 +3,24 @@ package org.dswarm.persistence.service.schema.test;
 import java.util.LinkedList;
 import java.util.Map;
 
-import org.dswarm.persistence.GuicedTest;
-import org.dswarm.persistence.model.schema.Attribute;
-import org.dswarm.persistence.model.schema.AttributePath;
-import org.dswarm.persistence.model.schema.Clasz;
-import org.dswarm.persistence.model.schema.ContentSchema;
-import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.model.schema.proxy.ProxyContentSchema;
-import org.dswarm.persistence.model.schema.proxy.ProxySchema;
-import org.dswarm.persistence.service.schema.ContentSchemaService;
-import org.dswarm.persistence.service.schema.SchemaService;
-import org.dswarm.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
-import org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtils;
-import org.dswarm.persistence.service.schema.test.utils.ClaszServiceTestUtils;
-import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import org.dswarm.persistence.GuicedTest;
+import org.dswarm.persistence.model.schema.Attribute;
+import org.dswarm.persistence.model.schema.AttributePath;
+import org.dswarm.persistence.model.schema.ContentSchema;
+import org.dswarm.persistence.model.schema.proxy.ProxyContentSchema;
+import org.dswarm.persistence.service.schema.ContentSchemaService;
+import org.dswarm.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
+import org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtils;
+import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
 
 public class ContentSchemaServiceTest extends IDBasicJPAServiceTest<ProxyContentSchema, ContentSchema, ContentSchemaService> {
 

@@ -1,10 +1,5 @@
 package org.dswarm.controller.test;
 
-import org.dswarm.controller.guice.DMPModule;
-import org.dswarm.persistence.PersistenceModule;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
@@ -16,6 +11,11 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 import com.google.inject.persist.PersistService;
 import com.google.inject.persist.jpa.JpaPersistModule;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+
+import org.dswarm.controller.guice.DMPModule;
+import org.dswarm.persistence.PersistenceModule;
 
 public class GuicedTest {
 

@@ -5,6 +5,12 @@ import java.util.Map;
 
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Maps;
+import org.junit.After;
+import org.junit.Assert;
+
 import org.dswarm.controller.resources.schema.test.utils.AttributePathsResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.AttributesResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.ContentSchemasResourceTestUtils;
@@ -16,12 +22,6 @@ import org.dswarm.persistence.model.schema.proxy.ProxyContentSchema;
 import org.dswarm.persistence.service.schema.ContentSchemaService;
 import org.dswarm.persistence.service.schema.test.utils.ContentSchemaServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.junit.After;
-import org.junit.Assert;
-
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.collect.Maps;
 
 public class ContentSchemasResourceTest
 		extends
@@ -33,9 +33,9 @@ public class ContentSchemasResourceTest
 
 	private ContentSchemasResourceTestUtils	contentSchemasResourceTestUtils;
 
-	final Map<Long, Attribute>						attributes		= Maps.newHashMap();
+	final Map<Long, Attribute>				attributes		= Maps.newHashMap();
 
-	final Map<Long, AttributePath>					attributePaths	= Maps.newLinkedHashMap();
+	final Map<Long, AttributePath>			attributePaths	= Maps.newLinkedHashMap();
 
 	public ContentSchemasResourceTest() {
 
@@ -117,7 +117,8 @@ public class ContentSchemasResourceTest
 
 		final Attribute rdfValue = attributesResourceTestUtils.getObject((long) 43);
 		attributes.put(rdfValue.getId(), rdfValue);
-		AttributePath valueAttributePath = attributePathsResourceTestUtils.prepareAttributePath("attribute_path8.json", attributePaths, attributes);
+		final AttributePath valueAttributePath = attributePathsResourceTestUtils.prepareAttributePath("attribute_path8.json", attributePaths,
+				attributes);
 
 		// manipulate value attribute path
 		final String valueAttributePathJSONString = objectMapper.writeValueAsString(valueAttributePath);

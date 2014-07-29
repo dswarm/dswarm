@@ -1,13 +1,12 @@
 package org.dswarm.converter.pipe;
 
+import com.google.common.base.Joiner;
 import org.culturegraph.mf.framework.DefaultStreamReceiver;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import com.google.common.base.Joiner;
 
 public class StreamUnflattenerTest {
 

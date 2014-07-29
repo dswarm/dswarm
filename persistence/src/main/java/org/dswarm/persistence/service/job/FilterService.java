@@ -2,13 +2,13 @@ package org.dswarm.persistence.service.job;
 
 import javax.persistence.EntityManager;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.job.Filter;
 import org.dswarm.persistence.model.job.proxy.ProxyFilter;
 import org.dswarm.persistence.service.BasicDMPJPAService;
-
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 /**
  * A persistence service for {@link Filter}s.

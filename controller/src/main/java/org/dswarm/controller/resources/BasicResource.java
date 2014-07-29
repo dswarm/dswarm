@@ -11,7 +11,12 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
+import com.codahale.metrics.Timer;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.utils.BasicResourceUtils;
 import org.dswarm.controller.status.DMPStatus;
@@ -20,11 +25,6 @@ import org.dswarm.persistence.model.DMPObject;
 import org.dswarm.persistence.model.proxy.ProxyDMPObject;
 import org.dswarm.persistence.model.proxy.RetrievalType;
 import org.dswarm.persistence.service.BasicJPAService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.codahale.metrics.Timer;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
  * A generic resource (controller service), whose concrete implementations can be derived with a given implementation of

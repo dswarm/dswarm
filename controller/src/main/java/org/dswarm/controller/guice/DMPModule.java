@@ -1,5 +1,12 @@
 package org.dswarm.controller.guice;
 
+import com.codahale.metrics.health.HealthCheckRegistry;
+import com.codahale.metrics.health.jvm.ThreadDeadlockHealthCheck;
+import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
+import com.google.inject.name.Names;
+
 import org.dswarm.controller.eventbus.CSVConverterEventRecorder;
 import org.dswarm.controller.eventbus.SchemaEventRecorder;
 import org.dswarm.controller.eventbus.XMLConverterEventRecorder;
@@ -9,13 +16,6 @@ import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.controller.status.DatabaseHealthCheck;
 import org.dswarm.controller.status.MetricsReporter;
 import org.dswarm.controller.utils.DataModelUtil;
-
-import com.codahale.metrics.health.HealthCheckRegistry;
-import com.codahale.metrics.health.jvm.ThreadDeadlockHealthCheck;
-import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
-import com.google.inject.name.Names;
 
 /**
  * The Guice configuration of the controller module. Interface/classes that are registered here can be utilised for injection.

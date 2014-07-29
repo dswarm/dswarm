@@ -1,11 +1,11 @@
 package org.dswarm.persistence.service.internal;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import org.dswarm.persistence.service.InternalModelService;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.service.internal.graph.InternalGDMGraphService;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 /**
  * An internal model service factory implementation.

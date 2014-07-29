@@ -2,11 +2,11 @@ package org.dswarm.persistence.service;
 
 import javax.persistence.EntityManager;
 
+import com.google.inject.Provider;
+
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.BasicDMPJPAObject;
 import org.dswarm.persistence.model.proxy.ProxyBasicDMPJPAObject;
-
-import com.google.inject.Provider;
 
 /**
  * A generic persistence service implementation for {@link BasicDMPJPAObject}s, i.e., objects where the identifier will be

@@ -4,13 +4,13 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.collect.Maps;
+import org.junit.Assert;
+
 import org.dswarm.persistence.model.job.Component;
 import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.job.proxy.ProxyTransformation;
 import org.dswarm.persistence.service.job.TransformationService;
-import org.junit.Assert;
-
-import com.google.common.collect.Maps;
 
 public class TransformationServiceTestUtils extends BasicFunctionServiceTestUtils<TransformationService, ProxyTransformation, Transformation> {
 

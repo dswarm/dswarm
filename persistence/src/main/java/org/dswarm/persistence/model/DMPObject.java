@@ -5,9 +5,8 @@ import java.io.Serializable;
 import javax.persistence.MappedSuperclass;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import com.google.common.base.Objects;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * The most abstract POJO class, i.e., this class is intended for inheritance. It only provides a getter for the identifier and
