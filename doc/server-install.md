@@ -2,7 +2,10 @@
 
 premise:
 - empty trusty (14.04)
-- three additional partitions: /data/log, /data/mysql, /data/neo4j
+- three additional partitions (easier to increase sizes): 
+-- /data/log, 1-5GB depending on usage
+-- /data/mysql, up to 5GB
+-- /data/neo4j, up to 20GB
 - let the $HOME of the less privileged user be '/home/user'
 - all commands boxes start as the less privileges user and in their $HOME.
 - Requiring root is explicitly marked (with `su` rather than `sudo ...`)
