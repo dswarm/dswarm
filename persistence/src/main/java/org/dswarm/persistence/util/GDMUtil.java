@@ -17,6 +17,7 @@ import org.dswarm.graph.json.NodeType;
 import org.dswarm.graph.json.Resource;
 import org.dswarm.graph.json.ResourceNode;
 import org.dswarm.graph.json.Statement;
+import org.dswarm.persistence.service.internal.graph.InternalGDMGraphService;
 
 /**
  * @author tgaengler
@@ -30,6 +31,11 @@ public final class GDMUtil {
 	public static final String	RDF_type	= GDMUtil.RDF_NS + "type";
 
 	public static final String	RDF_value	= GDMUtil.RDF_NS + "value";
+	
+	/**
+	 * The data model graph URI pattern
+	 */
+	private static final String						DATA_MODEL_GRAPH_URI_PATTERN	= "http://data.slub-dresden.de/datamodel/{datamodelid}/data";
 
 	/**
 	 * Gets all resources for the given record class identifier in the given GDM model.
@@ -319,4 +325,11 @@ public final class GDMUtil {
 
 		return resourceStatements;
 	}
+	
+	
+
+	public static String getDataModelGraphURI(final Long dataModelId) {
+		return DATA_MODEL_GRAPH_URI_PATTERN.replace("{datamodelid}", dataModelId.toString());
+	}
+	
 }

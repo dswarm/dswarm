@@ -318,7 +318,6 @@
 			<groupId>org.apache.jena</groupId>
 			<artifactId>apache-jena-libs</artifactId>
 			<type>pom</type>
-			<scope>test</scope>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
