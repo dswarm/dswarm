@@ -47,7 +47,7 @@ public class GDMModel implements Model {
 
 	/**
 	 * Creates a new {@link GDMModel} with a given GDM model instance.
-	 * 
+	 *
 	 * @param modelArg a GDM model instance that hold the GDM data
 	 */
 	public GDMModel(final org.dswarm.graph.json.Model modelArg) {
@@ -58,7 +58,7 @@ public class GDMModel implements Model {
 
 	/**
 	 * Creates a new {@link GDMModel} with a given GDM model instance and an identifier of the record.
-	 * 
+	 *
 	 * @param modelArg a GDM model instance that hold the RDF data
 	 * @param recordURIArg the record identifier
 	 */
@@ -76,7 +76,7 @@ public class GDMModel implements Model {
 
 	/**
 	 * Creates a new {@link GDMModel} with a given GDM model instance and an identifier of the record.
-	 * 
+	 *
 	 * @param modelArg a GDM model instance that hold the RDF data
 	 * @param recordURIArg the record identifier
 	 * @param recordClassURIArg the URI of the record class
@@ -95,7 +95,7 @@ public class GDMModel implements Model {
 
 	/**
 	 * Gets the GDM model with the GDM data.
-	 * 
+	 *
 	 * @return the GDM model with the GDM data
 	 */
 	public org.dswarm.graph.json.Model getModel() {
@@ -105,7 +105,7 @@ public class GDMModel implements Model {
 
 	/**
 	 * Gets the record identifiers.
-	 * 
+	 *
 	 * @return the record identifiers
 	 */
 	public Set<String> getRecordURIs() {
@@ -544,7 +544,6 @@ public class GDMModel implements Model {
 			final AttributePathHelper attributePathHelper = attributePaths.iterator().next();
 
 			if (attributePathHelper.length() > 1) {
-
 				// only one attribute path
 				final LinkedList<String> attributePath = attributePathHelper.getAttributePath();
 
@@ -553,7 +552,7 @@ public class GDMModel implements Model {
 				JsonNode previousAttribute = null;
 				ObjectNode currentAttribute = null;
 
-				while (attributePath.size() > 0) {
+				while (!attributePath.isEmpty()) {
 
 					final String attribute = attributePath.getLast();
 
@@ -606,7 +605,7 @@ public class GDMModel implements Model {
 			final ArrayNode jsonArray = DMPPersistenceUtil.getJSONObjectMapper().createArrayNode();
 
 			// determine level root attribute paths
-			final Map<String, AttributePathHelper> levelRootAttributePaths = Maps.newHashMap();
+			final Map<String, AttributePathHelper> levelRootAttributePaths = Maps.newLinkedHashMap();
 
 			for (final AttributePathHelper attributePathHelper : orderedAttributePaths) {
 

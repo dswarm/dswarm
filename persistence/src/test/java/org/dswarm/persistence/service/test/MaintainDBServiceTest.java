@@ -1,6 +1,6 @@
 package org.dswarm.persistence.service.test;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 
 import org.dswarm.persistence.DMPPersistenceException;
