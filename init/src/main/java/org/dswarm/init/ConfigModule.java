@@ -157,24 +157,24 @@ public final class ConfigModule extends AbstractModule {
 
 	private static class ConfigFactoryWithOffloading {
 
-		private static Config jdniConfig() {
-			final String configFileFromJdni;
+		private static Config jndiConfig() {
+			final String configFileFromJndi;
 			try {
-				configFileFromJdni = InitialContext.doLookup("java:comp/env/configFile");
+				configFileFromJndi = InitialContext.doLookup("java:comp/env/configFile");
 			} catch (final NamingException e) {
-				LOG.info("JDNI configFile is not set, skipping");
+				LOG.info("JNDI configFile is not set, skipping");
 				return ConfigFactory.empty();
 			}
 			try {
-				return ConfigFactory.parseFile(new File(configFileFromJdni));
+				return ConfigFactory.parseFile(new File(configFileFromJndi));
 			} catch (final ConfigException e ) {
-				LOG.warn(String.format("Could not load config [%s] from JDNI", configFileFromJdni), e);
+				LOG.warn(String.format("Could not load config [%s] from JNDI", configFileFromJndi), e);
 			}
 			return ConfigFactory.empty();
 		}
 
-		private static Config defaultConfig(final Config jdniConfig) {
-			return jdniConfig.withFallback(ConfigFactory.load());
+		private static Config defaultConfig(final Config jndiConfig) {
+			return jndiConfig.withFallback(ConfigFactory.load());
 		}
 
 		private static Config unresolvedConfig(final String configFileName) {
@@ -191,7 +191,7 @@ public final class ConfigModule extends AbstractModule {
 
 		private static Config loadConfig() {
 			return mergedConfig(
-					defaultConfig(jdniConfig()),
+					defaultConfig(jndiConfig()),
 					unresolvedConfig("application.conf"));
 		}
 	}
