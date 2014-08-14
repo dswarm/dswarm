@@ -2,368 +2,214 @@ package org.dswarm.controller.resources.export.test;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Map;
-import java.util.Set;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.base.Optional;
-import com.google.common.collect.Sets;
 import com.google.common.io.Resources;
-import com.google.inject.Key;
-import com.google.inject.name.Names;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.DatasetFactory;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
-import org.glassfish.jersey.media.multipart.MultiPartFeature;
-import org.hamcrest.CoreMatchers;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.dswarm.controller.resources.resource.test.utils.ConfigurationsResourceTestUtils;
+import org.dswarm.common.MediaTypeUtil;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
-import org.dswarm.controller.resources.schema.test.utils.AttributePathsResourceTestUtils;
-import org.dswarm.controller.resources.schema.test.utils.AttributesResourceTestUtils;
-import org.dswarm.controller.resources.schema.test.utils.ClaszesResourceTestUtils;
-import org.dswarm.controller.resources.schema.test.utils.SchemasResourceTestUtils;
 import org.dswarm.controller.resources.test.ResourceTest;
 import org.dswarm.controller.test.GuicedTest;
 import org.dswarm.graph.rdf.utils.RDFUtils;
-import org.dswarm.persistence.model.internal.Model;
+import org.dswarm.persistence.DMPPersistenceException;
+// import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
-import org.dswarm.persistence.model.resource.utils.DataModelUtils;
-import org.dswarm.persistence.model.schema.Attribute;
-import org.dswarm.persistence.model.schema.AttributePath;
-import org.dswarm.persistence.model.schema.Clasz;
-import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.service.InternalModelService;
-import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * Created by tgaengler on 28/04/14.
- *
+ * 
  * @author tgaengler
  */
 public class RDFResourceTest extends ResourceTest {
 
-	private static final Logger						LOG						= LoggerFactory.getLogger(RDFResourceTest.class);
+	private static final Logger					LOG				= LoggerFactory.getLogger(RDFResourceTest.class);
 
-	private final AttributesResourceTestUtils		attributesResourceTestUtils;
+	private final ResourcesResourceTestUtils	resourcesResourceTestUtils;
 
-	private final ClaszesResourceTestUtils			claszesResourceTestUtils;
+	private final DataModelsResourceTestUtils	dataModelsResourceTestUtils;
 
-	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
-
-	private final ResourcesResourceTestUtils		resourcesResourceTestUtils;
-
-	private final ConfigurationsResourceTestUtils	configurationsResourceTestUtils;
-
-	private final SchemasResourceTestUtils			schemasResourceTestUtils;
-
-	private final DataModelsResourceTestUtils		dataModelsResourceTestUtils;
-
-	protected final ObjectMapper					objectMapper			= GuicedTest.injector.getInstance(ObjectMapper.class);
-
-	private static final String						graphResourceIdentifier	= "rdf";
-
-	private final String							graphEndpoint			= GuicedTest.injector.getInstance(Key.get(String.class,
-																					Names.named("dswarm.db.graph.endpoint")));
+	protected final ObjectMapper				objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	public RDFResourceTest() {
 
 		super("rdf");
 
-		attributesResourceTestUtils = new AttributesResourceTestUtils();
-		claszesResourceTestUtils = new ClaszesResourceTestUtils();
-		attributePathsResourceTestUtils = new AttributePathsResourceTestUtils();
 		resourcesResourceTestUtils = new ResourcesResourceTestUtils();
-		configurationsResourceTestUtils = new ConfigurationsResourceTestUtils();
-		schemasResourceTestUtils = new SchemasResourceTestUtils();
 		dataModelsResourceTestUtils = new DataModelsResourceTestUtils();
+
+		initObjects();
+	}
+
+	/**
+	 * reset mysql and graph db
+	 * 
+	 * @throws DMPPersistenceException
+	 */
+	@After
+	public void tearDown2() throws DMPPersistenceException {
+		maintainDBService.initDB();
+		InternalGDMGraphServiceTestUtils.cleanGraphDB();
 	}
 
 	@Test
-	public void testExportSingleGraphWCTNQuads() throws Exception {
+	public void testExportAllNQuads() throws Exception {
 
-		RDFResourceTest.LOG.debug("start export CSV data as application/n-quads test");
+		exportInternal(MediaTypeUtil.N_QUADS, Lang.NQUADS, 200);
+	}
 
-		final DataModel csvDataModel = loadCSVData();
+	@Test
+	public void testExportAllTriG() throws Exception {
 
-		// GET the request
-		final Response response = graphTarget("/getall").request().accept("application/n-quads").get(Response.class);
+		exportInternal(MediaTypeUtil.TRIG, Lang.TRIG, 200);
+	}
 
-		Assert.assertEquals("expected 200", 200, response.getStatus());
+	@Ignore("requires BE endpoint to forward HTTP responses from GE")
+	@Test
+	public void testExportUnsupportedFormat() throws Exception {
 
-		final String body = response.readEntity(String.class);
+		exportInternal(MediaTypeUtil.RDF_XML, Lang.TRIG, 406);
+	}
 
-		Assert.assertNotNull("response body (n-quads) shouldn't be null", body);
+	/**
+	 * Request the export of all data from BE proxy endpoint in the serialization format. <br />
+	 * Count the number of statements in all serialized model file. (These are expected to be exported by db and hence should have
+	 * been imported in db in a prepare step). <br />
+	 * Assert the numbers of statements in the export is equal to the sum of statements of all serialized models.
+	 * 
+	 * @param requestFormatParam the requested serialization format to be used in export. may be empty to test the default
+	 *            fallback of the endpoint.
+	 * @param expectedResponseFormat the serialization format we expect in a response to the requested format
+	 * @throws Exception
+	 */
+	private void exportInternal(final String requestFormatParam, final Lang expectedResponseFormat, final int expectedHTTPResponseCode)
+			throws Exception {
 
-		// System.out.println("Response body : " + body);
+		RDFResourceTest.LOG.debug("start test export all data to format \"" + requestFormatParam + "\"");
 
-		final InputStream stream = new ByteArrayInputStream(body.getBytes("UTF-8"));
+		// prepare: load data to mysql and graph db
+
+		// SR hint: the resource's description needs to be "this is a description" since this is hard coded in
+		// org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils.uploadResource(File, Resource)
+		// should be refactored some day
+		loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
+		loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
+
+		// request the export from BE proxy endpoint
+		final Response response = target("/getall").queryParam("format", requestFormatParam).request().get(Response.class);
+
+		Assert.assertEquals("expected " + expectedHTTPResponseCode, expectedHTTPResponseCode, response.getStatus());
+
+		// in case we requested an unsupported format, stop processing here since there is no exported data to verify
+		if (expectedHTTPResponseCode == 406) {
+			return;
+		}
+
+		// read response
+		final Object responseEntity = response.getEntity();
+		Assert.assertNotNull("response body shouldn't be null", responseEntity);
+
+		// SR TODO: is it okay to do the check like this?
+		if (!(responseEntity instanceof InputStream)) {
+
+			Assert.assertTrue("Can not read response body", false);
+		}
+
+		final InputStream stream = (InputStream) responseEntity;
 
 		Assert.assertNotNull("input stream (from body) shouldn't be null", stream);
 
 		final Dataset dataset = DatasetFactory.createMem();
-		RDFDataMgr.read(dataset, stream, Lang.NQUADS);
+		RDFDataMgr.read(dataset, stream, expectedResponseFormat);
 
-		Assert.assertNotNull("dataset shouldn't be null", dataset);
-
-		final long statementsInExportedRDFModel = RDFUtils.determineDatasetSize(dataset);
-
-		RDFResourceTest.LOG.debug("exported '" + statementsInExportedRDFModel + "' statements");
-
-		Assert.assertEquals("expected 114 exported statements", 114, statementsInExportedRDFModel);
-
-		tearDownCSVData(csvDataModel);
-
-		RDFResourceTest.LOG.debug("end export CSV data as application/n-quads test");
-	}
-
-	// TODO remove/rework test, octet-stream is no more available
-	@Ignore
-	@Test
-	public void testExportSingleGraphWCTOctetStream() throws Exception {
-
-		RDFResourceTest.LOG.debug("start export CSV data as application/octet-stream test");
-
-		final DataModel csvDataModel = loadCSVData();
-
-		// GET the request
-		final Response response = graphTarget("/getall").queryParam("format", "application/n-quads").request()
-				.accept(MediaType.APPLICATION_OCTET_STREAM).get(Response.class);
-
-		Assert.assertEquals("expected 200", 200, response.getStatus());
-
-		final String body = response.readEntity(String.class);
-
-		Assert.assertNotNull("response body (n-quads) shouldn't be null", body);
-
-		// System.out.println("Response body : " + body);
-
-		final InputStream stream = new ByteArrayInputStream(body.getBytes("UTF-8"));
-
-		Assert.assertNotNull("input stream (from body) shouldn't be null", stream);
-
-		final Dataset dataset = DatasetFactory.createMem();
-		RDFDataMgr.read(dataset, stream, Lang.NQUADS);
-
-		Assert.assertNotNull("dataset shouldn't be null", dataset);
+		Assert.assertNotNull("dataset from response shouldn't be null", dataset);
 
 		final long statementsInExportedRDFModel = RDFUtils.determineDatasetSize(dataset);
 
-		RDFResourceTest.LOG.debug("exported '" + statementsInExportedRDFModel + "' statements");
+		LOG.info("exported '" + statementsInExportedRDFModel + "' statements");
 
-		Assert.assertEquals("expected 114 exported statements", 114, statementsInExportedRDFModel);
+		// count number of statements that were loaded to db while prepare
+		long expectedStatements = countStatementsInSerializedN3("atMostTwoRows.n3") + countStatementsInSerializedN3("UTF-8.n3");
 
-		tearDownCSVData(csvDataModel);
+		// compare number of exported statements with expected
+		Assert.assertEquals("the number of exported statements should be " + expectedStatements, expectedStatements, statementsInExportedRDFModel);
 
-		RDFResourceTest.LOG.debug("end export CSV data as application/octet-stream test");
+		RDFResourceTest.LOG.debug("end test export all data as " + expectedResponseFormat);
+		RDFResourceTest.LOG.info("end test export all data as " + expectedResponseFormat);
 	}
 
-	private DataModel loadCSVData() throws Exception {
+	// SR TODO refactor to dswarm-common
+	/**
+	 * Read a file, serialized in N3, and count the number of statements.
+	 * 
+	 * @param resourceName the /path/to/file.end of a serialized N3
+	 * @return the number of statements the serialized model contains
+	 * @throws IOException
+	 */
+	public long countStatementsInSerializedN3(final String resourceName) throws IOException {
+		final URL fileURL = Resources.getResource(resourceName);
+
+		byte[] bodyBytes = Resources.toByteArray(fileURL);
+		final InputStream expectedStream = new ByteArrayInputStream(bodyBytes);
+
+		final com.hp.hpl.jena.rdf.model.Model modelFromOriginalRDFile = ModelFactory.createDefaultModel();
+		modelFromOriginalRDFile.read(expectedStream, null, "N3");
+
+		final long statementsInOriginalRDFFile = modelFromOriginalRDFile.size();
+		return statementsInOriginalRDFFile;
+	}
+
+	private DataModel loadCSVData(final String resourceJsonFilename, final String csvFilename, final String configurationJsonFilename)
+			throws Exception {
 
 		RDFResourceTest.LOG.debug("start load CSV data");
 
-		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("resource.json");
+		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString(resourceJsonFilename);
 
 		final Resource expectedResource = GuicedTest.injector.getInstance(ObjectMapper.class).readValue(resourceJSONString, Resource.class);
 
-		final URL fileURL = Resources.getResource("test_csv.csv");
+		final URL fileURL = Resources.getResource(csvFilename);
 		final File resourceFile = FileUtils.toFile(fileURL);
 
-		final String configurationJSONString = DMPPersistenceUtil.getResourceAsString("controller_configuration.json");
+		final String configurationJSONString = DMPPersistenceUtil.getResourceAsString(configurationJsonFilename);
 
 		// add resource and config
 		final Resource resource = resourcesResourceTestUtils.uploadResource(resourceFile, expectedResource);
 
 		final Configuration config = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
 
-		final DataModel dataModel1 = new DataModel();
-		dataModel1.setName("my data model");
-		dataModel1.setDescription("my data model description");
-		dataModel1.setDataResource(resource);
-		dataModel1.setConfiguration(config);
+		final DataModel dataModelToCreate = new DataModel();
+		dataModelToCreate.setName("my data model");
+		dataModelToCreate.setDescription("my data model description");
+		dataModelToCreate.setDataResource(resource);
+		dataModelToCreate.setConfiguration(config);
 
-		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
+		final String dataModelJSONString = objectMapper.writeValueAsString(dataModelToCreate);
 
-		final DataModel dataModel = dataModelsResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
+		final DataModel dataModelfromDB = dataModelsResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
 
-		final int atMost = 1;
-
-		final InternalModelServiceFactory serviceFactory = GuicedTest.injector.getInstance(Key.get(InternalModelServiceFactory.class));
-		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
-		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getId(), Optional.of(atMost));
-
-		Assert.assertTrue(data.isPresent());
-		Assert.assertFalse(data.get().isEmpty());
-		Assert.assertThat(data.get().size(), CoreMatchers.equalTo(atMost));
-
-		final String recordId = data.get().keySet().iterator().next();
-
-		final String associativeJsonArrayString = dataModelsResourceTestUtils.getData(dataModel.getId(), atMost);
-
-		final ObjectNode associativeJsonArray = objectMapper.readValue(associativeJsonArrayString, ObjectNode.class);
-
-		Assert.assertThat(associativeJsonArray.size(), CoreMatchers.equalTo(atMost));
-
-		final JsonNode json = associativeJsonArray.get(recordId);
-
-		Assert.assertNotNull("the JSON structure for record '" + recordId + "' shouldn't be null", json);
-
-		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
-
-		Assert.assertNotNull("the data resource schema base uri shouldn't be null", dataResourceSchemaBaseURI);
-
-		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "id", json),
-				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "id", data.get().get(recordId).toRawJSON())));
-		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "year", json),
-				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "year", data.get().get(recordId).toRawJSON())));
-		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "description", json),
-				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "description", data.get().get(recordId).toRawJSON())));
-		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "name", json),
-				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "name", data.get().get(recordId).toRawJSON())));
-		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "isbn", json),
-				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "isbn", data.get().get(recordId).toRawJSON())));
-
-		RDFResourceTest.LOG.debug("end load CSV data");
-
-		return dataModel;
+		return dataModelfromDB;
 	}
 
-	private void tearDownCSVData(final DataModel dataModel) {
-
-		// clean up
-
-		final Schema schema = dataModel.getSchema();
-
-		dataModelsResourceTestUtils.deleteObject(dataModel);
-
-		final Set<AttributePath> attributePaths = schema.getAttributePaths();
-		final Clasz recordClasz = schema.getRecordClass();
-
-		schemasResourceTestUtils.deleteObject(schema);
-
-		final Set<Attribute> attributes = Sets.newHashSet();
-
-		if (attributePaths != null && !attributePaths.isEmpty()) {
-
-			for (final AttributePath attributePath : attributePaths) {
-
-				attributes.addAll(attributePath.getAttributePath());
-			}
-		}
-
-		for (final AttributePath attributePath : attributePaths) {
-
-			attributePathsResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(attributePath);
-		}
-
-		for (final Attribute attribute : attributes) {
-
-			attributesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(attribute);
-		}
-
-		final Resource resource = dataModel.getDataResource();
-		final Configuration config = dataModel.getConfiguration();
-
-		resourcesResourceTestUtils.deleteObject(resource);
-		configurationsResourceTestUtils.deleteObject(config);
-
-		claszesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(recordClasz);
-
-		// clean-up graph db
-		InternalGDMGraphServiceTestUtils.cleanGraphDB();
-	}
-
-	private JsonNode getValueNode(final String key, final JsonNode json) {
-
-		Assert.assertNotNull("the JSON structure shouldn't be null", json);
-		Assert.assertTrue("the JSON structure should be an array", json.isArray());
-		Assert.assertNotNull("the key shouldn't be null", key);
-
-		for (final JsonNode jsonEntry : json) {
-
-			Assert.assertTrue("the entries of the JSON array should be JSON objects", jsonEntry.isObject());
-
-			final JsonNode jsonNode = jsonEntry.get(key);
-
-			if (jsonNode == null) {
-
-				continue;
-			}
-
-			return jsonNode;
-		}
-
-		Assert.assertTrue("couldn't find element with key '" + key + "' in JSON structure '" + json + "'", false);
-
-		return null;
-	}
-
-	private String getValue(final String key, final JsonNode json) {
-
-		final JsonNode jsonNode = getValueNode(key, json);
-
-		if (jsonNode == null) {
-
-			Assert.assertTrue("couldn't find element with key '" + key + "' in JSON structure '" + json + "'", false);
-
-			return null;
-		}
-
-		Assert.assertTrue("the value should be a string", jsonNode.isTextual());
-
-		return jsonNode.asText();
-	}
-
-	private Client graphClient() {
-
-		final ClientBuilder builder = ClientBuilder.newBuilder();
-
-		return builder.register(MultiPartFeature.class).build();
-	}
-
-	private WebTarget graphTarget() {
-
-		WebTarget target = graphClient().target(graphEndpoint);
-
-		if (RDFResourceTest.graphResourceIdentifier != null) {
-
-			target = target.path(RDFResourceTest.graphResourceIdentifier);
-		}
-
-		return target;
-	}
-
-	private WebTarget graphTarget(final String... path) {
-
-		WebTarget target = graphTarget();
-
-		for (final String p : path) {
-
-			target = target.path(p);
-		}
-
-		return target;
-	}
 }

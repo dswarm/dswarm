@@ -1,0 +1,12 @@
+<http://data.slub-dresden.de/datamodels/4/records/e9487bcf-67e8-4396-b61d-1af4814e9f8b>
+        a       <http://data.slub-dresden.de/resources/1/schema#RecordType> ;
+        <http://data.slub-dresden.de/resources/1/schema#address>
+                "120 any st." ;
+        <http://data.slub-dresden.de/resources/1/schema#city>
+                "ʤ" ;
+        <http://data.slub-dresden.de/resources/1/schema#first>
+                "John" ;
+        <http://data.slub-dresden.de/resources/1/schema#last>
+                "Doe" ;
+        <http://data.slub-dresden.de/resources/1/schema#zip>
+                "08123" .

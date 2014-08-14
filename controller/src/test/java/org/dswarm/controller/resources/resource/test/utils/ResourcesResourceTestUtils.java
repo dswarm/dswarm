@@ -108,6 +108,10 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 	public Resource uploadResource(final File resourceFile, final Resource expectedResource) throws Exception {
 
 		final FormDataMultiPart form = new FormDataMultiPart();
+
+		// SR FIXME: why do we set this to hard coded values here? This leads to test failures if expectedResource does not
+		// contain the same name values, i.e. when generating test data, one has to know that values in expectedResource must be
+		// set to these hard coded values.
 		form.field("name", resourceFile.getName());
 		form.field("filename", resourceFile.getName());
 		form.field("description", "this is a description");

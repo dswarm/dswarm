@@ -29,6 +29,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.dswarm.common.MediaTypeUtil;
 import org.dswarm.controller.resources.resource.test.utils.ConfigurationsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
@@ -728,6 +729,16 @@ public class DataModelsResourceTest extends
 
 		DataModelsResourceTest.LOG.debug("end throw Exception at XML data test");
 	}
+	
+	// SR TODO add tests here
+	@Test
+	public void testExportAsNQuads() {
+		
+		final Response response = target(String.valueOf(1), "export").request().accept(MediaTypeUtil.N_QUADS).get(Response.class);
+		
+	}
+	
+	
 
 	@Override
 	public void testPUTObject() throws Exception {

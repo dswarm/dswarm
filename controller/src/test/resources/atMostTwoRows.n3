@@ -1,0 +1,38 @@
+<http://data.slub-dresden.de/datamodels/4/records/4ce996ec-0da3-4d35-ab5c-7c6611617088>
+        a       <http://data.slub-dresden.de/resources/2/schema#RecordType> ;
+        <http://data.slub-dresden.de/resources/2/schema#address>
+                "120 any st." ;
+        <http://data.slub-dresden.de/resources/2/schema#city>
+                "Anytown" ;
+        <http://data.slub-dresden.de/resources/2/schema#first>
+                "Jane" ;
+        <http://data.slub-dresden.de/resources/2/schema#last>
+                "Doe" ;
+        <http://data.slub-dresden.de/resources/2/schema#zip>
+                "08123" .
+
+<http://data.slub-dresden.de/datamodels/4/records/72b97b0c-89e4-4ef0-9047-fb9728355849>
+        a       <http://data.slub-dresden.de/resources/2/schema#RecordType> ;
+        <http://data.slub-dresden.de/resources/2/schema#address>
+                "23 another st." ;
+        <http://data.slub-dresden.de/resources/2/schema#city>
+                "Springfield" ;
+        <http://data.slub-dresden.de/resources/2/schema#first>
+                "Frank" ;
+        <http://data.slub-dresden.de/resources/2/schema#last>
+                "Doe" ;
+        <http://data.slub-dresden.de/resources/2/schema#zip>
+                "45678" .
+
+<http://data.slub-dresden.de/datamodels/4/records/213d7af7-f791-498a-a796-7fa4ec3e017d>
+        a       <http://data.slub-dresden.de/resources/2/schema#RecordType> ;
+        <http://data.slub-dresden.de/resources/2/schema#address>
+                "120 any st." ;
+        <http://data.slub-dresden.de/resources/2/schema#city>
+                "Anytown" ;
+        <http://data.slub-dresden.de/resources/2/schema#first>
+                "John" ;
+        <http://data.slub-dresden.de/resources/2/schema#last>
+                "Doe" ;
+        <http://data.slub-dresden.de/resources/2/schema#zip>
+                "08123" .

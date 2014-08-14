@@ -1,0 +1,11 @@
+{
+    "id": -177448833333,
+    "name": "atMostTwoRows.csv",
+    "description": "this is a description",
+    "type": "FILE",
+    "resource_attributes": {
+        "path": "/path/to/file.end",
+        "filesize": 766,
+        "filetype": "text/csv"
+    }
+}

@@ -16,6 +16,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
@@ -31,6 +32,8 @@ import org.slf4j.LoggerFactory;
 import org.dswarm.common.MediaTypeUtil;
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.status.DMPStatus;
+import org.dswarm.persistence.model.resource.DataModel;
+import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.util.GDMUtil;
 
 /**
@@ -89,7 +92,7 @@ public class RDFResource {
 
 		if (response.getStatus() != 200) {
 
-			// TODO give more details? e.g. if the requested format is not supported?
+			// TODO forward GE HTTP Response, e.g. if the requested format is not supported
 			throw new DMPControllerException("Couldn't export data from database. Received status code '" + response.getStatus()
 					+ "' from database endpoint.");
 		}
@@ -137,6 +140,49 @@ public class RDFResource {
 	// return Response.ok().entity(result).build();
 	// }
 
+	// SR FIXME: temporarily reactivated this endpoint to be compatible with current FE version
+	/**
+	 * @param id a data model identifier
+	 * @return
+	 */
+	@ApiOperation(value = "exports a selected data model from the graph DB in the given RDF serialisation format", notes = "Returns exported data in the given RDF serialisation format.")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "export was successfully processed"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@GET
+	@Path("/export/{id}/")
+	@Produces({ MediaTypeUtil.N_QUADS, MediaTypeUtil.RDF_XML, MediaTypeUtil.TRIG, MediaTypeUtil.TURTLE, MediaTypeUtil.N3  })
+	public Response exportSingleRDFForDownload(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final Long id,
+			@QueryParam("format") @DefaultValue(MediaTypeUtil.N_QUADS) String format) throws DMPControllerException {
+
+		// construct provenanceURI from id
+		final String provenanceURI = GDMUtil.getDataModelGraphURI(id);
+
+		final MediaType formatType = MediaTypeUtil.getMediaType(format, MediaTypeUtil.N_QUADS_TYPE);
+
+		// get file extension
+		final String fileExtension = RDFLanguages.contentTypeToLang(formatType.toString()).getFileExtensions().get(0);
+		LOG.debug("Exporting rdf data to " + formatType.toString());
+
+
+		// forward the request to graph DB
+		final WebTarget target = target("/export");
+		final Response response = target.queryParam("format", format).queryParam("provenanceuri", provenanceURI).request().accept(format)
+				.get(Response.class);
+
+		if (response.getStatus() != 200) {
+
+			//TODO give more details? e.g. if the requested format is not supported?
+			throw new DMPControllerException("Couldn't export data from database. Received status code '" + response.getStatus()
+					+ "' from database endpoint.");
+		}
+
+		final InputStream result = response.readEntity(InputStream.class);
+
+		return Response.ok(result, formatType).header("Content-Disposition", "attachment; filename*=UTF-8''rdf_export." + fileExtension).build();
+	}
+	
+	
+	
 	private Client client() {
 
 		final ClientBuilder builder = ClientBuilder.newBuilder();
