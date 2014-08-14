@@ -178,7 +178,7 @@ public class ResourcesResource {
 	 * @throws DMPControllerException
 	 */
 	@POST
-	@ApiOperation(value = "upload new data resource", notes = "Returns a new Resource object, when upload was successfully.", response = Resource.class)
+	@ApiOperation(value = "upload new data resource", notes = "Returns a new Resource object, when upload was successfull.", response = Resource.class)
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "data resource was successfully uploaded and stored"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@Consumes(MediaType.MULTIPART_FORM_DATA)

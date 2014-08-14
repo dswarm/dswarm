@@ -29,6 +29,7 @@ import org.apache.jena.riot.RDFDataMgr;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -138,6 +139,8 @@ public class RDFResourceTest extends ResourceTest {
 		RDFResourceTest.LOG.debug("end export CSV data as application/n-quads test");
 	}
 
+	// TODO remove/rework test, octet-stream is no more available
+	@Ignore
 	@Test
 	public void testExportSingleGraphWCTOctetStream() throws Exception {
 

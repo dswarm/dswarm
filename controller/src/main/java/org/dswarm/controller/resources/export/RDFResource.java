@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -27,6 +28,7 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.dswarm.common.MediaTypeUtil;
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.util.GDMUtil;
@@ -41,30 +43,18 @@ import org.dswarm.persistence.util.GDMUtil;
 @Path("rdf")
 public class RDFResource {
 
-	private static final Logger		LOG					= LoggerFactory.getLogger(RDFResource.class);
+	private static final Logger	LOG					= LoggerFactory.getLogger(RDFResource.class);
 
-	private static final String		resourceIdentifier	= "rdf";
-
-	// SR TODO use better solution here that is reused in org.dswarm.graph.resources.RDFResource
-	// i.e. put to new project and add it as dependency to BE and GE
-	public static final MediaType	TURTLE_TYPE			= new MediaType("text", "turtle");
-	public static final String		TURTLE				= "text/turtle";
-	public static final MediaType	TRIG_TYPE			= new MediaType("application", "trig");
-	public static final String		TRIG				= "application/trig";
-	public static final MediaType	N_QUADS_TYPE		= new MediaType("application", "n-quads");
-	public static final String		N_QUADS				= "application/n-quads";
-	public static final MediaType	RDF_XML_TYPE		= new MediaType("application", "rdf+xml");
-	public static final String		RDF_XML				= "application/rdf+xml";
-	public static final MediaType	N3_TYPE				= new MediaType("text", "n3");
-	public static final String		N3					= "text/n3";
+	// SR TO move somewhere else and reuse 
+	public static final String	resourceIdentifier	= "rdf";
 
 	/**
 	 * The metrics registry.
 	 */
-	private final DMPStatus			dmpStatus;
+	private final DMPStatus		dmpStatus;
 
 	// this is likely to be http://localhost:7474/graph
-	private final String			graphEndpoint;
+	private final String		graphEndpoint;
 
 	@Inject
 	public RDFResource(final DMPStatus dmpStatusArg, @Named("dswarm.db.graph.endpoint") final String graphEndpointArg) {
@@ -83,11 +73,11 @@ public class RDFResource {
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@GET
 	@Path("/getall")
-	@Produces({ N_QUADS, TRIG })
-	public Response exportAllRDFForDownload(@QueryParam("format") @DefaultValue("application/n-quads") final String format)
+	@Produces({ MediaTypeUtil.N_QUADS, MediaTypeUtil.TRIG })
+	public Response exportAllRDFForDownload(@QueryParam("format") @DefaultValue(MediaTypeUtil.N_QUADS) final String format)
 			throws DMPControllerException {
 
-		final MediaType formatType = getFormatType(format, N_QUADS_TYPE);
+		final MediaType formatType = MediaTypeUtil.getMediaType(format, MediaTypeUtil.N_QUADS_TYPE);
 
 		// get file extension
 		final String fileExtension = RDFLanguages.contentTypeToLang(formatType.toString()).getFileExtensions().get(0);
@@ -95,11 +85,11 @@ public class RDFResource {
 
 		// forward the request to graph DB
 		final WebTarget target = target("/getall");
-		final Response response = target.queryParam("format", format).request().accept(MediaType.APPLICATION_OCTET_STREAM).get(Response.class);
+		final Response response = target.request().accept(format).get(Response.class);
 
 		if (response.getStatus() != 200) {
 
-			//TODO give more details? e.g. if the requested format is not supported? 
+			// TODO give more details? e.g. if the requested format is not supported?
 			throw new DMPControllerException("Couldn't export data from database. Received status code '" + response.getStatus()
 					+ "' from database endpoint.");
 		}
@@ -109,69 +99,7 @@ public class RDFResource {
 		return Response.ok(result, formatType).header("Content-Disposition", "attachment; filename*=UTF-8''rdf_export." + fileExtension).build();
 	}
 
-	/**
-	 * @param id a data model identifier
-	 * @return
-	 */
-	@ApiOperation(value = "exports a selected data model from the graph DB in the given RDF serialisation format", notes = "Returns exported data in the given RDF serialisation format.")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "export was successfully processed"),
-			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
-	@GET
-	@Path("/export/{id}/")
-	@Produces({ N_QUADS, RDF_XML, TRIG, TURTLE, N3 })
-	public Response exportSingleRDFForDownload(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final Long id,
-			@QueryParam("format") @DefaultValue(N_QUADS) String format) throws DMPControllerException {
-
-		// construct provenanceURI from id
-		final String provenanceURI = GDMUtil.getDataModelGraphURI(id);
-
-		final MediaType formatType = getFormatType(format, N_QUADS_TYPE);
-
-		// get file extension
-		final String fileExtension = RDFLanguages.contentTypeToLang(formatType.toString()).getFileExtensions().get(0);
-		LOG.debug("Exporting rdf data to " + formatType.toString());
-
-
-		// forward the request to graph DB
-		final WebTarget target = target("/export");
-		final Response response = target.queryParam("format", format).queryParam("provenanceuri", provenanceURI).request().accept(format)
-				.get(Response.class);
-
-		if (response.getStatus() != 200) {
-
-			//TODO give more details? e.g. if the requested format is not supported?
-			throw new DMPControllerException("Couldn't export data from database. Received status code '" + response.getStatus()
-					+ "' from database endpoint.");
-		}
-
-		final InputStream result = response.readEntity(InputStream.class);
-
-		return Response.ok(result, formatType).header("Content-Disposition", "attachment; filename*=UTF-8''rdf_export." + fileExtension).build();
-	}
-
-	/**
-	 * build a {@link MediaType} from a {@link String}, assuming format consists of a type and a sub type separated by "/", e.g.
-	 * "application/n-quads"
-	 * 
-	 * @param format String to build a {@link MediaType} from
-	 * @param defaultType default to be used if {@link MediaType} can not be built from parameter format
-	 * @return
-	 */
-	// SR TODO: duplicated from org.dswarm.graph.resources.RDFResource.getFormatType(String, MediaType), needs to be refactored to
-	// separate module
-	private MediaType getFormatType(final String format, MediaType defaultType) {
-
-		LOG.debug("got format: \"" + format + "\"");
-
-		final String[] formatStrings = format.split("/", 2);
-		final MediaType formatType;
-		if (formatStrings.length == 2) {
-			formatType = new MediaType(formatStrings[0], formatStrings[1]);
-		} else {
-			formatType = defaultType;
-		}
-		return formatType;
-	}
+	
 
 	// deactivated because of unexplainable, unpredictable behavior (on a windows machine) 2014-07-30. This is likely a jersey
 	// bug.

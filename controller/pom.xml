@@ -334,6 +334,11 @@
 			</exclusions>
 			<version>2.11.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.dswarm</groupId>
+			<artifactId>common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<profiles>
