@@ -140,7 +140,7 @@ You can  put a `.conf` file anywhere and start d:swarm with the system property 
 
 You can override single keys with system properties of the same name (e.g. `-Ddswarm.db.metadata.log-sql=false`).
 
-You can set the JDNI property `configFile` (accessible at `java:comp/env/configFile`) and point to a `.conf` file anywhere on the system.
+You can set the JNDI property `configFile` (accessible at `java:comp/env/configFile`) and point to a `.conf` file anywhere on the system.
 
 There is actually a fourth way, where you place an `application.conf` file in your classpath, but this one is used by d:swarm itself to allow for staged resolving of substituted config values.
 You can still do this, but you'll probably not be able to override any of the substituted values.
@@ -167,7 +167,7 @@ You can override any settings with the `-D` parameter to specify system properti
 
     mvn exec:java -Ddswarm.db.metadata.username=foo -Ddswarm.db.metadata.password=bar -Ddswarm.log-config-on-start=on
 
-#### JDNI config
+#### JNDI config
 
 This one is the way to go when you use containers, such as tomcat, that would not allow system properties to be set.
 
@@ -222,4 +222,6 @@ In order to move to the new configuration system, perform the following steps.
 
 6. Add `-Dconfig.file=/path/to/dswarm.conf` to all maven start scripts/configurations you might have. That is `mvn ...` becomes `mvn -Dconfig.file=/path/to/dswarm.conf ...`
 
-7. At last, remove the dmp.properties file (Which might have been done already, as this step was committed via git)
+7. Provide the /path/to/dswarm.conf to your IDE. In eclipse, e.g., open `eclipse.ini`, go to `-vmargs` section and add the line `-Dconfig.file=/path/to/dswarm.conf`. 
+
+8. At last, remove the dmp.properties file (Which might have been done already, as this step was committed via git)
