@@ -40,15 +40,6 @@
 	</repositories>
 
 	<build>
-		<filters>
-			<filter>${project.root}/dmp.properties</filter>
-		</filters>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-			</resource>
-		</resources>
 		<plugins>
 			<plugin>
 				<groupId>de.juplo</groupId>

@@ -67,7 +67,7 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 	/**
 	 * record tag URI should be unique
 	 */
-	private String							recordTagUri	= null;
+	private String							recordTagUri = null;
 
 	private boolean							inRecord;
 	private StringBuilder					valueBuffer		= new StringBuilder();

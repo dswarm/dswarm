@@ -1,54 +1,42 @@
 package org.dswarm.persistence;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
+import com.google.common.base.Preconditions;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
+import com.google.inject.Key;
+import com.google.inject.name.Names;
 import com.google.inject.persist.PersistService;
-import com.google.inject.persist.jpa.JpaPersistModule;
+import com.typesafe.config.Config;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
-public class GuicedTest {
+import org.dswarm.init.ConfigModule;
+import org.dswarm.init.LoggingConfigurator;
 
-	protected static transient Injector	injector;
 
-	protected static Injector getInjector() {
+public abstract class GuicedTest {
 
-		class TestModule extends PersistenceModule {
+	protected static Injector injector;
 
-			/**
-			 * Provides the {@link ObjectMapper} instance for JSON de-/serialisation.
-			 * 
-			 * @return a {@link ObjectMapper} instance as singleton
-			 */
-			@Provides
-			@Singleton
-			protected ObjectMapper provideObjectMapper() {
+	public static Injector getInjector() {
+		final ConfigModule configModule = new ConfigModule();
+		final Injector configInjector = Guice.createInjector(configModule);
 
-				final ObjectMapper mapper = new ObjectMapper();
-				final JaxbAnnotationModule module = new JaxbAnnotationModule();
+		final Config config = configInjector.getInstance(Config.class);
+		LoggingConfigurator.configureFrom(config);
 
-				mapper.registerModule(module).registerModule(new Hibernate4Module()).setSerializationInclusion(JsonInclude.Include.NON_NULL)
-						.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+		return configInjector.createChildInjector(
+				new PersistenceModule(), new JacksonObjectMapperModule(), new JpaHibernateModule(configInjector));
+	}
 
-				return mapper;
-			}
-		}
-
-		return Guice.createInjector(new TestModule(), new JpaPersistModule("DMPApp"));
-
+	public static <T> T configValue(final String configPath, final Class<T> cls) {
+		return Preconditions.checkNotNull(injector).getInstance(Key.get(cls, Names.named(configPath)));
 	}
 
 	@BeforeClass
 	public static void startUp() throws Exception {
 
 		GuicedTest.injector = GuicedTest.getInjector();
-
 		GuicedTest.injector.getInstance(PersistService.class).start();
 	}
 

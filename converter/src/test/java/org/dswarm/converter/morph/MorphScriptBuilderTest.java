@@ -60,7 +60,7 @@ public class MorphScriptBuilderTest extends GuicedTest {
 
 	private void compareTaskGeneratedMorphscript(final String taskJSONFileName, final String morphFileName) throws Exception {
 
-		final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
+		final ObjectMapper objectMapper = injector.getInstance(ObjectMapper.class);
 
 		final String request = DMPPersistenceUtil.getResourceAsString(taskJSONFileName);
 

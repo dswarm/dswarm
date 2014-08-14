@@ -17,21 +17,27 @@ public final class MetricsReporter {
 	private static final Logger		LOG	= LoggerFactory.getLogger(MetricsReporter.class);
 
 	private final MetricRegistry	registry;
+	private final boolean			isEnabled;
 	private final String			esHost;
-	private final int				reportIntervalInSeconds;
+	private final long				reportIntervalInMillis;
 
 	@Inject
-	public MetricsReporter(final MetricRegistry registry, @Named("reporting.es.host") final String esHost,
-			@Named("reporting.interval") final Integer reportIntervalInSeconds) {
+	public MetricsReporter(
+			final MetricRegistry registry,
+			@Named("dswarm.reporting.enabled") final boolean isEnabled,
+			@Named("dswarm.reporting.interval") final long reportIntervalInMillis,
+			@Named("dswarm.reporting.elasticsearch.host") final String esHost) {
 		this.registry = registry;
+		this.isEnabled = isEnabled;
 		this.esHost = esHost;
-		this.reportIntervalInSeconds = reportIntervalInSeconds;
+		this.reportIntervalInMillis = reportIntervalInMillis;
 	}
 
 	public void start() throws IOException {
-		MetricsReporter.LOG.trace("reporting metrics to Elasticsearch at {} every {} seconds", esHost, reportIntervalInSeconds);
-		final ElasticsearchReporter reporter = ElasticsearchReporter.forRegistry(registry).hosts(esHost).build();
-
-		reporter.start(reportIntervalInSeconds, TimeUnit.SECONDS);
+		if (isEnabled) {
+			MetricsReporter.LOG.trace("reporting metrics to Elasticsearch at {} every {} milliseconds", esHost, reportIntervalInMillis);
+			final ElasticsearchReporter reporter = ElasticsearchReporter.forRegistry(registry).hosts(esHost).build();
+			reporter.start(reportIntervalInMillis, TimeUnit.MILLISECONDS);
+		}
 	}
 }

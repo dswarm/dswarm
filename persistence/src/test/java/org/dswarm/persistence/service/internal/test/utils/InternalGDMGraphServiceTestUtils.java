@@ -1,43 +1,26 @@
 package org.dswarm.persistence.service.internal.test.utils;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Properties;
-
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
-import com.google.common.io.Resources;
 import org.junit.Assert;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import org.dswarm.persistence.GuicedTest;
 
 /**
  * @author tgaengler
  */
 public final class InternalGDMGraphServiceTestUtils {
 
-	private static final Logger	LOG	= LoggerFactory.getLogger(InternalGDMGraphServiceTestUtils.class);
-
 	/**
 	 * cleans the complete graph db.
+	 * @param graphEndpoint The URL for our Neo4j extension
 	 */
 	public static void cleanGraphDB() {
 
-		final URL resource = Resources.getResource("dmp.properties");
-		final Properties properties = new Properties();
-
-		try {
-
-			properties.load(resource.openStream());
-		} catch (final IOException e) {
-
-			InternalGDMGraphServiceTestUtils.LOG.error("Could not load dmp.properties", e);
-		}
-
-		final String graphEndpoint = properties.getProperty("dmp_graph_endpoint", "http://localhost:7474/graph");
+		final String graphEndpoint = GuicedTest.configValue("dswarm.db.graph.endpoint", String.class);
 
 		final ClientBuilder builder = ClientBuilder.newBuilder();
 

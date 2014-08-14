@@ -5,7 +5,8 @@ import javax.servlet.ServletConfig;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import com.wordnik.swagger.config.ConfigFactory;
+import com.wordnik.swagger.config.ConfigFactory$;
+import com.wordnik.swagger.config.SwaggerConfig;
 import com.wordnik.swagger.jersey.config.JerseyJaxrsConfig;
 import com.wordnik.swagger.model.ApiInfo;
 
@@ -17,7 +18,7 @@ import com.wordnik.swagger.model.ApiInfo;
  * @author phorn
  */
 @Singleton
-public class SwaggerConfig extends JerseyJaxrsConfig {
+public class SwaggerConfiguration extends JerseyJaxrsConfig {
 
 	/**
 	 *
@@ -41,7 +42,7 @@ public class SwaggerConfig extends JerseyJaxrsConfig {
 	 * @param apiBaseUrl the base URI of the backend API
 	 */
 	@Inject
-	public SwaggerConfig(@Named("ApiVersion") final String apiVersion, @Named("ApiBaseUrl") final String apiBaseUrl) {
+	public SwaggerConfiguration(@Named("dswarm.api.version") final String apiVersion, @Named("dswarm.api.base-url") final String apiBaseUrl) {
 
 		this.apiVersion = apiVersion;
 		this.apiBaseUrl = apiBaseUrl;
@@ -63,7 +64,7 @@ public class SwaggerConfig extends JerseyJaxrsConfig {
 		"http://www.apache.org/licenses/LICENSE-2.0.html" /* license URL */
 		);
 
-		final com.wordnik.swagger.config.SwaggerConfig config = ConfigFactory.config();
+		final SwaggerConfig config = ConfigFactory$.MODULE$.config();
 
 		config.setApiVersion(apiVersion);
 		config.setBasePath(apiBaseUrl);

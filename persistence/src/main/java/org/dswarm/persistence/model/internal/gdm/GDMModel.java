@@ -43,7 +43,7 @@ public class GDMModel implements Model {
 	private final Set<String>					recordURIs					= Sets.newLinkedHashSet();
 	private final String						recordClassURI;
 
-	private boolean								areRecordURIsInitialized	= false;
+	private boolean								areRecordURIsInitialized;
 
 	/**
 	 * Creates a new {@link GDMModel} with a given GDM model instance.

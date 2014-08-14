@@ -418,70 +418,6 @@
 		</snapshotRepository>
 	</distributionManagement>
 
-	<profiles>
-		<profile>
-			<id>JENKINS</id>
-			<properties>
-				<env>jenkins</env>
-				<rdb.url>${db.mysql.url}</rdb.url>
-				<rdb.username>${db.mysql.username}</rdb.username>
-				<rdb.password>${db.mysql.password}</rdb.password>
-				<dmp_graph_endpoint>${dmp_graph_endpoint}</dmp_graph_endpoint>
-			</properties>
-		</profile>
-		<profile>
-			<id>SDVDMPDEV</id>
-			<properties>
-				<env>sdvdmpdev</env>
-				<rdb.url>jdbc:mysql://localhost:3306/dmp_dev?useUnicode=true&amp;amp;characterEncoding=UTF-8&amp;amp;autoReconnect=true</rdb.url>
-				<rdb.username>dmp</rdb.username>
-				<rdb.password>dmp_mysql</rdb.password>
-				<dmp_graph_endpoint>http://194.95.145.12:7474/graph</dmp_graph_endpoint>
-				<reporting_es_host>194.95.145.16:9200</reporting_es_host>
-			</properties>
-		</profile>
-		<profile>
-			<id>SDVDSWARM01</id>
-			<properties>
-				<env>sdvdswarm01</env>
-				<rdb.url>jdbc:mysql://localhost:3306/dmp?useUnicode=true&amp;amp;characterEncoding=UTF-8&amp;amp;autoReconnect=true</rdb.url>
-				<rdb.username>dmp</rdb.username>
-				<rdb.password>dmp</rdb.password>
-				<dmp_graph_endpoint>http://127.0.0.1:7474/graph</dmp_graph_endpoint>
-				<reporting_es_host>194.95.145.16:9200</reporting_es_host>
-			</properties>
-		</profile>
-		<profile>
-			<id>SDVDMPDOCS</id>
-			<properties>
-				<env>sdvdmpdocs</env>
-				<rdb.url>${db.mysql.url}</rdb.url>
-				<rdb.username>${db.mysql.username}</rdb.username>
-				<rdb.password>${db.mysql.password}</rdb.password>
-				<dmp_graph_endpoint>${dmp_graph_endpoint}</dmp_graph_endpoint>
-				<reporting_es_host>194.95.145.16:9200</reporting_es_host>
-			</properties>
-		</profile>
-		<profile>
-			<id>DEV</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<env>dev</env>
-				<!-- MySQL -->
-				<rdb.url>${db.mysql.url}</rdb.url>
-				<!-- H2 <rdb.url>jdbc:h2:file:target/h2/dmpdb</rdb.url> -->
-				<!-- HSQL <rdb.url>jdbc:hsqldb:file:target/hsql/dmpdb;hsqldb.lock_file=false</rdb.url> -->
-				<!-- H2 + HSQL -->
-				<!-- <rdb.username>SA</rdb.username> <rdb.password></rdb.password> -->
-				<!-- MySQL -->
-				<rdb.username>${db.mysql.username}</rdb.username>
-				<rdb.password>${db.mysql.password}</rdb.password>
-			</properties>
-		</profile>
-	</profiles>
-
 	<!-- <dependencyManagement> -->
 	<dependencies>
 		<dependency>
@@ -490,7 +426,8 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- Logging dependencies -->
+
+		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -507,6 +444,8 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
+		<!-- Utilities -->
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
@@ -517,6 +456,23 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>${apache.commons.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${commons-io.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tika</groupId>
+			<artifactId>tika-core</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.typesafe</groupId>
+			<artifactId>config</artifactId>
+			<version>1.2.1</version>
+		</dependency>
+
+		<!-- Json -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
@@ -547,12 +503,6 @@
 			<groupId>com.fasterxml.jackson.module</groupId>
 			<artifactId>jackson-module-guice</artifactId>
 			<version>${jackson.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>${commons-io.version}</version>
 		</dependency>
 
 		<!-- jee version -->
@@ -619,11 +569,5 @@
 			<artifactId>guice</artifactId>
 			<version>${guice.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.tika</groupId>
-			<artifactId>tika-core</artifactId>
-			<version>1.0</version>
-		</dependency>
 	</dependencies>
-	<!-- </dependencyManagement> -->
 </project>

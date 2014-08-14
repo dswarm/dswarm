@@ -158,4 +158,5 @@ tdb/
 /web/yo/app/test_out/
 persistence/src/main/resources/schema_new.sql
 
-dmp.properties
+dmp.conf
+dswarm.conf

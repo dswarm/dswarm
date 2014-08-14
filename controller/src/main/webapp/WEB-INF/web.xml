@@ -35,7 +35,7 @@
 	</filter-mapping>
 
 	<listener>
-		<listener-class>org.dswarm.controller.servlet.DMPInjector</listener-class>
+		<listener-class>org.dswarm.controller.providers.DMPInjector</listener-class>
 	</listener>
 
 	<context-param>

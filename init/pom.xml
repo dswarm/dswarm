@@ -17,24 +17,4 @@
 	<properties>
 		<project.root>${basedir}/..</project.root>
 	</properties>
-
-	<build>
-		<filters>
-			<filter>src/test/filters/dmp-common.properties</filter>
-			<filter>${project.root}/dmp.properties</filter>
-			<filter>src/test/filters/dmp-${env}.properties</filter>
-		</filters>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-			</resource>
-		</resources>
-		<testResources>
-			<testResource>
-				<directory>src/test/resources</directory>
-				<filtering>true</filtering>
-			</testResource>
-		</testResources>
-	</build>
 </project>
