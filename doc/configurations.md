@@ -152,7 +152,6 @@ Place a file named `dswarm.conf` somewhere in your filesystem and put in the fol
     cat <<EOF>>dswarm.conf
     dswarm.db.metadata.username=foo
     dswarm.db.metadata.password=bar
-    dswarm.log-config-on-start=on
     EOF
 
 Then, start d:swarm the following way
@@ -225,3 +224,9 @@ In order to move to the new configuration system, perform the following steps.
 7. Provide the /path/to/dswarm.conf to your IDE. In eclipse, e.g., open `eclipse.ini`, go to `-vmargs` section and add the line `-Dconfig.file=/path/to/dswarm.conf`. 
 
 8. At last, remove the dmp.properties file (Which might have been done already, as this step was committed via git)
+
+## Debugging your configuration
+
+You can use the config settings `dswarm.log-config-on-start=on` when you start d:swarm.
+If done so, d:swarm will log the complete configuration to the INFO loglevel stream.
+The format is similar to a Json format with additional comments, how a config value was constructed and what its description is.
