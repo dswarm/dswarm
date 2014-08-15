@@ -48,7 +48,6 @@ import org.dswarm.controller.eventbus.XMLConverterEventRecorder;
 import org.dswarm.controller.eventbus.XMLSchemaEvent;
 import org.dswarm.controller.eventbus.XMLSchemaEventRecorder;
 import org.dswarm.controller.resources.ExtendedBasicDMPResource;
-import org.dswarm.controller.resources.export.RDFResource;
 import org.dswarm.controller.resources.resource.utils.DataModelsResourceUtils;
 import org.dswarm.controller.resources.resource.utils.ExportUtils;
 import org.dswarm.controller.resources.utils.ResourceUtilsFactory;

@@ -1,4 +1,4 @@
-package org.dswarm.controller.resources.export.test;
+package org.dswarm.controller.resources.resource.test;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

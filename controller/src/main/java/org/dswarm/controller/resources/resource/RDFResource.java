@@ -1,4 +1,4 @@
-package org.dswarm.controller.resources.export;
+package org.dswarm.controller.resources.resource;
 
 import java.io.InputStream;
 
