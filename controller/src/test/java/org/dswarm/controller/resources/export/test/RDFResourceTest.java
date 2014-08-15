@@ -14,17 +14,18 @@ import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.DatasetFactory;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import org.apache.commons.io.FileUtils;
+import org.apache.http.HttpStatus;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.dswarm.common.MediaTypeUtil;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
+import org.dswarm.controller.resources.resource.test.utils.ExportTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
 import org.dswarm.controller.resources.test.ResourceTest;
 import org.dswarm.controller.test.GuicedTest;
@@ -76,20 +77,25 @@ public class RDFResourceTest extends ResourceTest {
 	@Test
 	public void testExportAllNQuads() throws Exception {
 
-		exportInternal(MediaTypeUtil.N_QUADS, Lang.NQUADS, 200);
+		exportInternal(MediaTypeUtil.N_QUADS, HttpStatus.SC_OK, Lang.NQUADS, ".nq");
 	}
 
 	@Test
 	public void testExportAllTriG() throws Exception {
 
-		exportInternal(MediaTypeUtil.TRIG, Lang.TRIG, 200);
+		exportInternal(MediaTypeUtil.TRIG, HttpStatus.SC_OK, Lang.TRIG, ".trig");
 	}
 
-	@Ignore("requires BE endpoint to forward HTTP responses from GE")
 	@Test
 	public void testExportUnsupportedFormat() throws Exception {
 
-		exportInternal(MediaTypeUtil.RDF_XML, Lang.TRIG, 406);
+		exportInternal(MediaTypeUtil.RDF_XML, HttpStatus.SC_NOT_ACCEPTABLE, null, null);
+	}
+
+	@Test
+	public void testExportRandomFormat() throws Exception {
+
+		exportInternal("khlav/kalash", HttpStatus.SC_NOT_ACCEPTABLE, null, null);
 	}
 
 	/**
@@ -98,18 +104,23 @@ public class RDFResourceTest extends ResourceTest {
 	 * been imported in db in a prepare step). <br />
 	 * Assert the numbers of statements in the export is equal to the sum of statements of all serialized models.
 	 * 
-	 * @param requestFormatParam the requested serialization format to be used in export. may be empty to test the default
+	 * @param requestedExportLanguage the requested serialization format to be used in export. may be empty to test the default
 	 *            fallback of the endpoint.
-	 * @param expectedResponseFormat the serialization format we expect in a response to the requested format
+	 * @param expectedHTTPResponseCode the expected HTTP status code of the response, e.g. {@link HttpStatus.SC_OK} or
+	 *            {@link HttpStatus.SC_NOT_ACCEPTABLE}
+	 * @param expectedExportLanguage the language the exported data is expected to be serialized in. hint: language may differ
+	 *            from {@code requestedExportLanguage} to test for default values. (ignored if expectedHTTPResponseCode !=
+	 *            {@link HttpStatus.SC_OK})
+	 * @param expectedFileEnding the expected file ending to be received from neo4j (ignored if expectedHTTPResponseCode !=
+	 *            {@link HttpStatus.SC_OK})
 	 * @throws Exception
 	 */
-	private void exportInternal(final String requestFormatParam, final Lang expectedResponseFormat, final int expectedHTTPResponseCode)
+	private void exportInternal(final String requestedExportLanguage, final int expectedHTTPResponseCode, final Lang expectedExportLanguage, final String expectedFileEnding)
 			throws Exception {
 
-		RDFResourceTest.LOG.debug("start test export all data to format \"" + requestFormatParam + "\"");
+		RDFResourceTest.LOG.debug("start test export all data to format \"" + requestedExportLanguage + "\"");
 
 		// prepare: load data to mysql and graph db
-
 		// SR hint: the resource's description needs to be "this is a description" since this is hard coded in
 		// org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils.uploadResource(File, Resource)
 		// should be refactored some day
@@ -117,37 +128,33 @@ public class RDFResourceTest extends ResourceTest {
 		loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 
 		// request the export from BE proxy endpoint
-		final Response response = target("/getall").queryParam("format", requestFormatParam).request().get(Response.class);
+		final Response response = target("/getall").queryParam("format", requestedExportLanguage).request().get(Response.class);
 
 		Assert.assertEquals("expected " + expectedHTTPResponseCode, expectedHTTPResponseCode, response.getStatus());
 
 		// in case we requested an unsupported format, stop processing here since there is no exported data to verify
-		if (expectedHTTPResponseCode == 406) {
+		if (expectedHTTPResponseCode == HttpStatus.SC_NOT_ACCEPTABLE) {
 			return;
 		}
+		
+		// check Content-Disposition header for correct file ending
+		ExportTestUtils.checkContentDispositionHeader(response, expectedFileEnding);		
 
-		// read response
-		final Object responseEntity = response.getEntity();
-		Assert.assertNotNull("response body shouldn't be null", responseEntity);
+		// read data set from response
+		final String body = response.readEntity(String.class);
+		Assert.assertNotNull("response body  shouldn't be null", body);
 
-		// SR TODO: is it okay to do the check like this?
-		if (!(responseEntity instanceof InputStream)) {
-
-			Assert.assertTrue("Can not read response body", false);
-		}
-
-		final InputStream stream = (InputStream) responseEntity;
-
+		final InputStream stream = new ByteArrayInputStream(body.getBytes("UTF-8"));
 		Assert.assertNotNull("input stream (from body) shouldn't be null", stream);
-
+ 
 		final Dataset dataset = DatasetFactory.createMem();
-		RDFDataMgr.read(dataset, stream, expectedResponseFormat);
-
+		RDFDataMgr.read(dataset, stream, expectedExportLanguage);
 		Assert.assertNotNull("dataset from response shouldn't be null", dataset);
 
+		// count number of statements in exportet data set
 		final long statementsInExportedRDFModel = RDFUtils.determineDatasetSize(dataset);
 
-		LOG.info("exported '" + statementsInExportedRDFModel + "' statements");
+		LOG.debug("exported '" + statementsInExportedRDFModel + "' statements");
 
 		// count number of statements that were loaded to db while prepare
 		long expectedStatements = countStatementsInSerializedN3("atMostTwoRows.n3") + countStatementsInSerializedN3("UTF-8.n3");
@@ -155,20 +162,19 @@ public class RDFResourceTest extends ResourceTest {
 		// compare number of exported statements with expected
 		Assert.assertEquals("the number of exported statements should be " + expectedStatements, expectedStatements, statementsInExportedRDFModel);
 
-		RDFResourceTest.LOG.debug("end test export all data as " + expectedResponseFormat);
-		RDFResourceTest.LOG.info("end test export all data as " + expectedResponseFormat);
+		RDFResourceTest.LOG.debug("end test export all data as " + expectedExportLanguage);
 	}
 
 	// SR TODO refactor to dswarm-common
 	/**
 	 * Read a file, serialized in N3, and count the number of statements.
 	 * 
-	 * @param resourceName the /path/to/file.end of a serialized N3
+	 * @param resourceNameN3 the /path/to/file.end of a model serialized in N3 format
 	 * @return the number of statements the serialized model contains
 	 * @throws IOException
 	 */
-	public long countStatementsInSerializedN3(final String resourceName) throws IOException {
-		final URL fileURL = Resources.getResource(resourceName);
+	public long countStatementsInSerializedN3(final String resourceNameN3) throws IOException {
+		final URL fileURL = Resources.getResource(resourceNameN3);
 
 		byte[] bodyBytes = Resources.toByteArray(fileURL);
 		final InputStream expectedStream = new ByteArrayInputStream(bodyBytes);

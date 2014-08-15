@@ -1,6 +1,7 @@
 package org.dswarm.controller.resources.export;
 
 import java.io.InputStream;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -18,6 +19,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import junit.framework.Assert;
+import org.apache.http.HttpStatus;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -38,7 +41,7 @@ import org.dswarm.persistence.util.GDMUtil;
 
 /**
  * Created by tgaengler on 28/04/14.
- *
+ * 
  * @author tgaengler
  */
 @RequestScoped
@@ -46,9 +49,11 @@ import org.dswarm.persistence.util.GDMUtil;
 @Path("rdf")
 public class RDFResource {
 
+	private static final String	CONTENT_DISPOSITION	= "Content-Disposition";
+
 	private static final Logger	LOG					= LoggerFactory.getLogger(RDFResource.class);
 
-	// SR TO move somewhere else and reuse 
+	// SR TO move somewhere else and reuse
 	public static final String	resourceIdentifier	= "rdf";
 
 	/**
@@ -68,7 +73,7 @@ public class RDFResource {
 
 	/**
 	 * for triggering a download
-	 *
+	 * 
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "exports all data from the graph DB in the given RDF serialisation format", notes = "Returns exported data in the given RDF serialisation format.")
@@ -81,28 +86,41 @@ public class RDFResource {
 			throws DMPControllerException {
 
 		final MediaType formatType = MediaTypeUtil.getMediaType(format, MediaTypeUtil.N_QUADS_TYPE);
-
-		// get file extension
-		final String fileExtension = RDFLanguages.contentTypeToLang(formatType.toString()).getFileExtensions().get(0);
 		RDFResource.LOG.debug("Exporting rdf data into " + formatType);
 
-		// forward the request to graph DB
+		// send the request to graph DB
 		final WebTarget target = target("/getall");
-		final Response response = target.request().accept(format).get(Response.class);
+		final Response responseFromGraph = target.request().accept(format).get(Response.class);
 
-		if (response.getStatus() != 200) {
+		Response responseToRequester;
 
-			// TODO forward GE HTTP Response, e.g. if the requested format is not supported
-			throw new DMPControllerException("Couldn't export data from database. Received status code '" + response.getStatus()
-					+ "' from database endpoint.");
+		switch (responseFromGraph.getStatus()) {
+
+			case HttpStatus.SC_OK:
+				final InputStream result = responseFromGraph.readEntity(InputStream.class);
+
+				List<String> contentDispositionList = responseFromGraph.getStringHeaders().get(CONTENT_DISPOSITION);
+				if (contentDispositionList == null || contentDispositionList.size() != 1) {
+					throw new DMPControllerException("Couldn't export data from database. Database endpoint did not provide a valid file.");
+				}
+				final String contenDispositionValue = contentDispositionList.get(0);
+
+				responseToRequester = Response.ok(result, formatType).header(CONTENT_DISPOSITION, contenDispositionValue).build();
+				break;
+
+			case HttpStatus.SC_NOT_ACCEPTABLE:
+				responseToRequester = Response.status(HttpStatus.SC_NOT_ACCEPTABLE).build();
+				break;
+
+			default:
+				// TODO forward GE HTTP Response, e.g. if the requested format is not supported
+				throw new DMPControllerException("Couldn't export data from database. Received status code '" + responseFromGraph.getStatus()
+						+ "' from database endpoint.");
+
 		}
+		return responseToRequester;
 
-		final InputStream result = response.readEntity(InputStream.class);
-
-		return Response.ok(result, formatType).header("Content-Disposition", "attachment; filename*=UTF-8''rdf_export." + fileExtension).build();
 	}
-
-	
 
 	// deactivated because of unexplainable, unpredictable behavior (on a windows machine) 2014-07-30. This is likely a jersey
 	// bug.
@@ -150,7 +168,7 @@ public class RDFResource {
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@GET
 	@Path("/export/{id}/")
-	@Produces({ MediaTypeUtil.N_QUADS, MediaTypeUtil.RDF_XML, MediaTypeUtil.TRIG, MediaTypeUtil.TURTLE, MediaTypeUtil.N3  })
+	@Produces({ MediaTypeUtil.N_QUADS, MediaTypeUtil.RDF_XML, MediaTypeUtil.TRIG, MediaTypeUtil.TURTLE, MediaTypeUtil.N3 })
 	public Response exportSingleRDFForDownload(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final Long id,
 			@QueryParam("format") @DefaultValue(MediaTypeUtil.N_QUADS) String format) throws DMPControllerException {
 
@@ -163,7 +181,6 @@ public class RDFResource {
 		final String fileExtension = RDFLanguages.contentTypeToLang(formatType.toString()).getFileExtensions().get(0);
 		LOG.debug("Exporting rdf data to " + formatType.toString());
 
-
 		// forward the request to graph DB
 		final WebTarget target = target("/export");
 		final Response response = target.queryParam("format", format).queryParam("provenanceuri", provenanceURI).request().accept(format)
@@ -171,18 +188,16 @@ public class RDFResource {
 
 		if (response.getStatus() != 200) {
 
-			//TODO give more details? e.g. if the requested format is not supported?
+			// TODO give more details? e.g. if the requested format is not supported?
 			throw new DMPControllerException("Couldn't export data from database. Received status code '" + response.getStatus()
 					+ "' from database endpoint.");
 		}
 
 		final InputStream result = response.readEntity(InputStream.class);
 
-		return Response.ok(result, formatType).header("Content-Disposition", "attachment; filename*=UTF-8''rdf_export." + fileExtension).build();
+		return Response.ok(result, formatType).header(CONTENT_DISPOSITION, "attachment; filename*=UTF-8''rdf_export." + fileExtension).build();
 	}
-	
-	
-	
+
 	private Client client() {
 
 		final ClientBuilder builder = ClientBuilder.newBuilder();
