@@ -1,6 +1,10 @@
 package org.dswarm.controller.resources.resource.test;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,6 +16,11 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.jena.riot.Lang;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.http.HttpStatus;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -32,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import org.dswarm.common.MediaTypeUtil;
 import org.dswarm.controller.resources.resource.test.utils.ConfigurationsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
+import org.dswarm.controller.resources.resource.test.utils.ExportTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.AttributePathsResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.AttributesResourceTestUtils;
@@ -39,6 +49,7 @@ import org.dswarm.controller.resources.schema.test.utils.ClaszesResourceTestUtil
 import org.dswarm.controller.resources.schema.test.utils.SchemasResourceTestUtils;
 import org.dswarm.controller.resources.test.BasicResourceTest;
 import org.dswarm.controller.test.GuicedTest;
+import org.dswarm.graph.rdf.export.test.PartialRDFExportTest;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
@@ -729,16 +740,180 @@ public class DataModelsResourceTest extends
 
 		DataModelsResourceTest.LOG.debug("end throw Exception at XML data test");
 	}
-	
-	// SR TODO add tests here
+
+	/**
+	 * Test export of a single graph to N3
+	 * 
+	 * @throws Exception
+	 */
 	@Test
-	public void testExportAsNQuads() {
-		
-		final Response response = target(String.valueOf(1), "export").request().accept(MediaTypeUtil.N_QUADS).get(Response.class);
-		
+	public void testExportDataModelAsN3() throws Exception {
+
+		testExportInternal(MediaTypeUtil.N3, HttpStatus.SC_OK, Lang.N3, "UTF-8.n3", ".n3");
+
 	}
-	
-	
+
+	/**
+	 * Test export of a single graph to RDF_XML
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testExportDataModelAsRDF_XML() throws Exception {
+
+		testExportInternal(MediaTypeUtil.RDF_XML, HttpStatus.SC_OK, Lang.RDFXML, "UTF-8.n3", ".rdf");
+
+	}
+
+	/**
+	 * Test export of a single graph to N_QUADS
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testExportDataModelAsN_QUADS() throws Exception {
+
+		testExportInternal(MediaTypeUtil.N_QUADS, HttpStatus.SC_OK, Lang.NQUADS, "UTF-8.n3", ".nq");
+
+	}
+
+	/**
+	 * Test export of a single graph to TRIG
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testExportDataModelAsTRIG() throws Exception {
+
+		testExportInternal(MediaTypeUtil.TRIG, HttpStatus.SC_OK, Lang.TRIG, "UTF-8.n3", ".trig");
+
+	}
+
+	/**
+	 * Test export of a single graph to N_QUADS
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testExportDataModelAsTURTLE() throws Exception {
+
+		testExportInternal(MediaTypeUtil.TURTLE, HttpStatus.SC_OK, Lang.TURTLE, "UTF-8.n3", ".ttl");
+
+	}
+
+	/**
+	 * Test export of a single graph to default format that is chosen by graph db in case no format is requested (i.e. empty
+	 * accept parameter)
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testExportDataModelAsDefaultFormat() throws Exception {
+
+		testExportInternal("", HttpStatus.SC_OK, Lang.NQUADS, "UTF-8.n3", ".nq");
+
+	}
+
+	/**
+	 * Test export of a single graph to to text/plain format. This format is not supported, a HTTP 406 (not acceptable) response
+	 * is expected.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testExportDataModelAsUnsupportedFormat() throws Exception {
+
+		testExportInternal(MediaType.TEXT_PLAIN, HttpStatus.SC_NOT_ACCEPTABLE, null, null, null);
+
+	}
+
+	/**
+	 * Test export of a single graph to a not existing format by sending some "random" accept header value. A HTTP 406 (not
+	 * acceptable) response is expected.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testExportDataModelAsRandomFormat() throws Exception {
+
+		testExportInternal("khlav/kalash", HttpStatus.SC_NOT_ACCEPTABLE, null, null, null);
+
+	}
+
+	/**
+	 * prepare: upload data and metadata of two csv files to mysql and graph db <br />
+	 * request the export from BE proxy endpoint<br />
+	 * assert the number of exported statements is equal to an expected value. the models themselves are not compared because of
+	 * UUIDs generated while uploading the data
+	 * 
+	 * @param requestedExportLanguage the serialization format neo4j should export the data to. (this value is used as accept
+	 *            header arg to query neo4j)
+	 * @param provenanceURI identifier of the graph to export
+	 * @param expectedHTTPResponseCode the expected HTTP status code of the response, e.g. {@link HttpStatus.SC_OK} or
+	 *            {@link HttpStatus.SC_NOT_ACCEPTABLE}
+	 * @param expectedExportLanguage the language the exported data is expected to be serialized in. hint: language may differ
+	 *            from {@code requestedExportLanguage} to test for default values. (ignored if expectedHTTPResponseCode !=
+	 *            {@link HttpStatus.SC_OK})
+	 * @param expectedModelFile name of file containing a serialized model, this (expected) model is equal to the actual model
+	 *            exported by neo4j. (ignored if expectedHTTPResponseCode != {@link HttpStatus.SC_OK})
+	 * @param expectedFileEnding the expected file ending to be received from neo4j (ignored if expectedHTTPResponseCode !=
+	 *            {@link HttpStatus.SC_OK})
+	 * @throws IOException
+	 */
+	private void testExportInternal(String requestedExportLanguage, int expectedHTTPResponseCode, Lang expectedExportLanguage,
+			String expectedModelFile, String expectedFileEnding) throws Exception {
+		// prepare: load data to mysql and graph db
+		// SR hint: the resource's description needs to be "this is a description" since this is hard coded in
+		// org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils.uploadResource(File, Resource)
+		// should be refactored some day
+		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
+		DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
+
+		// FIXME even though an export of data containing UTF-8 characters is requested, the exported data is not checked for
+		// encoding issues yet
+		String datamodelId = String.valueOf(datamodelUTF8csv.getId());
+
+		// request export of datamodelUTF8csv
+		final Response response = target(datamodelId, "export").queryParam("format", requestedExportLanguage).request().get(Response.class);
+
+		Assert.assertEquals("expected " + expectedHTTPResponseCode, expectedHTTPResponseCode, response.getStatus());
+
+		// in case we requested an unsupported format, stop processing here since there is no exported data to verify
+		if (expectedHTTPResponseCode == HttpStatus.SC_NOT_ACCEPTABLE) {
+			return;
+		}
+
+		// check Content-Disposition header for correct file ending
+		ExportTestUtils.checkContentDispositionHeader(response, expectedFileEnding);
+
+		// start check exported data
+		final String body = response.readEntity(String.class);
+
+		Assert.assertNotNull("response body shouldn't be null", body);
+
+		LOG.trace("Response body:\n" + body);
+
+		final InputStream inputStream = new ByteArrayInputStream(body.getBytes("UTF-8"));
+
+		Assert.assertNotNull("input stream (from body) shouldn't be null", inputStream);
+
+		// read actual model from response body
+		final com.hp.hpl.jena.rdf.model.Model actualModel = ModelFactory.createDefaultModel();
+		RDFDataMgr.read(actualModel, inputStream, expectedExportLanguage);
+
+		Assert.assertNotNull("actual model shouldn't be null", actualModel);
+		LOG.debug("exported '" + actualModel.size() + "' statements");
+
+		// read expected model from file
+		final com.hp.hpl.jena.rdf.model.Model expectedModel = RDFDataMgr.loadModel(expectedModelFile);
+		Assert.assertNotNull("expected model shouldn't be null", expectedModel);
+
+		// this check can not be done because of generated UUIDs
+		// check if statements are the "same" (isomorphic, i.e. blank nodes may have different IDs)
+		// Assert.assertTrue("the RDF from the property graph is not isomorphic to the RDF in the original file ",
+		// actualModel.isIsomorphicWith(expectedModel));
+		// end check exported data
+	}
 
 	@Override
 	public void testPUTObject() throws Exception {
@@ -860,5 +1035,37 @@ public class DataModelsResourceTest extends
 		Assert.assertTrue("the value should be a string", jsonNode.isTextual());
 
 		return jsonNode.asText();
+	}
+
+	private DataModel loadCSVData(final String resourceJsonFilename, final String csvFilename, final String configurationJsonFilename)
+			throws Exception {
+
+		LOG.debug("start load CSV data");
+
+		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString(resourceJsonFilename);
+
+		final Resource expectedResource = GuicedTest.injector.getInstance(ObjectMapper.class).readValue(resourceJSONString, Resource.class);
+
+		final URL fileURL = Resources.getResource(csvFilename);
+		final File resourceFile = FileUtils.toFile(fileURL);
+
+		final String configurationJSONString = DMPPersistenceUtil.getResourceAsString(configurationJsonFilename);
+
+		// add resource and config
+		final Resource resource = resourcesResourceTestUtils.uploadResource(resourceFile, expectedResource);
+
+		final Configuration config = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
+
+		final DataModel dataModelToCreate = new DataModel();
+		dataModelToCreate.setName("my data model");
+		dataModelToCreate.setDescription("my data model description");
+		dataModelToCreate.setDataResource(resource);
+		dataModelToCreate.setConfiguration(config);
+
+		final String dataModelJSONString = objectMapper.writeValueAsString(dataModelToCreate);
+
+		final DataModel dataModelfromDB = dataModelsResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
+
+		return dataModelfromDB;
 	}
 }
