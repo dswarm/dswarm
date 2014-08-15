@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,12 +16,8 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.jena.riot.Lang;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import org.apache.jena.riot.RDFDataMgr;
-import org.apache.http.HttpStatus;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
@@ -31,7 +26,11 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.io.Resources;
 import com.google.inject.Key;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import org.apache.commons.io.FileUtils;
+import org.apache.http.HttpStatus;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Assert;
@@ -50,7 +49,6 @@ import org.dswarm.controller.resources.schema.test.utils.ClaszesResourceTestUtil
 import org.dswarm.controller.resources.schema.test.utils.SchemasResourceTestUtils;
 import org.dswarm.controller.resources.test.BasicResourceTest;
 import org.dswarm.controller.test.GuicedTest;
-import org.dswarm.graph.rdf.export.test.PartialRDFExportTest;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
@@ -880,9 +878,9 @@ public class DataModelsResourceTest extends
 	@Test
 	public void testExportDataModelFromNotExistingDatamodel() throws Exception {
 
-		// hint do not load any data
+		// hint: do not load any data
 
-		testExportInternal(MediaTypeUtil.N_QUADS, Long.MAX_VALUE, HttpStatus.SC_NOT_FOUND, Lang.NQUADS, "UTF-8.n3", ".nq");
+		testExportInternal(MediaTypeUtil.N_QUADS, Long.MAX_VALUE, HttpStatus.SC_NOT_FOUND,  null, null, null);
 
 	}
 

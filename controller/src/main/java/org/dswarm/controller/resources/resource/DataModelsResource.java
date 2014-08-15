@@ -278,7 +278,9 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@GET
 	@Path("/{id}/export")
-	@Produces({ MediaTypeUtil.N_QUADS, MediaTypeUtil.RDF_XML, MediaTypeUtil.TRIG, MediaTypeUtil.TURTLE, MediaTypeUtil.N3 })
+	// SR TODO removing of @Produces should result in accepting any requested format (accept header?) Is this what we want as a
+	// proxy endpoint - let the graph endpoint decide which formats are accepted
+	// @Produces({ MediaTypeUtil.N_QUADS, MediaTypeUtil.RDF_XML, MediaTypeUtil.TRIG, MediaTypeUtil.TURTLE, MediaTypeUtil.N3 })
 	public Response exportForDownload(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final Long id,
 			@QueryParam("format") @DefaultValue(MediaTypeUtil.N_QUADS) String format) throws DMPControllerException {
 
@@ -300,11 +302,9 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 		final Response responseFromGraph = target.queryParam("provenanceuri", provenanceURI).request().accept(format).get(Response.class);
 
 		Response responseToRequester = ExportUtils.processGraphDBResonseInternal(responseFromGraph);
-		
+
 		return responseToRequester;
 	}
-
-
 
 	/**
 	 * This endpoint deletes a data model that matches the given id.

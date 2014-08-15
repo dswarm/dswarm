@@ -73,7 +73,9 @@ public class RDFResource {
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@GET
 	@Path("/getall")
-	@Produces({ MediaTypeUtil.N_QUADS, MediaTypeUtil.TRIG })
+	// SR TODO removing of @Produces should result in accepting any requested format (accept header?) Is this what we want as a
+	// proxy endpoint - let the graph endpoint decide which formats are accepted
+	//	@Produces({ MediaTypeUtil.N_QUADS, MediaTypeUtil.TRIG })
 	public Response exportAllRDFForDownload(@QueryParam("format") @DefaultValue(MediaTypeUtil.N_QUADS) final String format)
 			throws DMPControllerException {
 
@@ -90,42 +92,7 @@ public class RDFResource {
 
 	}
 
-	// deactivated because of unexplainable, unpredictable behavior (on a windows machine) 2014-07-30. This is likely a jersey
-	// bug.
-	// * precondition: start FE, databases
-	// * to reproduce the bug, do the following steps repeatedly (up to 10 times..) till the bug comes up
-	// * 1. start BE
-	// * 2. in FE: push Export button
-	// * 3. check with developer tools:
-	// ** "Request URL:http://127.0.0.1:8087/dmp/rdf/getall?format=application%2Fn-quads"
-	// ** response header should contain "Content-Disposition:attachment; filename*=UTF-8''rdf_export.nq",
-	// ** "Content-Type:application/octet-stream"
-	// * in case the bug is "active", the response header contains "Content-Type:application/n-quads" and no "Content-Disposition"
-	// field
-	// SR hint for bugfix: maybe this comes up since @Produces("application/n-quads") and @Produces({ N_QUADS, TRIG }) overlap in
-	// producing n-quads, it is not allowed to have 2 methods for one endpoint producing the same MediaType
-	//
-	// @GET
-	// @Path("/getall")
-	// @Produces("application/n-quads")
-	// public Response exportAllRDF() throws DMPControllerException {
-	//
-	// final WebTarget target = target("/getall");
-	//
-	// // GET the request
-	// final Response response = target.request().accept("application/n-quads").get(Response.class);
-	//
-	// if (response.getStatus() != 200) {
-	//
-	// throw new DMPControllerException("Couldn't export data from database. Received status code '" + response.getStatus()
-	// + "' from database endpoint.");
-	// }
-	//
-	// final String result = response.readEntity(String.class);
-	//
-	// return Response.ok().entity(result).build();
-	// }
-
+	
 	// SR FIXME: temporarily reactivated this endpoint to be compatible with current FE version
 	/**
 	 * @param id a data model identifier
