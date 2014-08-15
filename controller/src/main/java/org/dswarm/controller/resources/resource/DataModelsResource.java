@@ -1,6 +1,5 @@
 package org.dswarm.controller.resources.resource;
 
-import java.io.InputStream;
 import java.util.Iterator;
 
 import javax.inject.Inject;
@@ -9,7 +8,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -35,7 +33,6 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
-import org.apache.jena.riot.RDFLanguages;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +50,7 @@ import org.dswarm.controller.eventbus.XMLSchemaEventRecorder;
 import org.dswarm.controller.resources.ExtendedBasicDMPResource;
 import org.dswarm.controller.resources.export.RDFResource;
 import org.dswarm.controller.resources.resource.utils.DataModelsResourceUtils;
+import org.dswarm.controller.resources.resource.utils.ExportUtils;
 import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
 import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.controller.utils.DataModelUtil;
@@ -108,8 +106,8 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 			final Provider<SchemaEventRecorder> schemaEventRecorderProviderArg,
 			final Provider<XMLSchemaEventRecorder> xmlSchemaEventRecorderProviderArg,
 			final Provider<CSVConverterEventRecorder> csvConverterEventRecorderProviderArg,
-			final Provider<XMLConverterEventRecorder> xmlConverterEventRecorderProviderArg, @Named("dswarm.db.graph.endpoint") final String graphEndpointArg)
-			throws DMPControllerException {
+			final Provider<XMLConverterEventRecorder> xmlConverterEventRecorderProviderArg,
+			@Named("dswarm.db.graph.endpoint") final String graphEndpointArg) throws DMPControllerException {
 
 		super(utilsFactory.reset().get(DataModelsResourceUtils.class), dmpStatusArg);
 
@@ -270,7 +268,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 
 	/**
 	 * @param id
-	 * @param exportFormat serialization format the data model should be serialized in, injected from accept header field
+	 * @param format serialization format the data model should be serialized in, injected from accept header field
 	 * @return a single data model, serialized in exportLanguage
 	 * @throws DMPControllerException
 	 */
@@ -283,7 +281,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 	@Path("/{id}/export")
 	@Produces({ MediaTypeUtil.N_QUADS, MediaTypeUtil.RDF_XML, MediaTypeUtil.TRIG, MediaTypeUtil.TURTLE, MediaTypeUtil.N3 })
 	public Response exportForDownload(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final Long id,
-			@HeaderParam("Accept") @DefaultValue(MediaTypeUtil.N_QUADS) final String exportFormat) throws DMPControllerException {
+			@QueryParam("format") @DefaultValue(MediaTypeUtil.N_QUADS) String format) throws DMPControllerException {
 
 		// check if id is present, return 404 if not
 		final DataModelService persistenceService = pojoClassResourceUtils.getPersistenceService();
@@ -292,31 +290,22 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		// construct provenanceURI from id
+		// construct provenanceURI from data model id
 		final String provenanceURI = GDMUtil.getDataModelGraphURI(id);
 
-		final MediaType formatType = MediaTypeUtil.getMediaType(exportFormat, MediaTypeUtil.N_QUADS_TYPE);
+		final MediaType formatType = MediaTypeUtil.getMediaType(format, MediaTypeUtil.N_QUADS_TYPE);
+		LOG.debug("Exporting rdf of datamodel with id \"" + id + "\" to " + formatType.toString());
 
-		// get file extension
-		final String fileExtension = RDFLanguages.contentTypeToLang(formatType.toString()).getFileExtensions().get(0);
-		LOG.debug("Exporting rdf data to " + formatType.toString());
-
-		// forward the request to graph DB
+		// send the request to graph DB
 		final WebTarget target = target("/export");
-		final Response response = target.queryParam("provenanceuri", provenanceURI).request().accept(exportFormat).get(Response.class);
+		final Response responseFromGraph = target.queryParam("provenanceuri", provenanceURI).request().accept(format).get(Response.class);
 
-		if (response.getStatus() != 200) {
-
-			// TODO give more details? e.g. if the requested format is not supported?
-			throw new DMPControllerException("Couldn't export data from database. Received status code '" + response.getStatus()
-					+ "' from database endpoint.");
-		}
-
-		final InputStream result = response.readEntity(InputStream.class);
-
-		// TODO read "Content-Disposition" header from GE -> put code there (has been removed yesterday...)
-		return Response.ok(result, formatType).header("Content-Disposition", "attachment; filename*=UTF-8''rdf_export." + fileExtension).build();
+		Response responseToRequester = ExportUtils.processGraphDBResonseInternal(responseFromGraph);
+		
+		return responseToRequester;
 	}
+
+
 
 	/**
 	 * This endpoint deletes a data model that matches the given id.

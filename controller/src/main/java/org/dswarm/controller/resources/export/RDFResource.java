@@ -1,13 +1,11 @@
 package org.dswarm.controller.resources.export;
 
 import java.io.InputStream;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -17,10 +15,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
-import junit.framework.Assert;
-import org.apache.http.HttpStatus;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -34,9 +29,8 @@ import org.slf4j.LoggerFactory;
 
 import org.dswarm.common.MediaTypeUtil;
 import org.dswarm.controller.DMPControllerException;
+import org.dswarm.controller.resources.resource.utils.ExportUtils;
 import org.dswarm.controller.status.DMPStatus;
-import org.dswarm.persistence.model.resource.DataModel;
-import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.util.GDMUtil;
 
 /**
@@ -48,8 +42,6 @@ import org.dswarm.persistence.util.GDMUtil;
 @Api(value = "/rdf", description = "Provides some RDF export services.")
 @Path("rdf")
 public class RDFResource {
-
-	private static final String	CONTENT_DISPOSITION	= "Content-Disposition";
 
 	private static final Logger	LOG					= LoggerFactory.getLogger(RDFResource.class);
 
@@ -91,33 +83,9 @@ public class RDFResource {
 		// send the request to graph DB
 		final WebTarget target = target("/getall");
 		final Response responseFromGraph = target.request().accept(format).get(Response.class);
+		
+		Response responseToRequester = ExportUtils.processGraphDBResonseInternal(responseFromGraph);
 
-		Response responseToRequester;
-
-		switch (responseFromGraph.getStatus()) {
-
-			case HttpStatus.SC_OK:
-				final InputStream result = responseFromGraph.readEntity(InputStream.class);
-
-				List<String> contentDispositionList = responseFromGraph.getStringHeaders().get(CONTENT_DISPOSITION);
-				if (contentDispositionList == null || contentDispositionList.size() != 1) {
-					throw new DMPControllerException("Couldn't export data from database. Database endpoint did not provide a valid file.");
-				}
-				final String contenDispositionValue = contentDispositionList.get(0);
-
-				responseToRequester = Response.ok(result, formatType).header(CONTENT_DISPOSITION, contenDispositionValue).build();
-				break;
-
-			case HttpStatus.SC_NOT_ACCEPTABLE:
-				responseToRequester = Response.status(HttpStatus.SC_NOT_ACCEPTABLE).build();
-				break;
-
-			default:
-				// TODO forward GE HTTP Response, e.g. if the requested format is not supported
-				throw new DMPControllerException("Couldn't export data from database. Received status code '" + responseFromGraph.getStatus()
-						+ "' from database endpoint.");
-
-		}
 		return responseToRequester;
 
 	}
@@ -195,7 +163,8 @@ public class RDFResource {
 
 		final InputStream result = response.readEntity(InputStream.class);
 
-		return Response.ok(result, formatType).header(CONTENT_DISPOSITION, "attachment; filename*=UTF-8''rdf_export." + fileExtension).build();
+		return Response.ok(result, formatType).header(ExportUtils.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''rdf_export." + fileExtension)
+				.build();
 	}
 
 	private Client client() {
