@@ -87,6 +87,12 @@ public class RDFResourceTest extends ResourceTest {
 	}
 
 	@Test
+	public void testExportAllDefaultFormat() throws Exception {
+
+		exportInternal("", HttpStatus.SC_OK, Lang.NQUADS, ".nq");
+	}
+
+	@Test
 	public void testExportUnsupportedFormat() throws Exception {
 
 		exportInternal(MediaTypeUtil.RDF_XML, HttpStatus.SC_NOT_ACCEPTABLE, null, null);
