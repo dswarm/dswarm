@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -93,6 +94,12 @@ public class RDFResourceTest extends ResourceTest {
 	}
 
 	@Test
+	public void testExportAllNoFormatParameter() throws Exception {
+
+		exportInternal(null, HttpStatus.SC_OK, Lang.NQUADS, ".nq");
+	}
+
+	@Test
 	public void testExportUnsupportedFormat() throws Exception {
 
 		exportInternal(MediaTypeUtil.RDF_XML, HttpStatus.SC_NOT_ACCEPTABLE, null, null);
@@ -134,7 +141,14 @@ public class RDFResourceTest extends ResourceTest {
 		loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 
 		// request the export from BE proxy endpoint
-		final Response response = target("/getall").queryParam("format", requestedExportLanguage).request().get(Response.class);
+		
+		WebTarget targetBE = target("/getall");
+		// be able to simulate absence of query parameter
+		if (requestedExportLanguage != null) {
+			targetBE = targetBE.queryParam("format", requestedExportLanguage);
+		}
+
+		final Response response = targetBE.request().get(Response.class);
 
 		Assert.assertEquals("expected " + expectedHTTPResponseCode, expectedHTTPResponseCode, response.getStatus());
 

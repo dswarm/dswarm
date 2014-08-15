@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -749,7 +750,14 @@ public class DataModelsResourceTest extends
 	@Test
 	public void testExportDataModelAsN3() throws Exception {
 
-		testExportInternal(MediaTypeUtil.N3, HttpStatus.SC_OK, Lang.N3, "UTF-8.n3", ".n3");
+		// prepare: load data to mysql and graph db
+		// SR hint: the resource's description needs to be "this is a description" since this is hard coded in
+		// org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils.uploadResource(File, Resource)
+		// should be refactored some day
+		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
+		DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
+
+		testExportInternal(MediaTypeUtil.N3, datamodelAtMostcsv.getId(), HttpStatus.SC_OK, Lang.N3, "UTF-8.n3", ".n3");
 
 	}
 
@@ -761,7 +769,14 @@ public class DataModelsResourceTest extends
 	@Test
 	public void testExportDataModelAsRDF_XML() throws Exception {
 
-		testExportInternal(MediaTypeUtil.RDF_XML, HttpStatus.SC_OK, Lang.RDFXML, "UTF-8.n3", ".rdf");
+		// prepare: load data to mysql and graph db
+		// SR hint: the resource's description needs to be "this is a description" since this is hard coded in
+		// org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils.uploadResource(File, Resource)
+		// should be refactored some day
+		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
+		DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
+
+		testExportInternal(MediaTypeUtil.RDF_XML, datamodelAtMostcsv.getId(), HttpStatus.SC_OK, Lang.RDFXML, "UTF-8.n3", ".rdf");
 
 	}
 
@@ -772,8 +787,14 @@ public class DataModelsResourceTest extends
 	 */
 	@Test
 	public void testExportDataModelAsN_QUADS() throws Exception {
+		// prepare: load data to mysql and graph db
+		// SR hint: the resource's description needs to be "this is a description" since this is hard coded in
+		// org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils.uploadResource(File, Resource)
+		// should be refactored some day
+		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
+		DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
-		testExportInternal(MediaTypeUtil.N_QUADS, HttpStatus.SC_OK, Lang.NQUADS, "UTF-8.n3", ".nq");
+		testExportInternal(MediaTypeUtil.N_QUADS, datamodelAtMostcsv.getId(), HttpStatus.SC_OK, Lang.NQUADS, "UTF-8.n3", ".nq");
 
 	}
 
@@ -784,8 +805,14 @@ public class DataModelsResourceTest extends
 	 */
 	@Test
 	public void testExportDataModelAsTRIG() throws Exception {
+		// prepare: load data to mysql and graph db
+		// SR hint: the resource's description needs to be "this is a description" since this is hard coded in
+		// org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils.uploadResource(File, Resource)
+		// should be refactored some day
+		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
+		DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
-		testExportInternal(MediaTypeUtil.TRIG, HttpStatus.SC_OK, Lang.TRIG, "UTF-8.n3", ".trig");
+		testExportInternal(MediaTypeUtil.TRIG, datamodelAtMostcsv.getId(), HttpStatus.SC_OK, Lang.TRIG, "UTF-8.n3", ".trig");
 
 	}
 
@@ -796,21 +823,66 @@ public class DataModelsResourceTest extends
 	 */
 	@Test
 	public void testExportDataModelAsTURTLE() throws Exception {
+		// prepare: load data to mysql and graph db
+		// SR hint: the resource's description needs to be "this is a description" since this is hard coded in
+		// org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils.uploadResource(File, Resource)
+		// should be refactored some day
+		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
+		DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
-		testExportInternal(MediaTypeUtil.TURTLE, HttpStatus.SC_OK, Lang.TURTLE, "UTF-8.n3", ".ttl");
+		testExportInternal(MediaTypeUtil.TURTLE, datamodelAtMostcsv.getId(), HttpStatus.SC_OK, Lang.TURTLE, "UTF-8.n3", ".ttl");
 
 	}
 
 	/**
 	 * Test export of a single graph to default format that is chosen by graph db in case no format is requested (i.e. empty
-	 * accept parameter)
+	 * format parameter)
 	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void testExportDataModelAsDefaultFormat() throws Exception {
+	public void testExportDataModelAsEmptyFormatParameter() throws Exception {
+		// prepare: load data to mysql and graph db
+		// SR hint: the resource's description needs to be "this is a description" since this is hard coded in
+		// org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils.uploadResource(File, Resource)
+		// should be refactored some day
+		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
+		DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
-		testExportInternal("", HttpStatus.SC_OK, Lang.NQUADS, "UTF-8.n3", ".nq");
+		testExportInternal("", datamodelAtMostcsv.getId(), HttpStatus.SC_OK, Lang.NQUADS, "UTF-8.n3", ".nq");
+
+	}
+
+	/**
+	 * Test export of a single graph to default format that is chosen by graph db in case no format is requested (i.e. no format
+	 * parameter is provided)
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testExportDataModelAsMissingFormatParameter() throws Exception {
+		// prepare: load data to mysql and graph db
+		// SR hint: the resource's description needs to be "this is a description" since this is hard coded in
+		// org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils.uploadResource(File, Resource)
+		// should be refactored some day
+		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
+		DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
+
+		testExportInternal(null, datamodelAtMostcsv.getId(), HttpStatus.SC_OK, Lang.NQUADS, "UTF-8.n3", ".nq");
+
+	}
+
+	/**
+	 * Test export of a single graph that is not existing in database. a HTTP 404 (not found) response is expected.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testExportDataModelFromNotExistingDatamodel() throws Exception {
+
+		// hint do not load any data
+
+		testExportInternal(MediaTypeUtil.N_QUADS, Long.MAX_VALUE, HttpStatus.SC_NOT_FOUND, Lang.NQUADS, "UTF-8.n3", ".nq");
 
 	}
 
@@ -822,8 +894,14 @@ public class DataModelsResourceTest extends
 	 */
 	@Test
 	public void testExportDataModelAsUnsupportedFormat() throws Exception {
+		// prepare: load data to mysql and graph db
+		// SR hint: the resource's description needs to be "this is a description" since this is hard coded in
+		// org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils.uploadResource(File, Resource)
+		// should be refactored some day
+		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
+		DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
-		testExportInternal(MediaType.TEXT_PLAIN, HttpStatus.SC_NOT_ACCEPTABLE, null, null, null);
+		testExportInternal(MediaType.TEXT_PLAIN, datamodelAtMostcsv.getId(), HttpStatus.SC_NOT_ACCEPTABLE, null, null, null);
 
 	}
 
@@ -835,8 +913,14 @@ public class DataModelsResourceTest extends
 	 */
 	@Test
 	public void testExportDataModelAsRandomFormat() throws Exception {
+		// prepare: load data to mysql and graph db
+		// SR hint: the resource's description needs to be "this is a description" since this is hard coded in
+		// org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils.uploadResource(File, Resource)
+		// should be refactored some day
+		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
+		DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
-		testExportInternal("khlav/kalash", HttpStatus.SC_NOT_ACCEPTABLE, null, null, null);
+		testExportInternal("khlav/kalash", datamodelAtMostcsv.getId(), HttpStatus.SC_NOT_ACCEPTABLE, null, null, null);
 
 	}
 
@@ -848,6 +932,7 @@ public class DataModelsResourceTest extends
 	 * 
 	 * @param requestedExportLanguage the serialization format neo4j should export the data to. (this value is used as accept
 	 *            header arg to query neo4j)
+	 * @param datamodelID identifier of the datamodel to be exported
 	 * @param provenanceURI identifier of the graph to export
 	 * @param expectedHTTPResponseCode the expected HTTP status code of the response, e.g. {@link HttpStatus.SC_OK} or
 	 *            {@link HttpStatus.SC_NOT_ACCEPTABLE}
@@ -860,26 +945,28 @@ public class DataModelsResourceTest extends
 	 *            {@link HttpStatus.SC_OK})
 	 * @throws IOException
 	 */
-	private void testExportInternal(String requestedExportLanguage, int expectedHTTPResponseCode, Lang expectedExportLanguage,
+	private void testExportInternal(String requestedExportLanguage, long datamodelID, int expectedHTTPResponseCode, Lang expectedExportLanguage,
 			String expectedModelFile, String expectedFileEnding) throws Exception {
-		// prepare: load data to mysql and graph db
-		// SR hint: the resource's description needs to be "this is a description" since this is hard coded in
-		// org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils.uploadResource(File, Resource)
-		// should be refactored some day
-		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
-		DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
 		// FIXME even though an export of data containing UTF-8 characters is requested, the exported data is not checked for
 		// encoding issues yet
-		String datamodelId = String.valueOf(datamodelUTF8csv.getId());
+		String datamodelId = String.valueOf(datamodelID);
 
 		// request export of datamodelUTF8csv
-		final Response response = target(datamodelId, "export").queryParam("format", requestedExportLanguage).request().get(Response.class);
+
+		WebTarget targetBE = target(datamodelId, "export");
+		// be able to simulate absence of query parameter
+		if (requestedExportLanguage != null) {
+			targetBE = targetBE.queryParam("format", requestedExportLanguage);
+		}
+
+		final Response response = targetBE.request().get(Response.class);
 
 		Assert.assertEquals("expected " + expectedHTTPResponseCode, expectedHTTPResponseCode, response.getStatus());
 
-		// in case we requested an unsupported format, stop processing here since there is no exported data to verify
-		if (expectedHTTPResponseCode == HttpStatus.SC_NOT_ACCEPTABLE) {
+		// in case we requested an unsupported format or not existing data model, stop processing here since there is no exported
+		// data to verify
+		if (expectedHTTPResponseCode == HttpStatus.SC_NOT_FOUND || expectedHTTPResponseCode == HttpStatus.SC_NOT_ACCEPTABLE) {
 			return;
 		}
 
