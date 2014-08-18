@@ -281,6 +281,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 	// SR TODO removing of @Produces should result in accepting any requested format (accept header?) Is this what we want as a
 	// proxy endpoint - let the graph endpoint decide which formats are accepted
 	// @Produces({ MediaTypeUtil.N_QUADS, MediaTypeUtil.RDF_XML, MediaTypeUtil.TRIG, MediaTypeUtil.TURTLE, MediaTypeUtil.N3 })
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public Response exportForDownload(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final Long id,
 			@QueryParam("format") String format) throws DMPControllerException {
 

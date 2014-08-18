@@ -77,6 +77,7 @@ public class RDFResource {
 	// SR TODO removing of @Produces should result in accepting any requested format (accept header?) Is this what we want as a
 	// proxy endpoint - let the graph endpoint decide which formats are accepted
 	//	@Produces({ MediaTypeUtil.N_QUADS, MediaTypeUtil.TRIG })
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public Response exportAllRDFForDownload(@QueryParam("format") final String format)
 			throws DMPControllerException {
 
