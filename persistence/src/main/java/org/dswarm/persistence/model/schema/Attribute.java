@@ -62,7 +62,7 @@ public class Attribute extends AdvancedDMPJPAObject {
 		super(uriArg, name);
 	}
 
-	// public Set<AttributePath> getAttributePaths() {
+	// public Set<AttributePath> getUniqueAttributePaths() {
 	//
 	// return attributePaths;
 	// }

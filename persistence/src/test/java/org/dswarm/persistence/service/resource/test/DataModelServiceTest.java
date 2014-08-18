@@ -187,9 +187,9 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, 
 		Assert.assertNotNull("the updated data model shouldn't be null", updatedDataModel);
 		Assert.assertNotNull("the update data model id shouldn't be null", updatedDataModel.getId());
 		Assert.assertNotNull("the schema of the updated data model shouldn't be null", updatedDataModel.getSchema());
-		Assert.assertNotNull("the schema's attribute paths of the updated schema shouldn't be null", updatedDataModel.getSchema().getAttributePaths());
-		Assert.assertEquals("the schema's attribute paths size are not equal", schema.getAttributePaths(), updatedDataModel.getSchema()
-				.getAttributePaths());
+		Assert.assertNotNull("the schema's attribute paths of the updated schema shouldn't be null", updatedDataModel.getSchema().getUniqueAttributePaths());
+		Assert.assertEquals("the schema's attribute paths size are not equal", schema.getUniqueAttributePaths(), updatedDataModel.getSchema()
+				.getUniqueAttributePaths());
 		Assert.assertEquals("the attribute path '" + attributePath1.getId() + "' of the schema are not equal",
 				schema.getAttributePath(attributePath1.getId()), updatedDataModel.getSchema().getAttributePath(attributePath1.getId()));
 		Assert.assertNotNull("the attribute path's attributes of the attribute path '" + attributePath1.getId()

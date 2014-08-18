@@ -46,7 +46,7 @@ public class AttributeService extends AdvancedDMPJPAService<ProxyAttribute, Attr
 			throws DMPPersistenceException {
 
 		final String name = object.getName();
-		// final Set<AttributePath> attributePaths = object.getAttributePaths();
+		// final Set<AttributePath> attributePaths = object.getUniqueAttributePaths();
 
 		updateObject.setName(name);
 		// updateObject.setAttributePaths(attributePaths);

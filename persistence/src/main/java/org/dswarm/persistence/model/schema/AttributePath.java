@@ -36,7 +36,7 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * An attribute path is an ordered list of {@link Attribute}s.
- * 
+ *
  * @author tgaengler
  */
 @XmlRootElement
@@ -62,8 +62,7 @@ public class AttributePath extends DMPJPAObject {
 	@Access(AccessType.FIELD)
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "ATTRIBUTE_PATHS_ATTRIBUTES", joinColumns = { @JoinColumn(name = "ATTRIBUTE_PATH_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "ATTRIBUTE_ID", referencedColumnName = "ID") })
-	private Set<Attribute>			attributes;																	// =
-	// Sets.newCopyOnWriteArraySet();
+	private Set<Attribute>			attributes;
 
 	/**
 	 * all attributes of this attribute path as ordered list.

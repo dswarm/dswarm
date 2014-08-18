@@ -3,7 +3,6 @@ package org.dswarm.controller.resources.schema;
 import java.io.IOException;
 import java.net.URI;
 import java.util.LinkedList;
-import java.util.Set;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -367,7 +366,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 		super.prepareObjectForUpdate(objectFromJSON, object);
 
-		final Set<AttributePath> attributePaths = objectFromJSON.getAttributePaths();
+		final List<AttributePath> attributePaths = objectFromJSON.getAttributePaths();
 
 		object.setAttributePaths(attributePaths);
 

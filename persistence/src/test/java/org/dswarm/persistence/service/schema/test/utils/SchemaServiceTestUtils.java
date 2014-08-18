@@ -45,14 +45,14 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 
 		super.compareObjects(expectedSchema, actualSchema);
 
-		if (expectedSchema.getAttributePaths() == null || expectedSchema.getAttributePaths().isEmpty()) {
+		if (expectedSchema.getUniqueAttributePaths() == null || expectedSchema.getUniqueAttributePaths().isEmpty()) {
 
-			final boolean actualSchemaHasNoAttributePaths = (actualSchema.getAttributePaths() == null || actualSchema.getAttributePaths().isEmpty());
+			final boolean actualSchemaHasNoAttributePaths = (actualSchema.getUniqueAttributePaths() == null || actualSchema.getUniqueAttributePaths().isEmpty());
 			Assert.assertTrue("the actual schema '" + actualSchema.getId() + "' shouldn't have attribute paths", actualSchemaHasNoAttributePaths);
 
 		} else { // !null && !empty
 
-			final Set<AttributePath> actualAttributePaths = actualSchema.getAttributePaths();
+			final Set<AttributePath> actualAttributePaths = actualSchema.getUniqueAttributePaths();
 
 			Assert.assertNotNull("attribute paths of actual schema '" + actualSchema.getId() + "' shouldn't be null", actualAttributePaths);
 			Assert.assertFalse("attribute paths of actual schema '" + actualSchema.getId() + "' shouldn't be empty", actualAttributePaths.isEmpty());
@@ -64,7 +64,7 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 				actualAttributePathsMap.put(actualAttributePath.getId(), actualAttributePath);
 			}
 
-			attributePathsResourceTestUtils.compareObjects(expectedSchema.getAttributePaths(), actualAttributePathsMap);
+			attributePathsResourceTestUtils.compareObjects(expectedSchema.getUniqueAttributePaths(), actualAttributePathsMap);
 		}
 
 		if (expectedSchema.getRecordClass() == null) {
@@ -108,7 +108,7 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 		// collect attribute paths of attributes that were created via processing the transformation result
 		if (outputDataModelSchema != null) {
 
-			final Set<AttributePath> outputDataModelSchemaAttributePaths = outputDataModelSchema.getAttributePaths();
+			final Set<AttributePath> outputDataModelSchemaAttributePaths = outputDataModelSchema.getUniqueAttributePaths();
 
 			if (outputDataModelSchemaAttributePaths != null) {
 
@@ -150,7 +150,7 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 
 		super.prepareObjectForUpdate(objectWithUpdates, object);
 
-		final Set<AttributePath> attributePaths = objectWithUpdates.getAttributePaths();
+		final Set<AttributePath> attributePaths = objectWithUpdates.getUniqueAttributePaths();
 
 		object.setAttributePaths(attributePaths);
 

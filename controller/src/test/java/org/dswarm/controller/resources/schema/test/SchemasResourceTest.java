@@ -246,7 +246,7 @@ public class SchemasResourceTest extends
 
 		Assert.assertNotNull(updatedSchema);
 
-		final Set<AttributePath> attributePaths = updatedSchema.getAttributePaths();
+		final Set<AttributePath> attributePaths = updatedSchema.getUniqueAttributePaths();
 
 		Assert.assertNotNull(attributePaths);
 
@@ -324,7 +324,7 @@ public class SchemasResourceTest extends
 		final String attributeName1 = "attribute one";
 		final String attributeUri1 = SchemaUtils.mintAttributeURI(attributeName1, schemaNamespaceURI);
 
-		final AttributePath baseAttributePath = schema.getAttributePaths().iterator().next();
+		final AttributePath baseAttributePath = schema.getUniqueAttributePaths().iterator().next();
 		final Long baseAttributePathId = baseAttributePath.getId();
 
 		final Map<String, String> jsonMap = Maps.newHashMap();
@@ -355,7 +355,7 @@ public class SchemasResourceTest extends
 
 		Assert.assertNotNull(updatedSchema);
 
-		final Set<AttributePath> attributePaths = updatedSchema.getAttributePaths();
+		final Set<AttributePath> attributePaths = updatedSchema.getUniqueAttributePaths();
 
 		Assert.assertNotNull(attributePaths);
 
@@ -443,7 +443,7 @@ public class SchemasResourceTest extends
 	@Override
 	protected Schema updateObject(final Schema persistedSchema) throws Exception {
 
-		final Set<AttributePath> persistedAttributePaths = persistedSchema.getAttributePaths();
+		final Set<AttributePath> persistedAttributePaths = persistedSchema.getUniqueAttributePaths();
 		final AttributePath firstAttributePath = persistedAttributePaths.iterator().next();
 
 		final String attributeJSONString = DMPPersistenceUtil.getResourceAsString("attribute3.json");

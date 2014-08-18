@@ -220,7 +220,7 @@ public class ProjectWithNewEntitiesResourceTest extends
 
 			if (inputSchema != null) {
 
-				final Set<AttributePath> inputAttributePaths = inputSchema.getAttributePaths();
+				final Set<AttributePath> inputAttributePaths = inputSchema.getUniqueAttributePaths();
 
 				if (inputAttributePaths != null) {
 
@@ -259,7 +259,7 @@ public class ProjectWithNewEntitiesResourceTest extends
 
 			if (outputSchema != null) {
 
-				final Set<AttributePath> outputAttributePaths = outputSchema.getAttributePaths();
+				final Set<AttributePath> outputAttributePaths = outputSchema.getUniqueAttributePaths();
 
 				if (outputAttributePaths != null) {
 

@@ -142,7 +142,7 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 
 		if (schema != null) {
 
-			final Set<AttributePath> attributePathsToDelete = schema.getAttributePaths();
+			final Set<AttributePath> attributePathsToDelete = schema.getUniqueAttributePaths();
 
 			if (attributePaths != null) {
 
@@ -256,7 +256,7 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 
 		Assert.assertNotNull(schema);
 
-		final Set<AttributePath> sattributePaths = schema.getAttributePaths();
+		final Set<AttributePath> sattributePaths = schema.getUniqueAttributePaths();
 
 		Assert.assertNotNull(sattributePaths);
 
@@ -283,7 +283,7 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 
 		final Clasz recordClass = schema.getRecordClass();
 
-		final Set<AttributePath> attributePathsToDelete = schema.getAttributePaths();
+		final Set<AttributePath> attributePathsToDelete = schema.getUniqueAttributePaths();
 
 		if (attributePaths != null) {
 
