@@ -261,7 +261,7 @@ public class TasksResource {
 	}
 
 	/**
-	 * This endpoint executes the task that is given via its JSON representation and returns the result of the task execution.
+	 * This endpoint returns the metamorph script of the given task as XML.
 	 * 
 	 * @param jsonObjectString a JSON representation of one task
 	 * @return the result of the task execution

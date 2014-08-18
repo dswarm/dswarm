@@ -645,7 +645,7 @@ public class ResourcesResourceTest extends ResourceTest {
 		final Response response = target().request(MediaType.MULTIPART_FORM_DATA_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
 				.post(Entity.entity(form, MediaType.MULTIPART_FORM_DATA));
 
-		Assert.assertEquals("200 OK was expected", 201, response.getStatus());
+		Assert.assertEquals("201 CREATED was expected", 201, response.getStatus());
 
 		final String responseResourceString = response.readEntity(String.class);
 

@@ -92,11 +92,6 @@ public class InternalGDMGraphService implements InternalModelService {
 
 	private final Provider<AttributeService>		attributeService;
 
-	/**
-	 * The data model graph URI pattern
-	 */
-	private static final String						DATA_MODEL_GRAPH_URI_PATTERN	= "http://data.slub-dresden.de/datamodel/{datamodelid}/data";
-
 	private final String							graphEndpoint;
 
 	/**
@@ -154,7 +149,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			throw new DMPPersistenceException("real model that should be added to DB shouldn't be null");
 		}
 
-		final String resourceGraphURI = InternalGDMGraphService.DATA_MODEL_GRAPH_URI_PATTERN.replace("{datamodelid}", dataModelId.toString());
+		final String resourceGraphURI = GDMUtil.getDataModelGraphURI(dataModelId);
 
 		final DataModel dataModel = addRecordClass(dataModelId, gdmModel.getRecordClassURI());
 
@@ -206,7 +201,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			throw new DMPPersistenceException("data model id shouldn't be null");
 		}
 
-		final String resourceGraphURI = InternalGDMGraphService.DATA_MODEL_GRAPH_URI_PATTERN.replace("{datamodelid}", dataModelId.toString());
+		final String resourceGraphURI = GDMUtil.getDataModelGraphURI(dataModelId);
 
 		// retrieve record class uri from data model schema
 		final DataModel dataModel = dataModelService.get().getObject(dataModelId);
@@ -301,7 +296,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			throw new DMPPersistenceException("data model id shouldn't be null");
 		}
 
-		final String resourceGraphURI = InternalGDMGraphService.DATA_MODEL_GRAPH_URI_PATTERN.replace("{datamodelid}", dataModelId.toString());
+		final String resourceGraphURI = GDMUtil.getDataModelGraphURI(dataModelId);
 
 		// TODO: delete DataModel object from DB here as well?
 
@@ -313,6 +308,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		// TODO
 
 	}
+
 
 	/**
 	 * {@inheritDoc}

@@ -3,8 +3,10 @@ package org.dswarm.controller.resources.resource;
 import java.util.Iterator;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -12,6 +14,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -28,9 +33,11 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.dswarm.common.MediaTypeUtil;
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.eventbus.CSVConverterEvent;
 import org.dswarm.controller.eventbus.CSVConverterEventRecorder;
@@ -42,6 +49,7 @@ import org.dswarm.controller.eventbus.XMLSchemaEvent;
 import org.dswarm.controller.eventbus.XMLSchemaEventRecorder;
 import org.dswarm.controller.resources.ExtendedBasicDMPResource;
 import org.dswarm.controller.resources.resource.utils.DataModelsResourceUtils;
+import org.dswarm.controller.resources.resource.utils.ExportUtils;
 import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
 import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.controller.utils.DataModelUtil;
@@ -52,6 +60,7 @@ import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
 import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.resource.DataModelService;
+import org.dswarm.persistence.util.GDMUtil;
 
 /**
  * A resource (controller service) for {@link DataModel}s.
@@ -75,6 +84,9 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 	private final Provider<CSVConverterEventRecorder>	csvConverterEventRecorderProvider;
 	private final Provider<XMLConverterEventRecorder>	xmlConvertEventRecorderProvider;
 
+	// this is likely to be http://localhost:7474/graph
+	private final String								graphEndpoint;
+
 	/**
 	 * Creates a new resource (controller service) for {@link DataModel}s with the provider of the data model persistence service,
 	 * the object mapper, metrics registry, event bus provider and data model util.
@@ -93,7 +105,8 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 			final Provider<SchemaEventRecorder> schemaEventRecorderProviderArg,
 			final Provider<XMLSchemaEventRecorder> xmlSchemaEventRecorderProviderArg,
 			final Provider<CSVConverterEventRecorder> csvConverterEventRecorderProviderArg,
-			final Provider<XMLConverterEventRecorder> xmlConverterEventRecorderProviderArg) throws DMPControllerException {
+			final Provider<XMLConverterEventRecorder> xmlConverterEventRecorderProviderArg,
+			@Named("dswarm.db.graph.endpoint") final String graphEndpointArg) throws DMPControllerException {
 
 		super(utilsFactory.reset().get(DataModelsResourceUtils.class), dmpStatusArg);
 
@@ -102,6 +115,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 		xmlSchemaEventRecorderProvider = xmlSchemaEventRecorderProviderArg;
 		csvConverterEventRecorderProvider = csvConverterEventRecorderProviderArg;
 		xmlConvertEventRecorderProvider = xmlConverterEventRecorderProviderArg;
+		graphEndpoint = graphEndpointArg;
 	}
 
 	/**
@@ -249,6 +263,47 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 
 		// dmpStatus.stop(context);
 		return buildResponse(jsonString);
+	}
+
+	/**
+	 * @param id
+	 * @param format serialization format the data model should be serialized in, injected from accept header field
+	 * @return a single data model, serialized in exportLanguage
+	 * @throws DMPControllerException
+	 */
+	@ApiOperation(value = "exports a selected data model from the graph DB in the requested RDF serialisation format", notes = "Returns exported data in the requested RDF serialisation format.")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "export was successfully processed"),
+			@ApiResponse(code = 404, message = "could not find a data model for the given id"),
+			@ApiResponse(code = 406, message = "requested export format is not supported"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@GET
+	@Path("/{id}/export")
+	// SR TODO removing of @Produces should result in accepting any requested format (accept header?) Is this what we want as a
+	// proxy endpoint - let the graph endpoint decide which formats are accepted
+	// @Produces({ MediaTypeUtil.N_QUADS, MediaTypeUtil.RDF_XML, MediaTypeUtil.TRIG, MediaTypeUtil.TURTLE, MediaTypeUtil.N3 })
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	public Response exportForDownload(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final Long id,
+			@QueryParam("format") String format) throws DMPControllerException {
+
+		// check if id is present, return 404 if not
+		final DataModelService persistenceService = pojoClassResourceUtils.getPersistenceService();
+		final DataModel freshDataModel = persistenceService.getObject(id);
+		if (freshDataModel == null) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
+
+		// construct provenanceURI from data model id
+		final String provenanceURI = GDMUtil.getDataModelGraphURI(id);
+
+		LOG.debug("Forwarding to graph db: request to export rdf of datamodel with id \"" + id + "\" to " + format);
+
+		// send the request to graph DB
+		final WebTarget target = target("/export");
+		final Response responseFromGraph = target.queryParam("provenanceuri", provenanceURI).request().accept(format).get(Response.class);
+
+		Response responseToRequester = ExportUtils.processGraphDBResponseInternal(responseFromGraph);
+
+		return responseToRequester;
 	}
 
 	/**
@@ -417,4 +472,29 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 
 		return object;
 	}
+
+	private Client client() {
+
+		final ClientBuilder builder = ClientBuilder.newBuilder();
+
+		return builder.register(MultiPartFeature.class).build();
+	}
+
+	private WebTarget target() {
+
+		return client().target(graphEndpoint).path(RDFResource.resourceIdentifier);
+	}
+
+	private WebTarget target(final String... path) {
+
+		WebTarget target = target();
+
+		for (final String p : path) {
+
+			target = target.path(p);
+		}
+
+		return target;
+	}
+
 }

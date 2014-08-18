@@ -71,7 +71,7 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 			final Response response2 = target(String.valueOf(responseResource.getId()), "/configurations").request(MediaType.APPLICATION_JSON_TYPE)
 					.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(configurationJSON));
 
-			Assert.assertEquals("201 Created was expected", 201, response2.getStatus());
+			Assert.assertEquals("201 CREATED was expected", 201, response2.getStatus());
 
 			final String responseConfigurationJSON = response2.readEntity(String.class);
 
@@ -108,6 +108,10 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 	public Resource uploadResource(final File resourceFile, final Resource expectedResource) throws Exception {
 
 		final FormDataMultiPart form = new FormDataMultiPart();
+
+		// SR FIXME: why do we set this to hard coded values here? This leads to test failures if expectedResource does not
+		// contain the same name values, i.e. when generating test data, one has to know that values in expectedResource must be
+		// set to these hard coded values.
 		form.field("name", resourceFile.getName());
 		form.field("filename", resourceFile.getName());
 		form.field("description", "this is a description");
@@ -116,7 +120,7 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 		final Response response = target().request(MediaType.MULTIPART_FORM_DATA_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
 				.post(Entity.entity(form, MediaType.MULTIPART_FORM_DATA));
 
-		Assert.assertEquals("200 OK was expected", 201, response.getStatus());
+		Assert.assertEquals("201 CREATED was expected", 201, response.getStatus());
 
 		final String responseResourceString = response.readEntity(String.class);
 
@@ -136,7 +140,7 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 
 		final String responseConfigurationJSON = response.readEntity(String.class);
 
-		Assert.assertEquals("201 Created was expected", 201, response.getStatus());
+		Assert.assertEquals("201 CREATED was expected", 201, response.getStatus());
 		Assert.assertNotNull("response configuration JSON shouldn't be null", responseConfigurationJSON);
 
 		final Configuration responseConfiguration = objectMapper.readValue(responseConfigurationJSON, Configuration.class);
