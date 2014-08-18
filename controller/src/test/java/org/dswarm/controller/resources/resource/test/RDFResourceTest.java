@@ -20,6 +20,7 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,15 +65,18 @@ public class RDFResourceTest extends ResourceTest {
 		initObjects();
 	}
 
+	
+	
 	/**
 	 * reset mysql and graph db
-	 * 
-	 * @throws DMPPersistenceException
+	 * @throws Exception 
 	 */
 	@After
-	public void tearDown2() throws DMPPersistenceException {
+	public void tearDown2() throws Exception {
 		maintainDBService.initDB();
 		InternalGDMGraphServiceTestUtils.cleanGraphDB();
+		restartServer();
+		initObjects();
 	}
 
 	@Test

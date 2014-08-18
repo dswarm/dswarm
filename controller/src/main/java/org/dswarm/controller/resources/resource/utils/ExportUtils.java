@@ -16,6 +16,12 @@ public class ExportUtils {
 
 	public static final String	CONTENT_DISPOSITION	= "Content-Disposition";
 
+
+	protected ExportUtils() {
+		
+	}
+	
+	
 	/**
 	 * Process a response received from graph db and prepare a new response to be sent to a requester by "forwarding" the graph db
 	 * resonse's content and Content-Disposition header
