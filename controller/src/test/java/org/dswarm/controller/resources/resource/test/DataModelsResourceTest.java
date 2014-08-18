@@ -754,10 +754,13 @@ public class DataModelsResourceTest extends
 		// SR hint: the resource's description needs to be "this is a description" since this is hard coded in
 		// org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils.uploadResource(File, Resource)
 		// should be refactored some day
+
+		// FIXME even though the export of data containing UTF-8 characters is requested, the exported data is not checked for
+		// encoding issues yet
 		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 		DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
-		testExportInternal(MediaTypeUtil.N3, datamodelAtMostcsv.getId(), HttpStatus.SC_OK, MediaTypeUtil.N3_TYPE, "UTF-8.n3", ".n3");
+		testExportInternal(MediaTypeUtil.N3, datamodelUTF8csv.getId(), HttpStatus.SC_OK, MediaTypeUtil.N3_TYPE, "UTF-8.n3", ".n3");
 
 	}
 
@@ -776,7 +779,7 @@ public class DataModelsResourceTest extends
 		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 		DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
-		testExportInternal(MediaTypeUtil.RDF_XML, datamodelAtMostcsv.getId(), HttpStatus.SC_OK, MediaTypeUtil.RDF_XML_TYPE, "UTF-8.n3", ".rdf");
+		testExportInternal(MediaTypeUtil.RDF_XML, datamodelUTF8csv.getId(), HttpStatus.SC_OK, MediaTypeUtil.RDF_XML_TYPE, "UTF-8.n3", ".rdf");
 
 	}
 
@@ -794,7 +797,7 @@ public class DataModelsResourceTest extends
 		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 		DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
-		testExportInternal(MediaTypeUtil.N_QUADS, datamodelAtMostcsv.getId(), HttpStatus.SC_OK, MediaTypeUtil.N_QUADS_TYPE, "UTF-8.n3", ".nq");
+		testExportInternal(MediaTypeUtil.N_QUADS, datamodelUTF8csv.getId(), HttpStatus.SC_OK, MediaTypeUtil.N_QUADS_TYPE, "UTF-8.n3", ".nq");
 
 	}
 
@@ -812,7 +815,7 @@ public class DataModelsResourceTest extends
 		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 		DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
-		testExportInternal(MediaTypeUtil.TRIG, datamodelAtMostcsv.getId(), HttpStatus.SC_OK, MediaTypeUtil.TRIG_TYPE, "UTF-8.n3", ".trig");
+		testExportInternal(MediaTypeUtil.TRIG, datamodelUTF8csv.getId(), HttpStatus.SC_OK, MediaTypeUtil.TRIG_TYPE, "UTF-8.n3", ".trig");
 
 	}
 
@@ -830,7 +833,7 @@ public class DataModelsResourceTest extends
 		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 		DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
-		testExportInternal(MediaTypeUtil.TURTLE, datamodelAtMostcsv.getId(), HttpStatus.SC_OK, MediaTypeUtil.TURTLE_TYPE, "UTF-8.n3", ".ttl");
+		testExportInternal(MediaTypeUtil.TURTLE, datamodelUTF8csv.getId(), HttpStatus.SC_OK, MediaTypeUtil.TURTLE_TYPE, "UTF-8.n3", ".ttl");
 
 	}
 
@@ -849,7 +852,7 @@ public class DataModelsResourceTest extends
 		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 		DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
-		testExportInternal("", datamodelAtMostcsv.getId(), HttpStatus.SC_OK, MediaTypeUtil.N_QUADS_TYPE, "UTF-8.n3", ".nq");
+		testExportInternal("", datamodelUTF8csv.getId(), HttpStatus.SC_OK, MediaTypeUtil.N_QUADS_TYPE, "UTF-8.n3", ".nq");
 
 	}
 
@@ -868,7 +871,7 @@ public class DataModelsResourceTest extends
 		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 		DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
-		testExportInternal(null, datamodelAtMostcsv.getId(), HttpStatus.SC_OK, MediaTypeUtil.N_QUADS_TYPE, "UTF-8.n3", ".nq");
+		testExportInternal(null, datamodelUTF8csv.getId(), HttpStatus.SC_OK, MediaTypeUtil.N_QUADS_TYPE, "UTF-8.n3", ".nq");
 
 	}
 
@@ -948,12 +951,8 @@ public class DataModelsResourceTest extends
 	private void testExportInternal(final String requestedExportLanguage, final long datamodelID, final int expectedHTTPResponseCode,
 			final MediaType expectedExportMediaType, final String expectedModelFile, final String expectedFileEnding) throws Exception {
 
-		// FIXME even though an export of data containing UTF-8 characters is requested, the exported data is not checked for
-		// encoding issues yet
+		// request export of a data model
 		String datamodelId = String.valueOf(datamodelID);
-
-		// request export of datamodelUTF8csv
-
 		WebTarget targetBE = target(datamodelId, "export");
 		// be able to simulate absence of query parameter
 		if (requestedExportLanguage != null) {
@@ -999,6 +998,9 @@ public class DataModelsResourceTest extends
 		// read expected model from file
 		final com.hp.hpl.jena.rdf.model.Model expectedModel = RDFDataMgr.loadModel(expectedModelFile);
 		Assert.assertNotNull("expected model shouldn't be null", expectedModel);
+		
+		// compare models
+		Assert.assertEquals("models should have same number of statements.", expectedModel.size(), actualModel.size());
 
 		// this check can not be done because of generated UUIDs
 		// check if statements are the "same" (isomorphic, i.e. blank nodes may have different IDs)
