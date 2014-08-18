@@ -7,8 +7,10 @@ import java.io.InputStream;
 import java.net.URL;
 
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.jena.riot.RDFLanguages;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
 import com.hp.hpl.jena.query.Dataset;
@@ -68,13 +70,16 @@ public class RDFResourceTest extends ResourceTest {
 	
 	
 	/**
-	 * reset mysql and graph db
+	 * reset mysql and graph db; reset also jpa/hibernate cache 
 	 * @throws Exception 
 	 */
 	@After
 	public void tearDown2() throws Exception {
+		// clean up mysql and graph db
 		maintainDBService.initDB();
 		InternalGDMGraphServiceTestUtils.cleanGraphDB();
+		
+		// make sure jpa/hibernate does not cache some objects
 		restartServer();
 		initObjects();
 	}
@@ -82,25 +87,25 @@ public class RDFResourceTest extends ResourceTest {
 	@Test
 	public void testExportAllToNQuads() throws Exception {
 
-		exportInternal(MediaTypeUtil.N_QUADS, HttpStatus.SC_OK, Lang.NQUADS, ".nq");
+		exportInternal(MediaTypeUtil.N_QUADS, HttpStatus.SC_OK, MediaTypeUtil.N_QUADS_TYPE, ".nq");
 	}
 
 	@Test
 	public void testExportAllToTriG() throws Exception {
 
-		exportInternal(MediaTypeUtil.TRIG, HttpStatus.SC_OK, Lang.TRIG, ".trig");
+		exportInternal(MediaTypeUtil.TRIG, HttpStatus.SC_OK, MediaTypeUtil.TRIG_TYPE, ".trig");
 	}
 
 	@Test
 	public void testExportAllToDefaultFormat() throws Exception {
 
-		exportInternal("", HttpStatus.SC_OK, Lang.NQUADS, ".nq");
+		exportInternal("", HttpStatus.SC_OK, MediaTypeUtil.N_QUADS_TYPE, ".nq");
 	}
 
 	@Test
 	public void testExportAllNoFormatParameter() throws Exception {
 
-		exportInternal(null, HttpStatus.SC_OK, Lang.NQUADS, ".nq");
+		exportInternal(null, HttpStatus.SC_OK, MediaTypeUtil.N_QUADS_TYPE, ".nq");
 	}
 
 	@Test
@@ -125,14 +130,14 @@ public class RDFResourceTest extends ResourceTest {
 	 *            fallback of the endpoint.
 	 * @param expectedHTTPResponseCode the expected HTTP status code of the response, e.g. {@link HttpStatus.SC_OK} or
 	 *            {@link HttpStatus.SC_NOT_ACCEPTABLE}
-	 * @param expectedExportLanguage the language the exported data is expected to be serialized in. hint: language may differ
+	 * @param expectedExportMediaType the language the exported data is expected to be serialized in. hint: language may differ
 	 *            from {@code requestedExportLanguage} to test for default values. (ignored if expectedHTTPResponseCode !=
 	 *            {@link HttpStatus.SC_OK})
 	 * @param expectedFileEnding the expected file ending to be received from neo4j (ignored if expectedHTTPResponseCode !=
 	 *            {@link HttpStatus.SC_OK})
 	 * @throws Exception
 	 */
-	private void exportInternal(final String requestedExportLanguage, final int expectedHTTPResponseCode, final Lang expectedExportLanguage, final String expectedFileEnding)
+	private void exportInternal(final String requestedExportLanguage, final int expectedHTTPResponseCode, final MediaType expectedExportMediaType, final String expectedFileEnding)
 			throws Exception {
 
 		RDFResourceTest.LOG.debug("start test export all data to format \"" + requestedExportLanguage + "\"");
@@ -161,6 +166,10 @@ public class RDFResourceTest extends ResourceTest {
 			return;
 		}
 		
+		// check Content-Type header for correct content type (hint: even though we did not request the content type via an accept
+		// header field, we do want to get the content type specified in query parameter format) 
+		ExportTestUtils.checkContentTypeHeader(response, expectedExportMediaType.toString());
+		
 		// check Content-Disposition header for correct file ending
 		ExportTestUtils.checkContentDispositionHeader(response, expectedFileEnding);		
 
@@ -171,6 +180,7 @@ public class RDFResourceTest extends ResourceTest {
 		final InputStream stream = new ByteArrayInputStream(body.getBytes("UTF-8"));
 		Assert.assertNotNull("input stream (from body) shouldn't be null", stream);
  
+		final Lang expectedExportLanguage = RDFLanguages.contentTypeToLang(expectedExportMediaType.toString());
 		final Dataset dataset = DatasetFactory.createMem();
 		RDFDataMgr.read(dataset, stream, expectedExportLanguage);
 		Assert.assertNotNull("dataset from response shouldn't be null", dataset);
