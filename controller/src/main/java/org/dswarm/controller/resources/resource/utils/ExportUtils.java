@@ -27,7 +27,7 @@ public class ExportUtils {
 	 *             in case the status code of the response received from graph db is not 200 or 406<br />
 	 *             in case the Content-Disposition is not as expected
 	 */
-	public static Response processGraphDBResonseInternal(final Response responseFromGraph) throws DMPControllerException {
+	public static Response processGraphDBResponseInternal(final Response responseFromGraph) throws DMPControllerException {
 
 		Response responseToRequester;
 

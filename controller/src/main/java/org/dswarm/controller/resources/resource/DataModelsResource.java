@@ -282,7 +282,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 	// proxy endpoint - let the graph endpoint decide which formats are accepted
 	// @Produces({ MediaTypeUtil.N_QUADS, MediaTypeUtil.RDF_XML, MediaTypeUtil.TRIG, MediaTypeUtil.TURTLE, MediaTypeUtil.N3 })
 	public Response exportForDownload(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final Long id,
-			@QueryParam("format") @DefaultValue(MediaTypeUtil.N_QUADS) String format) throws DMPControllerException {
+			@QueryParam("format") String format) throws DMPControllerException {
 
 		// check if id is present, return 404 if not
 		final DataModelService persistenceService = pojoClassResourceUtils.getPersistenceService();
@@ -294,14 +294,13 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 		// construct provenanceURI from data model id
 		final String provenanceURI = GDMUtil.getDataModelGraphURI(id);
 
-		final MediaType formatType = MediaTypeUtil.getMediaType(format, MediaTypeUtil.N_QUADS_TYPE);
-		LOG.debug("Exporting rdf of datamodel with id \"" + id + "\" to " + formatType.toString());
+		LOG.debug("Forwarding to graph db: request to export rdf of datamodel with id \"" + id + "\" to " + format);
 
 		// send the request to graph DB
 		final WebTarget target = target("/export");
 		final Response responseFromGraph = target.queryParam("provenanceuri", provenanceURI).request().accept(format).get(Response.class);
 
-		Response responseToRequester = ExportUtils.processGraphDBResonseInternal(responseFromGraph);
+		Response responseToRequester = ExportUtils.processGraphDBResponseInternal(responseFromGraph);
 
 		return responseToRequester;
 	}

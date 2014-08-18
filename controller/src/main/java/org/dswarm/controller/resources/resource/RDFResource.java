@@ -70,69 +70,28 @@ public class RDFResource {
 	 */
 	@ApiOperation(value = "exports all data from the graph DB in the given RDF serialisation format", notes = "Returns exported data in the given RDF serialisation format.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "export was successfully processed"),
+			@ApiResponse(code = 406, message = "requested export format is not supported"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@GET
 	@Path("/getall")
 	// SR TODO removing of @Produces should result in accepting any requested format (accept header?) Is this what we want as a
 	// proxy endpoint - let the graph endpoint decide which formats are accepted
 	//	@Produces({ MediaTypeUtil.N_QUADS, MediaTypeUtil.TRIG })
-	public Response exportAllRDFForDownload(@QueryParam("format") @DefaultValue(MediaTypeUtil.N_QUADS) final String format)
+	public Response exportAllRDFForDownload(@QueryParam("format") final String format)
 			throws DMPControllerException {
 
-		final MediaType formatType = MediaTypeUtil.getMediaType(format, MediaTypeUtil.N_QUADS_TYPE);
-		RDFResource.LOG.debug("Exporting rdf data into " + formatType);
+		RDFResource.LOG.debug("Forwarding to graph db: Request to export all rdf data to " + format);
 
 		// send the request to graph DB
 		final WebTarget target = target("/getall");
 		final Response responseFromGraph = target.request().accept(format).get(Response.class);
 		
-		Response responseToRequester = ExportUtils.processGraphDBResonseInternal(responseFromGraph);
+		Response responseToRequester = ExportUtils.processGraphDBResponseInternal(responseFromGraph);
 
 		return responseToRequester;
 
 	}
-
 	
-	// SR FIXME: temporarily reactivated this endpoint to be compatible with current FE version
-	/**
-	 * @param id a data model identifier
-	 * @return
-	 */
-	@ApiOperation(value = "exports a selected data model from the graph DB in the given RDF serialisation format", notes = "Returns exported data in the given RDF serialisation format.")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "export was successfully processed"),
-			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
-	@GET
-	@Path("/export/{id}/")
-	@Produces({ MediaTypeUtil.N_QUADS, MediaTypeUtil.RDF_XML, MediaTypeUtil.TRIG, MediaTypeUtil.TURTLE, MediaTypeUtil.N3 })
-	public Response exportSingleRDFForDownload(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final Long id,
-			@QueryParam("format") @DefaultValue(MediaTypeUtil.N_QUADS) String format) throws DMPControllerException {
-
-		// construct provenanceURI from id
-		final String provenanceURI = GDMUtil.getDataModelGraphURI(id);
-
-		final MediaType formatType = MediaTypeUtil.getMediaType(format, MediaTypeUtil.N_QUADS_TYPE);
-
-		// get file extension
-		final String fileExtension = RDFLanguages.contentTypeToLang(formatType.toString()).getFileExtensions().get(0);
-		LOG.debug("Exporting rdf data to " + formatType.toString());
-
-		// forward the request to graph DB
-		final WebTarget target = target("/export");
-		final Response response = target.queryParam("format", format).queryParam("provenanceuri", provenanceURI).request().accept(format)
-				.get(Response.class);
-
-		if (response.getStatus() != 200) {
-
-			// TODO give more details? e.g. if the requested format is not supported?
-			throw new DMPControllerException("Couldn't export data from database. Received status code '" + response.getStatus()
-					+ "' from database endpoint.");
-		}
-
-		final InputStream result = response.readEntity(InputStream.class);
-
-		return Response.ok(result, formatType).header(ExportUtils.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''rdf_export." + fileExtension)
-				.build();
-	}
 
 	private Client client() {
 
