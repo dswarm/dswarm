@@ -76,19 +76,19 @@ public class RDFResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testExportAllNQuads() throws Exception {
+	public void testExportAllToNQuads() throws Exception {
 
 		exportInternal(MediaTypeUtil.N_QUADS, HttpStatus.SC_OK, Lang.NQUADS, ".nq");
 	}
 
 	@Test
-	public void testExportAllTriG() throws Exception {
+	public void testExportAllToTriG() throws Exception {
 
 		exportInternal(MediaTypeUtil.TRIG, HttpStatus.SC_OK, Lang.TRIG, ".trig");
 	}
 
 	@Test
-	public void testExportAllDefaultFormat() throws Exception {
+	public void testExportAllToDefaultFormat() throws Exception {
 
 		exportInternal("", HttpStatus.SC_OK, Lang.NQUADS, ".nq");
 	}
@@ -100,13 +100,13 @@ public class RDFResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testExportUnsupportedFormat() throws Exception {
+	public void testExportAllToUnsupportedFormat() throws Exception {
 
 		exportInternal(MediaTypeUtil.RDF_XML, HttpStatus.SC_NOT_ACCEPTABLE, null, null);
 	}
 
 	@Test
-	public void testExportRandomFormat() throws Exception {
+	public void testExportAllToRandomFormat() throws Exception {
 
 		exportInternal("khlav/kalash", HttpStatus.SC_NOT_ACCEPTABLE, null, null);
 	}
