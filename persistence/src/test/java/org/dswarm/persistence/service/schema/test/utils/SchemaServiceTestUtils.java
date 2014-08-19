@@ -38,7 +38,7 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 	 * Assert that both {@link Schema}ta have either no or equal attribute paths, see
 	 * {@link AttributePathServiceTestUtils#compareObjects(Set, Map)} for details.<br />
 	 * Assert that both {@link Schema}ta have either no or equal record classes, see
-	 * {@link ClaszServiceTestUtils#compareObjects(Clasz, Clasz)} for details.<br />
+	 * {@link ClaszServiceTestUtils#compareObjects(org.dswarm.persistence.model.DMPObject, org.dswarm.persistence.model.DMPObject)} for details.<br />
 	 */
 	@Override
 	public void compareObjects(final Schema expectedSchema, final Schema actualSchema) {
@@ -134,6 +134,7 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 
 		for (final AttributePath outputDataModelSchemaAttributePath : outputDataModelSchemaAttributePathRemovalCandidates) {
 
+			assert outputDataModelSchema != null;
 			outputDataModelSchema.removeAttributePath(outputDataModelSchemaAttributePath);
 		}
 

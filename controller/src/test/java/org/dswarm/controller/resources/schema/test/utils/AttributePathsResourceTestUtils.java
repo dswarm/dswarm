@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -51,7 +52,7 @@ public class AttributePathsResourceTestUtils extends
 
 					// note: one could even collect all attribute ids and replace them by their actual ones
 
-					if (attribute.getId().longValue() < 0) {
+					if (attribute.getId() < 0) {
 
 						attributeURIsFromDummyIdsFromObjectFromJSON.add(attribute.getUri());
 					}
@@ -101,16 +102,7 @@ public class AttributePathsResourceTestUtils extends
 		final List<Attribute> newAttributes = Lists.newLinkedList();
 
 		for (final Attribute attribute : attributePathAttributes) {
-
-			for (final Attribute newAttribute : attributes.values()) {
-
-				if (attribute.getUri().equals(newAttribute.getUri())) {
-
-					newAttributes.add(newAttribute);
-
-					break;
-				}
-			}
+			newAttributes.addAll(findAttribute(attributes.values(), attribute).asSet());
 		}
 
 		attributePath.setAttributePath(newAttributes);
@@ -122,5 +114,14 @@ public class AttributePathsResourceTestUtils extends
 		attributePaths.put(actualAttributePath.getId(), actualAttributePath);
 
 		return actualAttributePath;
+	}
+
+	private static Optional<Attribute> findAttribute(final Iterable<Attribute> haystack, final Attribute needle) {
+		for (final Attribute attribute : haystack) {
+			if (attribute.getUri().equals(needle.getUri())) {
+				return Optional.of(attribute);
+			}
+		}
+		return Optional.absent();
 	}
 }

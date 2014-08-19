@@ -152,9 +152,7 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 
 		final AttributePath attributePath = new AttributePath(attributePathArg);
 
-		final AttributePath updatedAttributePath = createObject(attributePath, attributePath);
-
-		return updatedAttributePath;
+		return createObject(attributePath, attributePath);
 	}
 
 	/**

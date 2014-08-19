@@ -303,7 +303,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		final ArrayNode actualJSONArray = objectMapper.readValue(actualResultJSONString, ArrayNode.class);
 		final ObjectNode actualElementInArray = (ObjectNode) actualJSONArray.get(0);
 		final String actualKeyInArray = actualElementInArray.fieldNames().next();
-		final ArrayNode actualKeyArray = (ArrayNode) actualElementInArray.get(actualKeyInArray);
+		final Iterable<JsonNode> actualKeyArray = actualElementInArray.get(actualKeyInArray);
 		ObjectNode actualJSON = null;
 
 		for (final JsonNode actualKeyArrayItem : actualKeyArray) {

@@ -311,9 +311,10 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 
 		final AttributePathServiceTestUtils attributePathServiceTestUtils = new AttributePathServiceTestUtils();
 
-		for (final AttributePath attributePath : attributePaths.values()) {
-
-			attributePathServiceTestUtils.deleteObject(attributePath);
+		if (attributePaths != null) {
+			for (final AttributePath attributePath : attributePaths.values()) {
+				attributePathServiceTestUtils.deleteObject(attributePath);
+			}
 		}
 
 		final AttributeServiceTestUtils attributeServiceTestUtils = new AttributeServiceTestUtils();
