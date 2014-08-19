@@ -1,7 +1,6 @@
 package org.dswarm.controller.resources.job.test;
 
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -9,6 +8,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -418,7 +418,7 @@ public class ProjectsResourceTest extends
 		updateMappingJSONString = objectMapper.writeValueAsString(expectedMapping);
 
 		updateMapping = mappingsResourceTestUtils.createObject(updateMappingJSONString, expectedMapping);
-		final Set<Mapping> updateMappings = new LinkedHashSet<Mapping>();
+		final Set<Mapping> updateMappings = Sets.newLinkedHashSet();
 		updateMappings.add(updateMapping);
 
 		persistedProject.setMappings(updateMappings);
@@ -554,8 +554,8 @@ public class ProjectsResourceTest extends
 			String attributePathJSONString = DMPPersistenceUtil.getResourceAsString(attributePathJSONFileName);
 			final AttributePath attributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
 
-			final LinkedList<Attribute> attributes = attributePath.getAttributePath();
-			final LinkedList<Attribute> newAttributes = Lists.newLinkedList();
+			final List<Attribute> attributes = attributePath.getAttributePath();
+			final List<Attribute> newAttributes = Lists.newLinkedList();
 
 			for (final Attribute attribute : attributes) {
 
@@ -811,8 +811,8 @@ public class ProjectsResourceTest extends
 		String attributePathJSONString = DMPPersistenceUtil.getResourceAsString(attributePathJSONFileName);
 		final AttributePath attributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
 
-		final LinkedList<Attribute> attributes = attributePath.getAttributePath();
-		final LinkedList<Attribute> newAttributes = Lists.newLinkedList();
+		final List<Attribute> attributes = attributePath.getAttributePath();
+		final List<Attribute> newAttributes = Lists.newLinkedList();
 
 		for (final Attribute attribute : attributes) {
 

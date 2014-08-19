@@ -47,7 +47,7 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 	/**
 	 * write data via InternalRDFGraphService and read it via InternalGDMGraphService. TODO: adapt record uri re. current model
 	 * (to ensure integrity)
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

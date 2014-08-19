@@ -1,6 +1,7 @@
 package org.dswarm.controller.resources.schema.test.utils;
 
-import java.util.LinkedList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,7 +34,7 @@ public class AttributePathsResourceTestUtils extends
 		// didn't exist before)
 		// => replace dummy id'ed attributes with real ids by attribute uri
 
-		final LinkedList<Attribute> attributePath = expectedObject.getAttributePath();
+		final List<Attribute> attributePath = expectedObject.getAttributePath();
 
 		if (attributePath != null) {
 
@@ -66,7 +67,7 @@ public class AttributePathsResourceTestUtils extends
 					}
 				}
 
-				final LinkedList<Attribute> newAttributePath = Lists.newLinkedList();
+				final List<Attribute> newAttributePath = Lists.newLinkedList();
 
 				// construct new attribute path
 
@@ -96,8 +97,8 @@ public class AttributePathsResourceTestUtils extends
 		String attributePathJSONString = DMPPersistenceUtil.getResourceAsString(attributePathJSONFileName);
 		final AttributePath attributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
 
-		final LinkedList<Attribute> attributePathAttributes = attributePath.getAttributePath();
-		final LinkedList<Attribute> newAttributes = Lists.newLinkedList();
+		final Iterable<Attribute> attributePathAttributes = attributePath.getAttributePath();
+		final List<Attribute> newAttributes = Lists.newLinkedList();
 
 		for (final Attribute attribute : attributePathAttributes) {
 

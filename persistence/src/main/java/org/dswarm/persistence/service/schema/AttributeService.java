@@ -12,14 +12,14 @@ import org.dswarm.persistence.service.AdvancedDMPJPAService;
 
 /**
  * A persistence service for {@link Attribute}s.
- * 
+ *
  * @author tgaengler
  */
 public class AttributeService extends AdvancedDMPJPAService<ProxyAttribute, Attribute> {
 
 	/**
 	 * Creates a new attribute persistence service with the given entity manager provider.
-	 * 
+	 *
 	 * @param entityManagerProvider an entity manager provider
 	 */
 	@Inject

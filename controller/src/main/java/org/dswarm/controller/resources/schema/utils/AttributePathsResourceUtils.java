@@ -1,6 +1,6 @@
 package org.dswarm.controller.resources.schema.utils;
 
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -46,8 +46,8 @@ public class AttributePathsResourceUtils extends BasicIDResourceUtils<AttributeP
 
 		final Map<Long, Attribute> attributeDummyIds;
 
-		final LinkedList<Attribute> attributes = object.getAttributePath();
-		final LinkedList<Attribute> newAttributes = Lists.newLinkedList();
+		final List<Attribute> attributes = object.getAttributePath();
+		final List<Attribute> newAttributes = Lists.newLinkedList();
 
 		JsonNode enhancedJsonNode = jsonNode;
 

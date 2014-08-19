@@ -1,7 +1,7 @@
 package org.dswarm.controller.resources.schema.test;
 
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -239,7 +239,7 @@ public class SchemasResourceTest extends
 
 		final Schema updatedSchema = objectMapper.readValue(responseString, Schema.class);
 
-		final LinkedList<String> attributeURIs = Lists.newLinkedList();
+		final List<String> attributeURIs = Lists.newLinkedList();
 		attributeURIs.add(attributeUri1);
 		attributeURIs.add(attributeUri2);
 		attributeURIs.add(attributeUri3);
@@ -254,7 +254,7 @@ public class SchemasResourceTest extends
 
 		for (final AttributePath attributePath : attributePaths) {
 
-			final LinkedList<Attribute> attributes = attributePath.getAttributePath();
+			final List<Attribute> attributes = attributePath.getAttributePath();
 
 			Assert.assertNotNull(attributes);
 
@@ -344,7 +344,7 @@ public class SchemasResourceTest extends
 
 		final Schema updatedSchema = objectMapper.readValue(responseString, Schema.class);
 
-		final LinkedList<String> attributeURIs = Lists.newLinkedList();
+		final List<String> attributeURIs = Lists.newLinkedList();
 
 		for (final Attribute attribute : baseAttributePath.getAttributePath()) {
 
@@ -363,7 +363,7 @@ public class SchemasResourceTest extends
 
 		for (final AttributePath attributePath : attributePaths) {
 
-			final LinkedList<Attribute> attributes = attributePath.getAttributePath();
+			final List<Attribute> attributes = attributePath.getAttributePath();
 
 			Assert.assertNotNull(attributes);
 
@@ -462,7 +462,7 @@ public class SchemasResourceTest extends
 
 		attributesResourceTestUtils.compareObjects(expectedAttribute, attribute);
 
-		final LinkedList<Attribute> firstAttributePathAttributesList = firstAttributePath.getAttributePath();
+		final List<Attribute> firstAttributePathAttributesList = firstAttributePath.getAttributePath();
 		firstAttributePathAttributesList.add(attribute);
 
 		final AttributePath newFirstAttributePath = attributePathsResourceTestUtils.getPersistenceServiceTestUtils().createAttributePath(

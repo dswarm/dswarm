@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -94,7 +95,7 @@ public class PNXSchemaTest extends ResourceTest {
 		final Fn actual = new Fn(dataModelUri);
 
 		for (final AttributePath attributePath : schema.getAttributePaths()) {
-			final LinkedList<Attribute> attributes = attributePath.getAttributePath();
+			final List<Attribute> attributes = attributePath.getAttributePath();
 
 			final String[] attributeNames = new String[attributes.size()];
 			int idx = 0;

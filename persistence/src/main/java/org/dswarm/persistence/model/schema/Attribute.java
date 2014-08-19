@@ -9,7 +9,7 @@ import org.dswarm.persistence.model.AdvancedDMPJPAObject;
 /**
  * An attribute is a property. In a graph an attribute is a relation between a node or subject and an object, e.g.,
  * 'dcterms:title'. In a CSV document an attribute is the header (label) of one column, e.g., 'title'.
- * 
+ *
  * @author tgaengler
  */
 @XmlRootElement
@@ -43,7 +43,7 @@ public class Attribute extends AdvancedDMPJPAObject {
 
 	/**
 	 * Creates a new attribute with the given identifier.
-	 * 
+	 *
 	 * @param id an attribute identifier
 	 */
 	public Attribute(final String uriArg) {
@@ -53,7 +53,7 @@ public class Attribute extends AdvancedDMPJPAObject {
 
 	/**
 	 * Creates a new attribute with the given identifier and name.
-	 * 
+	 *
 	 * @param id an attribute identifier
 	 * @param name an attribute name
 	 */

@@ -132,7 +132,7 @@ public class ProjectRemoveMappingResourceTest extends
 	 * It is intended that the mapping is removed from the project only, i.e. the relation between the project and the mapping is
 	 * removed but the mapping itself and all of its parts (like functions and filters) are still present in the database (to be
 	 * used in other projects).
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
