@@ -72,6 +72,18 @@ public class XMLTransformationFlowTest extends GuicedTest {
 
 		testXMLTaskWithTuples("dd-650.mabxml.task.result.json", "dd-650.mabxml.task.json", "test-mabxml.tuples.json");
 	}
+	
+	@Test
+	public void testDd727Morph() throws Exception {
+
+		testXMLMorphWithTuples("dd-727.mabxml.morph.result.json", "dd-727.mabxml.morph.xml", "dd-727.mabxml.tuples.json");
+	}
+	
+	@Test
+	public void testDd727Task() throws Exception {
+
+		testXMLTaskWithTuples("dd-727.mabxml.task.result.json", "dd-727.mabxml.task.json", "dd-727.mabxml.tuples.json");
+	}
 
 	@Test
 	public void testMetsmodsXmlWithFilterAndMapping() throws Exception {

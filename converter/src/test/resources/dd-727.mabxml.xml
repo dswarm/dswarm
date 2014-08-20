@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datei xmlns="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://files.dnb.de/standards/formate/mabxml-1.xsd">
+    <datensatz typ="h" status="n" mabVersion="M2.0">
+        <feld nr="001" ind=" "><![CDATA[test1]]></feld>
+        <feld nr="029" ind="m"><![CDATA[ZS]]></feld>
+        <feld nr="050" ind=" "><![CDATA[a|||||||||||||]]></feld>
+        <feld nr="052" ind=" "><![CDATA[p|||||||z||||||]]></feld>
+    </datensatz>
+    <datensatz typ="h" status="n" mabVersion="M2.0">
+		<feld nr="001" ind=" "><![CDATA[test2]]></feld>
+        <feld nr="029" ind="m"><![CDATA[MB]]></feld>
+        <feld nr="050" ind=" "><![CDATA[a|||||||||||||]]></feld>
+        <feld nr="052" ind=" "><![CDATA[p|||||||z||||||]]></feld>
+    </datensatz>
+</datei>
