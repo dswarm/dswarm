@@ -221,12 +221,27 @@ In order to move to the new configuration system, perform the following steps.
 
 6. Add `-Dconfig.file=/path/to/dswarm.conf` to all maven start scripts/configurations you might have. That is `mvn ...` becomes `mvn -Dconfig.file=/path/to/dswarm.conf ...`
 
-7. Provide the /path/to/dswarm.conf to your IDE. In eclipse, e.g., open `eclipse.ini`, go to `-vmargs` section and add the line `-Dconfig.file=/path/to/dswarm.conf`. 
-
-8. At last, remove the dmp.properties file (Which might have been done already, as this step was committed via git)
+7. At last, remove the dmp.properties file (Which might have been done already, as this step was committed via git)
 
 ## Debugging your configuration
 
 You can use the config settings `dswarm.log-config-on-start=on` when you start d:swarm.
 If done so, d:swarm will log the complete configuration to the INFO loglevel stream.
 The format is similar to a Json format with additional comments, how a config value was constructed and what its description is.
+
+## Configurations for your IDE
+
+These settings aren't strictly necessary, but will allow you to use the default run/test/debug executions as usual.
+
+### Eclipse
+
+Open `eclipse.ini`, go to `-vmargs` section and add the line `-Dconfig.file=/path/to/dswarm.conf`.
+
+### Intellij IDEA
+
+* When your project is opened, go to `Run` > `Edit Configurations...`.
+* On the left hand side, open the `Defaults` sections and select `Application`, or `JUnit` for test configurations respectively.
+* For the `VM Options` settings, add the config file paramter `-Dconfig.file=/path/to/dswarm.conf`
+
+    __Note:__ The path is relative to the `Working Directory` which is probably the directory that contains your config file as well, so you can just write `-Dconfig.file=dswarm.conf`
+
