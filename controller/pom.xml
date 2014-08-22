@@ -297,23 +297,6 @@
 			<artifactId>metrics-elasticsearch-reporter</artifactId>
 			<version>${es-metrics-reporter.version}</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.dswarm</groupId>
-			<artifactId>graph</artifactId>
-			<version>1.0</version>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>apache-jena-libs</artifactId>
-					<groupId>org.apache.jena</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>jersey-multipart</artifactId>
-					<groupId>com.sun.jersey.contribs</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
 		<dependency>
 			<groupId>org.apache.jena</groupId>
 			<artifactId>apache-jena-libs</artifactId>

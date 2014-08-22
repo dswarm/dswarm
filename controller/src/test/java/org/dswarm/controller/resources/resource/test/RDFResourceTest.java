@@ -33,7 +33,7 @@ import org.dswarm.controller.resources.resource.test.utils.ExportTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
 import org.dswarm.controller.resources.test.ResourceTest;
 import org.dswarm.controller.test.GuicedTest;
-import org.dswarm.graph.rdf.utils.RDFUtils;
+import org.dswarm.common.rdf.utils.RDFUtils;
 import org.dswarm.persistence.DMPPersistenceException;
 // import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.resource.Configuration;
