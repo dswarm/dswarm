@@ -39,8 +39,6 @@ public abstract class DMPObject<IDTYPE> implements Serializable {
 
 	@Override
 	public boolean equals(final Object obj) {
-//		return DMPObject.class.isInstance(obj) && Objects.equal(((DMPObject<?>) obj).getId(), getId());
-
 		if (this == obj) {
 			return true;
 		}
@@ -50,6 +48,11 @@ public abstract class DMPObject<IDTYPE> implements Serializable {
 
 		final DMPObject<?> other = (DMPObject<?>) obj;
 
+		// The ID is `null` if a DMPObject is not initialized/persisted in the DB.
+		// If this is the case for both objects, treat them as non equal, since they might be
+		// one of many recently `new`-ed objects and their equality cannot be proven at this point.
+		// If we introduce UUIDs for every object, this can change so that `null` IDs are treated
+		// as equal.
 		if (this.getId() == null && other.getId() == null) {
 			return false;
 		}
