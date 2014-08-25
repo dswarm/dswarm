@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -216,8 +215,8 @@ public class DataModelsResourceTest extends
 			String attributePathJSONString = DMPPersistenceUtil.getResourceAsString(attributePathJSONFileName);
 			final AttributePath attributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
 
-			final LinkedList<Attribute> attributes = attributePath.getAttributePath();
-			final LinkedList<Attribute> newAttributes = Lists.newLinkedList();
+			final List<Attribute> attributes = attributePath.getAttributePath();
+			final List<Attribute> newAttributes = Lists.newLinkedList();
 
 			for (final Attribute attribute : attributes) {
 
@@ -370,7 +369,7 @@ public class DataModelsResourceTest extends
 
 		pojoClassResourceTestUtils.deleteObject(dataModel);
 
-		final Set<AttributePath> attributePaths = schema.getAttributePaths();
+		final Set<AttributePath> attributePaths = schema.getUniqueAttributePaths();
 		final Clasz recordClasz = schema.getRecordClass();
 
 		schemasResourceTestUtils.deleteObject(schema);
@@ -484,7 +483,7 @@ public class DataModelsResourceTest extends
 
 		if (schema != null) {
 
-			final Set<AttributePath> attributePaths = schema.getAttributePaths();
+			final Set<AttributePath> attributePaths = schema.getUniqueAttributePaths();
 
 			if (attributePaths != null) {
 
@@ -596,7 +595,7 @@ public class DataModelsResourceTest extends
 
 		if (schema != null) {
 
-			final Set<AttributePath> attributePaths = schema.getAttributePaths();
+			final Set<AttributePath> attributePaths = schema.getUniqueAttributePaths();
 
 			if (attributePaths != null) {
 
@@ -709,7 +708,7 @@ public class DataModelsResourceTest extends
 
 		if (schema != null) {
 
-			final Set<AttributePath> attributePaths = schema.getAttributePaths();
+			final Set<AttributePath> attributePaths = schema.getUniqueAttributePaths();
 
 			if (attributePaths != null) {
 

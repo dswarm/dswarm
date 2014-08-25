@@ -132,7 +132,7 @@ public class ProjectRemoveMappingResourceTest extends
 	 * It is intended that the mapping is removed from the project only, i.e. the relation between the project and the mapping is
 	 * removed but the mapping itself and all of its parts (like functions and filters) are still present in the database (to be
 	 * used in other projects).
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -227,7 +227,7 @@ public class ProjectRemoveMappingResourceTest extends
 
 			if (inputSchema != null) {
 
-				final Set<AttributePath> inputAttributePaths = inputSchema.getAttributePaths();
+				final Set<AttributePath> inputAttributePaths = inputSchema.getUniqueAttributePaths();
 
 				if (inputAttributePaths != null) {
 
@@ -266,7 +266,7 @@ public class ProjectRemoveMappingResourceTest extends
 
 			if (outputSchema != null) {
 
-				final Set<AttributePath> outputAttributePaths = outputSchema.getAttributePaths();
+				final Set<AttributePath> outputAttributePaths = outputSchema.getUniqueAttributePaths();
 
 				if (outputAttributePaths != null) {
 

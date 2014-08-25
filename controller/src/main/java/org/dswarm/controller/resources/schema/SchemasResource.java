@@ -3,7 +3,7 @@ package org.dswarm.controller.resources.schema;
 import java.io.IOException;
 import java.net.URI;
 import java.util.LinkedList;
-import java.util.Set;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -56,7 +56,7 @@ import org.dswarm.persistence.service.schema.SchemaService;
 
 /**
  * A resource (controller service) for {@link Schema}s.
- * 
+ *
  * @author tgaengler
  * @author jpolowinski
  */
@@ -73,7 +73,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	/**
 	 * Creates a new resource (controller service) for {@link Schema}s with the provider of the schema persistence service, the
 	 * object mapper and metrics registry.
-	 * 
+	 *
 	 * @param utilsFactoryArg the utils factory
 	 * @param objectMapperArg an object mapper
 	 * @param dmpStatusArg a metrics registry
@@ -90,7 +90,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 	/**
 	 * This endpoint returns a schema as JSON representation for the provided schema identifier.
-	 * 
+	 *
 	 * @param id a schema identifier
 	 * @return a JSON representation of a schema
 	 */
@@ -109,7 +109,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 	/**
 	 * This endpoint consumes a schema as JSON representation and persists this schema in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one schema
 	 * @return the persisted schema as JSON representation
 	 * @throws DMPControllerException
@@ -128,7 +128,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 	/**
 	 * This endpoint returns a list of all schemas as JSON representation.
-	 * 
+	 *
 	 * @return a list of all schemas as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -146,7 +146,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 	/**
 	 * This endpoint consumes a schema as JSON representation and updates this schema in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one schema
 	 * @param id a schema identifier
 	 * @return the updated schema as JSON representation
@@ -171,7 +171,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	 * This endpoint consumes an ordered list of attribute descriptions - names + URIs - (of an attribute path) as JSON (array)
 	 * representation and creates an attribute path (incl. attributes) from them an updates the schema with this attribute path in
 	 * the database.
-	 * 
+	 *
 	 * @param attributeDescriptionsJSONArrayString an ordered list of attribute descriptions - names + URIs - (of an attribute
 	 *            path) as JSON (array) representation
 	 * @param id a schema identifier
@@ -240,7 +240,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	/**
 	 * This endpoint consumes an attribute name and creates an attribute path (incl. new attribute) with help of the given
 	 * attribute path (by id) and the freshly created attribute, and updates the schema with this attribute path in the database.
-	 * 
+	 *
 	 * @param schemaId a schema identifier
 	 * @param attributePathId a attribute path identifier
 	 * @param attributeDescriptionJSONString the name of the attribute that should be created and added at the end of the given
@@ -278,7 +278,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 		final AttributePathService attributePathService = attributePathResourceUtils.getPersistenceService();
 
 		final AttributePath baseAttributePath = getAttributePath(attributePathId, attributePathService);
-		final LinkedList<Attribute> baseAttributes = baseAttributePath.getAttributePath();
+		final List<Attribute> baseAttributes = baseAttributePath.getAttributePath();
 
 		final ObjectNode attributeDescriptionJSON;
 
@@ -337,7 +337,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 	/**
 	 * This endpoint deletes a schema that matches the given id.
-	 * 
+	 *
 	 * @param id a schema identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
 	 *         went wrong
@@ -366,7 +366,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 		super.prepareObjectForUpdate(objectFromJSON, object);
 
-		final Set<AttributePath> attributePaths = objectFromJSON.getAttributePaths();
+		final List<AttributePath> attributePaths = objectFromJSON.getAttributePaths();
 
 		object.setAttributePaths(attributePaths);
 

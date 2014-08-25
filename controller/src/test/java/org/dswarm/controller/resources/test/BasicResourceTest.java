@@ -151,17 +151,7 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 
 		final POJOCLASS persistedObject = createObjectInternal();
 
-		String idEncoded = null;
-
-		try {
-
-			idEncoded = URLEncoder.encode(persistedObject.getId().toString(), "UTF-8");
-		} catch (final UnsupportedEncodingException e) {
-
-			BasicResourceTest.LOG.debug("couldn't encode id", e);
-
-			Assert.assertTrue(false);
-		}
+		final String idEncoded = URLEncoder.encode(persistedObject.getId().toString(), "UTF-8");
 
 		Assert.assertNotNull("the id shouldn't be null", idEncoded);
 

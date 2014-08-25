@@ -1,6 +1,7 @@
 package org.dswarm.controller.resources.job.test;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -338,8 +339,8 @@ public class MappingsResourceTest extends
 		String attributePathJSONString = DMPPersistenceUtil.getResourceAsString(attributePathJSONFileName);
 		final AttributePath attributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
 
-		final LinkedList<Attribute> attributes = attributePath.getAttributePath();
-		final LinkedList<Attribute> newAttributes = Lists.newLinkedList();
+		final List<Attribute> attributes = attributePath.getAttributePath();
+		final List<Attribute> newAttributes = Lists.newLinkedList();
 
 		for (final Attribute attribute : attributes) {
 

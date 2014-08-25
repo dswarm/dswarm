@@ -1,7 +1,7 @@
 package org.dswarm.controller.resources.schema.test;
 
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -239,14 +239,14 @@ public class SchemasResourceTest extends
 
 		final Schema updatedSchema = objectMapper.readValue(responseString, Schema.class);
 
-		final LinkedList<String> attributeURIs = Lists.newLinkedList();
+		final List<String> attributeURIs = Lists.newLinkedList();
 		attributeURIs.add(attributeUri1);
 		attributeURIs.add(attributeUri2);
 		attributeURIs.add(attributeUri3);
 
 		Assert.assertNotNull(updatedSchema);
 
-		final Set<AttributePath> attributePaths = updatedSchema.getAttributePaths();
+		final Set<AttributePath> attributePaths = updatedSchema.getUniqueAttributePaths();
 
 		Assert.assertNotNull(attributePaths);
 
@@ -254,7 +254,7 @@ public class SchemasResourceTest extends
 
 		for (final AttributePath attributePath : attributePaths) {
 
-			final LinkedList<Attribute> attributes = attributePath.getAttributePath();
+			final List<Attribute> attributes = attributePath.getAttributePath();
 
 			Assert.assertNotNull(attributes);
 
@@ -324,7 +324,7 @@ public class SchemasResourceTest extends
 		final String attributeName1 = "attribute one";
 		final String attributeUri1 = SchemaUtils.mintAttributeURI(attributeName1, schemaNamespaceURI);
 
-		final AttributePath baseAttributePath = schema.getAttributePaths().iterator().next();
+		final AttributePath baseAttributePath = schema.getUniqueAttributePaths().iterator().next();
 		final Long baseAttributePathId = baseAttributePath.getId();
 
 		final Map<String, String> jsonMap = Maps.newHashMap();
@@ -344,7 +344,7 @@ public class SchemasResourceTest extends
 
 		final Schema updatedSchema = objectMapper.readValue(responseString, Schema.class);
 
-		final LinkedList<String> attributeURIs = Lists.newLinkedList();
+		final List<String> attributeURIs = Lists.newLinkedList();
 
 		for (final Attribute attribute : baseAttributePath.getAttributePath()) {
 
@@ -355,7 +355,7 @@ public class SchemasResourceTest extends
 
 		Assert.assertNotNull(updatedSchema);
 
-		final Set<AttributePath> attributePaths = updatedSchema.getAttributePaths();
+		final Set<AttributePath> attributePaths = updatedSchema.getUniqueAttributePaths();
 
 		Assert.assertNotNull(attributePaths);
 
@@ -363,7 +363,7 @@ public class SchemasResourceTest extends
 
 		for (final AttributePath attributePath : attributePaths) {
 
-			final LinkedList<Attribute> attributes = attributePath.getAttributePath();
+			final List<Attribute> attributes = attributePath.getAttributePath();
 
 			Assert.assertNotNull(attributes);
 
@@ -443,7 +443,7 @@ public class SchemasResourceTest extends
 	@Override
 	protected Schema updateObject(final Schema persistedSchema) throws Exception {
 
-		final Set<AttributePath> persistedAttributePaths = persistedSchema.getAttributePaths();
+		final Set<AttributePath> persistedAttributePaths = persistedSchema.getUniqueAttributePaths();
 		final AttributePath firstAttributePath = persistedAttributePaths.iterator().next();
 
 		final String attributeJSONString = DMPPersistenceUtil.getResourceAsString("attribute3.json");
@@ -462,7 +462,7 @@ public class SchemasResourceTest extends
 
 		attributesResourceTestUtils.compareObjects(expectedAttribute, attribute);
 
-		final LinkedList<Attribute> firstAttributePathAttributesList = firstAttributePath.getAttributePath();
+		final List<Attribute> firstAttributePathAttributesList = firstAttributePath.getAttributePath();
 		firstAttributePathAttributesList.add(attribute);
 
 		final AttributePath newFirstAttributePath = attributePathsResourceTestUtils.getPersistenceServiceTestUtils().createAttributePath(

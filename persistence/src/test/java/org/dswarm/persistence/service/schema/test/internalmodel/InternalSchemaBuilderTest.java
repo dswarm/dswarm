@@ -74,7 +74,7 @@ public class InternalSchemaBuilderTest extends GuicedTest {
 		System.out.println("Schema for " + schema.getRecordClass().getUri());
 		System.out.println("****************************************************");
 
-		final Set<AttributePath> pathSet = schema.getAttributePaths();
+		final Set<AttributePath> pathSet = schema.getUniqueAttributePaths();
 
 		for (final Iterator<AttributePath> iterator = pathSet.iterator(); iterator.hasNext();) {
 

@@ -1,6 +1,6 @@
 package org.dswarm.persistence.model.schema;
 
-import java.util.LinkedList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -36,7 +36,7 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * An attribute path is an ordered list of {@link Attribute}s.
- * 
+ *
  * @author tgaengler
  */
 @XmlRootElement
@@ -62,14 +62,13 @@ public class AttributePath extends DMPJPAObject {
 	@Access(AccessType.FIELD)
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "ATTRIBUTE_PATHS_ATTRIBUTES", joinColumns = { @JoinColumn(name = "ATTRIBUTE_PATH_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "ATTRIBUTE_ID", referencedColumnName = "ID") })
-	private Set<Attribute>			attributes;																	// =
-	// Sets.newCopyOnWriteArraySet();
+	private Set<Attribute>			attributes;
 
 	/**
 	 * all attributes of this attribute path as ordered list.
 	 */
 	@Transient
-	private LinkedList<Attribute>	orderedAttributes;
+	private List<Attribute> orderedAttributes;
 
 	/**
 	 * A JSON object of the ordered list of attributes.
@@ -110,10 +109,10 @@ public class AttributePath extends DMPJPAObject {
 
 	/**
 	 * Creates a new attribute path with the given ordered list of attributes.
-	 * 
+	 *
 	 * @param attributesArg an ordered list of attributes
 	 */
-	public AttributePath(final LinkedList<Attribute> attributesArg) {
+	public AttributePath(final Collection<Attribute> attributesArg) {
 
 		// orderedAttributes = attributesArg;
 		//
@@ -131,7 +130,7 @@ public class AttributePath extends DMPJPAObject {
 	 * Gets the utilised attributes of this attribute path.<br/>
 	 * note: this is not the ordered list of attributes, i.e., the attribute path; these are only the utilised attributes, i.e.,
 	 * an attribute can occur multiple times in an attribute path.
-	 * 
+	 *
 	 * @return the utilised attributes of this attribute path
 	 */
 	public Set<Attribute> getAttributes() {
@@ -141,11 +140,11 @@ public class AttributePath extends DMPJPAObject {
 
 	/**
 	 * Gets the attribute path, i.e., the ordered list of attributes.
-	 * 
+	 *
 	 * @return the attribute path
 	 */
 	@XmlElement(name = "attributes")
-	public LinkedList<Attribute> getAttributePath() {
+	public List<Attribute> getAttributePath() {
 
 		initAttributePath(false);
 
@@ -154,7 +153,7 @@ public class AttributePath extends DMPJPAObject {
 
 	/**
 	 * Gets the attribute path as JSON object (a list of Attributes)
-	 * 
+	 *
 	 * @return the attribute path as JSON object
 	 */
 	@JsonIgnore
@@ -169,11 +168,11 @@ public class AttributePath extends DMPJPAObject {
 
 	/**
 	 * Sets the attribute path (ordered list of attributes).
-	 * 
+	 *
 	 * @param attributesArg a new attribute path (ordered list of attributes)
 	 */
 	@XmlElement(name = "attributes")
-	public void setAttributePath(final LinkedList<Attribute> attributesArg) {
+	public void setAttributePath(final Collection<Attribute> attributesArg) {
 
 		if (attributesArg == null && orderedAttributes != null) {
 
@@ -229,7 +228,7 @@ public class AttributePath extends DMPJPAObject {
 	/**
 	 * Adds a new attribute to the end of this attribute path.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param attributeArg a new attribute
 	 */
 	public void addAttribute(final Attribute attributeArg) {
@@ -268,7 +267,7 @@ public class AttributePath extends DMPJPAObject {
 	/**
 	 * Adds a new attribute to the end of this attribute path.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param attributeArg a new attribute
 	 */
 	protected void addAttribute(final Attribute attributeArg, final int attributeIndex) {
@@ -307,7 +306,7 @@ public class AttributePath extends DMPJPAObject {
 	/**
 	 * Removes an existing attribute from this attribute path.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param attribute an existing attribute that should be removed
 	 * @param attributeIndex the position of the attribute in the attribute path
 	 */
@@ -398,7 +397,7 @@ public class AttributePath extends DMPJPAObject {
 
 	/**
 	 * Builds the ordered list of (identifiers of) attributes as one string, separated by a delimiter character (currently a dot)
-	 * 
+	 *
 	 * @return ordered list of (identifiers of) attributes as one string
 	 */
 	public String toAttributePath() {
@@ -468,7 +467,7 @@ public class AttributePath extends DMPJPAObject {
 	/**
 	 * Initialises the attribute path, collection of attributes and JSON object from the string that holds the serialised JSON
 	 * object of the attribute path.
-	 * 
+	 *
 	 * @param fromScratch flag that indicates, whether the attribute path should be initialised from scratch or not
 	 */
 	private void initAttributePath(final boolean fromScratch) {
@@ -520,7 +519,7 @@ public class AttributePath extends DMPJPAObject {
 
 	/**
 	 * Gets the attribute for a given attribute identifier.
-	 * 
+	 *
 	 * @param id an attribute identifier
 	 * @return the matched attribute or null
 	 */

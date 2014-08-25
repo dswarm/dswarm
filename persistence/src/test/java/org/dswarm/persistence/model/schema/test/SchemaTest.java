@@ -1,17 +1,17 @@
 package org.dswarm.persistence.model.schema.test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Assert;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
+import org.junit.Assert;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 public class SchemaTest extends GuicedTest {
 
@@ -20,88 +20,63 @@ public class SchemaTest extends GuicedTest {
 	private final ObjectMapper	objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
-	public void simpleSchemaTest() {
+	public void simpleSchemaTest() throws IOException {
 
-		// first attribute path
+		final Schema schema = makeTestSchema();
+		final String json = objectMapper.writeValueAsString(schema);
+		final Schema schemaDup = objectMapper.readValue(json, Schema.class);
+		final String jsonDup = objectMapper.writeValueAsString(schemaDup);
 
-		final String dctermsTitleId = "http://purl.org/dc/terms/title";
-		final String dctermsTitleName = "title";
+		SchemaTest.LOG.debug("schema json: {}", json);
 
-		final Attribute dctermsTitle = createAttribute(dctermsTitleId, dctermsTitleName);
-
-		final String dctermsHasPartId = "http://purl.org/dc/terms/hasPart";
-		final String dctermsHasPartName = "hasPart";
-
-		final Attribute dctermsHasPart = createAttribute(dctermsHasPartId, dctermsHasPartName);
-
-		final AttributePath attributePath1 = new AttributePath();
-		// attributePath1.setId(UUID.randomUUID().toString());
-
-		attributePath1.addAttribute(dctermsTitle);
-		attributePath1.addAttribute(dctermsHasPart);
-		attributePath1.addAttribute(dctermsTitle);
-
-		// second attribute path
-
-		final String dctermsCreatorId = "http://purl.org/dc/terms/creator";
-		final String dctermsCreatorName = "creator";
-
-		final Attribute dctermsCreator = createAttribute(dctermsCreatorId, dctermsCreatorName);
-
-		final String foafNameId = "http://xmlns.com/foaf/0.1/name";
-		final String foafNameName = "name";
-
-		final Attribute foafName = createAttribute(foafNameId, foafNameName);
-
-		final AttributePath attributePath2 = new AttributePath();
-		// attributePath2.setId(UUID.randomUUID().toString());
-
-		attributePath2.addAttribute(dctermsCreator);
-		attributePath2.addAttribute(foafName);
-
-		// third attribute path
-
-		final String dctermsCreatedId = "http://purl.org/dc/terms/created";
-		final String dctermsCreatedName = "created";
-
-		final Attribute dctermsCreated = createAttribute(dctermsCreatedId, dctermsCreatedName);
-
-		final AttributePath attributePath3 = new AttributePath();
-		// attributePath3.setId(UUID.randomUUID().toString());
-
-		attributePath3.addAttribute(dctermsCreated);
-
-		// record class
-
-		final String biboDocumentId = "http://purl.org/ontology/bibo/Document";
-		final String biboDocumentName = "document";
-
-		final Clasz biboDocument = new Clasz(biboDocumentId, biboDocumentName);
-
-		// schema
-
-		final Schema schema = new Schema();
-		// schema.setId(UUID.randomUUID().toString());
-
-		schema.addAttributePath(attributePath1);
-		schema.addAttributePath(attributePath2);
-		schema.addAttributePath(attributePath3);
-		schema.setRecordClass(biboDocument);
-
-		String json = null;
-
-		try {
-
-			json = objectMapper.writeValueAsString(schema);
-		} catch (final JsonProcessingException e) {
-
-			e.printStackTrace();
-		}
-
-		SchemaTest.LOG.debug("schema json: " + json);
+		Assert.assertTrue("the two schemas should be identical", json.equals(jsonDup));
 	}
 
-	private Attribute createAttribute(final String id, final String name) {
+	private static Schema makeTestSchema() {
+		final Attribute dctermsTitle = createAttribute("http://purl.org/dc/terms/title", "title");
+		final Attribute dctermsHasPart = createAttribute("http://purl.org/dc/terms/hasPart", "hasPart");
+		final Attribute dctermsDescription = createAttribute("http://purl.org/dc/terms/description", "description");
+		final Attribute dctermsCreator = createAttribute("http://purl.org/dc/terms/creator", "creator");
+		final Attribute foafName = createAttribute("http://xmlns.com/foaf/0.1/name", "name");
+		final Attribute dctermsCreated = createAttribute("http://purl.org/dc/terms/created", "created");
+
+		final AttributePath attributePath1 = createAttributePath(dctermsTitle, dctermsHasPart, dctermsDescription);
+		final AttributePath attributePath2 = createAttributePath(dctermsCreator, foafName);
+		final AttributePath attributePath3 = createAttributePath(dctermsCreated);
+
+		final Clasz biboDocument = new Clasz("http://purl.org/ontology/bibo/Document", "document");
+
+		return createSchema(biboDocument, attributePath1, attributePath2, attributePath3);
+	}
+
+	private static AttributePath createAttributePath(final Attribute... attributes) {
+		final AttributePath attributePath = new AttributePath();
+		for (final Attribute attribute : attributes) {
+			attributePath.addAttribute(attribute);
+		}
+
+		Assert.assertNotNull("the attributes should not be null", attributePath.getAttributes());
+		Assert.assertEquals("the attributes have the wrong size", attributes.length, attributePath.getAttributes().size());
+
+		return attributePath;
+	}
+
+	private static Schema createSchema(final Clasz recordClass, final AttributePath... attributePaths) {
+		final Schema schema = new Schema();
+		schema.setRecordClass(recordClass);
+		for (final AttributePath attributePath : attributePaths) {
+			schema.addAttributePath(attributePath);
+		}
+
+		Assert.assertNotNull("the record class should not be null", schema.getRecordClass());
+		Assert.assertEquals("the record class is not the same", recordClass, schema.getRecordClass());
+		Assert.assertNotNull("the attribute paths should not be null", schema.getUniqueAttributePaths());
+		Assert.assertEquals("the attribute paths have the wrong size", attributePaths.length, schema.getUniqueAttributePaths().size());
+
+		return schema;
+	}
+
+	private static Attribute createAttribute(final String id, final String name) {
 
 		final Attribute attribute = new Attribute(id);
 		attribute.setName(name);
@@ -113,5 +88,4 @@ public class SchemaTest extends GuicedTest {
 
 		return attribute;
 	}
-
 }

@@ -295,7 +295,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 		if (schema != null) {
 
-			final Set<AttributePath> attributePathsToDelete = schema.getAttributePaths();
+			final Set<AttributePath> attributePathsToDelete = schema.getUniqueAttributePaths();
 
 			if (attributePathsToDelete != null) {
 

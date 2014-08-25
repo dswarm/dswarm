@@ -3,9 +3,8 @@ package org.dswarm.controller.resources.schema.test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
@@ -13,24 +12,15 @@ import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.TextNode;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.google.common.io.Resources;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.MultiPart;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.junit.Test;
 
-import org.dswarm.controller.resources.resource.test.utils.ConfigurationsResourceTestUtils;
-import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
-import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
-import org.dswarm.controller.resources.schema.test.utils.AttributePathsResourceTestUtils;
-import org.dswarm.controller.resources.schema.test.utils.AttributesResourceTestUtils;
-import org.dswarm.controller.resources.schema.test.utils.ClaszesResourceTestUtils;
-import org.dswarm.controller.resources.schema.test.utils.SchemasResourceTestUtils;
 import org.dswarm.controller.resources.test.ResourceTest;
 import org.dswarm.controller.test.GuicedTest;
 import org.dswarm.persistence.model.resource.Configuration;
@@ -40,61 +30,210 @@ import org.dswarm.persistence.model.resource.ResourceType;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
-import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 
+@SuppressWarnings("MethodMayBeStatic")
 public class PNXSchemaTest extends ResourceTest {
 
-	private final ObjectMapper						mapper;
-
-	private final DataModelsResourceTestUtils		dataModelsResourceTestUtils;
-
-	private final AttributesResourceTestUtils		attributesResourceTestUtils;
-
-	private final ClaszesResourceTestUtils			claszesResourceTestUtils;
-
-	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
-
-	private final ResourcesResourceTestUtils		resourcesResourceTestUtils;
-
-	private final ConfigurationsResourceTestUtils	configurationsResourceTestUtils;
-
-	private final SchemasResourceTestUtils			schemasResourceTestUtils;
-
-	private final Map<Long, Attribute>				attributes		= Maps.newHashMap();
-
-	private final Map<Long, AttributePath>			attributePaths	= Maps.newLinkedHashMap();
+	private static final String CONFIGURATION_NAME = "pnx";
+	private static final String CONFIGURATION_DESCRIPTION = "pnx config";
+	private static final String RESOURCE_NAME = "pnx";
+	private static final String RESOURCE_DESCRIPTION = "pnx file";
 
 	public PNXSchemaTest() {
 		super(null);
-
-		mapper = GuicedTest.injector.getInstance(ObjectMapper.class);
-
-		dataModelsResourceTestUtils = new DataModelsResourceTestUtils();
-		attributesResourceTestUtils = new AttributesResourceTestUtils();
-		claszesResourceTestUtils = new ClaszesResourceTestUtils();
-		attributePathsResourceTestUtils = new AttributePathsResourceTestUtils();
-		resourcesResourceTestUtils = new ResourcesResourceTestUtils();
-		configurationsResourceTestUtils = new ConfigurationsResourceTestUtils();
-		schemasResourceTestUtils = new SchemasResourceTestUtils();
 	}
 
 	@Test
 	public void testPNXSchemaCreation() throws Exception {
-
 		final Resource resource = uploadResource();
 		final DataModel dataModel = createDataModel(resource);
 		final Schema schema = dataModel.getSchema();
+		final String dataModelUri = getResourceUri(dataModel);
 
-		final String dataModelUri = "http://data.slub-dresden.de/resources/" + dataModel.getId() + "/schema";
+		compareCreatedSchema(schema, dataModelUri);
+		new CleanupDataModelSchemaTask().cleanUpResources(dataModel, schema);
+	}
 
-		final Fn expected = makeExpected(dataModelUri);
+	private void compareCreatedSchema(final Schema schema, final String dataModelUri) {
+		final PathHelper expected = makeExpected(dataModelUri);
+		final PathHelper actual = makeActual(schema, dataModelUri);
 
-		final Fn actual = new Fn(dataModelUri);
+		Assert.assertTrue(
+				"Actual attribute paths contain superfluous paths",
+				attributePathsEqual(actual.attributePaths(), expected.attributePaths()));
 
-		for (final AttributePath attributePath : schema.getAttributePaths()) {
-			final LinkedList<Attribute> attributes = attributePath.getAttributePath();
+		Assert.assertTrue(
+				"Actual attribute paths is missing some paths",
+				attributePathsEqual(expected.attributePaths(), actual.attributePaths()));
+	}
+
+	private ObjectMapper getMapper() {
+		return GuicedTest.injector.getInstance(ObjectMapper.class);
+	}
+
+	private Resource uploadResource() throws URISyntaxException, IOException {
+		final File pnxFile = new File(Resources.getResource("test-pnx.xml").toURI());
+		final FileDataBodyPart filePart = new FileDataBodyPart("file", pnxFile, MediaType.MULTIPART_FORM_DATA_TYPE);
+
+		@SuppressWarnings("resource")
+		final MultiPart multiPart = new FormDataMultiPart()
+				.field("name", RESOURCE_NAME)
+				.field("description", RESOURCE_DESCRIPTION)
+				.bodyPart(filePart);
+
+		final Response resourceResponse = target("resources").request().buildPost(Entity.entity(multiPart, MediaType.MULTIPART_FORM_DATA_TYPE))
+				.invoke();
+		final Resource resource = getMapper().readValue(resourceResponse.readEntity(String.class), Resource.class);
+
+		MatcherAssert.assertThat(resourceResponse.getStatus(), Matchers.equalTo(201));
+		MatcherAssert.assertThat(resource.getName(), Matchers.equalTo(RESOURCE_NAME));
+		MatcherAssert.assertThat(resource.getDescription(), Matchers.equalTo(RESOURCE_DESCRIPTION));
+		MatcherAssert.assertThat(resource.getType(), Matchers.equalTo(ResourceType.FILE));
+
+		return resource;
+	}
+
+	private Configuration createConfiguration() {
+		final Configuration configuration = new Configuration();
+		configuration.setName(CONFIGURATION_NAME);
+		configuration.setDescription(CONFIGURATION_DESCRIPTION);
+		configuration.addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode("xml"));
+		configuration.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("record"));
+		configuration.addParameter(ConfigurationStatics.XML_NAMESPACE, new TextNode("http://foo-bar.de/"));
+		return configuration;
+	}
+
+	private DataModel createDataModel(final Resource resource) throws IOException {
+		final Configuration configuration = createConfiguration();
+		final DataModel model = createDataModel(resource, configuration);
+		return obtainDataModelByUpload(resource, model);
+	}
+
+	private DataModel createDataModel(final Resource resource, final Configuration configuration) {
+		final DataModel dataModel = new DataModel();
+		dataModel.setDataResource(resource);
+		dataModel.setConfiguration(configuration);
+		return dataModel;
+	}
+
+	private DataModel obtainDataModelByUpload(final Resource resource, final DataModel model) throws IOException {
+		final String dataModelAsString = getMapper().writeValueAsString(model);
+		final Response dataModelResponse = target("datamodels").request().buildPost(Entity.json(dataModelAsString)).invoke();
+		final DataModel dataModel = getMapper().readValue(dataModelResponse.readEntity(String.class), DataModel.class);
+
+		MatcherAssert.assertThat(dataModelResponse.getStatus(), Matchers.equalTo(201));
+		MatcherAssert.assertThat(dataModel.getDataResource(), Matchers.equalTo(resource));
+		MatcherAssert.assertThat(dataModel.getConfiguration().getName(), Matchers.equalTo(CONFIGURATION_NAME));
+		MatcherAssert.assertThat(dataModel.getConfiguration().getDescription(), Matchers.equalTo(CONFIGURATION_DESCRIPTION));
+		return dataModel;
+	}
+
+	private String getResourceUri(final DataModel dataModel) {
+		return String.format("http://data.slub-dresden.de/resources/%d/schema", dataModel.getId());
+	}
+
+	private PathHelper makeExpected(final String uri) {
+		final PathHelper pathHelper = PathHelpers.newExpected(uri);
+
+		final String[] attributeNames = { "sort", "lsr06", "booster2", "frbr", "ilsapiid", "dedup",
+				"search", "lds22", "lds28", "toplevel", "delcategory", "f6", "lds21", "lad04",
+				"lad05", "lfc01", "f1", "availlibrary", "sourcesystem", "lds32", "format", "cop",
+				"pub", "publisher", "ranking", "availpnx", "btitle", "addata", "searchscope",
+				"prefilter", "creationdate", "scope", "control", "lds12", "linktoholdings", "lds17",
+				"addsrcrecordid", "links", "lds18", "relation", "delivery", "rsrctype", "lds39",
+				"lsr01", "display", "lsr04", "lsr05", "lsr20", "lsr21", "lds31", "addtitle",
+				"lfc02", "recordid", "t", "f10", "ispartof", "facets", "c4", "availinstitution",
+				"c1", "genre", "title", "sourcerecordid", "sourceformat", "sourceid", "language",
+				"institution", "value", "type" };
+		for (final String attributeName : attributeNames) {
+			pathHelper.make(attributeName);
+		}
+
+		PathHelpers.force(pathHelper,
+				new String[] { "type" },
+				new String[] { "display", "type" },
+				new String[] { "display", "type", "type" },
+				new String[] { "display", "type", "value" });
+
+		pathHelper.path("sort", "creationdate");
+		pathHelper.path("sort", "title");
+		pathHelper.path("links", "linktoholdings");
+		pathHelper.path("frbr", "t");
+		pathHelper.path("dedup", "f10");
+		pathHelper.path("dedup", "c4");
+		pathHelper.path("dedup", "c1");
+		pathHelper.path("dedup", "f6");
+		pathHelper.path("dedup", "f1");
+		pathHelper.path("dedup", "t");
+		pathHelper.path("search", "rsrctype");
+		pathHelper.path("search", "scope");
+		pathHelper.path("search", "addsrcrecordid");
+		pathHelper.path("search", "title");
+		pathHelper.path("search", "lsr06");
+		pathHelper.path("search", "lsr01");
+		pathHelper.path("search", "lsr04");
+		pathHelper.path("search", "searchscope");
+		pathHelper.path("search", "lsr20");
+		pathHelper.path("search", "lsr21");
+		pathHelper.path("search", "creationdate");
+		pathHelper.path("search", "sourceid");
+		pathHelper.path("search", "addtitle");
+		pathHelper.path("search", "recordid");
+		pathHelper.path("search", "lsr05");
+		pathHelper.path("display", "availlibrary");
+		pathHelper.path("display", "lds12");
+		pathHelper.path("display", "ispartof");
+		pathHelper.path("display", "publisher");
+		pathHelper.path("display", "lds17");
+		pathHelper.path("display", "format");
+		pathHelper.path("display", "availinstitution");
+		pathHelper.path("display", "availpnx");
+		pathHelper.path("display", "lds39");
+		pathHelper.path("display", "title");
+		pathHelper.path("display", "lds28");
+		pathHelper.path("display", "relation");
+		pathHelper.path("display", "lds18");
+		pathHelper.path("display", "lds31");
+		pathHelper.path("display", "creationdate");
+		pathHelper.path("display", "lds32");
+		pathHelper.path("display", "language");
+		pathHelper.path("display", "lds21");
+		pathHelper.path("display", "lds22");
+		pathHelper.path("facets", "language");
+		pathHelper.path("facets", "toplevel");
+		pathHelper.path("facets", "prefilter");
+		pathHelper.path("facets", "creationdate");
+		pathHelper.path("facets", "lfc02");
+		pathHelper.path("facets", "rsrctype");
+		pathHelper.path("facets", "lfc01");
+		pathHelper.path("ranking", "booster2");
+		pathHelper.path("delivery", "delcategory");
+		pathHelper.path("delivery", "institution");
+		pathHelper.path("addata", "genre");
+		pathHelper.path("addata", "format");
+		pathHelper.path("addata", "cop");
+		pathHelper.path("addata", "btitle");
+		pathHelper.path("addata", "pub");
+		pathHelper.path("addata", "addtitle");
+		pathHelper.path("addata", "lad04");
+		pathHelper.path("addata", "lad05");
+		pathHelper.path("control", "sourceformat");
+		pathHelper.path("control", "sourcesystem");
+		pathHelper.path("control", "sourcerecordid");
+		pathHelper.path("control", "addsrcrecordid");
+		pathHelper.path("control", "ilsapiid");
+		pathHelper.path("control", "sourceid");
+		pathHelper.path("control", "recordid");
+
+		return pathHelper;
+	}
+
+	private PathHelper makeActual(final Schema schema, final String dataModelUri) {
+		final PathHelper actual = PathHelpers.newActual(dataModelUri);
+
+		for (final AttributePath attributePath : schema.getUniqueAttributePaths()) {
+			final List<Attribute> attributes = attributePath.getAttributePath();
 
 			final String[] attributeNames = new String[attributes.size()];
 			int idx = 0;
@@ -105,233 +244,35 @@ public class PNXSchemaTest extends ResourceTest {
 			}
 			actual.path(attributeNames);
 		}
+		return actual;
+	}
 
-		MatcherAssert.assertThat(actual.attributePaths, Matchers.everyItem(Matchers.isIn(expected.attributePaths)));
-		MatcherAssert.assertThat(expected.attributePaths, Matchers.everyItem(Matchers.isIn(actual.attributePaths)));
+	private boolean attributePathsEqual(final Iterable<AttributePath> actual, final Iterable<AttributePath> expected) {
+		for (final AttributePath attributePath : actual) {
+			if (!findAttributePath(expected, attributePath.getAttributePath())) {
+				return false;
+			}
+		}
+		return true;
+	}
 
-		// clean-up
+	private boolean findAttributePath(final Iterable<AttributePath> haystack, final Iterable<Attribute> needle) {
+		for (final AttributePath path : haystack) {
+			if (isEqualByUri(path.getAttributePath(), needle)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-		final Resource dataModelResource = dataModel.getDataResource();
-		final Configuration configuration = dataModel.getConfiguration();
-		final Clasz recordClass = schema.getRecordClass();
-
-		final Set<AttributePath> schemaAttributePaths = schema.getAttributePaths();
-
-		if (schemaAttributePaths != null) {
-
-			for (final AttributePath schemaAttributePath : schemaAttributePaths) {
-
-				attributePaths.put(schemaAttributePath.getId(), schemaAttributePath);
-
-				final Set<Attribute> attributePathsAttributes = schemaAttributePath.getAttributes();
-
-				if (attributePathsAttributes != null) {
-
-					for (final Attribute attribute : attributePathsAttributes) {
-
-						attributes.put(attribute.getId(), attribute);
-					}
-				}
+	private boolean isEqualByUri(final Iterable<Attribute> actualAttributes, final Iterable<Attribute> expectedAttributes) {
+		final Iterator<Attribute> actuals = actualAttributes.iterator();
+		for (final Attribute expectedAttribute : expectedAttributes) {
+			if (!actuals.hasNext() || !expectedAttribute.getUri().equals(actuals.next().getUri())) {
+				return false;
 			}
 		}
 
-		dataModelsResourceTestUtils.deleteObject(dataModel);
-
-		if (dataModelResource != null) {
-
-			resourcesResourceTestUtils.deleteObject(dataModelResource);
-		}
-
-		if (configuration != null) {
-
-			configurationsResourceTestUtils.deleteObject(configuration);
-		}
-
-		schemasResourceTestUtils.deleteObject(schema);
-
-		for (final AttributePath attributePath : attributePaths.values()) {
-
-			attributePathsResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(attributePath);
-		}
-
-		for (final Attribute attribute : attributes.values()) {
-
-			attributesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(attribute);
-		}
-
-		if (recordClass != null) {
-
-			claszesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(recordClass);
-		}
-
-		// clean-up graph db
-		InternalGDMGraphServiceTestUtils.cleanGraphDB();
-	}
-
-	private Resource uploadResource() throws URISyntaxException, IOException {
-
-		final String name = "pnx";
-		final String description = "pnx file";
-		final File pnxFile = new File(Resources.getResource("test-pnx.xml").toURI());
-		final FileDataBodyPart filePart = new FileDataBodyPart("file", pnxFile, MediaType.MULTIPART_FORM_DATA_TYPE);
-
-		final MultiPart multiPart = new FormDataMultiPart().field("name", name).field("description", description).bodyPart(filePart);
-
-		final Response resourceResponse = target("resources").request().buildPost(Entity.entity(multiPart, MediaType.MULTIPART_FORM_DATA_TYPE))
-				.invoke();
-		final Resource resource = mapper.readValue(resourceResponse.readEntity(String.class), Resource.class);
-
-		MatcherAssert.assertThat(resourceResponse.getStatus(), Matchers.equalTo(201));
-		MatcherAssert.assertThat(resource.getName(), Matchers.equalTo(name));
-		MatcherAssert.assertThat(resource.getDescription(), Matchers.equalTo(description));
-		MatcherAssert.assertThat(resource.getType(), Matchers.equalTo(ResourceType.FILE));
-
-		return resource;
-	}
-
-	private DataModel createDataModel(final Resource resource) throws IOException {
-
-		final String name = "pnx";
-		final String description = "pnx config";
-
-		final Configuration configuration = new Configuration() {
-
-			{
-				setName(name);
-				setDescription(description);
-				addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode("xml"));
-				addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("record"));
-				addParameter(ConfigurationStatics.XML_NAMESPACE, new TextNode("http://foo-bar.de/"));
-			}
-		};
-
-		final String dataModelAsString = mapper.writeValueAsString(new DataModel() {
-
-			{
-				setDataResource(resource);
-				setConfiguration(configuration);
-			}
-		});
-
-		final Response dataModelResponse = target("datamodels").request().buildPost(Entity.json(dataModelAsString)).invoke();
-		final DataModel dataModel = mapper.readValue(dataModelResponse.readEntity(String.class), DataModel.class);
-
-		MatcherAssert.assertThat(dataModelResponse.getStatus(), Matchers.equalTo(201));
-		MatcherAssert.assertThat(dataModel.getDataResource(), Matchers.equalTo(resource));
-		MatcherAssert.assertThat(dataModel.getConfiguration().getName(), Matchers.equalTo(name));
-		MatcherAssert.assertThat(dataModel.getConfiguration().getDescription(), Matchers.equalTo(description));
-
-		return dataModel;
-	}
-
-	private Fn makeExpected(final String uri) {
-		final Fn fn = new Fn(uri);
-
-		final String[] attributeNames = { "sort", "lsr06", "booster2", "frbr", "ilsapiid", "dedup", "search", "lds22", "lds28", "toplevel",
-				"delcategory", "f6", "lds21", "lad04", "lad05", "lfc01", "f1", "availlibrary", "sourcesystem", "lds32", "format", "cop", "pub",
-				"publisher", "ranking", "availpnx", "btitle", "addata", "searchscope", "prefilter", "creationdate", "scope", "control", "lds12",
-				"linktoholdings", "lds17", "addsrcrecordid", "links", "lds18", "relation", "delivery", "rsrctype", "lds39", "lsr01", "display",
-				"lsr04", "lsr05", "lsr20", "lsr21", "lds31", "addtitle", "lfc02", "recordid", "t", "f10", "ispartof", "facets", "c4",
-				"availinstitution", "c1", "genre", "title", "sourcerecordid", "sourceformat", "sourceid", "language", "institution" };
-
-		for (final String attributeName : attributeNames) {
-			fn.make(attributeName);
-		}
-
-		fn.path("sort", "creationdate");
-		fn.path("sort", "title");
-		fn.path("links", "linktoholdings");
-		fn.path("frbr", "t");
-		fn.path("dedup", "f10");
-		fn.path("dedup", "c4");
-		fn.path("dedup", "c1");
-		fn.path("dedup", "f6");
-		fn.path("dedup", "f1");
-		fn.path("dedup", "t");
-		fn.path("search", "rsrctype");
-		fn.path("search", "scope");
-		fn.path("search", "addsrcrecordid");
-		fn.path("search", "title");
-		fn.path("search", "lsr06");
-		fn.path("search", "lsr01");
-		fn.path("search", "lsr04");
-		fn.path("search", "searchscope");
-		fn.path("search", "lsr20");
-		fn.path("search", "lsr21");
-		fn.path("search", "creationdate");
-		fn.path("search", "sourceid");
-		fn.path("search", "addtitle");
-		fn.path("search", "recordid");
-		fn.path("search", "lsr05");
-		fn.path("display", "availlibrary");
-		fn.path("display", "lds12");
-		fn.path("display", "ispartof");
-		fn.path("display", "publisher");
-		fn.path("display", "lds17");
-		fn.path("display", "format");
-		fn.path("display", "availinstitution");
-		fn.path("display", "availpnx");
-		fn.path("display", "lds39");
-		fn.path("display", "title");
-		fn.path("display", "lds28");
-		fn.path("display", "relation");
-		fn.path("display", "lds18");
-		fn.path("display", "lds31");
-		fn.path("display", "creationdate");
-		fn.path("display", "lds32");
-		fn.path("display", "language");
-		fn.path("display", "lds21");
-		fn.path("display", "lds22");
-		fn.path("facets", "language");
-		fn.path("facets", "toplevel");
-		fn.path("facets", "prefilter");
-		fn.path("facets", "creationdate");
-		fn.path("facets", "lfc02");
-		fn.path("facets", "rsrctype");
-		fn.path("facets", "lfc01");
-		fn.path("ranking", "booster2");
-		fn.path("delivery", "delcategory");
-		fn.path("delivery", "institution");
-		fn.path("addata", "genre");
-		fn.path("addata", "format");
-		fn.path("addata", "cop");
-		fn.path("addata", "btitle");
-		fn.path("addata", "pub");
-		fn.path("addata", "addtitle");
-		fn.path("addata", "lad04");
-		fn.path("addata", "lad05");
-		fn.path("control", "sourceformat");
-		fn.path("control", "sourcesystem");
-		fn.path("control", "sourcerecordid");
-		fn.path("control", "addsrcrecordid");
-		fn.path("control", "ilsapiid");
-		fn.path("control", "sourceid");
-		fn.path("control", "recordid");
-
-		return fn;
-	}
-
-	private class Fn {
-
-		private final String	uri;
-
-		private Fn(final String uri) {
-			this.uri = uri;
-		}
-
-		private final Map<String, Attribute>	attributes		= Maps.newHashMap();
-		private final Set<AttributePath>		attributePaths	= Sets.newHashSet();
-
-		public void path(final String... a) {
-			final LinkedList<Attribute> list = Lists.newLinkedList();
-			for (final String s : a) {
-				list.add(attributes.get(s));
-			}
-			attributePaths.add(new AttributePath(list));
-		}
-
-		public void make(final String name) {
-			attributes.put(name, new Attribute(uri + "#" + name, name));
-		}
+		return !actuals.hasNext();
 	}
 }

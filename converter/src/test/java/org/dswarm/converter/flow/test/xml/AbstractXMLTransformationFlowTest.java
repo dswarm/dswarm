@@ -245,24 +245,21 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		final Map<Long, AttributePath> attributePaths = Maps.newLinkedHashMap();
 
-		if (schema != null) {
+		final Set<AttributePath> attributePathsToDelete = schema.getUniqueAttributePaths();
 
-			final Set<AttributePath> attributePathsToDelete = schema.getAttributePaths();
+		if (attributePathsToDelete != null) {
 
-			if (attributePathsToDelete != null) {
+			for (final AttributePath attributePath : attributePathsToDelete) {
 
-				for (final AttributePath attributePath : attributePathsToDelete) {
+				attributePaths.put(attributePath.getId(), attributePath);
 
-					attributePaths.put(attributePath.getId(), attributePath);
+				final Set<Attribute> attributesToDelete = attributePath.getAttributes();
 
-					final Set<Attribute> attributesToDelete = attributePath.getAttributes();
+				if (attributesToDelete != null) {
 
-					if (attributesToDelete != null) {
+					for (final Attribute attribute : attributesToDelete) {
 
-						for (final Attribute attribute : attributesToDelete) {
-
-							attributes.put(attribute.getId(), attribute);
-						}
+						attributes.put(attribute.getId(), attribute);
 					}
 				}
 			}
@@ -306,7 +303,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		final ArrayNode actualJSONArray = objectMapper.readValue(actualResultJSONString, ArrayNode.class);
 		final ObjectNode actualElementInArray = (ObjectNode) actualJSONArray.get(0);
 		final String actualKeyInArray = actualElementInArray.fieldNames().next();
-		final ArrayNode actualKeyArray = (ArrayNode) actualElementInArray.get(actualKeyInArray);
+		final Iterable<JsonNode> actualKeyArray = actualElementInArray.get(actualKeyInArray);
 		ObjectNode actualJSON = null;
 
 		for (final JsonNode actualKeyArrayItem : actualKeyArray) {

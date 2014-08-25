@@ -188,7 +188,7 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttribu
 
 	}
 
-	private AttributePath createObject(final LinkedList<Attribute> attributePath) {
+	private AttributePath createObject(final List<Attribute> attributePath) {
 		AttributePath object = null;
 		try {
 			object = jpaService.createOrGetObjectTransactional(attributePath).getObject();

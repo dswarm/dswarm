@@ -47,7 +47,7 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 	/**
 	 * write data via InternalRDFGraphService and read it via InternalGDMGraphService. TODO: adapt record uri re. current model
 	 * (to ensure integrity)
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -142,7 +142,7 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 
 		if (schema != null) {
 
-			final Set<AttributePath> attributePathsToDelete = schema.getAttributePaths();
+			final Set<AttributePath> attributePathsToDelete = schema.getUniqueAttributePaths();
 
 			if (attributePaths != null) {
 
@@ -256,7 +256,7 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 
 		Assert.assertNotNull(schema);
 
-		final Set<AttributePath> sattributePaths = schema.getAttributePaths();
+		final Set<AttributePath> sattributePaths = schema.getUniqueAttributePaths();
 
 		Assert.assertNotNull(sattributePaths);
 
@@ -283,7 +283,7 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 
 		final Clasz recordClass = schema.getRecordClass();
 
-		final Set<AttributePath> attributePathsToDelete = schema.getAttributePaths();
+		final Set<AttributePath> attributePathsToDelete = schema.getUniqueAttributePaths();
 
 		if (attributePaths != null) {
 
@@ -311,9 +311,10 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 
 		final AttributePathServiceTestUtils attributePathServiceTestUtils = new AttributePathServiceTestUtils();
 
-		for (final AttributePath attributePath : attributePaths.values()) {
-
-			attributePathServiceTestUtils.deleteObject(attributePath);
+		if (attributePaths != null) {
+			for (final AttributePath attributePath : attributePaths.values()) {
+				attributePathServiceTestUtils.deleteObject(attributePath);
+			}
 		}
 
 		final AttributeServiceTestUtils attributeServiceTestUtils = new AttributeServiceTestUtils();
