@@ -146,16 +146,6 @@ public class Schema extends BasicDMPJPAObject {
 	}
 
 	/**
-	 * @return a String representation of the ordered list of attribute path ids (Json array string)
-	 */
-	@JsonIgnore
-	public String getAttributePathsJson() {
-		initializedAttributePaths(false);
-		refreshAttributePathsString();
-		return attributePathsJsonString;
-	}
-
-	/**
 	 * Gets the attribute path for the given attribute path identifier.
 	 *
 	 * @param id an attribute path identifier
@@ -183,8 +173,8 @@ public class Schema extends BasicDMPJPAObject {
 	 */
 	public void addAttributePath(final AttributePath attributePath) {
 		Preconditions.checkNotNull(attributePath);
-		ensureAttributePaths();
 
+		ensureAttributePaths();
 		ensureInitializedOrderedAttributePaths();
 
 		if (!attributePaths.contains(attributePath)) {
@@ -192,6 +182,27 @@ public class Schema extends BasicDMPJPAObject {
 			attributePaths.add(attributePath);
 			orderedAttributePaths.add(attributePath);
 
+			refreshAttributePathsString();
+		}
+	}
+
+	/**
+	 * Adds a new attribute path at the given index, overwriting any existing attribute path.
+	 *
+	 * @param attributePath the attribute path to add
+	 * @param atIndex		the index at which to add
+	 */
+	public void addAttributePath(final AttributePath attributePath, final int atIndex) {
+		Preconditions.checkNotNull(attributePath);
+		Preconditions.checkArgument(atIndex >= 0, "insertion index must be positive");
+		Preconditions.checkArgument(atIndex <= orderedAttributePaths.size(), "insertion index must not be greater than %s", orderedAttributePaths.size());
+
+		ensureAttributePaths();
+		ensureInitializedOrderedAttributePaths();
+
+		if (!attributePath.equals(orderedAttributePaths.get(atIndex))) {
+			orderedAttributePaths.add(atIndex, attributePath);
+			attributePaths.add(attributePath);
 			refreshAttributePathsString();
 		}
 	}
@@ -212,7 +223,7 @@ public class Schema extends BasicDMPJPAObject {
 	}
 
 	/**
-	 * remove an attribute path if it occurs on a specific index.
+	 * Removes an attribute path if it occurs at a specific index.
 	 *
 	 * @param attributePath the attribute path to remove
 	 * @param atIndex       the index from which to remove
@@ -232,7 +243,9 @@ public class Schema extends BasicDMPJPAObject {
 				return true;
 			}
 		} else {
-			return attributePaths.remove(attributePath);
+			if (attributePaths != null) {
+				return attributePaths.remove(attributePath);
+			}
 		}
 		return false;
 	}
@@ -291,21 +304,6 @@ public class Schema extends BasicDMPJPAObject {
 				&& DMPPersistenceUtil.getAttributePathUtils().completeEquals(((Schema) obj).getUniqueAttributePaths(), getUniqueAttributePaths())
 				&& DMPPersistenceUtil.getClaszUtils().completeEquals(((Schema) obj).getRecordClass(), getRecordClass())
 				&& DMPPersistenceUtil.getContentSchemaUtils().completeEquals(((Schema) obj).getContentSchema(), getContentSchema());
-	}
-
-	protected void addAttributePath(final AttributePath attributePath, final int atIndex) {
-		Preconditions.checkNotNull(attributePath);
-		Preconditions.checkArgument(atIndex >= 0, "insertion index must be positive");
-		Preconditions.checkArgument(atIndex <= orderedAttributePaths.size(), "insertion index must not be greater than {}", orderedAttributePaths.size());
-
-		ensureAttributePaths();
-		ensureInitializedOrderedAttributePaths();
-
-		if (attributePath.equals(orderedAttributePaths.get(atIndex))) {
-			orderedAttributePaths.add(atIndex, attributePath);
-			attributePaths.add(attributePath);
-			refreshAttributePathsString();
-		}
 	}
 
 	private void ensureAttributePaths() {
