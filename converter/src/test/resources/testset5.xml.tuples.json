@@ -1,0 +1,94 @@
+[ {
+    "v1" : "http://data.slub-dresden.de/datamodels/21/records/902630e3-8d76-46d6-8056-a53e9eb8ca3c",
+    "v2" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/5/schema#recordType"
+    }, {
+        "http://data.slub-dresden.de/resources/5/schema#name" : [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/5/schema#nameType"
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Wladimir"
+        } ]
+    }, {
+        "http://data.slub-dresden.de/resources/5/schema#number" : [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/5/schema#numberType"
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "3"
+        } ]
+    }, {
+        "http://data.slub-dresden.de/resources/5/schema#color" : [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/5/schema#colorType"
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "blau"
+        } ]
+    }, {
+        "http://data.slub-dresden.de/resources/5/schema#date" : [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/5/schema#dateType"
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "20.12.2013"
+        } ]
+    } ]
+}, {
+    "v1" : "http://data.slub-dresden.de/datamodels/21/records/aebff82e-3b84-4eb5-b2a1-caf9c01c222f",
+    "v2" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/5/schema#recordType"
+    }, {
+        "http://data.slub-dresden.de/resources/5/schema#name" : [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/5/schema#nameType"
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Willi"
+        } ]
+    }, {
+        "http://data.slub-dresden.de/resources/5/schema#number" : [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/5/schema#numberType"
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "3"
+        } ]
+    }, {
+        "http://data.slub-dresden.de/resources/5/schema#color" : [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/5/schema#colorType"
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "grün"
+        } ]
+    }, {
+        "http://data.slub-dresden.de/resources/5/schema#date" : [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/5/schema#dateType"
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "10.12.2013"
+        } ]
+    } ]
+}, {
+    "v1" : "http://data.slub-dresden.de/datamodels/21/records/4f3fb941-d76a-4a6c-a678-ceb25f92bb40",
+    "v2" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/5/schema#recordType"
+    }, {
+        "http://data.slub-dresden.de/resources/5/schema#name" : [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/5/schema#nameType"
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Paule"
+        } ]
+    }, {
+        "http://data.slub-dresden.de/resources/5/schema#number" : [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/5/schema#numberType"
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "2"
+        } ]
+    }, {
+        "http://data.slub-dresden.de/resources/5/schema#color" : [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/5/schema#colorType"
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "grün"
+        } ]
+    }, {
+        "http://data.slub-dresden.de/resources/5/schema#date" : [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/5/schema#dateType"
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "10.10.2013"
+        } ]
+    }, {
+        "http://data.slub-dresden.de/resources/5/schema#extra" : [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/5/schema#extraType"
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "extra"
+        } ]
+    } ]
+} ]

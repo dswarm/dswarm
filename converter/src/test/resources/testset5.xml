@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listRecords>
+	<record>
+		<name>Wladimir</name>
+		<number>3</number>
+		<color>blau</color>
+		<date>20.12.2013</date>
+	</record>
+	<record>
+		<name>Willi</name>
+		<number>3</number>
+		<color>grün</color>
+		<date>10.12.2013</date>
+	</record>
+	<record>
+		<name>Paule</name>
+		<number>2</number>
+		<color>grün</color>
+		<date>10.10.2013</date>
+		<extra>extra</extra>
+	</record>
+</listRecords>
+	

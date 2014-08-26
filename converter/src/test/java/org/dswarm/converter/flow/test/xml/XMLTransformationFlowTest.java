@@ -79,6 +79,12 @@ public class XMLTransformationFlowTest extends GuicedTest {
 		testXMLTaskWithTuples("metsmods_small.xml.task.result.json", "metsmods_small.xml.task.json", "metsmods_small.xml.tuples.json");
 	}
 
+	@Test
+	public void testXMLWithFilterCommonAttributePathOnRoot() throws Exception {
+
+		testXMLTaskWithTuples("dd-651.xml.task.result.json", "dd-651.xml.task.json", "testset5.xml.tuples.json");
+	}
+
 	private void testXMLTaskWithTuples(final String taskResultJSONFileName, final String taskJSONFileName, final String tuplesJSONFileName)
 			throws Exception {
 
@@ -109,7 +115,6 @@ public class XMLTransformationFlowTest extends GuicedTest {
 		final String finalExpected = objectMapper2.writeValueAsString(expectedArray);
 
 		Assert.assertEquals(finalExpected.length(), finalActual.length());
-
 	}
 
 	private void testXMLMorphWithTuples(final String resultJSONFileName, final String morphXMLFileName, final String tuplesJSONFileName)
