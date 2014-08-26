@@ -176,12 +176,16 @@ public class ContentSchemasResource extends BasicDMPResource<ContentSchemasResou
 
 	/**
 	 * {@inheritDoc}<br/>
-	 * Updates the name, key attribute paths and value attribute path of the content schema.
+	 * Updates the name, record identifier attribute path, key attribute paths and value attribute path of the content schema.
 	 */
 	@Override
 	protected ContentSchema prepareObjectForUpdate(final ContentSchema objectFromJSON, final ContentSchema object) {
 
 		super.prepareObjectForUpdate(objectFromJSON, object);
+
+		final AttributePath recordIdentifierAttributePath = objectFromJSON.getRecordIdentifierAttributePath();
+
+		object.setRecordIdentifierAttributePath(recordIdentifierAttributePath);
 
 		final LinkedList<AttributePath> keyAttributePaths = objectFromJSON.getKeyAttributePaths();
 

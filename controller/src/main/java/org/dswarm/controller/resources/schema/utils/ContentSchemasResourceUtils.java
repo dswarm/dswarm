@@ -106,6 +106,18 @@ public class ContentSchemasResourceUtils extends BasicDMPResourceUtils<ContentSc
 
 		super.replaceRelevantDummyIds(object, enhancedJsonNode, dummyIdCandidates);
 
+		final AttributePath recordIdentifierAttributePath = object.getRecordIdentifierAttributePath();
+
+		if (recordIdentifierAttributePath != null) {
+
+			if (areDummyIdCandidatesEmpty(dummyIdCandidates)) {
+
+				return enhancedJsonNode;
+			}
+
+			utilsFactory.get(AttributePathsResourceUtils.class).replaceRelevantDummyIds(recordIdentifierAttributePath, enhancedJsonNode, dummyIdCandidates);
+		}
+
 		final AttributePath valueAttributePath = object.getValueAttributePath();
 
 		if (valueAttributePath != null) {

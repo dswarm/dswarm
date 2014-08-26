@@ -1,12 +1,20 @@
 {
     "name": "my content schema",
-    "id": 12,
+    "id": 2,
+    "record_identifier_attribute_path": {
+        "id": 54,
+        "attributes": [{
+            "name": "identifier",
+            "uri": "http://purl.org/dc/terms/identifier",
+            "id": 46
+        }]
+    },
     "key_attribute_paths": [{
-        "id": 44,
+        "id": 55,
         "attributes": [{
             "name": "title",
             "uri": "http://purl.org/dc/terms/title",
-            "id": 40
+            "id": 47
         }, {
             "name": "hasPart",
             "uri": "http://purl.org/dc/terms/hasPart",
@@ -14,10 +22,10 @@
         }, {
             "name": "title",
             "uri": "http://purl.org/dc/terms/title",
-            "id": 40
+            "id": 47
         }]
     }, {
-        "id": 45,
+        "id": 56,
         "attributes": [{
             "name": "creator",
             "uri": "http://purl.org/dc/terms/creator",
@@ -25,18 +33,18 @@
         }, {
             "name": "name",
             "uri": "http://xmlns.com/foaf/0.1/name",
-            "id": 41
+            "id": 48
         }]
     }, {
-        "id": 46,
+        "id": 57,
         "attributes": [{
             "name": "created",
             "uri": "http://purl.org/dc/terms/created",
-            "id": 42
+            "id": 49
         }]
     }],
     "value_attribute_path": {
-        "id": 47,
+        "id": 58,
         "attributes": [{
             "name": "value",
             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
