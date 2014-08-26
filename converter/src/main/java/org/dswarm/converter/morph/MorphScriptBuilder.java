@@ -65,32 +65,32 @@ import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 
 /**
  * Creates a metamorph script from a given {@link Task}.
- * 
+ *
  * @author phorn
  * @author niederl
  * @author tgaengler
  */
 public class MorphScriptBuilder {
 
-	private static final Logger					LOG									= LoggerFactory.getLogger(MorphScriptBuilder.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MorphScriptBuilder.class);
 
-	private static final String					MAPPING_PREFIX						= "mapping";
+	private static final String MAPPING_PREFIX = "mapping";
 
-	private static final DocumentBuilderFactory	DOC_FACTORY							= DocumentBuilderFactory.newInstance();
+	private static final DocumentBuilderFactory DOC_FACTORY = DocumentBuilderFactory.newInstance();
 
-	private static final String					SCHEMA_PATH							= "schemata/metamorph.xsd";
+	private static final String SCHEMA_PATH = "schemata/metamorph.xsd";
 
-	private static final TransformerFactory		TRANSFORMER_FACTORY;
+	private static final TransformerFactory TRANSFORMER_FACTORY;
 
-	private static final String					TRANSFORMER_FACTORY_CLASS			= "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl";
+	private static final String TRANSFORMER_FACTORY_CLASS = "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl";
 
-	private static final String					INPUT_VARIABLE_IDENTIFIER			= "inputString";
+	private static final String INPUT_VARIABLE_IDENTIFIER = "inputString";
 
-	private static final String					OUTPUT_VARIABLE_PREFIX_IDENTIFIER	= "__TRANSFORMATION_OUTPUT_VARIABLE__";
+	private static final String OUTPUT_VARIABLE_PREFIX_IDENTIFIER = "__TRANSFORMATION_OUTPUT_VARIABLE__";
 
-	private static final String					FILTER_VARIABLE_POSTFIX				= ".filtered";
+	private static final String FILTER_VARIABLE_POSTFIX = ".filtered";
 
-	private static final String					OCCURRENCE_VARIABLE_POSTFIX			= ".occurrence";
+	private static final String OCCURRENCE_VARIABLE_POSTFIX = ".occurrence";
 
 	static {
 		System.setProperty("javax.xml.transform.TransformerFactory", MorphScriptBuilder.TRANSFORMER_FACTORY_CLASS);
@@ -127,7 +127,7 @@ public class MorphScriptBuilder {
 		}
 	}
 
-	private Document							doc;
+	private Document doc;
 
 	private Element varDefinition(final String key, final String value) {
 		final Element var = doc.createElement("var");
@@ -570,8 +570,9 @@ public class MorphScriptBuilder {
 			final Map<String, List<String>> inputAttributePathVariablesMap, final Element rules) throws DMPConverterException {
 
 		final String transformationOutputVariableIdentifier = determineTransformationOutputVariable(transformationComponent);
-		final String finalTransformationOutputVariableIdentifier = transformationOutputVariableIdentifier == null ? MorphScriptBuilder.OUTPUT_VARIABLE_PREFIX_IDENTIFIER
-				: transformationOutputVariableIdentifier;
+		final String finalTransformationOutputVariableIdentifier =
+				transformationOutputVariableIdentifier == null ? MorphScriptBuilder.OUTPUT_VARIABLE_PREFIX_IDENTIFIER
+						: transformationOutputVariableIdentifier;
 
 		final Function transformationFunction = transformationComponent.getFunction();
 
@@ -638,7 +639,7 @@ public class MorphScriptBuilder {
 	private void processComponent(final Component component, final Map<String, List<String>> inputAttributePathVariablesMap,
 			final String transformationOutputVariableIdentifier, final Element rules) throws DMPConverterException {
 
-		String[] inputStrings = {};
+		String[] inputStrings = { };
 
 		final Map<String, String> componentParameterMapping = component.getParameterMappings();
 
@@ -905,7 +906,7 @@ public class MorphScriptBuilder {
 		combineAsFilter.setAttribute("name", "@" + variable);
 		combineAsFilter.setAttribute("value", "${" + variable + MorphScriptBuilder.FILTER_VARIABLE_POSTFIX + "}");
 
-		final String commonAttributePath = determineCommonAttributePath(inputAttributePathStringXMLEscaped, filterExpressionMap.keySet());
+		final String commonAttributePath = validateCommonAttributePath(inputAttributePathStringXMLEscaped, filterExpressionMap.keySet());
 
 		combineAsFilter.setAttribute("flushWith", commonAttributePath);
 
@@ -1005,5 +1006,58 @@ public class MorphScriptBuilder {
 		}
 
 		return commonPrefix.substring(0, commonPrefix.length() - 1);
+	}
+
+	private String validateCommonAttributePath(final String valueAttributePath, final Set<String> filterAttributePaths) {
+
+		final String commonAttributePath = determineCommonAttributePath(valueAttributePath, filterAttributePaths);
+
+		if (commonAttributePath == null || commonAttributePath.isEmpty()) {
+
+			// to flush at record level
+			return "record";
+		}
+
+		final String[] commonAttributePathAttributes = determineAttributes(commonAttributePath);
+		final String[] valueAttributePathAttributes = determineAttributes(valueAttributePath);
+
+		boolean isValid = true;
+
+		for (int i = 0; i < commonAttributePathAttributes.length; i++) {
+
+			final String commonAttributePathAttribute = commonAttributePathAttributes[i];
+			final String valueAttributePathAttribute = valueAttributePathAttributes[i];
+
+			if (!commonAttributePathAttribute.equals(valueAttributePathAttribute)) {
+
+				isValid = false;
+
+				break;
+			}
+		}
+
+		if (isValid) {
+
+			return commonAttributePath;
+		} else {
+
+			// to flush at record level
+			return "record";
+		}
+	}
+
+	private String[] determineAttributes(final String attributePath) {
+
+		final String[] attributes;
+
+		if (attributePath.contains(DMPStatics.ATTRIBUTE_DELIMITER.toString())) {
+
+			attributes = attributePath.split(DMPStatics.ATTRIBUTE_DELIMITER.toString());
+		} else {
+
+			attributes = new String[] { attributePath };
+		}
+
+		return attributes;
 	}
 }

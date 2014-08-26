@@ -1,0 +1,15 @@
+[ {
+    "http://data.slub-dresden.de/datamodels/21/records/902630e3-8d76-46d6-8056-a53e9eb8ca3c" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://purl.org/ontology/bibo/Document"
+    } ]
+}, {
+    "http://data.slub-dresden.de/datamodels/21/records/aebff82e-3b84-4eb5-b2a1-caf9c01c222f" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://purl.org/ontology/bibo/Document"
+    } ]
+}, {
+    "http://data.slub-dresden.de/datamodels/21/records/4f3fb941-d76a-4a6c-a678-ceb25f92bb40" : [ {
+        "http://purl.org/dc/elements/1.1/title" : "grün"
+    }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://purl.org/ontology/bibo/Document"
+    } ]
+} ]

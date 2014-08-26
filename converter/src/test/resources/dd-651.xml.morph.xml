@@ -1,0 +1,23 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+	<meta>
+		<name>mapping1</name>
+	</meta>
+	<rules>
+		<combine flushWith="record" includeSubEntities="true" name="@color_value__-1409057511951__0__" reset="true" sameEntity="true" value="${color_value__-1409057511951__0__.filtered}">
+			<if>
+				<all flushWith="http://data.slub-dresden.de/resources/5/schema#color&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value" includeSubEntities="true" name="CONDITION_ALL" reset="true">
+					<data source="http://data.slub-dresden.de/resources/5/schema#number&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value">
+						<regexp match="2"/>
+					</data>
+					<data source="http://data.slub-dresden.de/resources/5/schema#color&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value">
+						<regexp match="grün"/>
+					</data>
+				</all>
+			</if>
+			<data name="color_value__-1409057511951__0__.filtered" source="http://data.slub-dresden.de/resources/5/schema#color&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+		</combine>
+		<data name="http://purl.org/dc/elements/1.1/title" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
+		<data name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" source="@color_value__-1409057511951__0__"/>
+	</rules>
+</metamorph>
