@@ -50,9 +50,9 @@
 		<java.source.version>1.7</java.source.version>
 		<java.target.version>1.7</java.target.version>
 		<maxallowedviolations>7000</maxallowedviolations>
-		<google.guava.version>17.0</google.guava.version>
+		<google.guava.version>18.0</google.guava.version>
 		<google.collections.version>1.0</google.collections.version>
-		<jackson.version>2.3.3</jackson.version>
+		<jackson.version>2.4.1</jackson.version>
 		<slf4j.api.version>1.7.7</slf4j.api.version>
 		<apache.commons.version>3.3.2</apache.commons.version>
 		<commons-io.version>2.4</commons-io.version>

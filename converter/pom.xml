@@ -106,6 +106,10 @@
 					<artifactId>objenesis</artifactId>
 					<groupId>org.objenesis</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>hamcrest-core</artifactId>
+					<groupId>org.hamcrest</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -129,6 +133,11 @@
 					<groupId>xml-apis</groupId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.dswarm</groupId>
+			<artifactId>xsd2jsonschema</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

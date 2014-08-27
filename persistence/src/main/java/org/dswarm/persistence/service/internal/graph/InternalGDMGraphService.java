@@ -355,41 +355,11 @@ public class InternalGDMGraphService implements InternalModelService {
 		final DataModel dataModel = getSchemaInternal(dataModelId);
 		final Schema schema = dataModel.getSchema();
 
-		final Clasz recordClass;
+		final boolean result = SchemaUtils.addRecordClass(schema, recordClassUri, classService);
 
-		if (schema.getRecordClass() != null) {
+		if(!result) {
 
-			if (schema.getRecordClass().getUri().equals(recordClassUri)) {
-
-				// nothing to do, record class is already set
-
-				return dataModel;
-			}
-		} else {
-
-			// create new class
-			final ProxyClasz proxyRecordClass = classService.get().createOrGetObjectTransactional(recordClassUri);
-
-			if (proxyRecordClass == null) {
-
-				throw new DMPPersistenceException("couldn't create or retrieve record class");
-			}
-
-			recordClass = proxyRecordClass.getObject();
-
-			if (proxyRecordClass.getType().equals(RetrievalType.CREATED)) {
-
-				if (recordClass == null) {
-
-					throw new DMPPersistenceException("couldn't create new record class");
-				}
-
-				final String recordClassName = SchemaUtils.determineRelativeURIPart(recordClassUri);
-
-				recordClass.setName(recordClassName);
-			}
-
-			schema.setRecordClass(recordClass);
+			return dataModel;
 		}
 
 		return updateDataModel(dataModel);
@@ -398,74 +368,11 @@ public class InternalGDMGraphService implements InternalModelService {
 	private DataModel addAttributePaths(final DataModel dataModel, final Set<AttributePathHelper> attributePathHelpers)
 			throws DMPPersistenceException {
 
-		if (attributePathHelpers == null) {
+		final boolean result = SchemaUtils.addAttributePaths(dataModel.getSchema(), attributePathHelpers, attributePathService, attributeService);
 
-			InternalGDMGraphService.LOG.debug("couldn't determine attribute paths from data model '" + dataModel.getId() + "'");
-
-			return dataModel;
-		}
-
-		if (attributePathHelpers.isEmpty()) {
-
-			InternalGDMGraphService.LOG.debug("there are no attribute paths from data model '" + dataModel.getId() + "'");
-		}
-
-		if (dataModel.getSchema().getId() == 3) {
-
-			// mabxml schema is already there
+		if(!result) {
 
 			return dataModel;
-		}
-
-		for (final AttributePathHelper attributePathHelper : attributePathHelpers) {
-
-			final LinkedList<Attribute> attributes = Lists.newLinkedList();
-
-			final LinkedList<String> attributePathFromHelper = attributePathHelper.getAttributePath();
-
-			if (attributePathFromHelper.isEmpty()) {
-
-				InternalGDMGraphService.LOG.debug("there are no attributes for this attribute path from data model '" + dataModel.getId() + "'");
-			}
-
-			for (final String attributeString : attributePathFromHelper) {
-
-				final ProxyAttribute proxyAttribute = attributeService.get().createOrGetObjectTransactional(attributeString);
-
-				if (proxyAttribute == null) {
-
-					throw new DMPPersistenceException("couldn't create or retrieve attribute");
-				}
-
-				final Attribute attribute = proxyAttribute.getObject();
-
-				if (attribute == null) {
-
-					throw new DMPPersistenceException("couldn't create or retrieve attribute");
-				}
-
-				attributes.add(attribute);
-
-				final String attributeName = SchemaUtils.determineRelativeURIPart(attributeString);
-
-				attribute.setName(attributeName);
-			}
-
-			final ProxyAttributePath proxyAttributePath = attributePathService.get().createOrGetObjectTransactional(attributes);
-
-			if (proxyAttributePath == null) {
-
-				throw new DMPPersistenceException("couldn't create or retrieve attribute path");
-			}
-
-			final AttributePath attributePath = proxyAttributePath.getObject();
-
-			if (attributePath == null) {
-
-				throw new DMPPersistenceException("couldn't create or retrieve attribute path");
-			}
-
-			dataModel.getSchema().addAttributePath(attributePath);
 		}
 
 		return updateDataModel(dataModel);
