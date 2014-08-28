@@ -184,7 +184,17 @@ Put the following content into the file
 
 `/path/to/dswarm.conf` should be the same as in the previous example, where it was specified using `-Dconfig.file`.
 
-This is a one-time configuration for the container
+This is a one-time configuration for the container.
+
+##### Notes for Tomcat
+
+Tomcat has a [~~bug~~feature](https://issues.apache.org/bugzilla/show_bug.cgi?id=34840) where it would
+remove custom configurations whenever an application is redeployed.
+Unfortunately, this mean that the previous file would get deleted with every update of d:swarm.
+
+To work around this, edit the `$CATALINA_HOME/conf/context.xml`, so that is contains the `<Environment/>` part within its `<Context/>` part.
+
+This applies the settings for all deployed applications, though.
 
 
 ***
