@@ -2,6 +2,7 @@ package org.dswarm.converter.schema;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +79,26 @@ public class XMLSchemaParser {
 
 	public Optional<Schema> parse(final String xmlSchemaFilePath, final String recordTag) {
 
+		final Optional<Set<AttributePathHelper>> optionalAttributePaths = parseAttributePaths(xmlSchemaFilePath, recordTag);
+
+		if(!optionalAttributePaths.isPresent()) {
+
+			return Optional.absent();
+		}
+
+		final Set<AttributePathHelper> attributePaths = optionalAttributePaths.get();
+
+		for (final AttributePathHelper attributePath : attributePaths) {
+
+			System.out.println(attributePath.toString());
+		}
+
+		// TODO: remove this later;
+		return null;
+	}
+
+	public Optional<Set<AttributePathHelper>> parseAttributePaths(final String xmlSchemaFilePath, final String recordTag) {
+
 		final Optional<ObjectNode> jsonSchemaOptional = getJSONSchema(xmlSchemaFilePath);
 
 		if (!jsonSchemaOptional.isPresent()) {
@@ -92,7 +113,8 @@ public class XMLSchemaParser {
 		// attribute path retrieval from all records
 		for (final JsonNode recordTagNode : recordTagNodes) {
 
-			final Optional<String> optionalRecordTagAttribute = getAttribute(recordTagNode);
+			// TODO
+			// final Optional<String> optionalRecordTagAttribute = getAttribute(recordTagNode);
 
 			Set<AttributePathHelper> recordTagNodeAttributePaths = Sets.newLinkedHashSet();
 
@@ -104,13 +126,7 @@ public class XMLSchemaParser {
 			}
 		}
 
-		for (final AttributePathHelper attributePath : attributePaths) {
-
-			System.out.println(attributePath.toString());
-		}
-
-		// TODO: remove this later;
-		return null;
+		return Optional.fromNullable(attributePaths);
 	}
 
 	private List<JsonNode> getRecordTagNodes(final ObjectNode jsonSchema, final String recordTag) {
