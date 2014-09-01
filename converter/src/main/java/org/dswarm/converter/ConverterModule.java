@@ -4,6 +4,9 @@ import com.google.inject.AbstractModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.dswarm.converter.schema.XMLSchemaParser;
+import org.dswarm.init.util.DMPUtil;
+
 /**
  * The Guice configuration of the converter module. Interface/classes that are registered here can be utilised for injection.
  * 
@@ -15,5 +18,7 @@ public class ConverterModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
+
+		bind(XMLSchemaParser.class);
 	}
 }
