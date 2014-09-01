@@ -368,7 +368,16 @@ public class InternalGDMGraphService implements InternalModelService {
 	private DataModel addAttributePaths(final DataModel dataModel, final Set<AttributePathHelper> attributePathHelpers)
 			throws DMPPersistenceException {
 
-		final boolean result = SchemaUtils.addAttributePaths(dataModel.getSchema(), attributePathHelpers, attributePathService, attributeService);
+		final Schema schema = dataModel.getSchema();
+
+		if (schema.getId() == 3) {
+
+			// mabxml schema is already there
+
+			return dataModel;
+		}
+
+		final boolean result = SchemaUtils.addAttributePaths(schema, attributePathHelpers, attributePathService, attributeService);
 
 		if(!result) {
 

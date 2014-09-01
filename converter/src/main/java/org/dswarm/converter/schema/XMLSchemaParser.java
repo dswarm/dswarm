@@ -27,9 +27,12 @@ import org.xml.sax.SAXException;
 
 import org.dswarm.graph.json.Resource;
 import org.dswarm.graph.json.ResourceNode;
+import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelperHelper;
 import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.model.schema.proxy.ProxySchema;
+import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.service.schema.AttributePathService;
 import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.schema.ClaszService;
@@ -77,44 +80,75 @@ public class XMLSchemaParser {
 		objectMapperProvider = objectMapperProviderArg;
 	}
 
-	public Optional<Schema> parse(final String xmlSchemaFilePath, final String recordTag) {
+	public Optional<Schema> parse(final String xmlSchemaFilePath, final String recordTag, final String schemaName) throws DMPPersistenceException {
 
-		final Optional<Set<AttributePathHelper>> optionalAttributePaths = parseAttributePaths(xmlSchemaFilePath, recordTag);
+		final Optional<List<JsonNode>> optionalRecordTags = getRecordTagNodes(xmlSchemaFilePath, recordTag);
 
-		if(!optionalAttributePaths.isPresent()) {
+		if(!optionalRecordTags.isPresent()) {
 
 			return Optional.absent();
 		}
 
-		final Set<AttributePathHelper> attributePaths = optionalAttributePaths.get();
+		final List<JsonNode> recordTagNodes = optionalRecordTags.get();
 
-		for (final AttributePathHelper attributePath : attributePaths) {
+		final Optional<Schema> optionalSchema = createSchema();
 
-			System.out.println(attributePath.toString());
+		if(!optionalSchema.isPresent()) {
+
+			return Optional.absent();
 		}
 
-		// TODO: remove this later;
-		return null;
+		final Schema schema = optionalSchema.get();
+
+		if(schemaName != null) {
+
+			schema.setName(schemaName);
+		}
+
+		final Optional<String> optionalRecordTagAttribute = getAttribute(recordTagNodes.get(0));
+
+		if(optionalRecordTagAttribute.isPresent()) {
+
+			final String recordTagAttribute = optionalRecordTagAttribute.get();
+
+			final String recordTagAttributeURI = SchemaUtils.mintSchemaTermURI(recordTagAttribute, schema.getId());
+
+			final String recordClassUri = recordTagAttributeURI + "Type";
+
+			SchemaUtils.addRecordClass(schema, recordClassUri, classServiceProvider);
+		}
+
+		final Set<AttributePathHelper> attributePaths = parseAttributePaths(recordTagNodes);
+
+		SchemaUtils.addAttributePaths(schema, attributePaths, attributePathServiceProvider, attributeServiceProvider);
+
+		final Schema updatedSchema = SchemaUtils.updateSchema(schema, schemaServiceProvider);
+
+		return Optional.fromNullable(updatedSchema);
 	}
 
 	public Optional<Set<AttributePathHelper>> parseAttributePaths(final String xmlSchemaFilePath, final String recordTag) {
 
-		final Optional<ObjectNode> jsonSchemaOptional = getJSONSchema(xmlSchemaFilePath);
+		final Optional<List<JsonNode>> optionalRecordTags = getRecordTagNodes(xmlSchemaFilePath, recordTag);
 
-		if (!jsonSchemaOptional.isPresent()) {
+		if(!optionalRecordTags.isPresent()) {
 
 			return Optional.absent();
 		}
 
-		final List<JsonNode> recordTagNodes = getRecordTagNodes(jsonSchemaOptional.get(), recordTag);
+		final List<JsonNode> recordTagNodes = optionalRecordTags.get();
+
+		final Set<AttributePathHelper> attributePaths = parseAttributePaths(recordTagNodes);
+
+		return Optional.fromNullable(attributePaths);
+	}
+
+	private Set<AttributePathHelper> parseAttributePaths(final List<JsonNode> recordTagNodes) {
 
 		final Set<AttributePathHelper> attributePaths = Sets.newCopyOnWriteArraySet();
 
 		// attribute path retrieval from all records
 		for (final JsonNode recordTagNode : recordTagNodes) {
-
-			// TODO
-			// final Optional<String> optionalRecordTagAttribute = getAttribute(recordTagNode);
 
 			Set<AttributePathHelper> recordTagNodeAttributePaths = Sets.newLinkedHashSet();
 
@@ -126,7 +160,21 @@ public class XMLSchemaParser {
 			}
 		}
 
-		return Optional.fromNullable(attributePaths);
+		return attributePaths;
+	}
+
+	private Optional<List<JsonNode>> getRecordTagNodes(final String xmlSchemaFilePath, final String recordTag) {
+
+		final Optional<ObjectNode> jsonSchemaOptional = getJSONSchema(xmlSchemaFilePath);
+
+		if (!jsonSchemaOptional.isPresent()) {
+
+			return Optional.absent();
+		}
+
+		final List<JsonNode> recordTagNodes = getRecordTagNodes(jsonSchemaOptional.get(), recordTag);
+
+		return Optional.fromNullable(recordTagNodes);
 	}
 
 	private List<JsonNode> getRecordTagNodes(final ObjectNode jsonSchema, final String recordTag) {
@@ -331,41 +379,6 @@ public class XMLSchemaParser {
 		determineAttributePaths(attributePaths, finalAttributePathHelper, newElementNodes);
 
 		return attributePaths;
-
-		//		if (ArrayNode.class.isInstance(jsonSchemaAttributeNode)) {
-		//
-		//			final ArrayNode jsonArray = (ArrayNode) jsonSchemaAttributeNode;
-		//
-		//			for (final JsonNode entryNode : jsonArray) {
-		//
-		//				final Set<AttributePathHelper> newAttributePaths = determineAttributePaths(entryNode, attributePaths, attributePath);
-		//				attributePaths.addAll(newAttributePaths);
-		//			}
-		//
-		//		} else if (ObjectNode.class.isInstance(jsonSchemaAttributeNode)) {
-		//
-		//			final ObjectNode jsonObject = (ObjectNode) jsonSchemaAttributeNode;
-		//
-		//			final Iterator<String> fieldNames = jsonObject.fieldNames();
-		//
-		//			while (fieldNames.hasNext()) {
-		//
-		//				final String fieldName = fieldNames.next();
-		//
-		//				final AttributePathHelper newAttributePath = AttributePathHelperHelper.addAttributePath(fieldName, attributePaths, attributePath);
-		//
-		//				final JsonNode valueNode = jsonObject.get(fieldName);
-		//
-		//				final Set<AttributePathHelper> newAttributePaths = determineAttributePaths(valueNode, attributePaths, newAttributePath);
-		//				attributePaths.addAll(newAttributePaths);
-		//			}
-		//
-		//		} else if (TextNode.class.isInstance(jsonSchemaAttributeNode)) {
-		//
-		//			AttributePathHelperHelper.addAttributePath(jsonSchemaAttributeNode, attributePaths, attributePath);
-		//		}
-		//
-		//		return attributePaths;
 	}
 
 	private void determineAttributePaths(final Set<AttributePathHelper> attributePaths, final AttributePathHelper finalAttributePathHelper,
@@ -397,6 +410,24 @@ public class XMLSchemaParser {
 			// add rdf:value attribute
 			AttributePathHelperHelper.addAttributePath(GDMUtil.RDF_value, attributePaths, attributePath);
 		}
+	}
+
+	private Optional<Schema> createSchema() throws DMPPersistenceException {
+
+		// create new schema
+		final ProxySchema proxySchema = schemaServiceProvider.get().createObjectTransactional();
+
+		final Schema schema;
+
+		if (proxySchema != null) {
+
+			schema = proxySchema.getObject();
+		} else {
+
+			schema = null;
+		}
+
+		return Optional.fromNullable(schema);
 	}
 
 }

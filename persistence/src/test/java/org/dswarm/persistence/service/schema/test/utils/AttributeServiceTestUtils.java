@@ -59,6 +59,9 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 		AttributeServiceTestUtils.excludeSubAttributes.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#value");
 		AttributeServiceTestUtils.excludeSubAttributes.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns");
 		AttributeServiceTestUtils.excludeSubAttributes.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf");
+		AttributeServiceTestUtils.excludeSubAttributes.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#stw");
+		AttributeServiceTestUtils.excludeSubAttributes.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf");
+		AttributeServiceTestUtils.excludeSubAttributes.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code");
 	}
 
 	public AttributeServiceTestUtils() {

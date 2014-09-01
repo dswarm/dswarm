@@ -1,6 +1,5 @@
 package org.dswarm.converter.mf.stream.source;
 
-import java.net.URI;
 import java.util.Map;
 import java.util.Stack;
 import java.util.UUID;
@@ -34,12 +33,13 @@ import org.dswarm.graph.json.ResourceNode;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
+import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.util.GDMUtil;
 
 /**
  * Converts XML records to GDM triples.
- * 
+ *
  * @author tgaengler
  * @author phorn
  */
@@ -48,41 +48,41 @@ import org.dswarm.persistence.util.GDMUtil;
 @Out(GDMModel.class)
 public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>> {
 
-	private String							currentId;
-	private final Model						model;
-	private Resource						recordResource;
-	private ResourceNode					recordNode;
-	private Node							entityNode;
-	private Stack<Tuple<Node, Predicate>>	entityStack;
-	private final Stack<String>				elementURIStack;
+	private       String                        currentId;
+	private final Model                         model;
+	private       Resource                      recordResource;
+	private       ResourceNode                  recordNode;
+	private       Node                          entityNode;
+	private       Stack<Tuple<Node, Predicate>> entityStack;
+	private final Stack<String>                 elementURIStack;
 
-	private static final Pattern			TABS			= Pattern.compile("\t+");
+	private static final Pattern TABS = Pattern.compile("\t+");
 
 	/**
 	 * note: recordTagName is not biunique, i.e., the record tag name can occur in different name spaces; hence, a record tag
 	 * uniqueness is only give by a complete uri
 	 */
-	private final String					recordTagName;
+	private final String recordTagName;
 
 	/**
 	 * record tag URI should be unique
 	 */
-	private String							recordTagUri = null;
+	private String recordTagUri = null;
 
-	private boolean							inRecord;
-	private StringBuilder					valueBuffer		= new StringBuilder();
-	private String							uri;
-	private ResourceNode					recordType;
+	private boolean inRecord;
+	private StringBuilder valueBuffer = new StringBuilder();
+	private String       uri;
+	private ResourceNode recordType;
 
-	private final Optional<DataModel>		dataModel;
-	private final Optional<String>			dataModelUri;
+	private final Optional<DataModel> dataModel;
+	private final Optional<String>    dataModelUri;
 
-	private long							nodeIdCounter	= 1;
-	private final Predicate					rdfType			= new Predicate(GDMUtil.RDF_type);
-	private final Map<String, Predicate>	predicates		= Maps.newHashMap();
-	private final Map<String, ResourceNode>	types			= Maps.newHashMap();
-	private final Map<String, AtomicLong>	valueCounter	= Maps.newHashMap();
-	private final Map<String, String>		uris			= Maps.newHashMap();
+	private       long                      nodeIdCounter = 1;
+	private final Predicate                 rdfType       = new Predicate(GDMUtil.RDF_type);
+	private final Map<String, Predicate>    predicates    = Maps.newHashMap();
+	private final Map<String, ResourceNode> types         = Maps.newHashMap();
+	private final Map<String, AtomicLong>   valueCounter  = Maps.newHashMap();
+	private final Map<String, String>       uris          = Maps.newHashMap();
 
 	public XMLGDMEncoder(final Optional<DataModel> dataModel) {
 		super();
@@ -121,16 +121,16 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 
 		if (inRecord) {
 			writeValue();
-			startEntity(mintUri(uri, localName));
+			startEntity(SchemaUtils.mintUri(uri, localName));
 			writeAttributes(attributes);
 		} else if (localName.equals(recordTagName)) {
 
 			if (recordTagUri == null) {
 
-				recordTagUri = mintUri(elementURIStack.peek(), localName);
+				recordTagUri = SchemaUtils.mintUri(elementURIStack.peek(), localName);
 			}
 
-			if (recordTagUri.equals(mintUri(elementURIStack.peek(), localName))) {
+			if (recordTagUri.equals(SchemaUtils.mintUri(elementURIStack.peek(), localName))) {
 
 				// TODO: how to determine the id of an record, or should we mint uris?
 				final String identifier = attributes.getValue("id");
@@ -151,7 +151,7 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 
 			final String elementUri = elementURIStack.pop();
 
-			if (recordTagUri.equals(mintUri(elementUri, localName))) {
+			if (recordTagUri.equals(SchemaUtils.mintUri(elementUri, localName))) {
 				inRecord = false;
 				endRecord();
 			} else {
@@ -179,7 +179,7 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 		final int length = attributes.getLength();
 
 		for (int i = 0; i < length; ++i) {
-			final String name = mintUri(uri, attributes.getLocalName(i));
+			final String name = SchemaUtils.mintUri(uri, attributes.getLocalName(i));
 			final String value = attributes.getValue(i);
 			literal(name, value);
 		}
@@ -191,7 +191,7 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 
 		assert !isClosed();
 
-		currentId = isValidUri(identifier) ? identifier : mintRecordUri(identifier);
+		currentId = SchemaUtils.isValidUri(identifier) ? identifier : mintRecordUri(identifier);
 
 		recordResource = new Resource(currentId);
 		recordNode = new ResourceNode(currentId);
@@ -345,50 +345,6 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 		return uri;
 	}
 
-	private String mintDataModelTermUri(@Nullable final String uri, @Nullable final String localName) {
-
-		final boolean canUseLocalName = !Strings.isNullOrEmpty(localName);
-
-		if (Strings.isNullOrEmpty(uri)) {
-
-			if (dataModelUri.isPresent()) {
-
-				if (canUseLocalName) {
-
-					return mintUri(dataModelUri.get(), localName);
-				} else {
-
-					return dataModelUri.get() + "#" + UUID.randomUUID();
-				}
-			}
-
-			return String.format("http://data.slub-dresden.de/terms/%s", UUID.randomUUID());
-		}
-
-		if (canUseLocalName) {
-
-			return mintUri(uri, localName);
-		} else {
-
-			return String.format("http://data.slub-dresden.de/terms/%s", UUID.randomUUID());
-		}
-	}
-
-	private boolean isValidUri(@Nullable final String identifier) {
-		if (identifier != null) {
-			try {
-				final URI _uri = URI.create(identifier);
-
-				return _uri != null && _uri.getScheme() != null;
-			} catch (final IllegalArgumentException e) {
-
-				return false;
-			}
-		}
-
-		return false;
-	}
-
 	private String mintRecordUri(@Nullable final String identifier) {
 
 		if (currentId == null) {
@@ -436,22 +392,6 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 		}
 
 		return sb.toString();
-	}
-
-	private String mintUri(final String uri, final String localName) {
-
-		// allow has and slash uris
-		if (uri != null && uri.endsWith("/")) {
-
-			return uri + localName;
-		}
-
-		if (localName.startsWith("#")) {
-
-			return uri + localName;
-		}
-
-		return uri + "#" + localName;
 	}
 
 	private long getNewNodeId() {
@@ -519,7 +459,7 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 
 		if (!uris.containsKey(id)) {
 
-			final String uri = isValidUri(id) ? id : mintDataModelTermUri(null, id);
+			final String uri = SchemaUtils.isValidUri(id) ? id : SchemaUtils.mintTermUri(null, id, dataModelUri);
 
 			uris.put(id, uri);
 		}

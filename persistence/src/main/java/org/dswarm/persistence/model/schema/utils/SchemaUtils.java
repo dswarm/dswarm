@@ -1,8 +1,14 @@
 package org.dswarm.persistence.model.schema.utils;
 
+import java.net.URI;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.UUID;
 
+import javax.annotation.Nullable;
+
+import com.google.common.base.Optional;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.net.UrlEscapers;
 import com.google.inject.Provider;
@@ -73,6 +79,18 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		return namespaceURI + attributeNameURLEncoded;
 	}
 
+	public static String mintTermUri(final String possibleTermURI, final String baseURI) {
+
+		return mintTermUri(possibleTermURI, possibleTermURI, baseURI);
+	}
+
+	public static String mintSchemaTermURI(final String possibleTermURI, final Long schemaId) {
+
+		final String schemaNamespaceURI = determineSchemaNamespaceURI(schemaId);
+
+		return mintTermUri(possibleTermURI, possibleTermURI, schemaNamespaceURI);
+	}
+
 	public static boolean addRecordClass(final Schema schema, final String recordClassUri, final Provider<ClaszService> classServiceProvider)
 			throws DMPPersistenceException {
 
@@ -132,13 +150,6 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 			SchemaUtils.LOG.debug("there are no attribute paths for schema '" + schema.getId() + "'");
 		}
 
-		if (schema.getId() == 3) {
-
-			// mabxml schema is already there
-
-			return false;
-		}
-
 		for (final AttributePathHelper attributePathHelper : attributePathHelpers) {
 
 			final LinkedList<Attribute> attributes = Lists.newLinkedList();
@@ -150,9 +161,12 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 				SchemaUtils.LOG.debug("there are no attributes for this attribute path for schema '" + schema.getId() + "'");
 			}
 
+			final AttributeService attributeService = attributeServiceProvider.get();
+			final AttributePathService attributePathService = attributePathServiceProvider.get();
+
 			for (final String attributeString : attributePathFromHelper) {
 
-				final ProxyAttribute proxyAttribute = attributeServiceProvider.get().createOrGetObjectTransactional(attributeString);
+				final ProxyAttribute proxyAttribute = attributeService.createOrGetObjectTransactional(attributeString);
 
 				if (proxyAttribute == null) {
 
@@ -173,7 +187,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 				attribute.setName(attributeName);
 			}
 
-			final ProxyAttributePath proxyAttributePath = attributePathServiceProvider.get().createOrGetObjectTransactional(attributes);
+			final ProxyAttributePath proxyAttributePath = attributePathService.createOrGetObjectTransactional(attributes);
 
 			if (proxyAttributePath == null) {
 
@@ -193,7 +207,67 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		return true;
 	}
 
-	private Schema updateSchema(final Schema schema, final Provider<SchemaService> schemaServiceProvider) throws DMPPersistenceException {
+	public static boolean isValidUri(@Nullable final String identifier) {
+		if (identifier != null) {
+			try {
+				final URI _uri = URI.create(identifier);
+
+				return _uri != null && _uri.getScheme() != null;
+			} catch (final IllegalArgumentException e) {
+
+				return false;
+			}
+		}
+
+		return false;
+	}
+
+	public static String mintUri(final String uri, final String localName) {
+
+		// allow has and slash uris
+		if (uri != null && uri.endsWith("/")) {
+
+			return uri + localName;
+		}
+
+		if (localName.startsWith("#")) {
+
+			return uri + localName;
+		}
+
+		return uri + "#" + localName;
+	}
+
+	public static String mintTermUri(@Nullable final String uri, @Nullable final String localName, Optional<String> baseURI) {
+
+		final boolean canUseLocalName = !Strings.isNullOrEmpty(localName);
+
+		if (Strings.isNullOrEmpty(uri)) {
+
+			if (baseURI.isPresent()) {
+
+				if (canUseLocalName) {
+
+					return SchemaUtils.mintUri(baseURI.get(), localName);
+				} else {
+
+					return SchemaUtils.mintUri(baseURI.get(), UUID.randomUUID().toString());
+				}
+			}
+
+			return String.format("http://data.slub-dresden.de/terms/%s", UUID.randomUUID());
+		}
+
+		if (canUseLocalName) {
+
+			return SchemaUtils.mintUri(uri, localName);
+		} else {
+
+			return String.format("http://data.slub-dresden.de/terms/%s", UUID.randomUUID());
+		}
+	}
+
+	public static Schema updateSchema(final Schema schema, final Provider<SchemaService> schemaServiceProvider) throws DMPPersistenceException {
 
 		final ProxySchema proxyUpdatedSchema = schemaServiceProvider.get().updateObjectTransactional(schema);
 
@@ -203,6 +277,21 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		}
 
 		return proxyUpdatedSchema.getObject();
+	}
+
+	private static String mintTermUri(final String termUri, final String localTermName, final String baseUri) {
+
+		final boolean isValidURI = isValidUri(localTermName);
+
+		if (isValidURI) {
+
+			return localTermName;
+		} else {
+
+			final Optional<String> optionalBaseUri = Optional.fromNullable(baseUri);
+
+			return mintTermUri(termUri, localTermName, optionalBaseUri);
+		}
 	}
 
 }
