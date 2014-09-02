@@ -144,6 +144,8 @@ public class TransformationFlowTest extends GuicedTest {
 		//
 		// System.out.println(objectMapper.configure(SerializationFeature.INDENT_OUTPUT,
 		// true).writeValueAsString(gdmModel.toJSON()));
+		// System.out.println(Util.getJSONObjectMapper().configure(SerializationFeature.INDENT_OUTPUT,
+		// true).writeValueAsString(gdmModel.getModel()));
 
 		gdmService.createObject(inputDataModel.getId(), gdmModel);
 		// finished writing CSV statements to graph
@@ -156,7 +158,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 		final Schema schema = freshInputDataModel.getSchema();
 
-		final Optional<Map<String, Model>> optionalModelMap = gdmService.getObjects(updatedInputDataModel.getId(), Optional.<Integer> absent());
+		final Optional<Map<String, Model>> optionalModelMap = gdmService.getObjects(updatedInputDataModel.getId(), Optional.<Integer>absent());
 
 		Assert.assertNotNull("CSV record model map optional shouldn't be null", optionalModelMap);
 		Assert.assertTrue("CSV record model map should be present", optionalModelMap.isPresent());
