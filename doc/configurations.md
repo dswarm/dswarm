@@ -13,11 +13,11 @@ HOCON to get familiar with the format.
 All keys for d:swarm are in the namespace `dswarm` and possibly further
 sub-grouped by their module (e.g. `db` or `http`).
 
-The modules `controller`, `init`, and `persistence` have a `reference.conf` and a `application.conf`
+The modules `controller`, `init`, and `persistence` have a `reference.conf` and an `application.conf`
 defined in their `src/main/resources` directory.
 These files are merged together into a config tree, of which you can override any key.
 
-### complete config
+## complete config
 
 The following is the merged tree for all configurations, each value is the default setting.
 Every part can be overridden, conveniently so by using the properties-like syntax.
@@ -154,11 +154,17 @@ Place a file named `dswarm.conf` somewhere in your filesystem and put in the fol
     dswarm.db.metadata.password=bar
     EOF
 
-Then, start d:swarm the following way
+Username and password are used to access the MySQL database (hint: use same as in step `setup MySQL` in [server-insatll](server-insatll.md))
+You should not put this file under version control. Name it either `dswarm.conf` or `dmp.conf`, and place it in the root directory (of project `datamanagement-platform`). These files are already ignored by git.
 
-    mvn exec:java -Dconfig.file=/path/to/dswarm.conf
+You can start d:swarm the following way
 
-You should not put this file under version control. Name it either `dswarm.conf` or `dmp.conf`, and place it in the root directory — These files are already ignored by git.
+    datamanagement-platform/controller$ mvn exec:java
+
+or, in case you did not place the file in the root directory, type 
+
+    datamanagement-platform/controller$ mvn exec:java -Dconfig.file=/path/to/dswarm.conf
+
 
 #### single system properties
 
@@ -202,9 +208,33 @@ This applies the settings for all deployed applications, though.
 At any rate, any of these ways will override the specified values, and thus log the config on start and use foo:bar as credentials for the MySQL connection.
 
 
+
+## Debugging your configuration
+
+You can use the config settings `dswarm.log-config-on-start=on` when you start d:swarm.
+If done so, d:swarm will log the complete configuration to the INFO loglevel stream.
+The format is similar to a Json format with additional comments, how a config value was constructed and what its description is.
+
+## Configurations for your IDE
+
+These settings aren't strictly necessary, but will allow you to use the default run/test/debug executions as usual.
+
+### Eclipse
+
+Open `eclipse.ini`, go to `-vmargs` section and add the line `-Dconfig.file=/path/to/dswarm.conf`.
+
+### Intellij IDEA
+
+* When your project is opened, go to `Run` > `Edit Configurations...`.
+* On the left hand side, open the `Defaults` sections and select `Application`, or `JUnit` for test configurations respectively.
+* For the `VM Options` settings, add the config file paramter `-Dconfig.file=/path/to/dswarm.conf`
+
+    __Note:__ The path is relative to the `Working Directory` which is probably the directory that contains your config file as well, so you can just write `-Dconfig.file=dswarm.conf`
+
+
 ## Migration from dmp.properties
 
-In order to move to the new configuration system, perform the following steps.
+As of datamanagement-platform commit 6d36b3bf1 (Thu Jul 24 19:12:23 2014 +0200), you need to migrate from the old configuration (dmp.properties file) to the new typesafe configuration system. Contributers starting development past commit 6d36b3bf1 can skip this section. To migrate, please perform the following steps.
 
 1. create a `dswarm.conf` or `dmp.conf` file
 
@@ -229,29 +259,4 @@ In order to move to the new configuration system, perform the following steps.
 
 5. Remove all references to maven profiles in all start scripts/configurations you might have. That is `mvn -PDEV ...` becomes `mvn ...`
 
-6. Add `-Dconfig.file=/path/to/dswarm.conf` to all maven start scripts/configurations you might have. That is `mvn ...` becomes `mvn -Dconfig.file=/path/to/dswarm.conf ...`
-
-7. At last, remove the dmp.properties file (Which might have been done already, as this step was committed via git)
-
-## Debugging your configuration
-
-You can use the config settings `dswarm.log-config-on-start=on` when you start d:swarm.
-If done so, d:swarm will log the complete configuration to the INFO loglevel stream.
-The format is similar to a Json format with additional comments, how a config value was constructed and what its description is.
-
-## Configurations for your IDE
-
-These settings aren't strictly necessary, but will allow you to use the default run/test/debug executions as usual.
-
-### Eclipse
-
-Open `eclipse.ini`, go to `-vmargs` section and add the line `-Dconfig.file=/path/to/dswarm.conf`.
-
-### Intellij IDEA
-
-* When your project is opened, go to `Run` > `Edit Configurations...`.
-* On the left hand side, open the `Defaults` sections and select `Application`, or `JUnit` for test configurations respectively.
-* For the `VM Options` settings, add the config file paramter `-Dconfig.file=/path/to/dswarm.conf`
-
-    __Note:__ The path is relative to the `Working Directory` which is probably the directory that contains your config file as well, so you can just write `-Dconfig.file=dswarm.conf`
-
+6. At last, remove the dmp.properties file (Which might have been done already, as this step was committed via git)
