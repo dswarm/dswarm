@@ -105,16 +105,11 @@ npm install -g grunt-cli karma bower
 
 **6**. setup MySQL
 
-```
-cat <<EOT | mysql -uroot -p
-CREATE DATABASE IF NOT EXISTS dmp DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_bin;
-CREATE USER 'dmp'@'localhost' IDENTIFIED BY 'dmp';
-GRANT ALL PRIVILEGES ON dmp.* TO 'dmp'@localhost IDENTIFIED BY 'dmp';
-FLUSH PRIVILEGES;
-EOT
-```
+Create a database and a user for d:swarm. To customize the settings, edit `persistence/src/main/resources/create_database.sql`. Do not check in this file in case you modify it. Hint: remember settings for step 13 (configure d:swarm).
 
-then, open `/etc/mysql/my.cnf` and add the following line to the section `[mysqld]` (around line 45)
+    mysql -uroot -p < persistence/src/main/resources/create_database.sql
+
+Then, open `/etc/mysql/my.cnf` and add the following line to the section `[mysqld]` (around line 45)
 
 ```
 wait_timeout = 1209600
@@ -260,6 +255,8 @@ mkdir /data/neo4j/log
 chown -R neo4j:adm /data/neo4j/log
 ```
 
+By default, the Neo4j Server is bundled with a Web server that binds to host localhost on port 7474, answering only requests from the local machine. If you need remote access to Neo4j UI, see [Secure the port and remote client connection accepts](http://docs.neo4j.org/chunked/stable/security-server.html#_secure_the_port_and_remote_client_connection_accepts)
+
 * * *
 
 **These steps require less privileged access**
@@ -288,20 +285,9 @@ git clone --depth 1 --branch master git@git.slub-dresden.de:dmp/dmp-graph.git
 git clone --depth 1 --branch builds/unstable git@git.slub-dresden.de:dmp/dmp-backoffice-web.git
 ```
 
-**13**. optional: update MySQL properties
+**13**. configure d:swarm
 
-If you use a different user name or password in step 6 (setup MySQL), you need to update the following files accordingly.
-Open `datamanagement-platform/dev-tools/reset-dbs.bash` and change the default values for `MYSQL_PW` and `MYSQL_UN` to yours.
-Open `datamanagement-platform/pom.xml` and go to profile with id `SDVDSWARM01` (around lines 440-450) and change the default values for `rdb.username` and `rdb.password` to yours.
-
-In case you want to use a different maven build profile than `SDVDSWARM01` for the backend, e.g. the default `DEV`, you need to open `datamanagement-platform/dmp.properties` and add the following lines (with your login).
-
-```
-db.mysql.username=dmp
-db.mysql.password=dmp
-```
-
-Remember to not check in your local configuration. See footnote A for further information.
+Follow the instructions in `datamanagement-platform/doc/configuration.md`. 
 
 
 **14**. build neo4j extension
@@ -319,9 +305,9 @@ mv dmp-graph/target/graph-1.0-jar-with-dependencies.jar dmp-graph.jar
 
 ```
 pushd datamanagement-platform
-mvn -U -PSDVDSWARM01 -DskipTests clean install
+mvn -U -DskipTests clean install
 pushd controller
-mvn -U -PSDVDSWARM01 -DskipTests war:war
+mvn -U -DskipTests war:war
 popd; popd
 mv datamanagement-platform/controller/target/dswarm-controller-0.1-SNAPSHOT.war dmp.war
 ```
@@ -386,40 +372,3 @@ pushd dmp-backoffice-web; git pull; popd
 ```
 
 **2**. repeat steps 14 to 19 from installation as necessary
-
-
-# footnotes
-
-**A**. How to avoid checking in a local configuration.
-
-There are several ways to tell git not to check in local modifications of  (configuration) files. Both have disadvantages.
-
-***A1***. assume unchanged
-
-Tell git to flag the file `dmp.properties` as assume unchanged by 
-
-```
-git update-index --assume-unchanged dmp.properties
-```
-
-If you want to commit changes made on `dmp.properties`, you'll have to first call
-
-```
-git update-index --no-assume-unchanged dmp.properties
-```
-
-before staging and committing changes. In case there are upstream changes, they will be merged and the assume unchanged flag gets removed. Conflicts will be shown. 
-
- ***A2***. local ignore
- 
-Alternatively, git ignore the file locally
- 
-```
-echo "dmp.properties" >> .git/info/exclude
-```
-
-If you want to commit changes made on `dmp.properties`, you'll have to force add by
-
-```
-git add -f dmp.properties
-```
