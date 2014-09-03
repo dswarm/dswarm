@@ -10,6 +10,8 @@ import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
+import org.dswarm.persistence.model.schema.utils.SchemaUtils;
+
 /**
  * Decodes lines of CSV files.
  * 
@@ -59,7 +61,7 @@ public final class CsvDecoder extends DefaultObjectPipe<CSVRecord, StreamReceive
 
 					if (dataResourceSchemaBaseURI != null) {
 
-						headerColumnURI = dataResourceSchemaBaseURI + headerColumnName;
+						headerColumnURI = SchemaUtils.mintTermUri(headerColumnName, dataResourceSchemaBaseURI);
 					} else {
 
 						headerColumnURI = headerColumnName;

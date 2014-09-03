@@ -224,10 +224,12 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 	public static String mintUri(final String uri, final String localName) {
 
+		final String finalLocalName = UrlEscapers.urlFormParameterEscaper().escape(localName);
+
 		// allow has and slash uris
 		if (uri != null && uri.endsWith("/")) {
 
-			return uri + localName;
+			return uri + finalLocalName;
 		}
 
 		if (localName.startsWith("#")) {
@@ -235,7 +237,12 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 			return uri + localName;
 		}
 
-		return uri + "#" + localName;
+		if(uri != null && uri.endsWith("#")) {
+
+			return uri + finalLocalName;
+		}
+
+		return uri + "#" + finalLocalName;
 	}
 
 	public static String mintTermUri(@Nullable final String uri, @Nullable final String localName, Optional<String> baseURI) {
@@ -290,7 +297,15 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 			final Optional<String> optionalBaseUri = Optional.fromNullable(baseUri);
 
-			return mintTermUri(termUri, localTermName, optionalBaseUri);
+			final boolean isValidTermURI = isValidUri(termUri);
+
+			if(isValidTermURI) {
+
+				return mintTermUri(termUri, localTermName, optionalBaseUri);
+			} else {
+
+				return mintTermUri(null, localTermName, optionalBaseUri);
+			}
 		}
 	}
 
