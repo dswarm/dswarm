@@ -186,10 +186,6 @@ public class RDFResourceTest extends ResourceTest {
 		RDFDataMgr.read(dataset, stream, expectedExportLanguage);
 		Assert.assertNotNull("dataset from response shouldn't be null", dataset);
 
-		final StringWriter writer = new StringWriter();
-		RDFDataMgr.write(writer, dataset, Lang.NQUADS);
-		final String result = writer.toString();
-
 		// count number of statements in exportet data set
 		final long statementsInExportedRDFModel = RDFUtils.determineDatasetSize(dataset);
 
