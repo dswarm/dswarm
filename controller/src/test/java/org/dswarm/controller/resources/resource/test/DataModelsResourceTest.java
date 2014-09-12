@@ -935,16 +935,15 @@ public class DataModelsResourceTest extends
 	 * @param requestedExportLanguage the serialization format neo4j should export the data to. (this value is used as accept
 	 *            header arg to query neo4j)
 	 * @param datamodelID identifier of the datamodel to be exported
-	 * @param provenanceURI identifier of the graph to export
-	 * @param expectedHTTPResponseCode the expected HTTP status code of the response, e.g. {@link HttpStatus.SC_OK} or
-	 *            {@link HttpStatus.SC_NOT_ACCEPTABLE}
+	 * @param expectedHTTPResponseCode the expected HTTP status code of the response, e.g. {@link HttpStatus#SC_OK} or
+	 *            {@link HttpStatus#SC_NOT_ACCEPTABLE}
 	 * @param expectedExportMediaType the language the exported data is expected to be serialized in. hint: language may differ
 	 *            from {@code requestedExportLanguage} to test for default values. (ignored if expectedHTTPResponseCode !=
-	 *            {@link HttpStatus.SC_OK})
+	 *            {@link HttpStatus#SC_OK})
 	 * @param expectedModelFile name of file containing a serialized model, this (expected) model is equal to the actual model
-	 *            exported by neo4j. (ignored if expectedHTTPResponseCode != {@link HttpStatus.SC_OK})
+	 *            exported by neo4j. (ignored if expectedHTTPResponseCode != {@link HttpStatus#SC_OK})
 	 * @param expectedFileEnding the expected file ending to be received from neo4j (ignored if expectedHTTPResponseCode !=
-	 *            {@link HttpStatus.SC_OK})
+	 *            {@link HttpStatus#SC_OK})
 	 * @throws IOException
 	 */
 	private void testExportInternal(final String requestedExportLanguage, final long datamodelID, final int expectedHTTPResponseCode,

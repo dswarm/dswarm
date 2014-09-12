@@ -2,7 +2,6 @@ package org.dswarm.persistence.service.internal.graph;
 
 import java.io.IOException;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,7 +19,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
@@ -38,17 +36,11 @@ import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
-import org.dswarm.persistence.model.proxy.RetrievalType;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
-import org.dswarm.persistence.model.schema.Attribute;
-import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
-import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
-import org.dswarm.persistence.model.schema.proxy.ProxyClasz;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.service.InternalModelService;
@@ -149,7 +141,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			throw new DMPPersistenceException("real model that should be added to DB shouldn't be null");
 		}
 
-		final String resourceGraphURI = GDMUtil.getDataModelGraphURI(dataModelId);
+		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelId);
 
 		final DataModel dataModel = addRecordClass(dataModelId, gdmModel.getRecordClassURI());
 
@@ -187,7 +179,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		addAttributePaths(finalDataModel, gdmModel.getAttributePaths());
 
-		writeGDMToDB(realModel, resourceGraphURI);
+		writeGDMToDB(realModel, dataModelURI);
 	}
 
 	/**
@@ -201,7 +193,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			throw new DMPPersistenceException("data model id shouldn't be null");
 		}
 
-		final String resourceGraphURI = GDMUtil.getDataModelGraphURI(dataModelId);
+		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelId);
 
 		// retrieve record class uri from data model schema
 		final DataModel dataModel = dataModelService.get().getObject(dataModelId);
@@ -233,7 +225,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final String recordClassUri = recordClass.getUri();
 
-		final org.dswarm.graph.json.Model model = readGDMFromDB(recordClassUri, resourceGraphURI);
+		final org.dswarm.graph.json.Model model = readGDMFromDB(recordClassUri, dataModelURI);
 
 		if (model == null) {
 
@@ -296,12 +288,12 @@ public class InternalGDMGraphService implements InternalModelService {
 			throw new DMPPersistenceException("data model id shouldn't be null");
 		}
 
-		final String resourceGraphURI = GDMUtil.getDataModelGraphURI(dataModelId);
+		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelId);
 
 		// TODO: delete DataModel object from DB here as well?
 
 		// dataset.begin(ReadWrite.WRITE);
-		// dataset.removeNamedModel(resourceGraphURI);
+		// dataset.removeNamedModel(dataModelURI);
 		// dataset.commit();
 		// dataset.end();
 
@@ -464,7 +456,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		return dataModel;
 	}
 
-	private void writeGDMToDB(final org.dswarm.graph.json.Model model, final String resourceGraphUri) throws DMPPersistenceException {
+	private void writeGDMToDB(final org.dswarm.graph.json.Model model, final String dataModelUri) throws DMPPersistenceException {
 
 		final WebTarget target = target("/put");
 
@@ -482,7 +474,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		// Construct a MultiPart with two body parts
 		final MultiPart multiPart = new MultiPart();
-		multiPart.bodyPart(bytes, MediaType.APPLICATION_OCTET_STREAM_TYPE).bodyPart(resourceGraphUri, MediaType.TEXT_PLAIN_TYPE);
+		multiPart.bodyPart(bytes, MediaType.APPLICATION_OCTET_STREAM_TYPE).bodyPart(dataModelUri, MediaType.TEXT_PLAIN_TYPE);
 
 		// POST the request
 		final Response response = target.request("multipart/mixed").post(Entity.entity(multiPart, "multipart/mixed"));
@@ -494,7 +486,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		}
 	}
 
-	private org.dswarm.graph.json.Model readGDMFromDB(final String recordClassUri, final String resourceGraphUri) throws DMPPersistenceException {
+	private org.dswarm.graph.json.Model readGDMFromDB(final String recordClassUri, final String dataModelUri) throws DMPPersistenceException {
 
 		final WebTarget target = target("/get");
 
@@ -502,7 +494,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		final ObjectNode requestJson = objectMapper.createObjectNode();
 
 		requestJson.put("record_class_uri", recordClassUri);
-		requestJson.put("resource_graph_uri", resourceGraphUri);
+		requestJson.put("data_model_uri", dataModelUri);
 
 		String requestJsonString;
 

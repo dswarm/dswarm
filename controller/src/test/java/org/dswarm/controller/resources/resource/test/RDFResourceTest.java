@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.net.URL;
 
 import javax.ws.rs.client.WebTarget;
@@ -128,13 +129,13 @@ public class RDFResourceTest extends ResourceTest {
 	 * 
 	 * @param requestedExportLanguage the requested serialization format to be used in export. may be empty to test the default
 	 *            fallback of the endpoint.
-	 * @param expectedHTTPResponseCode the expected HTTP status code of the response, e.g. {@link HttpStatus.SC_OK} or
-	 *            {@link HttpStatus.SC_NOT_ACCEPTABLE}
+	 * @param expectedHTTPResponseCode the expected HTTP status code of the response, e.g. {@link HttpStatus#SC_OK} or
+	 *            {@link HttpStatus#SC_NOT_ACCEPTABLE}
 	 * @param expectedExportMediaType the language the exported data is expected to be serialized in. hint: language may differ
 	 *            from {@code requestedExportLanguage} to test for default values. (ignored if expectedHTTPResponseCode !=
-	 *            {@link HttpStatus.SC_OK})
+	 *            {@link HttpStatus#SC_OK})
 	 * @param expectedFileEnding the expected file ending to be received from neo4j (ignored if expectedHTTPResponseCode !=
-	 *            {@link HttpStatus.SC_OK})
+	 *            {@link HttpStatus#SC_OK})
 	 * @throws Exception
 	 */
 	private void exportInternal(final String requestedExportLanguage, final int expectedHTTPResponseCode, final MediaType expectedExportMediaType, final String expectedFileEnding)
@@ -185,6 +186,10 @@ public class RDFResourceTest extends ResourceTest {
 		RDFDataMgr.read(dataset, stream, expectedExportLanguage);
 		Assert.assertNotNull("dataset from response shouldn't be null", dataset);
 
+		final StringWriter writer = new StringWriter();
+		RDFDataMgr.write(writer, dataset, Lang.NQUADS);
+		final String result = writer.toString();
+
 		// count number of statements in exportet data set
 		final long statementsInExportedRDFModel = RDFUtils.determineDatasetSize(dataset);
 
@@ -192,6 +197,9 @@ public class RDFResourceTest extends ResourceTest {
 
 		// count number of statements that were loaded to db while prepare
 		long expectedStatements = countStatementsInSerializedN3("atMostTwoRows.n3") + countStatementsInSerializedN3("UTF-8.n3");
+
+		// + 2 triples from data model statements (for versioning)
+		expectedStatements += 2;
 
 		// compare number of exported statements with expected
 		Assert.assertEquals("the number of exported statements should be " + expectedStatements, expectedStatements, statementsInExportedRDFModel);
