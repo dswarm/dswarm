@@ -17,6 +17,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
@@ -25,6 +26,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import org.glassfish.jersey.media.multipart.BodyPart;
 import org.glassfish.jersey.media.multipart.MultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.Logger;
@@ -39,7 +41,9 @@ import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
+import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
+import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
@@ -61,46 +65,48 @@ import org.dswarm.persistence.util.GDMUtil;
 @Singleton
 public class InternalGDMGraphService implements InternalModelService {
 
-	private static final Logger						LOG								= LoggerFactory.getLogger(InternalGDMGraphService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(InternalGDMGraphService.class);
 
-	private static final String						resourceIdentifier				= "gdm";
+	private static final String resourceIdentifier = "gdm";
 
 	/**
 	 * The data model persistence service.
 	 */
-	private final Provider<DataModelService>		dataModelService;
+	private final Provider<DataModelService> dataModelService;
 
 	/**
 	 * The schema persistence service.
 	 */
-	private final Provider<SchemaService>			schemaService;
+	private final Provider<SchemaService> schemaService;
 
 	/**
 	 * The class persistence service.
 	 */
-	private final Provider<ClaszService>			classService;
+	private final Provider<ClaszService> classService;
 
-	private final Provider<AttributePathService>	attributePathService;
+	private final Provider<AttributePathService> attributePathService;
 
-	private final Provider<AttributeService>		attributeService;
+	private final Provider<AttributeService> attributeService;
 
-	private final String							graphEndpoint;
+	private final String graphEndpoint;
+
+	private final Provider<ObjectMapper> objectMapperProvider;
 
 	/**
 	 * /** Creates a new internal triple service with the given data model persistence service, schema persistence service, class
 	 * persistence service and the endpoint to access the graph database.
 	 *
-	 * @param dataModelService the data model persistence service
-	 * @param schemaService the schema persistence service
-	 * @param classService the class persistence service
+	 * @param dataModelService     the data model persistence service
+	 * @param schemaService        the schema persistence service
+	 * @param classService         the class persistence service
 	 * @param attributePathService the attribute path persistence service
-	 * @param attributeService the attribute persistence service
-	 * @param graphEndpointArg the endpoint to access the graph database
+	 * @param attributeService     the attribute persistence service
+	 * @param graphEndpointArg     the endpoint to access the graph database
 	 */
 	@Inject
 	public InternalGDMGraphService(final Provider<DataModelService> dataModelService, final Provider<SchemaService> schemaService,
 			final Provider<ClaszService> classService, final Provider<AttributePathService> attributePathService,
-			final Provider<AttributeService> attributeService, @Named("dswarm.db.graph.endpoint") final String graphEndpointArg) {
+			final Provider<AttributeService> attributeService, @Named("dswarm.db.graph.endpoint") final String graphEndpointArg, final Provider<ObjectMapper> objectMapperProviderArg) {
 
 		this.dataModelService = dataModelService;
 		this.schemaService = schemaService;
@@ -109,6 +115,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		this.attributeService = attributeService;
 
 		graphEndpoint = graphEndpointArg;
+		objectMapperProvider = objectMapperProviderArg;
 	}
 
 	/**
@@ -179,7 +186,13 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		addAttributePaths(finalDataModel, gdmModel.getAttributePaths());
 
-		writeGDMToDB(realModel, dataModelURI);
+		final Optional<ContentSchema> optionalContentSchema = Optional.fromNullable(finalDataModel.getSchema().getContentSchema());
+
+		// TODO: true for now
+		final Optional<Boolean> optionalDeprecateMissingRecords = Optional.of(Boolean.TRUE);
+		final Optional<String> optionalRecordClassUri = Optional.fromNullable(finalDataModel.getSchema().getRecordClass().getUri());
+
+		writeGDMToDB(realModel, dataModelURI, optionalContentSchema, optionalDeprecateMissingRecords, optionalRecordClassUri);
 	}
 
 	/**
@@ -301,7 +314,6 @@ public class InternalGDMGraphService implements InternalModelService {
 
 	}
 
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -337,7 +349,7 @@ public class InternalGDMGraphService implements InternalModelService {
 	/**
 	 * Adds the record class to the schema of the data model.
 	 *
-	 * @param dataModelId the identifier of the data model
+	 * @param dataModelId    the identifier of the data model
 	 * @param recordClassUri the identifier of the record class
 	 * @throws DMPPersistenceException
 	 */
@@ -349,7 +361,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final boolean result = SchemaUtils.addRecordClass(schema, recordClassUri, classService);
 
-		if(!result) {
+		if (!result) {
 
 			return dataModel;
 		}
@@ -371,7 +383,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final boolean result = SchemaUtils.addAttributePaths(schema, attributePathHelpers, attributePathService, attributeService);
 
-		if(!result) {
+		if (!result) {
 
 			return dataModel;
 		}
@@ -456,7 +468,8 @@ public class InternalGDMGraphService implements InternalModelService {
 		return dataModel;
 	}
 
-	private void writeGDMToDB(final org.dswarm.graph.json.Model model, final String dataModelUri) throws DMPPersistenceException {
+	private void writeGDMToDB(final org.dswarm.graph.json.Model model, final String dataModelUri, final Optional<ContentSchema> optionalContentSchema,
+			final Optional<Boolean> optionalDeprecateMissingRecords, final Optional<String> optionalRecordClassUri) throws DMPPersistenceException {
 
 		final WebTarget target = target("/put");
 
@@ -474,7 +487,21 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		// Construct a MultiPart with two body parts
 		final MultiPart multiPart = new MultiPart();
-		multiPart.bodyPart(bytes, MediaType.APPLICATION_OCTET_STREAM_TYPE).bodyPart(dataModelUri, MediaType.TEXT_PLAIN_TYPE);
+		multiPart.bodyPart(bytes, MediaType.APPLICATION_OCTET_STREAM_TYPE)
+				.bodyPart(dataModelUri, MediaType.TEXT_PLAIN_TYPE);
+
+		if (optionalContentSchema.isPresent()) {
+
+			final String contentSchemaJSONString = generateContentSchemaJSON(optionalContentSchema.get());
+
+			multiPart.bodyPart(new BodyPart(contentSchemaJSONString, MediaType.APPLICATION_JSON_TYPE));
+		}
+
+		if (optionalDeprecateMissingRecords.isPresent() && optionalRecordClassUri.isPresent()) {
+
+			multiPart.bodyPart(new BodyPart(Boolean.valueOf(optionalDeprecateMissingRecords.get()).toString(), MediaType.TEXT_PLAIN_TYPE))
+					.bodyPart(new BodyPart(optionalRecordClassUri.get(), MediaType.TEXT_PLAIN_TYPE));
+		}
 
 		// POST the request
 		final Response response = target.request("multipart/mixed").post(Entity.entity(multiPart, "multipart/mixed"));
@@ -483,6 +510,64 @@ public class InternalGDMGraphService implements InternalModelService {
 
 			throw new DMPPersistenceException("Couldn't store GDM data into database. Received status code '" + response.getStatus()
 					+ "' from database endpoint.");
+		}
+	}
+
+	private String generateContentSchemaJSON(final ContentSchema contentSchema) throws DMPPersistenceException {
+
+		final ObjectNode contentSchemaJSON = objectMapperProvider.get().createObjectNode();
+
+		final String recordIdentifierAP;
+
+		if(contentSchema.getRecordIdentifierAttributePath() != null) {
+
+			recordIdentifierAP = contentSchema.getRecordIdentifierAttributePath().toAttributePath();
+		} else {
+
+			recordIdentifierAP = null;
+		}
+
+		contentSchemaJSON.put("record_identifier_attribute_path", recordIdentifierAP);
+
+		final ArrayNode keyAttributePaths;
+
+		if(contentSchema.getKeyAttributePaths() != null) {
+
+			keyAttributePaths = objectMapperProvider.get().createArrayNode();
+
+			for(final AttributePath keyAttributePath : contentSchema.getKeyAttributePaths()) {
+
+				keyAttributePaths.add(keyAttributePath.toAttributePath());
+			}
+		} else {
+
+			keyAttributePaths = null;
+		}
+
+		contentSchemaJSON.set("key_attribute_paths", keyAttributePaths);
+
+		final String valueAttributePath;
+
+		if(contentSchema.getValueAttributePath() != null) {
+
+			valueAttributePath = contentSchema.getValueAttributePath().toAttributePath();
+		} else {
+
+			valueAttributePath = null;
+		}
+
+		contentSchemaJSON.put("value_attribute_path", valueAttributePath);
+
+		try {
+
+			return objectMapperProvider.get().writeValueAsString(contentSchemaJSON);
+		} catch (final JsonProcessingException e) {
+
+			final String message = "couldn't serialize content schema for dmp graph endpoint";
+
+			InternalGDMGraphService.LOG.error(message, e);
+
+			throw new DMPPersistenceException(message);
 		}
 	}
 
