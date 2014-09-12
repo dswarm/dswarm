@@ -269,6 +269,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 	public T applyResource(final String resourcePath) throws DMPConverterException {
 
 		final BOMResourceOpener opener = new BOMResourceOpener();
+		opener.setEncoding(encoding);
 
 		return apply(resourcePath, opener);
 	}
