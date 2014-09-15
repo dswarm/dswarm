@@ -97,7 +97,7 @@
 
 	<profiles>
 		<profile>
-			<id>dswarm-conf</id>
+					<id>dswarm-conf</id>
 			<activation>
 				<file>
 					<exists>../dswarm.conf</exists>

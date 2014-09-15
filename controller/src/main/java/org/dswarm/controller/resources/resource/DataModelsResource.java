@@ -290,14 +290,14 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		// construct provenanceURI from data model id
-		final String provenanceURI = GDMUtil.getDataModelGraphURI(id);
+		// construct dataModelURI from data model id
+		final String dataModelURI = GDMUtil.getDataModelGraphURI(id);
 
 		LOG.debug("Forwarding to graph db: request to export rdf of datamodel with id \"" + id + "\" to " + format);
 
 		// send the request to graph DB
 		final WebTarget target = target("/export");
-		final Response responseFromGraph = target.queryParam("provenanceuri", provenanceURI).request().accept(format).get(Response.class);
+		final Response responseFromGraph = target.queryParam("data_model_uri", dataModelURI).request().accept(format).get(Response.class);
 
 		return ExportUtils.processGraphDBResponseInternal(responseFromGraph);
 	}
