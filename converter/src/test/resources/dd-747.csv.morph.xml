@@ -1,0 +1,20 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+    <meta>
+        <name>mapping6</name>
+    </meta>
+    <rules>
+        <combine flushWith="record" includeSubEntities="true" name="@name__-1408543399900__0__" reset="true" sameEntity="true" value="${name__-1408543399900__0__.filtered}">
+            <if>
+                <all flushWith="http://data.slub-dresden.de/resources/1/schema#number" includeSubEntities="true" name="CONDITION_ALL" reset="true">
+                    <data source="http://data.slub-dresden.de/resources/1/schema#number">
+                        <regexp match="3"/>
+                    </data>
+                </all>
+            </if>
+            <data name="name__-1408543399900__0__.filtered" source="http://data.slub-dresden.de/resources/1/schema#name"/>
+        </combine>
+        <data name="http://purl.org/dc/elements/1.1/name" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" source="@name__-1408543399900__0__"/>
+    </rules>
+</metamorph>
