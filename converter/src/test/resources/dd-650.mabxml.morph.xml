@@ -5,61 +5,88 @@
     </meta>
     <rules>
     	<!-- get feld value if ind=" " and nr starts/ends with "0" and the second place is in range "0" to "9" -->
-        <combine name="@feld_value__0__" reset="false" sameEntity="true" value="${feld_value__0__.filtered}">
-            <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
-                <regexp match=" "/>
-            </data>
-            <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
-                <regexp match="0[0-9]0"/>
-            </data>
+        <combine flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld" includeSubEntities="true" name="@feld_value__0__" reset="true" sameEntity="true" value="${feld_value__0__.filtered}">
+            <if>
+                <all flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" includeSubEntities="true" name="CONDITION_ALL" reset="true">
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
+                        <regexp match="0[0-9]0"/>
+                    </data>
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
+                        <regexp match=" "/>
+                    </data>
+                </all>
+            </if>
             <data name="feld_value__0__.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
         </combine>
+        <data name="http://purl.org/dc/elements/1.1/case1" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" source="@feld_value__0__"/>
         
         <!-- get feld value if ind=" " and nr=030 OR nr=050 -->
-        <combine name="@feld_value__1__" reset="false" sameEntity="true" value="${feld_value__1__.filtered}">
-            <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
-                <regexp match=" "/>
-            </data>
-            <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
-                <regexp match="030|050"/>
-            </data>
+        <combine flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld" includeSubEntities="true" name="@feld_value__1__" reset="true" sameEntity="true" value="${feld_value__1__.filtered}">
+            <if>
+                <all flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" includeSubEntities="true" name="CONDITION_ALL" reset="true">
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
+                        <regexp match="030|050"/>
+                    </data>
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
+                        <regexp match=" "/>
+                    </data>
+                </all>
+            </if>
             <data name="feld_value__1__.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
         </combine>
+        <data name="http://purl.org/dc/elements/1.1/case2" source="@__TRANSFORMATION_OUTPUT_VARIABLE__2"/>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__2" source="@feld_value__1__"/>
         
         <!-- get feld value if ind=" " and nr=000 TO nr=010 -->
-        <combine name="@feld_value__2__" reset="false" sameEntity="true" value="${feld_value__2__.filtered}">
-            <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
-                <regexp match=" "/>
-            </data>
-            <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
-                <regexp match="0[0|1][0-9]"/>
-            </data>
+        <combine flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld" includeSubEntities="true" name="@feld_value__2__" reset="true" sameEntity="true" value="${feld_value__2__.filtered}">
+            <if>
+                <all flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" includeSubEntities="true" name="CONDITION_ALL" reset="true">
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
+                        <regexp match="0[0|1][0-9]"/>
+                    </data>
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
+                        <regexp match=" "/>
+                    </data>
+                </all>
+            </if>
             <data name="feld_value__2__.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
         </combine>
+        <data name="http://purl.org/dc/elements/1.1/case3" source="@__TRANSFORMATION_OUTPUT_VARIABLE__3"/>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__3" source="@feld_value__2__"/>
         
         <!-- negative list -->
-        <combine name="@feld_value__3__" reset="false" sameEntity="true" value="${feld_value__3__.filtered}">
-            <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
-                <regexp match="[^b]"/>
-            </data>
-            <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
-                <regexp match="070"/>
-            </data>
+        <combine flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld" includeSubEntities="true" name="@feld_value__3__" reset="true" sameEntity="true" value="${feld_value__3__.filtered}">
+            <if>
+                <all flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" includeSubEntities="true" name="CONDITION_ALL" reset="true">
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
+                        <regexp match="070"/>
+                    </data>
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
+                        <regexp match="[^b]"/>
+                    </data>
+                </all>
+            </if>
             <data name="feld_value__3__.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
         </combine>
+        <data name="http://purl.org/dc/elements/1.1/case4" source="@__TRANSFORMATION_OUTPUT_VARIABLE__4"/>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__4" source="@feld_value__3__"/>
         
-        <combine name="@feld_value__4__" reset="false" sameEntity="true" value="${feld_value__4__.filtered}">
-            <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
-                <regexp match="[^0-4]\d\d"/>
-            </data>
+        <combine flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld" includeSubEntities="true" name="@feld_value__4__" reset="true" sameEntity="true" value="${feld_value__4__.filtered}">
+            <if>
+                <all flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" includeSubEntities="true" name="CONDITION_ALL" reset="true">
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
+                        <regexp match="[^0-4]\d\d"/>
+                    </data>
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
+                        <regexp match="[^b]"/>
+                    </data>
+                </all>
+            </if>
             <data name="feld_value__4__.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
         </combine>
-        
-        <data name="http://purl.org/dc/elements/1.1/case1" source="@feld_value__0__"/>
-        <data name="http://purl.org/dc/elements/1.1/case2" source="@feld_value__1__"/>
-        <data name="http://purl.org/dc/elements/1.1/case3" source="@feld_value__2__"/>
-        <data name="http://purl.org/dc/elements/1.1/case4" source="@feld_value__3__"/>
-        <data name="http://purl.org/dc/elements/1.1/case5" source="@feld_value__4__"/>
+        <data name="http://purl.org/dc/elements/1.1/case5" source="@__TRANSFORMATION_OUTPUT_VARIABLE__5"/>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__5" source="@feld_value__4__"/>
         
     </rules>
 </metamorph>
