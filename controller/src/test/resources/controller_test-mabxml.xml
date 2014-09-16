@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datei xmlns="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://files.dnb.de/standards/formate/mabxml-1.xsd">
-    <datensatz typ="h" status="n" mabVersion="M2.0">
+    <datensatz id="ID06978834" typ="h" status="n" mabVersion="M2.0">
         <feld nr="001" ind=" ">06978834</feld>
         <feld nr="002" ind="a">19981028</feld>
         <feld nr="003" ind=" ">20010620</feld>

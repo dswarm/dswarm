@@ -111,11 +111,11 @@
     },
     "data_resource": {
         "id": 66,
-        "name": "test-mabxml.xml",
+        "name": "controller_test-mabxml.xml",
         "description": "this is a description",
         "type": "FILE",
         "resource_attributes": {
-            "path": "/home/tgaengler/git/tgaengler/datamanagement-platform/init/../tmp/resources/test-mabxml.xml",
+            "path": "/home/tgaengler/git/tgaengler/datamanagement-platform/init/../tmp/resources/controller_test-mabxml.xml",
             "filesize": 2279
         },
         "configurations": [{
