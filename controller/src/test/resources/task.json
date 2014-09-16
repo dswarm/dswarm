@@ -254,7 +254,7 @@
         },
         "data_resource": {
             "id": 1,
-            "name": "test-mabxml.xml",
+            "name": "controller_test-mabxml.xml",
             "type": "FILE",
             "configurations": [{
                 "id": 1,

@@ -214,7 +214,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
 
-		final URL fileURL = Resources.getResource("test-mabxml.xml");
+		final URL fileURL = Resources.getResource("controller_test-mabxml.xml");
 		resourceFile = FileUtils.toFile(fileURL);
 
 		final String resourceJSON = resourceUploadInteral(resourceFile, expectedResource);
