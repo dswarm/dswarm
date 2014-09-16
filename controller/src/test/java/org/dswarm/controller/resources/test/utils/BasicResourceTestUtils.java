@@ -207,7 +207,24 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 		final POJOCLASSIDTYPE objectId = objectMapper.readValue(updateObjectJSONString, pojoClass).getId();
 
-		Assert.assertEquals("the id of the updeted object should be equal", objectId, expectedObject.getId());
+		Assert.assertEquals("the ids of the updated object should be equal", expectedObject.getId(), objectId);
+
+		final POJOCLASS updatedObject = updateObjectWithoutComparison(updateObjectJSONString, objectId);
+
+		compareObjects(expectedObject, updatedObject);
+
+		return updatedObject;
+	}
+
+	public POJOCLASS updateObjectWithoutComparison(final POJOCLASS updateObject) throws Exception {
+
+		final String updateObjectJSONString = objectMapper.writeValueAsString(updateObject);
+		final POJOCLASSIDTYPE objectId = updateObject.getId();
+
+		return updateObjectWithoutComparison(updateObjectJSONString, objectId);
+	}
+
+	private POJOCLASS updateObjectWithoutComparison(final String updateObjectJSONString, final POJOCLASSIDTYPE objectId) throws Exception {
 
 		final Response response = target(String.valueOf(objectId)).request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
 				.put(Entity.json(updateObjectJSONString));
@@ -218,11 +235,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
 
-		final POJOCLASS updatedObject = objectMapper.readValue(responseString, pojoClass);
-
-		compareObjects(expectedObject, updatedObject);
-
-		return updatedObject;
+		return objectMapper.readValue(responseString, pojoClass);
 	}
 
 	public void deleteObject(final POJOCLASS object) {

@@ -77,11 +77,13 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 	private Resource								resource;
 
-	private DataModel								dataModel;
+	private DataModel inputDataModel;
 
-	private Schema									schema;
+	private DataModel outputDataModel;
 
-	private Clasz									recordClass;
+	private Schema schema;
+
+	private Clasz recordClass;
 
 	public TasksCsvResourceTest() {
 
@@ -165,39 +167,43 @@ public class TasksCsvResourceTest extends ResourceTest {
 		final String dataModelJSONString = objectMapper.writeValueAsString(data1);
 
 		// do not compare dataModelJSONString with data1 since the schema is automatically created, comparison would fail.
-		dataModel = dataModelsResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
+		inputDataModel = dataModelsResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
 
-		Assert.assertNotNull("the data model shouldn't be null", dataModel);
-		Assert.assertNotNull("the data model schema shouldn't be null", dataModel.getSchema());
+		Assert.assertNotNull("the data model shouldn't be null", inputDataModel);
+		Assert.assertNotNull("the data model schema shouldn't be null", inputDataModel.getSchema());
 
-		schema = dataModel.getSchema();
+		schema = inputDataModel.getSchema();
 
 		Assert.assertNotNull("the data model schema record class shouldn't be null", schema.getRecordClass());
 
 		recordClass = schema.getRecordClass();
 
 		// check processed data
-		final String data = dataModelsResourceTestUtils.getData(dataModel.getId(), 1);
+		final String data = dataModelsResourceTestUtils.getData(inputDataModel.getId(), 1);
 
 		Assert.assertNotNull("the data shouldn't be null", data);
 
 		// manipulate input data model
-		final String finalDataModelJSONString = objectMapper.writeValueAsString(dataModel);
-		final ObjectNode finalDataModelJSON = objectMapper.readValue(finalDataModelJSONString, ObjectNode.class);
+		final String finalInputDataModelJSONString = objectMapper.writeValueAsString(inputDataModel);
+		final ObjectNode finalInputDataModelJSON = objectMapper.readValue(finalInputDataModelJSONString, ObjectNode.class);
 
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
-		taskJSON.put("input_data_model", finalDataModelJSON);
+		taskJSON.put("input_data_model", finalInputDataModelJSON);
 
-		// manipulate output data model (output data model = input data model (for now))
-		taskJSON.put("output_data_model", finalDataModelJSON);
+		// utilise internal model as output data model
+		final DataModel outputDataModel = dataModelsResourceTestUtils.getObject((long) 1);
+		final String outputDataModelJSONString = objectMapper.writeValueAsString(outputDataModel);
+		final ObjectNode outputDataModelJSON = objectMapper.readValue(outputDataModelJSONString, ObjectNode.class);
+
+		taskJSON.put("output_data_model", outputDataModelJSON);
 
 		// manipulate attributes
-		final ObjectNode mappingJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) taskJSON.get("job")).get("mappings")).get(0);
+		final ObjectNode mappingJSON = (ObjectNode) taskJSON.get("job").get("mappings").get(0);
 
-		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
+		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(inputDataModel);
 
-		final ObjectNode outputAttributePathAttributeJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) ((ObjectNode) mappingJSON
-				.get("output_attribute_path")).get("attribute_path")).get("attributes")).get(0);
+		final ObjectNode outputAttributePathAttributeJSON = (ObjectNode) mappingJSON
+				.get("output_attribute_path").get("attribute_path").get("attributes").get(0);
 		final String outputAttributeName = outputAttributePathAttributeJSON.get("name").asText();
 		outputAttributePathAttributeJSON.put("uri", dataResourceSchemaBaseURI + outputAttributeName);
 
@@ -205,14 +211,14 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 		for (final JsonNode inputAttributePathsJSONNode : inputAttributePathsJSON) {
 
-			final ObjectNode inputAttributeJSON = (ObjectNode) ((ArrayNode) ((ObjectNode) ((ObjectNode) inputAttributePathsJSONNode)
-					.get("attribute_path")).get("attributes")).get(0);
+			final ObjectNode inputAttributeJSON = (ObjectNode) inputAttributePathsJSONNode
+					.get("attribute_path").get("attributes").get(0);
 			final String inputAttributeName = inputAttributeJSON.get("name").asText();
 			inputAttributeJSON.put("uri", dataResourceSchemaBaseURI + inputAttributeName);
 		}
 
 		// manipulate parameter mappings in transformation component
-		final ObjectNode transformationComponentParameterMappingsJSON = (ObjectNode) ((ObjectNode) mappingJSON.get("transformation"))
+		final ObjectNode transformationComponentParameterMappingsJSON = (ObjectNode) mappingJSON.get("transformation")
 				.get("parameter_mappings");
 		transformationComponentParameterMappingsJSON.put("description", dataResourceSchemaBaseURI + outputAttributeName);
 		transformationComponentParameterMappingsJSON.put("__TRANSFORMATION_OUTPUT_VARIABLE__1", dataResourceSchemaBaseURI + outputAttributeName);
@@ -247,7 +253,9 @@ public class TasksCsvResourceTest extends ResourceTest {
 			actualNodes.put(node.get("record_id").asText(), node);
 		}
 
-		final String actualDataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
+		this.outputDataModel = dataModelsResourceTestUtils.getObject(outputDataModel.getId());
+
+		final String actualDataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(inputDataModel);
 
 		final String expectedRecordDataFieldNameExample = expectedJSONArray.get(0).get("record_data").get(0).fieldNames().next();
 		final String expectedDataResourceSchemaBaseURI = expectedRecordDataFieldNameExample.substring(0,
@@ -255,7 +263,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 		for (final JsonNode expectedNode : expectedJSONArray) {
 
-			final String recordData = ((ObjectNode) expectedNode.get("record_data").get(0)).get(expectedDataResourceSchemaBaseURI + "description")
+			final String recordData = expectedNode.get("record_data").get(0).get(expectedDataResourceSchemaBaseURI + "description")
 					.asText();
 			final JsonNode actualNode = getRecordData(recordData, actualJSONArray, actualDataResourceSchemaBaseURI + "description");
 
@@ -283,11 +291,22 @@ public class TasksCsvResourceTest extends ResourceTest {
 					Matchers.equalTo(expectedRecordData.get(expectedDataResourceSchemaBaseURI + "description").asText()));
 		}
 
+		inputDataModel = dataModelsResourceTestUtils.getObject(inputDataModel.getId());
+
+		Assert.assertNotNull("the data model shouldn't be null", inputDataModel);
+		Assert.assertNotNull("the data model schema shouldn't be null", inputDataModel.getSchema());
+
+		this.schema = inputDataModel.getSchema();
+
+		Assert.assertNotNull("the data model schema record class shouldn't be null", this.schema.getRecordClass());
+
+		recordClass = this.schema.getRecordClass();
+
 		TasksCsvResourceTest.LOG.debug("end task execution test");
 	}
 
 	@After
-	public void cleanUp() {
+	public void cleanUp() throws Exception {
 
 		final Map<Long, Attribute> attributes = Maps.newHashMap();
 
@@ -305,7 +324,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 					final Set<Attribute> attributesToDelete = attributePath.getAttributes();
 
-					if (attributes != null) {
+					if (attributesToDelete != null) {
 
 						for (final Attribute attribute : attributesToDelete) {
 
@@ -316,8 +335,39 @@ public class TasksCsvResourceTest extends ResourceTest {
 			}
 		}
 
-		dataModelsResourceTestUtils.deleteObject(dataModel);
+		if(outputDataModel.getSchema() != null) {
+
+			final Set<AttributePath> attributePathsToDelete = outputDataModel.getSchema().getUniqueAttributePaths();
+
+			if (attributePathsToDelete != null) {
+
+				for (final AttributePath attributePath : attributePathsToDelete) {
+
+					attributePaths.put(attributePath.getId(), attributePath);
+
+					final Set<Attribute> attributesToDelete = attributePath.getAttributes();
+
+					if (attributesToDelete != null) {
+
+						for (final Attribute attribute : attributesToDelete) {
+
+							attributes.put(attribute.getId(), attribute);
+						}
+					}
+				}
+			}
+		}
+
+		final Schema outputSchema = outputDataModel.getSchema();
+		final Clasz outputRecordClass = outputSchema.getRecordClass();
+
+		outputDataModel.setSchema(null);
+
+		dataModelsResourceTestUtils.updateObjectWithoutComparison(outputDataModel);
+
+		dataModelsResourceTestUtils.deleteObject(inputDataModel);
 		schemasResourceTestUtils.deleteObject(schema);
+		schemasResourceTestUtils.deleteObject(outputSchema);
 
 		for (final AttributePath attributePath : attributePaths.values()) {
 
@@ -330,6 +380,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 		}
 
 		classesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(recordClass);
+		classesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(outputRecordClass);
 		resourcesResourceTestUtils.deleteObject(resource);
 		configurationsResourceTestUtils.deleteObject(configuration);
 

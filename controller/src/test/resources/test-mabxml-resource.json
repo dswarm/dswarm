@@ -1,10 +1,10 @@
 {
     "id": 1,
-    "name": "test-mabxml.xml",
+    "name": "controller_test-mabxml.xml",
     "type": "FILE",
     "description": "this is a description",
     "resource_attributes": {
-        "path": "dummy/path/to/test-mabxml.xml",
+        "path": "dummy/path/to/controller_test-mabxml.xml",
 		"filesize": 2279,
 		"filetype": "application/xml"
     }
