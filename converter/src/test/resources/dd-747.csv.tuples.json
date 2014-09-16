@@ -1,0 +1,40 @@
+[ {
+  "v1" : "http://data.slub-dresden.de/datamodels/4/records/bad198a4-29d9-46dc-8b40-aafbdfe42932",
+  "v2" : [ {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/1/schema#RecordType"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#name" : "Wladimir"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#number" : "3"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#color" : "blau"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#date" : "20.12.2013"
+  } ]
+}, {
+  "v1" : "http://data.slub-dresden.de/datamodels/4/records/b6c59f3d-237d-48fc-8761-1614457e1a16",
+  "v2" : [ {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/1/schema#RecordType"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#name" : "Willi"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#number" : "3"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#color" : "grün"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#date" : "10.12.2013"
+  } ]
+}, {
+  "v1" : "http://data.slub-dresden.de/datamodels/4/records/1c203b97-d64a-48ac-92fc-00902c752b8d",
+  "v2" : [ {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/1/schema#RecordType"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#name" : "Paule"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#number" : "2"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#color" : "grün"
+  }, {
+    "http://data.slub-dresden.de/resources/1/schema#date" : "10.10.2013"
+  } ]
+} ]

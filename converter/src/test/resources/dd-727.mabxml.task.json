@@ -1,0 +1,589 @@
+{
+    "name": "Transformations",
+    "description": "Transformations",
+    "job": {
+        "mappings": [{
+            "name": "cfghj",
+            "id": 6,
+            "input_attribute_paths": [{
+                "type": "MappingAttributePathInstance",
+                "name": "feld_value__-1408543399900__0__",
+                "id": 12,
+                "attribute_path": {
+                    "id": 48,
+                    "attributes": [{
+                        "name": "feld",
+                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                        "id": 40
+                    }, {
+                        "name": "value",
+                        "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+                        "id": 43
+                    }]
+                },
+                "filter": {
+                    "id": -1408543636806,
+                    "expression": "[{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr\":\"029\"}]"
+                }
+            }],
+            "output_attribute_path": {
+                "type": "MappingAttributePathInstance",
+                "name": "output mapping attribute path instance",
+                "id": 13,
+                "attribute_path": {
+                    "id": 3,
+                    "attributes": [{
+                        "name": "title",
+                        "uri": "http://purl.org/dc/elements/1.1/title",
+                        "id": 3
+                    }]
+                }
+            },
+            "transformation": {
+                "name": "transformation",
+                "description": "transformation",
+                "function": {
+                    "name": "transformation",
+                    "description": "transformation",
+                    "type": "Transformation"
+                },
+                "parameter_mappings": {
+                    "__TRANSFORMATION_OUTPUT_VARIABLE__1": "http://purl.org/dc/elements/1.1/title",
+                    "feld_value__-1408543399900__0__": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\u001ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+                }
+            }
+        }]
+    },
+    "input_data_model": {
+        "name": "dd-727.xml",
+        "description": "...",
+        "configuration": {
+            "name": "xml",
+            "description": "xml with id 34",
+            "id": 33,
+            "resources": [{
+                "id": 34
+            }],
+            "parameters": {
+                "storage_type": "mabxml",
+                "record_tag": "datensatz"
+            }
+        },
+        "schema": {
+            "name": "mabxml schema",
+            "id": 3,
+            "attribute_paths": [{
+                "id": 53,
+                "attributes": [{
+                    "name": "feld",
+                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                    "id": 40
+                }, {
+                    "name": "tf",
+                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
+                    "id": 45
+                }]
+            }, {
+                "id": 40,
+                "attributes": [{
+                    "name": "id",
+                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id",
+                    "id": 36
+                }]
+            }, {
+                "id": 50,
+                "attributes": [{
+                    "name": "feld",
+                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                    "id": 40
+                }, {
+                    "name": "ns",
+                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
+                    "id": 44
+                }]
+            }, {
+                "id": 49,
+                "attributes": [{
+                    "name": "feld",
+                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                    "id": 40
+                }, {
+                    "name": "ns",
+                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
+                    "id": 44
+                }]
+            }, {
+                "id": 52,
+                "attributes": [{
+                    "name": "feld",
+                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                    "id": 40
+                }, {
+                    "name": "tf",
+                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
+                    "id": 45
+                }]
+            }, {
+                "id": 51,
+                "attributes": [{
+                    "name": "feld",
+                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                    "id": 40
+                }, {
+                    "name": "ns",
+                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
+                    "id": 44
+                }, {
+                    "name": "value",
+                    "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+                    "id": 43
+                }]
+            }, {
+                "id": 45,
+                "attributes": [{
+                    "name": "feld",
+                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                    "id": 40
+                }]
+            }, {
+                "id": 46,
+                "attributes": [{
+                    "name": "feld",
+                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                    "id": 40
+                }, {
+                    "name": "nr",
+                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
+                    "id": 41
+                }]
+            }, {
+                "id": 47,
+                "attributes": [{
+                    "name": "feld",
+                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                    "id": 40
+                }, {
+                    "name": "ind",
+                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind",
+                    "id": 42
+                }]
+            }, {
+                "id": 48,
+                "attributes": [{
+                    "name": "feld",
+                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                    "id": 40
+                }, {
+                    "name": "value",
+                    "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+                    "id": 43
+                }]
+            }, {
+                "id": 41,
+                "attributes": [{
+                    "name": "typ",
+                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ",
+                    "id": 37
+                }]
+            }, {
+                "id": 42,
+                "attributes": [{
+                    "name": "status",
+                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status",
+                    "id": 38
+                }]
+            }, {
+                "id": 43,
+                "attributes": [{
+                    "name": "mabVersion",
+                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion",
+                    "id": 39
+                }]
+            }, {
+                "id": 44,
+                "attributes": [{
+                    "name": "feld",
+                    "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                    "id": 40
+                }]
+            }],
+            "record_class": {
+                "name": "datensatzType",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType",
+                "id": 3
+            },
+            "content_schema": {
+                "name": "mab content schema",
+                "id": 1,
+                "key_attribute_paths": [{
+                    "id": 46,
+                    "attributes": [{
+                        "name": "feld",
+                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                        "id": 40
+                    }, {
+                        "name": "nr",
+                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
+                        "id": 41
+                    }]
+                }, {
+                    "id": 47,
+                    "attributes": [{
+                        "name": "feld",
+                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                        "id": 40
+                    }, {
+                        "name": "ind",
+                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind",
+                        "id": 42
+                    }]
+                }],
+                "value_attribute_path": {
+                    "id": 48,
+                    "attributes": [{
+                        "name": "feld",
+                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                        "id": 40
+                    }, {
+                        "name": "value",
+                        "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+                        "id": 43
+                    }]
+                }
+            }
+        },
+        "id": 68,
+        "data_resource": {
+            "name": "dd-727.xml",
+            "description": "...",
+            "type": "FILE",
+            "id": 34,
+            "resource_attributes": {
+                "path": "/home/dmp/tmp/tmp/resources/dd-727.xml",
+                "filesize": -1,
+                "filetype": "application/xml"
+            },
+            "configurations": [{
+                "name": "xml",
+                "description": "xml with id 34",
+                "id": 33,
+                "resources": [{
+                    "id": 34
+                }],
+                "parameters": {
+                    "storage_type": "mabxml",
+                    "record_tag": "datensatz"
+                }
+            }]
+        }
+    },
+    "output_data_model": {
+        "name": "Internal Data Model BiboDocument",
+        "description": "Internal Data Model BiboDocument",
+        "schema": {
+            "name": "bibo:Document-Schema (KIM-Titeldaten)",
+            "id": 2,
+            "attribute_paths": [{
+                "id": 37,
+                "attributes": [{
+                    "name": "contributor",
+                    "uri": "http://purl.org/dc/terms/contributor",
+                    "id": 10
+                }, {
+                    "name": "type",
+                    "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                    "id": 1
+                }]
+            }, {
+                "id": 38,
+                "attributes": [{
+                    "name": "contributor",
+                    "uri": "http://purl.org/dc/terms/contributor",
+                    "id": 10
+                }, {
+                    "name": "familyName",
+                    "uri": "http://xmlns.com/foaf/0.1/familyName",
+                    "id": 34
+                }]
+            }, {
+                "id": 39,
+                "attributes": [{
+                    "name": "contributor",
+                    "uri": "http://purl.org/dc/terms/contributor",
+                    "id": 10
+                }, {
+                    "name": "givenName",
+                    "uri": "http://xmlns.com/foaf/0.1/givenName",
+                    "id": 35
+                }]
+            }, {
+                "id": 33,
+                "attributes": [{
+                    "name": "bibliographicCitation",
+                    "uri": "http://purl.org/dc/terms/bibliographicCitation",
+                    "id": 33
+                }]
+            }, {
+                "id": 34,
+                "attributes": [{
+                    "name": "creator",
+                    "uri": "http://purl.org/dc/terms/creator",
+                    "id": 8
+                }, {
+                    "name": "type",
+                    "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                    "id": 1
+                }]
+            }, {
+                "id": 35,
+                "attributes": [{
+                    "name": "creator",
+                    "uri": "http://purl.org/dc/terms/creator",
+                    "id": 8
+                }, {
+                    "name": "familyName",
+                    "uri": "http://xmlns.com/foaf/0.1/familyName",
+                    "id": 34
+                }]
+            }, {
+                "id": 36,
+                "attributes": [{
+                    "name": "creator",
+                    "uri": "http://purl.org/dc/terms/creator",
+                    "id": 8
+                }, {
+                    "name": "givenName",
+                    "uri": "http://xmlns.com/foaf/0.1/givenName",
+                    "id": 35
+                }]
+            }, {
+                "id": 3,
+                "attributes": [{
+                    "name": "title",
+                    "uri": "http://purl.org/dc/elements/1.1/title",
+                    "id": 3
+                }]
+            }, {
+                "id": 1,
+                "attributes": [{
+                    "name": "type",
+                    "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                    "id": 1
+                }]
+            }, {
+                "id": 7,
+                "attributes": [{
+                    "name": "shortTitle",
+                    "uri": "http://purl.org/ontology/bibo/shortTitle",
+                    "id": 7
+                }]
+            }, {
+                "id": 8,
+                "attributes": [{
+                    "name": "creator",
+                    "uri": "http://purl.org/dc/terms/creator",
+                    "id": 8
+                }]
+            }, {
+                "id": 5,
+                "attributes": [{
+                    "name": "otherTitleInformation",
+                    "uri": "http://rdvocab.info/Elements/otherTitleInformation",
+                    "id": 5
+                }]
+            }, {
+                "id": 6,
+                "attributes": [{
+                    "name": "alternative",
+                    "uri": "http://purl.org/dc/terms/alternative",
+                    "id": 6
+                }]
+            }, {
+                "id": 11,
+                "attributes": [{
+                    "name": "contributor",
+                    "uri": "http://purl.org/dc/elements/1.1/contributor",
+                    "id": 11
+                }]
+            }, {
+                "id": 12,
+                "attributes": [{
+                    "name": "publicationStatement",
+                    "uri": "http://rdvocab.info/Elements/publicationStatement",
+                    "id": 12
+                }]
+            }, {
+                "id": 9,
+                "attributes": [{
+                    "name": "creator",
+                    "uri": "http://purl.org/dc/elements/1.1/creator",
+                    "id": 9
+                }]
+            }, {
+                "id": 10,
+                "attributes": [{
+                    "name": "contributor",
+                    "uri": "http://purl.org/dc/terms/contributor",
+                    "id": 10
+                }]
+            }, {
+                "id": 15,
+                "attributes": [{
+                    "name": "issued",
+                    "uri": "http://purl.org/dc/terms/issued",
+                    "id": 15
+                }]
+            }, {
+                "id": 16,
+                "attributes": [{
+                    "name": "sameAs",
+                    "uri": "http://www.w3.org/2002/07/owl#sameAs",
+                    "id": 16
+                }]
+            }, {
+                "id": 13,
+                "attributes": [{
+                    "name": "placeOfPublication",
+                    "uri": "http://rdvocab.info/Elements/placeOfPublication",
+                    "id": 13
+                }]
+            }, {
+                "id": 14,
+                "attributes": [{
+                    "name": "publisher",
+                    "uri": "http://purl.org/dc/elements/1.1/publisher",
+                    "id": 14
+                }]
+            }, {
+                "id": 20,
+                "attributes": [{
+                    "name": "lccn",
+                    "uri": "http://purl.org/ontology/bibo/lccn",
+                    "id": 20
+                }]
+            }, {
+                "id": 19,
+                "attributes": [{
+                    "name": "eissn",
+                    "uri": "http://purl.org/ontology/bibo/eissn",
+                    "id": 19
+                }]
+            }, {
+                "id": 18,
+                "attributes": [{
+                    "name": "issn",
+                    "uri": "http://purl.org/ontology/bibo/issn",
+                    "id": 18
+                }]
+            }, {
+                "id": 17,
+                "attributes": [{
+                    "name": "isLike",
+                    "uri": "http://umbel.org/umbel#isLike",
+                    "id": 17
+                }]
+            }, {
+                "id": 24,
+                "attributes": [{
+                    "name": "hasPart",
+                    "uri": "http://purl.org/dc/terms/hasPart",
+                    "id": 24
+                }]
+            }, {
+                "id": 23,
+                "attributes": [{
+                    "name": "medium",
+                    "uri": "http://purl.org/dc/terms/medium",
+                    "id": 23
+                }]
+            }, {
+                "id": 22,
+                "attributes": [{
+                    "name": "isbn",
+                    "uri": "http://purl.org/ontology/bibo/isbn",
+                    "id": 22
+                }]
+            }, {
+                "id": 21,
+                "attributes": [{
+                    "name": "oclcnum",
+                    "uri": "http://purl.org/ontology/bibo/oclcnum",
+                    "id": 21
+                }]
+            }, {
+                "id": 96,
+                "attributes": [{
+                    "name": "bibliographicCitation",
+                    "uri": "http://purl.org/dc/terms/bibliographicCitation",
+                    "id": 33
+                }, {
+                    "name": "testleaf",
+                    "uri": "http://example.com",
+                    "id": 65
+                }]
+            }, {
+                "id": 28,
+                "attributes": [{
+                    "name": "precededBy",
+                    "uri": "http://rdvocab.info/Elements/precededBy",
+                    "id": 28
+                }]
+            }, {
+                "id": 27,
+                "attributes": [{
+                    "name": "isFormatOf",
+                    "uri": "http://purl.org/dc/terms/isFormatOf",
+                    "id": 27
+                }]
+            }, {
+                "id": 26,
+                "attributes": [{
+                    "name": "hasVersion",
+                    "uri": "http://purl.org/dc/terms/hasVersion",
+                    "id": 26
+                }]
+            }, {
+                "id": 25,
+                "attributes": [{
+                    "name": "isPartOf",
+                    "uri": "http://purl.org/dc/terms/isPartOf",
+                    "id": 25
+                }]
+            }, {
+                "id": 32,
+                "attributes": [{
+                    "name": "edition",
+                    "uri": "http://purl.org/ontology/bibo/edition",
+                    "id": 32
+                }]
+            }, {
+                "id": 31,
+                "attributes": [{
+                    "name": "1053",
+                    "uri": "http://iflastandards.info/ns/isbd/elements/1053",
+                    "id": 31
+                }]
+            }, {
+                "id": 30,
+                "attributes": [{
+                    "name": "language",
+                    "uri": "http://purl.org/dc/terms/language",
+                    "id": 30
+                }]
+            }, {
+                "id": 29,
+                "attributes": [{
+                    "name": "succeededBy",
+                    "uri": "http://rdvocab.info/Elements/succeededBy",
+                    "id": 29
+                }]
+            }],
+            "record_class": {
+                "name": "Document",
+                "uri": "http://purl.org/ontology/bibo/Document",
+                "id": 2
+            }
+        },
+        "id": 2
+    }
+}
