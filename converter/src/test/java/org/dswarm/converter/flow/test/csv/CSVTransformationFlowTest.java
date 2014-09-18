@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Provider;
 import org.junit.Assert;
 import org.junit.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.TransformationFlow;
 import org.dswarm.persistence.model.job.Task;
@@ -54,11 +56,17 @@ public class CSVTransformationFlowTest extends GuicedTest {
 		testCSVTaskWithTuples("almost.all.functions.complex.test.csv.result.json", "almost.all.functions.complex.test.csv.task.json",
 				"almost.all.functions.complex.test.csv.tuples.json");
 	}
-	
+
 	@Test
 	public void testCSVFilterOutputBeforeFilterCondition() throws Exception {
 
 		testCSVMorphWithTuples("dd-747.csv.morph.result.json", "dd-747.csv.morph.xml", "dd-747.csv.tuples.json");
+	}
+
+	@Test
+	public void testCSVMappingInputAndMappingOutputAreTheSame() throws Exception {
+
+		testCSVTaskWithTuples("dd-767.csv.task.result.json", "dd-767.csv.task.json", "dd-747.csv.tuples.json");
 	}
 
 	private void testCSVTaskWithTuples(final String taskResultJSONFileName, final String taskJSONFileName, final String tuplesJSONFileName)
@@ -90,9 +98,9 @@ public class CSVTransformationFlowTest extends GuicedTest {
 		final ArrayNode expectedArray = objectMapper2.readValue(expected, ArrayNode.class);
 		final String finalExpected = objectMapper2.writeValueAsString(expectedArray);
 
-		Assert.assertEquals(finalExpected.length(), finalActual.length());
+		JSONAssert.assertEquals(finalExpected, finalActual, true);
 	}
-	
+
 	private void testCSVMorphWithTuples(final String resultJSONFileName, final String morphXMLFileName, final String tuplesJSONFileName)
 			throws Exception {
 
@@ -121,7 +129,6 @@ public class CSVTransformationFlowTest extends GuicedTest {
 		final ArrayNode expectedArray = objectMapper2.readValue(expected, ArrayNode.class);
 		final String finalExpected = objectMapper2.writeValueAsString(expectedArray);
 
-		Assert.assertEquals(finalExpected.length(), finalActual.length());
-
+		JSONAssert.assertEquals(finalExpected, finalActual, true);
 	}
 }

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Provider;
 import org.junit.Assert;
 import org.junit.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
 
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.TransformationFlow;
@@ -126,7 +127,7 @@ public class XMLTransformationFlowTest extends GuicedTest {
 		final ArrayNode expectedArray = objectMapper2.readValue(expected, ArrayNode.class);
 		final String finalExpected = objectMapper2.writeValueAsString(expectedArray);
 
-		Assert.assertEquals(finalExpected.length(), finalActual.length());
+		JSONAssert.assertEquals(finalExpected, finalActual, true);
 	}
 
 	private void testXMLMorphWithTuples(final String resultJSONFileName, final String morphXMLFileName, final String tuplesJSONFileName)
@@ -157,8 +158,7 @@ public class XMLTransformationFlowTest extends GuicedTest {
 		final ArrayNode expectedArray = objectMapper2.readValue(expected, ArrayNode.class);
 		final String finalExpected = objectMapper2.writeValueAsString(expectedArray);
 
-		Assert.assertEquals(finalExpected.length(), finalActual.length());
-
+		JSONAssert.assertEquals(finalExpected, finalActual, true);
 	}
 
 }

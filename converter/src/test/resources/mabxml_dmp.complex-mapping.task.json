@@ -49,9 +49,9 @@
                     }]
                 },
                 "parameter_mappings": {
-                    "feld_value": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\u001ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-                    "feld_nr": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
-                    "__TRANSFORMATION_OUTPUT_VARIABLE__1": "http://purl.org/dc/elements/1.1/title"
+                    "feld_value": "feld_value",
+                    "feld_nr": "feld_nr",
+                    "__TRANSFORMATION_OUTPUT_VARIABLE__1": "output mapping attribute path instance"
                 }
             },
             "input_attribute_paths": [{

@@ -47,8 +47,8 @@
                     }]
                 },
                 "parameter_mappings": {
-                    "val6": "http://data.slub-dresden.de/resources/1/schema#val6",
-                    "__TRANSFORMATION_OUTPUT_VARIABLE__1": "http://rdvocab.info/Elements/otherTitleInformation"
+                    "val6": "val6",
+                    "__TRANSFORMATION_OUTPUT_VARIABLE__1": "output mapping attribute path instance"
                 }
             },
             "input_attribute_paths": [{

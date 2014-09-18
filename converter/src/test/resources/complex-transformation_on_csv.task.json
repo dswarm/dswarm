@@ -116,9 +116,9 @@
                     }]
                 },
                 "parameter_mappings": {
-                    "description": "http://data.slub-dresden.de/resources/1/schema#description",
-                    "id": "http://data.slub-dresden.de/resources/1/schema#id",
-                    "__TRANSFORMATION_OUTPUT_VARIABLE__1": "http://purl.org/ontology/bibo/shortTitle"
+                    "description": "description",
+                    "id": "id",
+                    "__TRANSFORMATION_OUTPUT_VARIABLE__1": "output mapping attribute path instance"
                 }
             },
             "input_attribute_paths": [{

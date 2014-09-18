@@ -52,7 +52,7 @@
             ]
           },
           "parameter_mappings": {
-            "__TRANSFORMATION_OUTPUT_VARIABLE__1": "http://purl.org/dc/elements/1.1/title",
+            "__TRANSFORMATION_OUTPUT_VARIABLE__1": "output mapping attribute path instance",
             "feld_value__0__VAR_IN_TRANSFORMATION": "feld_value__0__INPUT_ATTRIBUTE_PATH_INSTANCE",
             "feld_value__1__VAR_IN_TRANSFORMATION": "feld_value__1__INPUT_ATTRIBUTE_PATH_INSTANCE"
           }

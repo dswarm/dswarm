@@ -96,10 +96,10 @@
             ]
           },
           "parameter_mappings": {
-            "__TRANSFORMATION_OUTPUT_VARIABLE__1": "http://purl.org/dc/terms/alternative",
-            "note_value__0__": "http://www.loc.gov/mods/v3#note\u001ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-            "note_lang__0__": "http://www.loc.gov/mods/v3#note\u001ehttp://www.loc.gov/mods/v3#lang",
-            "note_displayLabel__0__": "http://www.loc.gov/mods/v3#note\u001ehttp://www.loc.gov/mods/v3#displayLabel"
+            "__TRANSFORMATION_OUTPUT_VARIABLE__1": "output mapping attribute path instance",
+            "note_value__0__": "note_value__0__",
+            "note_lang__0__": "note_lang__0__",
+            "note_displayLabel__0__": "note_displayLabel__0__"
           }
         },
         "input_attribute_paths": [
@@ -190,8 +190,8 @@
             "type": "Transformation"
           },
           "parameter_mappings": {
-            "__TRANSFORMATION_OUTPUT_VARIABLE__2": "http://purl.org/dc/elements/1.1/title",
-            "titleInfo_title_value__1__": "http://www.loc.gov/mods/v3#titleInfo\u001ehttp://www.loc.gov/mods/v3#title\u001ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+            "__TRANSFORMATION_OUTPUT_VARIABLE__2": "output mapping attribute path instance 2",
+            "titleInfo_title_value__1__": "titleInfo_title_value__1__"
           }
         },
         "input_attribute_paths": [{
@@ -221,7 +221,7 @@
           }],
         "output_attribute_path": {
           "type": "MappingAttributePathInstance",
-          "name": "output mapping attribute path instance",
+          "name": "output mapping attribute path instance 2",
           "id": -1402483505128,
           "attribute_path": {
             "id": 1,
@@ -245,8 +245,8 @@
             "type": "Transformation"
           },
           "parameter_mappings": {
-            "__TRANSFORMATION_OUTPUT_VARIABLE__3": "http://purl.org/ontology/bibo/edition",
-            "originInfo_dateIssued_value__2__": "http://www.loc.gov/mods/v3#originInfo\u001ehttp://www.loc.gov/mods/v3#dateIssued\u001ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+            "__TRANSFORMATION_OUTPUT_VARIABLE__3": "output mapping attribute path instance 3",
+            "originInfo_dateIssued_value__2__": "originInfo_dateIssued_value__2__"
           }
         },
         "input_attribute_paths": [{
@@ -280,7 +280,7 @@
           }],
         "output_attribute_path": {
           "type": "MappingAttributePathInstance",
-          "name": "output mapping attribute path instance",
+          "name": "output mapping attribute path instance 3",
           "id": -1402483539702,
           "attribute_path": {
             "id": 30,

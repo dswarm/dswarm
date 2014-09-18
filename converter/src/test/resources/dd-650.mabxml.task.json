@@ -13,8 +13,8 @@
             "type": "Transformation"
           },
           "parameter_mappings": {
-            "__TRANSFORMATION_OUTPUT_VARIABLE__1": "http://purl.org/dc/elements/1.1/case1",
-            "feld_value__0__": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+            "__TRANSFORMATION_OUTPUT_VARIABLE__1": "output mapping attribute path instance",
+            "feld_value__0__": "feld_value__0__"
           }
         },
         "input_attribute_paths": [{
@@ -67,8 +67,8 @@
             "type": "Transformation"
           },
           "parameter_mappings": {
-            "__TRANSFORMATION_OUTPUT_VARIABLE__2": "http://purl.org/dc/elements/1.1/case2",
-            "feld_value__1__": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+            "__TRANSFORMATION_OUTPUT_VARIABLE__2": "output mapping attribute path instance 2",
+            "feld_value__1__": "feld_value__1__"
           }
         },
         "input_attribute_paths": [{
@@ -97,7 +97,7 @@
           }],
         "output_attribute_path": {
           "type": "MappingAttributePathInstance",
-          "name": "output mapping attribute path instance",
+          "name": "output mapping attribute path instance 2",
           "id": -1402051926047,
           "attribute_path": {
             "id": 1,
@@ -121,8 +121,8 @@
             "type": "Transformation"
           },
           "parameter_mappings": {
-            "__TRANSFORMATION_OUTPUT_VARIABLE__3": "http://purl.org/dc/elements/1.1/case3",
-            "feld_value__2__": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+            "__TRANSFORMATION_OUTPUT_VARIABLE__3": "output mapping attribute path instance 3",
+            "feld_value__2__": "feld_value__2__"
           }
         },
         "input_attribute_paths": [{
@@ -151,7 +151,7 @@
           }],
         "output_attribute_path": {
           "type": "MappingAttributePathInstance",
-          "name": "output mapping attribute path instance",
+          "name": "output mapping attribute path instance 3",
           "id": -1402051926046,
           "attribute_path": {
             "id": 1,
@@ -175,8 +175,8 @@
             "type": "Transformation"
           },
           "parameter_mappings": {
-            "__TRANSFORMATION_OUTPUT_VARIABLE__4": "http://purl.org/dc/elements/1.1/case4",
-            "feld_value__3__": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+            "__TRANSFORMATION_OUTPUT_VARIABLE__4": "output mapping attribute path instance 4",
+            "feld_value__3__": "feld_value__3__"
           }
         },
         "input_attribute_paths": [{
@@ -205,7 +205,7 @@
           }],
         "output_attribute_path": {
           "type": "MappingAttributePathInstance",
-          "name": "output mapping attribute path instance",
+          "name": "output mapping attribute path instance 4",
           "id": -1402051926045,
           "attribute_path": {
             "id": 1,
@@ -229,8 +229,8 @@
             "type": "Transformation"
           },
           "parameter_mappings": {
-            "__TRANSFORMATION_OUTPUT_VARIABLE__5": "http://purl.org/dc/elements/1.1/case5",
-            "feld_value__4__": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+            "__TRANSFORMATION_OUTPUT_VARIABLE__5": "output mapping attribute path instance 5",
+            "feld_value__4__": "feld_value__4__"
           }
         },
         "input_attribute_paths": [{
@@ -259,7 +259,7 @@
           }],
         "output_attribute_path": {
           "type": "MappingAttributePathInstance",
-          "name": "output mapping attribute path instance",
+          "name": "output mapping attribute path instance 5",
           "id": -1402051926044,
           "attribute_path": {
             "id": 1,

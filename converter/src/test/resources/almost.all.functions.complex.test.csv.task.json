@@ -14,8 +14,8 @@
             "type": "Transformation"
           },
           "parameter_mappings": {
-            "__TRANSFORMATION_OUTPUT_VARIABLE__9": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "type__0__": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+            "__TRANSFORMATION_OUTPUT_VARIABLE__9": "output mapping attribute path instance",
+            "type__0__": "type__0__"
           }
         },
         "input_attribute_paths": [{
@@ -94,9 +94,9 @@
               }]
           },
           "parameter_mappings": {
-            "__TRANSFORMATION_OUTPUT_VARIABLE__10": "http://purl.org/dc/elements/1.1/creator",
-            "givenname__1__": "http://data.slub-dresden.de/resources/1/schema#givenname",
-            "sn__1__": "http://data.slub-dresden.de/resources/1/schema#sn"
+            "__TRANSFORMATION_OUTPUT_VARIABLE__10": "output mapping attribute path instance 2",
+            "givenname__1__": "givenname__1__",
+            "sn__1__": "sn__1__"
           }
         },
         "input_attribute_paths": [
@@ -129,7 +129,7 @@
         ],
         "output_attribute_path": {
           "type": "MappingAttributePathInstance",
-          "name": "output mapping attribute path instance",
+          "name": "output mapping attribute path instance 2",
           "id": -1402409005652,
           "attribute_path": {
             "id": 6,
@@ -292,9 +292,9 @@
             ]
           },
           "parameter_mappings": {
-            "__TRANSFORMATION_OUTPUT_VARIABLE__11": "http://purl.org/dc/elements/1.1/title",
-            "subtitle__2__": "http://data.slub-dresden.de/resources/1/schema#subtitle",
-            "title__2__": "http://data.slub-dresden.de/resources/1/schema#title"
+            "__TRANSFORMATION_OUTPUT_VARIABLE__11": "output mapping attribute path instance 3",
+            "subtitle__2__": "subtitle__2__",
+            "title__2__": "title__2__"
           }
         },
         "input_attribute_paths": [
@@ -327,7 +327,7 @@
         ],
         "output_attribute_path": {
           "type": "MappingAttributePathInstance",
-          "name": "output mapping attribute path instance",
+          "name": "output mapping attribute path instance 3",
           "id": -1402409026757,
           "attribute_path": {
             "id": 1,
@@ -351,8 +351,8 @@
             "type": "Transformation"
           },
           "parameter_mappings": {
-            "__TRANSFORMATION_OUTPUT_VARIABLE__12": "http://xmlns.com/foaf/0.1/givenName",
-            "givenname__3__": "http://data.slub-dresden.de/resources/1/schema#givenname"
+            "__TRANSFORMATION_OUTPUT_VARIABLE__12": "output mapping attribute path instance 4",
+            "givenname__3__": "givenname__3__"
           }
         },
         "input_attribute_paths": [{
@@ -370,7 +370,7 @@
           }],
         "output_attribute_path": {
           "type": "MappingAttributePathInstance",
-          "name": "output mapping attribute path instance",
+          "name": "output mapping attribute path instance 4",
           "id": -1402409053441,
           "attribute_path": {
             "id": 86,
@@ -394,8 +394,8 @@
             "type": "Transformation"
           },
           "parameter_mappings": {
-            "__TRANSFORMATION_OUTPUT_VARIABLE__13": "http://xmlns.com/foaf/0.1/familyName",
-            "sn__4__": "http://data.slub-dresden.de/resources/1/schema#sn"
+            "__TRANSFORMATION_OUTPUT_VARIABLE__13": "output mapping attribute path instance 5",
+            "sn__4__": "sn__4__"
           }
         },
         "input_attribute_paths": [{
@@ -413,7 +413,7 @@
           }],
         "output_attribute_path": {
           "type": "MappingAttributePathInstance",
-          "name": "output mapping attribute path instance",
+          "name": "output mapping attribute path instance 5",
           "id": -1402409065603,
           "attribute_path": {
             "id": 87,
@@ -470,8 +470,8 @@
               }]
           },
           "parameter_mappings": {
-            "__TRANSFORMATION_OUTPUT_VARIABLE__14": "http://purl.org/ontology/bibo/edition",
-            "date__5__": "http://data.slub-dresden.de/resources/1/schema#date"
+            "__TRANSFORMATION_OUTPUT_VARIABLE__14": "output mapping attribute path instance 6",
+            "date__5__": "date__5__"
           }
         },
         "input_attribute_paths": [{
@@ -489,7 +489,7 @@
           }],
         "output_attribute_path": {
           "type": "MappingAttributePathInstance",
-          "name": "output mapping attribute path instance",
+          "name": "output mapping attribute path instance 6",
           "id": -1402409083402,
           "attribute_path": {
             "id": 30,
@@ -641,8 +641,8 @@
             ]
           },
           "parameter_mappings": {
-            "__TRANSFORMATION_OUTPUT_VARIABLE__15": "http://purl.org/dc/terms/medium",
-            "attributes__6__": "http://data.slub-dresden.de/resources/1/schema#attributes"
+            "__TRANSFORMATION_OUTPUT_VARIABLE__15": "output mapping attribute path instance 7",
+            "attributes__6__": "attributes__6__"
           }
         },
         "input_attribute_paths": [{
@@ -660,7 +660,7 @@
           }],
         "output_attribute_path": {
           "type": "MappingAttributePathInstance",
-          "name": "output mapping attribute path instance",
+          "name": "output mapping attribute path instance 7",
           "id": -1402409115213,
           "attribute_path": {
             "id": 21,
@@ -717,8 +717,8 @@
               }]
           },
           "parameter_mappings": {
-            "__TRANSFORMATION_OUTPUT_VARIABLE__16": "http://purl.org/dc/terms/language",
-            "language__7__": "http://data.slub-dresden.de/resources/1/schema#language"
+            "__TRANSFORMATION_OUTPUT_VARIABLE__16": "output mapping attribute path instance 8",
+            "language__7__": "language__7__"
           }
         },
         "input_attribute_paths": [{
@@ -736,7 +736,7 @@
           }],
         "output_attribute_path": {
           "type": "MappingAttributePathInstance",
-          "name": "output mapping attribute path instance",
+          "name": "output mapping attribute path instance 8",
           "id": -1402409132868,
           "attribute_path": {
             "id": 28,
@@ -799,8 +799,8 @@
               }]
           },
           "parameter_mappings": {
-            "__TRANSFORMATION_OUTPUT_VARIABLE__17": "http://purl.org/ontology/bibo/isbn",
-            "isbn__8__": "http://data.slub-dresden.de/resources/1/schema#isbn"
+            "__TRANSFORMATION_OUTPUT_VARIABLE__17": "output mapping attribute path instance 9",
+            "isbn__8__": "isbn__8__"
           }
         },
         "input_attribute_paths": [{
@@ -818,7 +818,7 @@
           }],
         "output_attribute_path": {
           "type": "MappingAttributePathInstance",
-          "name": "output mapping attribute path instance",
+          "name": "output mapping attribute path instance 9",
           "id": -1402409142893,
           "attribute_path": {
             "id": 19,
@@ -923,8 +923,8 @@
             ]
           },
           "parameter_mappings": {
-            "__TRANSFORMATION_OUTPUT_VARIABLE__18": "http://rdvocab.info/Elements/placeOfPublication",
-            "isbn__9__": "http://data.slub-dresden.de/resources/1/schema#isbn"
+            "__TRANSFORMATION_OUTPUT_VARIABLE__18": "output mapping attribute path instance 10",
+            "isbn__9__": "isbn__9__"
           }
         },
         "input_attribute_paths": [{
@@ -942,7 +942,7 @@
           }],
         "output_attribute_path": {
           "type": "MappingAttributePathInstance",
-          "name": "output mapping attribute path instance",
+          "name": "output mapping attribute path instance 10",
           "id": -1402409156565,
           "attribute_path": {
             "id": 10,

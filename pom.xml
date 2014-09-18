@@ -64,6 +64,7 @@
 		<jersey.version>2.8</jersey.version>
 		<logback.version>1.1.2</logback.version>
 		<findebugs.jsr305.version>2.0.3</findebugs.jsr305.version>
+		<jsonassert.version>1.2.3</jsonassert.version>
 	</properties>
 
 	<repositories>
@@ -638,6 +639,13 @@
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
 			<version>${guice.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.skyscreamer</groupId>
+			<artifactId>jsonassert</artifactId>
+			<version>${jsonassert.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

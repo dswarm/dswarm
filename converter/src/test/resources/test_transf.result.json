@@ -1,17 +1,17 @@
 [{
     "http://data.slub-dresden.de/datamodels/2/records/15a6857b-6811-403b-a6e8-ddec6e589a9c": [{
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }, {
         "http://purl.org/dc/elements/1.1/title": "dOnald DUCK"
     }, {
         "http://rdvocab.info/Elements/otherTitleInformation": ["der", "hund"]
+    }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
     }]
 }, {
     "http://data.slub-dresden.de/datamodels/2/records/8094f4d7-4190-474e-a9a4-18d53b0420a4": [{
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }, {
         "http://purl.org/dc/elements/1.1/title": "der Pe "
     }, {
         "http://rdvocab.info/Elements/otherTitleInformation": ["öü@", "|"]
+    }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
     }]
 }]

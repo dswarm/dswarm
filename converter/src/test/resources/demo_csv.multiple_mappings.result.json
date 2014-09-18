@@ -1,71 +1,71 @@
 [{
-    "http://data.slub-dresden.de/datamodels/2/records/834c984b-b1e5-4572-abcd-372a7a5d3adc": [{
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }, {
-        "http://rdvocab.info/Elements/otherTitleInformation": "45830568"
-    }, {
-        "http://purl.org/dc/terms/issued": "2000"
-    }, {
-        "http://purl.org/dc/elements/1.1/title": "2000"
-    }]
-}, {
-    "http://data.slub-dresden.de/datamodels/2/records/dc38d87a-c56f-4352-b889-4c87b3ced9d7": [{
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }, {
-        "http://rdvocab.info/Elements/otherTitleInformation": "45253668"
-    }, {
-        "http://purl.org/dc/terms/issued": "1650"
-    }, {
-        "http://purl.org/dc/elements/1.1/title": "1750"
-    }]
-}, {
     "http://data.slub-dresden.de/datamodels/2/records/26d3e1fa-14e5-40e7-be32-a40cfb1ea9f6": [{
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }, {
         "http://rdvocab.info/Elements/otherTitleInformation": "43452345"
     }, {
         "http://purl.org/dc/terms/issued": "1660"
     }, {
         "http://purl.org/dc/elements/1.1/title": "1760"
-    }]
-}, {
-    "http://data.slub-dresden.de/datamodels/2/records/bf98271a-1e05-49a5-aba8-c2a8f73eeeec": [{
+    }, {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }, {
-        "http://rdvocab.info/Elements/otherTitleInformation": "42220585"
-    }, {
-        "http://purl.org/dc/terms/issued": "1640"
-    }, {
-        "http://purl.org/dc/elements/1.1/title": "1740"
-    }]
-}, {
-    "http://data.slub-dresden.de/datamodels/2/records/b49e9e9a-aa20-40f9-b7fa-77c5b1f2270b": [{
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }, {
-        "http://rdvocab.info/Elements/otherTitleInformation": "42449475"
-    }, {
-        "http://purl.org/dc/terms/issued": "1690"
-    }, {
-        "http://purl.org/dc/elements/1.1/title": "1790"
-    }]
-}, {
-    "http://data.slub-dresden.de/datamodels/2/records/87af98ac-afb4-45fb-b228-3e0afd506064": [{
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }, {
-        "http://rdvocab.info/Elements/otherTitleInformation": "48569736"
-    }, {
-        "http://purl.org/dc/terms/issued": "1680"
-    }, {
-        "http://purl.org/dc/elements/1.1/title": "1780"
     }]
 }, {
     "http://data.slub-dresden.de/datamodels/2/records/e4072a6f-7ff6-42aa-89d7-d9a98e5205af": [{
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }, {
         "http://rdvocab.info/Elements/otherTitleInformation": "45634255"
     }, {
         "http://purl.org/dc/terms/issued": "1670"
     }, {
         "http://purl.org/dc/elements/1.1/title": "1770"
+    }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/87af98ac-afb4-45fb-b228-3e0afd506064": [{
+        "http://rdvocab.info/Elements/otherTitleInformation": "48569736"
+    }, {
+        "http://purl.org/dc/terms/issued": "1680"
+    }, {
+        "http://purl.org/dc/elements/1.1/title": "1780"
+    }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/dc38d87a-c56f-4352-b889-4c87b3ced9d7": [{
+        "http://rdvocab.info/Elements/otherTitleInformation": "45253668"
+    }, {
+        "http://purl.org/dc/terms/issued": "1650"
+    }, {
+        "http://purl.org/dc/elements/1.1/title": "1750"
+    }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/b49e9e9a-aa20-40f9-b7fa-77c5b1f2270b": [{
+        "http://rdvocab.info/Elements/otherTitleInformation": "42449475"
+    }, {
+        "http://purl.org/dc/terms/issued": "1690"
+    }, {
+        "http://purl.org/dc/elements/1.1/title": "1790"
+    }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/bf98271a-1e05-49a5-aba8-c2a8f73eeeec": [{
+        "http://rdvocab.info/Elements/otherTitleInformation": "42220585"
+    }, {
+        "http://purl.org/dc/terms/issued": "1640"
+    }, {
+        "http://purl.org/dc/elements/1.1/title": "1740"
+    }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/2/records/834c984b-b1e5-4572-abcd-372a7a5d3adc": [{
+        "http://rdvocab.info/Elements/otherTitleInformation": "45830568"
+    }, {
+        "http://purl.org/dc/terms/issued": "2000"
+    }, {
+        "http://purl.org/dc/elements/1.1/title": "2000"
+    }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
     }]
 }]

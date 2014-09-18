@@ -57,8 +57,8 @@
                         "type": "Transformation"
                     },
                     "parameter_mappings": {
-                        "feld_nr": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
-                        "__TRANSFORMATION_OUTPUT_VARIABLE__5": "http://purl.org/dc/elements/1.1/creator"
+                        "feld_nr": "feld_nr",
+                        "__TRANSFORMATION_OUTPUT_VARIABLE__5": "output mapping attribute path instance"
                     }
                 }
             },
@@ -89,7 +89,7 @@
                 ],
                 "output_attribute_path": {
                     "type": "MappingAttributePathInstance",
-                    "name": "output mapping attribute path instance",
+                    "name": "output mapping attribute path instance 2",
                     "id": 148,
                     "attribute_path": {
                         "id": 6,
@@ -111,8 +111,8 @@
                         "type": "Transformation"
                     },
                     "parameter_mappings": {
-                        "feld_type": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\u001ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                        "__TRANSFORMATION_OUTPUT_VARIABLE__6": "http://purl.org/dc/elements/1.1/creator"
+                        "feld_type": "feld_type",
+                        "__TRANSFORMATION_OUTPUT_VARIABLE__6": "output mapping attribute path instance 2"
                     }
                 }
             },
@@ -170,8 +170,8 @@
                         "type": "Transformation"
                     },
                     "parameter_mappings": {
-                        "feld_value": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\u001ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-                        "__TRANSFORMATION_OUTPUT_VARIABLE__7": "http://purl.org/dc/elements/1.1/contributor"
+                        "feld_value": "feld_value",
+                        "__TRANSFORMATION_OUTPUT_VARIABLE__7": "output mapping attribute path instance"
                     }
                 }
             }
