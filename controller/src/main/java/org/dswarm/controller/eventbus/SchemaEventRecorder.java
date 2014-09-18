@@ -33,6 +33,7 @@ import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
 import org.dswarm.persistence.model.schema.proxy.ProxyClasz;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
+import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.service.schema.AttributePathService;
 import org.dswarm.persistence.service.schema.AttributeService;
@@ -163,7 +164,7 @@ public class SchemaEventRecorder {
 		final Set<AttributePath> attributePaths = Sets.newLinkedHashSet();
 
 		for (final String stringAttribute : stringAttributes) {
-			final String attributeUri = dataResourceBaseSchemaURI + stringAttribute;
+			final String attributeUri = SchemaUtils.mintTermUri(stringAttribute, dataResourceBaseSchemaURI);
 			final ProxyAttribute proxyAttribute = attributeService.createOrGetObjectTransactional(attributeUri);
 
 			if (proxyAttribute == null) {
