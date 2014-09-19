@@ -230,11 +230,11 @@
           },
           "id": 18,
           "parameter_mappings": {
-            "firstName": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/firstName",
-            "familyName": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/familyName",
-            "title": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/title",
-            "givenName": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/givenName",
-            "__TRANSFORMATION_OUTPUT_VARIABLE__1": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/name"
+            "firstName": "firstName",
+            "familyName": "familyName",
+            "title": "title",
+            "givenName": "givenName",
+            "__TRANSFORMATION_OUTPUT_VARIABLE__1": "output mapping attribute path instance"
           }
         },
         "id": 14,

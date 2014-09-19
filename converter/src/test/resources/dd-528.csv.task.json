@@ -116,8 +116,8 @@
             ]
           },
           "parameter_mappings": {
-            "__TRANSFORMATION_OUTPUT_VARIABLE__1": "http://purl.org/dc/elements/1.1/title",
-            "val4__0__": "http://data.slub-dresden.de/resources/1/schema#val4"
+            "__TRANSFORMATION_OUTPUT_VARIABLE__1": "output mapping attribute path instance",
+            "val4__0__": "val4__0__"
           }
         },
         "input_attribute_paths": [{

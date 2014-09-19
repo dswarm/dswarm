@@ -29,8 +29,8 @@
             }],
             "transformation": {
                 "parameter_mappings": {
-                    "description": "/test_csv.csv#description",
-                    "__TRANSFORMATION_OUTPUT_VARIABLE__1": "/test_csv.csv#description"
+                    "description": "description",
+                    "__TRANSFORMATION_OUTPUT_VARIABLE__1": "output mapping attribute path instance"
                  },
                 "function": {
                     "components": [{

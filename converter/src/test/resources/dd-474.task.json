@@ -47,8 +47,8 @@
                         ]
                     },
                     "parameter_mappings": {
-                        "val4": "http://data.slub-dresden.de/resources/1/schema#val4",
-                        "__TRANSFORMATION_OUTPUT_VARIABLE__1": "http://rdvocab.info/Elements/otherTitleInformation"
+                        "val4": "val4",
+                        "__TRANSFORMATION_OUTPUT_VARIABLE__1": "output mapping attribute path instance"
                     }
                 },
                 "input_attribute_paths": [
@@ -96,8 +96,8 @@
                         "type": "Transformation"
                     },
                     "parameter_mappings": {
-                        "val1": "http://data.slub-dresden.de/resources/1/schema#val1",
-                        "__TRANSFORMATION_OUTPUT_VARIABLE__2": "http://purl.org/dc/elements/1.1/title"
+                        "val1": "val1",
+                        "__TRANSFORMATION_OUTPUT_VARIABLE__2": "output mapping attribute path instance 2"
                     }
                 },
                 "input_attribute_paths": [
@@ -119,7 +119,7 @@
                 ],
                 "output_attribute_path": {
                     "type": "MappingAttributePathInstance",
-                    "name": "output mapping attribute path instance",
+                    "name": "output mapping attribute path instance 2",
                     "id": -1399995984735,
                     "attribute_path": {
                         "id": 1,

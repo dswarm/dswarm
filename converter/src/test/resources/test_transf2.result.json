@@ -1,13 +1,13 @@
 [{
-    "http://data.slub-dresden.de/datamodels/2/records/1ea5b991-f061-45fc-aba9-5604cb23c3bb": [{
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }, {
+    "http://data.slub-dresden.de/datamodels/2/records/6c6d50f7-9713-4927-a6f1-7fdc4d8f5a3d": [{
         "http://rdvocab.info/Elements/otherTitleInformation": "sbn10-"
+    }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
     }]
 }, {
-    "http://data.slub-dresden.de/datamodels/2/records/6c6d50f7-9713-4927-a6f1-7fdc4d8f5a3d": [{
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }, {
+    "http://data.slub-dresden.de/datamodels/2/records/1ea5b991-f061-45fc-aba9-5604cb23c3bb": [{
         "http://rdvocab.info/Elements/otherTitleInformation": "sbn10-"
+    }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
     }]
 }]

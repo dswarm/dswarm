@@ -48,8 +48,8 @@
                     "type": "Transformation"
                 },
                 "parameter_mappings": {
-                    "__TRANSFORMATION_OUTPUT_VARIABLE__1": "http://purl.org/dc/elements/1.1/title",
-                    "feld_value__-1408543399900__0__": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\u001ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+                    "__TRANSFORMATION_OUTPUT_VARIABLE__1": "output mapping attribute path instance",
+                    "feld_value__-1408543399900__0__": "feld_value__-1408543399900__0__"
                 }
             }
         }]

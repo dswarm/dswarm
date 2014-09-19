@@ -54,7 +54,7 @@
         </data>
         <data name="@type__0__" source="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
         <data name="http://www.w3.org/1999/02/22-rdf-syntax-ns#type" source="@__TRANSFORMATION_OUTPUT_VARIABLE__9"/>
-        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__9" source="@__TRANSFORMATION_OUTPUT_VARIABLE__9"/>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__9" source="@type__0__"/>
         <data name="@isbn__8__" source="http://data.slub-dresden.de/resources/1/schema#isbn"/>
         <data name="http://purl.org/ontology/bibo/isbn" source="@__TRANSFORMATION_OUTPUT_VARIABLE__17"/>
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__17" source="@isbn__8__">

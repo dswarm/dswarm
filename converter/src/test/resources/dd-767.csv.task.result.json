@@ -1,0 +1,19 @@
+[{
+    "http://data.slub-dresden.de/datamodels/4/records/bad198a4-29d9-46dc-8b40-aafbdfe42932": [{
+        "http://data.slub-dresden.de/resources/1/schema#name": "Wladimir"
+    }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/4/records/b6c59f3d-237d-48fc-8761-1614457e1a16": [{
+        "http://data.slub-dresden.de/resources/1/schema#name": "Willi"
+    }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }]
+}, {
+    "http://data.slub-dresden.de/datamodels/4/records/1c203b97-d64a-48ac-92fc-00902c752b8d": [{
+        "http://data.slub-dresden.de/resources/1/schema#name": "Paule"
+    }, {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+    }]
+}]
