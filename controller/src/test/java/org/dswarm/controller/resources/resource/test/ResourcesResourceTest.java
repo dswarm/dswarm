@@ -310,8 +310,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		ResourcesResourceTest.LOG.debug("end get resource configurations test");
 	}
-
-	// FIXME cross-test dependencies: test can not be run separately, need to run #testGetResources() first.
+	
 	@Test
 	public void testCurlGetResourceConfigurations() throws Exception {
 
@@ -431,7 +430,6 @@ public class ResourcesResourceTest extends ResourceTest {
 		ResourcesResourceTest.LOG.debug("end get resource configuration test");
 	}
 
-	// FIXME cross-test dependencies: ignoring this test crashes #testCurlGetResourceConfigurations()!!
 	@Test
 	public void testGetResources() throws Exception {
 
@@ -469,9 +467,8 @@ public class ResourcesResourceTest extends ResourceTest {
 		final String responseResources = response.readEntity(String.class);
 
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
-		// Assert.assertEquals("resources JSONs are not equal", resourcesJSONArray.toString(), responseResources);
+		Assert.assertEquals("resources JSONs are not equal", resourcesJSONArray.toString(), responseResources);
 
-		// FIXME if we do not call cleanUpDB(resource), testCurlGetResourceConfigurations() crashes.
 		cleanUpDB(resource);
 		cleanUpDB(resource2);
 
