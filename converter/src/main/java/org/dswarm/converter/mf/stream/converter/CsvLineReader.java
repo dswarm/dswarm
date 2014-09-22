@@ -185,7 +185,7 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 
 		if (!hasRecord) {
 
-			throw new MetafactureException(String.format("there are no records available, you need to have at least on row"));
+			throw new MetafactureException(String.format("there are no records available, you need to have at least one row"));
 		}
 
 		try {
