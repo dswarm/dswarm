@@ -87,16 +87,17 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 
 			final BufferedReader bufferedReader = new BufferedReader(reader);
 			int i = ignoreLines;
+			String exceptionMessage = "Cannot ignore " + ignoreLines + " lines. There is nothing left to ignore [%d] more lines.";
 
 			try {
 				for (; i-- > 0;) {
 					final String line = bufferedReader.readLine();
 					if (line == null) {
-						throw new MetafactureException(String.format("cannot ignore [%d] lines, file is probably empty", i + 1));
+						throw new MetafactureException(String.format(exceptionMessage, i + 1));
 					}
 				}
 			} catch (final IOException e) {
-				throw new MetafactureException(String.format("cannot ignore [%d] lines, file is probably empty", i + 1), e);
+				throw new MetafactureException(String.format(exceptionMessage, i + 1), e);
 			}
 
 			return bufferedReader;
@@ -133,7 +134,7 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 
 	private void processHeaders(final PeekingIterator<CSVRecord> iterator, final ObjectReceiver<CSVRecord> receiver) {
 		if (!iterator.hasNext()) {
-			throw new MetafactureException("cannot find any rows to use as header row");
+			throw new MetafactureException("Cannot find any row to use as header row.");
 		}
 
 		final CSVRecord record;
@@ -156,7 +157,8 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 
 		} catch (final NoSuchElementException e) {
 
-			throw new MetafactureException(String.format("there is nothing left to discard [%d] more rows", i + 1), e);
+			throw new MetafactureException(String.format("Cannot discard %d rows. There is nothing left to discard [%d] more rows.", discardRows,
+					i + 1), e);
 		}
 	}
 
@@ -185,7 +187,7 @@ public final class CsvLineReader extends DefaultObjectPipe<Reader, ObjectReceive
 
 		if (!hasRecord) {
 
-			throw new MetafactureException(String.format("there are no records available, you need to have at least one row"));
+			throw new MetafactureException(String.format("There are no records available, you need to have at least one row."));
 		}
 
 		try {
