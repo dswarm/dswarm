@@ -13,7 +13,7 @@ import com.wordnik.swagger.model.ApiInfo;
 /**
  * The configuration for the documentation generation application Swagger. It is utilised for generating the documentation of the
  * backend API.
- * 
+ *
  * @author tgaengler
  * @author phorn
  */
@@ -37,7 +37,7 @@ public class SwaggerConfiguration extends JerseyJaxrsConfig {
 
 	/**
 	 * Creates a new Swagger configuration with the given version and base URI of the backend API.
-	 * 
+	 *
 	 * @param apiVersion the version of the backend API
 	 * @param apiBaseUrl the base URI of the backend API
 	 */
@@ -56,12 +56,13 @@ public class SwaggerConfiguration extends JerseyJaxrsConfig {
 
 		super.init(servletConfig);
 
-		final ApiInfo info = new ApiInfo("d:swarm Backend", /* title */
-		"This is the d:swarm Backend server.", /* description */
-		"http://helloreverb.com/terms/", /* TOS Url */
-		"tgaengler@avantgarde-labs.de", /* Contact */
-		"Apache 2.0", /* license */
-		"http://www.apache.org/licenses/LICENSE-2.0.html" /* license URL */
+		final ApiInfo info = new ApiInfo(
+			      /* title */ "d:swarm Backend",
+			/* description */ "This is the d:swarm Backend server.",
+			    /* TOS Url */ "http://helloreverb.com/terms/",
+			    /* Contact */ "tgaengler@avantgarde-labs.de",
+			    /* license */ "Apache 2.0",
+			/* license URL */ "http://www.apache.org/licenses/LICENSE-2.0.html"
 		);
 
 		final SwaggerConfig config = ConfigFactory$.MODULE$.config();
