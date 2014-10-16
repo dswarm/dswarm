@@ -70,23 +70,23 @@ public class Schema extends BasicDMPJPAObject {
 	private static final Logger LOG								= LoggerFactory.getLogger(Schema.class);
 
 	/**
-	 * All attributes paths of the schema.
+	 * All attribute path (instances) of the schema.
 	 */
 	// @ManyToMany(mappedBy = "schemas", fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE,
 	// CascadeType.PERSIST, CascadeType.REFRESH })
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "SCHEMAS_ATTRIBUTE_PATHS", joinColumns = { @JoinColumn(name = "SCHEMA_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "ATTRIBUTE_PATH_ID", referencedColumnName = "ID") })
 	@JsonIgnore
-	private Set<AttributePath>	attributePaths;
+	private Set<SchemaAttributePathInstance>	attributePaths;
 
 	/**
-	 * All attribute paths ff the schema in their correct order.
+	 * All attribute path (instances) of the schema in their correct order.
 	 */
 	@Transient
-	private List<AttributePath>		orderedAttributePaths;
+	private List<SchemaAttributePathInstance>		orderedAttributePaths;
 
 	/**
-	 * All attribute paths of the schema in their correct order as a Json array.
+	 * All attribute path (instances) of the schema in their correct order as a Json array.
 	 */
 	@Transient
 	private ArrayNode				orderedAttributePathsJson;
@@ -98,7 +98,7 @@ public class Schema extends BasicDMPJPAObject {
 	private boolean					isOrderedAttributePathsInitialized;
 
 	/**
-	 * A Json string of all attribute paths of this schema.
+	 * A Json string of all attribute path (instances) of this schema.
 	 * This is a serialization of {@link #orderedAttributePathsJson}
 	 */
 	@JsonIgnore
@@ -128,21 +128,21 @@ public class Schema extends BasicDMPJPAObject {
 	}
 
 	/**
-	 * @return an ordered list of all attribute paths.
+	 * @return an ordered list of all attribute path (instances).
 	 */
 	@XmlElement(name = "attribute_paths")
-	public List<AttributePath> getAttributePaths() {
+	public List<SchemaAttributePathInstance> getAttributePaths() {
 		tryInitializeOrderedAttributePaths();
 		return orderedAttributePaths;
 	}
 
 	/**
-	 * Sets all attribute paths of the schema.
+	 * Sets all attribute path (instances) of the schema.
 	 *
-	 * @param attributePathsArg all attribute paths of the schema
+	 * @param attributePathsArg all attribute paths instances of the schema
 	 */
 	@XmlElement(name = "attribute_paths")
-	public void setAttributePaths(final Collection<AttributePath> attributePathsArg) {
+	public void setAttributePaths(final Collection<SchemaAttributePathInstance> attributePathsArg) {
 		if (attributePathsArg == null) {
 			removeAllAttributePaths();
 		} else {
@@ -151,26 +151,26 @@ public class Schema extends BasicDMPJPAObject {
 	}
 
 	/**
-	 * Gets all attribute paths of the schema.
+	 * Gets all attribute path (instances) of the schema.
 	 *
-	 * @return all attribute paths of the schema
+	 * @return all attribute paths instances of the schema
 	 */
 	@JsonIgnore
-	public Set<AttributePath> getUniqueAttributePaths() {
+	public Set<SchemaAttributePathInstance> getUniqueAttributePaths() {
 		return attributePaths;
 	}
 
 	/**
-	 * Gets the attribute path for the given attribute path identifier.
+	 * Gets the attribute path (instance) for the given attribute path identifier.
 	 *
 	 * @param id an attribute path identifier
-	 * @return that matched attribute path or null
+	 * @return that matched attribute path (instance) or null
 	 */
-	public AttributePath getAttributePath(final Long id) {
+	public SchemaAttributePathInstance getAttributePath(final Long id) {
 		Preconditions.checkNotNull(id);
 
 		if (attributePaths != null) {
-			for (final AttributePath attributePath : attributePaths) {
+			for (final SchemaAttributePathInstance attributePath : attributePaths) {
 				if (attributePath.getId().equals(id)) {
 					return attributePath;
 				}
@@ -181,12 +181,11 @@ public class Schema extends BasicDMPJPAObject {
 	}
 
 	/**
-	 * Adds a new attribute path to the collection of attribute paths of this schema.<br>
-	 * Created by: tgaengler
+	 * Adds a new attribute path (instance) to the collection of attribute path (instances) of this schema.<br>
 	 *
 	 * @param attributePath a new attribute path
 	 */
-	public void addAttributePath(final AttributePath attributePath) {
+	public void addAttributePath(final SchemaAttributePathInstance attributePath) {
 		Preconditions.checkNotNull(attributePath);
 
 		ensureAttributePaths();
@@ -202,12 +201,12 @@ public class Schema extends BasicDMPJPAObject {
 	}
 
 	/**
-	 * Adds a new attribute path at the given index, overwriting any existing attribute path.
+	 * Adds a new attribute path (instance) at the given index, overwriting any existing attribute path (instance).
 	 *
-	 * @param attributePath the attribute path to add
+	 * @param attributePath the attribute path instance to add
 	 * @param atIndex		the index at which to add
 	 */
-	public void addAttributePath(final AttributePath attributePath, final int atIndex) {
+	public void addAttributePath(final SchemaAttributePathInstance attributePath, final int atIndex) {
 		Preconditions.checkNotNull(attributePath);
 		Preconditions.checkArgument(atIndex >= 0, "insertion index must be positive");
 		Preconditions.checkArgument(atIndex <= orderedAttributePaths.size(), "insertion index must not be greater than %s", orderedAttributePaths.size());
@@ -223,10 +222,10 @@ public class Schema extends BasicDMPJPAObject {
 	}
 
 	/**
-	 * Removes an existing attribute path from the collection of attribute paths of this export schema.<br>
+	 * Removes an existing attribute path (instance) from the collection of attribute path (instances) of this export schema.<br>
 	 * Created by: tgaengler
 	 *
-	 * @param attributePath an existing attribute path that should be removed
+	 * @param attributePath an existing attribute path instance that should be removed
 	 */
 	public void removeAttributePath(final AttributePath attributePath) {
 		if (attributePath != null && attributePaths != null) {
@@ -238,11 +237,11 @@ public class Schema extends BasicDMPJPAObject {
 	}
 
 	/**
-	 * Removes an attribute path if it occurs at a specific index.
+	 * Removes an attribute path (instance) if it occurs at a specific index.
 	 *
-	 * @param attributePath the attribute path to remove
+	 * @param attributePath the attribute path instance to remove
 	 * @param atIndex       the index from which to remove
-	 * @return true if the attribute path could be removed, false otherwise.
+	 * @return true if the attribute path instance could be removed, false otherwise.
 	 */
 	public boolean removeAttributePath(final AttributePath attributePath, final int atIndex) {
 		Preconditions.checkNotNull(attributePath);
@@ -316,7 +315,7 @@ public class Schema extends BasicDMPJPAObject {
 	public boolean completeEquals(final Object obj) {
 
 		return Schema.class.isInstance(obj) && super.completeEquals(obj)
-				&& DMPPersistenceUtil.getAttributePathUtils().completeEquals(((Schema) obj).getUniqueAttributePaths(), getUniqueAttributePaths())
+				&& DMPPersistenceUtil.getSchemaAttributePathInstanceUtils().completeEquals(((Schema) obj).getUniqueAttributePaths(), getUniqueAttributePaths())
 				&& DMPPersistenceUtil.getClaszUtils().completeEquals(((Schema) obj).getRecordClass(), getRecordClass())
 				&& DMPPersistenceUtil.getContentSchemaUtils().completeEquals(((Schema) obj).getContentSchema(), getContentSchema());
 	}
@@ -334,16 +333,16 @@ public class Schema extends BasicDMPJPAObject {
 	}
 
 	@JsonIgnore
-	private void setAllAttributePaths(final Collection<AttributePath> attributePathsArg) {
+	private void setAllAttributePaths(final Collection<SchemaAttributePathInstance> attributePathsArg) {
 		ensureOrderedAttributePaths();
 
-		if (!DMPPersistenceUtil.getAttributePathUtils().completeEquals(orderedAttributePaths, attributePathsArg)) {
+		if (!DMPPersistenceUtil.getSchemaAttributePathInstanceUtils().completeEquals(orderedAttributePaths, attributePathsArg)) {
 			ensureAttributePaths();
 
 			attributePaths.clear();
 			orderedAttributePaths.clear();
 
-			for (final AttributePath newAttributePath : attributePathsArg) {
+			for (final SchemaAttributePathInstance newAttributePath : attributePathsArg) {
 				orderedAttributePaths.add(newAttributePath);
 				attributePaths.add(newAttributePath);
 			}
@@ -364,17 +363,17 @@ public class Schema extends BasicDMPJPAObject {
 
 	private void ensureInitializedOrderedAttributePaths() {
 		if (orderedAttributePaths == null) {
-			final Optional<List<AttributePath>> paths = initializedAttributePaths(true);
-			orderedAttributePaths = paths.or(Lists.<AttributePath>newLinkedList());
+			final Optional<List<SchemaAttributePathInstance>> paths = initializedAttributePaths(true);
+			orderedAttributePaths = paths.or(Lists.<SchemaAttributePathInstance>newLinkedList());
 		}
 	}
 
 	private void tryInitializeOrderedAttributePaths() {
-		final Optional<List<AttributePath>> paths = initializedAttributePaths(false);
+		final Optional<List<SchemaAttributePathInstance>> paths = initializedAttributePaths(false);
 		orderedAttributePaths = paths.orNull();
 	}
 
-	private Optional<List<AttributePath>> initializedAttributePaths(final boolean fromScratch) {
+	private Optional<List<SchemaAttributePathInstance>> initializedAttributePaths(final boolean fromScratch) {
 		if (orderedAttributePathsJson == null && !isOrderedAttributePathsInitialized) {
 
 			if (attributePathsJsonString == null) {
@@ -397,7 +396,7 @@ public class Schema extends BasicDMPJPAObject {
 				if (orderedAttributePathsJson != null) {
 
 					for (final JsonNode attributePathIdNode : orderedAttributePathsJson) {
-						final AttributePath attributePath = getAttributePath(attributePathIdNode.longValue());
+						final SchemaAttributePathInstance attributePath = getAttributePath(attributePathIdNode.longValue());
 						if (attributePath != null) {
 							orderedAttributePaths.add(attributePath);
 						}
@@ -415,7 +414,7 @@ public class Schema extends BasicDMPJPAObject {
 	private void refreshAttributePathsString() {
 		if (orderedAttributePaths != null) {
 			orderedAttributePathsJson = new ArrayNode(DMPPersistenceUtil.getJSONFactory());
-			for (final AttributePath attributePath : orderedAttributePaths) {
+			for (final SchemaAttributePathInstance attributePath : orderedAttributePaths) {
 				orderedAttributePathsJson.add(attributePath.getId());
 			}
 		}

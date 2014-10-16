@@ -37,14 +37,17 @@ import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
 import org.dswarm.persistence.model.schema.proxy.ProxyClasz;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
+import org.dswarm.persistence.model.schema.proxy.ProxySchemaAttributePathInstance;
 import org.dswarm.persistence.model.utils.BasicDMPJPAObjectUtils;
 import org.dswarm.persistence.service.schema.AttributePathService;
 import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.schema.ClaszService;
+import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 import org.dswarm.persistence.service.schema.SchemaService;
 
 /**
@@ -149,8 +152,12 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		return true;
 	}
 
-	public static boolean addAttributePaths(final Schema schema, final Set<AttributePathHelper> attributePathHelpers,
-			final Provider<AttributePathService> attributePathServiceProvider, final Provider<AttributeService> attributeServiceProvider)
+	public static boolean addAttributePaths(
+			final Schema schema,
+			final Set<AttributePathHelper> attributePathHelpers,
+			final Provider<AttributePathService> attributePathServiceProvider,
+			final Provider<SchemaAttributePathInstanceService> attributePathInstanceServiceProvider,
+			final Provider<AttributeService> attributeServiceProvider)
 			throws DMPPersistenceException {
 
 		if (attributePathHelpers == null) {
@@ -178,6 +185,8 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 			final AttributeService attributeService = attributeServiceProvider.get();
 			final AttributePathService attributePathService = attributePathServiceProvider.get();
+			final SchemaAttributePathInstanceService schemaAttributePathInstanceService = 
+					attributePathInstanceServiceProvider.get();
 
 			for (final String attributeString : attributePathFromHelper) {
 
@@ -215,8 +224,27 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 				throw new DMPPersistenceException("couldn't create or retrieve attribute path");
 			}
+			
+			// TODO: usage of proxy necessary here?
+			
+			final ProxySchemaAttributePathInstance proxySchemaAttributePathInstance =
+					schemaAttributePathInstanceService.createOrGetObjectTransactional(attributePath);
+			
+			if (proxySchemaAttributePathInstance == null) {
+				
+				throw new DMPPersistenceException("couldn't create or retrieve schema attribute path instance");
+			
+			}
 
-			schema.addAttributePath(attributePath);
+			final SchemaAttributePathInstance schemaAttributePathInstance = proxySchemaAttributePathInstance.getObject();
+			
+			if (schemaAttributePathInstance == null) {
+				
+				throw new DMPPersistenceException("couldn't create or retrieve schema attribute path instance");
+			
+			}
+
+			schema.addAttributePath(schemaAttributePathInstance);
 		}
 
 		return true;

@@ -46,6 +46,7 @@ import org.dswarm.persistence.model.schema.utils.AttributeUtils;
 import org.dswarm.persistence.model.schema.utils.ClaszUtils;
 import org.dswarm.persistence.model.schema.utils.ContentSchemaUtils;
 import org.dswarm.persistence.model.schema.utils.MappingAttributePathInstanceUtils;
+import org.dswarm.persistence.model.schema.utils.SchemaAttributePathInstanceUtils;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 
 /**
@@ -95,6 +96,8 @@ public final class DMPPersistenceUtil {
 	private static final JobUtils							JOBUTILS;
 
 	private static final MappingAttributePathInstanceUtils	MAPPINGATTRIBUTEPATHINSTANCEUTILS;
+	
+	private static final SchemaAttributePathInstanceUtils	SCHEMAATTRIBUTEPATHINSTANCEUTILS;
 
 	private static final long								LOWER_RANGE	= -9223372036854775808L;	// assign
 	// lower
@@ -129,6 +132,7 @@ public final class DMPPersistenceUtil {
 		DATAMODELUTILS = new DataModelUtils();
 		JOBUTILS = new JobUtils();
 		MAPPINGATTRIBUTEPATHINSTANCEUTILS = new MappingAttributePathInstanceUtils();
+		SCHEMAATTRIBUTEPATHINSTANCEUTILS = new SchemaAttributePathInstanceUtils();
 	}
 
 	/**
@@ -282,6 +286,11 @@ public final class DMPPersistenceUtil {
 	public static MappingAttributePathInstanceUtils getMappingAttributePathInstanceUtils() {
 
 		return DMPPersistenceUtil.MAPPINGATTRIBUTEPATHINSTANCEUTILS;
+	}
+	
+	public static SchemaAttributePathInstanceUtils getSchemaAttributePathInstanceUtils() {
+
+		return DMPPersistenceUtil.SCHEMAATTRIBUTEPATHINSTANCEUTILS;
 	}
 
 	public static long generateRandomDummyId() {
