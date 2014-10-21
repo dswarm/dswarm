@@ -33,9 +33,11 @@ import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.NameSpacePrefixRegistry;
+import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.service.schema.AttributePathService;
 import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.schema.ClaszService;
+import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 
 public class AttributePathBuilder extends GuicedTest {
 
@@ -77,7 +79,7 @@ public class AttributePathBuilder extends GuicedTest {
 		return pathUnderConstruction;
 	}
 
-	public AttributePath parsePrefixPath(final String pathInPrefixNotation) {
+	public AttributePath parseAsAttributePath(final String pathInPrefixNotation) {
 
 		// temp store prefix paths as a summary
 		prefixPaths += pathInPrefixNotation + System.lineSeparator();
@@ -102,9 +104,35 @@ public class AttributePathBuilder extends GuicedTest {
 		return getPath();
 
 	}
+	
+	public SchemaAttributePathInstance parseAsAttributePathInstance(final String pathInPrefixNotation) {
+		
+		AttributePath attributePath = parseAsAttributePath(pathInPrefixNotation);
+		
+		SchemaAttributePathInstance attributePathInstance = createAttributePathInstance(attributePath);
+		
+		return attributePathInstance;
+	}
 
 	public String getPrefixPaths() {
 		return prefixPaths;
+	}
+	
+	private SchemaAttributePathInstance createAttributePathInstance(final AttributePath attributePathArg) {
+
+		final SchemaAttributePathInstanceService attributePathInstanceService = GuicedTest.injector.getInstance(SchemaAttributePathInstanceService.class);
+
+		Assert.assertNotNull("attribute path instance service shouldn't be null", attributePathInstanceService);
+
+		SchemaAttributePathInstance persistedAttributePathInstance = null;
+		
+		try {
+			persistedAttributePathInstance = attributePathInstanceService.createObjectTransactional(attributePathArg).getObject();
+		} catch (final DMPPersistenceException e1) {
+			Assert.fail("something went wrong while attribute path instance creation.\n" + e1.getMessage());
+		}
+		
+		return persistedAttributePathInstance;
 	}
 
 	private AttributePath createAttributePath(final LinkedList<Attribute> attributePathArg) {
@@ -118,11 +146,9 @@ public class AttributePathBuilder extends GuicedTest {
 		AttributePath updatedAttributePath = null;
 
 		try {
-
 			updatedAttributePath = attributePathService.createOrGetObjectTransactional(attributePathArg).getObject();
 		} catch (final DMPPersistenceException e1) {
-
-			Assert.assertTrue("something went wrong while attribute path creation.\n" + e1.getMessage(), false);
+			Assert.fail("something went wrong while attribute path creation.\n" + e1.getMessage());
 		}
 
 		Assert.assertNotNull("updated attribute path shouldn't be null", updatedAttributePath);
@@ -139,6 +165,7 @@ public class AttributePathBuilder extends GuicedTest {
 		try {
 
 			json = objectMapper.writeValueAsString(updatedAttributePath);
+			
 		} catch (final JsonProcessingException e) {
 
 			e.printStackTrace();
@@ -167,8 +194,7 @@ public class AttributePathBuilder extends GuicedTest {
 		try {
 			attribute = attributeService.createOrGetObjectTransactional(id).getObject();
 		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while attribute creation.\n" + e.getMessage(), false);
+			Assert.fail("something went wrong while attribute creation.\n" + e.getMessage());
 		}
 
 		Assert.assertNotNull("attribute shouldn't be null", attribute);
@@ -179,10 +205,8 @@ public class AttributePathBuilder extends GuicedTest {
 		Attribute updatedAttribute = null;
 
 		try {
-
 			updatedAttribute = attributeService.updateObjectTransactional(attribute).getObject();
 		} catch (final DMPPersistenceException e) {
-
 			Assert.assertTrue("something went wrong while updating the attribute of id = '" + id + "'", false);
 		}
 
@@ -208,7 +232,6 @@ public class AttributePathBuilder extends GuicedTest {
 		try {
 			clasz = classService.createOrGetObjectTransactional(id).getObject();
 		} catch (final DMPPersistenceException e) {
-
 			Assert.assertTrue("something went wrong while class creation.\n" + e.getMessage(), false);
 		}
 
@@ -220,10 +243,8 @@ public class AttributePathBuilder extends GuicedTest {
 		Clasz updatedClasz = null;
 
 		try {
-
 			updatedClasz = classService.updateObjectTransactional(clasz).getObject();
 		} catch (final DMPPersistenceException e) {
-
 			Assert.assertTrue("something went wrong while updating the class of id = '" + id + "'", false);
 		}
 

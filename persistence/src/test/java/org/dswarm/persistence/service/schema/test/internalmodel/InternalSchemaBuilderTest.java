@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 
 public class InternalSchemaBuilderTest extends GuicedTest {
 
@@ -35,13 +36,13 @@ public class InternalSchemaBuilderTest extends GuicedTest {
 
 	// private static final String NL = System.lineSeparator();
 
-	@Ignore
+	//@Ignore
 	@Test
 	public void buildInternalSchema() {
 		buildSchema(new BiboDocumentSchemaBuilder());
 	}
 
-	@Ignore
+	//@Ignore
 	@Test
 	public void buildERMSchema() {
 		buildSchema(new BibrmContractItemSchemaBuilder());
@@ -89,12 +90,12 @@ public class InternalSchemaBuilderTest extends GuicedTest {
 		System.out.println("Schema for " + schema.getRecordClass().getUri());
 		System.out.println("****************************************************");
 
-		final Set<AttributePath> pathSet = schema.getUniqueAttributePaths();
+		final Set<SchemaAttributePathInstance> pathSet = schema.getUniqueAttributePaths();
 
-		for (final Iterator<AttributePath> iterator = pathSet.iterator(); iterator.hasNext();) {
+		for (final Iterator<SchemaAttributePathInstance> iterator = pathSet.iterator(); iterator.hasNext();) {
 
-			final AttributePath attributePath = iterator.next();
-			InternalSchemaBuilderTest.printAttributePath(attributePath);
+			final SchemaAttributePathInstance attributePathInstance = iterator.next();
+			InternalSchemaBuilderTest.printAttributePath(attributePathInstance);
 
 		}
 
@@ -102,9 +103,9 @@ public class InternalSchemaBuilderTest extends GuicedTest {
 
 	}
 
-	public static void printAttributePath(final AttributePath path) {
+	public static void printAttributePath(final SchemaAttributePathInstance path) {
 
-		System.out.println(path.toAttributePath().replace("", " :: "));
+		System.out.println(path.getAttributePath().toAttributePath().replace("", " :: "));
 
 	}
 
