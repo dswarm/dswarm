@@ -1,7 +1,6 @@
 [submodule "web"]
 	path = web
-	url = git@git.slub-dresden.de:dmp/dmp-backoffice-web.git
+	url = git://github.com/dswarm/dswarm-backoffice-web.git
 [submodule "docs"]
 	path = controller/src/docs/ui
-	url = git@git.slub-dresden.de:dmp/backoffice-api-docs.git
-	branch = dmp/devel
+	url = git://github.com/swagger-api/swagger-ui
