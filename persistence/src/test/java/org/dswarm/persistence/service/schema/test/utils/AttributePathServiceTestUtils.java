@@ -15,7 +15,10 @@
  */
 package org.dswarm.persistence.service.schema.test.utils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,6 +32,7 @@ import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
+import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.schema.AttributePathService;
 import org.dswarm.persistence.service.test.utils.BasicJPAServiceTestUtils;
 
@@ -224,6 +228,8 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath70);
 	}
 
+	private Map<String, AttributePath> map = new HashMap<>();
+
 	public AttributePathServiceTestUtils() {
 
 		super(AttributePath.class, AttributePathService.class);
@@ -391,5 +397,43 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 	public void reset() {
 
 		attributeResourceTestUtils.reset();
+	}
+
+	/**
+	 * Convenience method for creating simple attribute path of length 1
+	 * as they are frequently needed in sub-schema contexts
+	 *
+	 * @param attribute
+	 * @return an attribute path of length 1
+	 * @throws Exception
+	 */
+	public AttributePath createAttributePath(Attribute attribute) throws Exception {
+		final List<Attribute> attributeList = new LinkedList<>();
+		attributeList.add(attribute);
+		return createAttributePath(attributeList);
+	}
+
+	public AttributePath getAttributePath(final String ... attributeIds) throws Exception {
+
+		String key = null;
+
+		for(String attributeId : attributeIds) {
+
+			key = attributeId + "#";
+		}
+
+		if (!map.containsKey(key)) {
+
+			List<Attribute> attrs = new ArrayList<>();
+
+			for(String attrStr : attributeIds) {
+
+				attrs.add(attributeResourceTestUtils.getAttribute(attrStr));
+			}
+
+			map.put(key, createAttributePath(attrs));
+		}
+
+		return map.get(key);
 	}
 }

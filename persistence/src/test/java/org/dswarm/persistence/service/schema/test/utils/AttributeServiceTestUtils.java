@@ -15,12 +15,15 @@
  */
 package org.dswarm.persistence.service.schema.test.utils;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
 
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
+import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.test.utils.AdvancedDMPJPAServiceTestUtils;
 
@@ -79,6 +82,16 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 		AttributeServiceTestUtils.excludeSubAttributes.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code");
 	}
 
+	private static final Map<String, Tuple<String, String>> map2 = new HashMap<>();
+
+	static {
+
+		map2.put("http://purl.org/dc/terms/title", new Tuple<>("http://purl.org/dc/terms/title", "title"));
+		map2.put("http://purl.org/dc/terms/hasPart", new Tuple<>("http://purl.org/dc/terms/hasPart", "hasPart"));
+	}
+
+	private Map<String, Attribute> map = new HashMap<>();
+
 	public AttributeServiceTestUtils() {
 
 		super(Attribute.class, AttributeService.class);
@@ -120,4 +133,17 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 	public void reset() {
 
 	}
+
+	public Attribute getAttribute(final String name) throws Exception {
+
+		if (!map.containsKey(name)) {
+
+			Tuple<String, String> tuple = map2.get(name);
+
+			map.put(name, createAttribute(tuple.v1(), tuple.v2()));
+		}
+
+		return map.get(name);
+	}
+
 }

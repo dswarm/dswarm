@@ -15,7 +15,9 @@
  */
 package org.dswarm.persistence.service.test;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +26,7 @@ import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.DMPObject;
 import org.dswarm.persistence.model.proxy.ProxyDMPObject;
 import org.dswarm.persistence.service.BasicJPAService;
+import org.dswarm.persistence.service.MaintainDBService;
 
 public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, JPASERVICEIMPL extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSIDTYPE>
 		extends GuicedTest {
@@ -33,11 +36,36 @@ public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<
 	protected final String					type;
 	protected final Class<JPASERVICEIMPL>	jpaServiceClass;
 	protected JPASERVICEIMPL				jpaService	= null;
+	protected MaintainDBService				maintainDBService;
 
 	public BasicJPAServiceTest(final String type, final Class<JPASERVICEIMPL> jpaServiceClass) {
 
 		this.type = type;
 		this.jpaServiceClass = jpaServiceClass;
+
+		initObjects();
+	}
+
+	@Before
+	public void prepare() throws Exception {
+
+		GuicedTest.tearDown();
+		GuicedTest.startUp();
+		initObjects();
+		maintainDBService.initDB();
+	}
+
+	@After
+	public void tearDown2() throws Exception {
+
+		GuicedTest.tearDown();
+		GuicedTest.startUp();
+		maintainDBService.initDB();
+	}
+
+	protected void initObjects() {
+
+		maintainDBService = GuicedTest.injector.getInstance(MaintainDBService.class);
 
 		jpaService = GuicedTest.injector.getInstance(jpaServiceClass);
 

@@ -58,6 +58,9 @@ public abstract class GuicedTest {
 	@AfterClass
 	public static void tearDown() throws Exception {
 
-		GuicedTest.injector.getInstance(PersistService.class).stop();
+		if(GuicedTest.injector != null) {
+
+			GuicedTest.injector.getInstance(PersistService.class).stop();
+		}
 	}
 }
