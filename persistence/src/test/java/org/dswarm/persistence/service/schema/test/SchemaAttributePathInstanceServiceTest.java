@@ -36,16 +36,23 @@ public class SchemaAttributePathInstanceServiceTest extends
 	private final ObjectMapper					objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	// TODO: generalize
-	private final SchemaAttributePathInstanceServiceTestUtils schemaAttributePathInstanceServiceTestUtils;
+	private SchemaAttributePathInstanceServiceTestUtils schemaAttributePathInstanceServiceTestUtils;
 
 	public SchemaAttributePathInstanceServiceTest() {
 
 		super("schema attribute path instance", SchemaAttributePathInstanceService.class);
 
+	}
+
+	@Override
+	protected void initObjects() {
+		super.initObjects();
+		
 		// TODO: generalize
 		schemaAttributePathInstanceServiceTestUtils = new SchemaAttributePathInstanceServiceTestUtils();
 	}
-
+	
+	
 	@Test
 	public void testSimpleSchemaAttributePathInstance() throws Exception {
 
