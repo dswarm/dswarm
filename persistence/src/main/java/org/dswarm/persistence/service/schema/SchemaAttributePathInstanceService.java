@@ -16,6 +16,7 @@
 package org.dswarm.persistence.service.schema;
 
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -56,9 +57,6 @@ public class SchemaAttributePathInstanceService extends
 		
 		// should clear the relationship to the subschema
 		object.setSubSchema(null);
-		
-		// TODO does the sub-schema also need to be deleted? -> no, reuse possible
-		
 	}
 
 	/**
@@ -79,14 +77,13 @@ public class SchemaAttributePathInstanceService extends
 		//updateObject.setOrdinal(ordinal);
 	}
 
-	public ProxySchemaAttributePathInstance createOrGetObjectTransactional(AttributePath attributePath) throws DMPPersistenceException {
-		
-		final SchemaAttributePathInstance tempAttributePathInstance = new SchemaAttributePathInstance();
-		
-		tempAttributePathInstance.setAttributePath(attributePath);
+	@Transactional(rollbackOn = Exception.class)
+	public ProxySchemaAttributePathInstance createObjectTransactional(AttributePath attributePath) throws DMPPersistenceException {
 
-		return createObject(tempAttributePathInstance);
+		final SchemaAttributePathInstance attributePathInstance = new SchemaAttributePathInstance();
 		
-		// TODO reviewer, please check this twice ... not sure if this method and its usage is correct
+		attributePathInstance.setAttributePath(attributePath);
+
+		return createObject(attributePathInstance);
 	}
 }

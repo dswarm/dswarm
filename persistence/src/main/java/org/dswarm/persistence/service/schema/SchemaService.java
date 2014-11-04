@@ -15,7 +15,7 @@
  */
 package org.dswarm.persistence.service.schema;
 
-import java.util.List;
+import java.util.Collection;
 
 import javax.persistence.EntityManager;
 
@@ -68,7 +68,7 @@ public class SchemaService extends BasicDMPJPAService<ProxySchema, Schema> {
 	protected void updateObjectInternal(final Schema object, final Schema updateObject, final EntityManager entityManager)
 			throws DMPPersistenceException {
 
-		final List<SchemaAttributePathInstance> attributePaths = object.getAttributePaths();
+		final Collection<SchemaAttributePathInstance> attributePaths = object.getAttributePaths();
 		final Clasz recordClass = object.getRecordClass();
 		final ContentSchema contentSchema = object.getContentSchema();
 
