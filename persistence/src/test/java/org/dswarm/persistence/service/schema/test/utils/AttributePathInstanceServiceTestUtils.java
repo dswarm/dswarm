@@ -15,7 +15,10 @@
  */
 package org.dswarm.persistence.service.schema.test.utils;
 
-import org.junit.Assert;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
@@ -24,12 +27,20 @@ import org.dswarm.persistence.model.schema.AttributePathInstanceType;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttributePathInstance;
 import org.dswarm.persistence.service.schema.AttributePathInstanceService;
 import org.dswarm.persistence.service.test.utils.BasicDMPJPAServiceTestUtils;
+import org.junit.Assert;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 public abstract class AttributePathInstanceServiceTestUtils<POJOCLASSPERSISTENCESERVICE extends AttributePathInstanceService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyAttributePathInstance<POJOCLASS>, POJOCLASS extends AttributePathInstance>
 		extends BasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
 
-	private final AttributePathServiceTestUtils	attributePathServiceTestUtils;
+	protected final AttributePathServiceTestUtils	attributePathServiceTestUtils;
 
+	private Map<String, POJOCLASS> attributesById = new HashMap<>();
+	
+	protected abstract POJOCLASS createAttributePathInstance( final String name, final AttributePath attributePath, final JsonNode objectDescription ) throws Exception;
+	
+	
 	public AttributePathInstanceServiceTestUtils(final Class<POJOCLASS> pojoClassArg,
 			final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg) {
 
@@ -83,5 +94,33 @@ public abstract class AttributePathInstanceServiceTestUtils<POJOCLASSPERSISTENCE
 	public void reset() {
 
 		attributePathServiceTestUtils.reset();
+	}
+	
+	
+	
+	@Override
+	public POJOCLASS getObject( final JsonNode objectDescription ) throws Exception {
+		//TODO externalize valid keys
+		String name = objectDescription.get("name") != null ? objectDescription.get("name").asText( null ) : null;
+		
+		String key = null;
+		//TODO externalize valid keys
+		List<String> temp = new ArrayList<>();
+		for( JsonNode jn : objectDescription.get( "attribute_ids" ) ) {
+			temp.add( jn.asText() );
+			key = jn.asText() + "#";
+		}
+		
+		if( !attributesById.containsKey(key) ) {
+			AttributePath ap = getAttributePath( temp.toArray( new String[]{} ) );
+			attributesById.put( key, createAttributePathInstance( name, ap, objectDescription ) );
+		}
+
+		return attributesById.get(key);
+	}
+	
+	
+	protected AttributePath getAttributePath( String... attributeIds ) throws Exception {
+		return attributePathServiceTestUtils.getAttributePath(attributeIds);
 	}
 }

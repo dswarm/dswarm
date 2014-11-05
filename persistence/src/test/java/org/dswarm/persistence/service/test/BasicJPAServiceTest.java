@@ -15,18 +15,17 @@
  */
 package org.dswarm.persistence.service.test;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.DMPObject;
 import org.dswarm.persistence.model.proxy.ProxyDMPObject;
 import org.dswarm.persistence.service.BasicJPAService;
 import org.dswarm.persistence.service.MaintainDBService;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, JPASERVICEIMPL extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSIDTYPE>
 		extends GuicedTest {
@@ -53,6 +52,7 @@ public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<
 		GuicedTest.startUp();
 		initObjects();
 //		maintainDBService.initDB();
+		maintainDBService.truncateTables();
 	}
 
 	@After
@@ -60,8 +60,12 @@ public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<
 
 		GuicedTest.tearDown();
 		GuicedTest.startUp();
+		initObjects();
 //		maintainDBService.initDB();
+		maintainDBService.truncateTables();
 	}
+	
+	
 
 	protected void initObjects() {
 
