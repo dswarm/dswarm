@@ -141,8 +141,6 @@ public class AttributePathBuilder extends GuicedTest {
 
 		Assert.assertNotNull("attribute path service shouldn't be null", attributePathService);
 
-		final AttributePath attributePath = new AttributePath(attributePathArg);
-
 		AttributePath updatedAttributePath = null;
 
 		try {
@@ -150,15 +148,6 @@ public class AttributePathBuilder extends GuicedTest {
 		} catch (final DMPPersistenceException e1) {
 			Assert.fail("something went wrong while attribute path creation.\n" + e1.getMessage());
 		}
-
-		Assert.assertNotNull("updated attribute path shouldn't be null", updatedAttributePath);
-		Assert.assertNotNull("updated attribute path id shouldn't be null", updatedAttributePath.getId());
-		Assert.assertNotNull("the attribute path's attribute of the updated attribute path shouldn't be null", updatedAttributePath.getAttributes());
-		Assert.assertEquals("the attribute path's attributes size are not equal", attributePath.getAttributes(), updatedAttributePath.getAttributes());
-		Assert.assertEquals("the first attributes of the attribute path are not equal", attributePath.getAttributePath().get(0), updatedAttributePath
-				.getAttributePath().get(0));
-		Assert.assertNotNull("the attribute path string of the updated attribute path shouldn't be null", updatedAttributePath.toAttributePath());
-		Assert.assertEquals("the attribute path's strings are not equal", attributePath.toAttributePath(), updatedAttributePath.toAttributePath());
 
 		String json = null;
 
@@ -171,7 +160,7 @@ public class AttributePathBuilder extends GuicedTest {
 			e.printStackTrace();
 		}
 
-		AttributePathBuilder.LOG.debug("attribute path json for attribute path '" + attributePath.getId() + "': " + json);
+		AttributePathBuilder.LOG.debug("attribute path json for attribute path '" + updatedAttributePath.getId() + "': " + json);
 
 		return updatedAttributePath;
 	}

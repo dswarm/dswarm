@@ -77,13 +77,17 @@ public class SchemaAttributePathInstanceService extends
 		//updateObject.setOrdinal(ordinal);
 	}
 
-	@Transactional(rollbackOn = Exception.class)
-	public ProxySchemaAttributePathInstance createObjectTransactional(AttributePath attributePath) throws DMPPersistenceException {
-
-		final SchemaAttributePathInstance attributePathInstance = new SchemaAttributePathInstance();
+//	@Transactional(rollbackOn = Exception.class)
+	public ProxySchemaAttributePathInstance createObjectTransactional( final AttributePath attributePath ) throws DMPPersistenceException {
+		SchemaAttributePathInstance sapi = new SchemaAttributePathInstance();
+		sapi.setAttributePath( attributePath );
+		ProxySchemaAttributePathInstance psapi = createObjectTransactional( sapi );
+		return psapi;
 		
-		attributePathInstance.setAttributePath(attributePath);
-
-		return createObject(attributePathInstance);
+//		final EntityManager em = acquire();
+//		final ProxySchemaAttributePathInstance psapi = createObjectInternal( em );
+//		final SchemaAttributePathInstance sapi = psapi.getObject();
+//		sapi.setAttributePath(attributePath);
+//		return updateObjectInternal(sapi, em, "transactional");
 	}
 }
