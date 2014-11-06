@@ -16,16 +16,15 @@
 package org.dswarm.persistence.service.schema;
 
 import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxySchemaAttributePathInstance;
+
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 /**
  * A persistence service for {@link SchemaAttributePathInstance}s.
@@ -71,23 +70,12 @@ public class SchemaAttributePathInstanceService extends
 		final Schema subSchema = object.getSubSchema();
 
 		updateObject.setSubSchema(subSchema);
-
-		//final Integer ordinal = object.getOrdinal();
-
-		//updateObject.setOrdinal(ordinal);
 	}
 
-//	@Transactional(rollbackOn = Exception.class)
 	public ProxySchemaAttributePathInstance createObjectTransactional( final AttributePath attributePath ) throws DMPPersistenceException {
-		SchemaAttributePathInstance sapi = new SchemaAttributePathInstance();
+		final SchemaAttributePathInstance sapi = new SchemaAttributePathInstance();
 		sapi.setAttributePath( attributePath );
-		ProxySchemaAttributePathInstance psapi = createObjectTransactional( sapi );
+		final ProxySchemaAttributePathInstance psapi = createObjectTransactional( sapi );
 		return psapi;
-		
-//		final EntityManager em = acquire();
-//		final ProxySchemaAttributePathInstance psapi = createObjectInternal( em );
-//		final SchemaAttributePathInstance sapi = psapi.getObject();
-//		sapi.setAttributePath(attributePath);
-//		return updateObjectInternal(sapi, em, "transactional");
 	}
 }

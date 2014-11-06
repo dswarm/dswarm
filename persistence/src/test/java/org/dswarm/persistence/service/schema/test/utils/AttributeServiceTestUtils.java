@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Sets;
 
 import org.dswarm.persistence.model.schema.Attribute;
@@ -144,6 +145,12 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 		}
 
 		return map.get(name);
+	}
+
+	@Override
+	public Attribute getObject(JsonNode objectDescription) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

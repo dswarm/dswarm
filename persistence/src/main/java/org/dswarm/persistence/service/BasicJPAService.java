@@ -168,7 +168,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	@Transactional(rollbackOn = Exception.class)
 	public PROXYPOJOCLASS createObjectTransactional(final POJOCLASS object) throws DMPPersistenceException {
 
-		return createObject(object);
+		return createObjectInternal(object, "transactional");
 	}
 
 	/**
@@ -181,14 +181,27 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	 */
 	public PROXYPOJOCLASS createObject(final POJOCLASS object) throws DMPPersistenceException {
 
+		return createObjectInternal(object, "non-transactional");
+	}
+	
+	protected PROXYPOJOCLASS createObjectInternal(final POJOCLASS object, final String transactionType) throws DMPPersistenceException {
+		
 		final EntityManager entityManager = acquire(false);
 
-		return createObjectInternal(object, entityManager);
+		return createObjectInternal(object, entityManager, transactionType);
 	}
 
-	protected PROXYPOJOCLASS createObjectInternal(final POJOCLASS object, final EntityManager entityManager) throws DMPPersistenceException {
+	protected PROXYPOJOCLASS createObjectInternal(final POJOCLASS object, final EntityManager entityManager, final String transactionType) throws DMPPersistenceException {
 
-		return createObjectInternal(entityManager);
+		final POJOCLASS newObject = createNewObject();
+		
+		persistObject(newObject, entityManager);
+		
+		updateObjectInternal(object, newObject, entityManager);
+		
+		entityManager.merge(newObject);
+		
+		return createNewProxyObject(newObject, RetrievalType.CREATED);
 	}
 
 	/**
@@ -223,7 +236,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	protected PROXYPOJOCLASS updateObjectInternal(final POJOCLASS object, final EntityManager entityManager, final String transactionType)
 			throws DMPPersistenceException {
 
-		final PROXYPOJOCLASS proxyUpdateObject = getObject(object, entityManager);
+		final PROXYPOJOCLASS proxyUpdateObject = getObject(object, entityManager, transactionType);
 
 		if (proxyUpdateObject == null) {
 
@@ -372,7 +385,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	 * @return the requested POJOCLASS instance fresh from the DB or a new POJOCLASS instance
 	 * @throws DMPPersistenceException
 	 */
-	protected PROXYPOJOCLASS getObject(final POJOCLASS object, final EntityManager entityManager) throws DMPPersistenceException {
+	protected PROXYPOJOCLASS getObject(final POJOCLASS object, final EntityManager entityManager, final String transactionType) throws DMPPersistenceException {
 
 		final PROXYPOJOCLASS proxyUpdateObject;
 
@@ -381,12 +394,12 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 			BasicJPAService.LOG.debug(className + " id is null, will create a new " + className);
 
-			proxyUpdateObject = createObjectInternal(object, entityManager);
+			proxyUpdateObject = createObjectInternal(object, entityManager, transactionType);
 		} else if (Long.class.isInstance(object.getId()) && ((Long) object.getId()).longValue() < 0) {
 
 			BasicJPAService.LOG.debug(className + " id is a dummy id, will create a new " + className);
 
-			proxyUpdateObject = createObjectInternal(object, entityManager);
+			proxyUpdateObject = createObjectInternal(object, entityManager, transactionType);
 
 			// TODO: cache all ids of objects that have dummy id?
 		} else {

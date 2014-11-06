@@ -23,11 +23,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import org.junit.Assert;
 
+import org.junit.Assert;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
@@ -435,5 +436,11 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 		}
 
 		return map.get(key);
+	}
+
+	@Override
+	public AttributePath getObject(JsonNode objectDescription) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

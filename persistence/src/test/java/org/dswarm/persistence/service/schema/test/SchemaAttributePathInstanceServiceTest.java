@@ -15,12 +15,17 @@
  */
 package org.dswarm.persistence.service.schema.test;
 
+import java.util.Set;
+
 import org.dswarm.persistence.GuicedTest;
+import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxySchemaAttributePathInstance;
 import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
+import org.dswarm.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
 import org.dswarm.persistence.service.schema.test.utils.SchemaAttributePathInstanceServiceTestUtils;
 import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +34,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Sets;
 
 public class SchemaAttributePathInstanceServiceTest extends
 		IDBasicJPAServiceTest<ProxySchemaAttributePathInstance, SchemaAttributePathInstance, SchemaAttributePathInstanceService> {
@@ -52,6 +58,35 @@ public class SchemaAttributePathInstanceServiceTest extends
 
 		// TODO: generalize
 		schemaAttributePathInstanceServiceTestUtils = new SchemaAttributePathInstanceServiceTestUtils();
+	}
+	
+	@Test
+	public void idGenerationTest2() throws Exception {
+
+		LOG.debug("start id generation test for " + type);
+
+		final Set<SchemaAttributePathInstance> objectes = Sets.newLinkedHashSet();
+		
+		final AttributePathServiceTestUtils apstu = new AttributePathServiceTestUtils();
+
+		for (int i = 0; i < 10; i++) {
+			
+			final AttributePath ap = apstu.getAttributePath("http://purl.org/dc/terms/title", "http://purl.org/dc/terms/hasPart", "http://purl.org/dc/terms/title");
+
+			final ProxySchemaAttributePathInstance proxyObject = jpaService.createObjectTransactional(ap);
+
+			objectes.add(proxyObject.getObject());
+		}
+
+		Assert.assertEquals(type + "s set size should be 10", 10, objectes.size());
+
+		// clean-up DB table
+		for (final SchemaAttributePathInstance object : objectes) {
+
+			jpaService.deleteObject(object.getId());
+		}
+
+		LOG.debug("end id generation test for " + type);
 	}
 
 
