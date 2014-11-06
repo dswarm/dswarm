@@ -16,25 +16,60 @@
 package org.dswarm.converter.schema.test;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Set;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Optional;
-import junit.framework.Assert;
-import org.junit.Test;
 
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.schema.XMLSchemaParser;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
+import org.dswarm.persistence.model.schema.AttributePath;
+import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
+import org.dswarm.persistence.service.MaintainDBService;
+import org.dswarm.persistence.service.schema.AttributePathService;
+import org.dswarm.persistence.service.schema.ClaszService;
+import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Optional;
+import com.google.common.collect.Maps;
 
 /**
  * @author tgaengler
  */
 public class XMLSchemaParserTest extends GuicedTest {
 
+protected MaintainDBService	maintainDBService;
+	
+	@Before
+	public void prepare() throws Exception {
+		GuicedTest.tearDown();
+		GuicedTest.startUp();
+		initObjects();
+//		maintainDBService.initDB();
+		maintainDBService.truncateTables();
+	}
+
+	@After
+	public void tearDown2() throws Exception {
+		GuicedTest.tearDown();
+		GuicedTest.startUp();
+		initObjects();
+//		maintainDBService.initDB();
+//		maintainDBService.truncateTables();
+	}
+	
+	protected void initObjects() {
+		maintainDBService = GuicedTest.injector.getInstance(MaintainDBService.class);
+	}
+	
 	@Test
 	public void testAttributePathsParsing() throws IOException {
 
@@ -64,7 +99,7 @@ public class XMLSchemaParserTest extends GuicedTest {
 	 * @throws IOException
 	 * @throws DMPPersistenceException
 	 */
-	//@Test
+	@Test
 	public void testSchemaParsing() throws IOException, DMPPersistenceException {
 
 		final XMLSchemaParser xmlSchemaParser = GuicedTest.injector.getInstance(XMLSchemaParser.class);
@@ -79,5 +114,49 @@ public class XMLSchemaParserTest extends GuicedTest {
 		final String schemaJSONString = mapper.writeValueAsString(schema);
 
 		System.out.println("'" + schemaJSONString + "'");
+	}
+	
+	/**
+	 * note: creates the mabxml from the given xml schema file from scratch
+	 *
+	 * @throws IOException
+	 * @throws DMPPersistenceException
+	 */
+	@Test
+	public void testSchemaParsing2() throws IOException, DMPPersistenceException {
+
+		final XMLSchemaParser xmlSchemaParser = GuicedTest.injector.getInstance(XMLSchemaParser.class);
+		final Optional<Schema> optionalSchema = xmlSchemaParser.parse("mabxml-1.xsd", "datensatz", "mabxml schema");
+
+		Assert.assertTrue(optionalSchema.isPresent());
+
+		final Schema schema = optionalSchema.get();
+		
+		final Map<String, AttributePath> aps = Maps.newHashMap();
+		
+		for(final SchemaAttributePathInstance schemaAttributePathInstance : schema.getAttributePaths()) {
+			
+			final AttributePath attributePath = schemaAttributePathInstance.getAttributePath();
+			aps.put(attributePath.toAttributePath(), attributePath);
+		}
+		
+		final ContentSchema contentSchema = new ContentSchema();
+		contentSchema.setName("mab content schema");
+		
+		final AttributePath feldNr = aps.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldhttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr");
+		final AttributePath feldInd = aps.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldhttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind");
+		final AttributePath id = aps.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id");
+		final AttributePath feldValue = aps.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldhttp://www.w3.org/1999/02/22-rdf-syntax-ns#value");
+		
+		contentSchema.addKeyAttributePath(feldNr);
+		contentSchema.addKeyAttributePath(feldInd);
+		contentSchema.setRecordIdentifierAttributePath(id);
+		contentSchema.setValueAttributePath(feldValue);
+		
+		schema.setContentSchema(contentSchema);
+
+		final SchemaService schemaService = GuicedTest.injector.getInstance(SchemaService.class);
+		
+		schemaService.updateObjectTransactional(schema);
 	}
 }
