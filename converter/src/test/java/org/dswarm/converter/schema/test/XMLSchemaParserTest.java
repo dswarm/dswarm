@@ -50,30 +50,34 @@ import com.google.inject.name.Names;
  */
 public class XMLSchemaParserTest extends GuicedTest {
 
-protected MaintainDBService	maintainDBService;
-	
+	protected MaintainDBService maintainDBService;
+
+
 	@Before
 	public void prepare() throws Exception {
 		GuicedTest.tearDown();
 		GuicedTest.startUp();
 		initObjects();
-//		maintainDBService.initDB();
+		// maintainDBService.initDB();
 		maintainDBService.truncateTables();
 	}
+
 
 	@After
 	public void tearDown2() throws Exception {
 		GuicedTest.tearDown();
 		GuicedTest.startUp();
 		initObjects();
-//		maintainDBService.initDB();
-//		maintainDBService.truncateTables();
+		// maintainDBService.initDB();
+		// maintainDBService.truncateTables();
 	}
-	
+
+
 	protected void initObjects() {
 		maintainDBService = GuicedTest.injector.getInstance(MaintainDBService.class);
 	}
-	
+
+
 	@Test
 	public void testAttributePathsParsing() throws IOException {
 
@@ -86,7 +90,7 @@ protected MaintainDBService	maintainDBService;
 
 		final StringBuilder sb = new StringBuilder();
 
-		for(final AttributePathHelper attributePath : attributePaths) {
+		for (final AttributePathHelper attributePath : attributePaths) {
 
 			sb.append(attributePath.toString()).append("\n");
 		}
@@ -96,6 +100,7 @@ protected MaintainDBService	maintainDBService;
 
 		Assert.assertEquals(expectedAttributePaths, actualAttributePaths);
 	}
+
 
 	/**
 	 * note: creates the mabxml from the given xml schema file from scratch
@@ -119,7 +124,8 @@ protected MaintainDBService	maintainDBService;
 
 		System.out.println("'" + schemaJSONString + "'");
 	}
-	
+
+
 	/**
 	 * note: creates the mabxml from the given xml schema file from scratch
 	 *
@@ -134,69 +140,76 @@ protected MaintainDBService	maintainDBService;
 		Assert.assertTrue(optionalSchema.isPresent());
 
 		final Schema schema = optionalSchema.get();
-		
+
 		final Map<String, AttributePath> aps = Maps.newHashMap();
-		
-		for(final SchemaAttributePathInstance schemaAttributePathInstance : schema.getAttributePaths()) {
-			
+
+		for (final SchemaAttributePathInstance schemaAttributePathInstance : schema.getAttributePaths()) {
+
 			final AttributePath attributePath = schemaAttributePathInstance.getAttributePath();
 			aps.put(attributePath.toAttributePath(), attributePath);
 		}
-		
+
 		final ContentSchema contentSchema = new ContentSchema();
 		contentSchema.setName("mab content schema");
-		
-		final AttributePath feldNr = aps.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldhttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr");
-		final AttributePath feldInd = aps.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldhttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind");
+
+		final AttributePath feldNr = aps
+				.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldhttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr");
+		final AttributePath feldInd = aps
+				.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldhttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind");
 		final AttributePath id = aps.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id");
-		final AttributePath feldValue = aps.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldhttp://www.w3.org/1999/02/22-rdf-syntax-ns#value");
-		
+		final AttributePath feldValue = aps
+				.get("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldhttp://www.w3.org/1999/02/22-rdf-syntax-ns#value");
+
 		contentSchema.addKeyAttributePath(feldNr);
 		contentSchema.addKeyAttributePath(feldInd);
 		contentSchema.setRecordIdentifierAttributePath(id);
 		contentSchema.setValueAttributePath(feldValue);
-		
+
 		schema.setContentSchema(contentSchema);
 
 		final SchemaService schemaService = GuicedTest.injector.getInstance(SchemaService.class);
-		
+
 		schemaService.updateObjectTransactional(schema);
 	}
-	
-	
+
+
 	@Test
 	public void buildInitCompleteScript() throws Exception {
 		new BibrmContractItemSchemaBuilder().buildSchema();
 		new BiboDocumentSchemaBuilder().buildSchema();
 		testSchemaParsing2();
-		
+
 		String sep = File.separator;
-		
+
 		String user = readManuallyFromTypeSafeConfig("dswarm.db.metadata.username");
 		String pass = readManuallyFromTypeSafeConfig("dswarm.db.metadata.password");
 		String db = readManuallyFromTypeSafeConfig("dswarm.db.metadata.schema");
 		String outputFile = readManuallyFromTypeSafeConfig("dswarm.paths.root");
-		
-		outputFile = outputFile.substring(0, outputFile.lastIndexOf( sep ) );
-		outputFile = outputFile + sep + "persistence"+sep+"src"+sep+"main"+sep+"resources"+sep+"init_internal_schema.sql";
-		
+
+		outputFile = outputFile.substring(0, outputFile.lastIndexOf(sep));
+		outputFile = outputFile + sep + "persistence" + sep + "src" + sep + "main" + sep + "resources" + sep + "init_internal_schema.sql";
+
+		final String output = outputFile;
+
+
 		StringBuilder sb = new StringBuilder();
-		sb.append("mysqldump -u")
-		.append(user)
-		.append(" -p")
-		.append(pass)
-		.append(" --no-create-info --no-create-db --skip-triggers --skip-create-options --skip-add-drop-table --skip-lock-tables --skip-add-locks -B ")
-		.append(db)
-		.append(" > ")
-		.append( outputFile );
-		
-		CmdUtil.executeCommand( sb.toString() );
+		sb.append( "mysqldump" )
+				.append(" -u")
+				.append(user)
+				.append(" -p")
+				.append(pass)
+				.append(
+						" --no-create-info --no-create-db --skip-triggers --skip-create-options --skip-add-drop-table --skip-lock-tables --skip-add-locks -B ")
+				.append(db);
+		// .append(" > ")
+		// .append( outputFile );
+
+		CmdUtil.runCommand( sb.toString(), output );
 	}
-	
-	
+
+
 	private String readManuallyFromTypeSafeConfig( String key ) {
-		return GuicedTest.injector.getInstance( Key.get(String.class, Names.named( key )) );
+		return GuicedTest.injector.getInstance(Key.get(String.class, Names.named(key)));
 	}
-	
 
 }
