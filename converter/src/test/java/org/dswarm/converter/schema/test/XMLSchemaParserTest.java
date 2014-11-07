@@ -15,12 +15,14 @@
  */
 package org.dswarm.converter.schema.test;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.schema.XMLSchemaParser;
+import org.dswarm.init.util.CmdUtil;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
 import org.dswarm.persistence.model.schema.AttributePath;
@@ -28,9 +30,9 @@ import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.service.MaintainDBService;
-import org.dswarm.persistence.service.schema.AttributePathService;
-import org.dswarm.persistence.service.schema.ClaszService;
 import org.dswarm.persistence.service.schema.SchemaService;
+import org.dswarm.persistence.service.schema.test.internalmodel.BiboDocumentSchemaBuilder;
+import org.dswarm.persistence.service.schema.test.internalmodel.BibrmContractItemSchemaBuilder;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.junit.After;
 import org.junit.Assert;
@@ -40,6 +42,8 @@ import org.junit.Test;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
+import com.google.inject.Key;
+import com.google.inject.name.Names;
 
 /**
  * @author tgaengler
@@ -122,7 +126,6 @@ protected MaintainDBService	maintainDBService;
 	 * @throws IOException
 	 * @throws DMPPersistenceException
 	 */
-	@Test
 	public void testSchemaParsing2() throws IOException, DMPPersistenceException {
 
 		final XMLSchemaParser xmlSchemaParser = GuicedTest.injector.getInstance(XMLSchemaParser.class);
@@ -159,4 +162,41 @@ protected MaintainDBService	maintainDBService;
 		
 		schemaService.updateObjectTransactional(schema);
 	}
+	
+	
+	@Test
+	public void buildInitCompleteScript() throws Exception {
+		new BibrmContractItemSchemaBuilder().buildSchema();
+		new BiboDocumentSchemaBuilder().buildSchema();
+		testSchemaParsing2();
+		
+		String sep = File.separator;
+		
+		String user = readManuallyFromTypeSafeConfig("dswarm.db.metadata.username");
+		String pass = readManuallyFromTypeSafeConfig("dswarm.db.metadata.password");
+		String db = readManuallyFromTypeSafeConfig("dswarm.db.metadata.schema");
+		String outputFile = readManuallyFromTypeSafeConfig("dswarm.paths.root");
+		
+		outputFile = outputFile.substring(0, outputFile.lastIndexOf( sep ) );
+		outputFile = outputFile + sep + "persistence"+sep+"src"+sep+"main"+sep+"resources"+sep+"init_internal_schema.sql";
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("mysqldump -u")
+		.append(user)
+		.append(" -p")
+		.append(pass)
+		.append(" --no-create-info --no-create-db --skip-triggers --skip-create-options --skip-add-drop-table --skip-lock-tables --skip-add-locks -B ")
+		.append(db)
+		.append(" > ")
+		.append( outputFile );
+		
+		CmdUtil.executeCommand( sb.toString() );
+	}
+	
+	
+	private String readManuallyFromTypeSafeConfig( String key ) {
+		return GuicedTest.injector.getInstance( Key.get(String.class, Names.named( key )) );
+	}
+	
+
 }

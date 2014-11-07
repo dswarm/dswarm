@@ -65,13 +65,13 @@ public class InternalSchemaBuilderTest extends GuicedTest {
 	//@Ignore
 	@Test
 	public void buildInternalSchema() {
-		buildSchema(new BiboDocumentSchemaBuilder());
+		buildSchema( new BiboDocumentSchemaBuilder());
 	}
 
 	//@Ignore
 	@Test
 	public void buildERMSchema() {
-		buildSchema(new BibrmContractItemSchemaBuilder());
+		buildSchema( new BibrmContractItemSchemaBuilder());
 	}
 
 	private void buildSchema(final SchemaBuilder schemaBuilder) {

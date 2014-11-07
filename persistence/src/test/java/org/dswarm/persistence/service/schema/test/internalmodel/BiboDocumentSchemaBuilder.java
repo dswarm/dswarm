@@ -33,7 +33,8 @@ public class BiboDocumentSchemaBuilder extends SchemaBuilder {
 		 * // Example of how to use the normal API of the attribute path builder
 		 * biboDocumentSchema.addAttributePath(builder.start().add(DC + "creator").add(FOAF + "first_name").getPath());
 		 */
-
+		
+		
 		// basic properties used in DINI-AG Titeldaten recommendations
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dc:title"));
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("rda:otherTitleInformation"));
@@ -48,7 +49,6 @@ public class BiboDocumentSchemaBuilder extends SchemaBuilder {
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dc:publisher"));
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:issued"));
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("owl:sameAs"));
-		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("umbel:isLike"));
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("umbel:isLike"));
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("bibo:issn"));
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("bibo:eissn"));

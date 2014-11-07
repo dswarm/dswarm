@@ -28,6 +28,27 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.io.FileUtils;
+import org.dswarm.controller.resources.resource.test.utils.ConfigurationsResourceTestUtils;
+import org.dswarm.controller.resources.test.ResourceTest;
+import org.dswarm.controller.test.GuicedTest;
+import org.dswarm.init.util.CmdUtil;
+import org.dswarm.persistence.DMPPersistenceException;
+import org.dswarm.persistence.model.resource.Configuration;
+import org.dswarm.persistence.model.resource.Resource;
+import org.dswarm.persistence.service.resource.ConfigurationService;
+import org.dswarm.persistence.service.resource.ResourceService;
+import org.dswarm.persistence.service.resource.test.utils.ResourceServiceTestUtils;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
+import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -39,26 +60,6 @@ import com.google.common.io.Files;
 import com.google.common.io.Resources;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
-import org.apache.commons.io.FileUtils;
-import org.glassfish.jersey.media.multipart.FormDataMultiPart;
-import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
-import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.dswarm.controller.resources.resource.test.utils.ConfigurationsResourceTestUtils;
-import org.dswarm.controller.resources.test.ResourceTest;
-import org.dswarm.controller.test.GuicedTest;
-import org.dswarm.persistence.DMPPersistenceException;
-import org.dswarm.persistence.model.resource.Configuration;
-import org.dswarm.persistence.model.resource.Resource;
-import org.dswarm.persistence.service.resource.ConfigurationService;
-import org.dswarm.persistence.service.resource.ResourceService;
-import org.dswarm.persistence.service.resource.test.utils.ResourceServiceTestUtils;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class ResourcesResourceTest extends ResourceTest {
 
@@ -762,7 +763,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 	private void curlGetResourceConfigurationsInternal(final Resource resource) throws Exception {
 
-		final String resourceConfigurationsJSON = executeCommand("curl -G -H \"Content-Type: application/json\" -H \"Accepted: application/json\" "
+		final String resourceConfigurationsJSON = CmdUtil.executeCommand("curl -G -H \"Content-Type: application/json\" -H \"Accepted: application/json\" "
 				+ baseUri() + "/resources/" + resource.getId().toString() + "/configurations");
 
 		configurationsResourceTestUtils.evaluateObjects(resourceConfigurationsJSON, exceptedConfigurations);
@@ -781,7 +782,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 	private void curlGetResourcesInternal(final Long resourceId) throws Exception {
 
-		final String responseResourceJSON = executeCommand("curl -G -H \"Content-Type: application/json\" -H \"Accepted: application/json\" "
+		final String responseResourceJSON = CmdUtil.executeCommand("curl -G -H \"Content-Type: application/json\" -H \"Accepted: application/json\" "
 				+ baseUri() + "/resources/" + resourceId.toString());
 
 		evaluateGetResourcesInternal(responseResourceJSON);
