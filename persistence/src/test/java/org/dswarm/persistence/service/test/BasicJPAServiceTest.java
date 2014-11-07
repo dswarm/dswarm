@@ -51,8 +51,8 @@ public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<
 		GuicedTest.tearDown();
 		GuicedTest.startUp();
 		initObjects();
-//		maintainDBService.initDB();
-		maintainDBService.truncateTables();
+		maintainDBService.initDB();
+//		maintainDBService.truncateTables();
 	}
 
 	@After
@@ -61,8 +61,8 @@ public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<
 		GuicedTest.tearDown();
 		GuicedTest.startUp();
 		initObjects();
-//		maintainDBService.initDB();
-		maintainDBService.truncateTables();
+		maintainDBService.initDB();
+//		maintainDBService.truncateTables();
 	}
 	
 	

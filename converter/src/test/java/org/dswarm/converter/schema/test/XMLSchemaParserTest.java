@@ -69,7 +69,7 @@ public class XMLSchemaParserTest extends GuicedTest {
 		GuicedTest.startUp();
 		initObjects();
 		// maintainDBService.initDB();
-		// maintainDBService.truncateTables();
+		 maintainDBService.truncateTables();
 	}
 
 
@@ -173,7 +173,8 @@ public class XMLSchemaParserTest extends GuicedTest {
 	}
 
 
-	@Test
+	
+//	@Test
 	public void buildInitCompleteScript() throws Exception {
 		new BibrmContractItemSchemaBuilder().buildSchema();
 		new BiboDocumentSchemaBuilder().buildSchema();
