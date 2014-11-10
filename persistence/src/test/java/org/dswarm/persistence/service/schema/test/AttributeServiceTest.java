@@ -15,40 +15,49 @@
  */
 package org.dswarm.persistence.service.schema.test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.dswarm.persistence.GuicedTest;
+import org.dswarm.persistence.model.schema.Attribute;
+import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
+import org.dswarm.persistence.service.schema.AttributeService;
+import org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtils;
+import org.dswarm.persistence.service.test.AdvancedJPAServiceTest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.dswarm.persistence.GuicedTest;
-import org.dswarm.persistence.model.schema.Attribute;
-import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
-import org.dswarm.persistence.service.schema.AttributeService;
-import org.dswarm.persistence.service.test.AdvancedJPAServiceTest;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AttributeServiceTest extends AdvancedJPAServiceTest<ProxyAttribute, Attribute, AttributeService> {
 
-	private static final Logger	LOG				= LoggerFactory.getLogger(AttributeServiceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AttributeServiceTest.class);
 
-	private final ObjectMapper	objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
+
+	private AttributeServiceTestUtils astUtils;
+	
 	public AttributeServiceTest() {
-
 		super("attribute", AttributeService.class);
 	}
 
+	
+	@Override
+	protected void initObjects() {
+		super.initObjects();
+		astUtils = new AttributeServiceTestUtils();
+	}
+	
+
 	@Test
-	public void testSimpleAttribute() {
+	public void testSimpleAttribute() throws Exception {
 
-		final Attribute attribute = createObject("http://purl.org/dc/terms/title").getObject();
+		final Attribute attribute = astUtils.createAttribute("http://purl.org/dc/terms/title", "title");
+		
+		updateObjectTransactional( attribute );
 
-		attribute.setName("title");
-
-		updateObjectTransactional(attribute);
-
-		final Attribute updatedAttribute = getObject(attribute);
+		final Attribute updatedAttribute = getObject( attribute );
 
 		Assert.assertNotNull("the attribute name of the updated resource shouldn't be null", updatedAttribute.getName());
 		Assert.assertEquals("the attribute's name are not equal", attribute.getName(), updatedAttribute.getName());
@@ -58,7 +67,7 @@ public class AttributeServiceTest extends AdvancedJPAServiceTest<ProxyAttribute,
 		try {
 
 			json = objectMapper.writeValueAsString(updatedAttribute);
-		} catch (final JsonProcessingException e) {
+		} catch( final JsonProcessingException e ) {
 
 			e.printStackTrace();
 		}
@@ -69,8 +78,9 @@ public class AttributeServiceTest extends AdvancedJPAServiceTest<ProxyAttribute,
 		deleteObject(attribute.getId());
 	}
 
+
 	@Test
-	public void testUniquenessOfAttributes() {
+	public void testUniquenessOfAttributes() throws Exception {
 
 		final Attribute attribute1 = createAttribute();
 		final Attribute attribute2 = createAttribute();
@@ -95,11 +105,10 @@ public class AttributeServiceTest extends AdvancedJPAServiceTest<ProxyAttribute,
 		deleteObject(attribute1.getId());
 	}
 
-	private Attribute createAttribute() {
 
-		final Attribute attribute = createObject("http://purl.org/dc/terms/title").getObject();
+	private Attribute createAttribute() throws Exception {
 
-		attribute.setName("title");
+		final Attribute attribute = astUtils.createAttribute("http://purl.org/dc/terms/title", "title");
 
 		updateObjectTransactional(attribute);
 
