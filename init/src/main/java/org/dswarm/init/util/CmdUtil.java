@@ -7,7 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,9 +28,7 @@ public class CmdUtil {
 	private static String executeProcess( Process process, String command ) throws InterruptedException, IOException {
 		final int exitStatus = process.waitFor();
 
-		Assert.assertEquals("exit status should be 0", 0, exitStatus);
-
-		final StringBuilder sb = new StringBuilder();
+				final StringBuilder sb = new StringBuilder();
 
 		final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 		String line = reader.readLine();
