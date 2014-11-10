@@ -15,7 +15,11 @@
  */
 package org.dswarm.persistence.service.schema.test.utils;
 
+import static org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtils.ATTRIBUTE__HAS_PART;
+import static org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtils.ATTRIBUTE__TITLE;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -23,25 +27,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.dswarm.persistence.DMPPersistenceException;
+import org.dswarm.persistence.model.schema.Attribute;
+import org.dswarm.persistence.model.schema.AttributePath;
+import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
+import org.dswarm.persistence.service.schema.AttributePathService;
+import org.dswarm.persistence.service.test.utils.BasicJPAServiceTestUtils;
+import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-import org.junit.Assert;
-import org.dswarm.persistence.DMPPersistenceException;
-import org.dswarm.persistence.model.schema.Attribute;
-import org.dswarm.persistence.model.schema.AttributePath;
-import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
-import org.dswarm.persistence.model.types.Tuple;
-import org.dswarm.persistence.service.schema.AttributePathService;
-import org.dswarm.persistence.service.test.utils.BasicJPAServiceTestUtils;
-
 public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<AttributePathService, ProxyAttributePath, AttributePath, Long> {
 
-	private final AttributeServiceTestUtils		attributeResourceTestUtils;
+	private static final Logger LOG = LoggerFactory.getLogger( AttributePathServiceTestUtils.class );
+	
+	private final AttributeServiceTestUtils astUtils;
 
-	private static final Set<List<String>>	excludeAttributePaths	= Sets.newHashSet();
+	private static final Set<List<String>> excludeAttributePaths = Sets.newHashSet();
 
 	static {
 
@@ -174,7 +181,6 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 		attributePath62.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#value");
 		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath62);
 
-
 		final List<String> attributePath63 = Lists.newLinkedList();
 		attributePath63.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
 		attributePath63.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf");
@@ -231,92 +237,147 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 
 	private Map<String, AttributePath> map = new HashMap<>();
 
+
 	public AttributePathServiceTestUtils() {
 
 		super(AttributePath.class, AttributePathService.class);
 
-		attributeResourceTestUtils = new AttributeServiceTestUtils();
+		astUtils = new AttributeServiceTestUtils();
 	}
+
 
 	/**
 	 * {@inheritDoc} <br />
-	 * Assert that both {@link AttributePath}s have either no {@link Attribute}s or {@link Attribute}s are equal. See
+	 * Assert that both {@link AttributePath}s have either no {@link Attribute}s
+	 * or {@link Attribute}s are equal. See
 	 * {@link BasicJPAServiceTestUtils#compareObjects(Set, Map)} for details
 	 *
 	 * @param expectedObject
 	 * @param actualObject
 	 */
 	@Override
-	public void compareObjects(final AttributePath expectedObject, final AttributePath actualObject) {
+	public void compareObjects( final AttributePath expectedObject, final AttributePath actualObject ) {
 
 		super.compareObjects(expectedObject, actualObject);
 
-		if (expectedObject.getAttributes() == null || expectedObject.getAttributes().isEmpty()) {
-
+		if( expectedObject.getAttributes() == null || expectedObject.getAttributes().isEmpty() ) {
 			final boolean actualHasNoAttributes = actualObject.getAttributes() == null || actualObject.getAttributes().isEmpty();
 			Assert.assertTrue("the actual attribute path should not have any attributes", actualHasNoAttributes);
-
 		} else {
 			// !null && !empty
-
 			final Set<Attribute> actualAttributes = actualObject.getAttributes();
+			
+			Assert.assertNotNull( "attributes of actual attribute path '" + actualObject.getId() + "' shouldn't be null", actualAttributes );
+			Assert.assertFalse( "attributes of actual attribute path '" + actualObject.getId() + "' shouldn't be empty", actualAttributes.isEmpty() );
 
-			Assert.assertNotNull("attributes of actual attribute path '" + actualObject.getId() + "' shouldn't be null", actualAttributes);
-			Assert.assertFalse("attributes of actual attribute path '" + actualObject.getId() + "' shouldn't be empty", actualAttributes.isEmpty());
-
+			
 			final Map<Long, Attribute> actualAttributesMap = Maps.newHashMap();
-
 			for (final Attribute actualAttribute : actualAttributes) {
-
 				actualAttributesMap.put(actualAttribute.getId(), actualAttribute);
 			}
 
-			attributeResourceTestUtils.compareObjects(expectedObject.getAttributes(), actualAttributesMap);
+			astUtils.compareObjects( expectedObject.getAttributes(), actualAttributesMap );
 		}
 	}
 
-	public AttributePath createAttributePath(final List<Attribute> attributePathArg) throws Exception {
-
+	
+	public AttributePath createAttributePath( final List<Attribute> attributePathArg ) throws Exception {
 		final AttributePath attributePath = new AttributePath(attributePathArg);
-
 		return createObject(attributePath, attributePath);
 	}
 
+	
+	/**
+	 * Convenience method to be able to create attribute paths more dynamically 
+	 * @param attributes
+	 * @return
+	 * @throws Exception
+	 */
+	public AttributePath createAttributePath( Attribute... attributes ) throws Exception {
+		return createAttributePath( Arrays.asList( attributes ) );
+	}
+	
+	
+	/**
+	 * Constructs a sample attribute path consisting of the following attributes:<br>
+	 * "http://purl.org/dc/terms/title"<br>
+	 * "http://purl.org/dc/terms/hasPart"
+	 * @return
+	 * @throws Exception
+	 */
+	public AttributePath createDefaultAttributePath() throws Exception {
+		return createAttributePath(
+				astUtils.createAttribute( ATTRIBUTE__TITLE ),
+				astUtils.createAttribute( ATTRIBUTE__HAS_PART )
+		);
+	}
+	
+
+	public AttributePath createUniqueExampleAttributePath() throws Exception {
+		final AttributePath tempAttributePath = createDefaultAttributePath();
+		final AttributePath attributePath = createObject( tempAttributePath.getAttributePath() );
+		return attributePath;
+	}
+	
+	
+	/**
+	 * using JPA
+	 */
+	private AttributePath createObject( final List<Attribute> attributePath ) {
+		AttributePath object = null;
+		try {
+			object = jpaService.createOrGetObjectTransactional(attributePath).getObject();
+			LOG.debug( object.toString() );
+		} catch( final DMPPersistenceException e ) {
+			Assert.assertTrue("something went wrong during attribute path creation.\n" + e.getMessage(), false);
+		}
+
+		Assert.assertNotNull(type + " shouldn't be null", object);
+		Assert.assertNotNull(type + " id shouldn't be null", object.getId());
+		Assert.assertNotNull(type + " path shouldn't be null", object.getAttributePathAsJSONObjectString());
+
+		LOG.debug("created new attribute path with id = '" + object.getId() + "'" + " and path = '" + object.getAttributePathAsJSONObjectString() + "'");
+		return object;
+	}
+	
+	
+	
 	/**
 	 * {@inheritDoc}<br/>
 	 * Updates the name and list of attributes of the attribute path.
 	 */
 	@Override
-	protected AttributePath prepareObjectForUpdate(final AttributePath objectWithUpdates, final AttributePath object) {
-
+	protected AttributePath prepareObjectForUpdate( final AttributePath objectWithUpdates, final AttributePath object ) {
 		object.setAttributePath(objectWithUpdates.getAttributePath());
-
 		return object;
 	}
 
+
 	@Override
-	protected ProxyAttributePath createObject(final AttributePath object) throws DMPPersistenceException {
+	protected ProxyAttributePath createObject( final AttributePath object ) throws DMPPersistenceException {
 
 		return jpaService.createObjectTransactional(object);
 	}
 
-	@Override
-	public void deleteObject(final AttributePath object) {
 
-		if (object == null) {
+	@Override
+	public void deleteObject( final AttributePath object ) {
+
+		if( object == null ) {
 
 			return;
 		}
 
 		final Set<Attribute> attributes = object.getAttributes();
 
-		if (attributes != null && !attributes.isEmpty() && attributes.size() == 1) {
+		if( attributes != null && !attributes.isEmpty() && attributes.size() == 1 ) {
 
 			final Attribute attribute = attributes.iterator().next();
 
-			if (attribute != null && attribute.getUri() != null && AttributeServiceTestUtils.excludeAttributes.contains(attribute.getUri())) {
+			if( attribute != null && attribute.getUri() != null && AttributeServiceTestUtils.excludeAttributes.contains(attribute.getUri()) ) {
 
-				// don't delete attribute paths of attributes that should be excluded from removal
+				// don't delete attribute paths of attributes that should be excluded
+				// from removal
 
 				return;
 			}
@@ -324,11 +385,11 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 
 		final List<Attribute> orderedAttributes = object.getAttributePath();
 
-		if (orderedAttributes != null && !orderedAttributes.isEmpty()) {
+		if( orderedAttributes != null && !orderedAttributes.isEmpty() ) {
 
 			for (final List<String> excludeAttributePath : AttributePathServiceTestUtils.excludeAttributePaths) {
 
-				if (excludeAttributePath.size() != orderedAttributes.size()) {
+				if( excludeAttributePath.size() != orderedAttributes.size() ) {
 
 					// only compare attribute paths of the same size
 
@@ -339,36 +400,36 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 
 				boolean interrupted = false;
 
-				while (excludeIter.hasNext()) {
+				while( excludeIter.hasNext() ) {
 
 					final Iterator<Attribute> iter = orderedAttributes.iterator();
 
-					while (iter.hasNext()) {
+					while( iter.hasNext() ) {
 
 						final Attribute orderedAttribute = iter.next();
 
-						if (orderedAttribute.getUri() == null) {
+						if( orderedAttribute.getUri() == null ) {
 
 							break;
 						}
 
 						final String excludeAttribute = excludeIter.next();
 
-						if (orderedAttribute.getUri() == null) {
+						if( orderedAttribute.getUri() == null ) {
 
 							interrupted = true;
 
 							break;
 						}
 
-						if (!excludeAttribute.equals(orderedAttribute.getUri())) {
+						if( !excludeAttribute.equals(orderedAttribute.getUri()) ) {
 
 							interrupted = true;
 
 							break;
 						}
 
-						if (!excludeIter.hasNext() && iter.hasNext()) {
+						if( !excludeIter.hasNext() && iter.hasNext() ) {
 
 							interrupted = true;
 
@@ -376,13 +437,13 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 						}
 					}
 
-					if (interrupted) {
+					if( interrupted ) {
 
 						break;
 					}
 				}
 
-				if (!interrupted) {
+				if( !interrupted ) {
 
 					// found match
 
@@ -394,42 +455,45 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 		super.deleteObject(object);
 	}
 
+
 	@Override
 	public void reset() {
 
-		attributeResourceTestUtils.reset();
+		astUtils.reset();
 	}
 
+
 	/**
-	 * Convenience method for creating simple attribute path of length 1
-	 * as they are frequently needed in sub-schema contexts
+	 * Convenience method for creating simple attribute path of length 1 as they
+	 * are frequently needed in sub-schema contexts
 	 *
 	 * @param attribute
 	 * @return an attribute path of length 1
 	 * @throws Exception
 	 */
-	public AttributePath createAttributePath(Attribute attribute) throws Exception {
+	public AttributePath createAttributePath( Attribute attribute ) throws Exception {
 		final List<Attribute> attributeList = new LinkedList<>();
 		attributeList.add(attribute);
 		return createAttributePath(attributeList);
 	}
 
-	public AttributePath getAttributePath(final String ... attributeIds) throws Exception {
+
+	public AttributePath getAttributePath( final String... attributeIds ) throws Exception {
 
 		String key = null;
 
-		for(String attributeId : attributeIds) {
+		for (String attributeId : attributeIds) {
 
 			key = attributeId + "#";
 		}
 
-		if (!map.containsKey(key)) {
+		if( !map.containsKey(key) ) {
 
 			List<Attribute> attrs = new ArrayList<>();
 
-			for(String attrStr : attributeIds) {
+			for (String attrStr : attributeIds) {
 
-				attrs.add(attributeResourceTestUtils.getAttribute(attrStr));
+				attrs.add(astUtils.getAttribute(attrStr));
 			}
 
 			map.put(key, createAttributePath(attrs));
@@ -438,8 +502,9 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 		return map.get(key);
 	}
 
+
 	@Override
-	public AttributePath getObject(JsonNode objectDescription) throws Exception {
+	public AttributePath getObject( JsonNode objectDescription ) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
