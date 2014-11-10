@@ -57,8 +57,7 @@ public class CmdUtil {
 		try {
 			runProcess( osSpecificCommand, output );
 		} catch( IOException | InterruptedException e ) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error(e.getMessage(), e);
 		}
 	}
 	
@@ -80,7 +79,7 @@ public class CmdUtil {
 							}
 						}
 					} catch( Exception ex ) {
-						ex.printStackTrace();
+						LOG.error(ex.getMessage(), ex);
 					}
 				}
 			}).start();
