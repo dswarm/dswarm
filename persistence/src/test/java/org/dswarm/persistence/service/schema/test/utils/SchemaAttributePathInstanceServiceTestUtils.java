@@ -29,13 +29,21 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class SchemaAttributePathInstanceServiceTestUtils extends AttributePathInstanceServiceTestUtils<SchemaAttributePathInstanceService, ProxySchemaAttributePathInstance, SchemaAttributePathInstance> {
 
-	private SchemaServiceTestUtils schemaServiceTestUtils;
+	private SchemaServiceTestUtils sstUtils;
+	private AttributePathServiceTestUtils apstUtils;
+	
 	
 	public SchemaAttributePathInstanceServiceTestUtils() {
 		super(SchemaAttributePathInstance.class, SchemaAttributePathInstanceService.class);
-		schemaServiceTestUtils = new SchemaServiceTestUtils( this );
 	}
 
+	@Override
+	protected void initObjects() {
+		super.initObjects();
+		sstUtils = new SchemaServiceTestUtils( this );
+		apstUtils = new AttributePathServiceTestUtils();
+	}
+	
 
 	/**
 	 * {@inheritDoc}<br />
@@ -104,6 +112,18 @@ public class SchemaAttributePathInstanceServiceTestUtils extends AttributePathIn
 		return createSchemaAttributePathInstance(null, attributePath, subSchema);
 	}
 
+	
+	/**
+	 * Constructs a sample attribute path instance consisting of the following attributes:<br>
+	 * "http://purl.org/dc/terms/title"<br>
+	 * "http://purl.org/dc/terms/hasPart"
+	 * @return
+	 * @throws Exception
+	 */
+	public SchemaAttributePathInstance createDefaultSchemaAttributePathInstance() throws Exception {
+		return createSchemaAttributePathInstance( apstUtils.createDefaultAttributePath() );
+	}
+	
 
 	/**
 	 * {@inheritDoc}<br/>
@@ -120,7 +140,7 @@ public class SchemaAttributePathInstanceServiceTestUtils extends AttributePathIn
 	protected SchemaAttributePathInstance createAttributePathInstance( String name, AttributePath attributePath, JsonNode objectDescription ) throws Exception {
 		//TODO externalize keys (sub_schema)
 		JsonNode schemaJson = objectDescription.get("sub_schema") != null ? objectDescription.get("sub_schema") : null;
-		Schema subSchema = schemaServiceTestUtils.getObject( schemaJson );
+		Schema subSchema = sstUtils.getObject( schemaJson );
 		return createSchemaAttributePathInstance(name, attributePath, subSchema);
 	}
 	

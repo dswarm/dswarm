@@ -18,11 +18,9 @@ package org.dswarm.persistence.service.schema.test;
 import java.util.Set;
 
 import org.dswarm.persistence.GuicedTest;
-import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxySchemaAttributePathInstance;
 import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
-import org.dswarm.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
 import org.dswarm.persistence.service.schema.test.utils.SchemaAttributePathInstanceServiceTestUtils;
 import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
 import org.junit.Assert;
@@ -44,7 +42,7 @@ public class SchemaAttributePathInstanceServiceTest extends
 	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	// TODO: generalize
-	private SchemaAttributePathInstanceServiceTestUtils schemaAttributePathInstanceServiceTestUtils;
+	private SchemaAttributePathInstanceServiceTestUtils sapsiUtils;
 
 
 	public SchemaAttributePathInstanceServiceTest() {
@@ -57,35 +55,19 @@ public class SchemaAttributePathInstanceServiceTest extends
 		super.initObjects();
 
 		// TODO: generalize
-		schemaAttributePathInstanceServiceTestUtils = new SchemaAttributePathInstanceServiceTestUtils();
+		sapsiUtils = new SchemaAttributePathInstanceServiceTestUtils();
 	}
+	
 	
 	@Test
 	public void idGenerationTest2() throws Exception {
-
 		LOG.debug("start id generation test for " + type);
 
-		final Set<SchemaAttributePathInstance> objectes = Sets.newLinkedHashSet();
-		
-		final AttributePathServiceTestUtils apstu = new AttributePathServiceTestUtils();
-
+		final Set<SchemaAttributePathInstance> objects = Sets.newLinkedHashSet();
 		for (int i = 0; i < 10; i++) {
-			
-			final AttributePath ap = apstu.getAttributePath("http://purl.org/dc/terms/title", "http://purl.org/dc/terms/hasPart", "http://purl.org/dc/terms/title");
-
-			final ProxySchemaAttributePathInstance proxyObject = jpaService.createObjectTransactional(ap);
-
-			objectes.add(proxyObject.getObject());
+			objects.add( sapsiUtils.createDefaultSchemaAttributePathInstance() );
 		}
-
-		Assert.assertEquals(type + "s set size should be 10", 10, objectes.size());
-
-		// clean-up DB table
-		for (final SchemaAttributePathInstance object : objectes) {
-
-			jpaService.deleteObject(object.getId());
-		}
-
+		Assert.assertEquals(type + "s set size should be 10", 10, objects.size());
 		LOG.debug("end id generation test for " + type);
 	}
 
@@ -102,7 +84,7 @@ public class SchemaAttributePathInstanceServiceTest extends
 		
 		objectDescription.set( "attribute_ids", attributeIds );
 		
-		SchemaAttributePathInstance mapi = schemaAttributePathInstanceServiceTestUtils.getObject( objectDescription );
+		SchemaAttributePathInstance mapi = sapsiUtils.getObject( objectDescription );
 
 		// update mapping attribute path instance
 
