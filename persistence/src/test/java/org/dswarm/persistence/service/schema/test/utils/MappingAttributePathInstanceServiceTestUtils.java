@@ -144,30 +144,18 @@ public class MappingAttributePathInstanceServiceTestUtils
 
 	@Override
 	public void reset() {
-
 		super.reset();
 		// filtersResourceTestUtils.reset();
 	}
 
 
 	/**
-	 * Creates a filter with name 'my filter' and the following expression:<br>
-	 * "SELECT ?identifier ?url\n" + "WHERE {\n" + "    ?record custmabxml:metadata ?metadata ;\n"
-				+ "            custmabxml:header ?header .\n" + "    ?header custmabxml:identifier ?identifier .\n"
-				+ "    ?metadata m:record ?mabrecord .\n" + "    ?mabrecord m:datafield ?dataField .\n" + "    ?dataField m:tag \"088\" ;\n"
-				+ "               m:ind1 \"a\" ;\n" + "               m:subfield ?subField .\n" + "    ?subField rdf:value ?url .\n" + "}"
+	 * @see FilterServiceTestUtils#createDefaultFilter()
 	 * @return
 	 * @throws Exception
 	 */
 	public Filter createDefaultFilter() throws Exception {
-		final String filterName = "my filter";
-
-		final String filterExpression = "SELECT ?identifier ?url\n" + "WHERE {\n" + "    ?record custmabxml:metadata ?metadata ;\n"
-				+ "            custmabxml:header ?header .\n" + "    ?header custmabxml:identifier ?identifier .\n"
-				+ "    ?metadata m:record ?mabrecord .\n" + "    ?mabrecord m:datafield ?dataField .\n" + "    ?dataField m:tag \"088\" ;\n"
-				+ "               m:ind1 \"a\" ;\n" + "               m:subfield ?subField .\n" + "    ?subField rdf:value ?url .\n" + "}";
-
-		return fstUtils.createFilter(filterName, filterExpression);
+		return fstUtils.createDefaultFilter();
 	}
 
 
