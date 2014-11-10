@@ -17,12 +17,13 @@ package org.dswarm.persistence.service.schema.test.utils;
 
 import java.util.Set;
 
-import com.google.common.collect.Sets;
-
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.proxy.ProxyClasz;
 import org.dswarm.persistence.service.schema.ClaszService;
 import org.dswarm.persistence.service.test.utils.AdvancedDMPJPAServiceTestUtils;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.Sets;
 
 public class ClaszServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<ClaszService, ProxyClasz, Clasz> {
 
@@ -35,8 +36,14 @@ public class ClaszServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<ClaszS
 		ClaszServiceTestUtils.excludeClasses.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType");
 	}
 
+	
+	/**
+	 * "http://purl.org/ontology/bibo/Document", "document"
+	 */
+	public static final int CLASS__DOCUMENT = 0;
+	
+	
 	public ClaszServiceTestUtils() {
-
 		super(Clasz.class, ClaszService.class);
 	}
 
@@ -48,6 +55,26 @@ public class ClaszServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<ClaszS
 		return updatedClasz;
 	}
 
+	
+	
+	/**
+	 * Convenience method to create default or known classes.
+	 * @param identifier ClaszServiceTestUtils.CLASS__...
+	 * @return
+	 * @throws Exception
+	 */
+	public Clasz createClass( int identifier ) throws Exception {
+		
+		switch( identifier ) {
+			case CLASS__DOCUMENT:
+				return createClass( "http://purl.org/ontology/bibo/Document", "document" );
+			default:
+				throw new IllegalArgumentException( "Identifier '" + identifier + "' not found!" );
+		}
+	}
+	
+	
+	
 	@Override
 	public void deleteObject(final Clasz object) {
 
@@ -74,5 +101,11 @@ public class ClaszServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<ClaszS
 	@Override
 	public void reset() {
 
+	}
+
+	@Override
+	public Clasz getObject( JsonNode objectDescription ) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

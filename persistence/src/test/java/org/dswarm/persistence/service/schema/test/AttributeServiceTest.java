@@ -15,6 +15,8 @@
  */
 package org.dswarm.persistence.service.schema.test;
 
+import static org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtils.ATTRIBUTE__TITLE;
+
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
@@ -35,9 +37,9 @@ public class AttributeServiceTest extends AdvancedJPAServiceTest<ProxyAttribute,
 
 	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
-
 	private AttributeServiceTestUtils astUtils;
 	
+
 	public AttributeServiceTest() {
 		super("attribute", AttributeService.class);
 	}
@@ -52,26 +54,21 @@ public class AttributeServiceTest extends AdvancedJPAServiceTest<ProxyAttribute,
 
 	@Test
 	public void testSimpleAttribute() throws Exception {
+		final Attribute attribute = astUtils.createAttribute( ATTRIBUTE__TITLE );
+		final Attribute updatedAttribute = updateObjectTransactional( attribute ).getObject();
 
-		final Attribute attribute = astUtils.createAttribute("http://purl.org/dc/terms/title", "title");
+		astUtils.compareObjects(attribute, updatedAttribute);
 		
-		updateObjectTransactional( attribute );
-
-		final Attribute updatedAttribute = getObject( attribute );
-
 		Assert.assertNotNull("the attribute name of the updated resource shouldn't be null", updatedAttribute.getName());
-		Assert.assertEquals("the attribute's name are not equal", attribute.getName(), updatedAttribute.getName());
+//		Assert.assertEquals("the attribute's name are not equal", attribute.getName(), updatedAttribute.getName());
 
 		String json = null;
-
 		try {
 
 			json = objectMapper.writeValueAsString(updatedAttribute);
 		} catch( final JsonProcessingException e ) {
-
-			e.printStackTrace();
+			LOG.error( e.getMessage(), e );
 		}
-
 		AttributeServiceTest.LOG.debug("attribute json: " + json);
 	}
 
@@ -79,8 +76,8 @@ public class AttributeServiceTest extends AdvancedJPAServiceTest<ProxyAttribute,
 	@Test
 	public void testUniquenessOfAttributes() throws Exception {
 
-		final Attribute attribute1 = createAttribute();
-		final Attribute attribute2 = createAttribute();
+		final Attribute attribute1 = createAndUpdateAttribute();
+		final Attribute attribute2 = createAndUpdateAttribute();
 
 		Assert.assertNotNull("attribute1 shouldn't be null", attribute1);
 		Assert.assertNotNull("attribute2 shouldn't be null", attribute2);
@@ -100,14 +97,8 @@ public class AttributeServiceTest extends AdvancedJPAServiceTest<ProxyAttribute,
 	}
 
 
-	private Attribute createAttribute() throws Exception {
-
-		final Attribute attribute = astUtils.createAttribute("http://purl.org/dc/terms/title", "title");
-
-		updateObjectTransactional(attribute);
-
-		final Attribute updatedAttribute = getObject(attribute);
-
-		return updatedAttribute;
+	private Attribute createAndUpdateAttribute() throws Exception {
+		final Attribute attribute = astUtils.createAttribute( ATTRIBUTE__TITLE );
+		return updateObjectTransactional(attribute).getObject();
 	}
 }

@@ -15,6 +15,8 @@
  */
 package org.dswarm.persistence.service.schema.test;
 
+import static org.dswarm.persistence.service.schema.test.utils.ClaszServiceTestUtils.CLASS__DOCUMENT;
+
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.proxy.ProxyClasz;
@@ -35,26 +37,29 @@ public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, 
 
 	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	private final ClaszServiceTestUtils claszServiceTestUtils;
-
+	private ClaszServiceTestUtils cstUtils;
 
 	public ClaszServiceTest() {
 		super("class", ClaszService.class);
-		claszServiceTestUtils = new ClaszServiceTestUtils();
+	}
+	
+	
+	@Override
+	protected void initObjects() {
+		super.initObjects();
+		cstUtils = new ClaszServiceTestUtils();
 	}
 
 
 	@Test
 	public void testSimpleAttribute() throws Exception {
+		final Clasz clasz = cstUtils.createClass( CLASS__DOCUMENT );
+		final Clasz updatedClass = updateObjectTransactional(clasz).getObject();
 
-		final Clasz clasz = claszServiceTestUtils.createClass( "http://purl.org/ontology/bibo/Document", "document" );
-
-		updateObjectTransactional(clasz);
-
-		final Clasz updatedClass = getObject(clasz);
+		cstUtils.compareObjects( clasz, updatedClass);
 
 		Assert.assertNotNull("the attribute name of the updated resource shouldn't be null", updatedClass.getName());
-		Assert.assertEquals("the attribute's name are not equal", clasz.getName(), updatedClass.getName());
+//		Assert.assertEquals("the attribute's name are not equal", clasz.getName(), updatedClass.getName());
 
 		String json = null;
 		try {
@@ -63,7 +68,6 @@ public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, 
 		} catch( final JsonProcessingException e ) {
 			LOG.error( e.getMessage(), e );
 		}
-
 		ClaszServiceTest.LOG.debug("class json: " + json);
 	}
 
@@ -71,8 +75,8 @@ public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, 
 	@Test
 	public void testUniquenessOfClasses() throws Exception {
 
-		final Clasz clasz1 = createClass();
-		final Clasz clasz2 = createClass();
+		final Clasz clasz1 = createAndUpdateClass();
+		final Clasz clasz2 = createAndUpdateClass();
 
 		Assert.assertNotNull("attribute1 shouldn't be null", clasz1);
 		Assert.assertNotNull("attribute2 shouldn't be null", clasz2);
@@ -92,10 +96,8 @@ public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, 
 	}
 
 
-	private Clasz createClass() throws Exception {
-		final Clasz clasz = claszServiceTestUtils.createClass( "http://purl.org/ontology/bibo/Document", "document" );
-		updateObjectTransactional(clasz);
-		final Clasz updatedClasz = getObject(clasz);
-		return updatedClasz;
+	private Clasz createAndUpdateClass() throws Exception {
+		final Clasz clasz = cstUtils.createClass( CLASS__DOCUMENT );
+		return updateObjectTransactional(clasz).getObject();
 	}
 }

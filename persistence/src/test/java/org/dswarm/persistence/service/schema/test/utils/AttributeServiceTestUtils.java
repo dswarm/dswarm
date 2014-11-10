@@ -19,14 +19,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.collect.Sets;
-
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
 import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.test.utils.AdvancedDMPJPAServiceTestUtils;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.Sets;
 
 public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<AttributeService, ProxyAttribute, Attribute> {
 
@@ -86,15 +86,27 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 	private static final Map<String, Tuple<String, String>> map2 = new HashMap<>();
 
 	static {
-
 		map2.put("http://purl.org/dc/terms/title", new Tuple<>("http://purl.org/dc/terms/title", "title"));
 		map2.put("http://purl.org/dc/terms/hasPart", new Tuple<>("http://purl.org/dc/terms/hasPart", "hasPart"));
 	}
 
 	private Map<String, Attribute> map = new HashMap<>();
 
-	public AttributeServiceTestUtils() {
 
+	
+	/**
+	 * "http://purl.org/dc/terms/title", "title"
+	 */
+	public static final int ATTRIBUTE__TITLE = 0;
+	
+	/**
+	 * "http://purl.org/dc/terms/hasPart", "hasPart"
+	 */
+	public static final int ATTRIBUTE__HAS_PART = 1;
+	
+	
+	
+	public AttributeServiceTestUtils() {
 		super(Attribute.class, AttributeService.class);
 	}
 
@@ -106,6 +118,28 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 		return updatedAttribute;
 	}
 
+	
+	/**
+	 * Convenience method to create default or known attributes.
+	 * @param identifier AttributeServiceTestUtils.ATTRIBUTE__...
+	 * @return
+	 * @throws Exception
+	 */
+	public Attribute createAttribute( int identifier ) throws Exception {
+		
+		//TODO think about the neccessity of the map
+		
+		switch( identifier ) {
+			case ATTRIBUTE__TITLE:
+				return createAttribute( "http://purl.org/dc/terms/title", "title" );
+			case ATTRIBUTE__HAS_PART:
+				return createAttribute( "http://purl.org/dc/terms/hasPart", "hasPart" );
+			default:
+				throw new IllegalArgumentException( "Identifier '" + identifier + "' not found!" );
+		}
+	}
+	
+	
 	@Override
 	public void deleteObject(final Attribute object) {
 
