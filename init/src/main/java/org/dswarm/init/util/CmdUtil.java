@@ -48,7 +48,7 @@ public class CmdUtil {
 	
 	public static void runCommand( final String command, final String output ) {
 		String[] osSpecificCommand;
-		if( System.getenv("OS").startsWith("Windows") ) {
+		if( System.getenv("OS") != null && System.getenv("OS").startsWith("Windows") ) {
 			osSpecificCommand = new String[] { "cmd.exe", "/c", command };				
 		} else {
 			osSpecificCommand = new String[] { command };	
