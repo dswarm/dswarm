@@ -24,17 +24,29 @@ import org.dswarm.persistence.service.job.test.utils.FilterServiceTestUtils;
 import org.dswarm.persistence.service.schema.MappingAttributePathInstanceService;
 import org.junit.Assert;
 
-public class MappingAttributePathInstanceServiceTestUtils extends
+import com.fasterxml.jackson.databind.JsonNode;
+
+public class MappingAttributePathInstanceServiceTestUtils
+		extends
 		AttributePathInstanceServiceTestUtils<MappingAttributePathInstanceService, ProxyMappingAttributePathInstance, MappingAttributePathInstance> {
 
-	private final FilterServiceTestUtils	filtersResourceTestUtils;
+	private FilterServiceTestUtils fstUtils;
+	private AttributePathServiceTestUtils apstUtils;
+
 
 	public MappingAttributePathInstanceServiceTestUtils() {
 
 		super(MappingAttributePathInstance.class, MappingAttributePathInstanceService.class);
-
-		filtersResourceTestUtils = new FilterServiceTestUtils();
 	}
+
+	
+	@Override
+	protected void initObjects() {
+		super.initObjects();
+		fstUtils = new FilterServiceTestUtils();
+		apstUtils = new AttributePathServiceTestUtils();
+	}
+	
 
 	/**
 	 * {@inheritDoc}<br />
@@ -46,54 +58,80 @@ public class MappingAttributePathInstanceServiceTestUtils extends
 	 * @param actualMappingAttributePathInstance
 	 */
 	@Override
-	public void compareObjects(final MappingAttributePathInstance expectedMappingAttributePathInstance,
-			final MappingAttributePathInstance actualMappingAttributePathInstance) {
+	public void compareObjects( final MappingAttributePathInstance expectedMappingAttributePathInstance,
+			final MappingAttributePathInstance actualMappingAttributePathInstance ) {
 
 		super.compareObjects(expectedMappingAttributePathInstance, actualMappingAttributePathInstance);
 
 		Assert.assertEquals("the ordinals of the mapping attribute path should be equal", expectedMappingAttributePathInstance.getOrdinal(),
 				actualMappingAttributePathInstance.getOrdinal());
 
-		if (expectedMappingAttributePathInstance.getFilter() == null) {
+		if( expectedMappingAttributePathInstance.getFilter() == null ) {
 
-			Assert.assertNull("the actual mapping attribute path instance should not have a filter", actualMappingAttributePathInstance.getFilter());
+			Assert.assertNull("the actual mapping attribute path instance should not have a filter",
+					actualMappingAttributePathInstance.getFilter());
 
 		} else {
 
-			filtersResourceTestUtils.compareObjects(expectedMappingAttributePathInstance.getFilter(), actualMappingAttributePathInstance.getFilter());
+			fstUtils.compareObjects(expectedMappingAttributePathInstance.getFilter(),
+					actualMappingAttributePathInstance.getFilter());
 		}
 	}
 
-	public MappingAttributePathInstance createMappingAttributePathInstance(final String name, final AttributePath attributePath, final Integer ordinal, final Filter filter) throws Exception {
+
+	public MappingAttributePathInstance createMappingAttributePathInstance( final String name, final AttributePath attributePath,
+			final Integer ordinal, final Filter filter ) throws Exception {
 		final MappingAttributePathInstance mappingAttributePathInstance = new MappingAttributePathInstance();
 		mappingAttributePathInstance.setName(name);
 		mappingAttributePathInstance.setAttributePath(attributePath);
 		mappingAttributePathInstance.setOrdinal(ordinal);
 		mappingAttributePathInstance.setFilter(filter);
-		final MappingAttributePathInstance updatedMappingAttributePathInstance = createObject(mappingAttributePathInstance,mappingAttributePathInstance);
+		final MappingAttributePathInstance updatedMappingAttributePathInstance = createObject(mappingAttributePathInstance,
+				mappingAttributePathInstance);
 		Assert.assertNotNull(updatedMappingAttributePathInstance.getId());
 		return updatedMappingAttributePathInstance;
 	}
 
 	
-	public MappingAttributePathInstance createMappingAttributePathInstance( final AttributePath attributePath ) throws Exception {
-		return createMappingAttributePathInstance( null, attributePath, 0, null );	//TODO review ordinal and filter
+	@Override
+	protected MappingAttributePathInstance createAttributePathInstance( String name, AttributePath attributePath, JsonNode objectDescription )
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
+
 	
+	public MappingAttributePathInstance createMappingAttributePathInstance( final AttributePath attributePath ) throws Exception {
+		return createMappingAttributePathInstance(null, attributePath, 0, null);
+	}
+
+
 	/**
 	 * Convenience method
 	 */
 	public MappingAttributePathInstance createMappingAttributePathInstance( final Attribute attribute ) throws Exception {
-		AttributePath attributePath = attributePathServiceTestUtils.createAttributePath( attribute );
-		return createMappingAttributePathInstance( attributePath );
+		AttributePath attributePath = attributePathServiceTestUtils.createAttributePath(attribute);
+		return createMappingAttributePathInstance(attributePath);
 	}
+
 	
+	/**
+	 * Constructs a sample attribute path instance consisting of the following attributes:<br>
+	 * "http://purl.org/dc/terms/title"<br>
+	 * "http://purl.org/dc/terms/hasPart"
+	 * @return
+	 * @throws Exception
+	 */
+	public MappingAttributePathInstance createDefaultMappingAttributePathInstance() throws Exception {
+		return createMappingAttributePathInstance( apstUtils.createDefaultAttributePath() );
+	}
+
 	/**
 	 * {@inheritDoc}<br/>
 	 */
 	@Override
-	protected MappingAttributePathInstance prepareObjectForUpdate(final MappingAttributePathInstance objectWithUpdates,
-			final MappingAttributePathInstance object) {
+	protected MappingAttributePathInstance prepareObjectForUpdate( final MappingAttributePathInstance objectWithUpdates,
+			final MappingAttributePathInstance object ) {
 
 		super.prepareObjectForUpdate(objectWithUpdates, object);
 
@@ -103,16 +141,43 @@ public class MappingAttributePathInstanceServiceTestUtils extends
 		return object;
 	}
 
+
 	@Override
 	public void reset() {
 
 		super.reset();
-//		filtersResourceTestUtils.reset();
+		// filtersResourceTestUtils.reset();
 	}
 
 
-	@Override
-	protected MappingAttributePathInstance createAttributePathInstance( AttributePath attributePath ) throws Exception {
-		return createMappingAttributePathInstance( attributePath );
+	/**
+	 * Creates a filter with name 'my filter' and the following expression:<br>
+	 * "SELECT ?identifier ?url\n" + "WHERE {\n" + "    ?record custmabxml:metadata ?metadata ;\n"
+				+ "            custmabxml:header ?header .\n" + "    ?header custmabxml:identifier ?identifier .\n"
+				+ "    ?metadata m:record ?mabrecord .\n" + "    ?mabrecord m:datafield ?dataField .\n" + "    ?dataField m:tag \"088\" ;\n"
+				+ "               m:ind1 \"a\" ;\n" + "               m:subfield ?subField .\n" + "    ?subField rdf:value ?url .\n" + "}"
+	 * @return
+	 * @throws Exception
+	 */
+	public Filter createDefaultFilter() throws Exception {
+		final String filterName = "my filter";
+
+		final String filterExpression = "SELECT ?identifier ?url\n" + "WHERE {\n" + "    ?record custmabxml:metadata ?metadata ;\n"
+				+ "            custmabxml:header ?header .\n" + "    ?header custmabxml:identifier ?identifier .\n"
+				+ "    ?metadata m:record ?mabrecord .\n" + "    ?mabrecord m:datafield ?dataField .\n" + "    ?dataField m:tag \"088\" ;\n"
+				+ "               m:ind1 \"a\" ;\n" + "               m:subfield ?subField .\n" + "    ?subField rdf:value ?url .\n" + "}";
+
+		return fstUtils.createFilter(filterName, filterExpression);
 	}
+
+
+	/**
+	 * Creates an ordinal with the value of 1
+	 * @return
+	 */
+	public Integer createDefaultOrdinal() {
+		return Integer.valueOf(1);
+	}
+	
 }
+

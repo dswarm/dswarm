@@ -42,7 +42,7 @@ public class SchemaAttributePathInstanceServiceTest extends
 	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	// TODO: generalize
-	private SchemaAttributePathInstanceServiceTestUtils sapsiUtils;
+	private SchemaAttributePathInstanceServiceTestUtils sapisUtils;
 
 
 	public SchemaAttributePathInstanceServiceTest() {
@@ -55,7 +55,7 @@ public class SchemaAttributePathInstanceServiceTest extends
 		super.initObjects();
 
 		// TODO: generalize
-		sapsiUtils = new SchemaAttributePathInstanceServiceTestUtils();
+		sapisUtils = new SchemaAttributePathInstanceServiceTestUtils();
 	}
 	
 	
@@ -65,7 +65,7 @@ public class SchemaAttributePathInstanceServiceTest extends
 
 		final Set<SchemaAttributePathInstance> objects = Sets.newLinkedHashSet();
 		for (int i = 0; i < 10; i++) {
-			objects.add( sapsiUtils.createDefaultSchemaAttributePathInstance() );
+			objects.add( sapisUtils.createDefaultSchemaAttributePathInstance() );
 		}
 		Assert.assertEquals(type + "s set size should be 10", 10, objects.size());
 		LOG.debug("end id generation test for " + type);
@@ -84,12 +84,14 @@ public class SchemaAttributePathInstanceServiceTest extends
 		
 		objectDescription.set( "attribute_ids", attributeIds );
 		
-		SchemaAttributePathInstance mapi = sapsiUtils.getObject( objectDescription );
+		SchemaAttributePathInstance mapi = sapisUtils.getObject( objectDescription );
 
 		// update mapping attribute path instance
 
 		final SchemaAttributePathInstance updatedMappingAttributePathInstance = updateObjectTransactional(mapi).getObject();
 
+		sapisUtils.compareObjects( mapi, updatedMappingAttributePathInstance );
+		
 		// Assert.assertNotNull( "the mapping attribute path instance's attribute paths of the updated mapping attribute path instance shouldn't be null", updatedMappingAttributePathInstance.getAttributePath() );
 		// Assert.assertEquals("the mapping attribute path instance's attribute paths are not equal",
 		// mappingAttributePathInstance.getAttributePath(),
@@ -134,15 +136,11 @@ public class SchemaAttributePathInstanceServiceTest extends
 		// updatedMappingAttributePathInstance.getFilter().getExpression());
 
 		String json = null;
-
 		try {
-
 			json = objectMapper.writeValueAsString(updatedMappingAttributePathInstance);
 		} catch( final JsonProcessingException e ) {
-
-			e.printStackTrace();
+			LOG.error( e.getMessage(), e );
 		}
-
 		SchemaAttributePathInstanceServiceTest.LOG.debug("schema attribute path instance json: " + json);
 	}
 }
