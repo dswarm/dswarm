@@ -124,6 +124,17 @@ public class SchemaAttributePathInstanceServiceTestUtils extends AttributePathIn
 		return createSchemaAttributePathInstance( apstUtils.createDefaultAttributePath() );
 	}
 	
+	/**
+	 * Creates a sample attribute path instance based on the default method but with a full set of its properties
+	 * @see #createDefaultSchemaAttributePathInstance()
+	 * @return
+	 * @throws Exception
+	 */
+	public SchemaAttributePathInstance createDefaultSchemaAttributePathInstanceFull() throws Exception {
+		SchemaAttributePathInstance sapi = createSchemaAttributePathInstance( apstUtils.createDefaultAttributePath() );
+		sapi.setSubSchema( sstUtils.createDefaultSchema() );
+		return sapi;
+	}
 
 	/**
 	 * {@inheritDoc}<br/>

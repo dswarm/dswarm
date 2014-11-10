@@ -127,6 +127,20 @@ public class MappingAttributePathInstanceServiceTestUtils
 	}
 
 	/**
+	 * Creates a sample attribute path instance based on the default method but with a full set of its properties
+	 * @see #createDefaultMappingAttributePathInstance()
+	 * @return
+	 * @throws Exception
+	 */
+	public MappingAttributePathInstance createDefaultMappingAttributePathInstanceFull() throws Exception {
+		MappingAttributePathInstance mapi = createDefaultMappingAttributePathInstance();
+		mapi.setOrdinal( Integer.valueOf(1) );
+		mapi.setFilter( fstUtils.createDefaultFilter() );
+		return mapi;
+	}
+	
+	
+	/**
 	 * {@inheritDoc}<br/>
 	 */
 	@Override
@@ -148,24 +162,5 @@ public class MappingAttributePathInstanceServiceTestUtils
 		// filtersResourceTestUtils.reset();
 	}
 
-
-	/**
-	 * @see FilterServiceTestUtils#createDefaultFilter()
-	 * @return
-	 * @throws Exception
-	 */
-	public Filter createDefaultFilter() throws Exception {
-		return fstUtils.createDefaultFilter();
-	}
-
-
-	/**
-	 * Creates an ordinal with the value of 1
-	 * @return
-	 */
-	public Integer createDefaultOrdinal() {
-		return Integer.valueOf(1);
-	}
-	
 }
 

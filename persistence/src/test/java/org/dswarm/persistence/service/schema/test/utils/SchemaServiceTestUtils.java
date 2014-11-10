@@ -15,6 +15,8 @@
  */
 package org.dswarm.persistence.service.schema.test.utils;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,46 +37,58 @@ import com.google.common.collect.Sets;
 
 public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaService, ProxySchema, Schema> {
 
+	private ClaszServiceTestUtils claszesResourceTestUtils;
+	private ContentSchemaServiceTestUtils contentSchemaServiceTestUtils;
+	private SchemaAttributePathInstanceServiceTestUtils schemaAttributePathInstanceResourceTestUtils;
 
-	private final ClaszServiceTestUtils			claszesResourceTestUtils;
-
-	private final ContentSchemaServiceTestUtils	contentSchemaServiceTestUtils;
-	private final SchemaAttributePathInstanceServiceTestUtils	schemaAttributePathInstanceResourceTestUtils;
-	
 	public SchemaServiceTestUtils() {
-		this( new SchemaAttributePathInstanceServiceTestUtils() );
+		this(new SchemaAttributePathInstanceServiceTestUtils());
 	}
 
 	public SchemaServiceTestUtils( SchemaAttributePathInstanceServiceTestUtils schemaAttributePathInstanceResourceTestUtils ) {
 		super(Schema.class, SchemaService.class);
+		this.schemaAttributePathInstanceResourceTestUtils = schemaAttributePathInstanceResourceTestUtils;
+		//TODO check this constructor!!!
+	}
+
+	
+	@Override
+	protected void initObjects() {
+		super.initObjects();
 		claszesResourceTestUtils = new ClaszServiceTestUtils();
 		contentSchemaServiceTestUtils = new ContentSchemaServiceTestUtils();
-		this.schemaAttributePathInstanceResourceTestUtils = schemaAttributePathInstanceResourceTestUtils;
 	}
 	
+
 	/**
 	 * {@inheritDoc} <br />
-	 * Assert that both {@link Schema}ta have either no or equal attribute paths, see
-	 * {@link AttributePathServiceTestUtils#compareObjects(Set, Map)} for details.<br />
-	 * Assert that both {@link Schema}ta have either no or equal record classes, see
-	 * {@link ClaszServiceTestUtils#compareObjects(org.dswarm.persistence.model.DMPObject, org.dswarm.persistence.model.DMPObject)} for details.<br />
+	 * Assert that both {@link Schema}ta have either no or equal attribute paths,
+	 * see {@link AttributePathServiceTestUtils#compareObjects(Set, Map)} for
+	 * details.<br />
+	 * Assert that both {@link Schema}ta have either no or equal record classes,
+	 * see
+	 * {@link ClaszServiceTestUtils#compareObjects(org.dswarm.persistence.model.DMPObject, org.dswarm.persistence.model.DMPObject)}
+	 * for details.<br />
 	 */
 	@Override
-	public void compareObjects(final Schema expectedSchema, final Schema actualSchema) {
+	public void compareObjects( final Schema expectedSchema, final Schema actualSchema ) {
 
 		super.compareObjects(expectedSchema, actualSchema);
 
-		if (expectedSchema.getUniqueAttributePaths() == null || expectedSchema.getUniqueAttributePaths().isEmpty()) {
+		if( expectedSchema.getUniqueAttributePaths() == null || expectedSchema.getUniqueAttributePaths().isEmpty() ) {
 
-			final boolean actualSchemaHasNoAttributePaths = (actualSchema.getUniqueAttributePaths() == null || actualSchema.getUniqueAttributePaths().isEmpty());
+			final boolean actualSchemaHasNoAttributePaths = (actualSchema.getUniqueAttributePaths() == null || actualSchema
+					.getUniqueAttributePaths().isEmpty());
 			Assert.assertTrue("the actual schema '" + actualSchema.getId() + "' shouldn't have attribute paths", actualSchemaHasNoAttributePaths);
 
 		} else { // !null && !empty
 
 			final Set<SchemaAttributePathInstance> actualAttributePaths = actualSchema.getUniqueAttributePaths();
 
-			Assert.assertNotNull("attribute path instances of actual schema '" + actualSchema.getId() + "' shouldn't be null", actualAttributePaths);
-			Assert.assertFalse("attribute path instances of actual schema '" + actualSchema.getId() + "' shouldn't be empty", actualAttributePaths.isEmpty());
+			Assert.assertNotNull("attribute path instances of actual schema '" + actualSchema.getId() + "' shouldn't be null",
+					actualAttributePaths);
+			Assert.assertFalse("attribute path instances of actual schema '" + actualSchema.getId() + "' shouldn't be empty",
+					actualAttributePaths.isEmpty());
 
 			final Map<Long, SchemaAttributePathInstance> actualAttributePathsMap = Maps.newHashMap();
 
@@ -86,7 +100,7 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 			schemaAttributePathInstanceResourceTestUtils.compareObjects(expectedSchema.getUniqueAttributePaths(), actualAttributePathsMap);
 		}
 
-		if (expectedSchema.getRecordClass() == null) {
+		if( expectedSchema.getRecordClass() == null ) {
 
 			Assert.assertNull("the actual schema '" + actualSchema.getId() + "' shouldn't have a record class", actualSchema.getRecordClass());
 
@@ -95,14 +109,15 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 			claszesResourceTestUtils.compareObjects(expectedSchema.getRecordClass(), actualSchema.getRecordClass());
 		}
 
-		if (expectedSchema.getContentSchema() != null) {
+		if( expectedSchema.getContentSchema() != null ) {
 
 			contentSchemaServiceTestUtils.compareObjects(expectedSchema.getContentSchema(), actualSchema.getContentSchema());
 		}
 	}
 
-	
-	public Schema createSchema(final String name, final Set<SchemaAttributePathInstance> attributePaths, final Clasz recordClass) throws Exception {
+
+	public Schema createSchema( final String name, final Collection<SchemaAttributePathInstance> attributePaths, final Clasz recordClass )
+			throws Exception {
 
 		final Schema schema = new Schema();
 
@@ -120,28 +135,38 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 		return updatedSchema;
 	}
 
-	
-	public void removeAddedAttributePathsFromOutputModelSchema(final Schema outputDataModelSchema, final Map<Long, Attribute> attributes,
-			final Map<Long, SchemaAttributePathInstance> attributePaths) throws DMPPersistenceException {
+	public Schema createSchema( final String name, final SchemaAttributePathInstance[] attributePaths, final Clasz recordClass )
+			throws Exception {
+		return createSchema(name, Arrays.asList(attributePaths), recordClass );
+	}
+
+	public Schema createDefaultSchema() throws Exception {
+		return createSchema("my schema", new SchemaAttributePathInstance[]{ schemaAttributePathInstanceResourceTestUtils.createDefaultSchemaAttributePathInstance() }, claszesResourceTestUtils.createDefaultClass() );
+	}
+
+
+	public void removeAddedAttributePathsFromOutputModelSchema( final Schema outputDataModelSchema, final Map<Long, Attribute> attributes,
+			final Map<Long, SchemaAttributePathInstance> attributePaths ) throws DMPPersistenceException {
 
 		final Set<SchemaAttributePathInstance> outputDataModelSchemaAttributePathRemovalCandidates = Sets.newHashSet();
 
-		// collect attribute paths of attributes that were created via processing the transformation result
-		if (outputDataModelSchema != null) {
+		// collect attribute paths of attributes that were created via processing
+		// the transformation result
+		if( outputDataModelSchema != null ) {
 
 			final Set<SchemaAttributePathInstance> outputDataModelSchemaAttributePaths = outputDataModelSchema.getUniqueAttributePaths();
 
-			if (outputDataModelSchemaAttributePaths != null) {
+			if( outputDataModelSchemaAttributePaths != null ) {
 
 				for (final SchemaAttributePathInstance outputDataModelSchemaAttributePath : outputDataModelSchemaAttributePaths) {
-					
+
 					final AttributePath outputDataModelSchemaAttributePath2 = outputDataModelSchemaAttributePath.getAttributePath();
 
 					final Set<Attribute> outputDataModelSchemaAttributePathAttributes = outputDataModelSchemaAttributePath2.getAttributes();
 
 					for (final Attribute outputDataModelSchemaAttribute : outputDataModelSchemaAttributePathAttributes) {
 
-						if (attributes.containsKey(outputDataModelSchemaAttribute.getId())) {
+						if( attributes.containsKey(outputDataModelSchemaAttribute.getId()) ) {
 
 							// found candidate for removal
 
@@ -165,12 +190,13 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 		jpaService.updateObjectTransactional(outputDataModelSchema);
 	}
 
+
 	/**
 	 * {@inheritDoc}<br/>
 	 * Updates the name, attribute paths and record class of the schema.
 	 */
 	@Override
-	protected Schema prepareObjectForUpdate(final Schema objectWithUpdates, final Schema object) {
+	protected Schema prepareObjectForUpdate( final Schema objectWithUpdates, final Schema object ) {
 
 		super.prepareObjectForUpdate(objectWithUpdates, object);
 
@@ -185,15 +211,17 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 		return object;
 	}
 
+
 	@Override
 	public void reset() {
 		claszesResourceTestUtils.reset();
 	}
-	
-	
+
+
 	@Override
 	public Schema getObject( JsonNode objectDescription ) throws Exception {
-		//TODO create schema from object description
+		// TODO create schema from object description
 		return null;
 	}
+
 }

@@ -74,6 +74,10 @@ public class ClaszServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<ClaszS
 	}
 	
 	
+	public Clasz createDefaultClass() throws Exception {
+		return createClass( CLASS__DOCUMENT );
+	}
+	
 	
 	@Override
 	public void deleteObject(final Clasz object) {

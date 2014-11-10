@@ -57,15 +57,15 @@ public class SchemaAttributePathInstanceServiceTest extends
 		// TODO: generalize
 		sapisUtils = new SchemaAttributePathInstanceServiceTestUtils();
 	}
-	
-	
+
+
 	@Test
 	public void idGenerationTest2() throws Exception {
 		LOG.debug("start id generation test for " + type);
 
 		final Set<SchemaAttributePathInstance> objects = Sets.newLinkedHashSet();
 		for (int i = 0; i < 10; i++) {
-			objects.add( sapisUtils.createDefaultSchemaAttributePathInstance() );
+			objects.add(sapisUtils.createDefaultSchemaAttributePathInstance());
 		}
 		Assert.assertEquals(type + "s set size should be 10", 10, objects.size());
 		LOG.debug("end id generation test for " + type);
@@ -76,70 +76,53 @@ public class SchemaAttributePathInstanceServiceTest extends
 	public void testSimpleSchemaAttributePathInstance() throws Exception {
 
 		ObjectNode objectDescription = objectMapper.createObjectNode();
-		
-		ArrayNode attributeIds = objectMapper.createArrayNode();
-		attributeIds.add( "http://purl.org/dc/terms/title" );
-		attributeIds.add( "http://purl.org/dc/terms/hasPart" );
-		attributeIds.add( "http://purl.org/dc/terms/title" );
-		
-		objectDescription.set( "attribute_ids", attributeIds );
-		
-		SchemaAttributePathInstance mapi = sapisUtils.getObject( objectDescription );
 
-		// update mapping attribute path instance
+		ArrayNode attributeIds = objectMapper.createArrayNode();
+		attributeIds.add("http://purl.org/dc/terms/title");
+		attributeIds.add("http://purl.org/dc/terms/hasPart");
+		attributeIds.add("http://purl.org/dc/terms/title");
+
+		objectDescription.set("attribute_ids", attributeIds);
+
+		SchemaAttributePathInstance mapi = sapisUtils.getObject(objectDescription);
 
 		final SchemaAttributePathInstance updatedMappingAttributePathInstance = updateObjectTransactional(mapi).getObject();
 
-		sapisUtils.compareObjects( mapi, updatedMappingAttributePathInstance );
-		
-		// Assert.assertNotNull( "the mapping attribute path instance's attribute paths of the updated mapping attribute path instance shouldn't be null", updatedMappingAttributePathInstance.getAttributePath() );
-		// Assert.assertEquals("the mapping attribute path instance's attribute paths are not equal",
-		// mappingAttributePathInstance.getAttributePath(),
-		// updatedMappingAttributePathInstance.getAttributePath());
-		// Assert.assertNotNull("the attribute path's attributes of the attribute path '"
-		// + attributePath1.getId()
-		// +
-		// "' of the updated mapping attribute path instance shouldn't be null",
-		// updatedMappingAttributePathInstance.getAttributePath()
-		// .getAttributes());
-		// Assert.assertEquals("the attribute path's attributes size of attribute path '"
-		// + attributePath1.getId() + "' are not equal",
-		// attributePath1.getAttributes(),
-		// updatedMappingAttributePathInstance.getAttributePath().getAttributes());
-		// Assert.assertEquals("the first attributes of attribute path '" +
-		// attributePath1.getId() + "' are not equal", attributePath1
-		// .getAttributePath().get(0),
-		// updatedMappingAttributePathInstance.getAttributePath().getAttributePath().get(0));
-		// Assert.assertNotNull("the attribute path string of attribute path '"
-		// + attributePath1.getId()
-		// +
-		// "' of the updated mapping attribute path instance shouldn't be null",
-		// updatedMappingAttributePathInstance.getAttributePath()
-		// .toAttributePath());
-		// Assert.assertEquals("the attribute path's strings attribute path '" +
-		// attributePath1.getId() + "' are not equal",
-		// attributePath1.toAttributePath(),
-		// updatedMappingAttributePathInstance.getAttributePath().toAttributePath());
-		// Assert.assertNotNull("the mapping attribute path instance's ordinals of the updated mapping attribute path instance shouldn't be null",
-		// updatedMappingAttributePathInstance.getAttributePath());
-		// Assert.assertEquals("the mapping attribute path instance's ordinals are not equal",
-		// mappingAttributePathInstance.getOrdinal(),
-		// updatedMappingAttributePathInstance.getOrdinal());
-		// Assert.assertNotNull("the mapping attribute path instance's filters of the updated mapping attribute path instance shouldn't be null",
-		// updatedMappingAttributePathInstance.getFilter());
-		// Assert.assertEquals("the mapping attribute path instance's filters are not equal",
-		// mappingAttributePathInstance.getFilter(),
-		// updatedMappingAttributePathInstance.getFilter());
-		// Assert.assertEquals("the mapping attribute path instance's filter's expressions are not equal",
-		// mappingAttributePathInstance.getFilter()
-		// .getExpression(),
-		// updatedMappingAttributePathInstance.getFilter().getExpression());
+		sapisUtils.compareObjects(mapi, updatedMappingAttributePathInstance);
+
+		Assert.assertNotNull(
+				"the mapping attribute path instance's attribute paths of the updated mapping attribute path instance shouldn't be null",
+				updatedMappingAttributePathInstance.getAttributePath());
+		Assert.assertEquals("the mapping attribute path instance's attribute paths are not equal",
+				mapi.getAttributePath(), updatedMappingAttributePathInstance.getAttributePath());
+		Assert.assertNotNull("the attribute path's attributes of the attribute path '" + attributePath1.getId()
+				+ "' of the updated mapping attribute path instance shouldn't be null", updatedMappingAttributePathInstance.getAttributePath()
+				.getAttributes());
+		Assert.assertEquals("the attribute path's attributes size of attribute path '" + attributePath1.getId() + "' are not equal",
+				attributePath1.getAttributes(), updatedMappingAttributePathInstance.getAttributePath().getAttributes());
+		Assert.assertEquals("the first attributes of attribute path '" + attributePath1.getId() + "' are not equal", attributePath1
+				.getAttributePath().get(0), updatedMappingAttributePathInstance.getAttributePath().getAttributePath().get(0));
+		Assert.assertNotNull("the attribute path string of attribute path '" + attributePath1.getId()
+				+ "' of the updated mapping attribute path instance shouldn't be null", updatedMappingAttributePathInstance.getAttributePath()
+				.toAttributePath());
+		Assert.assertEquals("the attribute path's strings attribute path '" + attributePath1.getId() + "' are not equal",
+				attributePath1.toAttributePath(), updatedMappingAttributePathInstance.getAttributePath().toAttributePath());
+		Assert.assertNotNull("the mapping attribute path instance's ordinals of the updated mapping attribute path instance shouldn't be null",
+				updatedMappingAttributePathInstance.getAttributePath());
+		Assert.assertEquals("the mapping attribute path instance's ordinals are not equal", mapi.getOrdinal(),
+				updatedMappingAttributePathInstance.getOrdinal());
+		Assert.assertNotNull("the mapping attribute path instance's filters of the updated mapping attribute path instance shouldn't be null",
+				updatedMappingAttributePathInstance.getFilter());
+		Assert.assertEquals("the mapping attribute path instance's filters are not equal", mapi.getFilter(),
+				updatedMappingAttributePathInstance.getFilter());
+		Assert.assertEquals("the mapping attribute path instance's filter's expressions are not equal", mapi
+				.getFilter().getExpression(), updatedMappingAttributePathInstance.getFilter().getExpression());
 
 		String json = null;
 		try {
 			json = objectMapper.writeValueAsString(updatedMappingAttributePathInstance);
 		} catch( final JsonProcessingException e ) {
-			LOG.error( e.getMessage(), e );
+			LOG.error(e.getMessage(), e);
 		}
 		SchemaAttributePathInstanceServiceTest.LOG.debug("schema attribute path instance json: " + json);
 	}
