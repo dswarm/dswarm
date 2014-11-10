@@ -73,9 +73,6 @@ public class AttributeServiceTest extends AdvancedJPAServiceTest<ProxyAttribute,
 		}
 
 		AttributeServiceTest.LOG.debug("attribute json: " + json);
-
-		// clean up DB
-		deleteObject(attribute.getId());
 	}
 
 
@@ -100,9 +97,6 @@ public class AttributeServiceTest extends AdvancedJPAServiceTest<ProxyAttribute,
 		Assert.assertNotNull("attribute1 uri shouldn't be empty", attribute1.getName().trim().isEmpty());
 		Assert.assertNotNull("attribute2 uri shouldn't be empty", attribute2.getName().trim().isEmpty());
 		Assert.assertEquals("the attribute uris should be equal", attribute1.getName(), attribute2.getName());
-
-		// clean up DB
-		deleteObject(attribute1.getId());
 	}
 
 
