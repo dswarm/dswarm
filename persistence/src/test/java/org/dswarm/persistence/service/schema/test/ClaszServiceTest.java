@@ -15,41 +15,39 @@
  */
 package org.dswarm.persistence.service.schema.test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Assert;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.proxy.ProxyClasz;
 import org.dswarm.persistence.service.schema.ClaszService;
 import org.dswarm.persistence.service.schema.test.utils.ClaszServiceTestUtils;
 import org.dswarm.persistence.service.test.AdvancedJPAServiceTest;
+import org.junit.Assert;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, ClaszService> {
 
-	private static final Logger			LOG				= LoggerFactory.getLogger(ClaszServiceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ClaszServiceTest.class);
 
-	private final ObjectMapper			objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	private final ClaszServiceTestUtils	claszServiceTestUtils;
+	private final ClaszServiceTestUtils claszServiceTestUtils;
+
 
 	public ClaszServiceTest() {
-
 		super("class", ClaszService.class);
-
 		claszServiceTestUtils = new ClaszServiceTestUtils();
 	}
 
+
 	@Test
-	public void testSimpleAttribute() {
+	public void testSimpleAttribute() throws Exception {
 
-		final Clasz clasz = createObject("http://purl.org/ontology/bibo/Document").getObject();
-
-		clasz.setName("document");
+		final Clasz clasz = claszServiceTestUtils.createClass( "http://purl.org/ontology/bibo/Document", "document" );
 
 		updateObjectTransactional(clasz);
 
@@ -59,23 +57,19 @@ public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, 
 		Assert.assertEquals("the attribute's name are not equal", clasz.getName(), updatedClass.getName());
 
 		String json = null;
-
 		try {
 
 			json = objectMapper.writeValueAsString(updatedClass);
-		} catch (final JsonProcessingException e) {
-
-			e.printStackTrace();
+		} catch( final JsonProcessingException e ) {
+			LOG.error( e.getMessage(), e );
 		}
 
 		ClaszServiceTest.LOG.debug("class json: " + json);
-
-		// clean up DB
-		claszServiceTestUtils.deleteObject(clasz);
 	}
 
+
 	@Test
-	public void testUniquenessOfClasses() {
+	public void testUniquenessOfClasses() throws Exception {
 
 		final Clasz clasz1 = createClass();
 		final Clasz clasz2 = createClass();
@@ -95,21 +89,13 @@ public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, 
 		Assert.assertNotNull("attribute1 uri shouldn't be empty", clasz1.getName().trim().isEmpty());
 		Assert.assertNotNull("attribute2 uri shouldn't be empty", clasz2.getName().trim().isEmpty());
 		Assert.assertEquals("the attribute uris should be equal", clasz1.getName(), clasz2.getName());
-
-		// clean up DB
-		claszServiceTestUtils.deleteObject(clasz1);
 	}
 
-	private Clasz createClass() {
 
-		final Clasz clasz = createObject("http://purl.org/ontology/bibo/Document").getObject();
-
-		clasz.setName("document");
-
+	private Clasz createClass() throws Exception {
+		final Clasz clasz = claszServiceTestUtils.createClass( "http://purl.org/ontology/bibo/Document", "document" );
 		updateObjectTransactional(clasz);
-
 		final Clasz updatedClasz = getObject(clasz);
-
 		return updatedClasz;
 	}
 }
