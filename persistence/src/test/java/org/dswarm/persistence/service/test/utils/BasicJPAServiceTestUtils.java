@@ -15,6 +15,7 @@
  */
 package org.dswarm.persistence.service.test.utils;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import org.dswarm.persistence.model.DMPObject;
 import org.dswarm.persistence.model.proxy.ProxyDMPObject;
 import org.dswarm.persistence.service.BasicJPAService;
 import org.dswarm.persistence.service.test.BasicJPAServiceTest;
+
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,11 +49,12 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 	protected final Class<POJOCLASSPERSISTENCESERVICE>	persistenceServiceClass;
 
 	protected final ObjectMapper						objectMapper;
+	
+	protected Map<String, POJOCLASS> cache = new HashMap<>();
 
-	
-	
 	public abstract POJOCLASS getObject( final JsonNode objectDescription) throws Exception;
 	
+	public abstract POJOCLASS getObject(final String identifier) throws Exception;
 	
 	public BasicJPAServiceTestUtils(final Class<POJOCLASS> pojoClassArg, final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg) {
 

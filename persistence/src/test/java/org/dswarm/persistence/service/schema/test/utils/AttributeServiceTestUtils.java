@@ -15,14 +15,11 @@
  */
 package org.dswarm.persistence.service.schema.test.utils;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Sets;
 
-import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
 import org.dswarm.persistence.model.types.Tuple;
@@ -87,22 +84,19 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 		AttributeServiceTestUtils.excludeSubAttributes.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code");
 	}
 
-	private static final Map<String, Tuple<String, String>> commonsAttributesMap = new HashMap<>();
-
 	static {
 
-		commonsAttributesMap.put(DCTERMS_TITLE, new Tuple<>(DCTERMS_TITLE, "title"));
-		commonsAttributesMap.put(DCTERMS_HASPART, new Tuple<>(DCTERMS_HASPART, "hasPart"));
+		commonTermsMap.put(DCTERMS_TITLE, new Tuple<>(DCTERMS_TITLE, "title"));
+		commonTermsMap.put(DCTERMS_HASPART, new Tuple<>(DCTERMS_HASPART, "hasPart"));
 	}
-
-	private Map<String, Attribute> map = new HashMap<>();
 
 	public AttributeServiceTestUtils() {
 
 		super(Attribute.class, AttributeService.class);
 	}
 
-	public Attribute createAttribute(final String id, final String name) throws Exception {
+	@Override
+	public Attribute createObject(final String id, final String name) throws Exception {
 
 		final Attribute attribute = new Attribute(id, name);
 
@@ -138,38 +132,14 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 
 	}
 
-	/**
-	 * note: if the attribute was created before, you'll get the cached result. if you would like to get a fresh attribute from the database (e.g. for uniqueness test etc.), then you should utilise the #createAttribute(String, String) method
-	 * 
-	 * @param identifier
-	 * @return
-	 * @throws Exception
-	 */
-	public Attribute getAttribute(final String identifier) throws Exception {
-
-		if (!map.containsKey(identifier)) {
-
-			if(!commonsAttributesMap.containsKey(identifier)) {
-
-				throw new DMPPersistenceException(identifier + " is no common, please define it or utilise AttributeServiceTestUtils#createAttribute(Attribute)");
-			}
-
-			final Tuple<String, String> tuple = commonsAttributesMap.get(identifier);
-
-			map.put(identifier, createAttribute(tuple.v1(), tuple.v2()));
-		}
-
-		return map.get(identifier);
-	}
-
 	public Attribute getDctermsTitle() throws Exception {
 
-		return getAttribute(DCTERMS_TITLE);
+		return getObject(DCTERMS_TITLE);
 	}
 
 	public Attribute getDctermsHaspart() throws Exception {
 
-		return getAttribute(DCTERMS_HASPART);
+		return getObject(DCTERMS_HASPART);
 	}
 
 	@Override

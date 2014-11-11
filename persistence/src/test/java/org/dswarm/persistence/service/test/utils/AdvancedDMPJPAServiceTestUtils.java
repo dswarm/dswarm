@@ -15,15 +15,22 @@
  */
 package org.dswarm.persistence.service.test.utils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Assert;
 
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.AdvancedDMPJPAObject;
 import org.dswarm.persistence.model.proxy.ProxyAdvancedDMPJPAObject;
+import org.dswarm.persistence.model.schema.Attribute;
+import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.AdvancedDMPJPAService;
 
 public abstract class AdvancedDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE extends AdvancedDMPJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyAdvancedDMPJPAObject<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
 		extends BasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
+	
+	protected static final Map<String, Tuple<String, String>> commonTermsMap = new HashMap<>();
 
 	public AdvancedDMPJPAServiceTestUtils(final Class<POJOCLASS> pojoClassArg, final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg) {
 
@@ -51,4 +58,31 @@ public abstract class AdvancedDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE
 
 		return jpaService.createObjectTransactional(object);
 	}
+	
+	/**
+	 * note: if the object was created before, you'll get the cached result. if you would like to get a fresh object from the database (e.g. for uniqueness test etc.), then you should utilise, e.g., the #createAttribute(String, String) method (of the concrete implementation)
+	 * 
+	 * @param identifier
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public POJOCLASS getObject(final String identifier) throws Exception {
+
+		if (!cache.containsKey(identifier)) {
+
+			if(!commonTermsMap.containsKey(identifier)) {
+
+				throw new DMPPersistenceException(identifier + " is no common object, please define it or utilise another appropriated method for creating it");
+			}
+
+			final Tuple<String, String> tuple = commonTermsMap.get(identifier);
+
+			cache.put(identifier, createObject(tuple.v1(), tuple.v2()));
+		}
+
+		return cache.get(identifier);
+	}
+	
+	public abstract POJOCLASS createObject(final String identifier, final String name) throws Exception;
 }

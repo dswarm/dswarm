@@ -75,7 +75,7 @@ public class AttributeServiceTest extends AdvancedJPAServiceTest<ProxyAttribute,
 
 	private Attribute createAndUpdateAttribute() throws Exception {
 
-		final Attribute attribute = astUtils.createAttribute(AttributeServiceTestUtils.DCTERMS_TITLE, "title");
+		final Attribute attribute = astUtils.createObject(AttributeServiceTestUtils.DCTERMS_TITLE, "title");
 
 		return astUtils.updateObject(attribute, attribute);
 	}
