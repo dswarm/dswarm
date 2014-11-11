@@ -19,19 +19,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.Sets;
+
+import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
 import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.test.utils.AdvancedDMPJPAServiceTestUtils;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.collect.Sets;
-
 public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<AttributeService, ProxyAttribute, Attribute> {
 
-	public static final Set<String>	excludeAttributes		= Sets.newHashSet();
-	public static final Set<String>	excludeSubAttributes	= Sets.newHashSet();
+	public static final String DCTERMS_TITLE = "http://purl.org/dc/terms/title";
+	public static final String DCTERMS_HASPART = "http://purl.org/dc/terms/hasPart";
+
+	public static final Set<String> excludeAttributes    = Sets.newHashSet();
+	public static final Set<String> excludeSubAttributes = Sets.newHashSet();
 
 	static {
 
@@ -83,63 +87,28 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 		AttributeServiceTestUtils.excludeSubAttributes.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code");
 	}
 
-	private static final Map<String, Tuple<String, String>> map2 = new HashMap<>();
+	private static final Map<String, Tuple<String, String>> commonsAttributesMap = new HashMap<>();
 
 	static {
-		map2.put("http://purl.org/dc/terms/title", new Tuple<>("http://purl.org/dc/terms/title", "title"));
-		map2.put("http://purl.org/dc/terms/hasPart", new Tuple<>("http://purl.org/dc/terms/hasPart", "hasPart"));
+
+		commonsAttributesMap.put(DCTERMS_TITLE, new Tuple<>(DCTERMS_TITLE, "title"));
+		commonsAttributesMap.put(DCTERMS_HASPART, new Tuple<>(DCTERMS_HASPART, "hasPart"));
 	}
 
 	private Map<String, Attribute> map = new HashMap<>();
 
-
-	
-	/**
-	 * "http://purl.org/dc/terms/title", "title"
-	 */
-	public static final int ATTRIBUTE__TITLE = 0;
-	
-	/**
-	 * "http://purl.org/dc/terms/hasPart", "hasPart"
-	 */
-	public static final int ATTRIBUTE__HAS_PART = 1;
-	
-	
-	
 	public AttributeServiceTestUtils() {
+
 		super(Attribute.class, AttributeService.class);
 	}
 
 	public Attribute createAttribute(final String id, final String name) throws Exception {
 
 		final Attribute attribute = new Attribute(id, name);
-		final Attribute updatedAttribute = createObject(attribute, attribute);
 
-		return updatedAttribute;
+		return createObject(attribute, attribute);
 	}
 
-	
-	/**
-	 * Convenience method to create default or known attributes.
-	 * @param identifier AttributeServiceTestUtils.ATTRIBUTE__...
-	 * @return
-	 * @throws Exception
-	 */
-	public Attribute createAttribute( int identifier ) throws Exception {
-		
-		//TODO think about the neccessity of the map
-		
-		switch( identifier ) {
-			case ATTRIBUTE__TITLE:
-				return createAttribute( "http://purl.org/dc/terms/title", "title" );
-			case ATTRIBUTE__HAS_PART:
-				return createAttribute( "http://purl.org/dc/terms/hasPart", "hasPart" );
-			default:
-				throw new IllegalArgumentException( "Identifier '" + identifier + "' not found!" );
-		}
-	}
-	
-	
 	@Override
 	public void deleteObject(final Attribute object) {
 
@@ -169,20 +138,43 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 
 	}
 
-	public Attribute getAttribute(final String name) throws Exception {
+	/**
+	 * note: if the attribute was created before, you'll get the cached result. if you would like to get a fresh attribute from the database (e.g. for uniqueness test etc.), then you should utilise the #createAttribute(String, String) method
+	 * 
+	 * @param identifier
+	 * @return
+	 * @throws Exception
+	 */
+	public Attribute getAttribute(final String identifier) throws Exception {
 
-		if (!map.containsKey(name)) {
+		if (!map.containsKey(identifier)) {
 
-			Tuple<String, String> tuple = map2.get(name);
+			if(!commonsAttributesMap.containsKey(identifier)) {
 
-			map.put(name, createAttribute(tuple.v1(), tuple.v2()));
+				throw new DMPPersistenceException(identifier + " is no common, please define it or utilise AttributeServiceTestUtils#createAttribute(Attribute)");
+			}
+
+			final Tuple<String, String> tuple = commonsAttributesMap.get(identifier);
+
+			map.put(identifier, createAttribute(tuple.v1(), tuple.v2()));
 		}
 
-		return map.get(name);
+		return map.get(identifier);
+	}
+
+	public Attribute getDctermsTitle() throws Exception {
+
+		return getAttribute(DCTERMS_TITLE);
+	}
+
+	public Attribute getDctermsHaspart() throws Exception {
+
+		return getAttribute(DCTERMS_HASPART);
 	}
 
 	@Override
 	public Attribute getObject(JsonNode objectDescription) throws Exception {
+
 		// TODO Auto-generated method stub
 		return null;
 	}

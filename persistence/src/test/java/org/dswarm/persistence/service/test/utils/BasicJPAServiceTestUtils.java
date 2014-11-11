@@ -148,6 +148,14 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 		return responseObject;
 	}
 
+	/**
+	 * creates an object and compares the result via #compareObjects
+	 *
+	 * @param object
+	 * @param expectedObject
+	 * @return
+	 * @throws Exception
+	 */
 	public POJOCLASS createObject(final POJOCLASS object, final POJOCLASS expectedObject) throws Exception {
 
 		PROXYPOJOCLASS proxyObject = null;
