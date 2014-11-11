@@ -27,8 +27,8 @@
 .project
 .metadata
 bin/**
-tmp/**
-tmp/**/*
+*/tmp/**
+*/tmp/**/*
 *.tmp
 *.bak
 *~.nib
