@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# deprecated, use reset-dbs.py instead
+
 DIR="$( dirname "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" )"
 
 MYSQL_PW=${MYSQL_PW:="dmp"}
