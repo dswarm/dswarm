@@ -23,7 +23,6 @@ import org.junit.Assert;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.AdvancedDMPJPAObject;
 import org.dswarm.persistence.model.proxy.ProxyAdvancedDMPJPAObject;
-import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.AdvancedDMPJPAService;
 

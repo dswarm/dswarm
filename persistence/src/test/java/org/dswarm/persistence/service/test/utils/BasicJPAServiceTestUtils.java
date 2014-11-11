@@ -56,6 +56,8 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 	
 	public abstract POJOCLASS getObject(final String identifier) throws Exception;
 	
+	public abstract POJOCLASS getDefaultObject() throws Exception;
+	
 	public BasicJPAServiceTestUtils(final Class<POJOCLASS> pojoClassArg, final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg) {
 
 		super(pojoClassArg.getSimpleName(), persistenceServiceClassArg);

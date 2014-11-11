@@ -149,4 +149,10 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 		return null;
 	}
 
+	@Override
+	public Attribute getDefaultObject() throws Exception {
+		
+		return getDctermsTitle();
+	}
+
 }
