@@ -63,8 +63,6 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttribu
 
 		apstUtils.compareObjects(attributePath, updatedAttributePath);
 
-		// TODO not sure whether all is covered by base classes - to complicated to
-		// trace back the coverage!!!
 		Assert.assertNotNull("the attribute path's attribute of the updated attribute path shouldn't be null",
 				updatedAttributePath.getAttributes());
 		Assert.assertEquals("the attribute path's attributes are not equal", attributePath.getAttributes(),
