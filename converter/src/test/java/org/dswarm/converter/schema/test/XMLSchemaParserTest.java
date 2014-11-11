@@ -58,7 +58,7 @@ public class XMLSchemaParserTest extends GuicedTest {
 		GuicedTest.tearDown();
 		GuicedTest.startUp();
 		initObjects();
-		// maintainDBService.initDB();
+		maintainDBService.createTables();
 		maintainDBService.truncateTables();
 	}
 
@@ -67,7 +67,6 @@ public class XMLSchemaParserTest extends GuicedTest {
 		GuicedTest.tearDown();
 		GuicedTest.startUp();
 		initObjects();
-		// maintainDBService.initDB();
 		maintainDBService.truncateTables();
 	}
 
