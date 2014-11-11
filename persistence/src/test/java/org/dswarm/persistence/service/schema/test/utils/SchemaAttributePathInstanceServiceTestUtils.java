@@ -40,7 +40,7 @@ public class SchemaAttributePathInstanceServiceTestUtils extends AttributePathIn
 	@Override
 	protected void initObjects() {
 		super.initObjects();
-		sstUtils = new SchemaServiceTestUtils( this );
+		sstUtils = new SchemaServiceTestUtils();
 		apstUtils = new AttributePathServiceTestUtils();
 	}
 	
