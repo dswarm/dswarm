@@ -50,7 +50,7 @@ public class MappingAttributePathInstanceServiceTest extends
 	@Test
 	public void testSimpleMappingAttributePathInstance() throws Exception {
 
-		final MappingAttributePathInstance mapi = mapisUtils.getDefaultCompleteObject();
+		final MappingAttributePathInstance mapi = mapisUtils.createDefaultCompleteObject();
 
 		final MappingAttributePathInstance updatedMappingAttributePathInstance = mapisUtils.updateObject(mapi, mapi);
 

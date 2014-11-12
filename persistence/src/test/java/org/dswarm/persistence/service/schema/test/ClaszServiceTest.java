@@ -52,7 +52,7 @@ public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, 
 
 	@Test
 	public void testSimpleAttribute() throws Exception {
-		final Clasz clasz = cstUtils.getDefaultObject();
+		final Clasz clasz = cstUtils.createDefaultObject();
 		final Clasz updatedClass = cstUtils.updateObject(clasz, clasz);
 
 		String json = null;

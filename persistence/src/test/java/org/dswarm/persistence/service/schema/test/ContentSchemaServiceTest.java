@@ -51,7 +51,7 @@ public class ContentSchemaServiceTest extends IDBasicJPAServiceTest<ProxyContent
 	@Test
 	public void testSimpleSchema() throws Exception {
 
-		final ContentSchema contentSchema = contentSchemaServiceTestUtils.getDefaultObject();
+		final ContentSchema contentSchema = contentSchemaServiceTestUtils.createDefaultObject();
 
 		final ContentSchema updatedContentSchema = contentSchemaServiceTestUtils.updateObject(contentSchema, contentSchema);
 

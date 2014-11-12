@@ -39,19 +39,19 @@ public class MappingAttributePathInstanceServiceTestUtils
 		fstUtils = new FilterServiceTestUtils();
 	}
 
-	@Override public MappingAttributePathInstance getObject(String identifier) throws Exception {
+	@Override public MappingAttributePathInstance createObject(String identifier) throws Exception {
 		return null;
 	}
 
-	@Override public MappingAttributePathInstance getDefaultObject() throws Exception {
+	@Override public MappingAttributePathInstance createDefaultObject() throws Exception {
 
-		return createMappingAttributePathInstance(attributePathServiceTestUtils.getDefaultObject());
+		return createMappingAttributePathInstance(attributePathServiceTestUtils.createDefaultObject());
 	}
 
-	@Override public MappingAttributePathInstance getDefaultCompleteObject() throws Exception {
-		final MappingAttributePathInstance mapi = getDefaultObject();
+	@Override public MappingAttributePathInstance createDefaultCompleteObject() throws Exception {
+		final MappingAttributePathInstance mapi = createDefaultObject();
 		mapi.setOrdinal(1);
-		mapi.setFilter(fstUtils.getDefaultObject());
+		mapi.setFilter(fstUtils.createDefaultObject());
 
 		return updateObject(mapi, mapi);
 	}

@@ -140,38 +140,38 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 
 	public Attribute getDctermsTitle() throws Exception {
 
-		return getObject(DCTERMS_TITLE);
+		return createObject(DCTERMS_TITLE);
 	}
 
 	public Attribute getDctermsHaspart() throws Exception {
 
-		return getObject(DCTERMS_HASPART);
+		return createObject(DCTERMS_HASPART);
 	}
 
 	public Attribute getDctermsCreated() throws Exception {
 
-		return getObject(DCTERMS_CREATED);
+		return createObject(DCTERMS_CREATED);
 	}
 
 	public Attribute getRDFValue() throws Exception {
 
-		return getObject(RDF_VALUE);
+		return createObject(RDF_VALUE);
 	}
 
 	public Attribute getMABXMLID() throws Exception {
 
-		return getObject(MABXML_ID);
+		return createObject(MABXML_ID);
 	}
 
 	@Override
-	public Attribute getObject(JsonNode objectDescription) throws Exception {
+	public Attribute createObject(JsonNode objectDescription) throws Exception {
 
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Attribute getDefaultObject() throws Exception {
+	public Attribute createDefaultObject() throws Exception {
 		
 		return getDctermsTitle();
 	}

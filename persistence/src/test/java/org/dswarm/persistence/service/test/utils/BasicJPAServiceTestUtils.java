@@ -52,11 +52,11 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 	
 	protected Map<String, POJOCLASS> cache = new HashMap<>();
 
-	public abstract POJOCLASS getObject( final JsonNode objectDescription) throws Exception;
+	public abstract POJOCLASS createObject(final JsonNode objectDescription) throws Exception;
 	
-	public abstract POJOCLASS getObject(final String identifier) throws Exception;
+	public abstract POJOCLASS createObject(final String identifier) throws Exception;
 	
-	public abstract POJOCLASS getDefaultObject() throws Exception;
+	public abstract POJOCLASS createDefaultObject() throws Exception;
 	
 	public BasicJPAServiceTestUtils(final Class<POJOCLASS> pojoClassArg, final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg) {
 
@@ -236,9 +236,9 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 	 * @return
 	 * @throws Exception
 	 */
-	public POJOCLASS getDefaultCompleteObject() throws Exception {
+	public POJOCLASS createDefaultCompleteObject() throws Exception {
 
-		return getDefaultObject();
+		return createDefaultObject();
 	}
 
 	/**

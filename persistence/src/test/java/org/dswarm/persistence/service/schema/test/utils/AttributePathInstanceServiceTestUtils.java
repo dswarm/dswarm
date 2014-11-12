@@ -101,7 +101,7 @@ public abstract class AttributePathInstanceServiceTestUtils<POJOCLASSPERSISTENCE
 	
 	
 	@Override
-	public POJOCLASS getObject( final JsonNode objectDescription ) throws Exception {
+	public POJOCLASS createObject(final JsonNode objectDescription) throws Exception {
 		//TODO externalize valid keys
 		final String name = objectDescription.get("name") != null ? objectDescription.get("name").asText( null ) : null;
 		

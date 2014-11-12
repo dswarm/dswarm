@@ -80,17 +80,17 @@ public class FilterServiceTestUtils extends BasicDMPJPAServiceTestUtils<FilterSe
 	}
 
 	@Override
-	public Filter getObject(final JsonNode objectDescription) throws Exception {
+	public Filter createObject(final JsonNode objectDescription) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override public Filter getObject(final String identifier) throws Exception {
+	@Override public Filter createObject(final String identifier) throws Exception {
 
 		return null;
 	}
 
-	@Override public Filter getDefaultObject() throws Exception {
+	@Override public Filter createDefaultObject() throws Exception {
 
 		final String filterName = "my filter";
 

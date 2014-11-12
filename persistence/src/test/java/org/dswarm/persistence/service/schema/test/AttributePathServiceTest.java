@@ -58,7 +58,7 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttribu
 	public void testSimpleAttributePath2() throws Exception {
 		AttributePathServiceTest.LOG.debug("start simple attribute path test 2");
 
-		apstUtils.getDefaultObject();
+		apstUtils.createDefaultObject();
 
 		AttributePathServiceTest.LOG.debug("end simple attribute path test 2");
 	}
@@ -92,7 +92,7 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttribu
 	public void testSimpleAttributePath() throws Exception {
 		AttributePathServiceTest.LOG.debug("start simple attribute path test");
 
-		final AttributePath attributePath = apstUtils.getDefaultObject();
+		final AttributePath attributePath = apstUtils.createDefaultObject();
 		final AttributePath updatedAttributePath = apstUtils.updateObject(attributePath, attributePath);
 
 		String json = null;

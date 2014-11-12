@@ -46,12 +46,12 @@ public class SchemaAttributePathInstanceServiceTestUtils extends
 		sstUtils = schemaServiceTestUtils;
 	}
 
-	@Override public SchemaAttributePathInstance getObject(String identifier) throws Exception {
+	@Override public SchemaAttributePathInstance createObject(String identifier) throws Exception {
 
 		return null;
 	}
 
-	@Override public SchemaAttributePathInstance getDefaultObject() throws Exception {
+	@Override public SchemaAttributePathInstance createDefaultObject() throws Exception {
 
 		return getDctermsTitleDctermsHaspartDctermsTitleSAPI();
 	}
@@ -129,10 +129,10 @@ public class SchemaAttributePathInstanceServiceTestUtils extends
 		return createSchemaAttributePathInstance(null, attributePath, subSchema);
 	}
 
-	@Override public SchemaAttributePathInstance getDefaultCompleteObject() throws Exception {
+	@Override public SchemaAttributePathInstance createDefaultCompleteObject() throws Exception {
 
-		final SchemaAttributePathInstance sapi = getDefaultObject();
-		sapi.setSubSchema(sstUtils.getDefaultObject());
+		final SchemaAttributePathInstance sapi = createDefaultObject();
+		sapi.setSubSchema(sstUtils.createDefaultObject());
 
 		return updateObject(sapi, sapi);
 	}
@@ -153,7 +153,7 @@ public class SchemaAttributePathInstanceServiceTestUtils extends
 			final JsonNode objectDescription) throws Exception {
 		//TODO externalize keys (sub_schema)
 		final JsonNode schemaJson = objectDescription.get("sub_schema") != null ? objectDescription.get("sub_schema") : null;
-		final Schema subSchema = sstUtils.getObject(schemaJson);
+		final Schema subSchema = sstUtils.createObject(schemaJson);
 		return createSchemaAttributePathInstance(name, attributePath, subSchema);
 	}
 

@@ -346,34 +346,34 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 	 * @throws Exception
 	 */
 	@Override
-	public AttributePath getDefaultObject() throws Exception {
+	public AttributePath createDefaultObject() throws Exception {
 
 		return getDctermsTitleDctermHaspartDctermsTitleAP();
 	}
 
 	public AttributePath getDctermsTitleDctermHaspartDctermsTitleAP() throws Exception {
 
-		return getObject(DCTERMS_TITLE__DCTERMS_HASPART__DCTERMS_TITLE_AP);
+		return createObject(DCTERMS_TITLE__DCTERMS_HASPART__DCTERMS_TITLE_AP);
 	}
 
 	public AttributePath getDctermsTitleDctermHaspartAP() throws Exception {
 
-		return getObject(DCTERMS_TITLE__DCTERMS_HASPART_AP);
+		return createObject(DCTERMS_TITLE__DCTERMS_HASPART_AP);
 	}
 
 	public AttributePath getDctermsCreatedAP() throws Exception {
 
-		return getObject(AttributeServiceTestUtils.DCTERMS_CREATED);
+		return createObject(AttributeServiceTestUtils.DCTERMS_CREATED);
 	}
 
 	public AttributePath getRDFValueAP() throws Exception {
 
-		return getObject(AttributeServiceTestUtils.RDF_VALUE);
+		return createObject(AttributeServiceTestUtils.RDF_VALUE);
 	}
 
 	public AttributePath getMABXMLIDAP() throws Exception {
 
-		return getObject(AttributeServiceTestUtils.MABXML_ID);
+		return createObject(AttributeServiceTestUtils.MABXML_ID);
 	}
 
 	/**
@@ -553,7 +553,7 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 			i++;
 		}
 
-		return getObject(key.toString());
+		return createObject(key.toString());
 	}
 
 	public AttributePath getNonCachedAttributePath(final String... attributeIds) throws Exception {
@@ -579,12 +579,12 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 	}
 
 	@Override
-	public AttributePath getObject(JsonNode objectDescription) throws Exception {
+	public AttributePath createObject(JsonNode objectDescription) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override public AttributePath getObject(final String identifier) throws Exception {
+	@Override public AttributePath createObject(final String identifier) throws Exception {
 
 		if (!cache.containsKey(identifier)) {
 
@@ -610,7 +610,7 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 
 		for (final String attrStr : attributeIds) {
 
-			attrs.add(astUtils.getObject(attrStr));
+			attrs.add(astUtils.createObject(attrStr));
 		}
 
 		return attrs;

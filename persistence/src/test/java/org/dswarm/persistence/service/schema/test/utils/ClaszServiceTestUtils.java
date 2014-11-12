@@ -57,9 +57,9 @@ public class ClaszServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<ClaszS
 	}
 	
 	@Override
-	public Clasz getDefaultObject() throws Exception {
+	public Clasz createDefaultObject() throws Exception {
 		
-		return getObject(BIBO_DOCUMENT);
+		return createObject(BIBO_DOCUMENT);
 	}
 	
 	@Override
@@ -91,7 +91,7 @@ public class ClaszServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<ClaszS
 	}
 
 	@Override
-	public Clasz getObject( JsonNode objectDescription ) throws Exception {
+	public Clasz createObject(JsonNode objectDescription) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}

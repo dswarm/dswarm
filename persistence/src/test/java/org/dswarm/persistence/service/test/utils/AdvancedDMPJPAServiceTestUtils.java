@@ -66,7 +66,7 @@ public abstract class AdvancedDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE
 	 * @throws Exception
 	 */
 	@Override
-	public POJOCLASS getObject(final String identifier) throws Exception {
+	public POJOCLASS createObject(final String identifier) throws Exception {
 
 		if (!cache.containsKey(identifier)) {
 

@@ -143,20 +143,20 @@ public class ContentSchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<C
 	}
 
 	@Override
-	public ContentSchema getObject(final JsonNode objectDescription) throws Exception {
+	public ContentSchema createObject(final JsonNode objectDescription) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override public ContentSchema getObject(final String identifier) throws Exception {
+	@Override public ContentSchema createObject(final String identifier) throws Exception {
 		return null;
 	}
 
-	@Override public ContentSchema getDefaultObject() throws Exception {
+	@Override public ContentSchema createDefaultObject() throws Exception {
 
 		final ContentSchema contentSchema = new ContentSchema();
 		contentSchema.setName("Default Content Schema");
-		contentSchema.addKeyAttributePath(apstUtils.getDefaultObject());
+		contentSchema.addKeyAttributePath(apstUtils.createDefaultObject());
 		contentSchema.addKeyAttributePath(apstUtils.getDctermsTitleDctermHaspartAP());
 		contentSchema.addKeyAttributePath(apstUtils.getDctermsCreatedAP());
 		contentSchema.setValueAttributePath(apstUtils.getRDFValueAP());

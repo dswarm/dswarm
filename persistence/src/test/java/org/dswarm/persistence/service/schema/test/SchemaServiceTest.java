@@ -50,7 +50,7 @@ public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema
 	@Test
 	public void testSimpleSchema() throws Exception {
 
-		final Schema schema = sstUtils.getDefaultCompleteObject();
+		final Schema schema = sstUtils.createDefaultCompleteObject();
 		final Schema updatedSchema = sstUtils.updateObject(schema, schema);
 
 		Assert.assertNotNull("the schema's attribute paths of the updated schema shouldn't be null", updatedSchema.getUniqueAttributePaths());

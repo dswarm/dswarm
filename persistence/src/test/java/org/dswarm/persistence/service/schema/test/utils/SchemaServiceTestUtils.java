@@ -211,27 +211,27 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 	}
 
 	@Override
-	public Schema getObject(final JsonNode objectDescription) throws Exception {
+	public Schema createObject(final JsonNode objectDescription) throws Exception {
 		// TODO create schema from object description
 		return null;
 	}
 
-	@Override public Schema getObject(final String identifier) throws Exception {
+	@Override public Schema createObject(final String identifier) throws Exception {
 
 		return null;
 	}
 
-	@Override public Schema getDefaultObject() throws Exception {
+	@Override public Schema createDefaultObject() throws Exception {
 		return createSchema("Default Schema", new SchemaAttributePathInstance[] {
-				schemaAttributePathInstanceResourceTestUtils.getDefaultObject(),
+				schemaAttributePathInstanceResourceTestUtils.createDefaultObject(),
 				schemaAttributePathInstanceResourceTestUtils.getDctermsTitleDctermsHaspartSAPI()
-		}, claszesServiceTestUtils.getDefaultObject());
+		}, claszesServiceTestUtils.createDefaultObject());
 	}
 
-	@Override public Schema getDefaultCompleteObject() throws Exception {
+	@Override public Schema createDefaultCompleteObject() throws Exception {
 
-		final Schema schema = getDefaultObject();
-		schema.setContentSchema(contentSchemaServiceTestUtils.getDefaultObject());
+		final Schema schema = createDefaultObject();
+		schema.setContentSchema(contentSchemaServiceTestUtils.createDefaultObject());
 
 		return updateObject(schema, schema);
 	}
