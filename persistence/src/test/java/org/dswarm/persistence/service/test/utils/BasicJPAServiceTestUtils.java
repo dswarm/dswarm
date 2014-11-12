@@ -69,9 +69,17 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 
 		objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 	}
-	
-	
-	
+
+	@Override public void prepare() throws Exception {
+
+		// this should be done by the concrete test, not in the utils
+	}
+
+	@Override public void tearDown2() throws Exception {
+
+		// this should be done by the concrete test, not in the utils
+	}
+
 	/**
 	 * Assert that neither {@code expectedObject} nor {@code actualObject} is null.
 	 * 
@@ -220,6 +228,17 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 		final POJOCLASSIDTYPE objectId = object.getId();
 
 		deleteObject(objectId);
+	}
+
+	/**
+	 * default impl return getDefaultObject
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	public POJOCLASS getDefaultCompleteObject() throws Exception {
+
+		return getDefaultObject();
 	}
 
 	/**

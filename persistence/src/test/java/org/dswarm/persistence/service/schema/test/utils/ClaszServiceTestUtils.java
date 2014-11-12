@@ -52,9 +52,8 @@ public class ClaszServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<ClaszS
 	public Clasz createObject(final String id, final String name) throws Exception {
 
 		final Clasz clasz = new Clasz(id, name);
-		final Clasz updatedClasz = createObject(clasz, clasz);
 
-		return updatedClasz;
+		return createObject(clasz, clasz);
 	}
 	
 	@Override

@@ -31,7 +31,6 @@ public class MappingAttributePathInstanceServiceTestUtils
 		AttributePathInstanceServiceTestUtils<MappingAttributePathInstanceService, ProxyMappingAttributePathInstance, MappingAttributePathInstance> {
 
 	private FilterServiceTestUtils fstUtils;
-	private AttributePathServiceTestUtils apstUtils;
 
 
 	public MappingAttributePathInstanceServiceTestUtils() {
@@ -44,7 +43,6 @@ public class MappingAttributePathInstanceServiceTestUtils
 	protected void initObjects() {
 		super.initObjects();
 		fstUtils = new FilterServiceTestUtils();
-		apstUtils = new AttributePathServiceTestUtils();
 	}
 	
 
@@ -123,7 +121,7 @@ public class MappingAttributePathInstanceServiceTestUtils
 	 * @throws Exception
 	 */
 	public MappingAttributePathInstance createDefaultMappingAttributePathInstance() throws Exception {
-		return createMappingAttributePathInstance( apstUtils.createDefaultAttributePath() );
+		return createMappingAttributePathInstance( attributePathServiceTestUtils.createDefaultAttributePath() );
 	}
 
 	/**

@@ -30,6 +30,9 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 
 	public static final String DCTERMS_TITLE = "http://purl.org/dc/terms/title";
 	public static final String DCTERMS_HASPART = "http://purl.org/dc/terms/hasPart";
+	public static final String DCTERMS_CREATED = "http://purl.org/dc/terms/created";
+	public static final String RDF_VALUE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#value";
+	public static final String MABXML_ID = "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id";
 
 	public static final Set<String> excludeAttributes    = Sets.newHashSet();
 	public static final Set<String> excludeSubAttributes = Sets.newHashSet();
@@ -88,6 +91,9 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 
 		commonTermsMap.put(DCTERMS_TITLE, new Tuple<>(DCTERMS_TITLE, "title"));
 		commonTermsMap.put(DCTERMS_HASPART, new Tuple<>(DCTERMS_HASPART, "hasPart"));
+		commonTermsMap.put(DCTERMS_CREATED, new Tuple<>(DCTERMS_CREATED, "created"));
+		commonTermsMap.put(RDF_VALUE, new Tuple<>(RDF_VALUE, "value"));
+		commonTermsMap.put(MABXML_ID, new Tuple<>(MABXML_ID, "id"));
 	}
 
 	public AttributeServiceTestUtils() {
@@ -140,6 +146,21 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 	public Attribute getDctermsHaspart() throws Exception {
 
 		return getObject(DCTERMS_HASPART);
+	}
+
+	public Attribute getDctermsCreated() throws Exception {
+
+		return getObject(DCTERMS_CREATED);
+	}
+
+	public Attribute getRDFValue() throws Exception {
+
+		return getObject(RDF_VALUE);
+	}
+
+	public Attribute getMABXMLID() throws Exception {
+
+		return getObject(MABXML_ID);
 	}
 
 	@Override

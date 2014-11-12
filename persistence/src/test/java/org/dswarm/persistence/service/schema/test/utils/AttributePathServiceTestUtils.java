@@ -33,6 +33,7 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.dswarm.init.util.DMPStatics;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
@@ -43,10 +44,16 @@ import org.dswarm.persistence.service.test.utils.BasicJPAServiceTestUtils;
 
 public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<AttributePathService, ProxyAttributePath, AttributePath, Long> {
 
-	private static final Logger LOG = LoggerFactory.getLogger( AttributePathServiceTestUtils.class );
+	private static final Logger LOG = LoggerFactory.getLogger(AttributePathServiceTestUtils.class);
 
-	public static final String DCTERMS_TITLE__DCTERMS_HASPART__DCTERMS_TITLE_AP = AttributeServiceTestUtils.DCTERMS_TITLE + "#" + AttributeServiceTestUtils.DCTERMS_HASPART + "#" + AttributeServiceTestUtils.DCTERMS_TITLE;;
-	
+	public static final String DCTERMS_TITLE__DCTERMS_HASPART__DCTERMS_TITLE_AP =
+			AttributeServiceTestUtils.DCTERMS_TITLE + DMPStatics.ATTRIBUTE_DELIMITER
+					+ AttributeServiceTestUtils.DCTERMS_HASPART + DMPStatics.ATTRIBUTE_DELIMITER + AttributeServiceTestUtils.DCTERMS_TITLE;
+
+	public static final String DCTERMS_TITLE__DCTERMS_HASPART_AP =
+			AttributeServiceTestUtils.DCTERMS_TITLE + DMPStatics.ATTRIBUTE_DELIMITER
+					+ AttributeServiceTestUtils.DCTERMS_HASPART;
+
 	private final AttributeServiceTestUtils astUtils;
 
 	private static final Set<List<String>> excludeAttributePaths = Sets.newHashSet();
@@ -246,6 +253,27 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 		ap1.add(AttributeServiceTestUtils.DCTERMS_TITLE);
 
 		commonAttributePathsMap.put(DCTERMS_TITLE__DCTERMS_HASPART__DCTERMS_TITLE_AP, ap1);
+
+		final List<String> ap2 = Lists.newArrayList();
+		ap2.add(AttributeServiceTestUtils.DCTERMS_TITLE);
+		ap2.add(AttributeServiceTestUtils.DCTERMS_HASPART);
+
+		commonAttributePathsMap.put(DCTERMS_TITLE__DCTERMS_HASPART_AP, ap2);
+
+		final List<String> ap3 = Lists.newArrayList();
+		ap3.add(AttributeServiceTestUtils.DCTERMS_CREATED);
+
+		commonAttributePathsMap.put(AttributeServiceTestUtils.DCTERMS_CREATED, ap3);
+
+		final List<String> ap4 = Lists.newArrayList();
+		ap4.add(AttributeServiceTestUtils.RDF_VALUE);
+
+		commonAttributePathsMap.put(AttributeServiceTestUtils.RDF_VALUE, ap4);
+
+		final List<String> ap5 = Lists.newArrayList();
+		ap5.add(AttributeServiceTestUtils.MABXML_ID);
+
+		commonAttributePathsMap.put(AttributeServiceTestUtils.MABXML_ID, ap5);
 	}
 
 	public AttributePathServiceTestUtils() {
@@ -299,7 +327,8 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 	}
 
 	/**
-	 * Convenience method to be able to create attribute paths more dynamically 
+	 * Convenience method to be able to create attribute paths more dynamically
+	 *
 	 * @param attributes
 	 * @return
 	 * @throws Exception
@@ -312,6 +341,7 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 	 * Constructs a sample attribute path consisting of the following attributes:<br>
 	 * "http://purl.org/dc/terms/title"<br>
 	 * "http://purl.org/dc/terms/hasPart"
+	 *
 	 * @return
 	 * @throws Exception
 	 */
@@ -324,6 +354,26 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 	public AttributePath getDctermsTitleDctermHaspartDctermsTitleAP() throws Exception {
 
 		return getObject(DCTERMS_TITLE__DCTERMS_HASPART__DCTERMS_TITLE_AP);
+	}
+
+	public AttributePath getDctermsTitleDctermHaspartAP() throws Exception {
+
+		return getObject(DCTERMS_TITLE__DCTERMS_HASPART_AP);
+	}
+
+	public AttributePath getDctermsCreatedAP() throws Exception {
+
+		return getObject(AttributeServiceTestUtils.DCTERMS_CREATED);
+	}
+
+	public AttributePath getRDFValueAP() throws Exception {
+
+		return getObject(AttributeServiceTestUtils.RDF_VALUE);
+	}
+
+	public AttributePath getMABXMLIDAP() throws Exception {
+
+		return getObject(AttributeServiceTestUtils.MABXML_ID);
 	}
 
 	/**
@@ -487,7 +537,7 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 	 */
 	public AttributePath getAttributePath(final String... attributeIds) throws Exception {
 
-		StringBuilder key = new StringBuilder();
+		final StringBuilder key = new StringBuilder();
 
 		int i = 1;
 
@@ -495,9 +545,9 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 
 			key.append(attributeId);
 
-			if(i < attributeIds.length) {
+			if (i < attributeIds.length) {
 
-				key.append("#");
+				key.append(DMPStatics.ATTRIBUTE_DELIMITER);
 			}
 
 			i++;
@@ -538,9 +588,10 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 
 		if (!cache.containsKey(identifier)) {
 
-			if(!commonAttributePathsMap.containsKey(identifier)) {
+			if (!commonAttributePathsMap.containsKey(identifier)) {
 
-				throw new DMPPersistenceException(identifier + " is no common attribute path, please define it or utilise another appropriated method for creating it");
+				throw new DMPPersistenceException(
+						identifier + " is no common attribute path, please define it or utilise another appropriated method for creating it");
 			}
 
 			final List<String> attributeIds = commonAttributePathsMap.get(identifier);

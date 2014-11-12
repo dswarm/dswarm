@@ -95,8 +95,6 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttribu
 		final AttributePath attributePath = apstUtils.getDefaultObject();
 		final AttributePath updatedAttributePath = apstUtils.updateObject(attributePath, attributePath);
 
-		apstUtils.compareObjects(attributePath, updatedAttributePath);
-
 		String json = null;
 
 		try {

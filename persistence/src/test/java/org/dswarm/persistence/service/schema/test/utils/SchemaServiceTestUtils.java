@@ -40,20 +40,17 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 	private ClaszServiceTestUtils claszesServiceTestUtils;
 	private ContentSchemaServiceTestUtils contentSchemaServiceTestUtils;
 	private SchemaAttributePathInstanceServiceTestUtils schemaAttributePathInstanceResourceTestUtils;
-	
+
 	public SchemaServiceTestUtils() {
-		super(Schema.class, SchemaService.class);
+		this( new SchemaAttributePathInstanceServiceTestUtils() );
 	}
 
-	
-	@Override
-	protected void initObjects() {
-		super.initObjects();
-		schemaAttributePathInstanceResourceTestUtils = new SchemaAttributePathInstanceServiceTestUtils();
+	public SchemaServiceTestUtils( final SchemaAttributePathInstanceServiceTestUtils schemaAttributePathInstanceResourceTestUtils ) {
+		super(Schema.class, SchemaService.class);
+		this.schemaAttributePathInstanceResourceTestUtils = schemaAttributePathInstanceResourceTestUtils;
 		claszesServiceTestUtils = new ClaszServiceTestUtils();
-		contentSchemaServiceTestUtils = new ContentSchemaServiceTestUtils();
+		contentSchemaServiceTestUtils = new ContentSchemaServiceTestUtils(schemaAttributePathInstanceResourceTestUtils.getAttributePathServiceTestUtils());
 	}
-	
 
 	/**
 	 * {@inheritDoc} <br />
@@ -135,22 +132,6 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 		return createSchema(name, Arrays.asList(attributePaths), recordClass );
 	}
 
-	
-	public Schema createDefaultSchema() throws Exception {
-		return createSchema("Default Schema", new SchemaAttributePathInstance[] { 
-				schemaAttributePathInstanceResourceTestUtils.createDefaultSchemaAttributePathInstance(),
-				schemaAttributePathInstanceResourceTestUtils.createDefaultSchemaAttributePathInstance()
-		}, claszesServiceTestUtils.createDefaultClass() );
-	}
-
-	
-	public Schema createDefaultSchemaFull() throws Exception {
-		Schema s = createDefaultSchema();
-		s.setContentSchema( contentSchemaServiceTestUtils.createDefaultContentSchema() );
-		return s;
-	}
-	
-
 	public void removeAddedAttributePathsFromOutputModelSchema( final Schema outputDataModelSchema, final Map<Long, Attribute> attributes,
 			final Map<Long, SchemaAttributePathInstance> attributePaths ) throws DMPPersistenceException {
 
@@ -220,14 +201,36 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 
 	@Override
 	public void reset() {
-//		claszesServiceTestUtils.reset();
+
+		claszesServiceTestUtils.reset();
+		schemaAttributePathInstanceResourceTestUtils.reset();
+		contentSchemaServiceTestUtils.reset();
 	}
 
 
 	@Override
-	public Schema getObject( JsonNode objectDescription ) throws Exception {
+	public Schema getObject( final JsonNode objectDescription ) throws Exception {
 		// TODO create schema from object description
 		return null;
 	}
 
+	@Override public Schema getObject(final String identifier) throws Exception {
+
+		return null;
+	}
+
+	@Override public Schema getDefaultObject() throws Exception {
+		return createSchema("Default Schema", new SchemaAttributePathInstance[] {
+				schemaAttributePathInstanceResourceTestUtils.getDefaultObject(),
+				schemaAttributePathInstanceResourceTestUtils.getDctermsTitleDctermsHaspartSAPI()
+		}, claszesServiceTestUtils.getDefaultObject() );
+	}
+
+	@Override public Schema getDefaultCompleteObject() throws Exception {
+
+		final Schema schema = getDefaultObject();
+		schema.setContentSchema(contentSchemaServiceTestUtils.getDefaultObject());
+
+		return updateObject(schema, schema);
+	}
 }
