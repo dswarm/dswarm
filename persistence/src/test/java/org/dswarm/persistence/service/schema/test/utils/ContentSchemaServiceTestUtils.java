@@ -25,10 +25,8 @@ import org.junit.Assert;
 
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.ContentSchema;
-import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.proxy.ProxyContentSchema;
 import org.dswarm.persistence.service.schema.ContentSchemaService;
-import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.service.test.utils.BasicDMPJPAServiceTestUtils;
 
 public class ContentSchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<ContentSchemaService, ProxyContentSchema, ContentSchema> {
@@ -36,10 +34,10 @@ public class ContentSchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<C
 	private AttributePathServiceTestUtils apstUtils;
 
 	public ContentSchemaServiceTestUtils() {
-		this( new AttributePathServiceTestUtils() );
+		this(new AttributePathServiceTestUtils());
 	}
 
-	public ContentSchemaServiceTestUtils( final AttributePathServiceTestUtils attributePathServiceTestUtils ) {
+	public ContentSchemaServiceTestUtils(final AttributePathServiceTestUtils attributePathServiceTestUtils) {
 		super(ContentSchema.class, ContentSchemaService.class);
 		this.apstUtils = attributePathServiceTestUtils;
 	}
@@ -145,12 +143,12 @@ public class ContentSchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<C
 	}
 
 	@Override
-	public ContentSchema getObject(JsonNode objectDescription) throws Exception {
+	public ContentSchema getObject(final JsonNode objectDescription) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override public ContentSchema getObject(String identifier) throws Exception {
+	@Override public ContentSchema getObject(final String identifier) throws Exception {
 		return null;
 	}
 
