@@ -125,7 +125,7 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 
 		// update schema
 
-		final Schema updatedSchema = createObject(schema, schema);
+		final Schema updatedSchema = createAndCompareObject(schema, schema);
 
 		Assert.assertNotNull("updated schema shouldn't be null", updatedSchema);
 		Assert.assertNotNull("updated schema id shouldn't be null", updatedSchema.getId());
@@ -233,6 +233,6 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 		final Schema schema = createDefaultObject();
 		schema.setContentSchema(contentSchemaServiceTestUtils.createDefaultObject());
 
-		return updateObject(schema, schema);
+		return updateAndCompareObject(schema, schema);
 	}
 }

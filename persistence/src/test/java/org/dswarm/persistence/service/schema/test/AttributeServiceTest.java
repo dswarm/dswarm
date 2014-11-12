@@ -52,7 +52,7 @@ public class AttributeServiceTest extends AdvancedJPAServiceTest<ProxyAttribute,
 	public void testSimpleAttribute() throws Exception {
 
 		final Attribute attribute = astUtils.getDctermsTitle();
-		final Attribute updatedAttribute = astUtils.updateObject(attribute, attribute);
+		final Attribute updatedAttribute = astUtils.updateAndCompareObject(attribute, attribute);
 
 		String json = null;
 		try {
@@ -77,6 +77,6 @@ public class AttributeServiceTest extends AdvancedJPAServiceTest<ProxyAttribute,
 
 		final Attribute attribute = astUtils.createObject(AttributeServiceTestUtils.DCTERMS_TITLE, "title");
 
-		return astUtils.updateObject(attribute, attribute);
+		return astUtils.updateAndCompareObject(attribute, attribute);
 	}
 }

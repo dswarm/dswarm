@@ -53,7 +53,7 @@ public class MappingAttributePathInstanceServiceTestUtils
 		mapi.setOrdinal(1);
 		mapi.setFilter(fstUtils.createDefaultObject());
 
-		return updateObject(mapi, mapi);
+		return updateAndCompareObject(mapi, mapi);
 	}
 
 	/**
@@ -100,7 +100,7 @@ public class MappingAttributePathInstanceServiceTestUtils
 		mappingAttributePathInstance.setAttributePath(attributePath);
 		mappingAttributePathInstance.setOrdinal(ordinal);
 		mappingAttributePathInstance.setFilter(filter);
-		final MappingAttributePathInstance updatedMappingAttributePathInstance = createObject(mappingAttributePathInstance,
+		final MappingAttributePathInstance updatedMappingAttributePathInstance = createAndCompareObject(mappingAttributePathInstance,
 				mappingAttributePathInstance);
 		Assert.assertNotNull(updatedMappingAttributePathInstance.getId());
 		return updatedMappingAttributePathInstance;

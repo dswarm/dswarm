@@ -70,7 +70,7 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 		}
 
 		// update method needs to be utilised here, because component was already created
-		final Component updatedComponent = updateObject(component, component);
+		final Component updatedComponent = updateAndCompareObject(component, component);
 
 		Assert.assertNotNull("the updated component shouldn't be null", updatedComponent);
 		Assert.assertNotNull("the component name shouldn't be null", updatedComponent.getId());

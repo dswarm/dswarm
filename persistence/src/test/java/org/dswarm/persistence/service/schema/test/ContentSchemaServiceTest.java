@@ -53,7 +53,7 @@ public class ContentSchemaServiceTest extends IDBasicJPAServiceTest<ProxyContent
 
 		final ContentSchema contentSchema = contentSchemaServiceTestUtils.createDefaultObject();
 
-		final ContentSchema updatedContentSchema = contentSchemaServiceTestUtils.updateObject(contentSchema, contentSchema);
+		final ContentSchema updatedContentSchema = contentSchemaServiceTestUtils.updateAndCompareObject(contentSchema, contentSchema);
 
 		String json = null;
 

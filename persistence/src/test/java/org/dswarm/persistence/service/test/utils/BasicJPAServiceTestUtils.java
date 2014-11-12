@@ -169,7 +169,7 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 	 * @return
 	 * @throws Exception
 	 */
-	public POJOCLASS createObject(final POJOCLASS object, final POJOCLASS expectedObject) throws Exception {
+	public POJOCLASS createAndCompareObject(final POJOCLASS object, final POJOCLASS expectedObject) throws Exception {
 
 		PROXYPOJOCLASS proxyObject = null;
 
@@ -204,7 +204,7 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 		return proxyObject.getObject();
 	}
 
-	public POJOCLASS updateObject(final POJOCLASS updateObject, final POJOCLASS expectedObject) throws Exception {
+	public POJOCLASS updateAndCompareObject(final POJOCLASS updateObject, final POJOCLASS expectedObject) throws Exception {
 
 		PROXYPOJOCLASS proxyUpdatedObject = null;
 

@@ -53,7 +53,7 @@ public class ClaszServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<ClaszS
 
 		final Clasz clasz = new Clasz(id, name);
 
-		return createObject(clasz, clasz);
+		return createAndCompareObject(clasz, clasz);
 	}
 	
 	@Override

@@ -52,7 +52,7 @@ public class FilterServiceTest extends IDBasicJPAServiceTest<ProxyFilter, Filter
 
 		final Filter filter = filterServiceTestUtils.createDefaultObject();
 
-		final Filter updatedFilter = filterServiceTestUtils.updateObject(filter, filter);
+		final Filter updatedFilter = filterServiceTestUtils.updateAndCompareObject(filter, filter);
 
 		String json = null;
 

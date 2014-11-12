@@ -106,7 +106,7 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 
 		final Attribute attribute = new Attribute(id, name);
 
-		return createObject(attribute, attribute);
+		return createAndCompareObject(attribute, attribute);
 	}
 
 	@Override

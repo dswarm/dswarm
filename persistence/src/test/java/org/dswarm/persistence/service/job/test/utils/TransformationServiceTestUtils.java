@@ -91,7 +91,7 @@ public class TransformationServiceTestUtils extends BasicFunctionServiceTestUtil
 		transformation.setComponents(components);
 		transformation.setParameters(parameters);
 
-		final Transformation updatedTransformation = createObject(transformation, transformation);
+		final Transformation updatedTransformation = createAndCompareObject(transformation, transformation);
 
 		return updatedTransformation;
 	}

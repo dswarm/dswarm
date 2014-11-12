@@ -88,7 +88,8 @@ public class SchemaAttributePathInstanceServiceTestUtils extends
 		schemaAttributePathInstance.setName(name);
 		schemaAttributePathInstance.setAttributePath(attributePath);
 		schemaAttributePathInstance.setSubSchema(subSchema);
-		final SchemaAttributePathInstance updatedSchemaAttributePathInstance = createObject(schemaAttributePathInstance, schemaAttributePathInstance);
+		final SchemaAttributePathInstance updatedSchemaAttributePathInstance = createAndCompareObject(schemaAttributePathInstance,
+				schemaAttributePathInstance);
 		assertNotNull(updatedSchemaAttributePathInstance.getId());
 		return updatedSchemaAttributePathInstance;
 	}
@@ -134,7 +135,7 @@ public class SchemaAttributePathInstanceServiceTestUtils extends
 		final SchemaAttributePathInstance sapi = createDefaultObject();
 		sapi.setSubSchema(sstUtils.createDefaultObject());
 
-		return updateObject(sapi, sapi);
+		return updateAndCompareObject(sapi, sapi);
 	}
 
 	/**

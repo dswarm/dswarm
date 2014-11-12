@@ -70,7 +70,7 @@ public class ContentSchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<C
 
 		// update content schema
 
-		final ContentSchema updatedContentSchema = createObject(contentSchema, contentSchema);
+		final ContentSchema updatedContentSchema = createAndCompareObject(contentSchema, contentSchema);
 
 		Assert.assertNotNull("updated content schema shouldn't be null", updatedContentSchema);
 		Assert.assertNotNull("updated content schema id shouldn't be null", updatedContentSchema.getId());

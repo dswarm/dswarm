@@ -148,7 +148,7 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 		final String resourceJSONString = objectMapper.writeValueAsString(resource);
 		final Resource expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
 
-		final Resource updatedResource = createObject(resource, expectedResource);
+		final Resource updatedResource = createAndCompareObject(resource, expectedResource);
 
 		Assert.assertNotNull("updated resource shouldn't be null", updatedResource);
 		Assert.assertNotNull("updated resource id shouldn't be null", updatedResource.getId());

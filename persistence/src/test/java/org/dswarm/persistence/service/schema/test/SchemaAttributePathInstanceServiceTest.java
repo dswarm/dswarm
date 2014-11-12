@@ -83,7 +83,7 @@ public class SchemaAttributePathInstanceServiceTest extends
 
 		final SchemaAttributePathInstance sapi = sapisUtils.createObject(objectDescription);
 
-		final SchemaAttributePathInstance updatedMappingAttributePathInstance = sapisUtils.updateObject(sapi, sapi);
+		final SchemaAttributePathInstance updatedMappingAttributePathInstance = sapisUtils.updateAndCompareObject(sapi, sapi);
 
 		String json = null;
 		try {
@@ -99,7 +99,7 @@ public class SchemaAttributePathInstanceServiceTest extends
 		SchemaAttributePathInstanceServiceTest.LOG.debug("start complete schema attribute path instance test");
 
 		final SchemaAttributePathInstance sapi = sapisUtils.createDefaultCompleteObject();
-		final SchemaAttributePathInstance updatedAttributePath = sapisUtils.updateObject(sapi, sapi);
+		final SchemaAttributePathInstance updatedAttributePath = sapisUtils.updateAndCompareObject(sapi, sapi);
 
 		String json = null;
 

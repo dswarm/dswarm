@@ -53,7 +53,7 @@ public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, 
 	@Test
 	public void testSimpleAttribute() throws Exception {
 		final Clasz clasz = cstUtils.createDefaultObject();
-		final Clasz updatedClass = cstUtils.updateObject(clasz, clasz);
+		final Clasz updatedClass = cstUtils.updateAndCompareObject(clasz, clasz);
 
 		String json = null;
 		try {
@@ -78,6 +78,6 @@ public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, 
 
 	private Clasz createAndUpdateClass() throws Exception {
 		final Clasz clasz = cstUtils.createObject(ClaszServiceTestUtils.BIBO_DOCUMENT, "document");
-		return cstUtils.updateObject(clasz, clasz);
+		return cstUtils.updateAndCompareObject(clasz, clasz);
 	}
 }

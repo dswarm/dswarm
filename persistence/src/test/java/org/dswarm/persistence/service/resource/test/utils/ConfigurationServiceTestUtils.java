@@ -57,7 +57,7 @@ public class ConfigurationServiceTestUtils extends ExtendedBasicDMPJPAServiceTes
 		configuration.setDescription(description);
 		configuration.setParameters(parameters);
 
-		final Configuration updatedConfiguration = createObject(configuration, configuration);
+		final Configuration updatedConfiguration = createAndCompareObject(configuration, configuration);
 
 		Assert.assertNotNull("updated configuration shouldn't be null", updatedConfiguration);
 		Assert.assertNotNull("updated configuration id shouldn't be null", updatedConfiguration.getId());

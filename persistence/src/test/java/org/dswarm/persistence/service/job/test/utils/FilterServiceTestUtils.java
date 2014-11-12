@@ -57,7 +57,7 @@ public class FilterServiceTestUtils extends BasicDMPJPAServiceTestUtils<FilterSe
 		filter.setName(name);
 		filter.setExpression(expression);
 
-		return createObject(filter, filter);
+		return createAndCompareObject(filter, filter);
 	}
 
 	/**

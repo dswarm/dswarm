@@ -323,7 +323,7 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 
 	public AttributePath createAttributePath(final List<Attribute> attributePathArg) throws Exception {
 		final AttributePath attributePath = new AttributePath(attributePathArg);
-		return createObject(attributePath, attributePath);
+		return createAndCompareObject(attributePath, attributePath);
 	}
 
 	/**

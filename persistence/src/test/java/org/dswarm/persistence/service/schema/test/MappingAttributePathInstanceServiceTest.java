@@ -52,7 +52,7 @@ public class MappingAttributePathInstanceServiceTest extends
 
 		final MappingAttributePathInstance mapi = mapisUtils.createDefaultCompleteObject();
 
-		final MappingAttributePathInstance updatedMappingAttributePathInstance = mapisUtils.updateObject(mapi, mapi);
+		final MappingAttributePathInstance updatedMappingAttributePathInstance = mapisUtils.updateAndCompareObject(mapi, mapi);
 
 		String json = null;
 		try {

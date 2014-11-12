@@ -127,7 +127,7 @@ public abstract class BasicFunctionServiceTestUtils<POJOCLASSPERSISTENCESERVICE 
 		function.setDescription(functionDescription);
 		function.setParameters(parameters);
 
-		final POJOCLASS updatedFunction = createObject(function, function);
+		final POJOCLASS updatedFunction = createAndCompareObject(function, function);
 
 		return updatedFunction;
 	}
