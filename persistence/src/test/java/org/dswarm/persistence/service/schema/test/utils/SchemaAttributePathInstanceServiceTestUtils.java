@@ -15,8 +15,7 @@
  */
 package org.dswarm.persistence.service.schema.test.utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
@@ -25,18 +24,26 @@ import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxySchemaAttributePathInstance;
 import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-public class SchemaAttributePathInstanceServiceTestUtils extends AttributePathInstanceServiceTestUtils<SchemaAttributePathInstanceService, ProxySchemaAttributePathInstance, SchemaAttributePathInstance> {
+public class SchemaAttributePathInstanceServiceTestUtils extends
+		AttributePathInstanceServiceTestUtils<SchemaAttributePathInstanceService, ProxySchemaAttributePathInstance, SchemaAttributePathInstance> {
 
 	private SchemaServiceTestUtils sstUtils;
-	
-	
+
 	public SchemaAttributePathInstanceServiceTestUtils() {
 
 		super(SchemaAttributePathInstance.class, SchemaAttributePathInstanceService.class);
 
-		sstUtils = new SchemaServiceTestUtils( this );
+		sstUtils = new SchemaServiceTestUtils(this);
+	}
+
+	public SchemaAttributePathInstanceServiceTestUtils(final SchemaServiceTestUtils schemaServiceTestUtils) {
+
+		super(SchemaAttributePathInstance.class, SchemaAttributePathInstanceService.class);
+
+		sstUtils = schemaServiceTestUtils;
 	}
 
 	@Override public SchemaAttributePathInstance getObject(String identifier) throws Exception {
@@ -51,13 +58,12 @@ public class SchemaAttributePathInstanceServiceTestUtils extends AttributePathIn
 
 	public SchemaAttributePathInstance getDctermsTitleDctermsHaspartDctermsTitleSAPI() throws Exception {
 
-		return createSchemaAttributePathInstance( attributePathServiceTestUtils.getDctermsTitleDctermHaspartDctermsTitleAP() );
+		return createSchemaAttributePathInstance(attributePathServiceTestUtils.getDctermsTitleDctermHaspartDctermsTitleAP());
 	}
-
 
 	public SchemaAttributePathInstance getDctermsTitleDctermsHaspartSAPI() throws Exception {
 
-		return createSchemaAttributePathInstance( attributePathServiceTestUtils.getDctermsTitleDctermHaspartAP() );
+		return createSchemaAttributePathInstance(attributePathServiceTestUtils.getDctermsTitleDctermHaspartAP());
 	}
 
 	/**
@@ -67,8 +73,8 @@ public class SchemaAttributePathInstanceServiceTestUtils extends AttributePathIn
 	 * @param actualSchemaAttributePathInstance
 	 */
 	@Override
-	public void compareObjects( final SchemaAttributePathInstance expectedSchemaAttributePathInstance,
-			final SchemaAttributePathInstance actualSchemaAttributePathInstance ) {
+	public void compareObjects(final SchemaAttributePathInstance expectedSchemaAttributePathInstance,
+			final SchemaAttributePathInstance actualSchemaAttributePathInstance) {
 
 		super.compareObjects(expectedSchemaAttributePathInstance, actualSchemaAttributePathInstance);
 
@@ -76,27 +82,24 @@ public class SchemaAttributePathInstanceServiceTestUtils extends AttributePathIn
 				actualSchemaAttributePathInstance.getSubSchema());
 	}
 
-
-	public SchemaAttributePathInstance createSchemaAttributePathInstance( final String name, final AttributePath attributePath, final Schema subSchema ) throws Exception {
+	public SchemaAttributePathInstance createSchemaAttributePathInstance(final String name, final AttributePath attributePath, final Schema subSchema)
+			throws Exception {
 		final SchemaAttributePathInstance schemaAttributePathInstance = new SchemaAttributePathInstance();
 		schemaAttributePathInstance.setName(name);
 		schemaAttributePathInstance.setAttributePath(attributePath);
 		schemaAttributePathInstance.setSubSchema(subSchema);
-		final SchemaAttributePathInstance updatedSchemaAttributePathInstance = createObject(schemaAttributePathInstance,schemaAttributePathInstance);
+		final SchemaAttributePathInstance updatedSchemaAttributePathInstance = createObject(schemaAttributePathInstance, schemaAttributePathInstance);
 		assertNotNull(updatedSchemaAttributePathInstance.getId());
 		return updatedSchemaAttributePathInstance;
 	}
 
-
-	public SchemaAttributePathInstance createSchemaAttributePathInstance( final String name, final AttributePath attributePath ) throws Exception {
+	public SchemaAttributePathInstance createSchemaAttributePathInstance(final String name, final AttributePath attributePath) throws Exception {
 		return createSchemaAttributePathInstance(name, attributePath, null);
 	}
 
-
-	public SchemaAttributePathInstance createSchemaAttributePathInstance( final AttributePath attributePath ) throws Exception {
+	public SchemaAttributePathInstance createSchemaAttributePathInstance(final AttributePath attributePath) throws Exception {
 		return createSchemaAttributePathInstance(null, attributePath, null);
 	}
-
 
 	/**
 	 * Convenience method for creating simple attribute path instance with an
@@ -107,11 +110,10 @@ public class SchemaAttributePathInstanceServiceTestUtils extends AttributePathIn
 	 * @return a simple attribute path instance with no subschema
 	 * @throws Exception
 	 */
-	public SchemaAttributePathInstance createSchemaAttributePathInstance( final Attribute attribute ) throws Exception {
+	public SchemaAttributePathInstance createSchemaAttributePathInstance(final Attribute attribute) throws Exception {
 		AttributePath attributePath = attributePathServiceTestUtils.createAttributePath(attribute);
 		return createSchemaAttributePathInstance(attributePath);
 	}
-
 
 	/**
 	 * Convenience method for creating simple attribute path instance with an
@@ -122,7 +124,7 @@ public class SchemaAttributePathInstanceServiceTestUtils extends AttributePathIn
 	 * @return a simple attribute path instance with a subschema
 	 * @throws Exception
 	 */
-	public SchemaAttributePathInstance createSchemaAttributePathInstance( final Attribute attribute, final Schema subSchema ) throws Exception {
+	public SchemaAttributePathInstance createSchemaAttributePathInstance(final Attribute attribute, final Schema subSchema) throws Exception {
 		final AttributePath attributePath = attributePathServiceTestUtils.createAttributePath(attribute);
 		return createSchemaAttributePathInstance(null, attributePath, subSchema);
 	}
@@ -132,7 +134,6 @@ public class SchemaAttributePathInstanceServiceTestUtils extends AttributePathIn
 		final SchemaAttributePathInstance sapi = getDefaultObject();
 		sapi.setSubSchema(sstUtils.getDefaultObject());
 
-
 		return updateObject(sapi, sapi);
 	}
 
@@ -140,18 +141,19 @@ public class SchemaAttributePathInstanceServiceTestUtils extends AttributePathIn
 	 * {@inheritDoc}<br/>
 	 */
 	@Override
-	protected SchemaAttributePathInstance prepareObjectForUpdate( final SchemaAttributePathInstance objectWithUpdates, final SchemaAttributePathInstance object ) {
+	protected SchemaAttributePathInstance prepareObjectForUpdate(final SchemaAttributePathInstance objectWithUpdates,
+			final SchemaAttributePathInstance object) {
 		super.prepareObjectForUpdate(objectWithUpdates, object);
 		object.setSubSchema(objectWithUpdates.getSubSchema());
 		return object;
 	}
 
-
 	@Override
-	protected SchemaAttributePathInstance createAttributePathInstance( final String name, final AttributePath attributePath, final JsonNode objectDescription ) throws Exception {
+	protected SchemaAttributePathInstance createAttributePathInstance(final String name, final AttributePath attributePath,
+			final JsonNode objectDescription) throws Exception {
 		//TODO externalize keys (sub_schema)
 		final JsonNode schemaJson = objectDescription.get("sub_schema") != null ? objectDescription.get("sub_schema") : null;
-		final Schema subSchema = sstUtils.getObject( schemaJson );
+		final Schema subSchema = sstUtils.getObject(schemaJson);
 		return createSchemaAttributePathInstance(name, attributePath, subSchema);
 	}
 
