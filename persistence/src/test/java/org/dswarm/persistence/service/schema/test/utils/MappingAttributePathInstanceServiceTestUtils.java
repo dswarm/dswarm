@@ -51,8 +51,9 @@ public class MappingAttributePathInstanceServiceTestUtils
 	@Override public MappingAttributePathInstance getDefaultCompleteObject() throws Exception {
 		final MappingAttributePathInstance mapi = getDefaultObject();
 		mapi.setOrdinal(1);
-		mapi.setFilter(fstUtils.createDefaultFilter());
-		return mapi;
+		mapi.setFilter(fstUtils.getDefaultObject());
+
+		return updateObject(mapi, mapi);
 	}
 
 	/**
@@ -70,8 +71,15 @@ public class MappingAttributePathInstanceServiceTestUtils
 
 		super.compareObjects(expectedMappingAttributePathInstance, actualMappingAttributePathInstance);
 
-		Assert.assertEquals("the ordinals of the mapping attribute path should be equal", expectedMappingAttributePathInstance.getOrdinal(),
-				actualMappingAttributePathInstance.getOrdinal());
+		if (expectedMappingAttributePathInstance.getOrdinal() != null) {
+
+			Assert.assertNotNull(actualMappingAttributePathInstance.getOrdinal());
+			Assert.assertEquals("the ordinals of the mapping attribute path should be equal", expectedMappingAttributePathInstance.getOrdinal(),
+					actualMappingAttributePathInstance.getOrdinal());
+		} else {
+
+			Assert.assertNull(actualMappingAttributePathInstance.getOrdinal());
+		}
 
 		if (expectedMappingAttributePathInstance.getFilter() == null) {
 
