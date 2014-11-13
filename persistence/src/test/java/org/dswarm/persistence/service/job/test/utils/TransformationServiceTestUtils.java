@@ -20,7 +20,9 @@ import java.util.Map;
 import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.junit.Assert;
 
 import org.dswarm.persistence.model.job.Component;
@@ -30,20 +32,20 @@ import org.dswarm.persistence.service.job.TransformationService;
 
 public class TransformationServiceTestUtils extends BasicFunctionServiceTestUtils<TransformationService, ProxyTransformation, Transformation> {
 
-	private final ComponentServiceTestUtils componentsResourceTestUtils;
+	private final ComponentServiceTestUtils componentServiceTestUtils;
 
 	public TransformationServiceTestUtils() {
 
 		super(Transformation.class, TransformationService.class);
 
-		componentsResourceTestUtils = new ComponentServiceTestUtils();
+		componentServiceTestUtils = new ComponentServiceTestUtils();
 	}
 
 	public TransformationServiceTestUtils(final ComponentServiceTestUtils componentsResourceTestUtilsArg) {
 
 		super(Transformation.class, TransformationService.class);
 
-		componentsResourceTestUtils = componentsResourceTestUtilsArg;
+		componentServiceTestUtils = componentsResourceTestUtilsArg;
 	}
 
 	@Override
@@ -58,7 +60,28 @@ public class TransformationServiceTestUtils extends BasicFunctionServiceTestUtil
 
 	@Override
 	public Transformation createDefaultObject() throws Exception {
-		return null;
+
+		return getSimpleTrimTransformation();
+	}
+
+	@Override public Transformation createDefaultCompleteObject() throws Exception {
+
+		final String transformationName = "my transformation";
+		final String transformationDescription = "transformation which just makes use of one function";
+		final String transformationParameter = "transformationInputString";
+
+		final Component component = componentServiceTestUtils.createDefaultCompleteObject();
+
+		final Set<Component> components = Sets.newLinkedHashSet();
+
+		components.add(component.getInputComponents().iterator().next());
+		components.add(component);
+		components.add(component.getOutputComponents().iterator().next());
+
+		final LinkedList<String> parameters = Lists.newLinkedList();
+		parameters.add(transformationParameter);
+
+		return createTransformation(transformationName, transformationDescription, components, parameters);
 	}
 
 	/**
@@ -93,7 +116,7 @@ public class TransformationServiceTestUtils extends BasicFunctionServiceTestUtil
 				actualComponentsMap.put(actualComponent.getId(), actualComponent);
 			}
 
-			componentsResourceTestUtils.compareObjects(expectedTransformation.getComponents(), actualComponentsMap);
+			componentServiceTestUtils.compareObjects(expectedTransformation.getComponents(), actualComponentsMap);
 		}
 	}
 
@@ -127,6 +150,26 @@ public class TransformationServiceTestUtils extends BasicFunctionServiceTestUtil
 	@Override
 	public void reset() {
 
-		componentsResourceTestUtils.reset();
+		componentServiceTestUtils.reset();
+	}
+
+	public Transformation getSimpleTrimTransformation() throws Exception {
+
+		final Component component = componentServiceTestUtils.getSimpleTrimComponent();
+
+		// transformation
+
+		final String transformationName = "my transformation";
+		final String transformationDescription = "transformation which just makes use of one function";
+		final String transformationParameter = "transformationInputString";
+
+		final Set<Component> components = Sets.newLinkedHashSet();
+
+		components.add(component);
+
+		final LinkedList<String> parameters = Lists.newLinkedList();
+		parameters.add(transformationParameter);
+
+		return createTransformation(transformationName, transformationDescription, components, parameters);
 	}
 }
