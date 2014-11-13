@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.junit.Assert;
@@ -33,20 +34,20 @@ import org.dswarm.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestU
 
 public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils<ComponentService, ProxyComponent, Component> {
 
-	private final FunctionServiceTestUtils			functionsResourceTestUtils;
+	private final FunctionServiceTestUtils functionServiceTestUtils;
 
-	private final TransformationServiceTestUtils	transformationsResourceTestUtils;
+	private final TransformationServiceTestUtils transformationsServiceTestUtils;
 
-	private final Set<Long>							checkedExpectedComponents	= Sets.newHashSet();
+	private final Set<Long> checkedExpectedComponents = Sets.newHashSet();
 
-	private final Set<Long>							checkedActualComponents		= Sets.newHashSet();
+	private final Set<Long> checkedActualComponents = Sets.newHashSet();
 
 	public ComponentServiceTestUtils() {
 
 		super(Component.class, ComponentService.class);
 
-		functionsResourceTestUtils = new FunctionServiceTestUtils();
-		transformationsResourceTestUtils = new TransformationServiceTestUtils(this);
+		functionServiceTestUtils = new FunctionServiceTestUtils();
+		transformationsServiceTestUtils = new TransformationServiceTestUtils(this);
 	}
 
 	public Component createComponent(final String name, final Map<String, String> parameterMappings, final Function function,
@@ -76,6 +77,48 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 		Assert.assertNotNull("the component name shouldn't be null", updatedComponent.getId());
 
 		return updatedComponent;
+	}
+
+	@Override
+	public Component createObject(final JsonNode objectDescription) throws Exception {
+		return null;
+	}
+
+	@Override
+	public Component createObject(final String identifier) throws Exception {
+		return null;
+	}
+
+	@Override
+	public Component createDefaultObject() throws Exception {
+
+		return getSimpleTrimComponent();
+	}
+
+	@Override public Component createDefaultCompleteObject() throws Exception {
+
+		// previous component
+		final Component component1 = getSimpleReplaceComponent();
+
+		// next component
+		final Component component2 = getSimpleLowerCaseComponent();
+
+		// main component
+
+		final Component component = getSimpleTrimComponent();
+
+		final Set<Component> inputComponents = Sets.newLinkedHashSet();
+
+		inputComponents.add(component1);
+
+		final Set<Component> outputComponents = Sets.newLinkedHashSet();
+
+		outputComponents.add(component2);
+
+		component.setInputComponents(inputComponents);
+		component.setOutputComponents(outputComponents);
+
+		return updateAndCompareObject(component, component);
 	}
 
 	/**
@@ -146,12 +189,12 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 
 				case Function:
 
-					functionsResourceTestUtils.compareObjects(expectedComponent.getFunction(), actualComponent.getFunction());
+					functionServiceTestUtils.compareObjects(expectedComponent.getFunction(), actualComponent.getFunction());
 
 					break;
 				case Transformation:
 
-					transformationsResourceTestUtils.compareObjects((Transformation) expectedComponent.getFunction(),
+					transformationsServiceTestUtils.compareObjects((Transformation) expectedComponent.getFunction(),
 							(Transformation) actualComponent.getFunction());
 
 					break;
@@ -225,20 +268,18 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 
 	public void checkDeletedComponent(final Component component) {
 
-		Component deletedComponent = null;
-
-		deletedComponent = jpaService.getObject(component.getId());
+		final Component deletedComponent = jpaService.getObject(component.getId());
 
 		Assert.assertNull("component should be null", deletedComponent);
 
 	}
 
 	/**
-	 * @see {@link BasicJPAServiceTestUtils#compareObjects(Set, Map)}
 	 * @param actualComponentId
 	 * @param expectedComponents
 	 * @param actualComponents
 	 * @param type
+	 * @see {@link BasicJPAServiceTestUtils#compareObjects(Set, Map)}
 	 */
 	private void prepareAndCompareComponents(final Long actualComponentId, final Set<Component> expectedComponents,
 			final Set<Component> actualComponents, final String type) {
@@ -284,7 +325,7 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 			}
 		} else {
 
-			newInputComponents = inputComponents;
+			newInputComponents = null;
 		}
 
 		object.setInputComponents(newInputComponents);
@@ -305,7 +346,7 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 			}
 		} else {
 
-			newOutputComponents = outputComponents;
+			newOutputComponents = null;
 		}
 
 		object.setOutputComponents(newOutputComponents);
@@ -319,6 +360,57 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 		checkedActualComponents.clear();
 		checkedExpectedComponents.clear();
 
-		functionsResourceTestUtils.reset();
+		functionServiceTestUtils.reset();
+	}
+
+	public Component getSimpleReplaceComponent() throws Exception {
+
+		final Function function1 = functionServiceTestUtils.getSimpleReplaceFunction();
+
+		final String component1Name = "my replace component";
+		final Map<String, String> parameterMapping1 = Maps.newLinkedHashMap();
+
+		final String functionParameterName1 = "inputString";
+		final String componentVariableName1 = "previousComponent.outputString";
+		final String functionParameterName2 = "regex";
+		final String componentVariableName2 = "\\.";
+		final String functionParameterName3 = "replaceString";
+		final String componentVariableName3 = ":";
+
+		parameterMapping1.put(functionParameterName1, componentVariableName1);
+		parameterMapping1.put(functionParameterName2, componentVariableName2);
+		parameterMapping1.put(functionParameterName3, componentVariableName3);
+
+		return createComponent(component1Name, parameterMapping1, function1, null, null);
+	}
+
+	public Component getSimpleLowerCaseComponent() throws Exception {
+
+		final Function function2 = functionServiceTestUtils.getSimpleLowerCaseFunction();
+
+		final String component2Name = "my lower case component";
+		final Map<String, String> parameterMapping2 = Maps.newLinkedHashMap();
+
+		final String functionParameterName4 = "inputString";
+		final String componentVariableName4 = "previousComponent.outputString";
+
+		parameterMapping2.put(functionParameterName4, componentVariableName4);
+
+		return createComponent(component2Name, parameterMapping2, function2, null, null);
+	}
+
+	public Component getSimpleTrimComponent() throws Exception {
+
+		final Function function = functionServiceTestUtils.getSimpleTrimFunction();
+
+		final String componentName = "my trim component";
+		final Map<String, String> parameterMapping = Maps.newLinkedHashMap();
+
+		final String functionParameterName = "inputString";
+		final String componentVariableName = "previousComponent.outputString";
+
+		parameterMapping.put(functionParameterName, componentVariableName);
+
+		return createComponent(componentName, parameterMapping, function, null, null);
 	}
 }

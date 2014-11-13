@@ -19,6 +19,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Maps;
 import org.junit.Assert;
 
@@ -29,7 +30,7 @@ import org.dswarm.persistence.service.job.TransformationService;
 
 public class TransformationServiceTestUtils extends BasicFunctionServiceTestUtils<TransformationService, ProxyTransformation, Transformation> {
 
-	private final ComponentServiceTestUtils	componentsResourceTestUtils;
+	private final ComponentServiceTestUtils componentsResourceTestUtils;
 
 	public TransformationServiceTestUtils() {
 
@@ -43,6 +44,21 @@ public class TransformationServiceTestUtils extends BasicFunctionServiceTestUtil
 		super(Transformation.class, TransformationService.class);
 
 		componentsResourceTestUtils = componentsResourceTestUtilsArg;
+	}
+
+	@Override
+	public Transformation createObject(final JsonNode objectDescription) throws Exception {
+		return null;
+	}
+
+	@Override
+	public Transformation createObject(final String identifier) throws Exception {
+		return null;
+	}
+
+	@Override
+	public Transformation createDefaultObject() throws Exception {
+		return null;
 	}
 
 	/**
@@ -91,9 +107,7 @@ public class TransformationServiceTestUtils extends BasicFunctionServiceTestUtil
 		transformation.setComponents(components);
 		transformation.setParameters(parameters);
 
-		final Transformation updatedTransformation = createAndCompareObject(transformation, transformation);
-
-		return updatedTransformation;
+		return createAndCompareObject(transformation, transformation);
 	}
 
 	/**
