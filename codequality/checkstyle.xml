@@ -12,7 +12,7 @@ http://checkstyle.sf.net (or in your downloaded distribution).
 -->
 
 <module name="Checker">
-    <property name="charset" value="UTF-8"/>
+   <property name="charset" value="UTF-8"/>
     <!--
     If you set the basedir property below, then all reported file
     names will be relative to the specified directory. See
@@ -278,9 +278,9 @@ http://checkstyle.sf.net (or in your downloaded distribution).
         <module name="MissingDeprecated"/>
         <module name="MissingOverride"/>
 
-        <!-- http://checkstyle.sourceforge.net/config_modifier.html -->
+        <!-- http://checkstyle.sourceforge.net/config_modifier.html 
         <module name="ModifierOrder"/>
-        <module name="RedundantModifier"/>
+        <module name="RedundantModifier"/>-->
     </module>
 
 </module>
