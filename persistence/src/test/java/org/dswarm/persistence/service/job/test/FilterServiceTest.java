@@ -15,13 +15,10 @@
  */
 package org.dswarm.persistence.service.job.test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.job.Filter;
 import org.dswarm.persistence.model.job.proxy.ProxyFilter;
 import org.dswarm.persistence.service.job.FilterService;
@@ -31,8 +28,6 @@ import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
 public class FilterServiceTest extends IDBasicJPAServiceTest<ProxyFilter, Filter, FilterService> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FilterServiceTest.class);
-
-	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	private FilterServiceTestUtils filterServiceTestUtils;
 
@@ -48,22 +43,13 @@ public class FilterServiceTest extends IDBasicJPAServiceTest<ProxyFilter, Filter
 	}
 
 	@Test
-	public void testSimpleFilter() throws Exception {
+	@Override
+	public void testSimpleObject() throws Exception {
 
 		final Filter filter = filterServiceTestUtils.createDefaultObject();
 
 		final Filter updatedFilter = filterServiceTestUtils.updateAndCompareObject(filter, filter);
 
-		String json = null;
-
-		try {
-
-			json = objectMapper.writeValueAsString(updatedFilter);
-		} catch (final JsonProcessingException e) {
-
-			e.printStackTrace();
-		}
-
-		FilterServiceTest.LOG.debug("filter json: " + json);
+		logObjectJSON(updatedFilter);
 	}
 }

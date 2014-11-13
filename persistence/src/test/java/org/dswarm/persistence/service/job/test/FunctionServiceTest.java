@@ -20,10 +20,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
@@ -32,7 +30,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.proxy.ProxyFunction;
 import org.dswarm.persistence.service.job.FunctionService;
@@ -43,8 +40,6 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 public class FunctionServiceTest extends IDBasicJPAServiceTest<ProxyFunction, Function, FunctionService> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FunctionServiceTest.class);
-
-	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	private FunctionServiceTestUtils functionServiceTestUtils;
 
@@ -61,22 +56,14 @@ public class FunctionServiceTest extends IDBasicJPAServiceTest<ProxyFunction, Fu
 	}
 
 	@Test
-	public void testSimpleFunction() throws Exception {
+	@Override
+	public void testSimpleObject() throws Exception {
 
 		final Function function = functionServiceTestUtils.createDefaultObject();
 
 		final Function updatedFunction = updateObjectTransactional(function).getObject();
 
-		String json = null;
-
-		try {
-			json = objectMapper.writeValueAsString(updatedFunction);
-		} catch (final JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		FunctionServiceTest.LOG.debug("function json: " + json);
+		logObjectJSON(updatedFunction);
 	}
 
 	// @Test

@@ -20,10 +20,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.proxy.ProxyClasz;
 import org.dswarm.persistence.service.schema.ClaszService;
@@ -34,37 +30,26 @@ public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, 
 
 	private static final Logger LOG = LoggerFactory.getLogger(ClaszServiceTest.class);
 
-	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
-
 	private ClaszServiceTestUtils cstUtils;
 
 	public ClaszServiceTest() {
 		super("class", ClaszService.class);
 	}
-	
-	
+
 	@Override
 	protected void initObjects() {
 		super.initObjects();
 		cstUtils = new ClaszServiceTestUtils();
 	}
 
-
 	@Test
-	public void testSimpleAttribute() throws Exception {
+	@Override
+	public void testSimpleObject() throws Exception {
 		final Clasz clasz = cstUtils.createDefaultObject();
 		final Clasz updatedClass = cstUtils.updateAndCompareObject(clasz, clasz);
 
-		String json = null;
-		try {
-
-			json = objectMapper.writeValueAsString(updatedClass);
-		} catch( final JsonProcessingException e ) {
-			LOG.error( e.getMessage(), e );
-		}
-		ClaszServiceTest.LOG.debug("class json: " + json);
+		logObjectJSON(updatedClass);
 	}
-
 
 	@Test
 	public void testUniquenessOfClasses() throws Exception {
@@ -74,7 +59,6 @@ public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, 
 
 		Assert.assertEquals("the attribute uris should be equal", clasz1.getName(), clasz2.getName());
 	}
-
 
 	private Clasz createAndUpdateClass() throws Exception {
 		final Clasz clasz = cstUtils.createObject(ClaszServiceTestUtils.BIBO_DOCUMENT, "document");

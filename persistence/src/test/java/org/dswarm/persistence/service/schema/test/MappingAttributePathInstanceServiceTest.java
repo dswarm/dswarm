@@ -15,13 +15,10 @@
  */
 package org.dswarm.persistence.service.schema.test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxyMappingAttributePathInstance;
 import org.dswarm.persistence.service.schema.MappingAttributePathInstanceService;
@@ -32,8 +29,6 @@ public class MappingAttributePathInstanceServiceTest extends
 		IDBasicJPAServiceTest<ProxyMappingAttributePathInstance, MappingAttributePathInstance, MappingAttributePathInstanceService> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SchemaServiceTest.class);
-
-	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	private MappingAttributePathInstanceServiceTestUtils mapisUtils;
 
@@ -48,18 +43,13 @@ public class MappingAttributePathInstanceServiceTest extends
 	}
 
 	@Test
-	public void testSimpleMappingAttributePathInstance() throws Exception {
+	@Override
+	public void testSimpleObject() throws Exception {
 
 		final MappingAttributePathInstance mapi = mapisUtils.createDefaultCompleteObject();
 
 		final MappingAttributePathInstance updatedMappingAttributePathInstance = mapisUtils.updateAndCompareObject(mapi, mapi);
 
-		String json = null;
-		try {
-			json = objectMapper.writeValueAsString(updatedMappingAttributePathInstance);
-		} catch (final JsonProcessingException e) {
-			LOG.error(e.getMessage(), e);
-		}
-		MappingAttributePathInstanceServiceTest.LOG.debug("mapping attribute path instance json: " + json);
+		logObjectJSON(updatedMappingAttributePathInstance);
 	}
 }

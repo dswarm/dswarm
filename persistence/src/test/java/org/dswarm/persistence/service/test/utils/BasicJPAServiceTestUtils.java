@@ -21,6 +21,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.google.common.collect.Maps;
+import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.DMPObject;
@@ -28,36 +36,27 @@ import org.dswarm.persistence.model.proxy.ProxyDMPObject;
 import org.dswarm.persistence.service.BasicJPAService;
 import org.dswarm.persistence.service.test.BasicJPAServiceTest;
 
-import org.junit.Assert;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.google.common.collect.Maps;
-
 public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE>
 		extends BasicJPAServiceTest<PROXYPOJOCLASS, POJOCLASS, POJOCLASSPERSISTENCESERVICE, POJOCLASSIDTYPE> {
 
-	private static final Logger							LOG	= LoggerFactory.getLogger(BasicJPAServiceTestUtils.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BasicJPAServiceTestUtils.class);
 
-	protected final Class<POJOCLASS>					pojoClass;
+	protected final Class<POJOCLASS> pojoClass;
 
-	protected final String								pojoClassName;
+	protected final String pojoClassName;
 
-	protected final Class<POJOCLASSPERSISTENCESERVICE>	persistenceServiceClass;
+	protected final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClass;
 
-	protected final ObjectMapper						objectMapper;
-	
+	protected final ObjectMapper objectMapper;
+
 	protected Map<String, POJOCLASS> cache = new HashMap<>();
 
 	public abstract POJOCLASS createObject(final JsonNode objectDescription) throws Exception;
-	
+
 	public abstract POJOCLASS createObject(final String identifier) throws Exception;
-	
+
 	public abstract POJOCLASS createDefaultObject() throws Exception;
-	
+
 	public BasicJPAServiceTestUtils(final Class<POJOCLASS> pojoClassArg, final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg) {
 
 		super(pojoClassArg.getSimpleName(), persistenceServiceClassArg);
@@ -80,9 +79,14 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 		// this should be done by the concrete test, not in the utils
 	}
 
+	@Override public void testSimpleObject() throws Exception {
+
+		// this should be implemented in real test classes, not in the utils
+	}
+
 	/**
 	 * Assert that neither {@code expectedObject} nor {@code actualObject} is null.
-	 * 
+	 *
 	 * @param expectedObject
 	 * @param actualObject
 	 */
@@ -118,7 +122,7 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 	/**
 	 * Assert that expectedObjects and actualObjects have the same size.<br />
 	 * Assert that both collections contain equal objects regarding id and name.
-	 * 
+	 *
 	 * @param expectedObjects
 	 * @param actualObjects
 	 */
@@ -243,9 +247,9 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 
 	/**
 	 * Prepares a given object with information from an object with updates.
-	 * 
+	 *
 	 * @param objectWithUpdates an object with updates
-	 * @param object the given object
+	 * @param object            the given object
 	 * @return the updated object
 	 */
 	protected abstract POJOCLASS prepareObjectForUpdate(final POJOCLASS objectWithUpdates, final POJOCLASS object);
@@ -257,7 +261,7 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 
 	/**
 	 * Creates a new object of the concrete POJO class.
-	 * 
+	 *
 	 * @return a new instance of the concrete POJO class
 	 * @throws DMPPersistenceException if something went wrong.
 	 */

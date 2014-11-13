@@ -17,8 +17,6 @@ package org.dswarm.persistence.service.schema.test;
 
 import java.util.Set;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
@@ -27,7 +25,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxySchemaAttributePathInstance;
 import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
@@ -39,8 +36,6 @@ public class SchemaAttributePathInstanceServiceTest extends
 		IDBasicJPAServiceTest<ProxySchemaAttributePathInstance, SchemaAttributePathInstance, SchemaAttributePathInstanceService> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SchemaServiceTest.class);
-
-	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	// TODO: generalize
 	private SchemaAttributePathInstanceServiceTestUtils sapisUtils;
@@ -70,7 +65,8 @@ public class SchemaAttributePathInstanceServiceTest extends
 	}
 
 	@Test
-	public void testSimpleSchemaAttributePathInstance() throws Exception {
+	@Override
+	public void testSimpleObject() throws Exception {
 
 		final ObjectNode objectDescription = objectMapper.createObjectNode();
 
@@ -85,13 +81,7 @@ public class SchemaAttributePathInstanceServiceTest extends
 
 		final SchemaAttributePathInstance updatedMappingAttributePathInstance = sapisUtils.updateAndCompareObject(sapi, sapi);
 
-		String json = null;
-		try {
-			json = objectMapper.writeValueAsString(updatedMappingAttributePathInstance);
-		} catch (final JsonProcessingException e) {
-			LOG.error(e.getMessage(), e);
-		}
-		SchemaAttributePathInstanceServiceTest.LOG.debug("schema attribute path instance json: " + json);
+		logObjectJSON(updatedMappingAttributePathInstance);
 	}
 
 	@Test
@@ -101,15 +91,8 @@ public class SchemaAttributePathInstanceServiceTest extends
 		final SchemaAttributePathInstance sapi = sapisUtils.createDefaultCompleteObject();
 		final SchemaAttributePathInstance updatedAttributePath = sapisUtils.updateAndCompareObject(sapi, sapi);
 
-		String json = null;
+		logObjectJSON(updatedAttributePath);
 
-		try {
-			json = objectMapper.writeValueAsString(updatedAttributePath);
-		} catch( final JsonProcessingException e ) {
-			LOG.error(e.getMessage(), e);
-		}
-
-		SchemaAttributePathInstanceServiceTest.LOG.debug("attribute path json: " + json);
 		SchemaAttributePathInstanceServiceTest.LOG.debug("end complete schema attribute path instance test");
 	}
 }

@@ -18,20 +18,17 @@ package org.dswarm.persistence.service.schema.test;
 import java.util.List;
 import java.util.Set;
 
-import org.dswarm.persistence.GuicedTest;
+import org.junit.Assert;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
 import org.dswarm.persistence.service.schema.AttributePathService;
 import org.dswarm.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
 import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
-import org.junit.Assert;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttributePath, AttributePath, AttributePathService> {
 
@@ -39,20 +36,15 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttribu
 
 	private AttributePathServiceTestUtils apstUtils;
 
-	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
-
-
 	public AttributePathServiceTest() {
 		super("attribute path", AttributePathService.class);
 	}
-
 
 	@Override
 	protected void initObjects() {
 		super.initObjects();
 		apstUtils = new AttributePathServiceTestUtils();
 	}
-
 
 	@Test
 	public void testSimpleAttributePath2() throws Exception {
@@ -62,7 +54,6 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttribu
 
 		AttributePathServiceTest.LOG.debug("end simple attribute path test 2");
 	}
-
 
 	@Test
 	public void testUniquenessOfAttributePath() throws Exception {
@@ -87,23 +78,16 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttribu
 		AttributePathServiceTest.LOG.debug("start uniquness of attribute path test");
 	}
 
-
 	@Test
-	public void testSimpleAttributePath() throws Exception {
+	@Override
+	public void testSimpleObject() throws Exception {
 		AttributePathServiceTest.LOG.debug("start simple attribute path test");
 
 		final AttributePath attributePath = apstUtils.createDefaultObject();
 		final AttributePath updatedAttributePath = apstUtils.updateAndCompareObject(attributePath, attributePath);
 
-		String json = null;
+		logObjectJSON(updatedAttributePath);
 
-		try {
-			json = objectMapper.writeValueAsString(updatedAttributePath);
-		} catch( final JsonProcessingException e ) {
-			LOG.error(e.getMessage(), e);
-		}
-
-		AttributePathServiceTest.LOG.debug("attribute path json: " + json);
 		AttributePathServiceTest.LOG.debug("end simple attribute path test");
 	}
 }

@@ -15,13 +15,10 @@
  */
 package org.dswarm.persistence.service.schema.test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.proxy.ProxyContentSchema;
 import org.dswarm.persistence.service.schema.ContentSchemaService;
@@ -31,8 +28,6 @@ import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
 public class ContentSchemaServiceTest extends IDBasicJPAServiceTest<ProxyContentSchema, ContentSchema, ContentSchemaService> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ContentSchemaServiceTest.class);
-
-	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	private ContentSchemaServiceTestUtils contentSchemaServiceTestUtils;
 
@@ -49,22 +44,13 @@ public class ContentSchemaServiceTest extends IDBasicJPAServiceTest<ProxyContent
 	}
 
 	@Test
-	public void testSimpleSchema() throws Exception {
+	@Override
+	public void testSimpleObject() throws Exception {
 
 		final ContentSchema contentSchema = contentSchemaServiceTestUtils.createDefaultObject();
 
 		final ContentSchema updatedContentSchema = contentSchemaServiceTestUtils.updateAndCompareObject(contentSchema, contentSchema);
 
-		String json = null;
-
-		try {
-
-			json = objectMapper.writeValueAsString(updatedContentSchema);
-		} catch (final JsonProcessingException e) {
-
-			e.printStackTrace();
-		}
-
-		ContentSchemaServiceTest.LOG.debug("content schema json: " + json);
+		logObjectJSON(updatedContentSchema);
 	}
 }
