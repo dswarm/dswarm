@@ -147,5 +147,40 @@ public class MappingAttributePathInstanceServiceTestUtils
 		fstUtils.reset();
 	}
 
+	public MappingAttributePathInstance getDefaultInputMAPI() throws Exception {
+
+		final AttributePath inputAttributePath = attributePathServiceTestUtils.getDctermsTitleAP();
+
+		return createMappingAttributePathInstance("input mapping attribute path instance", inputAttributePath, null, null);
+	}
+
+	public MappingAttributePathInstance getDefaultOutputMAPI() throws Exception {
+
+		final AttributePath outputAttributePath = attributePathServiceTestUtils.getRDFSLabelAP();
+
+		return createMappingAttributePathInstance("output mapping attribute path instance", outputAttributePath, null, null);
+	}
+
+	public MappingAttributePathInstance getDctermsCreatorFoafFirstnameMAPI() throws Exception {
+
+		final AttributePath dctermsCreatorFoafFirstnameAP = attributePathServiceTestUtils.getDctermsCreatorFoafFirstnameAP();
+
+		return createMappingAttributePathInstance("dcterms:creator/foaf:firstName MAPI", dctermsCreatorFoafFirstnameAP, null, null);
+	}
+
+	public MappingAttributePathInstance getDctermsCreatorFoafFamilynameMAPI() throws Exception {
+
+		final AttributePath dctermsCreatorFoafFamilynameAP = attributePathServiceTestUtils.getDctermsCreatorFoafFamilynameAP();
+
+		return createMappingAttributePathInstance("dcterms:creator/foaf:familyName MAPI", dctermsCreatorFoafFamilynameAP, null, null);
+	}
+
+	public MappingAttributePathInstance getDctermsCreatorFoafNameMAPI() throws Exception {
+
+		final AttributePath dctermsCreatorFoafMameAP = attributePathServiceTestUtils.getDctermsCreatorFoafNameAP();
+
+		return createMappingAttributePathInstance("dcterms:creator/foaf:name MAPI", dctermsCreatorFoafMameAP, null, null);
+	}
+
 }
 

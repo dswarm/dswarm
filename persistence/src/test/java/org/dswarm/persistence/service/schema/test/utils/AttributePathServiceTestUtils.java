@@ -54,6 +54,13 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 			AttributeServiceTestUtils.DCTERMS_TITLE + DMPStatics.ATTRIBUTE_DELIMITER
 					+ AttributeServiceTestUtils.DCTERMS_HASPART;
 
+	public static final String DCTERMS_CREATOR__FOAF_FIRSTNAME_AP  =
+			AttributeServiceTestUtils.DCTERMS_CREATOR + DMPStatics.ATTRIBUTE_DELIMITER + AttributeServiceTestUtils.FOAF_FIRSTNAME;
+	public static final String DCTERMS_CREATOR__FOAF_FAMILYNAME_AP =
+			AttributeServiceTestUtils.DCTERMS_CREATOR + DMPStatics.ATTRIBUTE_DELIMITER + AttributeServiceTestUtils.FOAF_FAMILYNAME;
+	public static final String DCTERMS_CREATOR__FOAF_NAME_AP       =
+			AttributeServiceTestUtils.DCTERMS_CREATOR + DMPStatics.ATTRIBUTE_DELIMITER + AttributeServiceTestUtils.FOAF_NAME;
+
 	private final AttributeServiceTestUtils astUtils;
 
 	private static final Set<List<String>> excludeAttributePaths = Sets.newHashSet();
@@ -274,6 +281,34 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 		ap5.add(AttributeServiceTestUtils.MABXML_ID);
 
 		commonAttributePathsMap.put(AttributeServiceTestUtils.MABXML_ID, ap5);
+
+		final List<String> ap6 = Lists.newArrayList();
+		ap6.add(AttributeServiceTestUtils.RDFS_LABEL);
+
+		commonAttributePathsMap.put(AttributeServiceTestUtils.RDFS_LABEL, ap6);
+
+		final List<String> ap7 = Lists.newArrayList();
+		ap7.add(AttributeServiceTestUtils.DCTERMS_TITLE);
+
+		commonAttributePathsMap.put(AttributeServiceTestUtils.DCTERMS_TITLE, ap7);
+
+		final List<String> ap8 = Lists.newArrayList();
+		ap8.add(AttributeServiceTestUtils.DCTERMS_CREATOR);
+		ap8.add(AttributeServiceTestUtils.FOAF_FIRSTNAME);
+
+		commonAttributePathsMap.put(DCTERMS_CREATOR__FOAF_FIRSTNAME_AP, ap8);
+
+		final List<String> ap9 = Lists.newArrayList();
+		ap9.add(AttributeServiceTestUtils.DCTERMS_CREATOR);
+		ap9.add(AttributeServiceTestUtils.FOAF_FAMILYNAME);
+
+		commonAttributePathsMap.put(DCTERMS_CREATOR__FOAF_FAMILYNAME_AP, ap9);
+
+		final List<String> ap10 = Lists.newArrayList();
+		ap10.add(AttributeServiceTestUtils.DCTERMS_CREATOR);
+		ap10.add(AttributeServiceTestUtils.FOAF_NAME);
+
+		commonAttributePathsMap.put(DCTERMS_CREATOR__FOAF_NAME_AP, ap10);
 	}
 
 	public AttributePathServiceTestUtils() {
@@ -376,9 +411,31 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 		return createObject(AttributeServiceTestUtils.MABXML_ID);
 	}
 
-	/**
-	 * using JPA
-	 */
+	public AttributePath getRDFSLabelAP() throws Exception {
+
+		return createObject(AttributeServiceTestUtils.RDFS_LABEL);
+	}
+
+	public AttributePath getDctermsTitleAP() throws Exception {
+
+		return createObject(AttributeServiceTestUtils.DCTERMS_TITLE);
+	}
+
+	public AttributePath getDctermsCreatorFoafFirstnameAP() throws Exception {
+
+		return createObject(DCTERMS_CREATOR__FOAF_FIRSTNAME_AP);
+	}
+
+	public AttributePath getDctermsCreatorFoafFamilynameAP() throws Exception {
+
+		return createObject(DCTERMS_CREATOR__FOAF_FAMILYNAME_AP);
+	}
+
+	public AttributePath getDctermsCreatorFoafNameAP() throws Exception {
+
+		return createObject(DCTERMS_CREATOR__FOAF_NAME_AP);
+	}
+
 	private AttributePath createObject(final List<Attribute> attributePath) {
 		AttributePath object = null;
 		try {

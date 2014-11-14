@@ -15,6 +15,7 @@
  */
 package org.dswarm.persistence.service.job.test.utils;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
@@ -64,24 +65,39 @@ public class TransformationServiceTestUtils extends BasicFunctionServiceTestUtil
 		return getSimpleTrimTransformation();
 	}
 
-	@Override public Transformation createDefaultCompleteObject() throws Exception {
+	/**
+	 * note: result will be cache (temporarily - for re-utilisation in a test)
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public Transformation createDefaultCompleteObject() throws Exception {
 
 		final String transformationName = "my transformation";
-		final String transformationDescription = "transformation which just makes use of one function";
-		final String transformationParameter = "transformationInputString";
 
-		final Component component = componentServiceTestUtils.createDefaultCompleteObject();
+		if (!cache.containsKey(transformationName)) {
 
-		final Set<Component> components = Sets.newLinkedHashSet();
+			final String transformationDescription = "transformation which just makes use of one function";
+			final String transformationParameter = "transformationInputString";
 
-		components.add(component.getInputComponents().iterator().next());
-		components.add(component);
-		components.add(component.getOutputComponents().iterator().next());
+			final Component component = componentServiceTestUtils.createDefaultCompleteObject();
 
-		final LinkedList<String> parameters = Lists.newLinkedList();
-		parameters.add(transformationParameter);
+			final Set<Component> components = Sets.newLinkedHashSet();
 
-		return createTransformation(transformationName, transformationDescription, components, parameters);
+			components.add(component.getInputComponents().iterator().next());
+			components.add(component);
+			components.add(component.getOutputComponents().iterator().next());
+
+			final LinkedList<String> parameters = Lists.newLinkedList();
+			parameters.add(transformationParameter);
+
+			final Transformation transformation = createTransformation(transformationName, transformationDescription, components, parameters);
+
+			cache.put(transformationName, transformation);
+		}
+
+		return cache.get(transformationName);
 	}
 
 	/**
@@ -171,5 +187,30 @@ public class TransformationServiceTestUtils extends BasicFunctionServiceTestUtil
 		parameters.add(transformationParameter);
 
 		return createTransformation(transformationName, transformationDescription, components, parameters);
+	}
+
+	public Transformation getComplexTransformation() throws Exception {
+
+		final String transformation2Name = "my transformation 2";
+		final String transformation2Description = "transformation which makes use of three functions (two transformations and one function)";
+		final String transformation2Parameter = "firstName";
+		final String transformation2Parameter2 = "familyName";
+
+		final Set<Component> components2 = Sets.newLinkedHashSet();
+
+		final Component component4 = componentServiceTestUtils.getFullNameComponent();
+
+		final Iterator<Component> iter = component4.getInputComponents().iterator();
+
+		components2.add(iter.next());
+		components2.add(iter.next());
+		components2.add(component4);
+
+		final LinkedList<String> transformation2Parameters = Lists.newLinkedList();
+		transformation2Parameters.add(transformation2Parameter);
+		transformation2Parameters.add(transformation2Parameter2);
+
+		return createTransformation(transformation2Name, transformation2Description,
+				components2, transformation2Parameters);
 	}
 }

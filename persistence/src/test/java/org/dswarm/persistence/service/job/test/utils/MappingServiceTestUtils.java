@@ -18,6 +18,7 @@ package org.dswarm.persistence.service.job.test.utils;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.junit.Assert;
@@ -32,13 +33,13 @@ import org.dswarm.persistence.service.test.utils.BasicDMPJPAServiceTestUtils;
 
 public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<MappingService, ProxyMapping, Mapping> {
 
-	private final ComponentServiceTestUtils						componentServiceTestUtils;
+	private final ComponentServiceTestUtils componentServiceTestUtils;
 
-	private final MappingAttributePathInstanceServiceTestUtils	mappingAttributePathInstanceServiceTestUtils;
+	private final MappingAttributePathInstanceServiceTestUtils mappingAttributePathInstanceServiceTestUtils;
 
-	private final Set<Long>										checkedExpectedAttributePaths	= Sets.newHashSet();
+	private final Set<Long> checkedExpectedAttributePaths = Sets.newHashSet();
 
-	private final Set<Long>										checkedActualAttributePaths		= Sets.newHashSet();
+	private final Set<Long> checkedActualAttributePaths = Sets.newHashSet();
 
 	public MappingServiceTestUtils() {
 
@@ -48,14 +49,68 @@ public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<Mapping
 		mappingAttributePathInstanceServiceTestUtils = new MappingAttributePathInstanceServiceTestUtils();
 	}
 
+	@Override public Mapping createObject(JsonNode objectDescription) throws Exception {
+		return null;
+	}
+
+	@Override public Mapping createObject(String identifier) throws Exception {
+		return null;
+	}
+
+	@Override public Mapping createDefaultObject() throws Exception {
+
+		final MappingAttributePathInstance inputAttributePath = mappingAttributePathInstanceServiceTestUtils.getDefaultInputMAPI();
+		final MappingAttributePathInstance outputAttributePath = mappingAttributePathInstanceServiceTestUtils.getDefaultOutputMAPI();
+
+		final Component transformationComponent = componentServiceTestUtils
+				.getTransformationComponentSimpleTrimComponent(inputAttributePath.getAttributePath().toAttributePath(),
+						outputAttributePath.getAttributePath().toAttributePath());
+
+		final String mappingName = "my mapping";
+
+		final Mapping mapping = new Mapping();
+		mapping.setName(mappingName);
+		mapping.addInputAttributePath(inputAttributePath);
+		mapping.setOutputAttributePath(outputAttributePath);
+		mapping.setTransformation(transformationComponent);
+
+		return createAndCompareObject(mapping, mapping);
+	}
+
+	@Override public Mapping createDefaultCompleteObject() throws Exception {
+
+		final MappingAttributePathInstance firstNameMappingAttributePathInstance = mappingAttributePathInstanceServiceTestUtils
+				.getDctermsCreatorFoafFirstnameMAPI();
+		final MappingAttributePathInstance familyNameMappingAttributePathInstance = mappingAttributePathInstanceServiceTestUtils
+				.getDctermsCreatorFoafFamilynameMAPI();
+		final MappingAttributePathInstance outputMappingAttributePathInstance = mappingAttributePathInstanceServiceTestUtils
+				.getDctermsCreatorFoafNameMAPI();
+
+		final Component transformationComponent3 = componentServiceTestUtils
+				.getComplexTransformationComponent(firstNameMappingAttributePathInstance.getAttributePath().toAttributePath(),
+						familyNameMappingAttributePathInstance.getAttributePath().toAttributePath(),
+						outputMappingAttributePathInstance.getAttributePath().toAttributePath());
+
+		final String mappingName = "my mapping";
+
+		final Mapping mapping = new Mapping();
+		mapping.setName(mappingName);
+		mapping.addInputAttributePath(firstNameMappingAttributePathInstance);
+		mapping.addInputAttributePath(familyNameMappingAttributePathInstance);
+		mapping.setOutputAttributePath(outputMappingAttributePathInstance);
+		mapping.setTransformation(transformationComponent3);
+
+		return createAndCompareObject(mapping, mapping);
+	}
+
 	/**
 	 * {@inheritDoc} <br />
 	 * Assert that both mappings either have no or equal (transformation) components, see
 	 * {@link ComponentServiceTestUtils#compareObjects(Component, Component)}. <br />
 	 * Assert that both mappings either have no or equal input attribute paths, see {@link
-	 * BasicJPAServiceTestUtils.compareObjects(Set, Map)}. <br />
+	 * org.dswarm.persistence.service.test.utils.BasicJPAServiceTestUtils#compareObjects(java.util.Set, java.util.Map)}. <br />
 	 * Assert that both mappings either have no or equal output attribute paths, see {@link
-	 * BasicJPAServiceTestUtils.compareObjects(Set, Map)}. <br />
+	 * org.dswarm.persistence.service.test.utils.BasicJPAServiceTestUtils#compareObjects(java.util.Set, java.util.Map)} . <br />
 	 */
 	@Override
 	public void compareObjects(final Mapping expectedMapping, final Mapping actualMapping) {
@@ -65,7 +120,8 @@ public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<Mapping
 		// transformation (component)
 		if (expectedMapping.getTransformation() == null) {
 
-			Assert.assertNull("the actual mapping '" + actualMapping.getId() + "' shouldn't have a transformation", actualMapping.getTransformation());
+			Assert.assertNull("the actual mapping '" + actualMapping.getId() + "' shouldn't have a transformation",
+					actualMapping.getTransformation());
 
 		} else {
 			componentServiceTestUtils.compareObjects(expectedMapping.getTransformation(), actualMapping.getTransformation());
@@ -94,8 +150,6 @@ public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<Mapping
 
 				if (checkAttributePath(actualInputAttributePath, checkedActualAttributePaths)) {
 
-					// SR FIXME why can we be sure we dont need to check this actualInputAttributePath? the last reset() may have
-					// been a while ago.
 					continue;
 				}
 
@@ -108,8 +162,6 @@ public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<Mapping
 
 				if (checkAttributePath(expectedInputAttributePath, checkedExpectedAttributePaths)) {
 
-					// SR FIXME why can we be sure we dont need to check this expectedInputAttributePath? the last reset() may
-					// have been a while ago.
 					continue;
 				}
 
@@ -126,7 +178,6 @@ public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<Mapping
 			Assert.assertNull("actual mapping '" + actualMapping.getId() + "' shouldn't have an output attribute path",
 					actualMapping.getOutputAttributePath());
 
-			// SR FIXME why can we skip here?
 		} else if (!checkAttributePath(expectedMapping.getOutputAttributePath(), checkedExpectedAttributePaths)
 				&& !checkAttributePath(actualMapping.getOutputAttributePath(), checkedActualAttributePaths)) {
 
@@ -174,11 +225,8 @@ public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<Mapping
 
 		checkedExpectedAttributePaths.clear();
 		checkedActualAttributePaths.clear();
-		// checkedExpectedFilters.clear();
-		// checkedActualFilters.clear();
 
 		mappingAttributePathInstanceServiceTestUtils.reset();
-		// filtersResourceTestUtils.reset();
 		componentServiceTestUtils.reset();
 	}
 }

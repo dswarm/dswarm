@@ -141,13 +141,6 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 
 			if (checkedExpectedComponents.contains(expectedComponent.getId())) {
 
-				// SR FIXME why do we return here? we may have seen the expectedObject before but get a different actualObject
-				// that needs to be compared to the one already known.
-				// Furthermore, even if we have already seen expected A and actual B, how do we know that we already compared A
-				// with B? previous calls may have been
-				// A, C
-				// D, B
-				// current: A, B
 				return;
 			}
 
@@ -412,5 +405,131 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 		parameterMapping.put(functionParameterName, componentVariableName);
 
 		return createComponent(componentName, parameterMapping, function, null, null);
+	}
+
+	public Component getTransformationComponentSimpleTrimComponent(final String inputAttributePath, final String outputAttributePath)
+			throws Exception {
+
+		final Transformation transformation = transformationsServiceTestUtils.getSimpleTrimTransformation();
+
+		final Map<String, String> transformationComponentParameterMappings = Maps.newLinkedHashMap();
+
+		transformationComponentParameterMappings.put(transformation.getParameters().get(0), inputAttributePath);
+		transformationComponentParameterMappings.put("transformationOutputVariable", outputAttributePath);
+
+		return createComponent(transformation.getName() + " (component)",
+				transformationComponentParameterMappings, transformation, null, null);
+	}
+
+	/**
+	 * note: result will be cache (temporarily - for re-utilisation in a test)
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	public Component getFirstNameTransformationComponentDefaultCompleteComponent() throws Exception {
+
+		final String transformationComponentName = "prepare first name";
+
+		if (!cache.containsKey(transformationComponentName)) {
+
+			final Transformation transformation = transformationsServiceTestUtils.createDefaultCompleteObject();
+
+			final String transformationComponentFunctionParameterName = "transformationInputString";
+			final String transformationComponentVariableName = "firstName";
+
+			final Map<String, String> transformationComponentParameterMappings = Maps.newLinkedHashMap();
+
+			transformationComponentParameterMappings.put(transformationComponentFunctionParameterName, transformationComponentVariableName);
+
+			final Component transformationComponent = createComponent(transformationComponentName,
+					transformationComponentParameterMappings, transformation, null, null);
+
+			cache.put(transformationComponentName, transformationComponent);
+		}
+
+		return cache.get(transformationComponentName);
+	}
+
+	/**
+	 * note: result will be cache (temporarily - for re-utilisation in a test)
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	public Component getFamilyNameTransformationComponentDefaultCompleteComponent() throws Exception {
+
+		final String name = "prepare family name";
+
+		if (!cache.containsKey(name)) {
+
+			final Transformation transformation = transformationsServiceTestUtils.createDefaultCompleteObject();
+
+			final Map<String, String> transformationComponentParameterMappings2 = Maps.newLinkedHashMap();
+
+			transformationComponentParameterMappings2.put("transformationInputString", "familyName");
+
+			final Component transformationComponent = createComponent(name,
+					transformationComponentParameterMappings2, transformation, null, null);
+
+			cache.put(name, transformationComponent);
+		}
+
+		return cache.get(name);
+	}
+
+	/**
+	 * note: result will be cache (temporarily - for re-utilisation in a test)
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	public Component getFullNameComponent() throws Exception {
+
+		final String component4Name = "full name";
+
+		if (!cache.containsKey(component4Name)) {
+
+			final Component transformationComponent = getFirstNameTransformationComponentDefaultCompleteComponent();
+			final Component transformationComponent2 = getFamilyNameTransformationComponentDefaultCompleteComponent();
+			final Function function4 = functionServiceTestUtils.getSimpleConcatFunction();
+
+			final Map<String, String> parameterMapping4 = Maps.newLinkedHashMap();
+
+			final String functionParameterName5 = "firstString";
+			final String componentVariableName5 = transformationComponent.getId() + ".outputVariable";
+			final String functionParameterName6 = "secondString";
+			final String componentVariableName6 = transformationComponent2.getId() + ".outputVariable";
+
+			parameterMapping4.put(functionParameterName5, componentVariableName5);
+			parameterMapping4.put(functionParameterName6, componentVariableName6);
+
+			final Set<Component> component4InputComponents = Sets.newLinkedHashSet();
+
+			component4InputComponents.add(transformationComponent);
+			component4InputComponents.add(transformationComponent2);
+
+			final Component component4 = createComponent(component4Name, parameterMapping4, function4,
+					component4InputComponents, null);
+
+			cache.put(component4Name, component4);
+		}
+
+		return cache.get(component4Name);
+	}
+
+	public Component getComplexTransformationComponent(final String firstInputAttributePath, final String secondInputAttributePath,
+			final String outputAttributePath) throws Exception {
+
+		final Transformation transformation2 = transformationsServiceTestUtils.getComplexTransformation();
+
+		final Map<String, String> transformationComponent3ParameterMappings = Maps.newLinkedHashMap();
+
+		transformationComponent3ParameterMappings.put(transformation2.getParameters().getFirst(), firstInputAttributePath);
+		transformationComponent3ParameterMappings.put(transformation2.getParameters().get(1), secondInputAttributePath);
+		transformationComponent3ParameterMappings.put("transformationOutputVariable", outputAttributePath);
+
+		return createComponent(transformation2.getName() + " (component)",
+				transformationComponent3ParameterMappings, transformation2, null, null);
 	}
 }

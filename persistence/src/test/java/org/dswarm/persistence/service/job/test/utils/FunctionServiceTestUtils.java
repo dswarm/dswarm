@@ -108,6 +108,20 @@ public class FunctionServiceTestUtils extends BasicFunctionServiceTestUtils<Func
 		return createFunction(function2Name, function2Description, function2Parameters);
 	}
 
+	public Function getSimpleConcatFunction() throws Exception {
+
+		final String function4Name = "concat";
+		final String function4Description = "concatenates two given string";
+		final String function5Parameter = "firstString";
+		final String function6Parameter = "secondString";
+
+		final LinkedList<String> function4Parameters = Lists.newLinkedList();
+		function4Parameters.add(function5Parameter);
+		function4Parameters.add(function6Parameter);
+
+		return createFunction(function4Name, function4Description, function4Parameters);
+	}
+
 	@Override
 	public void reset() {
 

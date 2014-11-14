@@ -33,6 +33,11 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 	public static final String DCTERMS_CREATED = "http://purl.org/dc/terms/created";
 	public static final String RDF_VALUE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#value";
 	public static final String MABXML_ID = "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id";
+	public static final String RDFS_LABEL = "http://www.w3.org/2000/01/rdf-schema#label";
+	public static final String DCTERMS_CREATOR = "http://purl.org/dc/terms/creator";
+	public static final String FOAF_FIRSTNAME = "http://xmlns.com/foaf/0.1/firstName";
+	public static final String FOAF_FAMILYNAME = "http://xmlns.com/foaf/0.1/familyName";
+	public static final String FOAF_NAME = "http://xmlns.com/foaf/0.1/name";
 
 	public static final Set<String> excludeAttributes    = Sets.newHashSet();
 	public static final Set<String> excludeSubAttributes = Sets.newHashSet();
@@ -94,6 +99,11 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 		commonTermsMap.put(DCTERMS_CREATED, new Tuple<>(DCTERMS_CREATED, "created"));
 		commonTermsMap.put(RDF_VALUE, new Tuple<>(RDF_VALUE, "value"));
 		commonTermsMap.put(MABXML_ID, new Tuple<>(MABXML_ID, "id"));
+		commonTermsMap.put(RDFS_LABEL, new Tuple<>(RDFS_LABEL, "label"));
+		commonTermsMap.put(DCTERMS_CREATOR, new Tuple<>(DCTERMS_CREATOR, "creator"));
+		commonTermsMap.put(FOAF_FIRSTNAME, new Tuple<>(FOAF_FIRSTNAME, "first name"));
+		commonTermsMap.put(FOAF_FAMILYNAME, new Tuple<>(FOAF_FAMILYNAME, "family name"));
+		commonTermsMap.put(FOAF_NAME, new Tuple<>(FOAF_NAME, "name"));
 	}
 
 	public AttributeServiceTestUtils() {
@@ -161,6 +171,16 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 	public Attribute getMABXMLID() throws Exception {
 
 		return createObject(MABXML_ID);
+	}
+
+	public Attribute getRDFSLabel() throws Exception {
+
+		return createObject(RDFS_LABEL);
+	}
+
+	public Attribute getDctermsCreator() throws Exception {
+
+		return createObject(DCTERMS_CREATOR);
 	}
 
 	@Override
