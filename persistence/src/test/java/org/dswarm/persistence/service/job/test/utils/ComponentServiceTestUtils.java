@@ -19,9 +19,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.json.JSONException;
 import org.junit.Assert;
 
 import org.dswarm.persistence.model.job.Component;
@@ -134,7 +136,7 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 	 * pairwise equal.
 	 */
 	@Override
-	public void compareObjects(final Component expectedComponent, final Component actualComponent) {
+	public void compareObjects(final Component expectedComponent, final Component actualComponent) throws JsonProcessingException, JSONException {
 
 		// Start skip already checked objects
 		if (expectedComponent != null && expectedComponent.getId() != null) {
@@ -275,7 +277,7 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 	 * @see {@link BasicJPAServiceTestUtils#compareObjects(Set, Map)}
 	 */
 	private void prepareAndCompareComponents(final Long actualComponentId, final Set<Component> expectedComponents,
-			final Set<Component> actualComponents, final String type) {
+			final Set<Component> actualComponents, final String type) throws JsonProcessingException, JSONException {
 
 		Assert.assertNotNull(type + " components of actual component '" + actualComponentId + "' shouldn't be null", actualComponents);
 		Assert.assertFalse(type + " components of actual component '" + actualComponentId + "' shouldn't be empty", actualComponents.isEmpty());

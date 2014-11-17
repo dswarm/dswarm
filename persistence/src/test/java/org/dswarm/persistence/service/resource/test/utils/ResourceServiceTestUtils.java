@@ -20,10 +20,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.json.JSONException;
 import org.junit.Assert;
 
 import org.dswarm.persistence.model.resource.Configuration;
@@ -33,16 +35,66 @@ import org.dswarm.persistence.model.resource.proxy.ProxyResource;
 import org.dswarm.persistence.service.resource.ResourceService;
 import org.dswarm.persistence.service.test.utils.BasicJPAServiceTestUtils;
 import org.dswarm.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestUtils;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils<ResourceService, ProxyResource, Resource> {
 
-	private final ConfigurationServiceTestUtils	configurationsResourceTestUtils;
+	private final ConfigurationServiceTestUtils configurationsServiceTestUtils;
 
 	public ResourceServiceTestUtils() {
 
 		super(Resource.class, ResourceService.class);
 
-		configurationsResourceTestUtils = new ConfigurationServiceTestUtils();
+		configurationsServiceTestUtils = new ConfigurationServiceTestUtils(this);
+	}
+
+	public ResourceServiceTestUtils(final ConfigurationServiceTestUtils configurationServiceTestUtilsArg) {
+
+		super(Resource.class, ResourceService.class);
+
+		configurationsServiceTestUtils = configurationServiceTestUtilsArg;
+	}
+
+	public ConfigurationServiceTestUtils getConfigurationsServiceTestUtils() {
+
+		return configurationsServiceTestUtils;
+	}
+
+	@Override public Resource createObject(JsonNode objectDescription) throws Exception {
+		return null;
+	}
+
+	@Override public Resource createObject(String identifier) throws Exception {
+		return null;
+	}
+
+	@Override public Resource createDefaultObject() throws Exception {
+
+		final Resource resource = new Resource();
+
+		resource.setName("bla");
+		resource.setDescription("blubblub");
+		resource.setType(ResourceType.FILE);
+
+		final ObjectNode attributes = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
+
+		final String attributeKey = "path";
+		final String attributeValue = "/path/to/file.end";
+
+		attributes.put(attributeKey, attributeValue);
+
+		resource.setAttributes(attributes);
+
+		return createAndCompareObject(resource, resource);
+	}
+
+	@Override public Resource createDefaultCompleteObject() throws Exception {
+
+		final Resource resource = createDefaultObject();
+		final Configuration configuration = configurationsServiceTestUtils.createDefaultObject();
+		resource.addConfiguration(configuration);
+
+		return updateAndCompareObject(resource, resource);
 	}
 
 	/**
@@ -53,7 +105,7 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 	 * {@link BasicJPAServiceTestUtils#compareObjects(Set, Map)} for details.
 	 */
 	@Override
-	public void compareObjects(final Resource expectedResource, final Resource actualResource) {
+	public void compareObjects(final Resource expectedResource, final Resource actualResource) throws JsonProcessingException, JSONException {
 
 		super.compareObjects(expectedResource, actualResource);
 
@@ -129,7 +181,7 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 				actualConfigurationsMap.put(actualConfiguration.getId(), actualConfiguration);
 			}
 
-			configurationsResourceTestUtils.compareObjects(expectedResource.getConfigurations(), actualConfigurationsMap);
+			configurationsServiceTestUtils.compareObjects(expectedResource.getConfigurations(), actualConfigurationsMap);
 		}
 	}
 
@@ -158,7 +210,7 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 
 	/**
 	 * note: legacy
-	 * 
+	 *
 	 * @param resource
 	 * @param updatedResource
 	 * @param attributeKey
@@ -180,13 +232,14 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 
 	/**
 	 * note: legacy
-	 * 
+	 *
 	 * @param resource
 	 * @param updatedResource
 	 * @param parameterKey
 	 * @param parameterValue
 	 */
-	public void checkComplexResource(final Resource resource, final Resource updatedResource, final String parameterKey, final String parameterValue) {
+	public void checkComplexResource(final Resource resource, final Resource updatedResource, final String parameterKey,
+			final String parameterValue) {
 
 		checkComplexResource(resource, updatedResource);
 
@@ -201,7 +254,7 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 
 	/**
 	 * note: legacy
-	 * 
+	 *
 	 * @param resource
 	 * @param updatedResource
 	 */
@@ -237,7 +290,7 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 			}
 		} else {
 
-			newConfigurations = configurations;
+			newConfigurations = null;
 		}
 
 		object.setConfigurations(newConfigurations);
@@ -256,6 +309,6 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 	@Override
 	public void reset() {
 
-		configurationsResourceTestUtils.reset();
+		configurationsServiceTestUtils.reset();
 	}
 }

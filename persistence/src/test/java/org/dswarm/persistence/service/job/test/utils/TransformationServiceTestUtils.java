@@ -20,10 +20,12 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.json.JSONException;
 import org.junit.Assert;
 
 import org.dswarm.persistence.model.job.Component;
@@ -106,7 +108,8 @@ public class TransformationServiceTestUtils extends BasicFunctionServiceTestUtil
 	 * {@link org.dswarm.persistence.service.test.utils.BasicJPAServiceTestUtils#compareObjects(Set, Map)} for details.
 	 */
 	@Override
-	public void compareObjects(final Transformation expectedTransformation, final Transformation actualTransformation) {
+	public void compareObjects(final Transformation expectedTransformation, final Transformation actualTransformation)
+			throws JsonProcessingException, JSONException {
 
 		super.compareObjects(expectedTransformation, actualTransformation);
 

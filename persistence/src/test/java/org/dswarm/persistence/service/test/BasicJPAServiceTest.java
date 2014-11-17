@@ -24,6 +24,7 @@ import org.dswarm.persistence.service.MaintainDBService;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -119,7 +120,7 @@ public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<
 		return proxyUpdatedObject;
 	}
 
-	protected POJOCLASS getObject(final POJOCLASS object) {
+	protected POJOCLASS getObject(final POJOCLASS object) throws JsonProcessingException, JSONException {
 
 		final POJOCLASS persitentObject = jpaService.getObject(object.getId());
 
