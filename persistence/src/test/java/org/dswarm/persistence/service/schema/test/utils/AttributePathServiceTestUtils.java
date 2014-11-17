@@ -25,10 +25,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.json.JSONException;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -328,7 +330,7 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 	 * @param actualObject
 	 */
 	@Override
-	public void compareObjects(final AttributePath expectedObject, final AttributePath actualObject) {
+	public void compareObjects(final AttributePath expectedObject, final AttributePath actualObject) throws JsonProcessingException, JSONException {
 
 		super.compareObjects(expectedObject, actualObject);
 
