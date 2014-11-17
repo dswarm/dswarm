@@ -19,10 +19,7 @@ import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.NameSpacePrefixRegistry;
 import org.dswarm.persistence.model.schema.Schema;
 
-// TODO make this schema also use sub-schemata when everything works for the document schema
-public class BibrmContractItemSchemaBuilder extends SchemaBuilder {
-
-	// private static final Logger LOG = LoggerFactory.getLogger(BibrmContractItemSchemaBuilder.class);
+public class FoafPersonSchemaBuilder extends SchemaBuilder {
 
 	@Override
 	public Schema buildSchema() throws Exception {
@@ -31,28 +28,19 @@ public class BibrmContractItemSchemaBuilder extends SchemaBuilder {
 
 		final Schema tempSchema = new Schema();
 		
-		Clasz clasz = claszServiceTestUtils.createObject(NameSpacePrefixRegistry.BIBRM + "ContractItem", "ContractItem");
-		
-		// basic properties for ERM example
-		// tempSchema.addAttributePath(builder.parsePrefixPath("bibrm:hasItem")); // this needs to go to the schema of Contract
-		// itself
+		Clasz clasz = claszServiceTestUtils.createObject(NameSpacePrefixRegistry.FOAF + "Person", "Person");
+
+		// basic properties as an example:
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("rdf:type"));
-		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("bibrm:EISSN"));
-		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dc:title"));
-		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("bibrm:price"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("foaf:familyName"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("foaf:givenName"));
 
 		// store all parsed paths as an overview
 		prefixPaths = builder.getPrefixPaths();
 
-		final Schema persistentSchema = schemaServiceTestUtils.createSchema("bibrm:ContractItem-Schema (ERM-Scenario)",
-				tempSchema.getUniqueAttributePaths(), clasz);
+		final Schema persistentSchema = schemaServiceTestUtils.createSchema("foaf:Person-Schema", tempSchema.getUniqueAttributePaths(), clasz);
 
 		return persistentSchema;
-	}
-
-	@Override
-	public String getPrefixPaths() {
-		return prefixPaths;
 	}
 
 }
