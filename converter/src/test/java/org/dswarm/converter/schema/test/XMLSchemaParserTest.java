@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2013, 2014 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *         http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,25 +15,20 @@
  */
 package org.dswarm.converter.schema.test;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Optional;
+import com.google.common.collect.Maps;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Optional;
-import com.google.common.collect.Maps;
-import com.google.inject.Key;
-import com.google.inject.name.Names;
-
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.schema.XMLSchemaParser;
-import org.dswarm.init.util.CmdUtil;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
 import org.dswarm.persistence.model.schema.AttributePath;
@@ -42,8 +37,6 @@ import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.service.MaintainDBService;
 import org.dswarm.persistence.service.schema.SchemaService;
-import org.dswarm.persistence.service.schema.test.internalmodel.BiboDocumentSchemaBuilder;
-import org.dswarm.persistence.service.schema.test.internalmodel.BibrmContractItemSchemaBuilder;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -99,7 +92,7 @@ public class XMLSchemaParserTest extends GuicedTest {
 
 	/**
 	 * note: creates the mabxml from the given xml schema file from scratch
-	 * 
+	 *
 	 * @throws IOException
 	 * @throws DMPPersistenceException
 	 */
@@ -122,11 +115,11 @@ public class XMLSchemaParserTest extends GuicedTest {
 
 	/**
 	 * note: creates the mabxml from the given xml schema file from scratch
-	 * 
+	 *
 	 * @throws IOException
 	 * @throws DMPPersistenceException
 	 */
-	public void testSchemaParsing2() throws IOException, DMPPersistenceException {
+	public static void testSchemaParsing2() throws IOException, DMPPersistenceException {
 
 		final XMLSchemaParser xmlSchemaParser = GuicedTest.injector.getInstance(XMLSchemaParser.class);
 		final Optional<Schema> optionalSchema = xmlSchemaParser.parse("mabxml-1.xsd", "datensatz", "mabxml schema");
@@ -165,41 +158,4 @@ public class XMLSchemaParserTest extends GuicedTest {
 
 		schemaService.updateObjectTransactional(schema);
 	}
-
-	@Test
-	public void buildInitCompleteScript() throws Exception {
-		new BibrmContractItemSchemaBuilder().buildSchema();
-		new BiboDocumentSchemaBuilder().buildSchema();
-		testSchemaParsing2();
-
-		final String sep = File.separator;
-
-		final String user = readManuallyFromTypeSafeConfig("dswarm.db.metadata.username");
-		final String pass = readManuallyFromTypeSafeConfig("dswarm.db.metadata.password");
-		final String db = readManuallyFromTypeSafeConfig("dswarm.db.metadata.schema");
-		String outputFile = readManuallyFromTypeSafeConfig("dswarm.paths.root");
-
-		outputFile = outputFile.substring(0, outputFile.lastIndexOf(sep));
-		outputFile = outputFile + sep + "persistence" + sep + "src" + sep + "main" + sep + "resources" + sep + "init_internal_schema.sql";
-
-		final String output = outputFile;
-
-		final StringBuilder sb = new StringBuilder();
-		sb.append("mysqldump")
-				.append(" -u")
-				.append(user)
-				.append(" -p")
-				.append(pass)
-				.append(" --no-create-info --no-create-db --skip-triggers --skip-create-options --skip-add-drop-table --skip-lock-tables --skip-add-locks -B ")
-				.append(db);
-		// .append(" > ")
-		// .append( outputFile );
-
-		CmdUtil.runCommand(sb.toString(), output);
-	}
-
-	private String readManuallyFromTypeSafeConfig(final String key) {
-		return GuicedTest.injector.getInstance(Key.get(String.class, Names.named(key)));
-	}
-
 }
