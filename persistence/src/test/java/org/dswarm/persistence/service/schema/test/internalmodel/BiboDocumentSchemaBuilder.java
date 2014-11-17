@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2013, 2014 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,35 +15,39 @@
  */
 package org.dswarm.persistence.service.schema.test.internalmodel;
 
+import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.NameSpacePrefixRegistry;
 import org.dswarm.persistence.model.schema.Schema;
 
 public class BiboDocumentSchemaBuilder extends SchemaBuilder {
 
 	@Override
-	public Schema buildSchema() {
+	public Schema buildSchema() throws Exception {
 
 		final AttributePathBuilder builder = new AttributePathBuilder();
 
 		final Schema tempSchema = new Schema();
 
-		tempSchema.setRecordClass(builder.createClass(NameSpacePrefixRegistry.BIBO + "Document", "Document"));
+		Clasz clasz = claszServiceTestUtils.createObject(NameSpacePrefixRegistry.BIBO + "Document", "Document");
 
 		/*
 		 * // Example of how to use the normal API of the attribute path builder
 		 * biboDocumentSchema.addAttributePath(builder.start().add(DC + "creator").add(FOAF + "first_name").getPath());
 		 */
-		
-		
+
 		// basic properties used in DINI-AG Titeldaten recommendations
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dc:title"));
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("rda:otherTitleInformation"));
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:alternative"));
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("bibo:shortTitle"));
-		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:creator"));
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dc:creator"));
-		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:contributor"));
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dc:contributor"));
+		{
+			// add "deep" paths as schema attribute path instances with attached sub-schemata ...
+			Schema foafPersonSchema = new FoafPersonSchemaBuilder().buildSchema();
+			tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:creator", foafPersonSchema));
+			tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:contributor", foafPersonSchema));
+		}
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("rda:publicationStatement"));
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("rda:placeOfPublication"));
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dc:publisher"));
@@ -68,21 +72,11 @@ public class BiboDocumentSchemaBuilder extends SchemaBuilder {
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("bibo:edition"));
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:bibliographicCitation"));
 
-		// extra (added to have some details on creator/contributor resources):
-		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:creator/rdf:type"));
-		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:creator/foaf:familyName"));
-		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:creator/foaf:givenName"));
-		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:contributor/rdf:type"));
-		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:contributor/foaf:familyName"));
-		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:contributor/foaf:givenName"));
-
-		// This can be generated from an excel file Jan curates
-
 		// store all parsed paths as an overview
 		prefixPaths = builder.getPrefixPaths();
 
-		final Schema persistentSchema = createSchema("bibo:Document-Schema (KIM-Titeldaten)", tempSchema.getUniqueAttributePaths(),
-				tempSchema.getRecordClass());
+		final Schema persistentSchema = schemaServiceTestUtils.createSchema("bibo:Document-Schema (KIM-Titeldaten)",
+				tempSchema.getUniqueAttributePaths(), clasz);
 
 		return persistentSchema;
 	}

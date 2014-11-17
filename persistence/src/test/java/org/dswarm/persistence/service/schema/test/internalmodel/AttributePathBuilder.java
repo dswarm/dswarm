@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2013, 2014 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,50 +16,47 @@
 package org.dswarm.persistence.service.schema.test.internalmodel;
 
 import java.util.LinkedList;
-import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import org.apache.commons.lang.StringUtils;
-import org.junit.Assert;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
-import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.NameSpacePrefixRegistry;
+import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
-import org.dswarm.persistence.service.schema.AttributePathService;
-import org.dswarm.persistence.service.schema.AttributeService;
-import org.dswarm.persistence.service.schema.ClaszService;
-import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
+import org.dswarm.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
+import org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtils;
+import org.dswarm.persistence.service.schema.test.utils.SchemaAttributePathInstanceServiceTestUtils;
 
 public class AttributePathBuilder extends GuicedTest {
 
-	private static final Logger				LOG				= LoggerFactory.getLogger(AttributePathBuilder.class);
+	//private static final Logger									LOG			= LoggerFactory.getLogger(AttributePathBuilder.class);
 
-	private AttributePath					pathUnderConstruction;
+	private AttributePath										pathUnderConstruction;
 
-	private LinkedList<Attribute>			attributeList;
+	private LinkedList<Attribute>								attributeList;
 
-	private final ObjectMapper				objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+	// private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	private final Map<Long, Attribute>		attributes		= Maps.newLinkedHashMap();
+	private final NameSpacePrefixRegistry						registry;
 
-	private final NameSpacePrefixRegistry	registry;
+	private String												prefixPaths	= "";
 
-	private String							prefixPaths		= "";
+	private final SchemaAttributePathInstanceServiceTestUtils	schemaAPinstanceServiceTestUtils;
+	private final AttributePathServiceTestUtils					apServiceTestUtils;
+	private final AttributeServiceTestUtils						attributeServiceTestUtils;
 
 	public AttributePathBuilder() {
 
 		super();
 
 		registry = new NameSpacePrefixRegistry();
+
+		schemaAPinstanceServiceTestUtils = new SchemaAttributePathInstanceServiceTestUtils();
+		apServiceTestUtils = new AttributePathServiceTestUtils();
+		attributeServiceTestUtils = new AttributeServiceTestUtils();
 
 	}
 
@@ -68,18 +65,18 @@ public class AttributePathBuilder extends GuicedTest {
 		return this;
 	}
 
-	public AttributePathBuilder add(final String fullURI) {
-		attributeList.add(createAttribute(fullURI, getLocalName(fullURI)));
+	public AttributePathBuilder add(final String fullURI) throws Exception {
+		attributeList.add(attributeServiceTestUtils.createObject(fullURI, getLocalName(fullURI)));
 		return this;
 	}
 
-	public AttributePath getPath() {
+	public AttributePath getPath() throws Exception {
 
-		pathUnderConstruction = createAttributePath(attributeList);
+		pathUnderConstruction = apServiceTestUtils.createAttributePath(attributeList);
 		return pathUnderConstruction;
 	}
 
-	public AttributePath parseAsAttributePath(final String pathInPrefixNotation) {
+	public AttributePath parseAsAttributePath(final String pathInPrefixNotation) throws Exception {
 
 		// temp store prefix paths as a summary
 		prefixPaths += pathInPrefixNotation + System.lineSeparator();
@@ -104,144 +101,23 @@ public class AttributePathBuilder extends GuicedTest {
 		return getPath();
 
 	}
-	
-	public SchemaAttributePathInstance parseAsAttributePathInstance(final String pathInPrefixNotation) {
-		
+
+	public SchemaAttributePathInstance parseAsAttributePathInstance(final String pathInPrefixNotation) throws Exception {
+
 		AttributePath attributePath = parseAsAttributePath(pathInPrefixNotation);
-		
-		SchemaAttributePathInstance attributePathInstance = createAttributePathInstance(attributePath);
-		
-		return attributePathInstance;
+
+		return schemaAPinstanceServiceTestUtils.createSchemaAttributePathInstance(attributePath);
+	}
+
+	public SchemaAttributePathInstance parseAsAttributePathInstance(final String pathInPrefixNotation, Schema subSchema) throws Exception {
+
+		AttributePath attributePath = parseAsAttributePath(pathInPrefixNotation);
+
+		return schemaAPinstanceServiceTestUtils.createSchemaAttributePathInstance(null, attributePath, subSchema);
 	}
 
 	public String getPrefixPaths() {
 		return prefixPaths;
-	}
-	
-	private SchemaAttributePathInstance createAttributePathInstance(final AttributePath attributePathArg) {
-
-		final SchemaAttributePathInstanceService attributePathInstanceService = GuicedTest.injector.getInstance(SchemaAttributePathInstanceService.class);
-
-		Assert.assertNotNull("attribute path instance service shouldn't be null", attributePathInstanceService);
-
-		SchemaAttributePathInstance persistedAttributePathInstance = null;
-		
-		try {
-			persistedAttributePathInstance = attributePathInstanceService.createObjectTransactional(attributePathArg).getObject();
-		} catch (final DMPPersistenceException e1) {
-			Assert.fail("something went wrong while attribute path instance creation.\n" + e1.getMessage());
-		}
-		
-		return persistedAttributePathInstance;
-	}
-
-	private AttributePath createAttributePath(final LinkedList<Attribute> attributePathArg) {
-
-		final AttributePathService attributePathService = GuicedTest.injector.getInstance(AttributePathService.class);
-
-		Assert.assertNotNull("attribute path service shouldn't be null", attributePathService);
-
-		AttributePath updatedAttributePath = null;
-
-		try {
-			updatedAttributePath = attributePathService.createOrGetObjectTransactional(attributePathArg).getObject();
-		} catch (final DMPPersistenceException e1) {
-			Assert.fail("something went wrong while attribute path creation.\n" + e1.getMessage());
-		}
-
-		String json = null;
-
-		try {
-
-			json = objectMapper.writeValueAsString(updatedAttributePath);
-			
-		} catch (final JsonProcessingException e) {
-
-			e.printStackTrace();
-		}
-
-		AttributePathBuilder.LOG.debug("attribute path json for attribute path '" + updatedAttributePath.getId() + "': " + json);
-
-		return updatedAttributePath;
-	}
-
-	private Attribute createAttribute(final String id, final String name) {
-
-		if (attributes.containsKey(id)) {
-
-			return attributes.get(id);
-		}
-
-		final AttributeService attributeService = GuicedTest.injector.getInstance(AttributeService.class);
-
-		Assert.assertNotNull("attribute service shouldn't be null", attributeService);
-
-		// create first attribute
-
-		Attribute attribute = null;
-
-		try {
-			attribute = attributeService.createOrGetObjectTransactional(id).getObject();
-		} catch (final DMPPersistenceException e) {
-			Assert.fail("something went wrong while attribute creation.\n" + e.getMessage());
-		}
-
-		Assert.assertNotNull("attribute shouldn't be null", attribute);
-		Assert.assertNotNull("attribute id shouldn't be null", attribute.getId());
-
-		attribute.setName(name);
-
-		Attribute updatedAttribute = null;
-
-		try {
-			updatedAttribute = attributeService.updateObjectTransactional(attribute).getObject();
-		} catch (final DMPPersistenceException e) {
-			Assert.assertTrue("something went wrong while updating the attribute of id = '" + id + "'", false);
-		}
-
-		Assert.assertNotNull("updated attribute shouldn't be null", updatedAttribute);
-		Assert.assertNotNull("updated attribute id shouldn't be null", updatedAttribute.getId());
-		Assert.assertNotNull("updated attribute name shouldn't be null", updatedAttribute.getName());
-
-		attributes.put(updatedAttribute.getId(), updatedAttribute);
-
-		return updatedAttribute;
-	}
-
-	public Clasz createClass(final String id, final String name) {
-
-		final ClaszService classService = GuicedTest.injector.getInstance(ClaszService.class);
-
-		Assert.assertNotNull("class service shouldn't be null", classService);
-
-		// create class
-
-		Clasz clasz = null;
-
-		try {
-			clasz = classService.createOrGetObjectTransactional(id).getObject();
-		} catch (final DMPPersistenceException e) {
-			Assert.assertTrue("something went wrong while class creation.\n" + e.getMessage(), false);
-		}
-
-		Assert.assertNotNull("attribute shouldn't be null", clasz);
-		Assert.assertNotNull("attribute id shouldn't be null", clasz.getId());
-
-		clasz.setName(name);
-
-		Clasz updatedClasz = null;
-
-		try {
-			updatedClasz = classService.updateObjectTransactional(clasz).getObject();
-		} catch (final DMPPersistenceException e) {
-			Assert.assertTrue("something went wrong while updating the class of id = '" + id + "'", false);
-		}
-
-		Assert.assertNotNull("updated class shouldn't be null", updatedClasz);
-		Assert.assertNotNull("updated class id shouldn't be null", updatedClasz.getId());
-		Assert.assertNotNull("updated class name shouldn't be null", updatedClasz.getName());
-
-		return updatedClasz;
 	}
 
 	private String getLocalName(final String fullURI) {
