@@ -237,4 +237,12 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 
 		return updateAndCompareObject(schema, schema);
 	}
+
+	public Schema createAlternativeSchema() throws Exception {
+		return createSchema("my schema", new SchemaAttributePathInstance[] {
+				schemaAttributePathInstanceResourceTestUtils.createDefaultObject(),
+				schemaAttributePathInstanceResourceTestUtils.getDctermsCreatorFOAFNameSAPI(),
+				schemaAttributePathInstanceResourceTestUtils.getDctermsCreatedSAPI()
+		}, claszesServiceTestUtils.createDefaultObject());
+	}
 }

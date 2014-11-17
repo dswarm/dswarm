@@ -18,16 +18,14 @@ package org.dswarm.persistence.service.schema.test.internalmodel;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Before;
+import org.junit.Test;
+
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
-import org.dswarm.persistence.service.MaintainDBService;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class InternalSchemaBuilderTest extends GuicedTest {
 
@@ -37,28 +35,10 @@ public class InternalSchemaBuilderTest extends GuicedTest {
 
 	// private static final String NL = System.lineSeparator();
 
-	protected MaintainDBService	maintainDBService;
-
 	@Before
 	public void prepare() throws Exception {
-		GuicedTest.tearDown();
-		GuicedTest.startUp();
-		initObjects();
-		// maintainDBService.initDB();
+		super.prepare();
 		maintainDBService.truncateTables();
-	}
-
-	@After
-	public void tearDown2() throws Exception {
-		GuicedTest.tearDown();
-		GuicedTest.startUp();
-		initObjects();
-		// maintainDBService.initDB();
-		// maintainDBService.truncateTables();
-	}
-
-	protected void initObjects() {
-		maintainDBService = GuicedTest.injector.getInstance(MaintainDBService.class);
 	}
 
 	// @Ignore

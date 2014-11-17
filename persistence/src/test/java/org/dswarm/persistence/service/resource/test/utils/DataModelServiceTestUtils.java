@@ -15,6 +15,9 @@
  */
 package org.dswarm.persistence.service.resource.test.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.json.JSONException;
 import org.junit.Assert;
 
 import org.dswarm.persistence.model.resource.Configuration;
@@ -28,19 +31,55 @@ import org.dswarm.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestU
 
 public class DataModelServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils<DataModelService, ProxyDataModel, DataModel> {
 
-	private final ResourceServiceTestUtils		resourcesResourceTestUtils;
+	private final ResourceServiceTestUtils resourcesResourceTestUtils;
 
-	private final ConfigurationServiceTestUtils	configurationsResourceTestUtils;
+	private final ConfigurationServiceTestUtils configurationsResourceTestUtils;
 
-	private final SchemaServiceTestUtils		schemasResourceTestUtils;
+	private final SchemaServiceTestUtils schemasResourceTestUtils;
 
 	public DataModelServiceTestUtils() {
 
 		super(DataModel.class, DataModelService.class);
 
 		resourcesResourceTestUtils = new ResourceServiceTestUtils();
-		configurationsResourceTestUtils = new ConfigurationServiceTestUtils();
+		configurationsResourceTestUtils = new ConfigurationServiceTestUtils(resourcesResourceTestUtils);
 		schemasResourceTestUtils = new SchemaServiceTestUtils();
+	}
+
+	@Override public DataModel createObject(JsonNode objectDescription) throws Exception {
+		return null;
+	}
+
+	@Override public DataModel createObject(String identifier) throws Exception {
+		return null;
+	}
+
+	@Override public DataModel createDefaultObject() throws Exception {
+
+		final String dataModelName = "my data model";
+		final String dataModelDescription = "my data model description";
+
+		final Schema schema = schemasResourceTestUtils.createAlternativeSchema();
+		final Resource resource = resourcesResourceTestUtils.createDefaultObject();
+		final Configuration configuration = configurationsResourceTestUtils.createDefaultObject();
+		resource.addConfiguration(configuration);
+		final Resource updatedResource = resourcesResourceTestUtils.updateAndCompareObject(resource, resource);
+
+		return createDataModel(dataModelName, dataModelDescription, updatedResource, configuration, schema);
+	}
+
+	public DataModel createDataModel(final String name, final String description, final Resource resource, final Configuration configuration,
+			final Schema schema)
+			throws Exception {
+
+		final DataModel dataModel = new DataModel();
+		dataModel.setName(name);
+		dataModel.setDescription(description);
+		dataModel.setDataResource(resource);
+		dataModel.setConfiguration(configuration);
+		dataModel.setSchema(schema);
+
+		return createAndCompareObject(dataModel, dataModel);
 	}
 
 	/**
@@ -53,7 +92,7 @@ public class DataModelServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 	 * {@link SchemaServiceTestUtils#compareObjects(Schema, Schema)}. <br />
 	 */
 	@Override
-	public void compareObjects(final DataModel expectedDataModel, final DataModel actualDataModel) {
+	public void compareObjects(final DataModel expectedDataModel, final DataModel actualDataModel) throws JsonProcessingException, JSONException {
 
 		super.compareObjects(expectedDataModel, actualDataModel);
 
