@@ -22,16 +22,21 @@ import com.google.inject.Key;
 import com.google.inject.name.Names;
 import com.google.inject.persist.PersistService;
 import com.typesafe.config.Config;
+import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 
 import org.dswarm.init.ConfigModule;
 import org.dswarm.init.LoggingConfigurator;
-
+import org.dswarm.persistence.service.MaintainDBService;
+import org.dswarm.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 
 public abstract class GuicedTest {
 
 	protected static Injector injector;
+
+	protected MaintainDBService maintainDBService;
 
 	public static Injector getInjector() {
 		final ConfigModule configModule = new ConfigModule();
@@ -48,6 +53,33 @@ public abstract class GuicedTest {
 		return Preconditions.checkNotNull(injector).getInstance(Key.get(cls, Names.named(configPath)));
 	}
 
+	@Before
+	public void prepare() throws Exception {
+
+		GuicedTest.tearDown();
+		GuicedTest.startUp();
+		initObjects();
+		maintainDBService.initDB();
+		//		maintainDBService.truncateTables();
+		InternalGDMGraphServiceTestUtils.cleanGraphDB();
+	}
+
+	@After
+	public void tearDown3() throws Exception {
+
+		GuicedTest.tearDown();
+		GuicedTest.startUp();
+		initObjects();
+		maintainDBService.initDB();
+		//		maintainDBService.truncateTables();
+		InternalGDMGraphServiceTestUtils.cleanGraphDB();
+	}
+
+	protected void initObjects() {
+
+		maintainDBService = GuicedTest.injector.getInstance(MaintainDBService.class);
+	}
+
 	@BeforeClass
 	public static void startUp() throws Exception {
 
@@ -58,7 +90,7 @@ public abstract class GuicedTest {
 	@AfterClass
 	public static void tearDown() throws Exception {
 
-		if(GuicedTest.injector != null) {
+		if (GuicedTest.injector != null) {
 
 			GuicedTest.injector.getInstance(PersistService.class).stop();
 		}

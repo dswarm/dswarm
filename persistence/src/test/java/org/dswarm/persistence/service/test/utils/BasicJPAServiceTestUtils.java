@@ -76,7 +76,7 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 		// this should be done by the concrete test, not in the utils
 	}
 
-	@Override public void tearDown2() throws Exception {
+	@Override public void tearDown3() throws Exception {
 
 		// this should be done by the concrete test, not in the utils
 	}

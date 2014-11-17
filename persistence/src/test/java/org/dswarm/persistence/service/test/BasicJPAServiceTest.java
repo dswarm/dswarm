@@ -15,34 +15,30 @@
  */
 package org.dswarm.persistence.service.test;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONException;
+import org.junit.Assert;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.DMPObject;
 import org.dswarm.persistence.model.proxy.ProxyDMPObject;
 import org.dswarm.persistence.service.BasicJPAService;
-import org.dswarm.persistence.service.MaintainDBService;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONException;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, JPASERVICEIMPL extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSIDTYPE>
 		extends GuicedTest {
 
-	private static final Logger				LOG			= LoggerFactory.getLogger(BasicJPAServiceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BasicJPAServiceTest.class);
 
 	protected ObjectMapper objectMapper = null;
 
 	protected final String                type;
 	protected final Class<JPASERVICEIMPL> jpaServiceClass;
 	protected JPASERVICEIMPL jpaService = null;
-	protected MaintainDBService maintainDBService;
 
 	@Test
 	public abstract void testSimpleObject() throws Exception;
@@ -55,29 +51,9 @@ public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<
 		initObjects();
 	}
 
-	@Before
-	public void prepare() throws Exception {
-
-		GuicedTest.tearDown();
-		GuicedTest.startUp();
-		initObjects();
-		maintainDBService.initDB();
-		//		maintainDBService.truncateTables();
-	}
-
-	@After
-	public void tearDown2() throws Exception {
-
-		GuicedTest.tearDown();
-		GuicedTest.startUp();
-		initObjects();
-		maintainDBService.initDB();
-		//		maintainDBService.truncateTables();
-	}
-
 	protected void initObjects() {
 
-		maintainDBService = GuicedTest.injector.getInstance(MaintainDBService.class);
+		super.initObjects();
 
 		jpaService = GuicedTest.injector.getInstance(jpaServiceClass);
 		objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
