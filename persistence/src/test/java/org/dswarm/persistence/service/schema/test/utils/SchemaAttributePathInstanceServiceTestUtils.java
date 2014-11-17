@@ -68,6 +68,16 @@ public class SchemaAttributePathInstanceServiceTestUtils extends
 		return createSchemaAttributePathInstance(attributePathServiceTestUtils.getDctermsTitleDctermHaspartAP());
 	}
 
+	public SchemaAttributePathInstance getDctermsCreatorFOAFNameSAPI() throws Exception {
+
+		return createSchemaAttributePathInstance(attributePathServiceTestUtils.getDctermsCreatorFoafNameAP());
+	}
+
+	public SchemaAttributePathInstance getDctermsCreatedSAPI() throws Exception {
+
+		return createSchemaAttributePathInstance(attributePathServiceTestUtils.getDctermsCreatedAP());
+	}
+
 	/**
 	 * {@inheritDoc}<br />
 	 *
