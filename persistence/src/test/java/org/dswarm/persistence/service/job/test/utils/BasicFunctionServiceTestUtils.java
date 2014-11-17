@@ -18,6 +18,7 @@ package org.dswarm.persistence.service.job.test.utils;
 import java.util.LinkedList;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.json.JSONException;
 import org.junit.Assert;
 
 import org.dswarm.persistence.model.job.Function;
@@ -39,7 +40,7 @@ public abstract class BasicFunctionServiceTestUtils<POJOCLASSPERSISTENCESERVICE 
 	 * Assert both expected and actual function have either no or equal parameters.
 	 */
 	@Override
-	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) {
+	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) throws JsonProcessingException, JSONException {
 
 		super.compareObjects(expectedObject, actualObject);
 

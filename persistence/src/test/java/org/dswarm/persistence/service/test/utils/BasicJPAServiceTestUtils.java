@@ -21,10 +21,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.common.collect.Maps;
+import org.json.JSONException;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,7 +92,7 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 	 * @param expectedObject
 	 * @param actualObject
 	 */
-	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) {
+	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) throws JsonProcessingException, JSONException {
 
 		Assert.assertNotNull("excepted " + pojoClassName + " shouldn't be null", expectedObject);
 		Assert.assertNotNull("actual " + pojoClassName + " shouldn't be null", actualObject);
@@ -126,7 +128,8 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 	 * @param expectedObjects
 	 * @param actualObjects
 	 */
-	public void compareObjects(final Set<POJOCLASS> expectedObjects, final Map<POJOCLASSIDTYPE, POJOCLASS> actualObjects) {
+	public void compareObjects(final Set<POJOCLASS> expectedObjects, final Map<POJOCLASSIDTYPE, POJOCLASS> actualObjects)
+			throws JsonProcessingException, JSONException {
 
 		Assert.assertNotNull("expected objects shouldn't be null", expectedObjects);
 		Assert.assertNotNull("actual objects shouldn't be null", actualObjects);
@@ -150,11 +153,9 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 	}
 
 	@Override
-	public POJOCLASS getObject(final POJOCLASS expectedObject) {
+	public POJOCLASS getObject(final POJOCLASS expectedObject) throws JsonProcessingException, JSONException {
 
-		POJOCLASS responseObject = null;
-
-		responseObject = jpaService.getObject(expectedObject.getId());
+		final POJOCLASS responseObject = jpaService.getObject(expectedObject.getId());
 
 		Assert.assertNotNull("the updated " + type + " shouldn't be null", responseObject);
 		Assert.assertEquals("the " + type + "s are not equal", expectedObject, responseObject);
@@ -208,23 +209,32 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 		return proxyObject.getObject();
 	}
 
-	public POJOCLASS updateAndCompareObject(final POJOCLASS updateObject, final POJOCLASS expectedObject) throws Exception {
-
-		PROXYPOJOCLASS proxyUpdatedObject = null;
+	public POJOCLASS updateObject(final POJOCLASS updateObject) {
 
 		try {
 
-			proxyUpdatedObject = jpaService.updateObjectTransactional(updateObject);
+			final PROXYPOJOCLASS proxyUpdatedObject = jpaService.updateObjectTransactional(updateObject);
+
+			Assert.assertNotNull("the proxy object of " + type + " shouldn't be null", proxyUpdatedObject);
+
+			return proxyUpdatedObject.getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the " + type, false);
 		}
 
-		Assert.assertNotNull("the proxy object of " + type + " shouldn't be null", proxyUpdatedObject);
+		return null;
+	}
 
-		compareObjects(expectedObject, proxyUpdatedObject.getObject());
+	public POJOCLASS updateAndCompareObject(final POJOCLASS updateObject, final POJOCLASS expectedObject) throws Exception {
 
-		return proxyUpdatedObject.getObject();
+		POJOCLASS freshUpdatedObject = updateObject(updateObject);
+
+		Assert.assertNotNull("the object of " + type + " shouldn't be null", freshUpdatedObject);
+
+		compareObjects(expectedObject, freshUpdatedObject);
+
+		return freshUpdatedObject;
 	}
 
 	public void deleteObject(final POJOCLASS object) {
