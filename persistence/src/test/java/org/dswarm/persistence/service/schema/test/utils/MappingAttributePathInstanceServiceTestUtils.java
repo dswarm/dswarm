@@ -15,7 +15,9 @@
  */
 package org.dswarm.persistence.service.schema.test.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.json.JSONException;
 import org.junit.Assert;
 
 import org.dswarm.persistence.model.job.Filter;
@@ -67,7 +69,7 @@ public class MappingAttributePathInstanceServiceTestUtils
 	 */
 	@Override
 	public void compareObjects(final MappingAttributePathInstance expectedMappingAttributePathInstance,
-			final MappingAttributePathInstance actualMappingAttributePathInstance) {
+			final MappingAttributePathInstance actualMappingAttributePathInstance) throws JsonProcessingException, JSONException {
 
 		super.compareObjects(expectedMappingAttributePathInstance, actualMappingAttributePathInstance);
 

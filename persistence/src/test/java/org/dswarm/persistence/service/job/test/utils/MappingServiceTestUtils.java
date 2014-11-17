@@ -18,9 +18,11 @@ package org.dswarm.persistence.service.job.test.utils;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.json.JSONException;
 import org.junit.Assert;
 
 import org.dswarm.persistence.model.job.Component;
@@ -113,7 +115,7 @@ public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<Mapping
 	 * org.dswarm.persistence.service.test.utils.BasicJPAServiceTestUtils#compareObjects(java.util.Set, java.util.Map)} . <br />
 	 */
 	@Override
-	public void compareObjects(final Mapping expectedMapping, final Mapping actualMapping) {
+	public void compareObjects(final Mapping expectedMapping, final Mapping actualMapping) throws JsonProcessingException, JSONException {
 
 		super.compareObjects(expectedMapping, actualMapping);
 

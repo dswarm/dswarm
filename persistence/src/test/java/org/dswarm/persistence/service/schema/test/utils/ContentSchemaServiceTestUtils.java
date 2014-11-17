@@ -19,8 +19,10 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Maps;
+import org.json.JSONException;
 import org.junit.Assert;
 
 import org.dswarm.persistence.model.schema.AttributePath;
@@ -43,7 +45,7 @@ public class ContentSchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<C
 	}
 
 	@Override
-	public void compareObjects(final ContentSchema expectedObject, final ContentSchema actualObject) {
+	public void compareObjects(final ContentSchema expectedObject, final ContentSchema actualObject) throws JsonProcessingException, JSONException {
 		super.compareObjects(expectedObject, actualObject);
 		compareContentSchemas(expectedObject, actualObject);
 	}
@@ -78,7 +80,8 @@ public class ContentSchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<C
 		return updatedContentSchema;
 	}
 
-	private void compareContentSchemas(final ContentSchema expectedContentSchema, final ContentSchema actualContentSchema) {
+	private void compareContentSchemas(final ContentSchema expectedContentSchema, final ContentSchema actualContentSchema)
+			throws JsonProcessingException, JSONException {
 
 		if (expectedContentSchema.getRecordIdentifierAttributePath() != null) {
 
