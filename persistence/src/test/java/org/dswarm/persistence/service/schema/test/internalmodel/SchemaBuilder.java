@@ -15,10 +15,6 @@
  */
 package org.dswarm.persistence.service.schema.test.internalmodel;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.service.schema.test.utils.ClaszServiceTestUtils;
@@ -26,8 +22,7 @@ import org.dswarm.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 
 public abstract class SchemaBuilder extends GuicedTest {
 
-	private final ObjectMapper	objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
-	private static final Logger	LOG				= LoggerFactory.getLogger(SchemaBuilder.class);
+	//private static final Logger	LOG				= LoggerFactory.getLogger(SchemaBuilder.class);
 	protected String			prefixPaths		= "";
 	
 	protected final ClaszServiceTestUtils	claszServiceTestUtils;
