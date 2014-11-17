@@ -18,7 +18,9 @@ package org.dswarm.persistence.service.schema.test.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.json.JSONException;
 import org.junit.Assert;
 
 import org.dswarm.init.util.DMPStatics;
@@ -62,7 +64,7 @@ public abstract class AttributePathInstanceServiceTestUtils<POJOCLASSPERSISTENCE
 	 * @param actualObject
 	 */
 	@Override
-	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) {
+	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) throws JsonProcessingException, JSONException {
 
 		super.compareObjects(expectedObject, actualObject);
 

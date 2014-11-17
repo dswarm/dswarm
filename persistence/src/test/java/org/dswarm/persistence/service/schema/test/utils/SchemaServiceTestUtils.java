@@ -20,9 +20,11 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.json.JSONException;
 import org.junit.Assert;
 
 import org.dswarm.persistence.DMPPersistenceException;
@@ -70,7 +72,7 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 	 * for details.<br />
 	 */
 	@Override
-	public void compareObjects(final Schema expectedSchema, final Schema actualSchema) {
+	public void compareObjects(final Schema expectedSchema, final Schema actualSchema) throws JsonProcessingException, JSONException {
 
 		super.compareObjects(expectedSchema, actualSchema);
 

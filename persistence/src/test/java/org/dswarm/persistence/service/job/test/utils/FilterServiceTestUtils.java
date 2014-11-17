@@ -15,7 +15,9 @@
  */
 package org.dswarm.persistence.service.job.test.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.json.JSONException;
 import org.junit.Assert;
 
 import org.dswarm.persistence.model.job.Filter;
@@ -35,7 +37,7 @@ public class FilterServiceTestUtils extends BasicDMPJPAServiceTestUtils<FilterSe
 	 * Assert the filter expressions are equal.
 	 */
 	@Override
-	public void compareObjects(final Filter expectedFilter, final Filter actualFilter) {
+	public void compareObjects(final Filter expectedFilter, final Filter actualFilter) throws JsonProcessingException, JSONException {
 
 		super.compareObjects(expectedFilter, actualFilter);
 
