@@ -249,63 +249,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		final Clasz recordClass = schema.getRecordClass();
 
-		// clean-up
-		// TODO: move clean-up to @After
-
-		final DataModel freshOutputDataModel = dataModelService.getObject(internalModelId);
-
-		final Schema outputDataModelSchema = freshOutputDataModel.getSchema();
-
-		final Map<Long, Attribute> attributes = Maps.newHashMap();
-
-		final Map<Long, AttributePath> attributePaths = Maps.newLinkedHashMap();
-
-		final Set<AttributePath> attributePathsToDelete = schema.getUniqueAttributePaths();
-
-		if (attributePathsToDelete != null) {
-
-			for (final AttributePath attributePath : attributePathsToDelete) {
-
-				attributePaths.put(attributePath.getId(), attributePath);
-
-				final Set<Attribute> attributesToDelete = attributePath.getAttributes();
-
-				if (attributesToDelete != null) {
-
-					for (final Attribute attribute : attributesToDelete) {
-
-						attributes.put(attribute.getId(), attribute);
-					}
-				}
-			}
 		}
-
-		final SchemaService schemaService = GuicedTest.injector.getInstance(SchemaService.class);
-
-		schemaServiceTestUtils.removeAddedAttributePathsFromOutputModelSchema(outputDataModelSchema, attributes, attributePaths);
-
-		dataModelService.deleteObject(updatedInputDataModel.getId());
-
-		schemaService.deleteObject(schema.getId());
-
-		for (final AttributePath attributePath : attributePaths.values()) {
-
-			attributePathServiceTestUtils.deleteObject(attributePath);
-		}
-
-		for (final Attribute attribute : attributes.values()) {
-
-			attributeServiceTestUtils.deleteObject(attribute);
-		}
-
-		classServiceTestUtils.deleteObject(recordClass);
-
-		configurationService.deleteObject(updatedConfiguration.getId());
-		resourceService.deleteObject(updatedResource.getId());
-
-		// clean-up graph db
-		InternalGDMGraphServiceTestUtils.cleanGraphDB();
-	}
 
 	protected void compareResults(final String expectedResultJSONString, final String actualResultJSONString) throws Exception {
 
