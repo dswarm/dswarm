@@ -16,10 +16,14 @@
 package org.dswarm.persistence.service.schema.test.utils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.json.JSONException;
+import org.junit.Assert;
+
+import org.dswarm.init.util.DMPStatics;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.AttributePathInstance;
@@ -27,16 +31,11 @@ import org.dswarm.persistence.model.schema.AttributePathInstanceType;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttributePathInstance;
 import org.dswarm.persistence.service.schema.AttributePathInstanceService;
 import org.dswarm.persistence.service.test.utils.BasicDMPJPAServiceTestUtils;
-import org.junit.Assert;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 public abstract class AttributePathInstanceServiceTestUtils<POJOCLASSPERSISTENCESERVICE extends AttributePathInstanceService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyAttributePathInstance<POJOCLASS>, POJOCLASS extends AttributePathInstance>
 		extends BasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
 
-	protected final AttributePathServiceTestUtils	attributePathServiceTestUtils;
-
-	private Map<String, POJOCLASS> attributesById = new HashMap<>();
+	protected AttributePathServiceTestUtils	attributePathServiceTestUtils;
 	
 	protected abstract POJOCLASS createAttributePathInstance( final String name, final AttributePath attributePath, final JsonNode objectDescription ) throws Exception;
 	
@@ -47,6 +46,11 @@ public abstract class AttributePathInstanceServiceTestUtils<POJOCLASSPERSISTENCE
 		super(pojoClassArg, persistenceServiceClassArg);
 
 		attributePathServiceTestUtils = new AttributePathServiceTestUtils();
+	}
+
+	protected AttributePathServiceTestUtils getAttributePathServiceTestUtils() {
+
+		return attributePathServiceTestUtils;
 	}
 
 	/**
@@ -60,7 +64,7 @@ public abstract class AttributePathInstanceServiceTestUtils<POJOCLASSPERSISTENCE
 	 * @param actualObject
 	 */
 	@Override
-	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) {
+	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) throws JsonProcessingException, JSONException {
 
 		super.compareObjects(expectedObject, actualObject);
 
@@ -99,28 +103,38 @@ public abstract class AttributePathInstanceServiceTestUtils<POJOCLASSPERSISTENCE
 	
 	
 	@Override
-	public POJOCLASS getObject( final JsonNode objectDescription ) throws Exception {
+	public POJOCLASS createObject(final JsonNode objectDescription) throws Exception {
 		//TODO externalize valid keys
-		String name = objectDescription.get("name") != null ? objectDescription.get("name").asText( null ) : null;
+		final String name = objectDescription.get("name") != null ? objectDescription.get("name").asText( null ) : null;
 		
-		String key = null;
+		final StringBuilder keySB = new StringBuilder();
 		//TODO externalize valid keys
-		List<String> temp = new ArrayList<>();
-		for( JsonNode jn : objectDescription.get( "attribute_ids" ) ) {
+		final List<String> temp = new ArrayList<>();
+		int i = 1;
+		final JsonNode attributeIds = objectDescription.get( "attribute_ids" );
+		for( final JsonNode jn : attributeIds) {
 			temp.add( jn.asText() );
-			key = jn.asText() + "#";
-		}
-		
-		if( !attributesById.containsKey(key) ) {
-			AttributePath ap = getAttributePath( temp.toArray( new String[]{} ) );
-			attributesById.put( key, createAttributePathInstance( name, ap, objectDescription ) );
+
+			keySB.append(jn.asText());
+
+			if(i < attributeIds.size()) {
+
+				keySB.append(DMPStatics.ATTRIBUTE_DELIMITER);
+			}
 		}
 
-		return attributesById.get(key);
+		final String key = keySB.toString();
+		
+		if( !cache.containsKey(key) ) {
+			final AttributePath ap = getAttributePath(temp.toArray(new String[temp.size()]));
+			cache.put( key, createAttributePathInstance( name, ap, objectDescription ) );
+		}
+
+		return cache.get(key);
 	}
 	
 	
-	protected AttributePath getAttributePath( String... attributeIds ) throws Exception {
+	protected AttributePath getAttributePath( final String... attributeIds ) throws Exception {
 		return attributePathServiceTestUtils.getAttributePath(attributeIds);
 	}
 }

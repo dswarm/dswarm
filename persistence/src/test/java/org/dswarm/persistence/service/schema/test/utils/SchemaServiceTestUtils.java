@@ -20,6 +20,13 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import org.json.JSONException;
+import org.junit.Assert;
+
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
@@ -29,31 +36,30 @@ import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
 import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.service.test.utils.BasicDMPJPAServiceTestUtils;
-import org.junit.Assert;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaService, ProxySchema, Schema> {
 
-	private ClaszServiceTestUtils claszesServiceTestUtils;
-	private ContentSchemaServiceTestUtils contentSchemaServiceTestUtils;
-	private SchemaAttributePathInstanceServiceTestUtils schemaAttributePathInstanceResourceTestUtils;
-	
+	private final ClaszServiceTestUtils                       claszesServiceTestUtils;
+	private final ContentSchemaServiceTestUtils               contentSchemaServiceTestUtils;
+	private final SchemaAttributePathInstanceServiceTestUtils schemaAttributePathInstanceResourceTestUtils;
+
 	public SchemaServiceTestUtils() {
+
 		super(Schema.class, SchemaService.class);
+
+		schemaAttributePathInstanceResourceTestUtils = new SchemaAttributePathInstanceServiceTestUtils(this);
+		claszesServiceTestUtils = new ClaszServiceTestUtils();
+		contentSchemaServiceTestUtils = new ContentSchemaServiceTestUtils(
+				schemaAttributePathInstanceResourceTestUtils.getAttributePathServiceTestUtils());
 	}
 
-	
-	@Override
-	protected void initObjects() {
-		super.initObjects();
-		schemaAttributePathInstanceResourceTestUtils = new SchemaAttributePathInstanceServiceTestUtils();
+	public SchemaServiceTestUtils(final SchemaAttributePathInstanceServiceTestUtils schemaAttributePathInstanceResourceTestUtils) {
+		super(Schema.class, SchemaService.class);
+		this.schemaAttributePathInstanceResourceTestUtils = schemaAttributePathInstanceResourceTestUtils;
 		claszesServiceTestUtils = new ClaszServiceTestUtils();
-		contentSchemaServiceTestUtils = new ContentSchemaServiceTestUtils();
+		contentSchemaServiceTestUtils = new ContentSchemaServiceTestUtils(
+				schemaAttributePathInstanceResourceTestUtils.getAttributePathServiceTestUtils());
 	}
-	
 
 	/**
 	 * {@inheritDoc} <br />
@@ -66,11 +72,11 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 	 * for details.<br />
 	 */
 	@Override
-	public void compareObjects( final Schema expectedSchema, final Schema actualSchema ) {
+	public void compareObjects(final Schema expectedSchema, final Schema actualSchema) throws JsonProcessingException, JSONException {
 
 		super.compareObjects(expectedSchema, actualSchema);
 
-		if( expectedSchema.getUniqueAttributePaths() == null || expectedSchema.getUniqueAttributePaths().isEmpty() ) {
+		if (expectedSchema.getUniqueAttributePaths() == null || expectedSchema.getUniqueAttributePaths().isEmpty()) {
 
 			final boolean actualSchemaHasNoAttributePaths = (actualSchema.getUniqueAttributePaths() == null || actualSchema
 					.getUniqueAttributePaths().isEmpty());
@@ -95,7 +101,7 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 			schemaAttributePathInstanceResourceTestUtils.compareObjects(expectedSchema.getUniqueAttributePaths(), actualAttributePathsMap);
 		}
 
-		if( expectedSchema.getRecordClass() == null ) {
+		if (expectedSchema.getRecordClass() == null) {
 
 			Assert.assertNull("the actual schema '" + actualSchema.getId() + "' shouldn't have a record class", actualSchema.getRecordClass());
 
@@ -104,14 +110,13 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 			claszesServiceTestUtils.compareObjects(expectedSchema.getRecordClass(), actualSchema.getRecordClass());
 		}
 
-		if( expectedSchema.getContentSchema() != null ) {
+		if (expectedSchema.getContentSchema() != null) {
 
 			contentSchemaServiceTestUtils.compareObjects(expectedSchema.getContentSchema(), actualSchema.getContentSchema());
 		}
 	}
 
-
-	public Schema createSchema( final String name, final Collection<SchemaAttributePathInstance> attributePaths, final Clasz recordClass )
+	public Schema createSchema(final String name, final Collection<SchemaAttributePathInstance> attributePaths, final Clasz recordClass)
 			throws Exception {
 
 		final Schema schema = new Schema();
@@ -122,7 +127,7 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 
 		// update schema
 
-		final Schema updatedSchema = createObject(schema, schema);
+		final Schema updatedSchema = createAndCompareObject(schema, schema);
 
 		Assert.assertNotNull("updated schema shouldn't be null", updatedSchema);
 		Assert.assertNotNull("updated schema id shouldn't be null", updatedSchema.getId());
@@ -130,39 +135,22 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 		return updatedSchema;
 	}
 
-	
-	public Schema createSchema( final String name, final SchemaAttributePathInstance[] attributePaths, final Clasz recordClass ) throws Exception {
-		return createSchema(name, Arrays.asList(attributePaths), recordClass );
+	public Schema createSchema(final String name, final SchemaAttributePathInstance[] attributePaths, final Clasz recordClass) throws Exception {
+		return createSchema(name, Arrays.asList(attributePaths), recordClass);
 	}
 
-	
-	public Schema createDefaultSchema() throws Exception {
-		return createSchema("Default Schema", new SchemaAttributePathInstance[] { 
-				schemaAttributePathInstanceResourceTestUtils.createDefaultSchemaAttributePathInstance(),
-				schemaAttributePathInstanceResourceTestUtils.createDefaultSchemaAttributePathInstance()
-		}, claszesServiceTestUtils.createDefaultClass() );
-	}
-
-	
-	public Schema createDefaultSchemaFull() throws Exception {
-		Schema s = createDefaultSchema();
-		s.setContentSchema( contentSchemaServiceTestUtils.createDefaultContentSchema() );
-		return s;
-	}
-	
-
-	public void removeAddedAttributePathsFromOutputModelSchema( final Schema outputDataModelSchema, final Map<Long, Attribute> attributes,
-			final Map<Long, SchemaAttributePathInstance> attributePaths ) throws DMPPersistenceException {
+	public void removeAddedAttributePathsFromOutputModelSchema(final Schema outputDataModelSchema, final Map<Long, Attribute> attributes,
+			final Map<Long, SchemaAttributePathInstance> attributePaths) throws DMPPersistenceException {
 
 		final Set<SchemaAttributePathInstance> outputDataModelSchemaAttributePathRemovalCandidates = Sets.newHashSet();
 
 		// collect attribute paths of attributes that were created via processing
 		// the transformation result
-		if( outputDataModelSchema != null ) {
+		if (outputDataModelSchema != null) {
 
 			final Set<SchemaAttributePathInstance> outputDataModelSchemaAttributePaths = outputDataModelSchema.getUniqueAttributePaths();
 
-			if( outputDataModelSchemaAttributePaths != null ) {
+			if (outputDataModelSchemaAttributePaths != null) {
 
 				for (final SchemaAttributePathInstance outputDataModelSchemaAttributePath : outputDataModelSchemaAttributePaths) {
 
@@ -172,7 +160,7 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 
 					for (final Attribute outputDataModelSchemaAttribute : outputDataModelSchemaAttributePathAttributes) {
 
-						if( attributes.containsKey(outputDataModelSchemaAttribute.getId()) ) {
+						if (attributes.containsKey(outputDataModelSchemaAttribute.getId())) {
 
 							// found candidate for removal
 
@@ -196,13 +184,12 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 		jpaService.updateObjectTransactional(outputDataModelSchema);
 	}
 
-	
 	/**
 	 * {@inheritDoc}<br/>
 	 * Updates the name, attribute paths and record class of the schema.
 	 */
 	@Override
-	protected Schema prepareObjectForUpdate( final Schema objectWithUpdates, final Schema object ) {
+	protected Schema prepareObjectForUpdate(final Schema objectWithUpdates, final Schema object) {
 
 		super.prepareObjectForUpdate(objectWithUpdates, object);
 
@@ -217,17 +204,45 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 		return object;
 	}
 
-
 	@Override
 	public void reset() {
-//		claszesServiceTestUtils.reset();
+
+		claszesServiceTestUtils.reset();
+		schemaAttributePathInstanceResourceTestUtils.reset();
+		contentSchemaServiceTestUtils.reset();
 	}
 
-
 	@Override
-	public Schema getObject( JsonNode objectDescription ) throws Exception {
+	public Schema createObject(final JsonNode objectDescription) throws Exception {
 		// TODO create schema from object description
 		return null;
 	}
 
+	@Override public Schema createObject(final String identifier) throws Exception {
+
+		return null;
+	}
+
+	@Override public Schema createDefaultObject() throws Exception {
+		return createSchema("Default Schema", new SchemaAttributePathInstance[] {
+				schemaAttributePathInstanceResourceTestUtils.createDefaultObject(),
+				schemaAttributePathInstanceResourceTestUtils.getDctermsTitleDctermsHaspartSAPI()
+		}, claszesServiceTestUtils.createDefaultObject());
+	}
+
+	@Override public Schema createDefaultCompleteObject() throws Exception {
+
+		final Schema schema = createDefaultObject();
+		schema.setContentSchema(contentSchemaServiceTestUtils.createDefaultObject());
+
+		return updateAndCompareObject(schema, schema);
+	}
+
+	public Schema createAlternativeSchema() throws Exception {
+		return createSchema("my schema", new SchemaAttributePathInstance[] {
+				schemaAttributePathInstanceResourceTestUtils.createDefaultObject(),
+				schemaAttributePathInstanceResourceTestUtils.getDctermsCreatorFOAFNameSAPI(),
+				schemaAttributePathInstanceResourceTestUtils.getDctermsCreatedSAPI()
+		}, claszesServiceTestUtils.createDefaultObject());
+	}
 }

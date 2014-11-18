@@ -15,26 +15,20 @@
  */
 package org.dswarm.persistence.service.schema.test;
 
-import org.dswarm.persistence.GuicedTest;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxyMappingAttributePathInstance;
 import org.dswarm.persistence.service.schema.MappingAttributePathInstanceService;
 import org.dswarm.persistence.service.schema.test.utils.MappingAttributePathInstanceServiceTestUtils;
 import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
-import org.junit.Assert;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class MappingAttributePathInstanceServiceTest extends
 		IDBasicJPAServiceTest<ProxyMappingAttributePathInstance, MappingAttributePathInstance, MappingAttributePathInstanceService> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SchemaServiceTest.class);
-
-	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	private MappingAttributePathInstanceServiceTestUtils mapisUtils;
 
@@ -42,57 +36,20 @@ public class MappingAttributePathInstanceServiceTest extends
 		super("mapping attribute path instance", MappingAttributePathInstanceService.class);
 	}
 
-	
 	@Override
 	protected void initObjects() {
 		super.initObjects();
 		mapisUtils = new MappingAttributePathInstanceServiceTestUtils();
 	}
-	
 
 	@Test
-	public void testSimpleMappingAttributePathInstance() throws Exception {
-		
-		MappingAttributePathInstance mapi = mapisUtils.createDefaultMappingAttributePathInstance();
+	@Override
+	public void testSimpleObject() throws Exception {
 
-		final MappingAttributePathInstance updatedMappingAttributePathInstance = updateObjectTransactional( mapi ).getObject();
+		final MappingAttributePathInstance mapi = mapisUtils.createDefaultCompleteObject();
 
-		mapisUtils.compareObjects( mapi, updatedMappingAttributePathInstance );
-		
-		Assert.assertNotNull(
-				"the mapping attribute path instance's attribute paths of the updated mapping attribute path instance shouldn't be null",
-				updatedMappingAttributePathInstance.getAttributePath());
-		Assert.assertEquals("the mapping attribute path instance's attribute paths are not equal",
-				mapi.getAttributePath(), updatedMappingAttributePathInstance.getAttributePath());
-		Assert.assertNotNull("the attribute path's attributes of the attribute path '" + attributePath1.getId()
-				+ "' of the updated mapping attribute path instance shouldn't be null", updatedMappingAttributePathInstance.getAttributePath()
-				.getAttributes());
-		Assert.assertEquals("the attribute path's attributes size of attribute path '" + attributePath1.getId() + "' are not equal",
-				attributePath1.getAttributes(), updatedMappingAttributePathInstance.getAttributePath().getAttributes());
-		Assert.assertEquals("the first attributes of attribute path '" + attributePath1.getId() + "' are not equal", attributePath1
-				.getAttributePath().get(0), updatedMappingAttributePathInstance.getAttributePath().getAttributePath().get(0));
-		Assert.assertNotNull("the attribute path string of attribute path '" + attributePath1.getId()
-				+ "' of the updated mapping attribute path instance shouldn't be null", updatedMappingAttributePathInstance.getAttributePath()
-				.toAttributePath());
-		Assert.assertEquals("the attribute path's strings attribute path '" + attributePath1.getId() + "' are not equal",
-				attributePath1.toAttributePath(), updatedMappingAttributePathInstance.getAttributePath().toAttributePath());
-		Assert.assertNotNull("the mapping attribute path instance's ordinals of the updated mapping attribute path instance shouldn't be null",
-				updatedMappingAttributePathInstance.getAttributePath());
-		Assert.assertEquals("the mapping attribute path instance's ordinals are not equal", mapi.getOrdinal(),
-				updatedMappingAttributePathInstance.getOrdinal());
-		Assert.assertNotNull("the mapping attribute path instance's filters of the updated mapping attribute path instance shouldn't be null",
-				updatedMappingAttributePathInstance.getFilter());
-		Assert.assertEquals("the mapping attribute path instance's filters are not equal", mapi.getFilter(),
-				updatedMappingAttributePathInstance.getFilter());
-		Assert.assertEquals("the mapping attribute path instance's filter's expressions are not equal", mapi
-				.getFilter().getExpression(), updatedMappingAttributePathInstance.getFilter().getExpression());
+		final MappingAttributePathInstance updatedMappingAttributePathInstance = mapisUtils.updateAndCompareObject(mapi, mapi);
 
-		String json = null;
-		try {
-			json = objectMapper.writeValueAsString( mapi );
-		} catch( final JsonProcessingException e ) {
-			LOG.error( e.getMessage(), e );
-		}
-		MappingAttributePathInstanceServiceTest.LOG.debug("mapping attribute path instance json: " + json);
+		logObjectJSON(updatedMappingAttributePathInstance);
 	}
 }

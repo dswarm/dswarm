@@ -37,29 +37,11 @@ public class InternalSchemaBuilderTest extends GuicedTest {
 
 	// private static final String NL = System.lineSeparator();
 
-	protected MaintainDBService	maintainDBService;
-	
 	@Before
 	public void prepare() throws Exception {
-		GuicedTest.tearDown();
-		GuicedTest.startUp();
-		initObjects();
-//		maintainDBService.initDB();
+
+		super.prepare();
 		maintainDBService.truncateTables();
-	}
-
-	@After
-	public void tearDown2() throws Exception {
-		GuicedTest.tearDown();
-		GuicedTest.startUp();
-		initObjects();
-//		maintainDBService.initDB();
-//		maintainDBService.truncateTables();
-	}
-	
-
-	protected void initObjects() {
-		maintainDBService = GuicedTest.injector.getInstance(MaintainDBService.class);
 	}
 	
 	//@Ignore

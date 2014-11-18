@@ -15,8 +15,9 @@
  */
 package org.dswarm.persistence.service.schema.test.utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.json.JSONException;
 
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
@@ -25,25 +26,57 @@ import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxySchemaAttributePathInstance;
 import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-public class SchemaAttributePathInstanceServiceTestUtils extends AttributePathInstanceServiceTestUtils<SchemaAttributePathInstanceService, ProxySchemaAttributePathInstance, SchemaAttributePathInstance> {
+public class SchemaAttributePathInstanceServiceTestUtils extends
+		AttributePathInstanceServiceTestUtils<SchemaAttributePathInstanceService, ProxySchemaAttributePathInstance, SchemaAttributePathInstance> {
 
 	private SchemaServiceTestUtils sstUtils;
-	private AttributePathServiceTestUtils apstUtils;
-	
-	
+
 	public SchemaAttributePathInstanceServiceTestUtils() {
+
 		super(SchemaAttributePathInstance.class, SchemaAttributePathInstanceService.class);
+
+		sstUtils = new SchemaServiceTestUtils(this);
 	}
 
-	@Override
-	protected void initObjects() {
-		super.initObjects();
-		sstUtils = new SchemaServiceTestUtils();
-		apstUtils = new AttributePathServiceTestUtils();
+	public SchemaAttributePathInstanceServiceTestUtils(final SchemaServiceTestUtils schemaServiceTestUtils) {
+
+		super(SchemaAttributePathInstance.class, SchemaAttributePathInstanceService.class);
+
+		sstUtils = schemaServiceTestUtils;
 	}
-	
+
+	@Override public SchemaAttributePathInstance createObject(String identifier) throws Exception {
+
+		return null;
+	}
+
+	@Override public SchemaAttributePathInstance createDefaultObject() throws Exception {
+
+		return getDctermsTitleDctermsHaspartDctermsTitleSAPI();
+	}
+
+	public SchemaAttributePathInstance getDctermsTitleDctermsHaspartDctermsTitleSAPI() throws Exception {
+
+		return createSchemaAttributePathInstance(attributePathServiceTestUtils.getDctermsTitleDctermHaspartDctermsTitleAP());
+	}
+
+	public SchemaAttributePathInstance getDctermsTitleDctermsHaspartSAPI() throws Exception {
+
+		return createSchemaAttributePathInstance(attributePathServiceTestUtils.getDctermsTitleDctermHaspartAP());
+	}
+
+	public SchemaAttributePathInstance getDctermsCreatorFOAFNameSAPI() throws Exception {
+
+		return createSchemaAttributePathInstance(attributePathServiceTestUtils.getDctermsCreatorFoafNameAP());
+	}
+
+	public SchemaAttributePathInstance getDctermsCreatedSAPI() throws Exception {
+
+		return createSchemaAttributePathInstance(attributePathServiceTestUtils.getDctermsCreatedAP());
+	}
 
 	/**
 	 * {@inheritDoc}<br />
@@ -52,8 +85,8 @@ public class SchemaAttributePathInstanceServiceTestUtils extends AttributePathIn
 	 * @param actualSchemaAttributePathInstance
 	 */
 	@Override
-	public void compareObjects( final SchemaAttributePathInstance expectedSchemaAttributePathInstance,
-			final SchemaAttributePathInstance actualSchemaAttributePathInstance ) {
+	public void compareObjects(final SchemaAttributePathInstance expectedSchemaAttributePathInstance,
+			final SchemaAttributePathInstance actualSchemaAttributePathInstance) throws JsonProcessingException, JSONException {
 
 		super.compareObjects(expectedSchemaAttributePathInstance, actualSchemaAttributePathInstance);
 
@@ -61,27 +94,25 @@ public class SchemaAttributePathInstanceServiceTestUtils extends AttributePathIn
 				actualSchemaAttributePathInstance.getSubSchema());
 	}
 
-
-	public SchemaAttributePathInstance createSchemaAttributePathInstance( final String name, final AttributePath attributePath, final Schema subSchema ) throws Exception {
+	public SchemaAttributePathInstance createSchemaAttributePathInstance(final String name, final AttributePath attributePath, final Schema subSchema)
+			throws Exception {
 		final SchemaAttributePathInstance schemaAttributePathInstance = new SchemaAttributePathInstance();
 		schemaAttributePathInstance.setName(name);
 		schemaAttributePathInstance.setAttributePath(attributePath);
 		schemaAttributePathInstance.setSubSchema(subSchema);
-		final SchemaAttributePathInstance updatedSchemaAttributePathInstance = createObject(schemaAttributePathInstance,schemaAttributePathInstance);
+		final SchemaAttributePathInstance updatedSchemaAttributePathInstance = createAndCompareObject(schemaAttributePathInstance,
+				schemaAttributePathInstance);
 		assertNotNull(updatedSchemaAttributePathInstance.getId());
 		return updatedSchemaAttributePathInstance;
 	}
 
-
-	public SchemaAttributePathInstance createSchemaAttributePathInstance( final String name, final AttributePath attributePath ) throws Exception {
+	public SchemaAttributePathInstance createSchemaAttributePathInstance(final String name, final AttributePath attributePath) throws Exception {
 		return createSchemaAttributePathInstance(name, attributePath, null);
 	}
 
-
-	public SchemaAttributePathInstance createSchemaAttributePathInstance( final AttributePath attributePath ) throws Exception {
+	public SchemaAttributePathInstance createSchemaAttributePathInstance(final AttributePath attributePath) throws Exception {
 		return createSchemaAttributePathInstance(null, attributePath, null);
 	}
-
 
 	/**
 	 * Convenience method for creating simple attribute path instance with an
@@ -92,11 +123,10 @@ public class SchemaAttributePathInstanceServiceTestUtils extends AttributePathIn
 	 * @return a simple attribute path instance with no subschema
 	 * @throws Exception
 	 */
-	public SchemaAttributePathInstance createSchemaAttributePathInstance( final Attribute attribute ) throws Exception {
+	public SchemaAttributePathInstance createSchemaAttributePathInstance(final Attribute attribute) throws Exception {
 		AttributePath attributePath = attributePathServiceTestUtils.createAttributePath(attribute);
 		return createSchemaAttributePathInstance(attributePath);
 	}
-
 
 	/**
 	 * Convenience method for creating simple attribute path instance with an
@@ -107,53 +137,45 @@ public class SchemaAttributePathInstanceServiceTestUtils extends AttributePathIn
 	 * @return a simple attribute path instance with a subschema
 	 * @throws Exception
 	 */
-	public SchemaAttributePathInstance createSchemaAttributePathInstance( final Attribute attribute, Schema subSchema ) throws Exception {
-		AttributePath attributePath = attributePathServiceTestUtils.createAttributePath(attribute);
+	public SchemaAttributePathInstance createSchemaAttributePathInstance(final Attribute attribute, final Schema subSchema) throws Exception {
+		final AttributePath attributePath = attributePathServiceTestUtils.createAttributePath(attribute);
 		return createSchemaAttributePathInstance(null, attributePath, subSchema);
 	}
 
-	
-	/**
-	 * Constructs a sample attribute path instance consisting of the following attributes:<br>
-	 * "http://purl.org/dc/terms/title"<br>
-	 * "http://purl.org/dc/terms/hasPart"
-	 * @return
-	 * @throws Exception
-	 */
-	public SchemaAttributePathInstance createDefaultSchemaAttributePathInstance() throws Exception {
-		return createSchemaAttributePathInstance( apstUtils.createDefaultAttributePath() );
-	}
-	
-	/**
-	 * Creates a sample attribute path instance based on the default method but with a full set of its properties
-	 * @see #createDefaultSchemaAttributePathInstance()
-	 * @return
-	 * @throws Exception
-	 */
-	public SchemaAttributePathInstance createDefaultSchemaAttributePathInstanceFull() throws Exception {
-		SchemaAttributePathInstance sapi = createSchemaAttributePathInstance( apstUtils.createDefaultAttributePath() );
-		sapi.setSubSchema( sstUtils.createDefaultSchema() );
-		return sapi;
+	@Override public SchemaAttributePathInstance createDefaultCompleteObject() throws Exception {
+
+		final SchemaAttributePathInstance sapi = createDefaultObject();
+		sapi.setSubSchema(sstUtils.createDefaultObject());
+
+		return updateAndCompareObject(sapi, sapi);
 	}
 
 	/**
 	 * {@inheritDoc}<br/>
 	 */
 	@Override
-	protected SchemaAttributePathInstance prepareObjectForUpdate( final SchemaAttributePathInstance objectWithUpdates, final SchemaAttributePathInstance object ) {
+	protected SchemaAttributePathInstance prepareObjectForUpdate(final SchemaAttributePathInstance objectWithUpdates,
+			final SchemaAttributePathInstance object) {
 		super.prepareObjectForUpdate(objectWithUpdates, object);
 		object.setSubSchema(objectWithUpdates.getSubSchema());
 		return object;
 	}
 
-
 	@Override
-	protected SchemaAttributePathInstance createAttributePathInstance( String name, AttributePath attributePath, JsonNode objectDescription ) throws Exception {
+	protected SchemaAttributePathInstance createAttributePathInstance(final String name, final AttributePath attributePath,
+			final JsonNode objectDescription) throws Exception {
 		//TODO externalize keys (sub_schema)
-		JsonNode schemaJson = objectDescription.get("sub_schema") != null ? objectDescription.get("sub_schema") : null;
-		Schema subSchema = sstUtils.getObject( schemaJson );
+		final JsonNode schemaJson = objectDescription.get("sub_schema") != null ? objectDescription.get("sub_schema") : null;
+		final Schema subSchema = sstUtils.createObject(schemaJson);
 		return createSchemaAttributePathInstance(name, attributePath, subSchema);
 	}
-	
-	
+
+	@Override
+	public void reset() {
+
+		super.reset();
+
+		// ???
+		//sstUtils.reset();
+	}
 }

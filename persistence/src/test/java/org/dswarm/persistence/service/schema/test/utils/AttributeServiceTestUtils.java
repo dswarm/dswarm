@@ -15,9 +15,10 @@
  */
 package org.dswarm.persistence.service.schema.test.utils;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.Sets;
 
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
@@ -25,13 +26,21 @@ import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.test.utils.AdvancedDMPJPAServiceTestUtils;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.collect.Sets;
-
 public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<AttributeService, ProxyAttribute, Attribute> {
 
-	public static final Set<String>	excludeAttributes		= Sets.newHashSet();
-	public static final Set<String>	excludeSubAttributes	= Sets.newHashSet();
+	public static final String DCTERMS_TITLE = "http://purl.org/dc/terms/title";
+	public static final String DCTERMS_HASPART = "http://purl.org/dc/terms/hasPart";
+	public static final String DCTERMS_CREATED = "http://purl.org/dc/terms/created";
+	public static final String RDF_VALUE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#value";
+	public static final String MABXML_ID = "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id";
+	public static final String RDFS_LABEL = "http://www.w3.org/2000/01/rdf-schema#label";
+	public static final String DCTERMS_CREATOR = "http://purl.org/dc/terms/creator";
+	public static final String FOAF_FIRSTNAME = "http://xmlns.com/foaf/0.1/firstName";
+	public static final String FOAF_FAMILYNAME = "http://xmlns.com/foaf/0.1/familyName";
+	public static final String FOAF_NAME = "http://xmlns.com/foaf/0.1/name";
+
+	public static final Set<String> excludeAttributes    = Sets.newHashSet();
+	public static final Set<String> excludeSubAttributes = Sets.newHashSet();
 
 	static {
 
@@ -83,63 +92,33 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 		AttributeServiceTestUtils.excludeSubAttributes.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code");
 	}
 
-	private static final Map<String, Tuple<String, String>> map2 = new HashMap<>();
-
 	static {
-		map2.put("http://purl.org/dc/terms/title", new Tuple<>("http://purl.org/dc/terms/title", "title"));
-		map2.put("http://purl.org/dc/terms/hasPart", new Tuple<>("http://purl.org/dc/terms/hasPart", "hasPart"));
+
+		commonTermsMap.put(DCTERMS_TITLE, new Tuple<>(DCTERMS_TITLE, "title"));
+		commonTermsMap.put(DCTERMS_HASPART, new Tuple<>(DCTERMS_HASPART, "hasPart"));
+		commonTermsMap.put(DCTERMS_CREATED, new Tuple<>(DCTERMS_CREATED, "created"));
+		commonTermsMap.put(RDF_VALUE, new Tuple<>(RDF_VALUE, "value"));
+		commonTermsMap.put(MABXML_ID, new Tuple<>(MABXML_ID, "id"));
+		commonTermsMap.put(RDFS_LABEL, new Tuple<>(RDFS_LABEL, "label"));
+		commonTermsMap.put(DCTERMS_CREATOR, new Tuple<>(DCTERMS_CREATOR, "creator"));
+		commonTermsMap.put(FOAF_FIRSTNAME, new Tuple<>(FOAF_FIRSTNAME, "first name"));
+		commonTermsMap.put(FOAF_FAMILYNAME, new Tuple<>(FOAF_FAMILYNAME, "family name"));
+		commonTermsMap.put(FOAF_NAME, new Tuple<>(FOAF_NAME, "name"));
 	}
 
-	private Map<String, Attribute> map = new HashMap<>();
-
-
-	
-	/**
-	 * "http://purl.org/dc/terms/title", "title"
-	 */
-	public static final int ATTRIBUTE__TITLE = 0;
-	
-	/**
-	 * "http://purl.org/dc/terms/hasPart", "hasPart"
-	 */
-	public static final int ATTRIBUTE__HAS_PART = 1;
-	
-	
-	
 	public AttributeServiceTestUtils() {
+
 		super(Attribute.class, AttributeService.class);
 	}
 
-	public Attribute createAttribute(final String id, final String name) throws Exception {
+	@Override
+	public Attribute createObject(final String id, final String name) throws Exception {
 
 		final Attribute attribute = new Attribute(id, name);
-		final Attribute updatedAttribute = createObject(attribute, attribute);
 
-		return updatedAttribute;
+		return createAndCompareObject(attribute, attribute);
 	}
 
-	
-	/**
-	 * Convenience method to create default or known attributes.
-	 * @param identifier AttributeServiceTestUtils.ATTRIBUTE__...
-	 * @return
-	 * @throws Exception
-	 */
-	public Attribute createAttribute( int identifier ) throws Exception {
-		
-		//TODO think about the neccessity of the map
-		
-		switch( identifier ) {
-			case ATTRIBUTE__TITLE:
-				return createAttribute( "http://purl.org/dc/terms/title", "title" );
-			case ATTRIBUTE__HAS_PART:
-				return createAttribute( "http://purl.org/dc/terms/hasPart", "hasPart" );
-			default:
-				throw new IllegalArgumentException( "Identifier '" + identifier + "' not found!" );
-		}
-	}
-	
-	
 	@Override
 	public void deleteObject(final Attribute object) {
 
@@ -169,22 +148,52 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 
 	}
 
-	public Attribute getAttribute(final String name) throws Exception {
+	public Attribute getDctermsTitle() throws Exception {
 
-		if (!map.containsKey(name)) {
+		return createObject(DCTERMS_TITLE);
+	}
 
-			Tuple<String, String> tuple = map2.get(name);
+	public Attribute getDctermsHaspart() throws Exception {
 
-			map.put(name, createAttribute(tuple.v1(), tuple.v2()));
-		}
+		return createObject(DCTERMS_HASPART);
+	}
 
-		return map.get(name);
+	public Attribute getDctermsCreated() throws Exception {
+
+		return createObject(DCTERMS_CREATED);
+	}
+
+	public Attribute getRDFValue() throws Exception {
+
+		return createObject(RDF_VALUE);
+	}
+
+	public Attribute getMABXMLID() throws Exception {
+
+		return createObject(MABXML_ID);
+	}
+
+	public Attribute getRDFSLabel() throws Exception {
+
+		return createObject(RDFS_LABEL);
+	}
+
+	public Attribute getDctermsCreator() throws Exception {
+
+		return createObject(DCTERMS_CREATOR);
 	}
 
 	@Override
-	public Attribute getObject(JsonNode objectDescription) throws Exception {
+	public Attribute createObject(JsonNode objectDescription) throws Exception {
+
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Attribute createDefaultObject() throws Exception {
+		
+		return getDctermsTitle();
 	}
 
 }

@@ -15,10 +15,21 @@
  */
 package org.dswarm.persistence.service.test.utils;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.google.common.collect.Maps;
+import org.json.JSONException;
+import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.GuicedTest;
@@ -26,33 +37,28 @@ import org.dswarm.persistence.model.DMPObject;
 import org.dswarm.persistence.model.proxy.ProxyDMPObject;
 import org.dswarm.persistence.service.BasicJPAService;
 import org.dswarm.persistence.service.test.BasicJPAServiceTest;
-import org.junit.Assert;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.google.common.collect.Maps;
 
 public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE>
 		extends BasicJPAServiceTest<PROXYPOJOCLASS, POJOCLASS, POJOCLASSPERSISTENCESERVICE, POJOCLASSIDTYPE> {
 
-	private static final Logger							LOG	= LoggerFactory.getLogger(BasicJPAServiceTestUtils.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BasicJPAServiceTestUtils.class);
 
-	protected final Class<POJOCLASS>					pojoClass;
+	protected final Class<POJOCLASS> pojoClass;
 
-	protected final String								pojoClassName;
+	protected final String pojoClassName;
 
-	protected final Class<POJOCLASSPERSISTENCESERVICE>	persistenceServiceClass;
+	protected final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClass;
 
-	protected final ObjectMapper						objectMapper;
+	protected final ObjectMapper objectMapper;
 
-	
-	
-	public abstract POJOCLASS getObject( final JsonNode objectDescription) throws Exception;
-	
-	
+	protected Map<String, POJOCLASS> cache = new HashMap<>();
+
+	public abstract POJOCLASS createObject(final JsonNode objectDescription) throws Exception;
+
+	public abstract POJOCLASS createObject(final String identifier) throws Exception;
+
+	public abstract POJOCLASS createDefaultObject() throws Exception;
+
 	public BasicJPAServiceTestUtils(final Class<POJOCLASS> pojoClassArg, final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg) {
 
 		super(pojoClassArg.getSimpleName(), persistenceServiceClassArg);
@@ -64,16 +70,29 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 
 		objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 	}
-	
-	
-	
+
+	@Override public void prepare() throws Exception {
+
+		// this should be done by the concrete test, not in the utils
+	}
+
+	@Override public void tearDown3() throws Exception {
+
+		// this should be done by the concrete test, not in the utils
+	}
+
+	@Override public void testSimpleObject() throws Exception {
+
+		// this should be implemented in real test classes, not in the utils
+	}
+
 	/**
 	 * Assert that neither {@code expectedObject} nor {@code actualObject} is null.
-	 * 
+	 *
 	 * @param expectedObject
 	 * @param actualObject
 	 */
-	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) {
+	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) throws JsonProcessingException, JSONException {
 
 		Assert.assertNotNull("excepted " + pojoClassName + " shouldn't be null", expectedObject);
 		Assert.assertNotNull("actual " + pojoClassName + " shouldn't be null", actualObject);
@@ -105,11 +124,12 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 	/**
 	 * Assert that expectedObjects and actualObjects have the same size.<br />
 	 * Assert that both collections contain equal objects regarding id and name.
-	 * 
+	 *
 	 * @param expectedObjects
 	 * @param actualObjects
 	 */
-	public void compareObjects(final Set<POJOCLASS> expectedObjects, final Map<POJOCLASSIDTYPE, POJOCLASS> actualObjects) {
+	public void compareObjects(final Set<POJOCLASS> expectedObjects, final Map<POJOCLASSIDTYPE, POJOCLASS> actualObjects)
+			throws JsonProcessingException, JSONException {
 
 		Assert.assertNotNull("expected objects shouldn't be null", expectedObjects);
 		Assert.assertNotNull("actual objects shouldn't be null", actualObjects);
@@ -133,11 +153,9 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 	}
 
 	@Override
-	public POJOCLASS getObject(final POJOCLASS expectedObject) {
+	public POJOCLASS getObject(final POJOCLASS expectedObject) throws JsonProcessingException, JSONException {
 
-		POJOCLASS responseObject = null;
-
-		responseObject = jpaService.getObject(expectedObject.getId());
+		final POJOCLASS responseObject = jpaService.getObject(expectedObject.getId());
 
 		Assert.assertNotNull("the updated " + type + " shouldn't be null", responseObject);
 		Assert.assertEquals("the " + type + "s are not equal", expectedObject, responseObject);
@@ -148,7 +166,15 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 		return responseObject;
 	}
 
-	public POJOCLASS createObject(final POJOCLASS object, final POJOCLASS expectedObject) throws Exception {
+	/**
+	 * creates an object and compares the result via #compareObjects
+	 *
+	 * @param object
+	 * @param expectedObject
+	 * @return
+	 * @throws Exception
+	 */
+	public POJOCLASS createAndCompareObject(final POJOCLASS object, final POJOCLASS expectedObject) throws Exception {
 
 		PROXYPOJOCLASS proxyObject = null;
 
@@ -183,23 +209,32 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 		return proxyObject.getObject();
 	}
 
-	public POJOCLASS updateObject(final POJOCLASS updateObject, final POJOCLASS expectedObject) throws Exception {
-
-		PROXYPOJOCLASS proxyUpdatedObject = null;
+	public POJOCLASS updateObject(final POJOCLASS updateObject) {
 
 		try {
 
-			proxyUpdatedObject = jpaService.updateObjectTransactional(updateObject);
+			final PROXYPOJOCLASS proxyUpdatedObject = jpaService.updateObjectTransactional(updateObject);
+
+			Assert.assertNotNull("the proxy object of " + type + " shouldn't be null", proxyUpdatedObject);
+
+			return proxyUpdatedObject.getObject();
 		} catch (final DMPPersistenceException e) {
 
 			Assert.assertTrue("something went wrong while updating the " + type, false);
 		}
 
-		Assert.assertNotNull("the proxy object of " + type + " shouldn't be null", proxyUpdatedObject);
+		return null;
+	}
 
-		compareObjects(expectedObject, proxyUpdatedObject.getObject());
+	public POJOCLASS updateAndCompareObject(final POJOCLASS updateObject, final POJOCLASS expectedObject) throws Exception {
 
-		return proxyUpdatedObject.getObject();
+		POJOCLASS freshUpdatedObject = updateObject(updateObject);
+
+		Assert.assertNotNull("the object of " + type + " shouldn't be null", freshUpdatedObject);
+
+		compareObjects(expectedObject, freshUpdatedObject);
+
+		return freshUpdatedObject;
 	}
 
 	public void deleteObject(final POJOCLASS object) {
@@ -210,10 +245,21 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 	}
 
 	/**
+	 * default impl return getDefaultObject
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	public POJOCLASS createDefaultCompleteObject() throws Exception {
+
+		return createDefaultObject();
+	}
+
+	/**
 	 * Prepares a given object with information from an object with updates.
-	 * 
+	 *
 	 * @param objectWithUpdates an object with updates
-	 * @param object the given object
+	 * @param object            the given object
 	 * @return the updated object
 	 */
 	protected abstract POJOCLASS prepareObjectForUpdate(final POJOCLASS objectWithUpdates, final POJOCLASS object);
@@ -225,7 +271,7 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 
 	/**
 	 * Creates a new object of the concrete POJO class.
-	 * 
+	 *
 	 * @return a new instance of the concrete POJO class
 	 * @throws DMPPersistenceException if something went wrong.
 	 */

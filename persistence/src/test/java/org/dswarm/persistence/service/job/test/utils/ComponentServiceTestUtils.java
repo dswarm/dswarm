@@ -19,8 +19,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.json.JSONException;
 import org.junit.Assert;
 
 import org.dswarm.persistence.model.job.Component;
@@ -33,20 +36,20 @@ import org.dswarm.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestU
 
 public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils<ComponentService, ProxyComponent, Component> {
 
-	private final FunctionServiceTestUtils			functionsResourceTestUtils;
+	private final FunctionServiceTestUtils functionServiceTestUtils;
 
-	private final TransformationServiceTestUtils	transformationsResourceTestUtils;
+	private final TransformationServiceTestUtils transformationsServiceTestUtils;
 
-	private final Set<Long>							checkedExpectedComponents	= Sets.newHashSet();
+	private final Set<Long> checkedExpectedComponents = Sets.newHashSet();
 
-	private final Set<Long>							checkedActualComponents		= Sets.newHashSet();
+	private final Set<Long> checkedActualComponents = Sets.newHashSet();
 
 	public ComponentServiceTestUtils() {
 
 		super(Component.class, ComponentService.class);
 
-		functionsResourceTestUtils = new FunctionServiceTestUtils();
-		transformationsResourceTestUtils = new TransformationServiceTestUtils(this);
+		functionServiceTestUtils = new FunctionServiceTestUtils();
+		transformationsServiceTestUtils = new TransformationServiceTestUtils(this);
 	}
 
 	public Component createComponent(final String name, final Map<String, String> parameterMappings, final Function function,
@@ -70,12 +73,54 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 		}
 
 		// update method needs to be utilised here, because component was already created
-		final Component updatedComponent = updateObject(component, component);
+		final Component updatedComponent = updateAndCompareObject(component, component);
 
 		Assert.assertNotNull("the updated component shouldn't be null", updatedComponent);
 		Assert.assertNotNull("the component name shouldn't be null", updatedComponent.getId());
 
 		return updatedComponent;
+	}
+
+	@Override
+	public Component createObject(final JsonNode objectDescription) throws Exception {
+		return null;
+	}
+
+	@Override
+	public Component createObject(final String identifier) throws Exception {
+		return null;
+	}
+
+	@Override
+	public Component createDefaultObject() throws Exception {
+
+		return getSimpleTrimComponent();
+	}
+
+	@Override public Component createDefaultCompleteObject() throws Exception {
+
+		// previous component
+		final Component component1 = getSimpleReplaceComponent();
+
+		// next component
+		final Component component2 = getSimpleLowerCaseComponent();
+
+		// main component
+
+		final Component component = getSimpleTrimComponent();
+
+		final Set<Component> inputComponents = Sets.newLinkedHashSet();
+
+		inputComponents.add(component1);
+
+		final Set<Component> outputComponents = Sets.newLinkedHashSet();
+
+		outputComponents.add(component2);
+
+		component.setInputComponents(inputComponents);
+		component.setOutputComponents(outputComponents);
+
+		return updateAndCompareObject(component, component);
 	}
 
 	/**
@@ -91,20 +136,13 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 	 * pairwise equal.
 	 */
 	@Override
-	public void compareObjects(final Component expectedComponent, final Component actualComponent) {
+	public void compareObjects(final Component expectedComponent, final Component actualComponent) throws JsonProcessingException, JSONException {
 
 		// Start skip already checked objects
 		if (expectedComponent != null && expectedComponent.getId() != null) {
 
 			if (checkedExpectedComponents.contains(expectedComponent.getId())) {
 
-				// SR FIXME why do we return here? we may have seen the expectedObject before but get a different actualObject
-				// that needs to be compared to the one already known.
-				// Furthermore, even if we have already seen expected A and actual B, how do we know that we already compared A
-				// with B? previous calls may have been
-				// A, C
-				// D, B
-				// current: A, B
 				return;
 			}
 
@@ -146,12 +184,12 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 
 				case Function:
 
-					functionsResourceTestUtils.compareObjects(expectedComponent.getFunction(), actualComponent.getFunction());
+					functionServiceTestUtils.compareObjects(expectedComponent.getFunction(), actualComponent.getFunction());
 
 					break;
 				case Transformation:
 
-					transformationsResourceTestUtils.compareObjects((Transformation) expectedComponent.getFunction(),
+					transformationsServiceTestUtils.compareObjects((Transformation) expectedComponent.getFunction(),
 							(Transformation) actualComponent.getFunction());
 
 					break;
@@ -225,23 +263,21 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 
 	public void checkDeletedComponent(final Component component) {
 
-		Component deletedComponent = null;
-
-		deletedComponent = jpaService.getObject(component.getId());
+		final Component deletedComponent = jpaService.getObject(component.getId());
 
 		Assert.assertNull("component should be null", deletedComponent);
 
 	}
 
 	/**
-	 * @see {@link BasicJPAServiceTestUtils#compareObjects(Set, Map)}
 	 * @param actualComponentId
 	 * @param expectedComponents
 	 * @param actualComponents
 	 * @param type
+	 * @see {@link BasicJPAServiceTestUtils#compareObjects(Set, Map)}
 	 */
 	private void prepareAndCompareComponents(final Long actualComponentId, final Set<Component> expectedComponents,
-			final Set<Component> actualComponents, final String type) {
+			final Set<Component> actualComponents, final String type) throws JsonProcessingException, JSONException {
 
 		Assert.assertNotNull(type + " components of actual component '" + actualComponentId + "' shouldn't be null", actualComponents);
 		Assert.assertFalse(type + " components of actual component '" + actualComponentId + "' shouldn't be empty", actualComponents.isEmpty());
@@ -284,7 +320,7 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 			}
 		} else {
 
-			newInputComponents = inputComponents;
+			newInputComponents = null;
 		}
 
 		object.setInputComponents(newInputComponents);
@@ -305,7 +341,7 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 			}
 		} else {
 
-			newOutputComponents = outputComponents;
+			newOutputComponents = null;
 		}
 
 		object.setOutputComponents(newOutputComponents);
@@ -319,6 +355,183 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 		checkedActualComponents.clear();
 		checkedExpectedComponents.clear();
 
-		functionsResourceTestUtils.reset();
+		functionServiceTestUtils.reset();
+	}
+
+	public Component getSimpleReplaceComponent() throws Exception {
+
+		final Function function1 = functionServiceTestUtils.getSimpleReplaceFunction();
+
+		final String component1Name = "my replace component";
+		final Map<String, String> parameterMapping1 = Maps.newLinkedHashMap();
+
+		final String functionParameterName1 = "inputString";
+		final String componentVariableName1 = "previousComponent.outputString";
+		final String functionParameterName2 = "regex";
+		final String componentVariableName2 = "\\.";
+		final String functionParameterName3 = "replaceString";
+		final String componentVariableName3 = ":";
+
+		parameterMapping1.put(functionParameterName1, componentVariableName1);
+		parameterMapping1.put(functionParameterName2, componentVariableName2);
+		parameterMapping1.put(functionParameterName3, componentVariableName3);
+
+		return createComponent(component1Name, parameterMapping1, function1, null, null);
+	}
+
+	public Component getSimpleLowerCaseComponent() throws Exception {
+
+		final Function function2 = functionServiceTestUtils.getSimpleLowerCaseFunction();
+
+		final String component2Name = "my lower case component";
+		final Map<String, String> parameterMapping2 = Maps.newLinkedHashMap();
+
+		final String functionParameterName4 = "inputString";
+		final String componentVariableName4 = "previousComponent.outputString";
+
+		parameterMapping2.put(functionParameterName4, componentVariableName4);
+
+		return createComponent(component2Name, parameterMapping2, function2, null, null);
+	}
+
+	public Component getSimpleTrimComponent() throws Exception {
+
+		final Function function = functionServiceTestUtils.getSimpleTrimFunction();
+
+		final String componentName = "my trim component";
+		final Map<String, String> parameterMapping = Maps.newLinkedHashMap();
+
+		final String functionParameterName = "inputString";
+		final String componentVariableName = "previousComponent.outputString";
+
+		parameterMapping.put(functionParameterName, componentVariableName);
+
+		return createComponent(componentName, parameterMapping, function, null, null);
+	}
+
+	public Component getTransformationComponentSimpleTrimComponent(final String inputAttributePath, final String outputAttributePath)
+			throws Exception {
+
+		final Transformation transformation = transformationsServiceTestUtils.getSimpleTrimTransformation();
+
+		final Map<String, String> transformationComponentParameterMappings = Maps.newLinkedHashMap();
+
+		transformationComponentParameterMappings.put(transformation.getParameters().get(0), inputAttributePath);
+		transformationComponentParameterMappings.put("transformationOutputVariable", outputAttributePath);
+
+		return createComponent(transformation.getName() + " (component)",
+				transformationComponentParameterMappings, transformation, null, null);
+	}
+
+	/**
+	 * note: result will be cache (temporarily - for re-utilisation in a test)
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	public Component getFirstNameTransformationComponentDefaultCompleteComponent() throws Exception {
+
+		final String transformationComponentName = "prepare first name";
+
+		if (!cache.containsKey(transformationComponentName)) {
+
+			final Transformation transformation = transformationsServiceTestUtils.createDefaultCompleteObject();
+
+			final String transformationComponentFunctionParameterName = "transformationInputString";
+			final String transformationComponentVariableName = "firstName";
+
+			final Map<String, String> transformationComponentParameterMappings = Maps.newLinkedHashMap();
+
+			transformationComponentParameterMappings.put(transformationComponentFunctionParameterName, transformationComponentVariableName);
+
+			final Component transformationComponent = createComponent(transformationComponentName,
+					transformationComponentParameterMappings, transformation, null, null);
+
+			cache.put(transformationComponentName, transformationComponent);
+		}
+
+		return cache.get(transformationComponentName);
+	}
+
+	/**
+	 * note: result will be cache (temporarily - for re-utilisation in a test)
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	public Component getFamilyNameTransformationComponentDefaultCompleteComponent() throws Exception {
+
+		final String name = "prepare family name";
+
+		if (!cache.containsKey(name)) {
+
+			final Transformation transformation = transformationsServiceTestUtils.createDefaultCompleteObject();
+
+			final Map<String, String> transformationComponentParameterMappings2 = Maps.newLinkedHashMap();
+
+			transformationComponentParameterMappings2.put("transformationInputString", "familyName");
+
+			final Component transformationComponent = createComponent(name,
+					transformationComponentParameterMappings2, transformation, null, null);
+
+			cache.put(name, transformationComponent);
+		}
+
+		return cache.get(name);
+	}
+
+	/**
+	 * note: result will be cache (temporarily - for re-utilisation in a test)
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	public Component getFullNameComponent() throws Exception {
+
+		final String component4Name = "full name";
+
+		if (!cache.containsKey(component4Name)) {
+
+			final Component transformationComponent = getFirstNameTransformationComponentDefaultCompleteComponent();
+			final Component transformationComponent2 = getFamilyNameTransformationComponentDefaultCompleteComponent();
+			final Function function4 = functionServiceTestUtils.getSimpleConcatFunction();
+
+			final Map<String, String> parameterMapping4 = Maps.newLinkedHashMap();
+
+			final String functionParameterName5 = "firstString";
+			final String componentVariableName5 = transformationComponent.getId() + ".outputVariable";
+			final String functionParameterName6 = "secondString";
+			final String componentVariableName6 = transformationComponent2.getId() + ".outputVariable";
+
+			parameterMapping4.put(functionParameterName5, componentVariableName5);
+			parameterMapping4.put(functionParameterName6, componentVariableName6);
+
+			final Set<Component> component4InputComponents = Sets.newLinkedHashSet();
+
+			component4InputComponents.add(transformationComponent);
+			component4InputComponents.add(transformationComponent2);
+
+			final Component component4 = createComponent(component4Name, parameterMapping4, function4,
+					component4InputComponents, null);
+
+			cache.put(component4Name, component4);
+		}
+
+		return cache.get(component4Name);
+	}
+
+	public Component getComplexTransformationComponent(final String firstInputAttributePath, final String secondInputAttributePath,
+			final String outputAttributePath) throws Exception {
+
+		final Transformation transformation2 = transformationsServiceTestUtils.getComplexTransformation();
+
+		final Map<String, String> transformationComponent3ParameterMappings = Maps.newLinkedHashMap();
+
+		transformationComponent3ParameterMappings.put(transformation2.getParameters().getFirst(), firstInputAttributePath);
+		transformationComponent3ParameterMappings.put(transformation2.getParameters().get(1), secondInputAttributePath);
+		transformationComponent3ParameterMappings.put("transformationOutputVariable", outputAttributePath);
+
+		return createComponent(transformation2.getName() + " (component)",
+				transformationComponent3ParameterMappings, transformation2, null, null);
 	}
 }
