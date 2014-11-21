@@ -7,13 +7,13 @@ public class JsonModelValidationException extends Exception {
 	public JsonModelValidationException() {
 		super();
 	}
-	
-	public JsonModelValidationException( Throwable throwable ) {
-		super( throwable );
+
+	public JsonModelValidationException(final Throwable throwable) {
+		super(throwable);
 	}
-	
-	public JsonModelValidationException( String message, Throwable t ) {
-		super( message, t );
+
+	public JsonModelValidationException(final String message, final Throwable t) {
+		super(message, t);
 	}
-	
+
 }

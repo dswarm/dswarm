@@ -2,127 +2,130 @@ package org.dswarm.converter.adapt;
 
 import java.io.IOException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JsonSchemaTransformer {
 
 	public static final JsonSchemaTransformer INSTANCE = new JsonSchemaTransformer();
-	
-	private static final Logger log = LoggerFactory.getLogger( JsonSchemaTransformer.class );
-	
+
+	private static final Logger log = LoggerFactory.getLogger(JsonSchemaTransformer.class);
+
 	private final ObjectMapper mapper = new ObjectMapper();
-	
-	private static final String keyAttributePaths = "attribute_paths";
-	private static final String keyAttributePath = "attribute_path";
-	private static final String keySchema = "schema";
-	private static final String keyInputDataModel = "input_data_model";
+
+	private static final String keyAttributePaths  = "attribute_paths";
+	private static final String keyAttributePath   = "attribute_path";
+	private static final String keySchema          = "schema";
+	private static final String keyInputDataModel  = "input_data_model";
 	private static final String keyOutputDataModel = "output_data_model";
-	private static final String keyType = "type";
-	private static final String keyName = "name";
-	private static final String keyId = "id";
-	
+	private static final String keyType            = "type";
+	private static final String keyName            = "name";
+	private static final String keyId              = "id";
+
 	private static final String valueSchemaAttributePathInstance = "SchemaAttributePathInstance";
-	
+
 	private int generatedId;
-	
+
 	/**
-	 * 
 	 * @param jsonContent The complete json content
 	 * @return The rootNode
 	 * @throws JsonModelTransformException
 	 */
-	public JsonNode transformFixAttributePathInstance( String jsonContent ) throws JsonModelTransformException, JsonModelAlreadyTransformedException {
+	public JsonNode transformFixAttributePathInstance(final String jsonContent) throws JsonModelTransformException,
+			JsonModelAlreadyTransformedException {
 		try {
 			resetGeneratedId();
-			
-			JsonNode nodeRoot = objectifyJsonInput( jsonContent );	
-			
+
+			final JsonNode nodeRoot = objectifyJsonInput(jsonContent);
+
 			try {
-				updateSchemaNode( nodeRoot.get( keyInputDataModel ) );
-				updateSchemaNode( nodeRoot.get( keyOutputDataModel ) );
-			} catch( JsonModelAlreadyTransformedException e ) {
-				log.warn( e.getMessage() );
+				updateDataModelNode(nodeRoot.get(JsonSchemaTransformer.keyInputDataModel));
+				updateDataModelNode(nodeRoot.get(JsonSchemaTransformer.keyOutputDataModel));
+			} catch (final JsonModelAlreadyTransformedException e) {
+				JsonSchemaTransformer.log.warn(e.getMessage());
 				throw e;
 			} finally {
-				logObjectJSON( nodeRoot );
-				resetGeneratedId();				
+				logObjectJSON(nodeRoot);
+				resetGeneratedId();
 			}
-			
+
 			return nodeRoot;
-		} catch( IOException e ) {
-			log.error( e.getMessage(), e );
-			throw new JsonModelTransformException( e );
+		} catch (final IOException e) {
+			JsonSchemaTransformer.log.error(e.getMessage(), e);
+			throw new JsonModelTransformException(e);
 		}
 	}
-	
-	
+
 	private void resetGeneratedId() {
 		generatedId = 0;
 	}
-	
-	
-	private void updateSchemaNode( JsonNode parent ) throws JsonModelAlreadyTransformedException {
-		if( parent == null )
+
+	private void updateDataModelNode(final JsonNode parent) throws JsonModelAlreadyTransformedException {
+		if (parent == null) {
 			return;
-		
-		ObjectNode nodeSchema = (ObjectNode)parent.get( keySchema );
-		if( nodeSchema == null )
-			return;
-			
-		//skip resource which are already transformed
-		JsonNode valueForNodeType = nodeSchema.findValue( keyType );
-		if( valueForNodeType != null ) 
-			if( valueForNodeType.asText().equals(valueSchemaAttributePathInstance ) )
-				throw new JsonModelAlreadyTransformedException( "Resource already transformed." );			
-		
-		ArrayNode oldAttributePaths = (ArrayNode)nodeSchema.get( keyAttributePaths );
-		ArrayNode newAttributePaths = mapper.createArrayNode();
-		for( JsonNode oldAttributePath : oldAttributePaths ) {
-			int id = generateId();
-			JsonNode attributePathInstance = createSchemaAttributePathInstanceNode( id, "sapi_" + id, oldAttributePath );
-			newAttributePaths.add( attributePathInstance );
 		}
-		nodeSchema.replace( keyAttributePaths, newAttributePaths );
+
+		final JsonNode nodeSchema = parent.get(JsonSchemaTransformer.keySchema);
+		updateSchemaNode(nodeSchema);
 	}
-	
-	
+
+	public Optional<JsonNode> updateSchemaNode(final JsonNode nodeSchema) {
+		if (nodeSchema == null) {
+			return Optional.absent();
+		}
+
+		// skip resource which are already transformed
+		final JsonNode valueForNodeType = nodeSchema.findValue(JsonSchemaTransformer.keyType);
+		if (valueForNodeType != null) {
+			if (valueForNodeType.asText().equals(JsonSchemaTransformer.valueSchemaAttributePathInstance)) {
+				throw new JsonModelAlreadyTransformedException("Resource already transformed.");
+			}
+		}
+
+		final ArrayNode oldAttributePaths = (ArrayNode) nodeSchema.get(JsonSchemaTransformer.keyAttributePaths);
+		final ArrayNode newAttributePaths = mapper.createArrayNode();
+		for (final JsonNode oldAttributePath : oldAttributePaths) {
+			final int id = generateId();
+			final JsonNode attributePathInstance = createSchemaAttributePathInstanceNode(id, "sapi_" + id, oldAttributePath);
+			newAttributePaths.add(attributePathInstance);
+		}
+		((ObjectNode) nodeSchema).replace(JsonSchemaTransformer.keyAttributePaths, newAttributePaths);
+
+		return Optional.of(nodeSchema);
+	}
+
 	private int generateId() {
 		return generatedId++;
 	}
-	
-	
-	private JsonNode createSchemaAttributePathInstanceNode( int id, String name, JsonNode attributePath ) {
-		ObjectNode node = mapper.createObjectNode();
-		node.put( keyType, valueSchemaAttributePathInstance );
-		node.put( keyName, name );
-		node.put( keyId, id );
-		node.set( keyAttributePath, attributePath );
+
+	private JsonNode createSchemaAttributePathInstanceNode(final int id, final String name, final JsonNode attributePath) {
+		final ObjectNode node = mapper.createObjectNode();
+		node.put(JsonSchemaTransformer.keyType, JsonSchemaTransformer.valueSchemaAttributePathInstance);
+		node.put(JsonSchemaTransformer.keyName, name);
+		node.put(JsonSchemaTransformer.keyId, id);
+		node.set(JsonSchemaTransformer.keyAttributePath, attributePath);
 		return node;
 	}
-	
-	
-	private ObjectNode objectifyJsonInput( String jsonInput ) throws IOException {
-			return mapper.readValue( jsonInput, ObjectNode.class );
+
+	private ObjectNode objectifyJsonInput(final String jsonInput) throws IOException {
+		return mapper.readValue(jsonInput, ObjectNode.class);
 	}
 
-	
-	private void logObjectJSON( final Object object ) {
+	private void logObjectJSON(final Object object) {
 		try {
-			final String json = mapper.writeValueAsString( object );
-			log.debug( json );
+			final String json = mapper.writeValueAsString(object);
+			JsonSchemaTransformer.log.debug(json);
 		} catch (final JsonProcessingException e) {
-			log.error( "Unable to serialize " + object.getClass().getName() + " to JSON", e );
+			JsonSchemaTransformer.log.error("Unable to serialize " + object.getClass().getName() + " to JSON", e);
 		}
 	}
-	
-	
+
 	public ObjectMapper getMapper() {
 		return mapper;
 	}

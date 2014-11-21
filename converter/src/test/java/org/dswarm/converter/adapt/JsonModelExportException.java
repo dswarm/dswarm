@@ -7,9 +7,9 @@ public class JsonModelExportException extends Exception {
 	public JsonModelExportException() {
 		super();
 	}
-	
-	public JsonModelExportException( Throwable throwable ) {
-		super( throwable );
+
+	public JsonModelExportException(final Throwable throwable) {
+		super(throwable);
 	}
-	
+
 }

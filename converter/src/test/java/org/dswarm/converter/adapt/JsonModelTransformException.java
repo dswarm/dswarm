@@ -8,14 +8,12 @@ public class JsonModelTransformException extends Exception {
 		super();
 	}
 
-	
-	public JsonModelTransformException( String message ) {
-		super( message );
+	public JsonModelTransformException(final String message) {
+		super(message);
 	}
-	
-	
-	public JsonModelTransformException( Throwable throwable ) {
-		super( throwable );
+
+	public JsonModelTransformException(final Throwable throwable) {
+		super(throwable);
 	}
-	
+
 }

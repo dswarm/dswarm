@@ -8,14 +8,12 @@ public class JsonModelAlreadyTransformedException extends RuntimeException {
 		super();
 	}
 
-	
-	public JsonModelAlreadyTransformedException( String message ) {
-		super( message );
+	public JsonModelAlreadyTransformedException(final String message) {
+		super(message);
 	}
-	
-	
-	public JsonModelAlreadyTransformedException( Throwable throwable ) {
-		super( throwable );
+
+	public JsonModelAlreadyTransformedException(final Throwable throwable) {
+		super(throwable);
 	}
-	
+
 }

@@ -82,7 +82,7 @@ public class AttributePathsResourceTest
 		attributessArray.add(attribute1JSON);
 		attributessArray.add(attribute2JSON);
 
-		attributePathJSON.put("attributes", attributessArray);
+		attributePathJSON.set("attributes", attributessArray);
 
 		// re-init expect object
 		objectJSONString = objectMapper.writeValueAsString(attributePathJSON);
