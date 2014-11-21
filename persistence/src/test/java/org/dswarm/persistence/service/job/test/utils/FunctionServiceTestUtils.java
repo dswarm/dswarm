@@ -45,7 +45,7 @@ public class FunctionServiceTestUtils extends BasicFunctionServiceTestUtils<Func
 	}
 
 	@Override
-	public Function createDefaultObject() throws Exception {
+	public Function createAndPersistDefaultObject() throws Exception {
 
 		final String functionName = "trim";
 		final String functionDescription = "trims leading and trailing whitespaces from a given string";
@@ -69,6 +69,10 @@ public class FunctionServiceTestUtils extends BasicFunctionServiceTestUtils<Func
 		function.setFunctionDescription(functionFunctionDescription);
 
 		return createAndCompareObject(function, function);
+	}
+
+	@Override public Function createDefaultObject() throws Exception {
+		return null;
 	}
 
 	public Function getSimpleTrimFunction() throws Exception {

@@ -191,9 +191,13 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 	}
 
 	@Override
-	public Attribute createDefaultObject() throws Exception {
+	public Attribute createAndPersistDefaultObject() throws Exception {
 		
 		return getDctermsTitle();
+	}
+
+	@Override public Attribute createDefaultObject() throws Exception {
+		return null;
 	}
 
 }

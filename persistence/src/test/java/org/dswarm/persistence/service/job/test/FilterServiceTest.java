@@ -46,7 +46,7 @@ public class FilterServiceTest extends IDBasicJPAServiceTest<ProxyFilter, Filter
 	@Override
 	public void testSimpleObject() throws Exception {
 
-		final Filter filter = filterServiceTestUtils.createDefaultObject();
+		final Filter filter = filterServiceTestUtils.createAndPersistDefaultObject();
 
 		final Filter updatedFilter = filterServiceTestUtils.updateAndCompareObject(filter, filter);
 

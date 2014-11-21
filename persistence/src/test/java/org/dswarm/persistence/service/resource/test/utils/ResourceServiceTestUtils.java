@@ -68,7 +68,7 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 		return null;
 	}
 
-	@Override public Resource createDefaultObject() throws Exception {
+	@Override public Resource createAndPersistDefaultObject() throws Exception {
 
 		final Resource resource = new Resource();
 
@@ -88,10 +88,14 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 		return createAndCompareObject(resource, resource);
 	}
 
-	@Override public Resource createDefaultCompleteObject() throws Exception {
+	@Override public Resource createDefaultObject() throws Exception {
+		return null;
+	}
 
-		final Resource resource = createDefaultObject();
-		final Configuration configuration = configurationsServiceTestUtils.createDefaultObject();
+	@Override public Resource createAndPeristDefaultCompleteObject() throws Exception {
+
+		final Resource resource = createAndPersistDefaultObject();
+		final Configuration configuration = configurationsServiceTestUtils.createAndPersistDefaultObject();
 		resource.addConfiguration(configuration);
 
 		return updateAndCompareObject(resource, resource);

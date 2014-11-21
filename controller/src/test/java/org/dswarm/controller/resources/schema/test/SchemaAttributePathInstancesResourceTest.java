@@ -66,7 +66,7 @@ public class SchemaAttributePathInstancesResourceTest
 		final AttributePath attributePath = attributePathServiceTestUtils.getDctermsTitleDctermHaspartDctermsTitleAP();
 
 		final SchemaServiceTestUtils schemaServiceTestUtils = schemasResourceTestUtils.getPersistenceServiceTestUtils();
-		final Schema subSchema = schemaServiceTestUtils.createDefaultObject();
+		final Schema subSchema = schemaServiceTestUtils.createAndPersistDefaultObject();
 
 		schemaAttributePathInstance.setAttributePath(attributePath);
 		schemaAttributePathInstance.setSubSchema(subSchema);

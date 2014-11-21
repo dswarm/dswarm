@@ -59,7 +59,7 @@ public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<Mapping
 		return null;
 	}
 
-	@Override public Mapping createDefaultObject() throws Exception {
+	@Override public Mapping createAndPersistDefaultObject() throws Exception {
 
 		final MappingAttributePathInstance inputAttributePath = mappingAttributePathInstanceServiceTestUtils.getDefaultInputMAPI();
 		final MappingAttributePathInstance outputAttributePath = mappingAttributePathInstanceServiceTestUtils.getDefaultOutputMAPI();
@@ -79,7 +79,11 @@ public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<Mapping
 		return createAndCompareObject(mapping, mapping);
 	}
 
-	@Override public Mapping createDefaultCompleteObject() throws Exception {
+	@Override public Mapping createDefaultObject() throws Exception {
+		return null;
+	}
+
+	@Override public Mapping createAndPeristDefaultCompleteObject() throws Exception {
 
 		final MappingAttributePathInstance firstNameMappingAttributePathInstance = mappingAttributePathInstanceServiceTestUtils
 				.getDctermsCreatorFoafFirstnameMAPI();

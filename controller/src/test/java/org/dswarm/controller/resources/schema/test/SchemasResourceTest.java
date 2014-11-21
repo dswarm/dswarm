@@ -80,16 +80,16 @@ public class SchemasResourceTest extends
 		super.prepare();
 
 		final ClaszServiceTestUtils claszServiceTestUtils = claszesResourceTestUtils.getPersistenceServiceTestUtils();
-		final Clasz recordClass = claszServiceTestUtils.createDefaultObject();
+		final Clasz recordClass = claszServiceTestUtils.createAndPersistDefaultObject();
 
 		final SchemaAttributePathInstanceServiceTestUtils schemaAttributePathInstanceServiceTestUtils = schemaAttributePathInstancesResourceTestUtils
 				.getPersistenceServiceTestUtils();
 
-		final SchemaAttributePathInstance sapi1 = schemaAttributePathInstanceServiceTestUtils.createDefaultObject();
+		final SchemaAttributePathInstance sapi1 = schemaAttributePathInstanceServiceTestUtils.createAndPersistDefaultObject();
 		final SchemaAttributePathInstance sapi2 = schemaAttributePathInstanceServiceTestUtils.getDctermsTitleDctermsHaspartSAPI();
 
 		final ContentSchemaServiceTestUtils contentSchemaServiceTestUtils = contentSchemasResourceTestUtils.getPersistenceServiceTestUtils();
-		final ContentSchema contentSchema = contentSchemaServiceTestUtils.createDefaultObject();
+		final ContentSchema contentSchema = contentSchemaServiceTestUtils.createAndPersistDefaultObject();
 
 		final Schema schema = new Schema();
 		schema.setRecordClass(recordClass);

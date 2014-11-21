@@ -92,7 +92,7 @@ public class FilterServiceTestUtils extends BasicDMPJPAServiceTestUtils<FilterSe
 		return null;
 	}
 
-	@Override public Filter createDefaultObject() throws Exception {
+	@Override public Filter createAndPersistDefaultObject() throws Exception {
 
 		final String filterName = "my filter";
 
@@ -102,5 +102,9 @@ public class FilterServiceTestUtils extends BasicDMPJPAServiceTestUtils<FilterSe
 				+ "               m:ind1 \"a\" ;\n" + "               m:subfield ?subField .\n" + "    ?subField rdf:value ?url .\n" + "}";
 
 		return createFilter(filterName, filterExpression);
+	}
+
+	@Override public Filter createDefaultObject() throws Exception {
+		return null;
 	}
 }

@@ -223,26 +223,30 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 		return null;
 	}
 
-	@Override public Schema createDefaultObject() throws Exception {
+	@Override public Schema createAndPersistDefaultObject() throws Exception {
 		return createSchema("Default Schema", new SchemaAttributePathInstance[] {
-				schemaAttributePathInstanceResourceTestUtils.createDefaultObject(),
+				schemaAttributePathInstanceResourceTestUtils.createAndPersistDefaultObject(),
 				schemaAttributePathInstanceResourceTestUtils.getDctermsTitleDctermsHaspartSAPI()
-		}, claszesServiceTestUtils.createDefaultObject());
+		}, claszesServiceTestUtils.createAndPersistDefaultObject());
 	}
 
-	@Override public Schema createDefaultCompleteObject() throws Exception {
+	@Override public Schema createDefaultObject() throws Exception {
+		return null;
+	}
 
-		final Schema schema = createDefaultObject();
-		schema.setContentSchema(contentSchemaServiceTestUtils.createDefaultObject());
+	@Override public Schema createAndPeristDefaultCompleteObject() throws Exception {
+
+		final Schema schema = createAndPersistDefaultObject();
+		schema.setContentSchema(contentSchemaServiceTestUtils.createAndPersistDefaultObject());
 
 		return updateAndCompareObject(schema, schema);
 	}
 
 	public Schema createAlternativeSchema() throws Exception {
 		return createSchema("my schema", new SchemaAttributePathInstance[] {
-				schemaAttributePathInstanceResourceTestUtils.createDefaultObject(),
+				schemaAttributePathInstanceResourceTestUtils.createAndPersistDefaultObject(),
 				schemaAttributePathInstanceResourceTestUtils.getDctermsCreatorFOAFNameSAPI(),
 				schemaAttributePathInstanceResourceTestUtils.getDctermsCreatedSAPI()
-		}, claszesServiceTestUtils.createDefaultObject());
+		}, claszesServiceTestUtils.createAndPersistDefaultObject());
 	}
 }

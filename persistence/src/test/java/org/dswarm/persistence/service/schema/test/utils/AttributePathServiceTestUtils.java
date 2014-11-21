@@ -383,9 +383,13 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 	 * @throws Exception
 	 */
 	@Override
-	public AttributePath createDefaultObject() throws Exception {
+	public AttributePath createAndPersistDefaultObject() throws Exception {
 
 		return getDctermsTitleDctermHaspartDctermsTitleAP();
+	}
+
+	@Override public AttributePath createDefaultObject() throws Exception {
+		return null;
 	}
 
 	public AttributePath getDctermsTitleDctermHaspartDctermsTitleAP() throws Exception {

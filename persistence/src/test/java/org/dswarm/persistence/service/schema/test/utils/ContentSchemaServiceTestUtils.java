@@ -155,15 +155,21 @@ public class ContentSchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<C
 		return null;
 	}
 
+	@Override public ContentSchema createAndPersistDefaultObject() throws Exception {
+
+		final ContentSchema contentSchema = createDefaultObject();
+		return createContentSchema(contentSchema);
+	}
+
 	@Override public ContentSchema createDefaultObject() throws Exception {
 
 		final ContentSchema contentSchema = new ContentSchema();
 		contentSchema.setName("Default Content Schema");
-		contentSchema.addKeyAttributePath(apstUtils.createDefaultObject());
+		contentSchema.addKeyAttributePath(apstUtils.createAndPersistDefaultObject());
 		contentSchema.addKeyAttributePath(apstUtils.getDctermsTitleDctermHaspartAP());
 		contentSchema.addKeyAttributePath(apstUtils.getDctermsCreatedAP());
 		contentSchema.setValueAttributePath(apstUtils.getRDFValueAP());
 		contentSchema.setRecordIdentifierAttributePath(apstUtils.getMABXMLIDAP());
-		return createContentSchema(contentSchema);
+		return contentSchema;
 	}
 }

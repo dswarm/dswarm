@@ -57,6 +57,8 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 
 	public abstract POJOCLASS createObject(final String identifier) throws Exception;
 
+	public abstract POJOCLASS createAndPersistDefaultObject() throws Exception;
+
 	public abstract POJOCLASS createDefaultObject() throws Exception;
 
 	public BasicJPAServiceTestUtils(final Class<POJOCLASS> pojoClassArg, final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg) {
@@ -242,6 +244,17 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 		final POJOCLASSIDTYPE objectId = object.getId();
 
 		deleteObject(objectId);
+	}
+
+	/**
+	 * default impl return getDefaultObject
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	public POJOCLASS createAndPeristDefaultCompleteObject() throws Exception {
+
+		return createAndPersistDefaultObject();
 	}
 
 	/**

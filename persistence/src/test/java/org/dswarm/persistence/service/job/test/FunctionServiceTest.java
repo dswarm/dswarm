@@ -59,7 +59,7 @@ public class FunctionServiceTest extends IDBasicJPAServiceTest<ProxyFunction, Fu
 	@Override
 	public void testSimpleObject() throws Exception {
 
-		final Function function = functionServiceTestUtils.createDefaultObject();
+		final Function function = functionServiceTestUtils.createAndPersistDefaultObject();
 
 		final Function updatedFunction = updateObjectTransactional(function).getObject();
 

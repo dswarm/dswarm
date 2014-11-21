@@ -62,9 +62,13 @@ public class TransformationServiceTestUtils extends BasicFunctionServiceTestUtil
 	}
 
 	@Override
-	public Transformation createDefaultObject() throws Exception {
+	public Transformation createAndPersistDefaultObject() throws Exception {
 
 		return getSimpleTrimTransformation();
+	}
+
+	@Override public Transformation createDefaultObject() throws Exception {
+		return null;
 	}
 
 	/**
@@ -74,7 +78,7 @@ public class TransformationServiceTestUtils extends BasicFunctionServiceTestUtil
 	 * @throws Exception
 	 */
 	@Override
-	public Transformation createDefaultCompleteObject() throws Exception {
+	public Transformation createAndPeristDefaultCompleteObject() throws Exception {
 
 		final String transformationName = "my transformation";
 
@@ -83,7 +87,7 @@ public class TransformationServiceTestUtils extends BasicFunctionServiceTestUtil
 			final String transformationDescription = "transformation which just makes use of one function";
 			final String transformationParameter = "transformationInputString";
 
-			final Component component = componentServiceTestUtils.createDefaultCompleteObject();
+			final Component component = componentServiceTestUtils.createAndPeristDefaultCompleteObject();
 
 			final Set<Component> components = Sets.newLinkedHashSet();
 

@@ -53,9 +53,13 @@ public class SchemaAttributePathInstanceServiceTestUtils extends
 		return null;
 	}
 
-	@Override public SchemaAttributePathInstance createDefaultObject() throws Exception {
+	@Override public SchemaAttributePathInstance createAndPersistDefaultObject() throws Exception {
 
 		return getDctermsTitleDctermsHaspartDctermsTitleSAPI();
+	}
+
+	@Override public SchemaAttributePathInstance createDefaultObject() throws Exception {
+		return null;
 	}
 
 	public SchemaAttributePathInstance getDctermsTitleDctermsHaspartDctermsTitleSAPI() throws Exception {
@@ -142,10 +146,10 @@ public class SchemaAttributePathInstanceServiceTestUtils extends
 		return createSchemaAttributePathInstance(null, attributePath, subSchema);
 	}
 
-	@Override public SchemaAttributePathInstance createDefaultCompleteObject() throws Exception {
+	@Override public SchemaAttributePathInstance createAndPeristDefaultCompleteObject() throws Exception {
 
-		final SchemaAttributePathInstance sapi = createDefaultObject();
-		sapi.setSubSchema(sstUtils.createDefaultObject());
+		final SchemaAttributePathInstance sapi = createAndPersistDefaultObject();
+		sapi.setSubSchema(sstUtils.createAndPersistDefaultObject());
 
 		return updateAndCompareObject(sapi, sapi);
 	}
