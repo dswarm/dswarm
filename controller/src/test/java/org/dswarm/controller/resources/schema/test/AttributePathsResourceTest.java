@@ -21,7 +21,6 @@ import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -41,13 +40,9 @@ public class AttributePathsResourceTest
 		extends
 		BasicResourceTest<AttributePathsResourceTestUtils, AttributePathServiceTestUtils, AttributePathService, ProxyAttributePath, AttributePath, Long> {
 
-	private static final Logger					LOG	= LoggerFactory.getLogger(AttributePathsResourceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AttributePathsResourceTest.class);
 
-	private final AttributesResourceTestUtils	attributeResourceTestUtils;
-
-	private Attribute							actualAttribute1;
-
-	private Attribute							actualAttribute2;
+	private AttributesResourceTestUtils attributeResourceTestUtils;
 
 	public AttributePathsResourceTest() {
 
@@ -56,13 +51,21 @@ public class AttributePathsResourceTest
 		attributeResourceTestUtils = new AttributesResourceTestUtils();
 	}
 
+	@Override protected void initObjects() {
+
+		super.initObjects();
+
+		pojoClassResourceTestUtils = new AttributePathsResourceTestUtils();
+		attributeResourceTestUtils = new AttributesResourceTestUtils();
+	}
+
 	@Override
 	public void prepare() throws Exception {
 
 		super.prepare();
 
-		actualAttribute1 = attributeResourceTestUtils.createObject("attribute6.json");
-		actualAttribute2 = attributeResourceTestUtils.createObject("attribute7.json");
+		final Attribute actualAttribute1 = attributeResourceTestUtils.createObject("attribute6.json");
+		final Attribute actualAttribute2 = attributeResourceTestUtils.createObject("attribute7.json");
 
 		// manipulate attribute path attributes
 		final String attributePathJSONString = DMPPersistenceUtil.getResourceAsString("attribute_path.json");
@@ -132,8 +135,6 @@ public class AttributePathsResourceTest
 
 		Assert.assertEquals("the attribute paths should be equal", attributePath1, attributePath2);
 
-		deletedObject(attributePath1);
-
 		AttributePathsResourceTest.LOG.debug("end attribute paths uniqueness test");
 	}
 
@@ -168,10 +169,6 @@ public class AttributePathsResourceTest
 				attributePath);
 		Assert.assertEquals("number of attribute elements in attribute path should be equal", updateAttributePath.getAttributePath().size(),
 				attributePath.getAttributePath().size());
-
-		deletedObject(attributePath);
-
-		attributeResourceTestUtils.deleteObject(actualAttribute3);
 
 		AttributePathsResourceTest.LOG.debug("end attribute update test");
 	}
@@ -241,18 +238,6 @@ public class AttributePathsResourceTest
 				updateAttributePath.getAttributePath().size());
 		Assert.assertEquals("number of attribute elements in attribute path should be equal", 3, updateAttributePath.getAttributePath().size());
 
-		deletedObject(attributePath);
-		deletedObject(modifiedAttributePath);
-
-		attributeResourceTestUtils.deleteObject(actualAttribute3);
-
 		AttributePathsResourceTest.LOG.debug("end attribute update test with existing attribute path");
-	}
-
-	@After
-	public void tearDown2() throws Exception {
-
-		attributeResourceTestUtils.deleteObject(actualAttribute1);
-		attributeResourceTestUtils.deleteObject(actualAttribute2);
 	}
 }
