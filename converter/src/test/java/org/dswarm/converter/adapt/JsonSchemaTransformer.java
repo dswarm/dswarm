@@ -1,7 +1,6 @@
 package org.dswarm.converter.adapt;
 
 import java.io.IOException;
-import java.net.URL;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +10,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
 
 public class JsonSchemaTransformer {
 
@@ -35,22 +32,33 @@ public class JsonSchemaTransformer {
 	
 	private int generatedId;
 	
-	public JsonNode transformFixAttributePathInstance( String resourceName ) throws Exception {
+	/**
+	 * 
+	 * @param jsonContent The complete json content
+	 * @return The rootNode
+	 * @throws JsonModelTransformException
+	 */
+	public JsonNode transformFixAttributePathInstance( String jsonContent ) throws JsonModelTransformException, JsonModelAlreadyTransformedException {
 		try {
 			resetGeneratedId();
 			
-			String resourceContent = readJsonResource( resourceName );
-			JsonNode nodeRoot = objectifyJsonInput( resourceContent );
-			updateSchemaNode( nodeRoot.get( keyInputDataModel ) );
-			updateSchemaNode( nodeRoot.get( keyOutputDataModel ) );
-			logObjectJSON( nodeRoot );
+			JsonNode nodeRoot = objectifyJsonInput( jsonContent );	
 			
-			resetGeneratedId();
+			try {
+				updateSchemaNode( nodeRoot.get( keyInputDataModel ) );
+				updateSchemaNode( nodeRoot.get( keyOutputDataModel ) );
+			} catch( JsonModelAlreadyTransformedException e ) {
+				log.warn( e.getMessage() );
+				throw e;
+			} finally {
+				logObjectJSON( nodeRoot );
+				resetGeneratedId();				
+			}
 			
 			return nodeRoot;
 		} catch( IOException e ) {
 			log.error( e.getMessage(), e );
-			throw new Exception(e);
+			throw new JsonModelTransformException( e );
 		}
 	}
 	
@@ -60,8 +68,20 @@ public class JsonSchemaTransformer {
 	}
 	
 	
-	private void updateSchemaNode( JsonNode parent ) {
+	private void updateSchemaNode( JsonNode parent ) throws JsonModelAlreadyTransformedException {
+		if( parent == null )
+			return;
+		
 		ObjectNode nodeSchema = (ObjectNode)parent.get( keySchema );
+		if( nodeSchema == null )
+			return;
+			
+		//skip resource which are already transformed
+		JsonNode valueForNodeType = nodeSchema.findValue( keyType );
+		if( valueForNodeType != null ) 
+			if( valueForNodeType.asText().equals(valueSchemaAttributePathInstance ) )
+				throw new JsonModelAlreadyTransformedException( "Resource already transformed." );			
+		
 		ArrayNode oldAttributePaths = (ArrayNode)nodeSchema.get( keyAttributePaths );
 		ArrayNode newAttributePaths = mapper.createArrayNode();
 		for( JsonNode oldAttributePath : oldAttributePaths ) {
@@ -92,22 +112,6 @@ public class JsonSchemaTransformer {
 			return mapper.readValue( jsonInput, ObjectNode.class );
 	}
 
-	
-	private String readJsonResource( String resourceName ) {
-		try {
-			return readResource( resourceName );
-		} catch( IOException e ) {
-			log.error( e.getMessage(), e );
-			return "{}";
-		}
-	}
-	
-	
-	private String readResource( String resource ) throws IOException {
-		final URL url = Resources.getResource( resource );
-		return Resources.toString(url, Charsets.UTF_8);
-	}
-	
 	
 	private void logObjectJSON( final Object object ) {
 		try {
