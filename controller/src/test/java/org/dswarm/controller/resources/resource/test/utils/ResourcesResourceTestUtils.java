@@ -35,9 +35,10 @@ import org.dswarm.persistence.model.resource.proxy.ProxyResource;
 import org.dswarm.persistence.service.resource.ResourceService;
 import org.dswarm.persistence.service.resource.test.utils.ResourceServiceTestUtils;
 
-public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtils<ResourceServiceTestUtils, ResourceService, ProxyResource, Resource> {
+public class ResourcesResourceTestUtils
+		extends ExtendedBasicDMPResourceTestUtils<ResourceServiceTestUtils, ResourceService, ProxyResource, Resource> {
 
-	private final ConfigurationsResourceTestUtils	configurationsResourceTestUtils;
+	private final ConfigurationsResourceTestUtils configurationsResourceTestUtils;
 
 	public ResourcesResourceTestUtils() {
 
@@ -109,9 +110,7 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 
 			Assert.assertNotNull("response resource JSON string shouldn't be null", responseResource2String);
 
-			final Resource responseResource2 = objectMapper.readValue(responseResource2String, Resource.class);
-
-			responseResource = responseResource2;
+			responseResource = objectMapper.readValue(responseResource2String, Resource.class);
 
 		}
 
