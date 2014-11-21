@@ -25,8 +25,10 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.json.JSONException;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,21 +45,21 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTILS extends BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE>
 		extends ResourceTest {
 
-	private static final Logger									LOG	= LoggerFactory.getLogger(BasicResourceTestUtils.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BasicResourceTestUtils.class);
 
-	protected final Class<POJOCLASS>							pojoClass;
+	protected final Class<POJOCLASS> pojoClass;
 
-	protected final String										pojoClassName;
+	protected final String pojoClassName;
 
-	protected final POJOCLASSPERSISTENCESERVICE					persistenceService;
+	protected final POJOCLASSPERSISTENCESERVICE persistenceService;
 
-	protected final POJOCLASSPERSISTENCESERVICETESTUTILS		persistenceServiceTestUtils;
+	protected final POJOCLASSPERSISTENCESERVICETESTUTILS persistenceServiceTestUtils;
 
-	protected final Class<POJOCLASSPERSISTENCESERVICE>			persistenceServiceClass;
+	protected final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClass;
 
-	protected final Class<POJOCLASSPERSISTENCESERVICETESTUTILS>	persistenceServiceTestUtilsClass;
+	protected final Class<POJOCLASSPERSISTENCESERVICETESTUTILS> persistenceServiceTestUtilsClass;
 
-	protected final ObjectMapper								objectMapper;
+	protected final ObjectMapper objectMapper;
 
 	public BasicResourceTestUtils(final String resourceIdentifier, final Class<POJOCLASS> pojoClassArg,
 			final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg,
@@ -74,7 +76,8 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 		persistenceService = GuicedTest.injector.getInstance(persistenceServiceClass);
 
-		persistenceServiceTestUtils = GuicedTest.injector.getInstance(persistenceServiceTestUtilsClass);// createNewPersistenceServiceTestUtilsInstance();
+		persistenceServiceTestUtils = GuicedTest.injector
+				.getInstance(persistenceServiceTestUtilsClass);// createNewPersistenceServiceTestUtilsInstance();
 		// injector.getInstance(persistenceServiceTestUtilsClass); -> doesn't seem to work right - how can I inject test class
 		// from other sub modules?
 
@@ -86,7 +89,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 		return persistenceServiceTestUtils;
 	}
 
-	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) {
+	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) throws JsonProcessingException, JSONException {
 
 		persistenceServiceTestUtils.compareObjects(expectedObject, actualObject);
 	}
@@ -96,7 +99,8 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 		persistenceServiceTestUtils.evaluateObjects(objectsJSON, expectedObjects);
 	}
 
-	public void compareObjects(final Set<POJOCLASS> expectedObjects, final Map<POJOCLASSIDTYPE, POJOCLASS> actualObjects) {
+	public void compareObjects(final Set<POJOCLASS> expectedObjects, final Map<POJOCLASSIDTYPE, POJOCLASS> actualObjects)
+			throws JsonProcessingException, JSONException {
 
 		persistenceServiceTestUtils.compareObjects(expectedObjects, actualObjects);
 	}
@@ -151,7 +155,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 	/**
 	 * Load file containing JSON string and call {@link #createObject(String, DMPObject)} to create it in db.
-	 * 
+	 *
 	 * @param objectJSONFileName name of file containing JSON string of object to be created
 	 * @return the object returned by {@link #createObject(String, DMPObject)}.
 	 * @throws Exception
@@ -177,7 +181,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 	/**
 	 * Creates the object in db and asserts the response status is '201 created' but does not compare the response with the JSON
 	 * string.
-	 * 
+	 *
 	 * @param objectJSONString the JSON string of the object to be created
 	 * @return the actual object as created in db, never null.
 	 * @throws Exception
@@ -294,7 +298,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 	/**
 	 * Creates a new object of the concrete POJO class.
-	 * 
+	 *
 	 * @return a new instance of the concrete POJO class
 	 * @throws DMPPersistenceException if something went wrong.
 	 */

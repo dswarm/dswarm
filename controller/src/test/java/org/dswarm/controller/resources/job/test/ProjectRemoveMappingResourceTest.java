@@ -422,7 +422,7 @@ public class ProjectRemoveMappingResourceTest extends
 			}
 		}
 
-		cleanUpDB(initiallyPersistedProject);
+		deletedObject(initiallyPersistedProject);
 
 		if (inputDataModel != null) {
 

@@ -88,7 +88,7 @@ public class ClaszesResourceTest extends BasicResourceTest<ClaszesResourceTestUt
 
 		Assert.assertEquals("the classes should be equal", clasz1, clasz2);
 
-		cleanUpDB(clasz1);
+		deletedObject(clasz1);
 
 		ClaszesResourceTest.LOG.debug("end class uniqueness test");
 	}
@@ -157,8 +157,8 @@ public class ClaszesResourceTest extends BasicResourceTest<ClaszesResourceTestUt
 		Assert.assertEquals("uri's should be equal", updateClasz.getUri(), modifiedClasz.getUri());
 		Assert.assertNotEquals("uniqueness dosn't allow update of uri", updateClasz.getUri(), clasz.getUri());
 
-		cleanUpDB(clasz);
-		cleanUpDB(updateClasz);
+		deletedObject(clasz);
+		deletedObject(updateClasz);
 
 		ClaszesResourceTest.LOG.debug("end class update test with uri manipulation");
 	}
@@ -205,7 +205,7 @@ public class ClaszesResourceTest extends BasicResourceTest<ClaszesResourceTestUt
 
 		Assert.assertEquals("404 NOT FOUND was expected, i.e., no class with the given URI exists in the DB", 404, response.getStatus());
 
-		cleanUpDB(clasz);
+		deletedObject(clasz);
 
 		ClaszesResourceTest.LOG.debug("end class update test with non-existing uri (manipulation)");
 	}

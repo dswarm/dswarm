@@ -89,7 +89,7 @@ public class AttributesResourceTest extends
 
 		Assert.assertEquals("the attributes should be equal", attribute1, attribute2);
 
-		cleanUpDB(attribute1);
+		deletedObject(attribute1);
 
 		AttributesResourceTest.LOG.debug("end attribute uniqueness test");
 	}
@@ -158,8 +158,8 @@ public class AttributesResourceTest extends
 		Assert.assertEquals("uri's should be equal", updateAttribute.getUri(), modifiedAttribute.getUri());
 		Assert.assertNotEquals("uniqueness dosn't allow update of uri", updateAttribute.getUri(), attribute.getUri());
 
-		cleanUpDB(attribute);
-		cleanUpDB(updateAttribute);
+		deletedObject(attribute);
+		deletedObject(updateAttribute);
 
 		AttributesResourceTest.LOG.debug("end attribute update test with uri manipulation");
 	}
@@ -206,7 +206,7 @@ public class AttributesResourceTest extends
 
 		Assert.assertEquals("404 NOT FOUND was expected, i.e., no attribute with the given URI exists in the DB", 404, response.getStatus());
 
-		cleanUpDB(attribute);
+		deletedObject(attribute);
 
 		AttributesResourceTest.LOG.debug("end attribute update test with non-existing uri (manipulation)");
 	}

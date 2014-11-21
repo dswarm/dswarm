@@ -39,6 +39,7 @@ import org.dswarm.controller.resources.schema.utils.AttributesResourceUtils;
 import org.dswarm.controller.resources.schema.utils.ClaszesResourceUtils;
 import org.dswarm.controller.resources.schema.utils.ContentSchemasResourceUtils;
 import org.dswarm.controller.resources.schema.utils.MappingAttributePathInstancesResourceUtils;
+import org.dswarm.controller.resources.schema.utils.SchemaAttributePathInstancesResourceUtils;
 import org.dswarm.controller.resources.schema.utils.SchemasResourceUtils;
 
 /**
@@ -48,21 +49,21 @@ import org.dswarm.controller.resources.schema.utils.SchemasResourceUtils;
  * which are lazily loaded via standard {@code Provider}s and offers a {@code reset()} method, to reset the cache, effectively
  * creating a new scope, given that the Utils class itself are not Singleton-scoped. see
  * https://jira.slub-dresden.de/browse/DD-311
- * 
+ *
  * @author phorn
  */
 @Singleton
 public class ResourceUtilsFactory {
 
-	private static final Logger																		LOG					= LoggerFactory
-																																.getLogger(ResourceUtilsFactory.class);
+	private static final Logger LOG = LoggerFactory
+			.getLogger(ResourceUtilsFactory.class);
 
-	private static final String																		PROVIDER_NOT_FOUND	= "Cannot find a Provider of %s";
-	private static final String																		PROVIDER_CAST_FAIL	= "Cannot cast %s to Provider of %s";
-	private static final String																		INSTANCE_CAST_FAIL	= "Cannot cast %s to %s";
+	private static final String PROVIDER_NOT_FOUND = "Cannot find a Provider of %s";
+	private static final String PROVIDER_CAST_FAIL = "Cannot cast %s to Provider of %s";
+	private static final String INSTANCE_CAST_FAIL = "Cannot cast %s to %s";
 
-	private final Map<Class<? extends BasicResourceUtils>, BasicResourceUtils>						instances			= Maps.newHashMapWithExpectedSize(13);
-	private final Map<Class<? extends BasicResourceUtils>, Provider<? extends BasicResourceUtils>>	providers			= Maps.newHashMapWithExpectedSize(13);
+	private final Map<Class<? extends BasicResourceUtils>, BasicResourceUtils>                     instances = Maps.newHashMapWithExpectedSize(13);
+	private final Map<Class<? extends BasicResourceUtils>, Provider<? extends BasicResourceUtils>> providers = Maps.newHashMapWithExpectedSize(13);
 
 	@Inject
 	public ResourceUtilsFactory(final Provider<AttributePathsResourceUtils> attributePathsResourceUtilsProvider,
@@ -76,6 +77,7 @@ public class ResourceUtilsFactory {
 			final Provider<ResourcesResourceUtils> resourceResourceUtils, final Provider<SchemasResourceUtils> schemasResourceUtilsProvider,
 			final Provider<TransformationsResourceUtils> transformationsResourceUtilsProvider,
 			final Provider<MappingAttributePathInstancesResourceUtils> mappingAttributePathInstancesResourceUtilsProvider,
+			final Provider<SchemaAttributePathInstancesResourceUtils> schemaAttributePathInstancesResourceUtilsProvider,
 			final Provider<ContentSchemasResourceUtils> contentSchemasResourceUtilsProvider) {
 
 		providers.put(AttributePathsResourceUtils.class, attributePathsResourceUtilsProvider);
@@ -92,13 +94,14 @@ public class ResourceUtilsFactory {
 		providers.put(SchemasResourceUtils.class, schemasResourceUtilsProvider);
 		providers.put(TransformationsResourceUtils.class, transformationsResourceUtilsProvider);
 		providers.put(MappingAttributePathInstancesResourceUtils.class, mappingAttributePathInstancesResourceUtilsProvider);
+		providers.put(SchemaAttributePathInstancesResourceUtils.class, schemaAttributePathInstancesResourceUtilsProvider);
 		providers.put(ContentSchemasResourceUtils.class, contentSchemasResourceUtilsProvider);
 	}
 
 	/**
 	 * Reset the internal instance cache, effectively creating a new injection scope. You would use this within an constructor of
 	 * a Jersey Resource, for example.
-	 * 
+	 *
 	 * @return this instance for a fluent interface;
 	 */
 	public synchronized ResourceUtilsFactory reset() {
@@ -109,7 +112,7 @@ public class ResourceUtilsFactory {
 
 	/**
 	 * Get an instance of any BasicResourceUtils
-	 * 
+	 *
 	 * @param cls the class of the desired instance
 	 * @param <T> the type of the desired instance
 	 * @return an instance of T, guaranteed to be not null;

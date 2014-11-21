@@ -409,7 +409,7 @@ public class ProjectWithNewEntitiesResourceTest extends
 			}
 		}
 
-		cleanUpDB(actualObject);
+		deletedObject(actualObject);
 
 		if (inputDataModel != null) {
 

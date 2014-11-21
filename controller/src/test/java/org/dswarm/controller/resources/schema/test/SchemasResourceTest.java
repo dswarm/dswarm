@@ -327,7 +327,7 @@ public class SchemasResourceTest extends
 			}
 		}
 
-		cleanUpDB(updatedSchema);
+		deletedObject(updatedSchema);
 	}
 
 	@Test
@@ -434,7 +434,7 @@ public class SchemasResourceTest extends
 			}
 		}
 
-		cleanUpDB(updatedSchema);
+		deletedObject(updatedSchema);
 	}
 
 	@After

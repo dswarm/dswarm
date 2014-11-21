@@ -494,7 +494,7 @@ public class DataModelsResourceTest extends
 		final Schema schema = dataModel.getSchema();
 		final Clasz recordClass = schema.getRecordClass();
 
-		cleanUpDB(dataModel);
+		deletedObject(dataModel);
 
 		if (schema != null) {
 
@@ -606,7 +606,7 @@ public class DataModelsResourceTest extends
 		final Schema schema = dataModel.getSchema();
 		final Clasz recordClass = schema.getRecordClass();
 
-		cleanUpDB(dataModel);
+		deletedObject(dataModel);
 
 		if (schema != null) {
 
@@ -719,7 +719,7 @@ public class DataModelsResourceTest extends
 			recordClass = schema.getRecordClass();
 		}
 
-		cleanUpDB(dataModel);
+		deletedObject(dataModel);
 
 		if (schema != null) {
 

@@ -470,7 +470,7 @@ public class ProjectWithNewEntitiesAndOnePersistentMappingAttributePathInstanceR
 			}
 		}
 
-		cleanUpDB(actualObject);
+		deletedObject(actualObject);
 
 		if (inputDataModel != null) {
 

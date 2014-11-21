@@ -132,7 +132,7 @@ public class AttributePathsResourceTest
 
 		Assert.assertEquals("the attribute paths should be equal", attributePath1, attributePath2);
 
-		cleanUpDB(attributePath1);
+		deletedObject(attributePath1);
 
 		AttributePathsResourceTest.LOG.debug("end attribute paths uniqueness test");
 	}
@@ -169,7 +169,7 @@ public class AttributePathsResourceTest
 		Assert.assertEquals("number of attribute elements in attribute path should be equal", updateAttributePath.getAttributePath().size(),
 				attributePath.getAttributePath().size());
 
-		cleanUpDB(attributePath);
+		deletedObject(attributePath);
 
 		attributeResourceTestUtils.deleteObject(actualAttribute3);
 
@@ -241,8 +241,8 @@ public class AttributePathsResourceTest
 				updateAttributePath.getAttributePath().size());
 		Assert.assertEquals("number of attribute elements in attribute path should be equal", 3, updateAttributePath.getAttributePath().size());
 
-		cleanUpDB(attributePath);
-		cleanUpDB(modifiedAttributePath);
+		deletedObject(attributePath);
+		deletedObject(modifiedAttributePath);
 
 		attributeResourceTestUtils.deleteObject(actualAttribute3);
 

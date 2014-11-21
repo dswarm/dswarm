@@ -15,16 +15,12 @@
  */
 package org.dswarm.controller.resources.test;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,15 +33,15 @@ import org.dswarm.persistence.service.MaintainDBService;
 
 public class ResourceTest extends GuicedTest {
 
-	private static final Logger		LOG		= LoggerFactory.getLogger(ResourceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ResourceTest.class);
 
-	protected static EmbeddedServer	grizzlyServer;
+	protected static EmbeddedServer grizzlyServer;
 
-	protected String				resourceIdentifier;
+	protected String resourceIdentifier;
 
 	protected static final ServerConfig SERVER_CONFIG = new ServerConfig(9998, "127.0.0.1", "/test");
 
-	protected MaintainDBService		maintainDBService;
+	protected MaintainDBService maintainDBService;
 
 	public ResourceTest(final String resourceIdentifier) {
 
@@ -114,6 +110,5 @@ public class ResourceTest extends GuicedTest {
 	protected String baseUri() {
 		return ResourceTest.grizzlyServer.getBaseUri().toString();
 	}
-
 
 }
