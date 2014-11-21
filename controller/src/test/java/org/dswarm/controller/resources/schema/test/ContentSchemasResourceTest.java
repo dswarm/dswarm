@@ -51,6 +51,8 @@ public class ContentSchemasResourceTest
 	@Override
 	public void prepare() throws Exception {
 
+		super.prepare();
+
 		final ContentSchemaServiceTestUtils contentSchemaServiceTestUtils = pojoClassResourceTestUtils.getPersistenceServiceTestUtils();
 		final ContentSchema contentSchema = contentSchemaServiceTestUtils.createDefaultObject();
 

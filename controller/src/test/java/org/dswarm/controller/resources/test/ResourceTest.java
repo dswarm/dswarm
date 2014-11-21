@@ -20,7 +20,9 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +32,7 @@ import org.dswarm.controller.ServerConfig;
 import org.dswarm.controller.providers.handler.ExceptionHandler;
 import org.dswarm.controller.test.GuicedTest;
 import org.dswarm.persistence.service.MaintainDBService;
+import org.dswarm.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 
 public class ResourceTest extends GuicedTest {
 
@@ -46,6 +49,24 @@ public class ResourceTest extends GuicedTest {
 	public ResourceTest(final String resourceIdentifier) {
 
 		this.resourceIdentifier = resourceIdentifier;
+	}
+
+	@Before
+	public void prepare() throws Exception {
+
+		restartServer();
+		initObjects();
+		maintainDBService.initDB();
+		InternalGDMGraphServiceTestUtils.cleanGraphDB();
+	}
+
+	@After
+	public void tearDown3() throws Exception {
+
+		restartServer();
+		initObjects();
+		maintainDBService.initDB();
+		InternalGDMGraphServiceTestUtils.cleanGraphDB();
 	}
 
 	protected void initObjects() {

@@ -91,6 +91,13 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 		initObjects();
 	}
 
+	@Override public void prepare() throws Exception {
+		super.prepare();
+
+		objectJSONString = DMPPersistenceUtil.getResourceAsString(objectJSONFileName);
+		expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
+	}
+
 	@Override
 	protected void initObjects() {
 
@@ -98,27 +105,6 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 
 		objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 		persistenceService = GuicedTest.injector.getInstance(persistenceServiceClass);
-	}
-
-	@Before
-	public void prepare() throws Exception {
-
-		restartServer();
-		initObjects();
-		maintainDBService.initDB();
-		InternalGDMGraphServiceTestUtils.cleanGraphDB();
-
-		objectJSONString = DMPPersistenceUtil.getResourceAsString(objectJSONFileName);
-		expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
-	}
-
-	@After
-	public void tearDown3() throws Exception {
-
-		restartServer();
-		initObjects();
-		maintainDBService.initDB();
-		InternalGDMGraphServiceTestUtils.cleanGraphDB();
 	}
 
 	@Test
