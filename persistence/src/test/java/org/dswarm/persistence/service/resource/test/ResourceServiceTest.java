@@ -58,7 +58,7 @@ public class ResourceServiceTest extends IDBasicJPAServiceTest<ProxyResource, Re
 	@Test
 	public void testComplexResource() throws Exception {
 
-		final Resource resource = resourceServiceTestUtils.createAndPeristDefaultCompleteObject();
+		final Resource resource = resourceServiceTestUtils.createAndPersistDefaultCompleteObject();
 
 		// modify first configuration
 

@@ -46,7 +46,7 @@ public class MappingAttributePathInstanceServiceTest extends
 	@Override
 	public void testSimpleObject() throws Exception {
 
-		final MappingAttributePathInstance mapi = mapisUtils.createAndPeristDefaultCompleteObject();
+		final MappingAttributePathInstance mapi = mapisUtils.createAndPersistDefaultCompleteObject();
 
 		final MappingAttributePathInstance updatedMappingAttributePathInstance = mapisUtils.updateAndCompareObject(mapi, mapi);
 

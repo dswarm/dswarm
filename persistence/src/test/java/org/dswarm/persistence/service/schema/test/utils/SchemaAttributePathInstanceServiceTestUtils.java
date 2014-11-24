@@ -146,7 +146,7 @@ public class SchemaAttributePathInstanceServiceTestUtils extends
 		return createSchemaAttributePathInstance(null, attributePath, subSchema);
 	}
 
-	@Override public SchemaAttributePathInstance createAndPeristDefaultCompleteObject() throws Exception {
+	@Override public SchemaAttributePathInstance createAndPersistDefaultCompleteObject() throws Exception {
 
 		final SchemaAttributePathInstance sapi = createAndPersistDefaultObject();
 		sapi.setSubSchema(sstUtils.createAndPersistDefaultObject());

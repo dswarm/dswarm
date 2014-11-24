@@ -92,7 +92,7 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 		return null;
 	}
 
-	@Override public Resource createAndPeristDefaultCompleteObject() throws Exception {
+	@Override public Resource createAndPersistDefaultCompleteObject() throws Exception {
 
 		final Resource resource = createAndPersistDefaultObject();
 		final Configuration configuration = configurationsServiceTestUtils.createAndPersistDefaultObject();

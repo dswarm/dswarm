@@ -195,7 +195,7 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 		return null;
 	}
 
-	@Override public Schema createAndPeristDefaultCompleteObject() throws Exception {
+	@Override public Schema createAndPersistDefaultCompleteObject() throws Exception {
 
 		final Schema schema = createAndPersistDefaultObject();
 		schema.setContentSchema(contentSchemaServiceTestUtils.createAndPersistDefaultObject());

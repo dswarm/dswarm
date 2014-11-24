@@ -62,7 +62,7 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 	@Override public Project createAndPersistDefaultObject() throws Exception {
 
 		final Mapping simpleMapping = mappingServiceTestUtils.createAndPersistDefaultObject();
-		final Mapping complexMapping = mappingServiceTestUtils.createAndPeristDefaultCompleteObject();
+		final Mapping complexMapping = mappingServiceTestUtils.createAndPersistDefaultCompleteObject();
 
 		final Set<Mapping> mappings = Sets.newLinkedHashSet();
 		mappings.add(simpleMapping);

@@ -54,7 +54,7 @@ public class MappingAttributePathInstanceServiceTestUtils
 		return null;
 	}
 
-	@Override public MappingAttributePathInstance createAndPeristDefaultCompleteObject() throws Exception {
+	@Override public MappingAttributePathInstance createAndPersistDefaultCompleteObject() throws Exception {
 		final MappingAttributePathInstance mapi = createAndPersistDefaultObject();
 		mapi.setOrdinal(1);
 		mapi.setFilter(fstUtils.createAndPersistDefaultObject());
@@ -187,6 +187,5 @@ public class MappingAttributePathInstanceServiceTestUtils
 
 		return createMappingAttributePathInstance("dcterms:creator/foaf:name MAPI", dctermsCreatorFoafMameAP, null, null);
 	}
-
 }
 

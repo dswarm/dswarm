@@ -252,7 +252,7 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 	 * @return
 	 * @throws Exception
 	 */
-	public POJOCLASS createAndPeristDefaultCompleteObject() throws Exception {
+	public POJOCLASS createAndPersistDefaultCompleteObject() throws Exception {
 
 		return createAndPersistDefaultObject();
 	}

@@ -57,7 +57,7 @@ public class ComponentServiceTest extends IDBasicJPAServiceTest<ProxyComponent, 
 	@Test
 	public void complexComponentTest() throws Exception {
 
-		final Component component = componentServiceTestUtils.createAndPeristDefaultCompleteObject();
+		final Component component = componentServiceTestUtils.createAndPersistDefaultCompleteObject();
 
 		final Component updatedComponent = componentServiceTestUtils.updateAndCompareObject(component, component);
 

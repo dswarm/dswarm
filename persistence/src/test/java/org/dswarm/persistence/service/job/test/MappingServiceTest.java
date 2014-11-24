@@ -63,7 +63,7 @@ public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapp
 
 		MappingServiceTest.LOG.debug("start complex mapping test");
 
-		final Mapping mapping = mappingServiceTestUtils.createAndPeristDefaultCompleteObject();
+		final Mapping mapping = mappingServiceTestUtils.createAndPersistDefaultCompleteObject();
 
 		final Mapping updatedMapping = mappingServiceTestUtils.updateAndCompareObject(mapping, mapping);
 

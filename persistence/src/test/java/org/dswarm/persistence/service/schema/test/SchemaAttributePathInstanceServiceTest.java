@@ -88,7 +88,7 @@ public class SchemaAttributePathInstanceServiceTest extends
 	public void testCompleteSchemaAttributePathInstance() throws Exception {
 		SchemaAttributePathInstanceServiceTest.LOG.debug("start complete schema attribute path instance test");
 
-		final SchemaAttributePathInstance sapi = sapisUtils.createAndPeristDefaultCompleteObject();
+		final SchemaAttributePathInstance sapi = sapisUtils.createAndPersistDefaultCompleteObject();
 		final SchemaAttributePathInstance updatedAttributePath = sapisUtils.updateAndCompareObject(sapi, sapi);
 
 		logObjectJSON(updatedAttributePath);
