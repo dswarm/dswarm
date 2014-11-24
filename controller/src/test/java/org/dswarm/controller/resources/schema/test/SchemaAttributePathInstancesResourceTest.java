@@ -84,7 +84,7 @@ public class SchemaAttributePathInstancesResourceTest
 		final AttributePath newAttributePath = attributePathServiceTestUtils.getDctermsCreatedAP();
 
 		final SchemaServiceTestUtils schemaServiceTestUtils = schemasResourceTestUtils.getPersistenceServiceTestUtils();
-		final Schema subSchema = schemaServiceTestUtils.createAlternativeSchema();
+		final Schema subSchema = schemaServiceTestUtils.createAndPersistAlternativeSchema();
 
 		persistedMappingAttributePathInstance.setName(updateSchemaAttributePathInstanceNameString);
 		persistedMappingAttributePathInstance.setAttributePath(newAttributePath);

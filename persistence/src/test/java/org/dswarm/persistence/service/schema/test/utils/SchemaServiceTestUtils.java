@@ -23,13 +23,9 @@ import java.util.Set;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import org.json.JSONException;
 import org.junit.Assert;
 
-import org.dswarm.persistence.DMPPersistenceException;
-import org.dswarm.persistence.model.schema.Attribute;
-import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
@@ -116,16 +112,10 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 		}
 	}
 
-	public Schema createSchema(final String name, final Collection<SchemaAttributePathInstance> attributePaths, final Clasz recordClass)
+	public Schema createAndPersistSchema(final String name, final Collection<SchemaAttributePathInstance> attributePaths, final Clasz recordClass)
 			throws Exception {
 
-		final Schema schema = new Schema();
-
-		schema.setName(name);
-		schema.setAttributePaths(attributePaths);
-		schema.setRecordClass(recordClass);
-
-		// update schema
+		final Schema schema = createSchema(name, attributePaths, recordClass);
 
 		final Schema updatedSchema = createAndCompareObject(schema, schema);
 
@@ -135,53 +125,24 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 		return updatedSchema;
 	}
 
-	public Schema createSchema(final String name, final SchemaAttributePathInstance[] attributePaths, final Clasz recordClass) throws Exception {
-		return createSchema(name, Arrays.asList(attributePaths), recordClass);
+	public Schema createSchema(final String name, final Collection<SchemaAttributePathInstance> attributePaths, final Clasz recordClass) {
+
+		final Schema schema = new Schema();
+
+		schema.setName(name);
+		schema.setAttributePaths(attributePaths);
+		schema.setRecordClass(recordClass);
+
+		return schema;
 	}
 
-	public void removeAddedAttributePathsFromOutputModelSchema(final Schema outputDataModelSchema, final Map<Long, Attribute> attributes,
-			final Map<Long, SchemaAttributePathInstance> attributePaths) throws DMPPersistenceException {
+	public Schema createAndPersistSchema(final String name, final SchemaAttributePathInstance[] attributePaths, final Clasz recordClass)
+			throws Exception {
+		return createAndPersistSchema(name, Arrays.asList(attributePaths), recordClass);
+	}
 
-		final Set<SchemaAttributePathInstance> outputDataModelSchemaAttributePathRemovalCandidates = Sets.newHashSet();
-
-		// collect attribute paths of attributes that were created via processing
-		// the transformation result
-		if (outputDataModelSchema != null) {
-
-			final Set<SchemaAttributePathInstance> outputDataModelSchemaAttributePaths = outputDataModelSchema.getUniqueAttributePaths();
-
-			if (outputDataModelSchemaAttributePaths != null) {
-
-				for (final SchemaAttributePathInstance outputDataModelSchemaAttributePath : outputDataModelSchemaAttributePaths) {
-
-					final AttributePath outputDataModelSchemaAttributePath2 = outputDataModelSchemaAttributePath.getAttributePath();
-
-					final Set<Attribute> outputDataModelSchemaAttributePathAttributes = outputDataModelSchemaAttributePath2.getAttributes();
-
-					for (final Attribute outputDataModelSchemaAttribute : outputDataModelSchemaAttributePathAttributes) {
-
-						if (attributes.containsKey(outputDataModelSchemaAttribute.getId())) {
-
-							// found candidate for removal
-
-							attributePaths.put(outputDataModelSchemaAttributePath.getId(), outputDataModelSchemaAttributePath);
-
-							// remove candidate from output data model schema
-							outputDataModelSchemaAttributePathRemovalCandidates.add(outputDataModelSchemaAttributePath);
-						}
-					}
-				}
-			}
-		}
-
-		for (final SchemaAttributePathInstance outputDataModelSchemaAttributePath : outputDataModelSchemaAttributePathRemovalCandidates) {
-
-			assert outputDataModelSchema != null;
-			outputDataModelSchema.removeAttributePath(outputDataModelSchemaAttributePath);
-		}
-
-		// update output data model schema to persist possible changes
-		jpaService.updateObjectTransactional(outputDataModelSchema);
+	public Schema createSchema(final String name, final SchemaAttributePathInstance[] attributePaths, final Clasz recordClass) throws Exception {
+		return createSchema(name, Arrays.asList(attributePaths), recordClass);
 	}
 
 	/**
@@ -224,7 +185,7 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 	}
 
 	@Override public Schema createAndPersistDefaultObject() throws Exception {
-		return createSchema("Default Schema", new SchemaAttributePathInstance[] {
+		return createAndPersistSchema("Default Schema", new SchemaAttributePathInstance[] {
 				schemaAttributePathInstanceResourceTestUtils.createAndPersistDefaultObject(),
 				schemaAttributePathInstanceResourceTestUtils.getDctermsTitleDctermsHaspartSAPI()
 		}, claszesServiceTestUtils.createAndPersistDefaultObject());
@@ -242,8 +203,16 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 		return updateAndCompareObject(schema, schema);
 	}
 
+	public Schema createAndPersistAlternativeSchema() throws Exception {
+		return createAndPersistSchema("my schema", new SchemaAttributePathInstance[] {
+				schemaAttributePathInstanceResourceTestUtils.createAndPersistDefaultObject(),
+				schemaAttributePathInstanceResourceTestUtils.getDctermsCreatorFOAFNameSAPI(),
+				schemaAttributePathInstanceResourceTestUtils.getDctermsCreatedSAPI()
+		}, claszesServiceTestUtils.createAndPersistDefaultObject());
+	}
+
 	public Schema createAlternativeSchema() throws Exception {
-		return createSchema("my schema", new SchemaAttributePathInstance[] {
+		return createAndPersistSchema("my schema", new SchemaAttributePathInstance[] {
 				schemaAttributePathInstanceResourceTestUtils.createAndPersistDefaultObject(),
 				schemaAttributePathInstanceResourceTestUtils.getDctermsCreatorFOAFNameSAPI(),
 				schemaAttributePathInstanceResourceTestUtils.getDctermsCreatedSAPI()

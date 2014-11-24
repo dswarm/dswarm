@@ -59,7 +59,7 @@ public class DataModelServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 		final String dataModelName = "my data model";
 		final String dataModelDescription = "my data model description";
 
-		final Schema schema = schemasResourceTestUtils.createAlternativeSchema();
+		final Schema schema = schemasResourceTestUtils.createAndPersistAlternativeSchema();
 		final Resource resource = resourcesResourceTestUtils.createAndPersistDefaultObject();
 		final Configuration configuration = configurationsResourceTestUtils.createAndPersistDefaultObject();
 		resource.addConfiguration(configuration);
