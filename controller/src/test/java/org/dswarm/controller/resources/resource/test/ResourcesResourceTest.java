@@ -52,9 +52,10 @@ import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTest
 import org.dswarm.controller.resources.test.ResourceTest;
 import org.dswarm.controller.test.GuicedTest;
 import org.dswarm.init.util.CmdUtil;
-import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.Resource;
+import org.dswarm.persistence.service.resource.test.utils.ConfigurationServiceTestUtils;
+import org.dswarm.persistence.service.resource.test.utils.ResourceServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class ResourcesResourceTest extends ResourceTest {
@@ -743,61 +744,29 @@ public class ResourcesResourceTest extends ResourceTest {
 		Assert.assertNotNull("the configurations of the complex resource shouldn't be null", expectedComplexResource.getConfigurations());
 		Assert.assertFalse("the configurations of the complex resource shouldn't be empty", expectedComplexResource.getConfigurations().isEmpty());
 
-		Resource complexResource = null;
+		final ResourceServiceTestUtils resourceServiceTestUtils = resourcesResourceTestUtils.getPersistenceServiceTestUtils();
+		final Resource complexResource = resourceServiceTestUtils.getJpaService().createObjectTransactional().getObject();
 
-		try {
+		final Set<Configuration> createdConfigurations = Sets.newLinkedHashSet();
+		final ConfigurationServiceTestUtils configurationServiceTestUtils = resourceServiceTestUtils.getConfigurationsServiceTestUtils();
 
-			complexResource = resourcesResourceTestUtils.getPersistenceServiceTestUtils().getJpaService().createObjectTransactional().getObject();
-		} catch (final DMPPersistenceException e) {
+		for (final Configuration expectedConfiguration : expectedComplexResource.getConfigurations()) {
 
-			Assert.assertTrue("something went wrong during object creation.\n" + e.getMessage(), false);
+			final Configuration configuration = new Configuration();
+
+			configuration.setParameters(expectedConfiguration.getParameters());
+
+			final Configuration createdConfiguration = configurationServiceTestUtils.createAndCompareObject(configuration, configuration);
+			complexResource.addConfiguration(createdConfiguration);
+			createdConfigurations.add(createdConfiguration);
 		}
-
-		Assert.assertNotNull("resource shouldn't be null", complexResource);
-		Assert.assertNotNull("resource id shouldn't be null", complexResource.getId());
-
-		ResourcesResourceTest.LOG.debug("create new resource with id = '" + complexResource.getId() + "'");
 
 		complexResource.setName(expectedComplexResource.getName());
 		complexResource.setDescription(expectedComplexResource.getDescription());
 		complexResource.setType(expectedComplexResource.getType());
 		complexResource.setAttributes(expectedComplexResource.getAttributes());
 
-		final Set<Configuration> createdConfigurations = Sets.newLinkedHashSet();
-
-		for (final Configuration expectedConfiguration : expectedComplexResource.getConfigurations()) {
-
-			Configuration configuration = null;
-
-			try {
-
-				configuration = configurationsResourceTestUtils.getPersistenceServiceTestUtils().getJpaService().createObjectTransactional()
-						.getObject();
-			} catch (final DMPPersistenceException e) {
-
-				Assert.assertTrue("something went wrong during object creation.\n" + e.getMessage(), false);
-			}
-
-			Assert.assertNotNull("configuration shouldn't be null", configuration);
-			Assert.assertNotNull("configuration id shouldn't be null", configuration.getId());
-
-			configuration.setParameters(expectedConfiguration.getParameters());
-
-			complexResource.addConfiguration(configuration);
-
-			createdConfigurations.add(configuration);
-		}
-
-		Resource updatedComplexResource = null;
-
-		try {
-
-			updatedComplexResource = resourcesResourceTestUtils.getPersistenceServiceTestUtils().getJpaService().updateObjectTransactional(
-					complexResource).getObject();
-		} catch (final DMPPersistenceException e) {
-
-			Assert.assertTrue("something went wrong while updating the resource", false);
-		}
+		final Resource updatedComplexResource = resourceServiceTestUtils.updateAndCompareObject(complexResource, complexResource);
 
 		Assert.assertNotNull("updated resource shouldn't be null", updatedComplexResource);
 		Assert.assertNotNull("updated resource id shouldn't be null", updatedComplexResource.getId());
