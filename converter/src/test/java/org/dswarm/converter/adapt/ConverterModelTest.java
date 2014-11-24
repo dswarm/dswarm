@@ -1,13 +1,26 @@
+/**
+ * Copyright (C) 2013, 2014 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.dswarm.converter.adapt;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.RegexFileFilter;
@@ -15,8 +28,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.dswarm.persistence.model.job.Task;
 
 /**
  * @author sbarthel
@@ -26,21 +37,11 @@ public class ConverterModelTest extends ModelTest {
 
 	private static final Logger log = LoggerFactory.getLogger(ConverterModelTest.class);
 
-	@Test
+	//@Test
 	public void shouldTransformResource() {
 		try {
 			for (final URI uri : collectResources()) {
-				final String content = readResource(uri);
-
-				try {
-					final JsonNode rootNode = JsonSchemaTransformer.INSTANCE.transformFixAttributePathInstance(content);
-					checkTransformation(rootNode, uri);
-					writeBackToSource(rootNode, uri);
-					Assert.assertTrue(true);
-				} catch (JsonModelAlreadyTransformedException | JsonModelValidationException e) {
-					// nothing to do on this resource just continue to the next one
-				}
-
+				rewriteTaskJSON(uri, true);
 			}
 		} catch (JsonModelTransformException | JsonModelExportException e) {
 			ConverterModelTest.log.error(e.getMessage(), e);
@@ -48,14 +49,21 @@ public class ConverterModelTest extends ModelTest {
 		}
 	}
 
-	private void checkTransformation(final JsonNode node, final URI uri) throws JsonModelValidationException {
-		try {
-			final String jsonString = objectMapper.writeValueAsString(node);
-			objectMapper.readValue(jsonString, Task.class);
-		} catch (final IOException e) {
-			ConverterModelTest.log.warn("The file '" + uri + "' did not pass validation.", e);
-			throw new JsonModelValidationException("Invalid JSON content in resource: " + uri.toString(), e);
-		}
+	//@Test
+	public void rewriteSchemaJSONs() throws Exception {
+
+		rewriteSchemaJSON("mabxml.schema.json");
+		rewriteSchemaJSON("mabxml-1.schema.json");
+		rewriteSchemaJSON("ralfs_mabxml_dmp_schema.json");
+	}
+
+	//@Test
+	public void rewriteTaskJSONs() throws Exception {
+
+		rewriteTaskJSON("complex-transformation.json");
+		rewriteTaskJSON("converter_task.csv.json");
+		rewriteTaskJSON("converter_task.json");
+		rewriteTaskJSON("dmpf-task.json");
 	}
 
 	private List<URI> collectResources() {
