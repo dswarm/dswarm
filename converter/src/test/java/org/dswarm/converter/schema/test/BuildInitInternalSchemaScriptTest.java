@@ -19,12 +19,14 @@ import java.io.File;
 
 import com.google.inject.Key;
 import com.google.inject.name.Names;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.Test;
 
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.init.util.CmdUtil;
-import org.dswarm.persistence.service.MaintainDBService;
+import org.dswarm.persistence.DMPPersistenceException;
+import org.dswarm.persistence.model.resource.DataModel;
+import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.service.schema.test.internalmodel.BiboDocumentSchemaBuilder;
 import org.dswarm.persistence.service.schema.test.internalmodel.BibrmContractItemSchemaBuilder;
 
@@ -37,9 +39,9 @@ import org.dswarm.persistence.service.schema.test.internalmodel.BibrmContractIte
  */
 public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 
-	protected MaintainDBService	maintainDBService;
+	private DataModelService dataModelService;
 
-	@Before
+	@Override
 	public void prepare() throws Exception {
 		GuicedTest.tearDown();
 		GuicedTest.startUp();
@@ -48,24 +50,35 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		maintainDBService.truncateTables();
 	}
 
-	@After
-	public void tearDown2() throws Exception {
+	@Override public void tearDown3() throws Exception {
+
 		GuicedTest.tearDown();
 		GuicedTest.startUp();
 		initObjects();
 		maintainDBService.truncateTables();
 	}
 
+	@Override
 	protected void initObjects() {
-		maintainDBService = GuicedTest.injector.getInstance(MaintainDBService.class);
+
+		super.initObjects();
+		dataModelService = GuicedTest.injector.getInstance(DataModelService.class);
 	}
 
-	// @Test
+	//@Test
 	public void buildScript() throws Exception {
 
-		new BibrmContractItemSchemaBuilder().buildSchema();
-		new BiboDocumentSchemaBuilder().buildSchema();
-		XMLSchemaParserTest.testSchemaParsing2();
+		final Schema bibrmContractSchema = new BibrmContractItemSchemaBuilder().buildSchema();
+		final Schema biboDocumentSchema = new BiboDocumentSchemaBuilder().buildSchema();
+		final Schema mabxmlSchema = XMLSchemaParserTest.testSchemaParsing2();
+
+		final String bibrmContractDM = "Internal Data Model ContractItem";
+		final String biboDocumentDM = "Internal Data Model BiboDocument";
+		final String mabxmlSchemaDM = "Internal Data Model mabxml";
+
+		createSchemaDataModel(bibrmContractDM, bibrmContractDM, bibrmContractSchema);
+		createSchemaDataModel(biboDocumentDM, biboDocumentDM, biboDocumentSchema);
+		createSchemaDataModel(mabxmlSchemaDM, mabxmlSchemaDM, mabxmlSchema);
 
 		final String sep = File.separator;
 
@@ -81,20 +94,28 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 
 		final StringBuilder sb = new StringBuilder();
 		sb.append("mysqldump")
-		.append(" -u")
-		.append(user)
-		.append(" -p")
-		.append(pass)
-		.append(" --no-create-info --no-create-db --skip-triggers --skip-create-options --skip-add-drop-table --skip-lock-tables --skip-add-locks -B ")
-		.append(db);
-		// .append(" > ")
-		// .append( outputFile );
+				.append(" -u")
+				.append(user)
+				.append(" -p")
+				.append(pass)
+				.append(" --no-create-info --no-create-db --skip-triggers --skip-create-options --skip-add-drop-table --skip-lock-tables --skip-add-locks -B ")
+				.append(db);
 
 		CmdUtil.runCommand(sb.toString(), output);
 	}
 
 	private String readManuallyFromTypeSafeConfig(final String key) {
 		return GuicedTest.injector.getInstance(Key.get(String.class, Names.named(key)));
+	}
+
+	private void createSchemaDataModel(final String name, final String description, final Schema schema) throws DMPPersistenceException {
+
+		final DataModel dataModel = new DataModel();
+		dataModel.setName(name);
+		dataModel.setDescription(description);
+		dataModel.setSchema(schema);
+
+		dataModelService.createObjectTransactional(dataModel);
 	}
 
 }
