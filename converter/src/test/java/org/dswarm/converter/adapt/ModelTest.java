@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.dswarm.persistence.GuicedTest;
+import org.dswarm.persistence.model.job.Project;
 import org.dswarm.persistence.model.job.Task;
 import org.dswarm.persistence.model.schema.Schema;
 
@@ -90,9 +91,9 @@ public class ModelTest extends GuicedTest {
 		final String content = readResource(uri);
 
 		try {
-			final JsonNode rootNode = JsonSchemaTransformer.INSTANCE.transformFixAttributePathInstance(content);
-			
-			if(checkTask) {
+			final JsonNode rootNode = JsonSchemaTransformer.INSTANCE.transformFixAttributePathInstance(content, false);
+
+			if (checkTask) {
 				checkTransformation(rootNode, uri);
 			}
 			writeBackToSource(rootNode, uri);
@@ -123,10 +124,38 @@ public class ModelTest extends GuicedTest {
 		}
 	}
 
+	protected void rewriteProjectJSON(final String resourceName) throws Exception {
+
+		final URI resourceURI = findResource(resourceName);
+		final String content = readResource(resourceURI);
+
+		try {
+
+			final JsonNode rootNode = JsonSchemaTransformer.INSTANCE.transformFixAttributePathInstance(content, true);
+			Assert.assertNotNull(rootNode);
+			checkProject(rootNode, resourceURI);
+			writeBackToSource(rootNode, resourceURI);
+			Assert.assertTrue(true);
+		} catch (JsonModelAlreadyTransformedException | JsonModelValidationException e) {
+			// nothing to do on this resource just continue to the next one
+			ModelTest.log.debug("adapted project '" + resourceURI + "' already");
+		}
+	}
+
 	protected void checkSchema(final JsonNode node, final URI uri) throws JsonModelValidationException {
 		try {
 			final String jsonString = objectMapper.writeValueAsString(node);
 			objectMapper.readValue(jsonString, Schema.class);
+		} catch (final IOException e) {
+			ModelTest.log.warn("The file '" + uri + "' did not pass validation.", e);
+			throw new JsonModelValidationException("Invalid JSON content in resource: " + uri.toString(), e);
+		}
+	}
+
+	protected void checkProject(final JsonNode node, final URI uri) throws JsonModelValidationException {
+		try {
+			final String jsonString = objectMapper.writeValueAsString(node);
+			objectMapper.readValue(jsonString, Project.class);
 		} catch (final IOException e) {
 			ModelTest.log.warn("The file '" + uri + "' did not pass validation.", e);
 			throw new JsonModelValidationException("Invalid JSON content in resource: " + uri.toString(), e);

@@ -46,14 +46,18 @@ public class JsonSchemaTransformer {
 	private static final String valueSchemaAttributePathInstance = "SchemaAttributePathInstance";
 
 	private int generatedId;
+	private boolean produceDummyIds = false;
 
 	/**
 	 * @param jsonContent The complete json content
 	 * @return The rootNode
 	 * @throws JsonModelTransformException
 	 */
-	public JsonNode transformFixAttributePathInstance(final String jsonContent) throws JsonModelTransformException,
+	public JsonNode transformFixAttributePathInstance(final String jsonContent, final boolean produceDummyIds) throws JsonModelTransformException,
 			JsonModelAlreadyTransformedException {
+
+		this.produceDummyIds = produceDummyIds;
+
 		try {
 			resetGeneratedId();
 
@@ -78,7 +82,13 @@ public class JsonSchemaTransformer {
 	}
 
 	private void resetGeneratedId() {
-		generatedId = 0;
+
+		if (!produceDummyIds) {
+			generatedId = 1;
+		} else {
+
+			generatedId = -1;
+		}
 	}
 
 	private void updateDataModelNode(final JsonNode parent) throws JsonModelAlreadyTransformedException {
@@ -116,7 +126,14 @@ public class JsonSchemaTransformer {
 	}
 
 	private int generateId() {
-		return generatedId++;
+
+		if (!produceDummyIds) {
+
+			return generatedId++;
+		} else {
+
+			return generatedId--;
+		}
 	}
 
 	private JsonNode createSchemaAttributePathInstanceNode(final int id, final String name, final JsonNode attributePath) {

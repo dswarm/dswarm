@@ -1,5 +1,6 @@
 package org.dswarm.controller.adapt;
 
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,5 +17,11 @@ public class ControllerModelTest extends ModelTest {
 	public void rewriteSchemaJSON() throws Exception {
 
 		rewriteSchemaJSON("schema.json");
+	}
+
+	@Test
+	public void rewriteProjectJSONs() throws Exception {
+
+		rewriteProjectJSON("project_to_remove_mapping_from_with_dummy_IDs.json");
 	}
 }
