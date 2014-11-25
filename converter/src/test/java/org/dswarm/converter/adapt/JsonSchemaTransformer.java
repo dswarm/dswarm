@@ -106,7 +106,7 @@ public class JsonSchemaTransformer {
 		}
 
 		// skip resource which are already transformed
-		final JsonNode valueForNodeType = nodeSchema.findValue(JsonSchemaTransformer.keyType);
+		final JsonNode valueForNodeType = nodeSchema.get(JsonSchemaTransformer.keyType);
 		if (valueForNodeType != null) {
 			if (valueForNodeType.asText().equals(JsonSchemaTransformer.valueSchemaAttributePathInstance)) {
 				throw new JsonModelAlreadyTransformedException("Resource already transformed.");

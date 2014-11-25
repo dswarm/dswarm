@@ -154,6 +154,9 @@ public class ModelTest extends GuicedTest {
 
 	protected void checkProject(final JsonNode node, final URI uri) throws JsonModelValidationException {
 		try {
+			
+			// System.out.println(objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true).writeValueAsString(node));
+			
 			final String jsonString = objectMapper.writeValueAsString(node);
 			objectMapper.readValue(jsonString, Project.class);
 		} catch (final IOException e) {

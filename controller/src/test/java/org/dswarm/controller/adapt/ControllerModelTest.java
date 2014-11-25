@@ -22,6 +22,7 @@ public class ControllerModelTest extends ModelTest {
 	@Test
 	public void rewriteProjectJSONs() throws Exception {
 
-		rewriteProjectJSON("project_to_remove_mapping_from_with_dummy_IDs.json");
+		//rewriteProjectJSON("project_to_remove_mapping_from_with_dummy_IDs.json");
+		rewriteProjectJSON("project.w.new.entities.onepersistentmappingattributepathinstance.json");
 	}
 }
