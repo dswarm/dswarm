@@ -1,0 +1,45 @@
+[ {
+  "http://data.slub-dresden.de/datamodels/4/records/8d2da158-08ab-4d99-8cb0-b284b6a82d5d" : [ {
+    "http://example.org/humans" : [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://example.org/humansType"
+    }, {
+      "http://example.org/person" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://example.org/personType"
+      }, {
+        "http://purl.org/dc/terms/contributor" : [ {
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://purl.org/dc/terms/contributorType"
+        }, {
+          "http://xmlns.com/foaf/0.1/familyName" : "test1"
+        }, {
+          "http://xmlns.com/foaf/0.1/givenName" : [ "test1", "ZS" ]
+        } ]
+      } ]
+    } ]
+  }, {
+    "http://purl.org/dc/elements/1.1/title" : "a|||||||||||||"
+  }, {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://purl.org/ontology/bibo/Document"
+  } ]
+}, {
+  "http://data.slub-dresden.de/datamodels/4/records/460ef315-106e-4fc2-a906-74ca8244060e" : [ {
+    "http://example.org/humans" : [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://example.org/humansType"
+    }, {
+      "http://example.org/person" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://example.org/personType"
+      }, {
+        "http://purl.org/dc/terms/contributor" : [ {
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://purl.org/dc/terms/contributorType"
+        }, {
+          "http://xmlns.com/foaf/0.1/familyName" : "test2"
+        }, {
+          "http://xmlns.com/foaf/0.1/givenName" : [ "test2", "MB" ]
+        } ]
+      } ]
+    } ]
+  }, {
+    "http://purl.org/dc/elements/1.1/title" : "a|||||||||||||"
+  }, {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://purl.org/ontology/bibo/Document"
+  } ]
+} ]

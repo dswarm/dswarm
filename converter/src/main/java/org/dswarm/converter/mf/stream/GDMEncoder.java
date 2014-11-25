@@ -17,6 +17,7 @@ package org.dswarm.converter.mf.stream;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.Stack;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -44,6 +45,7 @@ import org.dswarm.graph.json.ResourceNode;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
+import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.util.GDMUtil;
 
 /**
@@ -62,18 +64,22 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 	private final Model						internalGDMModel;
 	private Resource						recordResource;
 	private ResourceNode					recordNode;
-	// private Stack<Tuple<Node, Predicate>> entityStack;
+    private Resource						entityResource;
+    private Node					entityNode;
+    private Stack<Tuple<Node, Predicate>>   entityStack;
 	// private final Stack<String> elementURIStack; // TODO use stack when statements for deeper hierarchy levels are possible
 
 	// not used: private ResourceNode recordType;
+    private ResourceNode recordType;
+    private String		 recordTypeUri;
 
 	private final Optional<DataModel>		dataModel;
 	private final Optional<String>			dataModelUri;
 
-	private String							recordTypeUri;
-
+    private       long                      nodeIdCounter = 1;
 	private final Map<String, Predicate>	predicates		= Maps.newHashMap();
 	private final Map<String, AtomicLong>	valueCounter	= Maps.newHashMap();
+    private final Map<String, ResourceNode> types         = Maps.newHashMap();
 	private final Map<String, String>		uris			= Maps.newHashMap();
 
 	public GDMEncoder(final Optional<DataModel> dataModel) {
@@ -92,14 +98,15 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 	@Override
 	public void startRecord(final String identifier) {
 
-		// System.out.println("in start record with: identifier = '" + identifier + "'");
-
 		assert !isClosed();
 
 		currentId = isValidUri(identifier) ? identifier : mintRecordUri(identifier);
 
 		recordResource = new Resource(currentId);
 		recordNode = new ResourceNode(currentId);
+
+        // init
+        entityStack = new Stack<>();
 
 	}
 
@@ -110,36 +117,59 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		internalGDMModel.addResource(recordResource);
 
-		// write triples
-		final GDMModel gdmModel;
+        // write triples
+        final GDMModel gdmModel;
 
-		if (recordTypeUri == null) {
+        gdmModel = new GDMModel(internalGDMModel, currentId);
 
-			gdmModel = new GDMModel(internalGDMModel, currentId);
-		} else {
+        currentId = null;
 
-			gdmModel = new GDMModel(internalGDMModel, currentId, recordTypeUri);
-		}
-
-		getReceiver().process(gdmModel);
+        getReceiver().process(gdmModel);
 	}
 
 	@Override
 	public void startEntity(final String name) {
 
-		// System.out.println("in start entity with name = '" + name + "'");
-
 		assert !isClosed();
+
+        final Predicate entityPredicate = getPredicate(name);
+
+        entityNode = new Node(getNewNodeId());
+
+        if (entityStack.empty()) {
+
+            addStatement(recordNode, entityPredicate, entityNode);
+        } else {
+
+            final Tuple<Node, Predicate> parentEntityTuple = entityStack.peek();
+
+            addStatement(parentEntityTuple.v1(), entityPredicate, entityNode);
+        }
+
+        // sub resource type just to have one
+        // TODO: evaluate the corret type (maybe in the morph script builder)
+        final ResourceNode entityType = getType(name + "Type");
+
+        addStatement(entityNode, getPredicate(GDMUtil.RDF_type), entityType);
+
+        entityStack.push(new Tuple<>(entityNode, entityPredicate));
 
 	}
 
 	@Override
 	public void endEntity() {
 
-		// System.out.println("in end entity");
-
 		assert !isClosed();
 
+        entityStack.pop();
+
+        if (!entityStack.isEmpty()) {
+
+            entityNode = entityStack.peek().v1();
+        } else {
+
+            entityNode = null;
+        }
 	}
 
 	@Override
@@ -175,14 +205,15 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 			final Predicate attributeProperty = getPredicate(propertyUri);
 			final LiteralNode literalObject = new LiteralNode(value);
 
-			if (null != recordResource) {
+            final Node currentNode = entityStack.empty() ? recordNode : entityNode;
+
+			if (null != currentNode) {
 
 				// TODO: this is only a HOTFIX for creating resources from resource type uris
 
 				if (!GDMUtil.RDF_type.equals(propertyUri)) {
 
-					// recordResource.addProperty(attributeProperty, value);
-					recordResource.addStatement(recordNode, attributeProperty, literalObject);
+					recordResource.addStatement(currentNode, attributeProperty, literalObject);
 				} else {
 
 					// check, whether value is really a URI
@@ -190,14 +221,12 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 						final ResourceNode typeResource = new ResourceNode(value);// ResourceFactory.createResource(value);
 
-						// recordResource.addStatement(entityNode, attributeProperty, typeResource);
-						addStatement(recordNode, attributeProperty, typeResource);
+						addStatement(currentNode, attributeProperty, typeResource);
 
 						recordTypeUri = value;
 					} else {
 
-						// recordResource.addStatement(entityNode, attributeProperty, literalObject);
-						addStatement(recordNode, attributeProperty, literalObject);
+						addStatement(currentNode, attributeProperty, literalObject);
 					}
 				}
 			} else {
@@ -374,4 +403,27 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		return uris.get(id);
 	}
+
+    private ResourceNode getType(final String typeId) {
+
+        final String typeURI = getURI(typeId);
+
+        if (!types.containsKey(typeURI)) {
+
+            final ResourceNode type = new ResourceNode(typeURI);
+
+            types.put(typeURI, type);
+        }
+
+        return types.get(typeURI);
+    }
+
+    private long getNewNodeId() {
+
+        final long newNodeId = nodeIdCounter;
+        nodeIdCounter++;
+
+        return newNodeId;
+    }
+
 }

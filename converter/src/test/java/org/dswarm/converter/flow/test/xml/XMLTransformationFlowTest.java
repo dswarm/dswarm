@@ -101,6 +101,12 @@ public class XMLTransformationFlowTest extends GuicedTest {
 		testXMLTaskWithTuples("dd-727.mabxml.task.result.json", "dd-727.mabxml.task.json", "dd-727.mabxml.tuples.json");
 	}
 
+    @Test
+    public void testDd734Morph() throws Exception {
+
+        testXMLMorphWithTuples("sub.entity.3level.mabxml.morph.result.json", "sub.entity.3level.mabxml.morph.xml", "mabxml.tuples.json");
+    }
+
 	@Test
 	public void testMetsmodsXmlWithFilterAndMapping() throws Exception {
 
