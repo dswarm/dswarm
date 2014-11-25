@@ -19,11 +19,17 @@ public class ControllerModelTest extends ModelTest {
 		rewriteSchemaJSON("schema.json");
 	}
 
-	@Test
+	//@Test
 	public void rewriteProjectJSONs() throws Exception {
 
-		//rewriteProjectJSON("project_to_remove_mapping_from_with_dummy_IDs.json");
-		//rewriteProjectJSON("project.w.new.entities.onepersistentmappingattributepathinstance.json");
+		rewriteProjectJSON("project_to_remove_mapping_from_with_dummy_IDs.json");
+		rewriteProjectJSON("project.w.new.entities.onepersistentmappingattributepathinstance.json");
 		rewriteProjectJSON("project.w.new.entities.json");
+	}
+
+	@Test
+	public void rewriteTaskJSONs() throws Exception {
+
+		rewriteTaskJSON("task.csv.json");
 	}
 }
