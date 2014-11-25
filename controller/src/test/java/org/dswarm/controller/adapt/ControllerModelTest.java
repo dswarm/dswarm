@@ -27,9 +27,10 @@ public class ControllerModelTest extends ModelTest {
 		rewriteProjectJSON("project.w.new.entities.json");
 	}
 
-	@Test
+	//@Test
 	public void rewriteTaskJSONs() throws Exception {
 
 		rewriteTaskJSON("task.csv.json");
+		rewriteTaskJSON("task.json");
 	}
 }
