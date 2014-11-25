@@ -745,7 +745,7 @@ public class ResourcesResourceTest extends ResourceTest {
 		Assert.assertFalse("the configurations of the complex resource shouldn't be empty", expectedComplexResource.getConfigurations().isEmpty());
 
 		final ResourceServiceTestUtils resourceServiceTestUtils = resourcesResourceTestUtils.getPersistenceServiceTestUtils();
-		final Resource complexResource = resourceServiceTestUtils.getJpaService().createObjectTransactional().getObject();
+		Resource complexResource = resourceServiceTestUtils.getJpaService().createObjectTransactional().getObject();
 
 		final Set<Configuration> createdConfigurations = Sets.newLinkedHashSet();
 		final ConfigurationServiceTestUtils configurationServiceTestUtils = resourceServiceTestUtils.getConfigurationsServiceTestUtils();
@@ -759,6 +759,10 @@ public class ResourcesResourceTest extends ResourceTest {
 			final Configuration createdConfiguration = configurationServiceTestUtils.createAndCompareObject(configuration, configuration);
 			complexResource.addConfiguration(createdConfiguration);
 			createdConfigurations.add(createdConfiguration);
+
+			complexResource = resourceServiceTestUtils.updateAndCompareObject(complexResource, complexResource);
+			// TODO: probably necessary to acquire a fresh entity manager to avoid run into concurrent modification exception => maybe we should also make use of a fresh entity manager for update operations
+			complexResource = resourceServiceTestUtils.getObject(complexResource);
 		}
 
 		complexResource.setName(expectedComplexResource.getName());
