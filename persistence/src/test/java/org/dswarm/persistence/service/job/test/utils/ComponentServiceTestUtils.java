@@ -123,6 +123,8 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 
 		component.setInputComponents(inputComponents);
 		component.setOutputComponents(outputComponents);
+		
+		updateAndCompareObject(component2, component2);
 
 		return updateAndCompareObject(component, component);
 	}
