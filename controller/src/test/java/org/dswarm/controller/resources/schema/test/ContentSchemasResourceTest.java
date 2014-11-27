@@ -88,8 +88,8 @@ public class ContentSchemasResourceTest
 
 		Assert.assertEquals("persisted and updated value attribute path string should be equal", updatedValueAttributePath.toAttributePath(),
 				blaPropertyAP.toAttributePath());
-		Assert.assertEquals("persisted and updated value attribute path attribute name should be equal", updatedValueAttributePath.getAttributes()
-				.iterator().next().getName(), blaPropertyAP.getAttributes().iterator().next().getName());
+		Assert.assertEquals("persisted and updated value attribute path attribute name should be equal", updatedValueAttributePath.getAttributePath()
+				.iterator().next().getName(), blaPropertyAP.getAttributePath().iterator().next().getName());
 		Assert.assertEquals("persisted and updated content schema name should be equal", updateContentSchema.getName(), updateSchemaNameString);
 
 		return updateContentSchema;

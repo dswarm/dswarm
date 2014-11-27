@@ -391,7 +391,7 @@ public class DataModelsResourceTest extends
 		Assert.assertThat(getValueNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld", json).size(),
 				CoreMatchers.equalTo(getValueNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld", expectedJson).size()));
 
-		Assert.assertEquals(Long.valueOf(3), dataModel.getSchema().getId());
+		Assert.assertEquals(Long.valueOf(4), dataModel.getSchema().getId());
 
 		DataModelsResourceTest.LOG.debug("end get MABXML data test");
 	}
