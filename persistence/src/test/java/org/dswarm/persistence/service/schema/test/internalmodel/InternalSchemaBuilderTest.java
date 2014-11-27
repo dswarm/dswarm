@@ -18,22 +18,19 @@ package org.dswarm.persistence.service.schema.test.internalmodel;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Test;
+
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
-import org.dswarm.persistence.service.MaintainDBService;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class InternalSchemaBuilderTest extends GuicedTest {
 
 	// private static final Logger LOG = LoggerFactory.getLogger(InternalSchemaBuilderTest.class);
 
-	private final ObjectMapper	objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	// private static final String NL = System.lineSeparator();
 
@@ -43,7 +40,7 @@ public class InternalSchemaBuilderTest extends GuicedTest {
 		super.prepare();
 		maintainDBService.truncateTables();
 	}
-	
+
 	//@Ignore
 	@Test
 	public void buildInternalSchema() throws Exception {
@@ -100,7 +97,7 @@ public class InternalSchemaBuilderTest extends GuicedTest {
 
 		final Set<SchemaAttributePathInstance> pathSet = schema.getUniqueAttributePaths();
 
-		for (final Iterator<SchemaAttributePathInstance> iterator = pathSet.iterator(); iterator.hasNext();) {
+		for (final Iterator<SchemaAttributePathInstance> iterator = pathSet.iterator(); iterator.hasNext(); ) {
 
 			final SchemaAttributePathInstance attributePathInstance = iterator.next();
 			InternalSchemaBuilderTest.printAttributePathAsText(attributePathInstance);
@@ -114,7 +111,7 @@ public class InternalSchemaBuilderTest extends GuicedTest {
 
 		System.out.println(path.getAttributePath().toAttributePath().replace("", " :: "));
 
-	}
+		if (null != path.getSubSchema()) {
 			System.out.println("****************************************************");
 			System.out.println("*with sub-schema:***********************************");
 			printSchemaAsText(path.getSubSchema());

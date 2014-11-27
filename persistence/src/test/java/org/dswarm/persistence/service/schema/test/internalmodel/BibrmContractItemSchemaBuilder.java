@@ -44,7 +44,7 @@ public class BibrmContractItemSchemaBuilder extends SchemaBuilder {
 		// store all parsed paths as an overview
 		prefixPaths = builder.getPrefixPaths();
 
-		final Schema persistentSchema = schemaServiceTestUtils.createSchema("bibrm:ContractItem-Schema (ERM-Scenario)",
+		final Schema persistentSchema = schemaServiceTestUtils.createAndPersistSchema("bibrm:ContractItem-Schema (ERM-Scenario)",
 				tempSchema.getUniqueAttributePaths(), clasz);
 
 		return persistentSchema;
