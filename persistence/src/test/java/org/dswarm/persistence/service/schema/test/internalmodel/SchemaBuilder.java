@@ -26,16 +26,23 @@ import org.dswarm.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 
 public abstract class SchemaBuilder extends GuicedTest {
 
-	private final ObjectMapper	objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
-	private static final Logger	LOG				= LoggerFactory.getLogger(SchemaBuilder.class);
-	protected String			prefixPaths		= "";
-	
-	protected final ClaszServiceTestUtils	claszServiceTestUtils;
-	protected final SchemaServiceTestUtils schemaServiceTestUtils;
+	private final        ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
+	private static final Logger       LOG          = LoggerFactory.getLogger(SchemaBuilder.class);
+	protected            String       prefixPaths  = "";
+
+	protected ClaszServiceTestUtils  claszServiceTestUtils;
+	protected SchemaServiceTestUtils schemaServiceTestUtils;
 
 	public SchemaBuilder() {
 		super();
-		
+
+		claszServiceTestUtils = new ClaszServiceTestUtils();
+		schemaServiceTestUtils = new SchemaServiceTestUtils();
+	}
+
+	@Override protected void initObjects() {
+		super.initObjects();
+
 		claszServiceTestUtils = new ClaszServiceTestUtils();
 		schemaServiceTestUtils = new SchemaServiceTestUtils();
 	}

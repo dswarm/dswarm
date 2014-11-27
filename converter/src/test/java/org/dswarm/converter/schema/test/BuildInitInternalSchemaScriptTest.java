@@ -75,10 +75,15 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		final String bibrmContractDM = "Internal Data Model ContractItem";
 		final String biboDocumentDM = "Internal Data Model BiboDocument";
 		final String mabxmlSchemaDM = "Internal Data Model mabxml";
+		// [@tgaengler]: just prevention, but I guess that we also need a (default) data model for the foaf:Person schema (right now)
+		final String foafPersonDM = "Internal Data Model foafPerson";
+
+		final Schema foafPersonSchema = biboDocumentSchema.getAttributePath((long) 14).getSubSchema();
 
 		createSchemaDataModel(bibrmContractDM, bibrmContractDM, bibrmContractSchema);
 		createSchemaDataModel(biboDocumentDM, biboDocumentDM, biboDocumentSchema);
 		createSchemaDataModel(mabxmlSchemaDM, mabxmlSchemaDM, mabxmlSchema);
+		createSchemaDataModel(foafPersonDM, foafPersonDM, foafPersonSchema);
 
 		final String sep = File.separator;
 
@@ -87,7 +92,7 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		final String db = readManuallyFromTypeSafeConfig("dswarm.db.metadata.schema");
 		String outputFile = readManuallyFromTypeSafeConfig("dswarm.paths.root");
 
-		outputFile = outputFile.substring(0, outputFile.lastIndexOf(sep));
+		//outputFile = outputFile.substring(0, outputFile.lastIndexOf(sep));
 		outputFile = outputFile + sep + "persistence" + sep + "src" + sep + "main" + sep + "resources" + sep + "init_internal_schema.sql";
 
 		final String output = outputFile;

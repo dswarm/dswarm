@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2013, 2014 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *         http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,19 +34,19 @@ public class AttributePathBuilder extends GuicedTest {
 
 	//private static final Logger									LOG			= LoggerFactory.getLogger(AttributePathBuilder.class);
 
-	private AttributePath										pathUnderConstruction;
+	private AttributePath pathUnderConstruction;
 
-	private LinkedList<Attribute>								attributeList;
+	private LinkedList<Attribute> attributeList;
 
 	// private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	private final NameSpacePrefixRegistry						registry;
+	private final NameSpacePrefixRegistry registry;
 
-	private String												prefixPaths	= "";
+	private String prefixPaths = "";
 
-	private final SchemaAttributePathInstanceServiceTestUtils	schemaAPinstanceServiceTestUtils;
-	private final AttributePathServiceTestUtils					apServiceTestUtils;
-	private final AttributeServiceTestUtils						attributeServiceTestUtils;
+	private SchemaAttributePathInstanceServiceTestUtils schemaAPinstanceServiceTestUtils;
+	private AttributePathServiceTestUtils               apServiceTestUtils;
+	private AttributeServiceTestUtils                   attributeServiceTestUtils;
 
 	public AttributePathBuilder() {
 
@@ -57,7 +57,14 @@ public class AttributePathBuilder extends GuicedTest {
 		schemaAPinstanceServiceTestUtils = new SchemaAttributePathInstanceServiceTestUtils();
 		apServiceTestUtils = new AttributePathServiceTestUtils();
 		attributeServiceTestUtils = new AttributeServiceTestUtils();
+	}
 
+	@Override protected void initObjects() {
+		super.initObjects();
+
+		schemaAPinstanceServiceTestUtils = new SchemaAttributePathInstanceServiceTestUtils();
+		apServiceTestUtils = new AttributePathServiceTestUtils();
+		attributeServiceTestUtils = new AttributeServiceTestUtils();
 	}
 
 	public AttributePathBuilder start() {
