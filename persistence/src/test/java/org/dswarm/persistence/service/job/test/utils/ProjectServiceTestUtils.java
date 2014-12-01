@@ -18,7 +18,11 @@ package org.dswarm.persistence.service.job.test.utils;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import org.json.JSONException;
 import org.junit.Assert;
 
 import org.dswarm.persistence.model.job.Function;
@@ -32,11 +36,11 @@ import org.dswarm.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestU
 
 public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils<ProjectService, ProxyProject, Project> {
 
-	private final FunctionServiceTestUtils	functionServiceTestUtils;
+	private final FunctionServiceTestUtils functionServiceTestUtils;
 
-	private final MappingServiceTestUtils	mappingServiceTestUtils;
+	private final MappingServiceTestUtils mappingServiceTestUtils;
 
-	private final DataModelServiceTestUtils	dataModelServiceTestUtils;
+	private final DataModelServiceTestUtils dataModelServiceTestUtils;
 
 	public ProjectServiceTestUtils() {
 
@@ -45,6 +49,83 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 		functionServiceTestUtils = new FunctionServiceTestUtils();
 		mappingServiceTestUtils = new MappingServiceTestUtils();
 		dataModelServiceTestUtils = new DataModelServiceTestUtils();
+	}
+
+	@Override public Project createObject(JsonNode objectDescription) throws Exception {
+		return null;
+	}
+
+	@Override public Project createObject(String identifier) throws Exception {
+		return null;
+	}
+
+	@Override public Project createAndPersistDefaultObject() throws Exception {
+
+		final Mapping simpleMapping = mappingServiceTestUtils.createAndPersistDefaultObject();
+		final Mapping complexMapping = mappingServiceTestUtils.createAndPersistDefaultCompleteObject();
+
+		final Set<Mapping> mappings = Sets.newLinkedHashSet();
+		mappings.add(simpleMapping);
+		mappings.add(complexMapping);
+
+		final DataModel inputDataModel = dataModelServiceTestUtils.createAndPersistDefaultObject();
+		final DataModel outputDataModel = dataModelServiceTestUtils.createAndPersistDefaultObject();
+
+		final Function function1 = simpleMapping.getTransformation().getFunction();
+
+		final Set<Function> functions = Sets.newLinkedHashSet();
+		functions.add(function1);
+
+		final String projectName = "my project";
+		final String projectDescription = "my project description";
+
+		return createAndPersistProject(projectName, projectDescription, mappings, inputDataModel, outputDataModel, functions);
+	}
+
+	@Override public Project createDefaultObject() throws Exception {
+
+		final Mapping simpleMapping = mappingServiceTestUtils.createAndPersistDefaultObject();
+		final Mapping complexMapping = mappingServiceTestUtils.createAndPersistDefaultCompleteObject();
+
+		final Set<Mapping> mappings = Sets.newLinkedHashSet();
+		mappings.add(simpleMapping);
+		mappings.add(complexMapping);
+
+		final DataModel inputDataModel = dataModelServiceTestUtils.createAndPersistDefaultObject();
+		final DataModel outputDataModel = dataModelServiceTestUtils.createAndPersistDefaultObject();
+
+		final Function function1 = simpleMapping.getTransformation().getFunction();
+
+		final Set<Function> functions = Sets.newLinkedHashSet();
+		functions.add(function1);
+
+		final String projectName = "my project";
+		final String projectDescription = "my project description";
+
+		return createProject(projectName, projectDescription, mappings, inputDataModel, outputDataModel, functions);
+	}
+
+	public Project createAndPersistProject(final String name, final String description, final Set<Mapping> mappings, final DataModel inputDataModel,
+			final DataModel outputDataModel, final Set<Function> functions)
+			throws Exception {
+
+		final Project project = createProject(name, description, mappings, inputDataModel, outputDataModel, functions);
+
+		return createAndCompareObject(project, project);
+	}
+
+	public Project createProject(final String name, final String description, final Set<Mapping> mappings, final DataModel inputDataModel, final DataModel outputDataModel,
+			final Set<Function> functions) {
+
+		final Project project = new Project();
+		project.setName(name);
+		project.setDescription(description);
+		project.setMappings(mappings);
+		project.setInputDataModel(inputDataModel);
+		project.setOutputDataModel(outputDataModel);
+		project.setFunctions(functions);
+
+		return project;
 	}
 
 	/**
@@ -59,7 +140,7 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 	 * {@link FunctionServiceTestUtils#compareObjects(Function, Function)}. <br />
 	 */
 	@Override
-	public void compareObjects(final Project expectedProject, final Project actualProject) {
+	public void compareObjects(final Project expectedProject, final Project actualProject) throws JsonProcessingException, JSONException {
 
 		super.compareObjects(expectedProject, actualProject);
 

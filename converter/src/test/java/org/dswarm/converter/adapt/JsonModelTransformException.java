@@ -13,26 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dswarm.controller.resources.job.test;
+package org.dswarm.converter.adapt;
 
-import java.io.IOException;
+public class JsonModelTransformException extends Exception {
 
-import org.junit.Before;
+	private static final long serialVersionUID = -2598044985016356394L;
 
-import org.dswarm.controller.resources.test.ResourceTest;
-
-public class JobsResourceTest extends ResourceTest {
-
-	private final String	jobJSONString	= null;
-
-	public JobsResourceTest() {
-
-		super("jobs");
+	public JsonModelTransformException() {
+		super();
 	}
 
-	@Before
-	public void prepare() throws IOException {
-
-		// jobJSONString = DMPPersistenceUtil.getResourceAsString("complex-request.json");
+	public JsonModelTransformException(final String message) {
+		super(message);
 	}
+
+	public JsonModelTransformException(final Throwable throwable) {
+		super(throwable);
+	}
+
 }

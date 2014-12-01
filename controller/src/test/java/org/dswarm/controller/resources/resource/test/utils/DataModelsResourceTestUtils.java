@@ -41,8 +41,6 @@ public class DataModelsResourceTestUtils extends
 
 		Assert.assertEquals("200 OK was expected", 200, response1.getStatus());
 
-		final String responseString = response1.readEntity(String.class);
-
-		return responseString;
+		return response1.readEntity(String.class);
 	}
 }

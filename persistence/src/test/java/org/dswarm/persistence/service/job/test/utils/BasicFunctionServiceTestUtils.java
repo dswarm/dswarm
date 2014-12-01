@@ -18,6 +18,7 @@ package org.dswarm.persistence.service.job.test.utils;
 import java.util.LinkedList;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.json.JSONException;
 import org.junit.Assert;
 
 import org.dswarm.persistence.model.job.Function;
@@ -39,7 +40,7 @@ public abstract class BasicFunctionServiceTestUtils<POJOCLASSPERSISTENCESERVICE 
 	 * Assert both expected and actual function have either no or equal parameters.
 	 */
 	@Override
-	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) {
+	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) throws JsonProcessingException, JSONException {
 
 		super.compareObjects(expectedObject, actualObject);
 
@@ -83,53 +84,17 @@ public abstract class BasicFunctionServiceTestUtils<POJOCLASSPERSISTENCESERVICE 
 
 		// compare parameters
 		Assert.assertEquals("the " + pojoClassName + " parameters should be equal", expectedObject.getParameters(), actualObject.getParameters());
-
-		// TODO: why do we the comparison on our own?
-		// if (expectedFunction.getParameters() == null || expectedFunction.getParameters().isEmpty()) {
-		//
-		// boolean actualFunctionhasNoParameters = (actualFunction.getParameters() == null ||
-		// actualFunction.getParameters().isEmpty());
-		// Assert.assertTrue("the actual " + pojoClassName + " should not have any parameter", actualFunctionhasNoParameters);
-		//
-		// } else {
-		// // (!null && !empty)
-		//
-		// final LinkedList<String> actualFunctionParameters = actualFunction.getParameters();
-		//
-		// Assert.assertNotNull("the actual " + pojoClassName + " parameters shouldn't be null", actualFunctionParameters);
-		// Assert.assertFalse("the actual " + pojoClassName + " parameters shouldn't be empty",
-		// actualFunctionParameters.isEmpty());
-		// Assert.assertEquals("the number of function parameters should be equal", expectedFunction.getParameters(),
-		// actualFunctionParameters.size());
-		//
-		// int i = 0;
-		//
-		// for (final String expectedFunctionParameter : expectedFunction.getParameters()) {
-		//
-		// final String actualFunctionParameter = actualFunctionParameters.get(i);
-		//
-		// Assert.assertEquals("the " + pojoClassName + " parameters are not equal", expectedFunctionParameter,
-		// actualFunctionParameter);
-		//
-		// i++;
-		// }
-		// }
 	}
 
 	public POJOCLASS createFunction(final String name, final String description, final LinkedList<String> parameters) throws Exception {
 
-		final String functionName = name;
-		final String functionDescription = description;
-
 		final POJOCLASS function = createNewObject();
 
-		function.setName(functionName);
-		function.setDescription(functionDescription);
+		function.setName(name);
+		function.setDescription(description);
 		function.setParameters(parameters);
 
-		final POJOCLASS updatedFunction = createObject(function, function);
-
-		return updatedFunction;
+		return createAndCompareObject(function, function);
 	}
 
 	/**
