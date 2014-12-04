@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +28,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import org.json.JSONException;
 import org.junit.Assert;
 import org.slf4j.Logger;
@@ -64,193 +62,6 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 			AttributeServiceTestUtils.DCTERMS_CREATOR + DMPStatics.ATTRIBUTE_DELIMITER + AttributeServiceTestUtils.FOAF_NAME;
 
 	private final AttributeServiceTestUtils astUtils;
-
-	private static final Set<List<String>> excludeAttributePaths = Sets.newHashSet();
-
-	static {
-
-		final List<String> attributePath32 = Lists.newLinkedList();
-		attributePath32.add("http://purl.org/dc/terms/creator");
-		attributePath32.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath32);
-
-		final List<String> attributePath33 = Lists.newLinkedList();
-		attributePath33.add("http://purl.org/dc/terms/creator");
-		attributePath33.add("http://xmlns.com/foaf/0.1/familyName");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath33);
-
-		final List<String> attributePath34 = Lists.newLinkedList();
-		attributePath34.add("http://purl.org/dc/terms/creator");
-		attributePath34.add("http://xmlns.com/foaf/0.1/givenName");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath34);
-
-		final List<String> attributePath35 = Lists.newLinkedList();
-		attributePath35.add("http://purl.org/dc/terms/contributor");
-		attributePath35.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath35);
-
-		final List<String> attributePath36 = Lists.newLinkedList();
-		attributePath36.add("http://purl.org/dc/terms/contributor");
-		attributePath36.add("http://xmlns.com/foaf/0.1/familyName");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath36);
-
-		final List<String> attributePath37 = Lists.newLinkedList();
-		attributePath37.add("http://purl.org/dc/terms/contributor");
-		attributePath37.add("http://xmlns.com/foaf/0.1/givenName");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath37);
-
-		final List<String> attributePath45 = Lists.newLinkedList();
-		attributePath45.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath45.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath45);
-
-		final List<String> attributePath46 = Lists.newLinkedList();
-		attributePath46.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath46.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath46);
-
-		final List<String> attributePath47 = Lists.newLinkedList();
-		attributePath47.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath47.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath47);
-
-		final List<String> attributePath48 = Lists.newLinkedList();
-		attributePath48.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath48.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath48);
-
-		final List<String> attributePath49 = Lists.newLinkedList();
-		attributePath49.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath49.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#value");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath49);
-
-		final List<String> attributePath50 = Lists.newLinkedList();
-		attributePath50.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath50.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath50);
-
-		final List<String> attributePath51 = Lists.newLinkedList();
-		attributePath51.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath51.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf");
-		attributePath51.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath51);
-
-		final List<String> attributePath52 = Lists.newLinkedList();
-		attributePath52.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath52.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#stw");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath52);
-
-		final List<String> attributePath53 = Lists.newLinkedList();
-		attributePath53.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath53.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#stw");
-		attributePath53.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath53);
-
-		final List<String> attributePath54 = Lists.newLinkedList();
-		attributePath54.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath54.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#stw");
-		attributePath54.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#value");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath54);
-
-		final List<String> attributePath55 = Lists.newLinkedList();
-		attributePath55.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath55.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath55);
-
-		final List<String> attributePath56 = Lists.newLinkedList();
-		attributePath56.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath56.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns");
-		attributePath56.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath56);
-
-		final List<String> attributePath57 = Lists.newLinkedList();
-		attributePath57.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath57.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns");
-		attributePath57.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#value");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath57);
-
-		final List<String> attributePath58 = Lists.newLinkedList();
-		attributePath58.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath58.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath58);
-
-		final List<String> attributePath59 = Lists.newLinkedList();
-		attributePath59.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath59.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf");
-		attributePath59.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath59);
-
-		final List<String> attributePath60 = Lists.newLinkedList();
-		attributePath60.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath60.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf");
-		attributePath60.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath60);
-
-		final List<String> attributePath61 = Lists.newLinkedList();
-		attributePath61.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath61.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf");
-		attributePath61.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath61);
-
-		final List<String> attributePath62 = Lists.newLinkedList();
-		attributePath62.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath62.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf");
-		attributePath62.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#value");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath62);
-
-		final List<String> attributePath63 = Lists.newLinkedList();
-		attributePath63.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath63.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf");
-		attributePath63.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath63);
-
-		final List<String> attributePath64 = Lists.newLinkedList();
-		attributePath64.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath64.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf");
-		attributePath64.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf");
-		attributePath64.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath64);
-
-		final List<String> attributePath65 = Lists.newLinkedList();
-		attributePath65.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath65.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf");
-		attributePath65.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#stw");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath65);
-
-		final List<String> attributePath66 = Lists.newLinkedList();
-		attributePath66.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath66.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf");
-		attributePath66.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#stw");
-		attributePath66.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath66);
-
-		final List<String> attributePath67 = Lists.newLinkedList();
-		attributePath67.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath67.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf");
-		attributePath67.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#stw");
-		attributePath67.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#value");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath67);
-
-		final List<String> attributePath68 = Lists.newLinkedList();
-		attributePath68.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath68.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf");
-		attributePath68.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath68);
-
-		final List<String> attributePath69 = Lists.newLinkedList();
-		attributePath69.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath69.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf");
-		attributePath69.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns");
-		attributePath69.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath69);
-
-		final List<String> attributePath70 = Lists.newLinkedList();
-		attributePath70.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld");
-		attributePath70.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf");
-		attributePath70.add("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns");
-		attributePath70.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#value");
-		AttributePathServiceTestUtils.excludeAttributePaths.add(attributePath70);
-	}
 
 	private static final Map<String, List<String>> commonAttributePathsMap = new HashMap<>();
 
@@ -383,9 +194,13 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 	 * @throws Exception
 	 */
 	@Override
-	public AttributePath createDefaultObject() throws Exception {
+	public AttributePath createAndPersistDefaultObject() throws Exception {
 
 		return getDctermsTitleDctermHaspartDctermsTitleAP();
+	}
+
+	@Override public AttributePath createDefaultObject() throws Exception {
+		return null;
 	}
 
 	public AttributePath getDctermsTitleDctermHaspartDctermsTitleAP() throws Exception {
@@ -470,101 +285,6 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 	protected ProxyAttributePath createObject(final AttributePath object) throws DMPPersistenceException {
 
 		return jpaService.createObjectTransactional(object);
-	}
-
-	@Override
-	public void deleteObject(final AttributePath object) {
-
-		if (object == null) {
-
-			return;
-		}
-
-		final Set<Attribute> attributes = object.getAttributes();
-
-		if (attributes != null && !attributes.isEmpty() && attributes.size() == 1) {
-
-			final Attribute attribute = attributes.iterator().next();
-
-			if (attribute != null && attribute.getUri() != null && AttributeServiceTestUtils.excludeAttributes.contains(attribute.getUri())) {
-
-				// don't delete attribute paths of attributes that should be excluded
-				// from removal
-
-				return;
-			}
-		}
-
-		final List<Attribute> orderedAttributes = object.getAttributePath();
-
-		if (orderedAttributes != null && !orderedAttributes.isEmpty()) {
-
-			for (final List<String> excludeAttributePath : AttributePathServiceTestUtils.excludeAttributePaths) {
-
-				if (excludeAttributePath.size() != orderedAttributes.size()) {
-
-					// only compare attribute paths of the same size
-
-					continue;
-				}
-
-				final Iterator<String> excludeIter = excludeAttributePath.iterator();
-
-				boolean interrupted = false;
-
-				while (excludeIter.hasNext()) {
-
-					final Iterator<Attribute> iter = orderedAttributes.iterator();
-
-					while (iter.hasNext()) {
-
-						final Attribute orderedAttribute = iter.next();
-
-						if (orderedAttribute.getUri() == null) {
-
-							break;
-						}
-
-						final String excludeAttribute = excludeIter.next();
-
-						if (orderedAttribute.getUri() == null) {
-
-							interrupted = true;
-
-							break;
-						}
-
-						if (!excludeAttribute.equals(orderedAttribute.getUri())) {
-
-							interrupted = true;
-
-							break;
-						}
-
-						if (!excludeIter.hasNext() && iter.hasNext()) {
-
-							interrupted = true;
-
-							break;
-						}
-					}
-
-					if (interrupted) {
-
-						break;
-					}
-				}
-
-				if (!interrupted) {
-
-					// found match
-
-					return;
-				}
-			}
-		}
-
-		super.deleteObject(object);
 	}
 
 	@Override

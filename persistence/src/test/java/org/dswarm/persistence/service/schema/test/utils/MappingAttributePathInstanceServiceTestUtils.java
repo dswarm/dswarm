@@ -45,15 +45,19 @@ public class MappingAttributePathInstanceServiceTestUtils
 		return null;
 	}
 
-	@Override public MappingAttributePathInstance createDefaultObject() throws Exception {
+	@Override public MappingAttributePathInstance createAndPersistDefaultObject() throws Exception {
 
-		return createMappingAttributePathInstance(attributePathServiceTestUtils.createDefaultObject());
+		return createMappingAttributePathInstance(attributePathServiceTestUtils.createAndPersistDefaultObject());
 	}
 
-	@Override public MappingAttributePathInstance createDefaultCompleteObject() throws Exception {
-		final MappingAttributePathInstance mapi = createDefaultObject();
+	@Override public MappingAttributePathInstance createDefaultObject() throws Exception {
+		return null;
+	}
+
+	@Override public MappingAttributePathInstance createAndPersistDefaultCompleteObject() throws Exception {
+		final MappingAttributePathInstance mapi = createAndPersistDefaultObject();
 		mapi.setOrdinal(1);
-		mapi.setFilter(fstUtils.createDefaultObject());
+		mapi.setFilter(fstUtils.createAndPersistDefaultObject());
 
 		return updateAndCompareObject(mapi, mapi);
 	}
@@ -183,6 +187,5 @@ public class MappingAttributePathInstanceServiceTestUtils
 
 		return createMappingAttributePathInstance("dcterms:creator/foaf:name MAPI", dctermsCreatorFoafMameAP, null, null);
 	}
-
 }
 

@@ -38,7 +38,7 @@ public class FoafPersonSchemaBuilder extends SchemaBuilder {
 		// store all parsed paths as an overview
 		prefixPaths = builder.getPrefixPaths();
 
-		final Schema persistentSchema = schemaServiceTestUtils.createSchema("foaf:Person-Schema", tempSchema.getUniqueAttributePaths(), clasz);
+		final Schema persistentSchema = schemaServiceTestUtils.createAndPersistSchema("foaf:Person-Schema", tempSchema.getUniqueAttributePaths(), clasz);
 
 		return persistentSchema;
 	}

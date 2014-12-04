@@ -75,7 +75,7 @@ public class BiboDocumentSchemaBuilder extends SchemaBuilder {
 		// store all parsed paths as an overview
 		prefixPaths = builder.getPrefixPaths();
 
-		final Schema persistentSchema = schemaServiceTestUtils.createSchema("bibo:Document-Schema (KIM-Titeldaten)",
+		final Schema persistentSchema = schemaServiceTestUtils.createAndPersistSchema("bibo:Document-Schema (KIM-Titeldaten)",
 				tempSchema.getUniqueAttributePaths(), clasz);
 
 		return persistentSchema;

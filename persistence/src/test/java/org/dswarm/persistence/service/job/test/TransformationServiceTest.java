@@ -48,7 +48,7 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 
 		TransformationServiceTest.LOG.debug("start simple transformation test");
 
-		final Transformation transformation = transformationServiceTestUtils.createDefaultObject();
+		final Transformation transformation = transformationServiceTestUtils.createAndPersistDefaultObject();
 
 		final Transformation updatedTransformation = transformationServiceTestUtils.updateAndCompareObject(transformation, transformation);
 
@@ -62,7 +62,7 @@ public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransf
 
 		TransformationServiceTest.LOG.debug("start complex transformation test");
 
-		final Transformation transformation = transformationServiceTestUtils.createDefaultCompleteObject();
+		final Transformation transformation = transformationServiceTestUtils.createAndPersistDefaultCompleteObject();
 
 		final Transformation updatedTransformation = transformationServiceTestUtils.updateAndCompareObject(transformation, transformation);
 

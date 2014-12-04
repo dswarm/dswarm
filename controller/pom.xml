@@ -147,6 +147,13 @@
 		</dependency>
 		<dependency>
 			<groupId>org.dswarm</groupId>
+			<artifactId>dswarm-converter</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.dswarm</groupId>
 			<artifactId>dswarm-init</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>

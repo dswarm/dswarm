@@ -59,13 +59,17 @@ public class ConfigurationServiceTestUtils extends ExtendedBasicDMPJPAServiceTes
 		return null;
 	}
 
-	@Override public Configuration createDefaultObject() throws Exception {
+	@Override public Configuration createAndPersistDefaultObject() throws Exception {
 
 		final ObjectNode parameters = new ObjectNode(objectMapper.getNodeFactory());
 		final String parameterValue = ";";
 		parameters.put(ConfigurationStatics.COLUMN_DELIMITER, parameterValue);
 
 		return createConfiguration("my configuration", "configuration description", parameters);
+	}
+
+	@Override public Configuration createDefaultObject() throws Exception {
+		return null;
 	}
 
 	/**

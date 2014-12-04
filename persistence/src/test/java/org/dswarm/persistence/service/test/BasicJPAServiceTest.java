@@ -51,6 +51,10 @@ public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<
 		initObjects();
 	}
 
+	public JPASERVICEIMPL getJpaService() {
+		return jpaService;
+	}
+
 	protected void initObjects() {
 
 		super.initObjects();

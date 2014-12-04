@@ -45,7 +45,7 @@ public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, 
 	@Test
 	public void testSimpleObject() throws Exception {
 
-		final DataModel dataModel = dataModelServiceTestUtils.createDefaultObject();
+		final DataModel dataModel = dataModelServiceTestUtils.createAndPersistDefaultObject();
 
 		final DataModel updatedDataModel = dataModelServiceTestUtils.updateAndCompareObject(dataModel, dataModel);
 

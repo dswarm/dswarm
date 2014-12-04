@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.json.JSONException;
 import org.junit.Assert;
 import org.slf4j.Logger;
@@ -57,6 +58,8 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 
 	public abstract POJOCLASS createObject(final String identifier) throws Exception;
 
+	public abstract POJOCLASS createAndPersistDefaultObject() throws Exception;
+
 	public abstract POJOCLASS createDefaultObject() throws Exception;
 
 	public BasicJPAServiceTestUtils(final Class<POJOCLASS> pojoClassArg, final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg) {
@@ -71,17 +74,20 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 		objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 	}
 
-	@Override public void prepare() throws Exception {
+	@Override
+	public void prepare() throws Exception {
 
 		// this should be done by the concrete test, not in the utils
 	}
 
-	@Override public void tearDown3() throws Exception {
+	@Override
+	public void tearDown3() throws Exception {
 
 		// this should be done by the concrete test, not in the utils
 	}
 
-	@Override public void testSimpleObject() throws Exception {
+	@Override
+	public void testSimpleObject() throws Exception {
 
 		// this should be implemented in real test classes, not in the utils
 	}
@@ -107,18 +113,32 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 
 		Assert.assertNotNull("response " + pojoClassName + "s JSON array shouldn't be null", responseObjectsJSONArray);
 
-		final Iterator<JsonNode> responseObjectsJSONIter = responseObjectsJSONArray.iterator();
-
-		while (responseObjectsJSONIter.hasNext()) {
-
-			final JsonNode responseObjectJSON = responseObjectsJSONIter.next();
+		for (final JsonNode responseObjectJSON : responseObjectsJSONArray) {
 
 			final POJOCLASS responseObject = objectMapper.readValue(responseObjectJSON.toString(), pojoClass);
 
 			responseObjects.put(responseObject.getId(), responseObject);
 		}
 
-		compareObjects(expectedObjects, responseObjects);
+		final Set<POJOCLASS> newExpectedObjects;
+
+		if (expectedObjects != null) {
+
+			newExpectedObjects = Sets.newLinkedHashSet();
+
+			for (final POJOCLASS expectedObject : expectedObjects) {
+
+				final String expectedObjectJSONString = objectMapper.writeValueAsString(expectedObject);
+				final POJOCLASS newExpectedObject = objectMapper.readValue(expectedObjectJSONString, pojoClass);
+
+				newExpectedObjects.add(newExpectedObject);
+			}
+		} else {
+
+			newExpectedObjects = expectedObjects;
+		}
+
+		compareObjects(newExpectedObjects, responseObjects);
 	}
 
 	/**
@@ -242,6 +262,17 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 		final POJOCLASSIDTYPE objectId = object.getId();
 
 		deleteObject(objectId);
+	}
+
+	/**
+	 * default impl return getDefaultObject
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	public POJOCLASS createAndPersistDefaultCompleteObject() throws Exception {
+
+		return createAndPersistDefaultObject();
 	}
 
 	/**

@@ -45,7 +45,7 @@ public class ClaszServiceTest extends AdvancedJPAServiceTest<ProxyClasz, Clasz, 
 	@Test
 	@Override
 	public void testSimpleObject() throws Exception {
-		final Clasz clasz = cstUtils.createDefaultObject();
+		final Clasz clasz = cstUtils.createAndPersistDefaultObject();
 		final Clasz updatedClass = cstUtils.updateAndCompareObject(clasz, clasz);
 
 		logObjectJSON(updatedClass);

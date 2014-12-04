@@ -57,11 +57,15 @@ public class ClaszServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<ClaszS
 	}
 	
 	@Override
-	public Clasz createDefaultObject() throws Exception {
+	public Clasz createAndPersistDefaultObject() throws Exception {
 		
 		return createObject(BIBO_DOCUMENT);
 	}
-	
+
+	@Override public Clasz createDefaultObject() throws Exception {
+		return null;
+	}
+
 	@Override
 	public void deleteObject(final Clasz object) {
 

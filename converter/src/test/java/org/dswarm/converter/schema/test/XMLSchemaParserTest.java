@@ -22,9 +22,7 @@ import java.util.Set;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import org.dswarm.converter.GuicedTest;
@@ -35,7 +33,6 @@ import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
-import org.dswarm.persistence.service.MaintainDBService;
 import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
@@ -44,9 +41,7 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
  */
 public class XMLSchemaParserTest extends GuicedTest {
 
-	protected MaintainDBService	maintainDBService;
-
-	@Before
+	@Override
 	public void prepare() throws Exception {
 		GuicedTest.tearDown();
 		GuicedTest.startUp();
@@ -55,16 +50,12 @@ public class XMLSchemaParserTest extends GuicedTest {
 		maintainDBService.truncateTables();
 	}
 
-	@After
-	public void tearDown2() throws Exception {
+	@Override
+	public void tearDown3() throws Exception {
 		GuicedTest.tearDown();
 		GuicedTest.startUp();
 		initObjects();
 		maintainDBService.truncateTables();
-	}
-
-	protected void initObjects() {
-		maintainDBService = GuicedTest.injector.getInstance(MaintainDBService.class);
 	}
 
 	@Test
@@ -119,10 +110,11 @@ public class XMLSchemaParserTest extends GuicedTest {
 	 * @throws IOException
 	 * @throws DMPPersistenceException
 	 */
-	public static void testSchemaParsing2() throws IOException, DMPPersistenceException {
+	public static Schema testSchemaParsing2() throws IOException, DMPPersistenceException {
 
+		final String schemaName = "mabxml schema";
 		final XMLSchemaParser xmlSchemaParser = GuicedTest.injector.getInstance(XMLSchemaParser.class);
-		final Optional<Schema> optionalSchema = xmlSchemaParser.parse("mabxml-1.xsd", "datensatz", "mabxml schema");
+		final Optional<Schema> optionalSchema = xmlSchemaParser.parse("mabxml-1.xsd", "datensatz", schemaName);
 
 		Assert.assertTrue(optionalSchema.isPresent());
 
@@ -157,5 +149,8 @@ public class XMLSchemaParserTest extends GuicedTest {
 		final SchemaService schemaService = GuicedTest.injector.getInstance(SchemaService.class);
 
 		schemaService.updateObjectTransactional(schema);
+
+		return schema;
 	}
+
 }

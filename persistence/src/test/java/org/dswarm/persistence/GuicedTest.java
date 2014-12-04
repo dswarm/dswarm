@@ -39,6 +39,7 @@ public abstract class GuicedTest {
 	protected MaintainDBService maintainDBService;
 
 	public static Injector getInjector() {
+
 		final ConfigModule configModule = new ConfigModule();
 		final Injector configInjector = Guice.createInjector(configModule);
 

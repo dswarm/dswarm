@@ -44,22 +44,14 @@ import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.ResourceType;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
-import org.dswarm.persistence.model.schema.Attribute;
-import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.service.internal.graph.InternalGDMGraphService;
-import org.dswarm.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 import org.dswarm.persistence.service.resource.ConfigurationService;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.service.resource.ResourceService;
-import org.dswarm.persistence.service.schema.SchemaService;
-import org.dswarm.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
-import org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtils;
-import org.dswarm.persistence.service.schema.test.utils.ClaszServiceTestUtils;
-import org.dswarm.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
@@ -76,11 +68,6 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 	protected final ObjectMapper				objectMapper;
 
-	private final AttributeServiceTestUtils		attributeServiceTestUtils;
-	private final AttributePathServiceTestUtils	attributePathServiceTestUtils;
-	private final SchemaServiceTestUtils		schemaServiceTestUtils;
-	private final ClaszServiceTestUtils			classServiceTestUtils;
-
 	public AbstractXMLTransformationFlowTest(final String taskJSONFileNameArg, final String expectedResultJSONFileNameArg, final String recordTagArg,
 			final String xmlNamespaceArg, final String exampleDataResourceFileNameArg) {
 
@@ -91,11 +78,6 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		recordTag = recordTagArg;
 		xmlNamespace = xmlNamespaceArg;
 		exampleDataResourceFileName = exampleDataResourceFileNameArg;
-
-		attributeServiceTestUtils = new AttributeServiceTestUtils();
-		attributePathServiceTestUtils = new AttributePathServiceTestUtils();
-		schemaServiceTestUtils = new SchemaServiceTestUtils();
-		classServiceTestUtils = new ClaszServiceTestUtils();
 	}
 
 	@Test
@@ -214,7 +196,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		taskJSON.put("input_data_model", inputDataModelJSON);
 
 		// manipulate output data model (output data model = internal model (for now))
-		final long internalModelId = 1;
+		final long internalModelId = 2;
 		final DataModel outputDataModel = dataModelService.getObject(internalModelId);
 		final String outputDataModelJSONString = objectMapper.writeValueAsString(outputDataModel);
 		final ObjectNode outputDataModelJSON = objectMapper.readValue(outputDataModelJSONString, ObjectNode.class);
@@ -246,10 +228,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		// System.out.println(objectMapper.writeValueAsString(schema));
 
 		Assert.assertNotNull("the record class of the schema of the fresh data model shouldn't be null", schema.getRecordClass());
-
-		final Clasz recordClass = schema.getRecordClass();
-
-		}
+	}
 
 	protected void compareResults(final String expectedResultJSONString, final String actualResultJSONString) throws Exception {
 

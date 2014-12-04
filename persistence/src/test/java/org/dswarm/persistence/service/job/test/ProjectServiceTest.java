@@ -47,7 +47,7 @@ public class ProjectServiceTest extends IDBasicJPAServiceTest<ProxyProject, Proj
 
 		ProjectServiceTest.LOG.debug("start simple project test");
 
-		final Project project = projectServiceTestUtils.createDefaultObject();
+		final Project project = projectServiceTestUtils.createAndPersistDefaultObject();
 
 		final Project updatedProject = projectServiceTestUtils.updateAndCompareObject(project, project);
 

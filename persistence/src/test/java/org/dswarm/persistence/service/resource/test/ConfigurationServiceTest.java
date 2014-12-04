@@ -45,7 +45,7 @@ public class ConfigurationServiceTest extends IDBasicJPAServiceTest<ProxyConfigu
 	@Test
 	public void testSimpleObject() throws Exception {
 
-		final Configuration configuration = configurationServiceTestUtils.createDefaultObject();
+		final Configuration configuration = configurationServiceTestUtils.createAndPersistDefaultObject();
 
 		final Configuration updatedConfiguration = configurationServiceTestUtils.updateAndCompareObject(configuration, configuration);
 

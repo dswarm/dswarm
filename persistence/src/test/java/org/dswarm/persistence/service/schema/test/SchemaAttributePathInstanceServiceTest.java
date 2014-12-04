@@ -58,7 +58,7 @@ public class SchemaAttributePathInstanceServiceTest extends
 
 		final Set<SchemaAttributePathInstance> objects = Sets.newLinkedHashSet();
 		for (int i = 0; i < 10; i++) {
-			objects.add(sapisUtils.createDefaultObject());
+			objects.add(sapisUtils.createAndPersistDefaultObject());
 		}
 		Assert.assertEquals(type + "s set size should be 10", 10, objects.size());
 		LOG.debug("end id generation test for " + type);
@@ -88,7 +88,7 @@ public class SchemaAttributePathInstanceServiceTest extends
 	public void testCompleteSchemaAttributePathInstance() throws Exception {
 		SchemaAttributePathInstanceServiceTest.LOG.debug("start complete schema attribute path instance test");
 
-		final SchemaAttributePathInstance sapi = sapisUtils.createDefaultCompleteObject();
+		final SchemaAttributePathInstance sapi = sapisUtils.createAndPersistDefaultCompleteObject();
 		final SchemaAttributePathInstance updatedAttributePath = sapisUtils.updateAndCompareObject(sapi, sapi);
 
 		logObjectJSON(updatedAttributePath);

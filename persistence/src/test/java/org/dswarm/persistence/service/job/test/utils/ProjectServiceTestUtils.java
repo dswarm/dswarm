@@ -59,17 +59,40 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 		return null;
 	}
 
-	@Override public Project createDefaultObject() throws Exception {
+	@Override public Project createAndPersistDefaultObject() throws Exception {
 
-		final Mapping simpleMapping = mappingServiceTestUtils.createDefaultObject();
-		final Mapping complexMapping = mappingServiceTestUtils.createDefaultCompleteObject();
+		final Mapping simpleMapping = mappingServiceTestUtils.createAndPersistDefaultObject();
+		final Mapping complexMapping = mappingServiceTestUtils.createAndPersistDefaultCompleteObject();
 
 		final Set<Mapping> mappings = Sets.newLinkedHashSet();
 		mappings.add(simpleMapping);
 		mappings.add(complexMapping);
 
-		final DataModel inputDataModel = dataModelServiceTestUtils.createDefaultObject();
-		final DataModel outputDataModel = dataModelServiceTestUtils.createDefaultObject();
+		final DataModel inputDataModel = dataModelServiceTestUtils.createAndPersistDefaultObject();
+		final DataModel outputDataModel = dataModelServiceTestUtils.createAndPersistDefaultObject();
+
+		final Function function1 = simpleMapping.getTransformation().getFunction();
+
+		final Set<Function> functions = Sets.newLinkedHashSet();
+		functions.add(function1);
+
+		final String projectName = "my project";
+		final String projectDescription = "my project description";
+
+		return createAndPersistProject(projectName, projectDescription, mappings, inputDataModel, outputDataModel, functions);
+	}
+
+	@Override public Project createDefaultObject() throws Exception {
+
+		final Mapping simpleMapping = mappingServiceTestUtils.createAndPersistDefaultObject();
+		final Mapping complexMapping = mappingServiceTestUtils.createAndPersistDefaultCompleteObject();
+
+		final Set<Mapping> mappings = Sets.newLinkedHashSet();
+		mappings.add(simpleMapping);
+		mappings.add(complexMapping);
+
+		final DataModel inputDataModel = dataModelServiceTestUtils.createAndPersistDefaultObject();
+		final DataModel outputDataModel = dataModelServiceTestUtils.createAndPersistDefaultObject();
 
 		final Function function1 = simpleMapping.getTransformation().getFunction();
 
@@ -82,9 +105,17 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 		return createProject(projectName, projectDescription, mappings, inputDataModel, outputDataModel, functions);
 	}
 
-	public Project createProject(final String name, final String description, final Set<Mapping> mappings, final DataModel inputDataModel,
+	public Project createAndPersistProject(final String name, final String description, final Set<Mapping> mappings, final DataModel inputDataModel,
 			final DataModel outputDataModel, final Set<Function> functions)
 			throws Exception {
+
+		final Project project = createProject(name, description, mappings, inputDataModel, outputDataModel, functions);
+
+		return createAndCompareObject(project, project);
+	}
+
+	public Project createProject(final String name, final String description, final Set<Mapping> mappings, final DataModel inputDataModel, final DataModel outputDataModel,
+			final Set<Function> functions) {
 
 		final Project project = new Project();
 		project.setName(name);
@@ -94,7 +125,7 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 		project.setOutputDataModel(outputDataModel);
 		project.setFunctions(functions);
 
-		return createAndCompareObject(project, project);
+		return project;
 	}
 
 	/**

@@ -92,12 +92,16 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 	}
 
 	@Override
-	public Component createDefaultObject() throws Exception {
+	public Component createAndPersistDefaultObject() throws Exception {
 
 		return getSimpleTrimComponent();
 	}
 
-	@Override public Component createDefaultCompleteObject() throws Exception {
+	@Override public Component createDefaultObject() throws Exception {
+		return null;
+	}
+
+	@Override public Component createAndPersistDefaultCompleteObject() throws Exception {
 
 		// previous component
 		final Component component1 = getSimpleReplaceComponent();
@@ -119,6 +123,8 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 
 		component.setInputComponents(inputComponents);
 		component.setOutputComponents(outputComponents);
+		
+		updateAndCompareObject(component2, component2);
 
 		return updateAndCompareObject(component, component);
 	}
@@ -435,7 +441,7 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 
 		if (!cache.containsKey(transformationComponentName)) {
 
-			final Transformation transformation = transformationsServiceTestUtils.createDefaultCompleteObject();
+			final Transformation transformation = transformationsServiceTestUtils.createAndPersistDefaultCompleteObject();
 
 			final String transformationComponentFunctionParameterName = "transformationInputString";
 			final String transformationComponentVariableName = "firstName";
@@ -465,7 +471,7 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 
 		if (!cache.containsKey(name)) {
 
-			final Transformation transformation = transformationsServiceTestUtils.createDefaultCompleteObject();
+			final Transformation transformation = transformationsServiceTestUtils.createAndPersistDefaultCompleteObject();
 
 			final Map<String, String> transformationComponentParameterMappings2 = Maps.newLinkedHashMap();
 

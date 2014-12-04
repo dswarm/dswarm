@@ -54,18 +54,22 @@ public class DataModelServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 		return null;
 	}
 
-	@Override public DataModel createDefaultObject() throws Exception {
+	@Override public DataModel createAndPersistDefaultObject() throws Exception {
 
 		final String dataModelName = "my data model";
 		final String dataModelDescription = "my data model description";
 
-		final Schema schema = schemasResourceTestUtils.createAlternativeSchema();
-		final Resource resource = resourcesResourceTestUtils.createDefaultObject();
-		final Configuration configuration = configurationsResourceTestUtils.createDefaultObject();
+		final Schema schema = schemasResourceTestUtils.createAndPersistAlternativeSchema();
+		final Resource resource = resourcesResourceTestUtils.createAndPersistDefaultObject();
+		final Configuration configuration = configurationsResourceTestUtils.createAndPersistDefaultObject();
 		resource.addConfiguration(configuration);
 		final Resource updatedResource = resourcesResourceTestUtils.updateAndCompareObject(resource, resource);
 
 		return createDataModel(dataModelName, dataModelDescription, updatedResource, configuration, schema);
+	}
+
+	@Override public DataModel createDefaultObject() throws Exception {
+		return null;
 	}
 
 	public DataModel createDataModel(final String name, final String description, final Resource resource, final Configuration configuration,
