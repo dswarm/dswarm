@@ -15,18 +15,14 @@
  */
 package org.dswarm.converter.mf.stream;
 
-import java.net.URI;
 import java.util.Map;
 import java.util.Stack;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
-import javax.annotation.Nullable;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
-import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.culturegraph.mf.exceptions.MetafactureException;
@@ -47,12 +43,13 @@ import org.dswarm.graph.json.util.Util;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
+import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.util.GDMUtil;
 
 /**
  * Converts records to GDM-JSON.
- * 
+ *
  * @author polowins
  * @author tgaengler
  * @author phorn
@@ -62,29 +59,22 @@ import org.dswarm.persistence.util.GDMUtil;
 @Out(GDMModel.class)
 public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>> {
 
-	private String							currentId;
-	private final Model						internalGDMModel;
-	//private Resource						recordResource;
-	private ResourceNode					recordNode;
-    //private Resource						entityResource;
-    private ResourceNode					entityNode;
-    private Resource						currentResource;
-    private Stack<Tuple<ResourceNode, Predicate>>   entityStack;
-    private Stack<Resource>   resourceStack;
-	// private final Stack<String> elementURIStack; // TODO use stack when statements for deeper hierarchy levels are possible
+	private static final String RESOURCE_BASE_URI = SchemaUtils.BASE_URI + "/resource/";
+	private       String                                currentId;
+	private final Model                                 internalGDMModel;
+	private       ResourceNode                          recordNode;
+	private       ResourceNode                          entityNode;
+	private       Resource                              currentResource;
+	private       Stack<Tuple<ResourceNode, Predicate>> entityStack;
+	private       Stack<Resource>                       resourceStack;
 
-	// not used: private ResourceNode recordType;
-    private ResourceNode recordType;
-    private String		 recordTypeUri;
+	private final Optional<DataModel> dataModel;
+	private final Optional<String>    dataModelUri;
 
-	private final Optional<DataModel>		dataModel;
-	private final Optional<String>			dataModelUri;
-
-    private       long                      nodeIdCounter = 1;
-	private final Map<String, Predicate>	predicates		= Maps.newHashMap();
-	private final Map<String, AtomicLong>	valueCounter	= Maps.newHashMap();
-    private final Map<String, ResourceNode> types         = Maps.newHashMap();
-	private final Map<String, String>		uris			= Maps.newHashMap();
+	private final Map<String, Predicate>    predicates    = Maps.newHashMap();
+	private final Map<String, AtomicLong>   valueCounter  = Maps.newHashMap();
+	private final Map<String, ResourceNode> types         = Maps.newHashMap();
+	private final Map<String, String>       uris          = Maps.newHashMap();
 
 	public GDMEncoder(final Optional<DataModel> dataModel) {
 
@@ -93,11 +83,9 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 		this.dataModel = dataModel;
 		dataModelUri = init(dataModel);
 
-		// init
-		// elementURIStack = new Stack<>(); // TODO use stack when statements for deeper hierarchy levels are possible
 		internalGDMModel = new Model();
 
-        resourceStack = new Stack<>();
+		resourceStack = new Stack<>();
 
 	}
 
@@ -106,18 +94,18 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		assert !isClosed();
 
-		currentId = isValidUri(identifier) ? identifier : mintRecordUri(identifier);
+		currentId = SchemaUtils.isValidUri(identifier) ? identifier : SchemaUtils.mintRecordUri(identifier, currentId, dataModel);
 
-		final Resource recordResource = new Resource(currentId);
+		final Resource recordResource = getOrCreateResource(currentId);
 
 		recordNode = new ResourceNode(currentId);
 
-        resourceStack.push(recordResource);
+		resourceStack.push(recordResource);
 
-        currentResource = recordResource;
+		currentResource = recordResource;
 
-        // init
-        entityStack = new Stack<>();
+		// init
+		entityStack = new Stack<>();
 
 	}
 
@@ -126,28 +114,26 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		assert !isClosed();
 
-		internalGDMModel.addResource(currentResource);
+		resourceStack.clear();
 
-        resourceStack.clear();
+		currentResource = null;
 
-        currentResource = null;
+		// write triples
+		final GDMModel gdmModel;
 
-        // write triples
-        final GDMModel gdmModel;
+		gdmModel = new GDMModel(internalGDMModel, currentId);
 
-        gdmModel = new GDMModel(internalGDMModel, currentId);
+		currentId = null;
 
-        currentId = null;
+		getReceiver().process(gdmModel);
 
-        getReceiver().process(gdmModel);
-
-        System.out.println("###############################");
-        try {
-            System.out.println(Util.getJSONObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(internalGDMModel));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        System.out.println("###############################");
+		System.out.println("###############################");
+		try {
+			System.out.println(Util.getJSONObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(internalGDMModel));
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		System.out.println("###############################");
 	}
 
 	@Override
@@ -155,32 +141,31 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		assert !isClosed();
 
-        final Predicate entityPredicate = getPredicate(name);
+		final Predicate entityPredicate = getPredicate(name);
 
-        final String entityUri = mintEntityUri();
+		final String entityUri = mintEntityUri();
 
-        final Resource entityResource = new Resource(entityUri);
+		final Resource entityResource = getOrCreateResource(entityUri);
 
-        entityNode = new ResourceNode(entityUri);
-        //entityNode = new Node(getNewNodeId());
+		entityNode = new ResourceNode(entityUri);
 
-        if (entityStack.empty()) {
+		if (entityStack.empty()) {
 
-            addStatement(recordNode, entityPredicate, entityNode);
-        } else {
+			addStatement(recordNode, entityPredicate, entityNode);
+		} else {
 
-            final Tuple<ResourceNode, Predicate> parentEntityTuple = entityStack.peek();
+			final Tuple<ResourceNode, Predicate> parentEntityTuple = entityStack.peek();
 
-            addStatement(parentEntityTuple.v1(), entityPredicate, entityNode);
-        }
+			addStatement(parentEntityTuple.v1(), entityPredicate, entityNode);
+		}
 
-        currentResource = entityResource;
+		currentResource = entityResource;
 
-        addStatement(entityNode, getPredicate(GDMUtil.RDF_type), new ResourceNode(name + "Type"));
+		addStatement(entityNode, getPredicate(GDMUtil.RDF_type), getType(name + SchemaUtils.TYPE_POSTFIX));
 
-        entityStack.push(new Tuple<>(entityNode, entityPredicate));
+		entityStack.push(new Tuple<>(entityNode, entityPredicate));
 
-        resourceStack.push(entityResource);
+		resourceStack.push(entityResource);
 
 	}
 
@@ -189,21 +174,19 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		assert !isClosed();
 
-        internalGDMModel.addResource(currentResource);
+		resourceStack.pop();
 
-        resourceStack.pop();
+		currentResource = resourceStack.peek();
 
-        currentResource = resourceStack.peek();
+		entityStack.pop();
 
-        entityStack.pop();
+		if (!entityStack.isEmpty()) {
 
-        if (!entityStack.isEmpty()) {
+			entityNode = entityStack.peek().v1();
+		} else {
 
-            entityNode = entityStack.peek().v1();
-        } else {
-
-            entityNode = null;
-        }
+			entityNode = null;
+		}
 	}
 
 	@Override
@@ -226,12 +209,12 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		final String propertyUri;
 
-		if (isValidUri(name)) {
+		if (SchemaUtils.isValidUri(name)) {
 
 			propertyUri = name;
 		} else {
 
-			propertyUri = mintUri(dataModelUri.get(), name);
+			propertyUri = SchemaUtils.mintUri(dataModelUri.get(), name);
 		}
 
 		if (value != null && !value.isEmpty()) {
@@ -239,7 +222,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 			final Predicate attributeProperty = getPredicate(propertyUri);
 			final LiteralNode literalObject = new LiteralNode(value);
 
-            final Node currentNode = entityStack.empty() ? recordNode : entityNode;
+			final Node currentNode = entityStack.empty() ? recordNode : entityNode;
 
 			if (null != currentNode) {
 
@@ -251,13 +234,11 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 				} else {
 
 					// check, whether value is really a URI
-					if (isValidUri(value)) {
+					if (SchemaUtils.isValidUri(value)) {
 
 						final ResourceNode typeResource = new ResourceNode(value);// ResourceFactory.createResource(value);
 
 						currentResource.addStatement(currentNode, attributeProperty, typeResource);
-
-						recordTypeUri = value;
 					} else {
 
 						currentResource.addStatement(currentNode, attributeProperty, literalObject);
@@ -275,121 +256,21 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		if (!dataModel.isPresent()) {
 
-			return Optional.fromNullable(StringUtils.stripEnd(DataModelUtils.determineDataModelSchemaBaseURI(null), "#"));
+			return Optional.fromNullable(StringUtils.stripEnd(DataModelUtils.determineDataModelSchemaBaseURI(null), SchemaUtils.HASH));
 		}
 
 		return dataModel.transform(new Function<DataModel, String>() {
 
 			@Override
 			public String apply(final DataModel dm) {
-				return StringUtils.stripEnd(DataModelUtils.determineDataModelSchemaBaseURI(dm), "#");
+				return StringUtils.stripEnd(DataModelUtils.determineDataModelSchemaBaseURI(dm), SchemaUtils.HASH);
 			}
 		});
 	}
 
-	private String mintDataModelTermUri(@Nullable final String uri, @Nullable final String localName) {
+	private String mintEntityUri() {
 
-		final boolean canUseLocalName = !Strings.isNullOrEmpty(localName);
-
-		if (Strings.isNullOrEmpty(uri)) {
-
-			if (dataModelUri.isPresent()) {
-
-				if (canUseLocalName) {
-
-					return mintUri(dataModelUri.get(), localName);
-				} else {
-
-					return dataModelUri.get() + "#" + UUID.randomUUID();
-				}
-			}
-
-			return String.format("http://data.slub-dresden.de/terms/%s", UUID.randomUUID());
-		}
-
-		if (canUseLocalName) {
-
-			return mintUri(uri, localName);
-		} else {
-
-			return String.format("http://data.slub-dresden.de/terms/%s", UUID.randomUUID());
-		}
-	}
-
-	private boolean isValidUri(@Nullable final String identifier) {
-
-		if (identifier != null) {
-
-			try {
-
-				final URI uri = URI.create(identifier);
-
-				return uri != null && uri.getScheme() != null;
-			} catch (final IllegalArgumentException e) {
-
-				return false;
-			}
-		}
-
-		return false;
-	}
-
-	private String mintRecordUri(@Nullable final String identifier) {
-
-		if (currentId == null) {
-
-			// mint completely new uri
-
-			final StringBuilder sb = new StringBuilder();
-
-			if (dataModel.isPresent()) {
-
-				// create uri from resource id and configuration id and random uuid
-
-				sb.append("http://data.slub-dresden.de/datamodels/").append(dataModel.get().getId()).append("/records/");
-			} else {
-
-				// create uri from random uuid
-
-				sb.append("http://data.slub-dresden.de/records/");
-			}
-
-			return sb.append(UUID.randomUUID()).toString();
-		}
-
-		// create uri with help of given record id
-
-		final StringBuilder sb = new StringBuilder();
-
-		if (dataModel.isPresent()) {
-
-			// create uri from resource id and configuration id and identifier
-
-			sb.append("http://data.slub-dresden.de/datamodels/").append(dataModel.get().getId()).append("/records/").append(identifier);
-		} else {
-
-			// create uri from identifier
-
-			sb.append("http://data.slub-dresden.de/records/").append(identifier);
-		}
-
-		return sb.toString();
-	}
-
-    private String mintEntityUri() {
-
-        return "http://data.slub-dresden.de/resource/" + UUID.randomUUID().toString();
-    }
-
-	private String mintUri(final String uri, final String localName) {
-
-		// allow has and slash uris
-		if (uri != null && uri.endsWith("/")) {
-
-			return uri + localName;
-		}
-
-		return uri + "#" + localName;
+		return RESOURCE_BASE_URI + UUID.randomUUID().toString();
 	}
 
 	private Predicate getPredicate(final String predicateId) {
@@ -435,7 +316,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		if (!uris.containsKey(id)) {
 
-			final String uri = isValidUri(id) ? id : mintDataModelTermUri(null, id);
+			final String uri = SchemaUtils.isValidUri(id) ? id : SchemaUtils.mintTermUri(null, id, dataModelUri);
 
 			uris.put(id, uri);
 		}
@@ -443,26 +324,33 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 		return uris.get(id);
 	}
 
-    private ResourceNode getType(final String typeId) {
+	private ResourceNode getType(final String typeId) {
 
-        final String typeURI = getURI(typeId);
+		final String typeURI = getURI(typeId);
 
-        if (!types.containsKey(typeURI)) {
+		if (!types.containsKey(typeURI)) {
 
-            final ResourceNode type = new ResourceNode(typeURI);
+			final ResourceNode type = new ResourceNode(typeURI);
 
-            types.put(typeURI, type);
-        }
+			types.put(typeURI, type);
+		}
 
-        return types.get(typeURI);
-    }
+		return types.get(typeURI);
+	}
 
-    private long getNewNodeId() {
+	private Resource getOrCreateResource(final String resourceURI) {
 
-        final long newNodeId = nodeIdCounter;
-        nodeIdCounter++;
+		final Resource resourceFromModel = internalGDMModel.getResource(resourceURI);
 
-        return newNodeId;
-    }
+		if (resourceFromModel != null) {
+
+			return resourceFromModel;
+		}
+
+		final Resource newResource = new Resource(resourceURI);
+		internalGDMModel.addResource(newResource);
+
+		return newResource;
+	}
 
 }
