@@ -130,11 +130,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
         resourceStack.clear();
 
-        try {
-            System.out.println(Util.getJSONObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(internalGDMModel));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+        currentResource = null;
 
         // write triples
         final GDMModel gdmModel;
@@ -144,6 +140,14 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
         currentId = null;
 
         getReceiver().process(gdmModel);
+
+        System.out.println("###############################");
+        try {
+            System.out.println(Util.getJSONObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(internalGDMModel));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        System.out.println("###############################");
 	}
 
 	@Override
@@ -153,11 +157,11 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
         final Predicate entityPredicate = getPredicate(name);
 
-        final Resource entityResource = new Resource(name + "URI");
+        final String entityUri = mintEntityUri();
 
-        currentResource = entityResource;
+        final Resource entityResource = new Resource(entityUri);
 
-        entityNode = new ResourceNode(name + "URI");
+        entityNode = new ResourceNode(entityUri);
         //entityNode = new Node(getNewNodeId());
 
         if (entityStack.empty()) {
@@ -169,6 +173,8 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
             addStatement(parentEntityTuple.v1(), entityPredicate, entityNode);
         }
+
+        currentResource = entityResource;
 
         addStatement(entityNode, getPredicate(GDMUtil.RDF_type), new ResourceNode(name + "Type"));
 
@@ -369,6 +375,11 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		return sb.toString();
 	}
+
+    private String mintEntityUri() {
+
+        return "http://data.slub-dresden.de/resource/" + UUID.randomUUID().toString();
+    }
 
 	private String mintUri(final String uri, final String localName) {
 
