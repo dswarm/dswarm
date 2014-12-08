@@ -20,7 +20,6 @@ import java.util.Stack;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
@@ -39,7 +38,6 @@ import org.dswarm.graph.json.Node;
 import org.dswarm.graph.json.Predicate;
 import org.dswarm.graph.json.Resource;
 import org.dswarm.graph.json.ResourceNode;
-import org.dswarm.graph.json.util.Util;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
@@ -68,13 +66,16 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 	private       Stack<Tuple<ResourceNode, Predicate>> entityStack;
 	private       Stack<Resource>                       resourceStack;
 
+	private ResourceNode recordType;
+	private Resource     recordResource;
+
 	private final Optional<DataModel> dataModel;
 	private final Optional<String>    dataModelUri;
 
-	private final Map<String, Predicate>    predicates    = Maps.newHashMap();
-	private final Map<String, AtomicLong>   valueCounter  = Maps.newHashMap();
-	private final Map<String, ResourceNode> types         = Maps.newHashMap();
-	private final Map<String, String>       uris          = Maps.newHashMap();
+	private final Map<String, Predicate>    predicates   = Maps.newHashMap();
+	private final Map<String, AtomicLong>   valueCounter = Maps.newHashMap();
+	private final Map<String, ResourceNode> types        = Maps.newHashMap();
+	private final Map<String, String>       uris         = Maps.newHashMap();
 
 	public GDMEncoder(final Optional<DataModel> dataModel) {
 
@@ -96,7 +97,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		currentId = SchemaUtils.isValidUri(identifier) ? identifier : SchemaUtils.mintRecordUri(identifier, currentId, dataModel);
 
-		final Resource recordResource = getOrCreateResource(currentId);
+		recordResource = getOrCreateResource(currentId);
 
 		recordNode = new ResourceNode(currentId);
 
@@ -121,20 +122,28 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 		// write triples
 		final GDMModel gdmModel;
 
-		gdmModel = new GDMModel(internalGDMModel, currentId);
+		if (recordType != null) {
+
+			gdmModel = new GDMModel(internalGDMModel, currentId, recordType.getUri());
+		} else {
+
+			gdmModel = new GDMModel(internalGDMModel, currentId);
+		}
 
 		currentId = null;
+		recordNode = null;
+		recordType = null;
 
 		getReceiver().process(gdmModel);
 
 		// TODO: remove this, when everything works fine
-//		System.out.println("###############################");
-//		try {
-//			System.out.println(Util.getJSONObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(internalGDMModel));
-//		} catch (JsonProcessingException e) {
-//			e.printStackTrace();
-//		}
-//		System.out.println("###############################");
+		//		System.out.println("###############################");
+		//		try {
+		//			System.out.println(Util.getJSONObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(internalGDMModel));
+		//		} catch (JsonProcessingException e) {
+		//			e.printStackTrace();
+		//		}
+		//		System.out.println("###############################");
 	}
 
 	@Override
@@ -240,6 +249,11 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 						final ResourceNode typeResource = new ResourceNode(value);// ResourceFactory.createResource(value);
 
 						currentResource.addStatement(currentNode, attributeProperty, typeResource);
+
+						if (currentResource.equals(recordResource)) {
+
+							recordType = typeResource;
+						}
 					} else {
 
 						currentResource.addStatement(currentNode, attributeProperty, literalObject);
