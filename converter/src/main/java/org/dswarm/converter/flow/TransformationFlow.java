@@ -80,14 +80,15 @@ import org.dswarm.persistence.util.GDMUtil;
 public class TransformationFlow {
 
 	private static final Logger							LOG	= LoggerFactory.getLogger(TransformationFlow.class);
+	private static final String BIBO_DOCUMENT_URI = "http://purl.org/ontology/bibo/Document";
 
-	private final Metamorph								transformer;
+	private final Metamorph transformer;
 
-	private final String								script;
+	private final String script;
 
-	private final Optional<DataModel>					outputDataModel;
+	private final Optional<DataModel> outputDataModel;
 
-	private final Provider<InternalModelServiceFactory>	internalModelServiceFactoryProvider;
+	private final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider;
 
 	public TransformationFlow(final Metamorph transformer, final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
 
@@ -191,7 +192,7 @@ public class TransformationFlow {
 		final GDMModelReceiver writer = new GDMModelReceiver();
 
 		//opener.setReceiver(transformer).setReceiver(unflattener).setReceiver(collapser).setReceiver(converter).setReceiver(writer);
-        opener.setReceiver(transformer).setReceiver(converter).setReceiver(writer);
+		opener.setReceiver(transformer).setReceiver(converter).setReceiver(writer);
 
 		opener.process(tuples);
 		opener.closeStream();
@@ -239,7 +240,7 @@ public class TransformationFlow {
 			if (gdmModel.getRecordClassURI() == null) {
 
 				final String recordURI = gdmModel.getRecordURIs().iterator().next();
-				final String defaultRecordClassURI = "http://purl.org/ontology/bibo/Document";
+				final String defaultRecordClassURI = BIBO_DOCUMENT_URI;
 
 				final Resource recordResource = model.getResource(recordURI);
 

@@ -127,13 +127,14 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		getReceiver().process(gdmModel);
 
-		System.out.println("###############################");
-		try {
-			System.out.println(Util.getJSONObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(internalGDMModel));
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		System.out.println("###############################");
+		// TODO: remove this, when everything works fine
+//		System.out.println("###############################");
+//		try {
+//			System.out.println(Util.getJSONObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(internalGDMModel));
+//		} catch (JsonProcessingException e) {
+//			e.printStackTrace();
+//		}
+//		System.out.println("###############################");
 	}
 
 	@Override

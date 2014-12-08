@@ -109,6 +109,9 @@ public final class DMPPersistenceUtil {
 	// value
 	private static final Random								random		= new SecureRandom();
 
+	public static final String RECORD_ID = "__record_id";
+	public static final String RECORD_DATA = "__record_data";
+
 	static {
 		MAPPER = new ObjectMapper();
 		final JaxbAnnotationModule module = new JaxbAnnotationModule();
