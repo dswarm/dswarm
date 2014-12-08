@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +27,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.base.Optional;
 import com.google.common.collect.AbstractIterator;
-import com.google.common.collect.Maps;
 import com.google.inject.Provider;
 import org.junit.Assert;
 import org.junit.Test;
@@ -44,7 +42,6 @@ import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.ResourceType;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
-import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
@@ -56,17 +53,17 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
-	protected final String						taskJSONFileName;
+	protected final String taskJSONFileName;
 
-	protected final String						expectedResultJSONFileName;
+	protected final String expectedResultJSONFileName;
 
-	protected final String						recordTag;
+	protected final String recordTag;
 
-	protected final String						xmlNamespace;
+	protected final String xmlNamespace;
 
-	protected final String						exampleDataResourceFileName;
+	protected final String exampleDataResourceFileName;
 
-	protected final ObjectMapper				objectMapper;
+	protected final ObjectMapper objectMapper;
 
 	public AbstractXMLTransformationFlowTest(final String taskJSONFileNameArg, final String expectedResultJSONFileNameArg, final String recordTagArg,
 			final String xmlNamespaceArg, final String exampleDataResourceFileNameArg) {
@@ -166,7 +163,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		final InternalGDMGraphService gdmService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
 		gdmService.createObject(updatedInputDataModel.getId(), gdmModel);
 
-		final Optional<Map<String, Model>> optionalModelMap = gdmService.getObjects(updatedInputDataModel.getId(), Optional.<Integer> absent());
+		final Optional<Map<String, Model>> optionalModelMap = gdmService.getObjects(updatedInputDataModel.getId(), Optional.<Integer>absent());
 
 		Assert.assertTrue("there is no map of entry models in the database", optionalModelMap.isPresent());
 
@@ -193,14 +190,14 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		// manipulate input data model
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
-		taskJSON.put("input_data_model", inputDataModelJSON);
+		taskJSON.set("input_data_model", inputDataModelJSON);
 
 		// manipulate output data model (output data model = internal model (for now))
 		final long internalModelId = 2;
 		final DataModel outputDataModel = dataModelService.getObject(internalModelId);
 		final String outputDataModelJSONString = objectMapper.writeValueAsString(outputDataModel);
 		final ObjectNode outputDataModelJSON = objectMapper.readValue(outputDataModelJSONString, ObjectNode.class);
-		taskJSON.put("output_data_model", outputDataModelJSON);
+		taskJSON.set("output_data_model", outputDataModelJSON);
 
 		final String finalTaskJSONString = objectMapper.writeValueAsString(taskJSON);
 

@@ -171,7 +171,8 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		currentResource = entityResource;
 
-		addStatement(entityNode, getPredicate(GDMUtil.RDF_type), getType(name + SchemaUtils.TYPE_POSTFIX));
+		// TODO: not, this should be done in a different way (i.e. the type should already be assigned from somewhere else and not minted on demand!)
+		// addStatement(entityNode, getPredicate(GDMUtil.RDF_type), getType(name + SchemaUtils.TYPE_POSTFIX));
 
 		entityStack.push(new Tuple<>(entityNode, entityPredicate));
 

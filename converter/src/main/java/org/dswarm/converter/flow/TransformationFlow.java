@@ -191,8 +191,9 @@ public class TransformationFlow {
 		final GDMEncoder converter = new GDMEncoder(outputDataModel);
 		final GDMModelReceiver writer = new GDMModelReceiver();
 
-		//opener.setReceiver(transformer).setReceiver(unflattener).setReceiver(collapser).setReceiver(converter).setReceiver(writer);
-		opener.setReceiver(transformer).setReceiver(converter).setReceiver(writer);
+		// .setReceiver(collapser)
+		opener.setReceiver(transformer).setReceiver(unflattener).setReceiver(converter).setReceiver(writer);
+		//opener.setReceiver(transformer).setReceiver(converter).setReceiver(writer);
 
 		opener.process(tuples);
 		opener.closeStream();

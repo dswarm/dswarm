@@ -15,21 +15,18 @@
  */
 package org.dswarm.converter.flow.test.xml;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Provider;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.TransformationFlow;
+import org.dswarm.converter.flow.utils.DMPConverterUtils;
 import org.dswarm.persistence.model.job.Task;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
@@ -181,51 +178,12 @@ public class XMLTransformationFlowTest extends GuicedTest {
 
 		final ArrayNode expectedArray = objectMapper2.readValue(expected, ArrayNode.class);
 
-		final JsonNode acutalJSONNode = removeRecordIdFields(array);
-		final JsonNode expectedJSONNode = removeRecordIdFields(expectedArray);
+		final JsonNode acutalJSONNode = DMPConverterUtils.removeRecordIdFields(array);
+		final JsonNode expectedJSONNode = DMPConverterUtils.removeRecordIdFields(expectedArray);
 
 		final String finalActual = objectMapper2.writeValueAsString(acutalJSONNode);
 		final String finalExpected = objectMapper2.writeValueAsString(expectedJSONNode);
 
 		JSONAssert.assertEquals(finalExpected, finalActual, true);
 	}
-
-	private JsonNode removeRecordIdFields(final JsonNode jsonNode) {
-
-		if (!jsonNode.isContainerNode()) {
-
-			return jsonNode;
-		}
-
-		if (jsonNode.isArray()) {
-
-			final ArrayNode arrayNode = DMPPersistenceUtil.getJSONObjectMapper().createArrayNode();
-
-			for (final JsonNode entry : jsonNode) {
-
-				final JsonNode manipulatedJSON = removeRecordIdFields(entry);
-				arrayNode.add(manipulatedJSON);
-			}
-
-			return arrayNode;
-		}
-
-		final JsonNode cleanedJSON = ((ObjectNode) jsonNode).without(DMPPersistenceUtil.RECORD_ID);
-
-		final Iterator<Map.Entry<String, JsonNode>> iter = cleanedJSON.fields();
-
-		final ObjectNode newJSON = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
-
-		while(iter.hasNext()) {
-
-			final Map.Entry<String, JsonNode> entry = iter.next();
-
-			final JsonNode result = removeRecordIdFields(entry.getValue());
-
-			newJSON.set(entry.getKey(), result);
-		}
-
-		return newJSON;
-	}
-
 }
