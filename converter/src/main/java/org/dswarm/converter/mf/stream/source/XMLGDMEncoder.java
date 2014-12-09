@@ -71,6 +71,8 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 	private       Stack<Tuple<Node, Predicate>> entityStack;
 	private final Stack<String>                 elementURIStack;
 
+	private static final String DATA_MODEL_BASE_URI = SchemaUtils.DATA_MODEL_BASE_URI + "%s";
+
 	private static final Pattern TABS = Pattern.compile("\t+");
 
 	/**
@@ -206,7 +208,7 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 
 		assert !isClosed();
 
-		currentId = SchemaUtils.isValidUri(identifier) ? identifier : mintRecordUri(identifier);
+		currentId = SchemaUtils.isValidUri(identifier) ? identifier : SchemaUtils.mintRecordUri(identifier, currentId, dataModel);
 
 		recordResource = new Resource(currentId);
 		recordNode = new ResourceNode(currentId);
@@ -217,7 +219,7 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 		// TODO: determine record type and create type triple with it
 		if (recordType == null) {
 
-			final String recordTypeUri = recordTagUri + "Type";
+			final String recordTypeUri = recordTagUri + SchemaUtils.TYPE_POSTFIX;
 
 			recordType = getType(recordTypeUri);
 		}
@@ -280,7 +282,7 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 		}
 
 		// sub resource type
-		final ResourceNode entityType = getType(name + "Type");
+		final ResourceNode entityType = getType(name + SchemaUtils.TYPE_POSTFIX);
 
 		addStatement(entityNode, rdfType, entityType);
 
@@ -342,7 +344,7 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 
 			@Override
 			public String apply(final DataModel dm) {
-				return StringUtils.stripEnd(DataModelUtils.determineDataModelSchemaBaseURI(dm), "#");
+				return StringUtils.stripEnd(DataModelUtils.determineDataModelSchemaBaseURI(dm), SchemaUtils.HASH);
 			}
 		});
 	}
@@ -354,59 +356,10 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 				return dataModelUri.get();
 			}
 
-			return String.format("http://data.slub-dresden.de/datamodels/%s", UUID.randomUUID());
+			return String.format(DATA_MODEL_BASE_URI, UUID.randomUUID());
 		}
 
 		return uri;
-	}
-
-	private String mintRecordUri(@Nullable final String identifier) {
-
-		if (currentId == null) {
-
-			// mint completely new uri
-
-			final StringBuilder sb = new StringBuilder();
-
-			if (dataModel.isPresent()) {
-
-				// create uri from resource id and configuration id and random uuid
-
-				sb.append("http://data.slub-dresden.de/datamodels/").append(dataModel.get().getId()).append("/records/");
-			} else {
-
-				// create uri from random uuid
-
-				sb.append("http://data.slub-dresden.de/records/");
-			}
-
-			final UUID uuid = UUID.randomUUID();
-
-			if (uuid == null) {
-
-				throw new MetafactureException("couldn't mint an uuid");
-			}
-
-			return sb.append(uuid.toString()).toString();
-		}
-
-		// create uri with help of given record id
-
-		final StringBuilder sb = new StringBuilder();
-
-		if (dataModel.isPresent()) {
-
-			// create uri from resource id and configuration id and identifier
-
-			sb.append("http://data.slub-dresden.de/datamodels/").append(dataModel.get().getId()).append("/records/").append(identifier);
-		} else {
-
-			// create uri from identifier
-
-			sb.append("http://data.slub-dresden.de/records/").append(identifier);
-		}
-
-		return sb.toString();
 	}
 
 	private long getNewNodeId() {

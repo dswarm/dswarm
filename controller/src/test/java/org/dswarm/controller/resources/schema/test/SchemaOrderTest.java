@@ -48,13 +48,13 @@ import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.ResourceType;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.schema.Attribute;
-import org.dswarm.persistence.model.schema.AttributePath;
+import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 
 @SuppressWarnings("MethodMayBeStatic")
 public class SchemaOrderTest extends ResourceTest {
 
-	private Resource resource;
-	private DataModel dataModel;
+	private Resource      resource;
+	private DataModel     dataModel;
 	private Configuration configuration;
 
 	public SchemaOrderTest() {
@@ -68,8 +68,6 @@ public class SchemaOrderTest extends ResourceTest {
 		whenConfiguringTheSchema();
 
 		assertThatAllAttributePathsAreInOrder();
-
-		new CleanupDataModelSchemaTask().cleanUpResources(dataModel, dataModel.getSchema());
 	}
 
 	private void givenUploadedResource() throws URISyntaxException, IOException {
@@ -107,6 +105,7 @@ public class SchemaOrderTest extends ResourceTest {
 		final Resource thisResource = this.resource;
 		final List<String> names = Lists.newArrayList("id", "val1", "val2", "val3", "val4", "val5", "val6", "type");
 		return Lists.transform(names, new Function<String, String>() {
+
 			@Override
 			public String apply(final String input) {
 				if (input.equals("type")) {
@@ -119,10 +118,11 @@ public class SchemaOrderTest extends ResourceTest {
 
 	private List<String> getActuals() {
 		final List<String> actuals = Lists.newArrayList();
-		final Collection<AttributePath> attributePaths = dataModel.getSchema().getAttributePaths();
-		for (final AttributePath attributePath : attributePaths) {
-			final Iterable<Attribute> path = attributePath.getAttributePath();
+		final Collection<SchemaAttributePathInstance> attributePaths = dataModel.getSchema().getAttributePaths();
+		for (final SchemaAttributePathInstance attributePath : attributePaths) {
+			final Iterable<Attribute> path = attributePath.getAttributePath().getAttributePath();
 			final Iterable<String> pathUris = Iterables.transform(path, new Function<Attribute, String>() {
+
 				@Override
 				public String apply(final Attribute input) {
 					return input.getUri();

@@ -39,44 +39,44 @@ import org.dswarm.persistence.model.proxy.RetrievalType;
  * A generic persistence service implementation, whose concrete implementations can be derived with a given implementation of
  * {@link DMPObject} and the related identifier type. This service delivers basic persistence layer functionality to create a new
  * object, update an existing one, retrieve existing ones or delete existing objects.
- * 
- * @author tgaengler
- * @param <POJOCLASS> the concrete POJO class
+ *
+ * @param <POJOCLASS>       the concrete POJO class
  * @param <POJOCLASSIDTYPE> the identifier type of the concrete POJO class
+ * @author tgaengler
  */
 public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE> {
 
-	private static final Logger				LOG	= LoggerFactory.getLogger(BasicJPAService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BasicJPAService.class);
 
 	/**
 	 * The concrete POJO class of this persistence service.
 	 */
-	protected final Class<POJOCLASS>		clasz;
+	protected final Class<POJOCLASS> clasz;
 
 	/**
 	 * The name of the concrete POJO class this persistence service.
 	 */
-	protected final String					className;
+	protected final String className;
 
 	/**
 	 * The concrete proxy POJO class of this persistence service.
 	 */
-	protected final Class<PROXYPOJOCLASS>	proxyClasz;
+	protected final Class<PROXYPOJOCLASS> proxyClasz;
 
 	/**
 	 * The name of the concrete proxy POJO class this persistence service.
 	 */
-	protected final String					proxyClassName;
+	protected final String proxyClassName;
 
 	/**
 	 * The entity manager provider (powered by Guice).
 	 */
-	private final Provider<EntityManager>	entityManagerProvider;
+	private final Provider<EntityManager> entityManagerProvider;
 
 	/**
 	 * Creates a new persistence service for the given concrete POJO class and the entity manager provider.
-	 * 
-	 * @param clasz a concrete POJO class
+	 *
+	 * @param clasz                 a concrete POJO class
 	 * @param entityManagerProvider an entity manager provider
 	 */
 	BasicJPAService(final Class<POJOCLASS> clasz, final Class<PROXYPOJOCLASS> proxyClasz, final Provider<EntityManager> entityManagerProvider) {
@@ -92,7 +92,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 	/**
 	 * Acquire a new or reused EntityManager with its cache cleared
-	 * 
+	 *
 	 * @return the EntityManager
 	 */
 	protected EntityManager acquire() {
@@ -101,7 +101,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 	/**
 	 * Acquire a new or reused EntityManager
-	 * 
+	 *
 	 * @param clear true if the EM's cache should be cleared
 	 * @return the EntityManager
 	 */
@@ -117,7 +117,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 	/**
 	 * Gets the concrete POJO class of this persistence service.
-	 * 
+	 *
 	 * @return the concrete POJO class
 	 */
 	public Class<POJOCLASS> getClasz() {
@@ -127,7 +127,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 	/**
 	 * Create and persist an object of the specific class transactional.<br>
-	 * 
+	 *
 	 * @return the persisted object of the specific class
 	 */
 	@Transactional(rollbackOn = Exception.class)
@@ -138,7 +138,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 	/**
 	 * Create and persist an object of the specific class non-transactional.<br>
-	 * 
+	 *
 	 * @return the persisted object of the specific class
 	 */
 	public PROXYPOJOCLASS createObject() throws DMPPersistenceException {
@@ -160,7 +160,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	/**
 	 * Create and persist an object of the specific class transactional. The given object can be utilised for initialisation of
 	 * the persisted object or to ensure certain constraints, e.g., a uniqueness constraint.<br>
-	 * 
+	 *
 	 * @param object
 	 * @return
 	 * @throws DMPPersistenceException
@@ -168,39 +168,54 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	@Transactional(rollbackOn = Exception.class)
 	public PROXYPOJOCLASS createObjectTransactional(final POJOCLASS object) throws DMPPersistenceException {
 
-		return createObject(object);
+		return createObjectInternal(object, "transactional");
 	}
 
 	/**
 	 * Create and persist an object of the specific class non-transactional. The given object can be utilised for initialisation
 	 * of the persisted object or to ensure certain constraints, e.g., a uniqueness constraint.<br>
-	 * 
+	 *
 	 * @param object
 	 * @return the persisted object of the specific class
 	 * @throws DMPPersistenceException
 	 */
 	public PROXYPOJOCLASS createObject(final POJOCLASS object) throws DMPPersistenceException {
 
-		final EntityManager entityManager = acquire(false);
-
-		return createObjectInternal(object, entityManager);
+		return createObjectInternal(object, "non-transactional");
 	}
 
-	protected PROXYPOJOCLASS createObjectInternal(final POJOCLASS object, final EntityManager entityManager) throws DMPPersistenceException {
+	protected PROXYPOJOCLASS createObjectInternal(final POJOCLASS object, final String transactionType) throws DMPPersistenceException {
 
-		return createObjectInternal(entityManager);
+		final EntityManager entityManager = acquire(false);
+
+		return createObjectInternal(object, entityManager, transactionType);
+	}
+
+	protected PROXYPOJOCLASS createObjectInternal(final POJOCLASS object, final EntityManager entityManager, final String transactionType)
+			throws DMPPersistenceException {
+
+		final POJOCLASS newObject = createNewObject();
+
+		persistObject(newObject, entityManager);
+
+		updateObjectInternal(object, newObject, entityManager);
+
+		entityManager.merge(newObject);
+
+		return createNewProxyObject(newObject, RetrievalType.CREATED);
 	}
 
 	/**
 	 * Creates (if it doesn't exist before) or updates a given instance of the specific class and writes this object persistent to
 	 * the DB afterwards.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param object the to be updated instance of the specific class
 	 */
 	@Transactional(rollbackOn = Exception.class)
 	public PROXYPOJOCLASS updateObjectTransactional(final POJOCLASS object) throws DMPPersistenceException {
 
+		// TODO [@tgaengler]: maybe we should also make use of a _fresh_ entity manager here (cf. concurrent modification exception case from Resource <-> Configuration
 		final EntityManager entityManager = acquire(false);
 
 		return updateObjectInternal(object, entityManager, "transactional");
@@ -210,7 +225,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	 * Updates a given instance of the specific class without writing this object persistent right now, i.e., the process that
 	 * calls this method needs to ensure that the update will be written persistent.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param object the to be updated instance of the specific class
 	 */
 	public PROXYPOJOCLASS updateObject(final POJOCLASS object) throws DMPPersistenceException {
@@ -223,7 +238,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	protected PROXYPOJOCLASS updateObjectInternal(final POJOCLASS object, final EntityManager entityManager, final String transactionType)
 			throws DMPPersistenceException {
 
-		final PROXYPOJOCLASS proxyUpdateObject = getObject(object, entityManager);
+		final PROXYPOJOCLASS proxyUpdateObject = getObject(object, entityManager, transactionType);
 
 		if (proxyUpdateObject == null) {
 
@@ -268,9 +283,9 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	 * and {@link BasicJPAService#updateObjectTransactional(POJOCLASS)}, i.e., this method includes the real update logic of this
 	 * service.<br>
 	 * Created by: tgaengler
-	 * 
-	 * @param object the instance of the specific class with the update data
-	 * @param updateObject the to be updated instance of the specific class
+	 *
+	 * @param object        the instance of the specific class with the update data
+	 * @param updateObject  the to be updated instance of the specific class
 	 * @param entityManager the {@link EntityManager} instance for managing the update process
 	 * @throws DMPPersistenceException
 	 */
@@ -280,7 +295,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	/**
 	 * Generic 'find all instances of a specific class' method.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @return the instance list of the specific class
 	 */
 	public List<POJOCLASS> getObjects() {
@@ -294,7 +309,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	/**
 	 * Generic 'exist instance for identifier of a specific class' method.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param id the idenfier of the requested instance of a specific class
 	 * @return the instance for the identifier of the specific class
 	 */
@@ -322,7 +337,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 		BasicJPAService.LOG.debug("try to find " + className + " with id '" + id + "' in the database");
 
 		final POJOCLASS entity = entityManager.find(clasz, id,
-				Collections.<String, Object> singletonMap("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS));
+				Collections.<String, Object>singletonMap("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS));
 
 		if (entity != null) {
 
@@ -339,7 +354,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	/**
 	 * Deletes an instance of the specific class permanently from the DB by a given identifier.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param id the identifier of the to be deleted instance of the specific class
 	 */
 	@Transactional(rollbackOn = Exception.class)
@@ -360,7 +375,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	/**
 	 * Prepares the given object for removal, i.e., disconnect the object from all related objects that shouldn't be deleted at
 	 * this time.
-	 * 
+	 *
 	 * @param object an object that should be deleted
 	 */
 	protected abstract void prepareObjectForRemoval(final POJOCLASS object);
@@ -368,11 +383,12 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	/**
 	 * Tries to retrieve a POJOCLASS instance or will create a new one, if the identifier is null.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @return the requested POJOCLASS instance fresh from the DB or a new POJOCLASS instance
 	 * @throws DMPPersistenceException
 	 */
-	protected PROXYPOJOCLASS getObject(final POJOCLASS object, final EntityManager entityManager) throws DMPPersistenceException {
+	protected PROXYPOJOCLASS getObject(final POJOCLASS object, final EntityManager entityManager, final String transactionType)
+			throws DMPPersistenceException {
 
 		final PROXYPOJOCLASS proxyUpdateObject;
 
@@ -381,12 +397,12 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 			BasicJPAService.LOG.debug(className + " id is null, will create a new " + className);
 
-			proxyUpdateObject = createObjectInternal(object, entityManager);
+			proxyUpdateObject = createObjectInternal(object, entityManager, transactionType);
 		} else if (Long.class.isInstance(object.getId()) && ((Long) object.getId()).longValue() < 0) {
 
 			BasicJPAService.LOG.debug(className + " id is a dummy id, will create a new " + className);
 
-			proxyUpdateObject = createObjectInternal(object, entityManager);
+			proxyUpdateObject = createObjectInternal(object, entityManager, transactionType);
 
 			// TODO: cache all ids of objects that have dummy id?
 		} else {
@@ -408,7 +424,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 	/**
 	 * Creates a new proxy object of the concrete proxy POJO class.
-	 * 
+	 *
 	 * @return a new instance of the concrete proxy POJO class
 	 * @throws DMPPersistenceException if something went wrong.
 	 */
@@ -446,7 +462,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 	/**
 	 * Creates a new proxy object of the concrete proxy POJO class.
-	 * 
+	 *
 	 * @return a new instance of the concrete proxy POJO class
 	 * @throws DMPPersistenceException if something went wrong.
 	 */
@@ -484,7 +500,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 	/**
 	 * Creates a new object of the concrete POJO class.
-	 * 
+	 *
 	 * @return a new instance of the concrete POJO class
 	 * @throws DMPPersistenceException if something went wrong.
 	 */

@@ -88,6 +88,23 @@ public class MaintainDBService {
 		initFunctions();
 		initSchemas();
 	}
+	
+	/**
+	 * Truncates all tables of the DMP DB.
+	 * 
+	 * @throws DMPPersistenceException
+	 */
+	@Transactional(rollbackOn = Exception.class)
+	public void createTables() throws DMPPersistenceException {
+
+		final EntityManager entityManager = acquire(false);
+
+		MaintainDBService.LOG.debug("try to create the tables of the DB");
+
+		executeSQLScriptStatementWise("schema.sql", entityManager);
+
+		MaintainDBService.LOG.debug("created tables of the DB");
+	}
 
 	/**
 	 * Truncates all tables of the DMP DB.

@@ -1,5 +1,16 @@
-[{
-    "http://data.slub-dresden.de/datamodels/1/records/5db234bd-3117-46eb-bc0d-4556c64c27e9": [{
-        "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": ["002", "359", "100", "106", "029", "030", "077", "335", "112", "120", "118", "070", "005", "076", "051", "501", "050", "102", "110", "331", "114", "037", "001", "410", "104", "334", "108", "116", "003", "412", "122", "433"]
-    }]
-}]
+[
+    {
+        "http://data.slub-dresden.de/datamodels/1/records/5db234bd-3117-46eb-bc0d-4556c64c27e9": [
+            {
+                "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld": [
+                    {
+                        "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": ["001", "002", "003", "005", "029", "030", "037", "050", "051", "070", "076", "077", "100", "102", "104", "106", "108", "110", "112", "114", "116", "118", "120", "122", "331", "334", "335", "359", "410", "412", "433", "501"]
+                    },
+                    {
+                        "__record_id": "http://data.slub-dresden.de/resource/9f84f5b2-c082-4aaf-affe-c6326c80bc7e"
+                    }
+                ]
+            }
+        ]
+    }
+]
