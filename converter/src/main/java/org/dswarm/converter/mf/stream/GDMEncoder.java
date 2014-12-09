@@ -57,7 +57,7 @@ import org.dswarm.persistence.util.GDMUtil;
 @Out(GDMModel.class)
 public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>> {
 
-	private static final String RESOURCE_BASE_URI = SchemaUtils.BASE_URI + "/resource/";
+	private static final String RESOURCE_BASE_URI = SchemaUtils.BASE_URI + "resource/";
 	private       String                                currentId;
 	private final Model                                 internalGDMModel;
 	private       ResourceNode                          recordNode;

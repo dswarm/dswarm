@@ -152,6 +152,9 @@ public class GDMModel implements Model {
 			}
 
 			return null;
+		} else if (!areRecordURIsInitialized) {
+
+			areRecordURIsInitialized = true;
 		}
 
 		return recordURIs;

@@ -194,7 +194,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 				final Set<Resource> recordResources = GDMUtil.getRecordResources(recordClassURI, realModel);
 
-				if (recordResources != null) {
+				if (recordResources != null && !recordResources.isEmpty()) {
 
 					final LinkedHashSet<String> recordURIs = Sets.newLinkedHashSet();
 

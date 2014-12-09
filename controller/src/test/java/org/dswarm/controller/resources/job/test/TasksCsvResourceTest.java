@@ -229,30 +229,30 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 		final Map<String, JsonNode> actualNodes = new HashMap<>(actualJSONArray.size());
 		for (final JsonNode node : actualJSONArray) {
-			actualNodes.put(node.get("record_id").asText(), node);
+			actualNodes.put(node.get(DMPPersistenceUtil.RECORD_ID).asText(), node);
 		}
 
 		final String actualDataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(inputDataModel);
 
-		final String expectedRecordDataFieldNameExample = expectedJSONArray.get(0).get("record_data").get(0).fieldNames().next();
+		final String expectedRecordDataFieldNameExample = expectedJSONArray.get(0).get(DMPPersistenceUtil.RECORD_DATA).get(0).fieldNames().next();
 		final String expectedDataResourceSchemaBaseURI = expectedRecordDataFieldNameExample.substring(0,
 				expectedRecordDataFieldNameExample.lastIndexOf('#') + 1);
 
 		for (final JsonNode expectedNode : expectedJSONArray) {
 
-			final String recordData = expectedNode.get("record_data").get(0).get(expectedDataResourceSchemaBaseURI + "description")
+			final String recordData = expectedNode.get(DMPPersistenceUtil.RECORD_DATA).get(0).get(expectedDataResourceSchemaBaseURI + "description")
 					.asText();
 			final JsonNode actualNode = getRecordData(recordData, actualJSONArray, actualDataResourceSchemaBaseURI + "description");
 
 			// SR TODO use Assert.assertNotNull here?
 			Assert.assertThat(actualNode, CoreMatchers.is(Matchers.notNullValue()));
 
-			final ObjectNode expectedRecordData = (ObjectNode) expectedNode.get("record_data").get(0);
+			final ObjectNode expectedRecordData = (ObjectNode) expectedNode.get(DMPPersistenceUtil.RECORD_DATA).get(0);
 
 			final ObjectNode actualElement = (ObjectNode) actualNode;
 			ObjectNode actualRecordData = null;
 
-			for (final JsonNode actualRecordDataCandidate : actualElement.get("record_data")) {
+			for (final JsonNode actualRecordDataCandidate : actualElement.get(DMPPersistenceUtil.RECORD_DATA)) {
 
 				if (actualRecordDataCandidate.get(actualDataResourceSchemaBaseURI + "description") != null) {
 
@@ -284,7 +284,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 		for (final JsonNode jsonEntry : jsonArray) {
 
-			final ArrayNode actualRecordDataArray = (ArrayNode) jsonEntry.get("record_data");
+			final ArrayNode actualRecordDataArray = (ArrayNode) jsonEntry.get(DMPPersistenceUtil.RECORD_DATA);
 
 			for (final JsonNode actualRecordData : actualRecordDataArray) {
 

@@ -225,9 +225,18 @@ public class TransformationFlow {
 				continue;
 			}
 
-			for (final org.dswarm.graph.json.Resource jsonResource : gdmModel.getModel().getResources()) {
-				model.addResource(jsonResource);
+			final Set<String> recordURIsFromGDMModel = gdmModel.getRecordURIs();
 
+			if(recordURIsFromGDMModel == null || recordURIsFromGDMModel.isEmpty()) {
+
+				// skip, since it seems to look like that there are no records in the model
+
+				continue;
+			}
+
+			for (final org.dswarm.graph.json.Resource jsonResource : gdmModel.getModel().getResources()) {
+
+				model.addResource(jsonResource);
 			}
 
 			if (recordClassUri == null) {
@@ -265,7 +274,7 @@ public class TransformationFlow {
 
 			finalGDMModels.add(finalGDMModel);
 
-			recordURIs.add(finalGDMModel.getRecordURIs().iterator().next());
+			recordURIs.addAll(recordURIsFromGDMModel);
 		}
 
 		if (recordClassUri == null) {
