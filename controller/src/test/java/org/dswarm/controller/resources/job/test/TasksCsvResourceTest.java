@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
@@ -31,26 +30,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import com.google.common.collect.Maps;
 import com.google.common.io.Resources;
 import org.apache.commons.io.FileUtils;
 import org.apache.tika.Tika;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.dswarm.controller.resources.resource.test.utils.ConfigurationsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
-import org.dswarm.controller.resources.schema.test.utils.AttributePathsResourceTestUtils;
-import org.dswarm.controller.resources.schema.test.utils.AttributesResourceTestUtils;
-import org.dswarm.controller.resources.schema.test.utils.ClaszesResourceTestUtils;
-import org.dswarm.controller.resources.schema.test.utils.SchemasResourceTestUtils;
 import org.dswarm.controller.resources.test.ResourceTest;
 import org.dswarm.controller.test.GuicedTest;
 import org.dswarm.persistence.model.resource.Configuration;
@@ -59,62 +50,37 @@ import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.ResourceType;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
-import org.dswarm.persistence.model.schema.Attribute;
-import org.dswarm.persistence.model.schema.AttributePath;
-import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class TasksCsvResourceTest extends ResourceTest {
 
-	private static final Logger						LOG				= LoggerFactory.getLogger(TasksCsvResourceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TasksCsvResourceTest.class);
 
-	private String									taskJSONString;
+	private String taskJSONString;
 
-	private final ResourcesResourceTestUtils		resourcesResourceTestUtils;
+	private ResourcesResourceTestUtils resourcesResourceTestUtils;
 
-	private final ConfigurationsResourceTestUtils	configurationsResourceTestUtils;
+	private DataModelsResourceTestUtils dataModelsResourceTestUtils;
 
-	private final DataModelsResourceTestUtils		dataModelsResourceTestUtils;
-
-	private final SchemasResourceTestUtils			schemasResourceTestUtils;
-
-	private final ClaszesResourceTestUtils			classesResourceTestUtils;
-
-	private final AttributesResourceTestUtils		attributesResourceTestUtils;
-
-	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
-
-	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
-
-	private Configuration							configuration;
-
-	private Resource								resource;
-
-	private DataModel inputDataModel;
-
-	private DataModel outputDataModel;
-
-	private Schema schema;
-
-	private Clasz recordClass;
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	public TasksCsvResourceTest() {
 
 		super("tasks");
-
-		resourcesResourceTestUtils = new ResourcesResourceTestUtils();
-		configurationsResourceTestUtils = new ConfigurationsResourceTestUtils();
-		dataModelsResourceTestUtils = new DataModelsResourceTestUtils();
-		schemasResourceTestUtils = new SchemasResourceTestUtils();
-		classesResourceTestUtils = new ClaszesResourceTestUtils();
-		attributePathsResourceTestUtils = new AttributePathsResourceTestUtils();
-		attributesResourceTestUtils = new AttributesResourceTestUtils();
 	}
 
-	@Before
-	public void prepare() throws IOException {
+	@Override protected void initObjects() {
+		super.initObjects();
+
+		resourcesResourceTestUtils = new ResourcesResourceTestUtils();
+		dataModelsResourceTestUtils = new DataModelsResourceTestUtils();
+	}
+
+	@Override
+	public void prepare() throws Exception {
+
+		super.prepare();
 
 		taskJSONString = DMPPersistenceUtil.getResourceAsString("task.csv.json");
 	}
@@ -124,7 +90,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 		TasksCsvResourceTest.LOG.debug("start task execution test");
 
-		final String resourceFileName = "test_csv.csv";
+		final String resourceFileName = "test_csv-controller.csv";
 
 		final Resource res1 = new Resource();
 		res1.setName(resourceFileName);
@@ -159,7 +125,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 		res1.setAttributes(attributes1);
 
 		// upload data resource
-		resource = resourcesResourceTestUtils.uploadResource(resourceFile, res1);
+		Resource resource = resourcesResourceTestUtils.uploadResource(resourceFile, res1);
 
 		// process input data model
 		final Configuration conf1 = new Configuration();
@@ -171,7 +137,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 		final String configurationJSONString = objectMapper.writeValueAsString(conf1);
 
 		// create configuration
-		configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
+		Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
 
 		final DataModel data1 = new DataModel();
 		data1.setName("'" + res1.getName() + "' + '" + conf1.getName() + "' data model");
@@ -182,16 +148,14 @@ public class TasksCsvResourceTest extends ResourceTest {
 		final String dataModelJSONString = objectMapper.writeValueAsString(data1);
 
 		// do not compare dataModelJSONString with data1 since the schema is automatically created, comparison would fail.
-		inputDataModel = dataModelsResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
+		DataModel inputDataModel = dataModelsResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
 
 		Assert.assertNotNull("the data model shouldn't be null", inputDataModel);
 		Assert.assertNotNull("the data model schema shouldn't be null", inputDataModel.getSchema());
 
-		schema = inputDataModel.getSchema();
+		Schema schema = inputDataModel.getSchema();
 
 		Assert.assertNotNull("the data model schema record class shouldn't be null", schema.getRecordClass());
-
-		recordClass = schema.getRecordClass();
 
 		// check processed data
 		final String data = dataModelsResourceTestUtils.getData(inputDataModel.getId(), 1);
@@ -265,32 +229,30 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 		final Map<String, JsonNode> actualNodes = new HashMap<>(actualJSONArray.size());
 		for (final JsonNode node : actualJSONArray) {
-			actualNodes.put(node.get("record_id").asText(), node);
+			actualNodes.put(node.get(DMPPersistenceUtil.RECORD_ID).asText(), node);
 		}
-
-		this.outputDataModel = dataModelsResourceTestUtils.getObject(outputDataModel.getId());
 
 		final String actualDataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(inputDataModel);
 
-		final String expectedRecordDataFieldNameExample = expectedJSONArray.get(0).get("record_data").get(0).fieldNames().next();
+		final String expectedRecordDataFieldNameExample = expectedJSONArray.get(0).get(DMPPersistenceUtil.RECORD_DATA).get(0).fieldNames().next();
 		final String expectedDataResourceSchemaBaseURI = expectedRecordDataFieldNameExample.substring(0,
 				expectedRecordDataFieldNameExample.lastIndexOf('#') + 1);
 
 		for (final JsonNode expectedNode : expectedJSONArray) {
 
-			final String recordData = expectedNode.get("record_data").get(0).get(expectedDataResourceSchemaBaseURI + "description")
+			final String recordData = expectedNode.get(DMPPersistenceUtil.RECORD_DATA).get(0).get(expectedDataResourceSchemaBaseURI + "description")
 					.asText();
 			final JsonNode actualNode = getRecordData(recordData, actualJSONArray, actualDataResourceSchemaBaseURI + "description");
 
 			// SR TODO use Assert.assertNotNull here?
 			Assert.assertThat(actualNode, CoreMatchers.is(Matchers.notNullValue()));
 
-			final ObjectNode expectedRecordData = (ObjectNode) expectedNode.get("record_data").get(0);
+			final ObjectNode expectedRecordData = (ObjectNode) expectedNode.get(DMPPersistenceUtil.RECORD_DATA).get(0);
 
 			final ObjectNode actualElement = (ObjectNode) actualNode;
 			ObjectNode actualRecordData = null;
 
-			for (final JsonNode actualRecordDataCandidate : actualElement.get("record_data")) {
+			for (final JsonNode actualRecordDataCandidate : actualElement.get(DMPPersistenceUtil.RECORD_DATA)) {
 
 				if (actualRecordDataCandidate.get(actualDataResourceSchemaBaseURI + "description") != null) {
 
@@ -311,103 +273,18 @@ public class TasksCsvResourceTest extends ResourceTest {
 		Assert.assertNotNull("the data model shouldn't be null", inputDataModel);
 		Assert.assertNotNull("the data model schema shouldn't be null", inputDataModel.getSchema());
 
-		this.schema = inputDataModel.getSchema();
+		schema = inputDataModel.getSchema();
 
-		Assert.assertNotNull("the data model schema record class shouldn't be null", this.schema.getRecordClass());
-
-		recordClass = this.schema.getRecordClass();
+		Assert.assertNotNull("the data model schema record class shouldn't be null", schema.getRecordClass());
 
 		TasksCsvResourceTest.LOG.debug("end task execution test");
-	}
-
-	@After
-	public void cleanUp() throws Exception {
-
-		final Map<Long, Attribute> attributes = Maps.newHashMap();
-
-		final Map<Long, AttributePath> attributePaths = Maps.newLinkedHashMap();
-
-		if (schema != null) {
-
-			final Set<AttributePath> attributePathsToDelete = schema.getUniqueAttributePaths();
-
-			if (attributePathsToDelete != null) {
-
-				for (final AttributePath attributePath : attributePathsToDelete) {
-
-					attributePaths.put(attributePath.getId(), attributePath);
-
-					final Set<Attribute> attributesToDelete = attributePath.getAttributes();
-
-					if (attributesToDelete != null) {
-
-						for (final Attribute attribute : attributesToDelete) {
-
-							attributes.put(attribute.getId(), attribute);
-						}
-					}
-				}
-			}
-		}
-
-		if(outputDataModel.getSchema() != null) {
-
-			final Set<AttributePath> attributePathsToDelete = outputDataModel.getSchema().getUniqueAttributePaths();
-
-			if (attributePathsToDelete != null) {
-
-				for (final AttributePath attributePath : attributePathsToDelete) {
-
-					attributePaths.put(attributePath.getId(), attributePath);
-
-					final Set<Attribute> attributesToDelete = attributePath.getAttributes();
-
-					if (attributesToDelete != null) {
-
-						for (final Attribute attribute : attributesToDelete) {
-
-							attributes.put(attribute.getId(), attribute);
-						}
-					}
-				}
-			}
-		}
-
-		final Schema outputSchema = outputDataModel.getSchema();
-		final Clasz outputRecordClass = outputSchema.getRecordClass();
-
-		outputDataModel.setSchema(null);
-
-		dataModelsResourceTestUtils.updateObjectWithoutComparison(outputDataModel);
-
-		dataModelsResourceTestUtils.deleteObject(inputDataModel);
-		schemasResourceTestUtils.deleteObject(schema);
-		schemasResourceTestUtils.deleteObject(outputSchema);
-
-		for (final AttributePath attributePath : attributePaths.values()) {
-
-			attributePathsResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(attributePath);
-		}
-
-		for (final Attribute attribute : attributes.values()) {
-
-			attributesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(attribute);
-		}
-
-		classesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(recordClass);
-		classesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(outputRecordClass);
-		resourcesResourceTestUtils.deleteObject(resource);
-		configurationsResourceTestUtils.deleteObject(configuration);
-
-		// clean-up graph db
-		InternalGDMGraphServiceTestUtils.cleanGraphDB();
 	}
 
 	private JsonNode getRecordData(final String recordData, final ArrayNode jsonArray, final String key) {
 
 		for (final JsonNode jsonEntry : jsonArray) {
 
-			final ArrayNode actualRecordDataArray = (ArrayNode) jsonEntry.get("record_data");
+			final ArrayNode actualRecordDataArray = (ArrayNode) jsonEntry.get(DMPPersistenceUtil.RECORD_DATA);
 
 			for (final JsonNode actualRecordData : actualRecordDataArray) {
 

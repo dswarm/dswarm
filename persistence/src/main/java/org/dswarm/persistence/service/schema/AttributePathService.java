@@ -15,7 +15,6 @@
  */
 package org.dswarm.persistence.service.schema;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -23,18 +22,18 @@ import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.TypedQuery;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.persist.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.proxy.RetrievalType;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
 import org.dswarm.persistence.service.BasicIDJPAService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.persist.Transactional;
 
 /**
  * A persistence service for {@link AttributePath}s.
@@ -90,11 +89,11 @@ public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, 
 
 		final EntityManager em = acquire();
 
-		return createObjectInternal(object, em);
+		return createObjectInternal(object, em, "non-transactional");
 	}
 
 	@Override
-	protected ProxyAttributePath createObjectInternal(final AttributePath object, final EntityManager entityManager) throws DMPPersistenceException {
+	protected ProxyAttributePath createObjectInternal(final AttributePath object, final EntityManager entityManager, final String transactionalType) throws DMPPersistenceException {
 
 		final AttributePath existingObject = getObject(object.getAttributePathAsJSONObjectString(), entityManager);
 

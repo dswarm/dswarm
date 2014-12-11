@@ -82,11 +82,11 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 
 		final EntityManager em = acquire();
 
-		return createObjectInternal(object, em);
+		return createObjectInternal(object, em, "non-transactional");
 	}
 
 	@Override
-	protected PROXYPOJOCLASS createObjectInternal(final POJOCLASS object, final EntityManager entityManager) throws DMPPersistenceException {
+	protected PROXYPOJOCLASS createObjectInternal(final POJOCLASS object, final EntityManager entityManager, final String transactionType) throws DMPPersistenceException {
 
 		final String uri = object.getUri();
 

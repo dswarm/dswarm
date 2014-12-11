@@ -1,43 +1,58 @@
 {
-    "id": 21,
-    "name": "my schema",
-    "attribute_paths": [{
-        "id": 76,
-        "attributes": [{
-            "id": 86,
-            "name": "title",
-            "uri": "http://purl.org/dc/terms/title"
-        }, {
-            "id": 87,
-            "name": "hasPart",
-            "uri": "http://purl.org/dc/terms/hasPart"
-        }, {
-            "id": 86,
-            "name": "title",
-            "uri": "http://purl.org/dc/terms/title"
-        }]
-    }, {
-        "id": 77,
-        "attributes": [{
-            "id": 88,
-            "name": "creator",
-            "uri": "http://purl.org/dc/terms/creator"
-        }, {
-            "id": 89,
-            "name": "name",
-            "uri": "http://xmlns.com/foaf/0.1/name"
-        }]
-    }, {
-        "id": 78,
-        "attributes": [{
-            "id": 90,
-            "name": "created",
-            "uri": "http://purl.org/dc/terms/created"
-        }]
-    }],
-    "record_class": {
-        "id": 21,
-        "name": "document",
-        "uri": "http://purl.org/ontology/bibo/Document"
+  "id" : 21,
+  "name" : "my schema",
+  "attribute_paths" : [ {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_0",
+    "id" : 0,
+    "attribute_path" : {
+      "id" : 76,
+      "attributes" : [ {
+        "id" : 86,
+        "name" : "title",
+        "uri" : "http://purl.org/dc/terms/title"
+      }, {
+        "id" : 87,
+        "name" : "hasPart",
+        "uri" : "http://purl.org/dc/terms/hasPart"
+      }, {
+        "id" : 86,
+        "name" : "title",
+        "uri" : "http://purl.org/dc/terms/title"
+      } ]
     }
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_1",
+    "id" : 1,
+    "attribute_path" : {
+      "id" : 77,
+      "attributes" : [ {
+        "id" : 88,
+        "name" : "creator",
+        "uri" : "http://purl.org/dc/terms/creator"
+      }, {
+        "id" : 89,
+        "name" : "name",
+        "uri" : "http://xmlns.com/foaf/0.1/name"
+      } ]
+    }
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_2",
+    "id" : 2,
+    "attribute_path" : {
+      "id" : 78,
+      "attributes" : [ {
+        "id" : 90,
+        "name" : "created",
+        "uri" : "http://purl.org/dc/terms/created"
+      } ]
+    }
+  } ],
+  "record_class" : {
+    "id" : 21,
+    "name" : "document",
+    "uri" : "http://purl.org/ontology/bibo/Document"
+  }
 }

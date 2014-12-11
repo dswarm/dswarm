@@ -80,14 +80,15 @@ import org.dswarm.persistence.util.GDMUtil;
 public class TransformationFlow {
 
 	private static final Logger							LOG	= LoggerFactory.getLogger(TransformationFlow.class);
+	private static final String BIBO_DOCUMENT_URI = "http://purl.org/ontology/bibo/Document";
 
-	private final Metamorph								transformer;
+	private final Metamorph transformer;
 
-	private final String								script;
+	private final String script;
 
-	private final Optional<DataModel>					outputDataModel;
+	private final Optional<DataModel> outputDataModel;
 
-	private final Provider<InternalModelServiceFactory>	internalModelServiceFactoryProvider;
+	private final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider;
 
 	public TransformationFlow(final Metamorph transformer, final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
 
@@ -190,7 +191,9 @@ public class TransformationFlow {
 		final GDMEncoder converter = new GDMEncoder(outputDataModel);
 		final GDMModelReceiver writer = new GDMModelReceiver();
 
-		opener.setReceiver(transformer).setReceiver(unflattener).setReceiver(collapser).setReceiver(converter).setReceiver(writer);
+		// .setReceiver(collapser)
+		opener.setReceiver(transformer).setReceiver(unflattener).setReceiver(converter).setReceiver(writer);
+		//opener.setReceiver(transformer).setReceiver(converter).setReceiver(writer);
 
 		opener.process(tuples);
 		opener.closeStream();
@@ -222,9 +225,18 @@ public class TransformationFlow {
 				continue;
 			}
 
-			for (final org.dswarm.graph.json.Resource jsonResource : gdmModel.getModel().getResources()) {
-				model.addResource(jsonResource);
+			final Set<String> recordURIsFromGDMModel = gdmModel.getRecordURIs();
 
+			if(recordURIsFromGDMModel == null || recordURIsFromGDMModel.isEmpty()) {
+
+				// skip, since it seems to look like that there are no records in the model
+
+				continue;
+			}
+
+			for (final org.dswarm.graph.json.Resource jsonResource : gdmModel.getModel().getResources()) {
+
+				model.addResource(jsonResource);
 			}
 
 			if (recordClassUri == null) {
@@ -238,7 +250,7 @@ public class TransformationFlow {
 			if (gdmModel.getRecordClassURI() == null) {
 
 				final String recordURI = gdmModel.getRecordURIs().iterator().next();
-				final String defaultRecordClassURI = "http://purl.org/ontology/bibo/Document";
+				final String defaultRecordClassURI = BIBO_DOCUMENT_URI;
 
 				final Resource recordResource = model.getResource(recordURI);
 
@@ -262,7 +274,7 @@ public class TransformationFlow {
 
 			finalGDMModels.add(finalGDMModel);
 
-			recordURIs.add(finalGDMModel.getRecordURIs().iterator().next());
+			recordURIs.addAll(recordURIsFromGDMModel);
 		}
 
 		if (recordClassUri == null) {
