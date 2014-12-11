@@ -90,7 +90,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 		TasksCsvResourceTest.LOG.debug("start task execution test");
 
-		final String resourceFileName = "test_csv.csv";
+		final String resourceFileName = "test_csv-controller.csv";
 
 		final Resource res1 = new Resource();
 		res1.setName(resourceFileName);

@@ -94,7 +94,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		expectedResource = GuicedTest.injector.getInstance(ObjectMapper.class).readValue(resourceJSONString, Resource.class);
 
-		final URL fileURL = Resources.getResource("test_csv.csv");
+		final URL fileURL = Resources.getResource("test_csv-controller.csv");
 		resourceFile = FileUtils.toFile(fileURL);
 	}
 
@@ -481,7 +481,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
 
-		final String expected = DMPPersistenceUtil.getResourceAsString("test_csv.csv");
+		final String expected = DMPPersistenceUtil.getResourceAsString("test_csv-controller.csv");
 
 		Assert.assertEquals("POST responses are not equal", expected, responseString);
 

@@ -181,7 +181,7 @@ public class DataModelsResourceTest extends
 
 		final Resource expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
 
-		final URL fileURL = Resources.getResource("test_csv.csv");
+		final URL fileURL = Resources.getResource("test_csv-controller.csv");
 		final File resourceFile = FileUtils.toFile(fileURL);
 
 		final String configurationJSONString = DMPPersistenceUtil.getResourceAsString("controller_configuration.json");
@@ -419,7 +419,7 @@ public class DataModelsResourceTest extends
 
 		final Resource expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
 
-		final URL fileURL = Resources.getResource("test-mabxml2.xml");
+		final URL fileURL = Resources.getResource("test-mabxml2-controller.xml");
 		final File resourceFile = FileUtils.toFile(fileURL);
 
 		final String configurationJSONString = DMPPersistenceUtil.getResourceAsString("xml-configuration.json");
