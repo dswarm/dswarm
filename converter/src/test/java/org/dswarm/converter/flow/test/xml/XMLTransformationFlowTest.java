@@ -16,17 +16,16 @@
 package org.dswarm.converter.flow.test.xml;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Provider;
+import org.junit.Assert;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.TransformationFlow;
-import org.dswarm.converter.flow.utils.DMPConverterUtils;
 import org.dswarm.persistence.model.job.Task;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
@@ -89,23 +88,17 @@ public class XMLTransformationFlowTest extends GuicedTest {
 
 		testXMLTaskWithTuples("dd-650.mabxml.task.result.json", "dd-650.mabxml.task.json", "test-mabxml.tuples.json");
 	}
-
+	
 	@Test
 	public void testDd727Morph() throws Exception {
 
 		testXMLMorphWithTuples("dd-727.mabxml.morph.result.json", "dd-727.mabxml.morph.xml", "dd-727.mabxml.tuples.json");
 	}
-
+	
 	@Test
 	public void testDd727Task() throws Exception {
 
 		testXMLTaskWithTuples("dd-727.mabxml.task.result.json", "dd-727.mabxml.task.json", "dd-727.mabxml.tuples.json");
-	}
-
-	@Test
-	public void testDd734Morph() throws Exception {
-
-		testXMLMorphWithTuples("sub.entity.3level.mabxml.morph.result.json", "sub.entity.3level.mabxml.morph.xml", "mabxml.tuples.json");
 	}
 
 	@Test
@@ -175,15 +168,12 @@ public class XMLTransformationFlowTest extends GuicedTest {
 
 		final String actual = flow.applyResource(tuplesJSONFileName);
 		final ArrayNode array = objectMapper2.readValue(actual, ArrayNode.class);
+		final String finalActual = objectMapper2.writeValueAsString(array);
 
 		final ArrayNode expectedArray = objectMapper2.readValue(expected, ArrayNode.class);
-
-		final JsonNode acutalJSONNode = DMPConverterUtils.removeRecordIdFields(array);
-		final JsonNode expectedJSONNode = DMPConverterUtils.removeRecordIdFields(expectedArray);
-
-		final String finalActual = objectMapper2.writeValueAsString(acutalJSONNode);
-		final String finalExpected = objectMapper2.writeValueAsString(expectedJSONNode);
+		final String finalExpected = objectMapper2.writeValueAsString(expectedArray);
 
 		JSONAssert.assertEquals(finalExpected, finalActual, true);
 	}
+
 }

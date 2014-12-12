@@ -19,12 +19,14 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.net.URL;
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.jena.riot.RDFLanguages;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
 import com.hp.hpl.jena.query.Dataset;
@@ -34,48 +36,68 @@ import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpStatus;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.riot.RDFLanguages;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.dswarm.common.MediaTypeUtil;
-import org.dswarm.common.rdf.utils.RDFUtils;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ExportTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
 import org.dswarm.controller.resources.test.ResourceTest;
 import org.dswarm.controller.test.GuicedTest;
+import org.dswarm.common.rdf.utils.RDFUtils;
+import org.dswarm.persistence.DMPPersistenceException;
+// import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
+import org.dswarm.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
+ * Created by tgaengler on 28/04/14.
+ * 
  * @author tgaengler
  */
 public class RDFResourceTest extends ResourceTest {
 
-	private static final Logger LOG = LoggerFactory.getLogger(RDFResourceTest.class);
+	private static final Logger					LOG				= LoggerFactory.getLogger(RDFResourceTest.class);
 
-	private ResourcesResourceTestUtils resourcesResourceTestUtils;
+	private final ResourcesResourceTestUtils	resourcesResourceTestUtils;
 
-	private DataModelsResourceTestUtils dataModelsResourceTestUtils;
+	private final DataModelsResourceTestUtils	dataModelsResourceTestUtils;
 
-	protected final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
+	protected final ObjectMapper				objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	public RDFResourceTest() {
 
 		super("rdf");
-	}
-
-	@Override protected void initObjects() {
-
-		super.initObjects();
 
 		resourcesResourceTestUtils = new ResourcesResourceTestUtils();
 		dataModelsResourceTestUtils = new DataModelsResourceTestUtils();
+
+		initObjects();
+	}
+
+	
+	
+	/**
+	 * reset mysql and graph db; reset also jpa/hibernate cache 
+	 * @throws Exception 
+	 */
+	@After
+	public void tearDown2() throws Exception {
+		// clean up mysql and graph db
+		maintainDBService.initDB();
+		InternalGDMGraphServiceTestUtils.cleanGraphDB();
+		
+		// make sure jpa/hibernate does not cache some objects
+		restartServer();
+		initObjects();
 	}
 
 	@Test
@@ -119,20 +141,19 @@ public class RDFResourceTest extends ResourceTest {
 	 * Count the number of statements in all serialized model file. (These are expected to be exported by db and hence should have
 	 * been imported in db in a prepare step). <br />
 	 * Assert the numbers of statements in the export is equal to the sum of statements of all serialized models.
-	 *
-	 * @param requestedExportLanguage  the requested serialization format to be used in export. may be empty to test the default
-	 *                                 fallback of the endpoint.
+	 * 
+	 * @param requestedExportLanguage the requested serialization format to be used in export. may be empty to test the default
+	 *            fallback of the endpoint.
 	 * @param expectedHTTPResponseCode the expected HTTP status code of the response, e.g. {@link HttpStatus#SC_OK} or
-	 *                                 {@link HttpStatus#SC_NOT_ACCEPTABLE}
-	 * @param expectedExportMediaType  the language the exported data is expected to be serialized in. hint: language may differ
-	 *                                 from {@code requestedExportLanguage} to test for default values. (ignored if expectedHTTPResponseCode !=
-	 *                                 {@link HttpStatus#SC_OK})
-	 * @param expectedFileEnding       the expected file ending to be received from neo4j (ignored if expectedHTTPResponseCode !=
-	 *                                 {@link HttpStatus#SC_OK})
+	 *            {@link HttpStatus#SC_NOT_ACCEPTABLE}
+	 * @param expectedExportMediaType the language the exported data is expected to be serialized in. hint: language may differ
+	 *            from {@code requestedExportLanguage} to test for default values. (ignored if expectedHTTPResponseCode !=
+	 *            {@link HttpStatus#SC_OK})
+	 * @param expectedFileEnding the expected file ending to be received from neo4j (ignored if expectedHTTPResponseCode !=
+	 *            {@link HttpStatus#SC_OK})
 	 * @throws Exception
 	 */
-	private void exportInternal(final String requestedExportLanguage, final int expectedHTTPResponseCode, final MediaType expectedExportMediaType,
-			final String expectedFileEnding)
+	private void exportInternal(final String requestedExportLanguage, final int expectedHTTPResponseCode, final MediaType expectedExportMediaType, final String expectedFileEnding)
 			throws Exception {
 
 		RDFResourceTest.LOG.debug("start test export all data to format \"" + requestedExportLanguage + "\"");
@@ -145,7 +166,7 @@ public class RDFResourceTest extends ResourceTest {
 		loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 
 		// request the export from BE proxy endpoint
-
+		
 		WebTarget targetBE = target("/getall");
 		// be able to simulate absence of query parameter
 		if (requestedExportLanguage != null) {
@@ -160,13 +181,13 @@ public class RDFResourceTest extends ResourceTest {
 		if (expectedHTTPResponseCode == HttpStatus.SC_NOT_ACCEPTABLE) {
 			return;
 		}
-
+		
 		// check Content-Type header for correct content type (hint: even though we did not request the content type via an accept
 		// header field, we do want to get the content type specified in query parameter format) 
 		ExportTestUtils.checkContentTypeHeader(response, expectedExportMediaType.toString());
-
+		
 		// check Content-Disposition header for correct file ending
-		ExportTestUtils.checkContentDispositionHeader(response, expectedFileEnding);
+		ExportTestUtils.checkContentDispositionHeader(response, expectedFileEnding);		
 
 		// read data set from response
 		final String body = response.readEntity(String.class);
@@ -174,7 +195,7 @@ public class RDFResourceTest extends ResourceTest {
 
 		final InputStream stream = new ByteArrayInputStream(body.getBytes("UTF-8"));
 		Assert.assertNotNull("input stream (from body) shouldn't be null", stream);
-
+ 
 		final Lang expectedExportLanguage = RDFLanguages.contentTypeToLang(expectedExportMediaType.toString());
 		final Dataset dataset = DatasetFactory.createMem();
 		RDFDataMgr.read(dataset, stream, expectedExportLanguage);
@@ -198,10 +219,9 @@ public class RDFResourceTest extends ResourceTest {
 	}
 
 	// SR TODO refactor to dswarm-common
-
 	/**
 	 * Read a file, serialized in N3, and count the number of statements.
-	 *
+	 * 
 	 * @param resourceNameN3 the /path/to/file.end of a model serialized in N3 format
 	 * @return the number of statements the serialized model contains
 	 * @throws IOException
@@ -215,7 +235,8 @@ public class RDFResourceTest extends ResourceTest {
 		final com.hp.hpl.jena.rdf.model.Model modelFromOriginalRDFile = ModelFactory.createDefaultModel();
 		modelFromOriginalRDFile.read(expectedStream, null, "N3");
 
-		return modelFromOriginalRDFile.size();
+		final long statementsInOriginalRDFFile = modelFromOriginalRDFile.size();
+		return statementsInOriginalRDFFile;
 	}
 
 	private DataModel loadCSVData(final String resourceJsonFilename, final String csvFilename, final String configurationJsonFilename)
@@ -245,7 +266,9 @@ public class RDFResourceTest extends ResourceTest {
 
 		final String dataModelJSONString = objectMapper.writeValueAsString(dataModelToCreate);
 
-		return dataModelsResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
+		final DataModel dataModelfromDB = dataModelsResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
+
+		return dataModelfromDB;
 	}
 
 }

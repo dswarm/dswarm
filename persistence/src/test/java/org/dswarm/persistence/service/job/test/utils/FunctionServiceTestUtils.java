@@ -15,115 +15,15 @@
  */
 package org.dswarm.persistence.service.job.test.utils;
 
-import java.util.LinkedList;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.collect.Lists;
-import org.junit.Assert;
-
 import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.proxy.ProxyFunction;
 import org.dswarm.persistence.service.job.FunctionService;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class FunctionServiceTestUtils extends BasicFunctionServiceTestUtils<FunctionService, ProxyFunction, Function> {
 
 	public FunctionServiceTestUtils() {
 
 		super(Function.class, FunctionService.class);
-	}
-
-	@Override
-	public Function createObject(final JsonNode objectDescription) throws Exception {
-		return null;
-	}
-
-	@Override
-	public Function createObject(final String identifier) throws Exception {
-		return null;
-	}
-
-	@Override
-	public Function createAndPersistDefaultObject() throws Exception {
-
-		final String functionName = "trim";
-		final String functionDescription = "trims leading and trailing whitespaces from a given string";
-		final String functionParameter1 = "inputString";
-		final String functionParameter2 = "parameter2";
-
-		final String functionFunctionDescriptionString = DMPPersistenceUtil.getResourceAsString("function_description.prettyprint.json");
-
-		Assert.assertNotNull("the function description JSON string shouldn't be null", functionFunctionDescriptionString);
-
-		final ObjectNode functionFunctionDescription = objectMapper.readValue(functionFunctionDescriptionString, ObjectNode.class);
-
-		Assert.assertNotNull("the function description JSON shouldn't be null", functionFunctionDescription);
-
-		final Function function = new Function();
-
-		function.setName(functionName);
-		function.setDescription(functionDescription);
-		function.addParameter(functionParameter1);
-		function.addParameter(functionParameter2);
-		function.setFunctionDescription(functionFunctionDescription);
-
-		return createAndCompareObject(function, function);
-	}
-
-	@Override public Function createDefaultObject() throws Exception {
-		return null;
-	}
-
-	public Function getSimpleTrimFunction() throws Exception {
-
-		final LinkedList<String> parameters = Lists.newLinkedList();
-		parameters.add("inputString");
-
-		return createFunction("trim", "trims leading and trailing whitespaces from a given string",
-				parameters);
-	}
-
-	public Function getSimpleReplaceFunction() throws Exception {
-
-		final String function1Name = "replace";
-		final String function1Description = "replace certain parts of a given string that matches a certain regex";
-		final String function1Parameter = "inputString";
-		final String function2Parameter = "regex";
-		final String function3Parameter = "replaceString";
-
-		final LinkedList<String> function1Parameters = Lists.newLinkedList();
-		function1Parameters.add(function1Parameter);
-		function1Parameters.add(function2Parameter);
-		function1Parameters.add(function3Parameter);
-
-		return createFunction(function1Name, function1Description, function1Parameters);
-	}
-
-	public Function getSimpleLowerCaseFunction() throws Exception {
-
-		final String function2Name = "lower_case";
-		final String function2Description = "lower cases all characters of a given string";
-		final String function4Parameter = "inputString";
-
-		final LinkedList<String> function2Parameters = Lists.newLinkedList();
-		function2Parameters.add(function4Parameter);
-
-		return createFunction(function2Name, function2Description, function2Parameters);
-	}
-
-	public Function getSimpleConcatFunction() throws Exception {
-
-		final String function4Name = "concat";
-		final String function4Description = "concatenates two given string";
-		final String function5Parameter = "firstString";
-		final String function6Parameter = "secondString";
-
-		final LinkedList<String> function4Parameters = Lists.newLinkedList();
-		function4Parameters.add(function5Parameter);
-		function4Parameters.add(function6Parameter);
-
-		return createFunction(function4Name, function4Description, function4Parameters);
 	}
 
 	@Override

@@ -26,10 +26,10 @@ import com.google.inject.Inject;
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.utils.BasicDMPResourceUtils;
 import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
+import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
 import org.dswarm.persistence.service.schema.SchemaService;
 
@@ -56,18 +56,18 @@ public class SchemasResourceUtils extends BasicDMPResourceUtils<SchemaService, P
 
 		super.replaceRelevantDummyIds(object, jsonNode, dummyIdCandidates);
 
-		final Set<SchemaAttributePathInstance> attributePaths = object.getUniqueAttributePaths();
+		final Set<AttributePath> attributePaths = object.getUniqueAttributePaths();
 
 		if (attributePaths != null) {
 
-			for (final SchemaAttributePathInstance attributePath : attributePaths) {
+			for (final AttributePath attributePath : attributePaths) {
 
 				if (areDummyIdCandidatesEmpty(dummyIdCandidates)) {
 
 					return jsonNode;
 				}
 
-				utilsFactory.get(SchemaAttributePathInstancesResourceUtils.class).replaceRelevantDummyIds(attributePath, jsonNode, dummyIdCandidates);
+				utilsFactory.get(AttributePathsResourceUtils.class).replaceRelevantDummyIds(attributePath, jsonNode, dummyIdCandidates);
 			}
 		}
 

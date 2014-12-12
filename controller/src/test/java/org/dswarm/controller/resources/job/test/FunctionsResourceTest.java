@@ -27,15 +27,13 @@ import org.dswarm.persistence.service.job.test.utils.FunctionServiceTestUtils;
 public class FunctionsResourceTest extends
 		BasicResourceTest<FunctionsResourceTestUtils, FunctionServiceTestUtils, FunctionService, ProxyFunction, Function, Long> {
 
+	private final FunctionsResourceTestUtils	functionsResourceTestUtils;
+
 	public FunctionsResourceTest() {
 
 		super(Function.class, FunctionService.class, "functions", "function.json", new FunctionsResourceTestUtils());
-	}
 
-	@Override protected void initObjects() {
-		super.initObjects();
-
-		pojoClassResourceTestUtils = new FunctionsResourceTestUtils();
+		functionsResourceTestUtils = new FunctionsResourceTestUtils();
 	}
 
 	@Override
@@ -47,7 +45,7 @@ public class FunctionsResourceTest extends
 
 		Assert.assertNotNull("the function JSON string shouldn't be null", updateFunctionJSONString);
 
-		final Function updateFunction = pojoClassResourceTestUtils.updateObject(updateFunctionJSONString, actualFunction);
+		final Function updateFunction = functionsResourceTestUtils.updateObject(updateFunctionJSONString, actualFunction);
 
 		Assert.assertNotNull("the function JSON string shouldn't be null", updateFunction);
 

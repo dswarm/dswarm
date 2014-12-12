@@ -72,8 +72,4 @@ public class Tuple<V1, V2> {
 		result = 31 * result + v2.hashCode();
 		return result;
 	}
-	
-	public String toString(){
-		return "(v1:" + v1 + ",v2:" + v2 + ")";
-	}
 }

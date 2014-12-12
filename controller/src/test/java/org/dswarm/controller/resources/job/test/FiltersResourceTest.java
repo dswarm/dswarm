@@ -42,12 +42,6 @@ public class FiltersResourceTest extends
 		updateObjectJSONFileName = "filter2.json";
 	}
 
-	@Override protected void initObjects() {
-		super.initObjects();
-
-		pojoClassResourceTestUtils = new FiltersResourceTestUtils();
-	}
-
 	@Test
 	public void exceptionTest() throws IOException {
 

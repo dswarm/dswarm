@@ -17,7 +17,6 @@ package org.dswarm.controller.resources.schema;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -53,7 +52,6 @@ import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.BasicDMPResource;
 import org.dswarm.controller.resources.schema.utils.AttributePathsResourceUtils;
 import org.dswarm.controller.resources.schema.utils.AttributesResourceUtils;
-import org.dswarm.controller.resources.schema.utils.SchemaAttributePathInstancesResourceUtils;
 import org.dswarm.controller.resources.schema.utils.SchemasResourceUtils;
 import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
 import org.dswarm.controller.status.DMPStatus;
@@ -63,13 +61,12 @@ import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
+import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.service.schema.AttributePathService;
 import org.dswarm.persistence.service.schema.AttributeService;
-import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 import org.dswarm.persistence.service.schema.SchemaService;
 
 /**
@@ -83,10 +80,10 @@ import org.dswarm.persistence.service.schema.SchemaService;
 @Path("schemas")
 public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, SchemaService, ProxySchema, Schema> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SchemasResource.class);
+	private static final Logger			LOG	= LoggerFactory.getLogger(SchemasResource.class);
 
-	private final ResourceUtilsFactory utilsFactory;
-	private final ObjectMapper         objectMapper;
+	private final ResourceUtilsFactory	utilsFactory;
+	private final ObjectMapper			objectMapper;
 
 	/**
 	 * Creates a new resource (controller service) for {@link Schema}s with the provider of the schema persistence service, the
@@ -94,7 +91,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	 *
 	 * @param utilsFactoryArg the utils factory
 	 * @param objectMapperArg an object mapper
-	 * @param dmpStatusArg    a metrics registry
+	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
 	public SchemasResource(final ResourceUtilsFactory utilsFactoryArg, final ObjectMapper objectMapperArg, final DMPStatus dmpStatusArg)
@@ -166,7 +163,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	 * This endpoint consumes a schema as JSON representation and updates this schema in the database.
 	 *
 	 * @param jsonObjectString a JSON representation of one schema
-	 * @param id               a schema identifier
+	 * @param id a schema identifier
 	 * @return the updated schema as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -191,13 +188,12 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	 * the database.
 	 *
 	 * @param attributeDescriptionsJSONArrayString an ordered list of attribute descriptions - names + URIs - (of an attribute
-	 *                                             path) as JSON (array) representation
-	 * @param id                                   a schema identifier
+	 *            path) as JSON (array) representation
+	 * @param id a schema identifier
 	 * @return the updated schema as JSON representation
 	 * @throws DMPControllerException
 	 */
-	@ApiOperation(value = "create attribute path from the given attribute descriptions (names + URIs) and update schema with this attribute path",
-			notes = "Returns an updated Schema object.")
+	@ApiOperation(value = "create attribute path from the given attribute descriptions (names + URIs) and update schema with this attribute path", notes = "Returns an updated Schema object.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "schema was successfully updated"),
 			@ApiResponse(code = 404, message = "could not find a schema for the given id"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
@@ -206,8 +202,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addAttributePath(
-			@ApiParam(value = "an ordered list of attribute descriptions - names + URIs + (of an attribute path) as JSON (array)",
-					required = true) final String attributeDescriptionsJSONArrayString,
+			@ApiParam(value = "an ordered list of attribute descriptions - names + URIs + (of an attribute path) as JSON (array)", required = true) final String attributeDescriptionsJSONArrayString,
 			@ApiParam(value = "schema identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
 
 		SchemasResource.LOG.debug("try to create attribute path from '" + attributeDescriptionsJSONArrayString + "' and add it to "
@@ -226,7 +221,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 		SchemasResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "'");
 		SchemasResource.LOG.trace(" = '" + ToStringBuilder.reflectionToString(object) + "'");
 
-		final SchemaAttributePathInstance attributePath = createAttributePath(attributeDescriptionsJSONArrayString, id);
+		final AttributePath attributePath = createAttributePath(attributeDescriptionsJSONArrayString, id);
 
 		object.addAttributePath(attributePath);
 
@@ -261,15 +256,14 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	 * This endpoint consumes an attribute name and creates an attribute path (incl. new attribute) with help of the given
 	 * attribute path (by id) and the freshly created attribute, and updates the schema with this attribute path in the database.
 	 *
-	 * @param schemaId                       a schema identifier
-	 * @param attributePathId                a attribute path identifier
+	 * @param schemaId a schema identifier
+	 * @param attributePathId a attribute path identifier
 	 * @param attributeDescriptionJSONString the name of the attribute that should be created and added at the end of the given
-	 *                                       attribute path
+	 *            attribute path
 	 * @return the updated schema as JSON representation
 	 * @throws DMPControllerException
 	 */
-	@ApiOperation(value = "create attribute path from the given attribute names and update schema with this attribute path",
-			notes = "Returns an updated Schema object.")
+	@ApiOperation(value = "create attribute path from the given attribute names and update schema with this attribute path", notes = "Returns an updated Schema object.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "schema was successfully updated"),
 			@ApiResponse(code = 404, message = "could not find a schema for the given id"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
@@ -325,24 +319,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 		final LinkedList<Attribute> attributes = Lists.newLinkedList(baseAttributes);
 		attributes.add(newAttribute);
 
-		final SchemaAttributePathInstance attributePath;
-
-		final SchemaAttributePathInstancesResourceUtils schemaAttributePathInstancesResourceUtils = utilsFactory
-				.get(SchemaAttributePathInstancesResourceUtils.class);
-		final SchemaAttributePathInstanceService schemaAttributePathInstanceService = schemaAttributePathInstancesResourceUtils
-				.getPersistenceService();
-
-		try {
-
-			attributePath = SchemaUtils.createSchemaAttributePathInstance(attributes, attributePathService, schemaAttributePathInstanceService);
-		} catch (final DMPPersistenceException e) {
-
-			final String message = "couldn't create schema attribute path instance";
-
-			SchemasResource.LOG.error(message, e);
-
-			throw new DMPControllerException(message);
-		}
+		final AttributePath attributePath = createOrGetAttributePath(attributes, attributePathService);
 
 		object.addAttributePath(attributePath);
 
@@ -378,11 +355,10 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	 *
 	 * @param id a schema identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
-	 * went wrong
+	 *         went wrong
 	 * @throws DMPControllerException
 	 */
-	@ApiOperation(value = "delete schema that matches the given id",
-			notes = "Returns status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong.")
+	@ApiOperation(value = "delete schema that matches the given id", notes = "Returns status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong.")
 	@ApiResponses(value = { @ApiResponse(code = 204, message = "schema was successfully deleted"),
 			@ApiResponse(code = 404, message = "could not find a schema for the given id"),
 			@ApiResponse(code = 409, message = "schema couldn't be deleted (maybe there are some existing constraints to related objects)"),
@@ -405,7 +381,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 		super.prepareObjectForUpdate(objectFromJSON, object);
 
-		final Collection<SchemaAttributePathInstance> attributePaths = objectFromJSON.getAttributePaths();
+		final List<AttributePath> attributePaths = objectFromJSON.getAttributePaths();
 
 		object.setAttributePaths(attributePaths);
 
@@ -420,8 +396,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 		return object;
 	}
 
-	private SchemaAttributePathInstance createAttributePath(final String attributeDescriptionsJSONArrayString, final Long id)
-			throws DMPControllerException {
+	private AttributePath createAttributePath(final String attributeDescriptionsJSONArrayString, final Long id) throws DMPControllerException {
 
 		if (attributeDescriptionsJSONArrayString == null) {
 
@@ -480,22 +455,47 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 		final AttributePathsResourceUtils attributePathResourceUtils = utilsFactory.get(AttributePathsResourceUtils.class);
 		final AttributePathService attributePathService = attributePathResourceUtils.getPersistenceService();
 
-		final SchemaAttributePathInstancesResourceUtils schemaAttributePathInstancesResourceUtils = utilsFactory
-				.get(SchemaAttributePathInstancesResourceUtils.class);
-		final SchemaAttributePathInstanceService schemaAttributePathInstanceService = schemaAttributePathInstancesResourceUtils
-				.getPersistenceService();
+		return createOrGetAttributePath(attributes, attributePathService);
+	}
+
+	private AttributePath createOrGetAttributePath(final LinkedList<Attribute> attributes, final AttributePathService attributePathService)
+			throws DMPControllerException {
+
+		ProxyAttributePath proxyAttributePath = null;
 
 		try {
 
-			return SchemaUtils.createSchemaAttributePathInstance(attributes, attributePathService, schemaAttributePathInstanceService);
+			proxyAttributePath = attributePathService.createOrGetObjectTransactional(attributes);
 		} catch (final DMPPersistenceException e) {
 
-			final String message = "couldn't create schema attribute path instance";
+			final String message = "couldn't create or get attribute path";
 
 			SchemasResource.LOG.error(message, e);
 
 			throw new DMPControllerException(message);
 		}
+
+		if (proxyAttributePath == null) {
+
+			final String message = "couldn't retrieve attribute path from db";
+
+			SchemasResource.LOG.error(message);
+
+			throw new DMPControllerException(message);
+		}
+
+		final AttributePath attributePath = proxyAttributePath.getObject();
+
+		if (attributePath == null) {
+
+			final String message = "couldn't retrieve attribute path from db";
+
+			SchemasResource.LOG.error(message);
+
+			throw new DMPControllerException(message);
+		}
+
+		return attributePath;
 	}
 
 	private Attribute createOrGetAttribute(final String attributeName, final String attributeURI, final AttributeService attributeService)
@@ -573,8 +573,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 		return updatedAttribute;
 	}
 
-	private AttributePath getAttributePath(final Long attributePathId, final AttributePathService attributePathService)
-			throws DMPControllerException {
+	private AttributePath getAttributePath(final Long attributePathId, final AttributePathService attributePathService) throws DMPControllerException {
 
 		if (attributePathId == null) {
 
@@ -665,7 +664,9 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 			attributeURI = SchemaUtils.mintAttributeURI(attributeName, schemaNamespaceURI);
 		}
 
-		return createOrGetAttribute(attributeName, attributeURI, attributeService);
+		final Attribute attribute = createOrGetAttribute(attributeName, attributeURI, attributeService);
+
+		return attribute;
 	}
 
 }

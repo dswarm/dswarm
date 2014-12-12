@@ -20,6 +20,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.junit.After;
 import org.junit.Assert;
 
 import org.dswarm.controller.resources.job.test.utils.ComponentsResourceTestUtils;
@@ -38,21 +39,27 @@ public class TransformationsResourceTest
 		extends
 		BasicResourceTest<TransformationsResourceTestUtils, TransformationServiceTestUtils, TransformationService, ProxyTransformation, Transformation, Long> {
 
-	private FunctionsResourceTestUtils functionsResourceTestUtils;
+	private final FunctionsResourceTestUtils		functionsResourceTestUtils;
 
-	private ComponentsResourceTestUtils componentsResourceTestUtils;
+	private final ComponentsResourceTestUtils		componentsResourceTestUtils;
+
+	private final TransformationsResourceTestUtils	transformationsResourceTestUtils;
+
+	private Function								function;
+
+	private Component								component;
+
+	private Function								updateFunction;
+
+	private Component								updateComponent;
 
 	public TransformationsResourceTest() {
 
 		super(Transformation.class, TransformationService.class, "transformations", "transformation.json", new TransformationsResourceTestUtils());
-	}
 
-	@Override protected void initObjects() {
-		super.initObjects();
-
-		pojoClassResourceTestUtils = new TransformationsResourceTestUtils();
 		functionsResourceTestUtils = new FunctionsResourceTestUtils();
 		componentsResourceTestUtils = new ComponentsResourceTestUtils();
+		transformationsResourceTestUtils = new TransformationsResourceTestUtils();
 	}
 
 	@Override
@@ -60,7 +67,7 @@ public class TransformationsResourceTest
 
 		super.prepare();
 
-		final Function function = functionsResourceTestUtils.createObject("function.json");
+		function = functionsResourceTestUtils.createObject("function.json");
 
 		// prepare component json for function manipulation
 		String componentJSONString = DMPPersistenceUtil.getResourceAsString("component.json");
@@ -74,13 +81,13 @@ public class TransformationsResourceTest
 
 		Assert.assertNotNull("the function JSON shouldn't be null", finalFunctionJSON);
 
-		componentJSON.set("function", finalFunctionJSON);
+		componentJSON.put("function", finalFunctionJSON);
 
 		// re-init expect component
 		componentJSONString = objectMapper.writeValueAsString(componentJSON);
 		final Component expectedComponent = objectMapper.readValue(componentJSONString, Component.class);
 
-		Component component = componentsResourceTestUtils.createObject(componentJSONString, expectedComponent);
+		component = componentsResourceTestUtils.createObject(componentJSONString, expectedComponent);
 
 		// prepare transformation json for component manipulation
 		final ObjectNode objectJSON = objectMapper.readValue(objectJSONString, ObjectNode.class);
@@ -97,11 +104,19 @@ public class TransformationsResourceTest
 
 		componentsJSONArray.add(finalComponentJSON);
 
-		objectJSON.set("components", componentsJSONArray);
+		objectJSON.put("components", componentsJSONArray);
 
 		// re-init expect object
 		objectJSONString = objectMapper.writeValueAsString(objectJSON);
 		expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
+	}
+
+	@Override
+	public void testPUTObject() throws Exception {
+
+		super.testPUTObject();
+
+		functionsResourceTestUtils.deleteObject(updateFunction);
 	}
 
 	@Override
@@ -114,10 +129,11 @@ public class TransformationsResourceTest
 		final ObjectNode componentJSON = objectMapper.readValue(componentJSONString, ObjectNode.class);
 
 		// update function in component object
-		componentJSON.set("function", functionJSON);
+		componentJSON.put("function", functionJSON);
 		componentJSONString = objectMapper.writeValueAsString(componentJSON);
 		final Component expectedComponent = objectMapper.readValue(componentJSONString, Component.class);
-		Component updateComponent = componentsResourceTestUtils.createObject(componentJSONString, expectedComponent);
+		updateComponent = componentsResourceTestUtils.createObject(componentJSONString, expectedComponent);
+		updateFunction = updateComponent.getFunction();
 
 		final Set<Component> components = new LinkedHashSet<Component>();
 		components.add(updateComponent);
@@ -138,14 +154,13 @@ public class TransformationsResourceTest
 		final Transformation expectedTransformation = objectMapper.readValue(updateTransformationJSONString, Transformation.class);
 		Assert.assertNotNull("the transformation JSON string shouldn't be null", updateTransformationJSONString);
 
-		final Transformation updateTransformation = pojoClassResourceTestUtils.updateObject(updateTransformationJSONString,
+		final Transformation updateTransformation = transformationsResourceTestUtils.updateObject(updateTransformationJSONString,
 				expectedTransformation);
 
 		Assert.assertNotNull("the transformation JSON string shouldn't be null", updateTransformation);
 		Assert.assertEquals("transformation id shoud be equal", updateTransformation.getId(), persistedTransformation.getId());
 		Assert.assertEquals("transformation name shoud be equal", updateTransformation.getName(), updateTransformationNameString);
-		Assert.assertEquals("transformation description shoud be equal", updateTransformation.getDescription(),
-				updateTransformationDescriptionString);
+		Assert.assertEquals("transformation description shoud be equal", updateTransformation.getDescription(), updateTransformationDescriptionString);
 
 		final Set<Component> components1 = expectedTransformation.getComponents();
 		final Set<Component> components2 = updateTransformation.getComponents();
@@ -155,5 +170,11 @@ public class TransformationsResourceTest
 		Assert.assertTrue("transformation function should be equal", updateTransformation.getComponents().contains(updateComponent));
 
 		return updateTransformation;
+	}
+
+	@After
+	public void tearDown2() throws Exception {
+
+		functionsResourceTestUtils.deleteObject(function);
 	}
 }

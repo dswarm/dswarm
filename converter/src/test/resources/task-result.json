@@ -1,16 +1,5 @@
-[
-    {
-        "http://data.slub-dresden.de/datamodels/1/records/e4b60cd7-04da-4295-820d-ea0aa49adbd7": [
-            {
-                "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld": [
-                    {
-                        "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": ["<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>", "<a href=\"http://av.gl/dmp2?foo\">Lorem Ipsum</a>", "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>", "<a href=\"http://av.gl/dmp5?foo\">Lorem Ipsum</a>", "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>", "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>"]
-                    },
-                    {
-                        "__record_id": "http://data.slub-dresden.de/resource/2734aa0f-a946-41ae-9a1f-ee0070581bae"
-                    }
-                ]
-            }
-        ]
-    }
-]
+[{
+    "http://data.slub-dresden.de/datamodels/1/records/e4b60cd7-04da-4295-820d-ea0aa49adbd7": [{
+        "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": ["<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>", "<a href=\"http://av.gl/dmp2?foo\">Lorem Ipsum</a>", "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>", "<a href=\"http://av.gl/dmp5?foo\">Lorem Ipsum</a>", "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>", "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>"]
+    }]
+}]

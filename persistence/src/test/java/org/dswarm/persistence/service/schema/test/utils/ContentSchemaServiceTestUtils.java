@@ -19,10 +19,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Maps;
-import org.json.JSONException;
 import org.junit.Assert;
 
 import org.dswarm.persistence.model.schema.AttributePath;
@@ -33,25 +30,25 @@ import org.dswarm.persistence.service.test.utils.BasicDMPJPAServiceTestUtils;
 
 public class ContentSchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<ContentSchemaService, ProxyContentSchema, ContentSchema> {
 
-	private AttributePathServiceTestUtils apstUtils;
+	private final AttributePathServiceTestUtils	attributePathsResourceTestUtils;
 
 	public ContentSchemaServiceTestUtils() {
-		this(new AttributePathServiceTestUtils());
-	}
 
-	public ContentSchemaServiceTestUtils(final AttributePathServiceTestUtils attributePathServiceTestUtils) {
 		super(ContentSchema.class, ContentSchemaService.class);
-		this.apstUtils = attributePathServiceTestUtils;
+
+		attributePathsResourceTestUtils = new AttributePathServiceTestUtils();
 	}
 
 	@Override
-	public void compareObjects(final ContentSchema expectedObject, final ContentSchema actualObject) throws JsonProcessingException, JSONException {
+	public void compareObjects(final ContentSchema expectedObject, final ContentSchema actualObject) {
+
 		super.compareObjects(expectedObject, actualObject);
+
 		compareContentSchemas(expectedObject, actualObject);
 	}
 
-	public ContentSchema createContentSchema(final String name, final AttributePath recordIdentifierAttributePath,
-			final LinkedList<AttributePath> keyAttributePaths, final AttributePath valueAttributePath) throws Exception {
+	public ContentSchema createContentSchema(final String name, final AttributePath recordIdentifierAttributePath, final LinkedList<AttributePath> keyAttributePaths,
+			final AttributePath valueAttributePath) throws Exception {
 
 		final ContentSchema contentSchema = new ContentSchema();
 
@@ -72,7 +69,7 @@ public class ContentSchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<C
 
 		// update content schema
 
-		final ContentSchema updatedContentSchema = createAndCompareObject(contentSchema, contentSchema);
+		final ContentSchema updatedContentSchema = createObject(contentSchema, contentSchema);
 
 		Assert.assertNotNull("updated content schema shouldn't be null", updatedContentSchema);
 		Assert.assertNotNull("updated content schema id shouldn't be null", updatedContentSchema.getId());
@@ -80,13 +77,12 @@ public class ContentSchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<C
 		return updatedContentSchema;
 	}
 
-	private void compareContentSchemas(final ContentSchema expectedContentSchema, final ContentSchema actualContentSchema)
-			throws JsonProcessingException, JSONException {
+	private void compareContentSchemas(final ContentSchema expectedContentSchema, final ContentSchema actualContentSchema) {
 
 		if (expectedContentSchema.getRecordIdentifierAttributePath() != null) {
 
-			apstUtils.compareObjects(expectedContentSchema.getRecordIdentifierAttributePath(),
-					actualContentSchema.getRecordIdentifierAttributePath());
+			attributePathsResourceTestUtils
+					.compareObjects(expectedContentSchema.getRecordIdentifierAttributePath(), actualContentSchema.getRecordIdentifierAttributePath());
 		}
 
 		if (expectedContentSchema.getKeyAttributePaths() != null && !expectedContentSchema.getKeyAttributePaths().isEmpty()) {
@@ -105,20 +101,19 @@ public class ContentSchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<C
 				actualKeyAttributePathsMap.put(actualKeyAttributePath.getId(), actualKeyAttributePath);
 			}
 
-			apstUtils.compareObjects(expectedContentSchema.getUtilisedKeyAttributePaths(), actualKeyAttributePathsMap);
+			attributePathsResourceTestUtils.compareObjects(expectedContentSchema.getUtilisedKeyAttributePaths(), actualKeyAttributePathsMap);
 		}
 
 		if (expectedContentSchema.getValueAttributePath() != null) {
 
-			apstUtils.compareObjects(expectedContentSchema.getValueAttributePath(),
-					actualContentSchema.getValueAttributePath());
+			attributePathsResourceTestUtils
+					.compareObjects(expectedContentSchema.getValueAttributePath(), actualContentSchema.getValueAttributePath());
 		}
 	}
 
 	/**
 	 * {@inheritDoc}<br/>
-	 * Updates the name, record identifier attribute path, key attribute paths and
-	 * value attribute path of the content schema.
+	 * Updates the name, record identifier attribute path, key attribute paths and value attribute path of the content schema.
 	 */
 	@Override
 	protected ContentSchema prepareObjectForUpdate(final ContentSchema objectWithUpdates, final ContentSchema object) {
@@ -142,34 +137,7 @@ public class ContentSchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<C
 
 	@Override
 	public void reset() {
-		//		apstUtils.reset();
-	}
 
-	@Override
-	public ContentSchema createObject(final JsonNode objectDescription) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override public ContentSchema createObject(final String identifier) throws Exception {
-		return null;
-	}
-
-	@Override public ContentSchema createAndPersistDefaultObject() throws Exception {
-
-		final ContentSchema contentSchema = createDefaultObject();
-		return createContentSchema(contentSchema);
-	}
-
-	@Override public ContentSchema createDefaultObject() throws Exception {
-
-		final ContentSchema contentSchema = new ContentSchema();
-		contentSchema.setName("Default Content Schema");
-		contentSchema.addKeyAttributePath(apstUtils.createAndPersistDefaultObject());
-		contentSchema.addKeyAttributePath(apstUtils.getDctermsTitleDctermHaspartAP());
-		contentSchema.addKeyAttributePath(apstUtils.getDctermsCreatedAP());
-		contentSchema.setValueAttributePath(apstUtils.getRDFValueAP());
-		contentSchema.setRecordIdentifierAttributePath(apstUtils.getMABXMLIDAP());
-		return contentSchema;
+		attributePathsResourceTestUtils.reset();
 	}
 }

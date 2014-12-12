@@ -17,11 +17,31 @@ package org.dswarm.converter.schema;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.TextNode;
+import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import com.google.common.io.ByteSource;
+import com.google.common.io.Resources;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
+
+import org.dswarm.graph.json.Resource;
+import org.dswarm.graph.json.ResourceNode;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelperHelper;
@@ -31,25 +51,11 @@ import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.service.schema.AttributePathService;
 import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.schema.ClaszService;
-import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 import org.dswarm.persistence.service.schema.SchemaService;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.dswarm.persistence.util.GDMUtil;
 import org.dswarm.xsd2jsonschema.JsonSchemaParser;
 import org.dswarm.xsd2jsonschema.model.JSRoot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import com.google.common.io.ByteSource;
-import com.google.common.io.Resources;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 /**
  * @author tgaengler
@@ -63,8 +69,6 @@ public class XMLSchemaParser {
 	private final Provider<ClaszService> classServiceProvider;
 
 	private final Provider<AttributePathService> attributePathServiceProvider;
-	
-	private final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceServiceProvider;
 
 	private final Provider<AttributeService> attributeServiceProvider;
 
@@ -81,13 +85,12 @@ public class XMLSchemaParser {
 
 	@Inject
 	public XMLSchemaParser(final Provider<SchemaService> schemaServiceProviderArg,
-			final Provider<ClaszService> classServiceProviderArg, final Provider<AttributePathService> attributePathServiceProviderArg, final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceServiceProviderArg,
+			final Provider<ClaszService> classServiceProviderArg, final Provider<AttributePathService> attributePathServiceProviderArg,
 			final Provider<AttributeService> attributeServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg) {
 
 		schemaServiceProvider = schemaServiceProviderArg;
 		classServiceProvider = classServiceProviderArg;
 		attributePathServiceProvider = attributePathServiceProviderArg;
-		schemaAttributePathInstanceServiceProvider = schemaAttributePathInstanceServiceProviderArg;
 		attributeServiceProvider = attributeServiceProviderArg;
 		objectMapperProvider = objectMapperProviderArg;
 	}
@@ -132,7 +135,7 @@ public class XMLSchemaParser {
 
 		final Set<AttributePathHelper> attributePaths = parseAttributePaths(recordTagNodes);
 
-		SchemaUtils.addAttributePaths(schema, attributePaths, attributePathServiceProvider, schemaAttributePathInstanceServiceProvider, attributeServiceProvider);
+		SchemaUtils.addAttributePaths(schema, attributePaths, attributePathServiceProvider, attributeServiceProvider);
 
 		final Schema updatedSchema = SchemaUtils.updateSchema(schema, schemaServiceProvider);
 
@@ -216,7 +219,7 @@ public class XMLSchemaParser {
 			if (currentJSONSchemaNodePropertiesEntry.getKey().endsWith(recordTag)) {
 
 				final ObjectNode recordTagNode = objectMapperProvider.get().createObjectNode();
-				recordTagNode.set(currentJSONSchemaNodePropertiesEntry.getKey(), currentJSONSchemaNodePropertiesEntry.getValue());
+				recordTagNode.put(currentJSONSchemaNodePropertiesEntry.getKey(), currentJSONSchemaNodePropertiesEntry.getValue());
 
 				recordTagNodes.add(recordTagNode);
 
@@ -375,7 +378,7 @@ public class XMLSchemaParser {
 
 			final String newAttribute = entry.getKey();
 
-			newJSONSchemaAttributeNode.set(newAttribute, entry.getValue());
+			newJSONSchemaAttributeNode.put(newAttribute, entry.getValue());
 
 			if (newAttribute.startsWith("@")) {
 

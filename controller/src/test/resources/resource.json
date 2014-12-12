@@ -1,6 +1,6 @@
 {
     "id": 1,
-    "name": "test_csv-controller.csv",
+    "name": "test_csv.csv",
     "type": "FILE",
     "description": "this is a description",
     "resource_attributes": {

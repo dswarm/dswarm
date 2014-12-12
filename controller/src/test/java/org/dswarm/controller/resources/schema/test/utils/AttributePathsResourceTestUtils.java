@@ -15,16 +15,15 @@
  */
 package org.dswarm.controller.resources.schema.test.utils;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import org.json.JSONException;
 
 import org.dswarm.controller.resources.test.utils.BasicResourceTestUtils;
 import org.dswarm.persistence.model.schema.Attribute;
@@ -43,7 +42,7 @@ public class AttributePathsResourceTestUtils extends
 	}
 
 	@Override
-	public void compareObjects(final AttributePath expectedObject, final AttributePath actualObject) throws JsonProcessingException, JSONException {
+	public void compareObjects(final AttributePath expectedObject, final AttributePath actualObject) {
 
 		// note: expected object need to be patched here
 

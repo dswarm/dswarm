@@ -33,22 +33,18 @@ import org.slf4j.LoggerFactory;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
 import org.dswarm.persistence.model.proxy.RetrievalType;
-import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
 import org.dswarm.persistence.model.schema.proxy.ProxyClasz;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
-import org.dswarm.persistence.model.schema.proxy.ProxySchemaAttributePathInstance;
 import org.dswarm.persistence.model.utils.BasicDMPJPAObjectUtils;
 import org.dswarm.persistence.service.schema.AttributePathService;
 import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.schema.ClaszService;
-import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 import org.dswarm.persistence.service.schema.SchemaService;
 
 /**
@@ -56,27 +52,18 @@ import org.dswarm.persistence.service.schema.SchemaService;
  */
 public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
-	private static final Logger LOG                 = LoggerFactory.getLogger(SchemaUtils.class);
-	public static final String BASE_URI            = "http://data.slub-dresden.de/";
-	private static final String RECORD_BASE_URI     = BASE_URI + "records/";
-	public static final String DATA_MODEL_BASE_URI = BASE_URI + "datamodels/";
-	private static final String RECORD_RELATIVE_URI = "/records/";
-	private static final String TERM_BASE_URI       = BASE_URI + "terms/%s";
-	public static final  String HASH                = "#";
-	public static final  String SLASH               = "/";
-	public static final  String TYPE_POSTFIX        = "Type";
-	private static final String SCHEMA_BASE_URI     = BASE_URI + "schemas/";
+	private static final Logger LOG = LoggerFactory.getLogger(SchemaUtils.class);
 
 	public static String determineRelativeURIPart(final String uri) {
 
 		final String lastPartDelimiter;
 
-		if (uri.lastIndexOf(HASH) > 0) {
+		if (uri.lastIndexOf("#") > 0) {
 
-			lastPartDelimiter = HASH;
-		} else if (uri.lastIndexOf(SLASH) > 0) {
+			lastPartDelimiter = "#";
+		} else if (uri.lastIndexOf("/") > 0) {
 
-			lastPartDelimiter = SLASH;
+			lastPartDelimiter = "/";
 		} else {
 
 			lastPartDelimiter = null;
@@ -97,7 +84,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 	public static String determineSchemaNamespaceURI(final Long schemaId) {
 
-		return SCHEMA_BASE_URI + schemaId + SLASH;
+		return "http://data.slub-dresden.de/schemas/" + schemaId + "/";
 	}
 
 	public static String mintAttributeURI(final String attributeName, final String namespaceURI) {
@@ -162,12 +149,8 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		return true;
 	}
 
-	public static boolean addAttributePaths(
-			final Schema schema,
-			final Set<AttributePathHelper> attributePathHelpers,
-			final Provider<AttributePathService> attributePathServiceProvider,
-			final Provider<SchemaAttributePathInstanceService> attributePathInstanceServiceProvider,
-			final Provider<AttributeService> attributeServiceProvider)
+	public static boolean addAttributePaths(final Schema schema, final Set<AttributePathHelper> attributePathHelpers,
+			final Provider<AttributePathService> attributePathServiceProvider, final Provider<AttributeService> attributeServiceProvider)
 			throws DMPPersistenceException {
 
 		if (attributePathHelpers == null) {
@@ -195,8 +178,6 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 			final AttributeService attributeService = attributeServiceProvider.get();
 			final AttributePathService attributePathService = attributePathServiceProvider.get();
-			final SchemaAttributePathInstanceService schemaAttributePathInstanceService =
-					attributePathInstanceServiceProvider.get();
 
 			for (final String attributeString : attributePathFromHelper) {
 
@@ -221,56 +202,24 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 				attribute.setName(attributeName);
 			}
 
-			addAttributePaths(schema, attributes, attributePathService, schemaAttributePathInstanceService);
+			final ProxyAttributePath proxyAttributePath = attributePathService.createOrGetObjectTransactional(attributes);
+
+			if (proxyAttributePath == null) {
+
+				throw new DMPPersistenceException("couldn't create or retrieve attribute path");
+			}
+
+			final AttributePath attributePath = proxyAttributePath.getObject();
+
+			if (attributePath == null) {
+
+				throw new DMPPersistenceException("couldn't create or retrieve attribute path");
+			}
+
+			schema.addAttributePath(attributePath);
 		}
 
 		return true;
-	}
-
-	public static void addAttributePaths(final Schema schema, final LinkedList<Attribute> attributes, final AttributePathService attributePathService,
-			final SchemaAttributePathInstanceService schemaAttributePathInstanceService) throws DMPPersistenceException {
-
-		final SchemaAttributePathInstance schemaAttributePathInstance = createSchemaAttributePathInstance(attributes, attributePathService,
-				schemaAttributePathInstanceService);
-
-		schema.addAttributePath(schemaAttributePathInstance);
-	}
-
-	public static SchemaAttributePathInstance createSchemaAttributePathInstance(final LinkedList<Attribute> attributes,
-			final AttributePathService attributePathService, final SchemaAttributePathInstanceService schemaAttributePathInstanceService)
-			throws DMPPersistenceException {
-
-		final ProxyAttributePath proxyAttributePath = attributePathService.createOrGetObjectTransactional(attributes);
-
-		if (proxyAttributePath == null) {
-
-			throw new DMPPersistenceException("couldn't create or retrieve attribute path");
-		}
-
-		final AttributePath attributePath = proxyAttributePath.getObject();
-
-		if (attributePath == null) {
-
-			throw new DMPPersistenceException("couldn't create or retrieve attribute path");
-		}
-
-		final ProxySchemaAttributePathInstance proxySchemaAttributePathInstance =
-				schemaAttributePathInstanceService.createObjectTransactional(attributePath);
-
-		if (proxySchemaAttributePathInstance == null) {
-
-			throw new DMPPersistenceException("couldn't create or retrieve schema attribute path instance");
-
-		}
-
-		final SchemaAttributePathInstance schemaAttributePathInstance = proxySchemaAttributePathInstance.getObject();
-
-		if (schemaAttributePathInstance == null) {
-
-			throw new DMPPersistenceException("couldn't create or retrieve schema attribute path instance");
-
-		}
-		return schemaAttributePathInstance;
 	}
 
 	public static boolean isValidUri(@Nullable final String identifier) {
@@ -293,22 +242,22 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		final String finalLocalName = UrlEscapers.urlFormParameterEscaper().escape(localName);
 
 		// allow has and slash uris
-		if (uri != null && uri.endsWith(SLASH)) {
+		if (uri != null && uri.endsWith("/")) {
 
 			return uri + finalLocalName;
 		}
 
-		if (localName.startsWith(HASH)) {
+		if (localName.startsWith("#")) {
 
 			return uri + localName;
 		}
 
-		if (uri != null && uri.endsWith(HASH)) {
+		if(uri != null && uri.endsWith("#")) {
 
 			return uri + finalLocalName;
 		}
 
-		return uri + HASH + finalLocalName;
+		return uri + "#" + finalLocalName;
 	}
 
 	public static String mintTermUri(@Nullable final String uri, @Nullable final String localName, Optional<String> baseURI) {
@@ -328,7 +277,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 				}
 			}
 
-			return String.format(TERM_BASE_URI, UUID.randomUUID());
+			return String.format("http://data.slub-dresden.de/terms/%s", UUID.randomUUID());
 		}
 
 		if (canUseLocalName) {
@@ -336,7 +285,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 			return SchemaUtils.mintUri(uri, localName);
 		} else {
 
-			return String.format(TERM_BASE_URI, UUID.randomUUID());
+			return String.format("http://data.slub-dresden.de/terms/%s", UUID.randomUUID());
 		}
 	}
 
@@ -352,48 +301,6 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		return proxyUpdatedSchema.getObject();
 	}
 
-	public static String mintRecordUri(@Nullable final String identifier, final String currentId, final Optional<DataModel> optionalDataModel) {
-
-		if (currentId == null) {
-
-			// mint completely new uri
-
-			final StringBuilder sb = new StringBuilder();
-
-			if (optionalDataModel.isPresent()) {
-
-				// create uri from resource id and configuration id and random uuid
-
-				sb.append(DATA_MODEL_BASE_URI).append(optionalDataModel.get().getId()).append(RECORD_RELATIVE_URI);
-			} else {
-
-				// create uri from random uuid
-
-				sb.append(RECORD_BASE_URI);
-			}
-
-			return sb.append(UUID.randomUUID()).toString();
-		}
-
-		// create uri with help of given record id
-
-		final StringBuilder sb = new StringBuilder();
-
-		if (optionalDataModel.isPresent()) {
-
-			// create uri from resource id and configuration id and identifier
-
-			sb.append(DATA_MODEL_BASE_URI).append(optionalDataModel.get().getId()).append(RECORD_RELATIVE_URI).append(identifier);
-		} else {
-
-			// create uri from identifier
-
-			sb.append(RECORD_BASE_URI).append(identifier);
-		}
-
-		return sb.toString();
-	}
-
 	private static String mintTermUri(final String termUri, final String localTermName, final String baseUri) {
 
 		final boolean isValidURI = isValidUri(localTermName);
@@ -407,7 +314,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 			final boolean isValidTermURI = isValidUri(termUri);
 
-			if (isValidTermURI) {
+			if(isValidTermURI) {
 
 				return mintTermUri(termUri, localTermName, optionalBaseUri);
 			} else {

@@ -44,7 +44,6 @@ import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class ProjectTest extends GuicedTest {
@@ -663,9 +662,9 @@ public class ProjectTest extends GuicedTest {
 		final Schema schema = new Schema();
 		// schema.setId(UUID.randomUUID().toString());
 
-		schema.addAttributePath(createAttributePathInstance(attributePath1));
-		schema.addAttributePath(createAttributePathInstance(attributePath2));
-		schema.addAttributePath(createAttributePathInstance(attributePath3));
+		schema.addAttributePath(attributePath1);
+		schema.addAttributePath(attributePath2);
+		schema.addAttributePath(attributePath3);
 		schema.setRecordClass(biboDocument);
 
 		// data resource
@@ -747,14 +746,4 @@ public class ProjectTest extends GuicedTest {
 
 		return attribute;
 	}
-	
-	private static SchemaAttributePathInstance createAttributePathInstance(final AttributePath attributePath) {
-		final SchemaAttributePathInstance attributePathInstance = new SchemaAttributePathInstance();
-		attributePathInstance.setAttributePath(attributePath);
-
-		Assert.assertNotNull("the attribute path should not be null", attributePathInstance.getAttributePath());
-
-		return attributePathInstance;
-	}
-
 }

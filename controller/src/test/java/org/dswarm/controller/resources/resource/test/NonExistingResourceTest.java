@@ -44,5 +44,7 @@ public class NonExistingResourceTest extends ResourceTest {
 		final Response response = target().request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
 
 		Assert.assertEquals("404 NOT FOUND was expected", 404, response.getStatus());
+
+		final String responseString = response.readEntity(String.class);
 	}
 }

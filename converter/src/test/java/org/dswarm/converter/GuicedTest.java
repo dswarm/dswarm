@@ -15,8 +15,6 @@
  */
 package org.dswarm.converter;
 
-import org.junit.After;
-import org.junit.Before;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -30,15 +28,11 @@ import org.dswarm.init.LoggingConfigurator;
 import org.dswarm.persistence.JacksonObjectMapperModule;
 import org.dswarm.persistence.JpaHibernateModule;
 import org.dswarm.persistence.PersistenceModule;
-import org.dswarm.persistence.service.MaintainDBService;
-import org.dswarm.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 
 
 public abstract class GuicedTest {
 
 	protected static Injector injector;
-	
-	protected MaintainDBService maintainDBService;
 
 	public static Injector getInjector() {
 		final ConfigModule configModule = new ConfigModule();
@@ -70,32 +64,5 @@ public abstract class GuicedTest {
 
 		GuicedTest.injector.getInstance(PersistService.class).stop();
 		org.dswarm.persistence.GuicedTest.tearDown();
-	}
-	
-	@Before
-	public void prepare() throws Exception {
-
-		GuicedTest.tearDown();
-		GuicedTest.startUp();
-		initObjects();
-		maintainDBService.initDB();
-		//		maintainDBService.truncateTables();
-		InternalGDMGraphServiceTestUtils.cleanGraphDB();
-	}
-
-	@After
-	public void tearDown3() throws Exception {
-
-		GuicedTest.tearDown();
-		GuicedTest.startUp();
-		initObjects();
-		maintainDBService.initDB();
-		//		maintainDBService.truncateTables();
-		InternalGDMGraphServiceTestUtils.cleanGraphDB();
-	}
-	
-	protected void initObjects() {
-
-		maintainDBService = GuicedTest.injector.getInstance(MaintainDBService.class);
 	}
 }
