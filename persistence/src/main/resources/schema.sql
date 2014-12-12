@@ -44,9 +44,7 @@ SET foreign_key_checks = 0;
 
     drop table if exists RESOURCE;
 
-    drop table if exists SCHEMAS_SCHEMA_ATTRIBUTE_PATH_INSTANCES;
-
-    drop table if exists SCHEMA_ATTRIBUTE_PATH_INSTANCE;
+    drop table if exists SCHEMAS_ATTRIBUTE_PATHS;
 
     drop table if exists TRANSFORMATION;
 
@@ -136,7 +134,7 @@ SET foreign_key_checks = 0;
     create table DATA_SCHEMA (
         ID bigint not null auto_increment,
         NAME varchar(255),
-        SCHEMA_ATTRIBUTE_PATH_INSTANCES VARCHAR(4000),
+        ATTRIBUTE_PATHS VARCHAR(4000),
         CONTENT_SCHEMA bigint,
         RECORD_CLASS bigint,
         primary key (ID)
@@ -216,16 +214,10 @@ SET foreign_key_checks = 0;
         primary key (ID)
     ) ENGINE=InnoDB;
 
-    create table SCHEMAS_SCHEMA_ATTRIBUTE_PATH_INSTANCES (
+    create table SCHEMAS_ATTRIBUTE_PATHS (
         SCHEMA_ID bigint not null,
-        SCHEMA_ATTRIBUTE_PATH_INSTANCE_ID bigint not null,
-        primary key (SCHEMA_ID, SCHEMA_ATTRIBUTE_PATH_INSTANCE_ID)
-    ) ENGINE=InnoDB;
-
-    create table SCHEMA_ATTRIBUTE_PATH_INSTANCE (
-        ID bigint not null,
-        SUB_SCHEMA bigint,
-        primary key (ID)
+        ATTRIBUTE_PATH_ID bigint not null,
+        primary key (SCHEMA_ID, ATTRIBUTE_PATH_ID)
     ) ENGINE=InnoDB;
 
     create table TRANSFORMATION (
@@ -413,29 +405,17 @@ SET foreign_key_checks = 0;
         foreign key (PROJECT_ID) 
         references PROJECT (ID);
 
-    alter table SCHEMAS_SCHEMA_ATTRIBUTE_PATH_INSTANCES 
-        add index FK_g2gpcehjy1n6n47h7iujc2rk (SCHEMA_ATTRIBUTE_PATH_INSTANCE_ID), 
-        add constraint FK_g2gpcehjy1n6n47h7iujc2rk 
-        foreign key (SCHEMA_ATTRIBUTE_PATH_INSTANCE_ID) 
-        references SCHEMA_ATTRIBUTE_PATH_INSTANCE (ID);
+    alter table SCHEMAS_ATTRIBUTE_PATHS 
+        add index FK_bn6agrogclcpeuvsua2ndpreu (ATTRIBUTE_PATH_ID), 
+        add constraint FK_bn6agrogclcpeuvsua2ndpreu 
+        foreign key (ATTRIBUTE_PATH_ID) 
+        references ATTRIBUTE_PATH (ID);
 
-    alter table SCHEMAS_SCHEMA_ATTRIBUTE_PATH_INSTANCES 
-        add index FK_i35wl7xdvfkks7cekmmm9wb56 (SCHEMA_ID), 
-        add constraint FK_i35wl7xdvfkks7cekmmm9wb56 
+    alter table SCHEMAS_ATTRIBUTE_PATHS 
+        add index FK_fs9dl6u7bs5fsd6wc08depa1a (SCHEMA_ID), 
+        add constraint FK_fs9dl6u7bs5fsd6wc08depa1a 
         foreign key (SCHEMA_ID) 
         references DATA_SCHEMA (ID);
-
-    alter table SCHEMA_ATTRIBUTE_PATH_INSTANCE 
-        add index FK_egcon8hcag84y1tpt0klt8m0a (SUB_SCHEMA), 
-        add constraint FK_egcon8hcag84y1tpt0klt8m0a 
-        foreign key (SUB_SCHEMA) 
-        references DATA_SCHEMA (ID);
-
-    alter table SCHEMA_ATTRIBUTE_PATH_INSTANCE 
-        add index FK_kdbuybigve4o0epqxkscgkfu7 (ID), 
-        add constraint FK_kdbuybigve4o0epqxkscgkfu7 
-        foreign key (ID) 
-        references ATTRIBUTE_PATH_INSTANCE (ID);
 
     alter table TRANSFORMATION 
         add index FK_qk4t8c3cucrxqguipv9emdxpm (ID), 

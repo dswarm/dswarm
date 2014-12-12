@@ -27,4 +27,10 @@ public class ProjectsResourceTestUtils extends ExtendedBasicDMPResourceTestUtils
 
 		super("projects", Project.class, ProjectService.class, ProjectServiceTestUtils.class);
 	}
+
+	// TODO put logic here to delete a project with all its parts?
+	// public void deleteObjectAndSiblings(Project project){
+	//
+	// }
+
 }

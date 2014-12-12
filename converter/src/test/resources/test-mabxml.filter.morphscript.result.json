@@ -1,11 +1,1 @@
-[{
-    "http://data.slub-dresden.de/datamodels/1/records/8fd200b4-b432-4618-9c1a-6cded44848de": [{
-        "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld": [{
-            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "077,Roll, Gernot"
-        }, {
-            "__record_id": "http://data.slub-dresden.de//resource/b9e63286-709f-4d10-a29c-2d32ced81bdc"
-        }]
-    }, {
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }]
-}]
+[{"http://data.slub-dresden.de/datamodels/1/records/8fd200b4-b432-4618-9c1a-6cded44848de":[{"http://www.w3.org/1999/02/22-rdf-syntax-ns#type":"http://purl.org/ontology/bibo/Document"},{"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr":"077,Roll, Gernot"}]}]

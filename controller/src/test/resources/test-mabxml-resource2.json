@@ -1,6 +1,6 @@
 {
     "id": 1,
-    "name": "test-mabxml2-controller.xml",
+    "name": "test-mabxml2.xml",
     "type": "FILE",
     "description": "this is a description",
     "resource_attributes": {

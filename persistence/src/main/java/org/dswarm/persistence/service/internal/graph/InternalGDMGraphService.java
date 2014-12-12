@@ -67,7 +67,6 @@ import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.service.schema.AttributePathService;
 import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.schema.ClaszService;
-import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.dswarm.persistence.util.GDMUtil;
@@ -101,8 +100,6 @@ public class InternalGDMGraphService implements InternalModelService {
 	private final Provider<ClaszService> classService;
 
 	private final Provider<AttributePathService> attributePathService;
-	
-	private final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceService;
 
 	private final Provider<AttributeService> attributeService;
 
@@ -111,7 +108,8 @@ public class InternalGDMGraphService implements InternalModelService {
 	private final Provider<ObjectMapper> objectMapperProvider;
 
 	/**
-	 * Creates a new internal triple service with the given persistence services and the endpoint to access the graph database.
+	 * /** Creates a new internal triple service with the given data model persistence service, schema persistence service, class
+	 * persistence service and the endpoint to access the graph database.
 	 *
 	 * @param dataModelService     the data model persistence service
 	 * @param schemaService        the schema persistence service
@@ -121,21 +119,14 @@ public class InternalGDMGraphService implements InternalModelService {
 	 * @param graphEndpointArg     the endpoint to access the graph database
 	 */
 	@Inject
-	public InternalGDMGraphService(
-			final Provider<DataModelService> dataModelService,
-			final Provider<SchemaService> schemaService,
-			final Provider<ClaszService> classService,
-			final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceService,
-			final Provider<AttributePathService> attributePathService,
-			final Provider<AttributeService> attributeService,
-			@Named("dswarm.db.graph.endpoint") final String graphEndpointArg,
-			final Provider<ObjectMapper> objectMapperProviderArg) {
-		
+	public InternalGDMGraphService(final Provider<DataModelService> dataModelService, final Provider<SchemaService> schemaService,
+			final Provider<ClaszService> classService, final Provider<AttributePathService> attributePathService,
+			final Provider<AttributeService> attributeService, @Named("dswarm.db.graph.endpoint") final String graphEndpointArg, final Provider<ObjectMapper> objectMapperProviderArg) {
+
 		this.dataModelService = dataModelService;
 		this.schemaService = schemaService;
 		this.classService = classService;
 		this.attributePathService = attributePathService;
-		this.schemaAttributePathInstanceService = schemaAttributePathInstanceService;
 		this.attributeService = attributeService;
 
 		graphEndpoint = graphEndpointArg;
@@ -194,7 +185,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 				final Set<Resource> recordResources = GDMUtil.getRecordResources(recordClassURI, realModel);
 
-				if (recordResources != null && !recordResources.isEmpty()) {
+				if (recordResources != null) {
 
 					final LinkedHashSet<String> recordURIs = Sets.newLinkedHashSet();
 
@@ -398,15 +389,14 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final Schema schema = dataModel.getSchema();
 
-		if (schema.getId() == 4) {
+		if (schema.getId() == 3) {
 
 			// mabxml schema is already there
 
 			return dataModel;
 		}
 
-		final boolean result = SchemaUtils.addAttributePaths(schema, attributePathHelpers,
-				attributePathService, schemaAttributePathInstanceService, attributeService);
+		final boolean result = SchemaUtils.addAttributePaths(schema, attributePathHelpers, attributePathService, attributeService);
 
 		if (!result) {
 
@@ -470,7 +460,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 				// assign existing mabxml schema to data resource
 
-				schema = schemaService.get().getObject((long) 4);
+				schema = schemaService.get().getObject((long) 3);
 			}
 
 			dataModel.setSchema(schema);

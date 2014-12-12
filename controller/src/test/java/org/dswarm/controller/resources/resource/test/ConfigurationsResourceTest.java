@@ -33,10 +33,4 @@ public class ConfigurationsResourceTest
 
 		updateObjectJSONFileName = "configuration2.json";
 	}
-
-	@Override protected void initObjects() {
-		super.initObjects();
-
-		pojoClassResourceTestUtils = new ConfigurationsResourceTestUtils();
-	}
 }

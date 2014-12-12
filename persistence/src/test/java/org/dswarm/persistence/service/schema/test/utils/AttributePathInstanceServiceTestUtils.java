@@ -15,15 +15,8 @@
  */
 package org.dswarm.persistence.service.schema.test.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import org.json.JSONException;
 import org.junit.Assert;
 
-import org.dswarm.init.util.DMPStatics;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.AttributePathInstance;
@@ -35,22 +28,14 @@ import org.dswarm.persistence.service.test.utils.BasicDMPJPAServiceTestUtils;
 public abstract class AttributePathInstanceServiceTestUtils<POJOCLASSPERSISTENCESERVICE extends AttributePathInstanceService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyAttributePathInstance<POJOCLASS>, POJOCLASS extends AttributePathInstance>
 		extends BasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
 
-	protected AttributePathServiceTestUtils	attributePathServiceTestUtils;
-	
-	protected abstract POJOCLASS createAttributePathInstance( final String name, final AttributePath attributePath, final JsonNode objectDescription ) throws Exception;
-	
-	
+	private final AttributePathServiceTestUtils	attributePathServiceTestUtils;
+
 	public AttributePathInstanceServiceTestUtils(final Class<POJOCLASS> pojoClassArg,
 			final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg) {
 
 		super(pojoClassArg, persistenceServiceClassArg);
 
 		attributePathServiceTestUtils = new AttributePathServiceTestUtils();
-	}
-
-	protected AttributePathServiceTestUtils getAttributePathServiceTestUtils() {
-
-		return attributePathServiceTestUtils;
 	}
 
 	/**
@@ -64,7 +49,7 @@ public abstract class AttributePathInstanceServiceTestUtils<POJOCLASSPERSISTENCE
 	 * @param actualObject
 	 */
 	@Override
-	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) throws JsonProcessingException, JSONException {
+	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) {
 
 		super.compareObjects(expectedObject, actualObject);
 
@@ -98,43 +83,5 @@ public abstract class AttributePathInstanceServiceTestUtils<POJOCLASSPERSISTENCE
 	public void reset() {
 
 		attributePathServiceTestUtils.reset();
-	}
-	
-	
-	
-	@Override
-	public POJOCLASS createObject(final JsonNode objectDescription) throws Exception {
-		//TODO externalize valid keys
-		final String name = objectDescription.get("name") != null ? objectDescription.get("name").asText( null ) : null;
-		
-		final StringBuilder keySB = new StringBuilder();
-		//TODO externalize valid keys
-		final List<String> temp = new ArrayList<>();
-		int i = 1;
-		final JsonNode attributeIds = objectDescription.get( "attribute_ids" );
-		for( final JsonNode jn : attributeIds) {
-			temp.add( jn.asText() );
-
-			keySB.append(jn.asText());
-
-			if(i < attributeIds.size()) {
-
-				keySB.append(DMPStatics.ATTRIBUTE_DELIMITER);
-			}
-		}
-
-		final String key = keySB.toString();
-		
-		if( !cache.containsKey(key) ) {
-			final AttributePath ap = getAttributePath(temp.toArray(new String[temp.size()]));
-			cache.put( key, createAttributePathInstance( name, ap, objectDescription ) );
-		}
-
-		return cache.get(key);
-	}
-	
-	
-	protected AttributePath getAttributePath( final String... attributeIds ) throws Exception {
-		return attributePathServiceTestUtils.getAttributePath(attributeIds);
 	}
 }

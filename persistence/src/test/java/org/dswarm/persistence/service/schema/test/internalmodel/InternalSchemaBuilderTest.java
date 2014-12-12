@@ -20,58 +20,52 @@ import java.util.Set;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import org.dswarm.persistence.GuicedTest;
+import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 
 public class InternalSchemaBuilderTest extends GuicedTest {
 
 	// private static final Logger LOG = LoggerFactory.getLogger(InternalSchemaBuilderTest.class);
 
-	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper	objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	// private static final String NL = System.lineSeparator();
 
-	@Override
-	public void prepare() throws Exception {
-
-		super.prepare();
-		maintainDBService.truncateTables();
-	}
-
-	//@Ignore
+	@Ignore
 	@Test
-	public void buildInternalSchema() throws Exception {
+	public void buildInternalSchema() {
 		buildSchema(new BiboDocumentSchemaBuilder());
 	}
 
-	//@Ignore
+	@Ignore
 	@Test
-	public void buildERMSchema() throws Exception {
+	public void buildERMSchema() {
 		buildSchema(new BibrmContractItemSchemaBuilder());
 	}
 
-	private void buildSchema(final SchemaBuilder schemaBuilder) throws Exception {
+	private void buildSchema(final SchemaBuilder schemaBuilder) {
 
 		final Schema schema = schemaBuilder.buildSchema();
 
-		printSchemaAsJSON(schema);
-		printSchemaAsText(schema);
-		printSchemaAsPrefixPaths(schemaBuilder);
+		printSchemaJSON(schema);
+		printSchemaText(schema);
+		printSchemaTextAsPrefixPaths(schemaBuilder);
 	}
 
-	private void printSchemaAsPrefixPaths(final SchemaBuilder schemaBuilder) {
+	private void printSchemaTextAsPrefixPaths(final SchemaBuilder schemaBuilder) {
 
-		System.out.println("***************************************************************");
-		System.out.println("Schema as prefix paths (does currently not print sub-schemata!)");
-		System.out.println("***************************************************************");
+		System.out.println("****************************************************");
+		System.out.println("Schema as prefix paths");
+		System.out.println("****************************************************");
 		System.out.println(schemaBuilder.getPrefixPaths());
 		System.out.println("****************************************************");
 	}
 
-	public void printSchemaAsJSON(final Schema schema) {
+	public void printSchemaJSON(final Schema schema) {
 
 		String json = null;
 
@@ -89,33 +83,29 @@ public class InternalSchemaBuilderTest extends GuicedTest {
 
 	}
 
-	public static void printSchemaAsText(final Schema schema) {
+	public void printSchemaText(final Schema schema) {
 
 		System.out.println("****************************************************");
 		System.out.println("Schema for " + schema.getRecordClass().getUri());
 		System.out.println("****************************************************");
 
-		final Set<SchemaAttributePathInstance> pathSet = schema.getUniqueAttributePaths();
+		final Set<AttributePath> pathSet = schema.getUniqueAttributePaths();
 
-		for (final Iterator<SchemaAttributePathInstance> iterator = pathSet.iterator(); iterator.hasNext(); ) {
+		for (final Iterator<AttributePath> iterator = pathSet.iterator(); iterator.hasNext();) {
 
-			final SchemaAttributePathInstance attributePathInstance = iterator.next();
-			InternalSchemaBuilderTest.printAttributePathAsText(attributePathInstance);
+			final AttributePath attributePath = iterator.next();
+			InternalSchemaBuilderTest.printAttributePath(attributePath);
+
 		}
 
 		System.out.println("****************************************************");
 
 	}
 
-	public static void printAttributePathAsText(final SchemaAttributePathInstance path) {
+	public static void printAttributePath(final AttributePath path) {
 
-		System.out.println(path.getAttributePath().toAttributePath().replace("", " :: "));
+		System.out.println(path.toAttributePath().replace("", " :: "));
 
-		if (null != path.getSubSchema()) {
-			System.out.println("****************************************************");
-			System.out.println("*with sub-schema:***********************************");
-			printSchemaAsText(path.getSubSchema());
-		}
 	}
 
 }

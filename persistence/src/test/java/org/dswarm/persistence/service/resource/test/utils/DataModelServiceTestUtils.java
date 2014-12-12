@@ -15,9 +15,6 @@
  */
 package org.dswarm.persistence.service.resource.test.utils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import org.json.JSONException;
 import org.junit.Assert;
 
 import org.dswarm.persistence.model.resource.Configuration;
@@ -31,59 +28,19 @@ import org.dswarm.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestU
 
 public class DataModelServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils<DataModelService, ProxyDataModel, DataModel> {
 
-	private final ResourceServiceTestUtils resourcesResourceTestUtils;
+	private final ResourceServiceTestUtils		resourcesResourceTestUtils;
 
-	private final ConfigurationServiceTestUtils configurationsResourceTestUtils;
+	private final ConfigurationServiceTestUtils	configurationsResourceTestUtils;
 
-	private final SchemaServiceTestUtils schemasResourceTestUtils;
+	private final SchemaServiceTestUtils		schemasResourceTestUtils;
 
 	public DataModelServiceTestUtils() {
 
 		super(DataModel.class, DataModelService.class);
 
 		resourcesResourceTestUtils = new ResourceServiceTestUtils();
-		configurationsResourceTestUtils = new ConfigurationServiceTestUtils(resourcesResourceTestUtils);
+		configurationsResourceTestUtils = new ConfigurationServiceTestUtils();
 		schemasResourceTestUtils = new SchemaServiceTestUtils();
-	}
-
-	@Override public DataModel createObject(JsonNode objectDescription) throws Exception {
-		return null;
-	}
-
-	@Override public DataModel createObject(String identifier) throws Exception {
-		return null;
-	}
-
-	@Override public DataModel createAndPersistDefaultObject() throws Exception {
-
-		final String dataModelName = "my data model";
-		final String dataModelDescription = "my data model description";
-
-		final Schema schema = schemasResourceTestUtils.createAndPersistAlternativeSchema();
-		final Resource resource = resourcesResourceTestUtils.createAndPersistDefaultObject();
-		final Configuration configuration = configurationsResourceTestUtils.createAndPersistDefaultObject();
-		resource.addConfiguration(configuration);
-		final Resource updatedResource = resourcesResourceTestUtils.updateAndCompareObject(resource, resource);
-
-		return createDataModel(dataModelName, dataModelDescription, updatedResource, configuration, schema);
-	}
-
-	@Override public DataModel createDefaultObject() throws Exception {
-		return null;
-	}
-
-	public DataModel createDataModel(final String name, final String description, final Resource resource, final Configuration configuration,
-			final Schema schema)
-			throws Exception {
-
-		final DataModel dataModel = new DataModel();
-		dataModel.setName(name);
-		dataModel.setDescription(description);
-		dataModel.setDataResource(resource);
-		dataModel.setConfiguration(configuration);
-		dataModel.setSchema(schema);
-
-		return createAndCompareObject(dataModel, dataModel);
 	}
 
 	/**
@@ -96,7 +53,7 @@ public class DataModelServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 	 * {@link SchemaServiceTestUtils#compareObjects(Schema, Schema)}. <br />
 	 */
 	@Override
-	public void compareObjects(final DataModel expectedDataModel, final DataModel actualDataModel) throws JsonProcessingException, JSONException {
+	public void compareObjects(final DataModel expectedDataModel, final DataModel actualDataModel) {
 
 		super.compareObjects(expectedDataModel, actualDataModel);
 

@@ -15,14 +15,16 @@
  */
 package org.dswarm.controller.resources.test;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,41 +34,22 @@ import org.dswarm.controller.ServerConfig;
 import org.dswarm.controller.providers.handler.ExceptionHandler;
 import org.dswarm.controller.test.GuicedTest;
 import org.dswarm.persistence.service.MaintainDBService;
-import org.dswarm.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 
 public class ResourceTest extends GuicedTest {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ResourceTest.class);
+	private static final Logger		LOG		= LoggerFactory.getLogger(ResourceTest.class);
 
-	protected static EmbeddedServer grizzlyServer;
+	protected static EmbeddedServer	grizzlyServer;
 
-	protected String resourceIdentifier;
+	protected String				resourceIdentifier;
 
 	protected static final ServerConfig SERVER_CONFIG = new ServerConfig(9998, "127.0.0.1", "/test");
 
-	protected MaintainDBService maintainDBService;
+	protected MaintainDBService		maintainDBService;
 
 	public ResourceTest(final String resourceIdentifier) {
 
 		this.resourceIdentifier = resourceIdentifier;
-	}
-
-	@Before
-	public void prepare() throws Exception {
-
-		restartServer();
-		initObjects();
-		maintainDBService.initDB();
-		InternalGDMGraphServiceTestUtils.cleanGraphDB();
-	}
-
-	@After
-	public void tearDown3() throws Exception {
-
-		restartServer();
-		initObjects();
-		maintainDBService.initDB();
-		InternalGDMGraphServiceTestUtils.cleanGraphDB();
 	}
 
 	protected void initObjects() {
@@ -132,4 +115,24 @@ public class ResourceTest extends GuicedTest {
 		return ResourceTest.grizzlyServer.getBaseUri().toString();
 	}
 
+	protected String executeCommand(final String command) throws Exception {
+
+		final Process process = Runtime.getRuntime().exec(command);
+		final int exitStatus = process.waitFor();
+
+		Assert.assertEquals("exit status should be 0", 0, exitStatus);
+
+		final StringBuilder sb = new StringBuilder();
+
+		final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+		String line = reader.readLine();
+		while (line != null) {
+			sb.append(line);
+			line = reader.readLine();
+		}
+
+		ResourceTest.LOG.debug("got result from command execution '" + command + "' = '" + sb.toString() + "'");
+
+		return sb.toString();
+	}
 }

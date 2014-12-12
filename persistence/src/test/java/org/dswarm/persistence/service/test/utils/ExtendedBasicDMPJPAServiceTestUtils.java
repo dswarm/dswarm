@@ -15,8 +15,6 @@
  */
 package org.dswarm.persistence.service.test.utils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.json.JSONException;
 import org.junit.Assert;
 
 import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
@@ -37,7 +35,7 @@ public abstract class ExtendedBasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESE
 	 * Assert that both objects have no or equal descriptions.
 	 */
 	@Override
-	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) throws JsonProcessingException, JSONException {
+	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) {
 
 		super.compareObjects(expectedObject, actualObject);
 
