@@ -1,0 +1,4 @@
+-- reset the metadata repositorx
+
+DROP DATABASE IF EXISTS dmp;
+CREATE DATABASE IF NOT EXISTS dmp DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_bin;

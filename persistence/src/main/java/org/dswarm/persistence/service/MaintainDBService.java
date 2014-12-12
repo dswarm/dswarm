@@ -24,6 +24,7 @@ import javax.persistence.Query;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.name.Named;
 import com.google.inject.persist.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,25 +37,33 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
  */
 public class MaintainDBService {
 
-	private static final Logger				LOG	= LoggerFactory.getLogger(MaintainDBService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MaintainDBService.class);
 
 	/**
 	 * The entity manager provider (powered by Guice).
 	 */
-	private final Provider<EntityManager>	entityManagerProvider;
+	private final Provider<EntityManager> entityManagerProvider;
+
+	private final String dbName;
+
+	private static final String DROP_DB_TEMPL = "DROP DATABASE IF EXISTS %s;";
+
+	private static final String CREATE_DB_TEMPL = "CREATE DATABASE IF NOT EXISTS %s DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_bin;";
+
+	private static final String USE_DB_TMPL = "USE %s;";
 
 	/**
 	 * @param entityManagerProvider
 	 */
-	@Inject
-	MaintainDBService(final Provider<EntityManager> entityManagerProvider) {
+	@Inject MaintainDBService(final Provider<EntityManager> entityManagerProvider, @Named("dswarm.db.metadata.schema") String dbNameArg) {
 
 		this.entityManagerProvider = entityManagerProvider;
+		dbName = dbNameArg;
 	}
 
 	/**
 	 * Acquire a new or reused EntityManager with its cache cleared
-	 * 
+	 *
 	 * @return the EntityManager
 	 */
 	protected EntityManager acquire() {
@@ -63,7 +72,7 @@ public class MaintainDBService {
 
 	/**
 	 * Acquire a new or reused EntityManager
-	 * 
+	 *
 	 * @param clear true if the EM's cache should be cleared
 	 * @return the EntityManager
 	 */
@@ -79,19 +88,48 @@ public class MaintainDBService {
 
 	/**
 	 * Initializes the DMP DB with necessary values.
-	 * 
+	 *
 	 * @throws DMPPersistenceException
 	 */
 	public void initDB() throws DMPPersistenceException {
 
+		resetDB();
+		createTables();
 		truncateTables();
 		initFunctions();
 		initSchemas();
 	}
-	
+
+	/**
+	 * re-creates the DMP DB.
+	 *
+	 * @throws DMPPersistenceException
+	 */
+	@Transactional(rollbackOn = Exception.class)
+	public void resetDB() throws DMPPersistenceException {
+
+		final EntityManager entityManager = acquire(false);
+
+		MaintainDBService.LOG.debug("try to re-create the DB");
+
+		final String dropDBStmt = String.format(DROP_DB_TEMPL, dbName);
+		final String createDBStmt = String.format(CREATE_DB_TEMPL, dbName);
+		final String useDBStmt = String.format(USE_DB_TMPL, dbName);
+
+		final List<String> sqlStmts = Lists.newArrayListWithCapacity(3);
+
+		sqlStmts.add(dropDBStmt);
+		sqlStmts.add(createDBStmt);
+		sqlStmts.add(useDBStmt);
+
+		executeSQLScript(entityManager, sqlStmts);
+
+		MaintainDBService.LOG.debug("re-created the DB");
+	}
+
 	/**
 	 * Truncates all tables of the DMP DB.
-	 * 
+	 *
 	 * @throws DMPPersistenceException
 	 */
 	@Transactional(rollbackOn = Exception.class)
@@ -108,7 +146,7 @@ public class MaintainDBService {
 
 	/**
 	 * Truncates all tables of the DMP DB.
-	 * 
+	 *
 	 * @throws DMPPersistenceException
 	 */
 	@Transactional(rollbackOn = Exception.class)
@@ -125,7 +163,7 @@ public class MaintainDBService {
 
 	/**
 	 * Initializes all inbuilt functions of the DMP.
-	 * 
+	 *
 	 * @throws DMPPersistenceException
 	 */
 	@Transactional(rollbackOn = Exception.class)
@@ -142,7 +180,7 @@ public class MaintainDBService {
 
 	/**
 	 * Initializes all schemas that should be initially available.
-	 * 
+	 *
 	 * @throws DMPPersistenceException
 	 */
 	@Transactional(rollbackOn = Exception.class)
@@ -159,9 +197,9 @@ public class MaintainDBService {
 
 	/**
 	 * Reads a SQL script from the given file and processes its content line-wise, i.e., each SQL statement must be on one line.
-	 * 
+	 *
 	 * @param sqlScriptFileName the SQL script file name
-	 * @param entityManager the entity manager
+	 * @param entityManager     the entity manager
 	 * @throws DMPPersistenceException
 	 */
 	private void executeSQLScriptLineWise(final String sqlScriptFileName, final EntityManager entityManager) throws DMPPersistenceException {
@@ -173,9 +211,9 @@ public class MaintainDBService {
 
 	/**
 	 * Reads a SQL script from the given file and processes its content statement-wise.
-	 * 
+	 *
 	 * @param sqlScriptFileName the SQL script file name
-	 * @param entityManager the entity manager
+	 * @param entityManager     the entity manager
 	 * @throws DMPPersistenceException
 	 */
 	private void executeSQLScriptStatementWise(final String sqlScriptFileName, final EntityManager entityManager) throws DMPPersistenceException {
@@ -187,9 +225,9 @@ public class MaintainDBService {
 
 	/**
 	 * Executes an SQL script statement-wise.
-	 * 
+	 *
 	 * @param entityManager the entity manager
-	 * @param sqlScript a list of SQL statements
+	 * @param sqlScript     a list of SQL statements
 	 */
 	private void executeSQLScript(final EntityManager entityManager, final List<String> sqlScript) {
 		for (final String sqlScriptLine : sqlScript) {
@@ -201,7 +239,7 @@ public class MaintainDBService {
 
 	/**
 	 * Reads a SQL script line-wise from the given file, i.e., each SQL statement must be on one line.
-	 * 
+	 *
 	 * @param sqlScriptFileName the SQL script file name
 	 * @return a list of SQL statements
 	 * @throws DMPPersistenceException
@@ -226,7 +264,7 @@ public class MaintainDBService {
 
 	/**
 	 * Reads a SQL script statement-wise from the given file.
-	 * 
+	 *
 	 * @param sqlScriptFileName the SQL script file name
 	 * @return a list of SQL statements
 	 * @throws DMPPersistenceException
@@ -265,7 +303,7 @@ public class MaintainDBService {
 
 	/**
 	 * Cleans a given SQL statement and formats the statement into one line.
-	 * 
+	 *
 	 * @param originalSQLStatement the original SQL statement
 	 * @return the cleaned SQL statement
 	 */
