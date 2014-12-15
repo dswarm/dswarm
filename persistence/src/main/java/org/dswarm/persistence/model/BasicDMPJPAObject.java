@@ -45,6 +45,9 @@ public abstract class BasicDMPJPAObject extends DMPObject {
 		super(uuidArg);
 	}
 
+	protected BasicDMPJPAObject() {
+	}
+
 	/**
 	 * Gets the name of the entity.
 	 * 

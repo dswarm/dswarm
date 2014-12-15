@@ -46,6 +46,10 @@ public abstract class ExtendedBasicDMPJPAObject extends BasicDMPJPAObject {
 		super(uuidArg);
 	}
 
+	protected ExtendedBasicDMPJPAObject() {
+
+	}
+
 	/**
 	 * Gets the description of the entity.
 	 *

@@ -63,7 +63,7 @@ public abstract class DMPObject implements Serializable {
 	@Id
 	@XmlID
 	@Access(AccessType.FIELD)
-	@Column(name = "UUID")
+	@Column(name = "UUID", columnDefinition = "VARCHAR(255)", length = 255, unique = true)
 	private String uuid;
 
 	public DMPObject(final String uuidArg) {
@@ -71,7 +71,10 @@ public abstract class DMPObject implements Serializable {
 		uuid = uuidArg;
 	}
 
-//	/**
+	protected DMPObject() {
+	}
+
+	//	/**
 //	 * Gets the db-generated identifier of this object.
 //	 *
 //	 * @return the db-generated identifier of this object
