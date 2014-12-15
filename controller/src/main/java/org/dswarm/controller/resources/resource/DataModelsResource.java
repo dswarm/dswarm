@@ -257,7 +257,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 		final ObjectNode json = pojoClassResourceUtils.getObjectMapper().createObjectNode();
 		while (tupleIterator.hasNext()) {
 			final Tuple<String, JsonNode> tuple = data.get().next();
-			json.put(tuple.v1(), tuple.v2());
+			json.set(tuple.v1(), tuple.v2());
 		}
 
 		final String jsonString;
