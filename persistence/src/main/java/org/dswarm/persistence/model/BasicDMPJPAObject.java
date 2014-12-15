@@ -41,6 +41,10 @@ public abstract class BasicDMPJPAObject extends DMPObject {
 	@Column(name = "NAME")
 	private String				name;
 
+	public BasicDMPJPAObject(final String uuidArg) {
+		super(uuidArg);
+	}
+
 	/**
 	 * Gets the name of the entity.
 	 * 

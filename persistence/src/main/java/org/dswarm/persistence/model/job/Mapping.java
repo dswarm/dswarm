@@ -90,6 +90,11 @@ public class Mapping extends BasicDMPJPAObject {
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private Component							transformation;
 
+	public Mapping(final String uuidArg) {
+
+		super(uuidArg);
+	}
+
 	/**
 	 * Gets the input attribute paths of the mapping.
 	 * 

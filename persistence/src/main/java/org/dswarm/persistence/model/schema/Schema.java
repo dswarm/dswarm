@@ -35,12 +35,6 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.dswarm.init.DMPException;
-import org.dswarm.persistence.model.BasicDMPJPAObject;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -48,6 +42,12 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.dswarm.init.DMPException;
+import org.dswarm.persistence.model.BasicDMPJPAObject;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * A data schema is a collection of {@link SchemaAttributePathInstance}s and a record class ({@link Clasz}) and optionally it contains a content
@@ -125,6 +125,12 @@ public class Schema extends BasicDMPJPAObject {
 	private ContentSchema contentSchema;
 
 	public Schema() {
+
+	}
+
+	public Schema(final String uuid) {
+
+		super(uuid);
 	}
 
 	/**
@@ -186,12 +192,12 @@ public class Schema extends BasicDMPJPAObject {
 	 * @param attributePath a new attribute path
 	 */
 	public void addAttributePath(final SchemaAttributePathInstance attributePath) {
-		
+
 		Preconditions.checkNotNull(attributePath);
 
 		ensureAttributePaths();
 		ensureInitializedOrderedAttributePaths();
-		
+
 		// TODO check if equals method works for SAPIs, otherwise the usage of contains may fail here
 
 		// second check is for attribute path uniqueness constraint
@@ -227,21 +233,22 @@ public class Schema extends BasicDMPJPAObject {
 	//		}
 	//	}
 
-//	 note removal is not really needed right now
-		/**
-		 * Removes an existing attribute path (instance) from the collection of attribute path (instances) of this export schema.<br>
-		 * Created by: tgaengler
-		 *
-		 * @param attributePath an existing attribute path instance that should be removed
-		 */
-		public void removeAttributePath(final SchemaAttributePathInstance attributePath) {
-			if (attributePath != null && attributePaths != null) {
-				final boolean isRemoved = attributePaths.remove(attributePath);
-				if (isRemoved && orderedAttributePaths != null) {
-					orderedAttributePaths.remove( attributePath.getAttributePath().toAttributePath() );
-				}
+	//	 note removal is not really needed right now
+
+	/**
+	 * Removes an existing attribute path (instance) from the collection of attribute path (instances) of this export schema.<br>
+	 * Created by: tgaengler
+	 *
+	 * @param attributePath an existing attribute path instance that should be removed
+	 */
+	public void removeAttributePath(final SchemaAttributePathInstance attributePath) {
+		if (attributePath != null && attributePaths != null) {
+			final boolean isRemoved = attributePaths.remove(attributePath);
+			if (isRemoved && orderedAttributePaths != null) {
+				orderedAttributePaths.remove(attributePath.getAttributePath().toAttributePath());
 			}
 		}
+	}
 
 	// note: removal is not really needed right now
 	//	/**

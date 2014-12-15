@@ -128,6 +128,11 @@ public class ContentSchema extends BasicDMPJPAObject {
 
 	}
 
+	public ContentSchema(final String uuid) {
+
+		super(uuid);
+	}
+
 	/**
 	 * Creates a new content schema with the given ordered list of key attribute paths and the value attribute path.
 	 *
@@ -135,8 +140,9 @@ public class ContentSchema extends BasicDMPJPAObject {
 	 * @param keyAttributePathsArg an ordered list of key attribute paths
 	 * @param valueAttributePath the attribute path where the values are located
 	 */
-	public ContentSchema(final AttributePath recordIdentifierAttributePathArg, final LinkedList<AttributePath> keyAttributePathsArg, final AttributePath valueAttributePath) {
+	public ContentSchema(final String uuid, final AttributePath recordIdentifierAttributePathArg, final LinkedList<AttributePath> keyAttributePathsArg, final AttributePath valueAttributePath) {
 
+		super(uuid);
 		setRecordIdentifierAttributePath(recordIdentifierAttributePathArg);
 		setKeyAttributePaths(keyAttributePathsArg);
 		setValueAttributePath(valueAttributePath);

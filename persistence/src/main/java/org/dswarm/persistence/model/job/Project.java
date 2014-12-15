@@ -99,6 +99,11 @@ public class Project extends ExtendedBasicDMPJPAObject {
 	@XmlList
 	private Set<Function>		functions;
 
+	public Project(final String uuidArg) {
+
+		super(uuidArg);
+	}
+
 	/**
 	 * Gets the sample input data model.
 	 * 

@@ -48,6 +48,11 @@ public class Filter extends BasicDMPJPAObject {
 	@Column(name = "EXPRESSION", columnDefinition = "VARCHAR(4000)", length = 4000)
 	private String				expression;
 
+	public Filter(final String uuidArg) {
+
+		super(uuidArg);
+	}
+
 	/**
 	 * Gets the filter expression.
 	 * 

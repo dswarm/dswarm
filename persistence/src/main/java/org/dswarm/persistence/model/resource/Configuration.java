@@ -100,6 +100,11 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	@Transient
 	private boolean				parametersInitialized;
 
+	public Configuration(final String uuidArg) {
+
+		super(uuidArg);
+	}
+
 	/**
 	 * Gets the configuration parameters.
 	 * 

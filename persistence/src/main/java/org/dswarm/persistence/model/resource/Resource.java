@@ -110,6 +110,11 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 	// @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	private Set<Configuration>	configurations;
 
+	public Resource(final String uuidArg) {
+
+		super(uuidArg);
+	}
+
 	/**
 	 * Gets the resource type.
 	 * 

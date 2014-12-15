@@ -74,8 +74,14 @@ public class Transformation extends Function {
 		super(FunctionType.Transformation);
 	}
 
-	private Transformation(final long idValue) {
-		super(FunctionType.Transformation);
+	public Transformation(final String uuid) {
+
+		super(uuid);
+	}
+
+	private Transformation(final String uuid, final long idValue) {
+
+		super(uuid, FunctionType.Transformation);
 		id = idValue;
 	}
 
