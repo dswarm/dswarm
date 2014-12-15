@@ -46,7 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.dswarm.controller.DMPControllerException;
-import org.dswarm.controller.resources.BasicIDResource;
+import org.dswarm.controller.resources.BasicResource;
 import org.dswarm.controller.resources.schema.utils.AttributePathsResourceUtils;
 import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
 import org.dswarm.controller.status.DMPStatus;
@@ -64,17 +64,17 @@ import org.dswarm.persistence.service.schema.AttributePathService;
 @RequestScoped
 @Api(value = "/attributepaths", description = "Operations about attribute paths.")
 @Path("attributepaths")
-public class AttributePathsResource extends BasicIDResource<AttributePathsResourceUtils, AttributePathService, ProxyAttributePath, AttributePath> {
+public class AttributePathsResource extends BasicResource<AttributePathsResourceUtils, AttributePathService, ProxyAttributePath, AttributePath> {
 
-	private static final Logger	LOG	= LoggerFactory.getLogger(AttributePathsResource.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AttributePathsResource.class);
 
 	/**
 	 * Creates a new resource (controller service) for {@link AttributePath}s with the provider of the attribute path persistence
 	 * service, the object mapper and metrics registry.
 	 *
 	 * @param attributePathServiceProviderArg the attribute path persistence service provider
-	 * @param objectMapperArg an object mapper
-	 * @param dmpStatusArg a metrics registry
+	 * @param objectMapperArg                 an object mapper
+	 * @param dmpStatusArg                    a metrics registry
 	 */
 	@Inject
 	public AttributePathsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
@@ -145,7 +145,7 @@ public class AttributePathsResource extends BasicIDResource<AttributePathsResour
 	 * This endpoint consumes a attribute path as JSON representation and updates this attribute path in the database.
 	 *
 	 * @param jsonObjectString a JSON representation of one attribute path
-	 * @param id a attribute path identifier
+	 * @param id               a attribute path identifier
 	 * @return the updated attribute path as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -169,10 +169,11 @@ public class AttributePathsResource extends BasicIDResource<AttributePathsResour
 	 *
 	 * @param id an attribute path identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
-	 *         went wrong
+	 * went wrong
 	 * @throws DMPControllerException
 	 */
-	@ApiOperation(value = "delete attribute path that matches the given id", notes = "Returns status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong.")
+	@ApiOperation(value = "delete attribute path that matches the given id",
+			notes = "Returns status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong.")
 	@ApiResponses(value = { @ApiResponse(code = 204, message = "attribute path was successfully deleted"),
 			@ApiResponse(code = 404, message = "could not find an attribute path for the given id"),
 			@ApiResponse(code = 409, message = "attribute path couldn't be deleted (maybe there are some existing constraints to related objects)"),

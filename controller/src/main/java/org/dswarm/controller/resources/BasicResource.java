@@ -46,39 +46,38 @@ import org.dswarm.persistence.service.BasicJPAService;
  * {@link DMPObject} and the related identifier type. This service delivers basic controller layer functionality to create a new
  * object or retrieve existing ones.<br/>
  * TODO: implement update an existing object and delete existing objects
- * 
+ *
+ * @param <POJOCLASSPERSISTENCESERVICE> the concrete persistence service of the resource that is related to the concrete POJO
+ *                                      class
+ * @param <POJOCLASS>                   the concrete POJO class of the resource
  * @author tgaengler
  * @author fniederlein
- * @param <POJOCLASSPERSISTENCESERVICE> the concrete persistence service of the resource that is related to the concrete POJO
- *            class
- * @param <POJOCLASS> the concrete POJO class of the resource
- * @param <POJOCLASSIDTYPE> the related identifier type of the concrete POJO class of the resource
  */
-public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResourceUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE> {
+public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResourceUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS>, POJOCLASS extends DMPObject> {
 
-	private static final Logger				LOG	= LoggerFactory.getLogger(BasicResource.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BasicResource.class);
 
-	protected final POJOCLASSRESOURCEUTILS	pojoClassResourceUtils;
+	protected final POJOCLASSRESOURCEUTILS pojoClassResourceUtils;
 
 	/**
 	 * The metrics registry.
 	 */
-	protected final DMPStatus				dmpStatus;
+	protected final DMPStatus dmpStatus;
 
 	/**
 	 * The base URI of this resource.
 	 */
 	@Context
-	UriInfo									uri;
+	UriInfo uri;
 
 	/**
 	 * Creates a new resource (controller service) for the given concrete POJO class with the provider of the concrete persistence
 	 * service, the object mapper and metrics registry.
-	 * 
-	 * @param clasz a concrete POJO class
+	 *
+	 * @param clasz                         a concrete POJO class
 	 * @param persistenceServiceProviderArg the concrete persistence service that is related to the concrete POJO class
-	 * @param objectMapperArg an object mapper
-	 * @param dmpStatusArg a metrics registry
+	 * @param objectMapperArg               an object mapper
+	 * @param dmpStatusArg                  a metrics registry
 	 */
 	protected BasicResource(final POJOCLASSRESOURCEUTILS pojoClassResourceUtilsArg, final DMPStatus dmpStatusArg) {
 
@@ -88,7 +87,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * Gets the concrete POJO class of this resource (controller service).
-	 * 
+	 *
 	 * @return the concrete POJO class
 	 */
 	public Class<POJOCLASS> getClasz() {
@@ -98,7 +97,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * Builds a positive response with the given content.
-	 * 
+	 *
 	 * @param responseContent a response message
 	 * @return the response
 	 */
@@ -109,14 +108,14 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * This endpoint returns an object of the type of the POJO class as JSON representation for the provided object id.
-	 * 
+	 *
 	 * @param id an object id
 	 * @return a JSON representation of an object of the type of the POJO class
 	 */
 	// @GET
 	// @Path("/{id}")
 	// @Produces(MediaType.APPLICATION_JSON)
-	public Response getObject(/* @PathParam("id") */final POJOCLASSIDTYPE id) throws DMPControllerException {
+	public Response getObject(/* @PathParam("id") */final Long id) throws DMPControllerException {
 
 		final Timer.Context context = dmpStatus.getSingleObject(pojoClassResourceUtils.getClaszName(), this.getClass());
 
@@ -155,7 +154,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 	/**
 	 * This endpoint consumes an object of the type of the POJO class as JSON representation and persists this object in the
 	 * database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one object of the type of the POJO class
 	 * @return the persisted object as JSON representation
 	 * @throws DMPControllerException
@@ -248,9 +247,9 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 	/**
 	 * This endpoint consumes an object of the type of the POJO class as JSON representation and update this object in the
 	 * database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one object of the type of the POJO class
-	 * @param id an object id
+	 * @param id               an object id
 	 * @return the persisted object as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -258,7 +257,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 	// @Path("/{id}")
 	// @Consumes(MediaType.APPLICATION_JSON)
 	// @Produces(MediaType.APPLICATION_JSON)
-	public Response updateObject(final String jsonObjectString, /* @PathParam("id") */final POJOCLASSIDTYPE id) throws DMPControllerException {
+	public Response updateObject(final String jsonObjectString, /* @PathParam("id") */final Long id) throws DMPControllerException {
 
 		final Timer.Context context = dmpStatus.updateSingleObject(pojoClassResourceUtils.getClaszName(), this.getClass());
 
@@ -342,7 +341,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * This endpoint returns a list of all objects of the type of the POJO class as JSON representation.
-	 * 
+	 *
 	 * @return a list of all objects of the type of the POJO class as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -399,16 +398,16 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * This endpoint deletes an object identified by the id.
-	 * 
+	 *
 	 * @param id an object id
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
-	 *         went wrong
+	 * went wrong
 	 * @throws DMPControllerException
 	 */
 	// @ApiOperation(value = "delete an object by id ", notes = "Returns a status.")
 	// @DELETE
 	// @Path("/{id}")
-	public Response deleteObject(/* @PathParam("id") */final POJOCLASSIDTYPE id) throws DMPControllerException {
+	public Response deleteObject(/* @PathParam("id") */final Long id) throws DMPControllerException {
 
 		final Timer.Context context = dmpStatus.deleteObject(pojoClassResourceUtils.getClaszName(), this.getClass());
 
@@ -447,7 +446,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * Creates the resource URI for the given object.
-	 * 
+	 *
 	 * @param object an object
 	 * @return the resource URI for the given object
 	 */
@@ -472,16 +471,16 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * Prepares a given object with information from an object that was received via an API request.
-	 * 
+	 *
 	 * @param objectFromJSON an object that was received via an API request
-	 * @param object the given object
+	 * @param object         the given object
 	 * @return the updated object
 	 */
 	protected abstract POJOCLASS prepareObjectForUpdate(final POJOCLASS objectFromJSON, final POJOCLASS object);
 
 	/**
 	 * Persists a new object that was received via an API request into the database.
-	 * 
+	 *
 	 * @param objectJSONString
 	 * @return
 	 * @throws DMPControllerException
@@ -545,13 +544,13 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * Persists an existing object that was received via an API request into the database.
-	 * 
+	 *
 	 * @param objectJSONString
 	 * @param id
 	 * @return
 	 * @throws DMPControllerException
 	 */
-	protected PROXYPOJOCLASS refreshObject(final String objectJSONString, final POJOCLASS object, final POJOCLASSIDTYPE id)
+	protected PROXYPOJOCLASS refreshObject(final String objectJSONString, final POJOCLASS object, final Long id)
 			throws DMPControllerException {
 
 		// enhance object JSON as necessary
@@ -567,7 +566,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 		return updateObject(preparedObject, id);
 	}
 
-	protected POJOCLASS retrieveObject(final POJOCLASSIDTYPE id, final String jsonObjectString) throws DMPControllerException {
+	protected POJOCLASS retrieveObject(final Long id, final String jsonObjectString) throws DMPControllerException {
 
 		// get persistent object per id
 
@@ -588,7 +587,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	}
 
-	protected PROXYPOJOCLASS updateObject(final POJOCLASS preparedObject, final POJOCLASSIDTYPE id) throws DMPControllerException {
+	protected PROXYPOJOCLASS updateObject(final POJOCLASS preparedObject, final Long id) throws DMPControllerException {
 
 		// update the persistent object in the DB
 

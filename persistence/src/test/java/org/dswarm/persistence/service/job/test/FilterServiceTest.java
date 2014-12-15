@@ -23,9 +23,9 @@ import org.dswarm.persistence.model.job.Filter;
 import org.dswarm.persistence.model.job.proxy.ProxyFilter;
 import org.dswarm.persistence.service.job.FilterService;
 import org.dswarm.persistence.service.job.test.utils.FilterServiceTestUtils;
-import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
+import org.dswarm.persistence.service.test.BasicJPAServiceTest;
 
-public class FilterServiceTest extends IDBasicJPAServiceTest<ProxyFilter, Filter, FilterService> {
+public class FilterServiceTest extends BasicJPAServiceTest<ProxyFilter, Filter, FilterService> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FilterServiceTest.class);
 

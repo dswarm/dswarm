@@ -19,7 +19,7 @@ import java.util.Collection;
 
 import org.dswarm.persistence.model.DMPObject;
 
-public class DMPObjectUtils<POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE> {
+public class DMPObjectUtils<POJOCLASS extends DMPObject> {
 
 	public boolean completeEquals(final Collection<POJOCLASS> existingObjects, final Collection<POJOCLASS> newObjects) {
 

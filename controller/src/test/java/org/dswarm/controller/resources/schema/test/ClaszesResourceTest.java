@@ -32,9 +32,9 @@ import org.dswarm.persistence.model.schema.proxy.ProxyClasz;
 import org.dswarm.persistence.service.schema.ClaszService;
 import org.dswarm.persistence.service.schema.test.utils.ClaszServiceTestUtils;
 
-public class ClaszesResourceTest extends BasicResourceTest<ClaszesResourceTestUtils, ClaszServiceTestUtils, ClaszService, ProxyClasz, Clasz, Long> {
+public class ClaszesResourceTest extends BasicResourceTest<ClaszesResourceTestUtils, ClaszServiceTestUtils, ClaszService, ProxyClasz, Clasz> {
 
-	private static final Logger	LOG	= LoggerFactory.getLogger(ClaszesResourceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ClaszesResourceTest.class);
 
 	public ClaszesResourceTest() {
 

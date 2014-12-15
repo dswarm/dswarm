@@ -42,7 +42,7 @@ import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.service.schema.AttributePathService;
 import org.dswarm.persistence.service.test.utils.BasicJPAServiceTestUtils;
 
-public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<AttributePathService, ProxyAttributePath, AttributePath, Long> {
+public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<AttributePathService, ProxyAttributePath, AttributePath> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AttributePathServiceTestUtils.class);
 

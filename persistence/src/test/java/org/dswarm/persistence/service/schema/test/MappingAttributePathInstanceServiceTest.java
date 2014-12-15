@@ -23,10 +23,10 @@ import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxyMappingAttributePathInstance;
 import org.dswarm.persistence.service.schema.MappingAttributePathInstanceService;
 import org.dswarm.persistence.service.schema.test.utils.MappingAttributePathInstanceServiceTestUtils;
-import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
+import org.dswarm.persistence.service.test.BasicJPAServiceTest;
 
 public class MappingAttributePathInstanceServiceTest extends
-		IDBasicJPAServiceTest<ProxyMappingAttributePathInstance, MappingAttributePathInstance, MappingAttributePathInstanceService> {
+		BasicJPAServiceTest<ProxyMappingAttributePathInstance, MappingAttributePathInstance, MappingAttributePathInstanceService> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SchemaServiceTest.class);
 

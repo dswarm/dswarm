@@ -23,9 +23,9 @@ import org.dswarm.persistence.model.job.Component;
 import org.dswarm.persistence.model.job.proxy.ProxyComponent;
 import org.dswarm.persistence.service.job.ComponentService;
 import org.dswarm.persistence.service.job.test.utils.ComponentServiceTestUtils;
-import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
+import org.dswarm.persistence.service.test.BasicJPAServiceTest;
 
-public class ComponentServiceTest extends IDBasicJPAServiceTest<ProxyComponent, Component, ComponentService> {
+public class ComponentServiceTest extends BasicJPAServiceTest<ProxyComponent, Component, ComponentService> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ComponentServiceTest.class);
 

@@ -23,9 +23,9 @@ import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.service.resource.test.utils.DataModelServiceTestUtils;
-import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
+import org.dswarm.persistence.service.test.BasicJPAServiceTest;
 
-public class DataModelServiceTest extends IDBasicJPAServiceTest<ProxyDataModel, DataModel, DataModelService> {
+public class DataModelServiceTest extends BasicJPAServiceTest<ProxyDataModel, DataModel, DataModelService> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DataModelServiceTest.class);
 

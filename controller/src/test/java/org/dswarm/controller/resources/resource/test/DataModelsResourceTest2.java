@@ -54,7 +54,7 @@ import org.dswarm.persistence.service.resource.test.utils.DataModelServiceTestUt
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class DataModelsResourceTest2 extends
-		BasicResourceTest<DataModelsResourceTestUtils, DataModelServiceTestUtils, DataModelService, ProxyDataModel, DataModel, Long> {
+		BasicResourceTest<DataModelsResourceTestUtils, DataModelServiceTestUtils, DataModelService, ProxyDataModel, DataModel> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DataModelsResourceTest2.class);
 

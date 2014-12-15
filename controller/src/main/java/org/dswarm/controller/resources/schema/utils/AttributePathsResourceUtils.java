@@ -28,7 +28,7 @@ import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 import org.dswarm.controller.DMPControllerException;
-import org.dswarm.controller.resources.utils.BasicIDResourceUtils;
+import org.dswarm.controller.resources.utils.BasicResourceUtils;
 import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.proxy.RetrievalType;
@@ -41,7 +41,7 @@ import org.dswarm.persistence.service.schema.AttributePathService;
 /**
  * @author tgaengler
  */
-public class AttributePathsResourceUtils extends BasicIDResourceUtils<AttributePathService, ProxyAttributePath, AttributePath> {
+public class AttributePathsResourceUtils extends BasicResourceUtils<AttributePathService, ProxyAttributePath, AttributePath> {
 
 	@Inject
 	public AttributePathsResourceUtils(final Provider<AttributePathService> persistenceServiceProviderArg,

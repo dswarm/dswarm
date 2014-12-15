@@ -24,9 +24,9 @@ import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
 import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.service.schema.test.utils.SchemaServiceTestUtils;
-import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
+import org.dswarm.persistence.service.test.BasicJPAServiceTest;
 
-public class SchemaServiceTest extends IDBasicJPAServiceTest<ProxySchema, Schema, SchemaService> {
+public class SchemaServiceTest extends BasicJPAServiceTest<ProxySchema, Schema, SchemaService> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SchemaServiceTest.class);
 

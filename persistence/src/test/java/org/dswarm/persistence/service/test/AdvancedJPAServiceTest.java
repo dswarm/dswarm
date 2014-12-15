@@ -25,7 +25,7 @@ import org.dswarm.persistence.model.proxy.ProxyAdvancedDMPJPAObject;
 import org.dswarm.persistence.service.AdvancedDMPJPAService;
 
 public abstract class AdvancedJPAServiceTest<PROXYPOJOCLASS extends ProxyAdvancedDMPJPAObject<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject, JPASERVICEIMPL extends AdvancedDMPJPAService<PROXYPOJOCLASS, POJOCLASS>>
-		extends IDBasicJPAServiceTest<PROXYPOJOCLASS, POJOCLASS, JPASERVICEIMPL> {
+		extends BasicJPAServiceTest<PROXYPOJOCLASS, POJOCLASS, JPASERVICEIMPL> {
 
 	private static final Logger	LOG	= LoggerFactory.getLogger(AdvancedJPAServiceTest.class);
 

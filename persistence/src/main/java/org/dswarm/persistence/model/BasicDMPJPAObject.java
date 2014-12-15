@@ -28,7 +28,7 @@ import com.google.common.base.Objects;
  */
 @XmlRootElement
 @MappedSuperclass
-public abstract class BasicDMPJPAObject extends DMPJPAObject {
+public abstract class BasicDMPJPAObject extends DMPObject {
 
 	/**
 	 *

@@ -15,8 +15,11 @@
  */
 package org.dswarm.persistence.service.test;
 
+import java.util.Set;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Sets;
 import org.json.JSONException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,7 +32,7 @@ import org.dswarm.persistence.model.DMPObject;
 import org.dswarm.persistence.model.proxy.ProxyDMPObject;
 import org.dswarm.persistence.service.BasicJPAService;
 
-public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, JPASERVICEIMPL extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSIDTYPE>
+public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS>, POJOCLASS extends DMPObject, JPASERVICEIMPL extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS>>
 		extends GuicedTest {
 
 	private static final Logger LOG = LoggerFactory.getLogger(BasicJPAServiceTest.class);
@@ -39,6 +42,36 @@ public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<
 	protected final String                type;
 	protected final Class<JPASERVICEIMPL> jpaServiceClass;
 	protected JPASERVICEIMPL jpaService = null;
+
+	/**
+	 * Test for identifier generation: Creates ten instances (incl. identifier generation) of the specific class, writes them to
+	 * the databases and check the size of the set afterwards.<br>
+	 * Created by: tgaengler
+	 */
+	@Test
+	public void idGenerationTest() {
+
+		BasicJPAServiceTest.LOG.debug("start id generation test for " + type);
+
+		final Set<POJOCLASS> objectes = Sets.newLinkedHashSet();
+
+		for (int i = 0; i < 10; i++) {
+
+			final PROXYPOJOCLASS proxyObject = createObject();
+
+			objectes.add(proxyObject.getObject());
+		}
+
+		Assert.assertEquals(type + "s set size should be 10", 10, objectes.size());
+
+		// clean-up DB table
+		for (final POJOCLASS object : objectes) {
+
+			jpaService.deleteObject(object.getId());
+		}
+
+		BasicJPAServiceTest.LOG.debug("end id generation test for " + type);
+	}
 
 	@Test
 	public abstract void testSimpleObject() throws Exception;
@@ -110,7 +143,7 @@ public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<
 		return persitentObject;
 	}
 
-	protected void deleteObject(final POJOCLASSIDTYPE id) {
+	protected void deleteObject(final Long id) {
 
 		jpaService.deleteObject(id);
 

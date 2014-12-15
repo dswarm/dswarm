@@ -38,7 +38,7 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class AttributePathsResourceTest
 		extends
-		BasicResourceTest<AttributePathsResourceTestUtils, AttributePathServiceTestUtils, AttributePathService, ProxyAttributePath, AttributePath, Long> {
+		BasicResourceTest<AttributePathsResourceTestUtils, AttributePathServiceTestUtils, AttributePathService, ProxyAttributePath, AttributePath> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AttributePathsResourceTest.class);
 

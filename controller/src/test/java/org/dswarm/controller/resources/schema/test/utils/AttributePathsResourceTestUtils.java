@@ -35,7 +35,7 @@ import org.dswarm.persistence.service.schema.test.utils.AttributePathServiceTest
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class AttributePathsResourceTestUtils extends
-		BasicResourceTestUtils<AttributePathServiceTestUtils, AttributePathService, ProxyAttributePath, AttributePath, Long> {
+		BasicResourceTestUtils<AttributePathServiceTestUtils, AttributePathService, ProxyAttributePath, AttributePath> {
 
 	public AttributePathsResourceTestUtils() {
 
