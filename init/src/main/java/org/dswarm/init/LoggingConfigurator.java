@@ -79,7 +79,9 @@ public final class LoggingConfigurator {
 	private static void configureLogback(final String loggingPath, final LoggerContext lc) {
 
 		final Logger dswarmLogger = lc.getLogger("org.dswarm");
-		dswarmLogger.setLevel(Level.DEBUG);
+		// TODO: decrease/increase logging level as necessary
+		// TODO: make logging level configurable via Typesafe config
+		// dswarmLogger.setLevel(Level.DEBUG);
 		dswarmLogger.addAppender(addFileAppender(lc, loggingPath, Level.DEBUG));
 		dswarmLogger.addAppender(addFileAppender(lc, loggingPath, Level.TRACE));
 		dswarmLogger.addAppender(addFileAppender(lc, loggingPath, Level.INFO));
