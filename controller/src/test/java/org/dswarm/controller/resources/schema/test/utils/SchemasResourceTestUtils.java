@@ -15,13 +15,13 @@
  */
 package org.dswarm.controller.resources.schema.test.utils;
 
+import org.dswarm.controller.resources.test.utils.BasicResourceTestUtils;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
 import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 
-public class SchemasResourceTestUtils extends
-		org.dswarm.controller.resources.test.utils.BasicResourceTestUtils<SchemaServiceTestUtils,SchemaService,ProxySchema,Schema> {
+public class SchemasResourceTestUtils extends BasicResourceTestUtils<SchemaServiceTestUtils, SchemaService, ProxySchema, Schema> {
 
 	public SchemasResourceTestUtils() {
 
