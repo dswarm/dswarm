@@ -22,27 +22,27 @@ import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.TypedQuery;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.persist.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.proxy.RetrievalType;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
-import org.dswarm.persistence.service.BasicIDJPAService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.persist.Transactional;
+import org.dswarm.persistence.service.BasicJPAService;
 
 /**
  * A persistence service for {@link AttributePath}s.
  *
  * @author tgaengler
  */
-public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, AttributePath> {
+public class AttributePathService extends BasicJPAService<ProxyAttributePath, AttributePath> {
 
-	private static final Logger	LOG	= LoggerFactory.getLogger(AttributePathService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AttributePathService.class);
 
 	/**
 	 * Creates a new attribute path persistence service with the given entity manager provider.
@@ -93,7 +93,8 @@ public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, 
 	}
 
 	@Override
-	protected ProxyAttributePath createObjectInternal(final AttributePath object, final EntityManager entityManager, final String transactionalType) throws DMPPersistenceException {
+	protected ProxyAttributePath createObjectInternal(final AttributePath object, final EntityManager entityManager, final String transactionalType)
+			throws DMPPersistenceException {
 
 		final AttributePath existingObject = getObject(object.getAttributePathAsJSONObjectString(), entityManager);
 

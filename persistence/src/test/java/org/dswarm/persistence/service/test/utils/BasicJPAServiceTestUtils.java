@@ -16,7 +16,6 @@
 package org.dswarm.persistence.service.test.utils;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,8 +38,8 @@ import org.dswarm.persistence.model.proxy.ProxyDMPObject;
 import org.dswarm.persistence.service.BasicJPAService;
 import org.dswarm.persistence.service.test.BasicJPAServiceTest;
 
-public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE>
-		extends BasicJPAServiceTest<PROXYPOJOCLASS, POJOCLASS, POJOCLASSPERSISTENCESERVICE, POJOCLASSIDTYPE> {
+public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS>, POJOCLASS extends DMPObject>
+		extends BasicJPAServiceTest<PROXYPOJOCLASS, POJOCLASS, POJOCLASSPERSISTENCESERVICE> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(BasicJPAServiceTestUtils.class);
 
@@ -108,7 +107,7 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 
 		Assert.assertNotNull("the " + pojoClassName + "s JSON string shouldn't be null", objectsJSON);
 
-		final Map<POJOCLASSIDTYPE, POJOCLASS> responseObjects = Maps.newLinkedHashMap();
+		final Map<Long, POJOCLASS> responseObjects = Maps.newLinkedHashMap();
 		final ArrayNode responseObjectsJSONArray = objectMapper.readValue(objectsJSON, ArrayNode.class);
 
 		Assert.assertNotNull("response " + pojoClassName + "s JSON array shouldn't be null", responseObjectsJSONArray);
@@ -148,7 +147,7 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 	 * @param expectedObjects
 	 * @param actualObjects
 	 */
-	public void compareObjects(final Set<POJOCLASS> expectedObjects, final Map<POJOCLASSIDTYPE, POJOCLASS> actualObjects)
+	public void compareObjects(final Set<POJOCLASS> expectedObjects, final Map<Long, POJOCLASS> actualObjects)
 			throws JsonProcessingException, JSONException {
 
 		Assert.assertNotNull("expected objects shouldn't be null", expectedObjects);
@@ -259,7 +258,7 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 
 	public void deleteObject(final POJOCLASS object) {
 
-		final POJOCLASSIDTYPE objectId = object.getId();
+		final Long objectId = object.getId();
 
 		deleteObject(objectId);
 	}

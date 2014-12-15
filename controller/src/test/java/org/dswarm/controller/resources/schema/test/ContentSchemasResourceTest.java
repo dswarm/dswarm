@@ -30,7 +30,7 @@ import org.dswarm.persistence.service.schema.test.utils.ContentSchemaServiceTest
 
 public class ContentSchemasResourceTest
 		extends
-		BasicResourceTest<ContentSchemasResourceTestUtils, ContentSchemaServiceTestUtils, ContentSchemaService, ProxyContentSchema, ContentSchema, Long> {
+		BasicResourceTest<ContentSchemasResourceTestUtils, ContentSchemaServiceTestUtils, ContentSchemaService, ProxyContentSchema, ContentSchema> {
 
 	private AttributePathsResourceTestUtils attributePathsResourceTestUtils;
 

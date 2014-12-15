@@ -23,9 +23,9 @@ import org.dswarm.persistence.model.job.Mapping;
 import org.dswarm.persistence.model.job.proxy.ProxyMapping;
 import org.dswarm.persistence.service.job.MappingService;
 import org.dswarm.persistence.service.job.test.utils.MappingServiceTestUtils;
-import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
+import org.dswarm.persistence.service.test.BasicJPAServiceTest;
 
-public class MappingServiceTest extends IDBasicJPAServiceTest<ProxyMapping, Mapping, MappingService> {
+public class MappingServiceTest extends BasicJPAServiceTest<ProxyMapping, Mapping, MappingService> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(MappingServiceTest.class);
 

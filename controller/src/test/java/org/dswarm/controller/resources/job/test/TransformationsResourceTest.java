@@ -36,7 +36,7 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class TransformationsResourceTest
 		extends
-		BasicResourceTest<TransformationsResourceTestUtils, TransformationServiceTestUtils, TransformationService, ProxyTransformation, Transformation, Long> {
+		BasicResourceTest<TransformationsResourceTestUtils, TransformationServiceTestUtils, TransformationService, ProxyTransformation, Transformation> {
 
 	private FunctionsResourceTestUtils functionsResourceTestUtils;
 

@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
 
 import org.dswarm.init.DMPException;
 import org.dswarm.init.util.DMPStatics;
-import org.dswarm.persistence.model.DMPJPAObject;
+import org.dswarm.persistence.model.DMPObject;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -59,7 +59,7 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "ATTRIBUTE_PATH")
-public class AttributePath extends DMPJPAObject {
+public class AttributePath extends DMPObject {
 
 	/**
 	 *

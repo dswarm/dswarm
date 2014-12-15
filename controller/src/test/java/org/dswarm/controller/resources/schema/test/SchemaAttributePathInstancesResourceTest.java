@@ -32,7 +32,7 @@ import org.dswarm.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 
 public class SchemaAttributePathInstancesResourceTest
 		extends
-		BasicResourceTest<SchemaAttributePathInstancesResourceTestUtils, SchemaAttributePathInstanceServiceTestUtils, SchemaAttributePathInstanceService, ProxySchemaAttributePathInstance, SchemaAttributePathInstance, Long> {
+		BasicResourceTest<SchemaAttributePathInstancesResourceTestUtils, SchemaAttributePathInstanceServiceTestUtils, SchemaAttributePathInstanceService, ProxySchemaAttributePathInstance, SchemaAttributePathInstance> {
 
 	private SchemasResourceTestUtils                      schemasResourceTestUtils;
 	private AttributePathsResourceTestUtils               attributePathResourceTestUtils;

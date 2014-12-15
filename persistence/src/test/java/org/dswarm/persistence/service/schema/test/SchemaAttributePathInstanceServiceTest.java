@@ -30,10 +30,10 @@ import org.dswarm.persistence.model.schema.proxy.ProxySchemaAttributePathInstanc
 import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 import org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtils;
 import org.dswarm.persistence.service.schema.test.utils.SchemaAttributePathInstanceServiceTestUtils;
-import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
+import org.dswarm.persistence.service.test.BasicJPAServiceTest;
 
 public class SchemaAttributePathInstanceServiceTest extends
-		IDBasicJPAServiceTest<ProxySchemaAttributePathInstance, SchemaAttributePathInstance, SchemaAttributePathInstanceService> {
+		BasicJPAServiceTest<ProxySchemaAttributePathInstance, SchemaAttributePathInstance, SchemaAttributePathInstanceService> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SchemaServiceTest.class);
 

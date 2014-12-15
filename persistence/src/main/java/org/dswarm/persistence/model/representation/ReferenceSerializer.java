@@ -26,7 +26,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import org.dswarm.persistence.model.DMPObject;
 
-public abstract class ReferenceSerializer<DMPOBJECTIMPL extends DMPObject<DMPOBJECTIDTYPE>, DMPOBJECTIDTYPE> extends JsonSerializer<DMPOBJECTIMPL> {
+public abstract class ReferenceSerializer<DMPOBJECTIMPL extends DMPObject> extends JsonSerializer<DMPOBJECTIMPL> {
 
 	@Override
 	public void serialize(final DMPOBJECTIMPL object, final JsonGenerator generator, final SerializerProvider provider) throws IOException {
@@ -38,7 +38,7 @@ public abstract class ReferenceSerializer<DMPOBJECTIMPL extends DMPObject<DMPOBJ
 			return;
 		}
 
-		final Reference<DMPOBJECTIDTYPE> reference = new Reference<>(object.getId());
+		final Reference<Long> reference = new Reference<>(object.getId());
 
 		generator.writeObject(reference);
 	}
@@ -47,7 +47,7 @@ public abstract class ReferenceSerializer<DMPOBJECTIMPL extends DMPObject<DMPOBJ
 	static class Reference<IDTYPE> {
 
 		@XmlID
-		private final IDTYPE	id;
+		private final IDTYPE id;
 
 		Reference(final IDTYPE idArg) {
 

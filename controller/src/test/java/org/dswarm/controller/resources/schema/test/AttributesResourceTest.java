@@ -33,7 +33,7 @@ import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtils;
 
 public class AttributesResourceTest extends
-		BasicResourceTest<AttributesResourceTestUtils, AttributeServiceTestUtils, AttributeService, ProxyAttribute, Attribute, Long> {
+		BasicResourceTest<AttributesResourceTestUtils, AttributeServiceTestUtils, AttributeService, ProxyAttribute, Attribute> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AttributesResourceTest.class);
 

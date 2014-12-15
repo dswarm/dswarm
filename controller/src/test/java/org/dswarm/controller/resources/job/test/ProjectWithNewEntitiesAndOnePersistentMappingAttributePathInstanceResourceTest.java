@@ -47,7 +47,7 @@ import org.dswarm.persistence.service.job.test.utils.ProjectServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class ProjectWithNewEntitiesAndOnePersistentMappingAttributePathInstanceResourceTest extends
-		BasicResourceTest<ProjectsResourceTestUtils, ProjectServiceTestUtils, ProjectService, ProxyProject, Project, Long> {
+		BasicResourceTest<ProjectsResourceTestUtils, ProjectServiceTestUtils, ProjectService, ProxyProject, Project> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AttributesResourceTest.class);
 

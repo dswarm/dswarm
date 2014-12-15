@@ -48,7 +48,7 @@ import org.dswarm.persistence.service.job.test.utils.ProjectServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class ProjectsResourceTest extends
-		BasicResourceTest<ProjectsResourceTestUtils, ProjectServiceTestUtils, ProjectService, ProxyProject, Project, Long> {
+		BasicResourceTest<ProjectsResourceTestUtils, ProjectServiceTestUtils, ProjectService, ProxyProject, Project> {
 
 	private FunctionsResourceTestUtils       functionsResourceTestUtils;
 	private MappingsResourceTestUtils        mappingsResourceTestUtils;

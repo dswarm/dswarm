@@ -34,7 +34,7 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class MappingAttributePathInstancesResourceTest
 		extends
-		BasicResourceTest<MappingAttributePathInstancesResourceTestUtils, MappingAttributePathInstanceServiceTestUtils, MappingAttributePathInstanceService, ProxyMappingAttributePathInstance, MappingAttributePathInstance, Long> {
+		BasicResourceTest<MappingAttributePathInstancesResourceTestUtils, MappingAttributePathInstanceServiceTestUtils, MappingAttributePathInstanceService, ProxyMappingAttributePathInstance, MappingAttributePathInstance> {
 
 	private AttributePathsResourceTestUtils attributePathResourceTestUtils;
 	private FiltersResourceTestUtils        filterResourceTestUtils;

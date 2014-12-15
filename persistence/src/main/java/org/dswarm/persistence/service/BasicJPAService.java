@@ -40,11 +40,10 @@ import org.dswarm.persistence.model.proxy.RetrievalType;
  * {@link DMPObject} and the related identifier type. This service delivers basic persistence layer functionality to create a new
  * object, update an existing one, retrieve existing ones or delete existing objects.
  *
- * @param <POJOCLASS>       the concrete POJO class
- * @param <POJOCLASSIDTYPE> the identifier type of the concrete POJO class
+ * @param <POJOCLASS> the concrete POJO class
  * @author tgaengler
  */
-public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE> {
+public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS>, POJOCLASS extends DMPObject> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(BasicJPAService.class);
 
@@ -79,7 +78,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	 * @param clasz                 a concrete POJO class
 	 * @param entityManagerProvider an entity manager provider
 	 */
-	BasicJPAService(final Class<POJOCLASS> clasz, final Class<PROXYPOJOCLASS> proxyClasz, final Provider<EntityManager> entityManagerProvider) {
+	public BasicJPAService(final Class<POJOCLASS> clasz, final Class<PROXYPOJOCLASS> proxyClasz, final Provider<EntityManager> entityManagerProvider) {
 
 		this.clasz = clasz;
 		this.className = clasz.getSimpleName();
@@ -313,7 +312,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	 * @param id the idenfier of the requested instance of a specific class
 	 * @return the instance for the identifier of the specific class
 	 */
-	public POJOCLASS getObject(final POJOCLASSIDTYPE id) {
+	public POJOCLASS getObject(final Long id) {
 
 		final EntityManager entityManager = acquire();
 
@@ -332,7 +331,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 		return createNewProxyObject(retrievedObject, RetrievalType.RETRIEVED);
 	}
 
-	protected POJOCLASS getObjectInternal(final POJOCLASSIDTYPE id, final EntityManager entityManager) {
+	protected POJOCLASS getObjectInternal(final Long id, final EntityManager entityManager) {
 
 		BasicJPAService.LOG.debug("try to find " + className + " with id '" + id + "' in the database");
 
@@ -358,7 +357,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	 * @param id the identifier of the to be deleted instance of the specific class
 	 */
 	@Transactional(rollbackOn = Exception.class)
-	public void deleteObject(final POJOCLASSIDTYPE id) {
+	public void deleteObject(final Long id) {
 
 		final EntityManager entityManager = acquire(false);
 		final POJOCLASS updateObject = entityManager.find(clasz, id);

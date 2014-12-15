@@ -42,7 +42,7 @@ import org.dswarm.persistence.service.BasicJPAService;
 import org.dswarm.persistence.service.test.utils.BasicJPAServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
-public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTILS extends BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE>
+public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTILS extends BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS>, POJOCLASS extends DMPObject>
 		extends ResourceTest {
 
 	private static final Logger LOG = LoggerFactory.getLogger(BasicResourceTestUtils.class);
@@ -99,7 +99,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 		persistenceServiceTestUtils.evaluateObjects(objectsJSON, expectedObjects);
 	}
 
-	public void compareObjects(final Set<POJOCLASS> expectedObjects, final Map<POJOCLASSIDTYPE, POJOCLASS> actualObjects)
+	public void compareObjects(final Set<POJOCLASS> expectedObjects, final Map<Long, POJOCLASS> actualObjects)
 			throws JsonProcessingException, JSONException {
 
 		persistenceServiceTestUtils.compareObjects(expectedObjects, actualObjects);
@@ -120,7 +120,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 		return responseObject;
 	}
 
-	public POJOCLASS getObject(final POJOCLASSIDTYPE id) throws Exception {
+	public POJOCLASS getObject(final Long id) throws Exception {
 
 		String idEncoded = null;
 
@@ -224,7 +224,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 	public POJOCLASS updateObject(final String updateObjectJSONString, final POJOCLASS expectedObject) throws Exception {
 
-		final POJOCLASSIDTYPE objectId = objectMapper.readValue(updateObjectJSONString, pojoClass).getId();
+		final Long objectId = objectMapper.readValue(updateObjectJSONString, pojoClass).getId();
 
 		Assert.assertEquals("the ids of the updated object should be equal", expectedObject.getId(), objectId);
 
@@ -238,12 +238,12 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 	public POJOCLASS updateObjectWithoutComparison(final POJOCLASS updateObject) throws Exception {
 
 		final String updateObjectJSONString = objectMapper.writeValueAsString(updateObject);
-		final POJOCLASSIDTYPE objectId = updateObject.getId();
+		final Long objectId = updateObject.getId();
 
 		return updateObjectWithoutComparison(updateObjectJSONString, objectId);
 	}
 
-	private POJOCLASS updateObjectWithoutComparison(final String updateObjectJSONString, final POJOCLASSIDTYPE objectId) throws Exception {
+	private POJOCLASS updateObjectWithoutComparison(final String updateObjectJSONString, final Long objectId) throws Exception {
 
 		final Response response = target(String.valueOf(objectId)).request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
 				.put(Entity.json(updateObjectJSONString));
@@ -263,7 +263,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 			// clean-up DB
 
-			final POJOCLASSIDTYPE objectId = object.getId();
+			final Long objectId = object.getId();
 
 			final POJOCLASS toBeDeletedObject = persistenceService.getObject(objectId);
 

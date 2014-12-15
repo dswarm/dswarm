@@ -32,7 +32,7 @@ import org.dswarm.persistence.service.job.test.utils.MappingServiceTestUtils;
 import org.dswarm.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
 
 public class MappingsResourceTest extends
-		BasicResourceTest<MappingsResourceTestUtils, MappingServiceTestUtils, MappingService, ProxyMapping, Mapping, Long> {
+		BasicResourceTest<MappingsResourceTestUtils, MappingServiceTestUtils, MappingService, ProxyMapping, Mapping> {
 
 	private ComponentsResourceTestUtils componentsResourceTestUtils;
 

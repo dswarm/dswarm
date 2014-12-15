@@ -25,7 +25,7 @@ import org.dswarm.persistence.service.job.FunctionService;
 import org.dswarm.persistence.service.job.test.utils.FunctionServiceTestUtils;
 
 public class FunctionsResourceTest extends
-		BasicResourceTest<FunctionsResourceTestUtils, FunctionServiceTestUtils, FunctionService, ProxyFunction, Function, Long> {
+		BasicResourceTest<FunctionsResourceTestUtils, FunctionServiceTestUtils, FunctionService, ProxyFunction, Function> {
 
 	public FunctionsResourceTest() {
 

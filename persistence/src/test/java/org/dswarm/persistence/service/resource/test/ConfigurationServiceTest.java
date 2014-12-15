@@ -23,9 +23,9 @@ import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.proxy.ProxyConfiguration;
 import org.dswarm.persistence.service.resource.ConfigurationService;
 import org.dswarm.persistence.service.resource.test.utils.ConfigurationServiceTestUtils;
-import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
+import org.dswarm.persistence.service.test.BasicJPAServiceTest;
 
-public class ConfigurationServiceTest extends IDBasicJPAServiceTest<ProxyConfiguration, Configuration, ConfigurationService> {
+public class ConfigurationServiceTest extends BasicJPAServiceTest<ProxyConfiguration, Configuration, ConfigurationService> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ConfigurationServiceTest.class);
 

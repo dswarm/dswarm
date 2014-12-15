@@ -23,9 +23,9 @@ import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.job.proxy.ProxyTransformation;
 import org.dswarm.persistence.service.job.TransformationService;
 import org.dswarm.persistence.service.job.test.utils.TransformationServiceTestUtils;
-import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
+import org.dswarm.persistence.service.test.BasicJPAServiceTest;
 
-public class TransformationServiceTest extends IDBasicJPAServiceTest<ProxyTransformation, Transformation, TransformationService> {
+public class TransformationServiceTest extends BasicJPAServiceTest<ProxyTransformation, Transformation, TransformationService> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TransformationServiceTest.class);
 

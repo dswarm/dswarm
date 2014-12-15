@@ -40,38 +40,36 @@ import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.DMPObject;
 import org.dswarm.persistence.model.proxy.ProxyDMPObject;
 import org.dswarm.persistence.service.BasicJPAService;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
- * @author tgaengler
  * @param <POJOCLASSPERSISTENCESERVICE>
  * @param <POJOCLASS>
- * @param <POJOCLASSIDTYPE>
+ * @author tgaengler
  */
-public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE> {
+public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS>, POJOCLASS extends DMPObject> {
 
-	private static final Logger								LOG						= LoggerFactory.getLogger(BasicResourceUtils.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BasicResourceUtils.class);
 
-	protected final Class<POJOCLASS>						pojoClass;
+	protected final Class<POJOCLASS> pojoClass;
 
-	protected final Class<POJOCLASSIDTYPE>					pojoClassIdType;
+	protected final String pojoClassName;
 
-	protected final String									pojoClassName;
+	protected final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProvider;
 
-	protected final Provider<POJOCLASSPERSISTENCESERVICE>	persistenceServiceProvider;
+	protected final Provider<ObjectMapper> objectMapperProvider;
 
-	protected final Provider<ObjectMapper>					objectMapperProvider;
-
-	protected final ResourceUtilsFactory					utilsFactory;
+	protected final ResourceUtilsFactory utilsFactory;
 
 	// TODO: this might be not the best solution ...
-	protected final Set<String>								toBeSkippedJsonNodes	= Sets.newHashSet();
+	protected final Set<String> toBeSkippedJsonNodes = Sets.newHashSet();
 
-	private Set<POJOCLASSIDTYPE>							processedObjectIds;
+	private Set<Long> processedObjectIds;
 
-	private Set<POJOCLASSIDTYPE>							dummyIdCandidates;
+	private Set<Long> dummyIdCandidates;
 
-	public BasicResourceUtils(final Class<POJOCLASS> pojoClassArg, final Class<POJOCLASSIDTYPE> pojoClassIdTypeArg,
-			final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg,
+	public BasicResourceUtils(final Class<POJOCLASS> pojoClassArg, final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
+			final Provider<ObjectMapper> objectMapperProviderArg,
 			final ResourceUtilsFactory utilsFactoryArg) {
 
 		persistenceServiceProvider = persistenceServiceProviderArg;
@@ -83,8 +81,6 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 		pojoClass = pojoClassArg;
 		pojoClassName = pojoClass.getSimpleName();
 
-		pojoClassIdType = pojoClassIdTypeArg;
-
 		// add here all identifiers for attributes that bear native JSON objects/arrays
 
 		toBeSkippedJsonNodes.add("resource_attributes");
@@ -95,7 +91,7 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 
 	/**
 	 * Gets the concrete POJO class of this resource (controller service).
-	 * 
+	 *
 	 * @return the concrete POJO class
 	 */
 	public Class<POJOCLASS> getClasz() {
@@ -106,11 +102,6 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 	public String getClaszName() {
 
 		return pojoClassName;
-	}
-
-	public Class<POJOCLASSIDTYPE> getIdType() {
-
-		return pojoClassIdType;
 	}
 
 	public ObjectMapper getObjectMapper() {
@@ -128,7 +119,7 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 		return toBeSkippedJsonNodes;
 	}
 
-	public JsonNode replaceRelevantDummyIds(final POJOCLASS object, final JsonNode jsonNode, final Set<POJOCLASSIDTYPE> dummyIdCandidates)
+	public JsonNode replaceRelevantDummyIds(final POJOCLASS object, final JsonNode jsonNode, final Set<Long> dummyIdCandidates)
 			throws DMPControllerException {
 
 		if (hasObjectAlreadyBeenProcessed(object.getId())) {
@@ -158,11 +149,11 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 		return persistenceServiceProvider.get().getObjects();
 	}
 
-	public void deleteObject(final POJOCLASSIDTYPE id) {
+	public void deleteObject(final Long id) {
 
 		if (id != null) {
 
-			final POJOCLASSIDTYPE objectId = id;
+			final Long objectId = id;
 
 			persistenceServiceProvider.get().deleteObject(objectId);
 		}
@@ -282,8 +273,8 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 
 	/**
 	 * Creates and persists a new object into the database.
-	 * 
-	 * @param objectFromJSON the new object
+	 *
+	 * @param objectFromJSON     the new object
 	 * @param persistenceService the related persistence service
 	 * @return the persisted object
 	 * @throws DMPPersistenceException
@@ -316,8 +307,8 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 		return newObject;
 	}
 
-	public JsonNode processDummyId(final JsonNode jsonNode, final POJOCLASSIDTYPE objectId, final POJOCLASSIDTYPE newObjectId,
-			final Set<POJOCLASSIDTYPE> dummyIdCandidates) {
+	public JsonNode processDummyId(final JsonNode jsonNode, final Long objectId, final Long newObjectId,
+			final Set<Long> dummyIdCandidates) {
 
 		final JsonNode enhancedJsonNode = replaceDummyIdInJsonNode(jsonNode, objectId, newObjectId);
 
@@ -330,28 +321,42 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 		return enhancedJsonNode;
 	}
 
-	public boolean hasObjectAlreadyBeenProcessed(final POJOCLASSIDTYPE objectId) {
+	public boolean hasObjectAlreadyBeenProcessed(final Long objectId) {
 
 		return processedObjectIds != null && processedObjectIds.contains(objectId);
 
 	}
 
-	protected abstract ObjectNode replaceDummyId(final JsonNode idNode, final POJOCLASSIDTYPE dummyId, final POJOCLASSIDTYPE realId,
-			final ObjectNode objectJson);
+	protected ObjectNode replaceDummyId(final JsonNode idNode, final Long dummyId, final Long realId, final ObjectNode objectJSON) {
 
-	protected boolean areDummyIdCandidatesEmpty(final Set<POJOCLASSIDTYPE> dummyIdCandidates) {
+		if (idNode.canConvertToLong()) {
+
+			final long longId = idNode.asLong();
+
+			if (dummyId.equals(Long.valueOf(longId))) {
+
+				// replace long id
+
+				objectJSON.put("id", Long.valueOf(realId.toString()));
+			}
+		}
+
+		return objectJSON;
+	}
+
+	protected boolean areDummyIdCandidatesEmpty(final Set<Long> dummyIdCandidates) {
 
 		return dummyIdCandidates == null || dummyIdCandidates.isEmpty();
 
 	}
 
-	protected boolean checkObject(final POJOCLASS object, final Set<POJOCLASSIDTYPE> dummyIdCandidates) {
+	protected boolean checkObject(final POJOCLASS object, final Set<Long> dummyIdCandidates) {
 
 		return hasObjectAlreadyBeenProcessed(object.getId()) || areDummyIdCandidatesEmpty(dummyIdCandidates);
 
 	}
 
-	protected JsonNode createNewObjectForDummyId(final POJOCLASS object, final JsonNode jsonNode, final Set<POJOCLASSIDTYPE> dummyIdCandidates)
+	protected JsonNode createNewObjectForDummyId(final POJOCLASS object, final JsonNode jsonNode, final Set<Long> dummyIdCandidates)
 			throws DMPControllerException {
 
 		final PROXYPOJOCLASS proxyNewObject = createNewObject(object);
@@ -398,9 +403,28 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 		return jsonNode;
 	}
 
-	protected abstract void checkObjectId(final JsonNode idNode);
+	protected void checkObjectId(final JsonNode idNode) {
 
-	protected abstract ObjectNode addDummyId(final ObjectNode objectJSON);
+		if (idNode.canConvertToLong()) {
+
+			final long longId = idNode.asLong();
+
+			if (longId < 0) {
+
+				addDummyIdCandidate(longId);
+			}
+		}
+	}
+
+	protected ObjectNode addDummyId(final ObjectNode objectJSON) {
+
+		final long randomDummyId = DMPPersistenceUtil.generateRandomDummyId();
+
+		// add dummy id to object
+		objectJSON.put("id", randomDummyId);
+
+		return objectJSON;
+	}
 
 	protected JsonNode enhanceObjectJSON(final ObjectNode objectJSON) {
 
@@ -440,7 +464,7 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 		return objectJSON;
 	}
 
-	protected void addDummyIdCandidate(final POJOCLASSIDTYPE dummyId) {
+	protected void addDummyIdCandidate(final Long dummyId) {
 
 		if (dummyIdCandidates == null) {
 
@@ -450,7 +474,7 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 		dummyIdCandidates.add(dummyId);
 	}
 
-	protected JsonNode replaceDummyIdInJsonNode(final JsonNode jsonNode, final POJOCLASSIDTYPE dummyId, final POJOCLASSIDTYPE realId) {
+	protected JsonNode replaceDummyIdInJsonNode(final JsonNode jsonNode, final Long dummyId, final Long realId) {
 
 		if (jsonNode == null || NullNode.class.isInstance(jsonNode)) {
 
@@ -475,7 +499,7 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 		return jsonNode;
 	}
 
-	protected void addProcessedObjectId(final POJOCLASSIDTYPE objectId) {
+	protected void addProcessedObjectId(final Long objectId) {
 
 		if (processedObjectIds == null) {
 
@@ -485,7 +509,7 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 		processedObjectIds.add(objectId);
 	}
 
-	private ObjectNode replaceDummyIdInObjectJSON(final ObjectNode objectJSON, final POJOCLASSIDTYPE dummyId, final POJOCLASSIDTYPE realId) {
+	private ObjectNode replaceDummyIdInObjectJSON(final ObjectNode objectJSON, final Long dummyId, final Long realId) {
 
 		final JsonNode idNode = objectJSON.get("id");
 

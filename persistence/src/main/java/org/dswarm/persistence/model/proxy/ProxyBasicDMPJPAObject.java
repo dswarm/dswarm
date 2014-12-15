@@ -29,7 +29,7 @@ import org.dswarm.persistence.model.BasicDMPJPAObject;
  * @author tgaengler
  */
 @XmlRootElement
-public abstract class ProxyBasicDMPJPAObject<POJOCLASS extends BasicDMPJPAObject> extends ProxyDMPJPAObject<POJOCLASS> {
+public abstract class ProxyBasicDMPJPAObject<POJOCLASS extends BasicDMPJPAObject> extends ProxyDMPObject<POJOCLASS> {
 
 	private static final Logger	LOG					= LoggerFactory.getLogger(ProxyBasicDMPJPAObject.class);
 
