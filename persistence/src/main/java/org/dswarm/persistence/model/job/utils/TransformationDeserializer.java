@@ -37,6 +37,7 @@ import org.dswarm.persistence.model.job.Component;
 import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.types.Tuple;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.job.ComponentService;
 
 /**
@@ -80,7 +81,11 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 	public Transformation deserialize(final JsonParser jp, final DeserializationContext ctxt) throws IOException {
 
 		deserializationContext = ctxt;
-		Transformation transformation = new Transformation();
+
+		// TODO: think about this
+		final String uuid = UUIDService.getUUID(Transformation.class.getSimpleName());
+
+		Transformation transformation = new Transformation(uuid);
 
 		String currentFieldName = null;
 		JsonToken currentToken = jp.getCurrentToken();
@@ -220,7 +225,11 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 			currentToken = jp.nextToken();
 
 			String currentComponentId = null;
-			final Component currentComponent = new Component();
+
+			// TODO: think about this
+			final String uuid = UUIDService.getUUID(Component.class.getSimpleName());
+
+			final Component currentComponent = new Component(uuid);
 
 			final ImmutableList.Builder<String> inputComponentsBuilder = new ImmutableList.Builder<>();
 			final ImmutableList.Builder<String> outputComponentsBuilder = new ImmutableList.Builder<>();

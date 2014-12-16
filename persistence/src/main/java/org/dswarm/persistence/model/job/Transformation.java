@@ -69,7 +69,7 @@ public class Transformation extends Function {
 	/**
 	 * Creates a new transformation.
 	 */
-	public Transformation() {
+	protected Transformation() {
 
 		super(FunctionType.Transformation);
 	}

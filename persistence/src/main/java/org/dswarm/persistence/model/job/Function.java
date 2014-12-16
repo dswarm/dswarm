@@ -138,12 +138,12 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Creates a new function.
 	 */
-	public Function() {
+	protected Function() {
 
 		functionType = FunctionType.Function;
 	}
 
-	public Function(final FunctionType functionTypeArg) {
+	protected Function(final FunctionType functionTypeArg) {
 
 		functionType = functionTypeArg;
 	}

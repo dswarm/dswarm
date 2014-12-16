@@ -31,6 +31,7 @@ import org.junit.Assert;
 import org.dswarm.persistence.model.job.Component;
 import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.job.proxy.ProxyTransformation;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.job.TransformationService;
 
 public class TransformationServiceTestUtils extends BasicFunctionServiceTestUtils<TransformationService, ProxyTransformation, Transformation> {
@@ -146,7 +147,9 @@ public class TransformationServiceTestUtils extends BasicFunctionServiceTestUtil
 	public Transformation createTransformation(final String name, final String description, final Set<Component> components,
 			final LinkedList<String> parameters) throws Exception {
 
-		final Transformation transformation = new Transformation();
+		final String uuid = UUIDService.getUUID(Transformation.class.getSimpleName());
+
+		final Transformation transformation = new Transformation(uuid);
 
 		transformation.setName(name);
 		transformation.setDescription(description);

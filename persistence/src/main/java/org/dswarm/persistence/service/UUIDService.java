@@ -20,9 +20,9 @@ import java.util.UUID;
 /**
  * @author tgaengler
  */
-public class UUIDService {
+public final class UUIDService {
 
-	public String getUUID(final String base) {
+	public static String getUUID(final String base) {
 
 		final UUID uuid = UUID.randomUUID();
 

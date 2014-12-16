@@ -53,7 +53,7 @@ public class Filter extends BasicDMPJPAObject {
 		super(uuidArg);
 	}
 
-	public Filter() {
+	protected Filter() {
 
 	}
 

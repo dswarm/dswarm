@@ -104,7 +104,7 @@ public class Project extends ExtendedBasicDMPJPAObject {
 		super(uuidArg);
 	}
 
-	public Project() {
+	protected Project() {
 
 	}
 

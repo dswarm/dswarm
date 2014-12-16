@@ -30,6 +30,7 @@ import org.dswarm.persistence.model.job.Mapping;
 import org.dswarm.persistence.model.job.Project;
 import org.dswarm.persistence.model.job.proxy.ProxyProject;
 import org.dswarm.persistence.model.resource.DataModel;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.job.ProjectService;
 import org.dswarm.persistence.service.resource.test.utils.DataModelServiceTestUtils;
 import org.dswarm.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestUtils;
@@ -118,7 +119,9 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 			final DataModel outputDataModel,
 			final Set<Function> functions) {
 
-		final Project project = new Project();
+		final String uuid = UUIDService.getUUID(Project.class.getSimpleName());
+
+		final Project project = new Project(uuid);
 		project.setName(name);
 		project.setDescription(description);
 		project.setMappings(mappings);

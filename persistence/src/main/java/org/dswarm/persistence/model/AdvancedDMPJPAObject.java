@@ -25,7 +25,7 @@ import com.google.common.base.Objects;
 
 /**
  * The abstract POJO class for entities where the uri of the entity should be provided at object creation.
- * 
+ *
  * @author tgaengler
  */
 @XmlRootElement
@@ -35,25 +35,33 @@ public abstract class AdvancedDMPJPAObject extends BasicDMPJPAObject {
 	/**
 	 *
 	 */
-	private static final long	serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 
 	// @Id
 	@Access(AccessType.FIELD)
 	@Column(name = "URI", columnDefinition = "VARCHAR(255)", length = 255, unique = true)
-	private final String		uri;
+	private final String uri;
 
 	protected AdvancedDMPJPAObject() {
 
 		uri = null;
 	}
 
-	protected AdvancedDMPJPAObject(final String uriArg) {
+	protected AdvancedDMPJPAObject(final String uuid) {
 
+		super(uuid);
+		uri = null;
+	}
+
+	protected AdvancedDMPJPAObject(final String uuid, final String uriArg) {
+
+		super(uuid);
 		uri = uriArg;
 	}
 
-	protected AdvancedDMPJPAObject(final String uriArg, final String name) {
+	protected AdvancedDMPJPAObject(final String uuid, final String uriArg, final String name) {
 
+		super(uuid);
 		uri = uriArg;
 		setName(name);
 	}

@@ -144,10 +144,11 @@ public class Component extends ExtendedBasicDMPJPAObject {
 	// @JsonIgnore
 	// private Transformation transformation = null;
 
-	public Component() {
+	protected Component() {
+
 	}
 
-	private Component(final String uuidArg) {
+	public Component(final String uuidArg) {
 
 		super(uuidArg);
 	}

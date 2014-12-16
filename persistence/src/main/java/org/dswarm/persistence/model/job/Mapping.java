@@ -96,7 +96,7 @@ public class Mapping extends BasicDMPJPAObject {
 		super(uuidArg);
 	}
 
-	public Mapping() {
+	protected Mapping() {
 
 		// y?
 	}

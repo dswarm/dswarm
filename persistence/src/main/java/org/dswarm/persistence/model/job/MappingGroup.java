@@ -36,6 +36,10 @@ public class MappingGroup extends AdvancedDMPJPAObject {
 
 	private String				description;
 
+	protected MappingGroup() {
+
+	}
+
 	public MappingGroup(final String id) {
 
 		super(id);

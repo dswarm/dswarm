@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.job.Filter;
+import org.dswarm.persistence.service.UUIDService;
 
 public class FilterTest extends GuicedTest {
 
@@ -38,7 +39,9 @@ public class FilterTest extends GuicedTest {
 				+ "    ?metadata m:record ?mabrecord .\n" + "    ?mabrecord m:datafield ?dataField .\n" + "    ?dataField m:tag \"088\" ;\n"
 				+ "               m:ind1 \"a\" ;\n" + "               m:subfield ?subField .\n" + "    ?subField rdf:value ?url .\n" + "}";
 
-		final Filter filter = new Filter();
+		final String uuid = UUIDService.getUUID(Filter.class.getSimpleName());
+
+		final Filter filter = new Filter(uuid);
 		// filter.setId(UUID.randomUUID().toString());
 
 		filter.setExpression(expression);

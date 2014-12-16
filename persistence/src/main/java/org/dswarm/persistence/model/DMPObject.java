@@ -72,6 +72,7 @@ public abstract class DMPObject implements Serializable {
 	}
 
 	protected DMPObject() {
+
 	}
 
 	//	/**

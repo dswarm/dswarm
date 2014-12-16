@@ -33,6 +33,7 @@ import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class DataModelTest extends GuicedTest {
@@ -98,7 +99,9 @@ public class DataModelTest extends GuicedTest {
 		final String biboDocumentId = "http://purl.org/ontology/bibo/Document";
 		final String biboDocumentName = "document";
 
-		final Clasz biboDocument = new Clasz(biboDocumentId, biboDocumentName);
+		final String uuid = UUIDService.getUUID(Clasz.class.getSimpleName());
+
+		final Clasz biboDocument = new Clasz(uuid, biboDocumentId, biboDocumentName);
 
 		// schema
 

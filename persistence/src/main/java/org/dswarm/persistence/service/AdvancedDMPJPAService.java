@@ -36,19 +36,19 @@ import org.dswarm.persistence.model.proxy.RetrievalType;
 /**
  * A generic persistence service implementation for {@link AdvancedDMPJPAObject}s, i.e., where the identifier will be set on
  * object creation.
- * 
- * @author tgaengler
+ *
  * @param <POJOCLASS> a concrete POJO class
+ * @author tgaengler
  */
 public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvancedDMPJPAObject<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
 		extends BasicDMPJPAService<PROXYPOJOCLASS, POJOCLASS> {
 
-	private static final Logger	LOG	= LoggerFactory.getLogger(AdvancedDMPJPAService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AdvancedDMPJPAService.class);
 
 	/**
 	 * Creates a new persistence service for the given concrete POJO class and the entity manager provider.
-	 * 
-	 * @param clasz a concrete POJO class
+	 *
+	 * @param clasz                 a concrete POJO class
 	 * @param entityManagerProvider an entity manager provider
 	 */
 	protected AdvancedDMPJPAService(final Class<POJOCLASS> clasz, final Class<PROXYPOJOCLASS> proxyClasz,
@@ -59,7 +59,7 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 
 	/**
 	 * Create and persist an object of the specific class with the given identifier.<br>
-	 * 
+	 *
 	 * @param uri the identifier of the object
 	 * @return the persisted object of the specific class
 	 */
@@ -73,8 +73,8 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 
 	/**
 	 * Create and persist an object of the specific class with the given identifier.<br>
-	 * 
-	 * @param id the identifier of the object
+	 *
+	 * @param object the object
 	 * @return the persisted object of the specific class
 	 */
 	@Override
@@ -86,7 +86,8 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 	}
 
 	@Override
-	protected PROXYPOJOCLASS createObjectInternal(final POJOCLASS object, final EntityManager entityManager, final String transactionType) throws DMPPersistenceException {
+	protected PROXYPOJOCLASS createObjectInternal(final POJOCLASS object, final EntityManager entityManager, final String transactionType)
+			throws DMPPersistenceException {
 
 		final String uri = object.getUri();
 
@@ -188,8 +189,8 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 
 	/**
 	 * Creates a new object of the concrete POJO class with the given identifier.
-	 * 
-	 * @param id an object identifier
+	 *
+	 * @param uri an object identifier
 	 * @return the new instance of the concrete POJO class
 	 * @throws DMPPersistenceException if something went wrong at object creation
 	 */
@@ -200,7 +201,7 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 		Constructor<POJOCLASS> constructor = null;
 
 		try {
-			constructor = clasz.getConstructor(String.class);
+			constructor = clasz.getConstructor(String.class, String.class);
 		} catch (final SecurityException | NoSuchMethodException e1) {
 
 			throw new DMPPersistenceException(e1.getMessage());
@@ -211,9 +212,11 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 			throw new DMPPersistenceException("couldn't find constructor to instantiate new '" + className + "' with uri '" + uri + "'");
 		}
 
+		final String uuid = UUIDService.getUUID(className);
+
 		try {
 
-			object = constructor.newInstance(uri);
+			object = constructor.newInstance(uuid, uri);
 		} catch (final InstantiationException | InvocationTargetException | IllegalArgumentException | IllegalAccessException e) {
 
 			AdvancedDMPJPAService.LOG.error("something went wrong while " + className + "object creation", e);

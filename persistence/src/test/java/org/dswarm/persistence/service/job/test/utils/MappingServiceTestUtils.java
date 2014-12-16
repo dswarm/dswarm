@@ -29,6 +29,7 @@ import org.dswarm.persistence.model.job.Component;
 import org.dswarm.persistence.model.job.Mapping;
 import org.dswarm.persistence.model.job.proxy.ProxyMapping;
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.job.MappingService;
 import org.dswarm.persistence.service.schema.test.utils.MappingAttributePathInstanceServiceTestUtils;
 import org.dswarm.persistence.service.test.utils.BasicDMPJPAServiceTestUtils;
@@ -76,7 +77,10 @@ public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<Mapping
 
 		final String mappingName = "my mapping";
 
-		final Mapping mapping = new Mapping();
+		// TODO: think about this?
+		final String uuid = UUIDService.getUUID(Mapping.class.getSimpleName());
+
+		final Mapping mapping = new Mapping(uuid);
 		mapping.setName(mappingName);
 		mapping.addInputAttributePath(inputAttributePath);
 		mapping.setOutputAttributePath(outputAttributePath);
@@ -101,7 +105,10 @@ public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<Mapping
 
 		final String mappingName = "my mapping";
 
-		final Mapping mapping = new Mapping();
+		// TODO: think about this?
+		final String uuid = UUIDService.getUUID(Mapping.class.getSimpleName());
+
+		final Mapping mapping = new Mapping(uuid);
 		mapping.setName(mappingName);
 		mapping.addInputAttributePath(firstNameMappingAttributePathInstance);
 		mapping.addInputAttributePath(familyNameMappingAttributePathInstance);

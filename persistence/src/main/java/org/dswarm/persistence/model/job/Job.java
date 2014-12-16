@@ -50,7 +50,7 @@ public class Job extends ExtendedBasicDMPJPAObject {
 	@XmlList
 	private Set<Mapping>		mappings;
 
-	public Job() {
+	protected Job() {
 
 
 	}

@@ -63,7 +63,7 @@ public class Task extends ExtendedBasicDMPJPAObject {
 	// @XmlIDREF
 	private Job					job;
 
-	public Task() {
+	protected Task() {
 
 	}
 

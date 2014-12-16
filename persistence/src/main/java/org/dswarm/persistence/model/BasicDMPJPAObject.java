@@ -46,6 +46,7 @@ public abstract class BasicDMPJPAObject extends DMPObject {
 	}
 
 	protected BasicDMPJPAObject() {
+
 	}
 
 	/**
