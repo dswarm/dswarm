@@ -47,7 +47,7 @@ public class SetAttributePathReferenceSerializer extends JsonSerializer<Set<Attr
 
 			System.out.println("attribute path = '" + object.toAttributePath() + "'");
 
-			references.add(new AttributePathReference(object.getId(), object.toAttributePath()));
+			references.add(new AttributePathReference(object.getUuid(), object.toAttributePath()));
 		}
 
 		generator.writeObject(references);
@@ -57,18 +57,18 @@ public class SetAttributePathReferenceSerializer extends JsonSerializer<Set<Attr
 	static class AttributePathReference {
 
 		@XmlID
-		private final Long		id;
+		private final String id;
 
 		@XmlElement(name = "attribute_path")
-		private final String	attributePath;
+		private final String attributePath;
 
-		AttributePathReference(final Long idArg, final String attributePathArg) {
+		AttributePathReference(final String idArg, final String attributePathArg) {
 
 			id = idArg;
 			attributePath = attributePathArg;
 		}
 
-		Long getId() {
+		String getId() {
 
 			return id;
 		}

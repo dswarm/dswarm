@@ -40,9 +40,9 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 
 	private final TransformationServiceTestUtils transformationsServiceTestUtils;
 
-	private final Set<Long> checkedExpectedComponents = Sets.newHashSet();
+	private final Set<String> checkedExpectedComponents = Sets.newHashSet();
 
-	private final Set<Long> checkedActualComponents = Sets.newHashSet();
+	private final Set<String> checkedActualComponents = Sets.newHashSet();
 
 	public ComponentServiceTestUtils() {
 
@@ -76,7 +76,7 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 		final Component updatedComponent = updateAndCompareObject(component, component);
 
 		Assert.assertNotNull("the updated component shouldn't be null", updatedComponent);
-		Assert.assertNotNull("the component name shouldn't be null", updatedComponent.getId());
+		Assert.assertNotNull("the component name shouldn't be null", updatedComponent.getUuid());
 
 		return updatedComponent;
 	}
@@ -145,25 +145,25 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 	public void compareObjects(final Component expectedComponent, final Component actualComponent) throws JsonProcessingException, JSONException {
 
 		// Start skip already checked objects
-		if (expectedComponent != null && expectedComponent.getId() != null) {
+		if (expectedComponent != null && expectedComponent.getUuid() != null) {
 
-			if (checkedExpectedComponents.contains(expectedComponent.getId())) {
+			if (checkedExpectedComponents.contains(expectedComponent.getUuid())) {
 
 				return;
 			}
 
-			checkedExpectedComponents.add(expectedComponent.getId());
+			checkedExpectedComponents.add(expectedComponent.getUuid());
 		}
 
-		if (actualComponent != null && actualComponent.getId() != null) {
+		if (actualComponent != null && actualComponent.getUuid() != null) {
 
-			if (checkedActualComponents.contains(actualComponent.getId())) {
+			if (checkedActualComponents.contains(actualComponent.getUuid())) {
 
 				// SR FIXME why do we return here? see above
 				return;
 			}
 
-			checkedActualComponents.add(actualComponent.getId());
+			checkedActualComponents.add(actualComponent.getUuid());
 		}
 		// End skip already checked objects
 
@@ -174,11 +174,11 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 		// function
 		if (expectedComponent.getFunction() == null) {
 
-			Assert.assertNull("the function of actual component '" + actualComponent.getId() + "' should be null", actualComponent.getFunction());
+			Assert.assertNull("the function of actual component '" + actualComponent.getUuid() + "' should be null", actualComponent.getFunction());
 
 		} else {
 
-			Assert.assertNotNull("the function of actual component '" + actualComponent.getId() + "' shouldn't be null",
+			Assert.assertNotNull("the function of actual component '" + actualComponent.getUuid() + "' shouldn't be null",
 					actualComponent.getFunction());
 
 			Assert.assertNotNull("function type of component must not be null", expectedComponent.getFunction().getFunctionType());
@@ -214,7 +214,7 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 
 		} else { // (!null && !empty)
 
-			prepareAndCompareComponents(actualComponent.getId(), expectedComponent.getInputComponents(), actualComponent.getInputComponents(),
+			prepareAndCompareComponents(actualComponent.getUuid(), expectedComponent.getInputComponents(), actualComponent.getInputComponents(),
 					"input");
 		}
 
@@ -227,7 +227,7 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 
 		} else { // (!null && !empty)
 
-			prepareAndCompareComponents(actualComponent.getId(), expectedComponent.getOutputComponents(), actualComponent.getOutputComponents(),
+			prepareAndCompareComponents(actualComponent.getUuid(), expectedComponent.getOutputComponents(), actualComponent.getOutputComponents(),
 					"output");
 		}
 
@@ -243,9 +243,9 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 
 			final Map<String, String> actualParameterMappings = actualComponent.getParameterMappings();
 
-			Assert.assertNotNull("parameter mappings of actual component '" + actualComponent.getId() + "' shouldn't be null",
+			Assert.assertNotNull("parameter mappings of actual component '" + actualComponent.getUuid() + "' shouldn't be null",
 					actualParameterMappings);
-			Assert.assertFalse("parameter mappings of actual component '" + actualComponent.getId() + "' shouldn't be empty",
+			Assert.assertFalse("parameter mappings of actual component '" + actualComponent.getUuid() + "' shouldn't be empty",
 					actualParameterMappings.isEmpty());
 			Assert.assertEquals("different number of parameter mappings", expectedComponent.getParameterMappings().size(), actualComponent
 					.getParameterMappings().size());
@@ -269,7 +269,7 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 
 	public void checkDeletedComponent(final Component component) {
 
-		final Component deletedComponent = jpaService.getObject(component.getId());
+		final Component deletedComponent = jpaService.getObject(component.getUuid());
 
 		Assert.assertNull("component should be null", deletedComponent);
 
@@ -282,17 +282,17 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 	 * @param type
 	 * @see {@link BasicJPAServiceTestUtils#compareObjects(Set, Map)}
 	 */
-	private void prepareAndCompareComponents(final Long actualComponentId, final Set<Component> expectedComponents,
+	private void prepareAndCompareComponents(final String actualComponentId, final Set<Component> expectedComponents,
 			final Set<Component> actualComponents, final String type) throws JsonProcessingException, JSONException {
 
 		Assert.assertNotNull(type + " components of actual component '" + actualComponentId + "' shouldn't be null", actualComponents);
 		Assert.assertFalse(type + " components of actual component '" + actualComponentId + "' shouldn't be empty", actualComponents.isEmpty());
 
-		final Map<Long, Component> actualComponentsMap = Maps.newHashMap();
+		final Map<String, Component> actualComponentsMap = Maps.newHashMap();
 
 		for (final Component actualComponent : actualComponents) {
 
-			actualComponentsMap.put(actualComponent.getId(), actualComponent);
+			actualComponentsMap.put(actualComponent.getUuid(), actualComponent);
 		}
 
 		compareObjects(expectedComponents, actualComponentsMap);
@@ -505,9 +505,9 @@ public class ComponentServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 			final Map<String, String> parameterMapping4 = Maps.newLinkedHashMap();
 
 			final String functionParameterName5 = "firstString";
-			final String componentVariableName5 = transformationComponent.getId() + ".outputVariable";
+			final String componentVariableName5 = transformationComponent.getUuid() + ".outputVariable";
 			final String functionParameterName6 = "secondString";
-			final String componentVariableName6 = transformationComponent2.getId() + ".outputVariable";
+			final String componentVariableName6 = transformationComponent2.getUuid() + ".outputVariable";
 
 			parameterMapping4.put(functionParameterName5, componentVariableName5);
 			parameterMapping4.put(functionParameterName6, componentVariableName6);

@@ -54,22 +54,22 @@ public class Clasz extends AdvancedDMPJPAObject {
 	/**
 	 * Creates a new class with the given identifier.
 	 * 
-	 * @param id a class identifier
+	 * @param uri a class identifier
 	 */
-	public Clasz(final String id) {
+	public Clasz(final String uri) {
 
-		super(id);
+		super(uri);
 	}
 
 	/**
 	 * Creates a new class with the given identifier and name-
 	 * 
-	 * @param id a class identifier
+	 * @param uri a class identifier
 	 * @param name a class name
 	 */
-	public Clasz(final String id, final String name) {
+	public Clasz(final String uri, final String name) {
 
-		super(id);
+		super(uri);
 		setName(name);
 	}
 

@@ -114,7 +114,8 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 		return createAndCompareObject(project, project);
 	}
 
-	public Project createProject(final String name, final String description, final Set<Mapping> mappings, final DataModel inputDataModel, final DataModel outputDataModel,
+	public Project createProject(final String name, final String description, final Set<Mapping> mappings, final DataModel inputDataModel,
+			final DataModel outputDataModel,
 			final Set<Function> functions) {
 
 		final Project project = new Project();
@@ -147,7 +148,7 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 		// compare input data models
 		if (expectedProject.getInputDataModel() == null) {
 
-			Assert.assertNull("the actual project '" + actualProject.getId() + "' should not have an input data model",
+			Assert.assertNull("the actual project '" + actualProject.getUuid() + "' should not have an input data model",
 					actualProject.getInputDataModel());
 
 		} else {
@@ -157,7 +158,7 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 		// compare output data models
 		if (expectedProject.getOutputDataModel() == null) {
 
-			Assert.assertNull("the actual project '" + actualProject.getId() + "' should not have an output data model",
+			Assert.assertNull("the actual project '" + actualProject.getUuid() + "' should not have an output data model",
 					actualProject.getOutputDataModel());
 
 		} else {
@@ -168,20 +169,20 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 		if (expectedProject.getMappings() == null || expectedProject.getMappings().isEmpty()) {
 
 			final boolean actualProjectHasNoMappings = (actualProject.getMappings() == null || actualProject.getMappings().isEmpty());
-			Assert.assertTrue("the actual project '" + actualProject.getId() + "' shouldn't have any mappings", actualProjectHasNoMappings);
+			Assert.assertTrue("the actual project '" + actualProject.getUuid() + "' shouldn't have any mappings", actualProjectHasNoMappings);
 
 		} else { // !null && !empty
 
 			final Set<Mapping> actualMappings = actualProject.getMappings();
 
-			Assert.assertNotNull("mappings of project '" + actualProject.getId() + "' shouldn't be null", actualMappings);
-			Assert.assertFalse("mappings of project '" + actualProject.getId() + "' shouldn't be empty", actualMappings.isEmpty());
+			Assert.assertNotNull("mappings of project '" + actualProject.getUuid() + "' shouldn't be null", actualMappings);
+			Assert.assertFalse("mappings of project '" + actualProject.getUuid() + "' shouldn't be empty", actualMappings.isEmpty());
 
-			final Map<Long, Mapping> actualMappingsMap = Maps.newHashMap();
+			final Map<String, Mapping> actualMappingsMap = Maps.newHashMap();
 
 			for (final Mapping actualMapping : actualMappings) {
 
-				actualMappingsMap.put(actualMapping.getId(), actualMapping);
+				actualMappingsMap.put(actualMapping.getUuid(), actualMapping);
 			}
 
 			mappingServiceTestUtils.compareObjects(expectedProject.getMappings(), actualMappingsMap);
@@ -191,20 +192,20 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 		if (expectedProject.getFunctions() == null || expectedProject.getFunctions().isEmpty()) {
 
 			final boolean actualProjectHasNoFunctions = (actualProject.getFunctions() == null || actualProject.getFunctions().isEmpty());
-			Assert.assertTrue("the actual project '" + actualProject.getId() + "' shouldn't have any functions", actualProjectHasNoFunctions);
+			Assert.assertTrue("the actual project '" + actualProject.getUuid() + "' shouldn't have any functions", actualProjectHasNoFunctions);
 
 		} else { // !null && !empty
 
 			final Set<Function> actualFunctions = actualProject.getFunctions();
 
-			Assert.assertNotNull("functions of project '" + actualProject.getId() + "' shouldn't be null", actualFunctions);
-			Assert.assertFalse("functions of project '" + actualProject.getId() + "' shouldn't be empty", actualFunctions.isEmpty());
+			Assert.assertNotNull("functions of project '" + actualProject.getUuid() + "' shouldn't be null", actualFunctions);
+			Assert.assertFalse("functions of project '" + actualProject.getUuid() + "' shouldn't be empty", actualFunctions.isEmpty());
 
-			final Map<Long, Function> actualFunctionsMap = Maps.newHashMap();
+			final Map<String, Function> actualFunctionsMap = Maps.newHashMap();
 
 			for (final Function actualFunction : actualFunctions) {
 
-				actualFunctionsMap.put(actualFunction.getId(), actualFunction);
+				actualFunctionsMap.put(actualFunction.getUuid(), actualFunction);
 			}
 
 			functionServiceTestUtils.compareObjects(expectedProject.getFunctions(), actualFunctionsMap);

@@ -108,7 +108,7 @@ public class MappingAttributePathInstanceServiceTestUtils
 		mappingAttributePathInstance.setFilter(filter);
 		final MappingAttributePathInstance updatedMappingAttributePathInstance = createAndCompareObject(mappingAttributePathInstance,
 				mappingAttributePathInstance);
-		Assert.assertNotNull(updatedMappingAttributePathInstance.getId());
+		Assert.assertNotNull(updatedMappingAttributePathInstance.getUuid());
 		return updatedMappingAttributePathInstance;
 	}
 

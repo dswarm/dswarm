@@ -143,6 +143,11 @@ public class Function extends ExtendedBasicDMPJPAObject {
 		functionType = FunctionType.Function;
 	}
 
+	public Function(final FunctionType functionTypeArg) {
+
+		functionType = functionTypeArg;
+	}
+
 	public Function(final String uuid) {
 
 		super(uuid);
@@ -310,7 +315,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 			if (parametersString == null) {
 
-				Function.LOG.debug("parameters JSON is null for '" + getId() + "'");
+				Function.LOG.debug("parameters JSON is null for '" + getUuid() + "'");
 
 				if (fromScratch) {
 
@@ -344,7 +349,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 				}
 			} catch (final DMPException e) {
 
-				Function.LOG.debug("couldn't parse parameters JSON for function '" + getId() + "'");
+				Function.LOG.debug("couldn't parse parameters JSON for function '" + getUuid() + "'");
 			}
 
 			parametersInitialized = true;
@@ -395,7 +400,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 				functionDescription = DMPPersistenceUtil.getJSON(functionDescriptionString);
 			} catch (final DMPException e) {
 
-				Function.LOG.debug("couldn't parse function description JSON string for function '" + getId() + "'");
+				Function.LOG.debug("couldn't parse function description JSON string for function '" + getUuid() + "'");
 			}
 
 			functionDescriptionInitialized = true;

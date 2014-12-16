@@ -38,7 +38,7 @@ public abstract class ReferenceSerializer<DMPOBJECTIMPL extends DMPObject> exten
 			return;
 		}
 
-		final Reference<Long> reference = new Reference<>(object.getId());
+		final Reference<String> reference = new Reference<>(object.getUuid());
 
 		generator.writeObject(reference);
 	}

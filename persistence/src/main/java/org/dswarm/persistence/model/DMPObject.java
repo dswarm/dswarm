@@ -63,7 +63,7 @@ public abstract class DMPObject implements Serializable {
 	@Id
 	@XmlID
 	@Access(AccessType.FIELD)
-	@Column(name = "UUID", columnDefinition = "VARCHAR(255)", length = 255, unique = true)
+	@Column(name = "UUID", columnDefinition = "VARCHAR(160)", length = 160, unique = true)
 	private String uuid;
 
 	public DMPObject(final String uuidArg) {

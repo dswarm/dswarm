@@ -101,18 +101,18 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 
 		final InternalGDMGraphService rdfGraphService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
 
-		rdfGraphService.createObject(dataModel.getId(), rdfModel);
+		rdfGraphService.createObject(dataModel.getUuid(), rdfModel);
 		// finished writing RDF statements to graph
 
 		// retrieve updated fresh data model
-		final DataModel freshDataModel = dataModelService.getObject(updatedDataModel.getId());
+		final DataModel freshDataModel = dataModelService.getObject(updatedDataModel.getUuid());
 
 		Assert.assertNotNull("the fresh data model shouldn't be null", freshDataModel);
 		Assert.assertNotNull("the schema of the fresh data model shouldn't be null", freshDataModel.getSchema());
 
 		final InternalGDMGraphService gdmGraphService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
 
-		final Optional<Map<String, Model>> optionalModelMap = gdmGraphService.getObjects(updatedDataModel.getId(), Optional.<Integer>absent());
+		final Optional<Map<String, Model>> optionalModelMap = gdmGraphService.getObjects(updatedDataModel.getUuid(), Optional.<Integer>absent());
 
 		Assert.assertNotNull("Ralf's MABXML record model map optional shouldn't be null", optionalModelMap);
 		Assert.assertTrue("Ralf's MABXML record model map should be present", optionalModelMap.isPresent());
@@ -190,11 +190,11 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 
 		final InternalGDMGraphService rdfGraphService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
 
-		rdfGraphService.createObject(dataModel.getId(), rdfModel);
+		rdfGraphService.createObject(dataModel.getUuid(), rdfModel);
 		// finished writing RDF statements to graph
 
 		// retrieve updated fresh data model
-		final DataModel freshDataModel = dataModelService.getObject(updatedDataModel.getId());
+		final DataModel freshDataModel = dataModelService.getObject(updatedDataModel.getUuid());
 
 		Assert.assertNotNull("the fresh data model shouldn't be null", freshDataModel);
 		Assert.assertNotNull("the schema of the fresh data model shouldn't be null", freshDataModel.getSchema());

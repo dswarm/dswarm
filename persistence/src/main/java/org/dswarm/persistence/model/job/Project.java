@@ -81,7 +81,7 @@ public class Project extends ExtendedBasicDMPJPAObject {
 	 * The collection of mappings the project.
 	 */
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinTable(name = "PROJECTS_MAPPINGS", joinColumns = { @JoinColumn(name = "PROJECT_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "MAPPING_ID", referencedColumnName = "ID") })
+	@JoinTable(name = "PROJECTS_MAPPINGS", joinColumns = { @JoinColumn(name = "PROJECT_UUID", referencedColumnName = "UUID") }, inverseJoinColumns = { @JoinColumn(name = "MAPPING_UUID", referencedColumnName = "UUID") })
 	// @JsonSerialize(using = SetMappingReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	// @XmlIDREF
@@ -92,7 +92,7 @@ public class Project extends ExtendedBasicDMPJPAObject {
 	 * The collection of functions that are created in this project, i.e., those functions are only visible to this project.
 	 */
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinTable(name = "PROJECTS_FUNCTIONS", joinColumns = { @JoinColumn(name = "PROJECT_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "FUNCTION_ID", referencedColumnName = "ID") })
+	@JoinTable(name = "PROJECTS_FUNCTIONS", joinColumns = { @JoinColumn(name = "PROJECT_UUID", referencedColumnName = "UUID") }, inverseJoinColumns = { @JoinColumn(name = "FUNCTION_UUID", referencedColumnName = "UUID") })
 	// @JsonSerialize(using = SetFunctionReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	// @XmlIDREF
@@ -102,6 +102,10 @@ public class Project extends ExtendedBasicDMPJPAObject {
 	public Project(final String uuidArg) {
 
 		super(uuidArg);
+	}
+
+	public Project() {
+
 	}
 
 	/**

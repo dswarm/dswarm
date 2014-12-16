@@ -128,15 +128,15 @@ public class TransformationServiceTestUtils extends BasicFunctionServiceTestUtil
 
 			final Set<Component> actualComponents = actualTransformation.getComponents();
 
-			Assert.assertNotNull("components of actual transformation '" + actualTransformation.getId() + "' shouldn't be null", actualComponents);
-			Assert.assertFalse("components of actual transformation '" + actualTransformation.getId() + "' shouldn't be empty",
+			Assert.assertNotNull("components of actual transformation '" + actualTransformation.getUuid() + "' shouldn't be null", actualComponents);
+			Assert.assertFalse("components of actual transformation '" + actualTransformation.getUuid() + "' shouldn't be empty",
 					actualComponents.isEmpty());
 
-			final Map<Long, Component> actualComponentsMap = Maps.newHashMap();
+			final Map<String, Component> actualComponentsMap = Maps.newHashMap();
 
 			for (final Component actualComponent : actualComponents) {
 
-				actualComponentsMap.put(actualComponent.getId(), actualComponent);
+				actualComponentsMap.put(actualComponent.getUuid(), actualComponent);
 			}
 
 			componentServiceTestUtils.compareObjects(expectedTransformation.getComponents(), actualComponentsMap);

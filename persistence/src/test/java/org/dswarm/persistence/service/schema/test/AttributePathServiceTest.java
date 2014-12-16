@@ -62,7 +62,7 @@ public class AttributePathServiceTest extends BasicJPAServiceTest<ProxyAttribute
 		final AttributePath attributePath1 = apstUtils.getNonCachedDctermsTitleDctermsHaspartDctermsTitleAP();
 		final AttributePath attributePath2 = apstUtils.getNonCachedDctermsTitleDctermsHaspartDctermsTitleAP();
 
-		Assert.assertEquals("ids of attribute paths should be equal", attributePath1.getId(), attributePath2.getId());
+		Assert.assertEquals("ids of attribute paths should be equal", attributePath1.getUuid(), attributePath2.getUuid());
 
 		final String jsonPath = attributePath1.getAttributePathAsJSONObjectString();
 

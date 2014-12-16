@@ -106,7 +106,7 @@ public class SchemaAttributePathInstanceServiceTestUtils extends
 		schemaAttributePathInstance.setSubSchema(subSchema);
 		final SchemaAttributePathInstance updatedSchemaAttributePathInstance = createAndCompareObject(schemaAttributePathInstance,
 				schemaAttributePathInstance);
-		assertNotNull(updatedSchemaAttributePathInstance.getId());
+		assertNotNull(updatedSchemaAttributePathInstance.getUuid());
 		return updatedSchemaAttributePathInstance;
 	}
 

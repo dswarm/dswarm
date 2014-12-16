@@ -75,7 +75,7 @@ public class ContentSchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<C
 		final ContentSchema updatedContentSchema = createAndCompareObject(contentSchema, contentSchema);
 
 		Assert.assertNotNull("updated content schema shouldn't be null", updatedContentSchema);
-		Assert.assertNotNull("updated content schema id shouldn't be null", updatedContentSchema.getId());
+		Assert.assertNotNull("updated content schema id shouldn't be null", updatedContentSchema.getUuid());
 
 		return updatedContentSchema;
 	}
@@ -93,16 +93,16 @@ public class ContentSchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<C
 
 			final Set<AttributePath> actualUtilisedKeyAttributePaths = actualContentSchema.getUtilisedKeyAttributePaths();
 
-			Assert.assertNotNull("key attribute paths of actual content schema '" + actualContentSchema.getId() + "' shouldn't be null",
+			Assert.assertNotNull("key attribute paths of actual content schema '" + actualContentSchema.getUuid() + "' shouldn't be null",
 					actualUtilisedKeyAttributePaths);
-			Assert.assertFalse("attribute paths of actual content schema '" + actualContentSchema.getId() + "' shouldn't be empty",
+			Assert.assertFalse("attribute paths of actual content schema '" + actualContentSchema.getUuid() + "' shouldn't be empty",
 					actualUtilisedKeyAttributePaths.isEmpty());
 
-			final Map<Long, AttributePath> actualKeyAttributePathsMap = Maps.newHashMap();
+			final Map<String, AttributePath> actualKeyAttributePathsMap = Maps.newHashMap();
 
 			for (final AttributePath actualKeyAttributePath : actualUtilisedKeyAttributePaths) {
 
-				actualKeyAttributePathsMap.put(actualKeyAttributePath.getId(), actualKeyAttributePath);
+				actualKeyAttributePathsMap.put(actualKeyAttributePath.getUuid(), actualKeyAttributePath);
 			}
 
 			apstUtils.compareObjects(expectedContentSchema.getUtilisedKeyAttributePaths(), actualKeyAttributePathsMap);

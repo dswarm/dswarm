@@ -75,8 +75,8 @@ public class Schema extends BasicDMPJPAObject {
 	// @ManyToMany(mappedBy = "schemas", fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE,
 	// CascadeType.PERSIST, CascadeType.REFRESH })
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinTable(name = "SCHEMAS_SCHEMA_ATTRIBUTE_PATH_INSTANCES", joinColumns = { @JoinColumn(name = "SCHEMA_ID", referencedColumnName = "ID") },
-			inverseJoinColumns = { @JoinColumn(name = "SCHEMA_ATTRIBUTE_PATH_INSTANCE_ID", referencedColumnName = "ID") })
+	@JoinTable(name = "SCHEMAS_SCHEMA_ATTRIBUTE_PATH_INSTANCES", joinColumns = { @JoinColumn(name = "SCHEMA_UUID", referencedColumnName = "UUID") },
+			inverseJoinColumns = { @JoinColumn(name = "SCHEMA_ATTRIBUTE_PATH_INSTANCE_UUID", referencedColumnName = "UUID") })
 	@JsonIgnore
 	private Set<SchemaAttributePathInstance> attributePaths;
 
@@ -169,15 +169,15 @@ public class Schema extends BasicDMPJPAObject {
 	/**
 	 * Gets the attribute path (instance) for the given schema attribute path instance identifier.
 	 *
-	 * @param id a schema attribute path instance identifier
+	 * @param uuid a schema attribute path instance identifier
 	 * @return that matched attribute path (instance) or null
 	 */
-	public SchemaAttributePathInstance getAttributePath(final Long id) {
-		Preconditions.checkNotNull(id);
+	public SchemaAttributePathInstance getAttributePath(final String uuid) {
+		Preconditions.checkNotNull(uuid);
 
 		if (attributePaths != null) {
 			for (final SchemaAttributePathInstance attributePath : attributePaths) {
-				if (attributePath.getId().equals(id)) {
+				if (attributePath.getUuid().equals(uuid)) {
 					return attributePath;
 				}
 			}
@@ -401,7 +401,7 @@ public class Schema extends BasicDMPJPAObject {
 		if (orderedAttributePathsJson == null && !isOrderedAttributePathsInitialized) {
 
 			if (attributePathsJsonString == null) {
-				Schema.LOG.debug("attribute paths JSON is null for {}", getId());
+				Schema.LOG.debug("attribute paths JSON is null for {}", getUuid());
 
 				if (fromScratch) {
 					orderedAttributePathsJson = new ArrayNode(DMPPersistenceUtil.getJSONFactory());
@@ -420,14 +420,14 @@ public class Schema extends BasicDMPJPAObject {
 				if (orderedAttributePathsJson != null) {
 
 					for (final JsonNode attributePathIdNode : orderedAttributePathsJson) {
-						final SchemaAttributePathInstance attributePath = getAttributePath(attributePathIdNode.longValue());
+						final SchemaAttributePathInstance attributePath = getAttributePath(attributePathIdNode.asText());
 						if (attributePath != null && !orderedAttributePaths.containsKey(attributePath.getAttributePath().toAttributePath())) {
 							orderedAttributePaths.put(attributePath.getAttributePath().toAttributePath(), attributePath);
 						}
 					}
 				}
 			} catch (final DMPException e) {
-				Schema.LOG.debug("couldn't parse attribute path JSON for attribute path '" + getId() + "'", e);
+				Schema.LOG.debug("couldn't parse attribute path JSON for attribute path '" + getUuid() + "'", e);
 			}
 			isOrderedAttributePathsInitialized = true;
 		}
@@ -439,7 +439,7 @@ public class Schema extends BasicDMPJPAObject {
 		if (orderedAttributePaths != null) {
 			orderedAttributePathsJson = new ArrayNode(DMPPersistenceUtil.getJSONFactory());
 			for (final SchemaAttributePathInstance attributePath : orderedAttributePaths.values()) {
-				orderedAttributePathsJson.add(attributePath.getId());
+				orderedAttributePathsJson.add(attributePath.getUuid());
 			}
 		}
 

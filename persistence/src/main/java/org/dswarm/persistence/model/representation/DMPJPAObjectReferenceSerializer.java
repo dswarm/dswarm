@@ -38,7 +38,7 @@ public class DMPJPAObjectReferenceSerializer extends JsonSerializer<DMPObject> {
 			return;
 		}
 
-		final Reference reference = new Reference(object.getId());
+		final Reference reference = new Reference(object.getUuid());
 
 		generator.writeObject(reference);
 	}
@@ -47,14 +47,14 @@ public class DMPJPAObjectReferenceSerializer extends JsonSerializer<DMPObject> {
 	static class Reference {
 
 		@XmlID
-		private final Long id;
+		private final String id;
 
-		Reference(final Long idArg) {
+		Reference(final String idArg) {
 
 			id = idArg;
 		}
 
-		Long getId() {
+		String getId() {
 
 			return id;
 		}

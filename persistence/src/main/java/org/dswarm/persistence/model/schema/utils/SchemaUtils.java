@@ -57,9 +57,9 @@ import org.dswarm.persistence.service.schema.SchemaService;
 public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 	private static final Logger LOG                 = LoggerFactory.getLogger(SchemaUtils.class);
-	public static final String BASE_URI            = "http://data.slub-dresden.de/";
+	public static final  String BASE_URI            = "http://data.slub-dresden.de/";
 	private static final String RECORD_BASE_URI     = BASE_URI + "records/";
-	public static final String DATA_MODEL_BASE_URI = BASE_URI + "datamodels/";
+	public static final  String DATA_MODEL_BASE_URI = BASE_URI + "datamodels/";
 	private static final String RECORD_RELATIVE_URI = "/records/";
 	private static final String TERM_BASE_URI       = BASE_URI + "terms/%s";
 	public static final  String HASH                = "#";
@@ -172,14 +172,14 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 		if (attributePathHelpers == null) {
 
-			SchemaUtils.LOG.debug("couldn't determine attribute paths for schema '" + schema.getId() + "'");
+			SchemaUtils.LOG.debug("couldn't determine attribute paths for schema '" + schema.getUuid() + "'");
 
 			return false;
 		}
 
 		if (attributePathHelpers.isEmpty()) {
 
-			SchemaUtils.LOG.debug("there are no attribute paths for schema '" + schema.getId() + "'");
+			SchemaUtils.LOG.debug("there are no attribute paths for schema '" + schema.getUuid() + "'");
 		}
 
 		for (final AttributePathHelper attributePathHelper : attributePathHelpers) {
@@ -190,7 +190,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 			if (attributePathFromHelper.isEmpty()) {
 
-				SchemaUtils.LOG.debug("there are no attributes for this attribute path for schema '" + schema.getId() + "'");
+				SchemaUtils.LOG.debug("there are no attributes for this attribute path for schema '" + schema.getUuid() + "'");
 			}
 
 			final AttributeService attributeService = attributeServiceProvider.get();
@@ -364,7 +364,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 				// create uri from resource id and configuration id and random uuid
 
-				sb.append(DATA_MODEL_BASE_URI).append(optionalDataModel.get().getId()).append(RECORD_RELATIVE_URI);
+				sb.append(DATA_MODEL_BASE_URI).append(optionalDataModel.get().getUuid()).append(RECORD_RELATIVE_URI);
 			} else {
 
 				// create uri from random uuid
@@ -383,7 +383,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 			// create uri from resource id and configuration id and identifier
 
-			sb.append(DATA_MODEL_BASE_URI).append(optionalDataModel.get().getId()).append(RECORD_RELATIVE_URI).append(identifier);
+			sb.append(DATA_MODEL_BASE_URI).append(optionalDataModel.get().getUuid()).append(RECORD_RELATIVE_URI).append(identifier);
 		} else {
 
 			// create uri from identifier

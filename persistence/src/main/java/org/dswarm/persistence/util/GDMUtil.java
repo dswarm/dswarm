@@ -32,31 +32,30 @@ import org.dswarm.graph.json.NodeType;
 import org.dswarm.graph.json.Resource;
 import org.dswarm.graph.json.ResourceNode;
 import org.dswarm.graph.json.Statement;
-import org.dswarm.persistence.service.internal.graph.InternalGDMGraphService;
 
 /**
  * @author tgaengler
  */
 public final class GDMUtil {
 
-	private static final Logger	LOG			= LoggerFactory.getLogger(GDMUtil.class);
+	private static final Logger LOG = LoggerFactory.getLogger(GDMUtil.class);
 
-	public static final String	RDF_NS		= "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+	public static final String RDF_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 
-	public static final String	RDF_type	= GDMUtil.RDF_NS + "type";
+	public static final String RDF_type = GDMUtil.RDF_NS + "type";
 
-	public static final String	RDF_value	= GDMUtil.RDF_NS + "value";
-	
+	public static final String RDF_value = GDMUtil.RDF_NS + "value";
+
 	/**
 	 * The data model graph URI pattern
 	 */
-	private static final String						DATA_MODEL_GRAPH_URI_PATTERN	= "http://data.slub-dresden.de/datamodel/{datamodelid}/data";
+	private static final String DATA_MODEL_GRAPH_URI_PATTERN = "http://data.slub-dresden.de/datamodel/{datamodelid}/data";
 
 	/**
 	 * Gets all resources for the given record class identifier in the given GDM model.
-	 * 
+	 *
 	 * @param recordClassURI the record class identifier
-	 * @param model the GDM model
+	 * @param model          the GDM model
 	 * @return
 	 */
 	public static Set<Resource> getRecordResources(final String recordClassURI, final Model model) {
@@ -154,9 +153,9 @@ public final class GDMUtil {
 
 	/**
 	 * Gets resource node for the given resource identifier in the given record resource.
-	 * 
+	 *
 	 * @param resourceURI the resource identifier
-	 * @param model the GDM model
+	 * @param model       the GDM model
 	 * @return
 	 */
 	public static ResourceNode getResourceNode(final String resourceURI, final Resource recordResource) {
@@ -210,9 +209,9 @@ public final class GDMUtil {
 
 	/**
 	 * Gets all statements for the given resource node in the given record resource.
-	 * 
+	 *
 	 * @param resourceURI the resource identifier
-	 * @param model the GDM model
+	 * @param model       the GDM model
 	 * @return
 	 */
 	public static Set<Statement> getResourceStatement(final Node resourceNode, final Resource recordResource) {
@@ -239,9 +238,9 @@ public final class GDMUtil {
 
 	/**
 	 * Gets all statements for the given resource identifier in the given record resource.
-	 * 
+	 *
 	 * @param resourceURI the resource identifier
-	 * @param model the GDM model
+	 * @param model       the GDM model
 	 * @return
 	 */
 	public static Set<Statement> getResourceStatement(final String resourceURI, final Resource recordResource) {
@@ -292,9 +291,9 @@ public final class GDMUtil {
 
 	/**
 	 * Gets all statements for the given resource identifier in the given record resource.
-	 * 
+	 *
 	 * @param resourceId the resource identifier
-	 * @param model the GDM model
+	 * @param model      the GDM model
 	 * @return
 	 */
 	public static Set<Statement> getResourceStatement(final Long resourceId, final Resource recordResource) {
@@ -340,11 +339,10 @@ public final class GDMUtil {
 
 		return resourceStatements;
 	}
-	
-	
 
-	public static String getDataModelGraphURI(final Long dataModelId) {
-		return DATA_MODEL_GRAPH_URI_PATTERN.replace("{datamodelid}", dataModelId.toString());
+	public static String getDataModelGraphURI(final String dataModelUuid) {
+
+		return DATA_MODEL_GRAPH_URI_PATTERN.replace("{datamodelid}", dataModelUuid);
 	}
-	
+
 }

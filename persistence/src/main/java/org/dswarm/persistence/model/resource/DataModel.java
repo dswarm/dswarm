@@ -84,6 +84,10 @@ public class DataModel extends ExtendedBasicDMPJPAObject {
 		super(uuidArg);
 	}
 
+	public DataModel() {
+
+	}
+
 	/**
 	 * Gets the data resource.
 	 * 

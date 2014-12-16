@@ -50,7 +50,7 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * A configuration contains information on how to process a given {@link Resource} into a {@link DataModel}, e.g., delimiter etc.
- * 
+ *
  * @author tgaengler
  */
 @XmlRootElement
@@ -63,22 +63,23 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	/**
 	 *
 	 */
-	private static final long	serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 
-	private static final Logger	LOG					= LoggerFactory.getLogger(Configuration.class);
+	private static final Logger LOG = LoggerFactory.getLogger(Configuration.class);
 
 	/**
 	 * The related resources.
 	 */
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinTable(name = "CONFIGURATIONS_RESOURCES", joinColumns = { @JoinColumn(name = "CONFIGURATION_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "RESOURCE_ID", referencedColumnName = "ID") })
+	@JoinTable(name = "CONFIGURATIONS_RESOURCES", joinColumns = { @JoinColumn(name = "CONFIGURATION_UUID", referencedColumnName = "UUID") },
+			inverseJoinColumns = { @JoinColumn(name = "RESOURCE_UUID", referencedColumnName = "UUID") })
 	@JsonSerialize(using = SetResourceReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	// @JsonDeserialize(using = ResourceReferenceDeserializer.class)
 	@XmlIDREF
 	@XmlList
 	// @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
-	private Set<Resource>		resources;
+	private Set<Resource> resources;
 
 	/**
 	 * A string that holds a serialised JSON object of configuration parameters.
@@ -86,28 +87,32 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "parameters", columnDefinition = "VARCHAR(4000)", length = 4000)
-	private String				parametersString;
+	private String parametersString;
 
 	/**
 	 * A JSON object of configuration parameters.
 	 */
 	@Transient
-	private ObjectNode			parameters;
+	private ObjectNode parameters;
 
 	/**
 	 * A flag that indicates, whether the configuration parameters are initialised or not.
 	 */
 	@Transient
-	private boolean				parametersInitialized;
+	private boolean parametersInitialized;
 
 	public Configuration(final String uuidArg) {
 
 		super(uuidArg);
 	}
 
+	public Configuration() {
+
+	}
+
 	/**
 	 * Gets the configuration parameters.
-	 * 
+	 *
 	 * @return the configuration parameters
 	 */
 	@XmlElement(name = "parameters")
@@ -120,7 +125,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the configuration parameters.
-	 * 
+	 *
 	 * @param parameters new configuration parameters
 	 */
 	@XmlElement(name = "parameters")
@@ -133,8 +138,8 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Adds a new configuration parameter.
-	 * 
-	 * @param key the key of the configuration parameter
+	 *
+	 * @param key   the key of the configuration parameter
 	 * @param value the value of the configuration parameter
 	 */
 	public void addParameter(final String key, final JsonNode value) {
@@ -151,7 +156,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the configuration parameter for the given key.
-	 * 
+	 *
 	 * @param key a configuration parameter key
 	 * @return the value of the matched configuration parameter or null
 	 */
@@ -164,7 +169,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the resources that are related to this configuration
-	 * 
+	 *
 	 * @return the resources that are related to this configuration
 	 */
 	public Set<Resource> getResources() {
@@ -174,7 +179,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the resources of this configuration
-	 * 
+	 *
 	 * @param resourcesArg a new collection of resources
 	 */
 	public void setResources(final Set<Resource> resourcesArg) {
@@ -216,7 +221,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Adds a new resource to the collection of resources of this configuration.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param resource a new export definition revision
 	 */
 	public void addResource(final Resource resource) {
@@ -239,7 +244,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Replaces an existing resource, i.e., the resource with the same identifier will be replaced.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param resource an existing, updated resource
 	 */
 	public void replaceResource(final Resource resource) {
@@ -266,7 +271,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Removes an existing resource from the collection of resources of this configuration.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param resource an existing resource that should be removed
 	 */
 	public void removeResource(final Resource resource) {
@@ -294,7 +299,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Initialises the configuration parameters from the string that holds the serialised JSON object of the configuration
 	 * parameters.
-	 * 
+	 *
 	 * @param fromScratch flag that indicates, whether the configuration parameters should be initialised from scratch or not
 	 */
 	private void initParameters(final boolean fromScratch) {
@@ -320,7 +325,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 				parameters = DMPPersistenceUtil.getJSON(parametersString);
 			} catch (final DMPException e) {
 
-				Configuration.LOG.debug("couldn't parse parameters JSON string for configuration '" + getId() + "'");
+				Configuration.LOG.debug("couldn't parse parameters JSON string for configuration '" + getUuid() + "'");
 			}
 
 			parametersInitialized = true;

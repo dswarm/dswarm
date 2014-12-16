@@ -91,7 +91,7 @@ public class Component extends ExtendedBasicDMPJPAObject {
 	 * The output components collection.
 	 */
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { /* CascadeType.DETACH, CascadeType.MERGE, */CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinTable(name = "INPUT_COMPONENTS_OUTPUT_COMPONENTS", joinColumns = { @JoinColumn(name = "INPUT_COMPONENT_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "OUTPUT_COMPONENT_ID", referencedColumnName = "ID") })
+	@JoinTable(name = "INPUT_COMPONENTS_OUTPUT_COMPONENTS", joinColumns = { @JoinColumn(name = "INPUT_COMPONENT_UUID", referencedColumnName = "UUID") }, inverseJoinColumns = { @JoinColumn(name = "OUTPUT_COMPONENT_UUID", referencedColumnName = "UUID") })
 	@XmlElement(name = "output_components")
 	@JsonSerialize(using = SetComponentReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
@@ -147,8 +147,9 @@ public class Component extends ExtendedBasicDMPJPAObject {
 	public Component() {
 	}
 
-	private Component(final long idValue) {
-		id = idValue;
+	private Component(final String uuidArg) {
+
+		super(uuidArg);
 	}
 
 	/**
@@ -497,7 +498,7 @@ public class Component extends ExtendedBasicDMPJPAObject {
 
 			if (parameterMappingsString == null) {
 
-				Component.LOG.debug("parameter mappings JSON is null for '" + getId() + "'");
+				Component.LOG.debug("parameter mappings JSON is null for '" + getUuid() + "'");
 
 				if (fromScratch) {
 
@@ -529,7 +530,7 @@ public class Component extends ExtendedBasicDMPJPAObject {
 
 						if (valueNode == null) {
 
-							Component.LOG.debug("value for key '" + key + "' in  parameter mappings JSON for component '" + getId() + "' is null");
+							Component.LOG.debug("value for key '" + key + "' in  parameter mappings JSON for component '" + getUuid() + "' is null");
 
 							continue;
 						}
@@ -541,7 +542,7 @@ public class Component extends ExtendedBasicDMPJPAObject {
 				}
 			} catch (final DMPException e) {
 
-				Component.LOG.debug("couldn't parse parameter mappings JSON for component '" + getId() + "'");
+				Component.LOG.debug("couldn't parse parameter mappings JSON for component '" + getUuid() + "'");
 			}
 
 			parameterMappingsInitialized = true;
@@ -572,11 +573,11 @@ public class Component extends ExtendedBasicDMPJPAObject {
 	 * </p>
 	 * 
 	 * @param component the base component that will be copied
-	 * @param idValue the target component's id value
+	 * @param uuid the target component's id value
 	 * @return a new component with the given id and all other attributes copied from the provided component.
 	 */
-	public static Component withId(final Component component, final long idValue) {
-		final Component newComponent = new Component(idValue);
+	public static Component withId(final Component component, final String uuid) {
+		final Component newComponent = new Component(uuid);
 
 		newComponent.setFunction(component.getFunction());
 		newComponent.setInputComponents(component.getInputComponents());

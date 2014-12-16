@@ -16,7 +16,7 @@
 package org.dswarm.persistence.service.schema.test.internalmodel;
 
 import org.dswarm.persistence.model.schema.Clasz;
-import org.dswarm.persistence.model.schema.NameSpacePrefixRegistry;
+import org.dswarm.persistence.model.schema.utils.NameSpacePrefixRegistry;
 import org.dswarm.persistence.model.schema.Schema;
 
 public class BiboDocumentSchemaBuilder extends SchemaBuilder {

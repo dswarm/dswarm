@@ -76,22 +76,22 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 
 			final boolean actualSchemaHasNoAttributePaths = (actualSchema.getUniqueAttributePaths() == null || actualSchema
 					.getUniqueAttributePaths().isEmpty());
-			Assert.assertTrue("the actual schema '" + actualSchema.getId() + "' shouldn't have attribute paths", actualSchemaHasNoAttributePaths);
+			Assert.assertTrue("the actual schema '" + actualSchema.getUuid() + "' shouldn't have attribute paths", actualSchemaHasNoAttributePaths);
 
 		} else { // !null && !empty
 
 			final Set<SchemaAttributePathInstance> actualAttributePaths = actualSchema.getUniqueAttributePaths();
 
-			Assert.assertNotNull("attribute path instances of actual schema '" + actualSchema.getId() + "' shouldn't be null",
+			Assert.assertNotNull("attribute path instances of actual schema '" + actualSchema.getUuid() + "' shouldn't be null",
 					actualAttributePaths);
-			Assert.assertFalse("attribute path instances of actual schema '" + actualSchema.getId() + "' shouldn't be empty",
+			Assert.assertFalse("attribute path instances of actual schema '" + actualSchema.getUuid() + "' shouldn't be empty",
 					actualAttributePaths.isEmpty());
 
-			final Map<Long, SchemaAttributePathInstance> actualAttributePathsMap = Maps.newHashMap();
+			final Map<String, SchemaAttributePathInstance> actualAttributePathsMap = Maps.newHashMap();
 
 			for (final SchemaAttributePathInstance actualAttributePath : actualAttributePaths) {
 
-				actualAttributePathsMap.put(actualAttributePath.getId(), actualAttributePath);
+				actualAttributePathsMap.put(actualAttributePath.getUuid(), actualAttributePath);
 			}
 
 			schemaAttributePathInstanceResourceTestUtils.compareObjects(expectedSchema.getUniqueAttributePaths(), actualAttributePathsMap);
@@ -99,7 +99,7 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 
 		if (expectedSchema.getRecordClass() == null) {
 
-			Assert.assertNull("the actual schema '" + actualSchema.getId() + "' shouldn't have a record class", actualSchema.getRecordClass());
+			Assert.assertNull("the actual schema '" + actualSchema.getUuid() + "' shouldn't have a record class", actualSchema.getRecordClass());
 
 		} else {
 
@@ -120,7 +120,7 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 		final Schema updatedSchema = createAndCompareObject(schema, schema);
 
 		Assert.assertNotNull("updated schema shouldn't be null", updatedSchema);
-		Assert.assertNotNull("updated schema id shouldn't be null", updatedSchema.getId());
+		Assert.assertNotNull("updated schema id shouldn't be null", updatedSchema.getUuid());
 
 		return updatedSchema;
 	}

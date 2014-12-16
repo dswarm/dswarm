@@ -44,7 +44,7 @@ abstract class SetReferenceSerializer<DMPOBJECTIMPL extends DMPObject> extends J
 
 		for (final DMPOBJECTIMPL object : objects) {
 
-			references.add(new Reference(object.getId()));
+			references.add(new Reference(object.getUuid()));
 		}
 
 		generator.writeObject(references);
@@ -54,14 +54,14 @@ abstract class SetReferenceSerializer<DMPOBJECTIMPL extends DMPObject> extends J
 	static class Reference {
 
 		@XmlID
-		private final Long id;
+		private final String id;
 
-		Reference(final Long idArg) {
+		Reference(final String idArg) {
 
 			id = idArg;
 		}
 
-		Long getId() {
+		String getId() {
 
 			return id;
 		}

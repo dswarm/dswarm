@@ -107,7 +107,7 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 
 		Assert.assertNotNull("the " + pojoClassName + "s JSON string shouldn't be null", objectsJSON);
 
-		final Map<Long, POJOCLASS> responseObjects = Maps.newLinkedHashMap();
+		final Map<String, POJOCLASS> responseObjects = Maps.newLinkedHashMap();
 		final ArrayNode responseObjectsJSONArray = objectMapper.readValue(objectsJSON, ArrayNode.class);
 
 		Assert.assertNotNull("response " + pojoClassName + "s JSON array shouldn't be null", responseObjectsJSONArray);
@@ -116,7 +116,7 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 
 			final POJOCLASS responseObject = objectMapper.readValue(responseObjectJSON.toString(), pojoClass);
 
-			responseObjects.put(responseObject.getId(), responseObject);
+			responseObjects.put(responseObject.getUuid(), responseObject);
 		}
 
 		final Set<POJOCLASS> newExpectedObjects;
@@ -147,7 +147,7 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 	 * @param expectedObjects
 	 * @param actualObjects
 	 */
-	public void compareObjects(final Set<POJOCLASS> expectedObjects, final Map<Long, POJOCLASS> actualObjects)
+	public void compareObjects(final Set<POJOCLASS> expectedObjects, final Map<String, POJOCLASS> actualObjects)
 			throws JsonProcessingException, JSONException {
 
 		Assert.assertNotNull("expected objects shouldn't be null", expectedObjects);
@@ -157,9 +157,9 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 
 		for (final POJOCLASS expectedObject : expectedObjects) {
 
-			final POJOCLASS actualObject = actualObjects.get(expectedObject.getId());
+			final POJOCLASS actualObject = actualObjects.get(expectedObject.getUuid());
 
-			Assert.assertNotNull(pojoClassName + " for id '" + expectedObject.getId() + "' shouldn't be null", actualObject);
+			Assert.assertNotNull(pojoClassName + " for id '" + expectedObject.getUuid() + "' shouldn't be null", actualObject);
 			Assert.assertEquals(pojoClassName + "s are not equal", expectedObject, actualObject);
 
 			compareObjects(expectedObject, actualObject);
@@ -174,7 +174,7 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 	@Override
 	public POJOCLASS getObject(final POJOCLASS expectedObject) throws JsonProcessingException, JSONException {
 
-		final POJOCLASS responseObject = jpaService.getObject(expectedObject.getId());
+		final POJOCLASS responseObject = jpaService.getObject(expectedObject.getUuid());
 
 		Assert.assertNotNull("the updated " + type + " shouldn't be null", responseObject);
 		Assert.assertEquals("the " + type + "s are not equal", expectedObject, responseObject);
@@ -258,7 +258,7 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 
 	public void deleteObject(final POJOCLASS object) {
 
-		final Long objectId = object.getId();
+		final String objectId = object.getUuid();
 
 		deleteObject(objectId);
 	}

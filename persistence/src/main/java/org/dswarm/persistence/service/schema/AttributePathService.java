@@ -72,12 +72,13 @@ public class AttributePathService extends BasicJPAService<ProxyAttributePath, At
 
 	/**
 	 * Tries to retrieve an attribute path object for the given ordered list of attribute paths
+	 * TODO: check, when this method was called in the code
 	 *
 	 * @param attributePathJSONArrayString
 	 * @return
 	 * @throws DMPPersistenceException
 	 */
-	public AttributePath getObject(final String attributePathJSONArrayString) throws DMPPersistenceException {
+	public AttributePath getObjectViaAttributePathJSON(final String attributePathJSONArrayString) throws DMPPersistenceException {
 
 		final EntityManager entityManager = acquire();
 

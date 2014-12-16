@@ -174,15 +174,15 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 
 			final Set<Configuration> actualConfigurations = actualResource.getConfigurations();
 
-			Assert.assertNotNull("configurations of actual resource '" + actualResource.getId() + "' shouldn't be null", actualConfigurations);
-			Assert.assertFalse("configurations of actual resource '" + actualResource.getId() + "' shouldn't be empty",
+			Assert.assertNotNull("configurations of actual resource '" + actualResource.getUuid() + "' shouldn't be null", actualConfigurations);
+			Assert.assertFalse("configurations of actual resource '" + actualResource.getUuid() + "' shouldn't be empty",
 					actualConfigurations.isEmpty());
 
-			final Map<Long, Configuration> actualConfigurationsMap = Maps.newHashMap();
+			final Map<String, Configuration> actualConfigurationsMap = Maps.newHashMap();
 
 			for (final Configuration actualConfiguration : actualConfigurations) {
 
-				actualConfigurationsMap.put(actualConfiguration.getId(), actualConfiguration);
+				actualConfigurationsMap.put(actualConfiguration.getUuid(), actualConfiguration);
 			}
 
 			configurationsServiceTestUtils.compareObjects(expectedResource.getConfigurations(), actualConfigurationsMap);
@@ -207,7 +207,7 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 		final Resource updatedResource = createAndCompareObject(resource, expectedResource);
 
 		Assert.assertNotNull("updated resource shouldn't be null", updatedResource);
-		Assert.assertNotNull("updated resource id shouldn't be null", updatedResource.getId());
+		Assert.assertNotNull("updated resource id shouldn't be null", updatedResource.getUuid());
 
 		return updatedResource;
 	}

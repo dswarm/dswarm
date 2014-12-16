@@ -36,9 +36,9 @@ import org.dswarm.persistence.model.job.Transformation;
 
 public class TransformationTest extends GuicedTest {
 
-	private static final Logger	LOG				= LoggerFactory.getLogger(TransformationTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TransformationTest.class);
 
-	private final ObjectMapper	objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleTransformationTest() {
@@ -291,15 +291,15 @@ public class TransformationTest extends GuicedTest {
 						mainComponent.getParameterMappings().get(functionParameterName));
 				Assert.assertNotNull("the component input components set shouldn't be null", mainComponent.getInputComponents());
 				Assert.assertEquals("the component input components set are not equal", 1, mainComponent.getInputComponents().size());
-				Assert.assertTrue("the component input components set doesn't contain component '" + component1.getId() + "'", mainComponent
+				Assert.assertTrue("the component input components set doesn't contain component '" + component1.getUuid() + "'", mainComponent
 						.getInputComponents().contains(component1));
-				Assert.assertEquals("the component input component '" + component1.getId() + "' are not equal", component1, mainComponent
+				Assert.assertEquals("the component input component '" + component1.getUuid() + "' are not equal", component1, mainComponent
 						.getInputComponents().iterator().next());
 				Assert.assertNotNull("the component output components set shouldn't be null", mainComponent.getOutputComponents());
 				Assert.assertEquals("the component output components set are not equal", 1, mainComponent.getOutputComponents().size());
-				Assert.assertTrue("the component output components set doesn't contain component '" + component2.getId() + "'", mainComponent
+				Assert.assertTrue("the component output components set doesn't contain component '" + component2.getUuid() + "'", mainComponent
 						.getOutputComponents().contains(component2));
-				Assert.assertEquals("the component output component '" + component2.getId() + "' are not equal", component2, mainComponent
+				Assert.assertEquals("the component output component '" + component2.getUuid() + "' are not equal", component2, mainComponent
 						.getOutputComponents().iterator().next());
 			}
 		}

@@ -53,6 +53,10 @@ public class Filter extends BasicDMPJPAObject {
 		super(uuidArg);
 	}
 
+	public Filter() {
+
+	}
+
 	/**
 	 * Gets the filter expression.
 	 * 

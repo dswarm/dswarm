@@ -50,6 +50,11 @@ public class Job extends ExtendedBasicDMPJPAObject {
 	@XmlList
 	private Set<Mapping>		mappings;
 
+	public Job() {
+
+
+	}
+
 	public Job(final String uuidArg) {
 
 		super(uuidArg);
