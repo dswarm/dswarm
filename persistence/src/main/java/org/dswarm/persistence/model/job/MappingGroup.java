@@ -40,9 +40,9 @@ public class MappingGroup extends AdvancedDMPJPAObject {
 
 	}
 
-	public MappingGroup(final String id) {
+	public MappingGroup(final String uuid) {
 
-		super(id);
+		super(uuid);
 	}
 
 	public List<Mapping> getMappings() {

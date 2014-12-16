@@ -119,7 +119,7 @@ public class AttributePath extends DMPObject {
 	/**
 	 * Creates a new attribute path.
 	 */
-	public AttributePath() {
+	protected AttributePath() {
 
 	}
 

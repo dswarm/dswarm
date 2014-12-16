@@ -46,7 +46,7 @@ public class Clasz extends AdvancedDMPJPAObject {
 	/**
 	 * Creates new class with no identifier.
 	 */
-	public Clasz() {
+	protected Clasz() {
 
 		//super(null);
 	}

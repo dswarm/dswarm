@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
+import org.dswarm.persistence.service.UUIDService;
 
 public class AttributePathTest extends GuicedTest {
 
@@ -66,7 +67,9 @@ public class AttributePathTest extends GuicedTest {
 
 	private Attribute createAttribute(final String id, final String name) {
 
-		final Attribute attribute = new Attribute(id);
+		final String uuid = UUIDService.getUUID(Attribute.class.getSimpleName());
+
+		final Attribute attribute = new Attribute(uuid, id);
 		attribute.setName(name);
 
 		Assert.assertNotNull("the attribute id shouldn't be null", attribute.getUri());

@@ -52,6 +52,7 @@ public class ClaszServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<ClaszS
 	@Override
 	public Clasz createObject(final String id, final String name) throws Exception {
 
+		// TODO: think about this?
 		final String uuid = UUIDService.getUUID(Clasz.class.getSimpleName());
 
 		final Clasz clasz = new Clasz(uuid, id, name);

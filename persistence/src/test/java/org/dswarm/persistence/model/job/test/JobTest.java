@@ -27,6 +27,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scala.tools.cmd.gen.AnyVals;
 
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.job.Component;
@@ -129,11 +130,15 @@ public class JobTest extends GuicedTest {
 
 		final Attribute dctermsTitle = createAttribute(dctermsTitleId, dctermsTitleName);
 
-		final AttributePath inputAttributePath = new AttributePath();
+		final String inputAttributePathUUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath inputAttributePath = new AttributePath(inputAttributePathUUID);
 
 		inputAttributePath.addAttribute(dctermsTitle);
 
-		final MappingAttributePathInstance inputMappingAttributePathInstance = new MappingAttributePathInstance();
+		final String inputMappingAttributePathInstanceUUID = UUIDService.getUUID(MappingAttributePathInstance.class.getSimpleName());
+
+		final MappingAttributePathInstance inputMappingAttributePathInstance = new MappingAttributePathInstance(inputMappingAttributePathInstanceUUID);
 		inputMappingAttributePathInstance.setAttributePath(inputAttributePath);
 
 		// output attribute path
@@ -143,7 +148,9 @@ public class JobTest extends GuicedTest {
 
 		final Attribute rdfsLabel = createAttribute(rdfsLabelId, rdfsLabelName);
 
-		final AttributePath outputAttributePath = new AttributePath();
+		final String outputAttributePathUUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath outputAttributePath = new AttributePath(outputAttributePathUUID);
 
 		outputAttributePath.addAttribute(rdfsLabel);
 

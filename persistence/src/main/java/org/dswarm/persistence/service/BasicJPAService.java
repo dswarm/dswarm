@@ -150,7 +150,8 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 	protected PROXYPOJOCLASS createObjectInternal(final EntityManager entityManager) throws DMPPersistenceException {
 
-		final POJOCLASS object = createNewObject();
+		// i.e. uuid will be created on demand in createNewObject
+		final POJOCLASS object = createNewObject(null);
 
 		persistObject(object, entityManager);
 
@@ -194,7 +195,8 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	protected PROXYPOJOCLASS createObjectInternal(final POJOCLASS object, final EntityManager entityManager, final String transactionType)
 			throws DMPPersistenceException {
 
-		final POJOCLASS newObject = createNewObject();
+		// TODO: shall we check, whether the entity with the UUID already exists in the DB, or not?
+		final POJOCLASS newObject = createNewObject(object.getUuid());
 
 		persistObject(newObject, entityManager);
 
@@ -499,21 +501,21 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	 * @return a new instance of the concrete POJO class
 	 * @throws DMPPersistenceException if something went wrong.
 	 */
-	private POJOCLASS createNewObject() throws DMPPersistenceException {
+	private POJOCLASS createNewObject(final String uuid) throws DMPPersistenceException {
 
-//		final POJOCLASS object;
-//
-//		try {
-//
-//			object = clasz.newInstance();
-//		} catch (final InstantiationException | IllegalAccessException e) {
-//
-//			BasicJPAService.LOG.error("something went wrong while " + className + "object creation", e);
-//
-//			throw new DMPPersistenceException(e.getMessage());
-//		}
-//
-//		return object;
+		//		final POJOCLASS object;
+		//
+		//		try {
+		//
+		//			object = clasz.newInstance();
+		//		} catch (final InstantiationException | IllegalAccessException e) {
+		//
+		//			BasicJPAService.LOG.error("something went wrong while " + className + "object creation", e);
+		//
+		//			throw new DMPPersistenceException(e.getMessage());
+		//		}
+		//
+		//		return object;
 
 		final POJOCLASS object;
 
@@ -531,11 +533,18 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 			throw new DMPPersistenceException("couldn't find constructor to instantiate new '" + className + "' with a uuid");
 		}
 
-		final String uuid = UUIDService.getUUID(className);
+		final String finalUUID;
+
+		if (uuid != null) {
+
+			finalUUID = uuid;
+		} else {
+			finalUUID = UUIDService.getUUID(className);
+		}
 
 		try {
 
-			object = constructor.newInstance(uuid);
+			object = constructor.newInstance(finalUUID);
 		} catch (final InstantiationException | InvocationTargetException | IllegalArgumentException | IllegalAccessException e) {
 
 			BasicJPAService.LOG.error("something went wrong while " + className + "object creation", e);

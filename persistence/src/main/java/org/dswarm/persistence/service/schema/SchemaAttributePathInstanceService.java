@@ -22,6 +22,7 @@ import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxySchemaAttributePathInstance;
+import org.dswarm.persistence.service.UUIDService;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -73,7 +74,10 @@ public class SchemaAttributePathInstanceService extends
 	}
 
 	public ProxySchemaAttributePathInstance createObjectTransactional( final AttributePath attributePath ) throws DMPPersistenceException {
-		final SchemaAttributePathInstance sapi = new SchemaAttributePathInstance();
+
+		final String uuid = UUIDService.getUUID(SchemaAttributePathInstance.class.getSimpleName());
+
+		final SchemaAttributePathInstance sapi = new SchemaAttributePathInstance(uuid);
 		sapi.setAttributePath( attributePath );
 		final ProxySchemaAttributePathInstance psapi = createObjectTransactional( sapi );
 		return psapi;

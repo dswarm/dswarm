@@ -115,7 +115,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 		super(uuidArg);
 	}
 
-	public Resource() {
+	protected Resource() {
 
 	}
 

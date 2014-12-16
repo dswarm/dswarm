@@ -51,9 +51,8 @@ public class Attribute extends AdvancedDMPJPAObject {
 	/**
 	 * Creates new attribute with no identifier.
 	 */
-	public Attribute() {
+	protected Attribute() {
 
-		super();
 	}
 
 	/**

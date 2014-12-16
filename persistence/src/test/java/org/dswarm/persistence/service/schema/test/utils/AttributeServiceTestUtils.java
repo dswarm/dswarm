@@ -59,6 +59,7 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 	@Override
 	public Attribute createObject(final String id, final String name) throws Exception {
 
+		// TODO: think about this?
 		final String uuid = UUIDService.getUUID(Attribute.class.getSimpleName());
 
 		final Attribute attribute = new Attribute(uuid, id, name);

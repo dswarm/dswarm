@@ -124,7 +124,7 @@ public class Schema extends BasicDMPJPAObject {
 	@XmlElement(name = "content_schema")
 	private ContentSchema contentSchema;
 
-	public Schema() {
+	protected Schema() {
 
 	}
 

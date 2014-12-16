@@ -84,7 +84,7 @@ public class DataModel extends ExtendedBasicDMPJPAObject {
 		super(uuidArg);
 	}
 
-	public DataModel() {
+	protected DataModel() {
 
 	}
 

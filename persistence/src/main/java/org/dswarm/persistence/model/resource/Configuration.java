@@ -106,7 +106,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 		super(uuidArg);
 	}
 
-	public Configuration() {
+	protected Configuration() {
 
 	}
 

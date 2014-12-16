@@ -34,6 +34,7 @@ import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
 import org.dswarm.persistence.service.BasicJPAService;
+import org.dswarm.persistence.service.UUIDService;
 
 /**
  * A persistence service for {@link AttributePath}s.
@@ -184,7 +185,17 @@ public class AttributePathService extends BasicJPAService<ProxyAttributePath, At
 
 	private AttributePath mergeAttributesIntoEntityManager(final AttributePath object, final EntityManager entityManager) {
 
-		final AttributePath tempAttributePath = new AttributePath();
+		final String uuid;
+
+		if(object.getUuid() != null) {
+
+			uuid = object.getUuid();
+		} else {
+
+			uuid = UUIDService.getUUID(AttributePath.class.getSimpleName());
+		}
+
+		final AttributePath tempAttributePath = new AttributePath(uuid);
 
 		final List<Attribute> attributes = object.getAttributePath();
 

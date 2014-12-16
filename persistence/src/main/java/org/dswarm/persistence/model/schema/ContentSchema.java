@@ -126,7 +126,7 @@ public class ContentSchema extends BasicDMPJPAObject {
 	/**
 	 * Creates a new content schema.
 	 */
-	public ContentSchema() {
+	protected ContentSchema() {
 
 	}
 
