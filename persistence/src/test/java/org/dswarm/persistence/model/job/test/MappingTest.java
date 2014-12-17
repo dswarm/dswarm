@@ -101,12 +101,17 @@ public class MappingTest extends GuicedTest {
 
 		final Attribute dctermsTitle = createAttribute(dctermsTitleId, dctermsTitleName);
 
-		final AttributePath inputAttributePath = new AttributePath();
+		final String inputAttributePathUUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath inputAttributePath = new AttributePath(inputAttributePathUUID);
 		// inputAttributePath.setId(UUID.randomUUID().toString());
 
 		inputAttributePath.addAttribute(dctermsTitle);
 
-		final MappingAttributePathInstance inputMappingAttributePathInstance = new MappingAttributePathInstance();
+		final String inputMappingAttributePathInstanceUUID = UUIDService.getUUID(MappingAttributePathInstance.class.getSimpleName());
+
+		final MappingAttributePathInstance inputMappingAttributePathInstance = new MappingAttributePathInstance(
+				inputMappingAttributePathInstanceUUID);
 		inputMappingAttributePathInstance.setAttributePath(inputAttributePath);
 
 		// output attribute path
@@ -116,12 +121,17 @@ public class MappingTest extends GuicedTest {
 
 		final Attribute rdfsLabel = createAttribute(rdfsLabelId, rdfsLabelName);
 
-		final AttributePath outputAttributePath = new AttributePath();
+		final String outputAttributePathUUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath outputAttributePath = new AttributePath(outputAttributePathUUID);
 		// outputAttributePath.setId(UUID.randomUUID().toString());
 
 		outputAttributePath.addAttribute(rdfsLabel);
 
-		final MappingAttributePathInstance outputMappingAttributePathInstance = new MappingAttributePathInstance();
+		final String outputMappingAttributePathInstanceUUID = UUIDService.getUUID(MappingAttributePathInstance.class.getSimpleName());
+
+		final MappingAttributePathInstance outputMappingAttributePathInstance = new MappingAttributePathInstance(
+				outputMappingAttributePathInstanceUUID);
 		outputMappingAttributePathInstance.setAttributePath(outputAttributePath);
 
 		// transformation component
@@ -466,13 +476,18 @@ public class MappingTest extends GuicedTest {
 
 		final Attribute firstName = createAttribute(firstNameId, firstNameName);
 
-		final AttributePath firstNameAttributePath = new AttributePath();
+		final String firstNameAttributePathUUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath firstNameAttributePath = new AttributePath(firstNameAttributePathUUID);
 		// firstNameAttributePath.setId(UUID.randomUUID().toString());
 
 		firstNameAttributePath.addAttribute(dctermsCreator);
 		firstNameAttributePath.addAttribute(firstName);
 
-		final MappingAttributePathInstance firstNameMappingAttributePathInstance = new MappingAttributePathInstance();
+		final String firstNameMappingAttributePathInstanceUUID = UUIDService.getUUID(MappingAttributePathInstance.class.getSimpleName());
+
+		final MappingAttributePathInstance firstNameMappingAttributePathInstance = new MappingAttributePathInstance(
+				firstNameMappingAttributePathInstanceUUID);
 		firstNameMappingAttributePathInstance.setAttributePath(firstNameAttributePath);
 
 		// family name attribute path
@@ -482,13 +497,18 @@ public class MappingTest extends GuicedTest {
 
 		final Attribute familyName = createAttribute(familyNameId, familyNameName);
 
-		final AttributePath familyNameAttributePath = new AttributePath();
+		final String familyNameAttributePathUUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath familyNameAttributePath = new AttributePath(familyNameAttributePathUUID);
 		// familyNameAttributePath.setId(UUID.randomUUID().toString());
 
 		familyNameAttributePath.addAttribute(dctermsCreator);
 		familyNameAttributePath.addAttribute(familyName);
 
-		final MappingAttributePathInstance familyNameMappingAttributePathInstance = new MappingAttributePathInstance();
+		final String familyNameMappingAttributePathInstanceUUID = UUIDService.getUUID(MappingAttributePathInstance.class.getSimpleName());
+
+		final MappingAttributePathInstance familyNameMappingAttributePathInstance = new MappingAttributePathInstance(
+				familyNameMappingAttributePathInstanceUUID);
 		familyNameMappingAttributePathInstance.setAttributePath(familyNameAttributePath);
 
 		// output attribute path
@@ -498,13 +518,18 @@ public class MappingTest extends GuicedTest {
 
 		final Attribute foafName = createAttribute(foafNameId, foafNameName);
 
-		final AttributePath nameAttributePath = new AttributePath();
+		final String nameAttributePathUUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath nameAttributePath = new AttributePath(nameAttributePathUUID);
 		// nameAttributePath.setId(UUID.randomUUID().toString());
 
 		nameAttributePath.addAttribute(dctermsCreator);
 		nameAttributePath.addAttribute(foafName);
 
-		final MappingAttributePathInstance outputMappingAttributePathInstance = new MappingAttributePathInstance();
+		final String outputMappingAttributePathInstanceUUID = UUIDService.getUUID(MappingAttributePathInstance.class.getSimpleName());
+
+		final MappingAttributePathInstance outputMappingAttributePathInstance = new MappingAttributePathInstance(
+				outputMappingAttributePathInstanceUUID);
 		outputMappingAttributePathInstance.setAttributePath(nameAttributePath);
 
 		// transformation component
@@ -672,13 +697,15 @@ public class MappingTest extends GuicedTest {
 		MappingTest.LOG.debug("clean-up next component json: " + json);
 	}
 
-	private Attribute createAttribute(final String id, final String name) {
+	private Attribute createAttribute(final String uri, final String name) {
 
-		final Attribute attribute = new Attribute(id);
+		final String uuid = UUIDService.getUUID(Attribute.class.getSimpleName());
+
+		final Attribute attribute = new Attribute(uuid, uri);
 		attribute.setName(name);
 
-		Assert.assertNotNull("the attribute id shouldn't be null", attribute.getUri());
-		Assert.assertEquals("the attribute ids are not equal", id, attribute.getUri());
+		Assert.assertNotNull("the attribute uri shouldn't be null", attribute.getUri());
+		Assert.assertEquals("the attribute ids are not equal", uri, attribute.getUri());
 		Assert.assertNotNull("the attribute name shouldn't be null", attribute.getName());
 		Assert.assertEquals("the attribute names are not equal", name, attribute.getName());
 

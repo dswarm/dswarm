@@ -28,6 +28,7 @@ import org.junit.Assert;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.proxy.ProxyContentSchema;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.schema.ContentSchemaService;
 import org.dswarm.persistence.service.test.utils.BasicDMPJPAServiceTestUtils;
 
@@ -53,7 +54,10 @@ public class ContentSchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<C
 	public ContentSchema createContentSchema(final String name, final AttributePath recordIdentifierAttributePath,
 			final LinkedList<AttributePath> keyAttributePaths, final AttributePath valueAttributePath) throws Exception {
 
-		final ContentSchema contentSchema = new ContentSchema();
+		// TODO: think about this?
+		final String contentSchemaUUID = UUIDService.getUUID(ContentSchema.class.getSimpleName());
+
+		final ContentSchema contentSchema = new ContentSchema(contentSchemaUUID);
 
 		contentSchema.setName(name);
 		contentSchema.setRecordIdentifierAttributePath(recordIdentifierAttributePath);
@@ -163,7 +167,10 @@ public class ContentSchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<C
 
 	@Override public ContentSchema createDefaultObject() throws Exception {
 
-		final ContentSchema contentSchema = new ContentSchema();
+		// TODO: think about this?
+		final String contentSchemaUUID = UUIDService.getUUID(ContentSchema.class.getSimpleName());
+
+		final ContentSchema contentSchema = new ContentSchema(contentSchemaUUID);
 		contentSchema.setName("Default Content Schema");
 		contentSchema.addKeyAttributePath(apstUtils.createAndPersistDefaultObject());
 		contentSchema.addKeyAttributePath(apstUtils.getDctermsTitleDctermHaspartAP());

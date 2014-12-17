@@ -54,16 +54,16 @@ abstract class SetReferenceSerializer<DMPOBJECTIMPL extends DMPObject> extends J
 	static class Reference {
 
 		@XmlID
-		private final String id;
+		private final String uuid;
 
-		Reference(final String idArg) {
+		Reference(final String uuidArg) {
 
-			id = idArg;
+			uuid = uuidArg;
 		}
 
-		String getId() {
+		String getUuid() {
 
-			return id;
+			return uuid;
 		}
 	}
 

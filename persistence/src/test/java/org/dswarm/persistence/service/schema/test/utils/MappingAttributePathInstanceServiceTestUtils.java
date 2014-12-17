@@ -25,6 +25,7 @@ import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxyMappingAttributePathInstance;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.job.test.utils.FilterServiceTestUtils;
 import org.dswarm.persistence.service.schema.MappingAttributePathInstanceService;
 
@@ -101,7 +102,11 @@ public class MappingAttributePathInstanceServiceTestUtils
 
 	public MappingAttributePathInstance createMappingAttributePathInstance(final String name, final AttributePath attributePath,
 			final Integer ordinal, final Filter filter) throws Exception {
-		final MappingAttributePathInstance mappingAttributePathInstance = new MappingAttributePathInstance();
+
+		// TODO: think about this?
+		final String mappingAttributePathInstanceUUID = UUIDService.getUUID(MappingAttributePathInstance.class.getSimpleName());
+
+		final MappingAttributePathInstance mappingAttributePathInstance = new MappingAttributePathInstance(mappingAttributePathInstanceUUID);
 		mappingAttributePathInstance.setName(name);
 		mappingAttributePathInstance.setAttributePath(attributePath);
 		mappingAttributePathInstance.setOrdinal(ordinal);

@@ -30,6 +30,7 @@ import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.service.test.utils.BasicDMPJPAServiceTestUtils;
 
@@ -127,7 +128,10 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 
 	public Schema createSchema(final String name, final Collection<SchemaAttributePathInstance> attributePaths, final Clasz recordClass) {
 
-		final Schema schema = new Schema();
+		// TODO: think about this?
+		final String schemaUUID = UUIDService.getUUID(Schema.class.getSimpleName());
+
+		final Schema schema = new Schema(schemaUUID);
 
 		schema.setName(name);
 		schema.setAttributePaths(attributePaths);

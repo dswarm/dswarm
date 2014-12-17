@@ -95,7 +95,7 @@ public class CustomTransformationDeserializerTest extends GuicedTest {
 
 	private static void testTransformation(final Transformation transformation) {
 
-		MatcherAssert.assertThat(transformation.getUuid(), Matchers.equalTo("42L"));
+		MatcherAssert.assertThat(transformation.getUuid(), Matchers.equalTo("42"));
 		MatcherAssert.assertThat(transformation.getFunctionType(), Matchers.equalTo(FunctionType.Transformation));
 		MatcherAssert.assertThat(transformation.getName(), Matchers.equalTo("transformation"));
 		MatcherAssert.assertThat(transformation.getDescription(), Matchers.equalTo("transformation"));
@@ -132,7 +132,8 @@ public class CustomTransformationDeserializerTest extends GuicedTest {
 	private static Component checkComponent(final Transformation transformation, final String uuid, final String name, final String description,
 			final List<String> functionParameters, final Tuple<String, String>... parameterMappings) {
 
-		final List<Component> configurations = Lambda.filter(Lambda.having(Lambda.on(Configuration.class).getUuid(), Matchers.equalTo(uuid)),
+		// TODO: changed Configuration.class to Component.class (y Configuration.class here - these are components!)
+		final List<Component> configurations = Lambda.filter(Lambda.having(Lambda.on(Component.class).getUuid(), Matchers.equalTo(uuid)),
 				transformation.getComponents());
 		MatcherAssert.assertThat(configurations, Matchers.hasSize(1));
 

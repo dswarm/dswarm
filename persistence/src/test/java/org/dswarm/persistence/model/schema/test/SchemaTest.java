@@ -88,7 +88,10 @@ public class SchemaTest extends GuicedTest {
 	}
 
 	private static AttributePath createAttributePath(final Attribute... attributes) {
-		final AttributePath attributePath = new AttributePath();
+
+		final String attributePathUUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath attributePath = new AttributePath(attributePathUUID);
 		for (final Attribute attribute : attributes) {
 			attributePath.addAttribute(attribute);
 		}
@@ -100,7 +103,10 @@ public class SchemaTest extends GuicedTest {
 	}
 
 	private static SchemaAttributePathInstance createAttributePathInstance(final AttributePath attributePath) {
-		final SchemaAttributePathInstance attributePathInstance = new SchemaAttributePathInstance();
+
+		final String attributePathInstanceUUID = UUIDService.getUUID(SchemaAttributePathInstance.class.getSimpleName());
+
+		final SchemaAttributePathInstance attributePathInstance = new SchemaAttributePathInstance(attributePathInstanceUUID);
 		attributePathInstance.setAttributePath(attributePath);
 
 		Assert.assertNotNull("the attribute path should not be null", attributePathInstance.getAttributePath());
@@ -110,7 +116,9 @@ public class SchemaTest extends GuicedTest {
 
 	private static Schema createSchema(final Clasz recordClass, final AttributePath... attributePaths) {
 
-		final Schema schema = new Schema();
+		final String schemaUUID = UUIDService.getUUID(Schema.class.getSimpleName());
+
+		final Schema schema = new Schema(schemaUUID);
 		schema.setRecordClass(recordClass);
 		for (final AttributePath attributePath : attributePaths) {
 			SchemaAttributePathInstance pathInstance = createAttributePathInstance(attributePath);
@@ -125,13 +133,15 @@ public class SchemaTest extends GuicedTest {
 		return schema;
 	}
 
-	private static Attribute createAttribute(final String id, final String name) {
+	private static Attribute createAttribute(final String uri, final String name) {
 
-		final Attribute attribute = new Attribute(id);
+		final String uuid = UUIDService.getUUID(Attribute.class.getSimpleName());
+
+		final Attribute attribute = new Attribute(uuid, uri);
 		attribute.setName(name);
 
-		Assert.assertNotNull("the attribute id shouldn't be null", attribute.getUri());
-		Assert.assertEquals("the attribute ids are not equal", id, attribute.getUri());
+		Assert.assertNotNull("the attribute uri shouldn't be null", attribute.getUri());
+		Assert.assertEquals("the attribute uris are not equal", uri, attribute.getUri());
 		Assert.assertNotNull("the attribute name shouldn't be null", attribute.getName());
 		Assert.assertEquals("the attribute names are not equal", name, attribute.getName());
 

@@ -82,7 +82,7 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 
 		deserializationContext = ctxt;
 
-		// TODO: think about this
+		// ok, transformation will be generated from scratch, when uuid is available in payload
 		final String uuid = UUIDService.getUUID(Transformation.class.getSimpleName());
 
 		Transformation transformation = new Transformation(uuid);
@@ -97,18 +97,24 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 					break;
 
 				case VALUE_STRING:
-					if (TransformationDeserializer.FUNCTION_DESCRIPTION_KEY.equals(currentFieldName)) {
-						TransformationDeserializer.setFunctionDescription(jp, transformation);
-					} else {
-						TransformationDeserializer.setStringValue(jp, transformation, currentFieldName);
+					switch (currentFieldName) {
+						case TransformationDeserializer.FUNCTION_DESCRIPTION_KEY:
+							TransformationDeserializer.setFunctionDescription(jp, transformation);
+							break;
+						case TransformationDeserializer.UUID_KEY:
+
+							transformation = Transformation.withId(transformation, jp.getText());
+
+							break;
+						default:
+							TransformationDeserializer.setStringValue(jp, transformation, currentFieldName);
+							break;
 					}
 					break;
 
 				case VALUE_NUMBER_INT:
 
-					// TODO: FIXME
-
-					//					transformation = Transformation.withId(transformation, jp.getLongValue());
+					// TODO: are there any numbers in there? id is now a uuid; hence a string
 					break;
 
 				case START_ARRAY:
@@ -226,10 +232,12 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 
 			String currentComponentId = null;
 
-			// TODO: think about this
-			final String uuid = UUIDService.getUUID(Component.class.getSimpleName());
+			// TODO we first need to extract the existing uuid, before we generate one!
+			// => right now the processing order is not correct, i.e., we need to this in another, i.e., the component should always (?) be created with a given uuid, or? - (as long as there is one available in the given payload)
+			// => currently, we often run in a branch where createComponent(String, Component) is utilised (which should be avoided)
+			// => i.e. we need to get the process into right processing order
 
-			final Component currentComponent = new Component(uuid);
+			Component currentComponent = null;
 
 			final ImmutableList.Builder<String> inputComponentsBuilder = new ImmutableList.Builder<>();
 			final ImmutableList.Builder<String> outputComponentsBuilder = new ImmutableList.Builder<>();
@@ -241,25 +249,39 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 						break;
 
 					case VALUE_STRING:
-						TransformationDeserializer.setStringValue(jp, currentComponent, currentFieldName);
+
+						if (TransformationDeserializer.UUID_KEY.equals(currentFieldName)) {
+							currentComponentId = jp.getText();
+
+							currentComponent = createComponent(jp, currentComponentId);
+
+							components.put(currentComponentId, currentComponent);
+						} else {
+
+							currentComponent = createComponent(currentComponentId, currentComponent);
+
+							TransformationDeserializer.setStringValue(jp, currentComponent, currentFieldName);
+						}
 						break;
 
 					case START_OBJECT:
 						if (TransformationDeserializer.FUNCTION_KEY.equals(currentFieldName)) {
+
+							currentComponent = createComponent(currentComponentId, currentComponent);
+
 							TransformationDeserializer.setFunction(jp, currentComponent);
 						} else if (TransformationDeserializer.PARAMETER_MAPPINGS_KEY.equals(currentFieldName)) {
+
+							currentComponent = createComponent(currentComponentId, currentComponent);
+
 							TransformationDeserializer.setParameterMappings(jp, currentComponent);
 						}
 						break;
 
 					case VALUE_NUMBER_INT:
 
-						// TODO: FIXME
+						// TODO: are there any numbers in there? id is now a uuid; hence a string
 
-						//						if (TransformationDeserializer.UUID_KEY.equals(currentFieldName)) {
-						//							currentComponentId = jp.getLongValue();
-						//							components.put(currentComponentId, currentComponent);
-						//						}
 						break;
 
 					case START_ARRAY:
@@ -294,6 +316,49 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 		linkInOutComponents(components, inOutComponents);
 
 		TransformationDeserializer.addComponents(transformation, components);
+	}
+
+	private Component createComponent(final JsonParser jp, final String currentComponentId) throws JsonMappingException {
+
+		if (currentComponentId != null && !currentComponentId.isEmpty()) {
+
+			return new Component(currentComponentId);
+		} else {
+
+			throw JsonMappingException.from(jp, "could not create component, i.e., uuid is not provided");
+		}
+	}
+
+	/**
+	 * note: should never be called or only in rare cases, i.e., the uuid should be provided by the given payload (i.e. method createComponent(JsonParser, String) should be utilised preferable
+	 *
+	 * @param currentComponentId
+	 * @param currentComponent
+	 * @return
+	 */
+	private Component createComponent(final String currentComponentId, Component currentComponent) {
+
+		if (currentComponent == null && currentComponentId != null && !currentComponentId.isEmpty()) {
+
+			currentComponent = new Component(currentComponentId);
+		} else if (currentComponent != null && currentComponentId != null && !currentComponentId.isEmpty()) {
+
+			if (currentComponent.getUuid().equals(currentComponentId)) {
+
+				return currentComponent;
+			} else {
+
+				return new Component(currentComponentId);
+			}
+
+		} else {
+
+			final String uuid = UUIDService.getUUID(Component.class.getSimpleName());
+
+			currentComponent = new Component(uuid);
+		}
+
+		return currentComponent;
 	}
 
 	/**
@@ -372,13 +437,17 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 						currentFieldName = jp.getText();
 						break;
 
+					case VALUE_STRING:
+
+						if (TransformationDeserializer.UUID_KEY.equals(currentFieldName)) {
+							ids.add(jp.getText());
+						}
+
+						break;
 					case VALUE_NUMBER_INT:
 
-						// TODO: FIXME
+						// TODO: are there any numbers in there? id is now a uuid; hence a string
 
-						//						if (TransformationDeserializer.UUID_KEY.equals(currentFieldName)) {
-						//							ids.add(jp.getLongValue());
-						//						}
 						break;
 
 					default: // no-op

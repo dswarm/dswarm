@@ -24,6 +24,7 @@ import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxySchemaAttributePathInstance;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 
 import static org.junit.Assert.assertEquals;
@@ -100,7 +101,10 @@ public class SchemaAttributePathInstanceServiceTestUtils extends
 
 	public SchemaAttributePathInstance createSchemaAttributePathInstance(final String name, final AttributePath attributePath, final Schema subSchema)
 			throws Exception {
-		final SchemaAttributePathInstance schemaAttributePathInstance = new SchemaAttributePathInstance();
+
+		final String schemattributePathInstanceUUID = UUIDService.getUUID(SchemaAttributePathInstance.class.getSimpleName());
+
+		final SchemaAttributePathInstance schemaAttributePathInstance = new SchemaAttributePathInstance(schemattributePathInstanceUUID);
 		schemaAttributePathInstance.setName(name);
 		schemaAttributePathInstance.setAttributePath(attributePath);
 		schemaAttributePathInstance.setSubSchema(subSchema);

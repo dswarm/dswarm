@@ -29,9 +29,9 @@ import org.dswarm.persistence.service.UUIDService;
 
 public class AttributePathTest extends GuicedTest {
 
-	private static final Logger	LOG				= LoggerFactory.getLogger(AttributePathTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AttributePathTest.class);
 
-	private final ObjectMapper	objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleAttributePathTest() {
@@ -46,7 +46,9 @@ public class AttributePathTest extends GuicedTest {
 
 		final Attribute dctermsHasPart = createAttribute(dctermsHasPartId, dctermsHasPartName);
 
-		final AttributePath attributePath = new AttributePath();
+		final String attributePathUUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath attributePath = new AttributePath(attributePathUUID);
 		// attributePath.setId(UUID.randomUUID().toString());
 
 		attributePath.addAttribute(dctermsHasPart);

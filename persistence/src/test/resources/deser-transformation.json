@@ -20,7 +20,7 @@
           },
           "reference": "compose"
         },
-        "id": 1,
+        "uuid": "1",
         "name": "compose",
         "parameters": [
           "prefix",
@@ -28,12 +28,12 @@
         ],
         "type": "Function"
       },
-      "id": 1,
+      "uuid": "1",
       "input_components": [],
       "name": "compose",
       "output_components": [
         {
-          "id": 2
+          "uuid": "2"
         }
       ],
       "parameter_mappings": {
@@ -63,7 +63,7 @@
           },
           "reference": "case"
         },
-        "id": 2,
+        "uuid": "2",
         "name": "case",
         "parameters": [
           "to",
@@ -71,10 +71,10 @@
         ],
         "type": "Function"
       },
-      "id": 2,
+      "uuid": "2",
       "input_components": [
         {
-          "id": 1
+          "uuid": "1"
         }
       ],
       "name": "case",
@@ -91,11 +91,11 @@
           "name": "count",
           "reference": "count"
         },
-        "id": 3,
+        "uuid": "3",
         "name": "count",
         "type": "Function"
       },
-      "id": 3,
+      "uuid": "3",
       "input_components": [],
       "name": "count",
       "output_components": [],
@@ -110,5 +110,5 @@
     "transformationInputString"
   ],
   "type": "Transformation",
-  "id": 42
+  "uuid": "42"
 }

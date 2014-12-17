@@ -18,6 +18,7 @@ package org.dswarm.persistence.service.schema.test.internalmodel;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.utils.NameSpacePrefixRegistry;
 import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.service.UUIDService;
 
 // TODO make this schema also use sub-schemata when everything works for the document schema
 public class BibrmContractItemSchemaBuilder extends SchemaBuilder {
@@ -29,9 +30,12 @@ public class BibrmContractItemSchemaBuilder extends SchemaBuilder {
 
 		final AttributePathBuilder builder = new AttributePathBuilder();
 
-		final Schema tempSchema = new Schema();
+		// TODO: think about this - maybe we should take a static identifier here instead
+		final String tempSchemaUUID = UUIDService.getUUID(Schema.class.getSimpleName());
+
+		final Schema tempSchema = new Schema(tempSchemaUUID);
 		
-		Clasz clasz = claszServiceTestUtils.createObject(NameSpacePrefixRegistry.BIBRM + "ContractItem", "ContractItem");
+		final Clasz clasz = claszServiceTestUtils.createObject(NameSpacePrefixRegistry.BIBRM + "ContractItem", "ContractItem");
 		
 		// basic properties for ERM example
 		// tempSchema.addAttributePath(builder.parsePrefixPath("bibrm:hasItem")); // this needs to go to the schema of Contract
@@ -44,10 +48,8 @@ public class BibrmContractItemSchemaBuilder extends SchemaBuilder {
 		// store all parsed paths as an overview
 		prefixPaths = builder.getPrefixPaths();
 
-		final Schema persistentSchema = schemaServiceTestUtils.createAndPersistSchema("bibrm:ContractItem-Schema (ERM-Scenario)",
+		return schemaServiceTestUtils.createAndPersistSchema("bibrm:ContractItem-Schema (ERM-Scenario)",
 				tempSchema.getUniqueAttributePaths(), clasz);
-
-		return persistentSchema;
 	}
 
 	@Override

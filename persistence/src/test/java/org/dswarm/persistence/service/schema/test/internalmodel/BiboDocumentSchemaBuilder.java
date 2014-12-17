@@ -18,6 +18,7 @@ package org.dswarm.persistence.service.schema.test.internalmodel;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.utils.NameSpacePrefixRegistry;
 import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.service.UUIDService;
 
 public class BiboDocumentSchemaBuilder extends SchemaBuilder {
 
@@ -26,9 +27,12 @@ public class BiboDocumentSchemaBuilder extends SchemaBuilder {
 
 		final AttributePathBuilder builder = new AttributePathBuilder();
 
-		final Schema tempSchema = new Schema();
+		// TODO: think about this - maybe we should take a static identifier here instead
+		final String tempSchemaUUID = UUIDService.getUUID(Schema.class.getSimpleName());
 
-		Clasz clasz = claszServiceTestUtils.createObject(NameSpacePrefixRegistry.BIBO + "Document", "Document");
+		final Schema tempSchema = new Schema(tempSchemaUUID);
+
+		final Clasz clasz = claszServiceTestUtils.createObject(NameSpacePrefixRegistry.BIBO + "Document", "Document");
 
 		/*
 		 * // Example of how to use the normal API of the attribute path builder
@@ -44,7 +48,7 @@ public class BiboDocumentSchemaBuilder extends SchemaBuilder {
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dc:contributor"));
 		{
 			// add "deep" paths as schema attribute path instances with attached sub-schemata ...
-			Schema foafPersonSchema = new FoafPersonSchemaBuilder().buildSchema();
+			final Schema foafPersonSchema = new FoafPersonSchemaBuilder().buildSchema();
 			tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:creator", foafPersonSchema));
 			tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:contributor", foafPersonSchema));
 		}
@@ -75,10 +79,8 @@ public class BiboDocumentSchemaBuilder extends SchemaBuilder {
 		// store all parsed paths as an overview
 		prefixPaths = builder.getPrefixPaths();
 
-		final Schema persistentSchema = schemaServiceTestUtils.createAndPersistSchema("bibo:Document-Schema (KIM-Titeldaten)",
+		return schemaServiceTestUtils.createAndPersistSchema("bibo:Document-Schema (KIM-Titeldaten)",
 				tempSchema.getUniqueAttributePaths(), clasz);
-
-		return persistentSchema;
 	}
 
 }

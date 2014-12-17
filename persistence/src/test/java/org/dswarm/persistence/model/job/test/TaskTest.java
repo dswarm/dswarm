@@ -99,7 +99,9 @@ public class TaskTest extends GuicedTest {
 
 		final Attribute dctermsHasPart = createAttribute(dctermsHasPartId, dctermsHasPartName);
 
-		final AttributePath attributePath1 = new AttributePath();
+		final String attributePath1UUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath attributePath1 = new AttributePath(attributePath1UUID);
 		// attributePath1.setId(UUID.randomUUID().toString());
 
 		attributePath1.addAttribute(dctermsTitle);
@@ -118,7 +120,9 @@ public class TaskTest extends GuicedTest {
 
 		final Attribute foafName = createAttribute(foafNameId, foafNameName);
 
-		final AttributePath attributePath2 = new AttributePath();
+		final String attributePath2UUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath attributePath2 = new AttributePath(attributePath2UUID);
 		// attributePath2.setId(UUID.randomUUID().toString());
 
 		attributePath2.addAttribute(dctermsCreator);
@@ -131,7 +135,9 @@ public class TaskTest extends GuicedTest {
 
 		final Attribute dctermsCreated = createAttribute(dctermsCreatedId, dctermsCreatedName);
 
-		final AttributePath attributePath3 = new AttributePath();
+		final String attributePath3UUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath attributePath3 = new AttributePath(attributePath3UUID);
 		// attributePath3.setId(UUID.randomUUID().toString());
 
 		attributePath3.addAttribute(dctermsCreated);
@@ -147,7 +153,9 @@ public class TaskTest extends GuicedTest {
 
 		// schema
 
-		final Schema schema = new Schema();
+		final String schemaUUID = UUIDService.getUUID(Schema.class.getSimpleName());
+
+		final Schema schema = new Schema(schemaUUID);
 		// schema.setId(UUID.randomUUID().toString());
 
 		schema.addAttributePath(createAttributePathInstance(attributePath1));
@@ -155,8 +163,10 @@ public class TaskTest extends GuicedTest {
 		schema.addAttributePath(createAttributePathInstance(attributePath3));
 		schema.setRecordClass(biboDocument);
 
+		final String resourceUUID = UUIDService.getUUID(Resource.class.getSimpleName());
+
 		// data resource
-		final Resource resource = new Resource();
+		final Resource resource = new Resource(resourceUUID);
 
 		resource.setName("bla");
 		resource.setDescription("blubblub");
@@ -170,8 +180,10 @@ public class TaskTest extends GuicedTest {
 
 		resource.setAttributes(attributes);
 
+		final String configurationUUID = UUIDService.getUUID(Configuration.class.getSimpleName());
+
 		// configuration
-		final Configuration configuration = new Configuration();
+		final Configuration configuration = new Configuration(configurationUUID);
 
 		configuration.setName("my configuration");
 		configuration.setDescription("configuration description");
@@ -185,8 +197,10 @@ public class TaskTest extends GuicedTest {
 
 		resource.addConfiguration(configuration);
 
+		final String dataModelUUID = UUIDService.getUUID(DataModel.class.getSimpleName());
+
 		// data model
-		final DataModel dataModel = new DataModel();
+		final DataModel dataModel = new DataModel(dataModelUUID);
 		dataModel.setName("my data model");
 		dataModel.setDescription("my data model description");
 		dataModel.setDataResource(resource);
@@ -295,11 +309,16 @@ public class TaskTest extends GuicedTest {
 
 		final Attribute dctermsTitle = createAttribute(dctermsTitleId, dctermsTitleName);
 
-		final AttributePath inputAttributePath = new AttributePath();
+		final String inputAttributePathUUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath inputAttributePath = new AttributePath(inputAttributePathUUID);
 
 		inputAttributePath.addAttribute(dctermsTitle);
 
-		final MappingAttributePathInstance inputMappingAttributePathInstance = new MappingAttributePathInstance();
+		final String inputMappingAttributePathInstanceUUID = UUIDService.getUUID(MappingAttributePathInstance.class.getSimpleName());
+
+		final MappingAttributePathInstance inputMappingAttributePathInstance = new MappingAttributePathInstance(
+				inputMappingAttributePathInstanceUUID);
 		inputMappingAttributePathInstance.setAttributePath(inputAttributePath);
 
 		// output attribute path
@@ -309,11 +328,16 @@ public class TaskTest extends GuicedTest {
 
 		final Attribute rdfsLabel = createAttribute(rdfsLabelId, rdfsLabelName);
 
-		final AttributePath outputAttributePath = new AttributePath();
+		final String outputAttributePathUUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath outputAttributePath = new AttributePath(outputAttributePathUUID);
 
 		outputAttributePath.addAttribute(rdfsLabel);
 
-		final MappingAttributePathInstance outputMappingAttributePathInstance = new MappingAttributePathInstance();
+		final String outputMappingAttributePathInstanceUUID = UUIDService.getUUID(MappingAttributePathInstance.class.getSimpleName());
+
+		final MappingAttributePathInstance outputMappingAttributePathInstance = new MappingAttributePathInstance(
+				outputMappingAttributePathInstanceUUID);
 		outputMappingAttributePathInstance.setAttributePath(outputAttributePath);
 
 		// transformation component
@@ -642,12 +666,17 @@ public class TaskTest extends GuicedTest {
 
 		final Attribute firstName = createAttribute(firstNameId, firstNameName);
 
-		final AttributePath firstNameAttributePath = new AttributePath();
+		final String firstNameAttributePathUUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath firstNameAttributePath = new AttributePath(firstNameAttributePathUUID);
 
 		firstNameAttributePath.addAttribute(dctermsCreator);
 		firstNameAttributePath.addAttribute(firstName);
 
-		final MappingAttributePathInstance firstNameMappingAttributePathInstance = new MappingAttributePathInstance();
+		final String firstNameMappingAttributePathInstanceUUID = UUIDService.getUUID(MappingAttributePathInstance.class.getSimpleName());
+
+		final MappingAttributePathInstance firstNameMappingAttributePathInstance = new MappingAttributePathInstance(
+				firstNameMappingAttributePathInstanceUUID);
 		firstNameMappingAttributePathInstance.setAttributePath(firstNameAttributePath);
 
 		// family name attribute path
@@ -657,12 +686,17 @@ public class TaskTest extends GuicedTest {
 
 		final Attribute familyName = createAttribute(familyNameId, familyNameName);
 
-		final AttributePath familyNameAttributePath = new AttributePath();
+		final String familyNameAttributePathUUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath familyNameAttributePath = new AttributePath(familyNameAttributePathUUID);
 
 		familyNameAttributePath.addAttribute(dctermsCreator);
 		familyNameAttributePath.addAttribute(familyName);
 
-		final MappingAttributePathInstance familyNameMappingAttributePathInstance = new MappingAttributePathInstance();
+		final String familyNameMappingAttributePathInstanceUUID = UUIDService.getUUID(MappingAttributePathInstance.class.getSimpleName());
+
+		final MappingAttributePathInstance familyNameMappingAttributePathInstance = new MappingAttributePathInstance(
+				familyNameMappingAttributePathInstanceUUID);
 		familyNameMappingAttributePathInstance.setAttributePath(familyNameAttributePath);
 
 		// output attribute path
@@ -672,12 +706,17 @@ public class TaskTest extends GuicedTest {
 
 		final Attribute foafName = createAttribute(foafNameId, foafNameName);
 
-		final AttributePath nameAttributePath = new AttributePath();
+		final String nameAttributePathUUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath nameAttributePath = new AttributePath(nameAttributePathUUID);
 
 		nameAttributePath.addAttribute(dctermsCreator);
 		nameAttributePath.addAttribute(foafName);
 
-		final MappingAttributePathInstance outputMappingAttributePathInstance = new MappingAttributePathInstance();
+		final String outputMappingAttributePathInstanceUUID = UUIDService.getUUID(MappingAttributePathInstance.class.getSimpleName());
+
+		final MappingAttributePathInstance outputMappingAttributePathInstance = new MappingAttributePathInstance(
+				outputMappingAttributePathInstanceUUID);
 		outputMappingAttributePathInstance.setAttributePath(nameAttributePath);
 
 		// transformation component
@@ -773,13 +812,15 @@ public class TaskTest extends GuicedTest {
 		return mapping;
 	}
 
-	private Attribute createAttribute(final String id, final String name) {
+	private Attribute createAttribute(final String uri, final String name) {
 
-		final Attribute attribute = new Attribute(id);
+		final String uuid = UUIDService.getUUID(Attribute.class.getSimpleName());
+
+		final Attribute attribute = new Attribute(uuid, uri);
 		attribute.setName(name);
 
-		Assert.assertNotNull("the attribute id shouldn't be null", attribute.getUri());
-		Assert.assertEquals("the attribute ids are not equal", id, attribute.getUri());
+		Assert.assertNotNull("the attribute uri shouldn't be null", attribute.getUri());
+		Assert.assertEquals("the attribute ids are not equal", uri, attribute.getUri());
 		Assert.assertNotNull("the attribute name shouldn't be null", attribute.getName());
 		Assert.assertEquals("the attribute names are not equal", name, attribute.getName());
 
@@ -787,7 +828,10 @@ public class TaskTest extends GuicedTest {
 	}
 
 	private static SchemaAttributePathInstance createAttributePathInstance(final AttributePath attributePath) {
-		final SchemaAttributePathInstance attributePathInstance = new SchemaAttributePathInstance();
+
+		final String attributePathInstanceUUID = UUIDService.getUUID(SchemaAttributePathInstance.class.getSimpleName());
+
+		final SchemaAttributePathInstance attributePathInstance = new SchemaAttributePathInstance(attributePathInstanceUUID);
 		attributePathInstance.setAttributePath(attributePath);
 
 		Assert.assertNotNull("the attribute path should not be null", attributePathInstance.getAttributePath());
