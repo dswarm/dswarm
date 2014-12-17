@@ -33,6 +33,7 @@ import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
@@ -128,7 +129,9 @@ public class XMLSchemaParserTest extends GuicedTest {
 			aps.put(attributePath.toAttributePath(), attributePath);
 		}
 
-		final ContentSchema contentSchema = new ContentSchema();
+		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
+
+		final ContentSchema contentSchema = new ContentSchema(uuid);
 		contentSchema.setName("mab content schema");
 
 		final AttributePath feldNr = aps

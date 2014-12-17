@@ -162,18 +162,18 @@ public class TransformationFlowTest extends GuicedTest {
 		// System.out.println(Util.getJSONObjectMapper().configure(SerializationFeature.INDENT_OUTPUT,
 		// true).writeValueAsString(gdmModel.getModel()));
 
-		gdmService.createObject(inputDataModel.getId(), gdmModel);
+		gdmService.createObject(inputDataModel.getUuid(), gdmModel);
 		// finished writing CSV statements to graph
 
 		// retrieve updated fresh data model
-		final DataModel freshInputDataModel = dataModelService.getObject(updatedInputDataModel.getId());
+		final DataModel freshInputDataModel = dataModelService.getObject(updatedInputDataModel.getUuid());
 
 		Assert.assertNotNull("the fresh data model shouldn't be null", freshInputDataModel);
 		Assert.assertNotNull("the schema of the fresh data model shouldn't be null", freshInputDataModel.getSchema());
 
 		final Schema schema = freshInputDataModel.getSchema();
 
-		final Optional<Map<String, Model>> optionalModelMap = gdmService.getObjects(updatedInputDataModel.getId(), Optional.<Integer>absent());
+		final Optional<Map<String, Model>> optionalModelMap = gdmService.getObjects(updatedInputDataModel.getUuid(), Optional.<Integer>absent());
 
 		Assert.assertNotNull("CSV record model map optional shouldn't be null", optionalModelMap);
 		Assert.assertTrue("CSV record model map should be present", optionalModelMap.isPresent());
@@ -200,13 +200,14 @@ public class TransformationFlowTest extends GuicedTest {
 
 		// manipulate input data model
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
-		taskJSON.put("input_data_model", inputDataModelJSON);
+		taskJSON.set("input_data_model", inputDataModelJSON);
 
-		final long internalModelId = 1;
+		// TODO: change/adapt this?!
+		final String internalModelId = "1";
 		final DataModel outputDataModel = dataModelService.getObject(internalModelId);
 		final String outputDataModelJSONString = objectMapper.writeValueAsString(outputDataModel);
 		final ObjectNode outputDataModelJSON = objectMapper.readValue(outputDataModelJSONString, ObjectNode.class);
-		taskJSON.put("output_data_model", outputDataModelJSON);
+		taskJSON.set("output_data_model", outputDataModelJSON);
 
 		// manipulate attributes
 		final ObjectNode mappingJSON = (ObjectNode) taskJSON.get("job").get("mappings").get(0);

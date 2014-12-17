@@ -28,6 +28,7 @@ import org.dswarm.converter.flow.CSVResourceFlowFactory;
 import org.dswarm.converter.mf.stream.reader.CsvReader;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
+import org.dswarm.persistence.service.UUIDService;
 
 public class CSVResourceFlowFactoryTest {
 
@@ -41,7 +42,10 @@ public class CSVResourceFlowFactoryTest {
 
 	@Test(expected = DMPConverterException.class)
 	public void testNoConstructor1() throws Exception {
-		final Configuration configuration = new Configuration();
+
+		final String uuid = UUIDService.getUUID(Configuration.class.getSimpleName());
+
+		final Configuration configuration = new Configuration(uuid);
 
 		configuration.addParameter(ConfigurationStatics.COLUMN_DELIMITER, new TextNode(";"));
 		configuration.addParameter(ConfigurationStatics.ENCODING, new TextNode("UTF-8"));

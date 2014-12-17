@@ -161,9 +161,9 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		// write model and retrieve tuples
 		final InternalGDMGraphService gdmService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
-		gdmService.createObject(updatedInputDataModel.getId(), gdmModel);
+		gdmService.createObject(updatedInputDataModel.getUuid(), gdmModel);
 
-		final Optional<Map<String, Model>> optionalModelMap = gdmService.getObjects(updatedInputDataModel.getId(), Optional.<Integer>absent());
+		final Optional<Map<String, Model>> optionalModelMap = gdmService.getObjects(updatedInputDataModel.getUuid(), Optional.<Integer>absent());
 
 		Assert.assertTrue("there is no map of entry models in the database", optionalModelMap.isPresent());
 
@@ -193,7 +193,8 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		taskJSON.set("input_data_model", inputDataModelJSON);
 
 		// manipulate output data model (output data model = internal model (for now))
-		final long internalModelId = 2;
+		// TODO: change/adapt this?!
+		final String internalModelId = "2";
 		final DataModel outputDataModel = dataModelService.getObject(internalModelId);
 		final String outputDataModelJSONString = objectMapper.writeValueAsString(outputDataModel);
 		final ObjectNode outputDataModelJSON = objectMapper.readValue(outputDataModelJSONString, ObjectNode.class);
@@ -215,7 +216,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		compareResults(expected, actual);
 
 		// retrieve updated fresh data model
-		final DataModel freshInputDataModel = dataModelService.getObject(updatedInputDataModel.getId());
+		final DataModel freshInputDataModel = dataModelService.getObject(updatedInputDataModel.getUuid());
 
 		Assert.assertNotNull("the fresh data model shouldn't be null", freshInputDataModel);
 		Assert.assertNotNull("the schema of the fresh data model shouldn't be null", freshInputDataModel.getSchema());

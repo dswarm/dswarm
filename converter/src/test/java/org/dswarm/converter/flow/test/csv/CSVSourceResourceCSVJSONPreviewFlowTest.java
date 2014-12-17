@@ -33,6 +33,7 @@ import org.dswarm.converter.flow.CSVResourceFlowFactory;
 import org.dswarm.converter.flow.CSVSourceResourceCSVJSONPreviewFlow;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -41,7 +42,7 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
  */
 public class CSVSourceResourceCSVJSONPreviewFlowTest {
 
-	private static final String	baseDir	= "csv_config" + System.getProperty("file.separator");
+	private static final String baseDir = "csv_config" + System.getProperty("file.separator");
 
 	@Test
 	public void testEndToEnd() throws Exception {
@@ -62,7 +63,9 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 		final String csvPath = "test_csv.csv";
 		final String expectedPath = "test_csv_no_headers.json";
 
-		final Configuration configuration = new Configuration();
+		final String uuid = UUIDService.getUUID(Configuration.class.getSimpleName());
+
+		final Configuration configuration = new Configuration(uuid);
 
 		configuration.addParameter(ConfigurationStatics.COLUMN_DELIMITER, new TextNode(";"));
 		configuration.addParameter(ConfigurationStatics.ENCODING, new TextNode("UTF-8"));
@@ -83,7 +86,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * e.g.<br />
 	 * 1;2;3 <br />
 	 * a;b;"c;d"<br />
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -101,7 +104,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * e.g.<br />
 	 * 1;2;3<br />
 	 * a;b;""<br />
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -119,7 +122,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * e.g.<br />
 	 * 1;2;3<br />
 	 * a;b;" "<br />
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -137,7 +140,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * e.g.<br />
 	 * "1"; "2";"3"<br />
 	 * "a";"b";"c"<br />
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -155,7 +158,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * e.g.<br />
 	 * "1";"2" ;"3"<br />
 	 * "a";"b";"c"<br />
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -174,7 +177,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * 1;2;3<br />
 	 * a;b;c<br />
 	 * <br />
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -193,7 +196,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * 1;2;3<br />
 	 * <br />
 	 * a;b;c<br />
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -211,7 +214,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * e.g.<br />
 	 * 1;2;3<br />
 	 * a;b<br />
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = DMPConverterException.class)
@@ -229,7 +232,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * e.g.<br />
 	 * 1;2;3 <br />
 	 * a;b;c;d<br />
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = DMPConverterException.class)
@@ -247,7 +250,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * e.g.<br />
 	 * 1;2;3<br />
 	 * a;b;\"c1\" c2<br />
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -269,7 +272,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * <br />
 	 * In case this test fails, check whether .gitattributes contains the following line:<br />
 	 * *_CRLF.csv text eol=crlf
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -288,7 +291,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * 1;2;3<br />
 	 * a;b;c1 EOL<br />
 	 * c2<br />
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = DMPConverterException.class)
@@ -307,7 +310,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * 1;2;3<br />
 	 * a;b EOL<br />
 	 * ;c<br />
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = DMPConverterException.class)
@@ -325,7 +328,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * e.g.<br />
 	 * 1;2;3<br />
 	 * a;b;ʤ<br />
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -345,7 +348,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * csv-comment line 2<br />
 	 * 1;2;3<br />
 	 * a;b;c<br />
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -354,7 +357,9 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 		final String csvPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "ignoreFirstTwoLines.csv";
 		final String expectedPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "ignoreFirstTwoLines.preview.json";
 
-		final Configuration configuration = new Configuration();
+		final String uuid = UUIDService.getUUID(Configuration.class.getSimpleName());
+
+		final Configuration configuration = new Configuration(uuid);
 
 		configuration.addParameter(ConfigurationStatics.COLUMN_DELIMITER, new TextNode(";"));
 		configuration.addParameter(ConfigurationStatics.ENCODING, new TextNode("UTF-8"));
@@ -376,7 +381,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * a;b;c<br />
 	 * d;e;f<br />
 	 * g;h;i<br />
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -385,7 +390,9 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 		final String csvPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "atMostTwoRows.csv";
 		final String expectedPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "atMostTwoRows.preview.json";
 
-		final Configuration configuration = new Configuration();
+		final String uuid = UUIDService.getUUID(Configuration.class.getSimpleName());
+
+		final Configuration configuration = new Configuration(uuid);
 
 		configuration.addParameter(ConfigurationStatics.COLUMN_DELIMITER, new TextNode(";"));
 		configuration.addParameter(ConfigurationStatics.ENCODING, new TextNode("UTF-8"));
@@ -407,7 +414,7 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 	 * a;b;c<br />
 	 * d;e;f<br />
 	 * g;h;i<br />
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -416,7 +423,9 @@ public class CSVSourceResourceCSVJSONPreviewFlowTest {
 		final String csvPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "discardInitialTwoRows.csv";
 		final String expectedPath = CSVSourceResourceCSVJSONPreviewFlowTest.baseDir + "discardInitialTwoRows.preview.json";
 
-		final Configuration configuration = new Configuration();
+		final String uuid = UUIDService.getUUID(Configuration.class.getSimpleName());
+
+		final Configuration configuration = new Configuration(uuid);
 
 		configuration.addParameter(ConfigurationStatics.COLUMN_DELIMITER, new TextNode(";"));
 		configuration.addParameter(ConfigurationStatics.ENCODING, new TextNode("UTF-8"));

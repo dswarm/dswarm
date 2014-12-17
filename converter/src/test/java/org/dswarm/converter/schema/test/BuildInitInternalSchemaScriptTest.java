@@ -19,13 +19,13 @@ import java.io.File;
 
 import com.google.inject.Key;
 import com.google.inject.name.Names;
-import org.junit.Test;
 
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.init.util.CmdUtil;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.service.schema.test.internalmodel.BiboDocumentSchemaBuilder;
 import org.dswarm.persistence.service.schema.test.internalmodel.BibrmContractItemSchemaBuilder;
@@ -78,7 +78,8 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		// [@tgaengler]: just prevention, but I guess that we also need a (default) data model for the foaf:Person schema (right now)
 		final String foafPersonDM = "Internal Data Model foafPerson";
 
-		final Schema foafPersonSchema = biboDocumentSchema.getAttributePath((long) 14).getSubSchema();
+		// TODO: adapt this to the correct AP
+		final Schema foafPersonSchema = biboDocumentSchema.getAttributePath("14").getSubSchema();
 
 		createSchemaDataModel(bibrmContractDM, bibrmContractDM, bibrmContractSchema);
 		createSchemaDataModel(biboDocumentDM, biboDocumentDM, biboDocumentSchema);
@@ -115,7 +116,10 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 
 	private void createSchemaDataModel(final String name, final String description, final Schema schema) throws DMPPersistenceException {
 
-		final DataModel dataModel = new DataModel();
+		// TODO: make these uuids static later (i.e. that they won't be generated all the time ...)
+		final String uuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+
+		final DataModel dataModel = new DataModel(uuid);
 		dataModel.setName(name);
 		dataModel.setDescription(description);
 		dataModel.setSchema(schema);

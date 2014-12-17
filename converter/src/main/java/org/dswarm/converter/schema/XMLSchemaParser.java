@@ -123,7 +123,7 @@ public class XMLSchemaParser {
 
 			final String recordTagAttribute = optionalRecordTagAttribute.get();
 
-			final String recordTagAttributeURI = SchemaUtils.mintSchemaTermURI(recordTagAttribute, schema.getId());
+			final String recordTagAttributeURI = SchemaUtils.mintSchemaTermURI(recordTagAttribute, schema.getUuid());
 
 			final String recordClassUri = recordTagAttributeURI + "Type";
 

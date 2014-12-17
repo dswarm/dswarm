@@ -43,6 +43,7 @@ import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
@@ -200,12 +201,16 @@ public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 	@Test
 	public void testFromConfiguration() throws Exception {
 
-		final Configuration configuration = new Configuration();
+		final String uuid = UUIDService.getUUID(Configuration.class.getSimpleName());
+
+		final Configuration configuration = new Configuration(uuid);
 
 		configuration.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("datensatz"));
 		configuration.addParameter(ConfigurationStatics.XML_NAMESPACE, new TextNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd"));
 
-		final DataModel dataModel = new DataModel();
+		final String dataModelUUID = UUIDService.getUUID(DataModel.class.getSimpleName());
+
+		final DataModel dataModel = new DataModel(dataModelUUID);
 
 		dataModel.setConfiguration(configuration);
 
@@ -217,12 +222,16 @@ public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 	@Test
 	public void testFromConfiguration2() throws Exception {
 
-		final Configuration configuration = new Configuration();
+		final String uuid = UUIDService.getUUID(Configuration.class.getSimpleName());
+
+		final Configuration configuration = new Configuration(uuid);
 
 		configuration.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("datensatz"));
 		configuration.addParameter(ConfigurationStatics.XML_NAMESPACE, new TextNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd"));
 
-		final DataModel dataModel = new DataModel();
+		final String dataModelUUID = UUIDService.getUUID(DataModel.class.getSimpleName());
+
+		final DataModel dataModel = new DataModel(dataModelUUID);
 
 		dataModel.setConfiguration(configuration);
 
@@ -252,9 +261,9 @@ public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 
 		final XMLSourceResourceGDMStmtsFlow flow = new XMLSourceResourceGDMStmtsFlow(dataModel);
 
-		testFlow(flow, "test-pnx.xml", "test-pnx.gson", Integer.valueOf(196));
+		testFlow(flow, "test-pnx.xml", "test-pnx.gson", 196);
 
-		dataModelService.deleteObject(dataModel.getId());
+		dataModelService.deleteObject(dataModel.getUuid());
 	}
 
 	// @Test(expected = DMPConverterException.class)

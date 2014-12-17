@@ -34,6 +34,7 @@ import org.dswarm.converter.flow.CSVResourceFlowFactory;
 import org.dswarm.converter.flow.CSVSourceResourceTriplesFlow;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
+import org.dswarm.persistence.service.UUIDService;
 
 public class CSVSourceResourceTriplesFlowTest {
 
@@ -98,7 +99,10 @@ public class CSVSourceResourceTriplesFlowTest {
 
 	@Test
 	public void testFromConfiguration() throws Exception {
-		final Configuration configuration = new Configuration();
+
+		final String uuid = UUIDService.getUUID(Configuration.class.getSimpleName());
+
+		final Configuration configuration = new Configuration(uuid);
 
 		configuration.addParameter(ConfigurationStatics.COLUMN_DELIMITER, new TextNode(";"));
 		configuration.addParameter(ConfigurationStatics.ENCODING, new TextNode("UTF-8"));
@@ -124,14 +128,20 @@ public class CSVSourceResourceTriplesFlowTest {
 
 	@Test(expected = DMPConverterException.class)
 	public void testNullConfigurationParameter() throws Exception {
-		final Configuration configuration = new Configuration();
+
+		final String uuid = UUIDService.getUUID(Configuration.class.getSimpleName());
+
+		final Configuration configuration = new Configuration(uuid);
 		@SuppressWarnings("UnusedDeclaration")
 		final CSVSourceResourceTriplesFlow flow = new CSVSourceResourceTriplesFlow(configuration);
 	}
 
 	@Test
 	public void testDefaultValues() throws Exception {
-		final Configuration configuration = new Configuration();
+
+		final String uuid = UUIDService.getUUID(Configuration.class.getSimpleName());
+
+		final Configuration configuration = new Configuration(uuid);
 
 		configuration.addParameter(ConfigurationStatics.COLUMN_DELIMITER, new TextNode(";"));
 

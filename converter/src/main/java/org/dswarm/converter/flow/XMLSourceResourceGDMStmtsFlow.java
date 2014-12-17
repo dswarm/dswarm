@@ -65,7 +65,7 @@ public class XMLSourceResourceGDMStmtsFlow {
 			throw new DMPConverterException("the data model configuration parameters shouldn't be null");
 		}
 
-		if (dataModel.getId() != null) {
+		if (dataModel.getUuid() != null) {
 
 			this.dataModel = Optional.of(dataModel);
 		} else {

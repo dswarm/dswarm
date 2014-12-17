@@ -95,9 +95,9 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		return relativeURIPart;
 	}
 
-	public static String determineSchemaNamespaceURI(final Long schemaId) {
+	public static String determineSchemaNamespaceURI(final String schemaUuid) {
 
-		return SCHEMA_BASE_URI + schemaId + SLASH;
+		return SCHEMA_BASE_URI + schemaUuid + SLASH;
 	}
 
 	public static String mintAttributeURI(final String attributeName, final String namespaceURI) {
@@ -112,9 +112,9 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		return mintTermUri(possibleTermURI, possibleTermURI, baseURI);
 	}
 
-	public static String mintSchemaTermURI(final String possibleTermURI, final Long schemaId) {
+	public static String mintSchemaTermURI(final String possibleTermURI, final String schemaUuid) {
 
-		final String schemaNamespaceURI = determineSchemaNamespaceURI(schemaId);
+		final String schemaNamespaceURI = determineSchemaNamespaceURI(schemaUuid);
 
 		return mintTermUri(possibleTermURI, possibleTermURI, schemaNamespaceURI);
 	}
