@@ -15,6 +15,8 @@
  */
 package org.dswarm.persistence.service.test.utils;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +38,7 @@ import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.DMPObject;
 import org.dswarm.persistence.model.proxy.ProxyDMPObject;
 import org.dswarm.persistence.service.BasicJPAService;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.test.BasicJPAServiceTest;
 
 public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS>, POJOCLASS extends DMPObject>
@@ -305,14 +308,37 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 	 * @return a new instance of the concrete POJO class
 	 * @throws DMPPersistenceException if something went wrong.
 	 */
-	protected POJOCLASS createNewObject() throws DMPPersistenceException {
+	protected POJOCLASS createNewObject(final String uuid) throws DMPPersistenceException {
 
 		final POJOCLASS object;
 
+		Constructor<POJOCLASS> constructor = null;
+
+		try {
+			constructor = pojoClass.getConstructor(String.class);
+		} catch (final SecurityException | NoSuchMethodException e1) {
+
+			throw new DMPPersistenceException(e1.getMessage());
+		}
+
+		if (null == constructor) {
+
+			throw new DMPPersistenceException("couldn't find constructor to instantiate new '" + pojoClassName + "' with a uuid");
+		}
+
+		final String finalUUID;
+
+		if (uuid != null) {
+
+			finalUUID = uuid;
+		} else {
+			finalUUID = UUIDService.getUUID(pojoClassName);
+		}
+
 		try {
 
-			object = pojoClass.newInstance();
-		} catch (final InstantiationException | IllegalAccessException e) {
+			object = constructor.newInstance(finalUUID);
+		} catch (final InstantiationException | InvocationTargetException | IllegalArgumentException | IllegalAccessException e) {
 
 			BasicJPAServiceTestUtils.LOG.error("something went wrong while " + pojoClassName + "object creation", e);
 
