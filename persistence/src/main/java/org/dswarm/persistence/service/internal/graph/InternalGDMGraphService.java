@@ -400,7 +400,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final Schema schema = dataModel.getSchema();
 
-		if (schema.getUuid().equals("4")) {
+		if (schema.getUuid().equals(SchemaUtils.MABXML_SCHEMA_UUID)) {
 
 			// mabxml schema is already there
 
@@ -472,7 +472,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 				// assign existing mabxml schema to data resource
 
-				schema = schemaService.get().getObject("4");
+				schema = schemaService.get().getObject(SchemaUtils.MABXML_SCHEMA_UUID);
 			}
 
 			dataModel.setSchema(schema);

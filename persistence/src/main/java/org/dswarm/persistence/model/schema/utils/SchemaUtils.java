@@ -67,6 +67,11 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 	public static final  String TYPE_POSTFIX        = "Type";
 	private static final String SCHEMA_BASE_URI     = BASE_URI + "schemas/";
 
+	public static final String MABXML_SCHEMA_UUID = "Schema-d87ba5c2-b02b-481d-a62d-2b46dd66d347";
+	public static final String BIBRM_CONTRACT_ITEM_SCHEMA_UUID = "Schema-70228b28-10fc-43fe-9d3e-ad22b038ebdf";
+	public static final String BIBO_DOCUMENT_SCHEMA_UUID = "Schema-ff62ec21-0a11-4c27-a704-d7ca53a21521";
+	public final static String FOAF_SCHEMA_UUID = "Schema-309e901c-3da9-4d82-a694-bab632eaa340";
+
 	public static String determineRelativeURIPart(final String uri) {
 
 		final String lastPartDelimiter;

@@ -39,6 +39,11 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 
 	private static final Logger LOG = LoggerFactory.getLogger(DataModelUtils.class);
 
+	public static final String BIBRM_CONTRACT_DATA_MODEL_UUID = "DataModel-7e170c22-1371-4836-9a09-515524a1a8d5";
+	public static final String BIBO_DOCUMENT_DATA_MODEL_UUID  = "DataModel-cf998267-392a-4d87-a33a-88dd1bffb016";
+	public static final String MABXML_DATA_MODEL_UUID         = "DataModel-4f399d11-81ae-45af-b2f4-645aa177ab85";
+	public static final String FOAF_PERSON_DATA_MODEL_UUID    = "DataModel-23451d9d-adf6-4352-90f8-4f17cccf5d36";
+
 	public static String determineDataModelSchemaBaseURI(final DataModel dataModel) {
 
 		final String dataResourceBaseURI = DataModelUtils.determineDataModelBaseURI(dataModel);

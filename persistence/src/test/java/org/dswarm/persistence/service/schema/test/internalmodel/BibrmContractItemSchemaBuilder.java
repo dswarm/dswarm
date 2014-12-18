@@ -18,13 +18,12 @@ package org.dswarm.persistence.service.schema.test.internalmodel;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.utils.NameSpacePrefixRegistry;
+import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 
 // TODO make this schema also use sub-schemata when everything works for the document schema
 public class BibrmContractItemSchemaBuilder extends SchemaBuilder {
 
 	// private static final Logger LOG = LoggerFactory.getLogger(BibrmContractItemSchemaBuilder.class);
-
-	public static final String BIBRM_CONTRACT_ITEM_SCHEMA_UUID = "Schema-70228b28-10fc-43fe-9d3e-ad22b038ebdf";
 
 	@Override
 	public Schema buildSchema() throws Exception {
@@ -32,7 +31,7 @@ public class BibrmContractItemSchemaBuilder extends SchemaBuilder {
 		final AttributePathBuilder builder = new AttributePathBuilder();
 
 		// we should take a static identifier here
-		final Schema tempSchema = new Schema(BIBRM_CONTRACT_ITEM_SCHEMA_UUID);
+		final Schema tempSchema = new Schema(SchemaUtils.BIBRM_CONTRACT_ITEM_SCHEMA_UUID);
 
 		final Clasz clasz = claszServiceTestUtils.createObject(NameSpacePrefixRegistry.BIBRM + "ContractItem", "ContractItem");
 

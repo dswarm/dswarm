@@ -18,10 +18,9 @@ package org.dswarm.persistence.service.schema.test.internalmodel;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.utils.NameSpacePrefixRegistry;
+import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 
 public class BiboDocumentSchemaBuilder extends SchemaBuilder {
-
-	public static final String BIBO_DOCUMENT_SCHEMA_UUID = "Schema-ff62ec21-0a11-4c27-a704-d7ca53a21521";
 
 	@Override
 	public Schema buildSchema() throws Exception {
@@ -29,7 +28,7 @@ public class BiboDocumentSchemaBuilder extends SchemaBuilder {
 		final AttributePathBuilder builder = new AttributePathBuilder();
 
 		// we should take a static identifier here
-		final Schema tempSchema = new Schema(BIBO_DOCUMENT_SCHEMA_UUID);
+		final Schema tempSchema = new Schema(SchemaUtils.BIBO_DOCUMENT_SCHEMA_UUID);
 
 		final Clasz clasz = claszServiceTestUtils.createObject(NameSpacePrefixRegistry.BIBO + "Document", "Document");
 

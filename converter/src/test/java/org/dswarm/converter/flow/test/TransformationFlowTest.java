@@ -202,8 +202,7 @@ public class TransformationFlowTest extends GuicedTest {
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
 		taskJSON.set("input_data_model", inputDataModelJSON);
 
-		// TODO: change/adapt this?!
-		final String internalModelId = "1";
+		final String internalModelId = DataModelUtils.BIBO_DOCUMENT_DATA_MODEL_UUID;
 		final DataModel outputDataModel = dataModelService.getObject(internalModelId);
 		final String outputDataModelJSONString = objectMapper.writeValueAsString(outputDataModel);
 		final ObjectNode outputDataModelJSON = objectMapper.readValue(outputDataModelJSONString, ObjectNode.class);

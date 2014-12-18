@@ -18,10 +18,9 @@ package org.dswarm.persistence.service.schema.test.internalmodel;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.utils.NameSpacePrefixRegistry;
+import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 
 public class FoafPersonSchemaBuilder extends SchemaBuilder {
-
-	public final static String FOAF_SCHEMA_UUID = "Schema-309e901c-3da9-4d82-a694-bab632eaa340";
 
 	@Override
 	public Schema buildSchema() throws Exception {
@@ -29,7 +28,7 @@ public class FoafPersonSchemaBuilder extends SchemaBuilder {
 		final AttributePathBuilder builder = new AttributePathBuilder();
 
 		// we should take a static identifier here
-		final Schema tempSchema = new Schema(FOAF_SCHEMA_UUID);
+		final Schema tempSchema = new Schema(SchemaUtils.FOAF_SCHEMA_UUID);
 
 		final Clasz clasz = claszServiceTestUtils.createObject(NameSpacePrefixRegistry.FOAF + "Person", "Person");
 
