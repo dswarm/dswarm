@@ -137,6 +137,18 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	}
 
 	/**
+	 * Create and persist an object of the specific class transactional with the given uuid.<br>
+	 *
+	 * @param uuid the uuid that should be utilised to created the object
+	 * @return the persisted object of the specific class with the given uuid
+	 */
+	@Transactional(rollbackOn = Exception.class)
+	public PROXYPOJOCLASS createObjectTransactional(final String uuid) throws DMPPersistenceException {
+
+		return createObject(uuid);
+	}
+
+	/**
 	 * Create and persist an object of the specific class non-transactional.<br>
 	 *
 	 * @return the persisted object of the specific class
@@ -148,10 +160,32 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 		return createObjectInternal(entityManager);
 	}
 
+	/**
+	 * Create and persist an object of the specific class non-transactional with the given uuid.<br>
+	 *
+	 * @param uuid the uuid that should be utilised to created the object
+	 * @return the persisted object of the specific class with the given uuid
+	 */
+	public PROXYPOJOCLASS createObject(final String uuid) throws DMPPersistenceException {
+
+		final EntityManager entityManager = acquire(false);
+
+		return createObjectInternal(uuid, entityManager);
+	}
+
 	protected PROXYPOJOCLASS createObjectInternal(final EntityManager entityManager) throws DMPPersistenceException {
 
 		// i.e. uuid will be created on demand in createNewObject
 		final POJOCLASS object = createNewObject(null);
+
+		persistObject(object, entityManager);
+
+		return createNewProxyObject(object);
+	}
+
+	protected PROXYPOJOCLASS createObjectInternal(final String uuid, final EntityManager entityManager) throws DMPPersistenceException {
+
+		final POJOCLASS object = createNewObject(uuid);
 
 		persistObject(object, entityManager);
 

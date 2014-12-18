@@ -42,6 +42,8 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
  */
 public class XMLSchemaParserTest extends GuicedTest {
 
+	public static final String MABXML_SCHEMA_UUID = "Schema-d87ba5c2-b02b-481d-a62d-2b46dd66d347";
+
 	@Override
 	public void prepare() throws Exception {
 		GuicedTest.tearDown();
@@ -92,7 +94,10 @@ public class XMLSchemaParserTest extends GuicedTest {
 	public void testSchemaParsing() throws IOException, DMPPersistenceException {
 
 		final XMLSchemaParser xmlSchemaParser = GuicedTest.injector.getInstance(XMLSchemaParser.class);
-		final Optional<Schema> optionalSchema = xmlSchemaParser.parse("mabxml-1.xsd", "datensatz", "mabxml schema");
+
+		final String schemaUUID = UUIDService.getUUID(Schema.class.getSimpleName());
+
+		final Optional<Schema> optionalSchema = xmlSchemaParser.parse("mabxml-1.xsd", "datensatz", schemaUUID, "mabxml schema");
 
 		Assert.assertTrue(optionalSchema.isPresent());
 
@@ -115,7 +120,8 @@ public class XMLSchemaParserTest extends GuicedTest {
 
 		final String schemaName = "mabxml schema";
 		final XMLSchemaParser xmlSchemaParser = GuicedTest.injector.getInstance(XMLSchemaParser.class);
-		final Optional<Schema> optionalSchema = xmlSchemaParser.parse("mabxml-1.xsd", "datensatz", schemaName);
+
+		final Optional<Schema> optionalSchema = xmlSchemaParser.parse("mabxml-1.xsd", "datensatz", MABXML_SCHEMA_UUID, schemaName);
 
 		Assert.assertTrue(optionalSchema.isPresent());
 

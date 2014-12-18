@@ -92,7 +92,7 @@ public class XMLSchemaParser {
 		objectMapperProvider = objectMapperProviderArg;
 	}
 
-	public Optional<Schema> parse(final String xmlSchemaFilePath, final String recordTag, final String schemaName) throws DMPPersistenceException {
+	public Optional<Schema> parse(final String xmlSchemaFilePath, final String recordTag, final String uuid, final String schemaName) throws DMPPersistenceException {
 
 		final Optional<List<JsonNode>> optionalRecordTags = getRecordTagNodes(xmlSchemaFilePath, recordTag);
 
@@ -103,7 +103,7 @@ public class XMLSchemaParser {
 
 		final List<JsonNode> recordTagNodes = optionalRecordTags.get();
 
-		final Optional<Schema> optionalSchema = createSchema();
+		final Optional<Schema> optionalSchema = createSchema(uuid);
 
 		if(!optionalSchema.isPresent()) {
 
@@ -424,10 +424,10 @@ public class XMLSchemaParser {
 		}
 	}
 
-	private Optional<Schema> createSchema() throws DMPPersistenceException {
+	private Optional<Schema> createSchema(final String uuid) throws DMPPersistenceException {
 
 		// create new schema
-		final ProxySchema proxySchema = schemaServiceProvider.get().createObjectTransactional();
+		final ProxySchema proxySchema = schemaServiceProvider.get().createObjectTransactional(uuid);
 
 		final Schema schema;
 

@@ -18,19 +18,18 @@ package org.dswarm.persistence.service.schema.test.internalmodel;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.utils.NameSpacePrefixRegistry;
-import org.dswarm.persistence.service.UUIDService;
 
 public class FoafPersonSchemaBuilder extends SchemaBuilder {
+
+	public final static String FOAF_SCHEMA_UUID = "Schema-309e901c-3da9-4d82-a694-bab632eaa340";
 
 	@Override
 	public Schema buildSchema() throws Exception {
 
 		final AttributePathBuilder builder = new AttributePathBuilder();
 
-		// TODO: think about this - maybe we should take a static identifier here instead
-		final String tempSchemaUUID = UUIDService.getUUID(Schema.class.getSimpleName());
-
-		final Schema tempSchema = new Schema(tempSchemaUUID);
+		// we should take a static identifier here
+		final Schema tempSchema = new Schema(FOAF_SCHEMA_UUID);
 
 		final Clasz clasz = claszServiceTestUtils.createObject(NameSpacePrefixRegistry.FOAF + "Person", "Person");
 
@@ -43,7 +42,7 @@ public class FoafPersonSchemaBuilder extends SchemaBuilder {
 		prefixPaths = builder.getPrefixPaths();
 
 		return schemaServiceTestUtils
-				.createAndPersistSchema("foaf:Person-Schema", tempSchema.getUniqueAttributePaths(), clasz);
+				.createAndPersistSchema(tempSchema.getUuid(), "foaf:Person-Schema", tempSchema.getUniqueAttributePaths(), clasz);
 	}
 
 }

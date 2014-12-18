@@ -175,12 +175,34 @@ public class Schema extends BasicDMPJPAObject {
 	public SchemaAttributePathInstance getAttributePath(final String uuid) {
 		Preconditions.checkNotNull(uuid);
 
+		ensureAttributePaths();
+
 		if (attributePaths != null) {
 			for (final SchemaAttributePathInstance attributePath : attributePaths) {
 				if (attributePath.getUuid().equals(uuid)) {
 					return attributePath;
 				}
 			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets the attribute path (instance) for the given schema attribute path uri path.
+	 *
+	 * @param uriPath a schema attribute path uri path
+	 * @return that matched attribute path (instance) or null
+	 */
+	public SchemaAttributePathInstance getAttributePathByURIPath(final String uriPath) {
+		Preconditions.checkNotNull(uriPath);
+
+		ensureAttributePaths();
+		ensureInitializedOrderedAttributePaths();
+
+		if (orderedAttributePaths != null) {
+
+			return orderedAttributePaths.get(uriPath);
 		}
 
 		return null;

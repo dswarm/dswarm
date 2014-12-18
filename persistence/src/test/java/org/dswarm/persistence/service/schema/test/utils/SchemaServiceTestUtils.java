@@ -113,10 +113,11 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 		}
 	}
 
-	public Schema createAndPersistSchema(final String name, final Collection<SchemaAttributePathInstance> attributePaths, final Clasz recordClass)
+	public Schema createAndPersistSchema(final String uuid, final String name, final Collection<SchemaAttributePathInstance> attributePaths,
+			final Clasz recordClass)
 			throws Exception {
 
-		final Schema schema = createSchema(name, attributePaths, recordClass);
+		final Schema schema = createSchema(uuid, name, attributePaths, recordClass);
 
 		final Schema updatedSchema = createAndCompareObject(schema, schema);
 
@@ -126,10 +127,24 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 		return updatedSchema;
 	}
 
-	public Schema createSchema(final String name, final Collection<SchemaAttributePathInstance> attributePaths, final Clasz recordClass) {
+	public Schema createAndPersistSchema(final String name, final Collection<SchemaAttributePathInstance> attributePaths, final Clasz recordClass)
+			throws Exception {
 
-		// TODO: think about this?
-		final String schemaUUID = UUIDService.getUUID(Schema.class.getSimpleName());
+		return createAndPersistSchema(null, name, attributePaths, recordClass);
+	}
+
+	public Schema createSchema(final String uuid, final String name, final Collection<SchemaAttributePathInstance> attributePaths,
+			final Clasz recordClass) {
+
+		final String schemaUUID;
+
+		if (uuid != null && !uuid.trim().isEmpty()) {
+
+			schemaUUID = uuid;
+		} else {
+
+			schemaUUID = UUIDService.getUUID(Schema.class.getSimpleName());
+		}
 
 		final Schema schema = new Schema(schemaUUID);
 
@@ -140,9 +155,26 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 		return schema;
 	}
 
+	public Schema createSchema(final String name, final Collection<SchemaAttributePathInstance> attributePaths,
+			final Clasz recordClass) {
+
+		return createSchema(null, name, attributePaths, recordClass);
+	}
+
+	public Schema createAndPersistSchema(final String uuid, final String name, final SchemaAttributePathInstance[] attributePaths,
+			final Clasz recordClass)
+			throws Exception {
+		return createAndPersistSchema(uuid, name, Arrays.asList(attributePaths), recordClass);
+	}
+
 	public Schema createAndPersistSchema(final String name, final SchemaAttributePathInstance[] attributePaths, final Clasz recordClass)
 			throws Exception {
 		return createAndPersistSchema(name, Arrays.asList(attributePaths), recordClass);
+	}
+
+	public Schema createSchema(final String uuid, final String name, final SchemaAttributePathInstance[] attributePaths, final Clasz recordClass)
+			throws Exception {
+		return createSchema(uuid, name, Arrays.asList(attributePaths), recordClass);
 	}
 
 	public Schema createSchema(final String name, final SchemaAttributePathInstance[] attributePaths, final Clasz recordClass) throws Exception {

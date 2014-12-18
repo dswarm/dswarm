@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2013, 2014 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *         http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,27 +16,26 @@
 package org.dswarm.persistence.service.schema.test.internalmodel;
 
 import org.dswarm.persistence.model.schema.Clasz;
-import org.dswarm.persistence.model.schema.utils.NameSpacePrefixRegistry;
 import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.service.UUIDService;
+import org.dswarm.persistence.model.schema.utils.NameSpacePrefixRegistry;
 
 // TODO make this schema also use sub-schemata when everything works for the document schema
 public class BibrmContractItemSchemaBuilder extends SchemaBuilder {
 
 	// private static final Logger LOG = LoggerFactory.getLogger(BibrmContractItemSchemaBuilder.class);
 
+	public static final String BIBRM_CONTRACT_ITEM_SCHEMA_UUID = "Schema-70228b28-10fc-43fe-9d3e-ad22b038ebdf";
+
 	@Override
 	public Schema buildSchema() throws Exception {
 
 		final AttributePathBuilder builder = new AttributePathBuilder();
 
-		// TODO: think about this - maybe we should take a static identifier here instead
-		final String tempSchemaUUID = UUIDService.getUUID(Schema.class.getSimpleName());
+		// we should take a static identifier here
+		final Schema tempSchema = new Schema(BIBRM_CONTRACT_ITEM_SCHEMA_UUID);
 
-		final Schema tempSchema = new Schema(tempSchemaUUID);
-		
 		final Clasz clasz = claszServiceTestUtils.createObject(NameSpacePrefixRegistry.BIBRM + "ContractItem", "ContractItem");
-		
+
 		// basic properties for ERM example
 		// tempSchema.addAttributePath(builder.parsePrefixPath("bibrm:hasItem")); // this needs to go to the schema of Contract
 		// itself
@@ -48,7 +47,7 @@ public class BibrmContractItemSchemaBuilder extends SchemaBuilder {
 		// store all parsed paths as an overview
 		prefixPaths = builder.getPrefixPaths();
 
-		return schemaServiceTestUtils.createAndPersistSchema("bibrm:ContractItem-Schema (ERM-Scenario)",
+		return schemaServiceTestUtils.createAndPersistSchema(tempSchema.getUuid(), "bibrm:ContractItem-Schema (ERM-Scenario)",
 				tempSchema.getUniqueAttributePaths(), clasz);
 	}
 

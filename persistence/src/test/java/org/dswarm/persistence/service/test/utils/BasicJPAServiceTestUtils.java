@@ -299,7 +299,7 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 
 	protected PROXYPOJOCLASS createObject(final POJOCLASS object) throws DMPPersistenceException {
 
-		return jpaService.createObjectTransactional();
+		return jpaService.createObjectTransactional(object.getUuid());
 	}
 
 	/**
