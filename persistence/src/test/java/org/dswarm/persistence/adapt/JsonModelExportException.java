@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dswarm.converter.adapt;
+package org.dswarm.persistence.adapt;
 
 public class JsonModelExportException extends Exception {
 

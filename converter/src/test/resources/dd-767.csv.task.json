@@ -4,32 +4,31 @@
   "job" : {
     "mappings" : [ {
       "name" : "name",
-      "id" : 1,
       "input_attribute_paths" : [ {
         "type" : "MappingAttributePathInstance",
         "name" : "name__-1410949155512__0__",
-        "id" : 1,
         "attribute_path" : {
-          "id" : 73,
           "attributes" : [ {
             "name" : "name",
             "uri" : "http://data.slub-dresden.de/resources/1/schema#name",
-            "id" : 51
-          } ]
-        }
+            "uuid" : "51"
+          } ],
+          "uuid" : "73"
+        },
+        "uuid" : "1"
       } ],
       "output_attribute_path" : {
         "type" : "MappingAttributePathInstance",
         "name" : "output mapping attribute path instance",
-        "id" : 2,
         "attribute_path" : {
-          "id" : 73,
           "attributes" : [ {
             "name" : "name",
             "uri" : "http://data.slub-dresden.de/resources/1/schema#name",
-            "id" : 51
-          } ]
-        }
+            "uuid" : "51"
+          } ],
+          "uuid" : "73"
+        },
+        "uuid" : "2"
       },
       "transformation" : {
         "name" : "transformation",
@@ -43,7 +42,8 @@
           "__TRANSFORMATION_OUTPUT_VARIABLE__1" : "output mapping attribute path instance",
           "name__-1410949155512__0__" : "name__-1410949155512__0__"
         }
-      }
+      },
+      "uuid" : "1"
     } ]
   },
   "input_data_model" : {
@@ -52,9 +52,8 @@
     "configuration" : {
       "name" : null,
       "description" : null,
-      "id" : 3,
       "resources" : [ {
-        "id" : 3
+        "uuid" : "3"
       } ],
       "parameters" : {
         "column_delimiter" : ";",
@@ -63,84 +62,83 @@
         "first_row_is_headings" : true,
         "column_names" : "columnN",
         "storage_type" : "csv"
-      }
+      },
+      "uuid" : "3"
     },
     "schema" : {
       "name" : "dd-747.csv schema",
-      "id" : 5,
       "attribute_paths" : [ {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_0",
-        "id" : 0,
         "attribute_path" : {
-          "id" : 73,
           "attributes" : [ {
             "name" : "name",
             "uri" : "http://data.slub-dresden.de/resources/1/schema#name",
-            "id" : 51
-          } ]
-        }
+            "uuid" : "51"
+          } ],
+          "uuid" : "73"
+        },
+        "uuid" : "0"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_1",
-        "id" : 1,
         "attribute_path" : {
-          "id" : 74,
           "attributes" : [ {
             "name" : "number",
             "uri" : "http://data.slub-dresden.de/resources/1/schema#number",
-            "id" : 52
-          } ]
-        }
+            "uuid" : "52"
+          } ],
+          "uuid" : "74"
+        },
+        "uuid" : "1"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_2",
-        "id" : 2,
         "attribute_path" : {
-          "id" : 75,
           "attributes" : [ {
             "name" : "color",
             "uri" : "http://data.slub-dresden.de/resources/1/schema#color",
-            "id" : 53
-          } ]
-        }
+            "uuid" : "53"
+          } ],
+          "uuid" : "75"
+        },
+        "uuid" : "2"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_3",
-        "id" : 3,
         "attribute_path" : {
-          "id" : 76,
           "attributes" : [ {
             "name" : "date",
             "uri" : "http://data.slub-dresden.de/resources/1/schema#date",
-            "id" : 54
-          } ]
-        }
+            "uuid" : "54"
+          } ],
+          "uuid" : "76"
+        },
+        "uuid" : "3"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_4",
-        "id" : 4,
         "attribute_path" : {
-          "id" : 1,
           "attributes" : [ {
             "name" : "type",
             "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "id" : 1
-          } ]
-        }
+            "uuid" : "1"
+          } ],
+          "uuid" : "1"
+        },
+        "uuid" : "4"
       } ],
       "record_class" : {
         "name" : "record type",
         "uri" : "http://data.slub-dresden.de/resources/1/schema#RecordType",
-        "id" : 5
-      }
+        "uuid" : "5"
+      },
+      "uuid" : "5"
     },
-    "id" : 6,
     "data_resource" : {
       "name" : "dd-747.csv",
       "description" : "dd-747",
       "type" : "FILE",
-      "id" : 3,
       "resource_attributes" : {
         "path" : "/home/dmp/tmp/tmp/resources/dd-747.csv",
         "filesize" : -1,
@@ -149,9 +147,8 @@
       "configurations" : [ {
         "name" : null,
         "description" : null,
-        "id" : 3,
         "resources" : [ {
-          "id" : 3
+          "uuid" : "3"
         } ],
         "parameters" : {
           "column_delimiter" : ";",
@@ -160,9 +157,12 @@
           "first_row_is_headings" : true,
           "column_names" : "columnN",
           "storage_type" : "csv"
-        }
-      } ]
-    }
+        },
+        "uuid" : "3"
+      } ],
+      "uuid" : "3"
+    },
+    "uuid" : "6"
   },
   "output_data_model" : {
     "name" : "dd-747.csv + null data model",
@@ -170,9 +170,8 @@
     "configuration" : {
       "name" : null,
       "description" : null,
-      "id" : 3,
       "resources" : [ {
-        "id" : 3
+        "uuid" : "3"
       } ],
       "parameters" : {
         "column_delimiter" : ";",
@@ -181,84 +180,83 @@
         "first_row_is_headings" : true,
         "column_names" : "columnN",
         "storage_type" : "csv"
-      }
+      },
+      "uuid" : "3"
     },
     "schema" : {
       "name" : "dd-747.csv schema",
-      "id" : 5,
       "attribute_paths" : [ {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_5",
-        "id" : 5,
         "attribute_path" : {
-          "id" : 73,
           "attributes" : [ {
             "name" : "name",
             "uri" : "http://data.slub-dresden.de/resources/1/schema#name",
-            "id" : 51
-          } ]
-        }
+            "uuid" : "51"
+          } ],
+          "uuid" : "73"
+        },
+        "uuid" : "5"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_6",
-        "id" : 6,
         "attribute_path" : {
-          "id" : 74,
           "attributes" : [ {
             "name" : "number",
             "uri" : "http://data.slub-dresden.de/resources/1/schema#number",
-            "id" : 52
-          } ]
-        }
+            "uuid" : "52"
+          } ],
+          "uuid" : "74"
+        },
+        "uuid" : "6"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_7",
-        "id" : 7,
         "attribute_path" : {
-          "id" : 75,
           "attributes" : [ {
             "name" : "color",
             "uri" : "http://data.slub-dresden.de/resources/1/schema#color",
-            "id" : 53
-          } ]
-        }
+            "uuid" : "53"
+          } ],
+          "uuid" : "75"
+        },
+        "uuid" : "7"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_8",
-        "id" : 8,
         "attribute_path" : {
-          "id" : 76,
           "attributes" : [ {
             "name" : "date",
             "uri" : "http://data.slub-dresden.de/resources/1/schema#date",
-            "id" : 54
-          } ]
-        }
+            "uuid" : "54"
+          } ],
+          "uuid" : "76"
+        },
+        "uuid" : "8"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_9",
-        "id" : 9,
         "attribute_path" : {
-          "id" : 1,
           "attributes" : [ {
             "name" : "type",
             "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "id" : 1
-          } ]
-        }
+            "uuid" : "1"
+          } ],
+          "uuid" : "1"
+        },
+        "uuid" : "9"
       } ],
       "record_class" : {
         "name" : "record type",
         "uri" : "http://data.slub-dresden.de/resources/1/schema#RecordType",
-        "id" : 5
-      }
+        "uuid" : "5"
+      },
+      "uuid" : "5"
     },
-    "id" : 6,
     "data_resource" : {
       "name" : "dd-747.csv",
       "description" : "dd-747",
       "type" : "FILE",
-      "id" : 3,
       "resource_attributes" : {
         "path" : "/home/dmp/tmp/tmp/resources/dd-747.csv",
         "filesize" : -1,
@@ -267,9 +265,8 @@
       "configurations" : [ {
         "name" : null,
         "description" : null,
-        "id" : 3,
         "resources" : [ {
-          "id" : 3
+          "uuid" : "3"
         } ],
         "parameters" : {
           "column_delimiter" : ";",
@@ -278,8 +275,11 @@
           "first_row_is_headings" : true,
           "column_names" : "columnN",
           "storage_type" : "csv"
-        }
-      } ]
-    }
+        },
+        "uuid" : "3"
+      } ],
+      "uuid" : "3"
+    },
+    "uuid" : "6"
   }
 }

@@ -1,529 +1,529 @@
 {
-  "id" : 15,
   "attribute_paths" : [ {
     "type" : "SchemaAttributePathInstance",
     "name" : "sapi_0",
-    "id" : 0,
     "attribute_path" : {
-      "id" : 106,
       "attributes" : [ {
-        "id" : 70,
         "name" : "metadata",
-        "uri" : "http://www.openarchives.org/OAI/2.0/metadata"
+        "uri" : "http://www.openarchives.org/OAI/2.0/metadata",
+        "uuid" : "70"
       }, {
-        "id" : 71,
         "name" : "record",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
+        "uuid" : "71"
       }, {
-        "id" : 78,
         "name" : "leader",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#leader"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#leader",
+        "uuid" : "78"
       }, {
-        "id" : 67,
         "name" : "value",
-        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
-      } ]
-    }
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+        "uuid" : "67"
+      } ],
+      "uuid" : "106"
+    },
+    "uuid" : "0"
   }, {
     "type" : "SchemaAttributePathInstance",
     "name" : "sapi_1",
-    "id" : 1,
     "attribute_path" : {
-      "id" : 105,
       "attributes" : [ {
-        "id" : 70,
         "name" : "metadata",
-        "uri" : "http://www.openarchives.org/OAI/2.0/metadata"
+        "uri" : "http://www.openarchives.org/OAI/2.0/metadata",
+        "uuid" : "70"
       }, {
-        "id" : 71,
         "name" : "record",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
+        "uuid" : "71"
       }, {
-        "id" : 78,
         "name" : "leader",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#leader"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#leader",
+        "uuid" : "78"
       }, {
-        "id" : 65,
         "name" : "type",
-        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-      } ]
-    }
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "uuid" : "65"
+      } ],
+      "uuid" : "105"
+    },
+    "uuid" : "1"
   }, {
     "type" : "SchemaAttributePathInstance",
     "name" : "sapi_2",
-    "id" : 2,
     "attribute_path" : {
-      "id" : 107,
       "attributes" : [ {
-        "id" : 70,
         "name" : "metadata",
-        "uri" : "http://www.openarchives.org/OAI/2.0/metadata"
+        "uri" : "http://www.openarchives.org/OAI/2.0/metadata",
+        "uuid" : "70"
       }, {
-        "id" : 71,
         "name" : "record",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
+        "uuid" : "71"
       }, {
-        "id" : 65,
         "name" : "type",
-        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-      } ]
-    }
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "uuid" : "65"
+      } ],
+      "uuid" : "107"
+    },
+    "uuid" : "2"
   }, {
     "type" : "SchemaAttributePathInstance",
     "name" : "sapi_3",
-    "id" : 3,
     "attribute_path" : {
-      "id" : 98,
       "attributes" : [ {
-        "id" : 70,
         "name" : "metadata",
-        "uri" : "http://www.openarchives.org/OAI/2.0/metadata"
+        "uri" : "http://www.openarchives.org/OAI/2.0/metadata",
+        "uuid" : "70"
       }, {
-        "id" : 71,
         "name" : "record",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
+        "uuid" : "71"
       }, {
-        "id" : 72,
         "name" : "datafield",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield",
+        "uuid" : "72"
       }, {
-        "id" : 75,
         "name" : "subfield",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield",
+        "uuid" : "75"
       }, {
-        "id" : 76,
         "name" : "code",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code"
-      } ]
-    }
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code",
+        "uuid" : "76"
+      } ],
+      "uuid" : "98"
+    },
+    "uuid" : "3"
   }, {
     "type" : "SchemaAttributePathInstance",
     "name" : "sapi_4",
-    "id" : 4,
     "attribute_path" : {
-      "id" : 97,
       "attributes" : [ {
-        "id" : 70,
         "name" : "metadata",
-        "uri" : "http://www.openarchives.org/OAI/2.0/metadata"
+        "uri" : "http://www.openarchives.org/OAI/2.0/metadata",
+        "uuid" : "70"
       }, {
-        "id" : 71,
         "name" : "record",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
+        "uuid" : "71"
       }, {
-        "id" : 72,
         "name" : "datafield",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield",
+        "uuid" : "72"
       }, {
-        "id" : 75,
         "name" : "subfield",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield",
+        "uuid" : "75"
       }, {
-        "id" : 65,
         "name" : "type",
-        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-      } ]
-    }
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "uuid" : "65"
+      } ],
+      "uuid" : "97"
+    },
+    "uuid" : "4"
   }, {
     "type" : "SchemaAttributePathInstance",
     "name" : "sapi_5",
-    "id" : 5,
     "attribute_path" : {
-      "id" : 100,
       "attributes" : [ {
-        "id" : 70,
         "name" : "metadata",
-        "uri" : "http://www.openarchives.org/OAI/2.0/metadata"
+        "uri" : "http://www.openarchives.org/OAI/2.0/metadata",
+        "uuid" : "70"
       }, {
-        "id" : 71,
         "name" : "record",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
+        "uuid" : "71"
       }, {
-        "id" : 77,
         "name" : "controlfield",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#controlfield"
-      } ]
-    }
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#controlfield",
+        "uuid" : "77"
+      } ],
+      "uuid" : "100"
+    },
+    "uuid" : "5"
   }, {
     "type" : "SchemaAttributePathInstance",
     "name" : "sapi_6",
-    "id" : 6,
     "attribute_path" : {
-      "id" : 99,
       "attributes" : [ {
-        "id" : 70,
         "name" : "metadata",
-        "uri" : "http://www.openarchives.org/OAI/2.0/metadata"
+        "uri" : "http://www.openarchives.org/OAI/2.0/metadata",
+        "uuid" : "70"
       }, {
-        "id" : 71,
         "name" : "record",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
+        "uuid" : "71"
       }, {
-        "id" : 72,
         "name" : "datafield",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield",
+        "uuid" : "72"
       }, {
-        "id" : 75,
         "name" : "subfield",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield",
+        "uuid" : "75"
       }, {
-        "id" : 67,
         "name" : "value",
-        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
-      } ]
-    }
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+        "uuid" : "67"
+      } ],
+      "uuid" : "99"
+    },
+    "uuid" : "6"
   }, {
     "type" : "SchemaAttributePathInstance",
     "name" : "sapi_7",
-    "id" : 7,
     "attribute_path" : {
-      "id" : 102,
       "attributes" : [ {
-        "id" : 70,
         "name" : "metadata",
-        "uri" : "http://www.openarchives.org/OAI/2.0/metadata"
+        "uri" : "http://www.openarchives.org/OAI/2.0/metadata",
+        "uuid" : "70"
       }, {
-        "id" : 71,
         "name" : "record",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
+        "uuid" : "71"
       }, {
-        "id" : 77,
         "name" : "controlfield",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#controlfield"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#controlfield",
+        "uuid" : "77"
       }, {
-        "id" : 73,
         "name" : "tag",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag"
-      } ]
-    }
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag",
+        "uuid" : "73"
+      } ],
+      "uuid" : "102"
+    },
+    "uuid" : "7"
   }, {
     "type" : "SchemaAttributePathInstance",
     "name" : "sapi_8",
-    "id" : 8,
     "attribute_path" : {
-      "id" : 101,
       "attributes" : [ {
-        "id" : 70,
         "name" : "metadata",
-        "uri" : "http://www.openarchives.org/OAI/2.0/metadata"
+        "uri" : "http://www.openarchives.org/OAI/2.0/metadata",
+        "uuid" : "70"
       }, {
-        "id" : 71,
         "name" : "record",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
+        "uuid" : "71"
       }, {
-        "id" : 77,
         "name" : "controlfield",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#controlfield"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#controlfield",
+        "uuid" : "77"
       }, {
-        "id" : 65,
         "name" : "type",
-        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-      } ]
-    }
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "uuid" : "65"
+      } ],
+      "uuid" : "101"
+    },
+    "uuid" : "8"
   }, {
     "type" : "SchemaAttributePathInstance",
     "name" : "sapi_9",
-    "id" : 9,
     "attribute_path" : {
-      "id" : 104,
       "attributes" : [ {
-        "id" : 70,
         "name" : "metadata",
-        "uri" : "http://www.openarchives.org/OAI/2.0/metadata"
+        "uri" : "http://www.openarchives.org/OAI/2.0/metadata",
+        "uuid" : "70"
       }, {
-        "id" : 71,
         "name" : "record",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
+        "uuid" : "71"
       }, {
-        "id" : 78,
         "name" : "leader",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#leader"
-      } ]
-    }
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#leader",
+        "uuid" : "78"
+      } ],
+      "uuid" : "104"
+    },
+    "uuid" : "9"
   }, {
     "type" : "SchemaAttributePathInstance",
     "name" : "sapi_10",
-    "id" : 10,
     "attribute_path" : {
-      "id" : 103,
       "attributes" : [ {
-        "id" : 70,
         "name" : "metadata",
-        "uri" : "http://www.openarchives.org/OAI/2.0/metadata"
+        "uri" : "http://www.openarchives.org/OAI/2.0/metadata",
+        "uuid" : "70"
       }, {
-        "id" : 71,
         "name" : "record",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
+        "uuid" : "71"
       }, {
-        "id" : 77,
         "name" : "controlfield",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#controlfield"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#controlfield",
+        "uuid" : "77"
       }, {
-        "id" : 67,
         "name" : "value",
-        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
-      } ]
-    }
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+        "uuid" : "67"
+      } ],
+      "uuid" : "103"
+    },
+    "uuid" : "10"
   }, {
     "type" : "SchemaAttributePathInstance",
     "name" : "sapi_11",
-    "id" : 11,
     "attribute_path" : {
-      "id" : 88,
       "attributes" : [ {
-        "id" : 68,
         "name" : "header",
-        "uri" : "http://www.openarchives.org/OAI/2.0/header"
+        "uri" : "http://www.openarchives.org/OAI/2.0/header",
+        "uuid" : "68"
       }, {
-        "id" : 69,
         "name" : "identifier",
-        "uri" : "http://www.openarchives.org/OAI/2.0/identifier"
+        "uri" : "http://www.openarchives.org/OAI/2.0/identifier",
+        "uuid" : "69"
       }, {
-        "id" : 67,
         "name" : "value",
-        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
-      } ]
-    }
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+        "uuid" : "67"
+      } ],
+      "uuid" : "88"
+    },
+    "uuid" : "11"
   }, {
     "type" : "SchemaAttributePathInstance",
     "name" : "sapi_12",
-    "id" : 12,
     "attribute_path" : {
-      "id" : 87,
       "attributes" : [ {
-        "id" : 68,
         "name" : "header",
-        "uri" : "http://www.openarchives.org/OAI/2.0/header"
+        "uri" : "http://www.openarchives.org/OAI/2.0/header",
+        "uuid" : "68"
       }, {
-        "id" : 69,
         "name" : "identifier",
-        "uri" : "http://www.openarchives.org/OAI/2.0/identifier"
+        "uri" : "http://www.openarchives.org/OAI/2.0/identifier",
+        "uuid" : "69"
       }, {
-        "id" : 65,
         "name" : "type",
-        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-      } ]
-    }
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "uuid" : "65"
+      } ],
+      "uuid" : "87"
+    },
+    "uuid" : "12"
   }, {
     "type" : "SchemaAttributePathInstance",
     "name" : "sapi_13",
-    "id" : 13,
     "attribute_path" : {
-      "id" : 86,
       "attributes" : [ {
-        "id" : 68,
         "name" : "header",
-        "uri" : "http://www.openarchives.org/OAI/2.0/header"
+        "uri" : "http://www.openarchives.org/OAI/2.0/header",
+        "uuid" : "68"
       }, {
-        "id" : 69,
         "name" : "identifier",
-        "uri" : "http://www.openarchives.org/OAI/2.0/identifier"
-      } ]
-    }
+        "uri" : "http://www.openarchives.org/OAI/2.0/identifier",
+        "uuid" : "69"
+      } ],
+      "uuid" : "86"
+    },
+    "uuid" : "13"
   }, {
     "type" : "SchemaAttributePathInstance",
     "name" : "sapi_14",
-    "id" : 14,
     "attribute_path" : {
-      "id" : 85,
       "attributes" : [ {
-        "id" : 68,
         "name" : "header",
-        "uri" : "http://www.openarchives.org/OAI/2.0/header"
+        "uri" : "http://www.openarchives.org/OAI/2.0/header",
+        "uuid" : "68"
       }, {
-        "id" : 65,
         "name" : "type",
-        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-      } ]
-    }
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "uuid" : "65"
+      } ],
+      "uuid" : "85"
+    },
+    "uuid" : "14"
   }, {
     "type" : "SchemaAttributePathInstance",
     "name" : "sapi_15",
-    "id" : 15,
     "attribute_path" : {
-      "id" : 84,
       "attributes" : [ {
-        "id" : 68,
         "name" : "header",
-        "uri" : "http://www.openarchives.org/OAI/2.0/header"
-      } ]
-    }
+        "uri" : "http://www.openarchives.org/OAI/2.0/header",
+        "uuid" : "68"
+      } ],
+      "uuid" : "84"
+    },
+    "uuid" : "15"
   }, {
     "type" : "SchemaAttributePathInstance",
     "name" : "sapi_16",
-    "id" : 16,
     "attribute_path" : {
-      "id" : 83,
       "attributes" : [ {
-        "id" : 65,
         "name" : "type",
-        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-      } ]
-    }
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "uuid" : "65"
+      } ],
+      "uuid" : "83"
+    },
+    "uuid" : "16"
   }, {
     "type" : "SchemaAttributePathInstance",
     "name" : "sapi_17",
-    "id" : 17,
     "attribute_path" : {
-      "id" : 96,
       "attributes" : [ {
-        "id" : 70,
         "name" : "metadata",
-        "uri" : "http://www.openarchives.org/OAI/2.0/metadata"
+        "uri" : "http://www.openarchives.org/OAI/2.0/metadata",
+        "uuid" : "70"
       }, {
-        "id" : 71,
         "name" : "record",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
+        "uuid" : "71"
       }, {
-        "id" : 72,
         "name" : "datafield",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield",
+        "uuid" : "72"
       }, {
-        "id" : 75,
         "name" : "subfield",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield"
-      } ]
-    }
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield",
+        "uuid" : "75"
+      } ],
+      "uuid" : "96"
+    },
+    "uuid" : "17"
   }, {
     "type" : "SchemaAttributePathInstance",
     "name" : "sapi_18",
-    "id" : 18,
     "attribute_path" : {
-      "id" : 95,
       "attributes" : [ {
-        "id" : 70,
         "name" : "metadata",
-        "uri" : "http://www.openarchives.org/OAI/2.0/metadata"
+        "uri" : "http://www.openarchives.org/OAI/2.0/metadata",
+        "uuid" : "70"
       }, {
-        "id" : 71,
         "name" : "record",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
+        "uuid" : "71"
       }, {
-        "id" : 72,
         "name" : "datafield",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield",
+        "uuid" : "72"
       }, {
-        "id" : 74,
         "name" : "ind1",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind1"
-      } ]
-    }
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind1",
+        "uuid" : "74"
+      } ],
+      "uuid" : "95"
+    },
+    "uuid" : "18"
   }, {
     "type" : "SchemaAttributePathInstance",
     "name" : "sapi_19",
-    "id" : 19,
     "attribute_path" : {
-      "id" : 94,
       "attributes" : [ {
-        "id" : 70,
         "name" : "metadata",
-        "uri" : "http://www.openarchives.org/OAI/2.0/metadata"
+        "uri" : "http://www.openarchives.org/OAI/2.0/metadata",
+        "uuid" : "70"
       }, {
-        "id" : 71,
         "name" : "record",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
+        "uuid" : "71"
       }, {
-        "id" : 72,
         "name" : "datafield",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield",
+        "uuid" : "72"
       }, {
-        "id" : 73,
         "name" : "tag",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag"
-      } ]
-    }
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag",
+        "uuid" : "73"
+      } ],
+      "uuid" : "94"
+    },
+    "uuid" : "19"
   }, {
     "type" : "SchemaAttributePathInstance",
     "name" : "sapi_20",
-    "id" : 20,
     "attribute_path" : {
-      "id" : 93,
       "attributes" : [ {
-        "id" : 70,
         "name" : "metadata",
-        "uri" : "http://www.openarchives.org/OAI/2.0/metadata"
+        "uri" : "http://www.openarchives.org/OAI/2.0/metadata",
+        "uuid" : "70"
       }, {
-        "id" : 71,
         "name" : "record",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
+        "uuid" : "71"
       }, {
-        "id" : 72,
         "name" : "datafield",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield",
+        "uuid" : "72"
       }, {
-        "id" : 65,
         "name" : "type",
-        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-      } ]
-    }
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "uuid" : "65"
+      } ],
+      "uuid" : "93"
+    },
+    "uuid" : "20"
   }, {
     "type" : "SchemaAttributePathInstance",
     "name" : "sapi_21",
-    "id" : 21,
     "attribute_path" : {
-      "id" : 92,
       "attributes" : [ {
-        "id" : 70,
         "name" : "metadata",
-        "uri" : "http://www.openarchives.org/OAI/2.0/metadata"
+        "uri" : "http://www.openarchives.org/OAI/2.0/metadata",
+        "uuid" : "70"
       }, {
-        "id" : 71,
         "name" : "record",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record"
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
+        "uuid" : "71"
       }, {
-        "id" : 72,
         "name" : "datafield",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield"
-      } ]
-    }
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield",
+        "uuid" : "72"
+      } ],
+      "uuid" : "92"
+    },
+    "uuid" : "21"
   }, {
     "type" : "SchemaAttributePathInstance",
     "name" : "sapi_22",
-    "id" : 22,
     "attribute_path" : {
-      "id" : 91,
       "attributes" : [ {
-        "id" : 70,
         "name" : "metadata",
-        "uri" : "http://www.openarchives.org/OAI/2.0/metadata"
+        "uri" : "http://www.openarchives.org/OAI/2.0/metadata",
+        "uuid" : "70"
       }, {
-        "id" : 71,
         "name" : "record",
-        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record"
-      } ]
-    }
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
+        "uuid" : "71"
+      } ],
+      "uuid" : "91"
+    },
+    "uuid" : "22"
   }, {
     "type" : "SchemaAttributePathInstance",
     "name" : "sapi_23",
-    "id" : 23,
     "attribute_path" : {
-      "id" : 90,
       "attributes" : [ {
-        "id" : 70,
         "name" : "metadata",
-        "uri" : "http://www.openarchives.org/OAI/2.0/metadata"
+        "uri" : "http://www.openarchives.org/OAI/2.0/metadata",
+        "uuid" : "70"
       }, {
-        "id" : 65,
         "name" : "type",
-        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-      } ]
-    }
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "uuid" : "65"
+      } ],
+      "uuid" : "90"
+    },
+    "uuid" : "23"
   }, {
     "type" : "SchemaAttributePathInstance",
     "name" : "sapi_24",
-    "id" : 24,
     "attribute_path" : {
-      "id" : 89,
       "attributes" : [ {
-        "id" : 70,
         "name" : "metadata",
-        "uri" : "http://www.openarchives.org/OAI/2.0/metadata"
-      } ]
-    }
+        "uri" : "http://www.openarchives.org/OAI/2.0/metadata",
+        "uuid" : "70"
+      } ],
+      "uuid" : "89"
+    },
+    "uuid" : "24"
   } ],
   "record_class" : {
-    "id" : 9,
     "name" : "recordType",
-    "uri" : "http://www.openarchives.org/OAI/2.0/recordType"
-  }
+    "uri" : "http://www.openarchives.org/OAI/2.0/recordType",
+    "uuid" : "9"
+  },
+  "uuid" : "15"
 }

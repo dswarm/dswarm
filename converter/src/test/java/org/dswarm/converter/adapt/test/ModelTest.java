@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dswarm.converter.adapt;
+package org.dswarm.converter.adapt.test;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,18 +21,20 @@ import java.net.URI;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
-import com.google.common.io.Resources;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
-import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.dswarm.converter.adapt.JsonModelAlreadyTransformedException;
+import org.dswarm.persistence.adapt.JsonModelExportException;
+import org.dswarm.converter.adapt.JsonModelTransformException;
+import org.dswarm.converter.adapt.JsonModelValidationException;
+import org.dswarm.converter.adapt.JsonSchemaTransformer;
+import org.dswarm.persistence.test.DMPPersistenceTestUtils;
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.job.Project;
 import org.dswarm.persistence.model.job.Task;
@@ -46,49 +48,21 @@ public class ModelTest extends GuicedTest {
 
 	private static final String sep = File.separator;
 
-	protected void writeBackToSource(final JsonNode node, final URI uri) throws JsonModelExportException {
-		try {
-			FileUtils.write(new File(uri), objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true).writeValueAsString(node));
-		} catch (final IOException e) {
-			throw new JsonModelExportException(e);
-		}
-	}
+	protected final String root;
 
-	/**
-	 * Finds a concrete resource
-	 *
-	 * @param resourceName The filename of the resource
-	 * @return The uri to the resource
-	 */
-	protected URI findResource(final String resourceName) {
-		final URI repositoryUri = findRepository();
-		final String filePath = repositoryUri.getRawPath() + ModelTest.sep + resourceName;
-		return new File(filePath).toURI();
-	}
+	public ModelTest() {
 
-	protected URI findRepository() {
-		final String root = GuicedTest.injector.getInstance(Key.get(String.class, Names.named("dswarm.paths.root")));
-		final String resourceRepository = root + ModelTest.sep + "src" + ModelTest.sep + "test" + ModelTest.sep + "resources" + ModelTest.sep;
-		return new File(resourceRepository).toURI();
-	}
-
-	protected String readResource(final URI uri) {
-		try {
-			return Resources.toString(uri.toURL(), Charsets.UTF_8);
-		} catch (final IOException e) {
-			ModelTest.log.error(e.getMessage(), e);
-			return "{}";
-		}
+		root = GuicedTest.injector.getInstance(Key.get(String.class, Names.named("dswarm.paths.root")));
 	}
 
 	protected void rewriteTaskJSON(final String resourceName) throws JsonModelTransformException, JsonModelExportException {
 
-		final URI resourceURI = findResource(resourceName);
+		final URI resourceURI = DMPPersistenceTestUtils.getResourceURI(resourceName, root);
 		rewriteTaskJSON(resourceURI, false);
 	}
 
 	protected void rewriteTaskJSON(final URI uri, final boolean checkTask) throws JsonModelTransformException, JsonModelExportException {
-		final String content = readResource(uri);
+		final String content = DMPPersistenceTestUtils.readResource(uri);
 
 		try {
 			final JsonNode rootNode = JsonSchemaTransformer.INSTANCE.transformFixAttributePathInstance(content, false);
@@ -96,7 +70,7 @@ public class ModelTest extends GuicedTest {
 			if (checkTask) {
 				checkTransformation(rootNode, uri);
 			}
-			writeBackToSource(rootNode, uri);
+			DMPPersistenceTestUtils.writeToFile(rootNode, uri);
 			Assert.assertTrue(true);
 		} catch (JsonModelAlreadyTransformedException | JsonModelValidationException e) {
 			// nothing to do on this resource just continue to the next one
@@ -106,8 +80,8 @@ public class ModelTest extends GuicedTest {
 
 	protected void rewriteSchemaJSON(final String resourceName) throws Exception {
 
-		final URI resourceURI = findResource(resourceName);
-		final String content = readResource(resourceURI);
+		final URI resourceURI = DMPPersistenceTestUtils.getResourceURI(resourceName, root);
+		final String content = DMPPersistenceTestUtils.readResource(resourceURI);
 
 		try {
 
@@ -116,7 +90,7 @@ public class ModelTest extends GuicedTest {
 			final Optional<JsonNode> optionalRootNode = JsonSchemaTransformer.INSTANCE.updateSchemaNode(schemaJSON);
 			Assert.assertTrue(optionalRootNode.isPresent());
 			checkSchema(optionalRootNode.get(), resourceURI);
-			writeBackToSource(optionalRootNode.get(), resourceURI);
+			DMPPersistenceTestUtils.writeToFile(optionalRootNode.get(), resourceURI);
 			Assert.assertTrue(true);
 		} catch (JsonModelAlreadyTransformedException | JsonModelValidationException e) {
 			// nothing to do on this resource just continue to the next one
@@ -126,15 +100,15 @@ public class ModelTest extends GuicedTest {
 
 	protected void rewriteProjectJSON(final String resourceName) throws Exception {
 
-		final URI resourceURI = findResource(resourceName);
-		final String content = readResource(resourceURI);
+		final URI resourceURI = DMPPersistenceTestUtils.getResourceURI(resourceName, root);
+		final String content = DMPPersistenceTestUtils.readResource(resourceURI);
 
 		try {
 
 			final JsonNode rootNode = JsonSchemaTransformer.INSTANCE.transformFixAttributePathInstance(content, true);
 			Assert.assertNotNull(rootNode);
 			checkProject(rootNode, resourceURI);
-			writeBackToSource(rootNode, resourceURI);
+			DMPPersistenceTestUtils.writeToFile(rootNode, resourceURI);
 			Assert.assertTrue(true);
 		} catch (JsonModelAlreadyTransformedException | JsonModelValidationException e) {
 			// nothing to do on this resource just continue to the next one
@@ -154,9 +128,9 @@ public class ModelTest extends GuicedTest {
 
 	protected void checkProject(final JsonNode node, final URI uri) throws JsonModelValidationException {
 		try {
-			
+
 			// System.out.println(objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true).writeValueAsString(node));
-			
+
 			final String jsonString = objectMapper.writeValueAsString(node);
 			objectMapper.readValue(jsonString, Project.class);
 		} catch (final IOException e) {

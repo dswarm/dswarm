@@ -7,7 +7,6 @@
           "type" : "Transformation",
           "name" : "my transformation 2",
           "description" : "transformation which makes use of three functions (two transformations and one funcion)",
-          "id" : 16,
           "parameters" : [ "firstName", "familyName" ],
           "components" : [ {
             "name" : "component_id_12",
@@ -15,22 +14,20 @@
               "type" : "Function",
               "name" : "replace",
               "description" : "replace certain parts of a given string that matches a certain regex",
-              "id" : 11,
-              "parameters" : [ "pattern", "with" ]
+              "parameters" : [ "pattern", "with" ],
+              "uuid" : "11"
             },
-            "id" : 12,
             "output_components" : [ {
               "name" : "component_id_14",
               "function" : {
                 "type" : "Function",
                 "name" : "trim",
                 "description" : "trims leading and trailing whitespaces from a given string",
-                "id" : 13
+                "uuid" : "13"
               },
-              "id" : 14,
               "input_components" : [ {
-                "id" : 12,
-                "name" : "component_id_12"
+                "name" : "component_id_12",
+                "uuid" : "12"
               } ],
               "output_components" : [ {
                 "name" : "component_id_13",
@@ -38,35 +35,36 @@
                   "type" : "Function",
                   "name" : "lower_case",
                   "description" : "lower cases all characters of a given string",
-                  "id" : 12
+                  "uuid" : "12"
                 },
-                "id" : 13,
                 "input_components" : [ {
-                  "id" : 14,
-                  "name" : "component_id_14"
+                  "name" : "component_id_14",
+                  "uuid" : "14"
                 } ],
                 "output_components" : [ {
-                  "id" : 17
-                } ]
-              } ]
+                  "uuid" : "17"
+                } ],
+                "uuid" : "13"
+              } ],
+              "uuid" : "14"
             } ],
             "parameter_mappings" : {
               "inputString" : "familyName",
               "pattern" : "=",
               "with" : ""
-            }
+            },
+            "uuid" : "12"
           }, {
             "name" : "component_id_14",
             "function" : {
               "type" : "Function",
               "name" : "trim",
               "description" : "trims leading and trailing whitespaces from a given string",
-              "id" : 13
+              "uuid" : "13"
             },
-            "id" : 14,
             "input_components" : [ {
-              "id" : 12,
-              "name" : "component_id_12"
+              "name" : "component_id_12",
+              "uuid" : "12"
             } ],
             "output_components" : [ {
               "name" : "component_id_13",
@@ -74,194 +72,196 @@
                 "type" : "Function",
                 "name" : "lower_case",
                 "description" : "lower cases all characters of a given string",
-                "id" : 12
+                "uuid" : "12"
               },
-              "id" : 13,
               "input_components" : [ {
-                "id" : 14,
-                "name" : "component_id_14"
+                "name" : "component_id_14",
+                "uuid" : "14"
               } ],
               "output_components" : [ {
-                "id" : 17
-              } ]
-            } ]
+                "uuid" : "17"
+              } ],
+              "uuid" : "13"
+            } ],
+            "uuid" : "14"
           }, {
             "name" : "component_id_15",
             "function" : {
               "type" : "Function",
               "name" : "replace",
               "description" : "replace certain parts of a given string that matches a certain regex",
-              "id" : 11,
-              "parameters" : [ "pattern", "with" ]
+              "parameters" : [ "pattern", "with" ],
+              "uuid" : "11"
             },
-            "id" : 15,
             "output_components" : [ {
-              "id" : 16
+              "uuid" : "16"
             } ],
             "parameter_mappings" : {
               "inputString" : "firstName",
               "pattern" : "=",
               "with" : ""
-            }
+            },
+            "uuid" : "15"
           }, {
             "name" : "component_id_17",
             "function" : {
               "type" : "Function",
               "name" : "concat",
               "description" : "Collects all received values and concatenates them on record end.",
-              "id" : 23,
-              "parameters" : [ "delimiter", "prefix", "postfix" ]
+              "parameters" : [ "delimiter", "prefix", "postfix" ],
+              "uuid" : "23"
             },
-            "id" : 17,
             "input_components" : [ {
-              "id" : 15,
-              "name" : "component_id_15"
+              "name" : "component_id_15",
+              "uuid" : "15"
             }, {
-              "id" : 13,
-              "name" : "component_id_13"
+              "name" : "component_id_13",
+              "uuid" : "13"
             } ],
             "output_components" : [ {
-              "id" : 18
+              "uuid" : "18"
             } ],
             "parameter_mappings" : {
               "inputString" : "component_id_13,component_id_15",
               "delimiter" : " ",
               "prefix" : "_",
               "postfix" : "_"
-            }
+            },
+            "uuid" : "17"
           }, {
             "name" : "component_id_13",
             "function" : {
               "type" : "Function",
               "name" : "case",
               "description" : "Upper/lower-case transformation.",
-              "id" : 2,
-              "parameters" : [ "to", "language" ]
+              "parameters" : [ "to", "language" ],
+              "uuid" : "2"
             },
-            "id" : 13,
             "input_components" : [ {
-              "id" : 14,
-              "name" : "component_id_14"
+              "name" : "component_id_14",
+              "uuid" : "14"
             } ],
             "output_components" : [ {
-              "id" : 17
+              "uuid" : "17"
             } ],
             "parameter_mappings" : {
               "to" : "lower"
-            }
+            },
+            "uuid" : "13"
           }, {
             "name" : "component_id_18",
             "function" : {
               "type" : "Function",
               "name" : "concat",
               "description" : "Collects all received values and concatenates them on record end.",
-              "id" : 23,
-              "parameters" : [ "delimiter", "prefix", "postfix" ]
+              "parameters" : [ "delimiter", "prefix", "postfix" ],
+              "uuid" : "23"
             },
-            "id" : 18,
             "input_components" : [ {
-              "id" : 17,
-              "name" : "component_id_17"
+              "name" : "component_id_17",
+              "uuid" : "17"
             } ],
             "parameter_mappings" : {
               "inputString" : "component_id_17,title,givenName",
               "delimiter" : ","
-            }
-          } ]
+            },
+            "uuid" : "18"
+          } ],
+          "uuid" : "16"
         },
-        "id" : 18,
         "parameter_mappings" : {
           "firstName" : "firstName",
           "familyName" : "familyName",
           "title" : "title",
           "givenName" : "givenName",
           "__TRANSFORMATION_OUTPUT_VARIABLE__1" : "output mapping attribute path instance"
-        }
+        },
+        "uuid" : "18"
       },
-      "id" : 14,
       "input_attribute_paths" : [ {
         "type" : "MappingAttributePathInstance",
         "name" : "firstName",
-        "id" : 8,
         "attribute_path" : {
-          "id" : 8,
           "attributes" : [ {
             "name" : "creator",
             "uri" : "http://purl.org/dc/terms/creator",
-            "id" : 9
+            "uuid" : "9"
           }, {
             "name" : "firstName",
             "uri" : "http://xmlns.com/foaf/0.1/firstName",
-            "id" : 10
-          } ]
-        }
+            "uuid" : "10"
+          } ],
+          "uuid" : "8"
+        },
+        "uuid" : "8"
       }, {
         "type" : "MappingAttributePathInstance",
         "name" : "familyName",
-        "id" : 9,
         "attribute_path" : {
-          "id" : 9,
           "attributes" : [ {
             "name" : "creator",
             "uri" : "http://purl.org/dc/terms/creator",
-            "id" : 9
+            "uuid" : "9"
           }, {
             "name" : "familyName",
             "uri" : "http://xmlns.com/foaf/0.1/familyName",
-            "id" : 11
-          } ]
-        }
+            "uuid" : "11"
+          } ],
+          "uuid" : "9"
+        },
+        "uuid" : "9"
       }, {
         "type" : "MappingAttributePathInstance",
         "name" : "title",
-        "id" : 10,
         "attribute_path" : {
-          "id" : 9,
           "attributes" : [ {
             "name" : "creator",
             "uri" : "http://purl.org/dc/terms/creator",
-            "id" : 9
+            "uuid" : "9"
           }, {
             "name" : "title",
             "uri" : "http://xmlns.com/foaf/0.1/title",
-            "id" : 12
-          } ]
-        }
+            "uuid" : "12"
+          } ],
+          "uuid" : "9"
+        },
+        "uuid" : "10"
       }, {
         "type" : "MappingAttributePathInstance",
         "name" : "givenName",
-        "id" : 11,
         "attribute_path" : {
-          "id" : 9,
           "attributes" : [ {
             "name" : "creator",
             "uri" : "http://purl.org/dc/terms/creator",
-            "id" : 9
+            "uuid" : "9"
           }, {
             "name" : "givenName",
             "uri" : "http://xmlns.com/foaf/0.1/givenName",
-            "id" : 13
-          } ]
-        }
+            "uuid" : "13"
+          } ],
+          "uuid" : "9"
+        },
+        "uuid" : "11"
       } ],
       "output_attribute_path" : {
         "type" : "MappingAttributePathInstance",
         "name" : "output mapping attribute path instance",
-        "id" : 11,
         "attribute_path" : {
-          "id" : 10,
           "attributes" : [ {
             "name" : "creator",
             "uri" : "http://purl.org/dc/terms/creator",
-            "id" : 9
+            "uuid" : "9"
           }, {
             "name" : "name",
             "uri" : "http://xmlns.com/foaf/0.1/name",
-            "id" : 12
-          } ]
-        }
+            "uuid" : "12"
+          } ],
+          "uuid" : "10"
+        },
+        "uuid" : "11"
       },
-      "name" : "my mapping"
+      "name" : "my mapping",
+      "uuid" : "14"
     } ]
   },
   "output_data_model" : {
@@ -275,9 +275,9 @@
           "column_delimiter" : ";"
         },
         "resources" : [ {
-          "id" : 2
+          "uuid" : "2"
         } ],
-        "id" : 2
+        "uuid" : "2"
       } ],
       "resource_attributes" : {
         "filesize" : -1,
@@ -286,77 +286,77 @@
       "type" : "FILE",
       "description" : "ssdfadfsdf",
       "name" : "test_csv.csv",
-      "id" : 2
+      "uuid" : "2"
     },
     "schema" : {
       "record_class" : {
-        "id" : 80,
         "name" : "record type",
-        "uri" : "/test_csv.csv#RecordType"
+        "uri" : "/test_csv.csv#RecordType",
+        "uuid" : "80"
       },
       "attribute_paths" : [ {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_5",
-        "id" : 5,
         "attribute_path" : {
           "attributes" : [ {
-            "id" : 89,
             "name" : "description",
-            "uri" : "/test_csv.csv#description"
+            "uri" : "/test_csv.csv#description",
+            "uuid" : "89"
           } ],
-          "id" : 98
-        }
+          "uuid" : "98"
+        },
+        "uuid" : "5"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_6",
-        "id" : 6,
         "attribute_path" : {
           "attributes" : [ {
-            "id" : 88,
             "name" : "id",
-            "uri" : "/test_csv.csv#id"
+            "uri" : "/test_csv.csv#id",
+            "uuid" : "88"
           } ],
-          "id" : 96
-        }
+          "uuid" : "96"
+        },
+        "uuid" : "6"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_7",
-        "id" : 7,
         "attribute_path" : {
           "attributes" : [ {
-            "id" : 87,
             "name" : "name",
-            "uri" : "/test_csv.csv#name"
+            "uri" : "/test_csv.csv#name",
+            "uuid" : "87"
           } ],
-          "id" : 97
-        }
+          "uuid" : "97"
+        },
+        "uuid" : "7"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_8",
-        "id" : 8,
         "attribute_path" : {
           "attributes" : [ {
-            "id" : 86,
             "name" : "year",
-            "uri" : "/test_csv.csv#year"
+            "uri" : "/test_csv.csv#year",
+            "uuid" : "86"
           } ],
-          "id" : 100
-        }
+          "uuid" : "100"
+        },
+        "uuid" : "8"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_9",
-        "id" : 9,
         "attribute_path" : {
           "attributes" : [ {
-            "id" : 85,
             "name" : "isbn",
-            "uri" : "/test_csv.csv#isbn"
+            "uri" : "/test_csv.csv#isbn",
+            "uuid" : "85"
           } ],
-          "id" : 99
-        }
+          "uuid" : "99"
+        },
+        "uuid" : "9"
       } ],
       "name" : "test_csv.csv schema",
-      "id" : 6
+      "uuid" : "6"
     },
     "configuration" : {
       "parameters" : {
@@ -367,13 +367,13 @@
         "column_delimiter" : ";"
       },
       "resources" : [ {
-        "id" : 2
+        "uuid" : "2"
       } ],
-      "id" : 2
+      "uuid" : "2"
     },
     "description" : " data model of resource test_csv.csv and configuration  null",
     "name" : "test_csv.csv + null data model",
-    "id" : 6
+    "uuid" : "6"
   },
   "input_data_model" : {
     "data_resource" : {
@@ -386,9 +386,9 @@
           "column_delimiter" : ";"
         },
         "resources" : [ {
-          "id" : 2
+          "uuid" : "2"
         } ],
-        "id" : 2
+        "uuid" : "2"
       } ],
       "resource_attributes" : {
         "filesize" : -1,
@@ -397,77 +397,77 @@
       "type" : "FILE",
       "description" : "ssdfadfsdf",
       "name" : "test_csv.csv",
-      "id" : 2
+      "uuid" : "2"
     },
     "schema" : {
       "record_class" : {
-        "id" : 80,
         "name" : "record type",
-        "uri" : "/test_csv.csv#RecordType"
+        "uri" : "/test_csv.csv#RecordType",
+        "uuid" : "80"
       },
       "attribute_paths" : [ {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_0",
-        "id" : 0,
         "attribute_path" : {
           "attributes" : [ {
-            "id" : 89,
             "name" : "description",
-            "uri" : "/test_csv.csv#description"
+            "uri" : "/test_csv.csv#description",
+            "uuid" : "89"
           } ],
-          "id" : 98
-        }
+          "uuid" : "98"
+        },
+        "uuid" : "0"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_1",
-        "id" : 1,
         "attribute_path" : {
           "attributes" : [ {
-            "id" : 88,
             "name" : "id",
-            "uri" : "/test_csv.csv#id"
+            "uri" : "/test_csv.csv#id",
+            "uuid" : "88"
           } ],
-          "id" : 96
-        }
+          "uuid" : "96"
+        },
+        "uuid" : "1"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_2",
-        "id" : 2,
         "attribute_path" : {
           "attributes" : [ {
-            "id" : 87,
             "name" : "name",
-            "uri" : "/test_csv.csv#name"
+            "uri" : "/test_csv.csv#name",
+            "uuid" : "87"
           } ],
-          "id" : 97
-        }
+          "uuid" : "97"
+        },
+        "uuid" : "2"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_3",
-        "id" : 3,
         "attribute_path" : {
           "attributes" : [ {
-            "id" : 86,
             "name" : "year",
-            "uri" : "/test_csv.csv#year"
+            "uri" : "/test_csv.csv#year",
+            "uuid" : "86"
           } ],
-          "id" : 100
-        }
+          "uuid" : "100"
+        },
+        "uuid" : "3"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_4",
-        "id" : 4,
         "attribute_path" : {
           "attributes" : [ {
-            "id" : 85,
             "name" : "isbn",
-            "uri" : "/test_csv.csv#isbn"
+            "uri" : "/test_csv.csv#isbn",
+            "uuid" : "85"
           } ],
-          "id" : 99
-        }
+          "uuid" : "99"
+        },
+        "uuid" : "4"
       } ],
       "name" : "test_csv.csv schema",
-      "id" : 6
+      "uuid" : "6"
     },
     "configuration" : {
       "parameters" : {
@@ -478,12 +478,12 @@
         "column_delimiter" : ";"
       },
       "resources" : [ {
-        "id" : 2
+        "uuid" : "2"
       } ],
-      "id" : 2
+      "uuid" : "2"
     },
     "description" : " data model of resource test_csv.csv and configuration  null",
     "name" : "test_csv.csv + null data model",
-    "id" : 6
+    "uuid" : "6"
   }
 }

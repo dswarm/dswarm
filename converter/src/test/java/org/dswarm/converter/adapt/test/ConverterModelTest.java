@@ -13,21 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dswarm.converter.adapt;
+package org.dswarm.converter.adapt.test;
 
-import java.io.File;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.IOFileFilter;
-import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.junit.Assert;
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.dswarm.persistence.adapt.JsonModelExportException;
+import org.dswarm.converter.adapt.JsonModelTransformException;
+import org.dswarm.persistence.test.DMPPersistenceTestUtils;
 
 /**
  * @author sbarthel
@@ -40,7 +36,7 @@ public class ConverterModelTest extends ModelTest {
 	//@Test
 	public void shouldTransformResource() {
 		try {
-			for (final URI uri : collectResources()) {
+			for (final URI uri : DMPPersistenceTestUtils.collectResources(root)) {
 				rewriteTaskJSON(uri, true);
 			}
 		} catch (JsonModelTransformException | JsonModelExportException e) {
@@ -64,20 +60,5 @@ public class ConverterModelTest extends ModelTest {
 		rewriteTaskJSON("converter_task.csv.json");
 		rewriteTaskJSON("converter_task.json");
 		rewriteTaskJSON("dmpf-task.json");
-	}
-
-	private List<URI> collectResources() {
-		final List<URI> resources = new ArrayList<>();
-
-		final File folder = new File(findRepository());
-		final IOFileFilter fileFilter = new RegexFileFilter(".*task\\.((.*?)(?<!result)\\.){0,}json"); // find all *task*.json but
-		// without result in it
-		final Iterator<File> it = FileUtils.iterateFiles(folder, fileFilter, null);
-
-		while (it.hasNext()) {
-			resources.add(it.next().toURI());
-		}
-
-		return resources;
 	}
 }
