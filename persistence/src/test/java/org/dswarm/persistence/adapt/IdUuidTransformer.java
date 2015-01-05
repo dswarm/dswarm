@@ -22,6 +22,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.dswarm.persistence.test.DMPPersistenceTestUtils;
@@ -37,9 +38,28 @@ public class IdUuidTransformer {
 	private static final String ID_FIELD_NAME   = "id";
 	private static final String UUID_FIELD_NAME = "uuid";
 
-	public static JsonNode transformIdToUuidInJsonString(final String jsonString) throws IOException {
+	public static JsonNode transformIdToUuidInJsonObjectString(final String jsonString) throws IOException {
 
-		final ObjectNode json = mapper.readValue(jsonString, ObjectNode.class);
+		final JsonNode json = mapper.readValue(jsonString, ObjectNode.class);
+
+		transformIdToUuidInJson(json);
+
+		return json;
+	}
+
+	public static JsonNode transformIdToUuidInJsonArrayString(final String jsonString) throws IOException {
+
+		final JsonNode json = mapper.readValue(jsonString, ArrayNode.class);
+
+		for (final JsonNode entry : json) {
+
+			transformIdToUuidInJson(entry);
+		}
+
+		return json;
+	}
+
+	public static void transformIdToUuidInJson(final JsonNode json) {
 
 		final List<JsonNode> matches = json.findParents(ID_FIELD_NAME);
 
@@ -50,25 +70,42 @@ public class IdUuidTransformer {
 			((ObjectNode) match).remove(ID_FIELD_NAME);
 			((ObjectNode) match).put(UUID_FIELD_NAME, "" + id);
 		}
-
-		return json;
 	}
 
-	public static void transformIdToUuidInJsonFile(final String fileName, final String rootPath) throws IOException, URISyntaxException,
+	public static void transformIdToUuidInJsonObjectFile(final String fileName, final String rootPath) throws IOException, URISyntaxException,
 			JsonModelExportException {
 
 		final String jsonString = DMPPersistenceUtil.getResourceAsString(fileName);
-		final JsonNode transformedJSON = transformIdToUuidInJsonString(jsonString);
+		final JsonNode transformedJSON = transformIdToUuidInJsonObjectString(jsonString);
 
 		final URI fileURI = DMPPersistenceTestUtils.getResourceURI(fileName, rootPath);
 
 		DMPPersistenceTestUtils.writeToFile(transformedJSON, fileURI);
 	}
 
-	public static void transformIdToUuidInJsonFile(final URI fileURI) throws IOException, URISyntaxException, JsonModelExportException {
+	public static void transformIdToUuidInJsonArrayFile(final String fileName, final String rootPath) throws IOException, URISyntaxException,
+			JsonModelExportException {
+
+		final String jsonString = DMPPersistenceUtil.getResourceAsString(fileName);
+		final JsonNode transformedJSON = transformIdToUuidInJsonArrayString(jsonString);
+
+		final URI fileURI = DMPPersistenceTestUtils.getResourceURI(fileName, rootPath);
+
+		DMPPersistenceTestUtils.writeToFile(transformedJSON, fileURI);
+	}
+
+	public static void transformIdToUuidInJsonObjectFile(final URI fileURI) throws IOException, URISyntaxException, JsonModelExportException {
 
 		final String jsonString = DMPPersistenceTestUtils.readResource(fileURI);
-		final JsonNode transformedJSON = transformIdToUuidInJsonString(jsonString);
+		final JsonNode transformedJSON = transformIdToUuidInJsonObjectString(jsonString);
+
+		DMPPersistenceTestUtils.writeToFile(transformedJSON, fileURI);
+	}
+
+	public static void transformIdToUuidInJsonArrayFile(final URI fileURI) throws IOException, URISyntaxException, JsonModelExportException {
+
+		final String jsonString = DMPPersistenceTestUtils.readResource(fileURI);
+		final JsonNode transformedJSON = transformIdToUuidInJsonArrayString(jsonString);
 
 		DMPPersistenceTestUtils.writeToFile(transformedJSON, fileURI);
 	}

@@ -1,13 +1,13 @@
 {
-    "type": "MappingAttributePathInstance",
-    "name": "output mapping attribute path instance",
-    "id": 2,
-    "attribute_path": {
-        "id": 2,
-        "attributes": [{
-            "name": "label",
-            "uri": "http://www.w3.org/2000/01/rdf-schema#label",
-            "id": 2
-        }]
-    }
+  "type" : "MappingAttributePathInstance",
+  "name" : "output mapping attribute path instance",
+  "attribute_path" : {
+    "attributes" : [ {
+      "name" : "label",
+      "uri" : "http://www.w3.org/2000/01/rdf-schema#label",
+      "uuid" : "2"
+    } ],
+    "uuid" : "2"
+  },
+  "uuid" : "2"
 }

@@ -1,17 +1,14 @@
 {
   "name" : "remove mapping test",
   "description" : "my project description",
-  "id" : 1,
   "input_data_model" : {
-    "id" : -3827342345685,
     "name" : "atMostTwoRows.csv + my configuration name data model",
     "description" : " data model of resource 'atMostTwoRows.csv' and configuration ' my configuration name'",
     "configuration" : {
       "name" : "my configuration name",
       "description" : "my configuration description",
-      "id" : 1,
       "resources" : [ {
-        "id" : 1
+        "uuid" : "1"
       } ],
       "parameters" : {
         "column_delimiter" : ";",
@@ -20,95 +17,95 @@
         "first_row_is_headings" : true,
         "column_names" : "columnN",
         "storage_type" : "csv"
-      }
+      },
+      "uuid" : "1"
     },
     "schema" : {
       "name" : "atMostTwoRows.csv schema",
-      "id" : -4183243486324374530,
       "attribute_paths" : [ {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_-1",
-        "id" : -1,
         "attribute_path" : {
-          "id" : -4070983487343468340,
           "attributes" : [ {
             "name" : "type",
             "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "id" : -2323909237623843453
-          } ]
-        }
+            "uuid" : "-2323909237623843453"
+          } ],
+          "uuid" : "-4070983487343468340"
+        },
+        "uuid" : "-1"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_-2",
-        "id" : -2,
         "attribute_path" : {
-          "id" : -1900003333342,
           "attributes" : [ {
             "name" : "first",
             "uri" : "http://data.slub-dresden.de/resources/1/schema#first",
-            "id" : -1477449935555
-          } ]
-        }
+            "uuid" : "-1477449935555"
+          } ],
+          "uuid" : "-1900003333342"
+        },
+        "uuid" : "-2"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_-3",
-        "id" : -3,
         "attribute_path" : {
-          "id" : -2226663338888,
           "attributes" : [ {
             "name" : "last",
             "uri" : "http://data.slub-dresden.de/resources/1/schema#last",
-            "id" : -4488557733222
-          } ]
-        }
+            "uuid" : "-4488557733222"
+          } ],
+          "uuid" : "-2226663338888"
+        },
+        "uuid" : "-3"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_-4",
-        "id" : -4,
         "attribute_path" : {
-          "id" : -2226663338884,
           "attributes" : [ {
             "name" : "address",
             "uri" : "http://data.slub-dresden.de/resources/1/schema#address",
-            "id" : -1909343643642
-          } ]
-        }
+            "uuid" : "-1909343643642"
+          } ],
+          "uuid" : "-2226663338884"
+        },
+        "uuid" : "-4"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_-5",
-        "id" : -5,
         "attribute_path" : {
-          "id" : -2885555444444,
           "attributes" : [ {
             "name" : "city",
             "uri" : "http://data.slub-dresden.de/resources/1/schema#city",
-            "id" : -2638233333322
-          } ]
-        }
+            "uuid" : "-2638233333322"
+          } ],
+          "uuid" : "-2885555444444"
+        },
+        "uuid" : "-5"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_-6",
-        "id" : -6,
         "attribute_path" : {
-          "id" : -2226663338885,
           "attributes" : [ {
             "name" : "zip",
             "uri" : "http://data.slub-dresden.de/resources/1/schema#zip",
-            "id" : -2778325723712
-          } ]
-        }
+            "uuid" : "-2778325723712"
+          } ],
+          "uuid" : "-2226663338885"
+        },
+        "uuid" : "-6"
       } ],
       "record_class" : {
         "name" : "record type",
         "uri" : "http://data.slub-dresden.de/resources/1/schema#RecordType",
-        "id" : -2784723475632
-      }
+        "uuid" : "-2784723475632"
+      },
+      "uuid" : "-4183243486324374530"
     },
     "data_resource" : {
       "name" : "atMostTwoRows.csv",
       "description" : "my resource description",
       "type" : "FILE",
-      "id" : 1,
       "resource_attributes" : {
         "path" : "C:\\DMP\\datamanagement-platform\\init\\..\\tmp\\resources\\atMostTwoRows.csv",
         "filetype" : "application/vnd.ms-excel",
@@ -117,9 +114,8 @@
       "configurations" : [ {
         "name" : "my configuration name",
         "description" : "my configuration description",
-        "id" : 1,
         "resources" : [ {
-          "id" : 1
+          "uuid" : "1"
         } ],
         "parameters" : {
           "column_delimiter" : ";",
@@ -128,41 +124,43 @@
           "first_row_is_headings" : true,
           "column_names" : "columnN",
           "storage_type" : "csv"
-        }
-      } ]
-    }
+        },
+        "uuid" : "1"
+      } ],
+      "uuid" : "1"
+    },
+    "uuid" : "-3827342345685"
   },
   "mappings" : [ {
-    "id" : -1404297542685,
     "name" : "type-to-type",
     "input_attribute_paths" : [ {
       "type" : "MappingAttributePathInstance",
       "name" : "input mapping attribute path instance",
-      "id" : -1932847464374,
       "attribute_path" : {
-        "id" : -4070983487343468340,
         "attributes" : [ {
           "name" : "type",
           "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-          "id" : -2323909237623843453
-        } ]
-      }
+          "uuid" : "-2323909237623843453"
+        } ],
+        "uuid" : "-4070983487343468340"
+      },
+      "uuid" : "-1932847464374"
     } ],
     "output_attribute_path" : {
       "type" : "MappingAttributePathInstance",
       "name" : "output mapping attribute path instance",
-      "id" : -1983743456345,
       "attribute_path" : {
-        "id" : -4070983487343468340,
         "attributes" : [ {
           "name" : "type",
           "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-          "id" : -2323909237623843453
-        } ]
-      }
-    }
+          "uuid" : "-2323909237623843453"
+        } ],
+        "uuid" : "-4070983487343468340"
+      },
+      "uuid" : "-1983743456345"
+    },
+    "uuid" : "-1404297542685"
   }, {
-    "id" : -1404297555465,
     "name" : "first+last-to-contributor",
     "transformation" : {
       "name" : "transformation",
@@ -175,7 +173,6 @@
           "function" : {
             "name" : "concat",
             "description" : "Collects all received values and concatenates them on record end.",
-            "id" : -1498234535465,
             "function_description" : {
               "name" : "concat",
               "dsl" : "metafacture",
@@ -196,15 +193,16 @@
               }
             },
             "parameters" : [ "delimiter", "prefix", "postfix" ],
-            "type" : "Function"
+            "type" : "Function",
+            "uuid" : "-1498234535465"
           },
           "name" : "component1404297589976",
-          "id" : -1404297589660,
           "description" : "{\"x\":\"first\",\"y\":0}",
           "parameter_mappings" : {
             "delimiter" : " ",
             "inputString" : "first,last"
-          }
+          },
+          "uuid" : "-1404297589660"
         } ]
       },
       "parameter_mappings" : {
@@ -216,83 +214,83 @@
     "input_attribute_paths" : [ {
       "type" : "MappingAttributePathInstance",
       "name" : "input mapping attribute path instance",
-      "id" : -1404297555484,
       "attribute_path" : {
-        "id" : -1900003333342,
         "attributes" : [ {
           "name" : "first",
           "uri" : "http://data.slub-dresden.de/resources/1/schema#first",
-          "id" : -1477449935555
-        } ]
+          "uuid" : "-1477449935555"
+        } ],
+        "uuid" : "-1900003333342"
       },
       "filter" : {
-        "id" : -1404297573850,
-        "expression" : "{\"http://data.slub-dresden.de/resources/1/schema#last\":\"Doe\"}"
-      }
+        "expression" : "{\"http://data.slub-dresden.de/resources/1/schema#last\":\"Doe\"}",
+        "uuid" : "-1404297573850"
+      },
+      "uuid" : "-1404297555484"
     }, {
       "type" : "MappingAttributePathInstance",
       "name" : "input mapping attribute path instance",
-      "id" : -1404297560848,
       "attribute_path" : {
-        "id" : -2226663338888,
         "attributes" : [ {
           "name" : "last",
           "uri" : "http://data.slub-dresden.de/resources/1/schema#last",
-          "id" : -4488557733222
-        } ]
+          "uuid" : "-4488557733222"
+        } ],
+        "uuid" : "-2226663338888"
       },
       "filter" : {
-        "id" : -1404297585033,
-        "expression" : "{\"http://data.slub-dresden.de/resources/1/schema#city\":\"Anytown\"}"
-      }
+        "expression" : "{\"http://data.slub-dresden.de/resources/1/schema#city\":\"Anytown\"}",
+        "uuid" : "-1404297585033"
+      },
+      "uuid" : "-1404297560848"
     } ],
     "output_attribute_path" : {
       "type" : "MappingAttributePathInstance",
       "name" : "output mapping attribute path instance",
-      "id" : -1404297555485,
       "attribute_path" : {
-        "id" : -1982346346725,
         "attributes" : [ {
           "name" : "contributor",
           "uri" : "http://purl.org/dc/elements/1.1/contributor",
-          "id" : -1493589346285
-        } ]
-      }
-    }
+          "uuid" : "-1493589346285"
+        } ],
+        "uuid" : "-1982346346725"
+      },
+      "uuid" : "-1404297555485"
+    },
+    "uuid" : "-1404297555465"
   }, {
-    "id" : -1404297608676,
     "name" : "city-to-shortTitle",
     "input_attribute_paths" : [ {
       "type" : "MappingAttributePathInstance",
       "name" : "input mapping attribute path instance",
-      "id" : -1404297608749,
       "attribute_path" : {
-        "id" : -2885555444444,
         "attributes" : [ {
           "name" : "city",
           "uri" : "http://data.slub-dresden.de/resources/1/schema#city",
-          "id" : -2638233333322
-        } ]
-      }
+          "uuid" : "-2638233333322"
+        } ],
+        "uuid" : "-2885555444444"
+      },
+      "uuid" : "-1404297608749"
     } ],
     "output_attribute_path" : {
       "type" : "MappingAttributePathInstance",
       "name" : "output mapping attribute path instance",
-      "id" : -1404297608750,
       "attribute_path" : {
-        "id" : -4000912660033554444,
         "attributes" : [ {
           "name" : "shortTitle",
           "uri" : "http://purl.org/ontology/bibo/shortTitle",
-          "id" : -4887733664466222111
-        } ]
-      }
-    }
+          "uuid" : "-4887733664466222111"
+        } ],
+        "uuid" : "-4000912660033554444"
+      },
+      "uuid" : "-1404297608750"
+    },
+    "uuid" : "-1404297608676"
   } ],
   "functions" : [ {
     "name" : "concat",
     "description" : "Collects all received values and concatenates them on record end.",
-    "id" : -1498234535465,
     "function_description" : {
       "name" : "concat",
       "dsl" : "metafacture",
@@ -313,69 +311,71 @@
       }
     },
     "parameters" : [ "delimiter", "prefix", "postfix" ],
-    "type" : "Function"
+    "type" : "Function",
+    "uuid" : "-1498234535465"
   } ],
   "output_data_model" : {
-    "id" : -2943462344562,
     "name" : "Internal Data Model BiboDocument TEST",
     "description" : "Internal Data Model BiboDocument TEST",
     "schema" : {
       "name" : "bibo:Document-Schema (KIM-Titeldaten) TEST",
-      "id" : -2062991439511256064,
       "attribute_paths" : [ {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_-7",
-        "id" : -7,
         "attribute_path" : {
-          "id" : -4070983487343468340,
           "attributes" : [ {
             "name" : "type",
             "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "id" : -2323909237623843453
-          } ]
-        }
+            "uuid" : "-2323909237623843453"
+          } ],
+          "uuid" : "-4070983487343468340"
+        },
+        "uuid" : "-7"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_-8",
-        "id" : -8,
         "attribute_path" : {
-          "id" : -4000912660033554444,
           "attributes" : [ {
             "name" : "shortTitle",
             "uri" : "http://purl.org/ontology/bibo/shortTitle",
-            "id" : -4887733664466222111
-          } ]
-        }
+            "uuid" : "-4887733664466222111"
+          } ],
+          "uuid" : "-4000912660033554444"
+        },
+        "uuid" : "-8"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_-9",
-        "id" : -9,
         "attribute_path" : {
-          "id" : -1982346346725,
           "attributes" : [ {
             "name" : "contributor",
             "uri" : "http://purl.org/dc/elements/1.1/contributor",
-            "id" : -1493589346285
-          } ]
-        }
+            "uuid" : "-1493589346285"
+          } ],
+          "uuid" : "-1982346346725"
+        },
+        "uuid" : "-9"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_-10",
-        "id" : -10,
         "attribute_path" : {
-          "id" : -1834782374475347233,
           "attributes" : [ {
             "name" : "publicationStatement",
             "uri" : "http://rdvocab.info/Elements/publicationStatement",
-            "id" : -2093473426437434652
-          } ]
-        }
+            "uuid" : "-2093473426437434652"
+          } ],
+          "uuid" : "-1834782374475347233"
+        },
+        "uuid" : "-10"
       } ],
       "record_class" : {
         "name" : "Document",
         "uri" : "http://purl.org/ontology/bibo/Document",
-        "id" : -3399570177189678080
-      }
-    }
-  }
+        "uuid" : "-3399570177189678080"
+      },
+      "uuid" : "-2062991439511256064"
+    },
+    "uuid" : "-2943462344562"
+  },
+  "uuid" : "1"
 }

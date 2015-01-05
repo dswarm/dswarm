@@ -46,19 +46,19 @@ public class IdUuidTransformerConverterTest extends GuicedTest {
 
 		try {
 			for (final URI uri : DMPPersistenceTestUtils.collectResources(root)) {
-				IdUuidTransformer.transformIdToUuidInJsonFile(uri);
+				IdUuidTransformer.transformIdToUuidInJsonObjectFile(uri);
 			}
 		} catch (JsonModelExportException e) {
 			IdUuidTransformerConverterTest.log.error(e.getMessage(), e);
 			Assert.fail(e.getMessage());
 		}
 
-		IdUuidTransformer.transformIdToUuidInJsonFile("mabxml.schema.json", root);
-		IdUuidTransformer.transformIdToUuidInJsonFile("mabxml-1.schema.json", root);
-		IdUuidTransformer.transformIdToUuidInJsonFile("ralfs_mabxml_dmp_schema.json", root);
-		IdUuidTransformer.transformIdToUuidInJsonFile("complex-transformation.json", root);
-		IdUuidTransformer.transformIdToUuidInJsonFile("converter_task.csv.json", root);
-		IdUuidTransformer.transformIdToUuidInJsonFile("converter_task.json", root);
-		IdUuidTransformer.transformIdToUuidInJsonFile("dmpf-task.json", root);
+		IdUuidTransformer.transformIdToUuidInJsonObjectFile("mabxml.schema.json", root);
+		IdUuidTransformer.transformIdToUuidInJsonObjectFile("mabxml-1.schema.json", root);
+		IdUuidTransformer.transformIdToUuidInJsonObjectFile("ralfs_mabxml_dmp_schema.json", root);
+		IdUuidTransformer.transformIdToUuidInJsonObjectFile("complex-transformation.json", root);
+		IdUuidTransformer.transformIdToUuidInJsonObjectFile("converter_task.csv.json", root);
+		IdUuidTransformer.transformIdToUuidInJsonObjectFile("converter_task.json", root);
+		IdUuidTransformer.transformIdToUuidInJsonObjectFile("dmpf-task.json", root);
 	}
 }

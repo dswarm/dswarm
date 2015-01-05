@@ -1,13 +1,13 @@
 {
-    "id": -283948346255,
-	"name": "my config name",
-    "description": "my config description",
-    "parameters": {
-        "column_delimiter": ";",
-        "escape_character": "\\",
-        "quote_character": "\"",
-        "first_row_is_headings": true,
-        "column_names": "columnN",
-        "storage_type": "csv"
-    }
+  "name" : "my config name",
+  "description" : "my config description",
+  "parameters" : {
+    "column_delimiter" : ";",
+    "escape_character" : "\\",
+    "quote_character" : "\"",
+    "first_row_is_headings" : true,
+    "column_names" : "columnN",
+    "storage_type" : "csv"
+  },
+  "uuid" : "-283948346255"
 }
