@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -253,7 +254,7 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 						if (TransformationDeserializer.UUID_KEY.equals(currentFieldName)) {
 							currentComponentId = jp.getText();
 
-							currentComponent = createComponent(jp, currentComponentId);
+							currentComponent = createComponent(jp, currentComponentId, currentComponent);
 
 							components.put(currentComponentId, currentComponent);
 						} else {
@@ -318,15 +319,13 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 		TransformationDeserializer.addComponents(transformation, components);
 	}
 
-	private Component createComponent(final JsonParser jp, final String currentComponentId) throws JsonMappingException {
+	private Component createComponent(final JsonParser jp, final String currentComponentId, final Component currentComponent) throws JsonMappingException {
 
-		if (currentComponentId != null && !currentComponentId.isEmpty()) {
-
-			return new Component(currentComponentId);
-		} else {
-
+		if (Strings.isNullOrEmpty(currentComponentId)) {
 			throw JsonMappingException.from(jp, "could not create component, i.e., uuid is not provided");
 		}
+
+		return Component.withId(currentComponent, currentComponentId);
 	}
 
 	/**
@@ -336,28 +335,17 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 	 * @param currentComponent
 	 * @return
 	 */
-	private Component createComponent(final String currentComponentId, Component currentComponent) {
-
-		if (currentComponent == null && currentComponentId != null && !currentComponentId.isEmpty()) {
-
-			currentComponent = new Component(currentComponentId);
-		} else if (currentComponent != null && currentComponentId != null && !currentComponentId.isEmpty()) {
-
-			if (currentComponent.getUuid().equals(currentComponentId)) {
-
-				return currentComponent;
-			} else {
-
+	private Component createComponent(final String currentComponentId, final Component currentComponent) {
+		if (currentComponent == null) {
+			if (!Strings.isNullOrEmpty(currentComponentId)) {
 				return new Component(currentComponentId);
+			} else {
+				final String uuid = UUIDService.getUUID(Component.class.getSimpleName());
+				return new Component(uuid);
 			}
-
-		} else {
-
-			final String uuid = UUIDService.getUUID(Component.class.getSimpleName());
-
-			currentComponent = new Component(uuid);
+		} else if (!Strings.isNullOrEmpty(currentComponentId) && !currentComponent.getUuid().equals(currentComponentId)) {
+			return Component.withId(currentComponent, currentComponentId);
 		}
-
 		return currentComponent;
 	}
 
