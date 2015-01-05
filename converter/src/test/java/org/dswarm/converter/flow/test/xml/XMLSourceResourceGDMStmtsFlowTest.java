@@ -208,7 +208,7 @@ public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 		configuration.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("datensatz"));
 		configuration.addParameter(ConfigurationStatics.XML_NAMESPACE, new TextNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd"));
 
-		final String dataModelUUID = UUIDService.getUUID(DataModel.class.getSimpleName());
+		final String dataModelUUID = "1";
 
 		final DataModel dataModel = new DataModel(dataModelUUID);
 
@@ -216,7 +216,7 @@ public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 
 		final XMLSourceResourceGDMStmtsFlow flow = new XMLSourceResourceGDMStmtsFlow(dataModel);
 
-		testFlow(flow, "test-mabxml.xml", "test-mabxml.gson", null);
+		testFlow(flow, "test-mabxml.xml", "test-mabxml_converter.gson", null);
 	}
 
 	@Test
@@ -229,7 +229,7 @@ public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 		configuration.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("datensatz"));
 		configuration.addParameter(ConfigurationStatics.XML_NAMESPACE, new TextNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd"));
 
-		final String dataModelUUID = UUIDService.getUUID(DataModel.class.getSimpleName());
+		final String dataModelUUID = "2";
 
 		final DataModel dataModel = new DataModel(dataModelUUID);
 
@@ -237,14 +237,14 @@ public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 
 		final XMLSourceResourceGDMStmtsFlow flow = new XMLSourceResourceGDMStmtsFlow(dataModel);
 
-		testFlow(flow, "test-complex-xml.xml", "test-complex-xml.gson", null);
+		testFlow(flow, "test-complex-xml.xml", "test-complex-xml_converter.gson", null);
 	}
 
 	@Test
 	public void testFromConfiguration3() throws Exception {
 
 		final DataModelService dataModelService = GuicedTest.injector.getInstance(DataModelService.class);
-		final DataModel dataModel = dataModelService.createObjectTransactional().getObject();
+		final DataModel dataModel = dataModelService.createObjectTransactional("3").getObject();
 
 		dataModel.setConfiguration(new Configuration() {
 
