@@ -72,9 +72,8 @@ public class AttributePathsResource extends BasicResource<AttributePathsResource
 	 * Creates a new resource (controller service) for {@link AttributePath}s with the provider of the attribute path persistence
 	 * service, the object mapper and metrics registry.
 	 *
-	 * @param attributePathServiceProviderArg the attribute path persistence service provider
-	 * @param objectMapperArg                 an object mapper
-	 * @param dmpStatusArg                    a metrics registry
+	 * @param utilsFactory the resource utils factory
+	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
 	public AttributePathsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
@@ -96,7 +95,7 @@ public class AttributePathsResource extends BasicResource<AttributePathsResource
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "attribute path identifier", required = true) @PathParam("id") final Long id)
+	public Response getObject(@ApiParam(value = "attribute path identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.getObject(id);
@@ -145,7 +144,7 @@ public class AttributePathsResource extends BasicResource<AttributePathsResource
 	 * This endpoint consumes a attribute path as JSON representation and updates this attribute path in the database.
 	 *
 	 * @param jsonObjectString a JSON representation of one attribute path
-	 * @param id               a attribute path identifier
+	 * @param uuid             a attribute path identifier
 	 * @return the updated attribute path as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -159,9 +158,9 @@ public class AttributePathsResource extends BasicResource<AttributePathsResource
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateObject(@ApiParam(value = "attribute path (as JSON)", required = true) final String jsonObjectString,
-			@ApiParam(value = "attribute path identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+			@ApiParam(value = "attribute path identifier", required = true) @PathParam("id") final String uuid) throws DMPControllerException {
 
-		return super.updateObject(jsonObjectString, id);
+		return super.updateObject(jsonObjectString, uuid);
 	}
 
 	/**
@@ -181,7 +180,7 @@ public class AttributePathsResource extends BasicResource<AttributePathsResource
 	@DELETE
 	@Path("/{id}")
 	@Override
-	public Response deleteObject(@ApiParam(value = "attribute path identifier", required = true) @PathParam("id") final Long id)
+	public Response deleteObject(@ApiParam(value = "attribute path identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.deleteObject(id);
@@ -219,11 +218,12 @@ public class AttributePathsResource extends BasicResource<AttributePathsResource
 				for (final Attribute attribute : attributePath) {
 
 					// note: one could even collect all attribute ids and replace them by their actual ones
+					// => ok, let's do this
 
-					if (attribute.getId() < 0) {
+					//if (attribute.getId() < 0) {
 
-						attributeURIsFromDummyIdsFromObjectFromJSON.add(attribute.getUri());
-					}
+					attributeURIsFromDummyIdsFromObjectFromJSON.add(attribute.getUri());
+					//}
 				}
 
 				// collect attributes that match the uris of the attribute with dummy id
@@ -262,11 +262,11 @@ public class AttributePathsResource extends BasicResource<AttributePathsResource
 	}
 
 	@Override
-	protected AttributePath retrieveObject(final Long id, final String jsonObjectString) throws DMPControllerException {
+	protected AttributePath retrieveObject(final String uuid, final String jsonObjectString) throws DMPControllerException {
 
 		if (jsonObjectString == null) {
 
-			return super.retrieveObject(id, jsonObjectString);
+			return super.retrieveObject(uuid, jsonObjectString);
 		}
 
 		// what should we do if the attribute path is a different one? => check whether an entity
@@ -283,7 +283,7 @@ public class AttributePathsResource extends BasicResource<AttributePathsResource
 
 		try {
 
-			object = persistenceService.getObject(objectFromJSON.getAttributePathAsJSONObjectString());
+			object = persistenceService.getObjectViaAttributePathJSON(objectFromJSON.getAttributePathAsJSONObjectString());
 		} catch (final DMPPersistenceException e) {
 
 			AttributePathsResource.LOG.debug("couldn't retrieve " + pojoClassResourceUtils.getClaszName() + " for attribute path '"
@@ -296,7 +296,7 @@ public class AttributePathsResource extends BasicResource<AttributePathsResource
 
 			// retrieve object by id and manipulate attribute path
 
-			return super.retrieveObject(id, jsonObjectString);
+			return super.retrieveObject(uuid, jsonObjectString);
 		}
 
 		AttributePathsResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with attribute path '" + objectFromJSON.toAttributePath()

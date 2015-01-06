@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dswarm.controller.resources.schema.test;
+package org.dswarm.controller.resources.schema.test.helper;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +28,7 @@ import com.google.common.collect.Sets;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 
-interface PathHelper {
+public interface PathHelper {
 
 	public Set<AttributePath> attributePaths();
 

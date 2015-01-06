@@ -28,9 +28,6 @@ import org.dswarm.persistence.service.schema.AttributeService;
 
 /**
  * @author tgaengler
- * @param <POJOCLASSPERSISTENCESERVICE>
- * @param <POJOCLASS>
- * @param <POJOCLASSIDTYPE>
  */
 public class AttributesResourceUtils extends AdvancedDMPResourceUtils<AttributeService, ProxyAttribute, Attribute> {
 

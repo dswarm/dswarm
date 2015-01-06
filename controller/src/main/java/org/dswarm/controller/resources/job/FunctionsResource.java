@@ -44,7 +44,7 @@ import org.dswarm.persistence.service.job.FunctionService;
 
 /**
  * A resource (controller service) for {@link Function}s.
- * 
+ *
  * @author tgaengler
  * @author fniederlein
  */
@@ -56,9 +56,8 @@ public class FunctionsResource extends BasicFunctionsResource<FunctionsResourceU
 	/**
 	 * Creates a new resource (controller service) for {@link Function}s with the provider of the function persistence service,
 	 * the object mapper and metrics registry.
-	 * 
-	 * @param functionServiceProviderArg the function persistence service provider
-	 * @param objectMapperArg an object mapper
+	 *
+	 * @param utilsFactory the resource utils factory
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
@@ -69,7 +68,7 @@ public class FunctionsResource extends BasicFunctionsResource<FunctionsResourceU
 
 	/**
 	 * This endpoint returns a function as JSON representation for the provided function identifier.
-	 * 
+	 *
 	 * @param id a function identifier
 	 * @return a JSON representation of a function
 	 */
@@ -81,14 +80,15 @@ public class FunctionsResource extends BasicFunctionsResource<FunctionsResourceU
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "function identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+	public Response getObject(@ApiParam(value = "function identifier", required = true) @PathParam("id") final String id)
+			throws DMPControllerException {
 
 		return super.getObject(id);
 	}
 
 	/**
 	 * This endpoint consumes a filter as JSON representation and persists this filter in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one filter
 	 * @return the persisted filter as JSON representation
 	 * @throws DMPControllerException
@@ -108,7 +108,7 @@ public class FunctionsResource extends BasicFunctionsResource<FunctionsResourceU
 
 	/**
 	 * This endpoint returns a list of all functions as JSON representation.
-	 * 
+	 *
 	 * @return a list of all functions as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -126,9 +126,9 @@ public class FunctionsResource extends BasicFunctionsResource<FunctionsResourceU
 
 	/**
 	 * This endpoint consumes a function as JSON representation and updates this function in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one function
-	 * @param id a function identifier
+	 * @param uuid             a function identifier
 	 * @return the updated function as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -142,17 +142,17 @@ public class FunctionsResource extends BasicFunctionsResource<FunctionsResourceU
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateObject(@ApiParam(value = "function (as JSON)", required = true) final String jsonObjectString,
-			@ApiParam(value = "function identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+			@ApiParam(value = "function identifier", required = true) @PathParam("id") final String uuid) throws DMPControllerException {
 
-		return super.updateObject(jsonObjectString, id);
+		return super.updateObject(jsonObjectString, uuid);
 	}
 
 	/**
 	 * This endpoint deletes a function that matches the given id.
-	 * 
+	 *
 	 * @param id a function identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
-	 *         went wrong
+	 * went wrong
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "delete function that matches the given id", notes = "Returns status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong.")
@@ -163,7 +163,7 @@ public class FunctionsResource extends BasicFunctionsResource<FunctionsResourceU
 	@DELETE
 	@Path("/{id}")
 	@Override
-	public Response deleteObject(@ApiParam(value = "function identifier", required = true) @PathParam("id") final Long id)
+	public Response deleteObject(@ApiParam(value = "function identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.deleteObject(id);

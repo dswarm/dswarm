@@ -67,11 +67,12 @@ public class AttributePathsResourceTestUtils extends
 				for (final Attribute attribute : attributePath) {
 
 					// note: one could even collect all attribute ids and replace them by their actual ones
+					// => ok, let's do this
 
-					if (attribute.getId() < 0) {
+					//if (attribute.getId() < 0) {
 
-						attributeURIsFromDummyIdsFromObjectFromJSON.add(attribute.getUri());
-					}
+					attributeURIsFromDummyIdsFromObjectFromJSON.add(attribute.getUri());
+					//}
 				}
 
 				// collect attributes that match the uris of the attribute with dummy id
@@ -108,8 +109,8 @@ public class AttributePathsResourceTestUtils extends
 		super.compareObjects(expectedObject, actualObject);
 	}
 
-	public AttributePath prepareAttributePath(final String attributePathJSONFileName, final Map<Long, AttributePath> attributePaths,
-			final Map<Long, Attribute> attributes) throws Exception {
+	public AttributePath prepareAttributePath(final String attributePathJSONFileName, final Map<String, AttributePath> attributePaths,
+			final Map<String, Attribute> attributes) throws Exception {
 
 		String attributePathJSONString = DMPPersistenceUtil.getResourceAsString(attributePathJSONFileName);
 		final AttributePath attributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
@@ -127,7 +128,7 @@ public class AttributePathsResourceTestUtils extends
 		final AttributePath expectedAttributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
 		final AttributePath actualAttributePath = createObject(attributePathJSONString, expectedAttributePath);
 
-		attributePaths.put(actualAttributePath.getId(), actualAttributePath);
+		attributePaths.put(actualAttributePath.getUuid(), actualAttributePath);
 
 		return actualAttributePath;
 	}

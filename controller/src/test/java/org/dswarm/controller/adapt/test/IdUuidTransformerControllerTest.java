@@ -39,7 +39,7 @@ public class IdUuidTransformerControllerTest extends GuicedTest {
 		root = GuicedTest.injector.getInstance(Key.get(String.class, Names.named("dswarm.paths.root"))) + "/controller";
 	}
 
-	@Test
+	//@Test
 	public void convertIdToUuidInControllerTest() throws JsonModelExportException, IOException, URISyntaxException {
 
 		IdUuidTransformer.transformIdToUuidInJsonObjectFile("atMostTwoRowsCsv_Configuration.json", root);

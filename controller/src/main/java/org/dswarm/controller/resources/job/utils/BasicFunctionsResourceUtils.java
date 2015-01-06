@@ -26,10 +26,9 @@ import org.dswarm.persistence.model.job.proxy.ProxyBasicFunction;
 import org.dswarm.persistence.service.job.BasicFunctionService;
 
 /**
- * @author tgaengler
  * @param <POJOCLASSPERSISTENCESERVICE>
  * @param <POJOCLASS>
- * @param <POJOCLASSIDTYPE>
+ * @author tgaengler
  */
 public abstract class BasicFunctionsResourceUtils<POJOCLASSPERSISTENCESERVICE extends BasicFunctionService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyBasicFunction<POJOCLASS>, POJOCLASS extends Function>
 		extends ExtendedBasicDMPResourceUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {

@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dswarm.controller.resources.schema.test;
+package org.dswarm.controller.resources.schema.test.helper;
 
 import java.util.Iterator;
 
 import com.google.common.collect.AbstractIterator;
 
+import org.dswarm.controller.resources.schema.test.helper.PathHelper;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 
-final class PathHelpers {
+public final class PathHelpers {
 	private PathHelpers() {
 	}
 
@@ -39,11 +40,11 @@ final class PathHelpers {
 		}
 	}
 
-	static PathHelper newActual(final String uri) {
+	public static PathHelper newActual(final String uri) {
 		return new PathHelper.Actual(uri);
 	}
 
-	static PathHelper newExpected(final String uri) {
+	public static PathHelper newExpected(final String uri) {
 		return new PathHelper.Expected(newActual(uri));
 	}
 

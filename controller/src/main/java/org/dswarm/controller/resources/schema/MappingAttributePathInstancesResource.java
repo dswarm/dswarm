@@ -85,7 +85,7 @@ public class MappingAttributePathInstancesResource
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "mapping attribute path instance identifier", required = true) @PathParam("id") final Long id)
+	public Response getObject(@ApiParam(value = "mapping attribute path instance identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.getObject(id);
@@ -135,7 +135,7 @@ public class MappingAttributePathInstancesResource
 	 * instance in the database.
 	 *
 	 * @param jsonObjectString a JSON representation of one mapping attribute path instance
-	 * @param id               a mapping attribute path instance identifier
+	 * @param uuid             a mapping attribute path instance identifier
 	 * @return the updated mapping attribute path instance as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -149,10 +149,10 @@ public class MappingAttributePathInstancesResource
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateObject(@ApiParam(value = "mapping attribute path instance (as JSON)", required = true) final String jsonObjectString,
-			@ApiParam(value = "mapping attribute path instance identifier", required = true) @PathParam("id") final Long id)
+			@ApiParam(value = "mapping attribute path instance identifier", required = true) @PathParam("id") final String uuid)
 			throws DMPControllerException {
 
-		return super.updateObject(jsonObjectString, id);
+		return super.updateObject(jsonObjectString, uuid);
 	}
 
 	/**
@@ -174,7 +174,7 @@ public class MappingAttributePathInstancesResource
 	@DELETE
 	@Path("/{id}")
 	@Override
-	public Response deleteObject(@ApiParam(value = "mapping attribute path instance identifier", required = true) @PathParam("id") final Long id)
+	public Response deleteObject(@ApiParam(value = "mapping attribute path instance identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.deleteObject(id);

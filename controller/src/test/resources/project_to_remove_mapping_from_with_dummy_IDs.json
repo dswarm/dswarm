@@ -29,9 +29,9 @@
           "attributes" : [ {
             "name" : "type",
             "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "uuid" : "-2323909237623843453"
+            "uuid" : "Attribute-a513da32-2af5-49af-aabe-ee1150d9f6db"
           } ],
-          "uuid" : "-4070983487343468340"
+          "uuid" : "AttributePath-8131149a-6165-4ee0-bb6f-0a942776caa4"
         },
         "uuid" : "-1"
       }, {
@@ -140,9 +140,9 @@
         "attributes" : [ {
           "name" : "type",
           "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-          "uuid" : "-2323909237623843453"
+          "uuid" : "Attribute-a513da32-2af5-49af-aabe-ee1150d9f6db"
         } ],
-        "uuid" : "-4070983487343468340"
+        "uuid" : "AttributePath-8131149a-6165-4ee0-bb6f-0a942776caa4"
       },
       "uuid" : "-1932847464374"
     } ],
@@ -153,9 +153,9 @@
         "attributes" : [ {
           "name" : "type",
           "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-          "uuid" : "-2323909237623843453"
+          "uuid" : "Attribute-a513da32-2af5-49af-aabe-ee1150d9f6db"
         } ],
-        "uuid" : "-4070983487343468340"
+        "uuid" : "AttributePath-8131149a-6165-4ee0-bb6f-0a942776caa4"
       },
       "uuid" : "-1983743456345"
     },
@@ -163,9 +163,11 @@
   }, {
     "name" : "first+last-to-contributor",
     "transformation" : {
+      "uuid" : "uuid1234",
       "name" : "transformation",
       "description" : "transformation",
       "function" : {
+        "uuid" : "uuid1235",
         "name" : "transformation",
         "description" : "transformation",
         "type" : "Transformation",
@@ -251,9 +253,9 @@
         "attributes" : [ {
           "name" : "contributor",
           "uri" : "http://purl.org/dc/elements/1.1/contributor",
-          "uuid" : "-1493589346285"
+          "uuid" : "Attribute-0af43ce4-37cb-4567-ad50-6bbb6084323a"
         } ],
-        "uuid" : "-1982346346725"
+        "uuid" : "AttributePath-f6da5272-1f0e-44a3-bb9e-e901400e6df2"
       },
       "uuid" : "-1404297555485"
     },
@@ -280,9 +282,9 @@
         "attributes" : [ {
           "name" : "shortTitle",
           "uri" : "http://purl.org/ontology/bibo/shortTitle",
-          "uuid" : "-4887733664466222111"
+          "uuid" : "Attribute-8beaace3-339a-4b6a-9436-41a867f58abb"
         } ],
-        "uuid" : "-4000912660033554444"
+        "uuid" : "AttributePath-3a4a22ab-8227-4dbc-8738-5ef4a49d9689"
       },
       "uuid" : "-1404297608750"
     },
@@ -326,9 +328,9 @@
           "attributes" : [ {
             "name" : "type",
             "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "uuid" : "-2323909237623843453"
+            "uuid" : "Attribute-a513da32-2af5-49af-aabe-ee1150d9f6db"
           } ],
-          "uuid" : "-4070983487343468340"
+          "uuid" : "AttributePath-8131149a-6165-4ee0-bb6f-0a942776caa4"
         },
         "uuid" : "-7"
       }, {
@@ -338,9 +340,9 @@
           "attributes" : [ {
             "name" : "shortTitle",
             "uri" : "http://purl.org/ontology/bibo/shortTitle",
-            "uuid" : "-4887733664466222111"
+            "uuid" : "Attribute-8beaace3-339a-4b6a-9436-41a867f58abb"
           } ],
-          "uuid" : "-4000912660033554444"
+          "uuid" : "AttributePath-3a4a22ab-8227-4dbc-8738-5ef4a49d9689"
         },
         "uuid" : "-8"
       }, {
@@ -350,9 +352,9 @@
           "attributes" : [ {
             "name" : "contributor",
             "uri" : "http://purl.org/dc/elements/1.1/contributor",
-            "uuid" : "-1493589346285"
+            "uuid" : "Attribute-0af43ce4-37cb-4567-ad50-6bbb6084323a"
           } ],
-          "uuid" : "-1982346346725"
+          "uuid" : "AttributePath-f6da5272-1f0e-44a3-bb9e-e901400e6df2"
         },
         "uuid" : "-9"
       }, {
@@ -362,16 +364,16 @@
           "attributes" : [ {
             "name" : "publicationStatement",
             "uri" : "http://rdvocab.info/Elements/publicationStatement",
-            "uuid" : "-2093473426437434652"
+            "uuid" : "Attribute-404e8596-55f7-475d-9634-6570927ad3f3"
           } ],
-          "uuid" : "-1834782374475347233"
+          "uuid" : "AttributePath-8341cdec-592a-4a06-9f21-55af7012fca4"
         },
         "uuid" : "-10"
       } ],
       "record_class" : {
         "name" : "Document",
         "uri" : "http://purl.org/ontology/bibo/Document",
-        "uuid" : "-3399570177189678080"
+        "uuid" : "Clasz-3f772842-4414-4b5c-9062-6f4256d05c57"
       },
       "uuid" : "-2062991439511256064"
     },

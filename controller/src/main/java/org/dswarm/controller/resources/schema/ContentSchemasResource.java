@@ -31,7 +31,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -56,7 +55,7 @@ import org.dswarm.persistence.service.schema.ContentSchemaService;
 
 /**
  * A resource (controller service) for {@link org.dswarm.persistence.model.schema.ContentSchema}s.
- * 
+ *
  * @author tgaengler
  */
 @RequestScoped
@@ -64,32 +63,25 @@ import org.dswarm.persistence.service.schema.ContentSchemaService;
 @Path("contentschemas")
 public class ContentSchemasResource extends BasicDMPResource<ContentSchemasResourceUtils, ContentSchemaService, ProxyContentSchema, ContentSchema> {
 
-	private static final Logger			LOG	= LoggerFactory.getLogger(ContentSchemasResource.class);
-
-	private final ResourceUtilsFactory	utilsFactory;
-	private final ObjectMapper			objectMapper;
+	private static final Logger LOG = LoggerFactory.getLogger(ContentSchemasResource.class);
 
 	/**
 	 * Creates a new resource (controller service) for {@link org.dswarm.persistence.model.schema.ContentSchema}s with the
 	 * provider of the content schema persistence service, the object mapper and metrics registry.
-	 * 
+	 *
 	 * @param utilsFactoryArg the utils factory
-	 * @param objectMapperArg an object mapper
-	 * @param dmpStatusArg a metrics registry
+	 * @param dmpStatusArg    a metrics registry
 	 */
 	@Inject
-	public ContentSchemasResource(final ResourceUtilsFactory utilsFactoryArg, final ObjectMapper objectMapperArg, final DMPStatus dmpStatusArg)
+	public ContentSchemasResource(final ResourceUtilsFactory utilsFactoryArg, final DMPStatus dmpStatusArg)
 			throws DMPControllerException {
 
 		super(utilsFactoryArg.reset().get(ContentSchemasResourceUtils.class), dmpStatusArg);
-
-		utilsFactory = utilsFactoryArg;
-		objectMapper = objectMapperArg;
 	}
 
 	/**
 	 * This endpoint returns a content schema as JSON representation for the provided content schema identifier.
-	 * 
+	 *
 	 * @param id a schema identifier
 	 * @return a JSON representation of a content schema
 	 */
@@ -101,14 +93,15 @@ public class ContentSchemasResource extends BasicDMPResource<ContentSchemasResou
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "schema identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+	public Response getObject(@ApiParam(value = "schema identifier", required = true) @PathParam("id") final String id)
+			throws DMPControllerException {
 
 		return super.getObject(id);
 	}
 
 	/**
 	 * This endpoint consumes a content schema as JSON representation and persists this content schema in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one content schema
 	 * @return the persisted content schema as JSON representation
 	 * @throws DMPControllerException
@@ -128,7 +121,7 @@ public class ContentSchemasResource extends BasicDMPResource<ContentSchemasResou
 
 	/**
 	 * This endpoint returns a list of all content schemas as JSON representation.
-	 * 
+	 *
 	 * @return a list of all content schemas as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -146,9 +139,9 @@ public class ContentSchemasResource extends BasicDMPResource<ContentSchemasResou
 
 	/**
 	 * This endpoint consumes a content schema as JSON representation and updates this content schema in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one content schema
-	 * @param id a content schema identifier
+	 * @param uuid             a content schema identifier
 	 * @return the updated content schema as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -162,17 +155,17 @@ public class ContentSchemasResource extends BasicDMPResource<ContentSchemasResou
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateObject(@ApiParam(value = "content schema (as JSON)", required = true) final String jsonObjectString,
-			@ApiParam(value = "content schema identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+			@ApiParam(value = "content schema identifier", required = true) @PathParam("id") final String uuid) throws DMPControllerException {
 
-		return super.updateObject(jsonObjectString, id);
+		return super.updateObject(jsonObjectString, uuid);
 	}
 
 	/**
 	 * This endpoint deletes a content schema that matches the given id.
-	 * 
+	 *
 	 * @param id a content schema identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
-	 *         went wrong
+	 * went wrong
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "delete content schema that matches the given id", notes = "Returns status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong.")
@@ -183,7 +176,7 @@ public class ContentSchemasResource extends BasicDMPResource<ContentSchemasResou
 	@DELETE
 	@Path("/{id}")
 	@Override
-	public Response deleteObject(@ApiParam(value = "content schema identifier", required = true) @PathParam("id") final Long id)
+	public Response deleteObject(@ApiParam(value = "content schema identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.deleteObject(id);
@@ -218,11 +211,12 @@ public class ContentSchemasResource extends BasicDMPResource<ContentSchemasResou
 				for (final AttributePath keyAttributePath : keyAttributePaths) {
 
 					// note: one could even collect all key attribute path ids and replace them by their actual ones
+					// => ok, let's do this
 
-					if (keyAttributePath.getId() < 0) {
+					//if (keyAttributePath.getId() < 0) {
 
-						keyAttributePathStringsFromDummyIdsFromObjectFromJSON.add(keyAttributePath.toAttributePath());
-					}
+					keyAttributePathStringsFromDummyIdsFromObjectFromJSON.add(keyAttributePath.toAttributePath());
+					//}
 				}
 
 				// collect key attribute paths that match the attribute paths of the key attribute path with dummy id

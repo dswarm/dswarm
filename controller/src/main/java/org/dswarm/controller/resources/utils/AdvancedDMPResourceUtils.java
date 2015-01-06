@@ -19,17 +19,15 @@ import javax.inject.Provider;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.dswarm.controller.DMPControllerException;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.AdvancedDMPJPAObject;
 import org.dswarm.persistence.model.proxy.ProxyAdvancedDMPJPAObject;
 import org.dswarm.persistence.service.AdvancedDMPJPAService;
 
 /**
- * @author tgaengler
  * @param <POJOCLASSPERSISTENCESERVICE>
  * @param <POJOCLASS>
- * @param <POJOCLASSIDTYPE>
+ * @author tgaengler
  */
 public abstract class AdvancedDMPResourceUtils<POJOCLASSPERSISTENCESERVICE extends AdvancedDMPJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyAdvancedDMPJPAObject<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
 		extends BasicDMPResourceUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
@@ -38,14 +36,6 @@ public abstract class AdvancedDMPResourceUtils<POJOCLASSPERSISTENCESERVICE exten
 			final Provider<ObjectMapper> objectMapperProviderArg, final ResourceUtilsFactory utilsFactoryArg) {
 
 		super(pojoClassArg, persistenceServiceProviderArg, objectMapperProviderArg, utilsFactoryArg);
-	}
-
-	@Override
-	public String prepareObjectJSONString(final String objectJSONString) throws DMPControllerException {
-
-		// an attribute or clasz is not a complex object
-
-		return objectJSONString;
 	}
 
 	/**

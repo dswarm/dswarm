@@ -84,7 +84,7 @@ public class ResourcesResourceTestUtils
 			final Configuration configurationFromJSON = resourceFromJSON.getConfigurations().iterator().next();
 			final String configurationJSON = objectMapper.writeValueAsString(configurationFromJSON);
 
-			final Response response2 = target(String.valueOf(responseResource.getId()), "/configurations").request(MediaType.APPLICATION_JSON_TYPE)
+			final Response response2 = target(String.valueOf(responseResource.getUuid()), "/configurations").request(MediaType.APPLICATION_JSON_TYPE)
 					.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(configurationJSON));
 
 			Assert.assertEquals("201 CREATED was expected", 201, response2.getStatus());
@@ -101,7 +101,7 @@ public class ResourcesResourceTestUtils
 
 			// retrieve resource (with configuration)
 
-			final Response response3 = target(String.valueOf(responseResource.getId())).request().accept(MediaType.APPLICATION_JSON_TYPE)
+			final Response response3 = target(String.valueOf(responseResource.getUuid())).request().accept(MediaType.APPLICATION_JSON_TYPE)
 					.get(Response.class);
 
 			Assert.assertEquals("200 OK was expected", 200, response3.getStatus());
@@ -149,7 +149,7 @@ public class ResourcesResourceTestUtils
 
 	public Configuration addResourceConfiguration(final Resource resource, final String configurationJSON) throws Exception {
 
-		final Response response = target(String.valueOf(resource.getId()), "/configurations").request(MediaType.APPLICATION_JSON_TYPE)
+		final Response response = target(String.valueOf(resource.getUuid()), "/configurations").request(MediaType.APPLICATION_JSON_TYPE)
 				.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(configurationJSON));
 
 		final String responseConfigurationJSON = response.readEntity(String.class);

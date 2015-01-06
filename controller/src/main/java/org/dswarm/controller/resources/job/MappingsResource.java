@@ -45,7 +45,7 @@ import org.dswarm.persistence.service.job.MappingService;
 
 /**
  * A resource (controller service) for {@link Mapping}s.
- * 
+ *
  * @author tgaengler
  */
 @RequestScoped
@@ -56,9 +56,8 @@ public class MappingsResource extends BasicDMPResource<MappingsResourceUtils, Ma
 	/**
 	 * Creates a new resource (controller service) for {@link Mapping}s with the provider of the mapping persistence service, the
 	 * object mapper and metrics registry.
-	 * 
-	 * @param mappingServiceProviderArg the mapping persistence service provider
-	 * @param objectMapperArg an object mapper
+	 *
+	 * @param utilsFactory the resource utils factory
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
@@ -69,7 +68,7 @@ public class MappingsResource extends BasicDMPResource<MappingsResourceUtils, Ma
 
 	/**
 	 * This endpoint returns a mapping as JSON representation for the provided mapping identifier.
-	 * 
+	 *
 	 * @param id a mapping identifier
 	 * @return a JSON representation of a mapping
 	 */
@@ -81,14 +80,15 @@ public class MappingsResource extends BasicDMPResource<MappingsResourceUtils, Ma
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "mapping identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+	public Response getObject(@ApiParam(value = "mapping identifier", required = true) @PathParam("id") final String id)
+			throws DMPControllerException {
 
 		return super.getObject(id);
 	}
 
 	/**
 	 * This endpoint consumes a mapping as JSON representation and persists this mapping in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one mapping
 	 * @return the persisted mapping as JSON representation
 	 * @throws DMPControllerException
@@ -100,14 +100,15 @@ public class MappingsResource extends BasicDMPResource<MappingsResourceUtils, Ma
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response createObject(@ApiParam(value = "mapping (as JSON)", required = true) final String jsonObjectString) throws DMPControllerException {
+	public Response createObject(@ApiParam(value = "mapping (as JSON)", required = true) final String jsonObjectString)
+			throws DMPControllerException {
 
 		return super.createObject(jsonObjectString);
 	}
 
 	/**
 	 * This endpoint returns a list of all mappings as JSON representation.
-	 * 
+	 *
 	 * @return a list of all mappings as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -125,10 +126,10 @@ public class MappingsResource extends BasicDMPResource<MappingsResourceUtils, Ma
 
 	/**
 	 * This endpoint deletes a mapping that matches the given id.
-	 * 
+	 *
 	 * @param id a mapping identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
-	 *         went wrong
+	 * went wrong
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "delete mapping that matches the given id", notes = "Returns status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong.")
@@ -139,7 +140,7 @@ public class MappingsResource extends BasicDMPResource<MappingsResourceUtils, Ma
 	@DELETE
 	@Path("/{id}")
 	@Override
-	public Response deleteObject(@ApiParam(value = "mapping identifier", required = true) @PathParam("id") final Long id)
+	public Response deleteObject(@ApiParam(value = "mapping identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.deleteObject(id);
@@ -147,9 +148,9 @@ public class MappingsResource extends BasicDMPResource<MappingsResourceUtils, Ma
 
 	/**
 	 * This endpoint consumes a mapping as JSON representation and updates this mapping in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one mapping
-	 * @param id a mapping identifier
+	 * @param uuid             a mapping identifier
 	 * @return the updated mapping as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -163,9 +164,9 @@ public class MappingsResource extends BasicDMPResource<MappingsResourceUtils, Ma
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateObject(@ApiParam(value = "mapping (as JSON)", required = true) final String jsonObjectString,
-			@ApiParam(value = "mapping identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+			@ApiParam(value = "mapping identifier", required = true) @PathParam("id") final String uuid) throws DMPControllerException {
 
-		final Response response = super.updateObject(jsonObjectString, id);
+		final Response response = super.updateObject(jsonObjectString, uuid);
 
 		return response;
 	}

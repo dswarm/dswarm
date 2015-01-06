@@ -26,6 +26,7 @@ import org.dswarm.persistence.model.job.Filter;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxyMappingAttributePathInstance;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.job.test.utils.FilterServiceTestUtils;
 import org.dswarm.persistence.service.schema.MappingAttributePathInstanceService;
 import org.dswarm.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
@@ -66,7 +67,9 @@ public class MappingAttributePathInstancesResourceTest
 		final FilterServiceTestUtils filterServiceTestUtils = filterResourceTestUtils.getPersistenceServiceTestUtils();
 		final Filter filter = filterServiceTestUtils.createAndPersistDefaultObject();
 
-		final MappingAttributePathInstance mappingAttributePathInstance = new MappingAttributePathInstance();
+		final String mappingAttributePathInstanceUuid = UUIDService.getUUID(MappingAttributePathInstance.class.getSimpleName());
+
+		final MappingAttributePathInstance mappingAttributePathInstance = new MappingAttributePathInstance(mappingAttributePathInstanceUuid);
 		mappingAttributePathInstance.setAttributePath(attributePath);
 		mappingAttributePathInstance.setFilter(filter);
 		mappingAttributePathInstance.setOrdinal(1);
@@ -94,6 +97,8 @@ public class MappingAttributePathInstancesResourceTest
 		final ObjectNode updatedMappingAttributePathInstanceJSON = objectMapper.readValue(updatedMappingAttributePathInstanceJSONString,
 				ObjectNode.class);
 
+		final Filter oldFilter = persistedMappingAttributePathInstance.getFilter();
+
 		final String filterJSONString = DMPPersistenceUtil.getResourceAsString("filter3.json");
 		final ObjectNode updateFilterJSON = objectMapper.readValue(filterJSONString, ObjectNode.class);
 		final Filter filter = objectMapper.readValue(filterJSONString, Filter.class);
@@ -101,8 +106,8 @@ public class MappingAttributePathInstancesResourceTest
 		// mapping attribute path instance name update
 		final String updateMappingAttributePathInstanceNameString = persistedMappingAttributePathInstance.getName() + " update";
 		updatedMappingAttributePathInstanceJSON.put("name", updateMappingAttributePathInstanceNameString);
-		updatedMappingAttributePathInstanceJSON.put("filter", updateFilterJSON);
-		updatedMappingAttributePathInstanceJSON.put("attribute_path", updatedAttributePathJSON);
+		updatedMappingAttributePathInstanceJSON.set("filter", updateFilterJSON);
+		updatedMappingAttributePathInstanceJSON.set("attribute_path", updatedAttributePathJSON);
 
 		updatedMappingAttributePathInstanceJSONString = objectMapper.writeValueAsString(updatedMappingAttributePathInstanceJSON);
 
@@ -117,7 +122,7 @@ public class MappingAttributePathInstancesResourceTest
 		Assert.assertEquals("persisted and updated attribute should be equal",
 				updatedMappingAttributePathInstance.getAttributePath().getAttributes().iterator().next(),
 				updatedMappingAttributePathInstance.getAttributePath().getAttributes().iterator().next());
-		Assert.assertNotEquals("old-persisted and updated filter shouldn't be equal", updatedMappingAttributePathInstance.getFilter(), filter);
+		Assert.assertNotEquals("old-persisted and updated filter shouldn't be equal", oldFilter, updatedMappingAttributePathInstance.getFilter());
 		Assert.assertEquals("persisted and updated mapping attribute path name should be equal", updatedMappingAttributePathInstance.getName(),
 				updateMappingAttributePathInstanceNameString);
 

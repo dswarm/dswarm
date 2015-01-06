@@ -379,15 +379,6 @@
 				</dependency>
 			</dependencies>
 		</profile>
-		<profile>
-			<id>TOMCAT</id>
-			<properties>
-				<env>dev</env>
-				<rdb.url>${db.mysql.url}</rdb.url>
-				<rdb.username>${db.mysql.username}</rdb.username>
-				<rdb.password>${db.mysql.password}</rdb.password>
-			</properties>
-		</profile>
 	</profiles>
 
 </project>

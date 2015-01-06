@@ -99,7 +99,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 		persistenceServiceTestUtils.evaluateObjects(objectsJSON, expectedObjects);
 	}
 
-	public void compareObjects(final Set<POJOCLASS> expectedObjects, final Map<Long, POJOCLASS> actualObjects)
+	public void compareObjects(final Set<POJOCLASS> expectedObjects, final Map<String, POJOCLASS> actualObjects)
 			throws JsonProcessingException, JSONException {
 
 		persistenceServiceTestUtils.compareObjects(expectedObjects, actualObjects);
@@ -112,7 +112,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 	public POJOCLASS getObjectAndCompare(final POJOCLASS expectedObject) throws Exception {
 
-		final POJOCLASS responseObject = getObject(expectedObject.getId());
+		final POJOCLASS responseObject = getObject(expectedObject.getUuid());
 
 		reset();
 		compareObjects(expectedObject, responseObject);
@@ -120,23 +120,23 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 		return responseObject;
 	}
 
-	public POJOCLASS getObject(final Long id) throws Exception {
+	public POJOCLASS getObject(final String uuid) throws Exception {
 
 		String idEncoded = null;
 
 		try {
 
-			idEncoded = URLEncoder.encode(id.toString(), "UTF-8");
+			idEncoded = URLEncoder.encode(uuid, "UTF-8");
 		} catch (final UnsupportedEncodingException e) {
 
-			BasicResourceTestUtils.LOG.debug("couldn't encode id", e);
+			BasicResourceTestUtils.LOG.debug("couldn't encode uuid", e);
 
 			Assert.assertTrue(false);
 		}
 
-		Assert.assertNotNull("the id shouldn't be null", idEncoded);
+		Assert.assertNotNull("the uuid shouldn't be null", idEncoded);
 
-		BasicResourceTestUtils.LOG.debug("try to retrieve " + pojoClassName + " with id '" + idEncoded + "'");
+		BasicResourceTestUtils.LOG.debug("try to retrieve " + pojoClassName + " with uuid '" + idEncoded + "'");
 
 		final Response response = target(idEncoded).request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
 
@@ -196,9 +196,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
 
-		final POJOCLASS actualObject = objectMapper.readValue(responseString, pojoClass);
-
-		return actualObject;
+		return objectMapper.readValue(responseString, pojoClass);
 	}
 
 	public POJOCLASS updateObject(final POJOCLASS persistedObject, final String updateObjectJSONFileName) throws Exception {
@@ -206,7 +204,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 		String updateObjectJSONString = DMPPersistenceUtil.getResourceAsString(updateObjectJSONFileName);
 
 		final ObjectNode objectJSON = objectMapper.readValue(updateObjectJSONString, ObjectNode.class);
-		objectJSON.put("id", String.valueOf(persistedObject.getId()));
+		objectJSON.put("uuid", String.valueOf(persistedObject.getUuid()));
 
 		updateObjectJSONString = objectMapper.writeValueAsString(objectJSON);
 
@@ -224,11 +222,11 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 	public POJOCLASS updateObject(final String updateObjectJSONString, final POJOCLASS expectedObject) throws Exception {
 
-		final Long objectId = objectMapper.readValue(updateObjectJSONString, pojoClass).getId();
+		final String objectUuid = objectMapper.readValue(updateObjectJSONString, pojoClass).getUuid();
 
-		Assert.assertEquals("the ids of the updated object should be equal", expectedObject.getId(), objectId);
+		Assert.assertEquals("the ids of the updated object should be equal", expectedObject.getUuid(), objectUuid);
 
-		final POJOCLASS updatedObject = updateObjectWithoutComparison(updateObjectJSONString, objectId);
+		final POJOCLASS updatedObject = updateObjectWithoutComparison(updateObjectJSONString, objectUuid);
 
 		compareObjects(expectedObject, updatedObject);
 
@@ -238,14 +236,14 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 	public POJOCLASS updateObjectWithoutComparison(final POJOCLASS updateObject) throws Exception {
 
 		final String updateObjectJSONString = objectMapper.writeValueAsString(updateObject);
-		final Long objectId = updateObject.getId();
+		final String objectUuid = updateObject.getUuid();
 
-		return updateObjectWithoutComparison(updateObjectJSONString, objectId);
+		return updateObjectWithoutComparison(updateObjectJSONString, objectUuid);
 	}
 
-	private POJOCLASS updateObjectWithoutComparison(final String updateObjectJSONString, final Long objectId) throws Exception {
+	private POJOCLASS updateObjectWithoutComparison(final String updateObjectJSONString, final String objectUuid) throws Exception {
 
-		final Response response = target(String.valueOf(objectId)).request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+		final Response response = target(String.valueOf(objectUuid)).request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
 				.put(Entity.json(updateObjectJSONString));
 
 		Assert.assertEquals("200 Updated was expected", 200, response.getStatus());
@@ -263,21 +261,21 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 			// clean-up DB
 
-			final Long objectId = object.getId();
+			final String objectUuid = object.getUuid();
 
-			final POJOCLASS toBeDeletedObject = persistenceService.getObject(objectId);
+			final POJOCLASS toBeDeletedObject = persistenceService.getObject(objectUuid);
 
 			if (toBeDeletedObject == null) {
 
 				BasicResourceTestUtils.LOG
-						.info(pojoClassName + " with id '" + objectId + "' has already been deleted from DB or never existed there");
+						.info(pojoClassName + " with id '" + objectUuid + "' has already been deleted from DB or never existed there");
 
 				return;
 			}
 
-			persistenceService.deleteObject(objectId);
+			persistenceService.deleteObject(objectUuid);
 
-			final POJOCLASS deletedObject = persistenceService.getObject(objectId);
+			final POJOCLASS deletedObject = persistenceService.getObject(objectUuid);
 
 			Assert.assertNull("the deleted " + pojoClassName + " should be null", deletedObject);
 		}

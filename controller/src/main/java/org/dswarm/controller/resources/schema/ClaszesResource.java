@@ -45,7 +45,7 @@ import org.dswarm.persistence.service.schema.ClaszService;
 
 /**
  * A resource (controller service) for {@link Clasz}es.
- * 
+ *
  * @author tgaengler
  */
 @RequestScoped
@@ -56,9 +56,8 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 	/**
 	 * Creates a new resource (controller service) for {@link Clasz}s with the provider of the class persistence service, the
 	 * object mapper and metrics registry.
-	 * 
-	 * @param claszServiceProviderArg the class persistence service provider
-	 * @param objectMapperArg an object mapper
+	 *
+	 * @param utilsFactory the resource utils factory
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
@@ -69,7 +68,7 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 
 	/**
 	 * This endpoint returns a class as JSON representation for the provided class identifier.<br/>
-	 * 
+	 *
 	 * @param id a class identifier
 	 * @return a JSON representation of a class
 	 */
@@ -81,14 +80,14 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "class identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+	public Response getObject(@ApiParam(value = "class identifier", required = true) @PathParam("id") final String id) throws DMPControllerException {
 
 		return super.getObject(id);
 	}
 
 	/**
 	 * This endpoint consumes a class as JSON representation and persists this class in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one class
 	 * @return the persisted class as JSON representation
 	 * @throws DMPControllerException
@@ -108,7 +107,7 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 
 	/**
 	 * This endpoint returns a list of all classes as JSON representation.
-	 * 
+	 *
 	 * @return a list of all classes as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -126,9 +125,9 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 
 	/**
 	 * This endpoint consumes a class as JSON representation and updates this class in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one class
-	 * @param id a class identifier
+	 * @param uuid             a class identifier
 	 * @return the updated class as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -142,17 +141,17 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateObject(@ApiParam(value = "class (as JSON)", required = true) final String jsonObjectString,
-			@ApiParam(value = "class identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+			@ApiParam(value = "class identifier", required = true) @PathParam("id") final String uuid) throws DMPControllerException {
 
-		return super.updateObject(jsonObjectString, id);
+		return super.updateObject(jsonObjectString, uuid);
 	}
 
 	/**
 	 * This endpoint deletes a class that matches the given id.
-	 * 
+	 *
 	 * @param id a class identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
-	 *         went wrong
+	 * went wrong
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "delete class that matches the given id", notes = "Returns status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong.")
@@ -163,7 +162,8 @@ public class ClaszesResource extends AdvancedDMPResource<ClaszesResourceUtils, C
 	@DELETE
 	@Path("/{id}")
 	@Override
-	public Response deleteObject(@ApiParam(value = "class identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+	public Response deleteObject(@ApiParam(value = "class identifier", required = true) @PathParam("id") final String id)
+			throws DMPControllerException {
 
 		return super.deleteObject(id);
 	}

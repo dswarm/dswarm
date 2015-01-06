@@ -27,7 +27,6 @@ import org.dswarm.persistence.service.ExtendedBasicDMPJPAService;
  * @author tgaengler
  * @param <POJOCLASSPERSISTENCESERVICE>
  * @param <POJOCLASS>
- * @param <POJOCLASSIDTYPE>
  */
 public abstract class ExtendedBasicDMPResourceUtils<POJOCLASSPERSISTENCESERVICE extends ExtendedBasicDMPJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyExtendedBasicDMPJPAObject<POJOCLASS>, POJOCLASS extends ExtendedBasicDMPJPAObject>
 		extends BasicDMPResourceUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
