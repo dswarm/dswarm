@@ -6,13 +6,13 @@
     }, {
         "http://xmlns.com/foaf/0.1/familyName": "Öß'äü"
     }, {
-        "http://purl.org/dc/elements/1.1/creator": "Öß'äü, Jim"
-    }, {
         "http://xmlns.com/foaf/0.1/givenName": "Jim"
     }, {
-        "http://purl.org/ontology/bibo/isbn": "9783866801929"
+        "http://purl.org/dc/elements/1.1/creator": "Öß'äü, Jim"
     }, {
         "http://rdvocab.info/Elements/placeOfPublication": "<a href=\"www.doi.org/isbn/9783866801929\">@Title</a>"
+    }, {
+        "http://purl.org/ontology/bibo/isbn": "9783866801929"
     }, {
         "http://purl.org/dc/terms/language": "en_US"
     }, {
@@ -26,13 +26,13 @@
     }, {
         "http://xmlns.com/foaf/0.1/familyName": "Èuhg"
     }, {
-        "http://purl.org/dc/elements/1.1/creator": "Èuhg, Jack"
-    }, {
         "http://xmlns.com/foaf/0.1/givenName": "Jack"
     }, {
-        "http://purl.org/ontology/bibo/isbn": "9783866801929"
+        "http://purl.org/dc/elements/1.1/creator": "Èuhg, Jack"
     }, {
         "http://rdvocab.info/Elements/placeOfPublication": "<a href=\"www.doi.org/isbn/9783866801929\">@Title</a>"
+    }, {
+        "http://purl.org/ontology/bibo/isbn": "9783866801929"
     }, {
         "http://purl.org/dc/terms/language": "en_US"
     }, {
@@ -48,13 +48,13 @@
     }, {
         "http://xmlns.com/foaf/0.1/familyName": "Ú'üöäßí"
     }, {
-        "http://purl.org/dc/elements/1.1/creator": "Ú'üöäßí, Jonny"
-    }, {
         "http://xmlns.com/foaf/0.1/givenName": "Jonny"
     }, {
-        "http://purl.org/ontology/bibo/isbn": "9783866801929"
+        "http://purl.org/dc/elements/1.1/creator": "Ú'üöäßí, Jonny"
     }, {
         "http://rdvocab.info/Elements/placeOfPublication": "<a href=\"www.doi.org/isbn/9783866801929\">@Title</a>"
+    }, {
+        "http://purl.org/ontology/bibo/isbn": "9783866801929"
     }, {
         "http://purl.org/dc/terms/language": "en_US"
     }, {
