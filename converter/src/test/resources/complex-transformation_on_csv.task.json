@@ -116,8 +116,8 @@
         },
         "parameter_mappings" : {
           "description" : "description",
-          "__TRANSFORMATION_OUTPUT_VARIABLE__1" : "output mapping attribute path instance",
-          "uuid" : "0"
+          "id" : "id",
+          "__TRANSFORMATION_OUTPUT_VARIABLE__1" : "output mapping attribute path instance"
         }
       },
       "input_attribute_paths" : [ {
