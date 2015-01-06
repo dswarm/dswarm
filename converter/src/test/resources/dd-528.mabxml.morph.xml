@@ -15,14 +15,14 @@
             <data name="feld_value__0__.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
         </combine>
         <data name="http://purl.org/dc/elements/1.1/title" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
+        <data name="@component1402051968368" source="@feld_value__0__">
+            <split delimiter="\|"/>
+        </data>
         <data name="@component1402052015295" source="@component1402051968368">
             <compose postfix="}" prefix="{"/>
         </data>
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" source="@component1402052015295">
             <occurrence only="4" sameEntity="false"/>
-        </data>
-        <data name="@component1402051968368" source="@feld_value__0__">
-            <split delimiter="\|"/>
         </data>
     </rules>
 </metamorph>
