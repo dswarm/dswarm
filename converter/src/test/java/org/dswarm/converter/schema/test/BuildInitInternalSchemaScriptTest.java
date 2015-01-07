@@ -65,16 +65,18 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		dataModelService = GuicedTest.injector.getInstance(DataModelService.class);
 	}
 
-	//@Test
+	@Test
 	public void buildScript() throws Exception {
 
 		final Schema bibrmContractSchema = new BibrmContractItemSchemaBuilder().buildSchema();
 		final Schema biboDocumentSchema = new BiboDocumentSchemaBuilder().buildSchema();
 		final Schema mabxmlSchema = XMLSchemaParserTest.testSchemaParsing2();
+		final Schema pnxSchema = XMLSchemaParserTest.testSchemaParsingPNX();
 
 		final String bibrmContractDM = "Internal Data Model ContractItem";
 		final String biboDocumentDM = "Internal Data Model BiboDocument";
 		final String mabxmlSchemaDM = "Internal Data Model mabxml";
+		final String pnxSchemaDM = "Internal Data Model PNX";
 		// [@tgaengler]: just prevention, but I guess that we also need a (default) data model for the foaf:Person schema (right now)
 		final String foafPersonDM = "Internal Data Model foafPerson";
 
@@ -83,6 +85,7 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		createSchemaDataModel(bibrmContractDM, bibrmContractDM, bibrmContractSchema);
 		createSchemaDataModel(biboDocumentDM, biboDocumentDM, biboDocumentSchema);
 		createSchemaDataModel(mabxmlSchemaDM, mabxmlSchemaDM, mabxmlSchema);
+		createSchemaDataModel(pnxSchemaDM, pnxSchemaDM, pnxSchema);
 		createSchemaDataModel(foafPersonDM, foafPersonDM, foafPersonSchema);
 
 		final String sep = File.separator;

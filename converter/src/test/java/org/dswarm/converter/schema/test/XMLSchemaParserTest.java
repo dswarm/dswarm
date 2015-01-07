@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2013, 2014 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -150,6 +150,23 @@ public class XMLSchemaParserTest extends GuicedTest {
 
 		schemaService.updateObjectTransactional(schema);
 
+		return schema;
+	}
+
+	/**
+	 * creates the PNX-schema (PRIMO) from the given XML-schema file from scratch
+	 *
+	 * @throws IOException
+	 * @throws DMPPersistenceException
+	 */
+	@Test
+	public static Schema testSchemaParsingPNX() throws IOException, DMPPersistenceException {
+		final XMLSchemaParser xmlSchemaParser = GuicedTest.injector.getInstance(XMLSchemaParser.class);
+		final Optional<Schema> optionalSchema = xmlSchemaParser.parse("pnx.xsd", "record", "pnx schema");
+		Assert.assertTrue(optionalSchema.isPresent());
+		final Schema schema = optionalSchema.get();
+		//final ObjectMapper mapper = GuicedTest.injector.getInstance(ObjectMapper.class);
+		//final String schemaJSONString = mapper.writeValueAsString(schema);
 		return schema;
 	}
 
