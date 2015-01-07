@@ -81,7 +81,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	 */
 	@Lob
 	@Access(AccessType.FIELD)
-	@Column(name = "FUNCTION_DESCRIPTION", columnDefinition = "VARCHAR(4000)", length = 4000)
+	@Column(name = "FUNCTION_DESCRIPTION", columnDefinition = "BLOB")
 	private String functionDescriptionString;
 
 	/**
@@ -120,7 +120,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	@JsonIgnore
 	@Lob
 	@Access(AccessType.FIELD)
-	@Column(name = "PARAMETERS", columnDefinition = "VARCHAR(4000)", length = 4000)
+	@Column(name = "PARAMETERS", columnDefinition = "BLOB")
 	private String parametersString;
 
 	/**

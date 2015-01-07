@@ -112,7 +112,7 @@ public class ContentSchema extends BasicDMPJPAObject {
 	@JsonIgnore
 	@Lob
 	@Access(AccessType.FIELD)
-	@Column(name = "KEY_ATTRIBUTE_PATHS", columnDefinition = "VARCHAR(4000)", length = 4000)
+	@Column(name = "KEY_ATTRIBUTE_PATHS", columnDefinition = "BLOB")
 	private String keyAttributePaths;
 
 	/**

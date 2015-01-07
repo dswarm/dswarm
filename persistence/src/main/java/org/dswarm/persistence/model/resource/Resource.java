@@ -82,7 +82,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 	 */
 	@Lob
 	@Access(AccessType.FIELD)
-	@Column(name = "attributes", columnDefinition = "VARCHAR(4000)", length = 4000)
+	@Column(name = "attributes", columnDefinition = "BLOB")
 	private String attributesString;
 
 	/**
