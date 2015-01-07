@@ -26,6 +26,7 @@ import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
@@ -98,18 +99,18 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 					break;
 
 				case VALUE_STRING:
-					switch (currentFieldName) {
-						case TransformationDeserializer.FUNCTION_DESCRIPTION_KEY:
-							TransformationDeserializer.setFunctionDescription(jp, transformation);
-							break;
-						case TransformationDeserializer.UUID_KEY:
-
-							transformation = Transformation.withId(transformation, jp.getText());
-
-							break;
-						default:
-							TransformationDeserializer.setStringValue(jp, transformation, currentFieldName);
-							break;
+					if (currentFieldName != null) {
+						switch (currentFieldName) {
+							case TransformationDeserializer.FUNCTION_DESCRIPTION_KEY:
+								TransformationDeserializer.setFunctionDescription(jp, transformation);
+								break;
+							case TransformationDeserializer.UUID_KEY:
+								transformation = Transformation.withId(transformation, jp.getText());
+								break;
+							default:
+								TransformationDeserializer.setStringValue(jp, transformation, currentFieldName);
+								break;
+						}
 					}
 					break;
 
@@ -231,14 +232,14 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 			}
 			currentToken = jp.nextToken();
 
-			String currentComponentId = null;
+			Optional<String> currentComponentId = Optional.absent();
 
 			// TODO we first need to extract the existing uuid, before we generate one!
 			// => right now the processing order is not correct, i.e., we need to this in another, i.e., the component should always (?) be created with a given uuid, or? - (as long as there is one available in the given payload)
 			// => currently, we often run in a branch where createComponent(String, Component) is utilised (which should be avoided)
 			// => i.e. we need to get the process into right processing order
 
-			Component currentComponent = null;
+			Component currentComponent = new Component(UUIDService.getUUID(Component.class.getSimpleName()));
 
 			final ImmutableList.Builder<String> inputComponentsBuilder = new ImmutableList.Builder<>();
 			final ImmutableList.Builder<String> outputComponentsBuilder = new ImmutableList.Builder<>();
@@ -252,15 +253,14 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 					case VALUE_STRING:
 
 						if (TransformationDeserializer.UUID_KEY.equals(currentFieldName)) {
-							currentComponentId = jp.getText();
+							currentComponentId = Optional.fromNullable(Strings.emptyToNull(jp.getText()));
+							if (!currentComponentId.isPresent()) {
+								throw JsonMappingException.from(jp, "could not create component, i.e., uuid is not provided");
+							}
 
-							currentComponent = createComponent(jp, currentComponentId, currentComponent);
-
-							components.put(currentComponentId, currentComponent);
+							currentComponent = createNewComponentWithId(currentComponent, currentComponentId.get());
+							components.put(currentComponentId.get(), currentComponent);
 						} else {
-
-							currentComponent = createComponent(currentComponentId, currentComponent);
-
 							TransformationDeserializer.setStringValue(jp, currentComponent, currentFieldName);
 						}
 						break;
@@ -268,12 +268,8 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 					case START_OBJECT:
 						if (TransformationDeserializer.FUNCTION_KEY.equals(currentFieldName)) {
 
-							currentComponent = createComponent(currentComponentId, currentComponent);
-
 							TransformationDeserializer.setFunction(jp, currentComponent);
 						} else if (TransformationDeserializer.PARAMETER_MAPPINGS_KEY.equals(currentFieldName)) {
-
-							currentComponent = createComponent(currentComponentId, currentComponent);
 
 							TransformationDeserializer.setParameterMappings(jp, currentComponent);
 						}
@@ -300,14 +296,14 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 				currentToken = jp.nextToken();
 			}
 
-			if (currentComponentId == null) {
+			if (!currentComponentId.isPresent()) {
 				throw JsonMappingException.from(jp, String.format("This component [%s] is missing an ID", currentComponent));
 			}
 
 			final List<String> inputComponentIds = inputComponentsBuilder.build();
 			final List<String> outputComponentIds = outputComponentsBuilder.build();
 
-			inOutComponents.put(currentComponentId, Tuple.tuple(inputComponentIds, outputComponentIds));
+			inOutComponents.put(currentComponentId.get(), Tuple.tuple(inputComponentIds, outputComponentIds));
 
 			currentToken = jp.nextToken();
 		}
@@ -319,34 +315,8 @@ public class TransformationDeserializer extends JsonDeserializer<Transformation>
 		TransformationDeserializer.addComponents(transformation, components);
 	}
 
-	private Component createComponent(final JsonParser jp, final String currentComponentId, final Component currentComponent) throws JsonMappingException {
-
-		if (Strings.isNullOrEmpty(currentComponentId)) {
-			throw JsonMappingException.from(jp, "could not create component, i.e., uuid is not provided");
-		}
-
-		return Component.withId(currentComponent, currentComponentId);
-	}
-
-	/**
-	 * note: should never be called or only in rare cases, i.e., the uuid should be provided by the given payload (i.e. method createComponent(JsonParser, String) should be utilised preferable
-	 *
-	 * @param currentComponentId
-	 * @param currentComponent
-	 * @return
-	 */
-	private Component createComponent(final String currentComponentId, final Component currentComponent) {
-		if (currentComponent == null) {
-			if (!Strings.isNullOrEmpty(currentComponentId)) {
-				return new Component(currentComponentId);
-			} else {
-				final String uuid = UUIDService.getUUID(Component.class.getSimpleName());
-				return new Component(uuid);
-			}
-		} else if (!Strings.isNullOrEmpty(currentComponentId) && !currentComponent.getUuid().equals(currentComponentId)) {
-			return Component.withId(currentComponent, currentComponentId);
-		}
-		return currentComponent;
+	private Component createNewComponentWithId(final Component currentComponent, final String componentId) throws JsonMappingException {
+		return Component.withId(currentComponent, componentId);
 	}
 
 	/**
