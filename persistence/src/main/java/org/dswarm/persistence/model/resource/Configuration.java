@@ -86,7 +86,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	 */
 	@Lob
 	@Access(AccessType.FIELD)
-	@Column(name = "parameters", columnDefinition = "VARCHAR(4000)", length = 4000)
+	@Column(name = "parameters", columnDefinition = "BLOB")
 	private String parametersString;
 
 	/**

@@ -26,6 +26,6 @@ public final class UUIDService {
 
 		final UUID uuid = UUID.randomUUID();
 
-		return String.format(base + "-%s", uuid.toString());
+		return String.format("%s-%s", base, uuid.toString());
 	}
 }

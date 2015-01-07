@@ -104,7 +104,7 @@ public class AttributePath extends DMPObject {
 	@JsonIgnore
 	@Lob
 	@Access(AccessType.FIELD)
-	@Column(name = "ATTRIBUTE_PATH", columnDefinition = "VARCHAR(4000)", length = 4000)
+	@Column(name = "ATTRIBUTE_PATH", columnDefinition = "BLOB")
 	private String attributePath;
 
 	/**
