@@ -26,6 +26,7 @@ import com.google.common.io.Resources;
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
+import org.glassfish.jersey.media.multipart.file.StreamDataBodyPart;
 import org.junit.Assert;
 
 import org.dswarm.controller.resources.test.utils.ExtendedBasicDMPResourceTestUtils;
@@ -58,13 +59,12 @@ public class ResourcesResourceTestUtils
 		Assert.assertNotNull("name of resource from JSON shouldn't be null", resourceFromJSON.getName());
 
 		final URL fileURL = Resources.getResource(resourceFromJSON.getName());
-		final File resourceFile = FileUtils.toFile(fileURL);
 
 		final FormDataMultiPart form = new FormDataMultiPart();
-		form.field("name", resourceFile.getName());
-		form.field("filename", resourceFile.getName());
+		form.field("name", resourceFromJSON.getName());
+		form.field("filename", resourceFromJSON.getName());
 		form.field("description", resourceFromJSON.getDescription());
-		form.bodyPart(new FileDataBodyPart("file", resourceFile, MediaType.MULTIPART_FORM_DATA_TYPE));
+		form.bodyPart(new StreamDataBodyPart("file", fileURL.openStream(), resourceFromJSON.getName(), MediaType.MULTIPART_FORM_DATA_TYPE));
 
 		final Response response = target().request(MediaType.MULTIPART_FORM_DATA_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
 				.post(Entity.entity(form, MediaType.MULTIPART_FORM_DATA));
