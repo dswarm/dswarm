@@ -45,7 +45,7 @@ import org.dswarm.persistence.service.job.FilterService;
 
 /**
  * A resource (controller service) for {@link Filter}s.
- * 
+ *
  * @author tgaengler
  * @author fniederlein
  */
@@ -57,9 +57,8 @@ public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, Filt
 	/**
 	 * Creates a new resource (controller service) for {@link Filter}s with the provider of the filter persistence service, the
 	 * object mapper and metrics registry.
-	 * 
-	 * @param filterServiceProviderArg the filter persistence service provider
-	 * @param objectMapperArg an object mapper
+	 *
+	 * @param utilsFactory the resource utils factory
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
@@ -70,7 +69,7 @@ public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, Filt
 
 	/**
 	 * This endpoint returns a filter as JSON representation for the provided filter identifier.
-	 * 
+	 *
 	 * @param id a filter identifier
 	 * @return a JSON representation of a filter
 	 */
@@ -82,14 +81,15 @@ public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, Filt
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "filter identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+	public Response getObject(@ApiParam(value = "filter identifier", required = true) @PathParam("id") final String id)
+			throws DMPControllerException {
 
 		return super.getObject(id);
 	}
 
 	/**
 	 * This endpoint consumes a filter as JSON representation and persists this filter in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one filter
 	 * @return the persisted filter as JSON representation
 	 * @throws DMPControllerException
@@ -108,7 +108,7 @@ public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, Filt
 
 	/**
 	 * This endpoint returns a list of all filters as JSON representation.
-	 * 
+	 *
 	 * @return a list of all filters as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -126,9 +126,9 @@ public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, Filt
 
 	/**
 	 * This endpoint consumes a filter as JSON representation and updates this filter in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one filter
-	 * @param id a filter identifier
+	 * @param uuid             a filter identifier
 	 * @return the updated filter as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -142,17 +142,17 @@ public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, Filt
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateObject(@ApiParam(value = "filter (as JSON)", required = true) final String jsonObjectString,
-			@ApiParam(value = "filter identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+			@ApiParam(value = "filter identifier", required = true) @PathParam("id") final String uuid) throws DMPControllerException {
 
-		return super.updateObject(jsonObjectString, id);
+		return super.updateObject(jsonObjectString, uuid);
 	}
 
 	/**
 	 * This endpoint deletes a filter that matches the given id.
-	 * 
+	 *
 	 * @param id a filter identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
-	 *         went wrong
+	 * went wrong
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "delete filter that matches the given id", notes = "Returns status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong.")
@@ -163,7 +163,7 @@ public class FiltersResource extends BasicDMPResource<FiltersResourceUtils, Filt
 	@DELETE
 	@Path("/{id}")
 	@Override
-	public Response deleteObject(@ApiParam(value = "filter identifier", required = true) @PathParam("id") final Long id)
+	public Response deleteObject(@ApiParam(value = "filter identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.deleteObject(id);

@@ -45,7 +45,6 @@ import org.dswarm.persistence.service.BasicJPAService;
  * A generic resource (controller service), whose concrete implementations can be derived with a given implementation of
  * {@link DMPObject} and the related identifier type. This service delivers basic controller layer functionality to create a new
  * object or retrieve existing ones.<br/>
- * TODO: implement update an existing object and delete existing objects
  *
  * @param <POJOCLASSPERSISTENCESERVICE> the concrete persistence service of the resource that is related to the concrete POJO
  *                                      class
@@ -72,12 +71,10 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 	/**
 	 * Creates a new resource (controller service) for the given concrete POJO class with the provider of the concrete persistence
-	 * service, the object mapper and metrics registry.
+	 * service and metrics registry.
 	 *
-	 * @param clasz                         a concrete POJO class
-	 * @param persistenceServiceProviderArg the concrete persistence service that is related to the concrete POJO class
-	 * @param objectMapperArg               an object mapper
-	 * @param dmpStatusArg                  a metrics registry
+	 * @param pojoClassResourceUtilsArg
+	 * @param dmpStatusArg              a metrics registry
 	 */
 	protected BasicResource(final POJOCLASSRESOURCEUTILS pojoClassResourceUtilsArg, final DMPStatus dmpStatusArg) {
 
@@ -107,31 +104,31 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 	}
 
 	/**
-	 * This endpoint returns an object of the type of the POJO class as JSON representation for the provided object id.
+	 * This endpoint returns an object of the type of the POJO class as JSON representation for the provided object uuid.
 	 *
-	 * @param id an object id
+	 * @param uuid an object uuid
 	 * @return a JSON representation of an object of the type of the POJO class
 	 */
 	// @GET
-	// @Path("/{id}")
+	// @Path("/{uuid}")
 	// @Produces(MediaType.APPLICATION_JSON)
-	public Response getObject(/* @PathParam("id") */final Long id) throws DMPControllerException {
+	public Response getObject(/* @PathParam("uuid") */final String uuid) throws DMPControllerException {
 
 		final Timer.Context context = dmpStatus.getSingleObject(pojoClassResourceUtils.getClaszName(), this.getClass());
 
-		BasicResource.LOG.debug("try to get " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "'");
+		BasicResource.LOG.debug("try to get " + pojoClassResourceUtils.getClaszName() + " with uuid '" + uuid + "'");
 
 		final POJOCLASSPERSISTENCESERVICE persistenceService = pojoClassResourceUtils.getPersistenceService();
-		final POJOCLASS object = persistenceService.getObject(id);
+		final POJOCLASS object = persistenceService.getObject(uuid);
 
 		if (object == null) {
 
-			BasicResource.LOG.debug("couldn't find " + pojoClassResourceUtils.getClaszName() + " '" + id + "'");
+			BasicResource.LOG.debug("couldn't find " + pojoClassResourceUtils.getClaszName() + " '" + uuid + "'");
 
 			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
 		}
-		BasicResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "'");
+		BasicResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with uuid '" + uuid + "'");
 		BasicResource.LOG.trace(" = '" + ToStringBuilder.reflectionToString(object) + "'");
 
 		final String objectJSON;
@@ -144,7 +141,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			throw new DMPControllerException("couldn't transform " + pojoClassResourceUtils.getClaszName() + " to JSON string.\n" + e.getMessage());
 		}
 
-		BasicResource.LOG.debug("return " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "'");
+		BasicResource.LOG.debug("return " + pojoClassResourceUtils.getClaszName() + " with uuid '" + uuid + "'");
 		BasicResource.LOG.trace(" = '" + objectJSON + "'");
 
 		dmpStatus.stop(context);
@@ -188,7 +185,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			throw new DMPControllerException("couldn't add " + pojoClassResourceUtils.getClaszName());
 		}
 
-		BasicResource.LOG.debug("added new " + pojoClassResourceUtils.getClaszName() + " with id = '" + object.getId() + "' ");
+		BasicResource.LOG.debug("added new " + pojoClassResourceUtils.getClaszName() + " with id = '" + object.getUuid() + "' ");
 		BasicResource.LOG.trace(" = '" + ToStringBuilder.reflectionToString(object) + "'");
 
 		final String objectJSON;
@@ -249,21 +246,21 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 	 * database.
 	 *
 	 * @param jsonObjectString a JSON representation of one object of the type of the POJO class
-	 * @param id               an object id
+	 * @param uuid             an object uuid
 	 * @return the persisted object as JSON representation
 	 * @throws DMPControllerException
 	 */
 	// @PUT
-	// @Path("/{id}")
+	// @Path("/{uuid}")
 	// @Consumes(MediaType.APPLICATION_JSON)
 	// @Produces(MediaType.APPLICATION_JSON)
-	public Response updateObject(final String jsonObjectString, /* @PathParam("id") */final Long id) throws DMPControllerException {
+	public Response updateObject(final String jsonObjectString, /* @PathParam("uuid") */final String uuid) throws DMPControllerException {
 
 		final Timer.Context context = dmpStatus.updateSingleObject(pojoClassResourceUtils.getClaszName(), this.getClass());
 
-		BasicResource.LOG.debug("try to update " + pojoClassResourceUtils.getClaszName() + " '" + id + "'");
+		BasicResource.LOG.debug("try to update " + pojoClassResourceUtils.getClaszName() + " '" + uuid + "'");
 
-		final POJOCLASS objectFromDB = retrieveObject(id, jsonObjectString);
+		final POJOCLASS objectFromDB = retrieveObject(uuid, jsonObjectString);
 
 		if (objectFromDB == null) {
 
@@ -271,27 +268,27 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		final PROXYPOJOCLASS proxyObject = refreshObject(jsonObjectString, objectFromDB, id);
+		final PROXYPOJOCLASS proxyObject = refreshObject(jsonObjectString, objectFromDB, uuid);
 
 		if (proxyObject == null) {
 
-			BasicResource.LOG.debug("couldn't update " + pojoClassResourceUtils.getClaszName() + " '" + id + "'");
+			BasicResource.LOG.debug("couldn't update " + pojoClassResourceUtils.getClaszName() + " '" + uuid + "'");
 
 			dmpStatus.stop(context);
-			throw new DMPControllerException("couldn't update " + pojoClassResourceUtils.getClaszName() + " '" + id + "'");
+			throw new DMPControllerException("couldn't update " + pojoClassResourceUtils.getClaszName() + " '" + uuid + "'");
 		}
 
 		final POJOCLASS object = proxyObject.getObject();
 
 		if (object == null) {
 
-			BasicResource.LOG.debug("couldn't update " + pojoClassResourceUtils.getClaszName() + " '" + id + "'");
+			BasicResource.LOG.debug("couldn't update " + pojoClassResourceUtils.getClaszName() + " '" + uuid + "'");
 
 			dmpStatus.stop(context);
-			throw new DMPControllerException("couldn't update " + pojoClassResourceUtils.getClaszName() + " '" + id + "'");
+			throw new DMPControllerException("couldn't update " + pojoClassResourceUtils.getClaszName() + " '" + uuid + "'");
 		}
 
-		BasicResource.LOG.debug("updated " + pojoClassResourceUtils.getClaszName() + " '" + id + "'");
+		BasicResource.LOG.debug("updated " + pojoClassResourceUtils.getClaszName() + " '" + uuid + "'");
 		BasicResource.LOG.trace(" = '" + ToStringBuilder.reflectionToString(object) + "'");
 
 		final String objectJSON;
@@ -305,7 +302,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 			throw new DMPControllerException("couldn't transform " + pojoClassResourceUtils.getClaszName() + " to JSON string.\n" + e.getMessage());
 		}
 
-		BasicResource.LOG.debug("return updated " + pojoClassResourceUtils.getClaszName() + " with id '" + object.getId() + "'");
+		BasicResource.LOG.debug("return updated " + pojoClassResourceUtils.getClaszName() + " with uuid '" + object.getUuid() + "'");
 		BasicResource.LOG.trace(" = '" + objectJSON + "'");
 
 		dmpStatus.stop(context);
@@ -397,48 +394,48 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 	}
 
 	/**
-	 * This endpoint deletes an object identified by the id.
+	 * This endpoint deletes an object identified by the uuid.
 	 *
-	 * @param id an object id
-	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
+	 * @param uuid an object uuid
+	 * @return status 204 if removal was successful, 404 if uuid not found, 409 if it couldn't be removed, or 500 if something else
 	 * went wrong
 	 * @throws DMPControllerException
 	 */
-	// @ApiOperation(value = "delete an object by id ", notes = "Returns a status.")
+	// @ApiOperation(value = "delete an object by uuid ", notes = "Returns a status.")
 	// @DELETE
-	// @Path("/{id}")
-	public Response deleteObject(/* @PathParam("id") */final Long id) throws DMPControllerException {
+	// @Path("/{uuid}")
+	public Response deleteObject(/* @PathParam("uuid") */final String uuid) throws DMPControllerException {
 
 		final Timer.Context context = dmpStatus.deleteObject(pojoClassResourceUtils.getClaszName(), this.getClass());
 
-		BasicResource.LOG.debug("try to delete " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "'");
+		BasicResource.LOG.debug("try to delete " + pojoClassResourceUtils.getClaszName() + " with uuid '" + uuid + "'");
 
 		final POJOCLASSPERSISTENCESERVICE persistenceService = pojoClassResourceUtils.getPersistenceService();
-		POJOCLASS object = persistenceService.getObject(id);
+		POJOCLASS object = persistenceService.getObject(uuid);
 
 		if (object == null) {
 
-			BasicResource.LOG.debug("couldn't find " + pojoClassResourceUtils.getClaszName() + " '" + id + "'");
+			BasicResource.LOG.debug("couldn't find " + pojoClassResourceUtils.getClaszName() + " '" + uuid + "'");
 
 			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
 		}
-		BasicResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "' ");
+		BasicResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with uuid '" + uuid + "' ");
 		BasicResource.LOG.trace(" = '" + ToStringBuilder.reflectionToString(object) + "'");
 
-		persistenceService.deleteObject(id);
+		persistenceService.deleteObject(uuid);
 
-		object = persistenceService.getObject(id);
+		object = persistenceService.getObject(uuid);
 
 		if (object != null) {
 
-			BasicResource.LOG.debug("couldn't delete " + pojoClassResourceUtils.getClaszName() + " '" + id + "'");
+			BasicResource.LOG.debug("couldn't delete " + pojoClassResourceUtils.getClaszName() + " '" + uuid + "'");
 
 			dmpStatus.stop(context);
 			return Response.status(Status.CONFLICT).build();
 		}
 
-		BasicResource.LOG.debug("deletion of " + pojoClassResourceUtils.getClaszName() + " with id '" + id + " was successful");
+		BasicResource.LOG.debug("deletion of " + pojoClassResourceUtils.getClaszName() + " with uuid '" + uuid + " was successful");
 
 		dmpStatus.stop(context);
 		return Response.status(Status.NO_CONTENT).build();
@@ -458,7 +455,7 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 		try {
 
-			idEncoded = URLEncoder.encode(object.getId().toString(), "UTF-8");
+			idEncoded = URLEncoder.encode(object.getUuid(), "UTF-8");
 		} catch (final UnsupportedEncodingException e) {
 
 			BasicResource.LOG.debug("couldn't encode id", e);
@@ -487,11 +484,9 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 	 */
 	protected PROXYPOJOCLASS addObject(final String objectJSONString) throws DMPControllerException {
 
-		final String enhancedObjectJSONString = pojoClassResourceUtils.prepareObjectJSONString(objectJSONString);
+		// get the deserialisised object from the object JSON string
 
-		// get the deserialisised object from the enhanced JSON string
-
-		final POJOCLASS objectFromJSON = pojoClassResourceUtils.deserializeObjectJSONString(enhancedObjectJSONString);
+		final POJOCLASS objectFromJSON = pojoClassResourceUtils.deserializeObjectJSONString(objectJSONString);
 
 		// create a new persistent object
 
@@ -546,48 +541,44 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 	 * Persists an existing object that was received via an API request into the database.
 	 *
 	 * @param objectJSONString
-	 * @param id
+	 * @param uuid
 	 * @return
 	 * @throws DMPControllerException
 	 */
-	protected PROXYPOJOCLASS refreshObject(final String objectJSONString, final POJOCLASS object, final Long id)
+	protected PROXYPOJOCLASS refreshObject(final String objectJSONString, final POJOCLASS object, final String uuid)
 			throws DMPControllerException {
 
-		// enhance object JSON as necessary
+		// get the deserialisised object from the object JSON string
 
-		final String enhancedObjectJSONString = pojoClassResourceUtils.prepareObjectJSONString(objectJSONString);
-
-		// get the deserialisised object from the enhanced JSON string
-
-		final POJOCLASS objectFromJSON = pojoClassResourceUtils.deserializeObjectJSONString(enhancedObjectJSONString);
+		final POJOCLASS objectFromJSON = pojoClassResourceUtils.deserializeObjectJSONString(objectJSONString);
 
 		final POJOCLASS preparedObject = prepareObjectForUpdate(objectFromJSON, object);
 
-		return updateObject(preparedObject, id);
+		return updateObject(preparedObject, uuid);
 	}
 
-	protected POJOCLASS retrieveObject(final Long id, final String jsonObjectString) throws DMPControllerException {
+	protected POJOCLASS retrieveObject(final String uuid, final String jsonObjectString) throws DMPControllerException {
 
-		// get persistent object per id
+		// get persistent object per uuid
 
 		final POJOCLASSPERSISTENCESERVICE persistenceService = pojoClassResourceUtils.getPersistenceService();
-		final POJOCLASS object = persistenceService.getObject(id);
+		final POJOCLASS object = persistenceService.getObject(uuid);
 
 		if (object == null) {
 
-			BasicResource.LOG.debug(pojoClassResourceUtils.getClaszName() + " for id '" + id + "' does not exist, i.e., it cannot be updated");
+			BasicResource.LOG.debug(pojoClassResourceUtils.getClaszName() + " for uuid '" + uuid + "' does not exist, i.e., it cannot be updated");
 
 			return null;
 		}
 
-		BasicResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "' ");
+		BasicResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with uuid '" + uuid + "' ");
 		BasicResource.LOG.trace("= '" + ToStringBuilder.reflectionToString(object) + "'");
 
 		return object;
 
 	}
 
-	protected PROXYPOJOCLASS updateObject(final POJOCLASS preparedObject, final Long id) throws DMPControllerException {
+	protected PROXYPOJOCLASS updateObject(final POJOCLASS preparedObject, final String uuid) throws DMPControllerException {
 
 		// update the persistent object in the DB
 
@@ -595,14 +586,12 @@ public abstract class BasicResource<POJOCLASSRESOURCEUTILS extends BasicResource
 
 		try {
 
-			final PROXYPOJOCLASS proxyPreparedObject = persistenceService.updateObjectTransactional(preparedObject);
-
-			return proxyPreparedObject;
+			return persistenceService.updateObjectTransactional(preparedObject);
 		} catch (final DMPPersistenceException e) {
 
-			BasicResource.LOG.debug("something went wrong while updating " + pojoClassResourceUtils.getClaszName() + "  for id '" + id + "'");
+			BasicResource.LOG.debug("something went wrong while updating " + pojoClassResourceUtils.getClaszName() + "  for uuid '" + uuid + "'");
 
-			throw new DMPControllerException("something went wrong while updating" + pojoClassResourceUtils.getClaszName() + "  for id '" + id
+			throw new DMPControllerException("something went wrong while updating" + pojoClassResourceUtils.getClaszName() + "  for uuid '" + uuid
 					+ "'\n" + e.getMessage());
 		}
 	}

@@ -93,14 +93,14 @@ public abstract class ProxyDMPObject<POJOCLASS extends DMPObject> implements Ser
 	 *
 	 * @return the identifier of the proxied object as the implemented identifier type of the real object
 	 */
-	public Long getId() {
+	public String getId() {
 
 		if (dmpObject == null) {
 
 			return null;
 		}
 
-		return dmpObject.getId();
+		return dmpObject.getUuid();
 	}
 
 	@Override
@@ -113,7 +113,7 @@ public abstract class ProxyDMPObject<POJOCLASS extends DMPObject> implements Ser
 			return 0;
 		}
 
-		return Objects.hashCode(dmpObject.getId());
+		return Objects.hashCode(dmpObject.getUuid());
 	}
 
 	@Override

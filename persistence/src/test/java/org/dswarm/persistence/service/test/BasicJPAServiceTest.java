@@ -67,7 +67,7 @@ public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<
 		// clean-up DB table
 		for (final POJOCLASS object : objectes) {
 
-			jpaService.deleteObject(object.getId());
+			jpaService.deleteObject(object.getUuid());
 		}
 
 		BasicJPAServiceTest.LOG.debug("end id generation test for " + type);
@@ -135,7 +135,7 @@ public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<
 
 	protected POJOCLASS getObject(final POJOCLASS object) throws JsonProcessingException, JSONException {
 
-		final POJOCLASS persitentObject = jpaService.getObject(object.getId());
+		final POJOCLASS persitentObject = jpaService.getObject(object.getUuid());
 
 		Assert.assertNotNull("the updated " + type + " shoudln't be null", persitentObject);
 		Assert.assertEquals("the " + type + "s are not equal", object, persitentObject);
@@ -143,11 +143,11 @@ public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<
 		return persitentObject;
 	}
 
-	protected void deleteObject(final Long id) {
+	protected void deleteObject(final String uuid) {
 
-		jpaService.deleteObject(id);
+		jpaService.deleteObject(uuid);
 
-		final POJOCLASS deletedObject = jpaService.getObject(id);
+		final POJOCLASS deletedObject = jpaService.getObject(uuid);
 
 		Assert.assertNull("deleted " + type + " shouldn't exist any more", deletedObject);
 	}

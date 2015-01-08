@@ -57,11 +57,11 @@ public abstract class AdvancedDMPResource<POJOCLASSRESOURCEUTILS extends Advance
 	}
 
 	@Override
-	protected POJOCLASS retrieveObject(final Long id, final String jsonObjectString) throws DMPControllerException {
+	protected POJOCLASS retrieveObject(final String uuid, final String jsonObjectString) throws DMPControllerException {
 
 		if (jsonObjectString == null) {
 
-			return super.retrieveObject(id, jsonObjectString);
+			return super.retrieveObject(uuid, jsonObjectString);
 		}
 
 		// what should we do if the uri is a different one, i.e., someone tries to manipulate the uri? => check whether an entity

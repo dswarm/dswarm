@@ -34,6 +34,7 @@ import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
 import org.dswarm.persistence.service.BasicJPAService;
+import org.dswarm.persistence.service.UUIDService;
 
 /**
  * A persistence service for {@link AttributePath}s.
@@ -72,12 +73,13 @@ public class AttributePathService extends BasicJPAService<ProxyAttributePath, At
 
 	/**
 	 * Tries to retrieve an attribute path object for the given ordered list of attribute paths
+	 * TODO: check, when this method was called in the code
 	 *
 	 * @param attributePathJSONArrayString
 	 * @return
 	 * @throws DMPPersistenceException
 	 */
-	public AttributePath getObject(final String attributePathJSONArrayString) throws DMPPersistenceException {
+	public AttributePath getObjectViaAttributePathJSON(final String attributePathJSONArrayString) throws DMPPersistenceException {
 
 		final EntityManager entityManager = acquire();
 
@@ -183,7 +185,17 @@ public class AttributePathService extends BasicJPAService<ProxyAttributePath, At
 
 	private AttributePath mergeAttributesIntoEntityManager(final AttributePath object, final EntityManager entityManager) {
 
-		final AttributePath tempAttributePath = new AttributePath();
+		final String uuid;
+
+		if(object.getUuid() != null) {
+
+			uuid = object.getUuid();
+		} else {
+
+			uuid = UUIDService.getUUID(AttributePath.class.getSimpleName());
+		}
+
+		final AttributePath tempAttributePath = new AttributePath(uuid);
 
 		final List<Attribute> attributes = object.getAttributePath();
 

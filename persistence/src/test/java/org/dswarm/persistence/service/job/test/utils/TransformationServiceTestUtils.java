@@ -31,6 +31,7 @@ import org.junit.Assert;
 import org.dswarm.persistence.model.job.Component;
 import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.job.proxy.ProxyTransformation;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.job.TransformationService;
 
 public class TransformationServiceTestUtils extends BasicFunctionServiceTestUtils<TransformationService, ProxyTransformation, Transformation> {
@@ -128,15 +129,15 @@ public class TransformationServiceTestUtils extends BasicFunctionServiceTestUtil
 
 			final Set<Component> actualComponents = actualTransformation.getComponents();
 
-			Assert.assertNotNull("components of actual transformation '" + actualTransformation.getId() + "' shouldn't be null", actualComponents);
-			Assert.assertFalse("components of actual transformation '" + actualTransformation.getId() + "' shouldn't be empty",
+			Assert.assertNotNull("components of actual transformation '" + actualTransformation.getUuid() + "' shouldn't be null", actualComponents);
+			Assert.assertFalse("components of actual transformation '" + actualTransformation.getUuid() + "' shouldn't be empty",
 					actualComponents.isEmpty());
 
-			final Map<Long, Component> actualComponentsMap = Maps.newHashMap();
+			final Map<String, Component> actualComponentsMap = Maps.newHashMap();
 
 			for (final Component actualComponent : actualComponents) {
 
-				actualComponentsMap.put(actualComponent.getId(), actualComponent);
+				actualComponentsMap.put(actualComponent.getUuid(), actualComponent);
 			}
 
 			componentServiceTestUtils.compareObjects(expectedTransformation.getComponents(), actualComponentsMap);
@@ -146,7 +147,9 @@ public class TransformationServiceTestUtils extends BasicFunctionServiceTestUtil
 	public Transformation createTransformation(final String name, final String description, final Set<Component> components,
 			final LinkedList<String> parameters) throws Exception {
 
-		final Transformation transformation = new Transformation();
+		final String uuid = UUIDService.getUUID(Transformation.class.getSimpleName());
+
+		final Transformation transformation = new Transformation(uuid);
 
 		transformation.setName(name);
 		transformation.setDescription(description);

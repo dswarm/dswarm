@@ -79,7 +79,7 @@ public abstract class AttributePathInstance extends BasicDMPJPAObject {
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private AttributePath				attributePath;
 
-	public AttributePathInstance() {
+	protected AttributePathInstance() {
 
 		// just for JPA
 	}
@@ -89,8 +89,14 @@ public abstract class AttributePathInstance extends BasicDMPJPAObject {
 	 * 
 	 * @param attributePathInstanceTypeArg the type of the attribute path instance
 	 */
-	public AttributePathInstance(final AttributePathInstanceType attributePathInstanceTypeArg) {
+	protected AttributePathInstance(final AttributePathInstanceType attributePathInstanceTypeArg) {
 
+		attributePathInstanceType = attributePathInstanceTypeArg;
+	}
+
+	protected AttributePathInstance(final String uuid, final AttributePathInstanceType attributePathInstanceTypeArg) {
+
+		super(uuid);
 		attributePathInstanceType = attributePathInstanceTypeArg;
 	}
 

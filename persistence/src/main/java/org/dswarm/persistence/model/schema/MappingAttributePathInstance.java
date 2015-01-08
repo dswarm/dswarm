@@ -72,9 +72,14 @@ public class MappingAttributePathInstance extends AttributePathInstance {
 	/**
 	 * Creates a new mapping attribute path instance.
 	 */
-	public MappingAttributePathInstance() {
+	protected MappingAttributePathInstance() {
 
 		super(AttributePathInstanceType.MappingAttributePathInstance);
+	}
+
+	public MappingAttributePathInstance(final String uuid) {
+
+		super(uuid, AttributePathInstanceType.MappingAttributePathInstance);
 	}
 
 	/**

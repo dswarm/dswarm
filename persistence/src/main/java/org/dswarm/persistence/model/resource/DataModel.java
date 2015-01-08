@@ -79,6 +79,15 @@ public class DataModel extends ExtendedBasicDMPJPAObject {
 	// @XmlIDREF
 	private Schema				schema;
 
+	public DataModel(final String uuidArg) {
+
+		super(uuidArg);
+	}
+
+	protected DataModel() {
+
+	}
+
 	/**
 	 * Gets the data resource.
 	 * 

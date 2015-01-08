@@ -101,7 +101,7 @@ public class InternalGDMGraphService implements InternalModelService {
 	private final Provider<ClaszService> classService;
 
 	private final Provider<AttributePathService> attributePathService;
-	
+
 	private final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceService;
 
 	private final Provider<AttributeService> attributeService;
@@ -130,7 +130,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			final Provider<AttributeService> attributeService,
 			@Named("dswarm.db.graph.endpoint") final String graphEndpointArg,
 			final Provider<ObjectMapper> objectMapperProviderArg) {
-		
+
 		this.dataModelService = dataModelService;
 		this.schemaService = schemaService;
 		this.classService = classService;
@@ -146,9 +146,9 @@ public class InternalGDMGraphService implements InternalModelService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void createObject(final Long dataModelId, final Object model) throws DMPPersistenceException {
+	public void createObject(final String dataModelUuid, final Object model) throws DMPPersistenceException {
 
-		if (dataModelId == null) {
+		if (dataModelUuid == null) {
 
 			throw new DMPPersistenceException("data model id shouldn't be null");
 		}
@@ -172,9 +172,9 @@ public class InternalGDMGraphService implements InternalModelService {
 			throw new DMPPersistenceException("real model that should be added to DB shouldn't be null");
 		}
 
-		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelId);
+		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelUuid);
 
-		final DataModel dataModel = addRecordClass(dataModelId, gdmModel.getRecordClassURI());
+		final DataModel dataModel = addRecordClass(dataModelUuid, gdmModel.getRecordClassURI());
 
 		final DataModel finalDataModel;
 
@@ -183,7 +183,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			finalDataModel = dataModel;
 		} else {
 
-			finalDataModel = getDataModel(dataModelId);
+			finalDataModel = getDataModel(dataModelUuid);
 		}
 
 		if (finalDataModel.getSchema() != null) {
@@ -223,41 +223,43 @@ public class InternalGDMGraphService implements InternalModelService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Optional<Map<String, Model>> getObjects(final Long dataModelId, final Optional<Integer> atMost) throws DMPPersistenceException {
+	public Optional<Map<String, Model>> getObjects(final String dataModelUuid, final Optional<Integer> atMost) throws DMPPersistenceException {
 
-		if (dataModelId == null) {
+		if (dataModelUuid == null) {
 
 			throw new DMPPersistenceException("data model id shouldn't be null");
 		}
 
-		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelId);
+		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelUuid);
 
 		// retrieve record class uri from data model schema
-		final DataModel dataModel = dataModelService.get().getObject(dataModelId);
+		final DataModel dataModel = dataModelService.get().getObject(dataModelUuid);
 
 		if (dataModel == null) {
 
-			InternalGDMGraphService.LOG.debug("couldn't find data model '" + dataModelId + "' to retrieve record class from");
+			InternalGDMGraphService.LOG.debug("couldn't find data model '" + dataModelUuid + "' to retrieve record class from");
 
-			throw new DMPPersistenceException("couldn't find data model '" + dataModelId + "' to retrieve record class from");
+			throw new DMPPersistenceException("couldn't find data model '" + dataModelUuid + "' to retrieve record class from");
 		}
 
 		final Schema schema = dataModel.getSchema();
 
 		if (schema == null) {
 
-			InternalGDMGraphService.LOG.debug("couldn't find schema in data model '" + dataModelId + "'");
+			InternalGDMGraphService.LOG.debug("couldn't find schema in data model '" + dataModelUuid + "'");
 
-			throw new DMPPersistenceException("couldn't find schema in data model '" + dataModelId + "'");
+			throw new DMPPersistenceException("couldn't find schema in data model '" + dataModelUuid + "'");
 		}
 
 		final Clasz recordClass = schema.getRecordClass();
 
 		if (recordClass == null) {
 
-			InternalGDMGraphService.LOG.debug("couldn't find record class in schema '" + schema.getId() + "' of data model '" + dataModelId + "'");
+			InternalGDMGraphService.LOG
+					.debug("couldn't find record class in schema '" + schema.getUuid() + "' of data model '" + dataModelUuid + "'");
 
-			throw new DMPPersistenceException("couldn't find record class in schema '" + schema.getId() + "' of data model '" + dataModelId + "'");
+			throw new DMPPersistenceException(
+					"couldn't find record class in schema '" + schema.getUuid() + "' of data model '" + dataModelUuid + "'");
 		}
 
 		final String recordClassUri = recordClass.getUri();
@@ -266,14 +268,14 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		if (model == null) {
 
-			InternalGDMGraphService.LOG.debug("couldn't find model for data model '" + dataModelId + "' in database");
+			InternalGDMGraphService.LOG.debug("couldn't find model for data model '" + dataModelUuid + "' in database");
 
 			return Optional.absent();
 		}
 
 		if (model.size() <= 0) {
 
-			InternalGDMGraphService.LOG.debug("model is empty for data model '" + dataModelId + "' in database");
+			InternalGDMGraphService.LOG.debug("model is empty for data model '" + dataModelUuid + "' in database");
 
 			return Optional.absent();
 		}
@@ -282,9 +284,9 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		if (recordResources == null || recordResources.isEmpty()) {
 
-			InternalGDMGraphService.LOG.debug("couldn't find records for record class'" + recordClassUri + "' in data model '" + dataModelId + "'");
+			InternalGDMGraphService.LOG.debug("couldn't find records for record class'" + recordClassUri + "' in data model '" + dataModelUuid + "'");
 
-			throw new DMPPersistenceException("couldn't find records for record class'" + recordClassUri + "' in data model '" + dataModelId + "'");
+			throw new DMPPersistenceException("couldn't find records for record class'" + recordClassUri + "' in data model '" + dataModelUuid + "'");
 		}
 
 		final Map<String, Model> modelMap = Maps.newLinkedHashMap();
@@ -318,14 +320,14 @@ public class InternalGDMGraphService implements InternalModelService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void deleteObject(final Long dataModelId) throws DMPPersistenceException {
+	public void deleteObject(final String dataModelUuid) throws DMPPersistenceException {
 
-		if (dataModelId == null) {
+		if (dataModelUuid == null) {
 
 			throw new DMPPersistenceException("data model id shouldn't be null");
 		}
 
-		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelId);
+		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelUuid);
 
 		// TODO: delete DataModel object from DB here as well?
 
@@ -342,27 +344,27 @@ public class InternalGDMGraphService implements InternalModelService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Optional<Schema> getSchema(final Long dataModelId) throws DMPPersistenceException {
+	public Optional<Schema> getSchema(final String dataModelUuid) throws DMPPersistenceException {
 
-		if (dataModelId == null) {
+		if (dataModelUuid == null) {
 
 			throw new DMPPersistenceException("data model id shouldn't be null");
 		}
 
-		final DataModel dataModel = dataModelService.get().getObject(dataModelId);
+		final DataModel dataModel = dataModelService.get().getObject(dataModelUuid);
 
 		if (dataModel == null) {
 
-			InternalGDMGraphService.LOG.debug("couldn't find data model '" + dataModelId + "' to retrieve it's schema");
+			InternalGDMGraphService.LOG.debug("couldn't find data model '" + dataModelUuid + "' to retrieve it's schema");
 
-			throw new DMPPersistenceException("couldn't find data model '" + dataModelId + "' to retrieve it's schema");
+			throw new DMPPersistenceException("couldn't find data model '" + dataModelUuid + "' to retrieve it's schema");
 		}
 
 		final Schema schema = dataModel.getSchema();
 
 		if (schema == null) {
 
-			InternalGDMGraphService.LOG.debug("couldn't find schema in data model '" + dataModelId + "'");
+			InternalGDMGraphService.LOG.debug("couldn't find schema in data model '" + dataModelUuid + "'");
 
 			return Optional.absent();
 		}
@@ -373,14 +375,14 @@ public class InternalGDMGraphService implements InternalModelService {
 	/**
 	 * Adds the record class to the schema of the data model.
 	 *
-	 * @param dataModelId    the identifier of the data model
+	 * @param dataModelUuid  the identifier of the data model
 	 * @param recordClassUri the identifier of the record class
 	 * @throws DMPPersistenceException
 	 */
-	private DataModel addRecordClass(final Long dataModelId, final String recordClassUri) throws DMPPersistenceException {
+	private DataModel addRecordClass(final String dataModelUuid, final String recordClassUri) throws DMPPersistenceException {
 
 		// (try) add record class uri to schema
-		final DataModel dataModel = getSchemaInternal(dataModelId);
+		final DataModel dataModel = getSchemaInternal(dataModelUuid);
 		final Schema schema = dataModel.getSchema();
 
 		final boolean result = SchemaUtils.addRecordClass(schema, recordClassUri, classService);
@@ -398,7 +400,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final Schema schema = dataModel.getSchema();
 
-		if (schema.getId() == 4) {
+		if (schema.getUuid().equals(SchemaUtils.MABXML_SCHEMA_UUID)) {
 
 			// mabxml schema is already there
 
@@ -427,9 +429,9 @@ public class InternalGDMGraphService implements InternalModelService {
 		return proxyUpdatedDataModel.getObject();
 	}
 
-	private DataModel getSchemaInternal(final Long dataModelId) throws DMPPersistenceException {
+	private DataModel getSchemaInternal(final String dataModelUuid) throws DMPPersistenceException {
 
-		final DataModel dataModel = getDataModel(dataModelId);
+		final DataModel dataModel = getDataModel(dataModelUuid);
 
 		final Schema schema;
 
@@ -470,7 +472,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 				// assign existing mabxml schema to data resource
 
-				schema = schemaService.get().getObject((long) 4);
+				schema = schemaService.get().getObject(SchemaUtils.MABXML_SCHEMA_UUID);
 			}
 
 			dataModel.setSchema(schema);
@@ -479,13 +481,13 @@ public class InternalGDMGraphService implements InternalModelService {
 		return updateDataModel(dataModel);
 	}
 
-	private DataModel getDataModel(final Long dataModelId) {
+	private DataModel getDataModel(final String dataModelUuid) {
 
-		final DataModel dataModel = dataModelService.get().getObject(dataModelId);
+		final DataModel dataModel = dataModelService.get().getObject(dataModelUuid);
 
 		if (dataModel == null) {
 
-			InternalGDMGraphService.LOG.debug("couldn't find data model '" + dataModelId + "'");
+			InternalGDMGraphService.LOG.debug("couldn't find data model '" + dataModelUuid + "'");
 
 			return null;
 		}
@@ -544,7 +546,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final String recordIdentifierAP;
 
-		if(contentSchema.getRecordIdentifierAttributePath() != null) {
+		if (contentSchema.getRecordIdentifierAttributePath() != null) {
 
 			recordIdentifierAP = contentSchema.getRecordIdentifierAttributePath().toAttributePath();
 		} else {
@@ -556,11 +558,11 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final ArrayNode keyAttributePaths;
 
-		if(contentSchema.getKeyAttributePaths() != null) {
+		if (contentSchema.getKeyAttributePaths() != null) {
 
 			keyAttributePaths = objectMapperProvider.get().createArrayNode();
 
-			for(final AttributePath keyAttributePath : contentSchema.getKeyAttributePaths()) {
+			for (final AttributePath keyAttributePath : contentSchema.getKeyAttributePaths()) {
 
 				keyAttributePaths.add(keyAttributePath.toAttributePath());
 			}
@@ -573,7 +575,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final String valueAttributePath;
 
-		if(contentSchema.getValueAttributePath() != null) {
+		if (contentSchema.getValueAttributePath() != null) {
 
 			valueAttributePath = contentSchema.getValueAttributePath().toAttributePath();
 		} else {

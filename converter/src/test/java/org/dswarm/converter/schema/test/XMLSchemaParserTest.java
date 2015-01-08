@@ -33,6 +33,8 @@ import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
+import org.dswarm.persistence.model.schema.utils.SchemaUtils;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
@@ -91,7 +93,10 @@ public class XMLSchemaParserTest extends GuicedTest {
 	public void testSchemaParsing() throws IOException, DMPPersistenceException {
 
 		final XMLSchemaParser xmlSchemaParser = GuicedTest.injector.getInstance(XMLSchemaParser.class);
-		final Optional<Schema> optionalSchema = xmlSchemaParser.parse("mabxml-1.xsd", "datensatz", "mabxml schema");
+
+		final String schemaUUID = UUIDService.getUUID(Schema.class.getSimpleName());
+
+		final Optional<Schema> optionalSchema = xmlSchemaParser.parse("mabxml-1.xsd", "datensatz", schemaUUID, "mabxml schema");
 
 		Assert.assertTrue(optionalSchema.isPresent());
 
@@ -114,7 +119,8 @@ public class XMLSchemaParserTest extends GuicedTest {
 
 		final String schemaName = "mabxml schema";
 		final XMLSchemaParser xmlSchemaParser = GuicedTest.injector.getInstance(XMLSchemaParser.class);
-		final Optional<Schema> optionalSchema = xmlSchemaParser.parse("mabxml-1.xsd", "datensatz", schemaName);
+
+		final Optional<Schema> optionalSchema = xmlSchemaParser.parse("mabxml-1.xsd", "datensatz", SchemaUtils.MABXML_SCHEMA_UUID, schemaName);
 
 		Assert.assertTrue(optionalSchema.isPresent());
 
@@ -128,7 +134,9 @@ public class XMLSchemaParserTest extends GuicedTest {
 			aps.put(attributePath.toAttributePath(), attributePath);
 		}
 
-		final ContentSchema contentSchema = new ContentSchema();
+		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
+
+		final ContentSchema contentSchema = new ContentSchema(uuid);
 		contentSchema.setName("mab content schema");
 
 		final AttributePath feldNr = aps

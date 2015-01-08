@@ -28,6 +28,7 @@ import org.junit.Assert;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.proxy.ProxyContentSchema;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.schema.ContentSchemaService;
 import org.dswarm.persistence.service.test.utils.BasicDMPJPAServiceTestUtils;
 
@@ -53,7 +54,10 @@ public class ContentSchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<C
 	public ContentSchema createContentSchema(final String name, final AttributePath recordIdentifierAttributePath,
 			final LinkedList<AttributePath> keyAttributePaths, final AttributePath valueAttributePath) throws Exception {
 
-		final ContentSchema contentSchema = new ContentSchema();
+		// TODO: think about this?
+		final String contentSchemaUUID = UUIDService.getUUID(ContentSchema.class.getSimpleName());
+
+		final ContentSchema contentSchema = new ContentSchema(contentSchemaUUID);
 
 		contentSchema.setName(name);
 		contentSchema.setRecordIdentifierAttributePath(recordIdentifierAttributePath);
@@ -75,7 +79,7 @@ public class ContentSchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<C
 		final ContentSchema updatedContentSchema = createAndCompareObject(contentSchema, contentSchema);
 
 		Assert.assertNotNull("updated content schema shouldn't be null", updatedContentSchema);
-		Assert.assertNotNull("updated content schema id shouldn't be null", updatedContentSchema.getId());
+		Assert.assertNotNull("updated content schema id shouldn't be null", updatedContentSchema.getUuid());
 
 		return updatedContentSchema;
 	}
@@ -93,16 +97,16 @@ public class ContentSchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<C
 
 			final Set<AttributePath> actualUtilisedKeyAttributePaths = actualContentSchema.getUtilisedKeyAttributePaths();
 
-			Assert.assertNotNull("key attribute paths of actual content schema '" + actualContentSchema.getId() + "' shouldn't be null",
+			Assert.assertNotNull("key attribute paths of actual content schema '" + actualContentSchema.getUuid() + "' shouldn't be null",
 					actualUtilisedKeyAttributePaths);
-			Assert.assertFalse("attribute paths of actual content schema '" + actualContentSchema.getId() + "' shouldn't be empty",
+			Assert.assertFalse("attribute paths of actual content schema '" + actualContentSchema.getUuid() + "' shouldn't be empty",
 					actualUtilisedKeyAttributePaths.isEmpty());
 
-			final Map<Long, AttributePath> actualKeyAttributePathsMap = Maps.newHashMap();
+			final Map<String, AttributePath> actualKeyAttributePathsMap = Maps.newHashMap();
 
 			for (final AttributePath actualKeyAttributePath : actualUtilisedKeyAttributePaths) {
 
-				actualKeyAttributePathsMap.put(actualKeyAttributePath.getId(), actualKeyAttributePath);
+				actualKeyAttributePathsMap.put(actualKeyAttributePath.getUuid(), actualKeyAttributePath);
 			}
 
 			apstUtils.compareObjects(expectedContentSchema.getUtilisedKeyAttributePaths(), actualKeyAttributePathsMap);
@@ -163,7 +167,10 @@ public class ContentSchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<C
 
 	@Override public ContentSchema createDefaultObject() throws Exception {
 
-		final ContentSchema contentSchema = new ContentSchema();
+		// TODO: think about this?
+		final String contentSchemaUUID = UUIDService.getUUID(ContentSchema.class.getSimpleName());
+
+		final ContentSchema contentSchema = new ContentSchema(contentSchemaUUID);
 		contentSchema.setName("Default Content Schema");
 		contentSchema.addKeyAttributePath(apstUtils.createAndPersistDefaultObject());
 		contentSchema.addKeyAttributePath(apstUtils.getDctermsTitleDctermHaspartAP());

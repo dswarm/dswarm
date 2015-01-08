@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2013, 2014 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *         http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,8 +16,9 @@
 package org.dswarm.persistence.service.schema.test.internalmodel;
 
 import org.dswarm.persistence.model.schema.Clasz;
-import org.dswarm.persistence.model.schema.NameSpacePrefixRegistry;
 import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.model.schema.utils.NameSpacePrefixRegistry;
+import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 
 public class BiboDocumentSchemaBuilder extends SchemaBuilder {
 
@@ -26,9 +27,10 @@ public class BiboDocumentSchemaBuilder extends SchemaBuilder {
 
 		final AttributePathBuilder builder = new AttributePathBuilder();
 
-		final Schema tempSchema = new Schema();
+		// we should take a static identifier here
+		final Schema tempSchema = new Schema(SchemaUtils.BIBO_DOCUMENT_SCHEMA_UUID);
 
-		Clasz clasz = claszServiceTestUtils.createObject(NameSpacePrefixRegistry.BIBO + "Document", "Document");
+		final Clasz clasz = claszServiceTestUtils.createObject(NameSpacePrefixRegistry.BIBO + "Document", "Document");
 
 		/*
 		 * // Example of how to use the normal API of the attribute path builder
@@ -44,7 +46,7 @@ public class BiboDocumentSchemaBuilder extends SchemaBuilder {
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dc:contributor"));
 		{
 			// add "deep" paths as schema attribute path instances with attached sub-schemata ...
-			Schema foafPersonSchema = new FoafPersonSchemaBuilder().buildSchema();
+			final Schema foafPersonSchema = new FoafPersonSchemaBuilder().buildSchema();
 			tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:creator", foafPersonSchema));
 			tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:contributor", foafPersonSchema));
 		}
@@ -75,10 +77,8 @@ public class BiboDocumentSchemaBuilder extends SchemaBuilder {
 		// store all parsed paths as an overview
 		prefixPaths = builder.getPrefixPaths();
 
-		final Schema persistentSchema = schemaServiceTestUtils.createAndPersistSchema("bibo:Document-Schema (KIM-Titeldaten)",
+		return schemaServiceTestUtils.createAndPersistSchema(tempSchema.getUuid(), "bibo:Document-Schema (KIM-Titeldaten)",
 				tempSchema.getUniqueAttributePaths(), clasz);
-
-		return persistentSchema;
 	}
 
 }

@@ -50,6 +50,7 @@ import org.dswarm.controller.test.GuicedTest;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -237,7 +238,9 @@ public class RDFResourceTest extends ResourceTest {
 
 		final Configuration config = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
 
-		final DataModel dataModelToCreate = new DataModel();
+		final String dataModelToCreateUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+
+		final DataModel dataModelToCreate = new DataModel(dataModelToCreateUuid);
 		dataModelToCreate.setName("my data model");
 		dataModelToCreate.setDescription("my data model description");
 		dataModelToCreate.setDataResource(resource);

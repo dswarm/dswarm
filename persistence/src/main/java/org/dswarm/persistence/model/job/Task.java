@@ -63,6 +63,15 @@ public class Task extends ExtendedBasicDMPJPAObject {
 	// @XmlIDREF
 	private Job					job;
 
+	protected Task() {
+
+	}
+
+	public Task(final String uuidArg) {
+
+		super(uuidArg);
+	}
+
 	/**
 	 * Gets the input data model.
 	 * 

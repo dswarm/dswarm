@@ -54,7 +54,7 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
  * A function is a method that can be executed on data via a {@link Job} execution (i.e. a {@link Task}). A function mainly
  * consists of a collection of parameters and a machine processable function description. Complex functions are
  * {@link Transformation}s.
- * 
+ *
  * @author tgaengler
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = true, defaultImpl = Function.class)
@@ -72,47 +72,47 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	/**
 	 *
 	 */
-	private static final long	serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 
-	private static final Logger	LOG					= LoggerFactory.getLogger(Function.class);
+	private static final Logger LOG = LoggerFactory.getLogger(Function.class);
 
 	/**
 	 * A string that holds the serialised JSON object of a function description.
 	 */
 	@Lob
 	@Access(AccessType.FIELD)
-	@Column(name = "FUNCTION_DESCRIPTION", columnDefinition = "VARCHAR(4000)", length = 4000)
-	private String				functionDescriptionString;
+	@Column(name = "FUNCTION_DESCRIPTION", columnDefinition = "BLOB")
+	private String functionDescriptionString;
 
 	/**
 	 * A function description as JSON object.
 	 */
 	@Transient
-	private ObjectNode			functionDescription;
+	private ObjectNode functionDescription;
 
 	/**
 	 * A flag that indicates, whether the function description is initialised or not.
 	 */
 	@Transient
-	private boolean				functionDescriptionInitialized;
+	private boolean functionDescriptionInitialized;
 
 	/**
 	 * A list of parameters.
 	 */
 	@Transient
-	private LinkedList<String>	parameters;
+	private LinkedList<String> parameters;
 
 	/**
 	 * A JSON array of the parameter list.
 	 */
 	@Transient
-	private ArrayNode			parametersJSON;
+	private ArrayNode parametersJSON;
 
 	/**
 	 * A flag that indicates, whether the parameters are initialized or not.
 	 */
 	@Transient
-	private boolean				parametersInitialized;
+	private boolean parametersInitialized;
 
 	/**
 	 * A string that hold the serialised JSON object of the parameters.
@@ -120,8 +120,8 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	@JsonIgnore
 	@Lob
 	@Access(AccessType.FIELD)
-	@Column(name = "PARAMETERS", columnDefinition = "VARCHAR(4000)", length = 4000)
-	private String				parametersString;
+	@Column(name = "PARAMETERS", columnDefinition = "BLOB")
+	private String parametersString;
 
 	/**
 	 * The function type, e.g., function ({@link FunctionType#Function}) or transformation ({@link FunctionType#Transformation}).
@@ -133,29 +133,43 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	// @JsonIgnore
 	@Column(name = "FUNCTION_TYPE")
 	@Enumerated(EnumType.STRING)
-	private final FunctionType	functionType;
+	private final FunctionType functionType;
 
 	/**
 	 * Creates a new function.
 	 */
-	public Function() {
+	protected Function() {
+
+		functionType = FunctionType.Function;
+	}
+
+	protected Function(final FunctionType functionTypeArg) {
+
+		functionType = functionTypeArg;
+	}
+
+	public Function(final String uuid) {
+
+		super(uuid);
 
 		functionType = FunctionType.Function;
 	}
 
 	/**
 	 * Creates a new function with the given function type, i.e. function or transformation.
-	 * 
+	 *
 	 * @param functionTypeArg the type of the function
 	 */
-	public Function(final FunctionType functionTypeArg) {
+	public Function(final String uuid, final FunctionType functionTypeArg) {
+
+		super(uuid);
 
 		functionType = functionTypeArg;
 	}
 
 	/**
 	 * Gets the parameters of the function.
-	 * 
+	 *
 	 * @return the parameters of the function
 	 */
 	@XmlElement(name = "parameters")
@@ -168,7 +182,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the parameters of the function.
-	 * 
+	 *
 	 * @param parametersArg new parameters of the function
 	 */
 	@XmlElement(name = "parameters")
@@ -198,7 +212,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Adds a new parameter to the parameters lists of the function
-	 * 
+	 *
 	 * @param parameter a new parameter
 	 */
 	public void addParameter(final String parameter) {
@@ -223,7 +237,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the machine processable function description
-	 * 
+	 *
 	 * @return the machine processable function description
 	 */
 	@XmlElement(name = "function_description")
@@ -236,7 +250,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the machine processable function description
-	 * 
+	 *
 	 * @param functionDescriptionArg a new machine processable function description
 	 */
 	public void setFunctionDescription(final ObjectNode functionDescriptionArg) {
@@ -249,7 +263,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Gets the function type, e.g., function ({@link FunctionType#Function}) or transformation (
 	 * {@link FunctionType#Transformation}).
-	 * 
+	 *
 	 * @return the function type
 	 */
 	public FunctionType getFunctionType() {
@@ -292,7 +306,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Initialises the parameters list and JSON object from the string that holds the serialised JSON object of the parameters
 	 * list.
-	 * 
+	 *
 	 * @param fromScratch flag that indicates, whether the parameters should be initialised from scratch or not
 	 */
 	private void initParameters(final boolean fromScratch) {
@@ -301,7 +315,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 			if (parametersString == null) {
 
-				Function.LOG.debug("parameters JSON is null for '" + getId() + "'");
+				Function.LOG.debug("parameters JSON is null for '" + getUuid() + "'");
 
 				if (fromScratch) {
 
@@ -335,7 +349,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 				}
 			} catch (final DMPException e) {
 
-				Function.LOG.debug("couldn't parse parameters JSON for function '" + getId() + "'");
+				Function.LOG.debug("couldn't parse parameters JSON for function '" + getUuid() + "'");
 			}
 
 			parametersInitialized = true;
@@ -360,7 +374,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Initialises the function description from the string that holds the serialised JSON object of the function description.
-	 * 
+	 *
 	 * @param fromScratch flag that indicates, whether the function description should be initialised from scratch or not
 	 */
 	private void initFunctionDescription(final boolean fromScratch) {
@@ -386,7 +400,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 				functionDescription = DMPPersistenceUtil.getJSON(functionDescriptionString);
 			} catch (final DMPException e) {
 
-				Function.LOG.debug("couldn't parse function description JSON string for function '" + getId() + "'");
+				Function.LOG.debug("couldn't parse function description JSON string for function '" + getUuid() + "'");
 			}
 
 			functionDescriptionInitialized = true;

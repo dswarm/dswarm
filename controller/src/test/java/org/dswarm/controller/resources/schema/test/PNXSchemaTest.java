@@ -36,6 +36,8 @@ import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 
+import org.dswarm.controller.resources.schema.test.helper.PathHelper;
+import org.dswarm.controller.resources.schema.test.helper.PathHelpers;
 import org.dswarm.controller.resources.test.ResourceTest;
 import org.dswarm.controller.test.GuicedTest;
 import org.dswarm.persistence.model.resource.Configuration;
@@ -47,6 +49,7 @@ import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
+import org.dswarm.persistence.service.UUIDService;
 
 @SuppressWarnings("MethodMayBeStatic")
 public class PNXSchemaTest extends ResourceTest {
@@ -110,7 +113,10 @@ public class PNXSchemaTest extends ResourceTest {
 	}
 
 	private Configuration createConfiguration() {
-		final Configuration configuration = new Configuration();
+
+		final String configurationUuid = UUIDService.getUUID(Configuration.class.getSimpleName());
+
+		final Configuration configuration = new Configuration(configurationUuid);
 		configuration.setName(CONFIGURATION_NAME);
 		configuration.setDescription(CONFIGURATION_DESCRIPTION);
 		configuration.addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode("xml"));
@@ -126,7 +132,10 @@ public class PNXSchemaTest extends ResourceTest {
 	}
 
 	private DataModel createDataModel(final Resource resource, final Configuration configuration) {
-		final DataModel dataModel = new DataModel();
+
+		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+
+		final DataModel dataModel = new DataModel(dataModelUuid);
 		dataModel.setDataResource(resource);
 		dataModel.setConfiguration(configuration);
 		return dataModel;
@@ -145,7 +154,7 @@ public class PNXSchemaTest extends ResourceTest {
 	}
 
 	private String getResourceUri(final DataModel dataModel) {
-		return String.format("http://data.slub-dresden.de/resources/%d/schema", dataModel.getId());
+		return String.format("http://data.slub-dresden.de/resources/%s/schema", dataModel.getUuid());
 	}
 
 	private PathHelper makeExpected(final String uri) {

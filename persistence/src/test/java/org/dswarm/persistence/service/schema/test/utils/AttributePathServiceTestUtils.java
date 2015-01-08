@@ -157,12 +157,12 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 			// !null && !empty
 			final Set<Attribute> actualAttributes = actualObject.getAttributes();
 
-			Assert.assertNotNull("attributes of actual attribute path '" + actualObject.getId() + "' shouldn't be null", actualAttributes);
-			Assert.assertFalse("attributes of actual attribute path '" + actualObject.getId() + "' shouldn't be empty", actualAttributes.isEmpty());
+			Assert.assertNotNull("attributes of actual attribute path '" + actualObject.getUuid() + "' shouldn't be null", actualAttributes);
+			Assert.assertFalse("attributes of actual attribute path '" + actualObject.getUuid() + "' shouldn't be empty", actualAttributes.isEmpty());
 
-			final Map<Long, Attribute> actualAttributesMap = Maps.newHashMap();
+			final Map<String, Attribute> actualAttributesMap = Maps.newHashMap();
 			for (final Attribute actualAttribute : actualAttributes) {
-				actualAttributesMap.put(actualAttribute.getId(), actualAttribute);
+				actualAttributesMap.put(actualAttribute.getUuid(), actualAttribute);
 			}
 
 			astUtils.compareObjects(expectedObject.getAttributes(), actualAttributesMap);
@@ -263,10 +263,10 @@ public class AttributePathServiceTestUtils extends BasicJPAServiceTestUtils<Attr
 		}
 
 		Assert.assertNotNull(type + " shouldn't be null", object);
-		Assert.assertNotNull(type + " id shouldn't be null", object.getId());
+		Assert.assertNotNull(type + " id shouldn't be null", object.getUuid());
 		Assert.assertNotNull(type + " path shouldn't be null", object.getAttributePathAsJSONObjectString());
 
-		LOG.debug("created new attribute path with id = '" + object.getId() + "'" + " and path = '" + object.getAttributePathAsJSONObjectString()
+		LOG.debug("created new attribute path with id = '" + object.getUuid() + "'" + " and path = '" + object.getAttributePathAsJSONObjectString()
 				+ "'");
 		return object;
 	}

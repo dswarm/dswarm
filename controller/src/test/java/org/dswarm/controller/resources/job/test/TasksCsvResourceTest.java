@@ -51,6 +51,7 @@ import org.dswarm.persistence.model.resource.ResourceType;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
 import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class TasksCsvResourceTest extends ResourceTest {
@@ -92,7 +93,9 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 		final String resourceFileName = "test_csv-controller.csv";
 
-		final Resource res1 = new Resource();
+		final String resource1Uuid = UUIDService.getUUID(Resource.class.getSimpleName());
+
+		final Resource res1 = new Resource(resource1Uuid);
 		res1.setName(resourceFileName);
 		res1.setDescription("this is a description");
 		res1.setType(ResourceType.FILE);
@@ -127,8 +130,10 @@ public class TasksCsvResourceTest extends ResourceTest {
 		// upload data resource
 		Resource resource = resourcesResourceTestUtils.uploadResource(resourceFile, res1);
 
+		final String configuration1Uuid = UUIDService.getUUID(Configuration.class.getSimpleName());
+
 		// process input data model
-		final Configuration conf1 = new Configuration();
+		final Configuration conf1 = new Configuration(configuration1Uuid);
 
 		conf1.setName("config1");
 		conf1.addParameter(ConfigurationStatics.COLUMN_DELIMITER, new TextNode(";"));
@@ -139,7 +144,9 @@ public class TasksCsvResourceTest extends ResourceTest {
 		// create configuration
 		Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
 
-		final DataModel data1 = new DataModel();
+		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+
+		final DataModel data1 = new DataModel(dataModelUuid);
 		data1.setName("'" + res1.getName() + "' + '" + conf1.getName() + "' data model");
 		data1.setDescription("data model of resource '" + res1.getName() + "' and configuration '" + conf1.getName() + "'");
 		data1.setDataResource(resource);
@@ -158,7 +165,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 		Assert.assertNotNull("the data model schema record class shouldn't be null", schema.getRecordClass());
 
 		// check processed data
-		final String data = dataModelsResourceTestUtils.getData(inputDataModel.getId(), 1);
+		final String data = dataModelsResourceTestUtils.getData(inputDataModel.getUuid(), 1);
 
 		Assert.assertNotNull("the data shouldn't be null", data);
 
@@ -167,14 +174,14 @@ public class TasksCsvResourceTest extends ResourceTest {
 		final ObjectNode finalInputDataModelJSON = objectMapper.readValue(finalInputDataModelJSONString, ObjectNode.class);
 
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
-		taskJSON.put("input_data_model", finalInputDataModelJSON);
+		taskJSON.set("input_data_model", finalInputDataModelJSON);
 
 		// utilise internal model as output data model
-		final DataModel outputDataModel = dataModelsResourceTestUtils.getObject((long) 1);
+		final DataModel outputDataModel = dataModelsResourceTestUtils.getObject(DataModelUtils.BIBO_DOCUMENT_DATA_MODEL_UUID);
 		final String outputDataModelJSONString = objectMapper.writeValueAsString(outputDataModel);
 		final ObjectNode outputDataModelJSON = objectMapper.readValue(outputDataModelJSONString, ObjectNode.class);
 
-		taskJSON.put("output_data_model", outputDataModelJSON);
+		taskJSON.set("output_data_model", outputDataModelJSON);
 
 		// manipulate attributes
 		final ObjectNode mappingJSON = (ObjectNode) taskJSON.get("job").get("mappings").get(0);
@@ -268,7 +275,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 					Matchers.equalTo(expectedRecordData.get(expectedDataResourceSchemaBaseURI + "description").asText()));
 		}
 
-		inputDataModel = dataModelsResourceTestUtils.getObject(inputDataModel.getId());
+		inputDataModel = dataModelsResourceTestUtils.getObject(inputDataModel.getUuid());
 
 		Assert.assertNotNull("the data model shouldn't be null", inputDataModel);
 		Assert.assertNotNull("the data model schema shouldn't be null", inputDataModel.getSchema());

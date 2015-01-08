@@ -122,7 +122,7 @@ public class ProjectRemoveMappingResourceTest extends
 		String idEncoded = null;
 		try {
 
-			idEncoded = URLEncoder.encode(initiallyPersistedProject.getId().toString(), "UTF-8");
+			idEncoded = URLEncoder.encode(initiallyPersistedProject.getUuid(), "UTF-8");
 		} catch (final UnsupportedEncodingException e) {
 
 			ProjectRemoveMappingResourceTest.LOG.debug("couldn't encode id", e);
@@ -151,8 +151,8 @@ public class ProjectRemoveMappingResourceTest extends
 		// Start check db
 
 		// the mapping itself must still be present in database
-		Assert.assertNotNull("mapping to be removed \"" + mappingToBeRemovedFromProjectName + "\" has no ID", mappingToBeRemovedFromProject.getId());
-		final Mapping persistedMappingToBeRemovedFromProject = mappingsResourceTestUtils.getObject(mappingToBeRemovedFromProject.getId());
+		Assert.assertNotNull("mapping to be removed \"" + mappingToBeRemovedFromProjectName + "\" has no ID", mappingToBeRemovedFromProject.getUuid());
+		final Mapping persistedMappingToBeRemovedFromProject = mappingsResourceTestUtils.getObject(mappingToBeRemovedFromProject.getUuid());
 		mappingsResourceTestUtils.compareObjects(mappingToBeRemovedFromProject, persistedMappingToBeRemovedFromProject);
 
 	}

@@ -1,29 +1,29 @@
 {
-        "id": 25,
-        "name": "my transformation (component) update",
-        "function": {
-            "id": 320,
-            "name": "my transformation",
-            "description": "transformation which just makes use of one function",
-            "parameters": ["transformationInputString"],
-            "components": [{
-                "id": 24,
-                "name": "my trim component",
-                "function": {
-                    "id": 319,
-                    "name": "trim",
-                    "description": "trims leading and trailing whitespaces from a given string",
-                    "parameters": ["inputString"],
-                    "type": "Function"
-                },
-                "parameter_mappings": {
-                    "inputString": "previousComponent.outputString"
-                }
-            }],
-            "type": "Transformation"
-        },
-        "parameter_mappings": {
-            "transformationInputString": "http://purl.org/dc/terms/title",
-            "transformationOutputVariable": "http://www.w3.org/2000/01/rdf-schema#label"
-        }
-    }
+  "name" : "my transformation (component) update",
+  "function" : {
+    "name" : "my transformation",
+    "description" : "transformation which just makes use of one function",
+    "parameters" : [ "transformationInputString" ],
+    "components" : [ {
+      "name" : "my trim component",
+      "function" : {
+        "name" : "trim",
+        "description" : "trims leading and trailing whitespaces from a given string",
+        "parameters" : [ "inputString" ],
+        "type" : "Function",
+        "uuid" : "319"
+      },
+      "parameter_mappings" : {
+        "inputString" : "previousComponent.outputString"
+      },
+      "uuid" : "24"
+    } ],
+    "type" : "Transformation",
+    "uuid" : "320"
+  },
+  "parameter_mappings" : {
+    "transformationInputString" : "http://purl.org/dc/terms/title",
+    "transformationOutputVariable" : "http://www.w3.org/2000/01/rdf-schema#label"
+  },
+  "uuid" : "25"
+}

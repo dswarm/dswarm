@@ -49,6 +49,7 @@ import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
 import org.dswarm.persistence.service.InternalModelService;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.service.resource.test.utils.DataModelServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
@@ -128,7 +129,9 @@ public class DataModelsResourceTest2 extends
 
 		final Configuration config = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
 
-		final DataModel dataModel1 = new DataModel();
+		final String dataModel1Uuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+
+		final DataModel dataModel1 = new DataModel(dataModel1Uuid);
 		dataModel1.setName("my data model");
 		dataModel1.setDescription("my data model description");
 		dataModel1.setDataResource(resource);
@@ -142,7 +145,7 @@ public class DataModelsResourceTest2 extends
 
 		final InternalModelServiceFactory serviceFactory = GuicedTest.injector.getInstance(Key.get(InternalModelServiceFactory.class));
 		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
-		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getId(), Optional.of(atMost));
+		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getUuid(), Optional.of(atMost));
 
 		Assert.assertTrue(data.isPresent());
 		Assert.assertFalse(data.get().isEmpty());
@@ -150,7 +153,7 @@ public class DataModelsResourceTest2 extends
 
 		final String recordId = data.get().keySet().iterator().next();
 
-		final Response response = target(String.valueOf(dataModel.getId()), "data").queryParam("atMost", atMost).request()
+		final Response response = target(String.valueOf(dataModel.getUuid()), "data").queryParam("atMost", atMost).request()
 				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
 
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
@@ -201,7 +204,9 @@ public class DataModelsResourceTest2 extends
 
 		final Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
 
-		final DataModel dataModel1 = new DataModel();
+		final String dataModel1Uuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+
+		final DataModel dataModel1 = new DataModel(dataModel1Uuid);
 		dataModel1.setName("my data model");
 		dataModel1.setDescription("my data model description");
 		dataModel1.setDataResource(resource);
@@ -215,7 +220,7 @@ public class DataModelsResourceTest2 extends
 
 		final InternalModelServiceFactory serviceFactory = GuicedTest.injector.getInstance(Key.get(InternalModelServiceFactory.class));
 		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
-		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getId(), Optional.of(atMost));
+		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getUuid(), Optional.of(atMost));
 
 		Assert.assertTrue(data.isPresent());
 		Assert.assertFalse(data.get().isEmpty());
@@ -223,7 +228,7 @@ public class DataModelsResourceTest2 extends
 
 		final String recordId = data.get().keySet().iterator().next();
 
-		final Response response = target(String.valueOf(dataModel.getId()), "data").queryParam("atMost", atMost).request()
+		final Response response = target(String.valueOf(dataModel.getUuid()), "data").queryParam("atMost", atMost).request()
 				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
 
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
@@ -276,7 +281,9 @@ public class DataModelsResourceTest2 extends
 
 		final Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
 
-		final DataModel dataModel1 = new DataModel();
+		final String dataModel1Uuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+
+		final DataModel dataModel1 = new DataModel(dataModel1Uuid);
 		final String dataModelName = UUID.randomUUID().toString();
 		dataModel1.setName(dataModelName);
 		dataModel1.setDescription("my data model description");

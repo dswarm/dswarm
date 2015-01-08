@@ -28,9 +28,6 @@ import org.dswarm.persistence.service.schema.ClaszService;
 
 /**
  * @author tgaengler
- * @param <POJOCLASSPERSISTENCESERVICE>
- * @param <POJOCLASS>
- * @param <POJOCLASSIDTYPE>
  */
 public class ClaszesResourceUtils extends AdvancedDMPResourceUtils<ClaszService, ProxyClasz, Clasz> {
 

@@ -1,27 +1,27 @@
 {
-    "type": "MappingAttributePathInstance",
-    "name": "my mapping attribute path instance",
-    "id": 2,
-    "attribute_path": {
-        "id": 2,
-        "attributes": [{
-            "name": "title",
-            "uri": "http://purl.org/dc/terms/title",
-            "id": 3
-        }, {
-            "name": "hasPart",
-            "uri": "http://purl.org/dc/terms/hasPart",
-            "id": 4
-        }, {
-            "name": "title",
-            "uri": "http://purl.org/dc/terms/title",
-            "id": 3
-        }]
-    },
-    "filter": {
-        "name": "my filter",
-        "expression": "SELECT ?identifier ?url\nWHERE {\n    ?record custmabxml:metadata ?metadata ;\n            custmabxml:header ?header .\n    ?header custmabxml:identifier ?identifier .\n    ?metadata m:record ?mabrecord .\n    ?mabrecord m:datafield ?dataField .\n    ?dataField m:tag \"088\" ;\n               m:ind1 \"a\" ;\n               m:subfield ?subField .\n    ?subField rdf:value ?url .\n}",
-        "id": 1
-    },
-    "ordinal": 1
+  "type" : "MappingAttributePathInstance",
+  "name" : "my mapping attribute path instance",
+  "attribute_path" : {
+    "attributes" : [ {
+      "name" : "title",
+      "uri" : "http://purl.org/dc/terms/title",
+      "uuid" : "3"
+    }, {
+      "name" : "hasPart",
+      "uri" : "http://purl.org/dc/terms/hasPart",
+      "uuid" : "4"
+    }, {
+      "name" : "title",
+      "uri" : "http://purl.org/dc/terms/title",
+      "uuid" : "3"
+    } ],
+    "uuid" : "2"
+  },
+  "filter" : {
+    "name" : "my filter",
+    "expression" : "SELECT ?identifier ?url\nWHERE {\n    ?record custmabxml:metadata ?metadata ;\n            custmabxml:header ?header .\n    ?header custmabxml:identifier ?identifier .\n    ?metadata m:record ?mabrecord .\n    ?mabrecord m:datafield ?dataField .\n    ?dataField m:tag \"088\" ;\n               m:ind1 \"a\" ;\n               m:subfield ?subField .\n    ?subField rdf:value ?url .\n}",
+    "uuid" : "1"
+  },
+  "ordinal" : 1,
+  "uuid" : "2"
 }

@@ -25,6 +25,7 @@ import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
 import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 import org.dswarm.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestUtils;
@@ -76,7 +77,10 @@ public class DataModelServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 			final Schema schema)
 			throws Exception {
 
-		final DataModel dataModel = new DataModel();
+		// TODO: think about this?
+		final String dataModelUUID = UUIDService.getUUID(DataModel.class.getSimpleName());
+
+		final DataModel dataModel = new DataModel(dataModelUUID);
 		dataModel.setName(name);
 		dataModel.setDescription(description);
 		dataModel.setDataResource(resource);

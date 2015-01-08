@@ -26,7 +26,7 @@ import org.dswarm.persistence.model.AdvancedDMPJPAObject;
 
 /**
  * A class is a type. In a graph a node or edge can have a type, e.g., foaf:Document.
- * 
+ *
  * @author tgaengler
  */
 @XmlRootElement
@@ -36,41 +36,45 @@ import org.dswarm.persistence.model.AdvancedDMPJPAObject;
 @Table(name = "CLASS")
 public class Clasz extends AdvancedDMPJPAObject {
 
-	private static final Logger	LOG					= LoggerFactory.getLogger(Clasz.class);
+	private static final Logger LOG = LoggerFactory.getLogger(Clasz.class);
 
 	/**
 	 *
 	 */
-	private static final long	serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Creates new class with no identifier.
 	 */
-	public Clasz() {
+	protected Clasz() {
 
-		super(null);
+		//super(null);
 	}
 
 	/**
 	 * Creates a new class with the given identifier.
-	 * 
-	 * @param id a class identifier
+	 *
+	 * @param uri a class identifier
 	 */
-	public Clasz(final String id) {
+	public Clasz(final String uuid) {
 
-		super(id);
+		super(uuid);
+	}
+
+	public Clasz(final String uuid, final String uri) {
+
+		super(uuid, uri);
 	}
 
 	/**
 	 * Creates a new class with the given identifier and name-
-	 * 
-	 * @param id a class identifier
+	 *
+	 * @param uri  a class identifier
 	 * @param name a class name
 	 */
-	public Clasz(final String id, final String name) {
+	public Clasz(final String uuid, final String uri, final String name) {
 
-		super(id);
-		setName(name);
+		super(uuid, uri, name);
 	}
 
 	@Override

@@ -35,12 +35,6 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.dswarm.init.DMPException;
-import org.dswarm.persistence.model.BasicDMPJPAObject;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -48,6 +42,12 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.dswarm.init.DMPException;
+import org.dswarm.persistence.model.BasicDMPJPAObject;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * A data schema is a collection of {@link SchemaAttributePathInstance}s and a record class ({@link Clasz}) and optionally it contains a content
@@ -75,8 +75,8 @@ public class Schema extends BasicDMPJPAObject {
 	// @ManyToMany(mappedBy = "schemas", fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE,
 	// CascadeType.PERSIST, CascadeType.REFRESH })
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinTable(name = "SCHEMAS_SCHEMA_ATTRIBUTE_PATH_INSTANCES", joinColumns = { @JoinColumn(name = "SCHEMA_ID", referencedColumnName = "ID") },
-			inverseJoinColumns = { @JoinColumn(name = "SCHEMA_ATTRIBUTE_PATH_INSTANCE_ID", referencedColumnName = "ID") })
+	@JoinTable(name = "SCHEMAS_SCHEMA_ATTRIBUTE_PATH_INSTANCES", joinColumns = { @JoinColumn(name = "SCHEMA_UUID", referencedColumnName = "UUID") },
+			inverseJoinColumns = { @JoinColumn(name = "SCHEMA_ATTRIBUTE_PATH_INSTANCE_UUID", referencedColumnName = "UUID") })
 	@JsonIgnore
 	private Set<SchemaAttributePathInstance> attributePaths;
 
@@ -105,7 +105,7 @@ public class Schema extends BasicDMPJPAObject {
 	@JsonIgnore
 	@Lob
 	@Access(AccessType.FIELD)
-	@Column(name = "SCHEMA_ATTRIBUTE_PATH_INSTANCES", columnDefinition = "VARCHAR(4000)", length = 4000)
+	@Column(name = "SCHEMA_ATTRIBUTE_PATH_INSTANCES", columnDefinition = "BLOB")
 	private String attributePathsJsonString;
 
 	/**
@@ -124,7 +124,13 @@ public class Schema extends BasicDMPJPAObject {
 	@XmlElement(name = "content_schema")
 	private ContentSchema contentSchema;
 
-	public Schema() {
+	protected Schema() {
+
+	}
+
+	public Schema(final String uuid) {
+
+		super(uuid);
 	}
 
 	/**
@@ -163,18 +169,40 @@ public class Schema extends BasicDMPJPAObject {
 	/**
 	 * Gets the attribute path (instance) for the given schema attribute path instance identifier.
 	 *
-	 * @param id a schema attribute path instance identifier
+	 * @param uuid a schema attribute path instance identifier
 	 * @return that matched attribute path (instance) or null
 	 */
-	public SchemaAttributePathInstance getAttributePath(final Long id) {
-		Preconditions.checkNotNull(id);
+	public SchemaAttributePathInstance getAttributePath(final String uuid) {
+		Preconditions.checkNotNull(uuid);
+
+		ensureAttributePaths();
 
 		if (attributePaths != null) {
 			for (final SchemaAttributePathInstance attributePath : attributePaths) {
-				if (attributePath.getId().equals(id)) {
+				if (attributePath.getUuid().equals(uuid)) {
 					return attributePath;
 				}
 			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets the attribute path (instance) for the given schema attribute path uri path.
+	 *
+	 * @param uriPath a schema attribute path uri path
+	 * @return that matched attribute path (instance) or null
+	 */
+	public SchemaAttributePathInstance getAttributePathByURIPath(final String uriPath) {
+		Preconditions.checkNotNull(uriPath);
+
+		ensureAttributePaths();
+		ensureInitializedOrderedAttributePaths();
+
+		if (orderedAttributePaths != null) {
+
+			return orderedAttributePaths.get(uriPath);
 		}
 
 		return null;
@@ -186,12 +214,12 @@ public class Schema extends BasicDMPJPAObject {
 	 * @param attributePath a new attribute path
 	 */
 	public void addAttributePath(final SchemaAttributePathInstance attributePath) {
-		
+
 		Preconditions.checkNotNull(attributePath);
 
 		ensureAttributePaths();
 		ensureInitializedOrderedAttributePaths();
-		
+
 		// TODO check if equals method works for SAPIs, otherwise the usage of contains may fail here
 
 		// second check is for attribute path uniqueness constraint
@@ -227,21 +255,22 @@ public class Schema extends BasicDMPJPAObject {
 	//		}
 	//	}
 
-//	 note removal is not really needed right now
-		/**
-		 * Removes an existing attribute path (instance) from the collection of attribute path (instances) of this export schema.<br>
-		 * Created by: tgaengler
-		 *
-		 * @param attributePath an existing attribute path instance that should be removed
-		 */
-		public void removeAttributePath(final SchemaAttributePathInstance attributePath) {
-			if (attributePath != null && attributePaths != null) {
-				final boolean isRemoved = attributePaths.remove(attributePath);
-				if (isRemoved && orderedAttributePaths != null) {
-					orderedAttributePaths.remove( attributePath.getAttributePath().toAttributePath() );
-				}
+	//	 note removal is not really needed right now
+
+	/**
+	 * Removes an existing attribute path (instance) from the collection of attribute path (instances) of this export schema.<br>
+	 * Created by: tgaengler
+	 *
+	 * @param attributePath an existing attribute path instance that should be removed
+	 */
+	public void removeAttributePath(final SchemaAttributePathInstance attributePath) {
+		if (attributePath != null && attributePaths != null) {
+			final boolean isRemoved = attributePaths.remove(attributePath);
+			if (isRemoved && orderedAttributePaths != null) {
+				orderedAttributePaths.remove(attributePath.getAttributePath().toAttributePath());
 			}
 		}
+	}
 
 	// note: removal is not really needed right now
 	//	/**
@@ -394,7 +423,7 @@ public class Schema extends BasicDMPJPAObject {
 		if (orderedAttributePathsJson == null && !isOrderedAttributePathsInitialized) {
 
 			if (attributePathsJsonString == null) {
-				Schema.LOG.debug("attribute paths JSON is null for {}", getId());
+				Schema.LOG.debug("attribute paths JSON is null for {}", getUuid());
 
 				if (fromScratch) {
 					orderedAttributePathsJson = new ArrayNode(DMPPersistenceUtil.getJSONFactory());
@@ -413,14 +442,14 @@ public class Schema extends BasicDMPJPAObject {
 				if (orderedAttributePathsJson != null) {
 
 					for (final JsonNode attributePathIdNode : orderedAttributePathsJson) {
-						final SchemaAttributePathInstance attributePath = getAttributePath(attributePathIdNode.longValue());
+						final SchemaAttributePathInstance attributePath = getAttributePath(attributePathIdNode.asText());
 						if (attributePath != null && !orderedAttributePaths.containsKey(attributePath.getAttributePath().toAttributePath())) {
 							orderedAttributePaths.put(attributePath.getAttributePath().toAttributePath(), attributePath);
 						}
 					}
 				}
 			} catch (final DMPException e) {
-				Schema.LOG.debug("couldn't parse attribute path JSON for attribute path '" + getId() + "'", e);
+				Schema.LOG.debug("couldn't parse attribute path JSON for attribute path '" + getUuid() + "'", e);
 			}
 			isOrderedAttributePathsInitialized = true;
 		}
@@ -432,7 +461,7 @@ public class Schema extends BasicDMPJPAObject {
 		if (orderedAttributePaths != null) {
 			orderedAttributePathsJson = new ArrayNode(DMPPersistenceUtil.getJSONFactory());
 			for (final SchemaAttributePathInstance attributePath : orderedAttributePaths.values()) {
-				orderedAttributePathsJson.add(attributePath.getId());
+				orderedAttributePathsJson.add(attributePath.getUuid());
 			}
 		}
 

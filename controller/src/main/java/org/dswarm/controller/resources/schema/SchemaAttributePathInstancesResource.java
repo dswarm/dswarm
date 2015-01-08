@@ -85,7 +85,7 @@ public class SchemaAttributePathInstancesResource
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "schema attribute path instance identifier", required = true) @PathParam("id") final Long id)
+	public Response getObject(@ApiParam(value = "schema attribute path instance identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.getObject(id);
@@ -135,7 +135,7 @@ public class SchemaAttributePathInstancesResource
 	 * instance in the database.
 	 *
 	 * @param jsonObjectString a JSON representation of one schema attribute path instance
-	 * @param id               a schema attribute path instance identifier
+	 * @param uuid             a schema attribute path instance identifier
 	 * @return the updated schema attribute path instance as JSON representation
 	 * @throws org.dswarm.controller.DMPControllerException
 	 */
@@ -149,10 +149,10 @@ public class SchemaAttributePathInstancesResource
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateObject(@ApiParam(value = "schema attribute path instance (as JSON)", required = true) final String jsonObjectString,
-			@ApiParam(value = "schema attribute path instance identifier", required = true) @PathParam("id") final Long id)
+			@ApiParam(value = "schema attribute path instance identifier", required = true) @PathParam("id") final String uuid)
 			throws DMPControllerException {
 
-		return super.updateObject(jsonObjectString, id);
+		return super.updateObject(jsonObjectString, uuid);
 	}
 
 	/**
@@ -174,7 +174,7 @@ public class SchemaAttributePathInstancesResource
 	@DELETE
 	@Path("/{id}")
 	@Override
-	public Response deleteObject(@ApiParam(value = "schema attribute path instance identifier", required = true) @PathParam("id") final Long id)
+	public Response deleteObject(@ApiParam(value = "schema attribute path instance identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.deleteObject(id);

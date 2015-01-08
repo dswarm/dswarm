@@ -15,7 +15,13 @@
  */
 package org.dswarm.persistence.model.schema.test;
 
+import java.io.IOException;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Assert;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.schema.Attribute;
@@ -23,19 +29,13 @@ import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
+import org.dswarm.persistence.service.UUIDService;
 
 public class SchemaTest extends GuicedTest {
 
-	private static final Logger	LOG				= LoggerFactory.getLogger(SchemaTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SchemaTest.class);
 
-	private final ObjectMapper	objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleSchemaTest() throws IOException {
@@ -49,10 +49,10 @@ public class SchemaTest extends GuicedTest {
 
 		Assert.assertTrue("the two schemas should be identical", json.equals(jsonDup));
 	}
-	
+
 	/**
 	 * Test building a schema with sub-schemata
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test
@@ -80,13 +80,18 @@ public class SchemaTest extends GuicedTest {
 		final AttributePath attributePath2 = createAttributePath(dctermsCreator, foafName);
 		final AttributePath attributePath3 = createAttributePath(dctermsCreated);
 
-		final Clasz biboDocument = new Clasz("http://purl.org/ontology/bibo/Document", "document");
+		final String uuid = UUIDService.getUUID(Clasz.class.getSimpleName());
+
+		final Clasz biboDocument = new Clasz(uuid, "http://purl.org/ontology/bibo/Document", "document");
 
 		return createSchema(biboDocument, attributePath1, attributePath2, attributePath3);
 	}
 
 	private static AttributePath createAttributePath(final Attribute... attributes) {
-		final AttributePath attributePath = new AttributePath();
+
+		final String attributePathUUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath attributePath = new AttributePath(attributePathUUID);
 		for (final Attribute attribute : attributes) {
 			attributePath.addAttribute(attribute);
 		}
@@ -96,9 +101,12 @@ public class SchemaTest extends GuicedTest {
 
 		return attributePath;
 	}
-	
+
 	private static SchemaAttributePathInstance createAttributePathInstance(final AttributePath attributePath) {
-		final SchemaAttributePathInstance attributePathInstance = new SchemaAttributePathInstance();
+
+		final String attributePathInstanceUUID = UUIDService.getUUID(SchemaAttributePathInstance.class.getSimpleName());
+
+		final SchemaAttributePathInstance attributePathInstance = new SchemaAttributePathInstance(attributePathInstanceUUID);
 		attributePathInstance.setAttributePath(attributePath);
 
 		Assert.assertNotNull("the attribute path should not be null", attributePathInstance.getAttributePath());
@@ -107,8 +115,10 @@ public class SchemaTest extends GuicedTest {
 	}
 
 	private static Schema createSchema(final Clasz recordClass, final AttributePath... attributePaths) {
-		
-		final Schema schema = new Schema();
+
+		final String schemaUUID = UUIDService.getUUID(Schema.class.getSimpleName());
+
+		final Schema schema = new Schema(schemaUUID);
 		schema.setRecordClass(recordClass);
 		for (final AttributePath attributePath : attributePaths) {
 			SchemaAttributePathInstance pathInstance = createAttributePathInstance(attributePath);
@@ -123,13 +133,15 @@ public class SchemaTest extends GuicedTest {
 		return schema;
 	}
 
-	private static Attribute createAttribute(final String id, final String name) {
+	private static Attribute createAttribute(final String uri, final String name) {
 
-		final Attribute attribute = new Attribute(id);
+		final String uuid = UUIDService.getUUID(Attribute.class.getSimpleName());
+
+		final Attribute attribute = new Attribute(uuid, uri);
 		attribute.setName(name);
 
-		Assert.assertNotNull("the attribute id shouldn't be null", attribute.getUri());
-		Assert.assertEquals("the attribute ids are not equal", id, attribute.getUri());
+		Assert.assertNotNull("the attribute uri shouldn't be null", attribute.getUri());
+		Assert.assertEquals("the attribute uris are not equal", uri, attribute.getUri());
 		Assert.assertNotNull("the attribute name shouldn't be null", attribute.getName());
 		Assert.assertEquals("the attribute names are not equal", name, attribute.getName());
 

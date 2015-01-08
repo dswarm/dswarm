@@ -1,17 +1,17 @@
 {
-    "id": 1,
-    "name": "my project",
-    "description": "my project description",
-    "mappings": [{
-        "id": 1
-    }],
-    "functions": [{
-        "id": 9
-    }],
-    "input_data_model": {
-        "id": 1
-    },
-    "output_data_model": {
-        "id": 2
-    }
+  "name" : "my project",
+  "description" : "my project description",
+  "mappings" : [ {
+    "uuid" : "1"
+  } ],
+  "functions" : [ {
+    "uuid" : "9"
+  } ],
+  "input_data_model" : {
+    "uuid" : "1"
+  },
+  "output_data_model" : {
+    "uuid" : "2"
+  },
+  "uuid" : "1"
 }

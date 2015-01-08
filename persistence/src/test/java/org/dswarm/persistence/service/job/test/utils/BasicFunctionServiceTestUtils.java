@@ -23,6 +23,7 @@ import org.junit.Assert;
 
 import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.proxy.ProxyBasicFunction;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.job.BasicFunctionService;
 import org.dswarm.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestUtils;
 
@@ -88,7 +89,10 @@ public abstract class BasicFunctionServiceTestUtils<POJOCLASSPERSISTENCESERVICE 
 
 	public POJOCLASS createFunction(final String name, final String description, final LinkedList<String> parameters) throws Exception {
 
-		final POJOCLASS function = createNewObject();
+		// TODO: think about this?
+		final String uuid = UUIDService.getUUID(pojoClassName);
+
+		final POJOCLASS function = createNewObject(uuid);
 
 		function.setName(name);
 		function.setDescription(description);

@@ -19,16 +19,17 @@ import java.io.File;
 
 import com.google.inject.Key;
 import com.google.inject.name.Names;
-import org.junit.Test;
 
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.init.util.CmdUtil;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.resource.DataModel;
+import org.dswarm.persistence.model.resource.utils.DataModelUtils;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.service.schema.test.internalmodel.BiboDocumentSchemaBuilder;
 import org.dswarm.persistence.service.schema.test.internalmodel.BibrmContractItemSchemaBuilder;
+import org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtils;
 
 /**
  * Serves as a preliminary place for triggering the build of a script that populates the database with initially required internal
@@ -65,7 +66,7 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		dataModelService = GuicedTest.injector.getInstance(DataModelService.class);
 	}
 
-	@Test
+	//@Test
 	public void buildScript() throws Exception {
 
 		final Schema bibrmContractSchema = new BibrmContractItemSchemaBuilder().buildSchema();
@@ -80,13 +81,13 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		// [@tgaengler]: just prevention, but I guess that we also need a (default) data model for the foaf:Person schema (right now)
 		final String foafPersonDM = "Internal Data Model foafPerson";
 
-		final Schema foafPersonSchema = biboDocumentSchema.getAttributePath((long) 14).getSubSchema();
+		final Schema foafPersonSchema = biboDocumentSchema.getAttributePathByURIPath(AttributeServiceTestUtils.DCTERMS_CREATOR).getSubSchema();
 
-		createSchemaDataModel(bibrmContractDM, bibrmContractDM, bibrmContractSchema);
-		createSchemaDataModel(biboDocumentDM, biboDocumentDM, biboDocumentSchema);
-		createSchemaDataModel(mabxmlSchemaDM, mabxmlSchemaDM, mabxmlSchema);
-		createSchemaDataModel(pnxSchemaDM, pnxSchemaDM, pnxSchema);
-		createSchemaDataModel(foafPersonDM, foafPersonDM, foafPersonSchema);
+		createSchemaDataModel(DataModelUtils.BIBRM_CONTRACT_DATA_MODEL_UUID, bibrmContractDM, bibrmContractDM, bibrmContractSchema);
+		createSchemaDataModel(DataModelUtils.BIBO_DOCUMENT_DATA_MODEL_UUID, biboDocumentDM, biboDocumentDM, biboDocumentSchema);
+		createSchemaDataModel(DataModelUtils.MABXML_DATA_MODEL_UUID, mabxmlSchemaDM, mabxmlSchemaDM, mabxmlSchema);
+		createSchemaDataModel(pnxSchemaDM, pnxSchemaDM, pnxSchema);		
+		createSchemaDataModel(DataModelUtils.FOAF_PERSON_DATA_MODEL_UUID, foafPersonDM, foafPersonDM, foafPersonSchema);
 
 		final String sep = File.separator;
 
@@ -109,6 +110,7 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 				.append(" --no-create-info --no-create-db --skip-triggers --skip-create-options --skip-add-drop-table --skip-lock-tables --skip-add-locks -B ")
 				.append(db);
 
+		// didn't work in ubuntu right now
 		CmdUtil.runCommand(sb.toString(), output);
 	}
 
@@ -116,9 +118,10 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		return GuicedTest.injector.getInstance(Key.get(String.class, Names.named(key)));
 	}
 
-	private void createSchemaDataModel(final String name, final String description, final Schema schema) throws DMPPersistenceException {
+	private void createSchemaDataModel(final String uuid, final String name, final String description, final Schema schema)
+			throws DMPPersistenceException {
 
-		final DataModel dataModel = new DataModel();
+		final DataModel dataModel = new DataModel(uuid);
 		dataModel.setName(name);
 		dataModel.setDescription(description);
 		dataModel.setSchema(schema);

@@ -1,11 +1,11 @@
 {
-    "id": -377733884442,
-    "name": "UTF-8.csv",
-    "description": "this is a description",
-    "type": "FILE",
-    "resource_attributes": {
-        "path": "/path/to/file.end",
-        "filesize": 766,
-        "filetype": "text/csv"
-    }
+  "name" : "UTF-8.csv",
+  "description" : "this is a description",
+  "type" : "FILE",
+  "resource_attributes" : {
+    "path" : "/path/to/file.end",
+    "filesize" : 766,
+    "filetype" : "text/csv"
+  },
+  "uuid" : "-377733884442"
 }

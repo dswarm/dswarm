@@ -32,12 +32,17 @@ import org.dswarm.persistence.util.GDMUtil;
 
 /**
  * A utility class for {@link DataModel}s and related entities.
- * 
+ *
  * @author tgaengler
  */
 public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataModel> {
 
-	private static final Logger	LOG	= LoggerFactory.getLogger(DataModelUtils.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DataModelUtils.class);
+
+	public static final String BIBRM_CONTRACT_DATA_MODEL_UUID = "DataModel-7e170c22-1371-4836-9a09-515524a1a8d5";
+	public static final String BIBO_DOCUMENT_DATA_MODEL_UUID  = "DataModel-cf998267-392a-4d87-a33a-88dd1bffb016";
+	public static final String MABXML_DATA_MODEL_UUID         = "DataModel-4f399d11-81ae-45af-b2f4-645aa177ab85";
+	public static final String FOAF_PERSON_DATA_MODEL_UUID    = "DataModel-23451d9d-adf6-4352-90f8-4f17cccf5d36";
 
 	public static String determineDataModelSchemaBaseURI(final DataModel dataModel) {
 
@@ -109,15 +114,15 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 					}
 				} else {
 
-					DataModelUtils.LOG.warn("The data model [" + dataModel.getId() + "] is missing the data resource path string");
+					DataModelUtils.LOG.warn("The data model [" + dataModel.getUuid() + "] is missing the data resource path string");
 				}
 			} else {
 
-				DataModelUtils.LOG.warn("The data model [" + dataModel.getId() + "] is missing the data resource path");
+				DataModelUtils.LOG.warn("The data model [" + dataModel.getUuid() + "] is missing the data resource path");
 			}
 		} else {
 
-			DataModelUtils.LOG.warn("The data model [" + dataModel.getId() + "] is missing the data resource");
+			DataModelUtils.LOG.warn("The data model [" + dataModel.getUuid() + "] is missing the data resource");
 		}
 
 		final String dataResourceBaseURI;
@@ -133,11 +138,11 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 
 			final StringBuilder sb = new StringBuilder();
 
-			if (dataResource != null && dataResource.getId() != null) {
+			if (dataResource != null && dataResource.getUuid() != null) {
 
 				// create uri from resource id
 
-				sb.append("http://data.slub-dresden.de/resources/").append(dataResource.getId());
+				sb.append("http://data.slub-dresden.de/resources/").append(dataResource.getUuid());
 			}
 
 			// TODO: this is wrong, or? - "create uri from data resource name" -> this will result in ugly uris ...
@@ -150,11 +155,11 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 			//
 			// sb.append("http://data.slub-dresden.de/resources/").append(dataResourceName);
 			// }
-			else if (dataModel.getId() != null) {
+			else if (dataModel.getUuid() != null) {
 
 				// create uri from data model id
 
-				sb.append("http://data.slub-dresden.de/datamodels/").append(dataModel.getId());
+				sb.append("http://data.slub-dresden.de/datamodels/").append(dataModel.getUuid());
 			} else {
 
 				// create uri with random uuid
@@ -188,7 +193,7 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 
 			// create uri from resource id and configuration id and random uuid
 
-			sb.append("http://data.slub-dresden.de/datamodels/").append(dataModel.getId()).append("/records/");
+			sb.append("http://data.slub-dresden.de/datamodels/").append(dataModel.getUuid()).append("/records/");
 		} else {
 
 			// create uri from random uuid

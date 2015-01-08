@@ -58,12 +58,11 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 	 * Creates a new resource (controller service) for {@link Attribute}s with the provider of the attribute persistence service,
 	 * the object mapper and metrics registry.
 	 * 
-	 * @param attributeServiceProviderArg the attribute persistence service provider
-	 * @param objectMapperArg an object mapper
+	 * @param utilsFactory the resource utils factory
 	 * @param dmpStatusArg a metrics registry
 	 */
 	@Inject
-	public AttributesResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg, final ObjectMapper objectMapperArg)
+	public AttributesResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg)
 			throws DMPControllerException {
 
 		super(utilsFactory.reset().get(AttributesResourceUtils.class), dmpStatusArg);
@@ -83,7 +82,7 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "attribute identifier", required = true) @PathParam("id") final Long id)
+	public Response getObject(@ApiParam(value = "attribute identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.getObject(id);
@@ -132,7 +131,7 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 	 * This endpoint consumes an attribute as JSON representation and updates this attribute in the database.
 	 * 
 	 * @param jsonObjectString a JSON representation of one attribute
-	 * @param id an attribute identifier
+	 * @param uuid an attribute identifier
 	 * @return the updated attribute as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -146,9 +145,9 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateObject(@ApiParam(value = "attribute (as JSON)", required = true) final String jsonObjectString,
-			@ApiParam(value = "attribute identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+			@ApiParam(value = "attribute identifier", required = true) @PathParam("id") final String uuid) throws DMPControllerException {
 
-		return super.updateObject(jsonObjectString, id);
+		return super.updateObject(jsonObjectString, uuid);
 	}
 
 	/**
@@ -167,7 +166,7 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 	@DELETE
 	@Path("/{id}")
 	@Override
-	public Response deleteObject(@ApiParam(value = "attribute identifier", required = true) @PathParam("id") final Long id)
+	public Response deleteObject(@ApiParam(value = "attribute identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.deleteObject(id);

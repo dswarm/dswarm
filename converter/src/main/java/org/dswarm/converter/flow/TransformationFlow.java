@@ -71,7 +71,7 @@ import org.dswarm.persistence.util.GDMUtil;
 
 /**
  * Flow that executes a given set of transformations on data of a given data model.
- * 
+ *
  * @author phorn
  * @author tgaengler
  * @author sreichert
@@ -79,7 +79,7 @@ import org.dswarm.persistence.util.GDMUtil;
  */
 public class TransformationFlow {
 
-	private static final Logger							LOG	= LoggerFactory.getLogger(TransformationFlow.class);
+	private static final Logger LOG               = LoggerFactory.getLogger(TransformationFlow.class);
 	private static final String BIBO_DOCUMENT_URI = "http://purl.org/ontology/bibo/Document";
 
 	private final Metamorph transformer;
@@ -227,7 +227,7 @@ public class TransformationFlow {
 
 			final Set<String> recordURIsFromGDMModel = gdmModel.getRecordURIs();
 
-			if(recordURIsFromGDMModel == null || recordURIsFromGDMModel.isEmpty()) {
+			if (recordURIsFromGDMModel == null || recordURIsFromGDMModel.isEmpty()) {
 
 				// skip, since it seems to look like that there are no records in the model
 
@@ -257,7 +257,8 @@ public class TransformationFlow {
 				if (recordResource != null) {
 
 					// TODO check this: subject OK?
-					recordResource.addStatement(new ResourceNode(recordResource.getUri()), new Predicate(GDMUtil.RDF_type), new ResourceNode(defaultRecordClassURI));
+					recordResource.addStatement(new ResourceNode(recordResource.getUri()), new Predicate(GDMUtil.RDF_type),
+							new ResourceNode(defaultRecordClassURI));
 				}
 
 				// re-write GDM model
@@ -267,7 +268,7 @@ public class TransformationFlow {
 				finalGDMModel = gdmModel;
 			}
 
-			if(recordClassUri == null) {
+			if (recordClassUri == null) {
 
 				recordClassUri = finalGDMModel.getRecordClassURI();
 			}
@@ -302,14 +303,14 @@ public class TransformationFlow {
 
 		if (writeResultToDatahub) {
 
-			if (outputDataModel.isPresent() && outputDataModel.get().getId() != null) {
+			if (outputDataModel.isPresent() && outputDataModel.get().getUuid() != null) {
 
 				// write result to graph db
 				final InternalModelService internalModelService = internalModelServiceFactoryProvider.get().getInternalGDMGraphService();
 
 				try {
 
-					internalModelService.createObject(outputDataModel.get().getId(), gdmModel);
+					internalModelService.createObject(outputDataModel.get().getUuid(), gdmModel);
 				} catch (final DMPPersistenceException e1) {
 
 					final String message = "couldn't persist the result of the transformation: " + e1.getMessage();

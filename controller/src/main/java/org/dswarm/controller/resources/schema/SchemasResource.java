@@ -120,7 +120,8 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "schema identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+	public Response getObject(@ApiParam(value = "schema identifier", required = true) @PathParam("id") final String id)
+			throws DMPControllerException {
 
 		return super.getObject(id);
 	}
@@ -166,7 +167,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	 * This endpoint consumes a schema as JSON representation and updates this schema in the database.
 	 *
 	 * @param jsonObjectString a JSON representation of one schema
-	 * @param id               a schema identifier
+	 * @param uuid             a schema identifier
 	 * @return the updated schema as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -180,9 +181,9 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateObject(@ApiParam(value = "schema (as JSON)", required = true) final String jsonObjectString,
-			@ApiParam(value = "schema identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+			@ApiParam(value = "schema identifier", required = true) @PathParam("id") final String uuid) throws DMPControllerException {
 
-		return super.updateObject(jsonObjectString, id);
+		return super.updateObject(jsonObjectString, uuid);
 	}
 
 	/**
@@ -192,45 +193,45 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	 *
 	 * @param attributeDescriptionsJSONArrayString an ordered list of attribute descriptions - names + URIs - (of an attribute
 	 *                                             path) as JSON (array) representation
-	 * @param id                                   a schema identifier
+	 * @param uuid                                 a schema identifier
 	 * @return the updated schema as JSON representation
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "create attribute path from the given attribute descriptions (names + URIs) and update schema with this attribute path",
 			notes = "Returns an updated Schema object.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "schema was successfully updated"),
-			@ApiResponse(code = 404, message = "could not find a schema for the given id"),
+			@ApiResponse(code = 404, message = "could not find a schema for the given uuid"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@POST
-	@Path("/{id}")
+	@Path("/{uuid}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addAttributePath(
 			@ApiParam(value = "an ordered list of attribute descriptions - names + URIs + (of an attribute path) as JSON (array)",
 					required = true) final String attributeDescriptionsJSONArrayString,
-			@ApiParam(value = "schema identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+			@ApiParam(value = "schema identifier", required = true) @PathParam("uuid") final String uuid) throws DMPControllerException {
 
 		SchemasResource.LOG.debug("try to create attribute path from '" + attributeDescriptionsJSONArrayString + "' and add it to "
-				+ pojoClassResourceUtils.getClaszName() + " with id '" + id + "'");
+				+ pojoClassResourceUtils.getClaszName() + " with uuid '" + uuid + "'");
 
 		final SchemaService persistenceService = pojoClassResourceUtils.getPersistenceService();
-		final Schema object = persistenceService.getObject(id);
+		final Schema object = persistenceService.getObject(uuid);
 
 		if (object == null) {
 
-			SchemasResource.LOG.debug("couldn't find " + pojoClassResourceUtils.getClaszName() + " '" + id + "'");
+			SchemasResource.LOG.debug("couldn't find " + pojoClassResourceUtils.getClaszName() + " '" + uuid + "'");
 
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		SchemasResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + id + "'");
+		SchemasResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with uuid '" + uuid + "'");
 		SchemasResource.LOG.trace(" = '" + ToStringBuilder.reflectionToString(object) + "'");
 
-		final SchemaAttributePathInstance attributePath = createAttributePath(attributeDescriptionsJSONArrayString, id);
+		final SchemaAttributePathInstance attributePath = createAttributePath(attributeDescriptionsJSONArrayString, uuid);
 
 		object.addAttributePath(attributePath);
 
-		final ProxySchema proxySchema = updateObject(object, id);
+		final ProxySchema proxySchema = updateObject(object, uuid);
 
 		if (proxySchema == null) {
 
@@ -261,8 +262,8 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	 * This endpoint consumes an attribute name and creates an attribute path (incl. new attribute) with help of the given
 	 * attribute path (by id) and the freshly created attribute, and updates the schema with this attribute path in the database.
 	 *
-	 * @param schemaId                       a schema identifier
-	 * @param attributePathId                a attribute path identifier
+	 * @param schemaUuid                     a schema identifier
+	 * @param attributePathUuid              a attribute path identifier
 	 * @param attributeDescriptionJSONString the name of the attribute that should be created and added at the end of the given
 	 *                                       attribute path
 	 * @return the updated schema as JSON representation
@@ -274,31 +275,31 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 			@ApiResponse(code = 404, message = "could not find a schema for the given id"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@POST
-	@Path("/{schemaid}/attributepaths/{attributepathid}")
+	@Path("/{schemauuid}/attributepaths/{attributepathuuid}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addAttribute(@ApiParam(value = "schema identifier", required = true) @PathParam("schemaid") final Long schemaId,
-			@ApiParam(value = "attribute path identifier", required = true) @PathParam("attributepathid") final Long attributePathId,
+	public Response addAttribute(@ApiParam(value = "schema identifier", required = true) @PathParam("schemauuid") final String schemaUuid,
+			@ApiParam(value = "attribute path identifier", required = true) @PathParam("attributepathuuid") final String attributePathUuid,
 			@ApiParam(value = "attribute description (name + URI)", required = true) final String attributeDescriptionJSONString)
 			throws DMPControllerException {
 
 		final SchemaService persistenceService = pojoClassResourceUtils.getPersistenceService();
-		final Schema object = persistenceService.getObject(schemaId);
+		final Schema object = persistenceService.getObject(schemaUuid);
 
 		if (object == null) {
 
-			SchemasResource.LOG.debug("couldn't find " + pojoClassResourceUtils.getClaszName() + " '" + schemaId + "'");
+			SchemasResource.LOG.debug("couldn't find " + pojoClassResourceUtils.getClaszName() + " '" + schemaUuid + "'");
 
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		SchemasResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + schemaId + "'");
+		SchemasResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + schemaUuid + "'");
 		SchemasResource.LOG.trace(" = '" + ToStringBuilder.reflectionToString(object) + "'");
 
 		final AttributePathsResourceUtils attributePathResourceUtils = utilsFactory.get(AttributePathsResourceUtils.class);
 		final AttributePathService attributePathService = attributePathResourceUtils.getPersistenceService();
 
-		final AttributePath baseAttributePath = getAttributePath(attributePathId, attributePathService);
+		final AttributePath baseAttributePath = getAttributePath(attributePathUuid, attributePathService);
 		final List<Attribute> baseAttributes = baseAttributePath.getAttributePath();
 
 		final ObjectNode attributeDescriptionJSON;
@@ -316,7 +317,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 			throw new DMPControllerException("there is no attribute description");
 		}
 
-		final String schemaNamespaceURI = SchemaUtils.determineSchemaNamespaceURI(schemaId);
+		final String schemaNamespaceURI = SchemaUtils.determineSchemaNamespaceURI(schemaUuid);
 		final AttributesResourceUtils attributeResourceUtils = utilsFactory.get(AttributesResourceUtils.class);
 		final AttributeService attributeService = attributeResourceUtils.getPersistenceService();
 
@@ -346,7 +347,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 		object.addAttributePath(attributePath);
 
-		final ProxySchema proxySchema = updateObject(object, schemaId);
+		final ProxySchema proxySchema = updateObject(object, schemaUuid);
 
 		if (proxySchema == null) {
 
@@ -390,7 +391,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 	@DELETE
 	@Path("/{id}")
 	@Override
-	public Response deleteObject(@ApiParam(value = "schema identifier", required = true) @PathParam("id") final Long id)
+	public Response deleteObject(@ApiParam(value = "schema identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.deleteObject(id);
@@ -420,7 +421,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 		return object;
 	}
 
-	private SchemaAttributePathInstance createAttributePath(final String attributeDescriptionsJSONArrayString, final Long id)
+	private SchemaAttributePathInstance createAttributePath(final String attributeDescriptionsJSONArrayString, final String uuid)
 			throws DMPControllerException {
 
 		if (attributeDescriptionsJSONArrayString == null) {
@@ -465,7 +466,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 			throw new DMPControllerException(message);
 		}
 
-		final String schemaNamespaceURI = SchemaUtils.determineSchemaNamespaceURI(id);
+		final String schemaNamespaceURI = SchemaUtils.determineSchemaNamespaceURI(uuid);
 		final AttributesResourceUtils attributeResourceUtils = utilsFactory.get(AttributesResourceUtils.class);
 		final AttributeService attributeService = attributeResourceUtils.getPersistenceService();
 		final LinkedList<Attribute> attributes = Lists.newLinkedList();
@@ -573,10 +574,10 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 		return updatedAttribute;
 	}
 
-	private AttributePath getAttributePath(final Long attributePathId, final AttributePathService attributePathService)
+	private AttributePath getAttributePath(final String attributePathUuid, final AttributePathService attributePathService)
 			throws DMPControllerException {
 
-		if (attributePathId == null) {
+		if (attributePathUuid == null) {
 
 			final String message = "attribute path id should be set";
 
@@ -585,11 +586,11 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 			throw new DMPControllerException(message);
 		}
 
-		final AttributePath attributePath = attributePathService.getObject(attributePathId);
+		final AttributePath attributePath = attributePathService.getObject(attributePathUuid);
 
 		if (attributePath == null) {
 
-			final String message = "couldn't retrieve attribute path for '" + attributePathId + "' from db";
+			final String message = "couldn't retrieve attribute path for '" + attributePathUuid + "' from db";
 
 			SchemasResource.LOG.error(message);
 

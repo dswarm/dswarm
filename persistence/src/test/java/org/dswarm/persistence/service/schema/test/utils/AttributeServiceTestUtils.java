@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
 import org.dswarm.persistence.model.types.Tuple;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.test.utils.AdvancedDMPJPAServiceTestUtils;
 
@@ -58,7 +59,10 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 	@Override
 	public Attribute createObject(final String id, final String name) throws Exception {
 
-		final Attribute attribute = new Attribute(id, name);
+		// TODO: think about this?
+		final String uuid = UUIDService.getUUID(Attribute.class.getSimpleName());
+
+		final Attribute attribute = new Attribute(uuid, id, name);
 
 		return createAndCompareObject(attribute, attribute);
 	}

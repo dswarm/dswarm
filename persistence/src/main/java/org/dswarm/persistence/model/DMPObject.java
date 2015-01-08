@@ -24,6 +24,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -43,40 +44,78 @@ public abstract class DMPObject implements Serializable {
 	/**
 	 *
 	 */
-	private static final long	serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
+
+//	/**
+//	 * The db-generated identifier of the entity.
+//	 * TODO: make (generated) id private
+//	 */
+//	@Id
+//	@UniqueConstraint()
+//	@Access(AccessType.FIELD)
+//	@GeneratedValue(strategy = GenerationType.AUTO)
+//	@Column(name = "ID")
+//	protected Long id;
 
 	/**
-	 * The identifier of the entity.
+	 * can we make this final as well? how deals JPA with this?
 	 */
 	@Id
 	@XmlID
 	@Access(AccessType.FIELD)
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "ID")
-	protected Long id;
+	@Column(name = "UUID", columnDefinition = "VARCHAR(160)", length = 160, unique = true)
+	private String uuid;
 
-	/**
-	 * Gets the identifier of this object.
-	 *
-	 * @return the identifier of this object as the implemented identifier type
-	 */
-	public Long getId() {
+	public DMPObject(final String uuidArg) {
 
-		return id;
+		uuid = uuidArg;
+	}
+
+	protected DMPObject() {
+
+	}
+
+	//	/**
+//	 * Gets the db-generated identifier of this object.
+//	 *
+//	 * @return the db-generated identifier of this object
+//	 */
+//	public Long getId() {
+//
+//		return id;
+//	}
+
+	public String getUuid() {
+
+		if(uuid == null) {
+
+			// TODO: throw exception???
+		}
+
+		return uuid;
 	}
 
 	@Override
 	public int hashCode() {
 
-		return Objects.hashCode(getId());
+		return Objects.hashCode(getUuid());
 	}
 
+	/**
+	 * TODO: revise this according to http://www.artima.com/lejava/articles/equality.html (and probably http://stackoverflow.com/questions/27581/what-issues-should-be-considered-when-overriding-equals-and-hashcode-in-java/256447#256447)
+	 *
+	 * @param obj
+	 * @return
+	 */
 	@Override
 	public boolean equals(final Object obj) {
+
 		if (this == obj) {
+
 			return true;
 		}
 		if (obj == null || !(obj instanceof DMPObject)) {
+
 			return false;
 		}
 
@@ -87,16 +126,20 @@ public abstract class DMPObject implements Serializable {
 		// one of many recently `new`-ed objects and their equality cannot be proven at this point.
 		// If we introduce UUIDs for every object, this can change so that `null` IDs are treated
 		// as equal.
-		if (this.getId() == null && other.getId() == null) {
+		//
+		// TODO: revise this or remove it
+		// note: a uuid should never be null (or?)
+		if (this.getUuid() == null && other.getUuid() == null) {
+
 			return false;
 		}
 
-		return Objects.equal(other.getId(), getId());
+		return Objects.equal(other.getUuid(), getUuid());
 	}
 
 	public boolean completeEquals(final Object obj) {
 
-		return DMPObject.class.isInstance(obj) && Objects.equal(((DMPObject) obj).getId(), getId());
+		return DMPObject.class.isInstance(obj) && Objects.equal(((DMPObject) obj).getUuid(), getUuid());
 	}
 
 	@Override

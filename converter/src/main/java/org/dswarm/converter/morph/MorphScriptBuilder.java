@@ -241,7 +241,7 @@ public class MorphScriptBuilder {
 		final List<String> metas = Lists.newArrayList();
 
 		for (final Mapping mapping : task.getJob().getMappings()) {
-			metas.add(MorphScriptBuilder.MAPPING_PREFIX + mapping.getId());
+			metas.add(MorphScriptBuilder.MAPPING_PREFIX + mapping.getUuid());
 
 			createTransformation(rules, mapping);
 		}
@@ -259,7 +259,7 @@ public class MorphScriptBuilder {
 
 		if (transformationComponent == null) {
 
-			MorphScriptBuilder.LOG.debug("transformation component for mapping '" + mapping.getId() + "' was empty. Just delegate mapping input to mapping output.");
+			MorphScriptBuilder.LOG.debug("transformation component for mapping '" + mapping.getUuid() + "' was empty. Just delegate mapping input to mapping output.");
 
 			// just delegate input attribute path to output attribute path
 
@@ -270,7 +270,7 @@ public class MorphScriptBuilder {
 
 		if (transformationComponent.getParameterMappings() == null || transformationComponent.getParameterMappings().isEmpty()) {
 
-			MorphScriptBuilder.LOG.debug("parameter mappings for transformation component shouldn't be empty, mapping: '" + mapping.getId() + "'. Delegate mapping input to mapping output and process transformation.");
+			MorphScriptBuilder.LOG.debug("parameter mappings for transformation component shouldn't be empty, mapping: '" + mapping.getUuid() + "'. Delegate mapping input to mapping output and process transformation.");
 
 			// delegate input attribute path to output attribute path + add possible transformations (components)
 
@@ -593,7 +593,7 @@ public class MorphScriptBuilder {
 
 		if (transformationFunction == null) {
 
-			MorphScriptBuilder.LOG.debug("transformation component's function for mapping '" + mapping.getId() + "' was empty");
+			MorphScriptBuilder.LOG.debug("transformation component's function for mapping '" + mapping.getUuid() + "' was empty");
 
 			// nothing to do - mapping from input attribute path to output attribute path should be fine already
 
@@ -606,7 +606,7 @@ public class MorphScriptBuilder {
 
 				// TODO: process simple function
 
-				MorphScriptBuilder.LOG.error("transformation component's function for mapping '" + mapping.getId()
+				MorphScriptBuilder.LOG.error("transformation component's function for mapping '" + mapping.getUuid()
 						+ "' was a real FUNCTION. this is not supported right now.");
 
 				break;
@@ -621,7 +621,7 @@ public class MorphScriptBuilder {
 
 				if (components == null || components.isEmpty()) {
 
-					MorphScriptBuilder.LOG.debug("transformation component's transformation's components for mapping '" + mapping.getId()
+					MorphScriptBuilder.LOG.debug("transformation component's transformation's components for mapping '" + mapping.getUuid()
 							+ "' are empty");
 
 					if (mappingInputsVariablesMap != null && !mappingInputsVariablesMap.isEmpty()) {

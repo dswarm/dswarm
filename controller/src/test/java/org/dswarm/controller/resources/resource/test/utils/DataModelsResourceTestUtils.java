@@ -34,7 +34,7 @@ public class DataModelsResourceTestUtils extends
 		super("datamodels", DataModel.class, DataModelService.class, DataModelServiceTestUtils.class);
 	}
 
-	public String getData(final Long dataModelId, final int atMost) {
+	public String getData(final String dataModelId, final int atMost) {
 
 		final Response response1 = target(String.valueOf(dataModelId), "data").queryParam("atMost", atMost).request()
 				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);

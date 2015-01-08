@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dswarm.controller.adapt;
+package org.dswarm.controller.adapt.test;
 
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.dswarm.converter.adapt.ModelTest;
+import org.dswarm.converter.adapt.test.ModelTest;
 
 /**
  * @author tgaengler

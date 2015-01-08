@@ -38,7 +38,7 @@ public abstract class ReferenceSerializer<DMPOBJECTIMPL extends DMPObject> exten
 			return;
 		}
 
-		final Reference<Long> reference = new Reference<>(object.getId());
+		final Reference<String> reference = new Reference<>(object.getUuid());
 
 		generator.writeObject(reference);
 	}
@@ -47,16 +47,16 @@ public abstract class ReferenceSerializer<DMPOBJECTIMPL extends DMPObject> exten
 	static class Reference<IDTYPE> {
 
 		@XmlID
-		private final IDTYPE id;
+		private final IDTYPE uuid;
 
-		Reference(final IDTYPE idArg) {
+		Reference(final IDTYPE uuidArg) {
 
-			id = idArg;
+			uuid = uuidArg;
 		}
 
-		IDTYPE getId() {
+		IDTYPE getUuid() {
 
-			return id;
+			return uuid;
 		}
 	}
 

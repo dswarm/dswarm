@@ -30,6 +30,7 @@ import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.service.test.utils.BasicDMPJPAServiceTestUtils;
 
@@ -76,22 +77,22 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 
 			final boolean actualSchemaHasNoAttributePaths = (actualSchema.getUniqueAttributePaths() == null || actualSchema
 					.getUniqueAttributePaths().isEmpty());
-			Assert.assertTrue("the actual schema '" + actualSchema.getId() + "' shouldn't have attribute paths", actualSchemaHasNoAttributePaths);
+			Assert.assertTrue("the actual schema '" + actualSchema.getUuid() + "' shouldn't have attribute paths", actualSchemaHasNoAttributePaths);
 
 		} else { // !null && !empty
 
 			final Set<SchemaAttributePathInstance> actualAttributePaths = actualSchema.getUniqueAttributePaths();
 
-			Assert.assertNotNull("attribute path instances of actual schema '" + actualSchema.getId() + "' shouldn't be null",
+			Assert.assertNotNull("attribute path instances of actual schema '" + actualSchema.getUuid() + "' shouldn't be null",
 					actualAttributePaths);
-			Assert.assertFalse("attribute path instances of actual schema '" + actualSchema.getId() + "' shouldn't be empty",
+			Assert.assertFalse("attribute path instances of actual schema '" + actualSchema.getUuid() + "' shouldn't be empty",
 					actualAttributePaths.isEmpty());
 
-			final Map<Long, SchemaAttributePathInstance> actualAttributePathsMap = Maps.newHashMap();
+			final Map<String, SchemaAttributePathInstance> actualAttributePathsMap = Maps.newHashMap();
 
 			for (final SchemaAttributePathInstance actualAttributePath : actualAttributePaths) {
 
-				actualAttributePathsMap.put(actualAttributePath.getId(), actualAttributePath);
+				actualAttributePathsMap.put(actualAttributePath.getUuid(), actualAttributePath);
 			}
 
 			schemaAttributePathInstanceResourceTestUtils.compareObjects(expectedSchema.getUniqueAttributePaths(), actualAttributePathsMap);
@@ -99,7 +100,7 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 
 		if (expectedSchema.getRecordClass() == null) {
 
-			Assert.assertNull("the actual schema '" + actualSchema.getId() + "' shouldn't have a record class", actualSchema.getRecordClass());
+			Assert.assertNull("the actual schema '" + actualSchema.getUuid() + "' shouldn't have a record class", actualSchema.getRecordClass());
 
 		} else {
 
@@ -112,22 +113,40 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 		}
 	}
 
-	public Schema createAndPersistSchema(final String name, final Collection<SchemaAttributePathInstance> attributePaths, final Clasz recordClass)
+	public Schema createAndPersistSchema(final String uuid, final String name, final Collection<SchemaAttributePathInstance> attributePaths,
+			final Clasz recordClass)
 			throws Exception {
 
-		final Schema schema = createSchema(name, attributePaths, recordClass);
+		final Schema schema = createSchema(uuid, name, attributePaths, recordClass);
 
 		final Schema updatedSchema = createAndCompareObject(schema, schema);
 
 		Assert.assertNotNull("updated schema shouldn't be null", updatedSchema);
-		Assert.assertNotNull("updated schema id shouldn't be null", updatedSchema.getId());
+		Assert.assertNotNull("updated schema id shouldn't be null", updatedSchema.getUuid());
 
 		return updatedSchema;
 	}
 
-	public Schema createSchema(final String name, final Collection<SchemaAttributePathInstance> attributePaths, final Clasz recordClass) {
+	public Schema createAndPersistSchema(final String name, final Collection<SchemaAttributePathInstance> attributePaths, final Clasz recordClass)
+			throws Exception {
 
-		final Schema schema = new Schema();
+		return createAndPersistSchema(null, name, attributePaths, recordClass);
+	}
+
+	public Schema createSchema(final String uuid, final String name, final Collection<SchemaAttributePathInstance> attributePaths,
+			final Clasz recordClass) {
+
+		final String schemaUUID;
+
+		if (uuid != null && !uuid.trim().isEmpty()) {
+
+			schemaUUID = uuid;
+		} else {
+
+			schemaUUID = UUIDService.getUUID(Schema.class.getSimpleName());
+		}
+
+		final Schema schema = new Schema(schemaUUID);
 
 		schema.setName(name);
 		schema.setAttributePaths(attributePaths);
@@ -136,9 +155,26 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 		return schema;
 	}
 
+	public Schema createSchema(final String name, final Collection<SchemaAttributePathInstance> attributePaths,
+			final Clasz recordClass) {
+
+		return createSchema(null, name, attributePaths, recordClass);
+	}
+
+	public Schema createAndPersistSchema(final String uuid, final String name, final SchemaAttributePathInstance[] attributePaths,
+			final Clasz recordClass)
+			throws Exception {
+		return createAndPersistSchema(uuid, name, Arrays.asList(attributePaths), recordClass);
+	}
+
 	public Schema createAndPersistSchema(final String name, final SchemaAttributePathInstance[] attributePaths, final Clasz recordClass)
 			throws Exception {
 		return createAndPersistSchema(name, Arrays.asList(attributePaths), recordClass);
+	}
+
+	public Schema createSchema(final String uuid, final String name, final SchemaAttributePathInstance[] attributePaths, final Clasz recordClass)
+			throws Exception {
+		return createSchema(uuid, name, Arrays.asList(attributePaths), recordClass);
 	}
 
 	public Schema createSchema(final String name, final SchemaAttributePathInstance[] attributePaths, final Clasz recordClass) throws Exception {

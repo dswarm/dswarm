@@ -1,8 +1,8 @@
 [ {
-  "http://data.slub-dresden.de/records/7fc13720-2859-477d-9127-5ec65f82220e" : [ {
+  "http://data.slub-dresden.de/datamodels/2/records/72b7181a-9d7f-4ad9-8652-492613e7d0da" : [ {
     "order" : 1,
     "s" : {
-      "uri" : "http://data.slub-dresden.de/records/7fc13720-2859-477d-9127-5ec65f82220e"
+      "uri" : "http://data.slub-dresden.de/datamodels/2/records/72b7181a-9d7f-4ad9-8652-492613e7d0da"
     },
     "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
     "o" : {
@@ -11,7 +11,7 @@
   }, {
     "order" : 1,
     "s" : {
-      "uri" : "http://data.slub-dresden.de/records/7fc13720-2859-477d-9127-5ec65f82220e"
+      "uri" : "http://data.slub-dresden.de/datamodels/2/records/72b7181a-9d7f-4ad9-8652-492613e7d0da"
     },
     "p" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ",
     "o" : {
@@ -20,7 +20,7 @@
   }, {
     "order" : 1,
     "s" : {
-      "uri" : "http://data.slub-dresden.de/records/7fc13720-2859-477d-9127-5ec65f82220e"
+      "uri" : "http://data.slub-dresden.de/datamodels/2/records/72b7181a-9d7f-4ad9-8652-492613e7d0da"
     },
     "p" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status",
     "o" : {
@@ -29,7 +29,7 @@
   }, {
     "order" : 1,
     "s" : {
-      "uri" : "http://data.slub-dresden.de/records/7fc13720-2859-477d-9127-5ec65f82220e"
+      "uri" : "http://data.slub-dresden.de/datamodels/2/records/72b7181a-9d7f-4ad9-8652-492613e7d0da"
     },
     "p" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion",
     "o" : {
@@ -38,7 +38,7 @@
   }, {
     "order" : 1,
     "s" : {
-      "uri" : "http://data.slub-dresden.de/records/7fc13720-2859-477d-9127-5ec65f82220e"
+      "uri" : "http://data.slub-dresden.de/datamodels/2/records/72b7181a-9d7f-4ad9-8652-492613e7d0da"
     },
     "p" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
     "o" : {
@@ -83,7 +83,7 @@
   }, {
     "order" : 2,
     "s" : {
-      "uri" : "http://data.slub-dresden.de/records/7fc13720-2859-477d-9127-5ec65f82220e"
+      "uri" : "http://data.slub-dresden.de/datamodels/2/records/72b7181a-9d7f-4ad9-8652-492613e7d0da"
     },
     "p" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
     "o" : {
@@ -128,7 +128,7 @@
   }, {
     "order" : 3,
     "s" : {
-      "uri" : "http://data.slub-dresden.de/records/7fc13720-2859-477d-9127-5ec65f82220e"
+      "uri" : "http://data.slub-dresden.de/datamodels/2/records/72b7181a-9d7f-4ad9-8652-492613e7d0da"
     },
     "p" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
     "o" : {
@@ -173,7 +173,7 @@
   }, {
     "order" : 4,
     "s" : {
-      "uri" : "http://data.slub-dresden.de/records/7fc13720-2859-477d-9127-5ec65f82220e"
+      "uri" : "http://data.slub-dresden.de/datamodels/2/records/72b7181a-9d7f-4ad9-8652-492613e7d0da"
     },
     "p" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
     "o" : {

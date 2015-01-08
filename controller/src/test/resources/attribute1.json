@@ -1,5 +1,5 @@
 {
-    "id": 1,
-    "name": "title",
-    "uri": "http://purl.org/dc/terms/title"
+  "name" : "title",
+  "uri" : "http://purl.org/dc/terms/title",
+  "uuid" : "1"
 }
