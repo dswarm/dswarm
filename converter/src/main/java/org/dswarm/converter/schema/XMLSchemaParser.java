@@ -22,6 +22,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import com.google.common.io.ByteSource;
+import com.google.common.io.Resources;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
+
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelperHelper;
@@ -36,20 +51,6 @@ import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.util.GDMUtil;
 import org.dswarm.xsd2jsonschema.JsonSchemaParser;
 import org.dswarm.xsd2jsonschema.model.JSRoot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import com.google.common.io.ByteSource;
-import com.google.common.io.Resources;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 /**
  * @author tgaengler
@@ -63,7 +64,7 @@ public class XMLSchemaParser {
 	private final Provider<ClaszService> classServiceProvider;
 
 	private final Provider<AttributePathService> attributePathServiceProvider;
-	
+
 	private final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceServiceProvider;
 
 	private final Provider<AttributeService> attributeServiceProvider;
@@ -74,14 +75,17 @@ public class XMLSchemaParser {
 	private static final String UNKNOWN_JSON_SCHEMA_ATTRIBUTE_TYPE = "__UNKNOWN__";
 	private static final String STRING_JSON_SCHEMA_ATTRIBUTE_TYPE  = "string";
 	private static final String OBJECT_JSON_SCHEMA_ATTRIBUTE_TYPE  = "object";
+	private static final String ARRAY_JSON_SCHEMA_ATTRIBUTE_TYPE   = "array";
 
 	private static final String JSON_SCHEMA_PROPERTIES_IDENTIFIER = "properties";
+	private static final String JSON_SCHEMA_ITEMS_IDENTIFIER      = "items";
 	private static final String JSON_SCHEMA_TYPE_IDENTIFIER       = "type";
 	private static final String JSON_SCHEMA_MIXED_IDENTIFIER      = "mixed";
 
 	@Inject
 	public XMLSchemaParser(final Provider<SchemaService> schemaServiceProviderArg,
-			final Provider<ClaszService> classServiceProviderArg, final Provider<AttributePathService> attributePathServiceProviderArg, final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceServiceProviderArg,
+			final Provider<ClaszService> classServiceProviderArg, final Provider<AttributePathService> attributePathServiceProviderArg,
+			final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceServiceProviderArg,
 			final Provider<AttributeService> attributeServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg) {
 
 		schemaServiceProvider = schemaServiceProviderArg;
@@ -96,7 +100,7 @@ public class XMLSchemaParser {
 
 		final Optional<List<JsonNode>> optionalRecordTags = getRecordTagNodes(xmlSchemaFilePath, recordTag);
 
-		if(!optionalRecordTags.isPresent()) {
+		if (!optionalRecordTags.isPresent()) {
 
 			return Optional.absent();
 		}
@@ -105,21 +109,21 @@ public class XMLSchemaParser {
 
 		final Optional<Schema> optionalSchema = createSchema();
 
-		if(!optionalSchema.isPresent()) {
+		if (!optionalSchema.isPresent()) {
 
 			return Optional.absent();
 		}
 
 		final Schema schema = optionalSchema.get();
 
-		if(schemaName != null) {
+		if (schemaName != null) {
 
 			schema.setName(schemaName);
 		}
 
 		final Optional<String> optionalRecordTagAttribute = getAttribute(recordTagNodes.get(0));
 
-		if(optionalRecordTagAttribute.isPresent()) {
+		if (optionalRecordTagAttribute.isPresent()) {
 
 			final String recordTagAttribute = optionalRecordTagAttribute.get();
 
@@ -132,7 +136,8 @@ public class XMLSchemaParser {
 
 		final Set<AttributePathHelper> attributePaths = parseAttributePaths(recordTagNodes);
 
-		SchemaUtils.addAttributePaths(schema, attributePaths, attributePathServiceProvider, schemaAttributePathInstanceServiceProvider, attributeServiceProvider);
+		SchemaUtils.addAttributePaths(schema, attributePaths, attributePathServiceProvider, schemaAttributePathInstanceServiceProvider,
+				attributeServiceProvider);
 
 		final Schema updatedSchema = SchemaUtils.updateSchema(schema, schemaServiceProvider);
 
@@ -143,7 +148,7 @@ public class XMLSchemaParser {
 
 		final Optional<List<JsonNode>> optionalRecordTags = getRecordTagNodes(xmlSchemaFilePath, recordTag);
 
-		if(!optionalRecordTags.isPresent()) {
+		if (!optionalRecordTags.isPresent()) {
 
 			return Optional.absent();
 		}
@@ -287,15 +292,7 @@ public class XMLSchemaParser {
 
 		final String attribute = optionalAttribute.get();
 
-		final boolean isXMLAttribute;
-
-		if (attribute.startsWith("@")) {
-
-			isXMLAttribute = true;
-		} else {
-
-			isXMLAttribute = false;
-		}
+		final boolean isXMLAttribute = attribute.startsWith("@");
 
 		final String finalAttribute;
 
@@ -323,6 +320,7 @@ public class XMLSchemaParser {
 
 		final String type;
 
+		// determine schema element type, e.g., 'object' or 'string'
 		if (typeNode != null) {
 
 			type = typeNode.asText();
@@ -331,66 +329,98 @@ public class XMLSchemaParser {
 			type = XMLSchemaParser.UNKNOWN_JSON_SCHEMA_ATTRIBUTE_TYPE;
 		}
 
-		if ((type.equals(XMLSchemaParser.STRING_JSON_SCHEMA_ATTRIBUTE_TYPE) || type.equals(OBJECT_JSON_SCHEMA_ATTRIBUTE_TYPE)) && !isXMLAttribute) {
+		if(type.equals(XMLSchemaParser.ARRAY_JSON_SCHEMA_ATTRIBUTE_TYPE)) {
 
-			// add rdf:type attribute
-			AttributePathHelperHelper.addAttributePath(GDMUtil.RDF_type, attributePaths, finalAttributePathHelper);
-		}
+			// do something with the array, i.e., go deeper in hierarchy (via recursion)
+			final JsonNode jsonSchemaAttributeItemsNode = jsonSchemaAttributeContentNode.get(XMLSchemaParser.JSON_SCHEMA_ITEMS_IDENTIFIER);
 
-		final JsonNode jsonSchemaAttributePropertiesNode = jsonSchemaAttributeContentNode.get(XMLSchemaParser.JSON_SCHEMA_PROPERTIES_IDENTIFIER);
+			final Iterator<Map.Entry<String, JsonNode>> iter = jsonSchemaAttributeItemsNode.fields();
 
-		final boolean noProperties;
+			final List<JsonNode> newAttributeNodes = Lists.newArrayList();
+			final List<JsonNode> newElementNodes = Lists.newArrayList();
 
-		noProperties = jsonSchemaAttributePropertiesNode == null || jsonSchemaAttributePropertiesNode.size() <= 0;
+			while (iter.hasNext()) {
 
-		final JsonNode mixedNode = jsonSchemaAttributeContentNode.get(XMLSchemaParser.JSON_SCHEMA_MIXED_IDENTIFIER);
+				final Map.Entry<String, JsonNode> entry = iter.next();
 
-		final boolean isMixed;
+				final ObjectNode newJSONSchemaAttributeNode = objectMapperProvider.get().createObjectNode();
 
-		isMixed = mixedNode != null && mixedNode.asBoolean();
+				final String newAttribute = entry.getKey();
 
-		final boolean addRDFValueAttributePath;
+				newJSONSchemaAttributeNode.set(newAttribute, entry.getValue());
 
-		addRDFValueAttributePath =
-				(type.equals(XMLSchemaParser.STRING_JSON_SCHEMA_ATTRIBUTE_TYPE) || (type.equals(OBJECT_JSON_SCHEMA_ATTRIBUTE_TYPE) && isMixed))
-						&& !isXMLAttribute;
+				if (newAttribute.startsWith("@")) {
 
-		if (noProperties) {
+					newAttributeNodes.add(newJSONSchemaAttributeNode);
+				} else {
 
+					newElementNodes.add(newJSONSchemaAttributeNode);
+				}
+			}
+
+			determineAttributePaths(attributePaths, finalAttributePathHelper, newAttributeNodes);
+			determineAttributePaths(attributePaths, finalAttributePathHelper, newElementNodes);
+
+			return attributePaths;
+
+		} else {
+
+			if ((type.equals(XMLSchemaParser.STRING_JSON_SCHEMA_ATTRIBUTE_TYPE) || type.equals(OBJECT_JSON_SCHEMA_ATTRIBUTE_TYPE))
+					&& !isXMLAttribute) {
+
+				// add rdf:type attribute
+				AttributePathHelperHelper.addAttributePath(GDMUtil.RDF_type, attributePaths, finalAttributePathHelper);
+			}
+
+			final JsonNode jsonSchemaAttributePropertiesNode = jsonSchemaAttributeContentNode.get(XMLSchemaParser.JSON_SCHEMA_PROPERTIES_IDENTIFIER);
+
+			final boolean noProperties = jsonSchemaAttributePropertiesNode == null || jsonSchemaAttributePropertiesNode.size() <= 0;
+
+			final JsonNode mixedNode = jsonSchemaAttributeContentNode.get(XMLSchemaParser.JSON_SCHEMA_MIXED_IDENTIFIER);
+
+			final boolean isMixed = mixedNode != null && mixedNode.asBoolean();
+
+			final boolean addRDFValueAttributePath =
+					(type.equals(XMLSchemaParser.STRING_JSON_SCHEMA_ATTRIBUTE_TYPE) || (type.equals(OBJECT_JSON_SCHEMA_ATTRIBUTE_TYPE) && isMixed))
+							&& !isXMLAttribute;
+
+			if (noProperties) {
+
+				addRDFValueAttributePath(addRDFValueAttributePath, attributePaths, finalAttributePathHelper);
+
+				return attributePaths;
+			}
+
+			final Iterator<Map.Entry<String, JsonNode>> iter = jsonSchemaAttributePropertiesNode.fields();
+
+			final List<JsonNode> newAttributeNodes = Lists.newArrayList();
+			final List<JsonNode> newElementNodes = Lists.newArrayList();
+
+			while (iter.hasNext()) {
+
+				final Map.Entry<String, JsonNode> entry = iter.next();
+
+				final ObjectNode newJSONSchemaAttributeNode = objectMapperProvider.get().createObjectNode();
+
+				final String newAttribute = entry.getKey();
+
+				newJSONSchemaAttributeNode.set(newAttribute, entry.getValue());
+
+				if (newAttribute.startsWith("@")) {
+
+					newAttributeNodes.add(newJSONSchemaAttributeNode);
+				} else {
+
+					newElementNodes.add(newJSONSchemaAttributeNode);
+				}
+			}
+
+			determineAttributePaths(attributePaths, finalAttributePathHelper, newAttributeNodes);
 			addRDFValueAttributePath(addRDFValueAttributePath, attributePaths, finalAttributePathHelper);
+			determineAttributePaths(attributePaths, finalAttributePathHelper, newElementNodes);
 
 			return attributePaths;
 		}
-
-		final Iterator<Map.Entry<String, JsonNode>> iter = jsonSchemaAttributePropertiesNode.fields();
-
-		final List<JsonNode> newAttributeNodes = Lists.newArrayList();
-		final List<JsonNode> newElementNodes = Lists.newArrayList();
-
-		while (iter.hasNext()) {
-
-			final Map.Entry<String, JsonNode> entry = iter.next();
-
-			final ObjectNode newJSONSchemaAttributeNode = objectMapperProvider.get().createObjectNode();
-
-			final String newAttribute = entry.getKey();
-
-			newJSONSchemaAttributeNode.set(newAttribute, entry.getValue());
-
-			if (newAttribute.startsWith("@")) {
-
-				newAttributeNodes.add(newJSONSchemaAttributeNode);
-			} else {
-
-				newElementNodes.add(newJSONSchemaAttributeNode);
-			}
-		}
-
-		determineAttributePaths(attributePaths, finalAttributePathHelper, newAttributeNodes);
-		addRDFValueAttributePath(addRDFValueAttributePath, attributePaths, finalAttributePathHelper);
-		determineAttributePaths(attributePaths, finalAttributePathHelper, newElementNodes);
-
-		return attributePaths;
 	}
 
 	private void determineAttributePaths(final Set<AttributePathHelper> attributePaths, final AttributePathHelper finalAttributePathHelper,
