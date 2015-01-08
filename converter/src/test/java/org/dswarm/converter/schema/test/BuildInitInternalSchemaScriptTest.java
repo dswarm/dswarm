@@ -67,7 +67,7 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		dataModelService = GuicedTest.injector.getInstance(DataModelService.class);
 	}
 
-	@Test
+	//@Test
 	public void buildScript() throws Exception {
 
 		final Schema bibrmContractSchema = new BibrmContractItemSchemaBuilder().buildSchema();
