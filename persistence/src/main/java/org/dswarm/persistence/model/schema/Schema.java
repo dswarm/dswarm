@@ -105,7 +105,7 @@ public class Schema extends BasicDMPJPAObject {
 	@JsonIgnore
 	@Lob
 	@Access(AccessType.FIELD)
-	@Column(name = "SCHEMA_ATTRIBUTE_PATH_INSTANCES", columnDefinition = "BLOB")
+	@Column(name = "SCHEMA_ATTRIBUTE_PATH_INSTANCES", columnDefinition = "LONGBLOB")
 	private String attributePathsJsonString;
 
 	/**

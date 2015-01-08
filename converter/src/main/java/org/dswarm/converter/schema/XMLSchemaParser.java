@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -96,7 +95,8 @@ public class XMLSchemaParser {
 		objectMapperProvider = objectMapperProviderArg;
 	}
 
-	public Optional<Schema> parse(final String xmlSchemaFilePath, final String recordTag, final String uuid, final String schemaName) throws DMPPersistenceException {
+	public Optional<Schema> parse(final String xmlSchemaFilePath, final String recordTag, final String uuid, final String schemaName)
+			throws DMPPersistenceException {
 
 		final Optional<List<JsonNode>> optionalRecordTags = getRecordTagNodes(xmlSchemaFilePath, recordTag);
 
@@ -329,7 +329,7 @@ public class XMLSchemaParser {
 			type = XMLSchemaParser.UNKNOWN_JSON_SCHEMA_ATTRIBUTE_TYPE;
 		}
 
-		if(type.equals(XMLSchemaParser.ARRAY_JSON_SCHEMA_ATTRIBUTE_TYPE)) {
+		if (type.equals(XMLSchemaParser.ARRAY_JSON_SCHEMA_ATTRIBUTE_TYPE)) {
 
 			// do something with the array, i.e., go deeper in hierarchy (via recursion)
 			final JsonNode jsonSchemaAttributeItemsNode = jsonSchemaAttributeContentNode.get(XMLSchemaParser.JSON_SCHEMA_ITEMS_IDENTIFIER);

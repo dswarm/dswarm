@@ -136,7 +136,7 @@ SET foreign_key_checks = 0;
     create table DATA_SCHEMA (
         UUID VARCHAR(160) not null,
         NAME varchar(255),
-        SCHEMA_ATTRIBUTE_PATH_INSTANCES BLOB,
+        SCHEMA_ATTRIBUTE_PATH_INSTANCES LONGBLOB,
         CONTENT_SCHEMA VARCHAR(160),
         RECORD_CLASS VARCHAR(160),
         primary key (UUID)
