@@ -266,6 +266,10 @@
 					<configuration>
 						<source>${java.source.version}</source>
 						<target>${java.target.version}</target>
+						<compilerArgs>
+							<compilerArg>-Xlint:deprecation</compilerArg>
+							<compilerArg>-Xlint:unchecked</compilerArg>
+						</compilerArgs>
 					</configuration>
 				</plugin>
 				<plugin>
