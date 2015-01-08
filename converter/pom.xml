@@ -32,7 +32,10 @@
 	<name>d:swarm - Converter</name>
 
 	<properties>
-		<commons-csv.version>1.1</commons-csv.version>
+		<version.commons-csv>1.1</version.commons-csv>
+		<version.mockito-core>1.10.19</version.mockito-core>
+		<version.xalan>2.7.2</version.xalan>
+		<version.xerces>2.11.0</version.xerces>
 	</properties>
 
 	<repositories>
@@ -68,12 +71,12 @@
 		<dependency>
 			<groupId>org.dswarm</groupId>
 			<artifactId>dswarm-init</artifactId>
-			<version>0.1-SNAPSHOT</version>
+			<version>${dmp.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.dswarm</groupId>
 			<artifactId>dswarm-persistence</artifactId>
-			<version>0.1-SNAPSHOT</version>
+			<version>${dmp.version}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>hamcrest-core</artifactId>
@@ -84,7 +87,7 @@
 		<dependency>
 			<groupId>org.dswarm</groupId>
 			<artifactId>dswarm-persistence</artifactId>
-			<version>0.1-SNAPSHOT</version>
+			<version>${dmp.version}</version>
 			<type>test-jar</type>
 			<scope>test</scope>
 			<exclusions>
@@ -97,7 +100,7 @@
 		<dependency>
 			<groupId>org.culturegraph</groupId>
 			<artifactId>metafacture-core</artifactId>
-			<version>${metafacture-core.version}</version>
+			<version>${version.metafacture-core}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>jackson-core</artifactId>
@@ -124,12 +127,12 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-csv</artifactId>
-			<version>${commons-csv.version}</version>
+			<version>${version.commons-csv}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>1.9.5</version>
+			<version>${version.mockito-core}</version>
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>
@@ -145,18 +148,18 @@
 		<dependency>
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>jsr305</artifactId>
-			<version>${findebugs.jsr305.version}</version>
+			<version>${version.findebugs.jsr305}</version>
 		</dependency>
 		<!-- for xml handling in morph script builder -->
 		<dependency>
 			<groupId>xerces</groupId>
 			<artifactId>xercesImpl</artifactId>
-			<version>2.11.0</version>
+			<version>${version.xerces}</version>
 		</dependency>
 		<dependency>
 			<groupId>xalan</groupId>
 			<artifactId>xalan</artifactId>
-			<version>2.7.1</version>
+			<version>${version.xalan}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>xml-apis</artifactId>
