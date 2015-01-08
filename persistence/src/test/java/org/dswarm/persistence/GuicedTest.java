@@ -15,6 +15,7 @@
  */
 package org.dswarm.persistence;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -52,6 +53,14 @@ public abstract class GuicedTest {
 
 	public static <T> T configValue(final String configPath, final Class<T> cls) {
 		return Preconditions.checkNotNull(injector).getInstance(Key.get(cls, Names.named(configPath)));
+	}
+
+	public static <T> Optional<T> getInstance(final Class<T> tClass) {
+		if (injector != null) {
+			return Optional.fromNullable(injector.getInstance(tClass));
+		} else {
+			return Optional.absent();
+		}
 	}
 
 	@Before

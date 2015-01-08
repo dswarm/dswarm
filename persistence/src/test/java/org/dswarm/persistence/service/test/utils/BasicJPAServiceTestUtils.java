@@ -41,8 +41,7 @@ import org.dswarm.persistence.service.BasicJPAService;
 import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.test.BasicJPAServiceTest;
 
-public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS>, POJOCLASS extends DMPObject>
-		extends BasicJPAServiceTest<PROXYPOJOCLASS, POJOCLASS, POJOCLASSPERSISTENCESERVICE> {
+public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS>, POJOCLASS extends DMPObject> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(BasicJPAServiceTestUtils.class);
 
@@ -53,6 +52,13 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 	protected final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClass;
 
 	protected final ObjectMapper objectMapper;
+	protected final String type;
+
+	public POJOCLASSPERSISTENCESERVICE getJpaService() {
+		return jpaService;
+	}
+
+	protected final POJOCLASSPERSISTENCESERVICE jpaService;
 
 	protected Map<String, POJOCLASS> cache = new HashMap<>();
 
@@ -64,34 +70,36 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 
 	public abstract POJOCLASS createDefaultObject() throws Exception;
 
-	public BasicJPAServiceTestUtils(final Class<POJOCLASS> pojoClassArg, final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg) {
+	protected PROXYPOJOCLASS createObject() {
 
-		super(pojoClassArg.getSimpleName(), persistenceServiceClassArg);
+		PROXYPOJOCLASS proxyObject = null;
+
+		try {
+
+			proxyObject = jpaService.createObjectTransactional();
+		} catch (final DMPPersistenceException e) {
+
+			Assert.assertTrue("something went wrong during object creation.\n" + e.getMessage(), false);
+		}
+
+		Assert.assertNotNull(type + " shouldn't be null", proxyObject);
+		Assert.assertNotNull(type + " id shouldn't be null", proxyObject.getId());
+
+		BasicJPAServiceTestUtils.LOG.debug("created new {} with id = '{}'", type, proxyObject.getId());
+
+		return proxyObject;
+	}
+
+	public BasicJPAServiceTestUtils(final Class<POJOCLASS> pojoClassArg, final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg) {
 
 		pojoClass = pojoClassArg;
 		pojoClassName = pojoClass.getSimpleName();
+		type = pojoClassName;
 
 		persistenceServiceClass = persistenceServiceClassArg;
 
-		objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
-	}
-
-	@Override
-	public void prepare() throws Exception {
-
-		// this should be done by the concrete test, not in the utils
-	}
-
-	@Override
-	public void tearDown3() throws Exception {
-
-		// this should be done by the concrete test, not in the utils
-	}
-
-	@Override
-	public void testSimpleObject() throws Exception {
-
-		// this should be implemented in real test classes, not in the utils
+		jpaService = GuicedTest.getInstance(persistenceServiceClassArg).get();
+		objectMapper = GuicedTest.getInstance(ObjectMapper.class).get();
 	}
 
 	/**
@@ -174,7 +182,6 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 		return jpaService.getObjects();
 	}
 
-	@Override
 	public POJOCLASS getObject(final POJOCLASS expectedObject) throws JsonProcessingException, JSONException {
 
 		final POJOCLASS responseObject = jpaService.getObject(expectedObject.getUuid());
@@ -264,6 +271,15 @@ public abstract class BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE exten
 		final String objectId = object.getUuid();
 
 		deleteObject(objectId);
+	}
+
+	protected void deleteObject(final String uuid) {
+
+		jpaService.deleteObject(uuid);
+
+		final POJOCLASS deletedObject = jpaService.getObject(uuid);
+
+		Assert.assertNull("deleted " + type + " shouldn't exist any more", deletedObject);
 	}
 
 	/**
