@@ -19,6 +19,7 @@ import java.io.File;
 
 import com.google.inject.Key;
 import com.google.inject.name.Names;
+import org.junit.Test;
 
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.init.util.CmdUtil;
@@ -66,7 +67,7 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		dataModelService = GuicedTest.injector.getInstance(DataModelService.class);
 	}
 
-	//@Test
+	@Test
 	public void buildScript() throws Exception {
 
 		final Schema bibrmContractSchema = new BibrmContractItemSchemaBuilder().buildSchema();
@@ -86,7 +87,7 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		createSchemaDataModel(DataModelUtils.BIBRM_CONTRACT_DATA_MODEL_UUID, bibrmContractDM, bibrmContractDM, bibrmContractSchema);
 		createSchemaDataModel(DataModelUtils.BIBO_DOCUMENT_DATA_MODEL_UUID, biboDocumentDM, biboDocumentDM, biboDocumentSchema);
 		createSchemaDataModel(DataModelUtils.MABXML_DATA_MODEL_UUID, mabxmlSchemaDM, mabxmlSchemaDM, mabxmlSchema);
-		createSchemaDataModel(pnxSchemaDM, pnxSchemaDM, pnxSchema);		
+		createSchemaDataModel(DataModelUtils.PNX_DATA_MODEL_UUID, pnxSchemaDM, pnxSchemaDM, pnxSchema);
 		createSchemaDataModel(DataModelUtils.FOAF_PERSON_DATA_MODEL_UUID, foafPersonDM, foafPersonDM, foafPersonSchema);
 
 		final String sep = File.separator;

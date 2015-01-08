@@ -167,15 +167,13 @@ public class XMLSchemaParserTest extends GuicedTest {
 	 * @throws IOException
 	 * @throws DMPPersistenceException
 	 */
-	@Test
 	public static Schema testSchemaParsingPNX() throws IOException, DMPPersistenceException {
 		final XMLSchemaParser xmlSchemaParser = GuicedTest.injector.getInstance(XMLSchemaParser.class);
-		final Optional<Schema> optionalSchema = xmlSchemaParser.parse("pnx.xsd", "record", "pnx schema");
+		final Optional<Schema> optionalSchema = xmlSchemaParser.parse("pnx.xsd", "record", SchemaUtils.PNX_SCHEMA_UUID, "pnx schema");
 		Assert.assertTrue(optionalSchema.isPresent());
-		final Schema schema = optionalSchema.get();
 		//final ObjectMapper mapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 		//final String schemaJSONString = mapper.writeValueAsString(schema);
-		return schema;
+		return optionalSchema.get();
 	}
 
 }
