@@ -84,14 +84,8 @@ public class SchemaAttributePathInstance extends AttributePathInstance {
 	 *
 	 * @param subSchema - the Schema to be used as as sub-schema.
 	 */
-	public void setSubSchema(Schema subSchema) {
+	public void setSubSchema(final Schema subSchema) {
 		this.subSchema = subSchema;
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-
-		return SchemaAttributePathInstance.class.isInstance(obj) && super.equals(obj);
 	}
 
 	@Override
@@ -99,7 +93,6 @@ public class SchemaAttributePathInstance extends AttributePathInstance {
 
 		return SchemaAttributePathInstance.class.isInstance(obj) && super.completeEquals(obj)
 				//&& Objects.equal(((SchemaAttributePathInstance) obj).getOrdinal(), getOrdinal())
-				&& Objects.equal(((SchemaAttributePathInstance) obj).getSubSchema(), getSubSchema())
-				;
+				&& Objects.equal(((SchemaAttributePathInstance) obj).getSubSchema(), getSubSchema());
 	}
 }

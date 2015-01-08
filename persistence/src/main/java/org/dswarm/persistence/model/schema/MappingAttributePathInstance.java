@@ -84,7 +84,7 @@ public class MappingAttributePathInstance extends AttributePathInstance {
 
 	/**
 	 * Gets the filter of the mapping attribute path instance.
-	 * 
+	 *
 	 * @return the filter of the mapping attribute path instance
 	 */
 	public Filter getFilter() {
@@ -94,7 +94,7 @@ public class MappingAttributePathInstance extends AttributePathInstance {
 
 	/**
 	 * Sets the filter of the mapping attribute path instance.
-	 * 
+	 *
 	 * @param filterArg a new filter
 	 */
 	public void setFilter(final Filter filterArg) {
@@ -115,12 +115,6 @@ public class MappingAttributePathInstance extends AttributePathInstance {
 		}
 
 		ordinal = ordinalArg;
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-
-		return MappingAttributePathInstance.class.isInstance(obj) && super.equals(obj);
 	}
 
 	@Override

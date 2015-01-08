@@ -78,12 +78,6 @@ public class Filter extends BasicDMPJPAObject {
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
-
-		return Filter.class.isInstance(obj) && super.equals(obj);
-	}
-
-	@Override
 	public boolean completeEquals(final Object obj) {
 
 		return Filter.class.isInstance(obj) && super.completeEquals(obj) && Objects.equal(((Filter) obj).getExpression(), getExpression());

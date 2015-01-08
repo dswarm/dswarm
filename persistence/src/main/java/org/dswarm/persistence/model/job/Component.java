@@ -455,13 +455,6 @@ public class Component extends ExtendedBasicDMPJPAObject {
 	// }
 	// }
 
-	@Override
-	public boolean equals(final Object obj) {
-
-		return Component.class.isInstance(obj) && super.equals(obj);
-
-	}
-
 	/**
 	 * Refreshs the string that holds the serialised JSON object of the parameter mappings map. This method should be called after
 	 * every manipulation of the parameter mappings map (to keep the states consistent).

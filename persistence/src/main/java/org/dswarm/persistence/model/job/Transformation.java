@@ -181,13 +181,6 @@ public class Transformation extends Function {
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
-
-		return Transformation.class.isInstance(obj) && super.equals(obj);
-
-	}
-
-	@Override
 	public boolean completeEquals(final Object obj) {
 
 		return Transformation.class.isInstance(obj) && super.completeEquals(obj)

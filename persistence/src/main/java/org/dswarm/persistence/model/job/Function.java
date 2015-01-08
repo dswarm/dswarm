@@ -271,12 +271,6 @@ public class Function extends ExtendedBasicDMPJPAObject {
 		return functionType;
 	}
 
-	@Override
-	public boolean equals(final Object obj) {
-
-		return Function.class.isInstance(obj) && super.equals(obj);
-
-	}
 
 	/**
 	 * Refreshs the string that holds the serialised JSON object of the parameters list. This method should be called after every

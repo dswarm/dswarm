@@ -342,13 +342,6 @@ public class Schema extends BasicDMPJPAObject {
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
-
-		return Schema.class.isInstance(obj) && super.equals(obj);
-
-	}
-
-	@Override
 	public boolean completeEquals(final Object obj) {
 
 		return Schema.class.isInstance(obj) && super.completeEquals(obj)

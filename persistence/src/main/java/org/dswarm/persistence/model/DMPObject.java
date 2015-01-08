@@ -96,7 +96,7 @@ public abstract class DMPObject implements Serializable {
 	}
 
 	@Override
-	public int hashCode() {
+	public final int hashCode() {
 
 		return Objects.hashCode(getUuid());
 	}
@@ -108,7 +108,7 @@ public abstract class DMPObject implements Serializable {
 	 * @return
 	 */
 	@Override
-	public boolean equals(final Object obj) {
+	public final boolean equals(final Object obj) {
 
 		if (this == obj) {
 

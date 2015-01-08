@@ -196,21 +196,6 @@ public class Attribute extends AdvancedDMPJPAObject {
 	// }
 
 	@Override
-	public boolean equals(final Object obj) {
-
-		if (!Attribute.class.isInstance(obj)) {
-
-			return false;
-		}
-
-		final boolean result = super.equals(obj);
-
-		// TODO: do uri comparison here or in upper class?
-
-		return result;
-	}
-
-	@Override
 	public boolean completeEquals(final Object obj) {
 
 		return Attribute.class.isInstance(obj) && super.completeEquals(obj);
