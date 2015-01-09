@@ -78,13 +78,6 @@ public class Clasz extends AdvancedDMPJPAObject {
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
-
-		return Clasz.class.isInstance(obj) && super.equals(obj);
-
-	}
-
-	@Override
 	public boolean completeEquals(final Object obj) {
 
 		return Clasz.class.isInstance(obj) && super.completeEquals(obj);

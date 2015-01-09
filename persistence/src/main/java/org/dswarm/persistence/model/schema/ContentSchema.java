@@ -352,13 +352,6 @@ public class ContentSchema extends BasicDMPJPAObject {
 		}
 	}
 
-	@Override
-	public boolean equals(final Object obj) {
-
-		return ContentSchema.class.isInstance(obj) && super.equals(obj);
-
-	}
-
 	/**
 	 * Refreshes the string that holds the serialised JSON object of the key attribute paths (ordered list of attribute paths).
 	 * This method should be called after every manipulation of the key attribute paths (to keep the states consistent).

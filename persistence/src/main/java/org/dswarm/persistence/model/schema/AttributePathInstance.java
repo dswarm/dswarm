@@ -86,7 +86,7 @@ public abstract class AttributePathInstance extends BasicDMPJPAObject {
 
 	/**
 	 * Creates a new attribute path instance with the given attribute path instance type.
-	 * 
+	 *
 	 * @param attributePathInstanceTypeArg the type of the attribute path instance
 	 */
 	protected AttributePathInstance(final AttributePathInstanceType attributePathInstanceTypeArg) {
@@ -113,12 +113,6 @@ public abstract class AttributePathInstance extends BasicDMPJPAObject {
 	public AttributePathInstanceType getAttributePathInstanceType() {
 
 		return attributePathInstanceType;
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-
-		return AttributePathInstance.class.isInstance(obj) && super.equals(obj);
 	}
 
 	@Override

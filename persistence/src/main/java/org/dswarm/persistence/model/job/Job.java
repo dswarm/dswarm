@@ -30,7 +30,7 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 /**
  * A job is a collection of {@link Mapping}s that can be execution on a given input {@link DataModel} and be written to a given
  * output {@link DataModel}.
- * 
+ *
  * @author tgaengler
  */
 @XmlRootElement
@@ -62,7 +62,7 @@ public class Job extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the collection of mappings of the job.
-	 * 
+	 *
 	 * @return the collection of mappings of the job
 	 */
 	public Set<Mapping> getMappings() {
@@ -72,7 +72,7 @@ public class Job extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the collection of mappings of the job.
-	 * 
+	 *
 	 * @param mappingsArg a new collection of mappings
 	 */
 	public void setMappings(final Set<Mapping> mappingsArg) {
@@ -95,13 +95,6 @@ public class Job extends ExtendedBasicDMPJPAObject {
 				mappings.addAll(mappingsArg);
 			}
 		}
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-
-		return Job.class.isInstance(obj) && super.equals(obj);
-
 	}
 
 	@Override

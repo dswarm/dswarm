@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 import org.dswarm.controller.resources.job.test.utils.ProjectsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ConfigurationsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
-import org.dswarm.controller.resources.schema.test.AttributesResourceTest;
 import org.dswarm.controller.resources.schema.test.utils.AttributePathsResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.AttributesResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.MappingAttributePathInstancesResourceTestUtils;
@@ -49,7 +48,7 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 public class ProjectWithNewEntitiesAndOnePersistentMappingAttributePathInstanceResourceTest extends
 		BasicResourceTest<ProjectsResourceTestUtils, ProjectServiceTestUtils, ProjectService, ProxyProject, Project> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(AttributesResourceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ProjectWithNewEntitiesAndOnePersistentMappingAttributePathInstanceResourceTest.class);
 
 	private AttributesResourceTestUtils attributesResourceTestUtils;
 
@@ -115,8 +114,7 @@ public class ProjectWithNewEntitiesAndOnePersistentMappingAttributePathInstanceR
 	@Test
 	public void testPOSTObjectsWithNewEntities() throws Exception {
 
-		ProjectWithNewEntitiesAndOnePersistentMappingAttributePathInstanceResourceTest.LOG.debug("start POST " + pojoClassName
-				+ "s with new entities test");
+		ProjectWithNewEntitiesAndOnePersistentMappingAttributePathInstanceResourceTest.LOG.debug("start POST {}s with new entities test", pojoClassName);
 
 		objectJSONString = DMPPersistenceUtil.getResourceAsString("project.w.new.entities.onepersistentmappingattributepathinstance.json");
 
@@ -246,7 +244,6 @@ public class ProjectWithNewEntitiesAndOnePersistentMappingAttributePathInstanceR
 
 		// TODO: do comparison/check somehow
 
-		ProjectWithNewEntitiesAndOnePersistentMappingAttributePathInstanceResourceTest.LOG.debug("end POST " + pojoClassName
-				+ "s with new entities test");
+		ProjectWithNewEntitiesAndOnePersistentMappingAttributePathInstanceResourceTest.LOG.debug("end POST {}s with new entities test", pojoClassName);
 	}
 }

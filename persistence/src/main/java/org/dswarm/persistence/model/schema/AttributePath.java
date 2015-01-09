@@ -455,13 +455,6 @@ public class AttributePath extends DMPObject {
 		return sb.toString();
 	}
 
-	@Override
-	public boolean equals(final Object obj) {
-
-		return AttributePath.class.isInstance(obj) && super.equals(obj);
-
-	}
-
 	/**
 	 * Refreshs the string that holds the serialised JSON object of the attribute path (ordered list of attributes). This method
 	 * should be called after every manipulation of the attribute path (to keep the states consistent).
