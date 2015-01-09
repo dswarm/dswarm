@@ -86,6 +86,7 @@ public class JpaHibernateModule extends AbstractModule {
 		properties.setProperty("hibernate.discriminator.ignore_explicit_for_joined", "true");
 		properties.setProperty("hibernate.show_sql", String.valueOf(isLogSql));
 		properties.setProperty("javax.persistence.jdbc.driver", "com.mysql.jdbc.Driver");
+		properties.setProperty("hibernate.jdbc.lob.non_contextual_creation", "true");
 
 		return properties;
 	}
