@@ -16,6 +16,7 @@
 package org.dswarm.controller.resources.resource;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -27,6 +28,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
@@ -37,8 +39,6 @@ import com.wordnik.swagger.annotations.ApiResponses;
 
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.ExtendedBasicDMPResource;
-import org.dswarm.controller.resources.resource.utils.ConfigurationsResourceUtils;
-import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
 import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.proxy.ProxyConfiguration;
@@ -53,19 +53,22 @@ import org.dswarm.persistence.service.resource.ConfigurationService;
 @Api(value = "/configurations", description = "Operations about configurations")
 @Path("configurations")
 public class ConfigurationsResource extends
-		ExtendedBasicDMPResource<ConfigurationsResourceUtils, ConfigurationService, ProxyConfiguration, Configuration> {
+		ExtendedBasicDMPResource<ConfigurationService, ProxyConfiguration, Configuration> {
 
 	/**
 	 * Creates a new resource (controller service) for {@link Configuration}s with the provider of the component persistence
 	 * service, the object mapper and metrics registry.
 	 *
-	 * @param utilsFactory the resource utils factory
-	 * @param dmpStatusArg a metrics registry
+	 * @param persistenceServiceProviderArg
+	 * @param objectMapperProviderArg
+	 * @param dmpStatusArg                  a metrics registry
+	 * @throws DMPControllerException
 	 */
 	@Inject
-	public ConfigurationsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
+	public ConfigurationsResource(final Provider<ConfigurationService> persistenceServiceProviderArg,
+			final Provider<ObjectMapper> objectMapperProviderArg, final DMPStatus dmpStatusArg) throws DMPControllerException {
 
-		super(utilsFactory.reset().get(ConfigurationsResourceUtils.class), dmpStatusArg);
+		super(Configuration.class, persistenceServiceProviderArg, objectMapperProviderArg, dmpStatusArg);
 	}
 
 	/**

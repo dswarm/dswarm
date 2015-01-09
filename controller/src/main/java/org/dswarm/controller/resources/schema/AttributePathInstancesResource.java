@@ -15,8 +15,11 @@
  */
 package org.dswarm.controller.resources.schema;
 
+import javax.inject.Provider;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.dswarm.controller.resources.BasicDMPResource;
-import org.dswarm.controller.resources.schema.utils.AttributePathInstancesResourceUtils;
 import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.model.schema.AttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttributePathInstance;
@@ -25,26 +28,29 @@ import org.dswarm.persistence.service.schema.AttributePathInstanceService;
 /**
  * A generic resource (controller service) for {@link AttributePathInstance}s.
  *
- * @param <POJOCLASSRESOURCEUTILS>
  * @param <POJOCLASSPERSISTENCESERVICE> the concrete {@link AttributePathInstance} persistence service of the resource that is
  *                                      related to the concrete {@link AttributePathInstance} class
  * @param <PROXYPOJOCLASS>
  * @param <POJOCLASS>                   the concrete {@link AttributePathInstance} class
  * @author tgaengler
  */
-public abstract class AttributePathInstancesResource<POJOCLASSRESOURCEUTILS extends AttributePathInstancesResourceUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends AttributePathInstanceService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyAttributePathInstance<POJOCLASS>, POJOCLASS extends AttributePathInstance>
-		extends BasicDMPResource<POJOCLASSRESOURCEUTILS, POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
+public abstract class AttributePathInstancesResource<POJOCLASSPERSISTENCESERVICE extends AttributePathInstanceService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyAttributePathInstance<POJOCLASS>, POJOCLASS extends AttributePathInstance>
+		extends BasicDMPResource<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
 
 	/**
 	 * Creates a new resource (controller service) for the given concrete {@link AttributePathInstance} class with the provider of
 	 * the concrete {@link AttributePathInstance} persistence service, the object mapper and metrics registry.
 	 *
-	 * @param pojoClassResourceUtilsArg
+	 * @param pojoClassArg                  a concrete POJO class
+	 * @param persistenceServiceProviderArg the concrete persistence service that is related to the concrete POJO class
+	 * @param objectMapperProviderArg       an object mapper
 	 * @param dmpStatusArg
 	 */
-	public AttributePathInstancesResource(final POJOCLASSRESOURCEUTILS pojoClassResourceUtilsArg, final DMPStatus dmpStatusArg) {
+	public AttributePathInstancesResource(final Class<POJOCLASS> pojoClassArg,
+			final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
+			final Provider<ObjectMapper> objectMapperProviderArg, final DMPStatus dmpStatusArg) {
 
-		super(pojoClassResourceUtilsArg, dmpStatusArg);
+		super(pojoClassArg, persistenceServiceProviderArg, objectMapperProviderArg, dmpStatusArg);
 	}
 
 	/**
