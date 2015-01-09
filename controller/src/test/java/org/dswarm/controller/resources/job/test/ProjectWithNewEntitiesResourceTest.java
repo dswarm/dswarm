@@ -43,7 +43,7 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 public class ProjectWithNewEntitiesResourceTest extends
 		BasicResourceTest<ProjectsResourceTestUtils, ProjectServiceTestUtils, ProjectService, ProxyProject, Project> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(AttributesResourceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ProjectWithNewEntitiesResourceTest.class);
 
 	private ResourcesResourceTestUtils resourcesResourceTestUtils;
 

@@ -113,17 +113,17 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 			objectFromJSON = objectMapperProvider.get().readValue(objectJSONString, pojoClass);
 		} catch (final JsonMappingException je) {
 
-			throw new DMPJsonException("something went wrong while deserializing the " + pojoClassName + " JSON string", je);
+			throw new DMPJsonException(String.format("something went wrong while deserializing the %s JSON string", pojoClassName), je);
 		} catch (final IOException e) {
 
-			BasicResourceUtils.LOG.debug("something went wrong while deserializing the " + pojoClassName + " JSON string");
+			BasicResourceUtils.LOG.debug("something went wrong while deserializing the {} JSON string", pojoClassName);
 
-			throw new DMPControllerException("something went wrong while deserializing the " + pojoClassName + " JSON string.\n" + e.getMessage());
+			throw new DMPControllerException(String.format("something went wrong while deserializing the %s JSON string.\n%s", pojoClassName, e.getMessage()));
 		}
 
 		if (objectFromJSON == null) {
 
-			throw new DMPControllerException("deserialized " + pojoClassName + " is null");
+			throw new DMPControllerException(String.format("deserialized %s is null", pojoClassName));
 		}
 
 		return objectFromJSON;
@@ -138,14 +138,14 @@ public abstract class BasicResourceUtils<POJOCLASSPERSISTENCESERVICE extends Bas
 			objectJSONString = objectMapperProvider.get().writeValueAsString(object);
 		} catch (final JsonProcessingException e) {
 
-			BasicResourceUtils.LOG.debug("couldn't serialize enhanced " + pojoClassName + " JSON.");
+			BasicResourceUtils.LOG.debug("couldn't serialize enhanced {} JSON.", pojoClassName);
 
 			throw new DMPControllerException("couldn't serialize enhanced " + pojoClassName + " JSON.\n" + e.getMessage());
 		}
 
 		if (objectJSONString == null) {
 
-			BasicResourceUtils.LOG.debug("couldn't serialize enhanced " + pojoClassName + " JSON correctly.");
+			BasicResourceUtils.LOG.debug("couldn't serialize enhanced {} JSON correctly.", pojoClassName);
 
 			throw new DMPControllerException("couldn't serialize enhanced " + pojoClassName + " JSON correctly.\n");
 		}
