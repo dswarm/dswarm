@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -51,11 +52,6 @@ import org.slf4j.LoggerFactory;
 
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.BasicDMPResource;
-import org.dswarm.controller.resources.schema.utils.AttributePathsResourceUtils;
-import org.dswarm.controller.resources.schema.utils.AttributesResourceUtils;
-import org.dswarm.controller.resources.schema.utils.SchemaAttributePathInstancesResourceUtils;
-import org.dswarm.controller.resources.schema.utils.SchemasResourceUtils;
-import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
 import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.schema.Attribute;
@@ -81,29 +77,38 @@ import org.dswarm.persistence.service.schema.SchemaService;
 @RequestScoped
 @Api(value = "/schemas", description = "Operations about schemas")
 @Path("schemas")
-public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, SchemaService, ProxySchema, Schema> {
+public class SchemasResource extends BasicDMPResource<SchemaService, ProxySchema, Schema> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SchemasResource.class);
 
-	private final ResourceUtilsFactory utilsFactory;
-	private final ObjectMapper         objectMapper;
+	private final Provider<AttributeService>                   attributeServiceProvider;
+	private final Provider<AttributePathService>               attributePathServiceProvider;
+	private final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceServiceProvider;
 
 	/**
 	 * Creates a new resource (controller service) for {@link Schema}s with the provider of the schema persistence service, the
 	 * object mapper and metrics registry.
 	 *
-	 * @param utilsFactoryArg the utils factory
-	 * @param objectMapperArg an object mapper
-	 * @param dmpStatusArg    a metrics registry
+	 * @param persistenceServiceProviderArg
+	 * @param attributeServiceProviderArg
+	 * @param attributePathServiceProviderArg
+	 * @param schemaAttributePathInstanceServiceProviderArg
+	 * @param objectMapperProviderArg                       an object mapper
+	 * @param dmpStatusArg                                  a metrics registry
+	 * @throws DMPControllerException
 	 */
 	@Inject
-	public SchemasResource(final ResourceUtilsFactory utilsFactoryArg, final ObjectMapper objectMapperArg, final DMPStatus dmpStatusArg)
+	public SchemasResource(final Provider<SchemaService> persistenceServiceProviderArg, final Provider<AttributeService> attributeServiceProviderArg,
+			final Provider<AttributePathService> attributePathServiceProviderArg,
+			final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceServiceProviderArg,
+			final Provider<ObjectMapper> objectMapperProviderArg, final DMPStatus dmpStatusArg)
 			throws DMPControllerException {
 
-		super(utilsFactoryArg.reset().get(SchemasResourceUtils.class), dmpStatusArg);
+		super(Schema.class, persistenceServiceProviderArg, objectMapperProviderArg, dmpStatusArg);
 
-		utilsFactory = utilsFactoryArg;
-		objectMapper = objectMapperArg;
+		attributeServiceProvider = attributeServiceProviderArg;
+		attributePathServiceProvider = attributePathServiceProviderArg;
+		schemaAttributePathInstanceServiceProvider = schemaAttributePathInstanceServiceProviderArg;
 	}
 
 	/**
@@ -212,19 +217,19 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 			@ApiParam(value = "schema identifier", required = true) @PathParam("uuid") final String uuid) throws DMPControllerException {
 
 		SchemasResource.LOG.debug("try to create attribute path from '" + attributeDescriptionsJSONArrayString + "' and add it to "
-				+ pojoClassResourceUtils.getClaszName() + " with uuid '" + uuid + "'");
+				+ pojoClassName + " with uuid '" + uuid + "'");
 
-		final SchemaService persistenceService = pojoClassResourceUtils.getPersistenceService();
+		final SchemaService persistenceService = persistenceServiceProvider.get();
 		final Schema object = persistenceService.getObject(uuid);
 
 		if (object == null) {
 
-			SchemasResource.LOG.debug("couldn't find " + pojoClassResourceUtils.getClaszName() + " '" + uuid + "'");
+			SchemasResource.LOG.debug("couldn't find " + pojoClassName + " '" + uuid + "'");
 
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		SchemasResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with uuid '" + uuid + "'");
+		SchemasResource.LOG.debug("got " + pojoClassName + " with uuid '" + uuid + "'");
 		SchemasResource.LOG.trace(" = '" + ToStringBuilder.reflectionToString(object) + "'");
 
 		final SchemaAttributePathInstance attributePath = createAttributePath(attributeDescriptionsJSONArrayString, uuid);
@@ -253,7 +258,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 			throw new DMPControllerException(message);
 		}
 
-		final String updatedSchemaString = pojoClassResourceUtils.serializeObject(updatedSchema);
+		final String updatedSchemaString = serializeObject(updatedSchema);
 
 		return buildResponse(updatedSchemaString);
 	}
@@ -283,21 +288,20 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 			@ApiParam(value = "attribute description (name + URI)", required = true) final String attributeDescriptionJSONString)
 			throws DMPControllerException {
 
-		final SchemaService persistenceService = pojoClassResourceUtils.getPersistenceService();
+		final SchemaService persistenceService = persistenceServiceProvider.get();
 		final Schema object = persistenceService.getObject(schemaUuid);
 
 		if (object == null) {
 
-			SchemasResource.LOG.debug("couldn't find " + pojoClassResourceUtils.getClaszName() + " '" + schemaUuid + "'");
+			SchemasResource.LOG.debug("couldn't find " + pojoClassName + " '" + schemaUuid + "'");
 
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		SchemasResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with id '" + schemaUuid + "'");
+		SchemasResource.LOG.debug("got " + pojoClassName + " with id '" + schemaUuid + "'");
 		SchemasResource.LOG.trace(" = '" + ToStringBuilder.reflectionToString(object) + "'");
 
-		final AttributePathsResourceUtils attributePathResourceUtils = utilsFactory.get(AttributePathsResourceUtils.class);
-		final AttributePathService attributePathService = attributePathResourceUtils.getPersistenceService();
+		final AttributePathService attributePathService = attributePathServiceProvider.get();
 
 		final AttributePath baseAttributePath = getAttributePath(attributePathUuid, attributePathService);
 		final List<Attribute> baseAttributes = baseAttributePath.getAttributePath();
@@ -306,7 +310,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 		try {
 
-			attributeDescriptionJSON = objectMapper.readValue(attributeDescriptionJSONString, ObjectNode.class);
+			attributeDescriptionJSON = objectMapperProvider.get().readValue(attributeDescriptionJSONString, ObjectNode.class);
 		} catch (final IOException e) {
 
 			throw new DMPControllerException("couldn't parse attribute description (name + URI)");
@@ -318,8 +322,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 		}
 
 		final String schemaNamespaceURI = SchemaUtils.determineSchemaNamespaceURI(schemaUuid);
-		final AttributesResourceUtils attributeResourceUtils = utilsFactory.get(AttributesResourceUtils.class);
-		final AttributeService attributeService = attributeResourceUtils.getPersistenceService();
+		final AttributeService attributeService = attributeServiceProvider.get();
 
 		final Attribute newAttribute = createOrGetAttribute(attributeDescriptionJSON, schemaNamespaceURI, attributeService);
 
@@ -328,10 +331,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 		final SchemaAttributePathInstance attributePath;
 
-		final SchemaAttributePathInstancesResourceUtils schemaAttributePathInstancesResourceUtils = utilsFactory
-				.get(SchemaAttributePathInstancesResourceUtils.class);
-		final SchemaAttributePathInstanceService schemaAttributePathInstanceService = schemaAttributePathInstancesResourceUtils
-				.getPersistenceService();
+		final SchemaAttributePathInstanceService schemaAttributePathInstanceService = schemaAttributePathInstanceServiceProvider.get();
 
 		try {
 
@@ -369,7 +369,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 			throw new DMPControllerException(message);
 		}
 
-		final String updatedSchemaString = pojoClassResourceUtils.serializeObject(updatedSchema);
+		final String updatedSchemaString = serializeObject(updatedSchema);
 
 		return buildResponse(updatedSchemaString);
 	}
@@ -437,7 +437,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 
 		try {
 
-			attributeDescriptionsJSONArray = pojoClassResourceUtils.getObjectMapper()
+			attributeDescriptionsJSONArray = objectMapperProvider.get()
 					.readValue(attributeDescriptionsJSONArrayString, ArrayNode.class);
 		} catch (final IOException e) {
 
@@ -467,8 +467,7 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 		}
 
 		final String schemaNamespaceURI = SchemaUtils.determineSchemaNamespaceURI(uuid);
-		final AttributesResourceUtils attributeResourceUtils = utilsFactory.get(AttributesResourceUtils.class);
-		final AttributeService attributeService = attributeResourceUtils.getPersistenceService();
+		final AttributeService attributeService = attributeServiceProvider.get();
 		final LinkedList<Attribute> attributes = Lists.newLinkedList();
 
 		for (final JsonNode attributeDescriptionNode : attributeDescriptionsJSONArray) {
@@ -478,13 +477,9 @@ public class SchemasResource extends BasicDMPResource<SchemasResourceUtils, Sche
 			attributes.add(attribute);
 		}
 
-		final AttributePathsResourceUtils attributePathResourceUtils = utilsFactory.get(AttributePathsResourceUtils.class);
-		final AttributePathService attributePathService = attributePathResourceUtils.getPersistenceService();
+		final AttributePathService attributePathService = attributePathServiceProvider.get();
 
-		final SchemaAttributePathInstancesResourceUtils schemaAttributePathInstancesResourceUtils = utilsFactory
-				.get(SchemaAttributePathInstancesResourceUtils.class);
-		final SchemaAttributePathInstanceService schemaAttributePathInstanceService = schemaAttributePathInstancesResourceUtils
-				.getPersistenceService();
+		final SchemaAttributePathInstanceService schemaAttributePathInstanceService = schemaAttributePathInstanceServiceProvider.get();
 
 		try {
 

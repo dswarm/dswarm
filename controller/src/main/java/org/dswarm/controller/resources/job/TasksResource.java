@@ -63,7 +63,7 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * A resource (controller service) for {@link Task}s.
- * 
+ *
  * @author tgaengler
  */
 @RequestScoped
@@ -71,7 +71,7 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 @Path("/tasks")
 public class TasksResource {
 
-	private static final Logger							LOG	= LoggerFactory.getLogger(TasksResource.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TasksResource.class);
 
 	/**
 	 * The base URI of this resource.
@@ -101,8 +101,8 @@ public class TasksResource {
 	 * service, the object mapper and metrics registry.
 	 *
 	 * @param dataModelUtilArg the data model util
-	 * @param objectMapperArg an object mapper
-	 * @param dmpStatusArg a metrics registry
+	 * @param objectMapperArg  an object mapper
+	 * @param dmpStatusArg     a metrics registry
 	 */
 	@Inject
 	public TasksResource(final DataModelUtil dataModelUtilArg, final ObjectMapper objectMapperArg, final DMPStatus dmpStatusArg,
@@ -254,7 +254,7 @@ public class TasksResource {
 
 	/**
 	 * This endpoint returns the metamorph script of the given task as XML.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one task
 	 * @return the result of the task execution
 	 * @throws IOException

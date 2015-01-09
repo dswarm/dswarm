@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -31,6 +32,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -45,8 +47,6 @@ import org.slf4j.LoggerFactory;
 
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.BasicDMPResource;
-import org.dswarm.controller.resources.schema.utils.ContentSchemasResourceUtils;
-import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
 import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.ContentSchema;
@@ -61,7 +61,7 @@ import org.dswarm.persistence.service.schema.ContentSchemaService;
 @RequestScoped
 @Api(value = "/contentschemas", description = "Operations about content schemas")
 @Path("contentschemas")
-public class ContentSchemasResource extends BasicDMPResource<ContentSchemasResourceUtils, ContentSchemaService, ProxyContentSchema, ContentSchema> {
+public class ContentSchemasResource extends BasicDMPResource<ContentSchemaService, ProxyContentSchema, ContentSchema> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ContentSchemasResource.class);
 
@@ -69,14 +69,16 @@ public class ContentSchemasResource extends BasicDMPResource<ContentSchemasResou
 	 * Creates a new resource (controller service) for {@link org.dswarm.persistence.model.schema.ContentSchema}s with the
 	 * provider of the content schema persistence service, the object mapper and metrics registry.
 	 *
-	 * @param utilsFactoryArg the utils factory
-	 * @param dmpStatusArg    a metrics registry
+	 * @param persistenceServiceProviderArg
+	 * @param objectMapperProviderArg
+	 * @param dmpStatusArg                  a metrics registry
 	 */
 	@Inject
-	public ContentSchemasResource(final ResourceUtilsFactory utilsFactoryArg, final DMPStatus dmpStatusArg)
+	public ContentSchemasResource(final Provider<ContentSchemaService> persistenceServiceProviderArg,
+			final Provider<ObjectMapper> objectMapperProviderArg, final DMPStatus dmpStatusArg)
 			throws DMPControllerException {
 
-		super(utilsFactoryArg.reset().get(ContentSchemasResourceUtils.class), dmpStatusArg);
+		super(ContentSchema.class, persistenceServiceProviderArg, objectMapperProviderArg, dmpStatusArg);
 	}
 
 	/**

@@ -16,6 +16,7 @@
 package org.dswarm.controller.resources.schema;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -27,6 +28,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -35,8 +37,6 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
 import org.dswarm.controller.DMPControllerException;
-import org.dswarm.controller.resources.schema.utils.SchemaAttributePathInstancesResourceUtils;
-import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
 import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
@@ -53,20 +53,22 @@ import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 @Path("schemaattributepathinstances")
 public class SchemaAttributePathInstancesResource
 		extends
-		AttributePathInstancesResource<SchemaAttributePathInstancesResourceUtils, SchemaAttributePathInstanceService, ProxySchemaAttributePathInstance, SchemaAttributePathInstance> {
+		AttributePathInstancesResource<SchemaAttributePathInstanceService, ProxySchemaAttributePathInstance, SchemaAttributePathInstance> {
 
 	/**
 	 * Creates a new resource (controller service) for {@link org.dswarm.persistence.model.schema.SchemaAttributePathInstance}s with the provider of the schema
 	 * attribute path instance persistence service, the object mapper and metrics registry.
 	 *
-	 * @param utilsFactory
+	 * @param persistenceServiceProviderArg
+	 * @param objectMapperProviderArg
 	 * @param dmpStatusArg
 	 * @throws org.dswarm.controller.DMPControllerException
 	 */
 	@Inject
-	public SchemaAttributePathInstancesResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
+	public SchemaAttributePathInstancesResource(final Provider<SchemaAttributePathInstanceService> persistenceServiceProviderArg,
+			final Provider<ObjectMapper> objectMapperProviderArg, final DMPStatus dmpStatusArg) throws DMPControllerException {
 
-		super(utilsFactory.reset().get(SchemaAttributePathInstancesResourceUtils.class), dmpStatusArg);
+		super(SchemaAttributePathInstance.class, persistenceServiceProviderArg, objectMapperProviderArg, dmpStatusArg);
 	}
 
 	/**

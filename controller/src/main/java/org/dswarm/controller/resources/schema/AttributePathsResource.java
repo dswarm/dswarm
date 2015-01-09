@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -32,6 +33,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -47,8 +49,6 @@ import org.slf4j.LoggerFactory;
 
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.BasicResource;
-import org.dswarm.controller.resources.schema.utils.AttributePathsResourceUtils;
-import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
 import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.schema.Attribute;
@@ -64,7 +64,7 @@ import org.dswarm.persistence.service.schema.AttributePathService;
 @RequestScoped
 @Api(value = "/attributepaths", description = "Operations about attribute paths.")
 @Path("attributepaths")
-public class AttributePathsResource extends BasicResource<AttributePathsResourceUtils, AttributePathService, ProxyAttributePath, AttributePath> {
+public class AttributePathsResource extends BasicResource<AttributePathService, ProxyAttributePath, AttributePath> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AttributePathsResource.class);
 
@@ -72,13 +72,15 @@ public class AttributePathsResource extends BasicResource<AttributePathsResource
 	 * Creates a new resource (controller service) for {@link AttributePath}s with the provider of the attribute path persistence
 	 * service, the object mapper and metrics registry.
 	 *
-	 * @param utilsFactory the resource utils factory
-	 * @param dmpStatusArg a metrics registry
+	 * @param persistenceServiceProviderArg
+	 * @param objectMapperProviderArg
+	 * @param dmpStatusArg                  a metrics registry
 	 */
 	@Inject
-	public AttributePathsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
+	public AttributePathsResource(final Provider<AttributePathService> persistenceServiceProviderArg,
+			final Provider<ObjectMapper> objectMapperProviderArg, final DMPStatus dmpStatusArg) throws DMPControllerException {
 
-		super(utilsFactory.reset().get(AttributePathsResourceUtils.class), dmpStatusArg);
+		super(AttributePath.class, persistenceServiceProviderArg, objectMapperProviderArg, dmpStatusArg);
 	}
 
 	/**
@@ -273,11 +275,11 @@ public class AttributePathsResource extends BasicResource<AttributePathsResource
 		// with this attribute path exists and manipulate this one instead
 		// note: we could also throw an exception instead
 
-		final AttributePath objectFromJSON = pojoClassResourceUtils.deserializeObjectJSONString(jsonObjectString);
+		final AttributePath objectFromJSON = deserializeObjectJSONString(jsonObjectString);
 
 		// get persistent object per attribute path
 
-		final AttributePathService persistenceService = pojoClassResourceUtils.getPersistenceService();
+		final AttributePathService persistenceService = persistenceServiceProvider.get();
 
 		AttributePath object = null;
 
@@ -286,7 +288,7 @@ public class AttributePathsResource extends BasicResource<AttributePathsResource
 			object = persistenceService.getObjectViaAttributePathJSON(objectFromJSON.getAttributePathAsJSONObjectString());
 		} catch (final DMPPersistenceException e) {
 
-			AttributePathsResource.LOG.debug("couldn't retrieve " + pojoClassResourceUtils.getClaszName() + " for attribute path '"
+			AttributePathsResource.LOG.debug("couldn't retrieve " + pojoClassName + " for attribute path '"
 					+ objectFromJSON.toAttributePath() + "'");
 
 			return null;
@@ -299,10 +301,17 @@ public class AttributePathsResource extends BasicResource<AttributePathsResource
 			return super.retrieveObject(uuid, jsonObjectString);
 		}
 
-		AttributePathsResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with attribute path '" + objectFromJSON.toAttributePath()
+		AttributePathsResource.LOG.debug("got " + pojoClassName + " with attribute path '" + objectFromJSON.toAttributePath()
 				+ "' ");
 		AttributePathsResource.LOG.trace("= '" + ToStringBuilder.reflectionToString(object) + "'");
 
 		return object;
+	}
+
+	@Override
+	protected ProxyAttributePath createObject(final AttributePath objectFromJSON, final AttributePathService persistenceService)
+			throws DMPPersistenceException {
+
+		return persistenceService.createOrGetObjectTransactional(objectFromJSON.getAttributePath());
 	}
 }

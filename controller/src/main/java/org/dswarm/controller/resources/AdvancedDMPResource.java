@@ -15,12 +15,14 @@
  */
 package org.dswarm.controller.resources;
 
+import javax.inject.Provider;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.dswarm.controller.DMPControllerException;
-import org.dswarm.controller.resources.utils.AdvancedDMPResourceUtils;
 import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.AdvancedDMPJPAObject;
@@ -37,8 +39,8 @@ import org.dswarm.persistence.service.AdvancedDMPJPAService;
  * @param <POJOCLASS>                   the concrete POJO class of the resource
  * @author tgaengler
  */
-public abstract class AdvancedDMPResource<POJOCLASSRESOURCEUTILS extends AdvancedDMPResourceUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends AdvancedDMPJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyAdvancedDMPJPAObject<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
-		extends BasicDMPResource<POJOCLASSRESOURCEUTILS, POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
+public abstract class AdvancedDMPResource<POJOCLASSPERSISTENCESERVICE extends AdvancedDMPJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyAdvancedDMPJPAObject<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
+		extends BasicDMPResource<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AdvancedDMPResource.class);
 
@@ -46,14 +48,25 @@ public abstract class AdvancedDMPResource<POJOCLASSRESOURCEUTILS extends Advance
 	 * Creates a new resource (controller service) for the given concrete POJO class with the provider of the concrete persistence
 	 * service, the object mapper and metrics registry.
 	 *
-	 * @param clasz                         a concrete POJO class
+	 * @param pojoClassArg                  a concrete POJO class
 	 * @param persistenceServiceProviderArg the concrete persistence service that is related to the concrete POJO class
-	 * @param objectMapperArg               an object mapper
+	 * @param objectMapperProviderArg       an object mapper
 	 * @param dmpStatusArg                  a metrics registry
 	 */
-	public AdvancedDMPResource(final POJOCLASSRESOURCEUTILS pojoClassResourceUtilsArg, final DMPStatus dmpStatusArg) {
+	public AdvancedDMPResource(final Class<POJOCLASS> pojoClassArg, final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
+			final Provider<ObjectMapper> objectMapperProviderArg, final DMPStatus dmpStatusArg) {
 
-		super(pojoClassResourceUtilsArg, dmpStatusArg);
+		super(pojoClassArg, persistenceServiceProviderArg, objectMapperProviderArg, dmpStatusArg);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected PROXYPOJOCLASS createObject(final POJOCLASS objectFromJSON, final POJOCLASSPERSISTENCESERVICE persistenceService)
+			throws DMPPersistenceException {
+
+		return persistenceService.createOrGetObjectTransactional(objectFromJSON.getUri());
 	}
 
 	@Override
@@ -68,11 +81,11 @@ public abstract class AdvancedDMPResource<POJOCLASSRESOURCEUTILS extends Advance
 		// with this uri exists and manipulate this one instead
 		// note: we could also throw an exception instead
 
-		final POJOCLASS objectFromJSON = pojoClassResourceUtils.deserializeObjectJSONString(jsonObjectString);
+		final POJOCLASS objectFromJSON = deserializeObjectJSONString(jsonObjectString);
 
 		// get persistent object per uri
 
-		final POJOCLASSPERSISTENCESERVICE persistenceService = pojoClassResourceUtils.getPersistenceService();
+		final POJOCLASSPERSISTENCESERVICE persistenceService = persistenceServiceProvider.get();
 
 		POJOCLASS object = null;
 		try {
@@ -80,20 +93,20 @@ public abstract class AdvancedDMPResource<POJOCLASSRESOURCEUTILS extends Advance
 		} catch (final DMPPersistenceException e) {
 
 			AdvancedDMPResource.LOG
-					.debug("couldn't retrieve " + pojoClassResourceUtils.getClaszName() + " for uri '" + objectFromJSON.getUri() + "'");
+					.debug("couldn't retrieve " + pojoClassName + " for uri '" + objectFromJSON.getUri() + "'");
 
 			return null;
 		}
 
 		if (object == null) {
 
-			AdvancedDMPResource.LOG.debug(pojoClassResourceUtils.getClaszName() + " for uri '" + objectFromJSON.getUri()
+			AdvancedDMPResource.LOG.debug(pojoClassName + " for uri '" + objectFromJSON.getUri()
 					+ "' does not exist, i.e., it cannot be updated");
 
 			return null;
 		}
 
-		AdvancedDMPResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with uri '" + objectFromJSON.getUri() + "'");
+		AdvancedDMPResource.LOG.debug("got " + pojoClassName + " with uri '" + objectFromJSON.getUri() + "'");
 		AdvancedDMPResource.LOG.trace(" = '" + ToStringBuilder.reflectionToString(object) + "'");
 
 		return object;

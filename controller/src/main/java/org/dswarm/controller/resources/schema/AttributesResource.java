@@ -16,6 +16,7 @@
 package org.dswarm.controller.resources.schema;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -37,8 +38,6 @@ import com.wordnik.swagger.annotations.ApiResponses;
 
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.AdvancedDMPResource;
-import org.dswarm.controller.resources.schema.utils.AttributesResourceUtils;
-import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
 import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
@@ -46,31 +45,33 @@ import org.dswarm.persistence.service.schema.AttributeService;
 
 /**
  * A resource (controller service) for {@link Attribute}s.
- * 
+ *
  * @author tgaengler
  */
 @RequestScoped
 @Api(value = "/attributes", description = "Operations about attributes.")
 @Path("attributes")
-public class AttributesResource extends AdvancedDMPResource<AttributesResourceUtils, AttributeService, ProxyAttribute, Attribute> {
+public class AttributesResource extends AdvancedDMPResource<AttributeService, ProxyAttribute, Attribute> {
 
 	/**
 	 * Creates a new resource (controller service) for {@link Attribute}s with the provider of the attribute persistence service,
 	 * the object mapper and metrics registry.
-	 * 
-	 * @param utilsFactory the resource utils factory
-	 * @param dmpStatusArg a metrics registry
+	 *
+	 * @param persistenceServiceProviderArg
+	 * @param objectMapperProviderArg
+	 * @param dmpStatusArg                  a metrics registry
 	 */
 	@Inject
-	public AttributesResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg)
+	public AttributesResource(final Provider<AttributeService> persistenceServiceProviderArg,
+			final Provider<ObjectMapper> objectMapperProviderArg, final DMPStatus dmpStatusArg)
 			throws DMPControllerException {
 
-		super(utilsFactory.reset().get(AttributesResourceUtils.class), dmpStatusArg);
+		super(Attribute.class, persistenceServiceProviderArg, objectMapperProviderArg, dmpStatusArg);
 	}
 
 	/**
 	 * This endpoint returns an attribute as JSON representation for the provided attribute identifier.<br/>
-	 * 
+	 *
 	 * @param id an attribute identifier
 	 * @return a JSON representation of an attribute
 	 */
@@ -90,7 +91,7 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 
 	/**
 	 * This endpoint consumes an attribute as JSON representation and persists this attribute in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one attribute
 	 * @return the persisted attribute as JSON representation
 	 * @throws DMPControllerException
@@ -111,7 +112,7 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 
 	/**
 	 * This endpoint returns a list of all attributes as JSON representation.
-	 * 
+	 *
 	 * @return a list of all attributes as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -129,9 +130,9 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 
 	/**
 	 * This endpoint consumes an attribute as JSON representation and updates this attribute in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one attribute
-	 * @param uuid an attribute identifier
+	 * @param uuid             an attribute identifier
 	 * @return the updated attribute as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -152,10 +153,10 @@ public class AttributesResource extends AdvancedDMPResource<AttributesResourceUt
 
 	/**
 	 * This endpoint deletes a attribute that matches the given id.
-	 * 
+	 *
 	 * @param id an attribute identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
-	 *         went wrong
+	 * went wrong
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "delete attribute that matches the given id", notes = "Returns status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong.")
