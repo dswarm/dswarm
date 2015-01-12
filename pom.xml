@@ -73,7 +73,7 @@
 		<version.maven.plugin.javadoc>2.9.1</version.maven.plugin.javadoc>
 		<version.maven.plugin.jxr>2.4</version.maven.plugin.jxr>
 		<version.maven.plugin.license>2.7</version.maven.plugin.license>
-		<version.maven.plugin.pmd>3.2</version.maven.plugin.pmd>
+		<version.maven.plugin.pmd>3.3</version.maven.plugin.pmd>
 		<version.maven.plugin.project-info-reports>2.7</version.maven.plugin.project-info-reports>
 		<version.maven.plugin.release>2.5</version.maven.plugin.release>
 		<version.maven.plugin.resources>2.6</version.maven.plugin.resources>
