@@ -87,6 +87,7 @@ public class JpaHibernateModule extends AbstractModule {
 		properties.setProperty("hibernate.show_sql", String.valueOf(isLogSql));
 		properties.setProperty("javax.persistence.jdbc.driver", "com.mysql.jdbc.Driver");
 		properties.setProperty("hibernate.jdbc.lob.non_contextual_creation", "true");
+		properties.setProperty("hibernate.ejb.entitymanager_factory_name", "DMPAppFactory");
 
 		return properties;
 	}
