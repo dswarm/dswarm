@@ -17,8 +17,6 @@ package org.dswarm.converter.flow.test;
 
 import java.io.IOException;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -53,8 +51,7 @@ public class EdgeCasesTransformationFlowTest extends GuicedTest {
 		Assert.assertEquals(finalExpected, actual);
 	}
 
-	private ArrayNode replaceKeyWithActualKey(final String expected, final String actual) throws JsonParseException, JsonMappingException,
-			IOException {
+	private ArrayNode replaceKeyWithActualKey(final String expected, final String actual) throws IOException {
 
 		// replace key with actual key
 		final ArrayNode expectedJson = DMPPersistenceUtil.getJSONObjectMapper().readValue(expected, ArrayNode.class);
@@ -115,7 +112,7 @@ public class EdgeCasesTransformationFlowTest extends GuicedTest {
 		Assert.assertTrue("the actual content JSON should be a JSON object", actualContentJson.isObject());
 
 		final ObjectNode newExpectedContentJson = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
-		newExpectedContentJson.put(actualContentJson.fieldNames().next(), expectedContentValue);
+		newExpectedContentJson.set(actualContentJson.fieldNames().next(), expectedContentValue);
 		final ArrayNode newExpectedContent = DMPPersistenceUtil.getJSONObjectMapper().createArrayNode();
 
 		if (typeNode != null) {
@@ -139,7 +136,7 @@ public class EdgeCasesTransformationFlowTest extends GuicedTest {
 
 			newExpectedContent.add(newExpectedContentJson);
 		}
-		expectedTuple.put(expectedFieldName, newExpectedContent);
+		expectedTuple.set(expectedFieldName, newExpectedContent);
 
 		return expectedJson;
 	}
