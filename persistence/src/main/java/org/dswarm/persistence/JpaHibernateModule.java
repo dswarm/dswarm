@@ -15,7 +15,12 @@
  */
 package org.dswarm.persistence;
 
+import java.util.List;
 import java.util.Properties;
+
+import javax.persistence.spi.PersistenceProvider;
+import javax.persistence.spi.PersistenceProviderResolver;
+import javax.persistence.spi.PersistenceProviderResolverHolder;
 
 import com.google.common.base.Preconditions;
 import com.google.inject.AbstractModule;
@@ -23,6 +28,9 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.typesafe.config.Config;
+import org.hibernate.jpa.HibernatePersistenceProvider;
+
+import static java.util.Arrays.asList;
 
 public class JpaHibernateModule extends AbstractModule {
 
@@ -93,6 +101,23 @@ public class JpaHibernateModule extends AbstractModule {
 	}
 
 	private Module persistModule() {
+
+		// to fix depracted hibernate persistence provider issue, see also https://hibernate.atlassian.net/browse/HHH-9141?focusedCommentId=64948&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-64948
+		PersistenceProviderResolverHolder.setPersistenceProviderResolver(new PersistenceProviderResolver() {
+
+			private final List<PersistenceProvider> providers_ = asList((PersistenceProvider) new HibernatePersistenceProvider());
+
+			@Override
+			public List<PersistenceProvider> getPersistenceProviders() {
+				return providers_;
+			}
+
+			@Override public void clearCachedProviders() {
+
+				providers_.clear();
+			}
+		});
+
 		return new JpaPersistModule(jpaUnit).properties(persistenceConfig());
 	}
 }
