@@ -40,8 +40,8 @@
 
 	<properties>
 		<dmp.version>0.1-SNAPSHOT</dmp.version>
-		<java.source.version>1.7</java.source.version>
-		<java.target.version>1.7</java.target.version>
+		<java.source.version>1.8</java.source.version>
+		<java.target.version>1.8</java.target.version>
 		<maxallowedviolations>7000</maxallowedviolations>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<version.apache.commons>3.3.2</version.apache.commons>
