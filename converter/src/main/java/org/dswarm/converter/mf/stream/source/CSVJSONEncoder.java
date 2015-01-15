@@ -100,14 +100,14 @@ public final class CSVJSONEncoder extends DefaultStreamPipe<ObjectReceiver<JsonN
 
 				if (schemaJSON != null) {
 
-					json.put("schema", schemaJSON);
+					json.set("schema", schemaJSON);
 				}
 			}
 
 			final ArrayNode dataJSONArray = new ArrayNode(DMPPersistenceUtil.getJSONFactory());
 
 			dataJSONArray.add(dataJSON);
-			json.put("data", dataJSONArray);
+			json.set("data", dataJSONArray);
 
 		}
 

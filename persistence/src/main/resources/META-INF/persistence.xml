@@ -1,10 +1,10 @@
-<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
-http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
-	version="2.0">
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+http://java.sun.com/xml/ns/persistence/persistence_2_1.xsd"
+	version="2.1">
 	<persistence-unit name="DMPApp" transaction-type="RESOURCE_LOCAL">
-		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
 		<!-- classes -->
 		<class>org.dswarm.persistence.model.resource.Resource</class>
@@ -21,6 +21,8 @@ http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
 		<class>org.dswarm.persistence.model.job.Project</class>
 		<class>org.dswarm.persistence.model.job.Transformation</class>
 		<class>org.dswarm.persistence.model.schema.MappingAttributePathInstance</class>
+		<class>org.dswarm.persistence.model.schema.SchemaAttributePathInstance</class>
+		<class>org.dswarm.persistence.model.schema.ContentSchema</class>
 
 		<shared-cache-mode>NONE</shared-cache-mode>
 	</persistence-unit>

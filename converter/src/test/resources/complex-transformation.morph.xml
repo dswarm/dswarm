@@ -4,10 +4,10 @@
         <name>mapping14</name>
     </meta>
     <rules>
-        <data name="@givenName" source="http://purl.org/dc/terms/creator&#30;http://xmlns.com/foaf/0.1/givenName"/>
-        <data name="@title" source="http://purl.org/dc/terms/creator&#30;http://xmlns.com/foaf/0.1/title"/>
         <data name="@firstName" source="http://purl.org/dc/terms/creator&#30;http://xmlns.com/foaf/0.1/firstName"/>
         <data name="@familyName" source="http://purl.org/dc/terms/creator&#30;http://xmlns.com/foaf/0.1/familyName"/>
+        <data name="@title" source="http://purl.org/dc/terms/creator&#30;http://xmlns.com/foaf/0.1/title"/>
+        <data name="@givenName" source="http://purl.org/dc/terms/creator&#30;http://xmlns.com/foaf/0.1/givenName"/>
         <data name="http://purl.org/dc/terms/creator&#30;http://xmlns.com/foaf/0.1/name" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
         <data name="@component_id_12" source="@familyName">
             <replace pattern="=" with=""/>
