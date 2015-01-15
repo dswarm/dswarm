@@ -31,6 +31,7 @@ import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.job.utils.TransformationDeserializer;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.service.MaintainDBService;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.internal.InternalServiceFactoryImpl;
 import org.dswarm.persistence.service.job.ComponentService;
 import org.dswarm.persistence.service.job.FilterService;
@@ -46,6 +47,7 @@ import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.schema.ClaszService;
 import org.dswarm.persistence.service.schema.ContentSchemaService;
 import org.dswarm.persistence.service.schema.MappingAttributePathInstanceService;
+import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 import org.dswarm.persistence.service.schema.SchemaService;
 
 /**
@@ -75,8 +77,10 @@ public class PersistenceModule extends AbstractModule {
 		bind(FilterService.class).in(Scopes.SINGLETON);
 		bind(ProjectService.class).in(Scopes.SINGLETON);
 		bind(MappingAttributePathInstanceService.class).in(Scopes.SINGLETON);
+		bind(SchemaAttributePathInstanceService.class).in(Scopes.SINGLETON);
 		bind(ContentSchemaService.class).in(Scopes.SINGLETON);
 		bind(MaintainDBService.class).in(Scopes.SINGLETON);
+		bind(UUIDService.class).in(Scopes.SINGLETON);
 
 		bind(InternalModelServiceFactory.class).to(InternalServiceFactoryImpl.class).in(Scopes.SINGLETON);
 		bind(DMPUtil.class);

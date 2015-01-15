@@ -594,7 +594,7 @@ public class GDMModel implements Model {
 					if (deepestAttributeTransformed) {
 
 						currentAttribute = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
-						currentAttribute.put(attribute, previousAttribute);
+						currentAttribute.set(attribute, previousAttribute);
 						previousAttribute = currentAttribute;
 					} else {
 

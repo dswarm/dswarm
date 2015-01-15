@@ -72,6 +72,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 	public static final String BIBO_DOCUMENT_SCHEMA_UUID = "Schema-ff62ec21-0a11-4c27-a704-d7ca53a21521";
 	public final static String FOAF_SCHEMA_UUID = "Schema-309e901c-3da9-4d82-a694-bab632eaa340";
 	public static final String PNX_SCHEMA_UUID = "Schema-dbc97499-278d-4551-a65e-8e8bb219ca6c";
+	public static final String MARC21_SCHEMA_UUID = "Schema-781d73f0-d115-462e-9b4c-ec23e4251c8d";
 
 	public static String determineRelativeURIPart(final String uri) {
 
