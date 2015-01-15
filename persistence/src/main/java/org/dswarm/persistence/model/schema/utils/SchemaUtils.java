@@ -191,8 +191,6 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 		for (final AttributePathHelper attributePathHelper : attributePathHelpers) {
 
-			System.out.println(attributePathHelper.toString());
-
 			final LinkedList<Attribute> attributes = Lists.newLinkedList();
 
 			final LinkedList<String> attributePathFromHelper = attributePathHelper.getAttributePath();

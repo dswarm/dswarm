@@ -106,13 +106,7 @@ public class XMLSchemaParserTest extends GuicedTest {
 
 		final Schema schema = parseSchema("mabxml-1.xsd", "datensatz", SchemaUtils.MABXML_SCHEMA_UUID, "mabxml schema");
 
-		final Map<String, AttributePath> aps = Maps.newHashMap();
-
-		for (final SchemaAttributePathInstance schemaAttributePathInstance : schema.getAttributePaths()) {
-
-			final AttributePath attributePath = schemaAttributePathInstance.getAttributePath();
-			aps.put(attributePath.toAttributePath(), attributePath);
-		}
+		final Map<String, AttributePath> aps = generateAttributePathMap(schema);
 
 		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
 
@@ -129,16 +123,8 @@ public class XMLSchemaParserTest extends GuicedTest {
 
 		contentSchema.addKeyAttributePath(feldNr);
 		contentSchema.addKeyAttributePath(feldInd);
-		contentSchema.setRecordIdentifierAttributePath(id);
-		contentSchema.setValueAttributePath(feldValue);
 
-		schema.setContentSchema(contentSchema);
-
-		final SchemaService schemaService = GuicedTest.injector.getInstance(SchemaService.class);
-
-		schemaService.updateObjectTransactional(schema);
-
-		return schema;
+		return fillContentSchemaAndUpdateSchema(contentSchema, id, feldValue, schema);
 	}
 
 	/**
@@ -160,7 +146,33 @@ public class XMLSchemaParserTest extends GuicedTest {
 	 */
 	public static Schema parseMarc21Schema() throws IOException, DMPPersistenceException {
 
-		return parseSchema("MARC21slim.xsd", "record", SchemaUtils.MARC21_SCHEMA_UUID, "marc21 schema");
+		final Schema schema = parseSchema("MARC21slim.xsd", "record", SchemaUtils.MARC21_SCHEMA_UUID, "marc21 schema");
+
+		final Map<String, AttributePath> aps = generateAttributePathMap(schema);
+
+		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
+
+		final ContentSchema contentSchema = new ContentSchema(uuid);
+		contentSchema.setName("marc21 content schema");
+
+		final AttributePath datafieldTag = aps
+				.get("http://www.loc.gov/MARC21/slim#datafield\u001Ehttp://www.loc.gov/MARC21/slim#tag");
+		final AttributePath datafieldInd1 = aps
+				.get("http://www.loc.gov/MARC21/slim#datafield\u001Ehttp://www.loc.gov/MARC21/slim#ind1");
+		final AttributePath datafieldInd2 = aps
+				.get("http://www.loc.gov/MARC21/slim#datafield\u001Ehttp://www.loc.gov/MARC21/slim#ind2");
+		final AttributePath datafieldSubfieldCode = aps
+				.get("http://www.loc.gov/MARC21/slim#datafield\u001Ehttp://www.loc.gov/MARC21/slim#subfield\u001Ehttp://www.loc.gov/MARC21/slim#code");
+		final AttributePath id = aps.get("http://www.loc.gov/MARC21/slim#id");
+		final AttributePath datafieldSubfieldValue = aps
+				.get("http://www.loc.gov/MARC21/slim#datafield\u001Ehttp://www.loc.gov/MARC21/slim#subfield\u001Ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#value");
+
+		contentSchema.addKeyAttributePath(datafieldTag);
+		contentSchema.addKeyAttributePath(datafieldInd1);
+		contentSchema.addKeyAttributePath(datafieldInd2);
+		contentSchema.addKeyAttributePath(datafieldSubfieldCode);
+
+		return fillContentSchemaAndUpdateSchema(contentSchema, id, datafieldSubfieldValue, schema);
 	}
 
 	private static Schema parseSchema(final String xsdFileName, final String recordIdentifier, final String schemaUUID, final String schemaName)
@@ -193,6 +205,34 @@ public class XMLSchemaParserTest extends GuicedTest {
 		final String actualAttributePaths = sb.toString();
 
 		Assert.assertEquals(expectedAttributePaths, actualAttributePaths);
+	}
+
+	private static Map<String, AttributePath> generateAttributePathMap(final Schema schema) {
+
+		final Map<String, AttributePath> aps = Maps.newHashMap();
+
+		for (final SchemaAttributePathInstance schemaAttributePathInstance : schema.getAttributePaths()) {
+
+			final AttributePath attributePath = schemaAttributePathInstance.getAttributePath();
+			aps.put(attributePath.toAttributePath(), attributePath);
+		}
+
+		return aps;
+	}
+
+	private static Schema fillContentSchemaAndUpdateSchema(final ContentSchema contentSchema, final AttributePath recordIdentifierAP, final AttributePath valueAP, final Schema schema)
+			throws DMPPersistenceException {
+
+		contentSchema.setRecordIdentifierAttributePath(recordIdentifierAP);
+		contentSchema.setValueAttributePath(valueAP);
+
+		schema.setContentSchema(contentSchema);
+
+		final SchemaService schemaService = GuicedTest.injector.getInstance(SchemaService.class);
+
+		schemaService.updateObjectTransactional(schema);
+
+		return schema;
 	}
 
 }
