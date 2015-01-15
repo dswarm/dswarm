@@ -4,17 +4,17 @@
         <name>mapping-1402483329964, mapping-1402483505043, mapping-1402483539669</name>
     </meta>
     <rules>
-        <data name="@note_value__0__" source="http://www.loc.gov/mods/v3#note&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
-        <data name="@note_lang__0__" source="http://www.loc.gov/mods/v3#note&#30;http://www.loc.gov/mods/v3#lang"/>
         <data name="@note_displayLabel__0__" source="http://www.loc.gov/mods/v3#note&#30;http://www.loc.gov/mods/v3#displayLabel"/>
+        <data name="@note_lang__0__" source="http://www.loc.gov/mods/v3#note&#30;http://www.loc.gov/mods/v3#lang"/>
+        <data name="@note_value__0__" source="http://www.loc.gov/mods/v3#note&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
         <data name="http://purl.org/dc/terms/alternative" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
-        <combine name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" reset="true" value="[${component1402483352013}+${note_displayLabel__0__}]">
-            <data name="component1402483352013" source="@component1402483352013"/>
-            <data name="note_displayLabel__0__" source="@note_displayLabel__0__"/>
-        </combine>
         <combine name="@component1402483352013" reset="true" value="(${note_value__0__}#${note_lang__0__})">
             <data name="note_value__0__" source="@note_value__0__"/>
             <data name="note_lang__0__" source="@note_lang__0__"/>
+        </combine>
+        <combine name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" reset="true" value="[${component1402483352013}+${note_displayLabel__0__}]">
+            <data name="component1402483352013" source="@component1402483352013"/>
+            <data name="note_displayLabel__0__" source="@note_displayLabel__0__"/>
         </combine>
         <data name="@titleInfo_title_value__1__" source="http://www.loc.gov/mods/v3#titleInfo&#30;http://www.loc.gov/mods/v3#title&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
         <data name="http://purl.org/dc/elements/1.1/title" source="@__TRANSFORMATION_OUTPUT_VARIABLE__2"/>

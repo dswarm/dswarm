@@ -108,14 +108,14 @@ public class ConverterHelper {
 				arrayNode.add(object.getLiteralOrURI());
 			}
 
-			objectJSONObject.put(property, arrayNode);
+			objectJSONObject.set(property, arrayNode);
 		} else {
 
 			final Object object = objects.get(0);
 
 			if (object.isJsonNode()) {
 
-				objectJSONObject.put(property, object.getJsonNode());
+				objectJSONObject.set(property, object.getJsonNode());
 			} else {
 
 				objectJSONObject.put(property, object.getLiteralOrURI());

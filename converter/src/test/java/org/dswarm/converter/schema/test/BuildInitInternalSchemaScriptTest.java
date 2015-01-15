@@ -19,7 +19,6 @@ import java.io.File;
 
 import com.google.inject.Key;
 import com.google.inject.name.Names;
-import org.junit.Test;
 
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.init.util.CmdUtil;
@@ -72,13 +71,15 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 
 		final Schema bibrmContractSchema = new BibrmContractItemSchemaBuilder().buildSchema();
 		final Schema biboDocumentSchema = new BiboDocumentSchemaBuilder().buildSchema();
-		final Schema mabxmlSchema = XMLSchemaParserTest.testSchemaParsing2();
-		final Schema pnxSchema = XMLSchemaParserTest.testSchemaParsingPNX();
+		final Schema mabxmlSchema = XMLSchemaParserTest.parseMabxmlSchema();
+		final Schema pnxSchema = XMLSchemaParserTest.parsePNXSchema();
+		final Schema marc21Schema = XMLSchemaParserTest.parseMarc21Schema();
 
 		final String bibrmContractDM = "Internal Data Model ContractItem";
 		final String biboDocumentDM = "Internal Data Model BiboDocument";
 		final String mabxmlSchemaDM = "Internal Data Model mabxml";
 		final String pnxSchemaDM = "Internal Data Model PNX";
+		final String marc21SchemaDM = "Internal Data Model Marc21";
 		// [@tgaengler]: just prevention, but I guess that we also need a (default) data model for the foaf:Person schema (right now)
 		final String foafPersonDM = "Internal Data Model foafPerson";
 
@@ -88,6 +89,7 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		createSchemaDataModel(DataModelUtils.BIBO_DOCUMENT_DATA_MODEL_UUID, biboDocumentDM, biboDocumentDM, biboDocumentSchema);
 		createSchemaDataModel(DataModelUtils.MABXML_DATA_MODEL_UUID, mabxmlSchemaDM, mabxmlSchemaDM, mabxmlSchema);
 		createSchemaDataModel(DataModelUtils.PNX_DATA_MODEL_UUID, pnxSchemaDM, pnxSchemaDM, pnxSchema);
+		createSchemaDataModel(DataModelUtils.MARC21_DATA_MODEL_UUID, marc21SchemaDM, marc21SchemaDM, marc21Schema);
 		createSchemaDataModel(DataModelUtils.FOAF_PERSON_DATA_MODEL_UUID, foafPersonDM, foafPersonDM, foafPersonSchema);
 
 		final String sep = File.separator;
