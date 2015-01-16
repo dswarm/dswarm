@@ -1,5 +1,5 @@
 {
-    "id": 5,
-    "name": "name",
-    "uri": "http://xmlns.com/foaf/0.1/name"
+  "name" : "name",
+  "uri" : "http://xmlns.com/foaf/0.1/name",
+  "uuid" : "5"
 }

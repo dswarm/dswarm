@@ -49,6 +49,7 @@ import org.dswarm.persistence.model.resource.ResourceType;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
+import org.dswarm.persistence.service.UUIDService;
 
 @SuppressWarnings("MethodMayBeStatic")
 public class SchemaOrderTest extends ResourceTest {
@@ -111,7 +112,7 @@ public class SchemaOrderTest extends ResourceTest {
 				if (input.equals("type")) {
 					return "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
 				}
-				return String.format("http://data.slub-dresden.de/resources/%d/schema#%s", thisResource.getId(), input);
+				return String.format("http://data.slub-dresden.de/resources/%s/schema#%s", thisResource.getUuid(), input);
 			}
 		});
 	}
@@ -210,7 +211,9 @@ public class SchemaOrderTest extends ResourceTest {
 		final String name = "DD-492";
 		final String description = "DD-492 config";
 
-		configuration = new Configuration();
+		final String configurationUuid = UUIDService.getUUID(Configuration.class.getSimpleName());
+
+		configuration = new Configuration(configurationUuid);
 		configuration.setName(name);
 		configuration.setDescription(description);
 		configuration.addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode("csv"));
@@ -218,7 +221,10 @@ public class SchemaOrderTest extends ResourceTest {
 	}
 
 	private DataModel createDataModel() {
-		final DataModel dataModel = new DataModel();
+
+		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+
+		final DataModel dataModel = new DataModel(dataModelUuid);
 		dataModel.setDataResource(resource);
 		dataModel.setConfiguration(configuration);
 		return dataModel;

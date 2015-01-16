@@ -26,7 +26,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.base.Objects;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,13 +40,13 @@ import org.slf4j.LoggerFactory;
 @Table(name = "SCHEMA_ATTRIBUTE_PATH_INSTANCE")
 public class SchemaAttributePathInstance extends AttributePathInstance {
 
-	private static final Logger	LOG					= LoggerFactory.getLogger(SchemaAttributePathInstance.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SchemaAttributePathInstance.class);
 
 	/**
 	 *
 	 */
-	private static final long	serialVersionUID	= 1L;
-	
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * The optional subschema of the schema attribute path instance. A sub-schema can
 	 * further prescribe how the (complex) value of the last attribute of an attribute path
@@ -56,17 +55,21 @@ public class SchemaAttributePathInstance extends AttributePathInstance {
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "SUB_SCHEMA")
 	@XmlElement(name = "sub_schema")
-	private Schema	subSchema;
+	private Schema subSchema;
 
 	/**
 	 * Creates a new mapping attribute path instance.
 	 */
-	public SchemaAttributePathInstance() {
+	protected SchemaAttributePathInstance() {
 
 		super(AttributePathInstanceType.SchemaAttributePathInstance);
 	}
 
-	
+	public SchemaAttributePathInstance(final String uuid) {
+
+		super(uuid, AttributePathInstanceType.SchemaAttributePathInstance);
+	}
+
 	/**
 	 * @return the sub-schema of the mapping attribute path instance
 	 * or null if no sub-schema was defined
@@ -75,21 +78,14 @@ public class SchemaAttributePathInstance extends AttributePathInstance {
 		return subSchema;
 	}
 
-	
 	/**
-	 * Set a sub-schema for the attribute path instance to further prescribe 
+	 * Set a sub-schema for the attribute path instance to further prescribe
 	 * how the (complex) value of the last attribute of this path is meant to be structured.
-	 * 
+	 *
 	 * @param subSchema - the Schema to be used as as sub-schema.
 	 */
-	public void setSubSchema(Schema subSchema) {
+	public void setSubSchema(final Schema subSchema) {
 		this.subSchema = subSchema;
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-
-		return SchemaAttributePathInstance.class.isInstance(obj) && super.equals(obj);
 	}
 
 	@Override
@@ -97,7 +93,6 @@ public class SchemaAttributePathInstance extends AttributePathInstance {
 
 		return SchemaAttributePathInstance.class.isInstance(obj) && super.completeEquals(obj)
 				//&& Objects.equal(((SchemaAttributePathInstance) obj).getOrdinal(), getOrdinal())
-				&& Objects.equal(((SchemaAttributePathInstance) obj).getSubSchema(), getSubSchema())
-				;
+				&& Objects.equal(((SchemaAttributePathInstance) obj).getSubSchema(), getSubSchema());
 	}
 }

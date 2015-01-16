@@ -28,9 +28,9 @@ import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
 import org.dswarm.persistence.service.schema.AttributePathService;
 import org.dswarm.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
-import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
+import org.dswarm.persistence.service.test.BasicJPAServiceTest;
 
-public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttributePath, AttributePath, AttributePathService> {
+public class AttributePathServiceTest extends BasicJPAServiceTest<ProxyAttributePath, AttributePath, AttributePathService> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AttributePathServiceTest.class);
 
@@ -62,7 +62,7 @@ public class AttributePathServiceTest extends IDBasicJPAServiceTest<ProxyAttribu
 		final AttributePath attributePath1 = apstUtils.getNonCachedDctermsTitleDctermsHaspartDctermsTitleAP();
 		final AttributePath attributePath2 = apstUtils.getNonCachedDctermsTitleDctermsHaspartDctermsTitleAP();
 
-		Assert.assertEquals("ids of attribute paths should be equal", attributePath1.getId(), attributePath2.getId());
+		Assert.assertEquals("ids of attribute paths should be equal", attributePath1.getUuid(), attributePath2.getUuid());
 
 		final String jsonPath = attributePath1.getAttributePathAsJSONObjectString();
 

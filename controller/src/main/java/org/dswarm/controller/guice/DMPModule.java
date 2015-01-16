@@ -25,7 +25,6 @@ import org.dswarm.controller.eventbus.CSVConverterEventRecorder;
 import org.dswarm.controller.eventbus.SchemaEventRecorder;
 import org.dswarm.controller.eventbus.XMLConverterEventRecorder;
 import org.dswarm.controller.eventbus.XMLSchemaEventRecorder;
-import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
 import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.controller.status.DatabaseHealthCheck;
 import org.dswarm.controller.status.MetricsReporter;
@@ -52,7 +51,7 @@ public class DMPModule extends AbstractModule {
 		bind(XMLSchemaEventRecorder.class).asEagerSingleton();
 
 		bind(DataModelUtil.class);
-		bind(ResourceUtilsFactory.class);
+		// TODO bind persistence services here ???
 
 		bind(MetricsReporter.class);
 		bind(DMPStatus.class);

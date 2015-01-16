@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -32,6 +33,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -46,9 +48,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.dswarm.controller.DMPControllerException;
-import org.dswarm.controller.resources.BasicIDResource;
-import org.dswarm.controller.resources.schema.utils.AttributePathsResourceUtils;
-import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
+import org.dswarm.controller.resources.BasicResource;
 import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.schema.Attribute;
@@ -64,22 +64,23 @@ import org.dswarm.persistence.service.schema.AttributePathService;
 @RequestScoped
 @Api(value = "/attributepaths", description = "Operations about attribute paths.")
 @Path("attributepaths")
-public class AttributePathsResource extends BasicIDResource<AttributePathsResourceUtils, AttributePathService, ProxyAttributePath, AttributePath> {
+public class AttributePathsResource extends BasicResource<AttributePathService, ProxyAttributePath, AttributePath> {
 
-	private static final Logger	LOG	= LoggerFactory.getLogger(AttributePathsResource.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AttributePathsResource.class);
 
 	/**
 	 * Creates a new resource (controller service) for {@link AttributePath}s with the provider of the attribute path persistence
 	 * service, the object mapper and metrics registry.
 	 *
-	 * @param attributePathServiceProviderArg the attribute path persistence service provider
-	 * @param objectMapperArg an object mapper
-	 * @param dmpStatusArg a metrics registry
+	 * @param persistenceServiceProviderArg
+	 * @param objectMapperProviderArg
+	 * @param dmpStatusArg                  a metrics registry
 	 */
 	@Inject
-	public AttributePathsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
+	public AttributePathsResource(final Provider<AttributePathService> persistenceServiceProviderArg,
+			final Provider<ObjectMapper> objectMapperProviderArg, final DMPStatus dmpStatusArg) throws DMPControllerException {
 
-		super(utilsFactory.reset().get(AttributePathsResourceUtils.class), dmpStatusArg);
+		super(AttributePath.class, persistenceServiceProviderArg, objectMapperProviderArg, dmpStatusArg);
 	}
 
 	/**
@@ -96,7 +97,7 @@ public class AttributePathsResource extends BasicIDResource<AttributePathsResour
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "attribute path identifier", required = true) @PathParam("id") final Long id)
+	public Response getObject(@ApiParam(value = "attribute path identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.getObject(id);
@@ -145,7 +146,7 @@ public class AttributePathsResource extends BasicIDResource<AttributePathsResour
 	 * This endpoint consumes a attribute path as JSON representation and updates this attribute path in the database.
 	 *
 	 * @param jsonObjectString a JSON representation of one attribute path
-	 * @param id a attribute path identifier
+	 * @param uuid             a attribute path identifier
 	 * @return the updated attribute path as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -159,9 +160,9 @@ public class AttributePathsResource extends BasicIDResource<AttributePathsResour
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateObject(@ApiParam(value = "attribute path (as JSON)", required = true) final String jsonObjectString,
-			@ApiParam(value = "attribute path identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+			@ApiParam(value = "attribute path identifier", required = true) @PathParam("id") final String uuid) throws DMPControllerException {
 
-		return super.updateObject(jsonObjectString, id);
+		return super.updateObject(jsonObjectString, uuid);
 	}
 
 	/**
@@ -169,10 +170,11 @@ public class AttributePathsResource extends BasicIDResource<AttributePathsResour
 	 *
 	 * @param id an attribute path identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
-	 *         went wrong
+	 * went wrong
 	 * @throws DMPControllerException
 	 */
-	@ApiOperation(value = "delete attribute path that matches the given id", notes = "Returns status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong.")
+	@ApiOperation(value = "delete attribute path that matches the given id",
+			notes = "Returns status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong.")
 	@ApiResponses(value = { @ApiResponse(code = 204, message = "attribute path was successfully deleted"),
 			@ApiResponse(code = 404, message = "could not find an attribute path for the given id"),
 			@ApiResponse(code = 409, message = "attribute path couldn't be deleted (maybe there are some existing constraints to related objects)"),
@@ -180,7 +182,7 @@ public class AttributePathsResource extends BasicIDResource<AttributePathsResour
 	@DELETE
 	@Path("/{id}")
 	@Override
-	public Response deleteObject(@ApiParam(value = "attribute path identifier", required = true) @PathParam("id") final Long id)
+	public Response deleteObject(@ApiParam(value = "attribute path identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.deleteObject(id);
@@ -218,11 +220,12 @@ public class AttributePathsResource extends BasicIDResource<AttributePathsResour
 				for (final Attribute attribute : attributePath) {
 
 					// note: one could even collect all attribute ids and replace them by their actual ones
+					// => ok, let's do this
 
-					if (attribute.getId() < 0) {
+					//if (attribute.getId() < 0) {
 
-						attributeURIsFromDummyIdsFromObjectFromJSON.add(attribute.getUri());
-					}
+					attributeURIsFromDummyIdsFromObjectFromJSON.add(attribute.getUri());
+					//}
 				}
 
 				// collect attributes that match the uris of the attribute with dummy id
@@ -261,31 +264,31 @@ public class AttributePathsResource extends BasicIDResource<AttributePathsResour
 	}
 
 	@Override
-	protected AttributePath retrieveObject(final Long id, final String jsonObjectString) throws DMPControllerException {
+	protected AttributePath retrieveObject(final String uuid, final String jsonObjectString) throws DMPControllerException {
 
 		if (jsonObjectString == null) {
 
-			return super.retrieveObject(id, jsonObjectString);
+			return super.retrieveObject(uuid, jsonObjectString);
 		}
 
 		// what should we do if the attribute path is a different one? => check whether an entity
 		// with this attribute path exists and manipulate this one instead
 		// note: we could also throw an exception instead
 
-		final AttributePath objectFromJSON = pojoClassResourceUtils.deserializeObjectJSONString(jsonObjectString);
+		final AttributePath objectFromJSON = deserializeObjectJSONString(jsonObjectString);
 
 		// get persistent object per attribute path
 
-		final AttributePathService persistenceService = pojoClassResourceUtils.getPersistenceService();
+		final AttributePathService persistenceService = persistenceServiceProvider.get();
 
 		AttributePath object = null;
 
 		try {
 
-			object = persistenceService.getObject(objectFromJSON.getAttributePathAsJSONObjectString());
+			object = persistenceService.getObjectViaAttributePathJSON(objectFromJSON.getAttributePathAsJSONObjectString());
 		} catch (final DMPPersistenceException e) {
 
-			AttributePathsResource.LOG.debug("couldn't retrieve " + pojoClassResourceUtils.getClaszName() + " for attribute path '"
+			AttributePathsResource.LOG.debug("couldn't retrieve " + pojoClassName + " for attribute path '"
 					+ objectFromJSON.toAttributePath() + "'");
 
 			return null;
@@ -295,13 +298,20 @@ public class AttributePathsResource extends BasicIDResource<AttributePathsResour
 
 			// retrieve object by id and manipulate attribute path
 
-			return super.retrieveObject(id, jsonObjectString);
+			return super.retrieveObject(uuid, jsonObjectString);
 		}
 
-		AttributePathsResource.LOG.debug("got " + pojoClassResourceUtils.getClaszName() + " with attribute path '" + objectFromJSON.toAttributePath()
+		AttributePathsResource.LOG.debug("got " + pojoClassName + " with attribute path '" + objectFromJSON.toAttributePath()
 				+ "' ");
 		AttributePathsResource.LOG.trace("= '" + ToStringBuilder.reflectionToString(object) + "'");
 
 		return object;
+	}
+
+	@Override
+	protected ProxyAttributePath createObject(final AttributePath objectFromJSON, final AttributePathService persistenceService)
+			throws DMPPersistenceException {
+
+		return persistenceService.createOrGetObjectTransactional(objectFromJSON.getAttributePath());
 	}
 }

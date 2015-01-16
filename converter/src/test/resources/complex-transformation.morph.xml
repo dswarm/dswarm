@@ -5,23 +5,11 @@
     </meta>
     <rules>
         <data name="@firstName" source="http://purl.org/dc/terms/creator&#30;http://xmlns.com/foaf/0.1/firstName"/>
-        <data name="@givenName" source="http://purl.org/dc/terms/creator&#30;http://xmlns.com/foaf/0.1/givenName"/>
         <data name="@familyName" source="http://purl.org/dc/terms/creator&#30;http://xmlns.com/foaf/0.1/familyName"/>
         <data name="@title" source="http://purl.org/dc/terms/creator&#30;http://xmlns.com/foaf/0.1/title"/>
+        <data name="@givenName" source="http://purl.org/dc/terms/creator&#30;http://xmlns.com/foaf/0.1/givenName"/>
         <data name="http://purl.org/dc/terms/creator&#30;http://xmlns.com/foaf/0.1/name" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
-        <combine name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" reset="true" value="${component_id_17},${title},${givenName}">
-            <data name="component_id_17" source="@component_id_17"/>
-            <data name="title" source="@title"/>
-            <data name="givenName" source="@givenName"/>
-        </combine>
-        <combine name="@component_id_17" reset="true" value="_${component_id_13} ${component_id_15}_">
-            <data name="component_id_13" source="@component_id_13"/>
-            <data name="component_id_15" source="@component_id_15"/>
-        </combine>
         <data name="@component_id_12" source="@familyName">
-            <replace pattern="=" with=""/>
-        </data>
-        <data name="@component_id_15" source="@firstName">
             <replace pattern="=" with=""/>
         </data>
         <data name="@component_id_13" source="@component_id_14">
@@ -30,5 +18,17 @@
         <data name="@component_id_14" source="@component_id_12">
             <trim/>
         </data>
+        <data name="@component_id_15" source="@firstName">
+            <replace pattern="=" with=""/>
+        </data>
+        <combine name="@component_id_17" reset="true" value="_${component_id_13} ${component_id_15}_">
+            <data name="component_id_13" source="@component_id_13"/>
+            <data name="component_id_15" source="@component_id_15"/>
+        </combine>
+        <combine name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" reset="true" value="${component_id_17},${title},${givenName}">
+            <data name="component_id_17" source="@component_id_17"/>
+            <data name="title" source="@title"/>
+            <data name="givenName" source="@givenName"/>
+        </combine>
     </rules>
 </metamorph>

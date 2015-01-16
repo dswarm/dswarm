@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.job.Function;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class FunctionTest extends GuicedTest {
@@ -47,7 +48,9 @@ public class FunctionTest extends GuicedTest {
 
 		Assert.assertNotNull("the function description JSON shouldn't be null", functionFunctionDescription);
 
-		final Function function = new Function();
+		final String uuid = UUIDService.getUUID(Function.class.getSimpleName());
+
+		final Function function = new Function(uuid);
 		function.setName(functionName);
 		function.setDescription(functionDescription);
 		function.addParameter(functionParameter);

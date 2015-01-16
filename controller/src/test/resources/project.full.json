@@ -1,421 +1,421 @@
 {
-    "name": "my project",
-    "description": "my project description",
-    "id": 1,
-    "input_data_model": {
-        "name": "my data model",
-        "description": "my data model description",
-        "configuration": {
-            "name": "my configuration",
-            "description": "configuration description",
-            "parameters": {
-                "fileseparator": ";"
-            },
-            "id": 1,
-            "resources": [{
-                "id": 1
-            }]
-        },
-        "schema": {
-            "name": "my schema",
-            "id": 1,
-            "attribute_paths": [{
-                "id": 7,
-                "attributes": [{
-                    "name": "created",
-                    "uri": "http://purl.org/dc/terms/created",
-                    "id": 8
-                }]
-            }, {
-                "id": 5,
-                "attributes": [{
-                    "name": "creator",
-                    "uri": "http://purl.org/dc/terms/creator",
-                    "id": 3
-                }, {
-                    "name": "name",
-                    "uri": "http://xmlns.com/foaf/0.1/name",
-                    "id": 6
-                }]
-            }, {
-                "id": 6,
-                "attributes": [{
-                    "name": "title",
-                    "uri": "http://purl.org/dc/terms/title",
-                    "id": 1
-                }, {
-                    "name": "hasPart",
-                    "uri": "http://purl.org/dc/terms/hasPart",
-                    "id": 7
-                }, {
-                    "name": "title",
-                    "uri": "http://purl.org/dc/terms/title",
-                    "id": 1
-                }]
-            }],
-            "record_class": {
-                "name": "document",
-                "uri": "http://purl.org/ontology/bibo/Document",
-                "id": 1
-            }
-        },
-        "id": 1,
-        "data_resource": {
-            "name": "bla",
-            "description": "blubblub",
-            "type": "FILE",
-            "id": 1,
-            "resource_attributes": {
-                "path": "/path/to/file.end"
-            },
-            "configurations": [{
-                "name": "my configuration",
-                "description": "configuration description",
-                "parameters": {
-                    "fileseparator": ";"
-                },
-                "id": 1,
-                "resources": [{
-                    "id": 1
-                }]
-            }]
-        }
+  "name" : "my project",
+  "description" : "my project description",
+  "input_data_model" : {
+    "name" : "my data model",
+    "description" : "my data model description",
+    "configuration" : {
+      "name" : "my configuration",
+      "description" : "configuration description",
+      "parameters" : {
+        "fileseparator" : ";"
+      },
+      "resources" : [ {
+        "uuid" : "1"
+      } ],
+      "uuid" : "1"
     },
-    "output_data_model": {
-        "name": "my output data model",
-        "description": "my output data model description",
-        "schema": {
-            "name": "my schema",
-            "id": 2,
-            "attribute_paths": [{
-                "id": 7,
-                "attributes": [{
-                    "name": "created",
-                    "uri": "http://purl.org/dc/terms/created",
-                    "id": 8
-                }]
-            }, {
-                "id": 5,
-                "attributes": [{
-                    "name": "creator",
-                    "uri": "http://purl.org/dc/terms/creator",
-                    "id": 3
-                }, {
-                    "name": "name",
-                    "uri": "http://xmlns.com/foaf/0.1/name",
-                    "id": 6
-                }]
-            }, {
-                "id": 6,
-                "attributes": [{
-                    "name": "title",
-                    "uri": "http://purl.org/dc/terms/title",
-                    "id": 1
-                }, {
-                    "name": "hasPart",
-                    "uri": "http://purl.org/dc/terms/hasPart",
-                    "id": 7
-                }, {
-                    "name": "title",
-                    "uri": "http://purl.org/dc/terms/title",
-                    "id": 1
-                }]
-            }],
-            "record_class": {
-                "name": "document",
-                "uri": "http://purl.org/ontology/bibo/Document",
-                "id": 1
-            }
-        },
-        "id": 2
-    },
-    "mappings": [{
-        "name": "my mapping",
-        "transformation": {
-            "name": "my transformation (component)",
-            "function": {
-                "type": "Transformation",
-                "name": "my transformation",
-                "description": "transformation which just makes use of one function",
-                "id": 2,
-                "parameters": ["transformationInputString"],
-                "components": [{
-                    "name": "my trim component",
-                    "function": {
-                        "type": "Function",
-                        "name": "trim",
-                        "description": "trims leading and trailing whitespaces from a given string",
-                        "id": 1,
-                        "parameters": ["inputString"]
-                    },
-                    "id": 1,
-                    "parameter_mappings": {
-                        "inputString": "previousComponent.outputString"
-                    }
-                }]
-            },
-            "id": 2,
-            "parameter_mappings": {
-                "transformationInputString": "http://purl.org/dc/terms/title",
-                "transformationOutputVariable": "http://www.w3.org/2000/01/rdf-schema#label"
-            }
-        },
-        "id": 1,
-        "input_attribute_paths": [{
-            "type": "MappingAttributePathInstance",
-            "name": "input mapping attribute path instance",
-            "id": 1,
-            "attribute_path": {
-                "id": 1,
-                "attributes": [{
-                    "name": "title",
-                    "uri": "http://purl.org/dc/terms/title",
-                    "id": 1
-                }]
-            }
-        }],
-        "output_attribute_path": {
-            "type": "MappingAttributePathInstance",
-            "name": "output mapping attribute path instance",
-            "id": 2,
-            "attribute_path": {
-                "id": 2,
-                "attributes": [{
-                    "name": "label",
-                    "uri": "http://www.w3.org/2000/01/rdf-schema#label",
-                    "id": 2
-                }]
-            }
-        }
-    }, {
-        "name": "my mapping",
-        "transformation": {
-            "name": "my transformation 2 (component)",
-            "function": {
-                "type": "Transformation",
-                "name": "my transformation 2",
-                "description": "transformation which makes use of three functions (two transformations and one funcion)",
-                "id": 8,
-                "parameters": ["firstName", "familyName"],
-                "components": [{
-                    "name": "prepare family name",
-                    "function": {
-                        "type": "Transformation",
-                        "name": "my transformation",
-                        "description": "transformation which makes use of three functions",
-                        "id": 6,
-                        "parameters": ["transformationInputString"],
-                        "components": [{
-                            "name": "my replace component",
-                            "function": {
-                                "type": "Function",
-                                "name": "replace",
-                                "description": "replace certain parts of a given string that matches a certain regex",
-                                "id": 3,
-                                "parameters": ["inputString", "regex", "replaceString"]
-                            },
-                            "id": 3,
-                            "output_components": [{
-                                "id": 5
-                            }],
-                            "parameter_mappings": {
-                                "inputString": "previousComponent.outputString",
-                                "regex": "\\.",
-                                "replaceString": ":"
-                            }
-                        }, {
-                            "name": "my lower case component",
-                            "function": {
-                                "type": "Function",
-                                "name": "lower_case",
-                                "description": "lower cases all characters of a given string",
-                                "id": 4,
-                                "parameters": ["inputString"]
-                            },
-                            "id": 4,
-                            "parameter_mappings": {
-                                "inputString": "previousComponent.outputString"
-                            }
-                        }, {
-                            "name": "my trim component",
-                            "function": {
-                                "type": "Function",
-                                "name": "trim",
-                                "description": "trims leading and trailing whitespaces from a given string",
-                                "id": 5,
-                                "parameters": ["inputString"]
-                            },
-                            "id": 5,
-                            "input_components": [{
-                                "id": 3
-                            }],
-                            "output_components": [{
-                                "id": 4
-                            }],
-                            "parameter_mappings": {
-                                "inputString": "previousComponent.outputString"
-                            }
-                        }]
-                    },
-                    "id": 7,
-                    "output_components": [{
-                        "id": 8
-                    }],
-                    "parameter_mappings": {
-                        "transformationInputString": "familyName"
-                    }
-                }, {
-                    "name": "full name",
-                    "function": {
-                        "type": "Function",
-                        "name": "concat",
-                        "description": "concatenates two given string",
-                        "id": 7,
-                        "parameters": ["firstString", "secondString"]
-                    },
-                    "id": 8,
-                    "input_components": [{
-                        "id": 6
-                    }, {
-                        "id": 7
-                    }],
-                    "parameter_mappings": {
-                        "firstString": "6.outputVariable",
-                        "secondString": "7.outputVariable"
-                    }
-                }, {
-                    "name": "prepare first name",
-                    "function": {
-                        "type": "Transformation",
-                        "name": "my transformation",
-                        "description": "transformation which makes use of three functions",
-                        "id": 6,
-                        "parameters": ["transformationInputString"],
-                        "components": [{
-                            "name": "my replace component",
-                            "function": {
-                                "type": "Function",
-                                "name": "replace",
-                                "description": "replace certain parts of a given string that matches a certain regex",
-                                "id": 3,
-                                "parameters": ["inputString", "regex", "replaceString"]
-                            },
-                            "id": 3,
-                            "output_components": [{
-                                "id": 5
-                            }],
-                            "parameter_mappings": {
-                                "inputString": "previousComponent.outputString",
-                                "regex": "\\.",
-                                "replaceString": ":"
-                            }
-                        }, {
-                            "name": "my lower case component",
-                            "function": {
-                                "type": "Function",
-                                "name": "lower_case",
-                                "description": "lower cases all characters of a given string",
-                                "id": 4,
-                                "parameters": ["inputString"]
-                            },
-                            "id": 4,
-                            "parameter_mappings": {
-                                "inputString": "previousComponent.outputString"
-                            }
-                        }, {
-                            "name": "my trim component",
-                            "function": {
-                                "type": "Function",
-                                "name": "trim",
-                                "description": "trims leading and trailing whitespaces from a given string",
-                                "id": 5,
-                                "parameters": ["inputString"]
-                            },
-                            "id": 5,
-                            "input_components": [{
-                                "id": 3
-                            }],
-                            "output_components": [{
-                                "id": 4
-                            }],
-                            "parameter_mappings": {
-                                "inputString": "previousComponent.outputString"
-                            }
-                        }]
-                    },
-                    "id": 6,
-                    "output_components": [{
-                        "id": 8
-                    }],
-                    "parameter_mappings": {
-                        "transformationInputString": "firstName"
-                    }
-                }]
-            },
-            "id": 9,
-            "parameter_mappings": {
-                "firstName": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/firstName",
-                "familyName": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/familyName",
-                "transformationOutputVariable": "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/name"
-            }
-        },
-        "id": 2,
-        "input_attribute_paths": [{
-            "type": "MappingAttributePathInstance",
-            "name": "first name mapping attribute path instance",
-            "id": 3,
-            "attribute_path": {
-                "id": 3,
-                "attributes": [{
-                    "name": "creator",
-                    "uri": "http://purl.org/dc/terms/creator",
-                    "id": 3
-                }, {
-                    "name": "firstName",
-                    "uri": "http://xmlns.com/foaf/0.1/firstName",
-                    "id": 4
-                }]
-            }
+    "schema" : {
+      "name" : "my schema",
+      "attribute_paths" : [ {
+        "attributes" : [ {
+          "name" : "created",
+          "uri" : "http://purl.org/dc/terms/created",
+          "uuid" : "8"
+        } ],
+        "uuid" : "7"
+      }, {
+        "attributes" : [ {
+          "name" : "creator",
+          "uri" : "http://purl.org/dc/terms/creator",
+          "uuid" : "3"
         }, {
-            "type": "MappingAttributePathInstance",
-            "name": "family name mapping attribute path instance",
-            "id": 4,
-            "attribute_path": {
-                "id": 4,
-                "attributes": [{
-                    "name": "creator",
-                    "uri": "http://purl.org/dc/terms/creator",
-                    "id": 3
-                }, {
-                    "name": "familyName",
-                    "uri": "http://xmlns.com/foaf/0.1/familyName",
-                    "id": 5
-                }]
-            }
-        }],
-        "output_attribute_path": {
-            "type": "MappingAttributePathInstance",
-            "name": "output mapping attribute path instance",
-            "id": 5,
-            "attribute_path": {
-                "id": 5,
-                "attributes": [{
-                    "name": "creator",
-                    "uri": "http://purl.org/dc/terms/creator",
-                    "id": 3
-                }, {
-                    "name": "name",
-                    "uri": "http://xmlns.com/foaf/0.1/name",
-                    "id": 6
-                }]
-            }
-        }
-    }],
-    "functions": [{
-        "type": "Function",
-        "name": "trim",
-        "description": "trims leading and trailing whitespaces from a given string",
-        "id": 9,
-        "parameters": ["inputString"]
-    }]
+          "name" : "name",
+          "uri" : "http://xmlns.com/foaf/0.1/name",
+          "uuid" : "6"
+        } ],
+        "uuid" : "5"
+      }, {
+        "attributes" : [ {
+          "name" : "title",
+          "uri" : "http://purl.org/dc/terms/title",
+          "uuid" : "1"
+        }, {
+          "name" : "hasPart",
+          "uri" : "http://purl.org/dc/terms/hasPart",
+          "uuid" : "7"
+        }, {
+          "name" : "title",
+          "uri" : "http://purl.org/dc/terms/title",
+          "uuid" : "1"
+        } ],
+        "uuid" : "6"
+      } ],
+      "record_class" : {
+        "name" : "document",
+        "uri" : "http://purl.org/ontology/bibo/Document",
+        "uuid" : "1"
+      },
+      "uuid" : "1"
+    },
+    "data_resource" : {
+      "name" : "bla",
+      "description" : "blubblub",
+      "type" : "FILE",
+      "resource_attributes" : {
+        "path" : "/path/to/file.end"
+      },
+      "configurations" : [ {
+        "name" : "my configuration",
+        "description" : "configuration description",
+        "parameters" : {
+          "fileseparator" : ";"
+        },
+        "resources" : [ {
+          "uuid" : "1"
+        } ],
+        "uuid" : "1"
+      } ],
+      "uuid" : "1"
+    },
+    "uuid" : "1"
+  },
+  "output_data_model" : {
+    "name" : "my output data model",
+    "description" : "my output data model description",
+    "schema" : {
+      "name" : "my schema",
+      "attribute_paths" : [ {
+        "attributes" : [ {
+          "name" : "created",
+          "uri" : "http://purl.org/dc/terms/created",
+          "uuid" : "8"
+        } ],
+        "uuid" : "7"
+      }, {
+        "attributes" : [ {
+          "name" : "creator",
+          "uri" : "http://purl.org/dc/terms/creator",
+          "uuid" : "3"
+        }, {
+          "name" : "name",
+          "uri" : "http://xmlns.com/foaf/0.1/name",
+          "uuid" : "6"
+        } ],
+        "uuid" : "5"
+      }, {
+        "attributes" : [ {
+          "name" : "title",
+          "uri" : "http://purl.org/dc/terms/title",
+          "uuid" : "1"
+        }, {
+          "name" : "hasPart",
+          "uri" : "http://purl.org/dc/terms/hasPart",
+          "uuid" : "7"
+        }, {
+          "name" : "title",
+          "uri" : "http://purl.org/dc/terms/title",
+          "uuid" : "1"
+        } ],
+        "uuid" : "6"
+      } ],
+      "record_class" : {
+        "name" : "document",
+        "uri" : "http://purl.org/ontology/bibo/Document",
+        "uuid" : "1"
+      },
+      "uuid" : "2"
+    },
+    "uuid" : "2"
+  },
+  "mappings" : [ {
+    "name" : "my mapping",
+    "transformation" : {
+      "name" : "my transformation (component)",
+      "function" : {
+        "type" : "Transformation",
+        "name" : "my transformation",
+        "description" : "transformation which just makes use of one function",
+        "parameters" : [ "transformationInputString" ],
+        "components" : [ {
+          "name" : "my trim component",
+          "function" : {
+            "type" : "Function",
+            "name" : "trim",
+            "description" : "trims leading and trailing whitespaces from a given string",
+            "parameters" : [ "inputString" ],
+            "uuid" : "1"
+          },
+          "parameter_mappings" : {
+            "inputString" : "previousComponent.outputString"
+          },
+          "uuid" : "1"
+        } ],
+        "uuid" : "2"
+      },
+      "parameter_mappings" : {
+        "transformationInputString" : "http://purl.org/dc/terms/title",
+        "transformationOutputVariable" : "http://www.w3.org/2000/01/rdf-schema#label"
+      },
+      "uuid" : "2"
+    },
+    "input_attribute_paths" : [ {
+      "type" : "MappingAttributePathInstance",
+      "name" : "input mapping attribute path instance",
+      "attribute_path" : {
+        "attributes" : [ {
+          "name" : "title",
+          "uri" : "http://purl.org/dc/terms/title",
+          "uuid" : "1"
+        } ],
+        "uuid" : "1"
+      },
+      "uuid" : "1"
+    } ],
+    "output_attribute_path" : {
+      "type" : "MappingAttributePathInstance",
+      "name" : "output mapping attribute path instance",
+      "attribute_path" : {
+        "attributes" : [ {
+          "name" : "label",
+          "uri" : "http://www.w3.org/2000/01/rdf-schema#label",
+          "uuid" : "2"
+        } ],
+        "uuid" : "2"
+      },
+      "uuid" : "2"
+    },
+    "uuid" : "1"
+  }, {
+    "name" : "my mapping",
+    "transformation" : {
+      "name" : "my transformation 2 (component)",
+      "function" : {
+        "type" : "Transformation",
+        "name" : "my transformation 2",
+        "description" : "transformation which makes use of three functions (two transformations and one funcion)",
+        "parameters" : [ "firstName", "familyName" ],
+        "components" : [ {
+          "name" : "prepare family name",
+          "function" : {
+            "type" : "Transformation",
+            "name" : "my transformation",
+            "description" : "transformation which makes use of three functions",
+            "parameters" : [ "transformationInputString" ],
+            "components" : [ {
+              "name" : "my replace component",
+              "function" : {
+                "type" : "Function",
+                "name" : "replace",
+                "description" : "replace certain parts of a given string that matches a certain regex",
+                "parameters" : [ "inputString", "regex", "replaceString" ],
+                "uuid" : "3"
+              },
+              "output_components" : [ {
+                "uuid" : "5"
+              } ],
+              "parameter_mappings" : {
+                "inputString" : "previousComponent.outputString",
+                "regex" : "\\.",
+                "replaceString" : ":"
+              },
+              "uuid" : "3"
+            }, {
+              "name" : "my lower case component",
+              "function" : {
+                "type" : "Function",
+                "name" : "lower_case",
+                "description" : "lower cases all characters of a given string",
+                "parameters" : [ "inputString" ],
+                "uuid" : "4"
+              },
+              "parameter_mappings" : {
+                "inputString" : "previousComponent.outputString"
+              },
+              "uuid" : "4"
+            }, {
+              "name" : "my trim component",
+              "function" : {
+                "type" : "Function",
+                "name" : "trim",
+                "description" : "trims leading and trailing whitespaces from a given string",
+                "parameters" : [ "inputString" ],
+                "uuid" : "5"
+              },
+              "input_components" : [ {
+                "uuid" : "3"
+              } ],
+              "output_components" : [ {
+                "uuid" : "4"
+              } ],
+              "parameter_mappings" : {
+                "inputString" : "previousComponent.outputString"
+              },
+              "uuid" : "5"
+            } ],
+            "uuid" : "6"
+          },
+          "output_components" : [ {
+            "uuid" : "8"
+          } ],
+          "parameter_mappings" : {
+            "transformationInputString" : "familyName"
+          },
+          "uuid" : "7"
+        }, {
+          "name" : "full name",
+          "function" : {
+            "type" : "Function",
+            "name" : "concat",
+            "description" : "concatenates two given string",
+            "parameters" : [ "firstString", "secondString" ],
+            "uuid" : "7"
+          },
+          "input_components" : [ {
+            "uuid" : "6"
+          }, {
+            "uuid" : "7"
+          } ],
+          "parameter_mappings" : {
+            "firstString" : "6.outputVariable",
+            "secondString" : "7.outputVariable"
+          },
+          "uuid" : "8"
+        }, {
+          "name" : "prepare first name",
+          "function" : {
+            "type" : "Transformation",
+            "name" : "my transformation",
+            "description" : "transformation which makes use of three functions",
+            "parameters" : [ "transformationInputString" ],
+            "components" : [ {
+              "name" : "my replace component",
+              "function" : {
+                "type" : "Function",
+                "name" : "replace",
+                "description" : "replace certain parts of a given string that matches a certain regex",
+                "parameters" : [ "inputString", "regex", "replaceString" ],
+                "uuid" : "3"
+              },
+              "output_components" : [ {
+                "uuid" : "5"
+              } ],
+              "parameter_mappings" : {
+                "inputString" : "previousComponent.outputString",
+                "regex" : "\\.",
+                "replaceString" : ":"
+              },
+              "uuid" : "3"
+            }, {
+              "name" : "my lower case component",
+              "function" : {
+                "type" : "Function",
+                "name" : "lower_case",
+                "description" : "lower cases all characters of a given string",
+                "parameters" : [ "inputString" ],
+                "uuid" : "4"
+              },
+              "parameter_mappings" : {
+                "inputString" : "previousComponent.outputString"
+              },
+              "uuid" : "4"
+            }, {
+              "name" : "my trim component",
+              "function" : {
+                "type" : "Function",
+                "name" : "trim",
+                "description" : "trims leading and trailing whitespaces from a given string",
+                "parameters" : [ "inputString" ],
+                "uuid" : "5"
+              },
+              "input_components" : [ {
+                "uuid" : "3"
+              } ],
+              "output_components" : [ {
+                "uuid" : "4"
+              } ],
+              "parameter_mappings" : {
+                "inputString" : "previousComponent.outputString"
+              },
+              "uuid" : "5"
+            } ],
+            "uuid" : "6"
+          },
+          "output_components" : [ {
+            "uuid" : "8"
+          } ],
+          "parameter_mappings" : {
+            "transformationInputString" : "firstName"
+          },
+          "uuid" : "6"
+        } ],
+        "uuid" : "8"
+      },
+      "parameter_mappings" : {
+        "firstName" : "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/firstName",
+        "familyName" : "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/familyName",
+        "transformationOutputVariable" : "http://purl.org/dc/terms/creator\u001Ehttp://xmlns.com/foaf/0.1/name"
+      },
+      "uuid" : "9"
+    },
+    "input_attribute_paths" : [ {
+      "type" : "MappingAttributePathInstance",
+      "name" : "first name mapping attribute path instance",
+      "attribute_path" : {
+        "attributes" : [ {
+          "name" : "creator",
+          "uri" : "http://purl.org/dc/terms/creator",
+          "uuid" : "3"
+        }, {
+          "name" : "firstName",
+          "uri" : "http://xmlns.com/foaf/0.1/firstName",
+          "uuid" : "4"
+        } ],
+        "uuid" : "3"
+      },
+      "uuid" : "3"
+    }, {
+      "type" : "MappingAttributePathInstance",
+      "name" : "family name mapping attribute path instance",
+      "attribute_path" : {
+        "attributes" : [ {
+          "name" : "creator",
+          "uri" : "http://purl.org/dc/terms/creator",
+          "uuid" : "3"
+        }, {
+          "name" : "familyName",
+          "uri" : "http://xmlns.com/foaf/0.1/familyName",
+          "uuid" : "5"
+        } ],
+        "uuid" : "4"
+      },
+      "uuid" : "4"
+    } ],
+    "output_attribute_path" : {
+      "type" : "MappingAttributePathInstance",
+      "name" : "output mapping attribute path instance",
+      "attribute_path" : {
+        "attributes" : [ {
+          "name" : "creator",
+          "uri" : "http://purl.org/dc/terms/creator",
+          "uuid" : "3"
+        }, {
+          "name" : "name",
+          "uri" : "http://xmlns.com/foaf/0.1/name",
+          "uuid" : "6"
+        } ],
+        "uuid" : "5"
+      },
+      "uuid" : "5"
+    },
+    "uuid" : "2"
+  } ],
+  "functions" : [ {
+    "type" : "Function",
+    "name" : "trim",
+    "description" : "trims leading and trailing whitespaces from a given string",
+    "parameters" : [ "inputString" ],
+    "uuid" : "9"
+  } ],
+  "uuid" : "1"
 }

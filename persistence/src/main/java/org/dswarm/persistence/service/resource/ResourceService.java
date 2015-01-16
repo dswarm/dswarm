@@ -32,14 +32,14 @@ import org.dswarm.persistence.service.ExtendedBasicDMPJPAService;
 
 /**
  * A persistence service for {@link Resource}s.
- * 
+ *
  * @author tgaengler
  */
 public class ResourceService extends ExtendedBasicDMPJPAService<ProxyResource, Resource> {
 
 	/**
 	 * Creates a new resource persistence service with the given entity manager provider.
-	 * 
+	 *
 	 * @param entityManagerProvider an entity manager provider
 	 */
 	@Inject
@@ -78,11 +78,5 @@ public class ResourceService extends ExtendedBasicDMPJPAService<ProxyResource, R
 		final ObjectNode attributes = object.getAttributes();
 
 		updateObject.setAttributes(attributes);
-	}
-
-	@Override
-	public Resource getObject(final Long id) {
-
-		return super.getObject(id);
 	}
 }

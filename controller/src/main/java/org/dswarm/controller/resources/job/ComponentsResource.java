@@ -16,6 +16,7 @@
 package org.dswarm.controller.resources.job;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -27,6 +28,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -36,8 +38,6 @@ import com.wordnik.swagger.annotations.ApiResponses;
 
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.ExtendedBasicDMPResource;
-import org.dswarm.controller.resources.job.utils.ComponentsResourceUtils;
-import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
 import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.model.job.Component;
 import org.dswarm.persistence.model.job.proxy.ProxyComponent;
@@ -45,31 +45,32 @@ import org.dswarm.persistence.service.job.ComponentService;
 
 /**
  * A resource (controller service) for {@link Component}s.
- * 
+ *
  * @author tgaengler
  */
 @RequestScoped
 @Api(value = "/components", description = "Operations about components.")
 @Path("components")
-public class ComponentsResource extends ExtendedBasicDMPResource<ComponentsResourceUtils, ComponentService, ProxyComponent, Component> {
+public class ComponentsResource extends ExtendedBasicDMPResource<ComponentService, ProxyComponent, Component> {
 
 	/**
 	 * Creates a new resource (controller service) for {@link Component}s with the provider of the component persistence service,
 	 * the object mapper and metrics registry.
-	 * 
-	 * @param componentServiceProviderArg the component persistence service provider
-	 * @param objectMapperArg an object mapper
-	 * @param dmpStatusArg a metrics registry
+	 *
+	 * @param persistenceServiceProviderArg
+	 * @param objectMapperProviderArg
+	 * @param dmpStatusArg                  a metrics registry
 	 */
 	@Inject
-	public ComponentsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
+	public ComponentsResource(final Provider<ComponentService> persistenceServiceProviderArg,
+			final Provider<ObjectMapper> objectMapperProviderArg, final DMPStatus dmpStatusArg) throws DMPControllerException {
 
-		super(utilsFactory.reset().get(ComponentsResourceUtils.class), dmpStatusArg);
+		super(Component.class, persistenceServiceProviderArg, objectMapperProviderArg, dmpStatusArg);
 	}
 
 	/**
 	 * This endpoint returns a component as JSON representation for the provided component identifier.
-	 * 
+	 *
 	 * @param id a component identifier
 	 * @return a JSON representation of a component
 	 */
@@ -81,7 +82,7 @@ public class ComponentsResource extends ExtendedBasicDMPResource<ComponentsResou
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "component identifier", required = true) @PathParam("id") final Long id)
+	public Response getObject(@ApiParam(value = "component identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.getObject(id);
@@ -89,7 +90,7 @@ public class ComponentsResource extends ExtendedBasicDMPResource<ComponentsResou
 
 	/**
 	 * This endpoint consumes a component as JSON representation and persists this component in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one component
 	 * @return the persisted component as JSON representation
 	 * @throws DMPControllerException
@@ -109,7 +110,7 @@ public class ComponentsResource extends ExtendedBasicDMPResource<ComponentsResou
 
 	/**
 	 * This endpoint returns a list of all components as JSON representation.
-	 * 
+	 *
 	 * @return a list of all components as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -127,9 +128,9 @@ public class ComponentsResource extends ExtendedBasicDMPResource<ComponentsResou
 
 	/**
 	 * This endpoint consumes a component as JSON representation and updates this component in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one component
-	 * @param id a component identifier
+	 * @param uuid             a component identifier
 	 * @return the updated filter as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -143,17 +144,17 @@ public class ComponentsResource extends ExtendedBasicDMPResource<ComponentsResou
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateObject(@ApiParam(value = "component (as JSON)", required = true) final String jsonObjectString,
-			@ApiParam(value = "component identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+			@ApiParam(value = "component identifier", required = true) @PathParam("id") final String uuid) throws DMPControllerException {
 
-		return super.updateObject(jsonObjectString, id);
+		return super.updateObject(jsonObjectString, uuid);
 	}
 
 	/**
 	 * This endpoint deletes a component that matches the given id.
-	 * 
+	 *
 	 * @param id a component identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
-	 *         went wrong
+	 * went wrong
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "delete component that matches the given id", notes = "Returns status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong.")
@@ -164,7 +165,7 @@ public class ComponentsResource extends ExtendedBasicDMPResource<ComponentsResou
 	@DELETE
 	@Path("/{id}")
 	@Override
-	public Response deleteObject(@ApiParam(value = "component identifier", required = true) @PathParam("id") final Long id)
+	public Response deleteObject(@ApiParam(value = "component identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.deleteObject(id);

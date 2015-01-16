@@ -43,6 +43,7 @@ import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.service.schema.test.utils.ClaszServiceTestUtils;
 import org.dswarm.persistence.service.schema.test.utils.ContentSchemaServiceTestUtils;
@@ -50,7 +51,7 @@ import org.dswarm.persistence.service.schema.test.utils.SchemaAttributePathInsta
 import org.dswarm.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 
 public class SchemasResourceTest extends
-		BasicResourceTest<SchemasResourceTestUtils, SchemaServiceTestUtils, SchemaService, ProxySchema, Schema, Long> {
+		BasicResourceTest<SchemasResourceTestUtils, SchemaServiceTestUtils, SchemaService, ProxySchema, Schema> {
 
 	private ClaszesResourceTestUtils claszesResourceTestUtils;
 
@@ -91,7 +92,9 @@ public class SchemasResourceTest extends
 		final ContentSchemaServiceTestUtils contentSchemaServiceTestUtils = contentSchemasResourceTestUtils.getPersistenceServiceTestUtils();
 		final ContentSchema contentSchema = contentSchemaServiceTestUtils.createAndPersistDefaultObject();
 
-		final Schema schema = new Schema();
+		final String schemaUuid = UUIDService.getUUID(Schema.class.getSimpleName());
+
+		final Schema schema = new Schema(schemaUuid);
 		schema.setRecordClass(recordClass);
 		schema.addAttributePath(sapi1);
 		schema.addAttributePath(sapi2);
@@ -113,7 +116,7 @@ public class SchemasResourceTest extends
 
 		final Schema schema = createObjectInternal();
 
-		final String schemaNamespaceURI = SchemaUtils.determineSchemaNamespaceURI(schema.getId());
+		final String schemaNamespaceURI = SchemaUtils.determineSchemaNamespaceURI(schema.getUuid());
 		final String attributeName1 = "attribute one";
 		final String attributeName2 = "attribute2";
 		final String attributeName3 = "a3";
@@ -131,7 +134,7 @@ public class SchemasResourceTest extends
 
 		final String attributeNamesJSONArrayString = objectMapper.writeValueAsString(attributeDescriptionsJSONArray);
 
-		final Response response = target().path("/" + schema.getId()).request(MediaType.APPLICATION_JSON_TYPE)
+		final Response response = target().path("/" + schema.getUuid()).request(MediaType.APPLICATION_JSON_TYPE)
 				.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(attributeNamesJSONArrayString));
 
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
@@ -204,19 +207,19 @@ public class SchemasResourceTest extends
 
 		final Schema schema = createObjectInternal();
 
-		final String schemaNamespaceURI = SchemaUtils.determineSchemaNamespaceURI(schema.getId());
+		final String schemaNamespaceURI = SchemaUtils.determineSchemaNamespaceURI(schema.getUuid());
 		final String attributeName1 = "attribute one";
 		final String attributeUri1 = SchemaUtils.mintAttributeURI(attributeName1, schemaNamespaceURI);
 
 		final SchemaAttributePathInstance baseAttributePath = schema.getUniqueAttributePaths().iterator().next();
-		final Long baseAttributePathId = baseAttributePath.getAttributePath().getId();
+		final String baseAttributePathUuid = baseAttributePath.getAttributePath().getUuid();
 
 		final Map<String, String> jsonMap = Maps.newHashMap();
 		jsonMap.put("name", attributeName1);
 		jsonMap.put("uri", attributeUri1);
 		final String payloadJson = objectMapper.writeValueAsString(jsonMap);
 
-		final Response response = target().path("/" + schema.getId() + "/attributepaths/" + baseAttributePathId)
+		final Response response = target().path("/" + schema.getUuid() + "/attributepaths/" + baseAttributePathUuid)
 				.request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
 				.post(Entity.entity(payloadJson, MediaType.APPLICATION_JSON_TYPE));
 
@@ -301,9 +304,10 @@ public class SchemasResourceTest extends
 		persistedSchema.addAttributePath(newFirstAttributePath);
 
 		// clasz update (with a non-persistent class)
-		final String biboBookId = "http://purl.org/ontology/bibo/Bookibook";
+		final String biboBookUuid = UUIDService.getUUID(Clasz.class.getSimpleName());
+		final String biboBookUri = "http://purl.org/ontology/bibo/Bookibook";
 		final String biboBookName = "bookibook";
-		final Clasz biboBook = new Clasz(biboBookId, biboBookName);
+		final Clasz biboBook = new Clasz(biboBookUuid, biboBookUri, biboBookName);
 		persistedSchema.setRecordClass(biboBook);
 
 		String updateSchemaJSONString = objectMapper.writeValueAsString(persistedSchema);
@@ -322,9 +326,9 @@ public class SchemasResourceTest extends
 
 		final Schema updateSchema = pojoClassResourceTestUtils.updateObject(updateSchemaJSONString, expectedSchema);
 
-		Assert.assertEquals("persisted and updated clasz uri should be equal", updateSchema.getRecordClass().getUri(), biboBookId);
-		Assert.assertEquals("persisted and updated clasz name should be equal", updateSchema.getRecordClass().getName(), biboBookName);
-		Assert.assertEquals("persisted and updated schema name should be equal", updateSchema.getName(), updateSchemaNameString);
+		Assert.assertEquals("persisted and updated clasz uri should be equal", biboBookUri, updateSchema.getRecordClass().getUri());
+		Assert.assertEquals("persisted and updated clasz name should be equal", biboBookName, updateSchema.getRecordClass().getName());
+		Assert.assertEquals("persisted and updated schema name should be equal", updateSchemaNameString, updateSchema.getName());
 
 		return updateSchema;
 	}

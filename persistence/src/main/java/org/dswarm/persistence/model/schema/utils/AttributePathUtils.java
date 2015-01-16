@@ -16,8 +16,8 @@
 package org.dswarm.persistence.model.schema.utils;
 
 import org.dswarm.persistence.model.schema.AttributePath;
-import org.dswarm.persistence.model.utils.DMPJPAObjectUtils;
+import org.dswarm.persistence.model.utils.DMPObjectUtils;
 
-public final class AttributePathUtils extends DMPJPAObjectUtils<AttributePath> {
+public final class AttributePathUtils extends DMPObjectUtils<AttributePath> {
 
 }

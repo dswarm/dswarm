@@ -22,6 +22,7 @@ import org.junit.Assert;
 
 import org.dswarm.persistence.model.job.Filter;
 import org.dswarm.persistence.model.job.proxy.ProxyFilter;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.job.FilterService;
 import org.dswarm.persistence.service.test.utils.BasicDMPJPAServiceTestUtils;
 
@@ -54,7 +55,10 @@ public class FilterServiceTestUtils extends BasicDMPJPAServiceTestUtils<FilterSe
 
 	public Filter createFilter(final String name, final String expression) throws Exception {
 
-		final Filter filter = new Filter();
+		// TODO: think about this?
+		final String uuid = UUIDService.getUUID(Filter.class.getSimpleName());
+
+		final Filter filter = new Filter(uuid);
 
 		filter.setName(name);
 		filter.setExpression(expression);

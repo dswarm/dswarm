@@ -1,23 +1,23 @@
 {
-    "id": 177,
-    "name": "compose",
-    "description": "Add pre- or postfix to a string.",
-    "parameters": ["prefix","postfix"],
-    "function_description": {
-        "name": "compose",
-        "dsl": "metafacture",
-        "reference": "compose",
-        "description": "Add pre- or postfix to a string.",
-        "parameters": {
-            "prefix": {
-                "type": "text",
-                "optional": true
-            },
-            "postfix": {
-                "type": "text",
-                "optional": true
-            }
-        }
-    },
-    "type": "Function"
+  "name" : "compose",
+  "description" : "Add pre- or postfix to a string.",
+  "parameters" : [ "prefix", "postfix" ],
+  "function_description" : {
+    "name" : "compose",
+    "dsl" : "metafacture",
+    "reference" : "compose",
+    "description" : "Add pre- or postfix to a string.",
+    "parameters" : {
+      "prefix" : {
+        "type" : "text",
+        "optional" : true
+      },
+      "postfix" : {
+        "type" : "text",
+        "optional" : true
+      }
+    }
+  },
+  "type" : "Function",
+  "uuid" : "177"
 }

@@ -38,7 +38,7 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
  * A transformation is a complex {@link Function} that consists of {@link Component}s.<br/>
  * <br/>
  * TODO: maybe add some methods to retrieve starting and finishing components
- * 
+ *
  * @author tgaengler
  */
 @XmlRootElement
@@ -49,39 +49,39 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 @Table(name = "TRANSFORMATION")
 public class Transformation extends Function {
 
-	private static final Logger	LOG					= LoggerFactory.getLogger(Transformation.class);
+	private static final Logger LOG = LoggerFactory.getLogger(Transformation.class);
 
 	/**
 	 *
 	 */
-	private static final long	serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The components of the transformation.
 	 */
 	@OneToMany(/* mappedBy = "transformation", */fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
 			CascadeType.REFRESH, CascadeType.REMOVE }, orphanRemoval = true)
-	@JoinColumn(name = "TRANSFORMATION", referencedColumnName = "ID")
+	@JoinColumn(name = "TRANSFORMATION", referencedColumnName = "UUID")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@XmlList
-	private Set<Component>		components;
+	private Set<Component> components;
 
 	/**
 	 * Creates a new transformation.
 	 */
-	public Transformation() {
+	protected Transformation() {
 
 		super(FunctionType.Transformation);
 	}
 
-	private Transformation(final long idValue) {
-		super(FunctionType.Transformation);
-		id = idValue;
+	public Transformation(final String uuid) {
+
+		super(uuid, FunctionType.Transformation);
 	}
 
 	/**
 	 * Gets the components of the transformation.
-	 * 
+	 *
 	 * @return the components of the transformation
 	 */
 	public Set<Component> getComponents() {
@@ -91,7 +91,7 @@ public class Transformation extends Function {
 
 	/**
 	 * Sets the components of the transformation
-	 * 
+	 *
 	 * @param componentsArg a new collection of components
 	 */
 	public void setComponents(final Set<Component> componentsArg) {
@@ -137,7 +137,7 @@ public class Transformation extends Function {
 	/**
 	 * Adds a new component to the collection of components of this transformation.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param component a new component
 	 */
 	public void addComponent(final Component component) {
@@ -164,7 +164,7 @@ public class Transformation extends Function {
 	/**
 	 * Removes an existing component from the collection of components of this transformation.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param component an existing component that should be removed
 	 */
 	public void removeComponent(final Component component) {
@@ -178,13 +178,6 @@ public class Transformation extends Function {
 			// component.setTransformation(null);
 			// }
 		}
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-
-		return Transformation.class.isInstance(obj) && super.equals(obj);
-
 	}
 
 	@Override
@@ -206,13 +199,13 @@ public class Transformation extends Function {
 	 * The id is otherwise assigned by the database/Hibernate layer. You should never need this outside of
 	 * {@code TransformationDeserializer}.
 	 * </p>
-	 * 
+	 *
 	 * @param transformation the base transformation that will be copied
-	 * @param idValue the target transformation's id value
+	 * @param uuid           the target transformation's id value
 	 * @return a new transformation with the given id and all other attributes copied from the provided transformation.
 	 */
-	public static Transformation withId(final Transformation transformation, final long idValue) {
-		final Transformation newTransformation = new Transformation(idValue);
+	public static Transformation withId(final Transformation transformation, final String uuid) {
+		final Transformation newTransformation = new Transformation(uuid);
 
 		newTransformation.setComponents(transformation.getComponents());
 		newTransformation.setFunctionDescription(transformation.getFunctionDescription());

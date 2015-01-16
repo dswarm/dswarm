@@ -21,9 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
-import java.util.UUID;
 
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -61,18 +59,19 @@ import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
-import org.dswarm.persistence.model.resource.utils.DataModelUtils;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.service.InternalModelService;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.service.resource.test.utils.DataModelServiceTestUtils;
 import org.dswarm.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class DataModelsResourceTest extends
-		BasicResourceTest<DataModelsResourceTestUtils, DataModelServiceTestUtils, DataModelService, ProxyDataModel, DataModel, Long> {
+		BasicResourceTest<DataModelsResourceTestUtils, DataModelServiceTestUtils, DataModelService, ProxyDataModel, DataModel> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DataModelsResourceTest.class);
 
@@ -173,153 +172,6 @@ public class DataModelsResourceTest extends
 	}
 
 	@Test
-	public void testCSVData() throws Exception {
-
-		DataModelsResourceTest.LOG.debug("start get CSV data test");
-
-		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("resource.json");
-
-		final Resource expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
-
-		final URL fileURL = Resources.getResource("test_csv-controller.csv");
-		final File resourceFile = FileUtils.toFile(fileURL);
-
-		final String configurationJSONString = DMPPersistenceUtil.getResourceAsString("controller_configuration.json");
-
-		// add resource and config
-		final Resource resource = resourcesResourceTestUtils.uploadResource(resourceFile, expectedResource);
-
-		final Configuration config = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
-
-		final DataModel dataModel1 = new DataModel();
-		dataModel1.setName("my data model");
-		dataModel1.setDescription("my data model description");
-		dataModel1.setDataResource(resource);
-		dataModel1.setConfiguration(config);
-
-		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
-
-		final DataModel dataModel = pojoClassResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
-
-		final int atMost = 1;
-
-		final InternalModelServiceFactory serviceFactory = GuicedTest.injector.getInstance(Key.get(InternalModelServiceFactory.class));
-		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
-		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getId(), Optional.of(atMost));
-
-		Assert.assertTrue(data.isPresent());
-		Assert.assertFalse(data.get().isEmpty());
-		Assert.assertThat(data.get().size(), CoreMatchers.equalTo(atMost));
-
-		final String recordId = data.get().keySet().iterator().next();
-
-		final Response response = target(String.valueOf(dataModel.getId()), "data").queryParam("atMost", atMost).request()
-				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
-
-		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
-
-		final ObjectNode assoziativeJsonArray = response.readEntity(ObjectNode.class);
-
-		Assert.assertThat(assoziativeJsonArray.size(), CoreMatchers.equalTo(atMost));
-
-		final JsonNode json = assoziativeJsonArray.get(recordId);
-
-		Assert.assertNotNull("the JSON structure for record '" + recordId + "' shouldn't be null", json);
-
-		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
-
-		Assert.assertNotNull("the data resource schema base uri shouldn't be null", dataResourceSchemaBaseURI);
-
-		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "id", json),
-				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "id", data.get().get(recordId).toRawJSON())));
-		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "year", json),
-				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "year", data.get().get(recordId).toRawJSON())));
-		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "description", json),
-				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "description", data.get().get(recordId).toRawJSON())));
-		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "name", json),
-				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "name", data.get().get(recordId).toRawJSON())));
-		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "isbn", json),
-				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "isbn", data.get().get(recordId).toRawJSON())));
-
-		DataModelsResourceTest.LOG.debug("end get CSV data test");
-	}
-
-	@Test
-	public void testXMLData() throws Exception {
-
-		DataModelsResourceTest.LOG.debug("start get XML data test");
-
-		// prepare resource
-		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("test-mabxml-resource.json");
-
-		final Resource expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
-
-		final URL fileURL = Resources.getResource("controller_test-mabxml.xml");
-		final File resourceFile = FileUtils.toFile(fileURL);
-
-		final String configurationJSONString = DMPPersistenceUtil.getResourceAsString("xml-configuration.json");
-
-		// add resource and config
-		final Resource resource = resourcesResourceTestUtils.uploadResource(resourceFile, expectedResource);
-
-		final Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
-
-		final DataModel dataModel1 = new DataModel();
-		dataModel1.setName("my data model");
-		dataModel1.setDescription("my data model description");
-		dataModel1.setDataResource(resource);
-		dataModel1.setConfiguration(configuration);
-
-		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
-
-		final DataModel dataModel = pojoClassResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
-
-		final int atMost = 1;
-
-		final InternalModelServiceFactory serviceFactory = GuicedTest.injector.getInstance(Key.get(InternalModelServiceFactory.class));
-		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
-		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getId(), Optional.of(atMost));
-
-		Assert.assertTrue(data.isPresent());
-		Assert.assertFalse(data.get().isEmpty());
-		Assert.assertThat(data.get().size(), CoreMatchers.equalTo(atMost));
-
-		final String recordId = data.get().keySet().iterator().next();
-
-		final Response response = target(String.valueOf(dataModel.getId()), "data").queryParam("atMost", atMost).request()
-				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
-
-		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
-
-		// final String assoziativeJsonArrayString = response.readEntity(String.class);
-		//
-		// System.out.println("result = '" + assoziativeJsonArrayString + "'");
-
-		final ObjectNode assoziativeJsonArray = response.readEntity(ObjectNode.class);
-
-		Assert.assertThat(assoziativeJsonArray.size(), CoreMatchers.equalTo(atMost));
-
-		final JsonNode json = assoziativeJsonArray.get(recordId);
-
-		final JsonNode expectedJson = data.get().get(recordId).toRawJSON();
-
-		Assert.assertNotNull("the expected data JSON shouldn't be null", expectedJson);
-
-		System.out.println("expected JSON = '" + objectMapper.writeValueAsString(expectedJson) + "'");
-
-		Assert.assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", json),
-				CoreMatchers.equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", expectedJson)));
-		Assert.assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion", json),
-				CoreMatchers.equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion", expectedJson)));
-		Assert.assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ", json),
-				CoreMatchers.equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ", expectedJson)));
-		Assert.assertThat(getValueNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld", json).size(),
-				CoreMatchers.equalTo(getValueNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld", expectedJson).size()));
-
-		DataModelsResourceTest.LOG.debug("end get XML data test");
-	}
-
-	@Test
 	public void testMABXMLData() throws Exception {
 
 		DataModelsResourceTest.LOG.debug("start get MABXML data test");
@@ -339,7 +191,9 @@ public class DataModelsResourceTest extends
 
 		final Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
 
-		final DataModel dataModel1 = new DataModel();
+		final String dataModel1Uuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+
+		final DataModel dataModel1 = new DataModel(dataModel1Uuid);
 		dataModel1.setName("my data model");
 		dataModel1.setDescription("my data model description");
 		dataModel1.setDataResource(resource);
@@ -353,7 +207,7 @@ public class DataModelsResourceTest extends
 
 		final InternalModelServiceFactory serviceFactory = GuicedTest.injector.getInstance(Key.get(InternalModelServiceFactory.class));
 		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
-		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getId(), Optional.of(atMost));
+		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getUuid(), Optional.of(atMost));
 
 		Assert.assertTrue(data.isPresent());
 		Assert.assertFalse(data.get().isEmpty());
@@ -361,7 +215,7 @@ public class DataModelsResourceTest extends
 
 		final String recordId = data.get().keySet().iterator().next();
 
-		final Response response = target(String.valueOf(dataModel.getId()), "data").queryParam("atMost", atMost).request()
+		final Response response = target(String.valueOf(dataModel.getUuid()), "data").queryParam("atMost", atMost).request()
 				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
 
 		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
@@ -391,7 +245,7 @@ public class DataModelsResourceTest extends
 		Assert.assertThat(getValueNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld", json).size(),
 				CoreMatchers.equalTo(getValueNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld", expectedJson).size()));
 
-		Assert.assertEquals(Long.valueOf(4), dataModel.getSchema().getId());
+		Assert.assertEquals(SchemaUtils.MABXML_SCHEMA_UUID, dataModel.getSchema().getUuid());
 
 		DataModelsResourceTest.LOG.debug("end get MABXML data test");
 	}
@@ -407,49 +261,6 @@ public class DataModelsResourceTest extends
 		Assert.assertThat(response.hasEntity(), CoreMatchers.equalTo(false));
 
 		DataModelsResourceTest.LOG.debug("end get resource configuration data missing test");
-	}
-
-	@Test
-	public void testExceptionAtXMLData() throws Exception {
-
-		DataModelsResourceTest.LOG.debug("start throw Exception at XML data test");
-
-		// prepare resource
-		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("test-mabxml-resource2.json");
-
-		final Resource expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
-
-		final URL fileURL = Resources.getResource("test-mabxml2-controller.xml");
-		final File resourceFile = FileUtils.toFile(fileURL);
-
-		final String configurationJSONString = DMPPersistenceUtil.getResourceAsString("xml-configuration.json");
-
-		// add resource and config
-		final Resource resource = resourcesResourceTestUtils.uploadResource(resourceFile, expectedResource);
-
-		final Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
-
-		final DataModel dataModel1 = new DataModel();
-		final String dataModelName = UUID.randomUUID().toString();
-		dataModel1.setName(dataModelName);
-		dataModel1.setDescription("my data model description");
-		dataModel1.setDataResource(resource);
-		dataModel1.setConfiguration(configuration);
-
-		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
-
-		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(Entity.json(dataModelJSONString));
-
-		Assert.assertEquals("500 was expected", 500, response.getStatus());
-
-		final String body = response.readEntity(String.class);
-
-		Assert.assertEquals(
-				"{\"status\":\"nok\",\"status_code\":500,\"error\":\" 1; XML document structures must start and end within the same entity.\"}",
-				body);
-
-		DataModelsResourceTest.LOG.debug("end throw Exception at XML data test");
 	}
 
 	/**
@@ -470,7 +281,7 @@ public class DataModelsResourceTest extends
 		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 		loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
-		testExportInternal(MediaTypeUtil.N3, datamodelUTF8csv.getId(), HttpStatus.SC_OK, MediaTypeUtil.N3_TYPE, "UTF-8.n3", ".n3");
+		testExportInternal(MediaTypeUtil.N3, datamodelUTF8csv.getUuid(), HttpStatus.SC_OK, MediaTypeUtil.N3_TYPE, "UTF-8.n3", ".n3");
 
 	}
 
@@ -489,7 +300,7 @@ public class DataModelsResourceTest extends
 		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 		loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
-		testExportInternal(MediaTypeUtil.RDF_XML, datamodelUTF8csv.getId(), HttpStatus.SC_OK, MediaTypeUtil.RDF_XML_TYPE, "UTF-8.n3", ".rdf");
+		testExportInternal(MediaTypeUtil.RDF_XML, datamodelUTF8csv.getUuid(), HttpStatus.SC_OK, MediaTypeUtil.RDF_XML_TYPE, "UTF-8.n3", ".rdf");
 
 	}
 
@@ -507,7 +318,7 @@ public class DataModelsResourceTest extends
 		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 		loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
-		testExportInternal(MediaTypeUtil.N_QUADS, datamodelUTF8csv.getId(), HttpStatus.SC_OK, MediaTypeUtil.N_QUADS_TYPE, "UTF-8.n3", ".nq");
+		testExportInternal(MediaTypeUtil.N_QUADS, datamodelUTF8csv.getUuid(), HttpStatus.SC_OK, MediaTypeUtil.N_QUADS_TYPE, "UTF-8.n3", ".nq");
 
 	}
 
@@ -525,7 +336,7 @@ public class DataModelsResourceTest extends
 		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 		loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
-		testExportInternal(MediaTypeUtil.TRIG, datamodelUTF8csv.getId(), HttpStatus.SC_OK, MediaTypeUtil.TRIG_TYPE, "UTF-8.n3", ".trig");
+		testExportInternal(MediaTypeUtil.TRIG, datamodelUTF8csv.getUuid(), HttpStatus.SC_OK, MediaTypeUtil.TRIG_TYPE, "UTF-8.n3", ".trig");
 
 	}
 
@@ -543,7 +354,7 @@ public class DataModelsResourceTest extends
 		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 		loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
-		testExportInternal(MediaTypeUtil.TURTLE, datamodelUTF8csv.getId(), HttpStatus.SC_OK, MediaTypeUtil.TURTLE_TYPE, "UTF-8.n3", ".ttl");
+		testExportInternal(MediaTypeUtil.TURTLE, datamodelUTF8csv.getUuid(), HttpStatus.SC_OK, MediaTypeUtil.TURTLE_TYPE, "UTF-8.n3", ".ttl");
 
 	}
 
@@ -562,7 +373,7 @@ public class DataModelsResourceTest extends
 		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 		loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
-		testExportInternal("", datamodelUTF8csv.getId(), HttpStatus.SC_OK, MediaTypeUtil.N_QUADS_TYPE, "UTF-8.n3", ".nq");
+		testExportInternal("", datamodelUTF8csv.getUuid(), HttpStatus.SC_OK, MediaTypeUtil.N_QUADS_TYPE, "UTF-8.n3", ".nq");
 
 	}
 
@@ -581,7 +392,7 @@ public class DataModelsResourceTest extends
 		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 		loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
-		testExportInternal(null, datamodelUTF8csv.getId(), HttpStatus.SC_OK, MediaTypeUtil.N_QUADS_TYPE, "UTF-8.n3", ".nq");
+		testExportInternal(null, datamodelUTF8csv.getUuid(), HttpStatus.SC_OK, MediaTypeUtil.N_QUADS_TYPE, "UTF-8.n3", ".nq");
 
 	}
 
@@ -595,7 +406,7 @@ public class DataModelsResourceTest extends
 
 		// hint: do not load any data
 
-		testExportInternal(MediaTypeUtil.N_QUADS, Long.MAX_VALUE, HttpStatus.SC_NOT_FOUND, null, null, null);
+		testExportInternal(MediaTypeUtil.N_QUADS, "0815", HttpStatus.SC_NOT_FOUND, null, null, null);
 
 	}
 
@@ -614,7 +425,7 @@ public class DataModelsResourceTest extends
 		loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 		DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
-		testExportInternal(MediaType.TEXT_PLAIN, datamodelAtMostcsv.getId(), HttpStatus.SC_NOT_ACCEPTABLE, null, null, null);
+		testExportInternal(MediaType.TEXT_PLAIN, datamodelAtMostcsv.getUuid(), HttpStatus.SC_NOT_ACCEPTABLE, null, null, null);
 
 	}
 
@@ -633,7 +444,7 @@ public class DataModelsResourceTest extends
 		loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 		DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
-		testExportInternal("khlav/kalash", datamodelAtMostcsv.getId(), HttpStatus.SC_NOT_ACCEPTABLE, null, null, null);
+		testExportInternal("khlav/kalash", datamodelAtMostcsv.getUuid(), HttpStatus.SC_NOT_ACCEPTABLE, null, null, null);
 
 	}
 
@@ -645,23 +456,23 @@ public class DataModelsResourceTest extends
 	 *
 	 * @param requestedExportLanguage  the serialization format neo4j should export the data to. (this value is used as accept
 	 *                                 header arg to query neo4j)
-	 * @param datamodelID              identifier of the datamodel to be exported
-	 * @param expectedHTTPResponseCode the expected HTTP status code of the response, e.g. {@link HttpStatus#SC_OK} or
-	 *                                 {@link HttpStatus#SC_NOT_ACCEPTABLE}
+	 * @param datamodelUuid            identifier of the datamodel to be exported
+	 * @param expectedHTTPResponseCode the expected HTTP status code of the response, e.g. {@link org.apache.http.HttpStatus#SC_OK} or
+	 *                                 {@link org.apache.http.HttpStatus#SC_NOT_ACCEPTABLE}
 	 * @param expectedExportMediaType  the language the exported data is expected to be serialized in. hint: language may differ
 	 *                                 from {@code requestedExportLanguage} to test for default values. (ignored if expectedHTTPResponseCode !=
-	 *                                 {@link HttpStatus#SC_OK})
+	 *                                 {@link org.apache.http.HttpStatus#SC_OK})
 	 * @param expectedModelFile        name of file containing a serialized model, this (expected) model is equal to the actual model
-	 *                                 exported by neo4j. (ignored if expectedHTTPResponseCode != {@link HttpStatus#SC_OK})
+	 *                                 exported by neo4j. (ignored if expectedHTTPResponseCode != {@link org.apache.http.HttpStatus#SC_OK})
 	 * @param expectedFileEnding       the expected file ending to be received from neo4j (ignored if expectedHTTPResponseCode !=
-	 *                                 {@link HttpStatus#SC_OK})
+	 *                                 {@link org.apache.http.HttpStatus#SC_OK})
 	 * @throws IOException
 	 */
-	private void testExportInternal(final String requestedExportLanguage, final long datamodelID, final int expectedHTTPResponseCode,
+	private void testExportInternal(final String requestedExportLanguage, final String datamodelUuid, final int expectedHTTPResponseCode,
 			final MediaType expectedExportMediaType, final String expectedModelFile, final String expectedFileEnding) throws Exception {
 
 		// request export of a data model
-		String datamodelId = String.valueOf(datamodelID);
+		String datamodelId = String.valueOf(datamodelUuid);
 		WebTarget targetBE = target(datamodelId, "export");
 		// be able to simulate absence of query parameter
 		if (requestedExportLanguage != null) {
@@ -746,7 +557,7 @@ public class DataModelsResourceTest extends
 		final DataModel updateDataModel = pojoClassResourceTestUtils.updateObject(updateDataModelJSONString, expectedDataModel);
 
 		Assert.assertNotNull("the data model JSON string shouldn't be null", updateDataModel);
-		Assert.assertEquals("data model id shoud be equal", updateDataModel.getId(), persistedDataModel.getId());
+		Assert.assertEquals("data model id shoud be equal", updateDataModel.getUuid(), persistedDataModel.getUuid());
 		Assert.assertEquals("data model name shoud be equal", updateDataModel.getName(), persistedDataModel.getName());
 		Assert.assertEquals("data model description shoud be equal", updateDataModel.getDescription(), persistedDataModel.getDescription());
 		Assert.assertEquals("data model schema shoud be equal", updateDataModel.getSchema(), persistedDataModel.getSchema());
@@ -815,7 +626,9 @@ public class DataModelsResourceTest extends
 
 		final Configuration config = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
 
-		final DataModel dataModelToCreate = new DataModel();
+		final String dataModelToCreateUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+
+		final DataModel dataModelToCreate = new DataModel(dataModelToCreateUuid);
 		dataModelToCreate.setName("my data model");
 		dataModelToCreate.setDescription("my data model description");
 		dataModelToCreate.setDataResource(resource);

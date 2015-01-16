@@ -1,5 +1,5 @@
 {
-    "id": 1,
-    "uri": "http://purl.org/ontology/bibo/blaproperty",
-    "name": "blaproperty"
+  "uri" : "http://purl.org/ontology/bibo/blaproperty",
+  "name" : "blaproperty",
+  "uuid" : "1"
 }

@@ -26,7 +26,7 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * A task is an executable {@link Job}, i.e., a job with a concrete input {@link DataModel} and output {@link DataModel}.
- * 
+ *
  * @author tgaengler
  */
 @XmlRootElement
@@ -63,9 +63,18 @@ public class Task extends ExtendedBasicDMPJPAObject {
 	// @XmlIDREF
 	private Job					job;
 
+	protected Task() {
+
+	}
+
+	public Task(final String uuidArg) {
+
+		super(uuidArg);
+	}
+
 	/**
 	 * Gets the input data model.
-	 * 
+	 *
 	 * @return the input data model
 	 */
 	public DataModel getInputDataModel() {
@@ -75,7 +84,7 @@ public class Task extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the input data model.
-	 * 
+	 *
 	 * @param inputDataModelArg a new input data model
 	 */
 	public void setInputDataModel(final DataModel inputDataModelArg) {
@@ -85,7 +94,7 @@ public class Task extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the output data model.
-	 * 
+	 *
 	 * @return the output data model
 	 */
 	public DataModel getOutputDataModel() {
@@ -95,7 +104,7 @@ public class Task extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the output data model.
-	 * 
+	 *
 	 * @param outputDataModelArg a new output data model
 	 */
 	public void setOutputDataModel(final DataModel outputDataModelArg) {
@@ -105,7 +114,7 @@ public class Task extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Gets the job of the task.
-	 * 
+	 *
 	 * @return the job of the task
 	 */
 	public Job getJob() {
@@ -115,18 +124,12 @@ public class Task extends ExtendedBasicDMPJPAObject {
 
 	/**
 	 * Sets the job of the task.
-	 * 
+	 *
 	 * @param jobArg a new job
 	 */
 	public void setJob(final Job jobArg) {
 
 		job = jobArg;
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-
-		return Task.class.isInstance(obj) && super.equals(obj);
 	}
 
 	@Override

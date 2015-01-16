@@ -31,10 +31,10 @@ public class AttributesResourceTestUtils
 		super("attributes", Attribute.class, AttributeService.class, AttributeServiceTestUtils.class);
 	}
 
-	public void prepareAttribute(final String attributeJSONFileName, final Map<Long, Attribute> attributes) throws Exception {
+	public void prepareAttribute(final String attributeJSONFileName, final Map<String, Attribute> attributes) throws Exception {
 
 		final Attribute actualAttribute = createObject(attributeJSONFileName);
 
-		attributes.put(actualAttribute.getId(), actualAttribute);
+		attributes.put(actualAttribute.getUuid(), actualAttribute);
 	}
 }

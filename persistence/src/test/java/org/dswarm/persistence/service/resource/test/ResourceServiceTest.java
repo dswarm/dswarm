@@ -26,9 +26,9 @@ import org.dswarm.persistence.model.resource.proxy.ProxyResource;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.service.resource.ResourceService;
 import org.dswarm.persistence.service.resource.test.utils.ResourceServiceTestUtils;
-import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
+import org.dswarm.persistence.service.test.BasicJPAServiceTest;
 
-public class ResourceServiceTest extends IDBasicJPAServiceTest<ProxyResource, Resource, ResourceService> {
+public class ResourceServiceTest extends BasicJPAServiceTest<ProxyResource, Resource, ResourceService> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ResourceServiceTest.class);
 

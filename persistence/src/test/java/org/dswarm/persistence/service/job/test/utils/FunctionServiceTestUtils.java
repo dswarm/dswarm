@@ -24,6 +24,7 @@ import org.junit.Assert;
 
 import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.proxy.ProxyFunction;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.job.FunctionService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
@@ -60,7 +61,10 @@ public class FunctionServiceTestUtils extends BasicFunctionServiceTestUtils<Func
 
 		Assert.assertNotNull("the function description JSON shouldn't be null", functionFunctionDescription);
 
-		final Function function = new Function();
+		// TODO: think about this?
+		final String functionUUID = UUIDService.getUUID(Function.class.getSimpleName());
+
+		final Function function = new Function(functionUUID);
 
 		function.setName(functionName);
 		function.setDescription(functionDescription);

@@ -1,59 +1,59 @@
 {
-    "name": "my mapping",
-    "transformation": {
-        "name": "my transformation (component)",
-        "function": {
-            "type": "Transformation",
-            "name": "my transformation",
-            "description": "transformation which just makes use of one function",
-            "id": 2,
-            "parameters": ["transformationInputString"],
-            "components": [{
-                "name": "my trim component",
-                "function": {
-                    "type": "Function",
-                    "name": "trim",
-                    "description": "trims leading and trailing whitespaces from a given string",
-                    "id": 1,
-                    "parameters": ["inputString"]
-                },
-                "id": 1,
-                "parameter_mappings": {
-                    "inputString": "previousComponent.outputString"
-                }
-            }]
+  "name" : "my mapping",
+  "transformation" : {
+    "name" : "my transformation (component)",
+    "function" : {
+      "type" : "Transformation",
+      "name" : "my transformation",
+      "description" : "transformation which just makes use of one function",
+      "parameters" : [ "transformationInputString" ],
+      "components" : [ {
+        "name" : "my trim component",
+        "function" : {
+          "type" : "Function",
+          "name" : "trim",
+          "description" : "trims leading and trailing whitespaces from a given string",
+          "parameters" : [ "inputString" ],
+          "uuid" : "1"
         },
-        "id": 2,
-        "parameter_mappings": {
-            "transformationInputString": "http://purl.org/dc/terms/title",
-            "transformationOutputVariable": "http://www.w3.org/2000/01/rdf-schema#label"
-        }
+        "parameter_mappings" : {
+          "inputString" : "previousComponent.outputString"
+        },
+        "uuid" : "1"
+      } ],
+      "uuid" : "2"
     },
-    "id": 1,
-    "input_attribute_paths": [{
-        "type": "MappingAttributePathInstance",
-        "name": "input mapping attribute path instance",
-        "id": 1,
-        "attribute_path": {
-            "id": 1,
-            "attributes": [{
-                "name": "title",
-                "uri": "http://purl.org/dc/terms/title",
-                "id": 1
-            }]
-        }
-    }],
-    "output_attribute_path": {
-        "type": "MappingAttributePathInstance",
-        "name": "output mapping attribute path instance",
-        "id": 2,
-        "attribute_path": {
-            "id": 2,
-            "attributes": [{
-                "name": "label",
-                "uri": "http://www.w3.org/2000/01/rdf-schema#label",
-                "id": 2
-            }]
-        }
-    }
+    "parameter_mappings" : {
+      "transformationInputString" : "http://purl.org/dc/terms/title",
+      "transformationOutputVariable" : "http://www.w3.org/2000/01/rdf-schema#label"
+    },
+    "uuid" : "2"
+  },
+  "input_attribute_paths" : [ {
+    "type" : "MappingAttributePathInstance",
+    "name" : "input mapping attribute path instance",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "title",
+        "uri" : "http://purl.org/dc/terms/title",
+        "uuid" : "1"
+      } ],
+      "uuid" : "1"
+    },
+    "uuid" : "1"
+  } ],
+  "output_attribute_path" : {
+    "type" : "MappingAttributePathInstance",
+    "name" : "output mapping attribute path instance",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "label",
+        "uri" : "http://www.w3.org/2000/01/rdf-schema#label",
+        "uuid" : "2"
+      } ],
+      "uuid" : "2"
+    },
+    "uuid" : "2"
+  },
+  "uuid" : "1"
 }

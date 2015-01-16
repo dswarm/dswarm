@@ -111,14 +111,14 @@ public class XMLConverterEventRecorder {
 
 		} catch (final DMPConverterException | NullPointerException e) {
 
-			final String message = "couldn't convert the XML data of data model '" + dataModel.getId() + "'";
+			final String message = "couldn't convert the XML data of data model '" + dataModel.getUuid() + "'";
 
 			XMLConverterEventRecorder.LOG.error(message, e);
 
 			throw new DMPControllerException(message + " " + e.getMessage(), e);
 		} catch (final Exception e) {
 
-			final String message = "really couldn't convert the XML data of data model '" + dataModel.getId() + "'";
+			final String message = "really couldn't convert the XML data of data model '" + dataModel.getUuid() + "'";
 
 			XMLConverterEventRecorder.LOG.error(message, e);
 
@@ -129,10 +129,10 @@ public class XMLConverterEventRecorder {
 
 			try {
 
-				internalServiceFactory.getInternalGDMGraphService().createObject(dataModel.getId(), result);
+				internalServiceFactory.getInternalGDMGraphService().createObject(dataModel.getUuid(), result);
 			} catch (final DMPPersistenceException e) {
 
-				final String message = "couldn't persist the converted data of data model '" + dataModel.getId() + "'";
+				final String message = "couldn't persist the converted data of data model '" + dataModel.getUuid() + "'";
 
 				XMLConverterEventRecorder.LOG.error(message, e);
 

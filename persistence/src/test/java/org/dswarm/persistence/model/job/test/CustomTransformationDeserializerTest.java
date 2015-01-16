@@ -48,9 +48,9 @@ import org.dswarm.persistence.model.types.Tuple;
 
 public class CustomTransformationDeserializerTest extends GuicedTest {
 
-	private static final Logger	LOG	= LoggerFactory.getLogger(CustomTransformationDeserializerTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(CustomTransformationDeserializerTest.class);
 
-	private ObjectMapper		objectMapper;
+	private ObjectMapper objectMapper;
 
 	@Before
 	public void setUp() throws Exception {
@@ -95,7 +95,7 @@ public class CustomTransformationDeserializerTest extends GuicedTest {
 
 	private static void testTransformation(final Transformation transformation) {
 
-		MatcherAssert.assertThat(transformation.getId(), Matchers.equalTo(42L));
+		MatcherAssert.assertThat(transformation.getUuid(), Matchers.equalTo("42"));
 		MatcherAssert.assertThat(transformation.getFunctionType(), Matchers.equalTo(FunctionType.Transformation));
 		MatcherAssert.assertThat(transformation.getName(), Matchers.equalTo("transformation"));
 		MatcherAssert.assertThat(transformation.getDescription(), Matchers.equalTo("transformation"));
@@ -106,13 +106,13 @@ public class CustomTransformationDeserializerTest extends GuicedTest {
 
 		MatcherAssert.assertThat(transformation.getComponents(), Matchers.hasSize(3));
 
-		final Component c1 = CustomTransformationDeserializerTest.checkComponent(transformation, 1, "compose", "Add pre- or postfix to a string.",
+		final Component c1 = CustomTransformationDeserializerTest.checkComponent(transformation, "1", "compose", "Add pre- or postfix to a string.",
 				Lists.newArrayList("prefix", "postfix"), Tuple.tuple("inputString", "variable_name"));
-		final Component c2 = CustomTransformationDeserializerTest.checkComponent(transformation, 2, "case", "Upper/lower-case transformation.",
+		final Component c2 = CustomTransformationDeserializerTest.checkComponent(transformation, "2", "case", "Upper/lower-case transformation.",
 				Lists.newArrayList("to", "language"));
 		final Component c3 = CustomTransformationDeserializerTest
-				.checkComponent(transformation, 3, "count", "Returns the an increasing count for each received literal.",
-						Collections.<String> emptyList(), Tuple.tuple("inputString", "dataset"));
+				.checkComponent(transformation, "3", "count", "Returns the an increasing count for each received literal.",
+						Collections.<String>emptyList(), Tuple.tuple("inputString", "dataset"));
 
 		// *C1* --> C2
 		MatcherAssert.assertThat(c1.getInputComponents(), Matchers.is(Matchers.nullValue()));
@@ -129,16 +129,17 @@ public class CustomTransformationDeserializerTest extends GuicedTest {
 	}
 
 	@SafeVarargs
-	private static Component checkComponent(final Transformation transformation, final long id, final String name, final String description,
+	private static Component checkComponent(final Transformation transformation, final String uuid, final String name, final String description,
 			final List<String> functionParameters, final Tuple<String, String>... parameterMappings) {
 
-		final List<Component> configurations = Lambda.filter(Lambda.having(Lambda.on(Configuration.class).getId(), Matchers.equalTo(id)),
+		// TODO: changed Configuration.class to Component.class (y Configuration.class here - these are components!)
+		final List<Component> configurations = Lambda.filter(Lambda.having(Lambda.on(Component.class).getUuid(), Matchers.equalTo(uuid)),
 				transformation.getComponents());
 		MatcherAssert.assertThat(configurations, Matchers.hasSize(1));
 
 		final Component component = configurations.get(0);
 
-		MatcherAssert.assertThat(component.getId(), Matchers.equalTo(id));
+		MatcherAssert.assertThat(component.getUuid(), Matchers.equalTo(uuid));
 		MatcherAssert.assertThat(component.getName(), Matchers.equalTo(name));
 		MatcherAssert.assertThat(component.getDescription(), Matchers.equalTo(description));
 
@@ -151,20 +152,20 @@ public class CustomTransformationDeserializerTest extends GuicedTest {
 			MatcherAssert.assertThat(componentParameterMappings, Matchers.hasValue(value));
 		}
 
-		CustomTransformationDeserializerTest.checkFunction(component, id, name, description,
+		CustomTransformationDeserializerTest.checkFunction(component, uuid, name, description,
 				functionParameters.toArray(new String[functionParameters.size()]));
 
 		return component;
 	}
 
-	private static Function checkFunction(final Component component, final long id, final String name, final String description,
+	private static Function checkFunction(final Component component, final String uuid, final String name, final String description,
 			final String... parameters) {
 
 		final Function function = component.getFunction();
 
 		MatcherAssert.assertThat(function, Matchers.is(Matchers.notNullValue()));
 
-		MatcherAssert.assertThat(function.getId(), Matchers.equalTo(id));
+		MatcherAssert.assertThat(function.getUuid(), Matchers.equalTo(uuid));
 		MatcherAssert.assertThat(function.getName(), Matchers.equalTo(name));
 		MatcherAssert.assertThat(function.getDescription(), Matchers.equalTo(description));
 

@@ -16,6 +16,7 @@
 package org.dswarm.controller.resources.resource;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -27,6 +28,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
@@ -37,8 +39,6 @@ import com.wordnik.swagger.annotations.ApiResponses;
 
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.ExtendedBasicDMPResource;
-import org.dswarm.controller.resources.resource.utils.ConfigurationsResourceUtils;
-import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
 import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.proxy.ProxyConfiguration;
@@ -46,32 +46,34 @@ import org.dswarm.persistence.service.resource.ConfigurationService;
 
 /**
  * A resource (controller service) for {@link Configuration}s.
- * 
+ *
  * @author tgaengler
  */
 @RequestScoped
 @Api(value = "/configurations", description = "Operations about configurations")
 @Path("configurations")
 public class ConfigurationsResource extends
-		ExtendedBasicDMPResource<ConfigurationsResourceUtils, ConfigurationService, ProxyConfiguration, Configuration> {
+		ExtendedBasicDMPResource<ConfigurationService, ProxyConfiguration, Configuration> {
 
 	/**
 	 * Creates a new resource (controller service) for {@link Configuration}s with the provider of the component persistence
 	 * service, the object mapper and metrics registry.
-	 * 
-	 * @param persistenceServiceProviderArg the component persistence service provider
-	 * @param objectMapperArg an object mapper
-	 * @param dmpStatusArg a metrics registry
+	 *
+	 * @param persistenceServiceProviderArg
+	 * @param objectMapperProviderArg
+	 * @param dmpStatusArg                  a metrics registry
+	 * @throws DMPControllerException
 	 */
 	@Inject
-	public ConfigurationsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
+	public ConfigurationsResource(final Provider<ConfigurationService> persistenceServiceProviderArg,
+			final Provider<ObjectMapper> objectMapperProviderArg, final DMPStatus dmpStatusArg) throws DMPControllerException {
 
-		super(utilsFactory.reset().get(ConfigurationsResourceUtils.class), dmpStatusArg);
+		super(Configuration.class, persistenceServiceProviderArg, objectMapperProviderArg, dmpStatusArg);
 	}
 
 	/**
 	 * This endpoint returns a configuration as JSON representation for the provided configuration identifier.
-	 * 
+	 *
 	 * @param id a configuration identifier
 	 * @return a JSON representation of a configuration
 	 */
@@ -83,7 +85,7 @@ public class ConfigurationsResource extends
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "configuration identifier", required = true) @PathParam("id") final Long id)
+	public Response getObject(@ApiParam(value = "configuration identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.getObject(id);
@@ -91,7 +93,7 @@ public class ConfigurationsResource extends
 
 	/**
 	 * This endpoint consumes a configuration as JSON representation and persists this configuration in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one configuration
 	 * @return the persisted configuration as JSON representation
 	 * @throws DMPControllerException
@@ -111,7 +113,7 @@ public class ConfigurationsResource extends
 
 	/**
 	 * This endpoint returns a list of all configurations as JSON representation.
-	 * 
+	 *
 	 * @return a list of all configurations as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -129,10 +131,10 @@ public class ConfigurationsResource extends
 
 	/**
 	 * This endpoint deletes a configuration that matches the given id.
-	 * 
+	 *
 	 * @param id a configuration identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
-	 *         went wrong
+	 * went wrong
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "delete configuration that matches the given id", notes = "Returns status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong.")
@@ -143,7 +145,7 @@ public class ConfigurationsResource extends
 	@DELETE
 	@Path("/{id}")
 	@Override
-	public Response deleteObject(@ApiParam(value = "configuration identifier", required = true) @PathParam("id") final Long id)
+	public Response deleteObject(@ApiParam(value = "configuration identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.deleteObject(id);
@@ -151,9 +153,9 @@ public class ConfigurationsResource extends
 
 	/**
 	 * This endpoint consumes a configuration as JSON representation and updates this configuration in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one configuration
-	 * @param id a configuration identifier
+	 * @param uuid             a configuration identifier
 	 * @return the updated configuration as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -167,9 +169,9 @@ public class ConfigurationsResource extends
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateObject(@ApiParam(value = "configuration (as JSON)", required = true) final String jsonObjectString,
-			@ApiParam(value = "configuration identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+			@ApiParam(value = "configuration identifier", required = true) @PathParam("id") final String uuid) throws DMPControllerException {
 
-		return super.updateObject(jsonObjectString, id);
+		return super.updateObject(jsonObjectString, uuid);
 	}
 
 	/**

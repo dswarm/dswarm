@@ -34,10 +34,10 @@ import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.proxy.ProxyFunction;
 import org.dswarm.persistence.service.job.FunctionService;
 import org.dswarm.persistence.service.job.test.utils.FunctionServiceTestUtils;
-import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
+import org.dswarm.persistence.service.test.BasicJPAServiceTest;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
-public class FunctionServiceTest extends IDBasicJPAServiceTest<ProxyFunction, Function, FunctionService> {
+public class FunctionServiceTest extends BasicJPAServiceTest<ProxyFunction, Function, FunctionService> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FunctionServiceTest.class);
 

@@ -17,7 +17,7 @@ package org.dswarm.persistence.model.schema.proxy;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.dswarm.persistence.model.proxy.ProxyDMPJPAObject;
+import org.dswarm.persistence.model.proxy.ProxyDMPObject;
 import org.dswarm.persistence.model.proxy.RetrievalType;
 import org.dswarm.persistence.model.schema.AttributePath;
 
@@ -27,7 +27,7 @@ import org.dswarm.persistence.model.schema.AttributePath;
  * @author tgaengler
  */
 @XmlRootElement
-public class ProxyAttributePath extends ProxyDMPJPAObject<AttributePath> {
+public class ProxyAttributePath extends ProxyDMPObject<AttributePath> {
 
 	/**
 	 *

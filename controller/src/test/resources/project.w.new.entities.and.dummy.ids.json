@@ -1,251 +1,251 @@
 {
-    "id": 1,
-    "name": "my project",
-    "description": "my project description",
-    "mappings": [{
-        "name": "my mapping",
-        "transformation": {
-            "name": "my transformation (component)",
-            "function": {
-                "type": "Transformation",
-                "name": "my transformation",
-                "description": "transformation which just makes use of one function",
-                "parameters": ["transformationInputString"],
-                "components": [{
-                    "name": "my trim component",
-                    "function": {
-                        "type": "Function",
-                        "id": 1,
-                        "name": "trim",
-                        "description": "trims leading and trailing whitespaces from a given string",
-                        "parameters": ["inputString", "parameter2"],
-                        "function_description": {
-                            "name": "case",
-                            "dsl": "metafacture",
-                            "reference": "case",
-                            "description": "Upper/lower-case transformation.",
-                            "parameters": {
-                                "to": {
-                                    "type": "radio",
-                                    "choices": ["upper", "lower"]
-                                },
-                                "language": {
-                                    "type": "text",
-                                    "optional": true
-                                }
-                            }
-                        }
-                    },
-                    "parameter_mappings": {
-                        "inputString": "previousComponent.outputString"
-                    },
-                    "id": -8764606810422070272
-                }],
-                "id": -8678798010126573568
-            },
-            "parameter_mappings": {
-                "transformationInputString": "http://purl.org/dc/terms/title",
-                "transformationOutputVariable": "http://www.w3.org/2000/01/rdf-schema#label"
-            },
-            "id": -5580896502870875136
-        },
-        "input_attribute_paths": [{
-            "type": "MappingAttributePathInstance",
-            "name": "input mapping attribute path instance",
-            "attribute_path": {
-                "attributes": [{
-                    "id": 4,
-                    "uri": "http://purl.org/dc/terms/title",
-                    "name": "title"
-                }],
-                "id": -3813055239539509248
-            },
-            "id": -596195708559444992
-        }, {
-            "type": "MappingAttributePathInstance",
-            "name": "input mapping attribute path instance",
-            "id": 1,
-            "attribute_path": {
-                "id": 5,
-                "attributes": [{
-                    "name": "dataset",
-                    "uri": "http://data.slub-dresden.de/resources/1/schema#dataset",
-                    "id": 6
-                }]
-            }
-        }],
-        "output_attribute_path": {
-            "type": "MappingAttributePathInstance",
-            "name": "output mapping attribute path instance",
-            "attribute_path": {
-                "attributes": [{
-                    "id": 6,
-                    "uri": "http://www.w3.org/2000/01/rdf-schema#label",
-                    "name": "label"
-                }],
-                "id": -4408671628666616832
-            },
-            "id": -4604650445286682624
-        },
-        "id": -1883180186746344448
-    }],
-    "functions": [{
-        "type": "Function",
-        "id": 1,
-        "name": "trim",
-        "description": "trims leading and trailing whitespaces from a given string",
-        "parameters": ["inputString", "parameter2"],
-        "function_description": {
-            "name": "case",
-            "dsl": "metafacture",
-            "reference": "case",
-            "description": "Upper/lower-case transformation.",
-            "parameters": {
-                "to": {
-                    "type": "radio",
-                    "choices": ["upper", "lower"]
+  "name" : "my project",
+  "description" : "my project description",
+  "mappings" : [ {
+    "name" : "my mapping",
+    "transformation" : {
+      "name" : "my transformation (component)",
+      "function" : {
+        "type" : "Transformation",
+        "name" : "my transformation",
+        "description" : "transformation which just makes use of one function",
+        "parameters" : [ "transformationInputString" ],
+        "components" : [ {
+          "name" : "my trim component",
+          "function" : {
+            "type" : "Function",
+            "name" : "trim",
+            "description" : "trims leading and trailing whitespaces from a given string",
+            "parameters" : [ "inputString", "parameter2" ],
+            "function_description" : {
+              "name" : "case",
+              "dsl" : "metafacture",
+              "reference" : "case",
+              "description" : "Upper/lower-case transformation.",
+              "parameters" : {
+                "to" : {
+                  "type" : "radio",
+                  "choices" : [ "upper", "lower" ]
                 },
-                "language": {
-                    "type": "text",
-                    "optional": true
+                "language" : {
+                  "type" : "text",
+                  "optional" : true
                 }
-            }
-        }
-    }],
-    "input_data_model": {
-        "name": "my data model",
-        "description": "my data model description",
-        "configuration": {
-            "name": "foo",
-            "description": "bar",
-            "parameters": {
-                "encoding": "UTF-8",
-                "escape_character": "\\",
-                "quote_character": "\"",
-                "column_delimiter": ";",
-                "row_delimiter": "\n"
+              }
             },
-            "id": 1,
-            "resources": [{
-                "id": 1
-            }]
-        },
-        "schema": {
-            "id": 1,
-            "name": "my schema",
-            "attribute_paths": [{
-                "id": 3,
-                "attributes": [{
-                    "id": 4,
-                    "uri": "http://purl.org/dc/terms/title",
-                    "name": "title"
-                }, {
-                    "id": 5,
-                    "uri": "http://purl.org/dc/terms/hasPart",
-                    "name": "hasPart"
-                }, {
-                    "id": 4,
-                    "uri": "http://purl.org/dc/terms/title",
-                    "name": "title"
-                }]
-            }, {
-                "id": 2,
-                "attributes": [{
-                    "id": 2,
-                    "uri": "http://purl.org/dc/terms/creator",
-                    "name": "creator"
-                }, {
-                    "id": 3,
-                    "uri": "http://xmlns.com/foaf/0.1/name",
-                    "name": "name"
-                }]
-            }, {
-                "id": 1,
-                "attributes": [{
-                    "id": 1,
-                    "uri": "http://purl.org/dc/terms/created",
-                    "name": "created"
-                }]
-            }],
-            "record_class": {
-                "id": 1,
-                "uri": "http://purl.org/ontology/bibo/Document",
-                "name": "document"
-            }
-        },
-        "data_resource": {
-            "name": "test_csv.csv",
-            "description": "blubblub",
-            "type": "FILE",
-            "id": 1,
-            "resource_attributes": {
-                "path": "/home/tgaengler/git/tgaengler/datamanagement-platform/init/../tmp/resources/test_csv.csv",
-                "filesize": 766
-            },
-            "configurations": [{
-                "name": "foo",
-                "description": "bar",
-                "parameters": {
-                    "encoding": "UTF-8",
-                    "escape_character": "\\",
-                    "quote_character": "\"",
-                    "column_delimiter": ";",
-                    "row_delimiter": "\n"
-                },
-                "id": 1,
-                "resources": [{
-                    "id": 1
-                }]
-            }]
-        },
-        "id": -8825977498776171520
+            "uuid" : "1"
+          },
+          "parameter_mappings" : {
+            "inputString" : "previousComponent.outputString"
+          },
+          "uuid" : "-8764606810422070272"
+        } ],
+        "uuid" : "-8678798010126573568"
+      },
+      "parameter_mappings" : {
+        "transformationInputString" : "http://purl.org/dc/terms/title",
+        "transformationOutputVariable" : "http://www.w3.org/2000/01/rdf-schema#label"
+      },
+      "uuid" : "-5580896502870875136"
     },
-    "output_data_model": {
-        "name": "my output data model",
-        "description": "my output data model description",
-        "schema": {
-            "id": 1,
-            "name": "my schema",
-            "attribute_paths": [{
-                "id": 3,
-                "attributes": [{
-                    "id": 4,
-                    "uri": "http://purl.org/dc/terms/title",
-                    "name": "title"
-                }, {
-                    "id": 5,
-                    "uri": "http://purl.org/dc/terms/hasPart",
-                    "name": "hasPart"
-                }, {
-                    "id": 4,
-                    "uri": "http://purl.org/dc/terms/title",
-                    "name": "title"
-                }]
-            }, {
-                "id": 2,
-                "attributes": [{
-                    "id": 2,
-                    "uri": "http://purl.org/dc/terms/creator",
-                    "name": "creator"
-                }, {
-                    "id": 3,
-                    "uri": "http://xmlns.com/foaf/0.1/name",
-                    "name": "name"
-                }]
-            }, {
-                "id": 1,
-                "attributes": [{
-                    "id": 1,
-                    "uri": "http://purl.org/dc/terms/created",
-                    "name": "created"
-                }]
-            }],
-            "record_class": {
-                "id": 1,
-                "uri": "http://purl.org/ontology/bibo/Document",
-                "name": "document"
-            }
+    "input_attribute_paths" : [ {
+      "type" : "MappingAttributePathInstance",
+      "name" : "input mapping attribute path instance",
+      "attribute_path" : {
+        "attributes" : [ {
+          "uri" : "http://purl.org/dc/terms/title",
+          "name" : "title",
+          "uuid" : "4"
+        } ],
+        "uuid" : "-3813055239539509248"
+      },
+      "uuid" : "-596195708559444992"
+    }, {
+      "type" : "MappingAttributePathInstance",
+      "name" : "input mapping attribute path instance",
+      "attribute_path" : {
+        "attributes" : [ {
+          "name" : "dataset",
+          "uri" : "http://data.slub-dresden.de/resources/1/schema#dataset",
+          "uuid" : "6"
+        } ],
+        "uuid" : "5"
+      },
+      "uuid" : "1"
+    } ],
+    "output_attribute_path" : {
+      "type" : "MappingAttributePathInstance",
+      "name" : "output mapping attribute path instance",
+      "attribute_path" : {
+        "attributes" : [ {
+          "uri" : "http://www.w3.org/2000/01/rdf-schema#label",
+          "name" : "label",
+          "uuid" : "6"
+        } ],
+        "uuid" : "-4408671628666616832"
+      },
+      "uuid" : "-4604650445286682624"
+    },
+    "uuid" : "-1883180186746344448"
+  } ],
+  "functions" : [ {
+    "type" : "Function",
+    "name" : "trim",
+    "description" : "trims leading and trailing whitespaces from a given string",
+    "parameters" : [ "inputString", "parameter2" ],
+    "function_description" : {
+      "name" : "case",
+      "dsl" : "metafacture",
+      "reference" : "case",
+      "description" : "Upper/lower-case transformation.",
+      "parameters" : {
+        "to" : {
+          "type" : "radio",
+          "choices" : [ "upper", "lower" ]
         },
-        "id": -3564962124993277952
-    }
+        "language" : {
+          "type" : "text",
+          "optional" : true
+        }
+      }
+    },
+    "uuid" : "1"
+  } ],
+  "input_data_model" : {
+    "name" : "my data model",
+    "description" : "my data model description",
+    "configuration" : {
+      "name" : "foo",
+      "description" : "bar",
+      "parameters" : {
+        "encoding" : "UTF-8",
+        "escape_character" : "\\",
+        "quote_character" : "\"",
+        "column_delimiter" : ";",
+        "row_delimiter" : "\n"
+      },
+      "resources" : [ {
+        "uuid" : "1"
+      } ],
+      "uuid" : "1"
+    },
+    "schema" : {
+      "name" : "my schema",
+      "attribute_paths" : [ {
+        "attributes" : [ {
+          "uri" : "http://purl.org/dc/terms/title",
+          "name" : "title",
+          "uuid" : "4"
+        }, {
+          "uri" : "http://purl.org/dc/terms/hasPart",
+          "name" : "hasPart",
+          "uuid" : "5"
+        }, {
+          "uri" : "http://purl.org/dc/terms/title",
+          "name" : "title",
+          "uuid" : "4"
+        } ],
+        "uuid" : "3"
+      }, {
+        "attributes" : [ {
+          "uri" : "http://purl.org/dc/terms/creator",
+          "name" : "creator",
+          "uuid" : "2"
+        }, {
+          "uri" : "http://xmlns.com/foaf/0.1/name",
+          "name" : "name",
+          "uuid" : "3"
+        } ],
+        "uuid" : "2"
+      }, {
+        "attributes" : [ {
+          "uri" : "http://purl.org/dc/terms/created",
+          "name" : "created",
+          "uuid" : "1"
+        } ],
+        "uuid" : "1"
+      } ],
+      "record_class" : {
+        "uri" : "http://purl.org/ontology/bibo/Document",
+        "name" : "document",
+        "uuid" : "1"
+      },
+      "uuid" : "1"
+    },
+    "data_resource" : {
+      "name" : "test_csv.csv",
+      "description" : "blubblub",
+      "type" : "FILE",
+      "resource_attributes" : {
+        "path" : "/home/tgaengler/git/tgaengler/datamanagement-platform/init/../tmp/resources/test_csv.csv",
+        "filesize" : 766
+      },
+      "configurations" : [ {
+        "name" : "foo",
+        "description" : "bar",
+        "parameters" : {
+          "encoding" : "UTF-8",
+          "escape_character" : "\\",
+          "quote_character" : "\"",
+          "column_delimiter" : ";",
+          "row_delimiter" : "\n"
+        },
+        "resources" : [ {
+          "uuid" : "1"
+        } ],
+        "uuid" : "1"
+      } ],
+      "uuid" : "1"
+    },
+    "uuid" : "-8825977498776171520"
+  },
+  "output_data_model" : {
+    "name" : "my output data model",
+    "description" : "my output data model description",
+    "schema" : {
+      "name" : "my schema",
+      "attribute_paths" : [ {
+        "attributes" : [ {
+          "uri" : "http://purl.org/dc/terms/title",
+          "name" : "title",
+          "uuid" : "4"
+        }, {
+          "uri" : "http://purl.org/dc/terms/hasPart",
+          "name" : "hasPart",
+          "uuid" : "5"
+        }, {
+          "uri" : "http://purl.org/dc/terms/title",
+          "name" : "title",
+          "uuid" : "4"
+        } ],
+        "uuid" : "3"
+      }, {
+        "attributes" : [ {
+          "uri" : "http://purl.org/dc/terms/creator",
+          "name" : "creator",
+          "uuid" : "2"
+        }, {
+          "uri" : "http://xmlns.com/foaf/0.1/name",
+          "name" : "name",
+          "uuid" : "3"
+        } ],
+        "uuid" : "2"
+      }, {
+        "attributes" : [ {
+          "uri" : "http://purl.org/dc/terms/created",
+          "name" : "created",
+          "uuid" : "1"
+        } ],
+        "uuid" : "1"
+      } ],
+      "record_class" : {
+        "uri" : "http://purl.org/ontology/bibo/Document",
+        "name" : "document",
+        "uuid" : "1"
+      },
+      "uuid" : "1"
+    },
+    "uuid" : "-3564962124993277952"
+  },
+  "uuid" : "1"
 }

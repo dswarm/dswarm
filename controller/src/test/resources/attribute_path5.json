@@ -1,8 +1,8 @@
 {
-    "id": 1,
-    "attributes": [{
-        "id": 6,
-        "uri": "http://www.w3.org/2000/01/rdf-schema#label",
-        "name": "label"
-    }]
+  "attributes" : [ {
+    "uri" : "http://www.w3.org/2000/01/rdf-schema#label",
+    "name" : "label",
+    "uuid" : "6"
+  } ],
+  "uuid" : "1"
 }

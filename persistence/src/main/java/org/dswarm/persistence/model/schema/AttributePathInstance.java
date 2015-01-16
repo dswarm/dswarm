@@ -79,18 +79,24 @@ public abstract class AttributePathInstance extends BasicDMPJPAObject {
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private AttributePath				attributePath;
 
-	public AttributePathInstance() {
+	protected AttributePathInstance() {
 
 		// just for JPA
 	}
 
 	/**
 	 * Creates a new attribute path instance with the given attribute path instance type.
-	 * 
+	 *
 	 * @param attributePathInstanceTypeArg the type of the attribute path instance
 	 */
-	public AttributePathInstance(final AttributePathInstanceType attributePathInstanceTypeArg) {
+	protected AttributePathInstance(final AttributePathInstanceType attributePathInstanceTypeArg) {
 
+		attributePathInstanceType = attributePathInstanceTypeArg;
+	}
+
+	protected AttributePathInstance(final String uuid, final AttributePathInstanceType attributePathInstanceTypeArg) {
+
+		super(uuid);
 		attributePathInstanceType = attributePathInstanceTypeArg;
 	}
 
@@ -107,12 +113,6 @@ public abstract class AttributePathInstance extends BasicDMPJPAObject {
 	public AttributePathInstanceType getAttributePathInstanceType() {
 
 		return attributePathInstanceType;
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-
-		return AttributePathInstance.class.isInstance(obj) && super.equals(obj);
 	}
 
 	@Override

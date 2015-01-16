@@ -29,6 +29,7 @@ import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.proxy.ProxyConfiguration;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.resource.ConfigurationService;
 import org.dswarm.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
@@ -82,7 +83,7 @@ public class ConfigurationServiceTestUtils extends ExtendedBasicDMPJPAServiceTes
 
 		super.compareObjects(expectedConfiguration, actualConfiguration);
 
-		if(expectedConfiguration.getParameters() == null) {
+		if (expectedConfiguration.getParameters() == null) {
 
 			Assert.assertNull(actualConfiguration.getParameters());
 		} else {
@@ -101,7 +102,10 @@ public class ConfigurationServiceTestUtils extends ExtendedBasicDMPJPAServiceTes
 
 	public Configuration createConfiguration(final String name, final String description, final ObjectNode parameters) throws Exception {
 
-		final Configuration configuration = new Configuration();
+		// TODO: think about this?
+		final String configurationUUID = UUIDService.getUUID(Configuration.class.getSimpleName());
+
+		final Configuration configuration = new Configuration(configurationUUID);
 
 		configuration.setName(name);
 		configuration.setDescription(description);
@@ -110,7 +114,7 @@ public class ConfigurationServiceTestUtils extends ExtendedBasicDMPJPAServiceTes
 		final Configuration updatedConfiguration = createAndCompareObject(configuration, configuration);
 
 		Assert.assertNotNull("updated configuration shouldn't be null", updatedConfiguration);
-		Assert.assertNotNull("updated configuration id shouldn't be null", updatedConfiguration.getId());
+		Assert.assertNotNull("updated configuration id shouldn't be null", updatedConfiguration.getUuid());
 
 		return updatedConfiguration;
 	}

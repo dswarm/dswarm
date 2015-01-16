@@ -1,12 +1,12 @@
 {
-    "id": 2,
-    "attributes": [{
-        "id": 3,
-        "uri": "http://purl.org/dc/terms/creator",
-        "name": "creator"
-    }, {
-        "id": 4,
-        "uri": "http://xmlns.com/foaf/0.1/name",
-        "name": "name"
-    }]
+  "attributes" : [ {
+    "uri" : "http://purl.org/dc/terms/creator",
+    "name" : "creator",
+    "uuid" : "3"
+  }, {
+    "uri" : "http://xmlns.com/foaf/0.1/name",
+    "name" : "name",
+    "uuid" : "4"
+  } ],
+  "uuid" : "2"
 }

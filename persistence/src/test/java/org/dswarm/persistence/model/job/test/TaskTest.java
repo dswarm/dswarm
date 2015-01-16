@@ -46,13 +46,14 @@ import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class TaskTest extends GuicedTest {
 
-	private static final Logger	LOG				= LoggerFactory.getLogger(TaskTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TaskTest.class);
 
-	private final ObjectMapper	objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleTaskTest() {
@@ -62,7 +63,9 @@ public class TaskTest extends GuicedTest {
 		final DataModel inputDataModel = createDataModel();
 		final DataModel outputDataModel = createDataModel();
 
-		final Task task = new Task();
+		final String taskUUID = UUIDService.getUUID(Task.class.getSimpleName());
+
+		final Task task = new Task(taskUUID);
 		task.setName("my task");
 		task.setDescription("my task description");
 		task.setJob(job);
@@ -96,7 +99,9 @@ public class TaskTest extends GuicedTest {
 
 		final Attribute dctermsHasPart = createAttribute(dctermsHasPartId, dctermsHasPartName);
 
-		final AttributePath attributePath1 = new AttributePath();
+		final String attributePath1UUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath attributePath1 = new AttributePath(attributePath1UUID);
 		// attributePath1.setId(UUID.randomUUID().toString());
 
 		attributePath1.addAttribute(dctermsTitle);
@@ -115,7 +120,9 @@ public class TaskTest extends GuicedTest {
 
 		final Attribute foafName = createAttribute(foafNameId, foafNameName);
 
-		final AttributePath attributePath2 = new AttributePath();
+		final String attributePath2UUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath attributePath2 = new AttributePath(attributePath2UUID);
 		// attributePath2.setId(UUID.randomUUID().toString());
 
 		attributePath2.addAttribute(dctermsCreator);
@@ -128,7 +135,9 @@ public class TaskTest extends GuicedTest {
 
 		final Attribute dctermsCreated = createAttribute(dctermsCreatedId, dctermsCreatedName);
 
-		final AttributePath attributePath3 = new AttributePath();
+		final String attributePath3UUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath attributePath3 = new AttributePath(attributePath3UUID);
 		// attributePath3.setId(UUID.randomUUID().toString());
 
 		attributePath3.addAttribute(dctermsCreated);
@@ -138,11 +147,15 @@ public class TaskTest extends GuicedTest {
 		final String biboDocumentId = "http://purl.org/ontology/bibo/Document";
 		final String biboDocumentName = "document";
 
-		final Clasz biboDocument = new Clasz(biboDocumentId, biboDocumentName);
+		final String uuid = UUIDService.getUUID(Clasz.class.getSimpleName());
+
+		final Clasz biboDocument = new Clasz(uuid, biboDocumentId, biboDocumentName);
 
 		// schema
 
-		final Schema schema = new Schema();
+		final String schemaUUID = UUIDService.getUUID(Schema.class.getSimpleName());
+
+		final Schema schema = new Schema(schemaUUID);
 		// schema.setId(UUID.randomUUID().toString());
 
 		schema.addAttributePath(createAttributePathInstance(attributePath1));
@@ -150,8 +163,10 @@ public class TaskTest extends GuicedTest {
 		schema.addAttributePath(createAttributePathInstance(attributePath3));
 		schema.setRecordClass(biboDocument);
 
+		final String resourceUUID = UUIDService.getUUID(Resource.class.getSimpleName());
+
 		// data resource
-		final Resource resource = new Resource();
+		final Resource resource = new Resource(resourceUUID);
 
 		resource.setName("bla");
 		resource.setDescription("blubblub");
@@ -165,8 +180,10 @@ public class TaskTest extends GuicedTest {
 
 		resource.setAttributes(attributes);
 
+		final String configurationUUID = UUIDService.getUUID(Configuration.class.getSimpleName());
+
 		// configuration
-		final Configuration configuration = new Configuration();
+		final Configuration configuration = new Configuration(configurationUUID);
 
 		configuration.setName("my configuration");
 		configuration.setDescription("configuration description");
@@ -180,8 +197,10 @@ public class TaskTest extends GuicedTest {
 
 		resource.addConfiguration(configuration);
 
+		final String dataModelUUID = UUIDService.getUUID(DataModel.class.getSimpleName());
+
 		// data model
-		final DataModel dataModel = new DataModel();
+		final DataModel dataModel = new DataModel(dataModelUUID);
 		dataModel.setName("my data model");
 		dataModel.setDescription("my data model description");
 		dataModel.setDataResource(resource);
@@ -213,7 +232,9 @@ public class TaskTest extends GuicedTest {
 		mappings.add(simpleMapping);
 		mappings.add(complexMapping);
 
-		final Job job = new Job();
+		final String jobUUID = UUIDService.getUUID(Job.class.getSimpleName());
+
+		final Job job = new Job(jobUUID);
 		job.setName("my job");
 		job.setDescription("my job description");
 		job.setMappings(mappings);
@@ -239,7 +260,9 @@ public class TaskTest extends GuicedTest {
 		final String functionDescription = "trims leading and trailing whitespaces from a given string";
 		final String functionParameter = "inputString";
 
-		final Function function = new Function();
+		final String functionUUID = UUIDService.getUUID(Function.class.getSimpleName());
+
+		final Function function = new Function(functionUUID);
 		function.setName(functionName);
 		function.setDescription(functionDescription);
 		function.addParameter(functionParameter);
@@ -252,7 +275,9 @@ public class TaskTest extends GuicedTest {
 
 		parameterMappings.put(functionParameterName, componentVariableName);
 
-		final Component component = new Component();
+		final String componentUUID = UUIDService.getUUID(Component.class.getSimpleName());
+
+		final Component component = new Component(componentUUID);
 		component.setName(componentName);
 		component.setFunction(function);
 		component.setParameterMappings(parameterMappings);
@@ -267,7 +292,9 @@ public class TaskTest extends GuicedTest {
 
 		components.add(component);
 
-		final Transformation transformation = new Transformation();
+		final String transformationUUID = UUIDService.getUUID(Transformation.class.getSimpleName());
+
+		final Transformation transformation = new Transformation(transformationUUID);
 		transformation.setName(transformationName);
 		transformation.setDescription(transformationDescription);
 		transformation.setComponents(components);
@@ -282,11 +309,16 @@ public class TaskTest extends GuicedTest {
 
 		final Attribute dctermsTitle = createAttribute(dctermsTitleId, dctermsTitleName);
 
-		final AttributePath inputAttributePath = new AttributePath();
+		final String inputAttributePathUUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath inputAttributePath = new AttributePath(inputAttributePathUUID);
 
 		inputAttributePath.addAttribute(dctermsTitle);
 
-		final MappingAttributePathInstance inputMappingAttributePathInstance = new MappingAttributePathInstance();
+		final String inputMappingAttributePathInstanceUUID = UUIDService.getUUID(MappingAttributePathInstance.class.getSimpleName());
+
+		final MappingAttributePathInstance inputMappingAttributePathInstance = new MappingAttributePathInstance(
+				inputMappingAttributePathInstanceUUID);
 		inputMappingAttributePathInstance.setAttributePath(inputAttributePath);
 
 		// output attribute path
@@ -296,11 +328,16 @@ public class TaskTest extends GuicedTest {
 
 		final Attribute rdfsLabel = createAttribute(rdfsLabelId, rdfsLabelName);
 
-		final AttributePath outputAttributePath = new AttributePath();
+		final String outputAttributePathUUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath outputAttributePath = new AttributePath(outputAttributePathUUID);
 
 		outputAttributePath.addAttribute(rdfsLabel);
 
-		final MappingAttributePathInstance outputMappingAttributePathInstance = new MappingAttributePathInstance();
+		final String outputMappingAttributePathInstanceUUID = UUIDService.getUUID(MappingAttributePathInstance.class.getSimpleName());
+
+		final MappingAttributePathInstance outputMappingAttributePathInstance = new MappingAttributePathInstance(
+				outputMappingAttributePathInstanceUUID);
 		outputMappingAttributePathInstance.setAttributePath(outputAttributePath);
 
 		// transformation component
@@ -310,7 +347,9 @@ public class TaskTest extends GuicedTest {
 		transformationComponentParameterMappings.put(transformation.getParameters().get(0), inputAttributePath.toAttributePath());
 		transformationComponentParameterMappings.put("transformationOutputVariable", outputAttributePath.toAttributePath());
 
-		final Component transformationComponent = new Component();
+		final String transformationComponentUUID = UUIDService.getUUID(Component.class.getSimpleName());
+
+		final Component transformationComponent = new Component(transformationComponentUUID);
 		transformationComponent.setName(transformation.getName() + " (component)");
 		transformationComponent.setFunction(transformation);
 		transformationComponent.setParameterMappings(transformationComponentParameterMappings);
@@ -319,7 +358,9 @@ public class TaskTest extends GuicedTest {
 
 		final String mappingName = "my simple mapping";
 
-		final Mapping mapping = new Mapping();
+		final String mappingUUID = UUIDService.getUUID(Mapping.class.getSimpleName());
+
+		final Mapping mapping = new Mapping(mappingUUID);
 		mapping.setName(mappingName);
 		mapping.addInputAttributePath(inputMappingAttributePathInstance);
 		mapping.setOutputAttributePath(outputMappingAttributePathInstance);
@@ -331,7 +372,7 @@ public class TaskTest extends GuicedTest {
 		Assert.assertEquals("the transformation component parameter mappings' size are not equal", 2, mapping.getTransformation()
 				.getParameterMappings().size());
 		Assert.assertTrue("the transformation component parameter mappings doesn't contain a mapping for function parameter '"
-				+ transformation.getParameters().get(0) + "'",
+						+ transformation.getParameters().get(0) + "'",
 				mapping.getTransformation().getParameterMappings().containsKey(transformation.getParameters().get(0)));
 		Assert.assertEquals("the transformation component parameter mapping for '" + transformation.getParameters().get(0) + "' are not equal",
 				inputAttributePath.toAttributePath(), mapping.getTransformation().getParameterMappings().get(transformation.getParameters().get(0)));
@@ -393,7 +434,9 @@ public class TaskTest extends GuicedTest {
 		final String function2Parameter = "regex";
 		final String function3Parameter = "replaceString";
 
-		final Function function1 = new Function();
+		final String function1UUID = UUIDService.getUUID(Function.class.getSimpleName());
+
+		final Function function1 = new Function(function1UUID);
 		function1.setName(function1Name);
 		function1.setDescription(function1Description);
 		function1.addParameter(function1Parameter);
@@ -414,7 +457,9 @@ public class TaskTest extends GuicedTest {
 		parameterMapping1.put(functionParameterName2, componentVariableName2);
 		parameterMapping1.put(functionParameterName3, componentVariableName3);
 
-		final Component component1 = new Component();
+		final String component1UUID = UUIDService.getUUID(Component.class.getSimpleName());
+
+		final Component component1 = new Component(component1UUID);
 		component1.setName(component1Name);
 		component1.setFunction(function1);
 		component1.setParameterMappings(parameterMapping1);
@@ -425,7 +470,9 @@ public class TaskTest extends GuicedTest {
 		final String function2Description = "lower cases all characters of a given string";
 		final String function4Parameter = "inputString";
 
-		final Function function2 = new Function();
+		final String function2UUID = UUIDService.getUUID(Function.class.getSimpleName());
+
+		final Function function2 = new Function(function2UUID);
 		function2.setName(function2Name);
 		function2.setDescription(function2Description);
 		function2.addParameter(function4Parameter);
@@ -438,7 +485,9 @@ public class TaskTest extends GuicedTest {
 
 		parameterMapping2.put(functionParameterName4, componentVariableName4);
 
-		final Component component2 = new Component();
+		final String component2UUID = UUIDService.getUUID(Component.class.getSimpleName());
+
+		final Component component2 = new Component(component2UUID);
 		component2.setName(component2Name);
 		component2.setFunction(function2);
 		component2.setParameterMappings(parameterMapping2);
@@ -449,7 +498,9 @@ public class TaskTest extends GuicedTest {
 		final String functionDescription = "trims leading and trailing whitespaces from a given string";
 		final String functionParameter = "inputString";
 
-		final Function function = new Function();
+		final String functionUUID = UUIDService.getUUID(Function.class.getSimpleName());
+
+		final Function function = new Function(functionUUID);
 		function.setName(functionName);
 		function.setDescription(functionDescription);
 		function.addParameter(functionParameter);
@@ -470,7 +521,9 @@ public class TaskTest extends GuicedTest {
 
 		outputComponents.add(component2);
 
-		final Component component = new Component();
+		final String componentUUID = UUIDService.getUUID(Component.class.getSimpleName());
+
+		final Component component = new Component(componentUUID);
 		component.setName(componentName);
 		component.setFunction(function);
 		component.setParameterMappings(parameterMapping);
@@ -489,7 +542,9 @@ public class TaskTest extends GuicedTest {
 		components.add(component);
 		components.add(component2);
 
-		final Transformation transformation = new Transformation();
+		final String transformationUUID = UUIDService.getUUID(Transformation.class.getSimpleName());
+
+		final Transformation transformation = new Transformation(transformationUUID);
 		transformation.setName(transformationName);
 		transformation.setDescription(transformationDescription);
 		transformation.setComponents(components);
@@ -502,7 +557,7 @@ public class TaskTest extends GuicedTest {
 
 		transformationComponentParameterMappings.put("transformationInputString", "firstName");
 
-		final Component transformationComponent = new Component();
+		final Component transformationComponent = new Component(transformationComponentId);
 		transformationComponent.setName("prepare first name");
 		transformationComponent.setFunction(transformation);
 		transformationComponent.setParameterMappings(transformationComponentParameterMappings);
@@ -514,7 +569,7 @@ public class TaskTest extends GuicedTest {
 
 		transformationComponentParameterMappings2.put("transformationInputString", "familyName");
 
-		final Component transformationComponent2 = new Component();
+		final Component transformationComponent2 = new Component(transformationComponentId2);
 		transformationComponent2.setName("prepare family name");
 		transformationComponent2.setFunction(transformation);
 		transformationComponent2.setParameterMappings(transformationComponentParameterMappings2);
@@ -526,7 +581,9 @@ public class TaskTest extends GuicedTest {
 		final String function5Parameter = "firstString";
 		final String function6Parameter = "secondString";
 
-		final Function function4 = new Function();
+		final String function4UUID = UUIDService.getUUID(Function.class.getSimpleName());
+
+		final Function function4 = new Function(function4UUID);
 		function4.setName(function4Name);
 		function4.setDescription(function4Description);
 		function4.addParameter(function5Parameter);
@@ -543,7 +600,9 @@ public class TaskTest extends GuicedTest {
 		parameterMapping4.put(functionParameterName5, componentVariableName5);
 		parameterMapping4.put(functionParameterName6, componentVariableName6);
 
-		final Component component4 = new Component();
+		final String component4UUID = UUIDService.getUUID(Component.class.getSimpleName());
+
+		final Component component4 = new Component(component4UUID);
 		component4.setName(component4Name);
 		component4.setFunction(function4);
 		component4.setParameterMappings(parameterMapping4);
@@ -582,7 +641,9 @@ public class TaskTest extends GuicedTest {
 		components2.add(transformationComponent2);
 		components2.add(component4);
 
-		final Transformation transformation2 = new Transformation();
+		final String transformation2UUID = UUIDService.getUUID(Transformation.class.getSimpleName());
+
+		final Transformation transformation2 = new Transformation(transformation2UUID);
 		transformation2.setName(transformation2Name);
 		transformation2.setDescription(transformation2Description);
 		transformation2.setComponents(components2);
@@ -605,12 +666,17 @@ public class TaskTest extends GuicedTest {
 
 		final Attribute firstName = createAttribute(firstNameId, firstNameName);
 
-		final AttributePath firstNameAttributePath = new AttributePath();
+		final String firstNameAttributePathUUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath firstNameAttributePath = new AttributePath(firstNameAttributePathUUID);
 
 		firstNameAttributePath.addAttribute(dctermsCreator);
 		firstNameAttributePath.addAttribute(firstName);
 
-		final MappingAttributePathInstance firstNameMappingAttributePathInstance = new MappingAttributePathInstance();
+		final String firstNameMappingAttributePathInstanceUUID = UUIDService.getUUID(MappingAttributePathInstance.class.getSimpleName());
+
+		final MappingAttributePathInstance firstNameMappingAttributePathInstance = new MappingAttributePathInstance(
+				firstNameMappingAttributePathInstanceUUID);
 		firstNameMappingAttributePathInstance.setAttributePath(firstNameAttributePath);
 
 		// family name attribute path
@@ -620,12 +686,17 @@ public class TaskTest extends GuicedTest {
 
 		final Attribute familyName = createAttribute(familyNameId, familyNameName);
 
-		final AttributePath familyNameAttributePath = new AttributePath();
+		final String familyNameAttributePathUUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath familyNameAttributePath = new AttributePath(familyNameAttributePathUUID);
 
 		familyNameAttributePath.addAttribute(dctermsCreator);
 		familyNameAttributePath.addAttribute(familyName);
 
-		final MappingAttributePathInstance familyNameMappingAttributePathInstance = new MappingAttributePathInstance();
+		final String familyNameMappingAttributePathInstanceUUID = UUIDService.getUUID(MappingAttributePathInstance.class.getSimpleName());
+
+		final MappingAttributePathInstance familyNameMappingAttributePathInstance = new MappingAttributePathInstance(
+				familyNameMappingAttributePathInstanceUUID);
 		familyNameMappingAttributePathInstance.setAttributePath(familyNameAttributePath);
 
 		// output attribute path
@@ -635,12 +706,17 @@ public class TaskTest extends GuicedTest {
 
 		final Attribute foafName = createAttribute(foafNameId, foafNameName);
 
-		final AttributePath nameAttributePath = new AttributePath();
+		final String nameAttributePathUUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath nameAttributePath = new AttributePath(nameAttributePathUUID);
 
 		nameAttributePath.addAttribute(dctermsCreator);
 		nameAttributePath.addAttribute(foafName);
 
-		final MappingAttributePathInstance outputMappingAttributePathInstance = new MappingAttributePathInstance();
+		final String outputMappingAttributePathInstanceUUID = UUIDService.getUUID(MappingAttributePathInstance.class.getSimpleName());
+
+		final MappingAttributePathInstance outputMappingAttributePathInstance = new MappingAttributePathInstance(
+				outputMappingAttributePathInstanceUUID);
 		outputMappingAttributePathInstance.setAttributePath(nameAttributePath);
 
 		// transformation component
@@ -651,7 +727,9 @@ public class TaskTest extends GuicedTest {
 		transformationComponent3ParameterMappings.put(transformation2Parameter2, familyNameAttributePath.toAttributePath());
 		transformationComponent3ParameterMappings.put("transformationOutputVariable", nameAttributePath.toAttributePath());
 
-		final Component transformationComponent3 = new Component();
+		final String transformationComponent3UUID = UUIDService.getUUID(Component.class.getSimpleName());
+
+		final Component transformationComponent3 = new Component(transformationComponent3UUID);
 		transformationComponent3.setName(transformation2.getName() + " (component)");
 		transformationComponent3.setFunction(transformation2);
 		transformationComponent3.setParameterMappings(transformationComponent3ParameterMappings);
@@ -660,7 +738,9 @@ public class TaskTest extends GuicedTest {
 
 		final String mappingName = "my complex mapping";
 
-		final Mapping mapping = new Mapping();
+		final String mappingUUID = UUIDService.getUUID(Mapping.class.getSimpleName());
+
+		final Mapping mapping = new Mapping(mappingUUID);
 		mapping.setName(mappingName);
 		mapping.addInputAttributePath(firstNameMappingAttributePathInstance);
 		mapping.addInputAttributePath(familyNameMappingAttributePathInstance);
@@ -732,21 +812,26 @@ public class TaskTest extends GuicedTest {
 		return mapping;
 	}
 
-	private Attribute createAttribute(final String id, final String name) {
+	private Attribute createAttribute(final String uri, final String name) {
 
-		final Attribute attribute = new Attribute(id);
+		final String uuid = UUIDService.getUUID(Attribute.class.getSimpleName());
+
+		final Attribute attribute = new Attribute(uuid, uri);
 		attribute.setName(name);
 
-		Assert.assertNotNull("the attribute id shouldn't be null", attribute.getUri());
-		Assert.assertEquals("the attribute ids are not equal", id, attribute.getUri());
+		Assert.assertNotNull("the attribute uri shouldn't be null", attribute.getUri());
+		Assert.assertEquals("the attribute ids are not equal", uri, attribute.getUri());
 		Assert.assertNotNull("the attribute name shouldn't be null", attribute.getName());
 		Assert.assertEquals("the attribute names are not equal", name, attribute.getName());
 
 		return attribute;
 	}
-	
+
 	private static SchemaAttributePathInstance createAttributePathInstance(final AttributePath attributePath) {
-		final SchemaAttributePathInstance attributePathInstance = new SchemaAttributePathInstance();
+
+		final String attributePathInstanceUUID = UUIDService.getUUID(SchemaAttributePathInstance.class.getSimpleName());
+
+		final SchemaAttributePathInstance attributePathInstance = new SchemaAttributePathInstance(attributePathInstanceUUID);
 		attributePathInstance.setAttributePath(attributePath);
 
 		Assert.assertNotNull("the attribute path should not be null", attributePathInstance.getAttributePath());

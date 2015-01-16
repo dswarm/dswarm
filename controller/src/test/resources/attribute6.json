@@ -1,5 +1,5 @@
 {
-    "id": 6,
-    "name": "label",
-    "uri": "http://www.w3.org/2000/01/rdf-schema#label"
+  "name" : "label",
+  "uri" : "http://www.w3.org/2000/01/rdf-schema#label",
+  "uuid" : "6"
 }

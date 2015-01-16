@@ -1,1 +1,9 @@
-{"id":1,"name":"foo","description":"bar","parameters":{"fieldseparator":"|", "storage_type": "csv"}}
+{
+  "name" : "foo",
+  "description" : "bar",
+  "parameters" : {
+    "fieldseparator" : "|",
+    "storage_type" : "csv"
+  },
+  "uuid" : "1"
+}

@@ -27,7 +27,7 @@ import org.dswarm.persistence.model.BasicDMPJPAObject;
 /**
  * A filter is a graph pattern for reducing records. It can be applied at the beginning or the end of a {@link Transformation}
  * instantiation, i.e., a {@link Mapping}, to filter incoming or outgoing records.
- * 
+ *
  * @author tgaengler
  */
 @XmlRootElement
@@ -45,12 +45,21 @@ public class Filter extends BasicDMPJPAObject {
 	/**
 	 * The filter expression that should be evaluated at execution time.
 	 */
-	@Column(name = "EXPRESSION", columnDefinition = "VARCHAR(4000)", length = 4000)
+	@Column(name = "EXPRESSION", columnDefinition = "BLOB")
 	private String				expression;
+
+	public Filter(final String uuidArg) {
+
+		super(uuidArg);
+	}
+
+	protected Filter() {
+
+	}
 
 	/**
 	 * Gets the filter expression.
-	 * 
+	 *
 	 * @return the filter expression
 	 */
 	public String getExpression() {
@@ -60,18 +69,12 @@ public class Filter extends BasicDMPJPAObject {
 
 	/**
 	 * Sets the filter expression
-	 * 
+	 *
 	 * @param expressionArg a new filter expression
 	 */
 	public void setExpression(final String expressionArg) {
 
 		expression = expressionArg;
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-
-		return Filter.class.isInstance(obj) && super.equals(obj);
 	}
 
 	@Override

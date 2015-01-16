@@ -1,5 +1,5 @@
 {
-    "id": 3,
-    "name": "created",
-    "uri": "http://purl.org/dc/terms/created"
+  "name" : "created",
+  "uri" : "http://purl.org/dc/terms/created",
+  "uuid" : "3"
 }

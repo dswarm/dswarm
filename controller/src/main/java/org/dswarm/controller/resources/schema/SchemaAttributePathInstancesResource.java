@@ -16,6 +16,7 @@
 package org.dswarm.controller.resources.schema;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -27,6 +28,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -35,8 +37,6 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
 import org.dswarm.controller.DMPControllerException;
-import org.dswarm.controller.resources.schema.utils.SchemaAttributePathInstancesResourceUtils;
-import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
 import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
@@ -53,20 +53,22 @@ import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 @Path("schemaattributepathinstances")
 public class SchemaAttributePathInstancesResource
 		extends
-		AttributePathInstancesResource<SchemaAttributePathInstancesResourceUtils, SchemaAttributePathInstanceService, ProxySchemaAttributePathInstance, SchemaAttributePathInstance> {
+		AttributePathInstancesResource<SchemaAttributePathInstanceService, ProxySchemaAttributePathInstance, SchemaAttributePathInstance> {
 
 	/**
 	 * Creates a new resource (controller service) for {@link org.dswarm.persistence.model.schema.SchemaAttributePathInstance}s with the provider of the schema
 	 * attribute path instance persistence service, the object mapper and metrics registry.
 	 *
-	 * @param utilsFactory
+	 * @param persistenceServiceProviderArg
+	 * @param objectMapperProviderArg
 	 * @param dmpStatusArg
 	 * @throws org.dswarm.controller.DMPControllerException
 	 */
 	@Inject
-	public SchemaAttributePathInstancesResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
+	public SchemaAttributePathInstancesResource(final Provider<SchemaAttributePathInstanceService> persistenceServiceProviderArg,
+			final Provider<ObjectMapper> objectMapperProviderArg, final DMPStatus dmpStatusArg) throws DMPControllerException {
 
-		super(utilsFactory.reset().get(SchemaAttributePathInstancesResourceUtils.class), dmpStatusArg);
+		super(SchemaAttributePathInstance.class, persistenceServiceProviderArg, objectMapperProviderArg, dmpStatusArg);
 	}
 
 	/**
@@ -85,7 +87,7 @@ public class SchemaAttributePathInstancesResource
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "schema attribute path instance identifier", required = true) @PathParam("id") final Long id)
+	public Response getObject(@ApiParam(value = "schema attribute path instance identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.getObject(id);
@@ -135,7 +137,7 @@ public class SchemaAttributePathInstancesResource
 	 * instance in the database.
 	 *
 	 * @param jsonObjectString a JSON representation of one schema attribute path instance
-	 * @param id               a schema attribute path instance identifier
+	 * @param uuid             a schema attribute path instance identifier
 	 * @return the updated schema attribute path instance as JSON representation
 	 * @throws org.dswarm.controller.DMPControllerException
 	 */
@@ -149,10 +151,10 @@ public class SchemaAttributePathInstancesResource
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateObject(@ApiParam(value = "schema attribute path instance (as JSON)", required = true) final String jsonObjectString,
-			@ApiParam(value = "schema attribute path instance identifier", required = true) @PathParam("id") final Long id)
+			@ApiParam(value = "schema attribute path instance identifier", required = true) @PathParam("id") final String uuid)
 			throws DMPControllerException {
 
-		return super.updateObject(jsonObjectString, id);
+		return super.updateObject(jsonObjectString, uuid);
 	}
 
 	/**
@@ -174,7 +176,7 @@ public class SchemaAttributePathInstancesResource
 	@DELETE
 	@Path("/{id}")
 	@Override
-	public Response deleteObject(@ApiParam(value = "schema attribute path instance identifier", required = true) @PathParam("id") final Long id)
+	public Response deleteObject(@ApiParam(value = "schema attribute path instance identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.deleteObject(id);

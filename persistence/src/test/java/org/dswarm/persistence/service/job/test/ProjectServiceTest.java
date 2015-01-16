@@ -23,9 +23,9 @@ import org.dswarm.persistence.model.job.Project;
 import org.dswarm.persistence.model.job.proxy.ProxyProject;
 import org.dswarm.persistence.service.job.ProjectService;
 import org.dswarm.persistence.service.job.test.utils.ProjectServiceTestUtils;
-import org.dswarm.persistence.service.test.IDBasicJPAServiceTest;
+import org.dswarm.persistence.service.test.BasicJPAServiceTest;
 
-public class ProjectServiceTest extends IDBasicJPAServiceTest<ProxyProject, Project, ProjectService> {
+public class ProjectServiceTest extends BasicJPAServiceTest<ProxyProject, Project, ProjectService> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ProjectServiceTest.class);
 

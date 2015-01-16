@@ -28,7 +28,7 @@ import org.dswarm.persistence.service.job.ComponentService;
 import org.dswarm.persistence.service.job.test.utils.ComponentServiceTestUtils;
 
 public class ComponentsResourceTest extends
-		BasicResourceTest<ComponentsResourceTestUtils, ComponentServiceTestUtils, ComponentService, ProxyComponent, Component, Long> {
+		BasicResourceTest<ComponentsResourceTestUtils, ComponentServiceTestUtils, ComponentService, ProxyComponent, Component> {
 
 	private FunctionsResourceTestUtils functionsResourceTestUtils;
 

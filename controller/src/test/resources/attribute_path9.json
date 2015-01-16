@@ -1,9 +1,8 @@
-
 {
-    "id": 47,
-    "attributes": [{
-        "name": "blaproperty",
-        "uri": "http://purl.org/ontology/bibo/blaproperty",
-        "id": 43
-    }]
+  "attributes" : [ {
+    "name" : "blaproperty",
+    "uri" : "http://purl.org/ontology/bibo/blaproperty",
+    "uuid" : "43"
+  } ],
+  "uuid" : "47"
 }

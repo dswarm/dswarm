@@ -29,6 +29,7 @@ import org.dswarm.persistence.model.job.Component;
 import org.dswarm.persistence.model.job.Mapping;
 import org.dswarm.persistence.model.job.proxy.ProxyMapping;
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.job.MappingService;
 import org.dswarm.persistence.service.schema.test.utils.MappingAttributePathInstanceServiceTestUtils;
 import org.dswarm.persistence.service.test.utils.BasicDMPJPAServiceTestUtils;
@@ -39,9 +40,9 @@ public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<Mapping
 
 	private final MappingAttributePathInstanceServiceTestUtils mappingAttributePathInstanceServiceTestUtils;
 
-	private final Set<Long> checkedExpectedAttributePaths = Sets.newHashSet();
+	private final Set<String> checkedExpectedAttributePaths = Sets.newHashSet();
 
-	private final Set<Long> checkedActualAttributePaths = Sets.newHashSet();
+	private final Set<String> checkedActualAttributePaths = Sets.newHashSet();
 
 	public MappingServiceTestUtils() {
 
@@ -76,7 +77,10 @@ public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<Mapping
 
 		final String mappingName = "my mapping";
 
-		final Mapping mapping = new Mapping();
+		// TODO: think about this?
+		final String uuid = UUIDService.getUUID(Mapping.class.getSimpleName());
+
+		final Mapping mapping = new Mapping(uuid);
 		mapping.setName(mappingName);
 		mapping.addInputAttributePath(inputAttributePath);
 		mapping.setOutputAttributePath(outputAttributePath);
@@ -101,7 +105,10 @@ public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<Mapping
 
 		final String mappingName = "my mapping";
 
-		final Mapping mapping = new Mapping();
+		// TODO: think about this?
+		final String uuid = UUIDService.getUUID(Mapping.class.getSimpleName());
+
+		final Mapping mapping = new Mapping(uuid);
 		mapping.setName(mappingName);
 		mapping.addInputAttributePath(firstNameMappingAttributePathInstance);
 		mapping.addInputAttributePath(familyNameMappingAttributePathInstance);
@@ -128,7 +135,7 @@ public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<Mapping
 		// transformation (component)
 		if (expectedMapping.getTransformation() == null) {
 
-			Assert.assertNull("the actual mapping '" + actualMapping.getId() + "' shouldn't have a transformation",
+			Assert.assertNull("the actual mapping '" + actualMapping.getUuid() + "' shouldn't have a transformation",
 					actualMapping.getTransformation());
 
 		} else {
@@ -140,19 +147,19 @@ public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<Mapping
 
 			final boolean actualMappingHasNoInputAttributePaths = (actualMapping.getInputAttributePaths() == null || actualMapping
 					.getInputAttributePaths().isEmpty());
-			Assert.assertTrue("actual mapping '" + actualMapping.getId() + "' shouldn't have input attribute paths",
+			Assert.assertTrue("actual mapping '" + actualMapping.getUuid() + "' shouldn't have input attribute paths",
 					actualMappingHasNoInputAttributePaths);
 
 		} else { // !null && !empty
 
 			final Set<MappingAttributePathInstance> actualInputAttributePaths = actualMapping.getInputAttributePaths();
 
-			Assert.assertNotNull("input attribute paths of actual mapping '" + actualMapping.getId() + "' shouldn't be null",
+			Assert.assertNotNull("input attribute paths of actual mapping '" + actualMapping.getUuid() + "' shouldn't be null",
 					actualInputAttributePaths);
-			Assert.assertFalse("input attribute paths of actual mapping '" + actualMapping.getId() + "' shouldn't be empty",
+			Assert.assertFalse("input attribute paths of actual mapping '" + actualMapping.getUuid() + "' shouldn't be empty",
 					actualInputAttributePaths.isEmpty());
 
-			final Map<Long, MappingAttributePathInstance> actualInputAttributePathsMap = Maps.newHashMap();
+			final Map<String, MappingAttributePathInstance> actualInputAttributePathsMap = Maps.newHashMap();
 
 			for (final MappingAttributePathInstance actualInputAttributePath : actualInputAttributePaths) {
 
@@ -161,7 +168,7 @@ public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<Mapping
 					continue;
 				}
 
-				actualInputAttributePathsMap.put(actualInputAttributePath.getId(), actualInputAttributePath);
+				actualInputAttributePathsMap.put(actualInputAttributePath.getUuid(), actualInputAttributePath);
 			}
 
 			final Set<MappingAttributePathInstance> uncheckedExpectedInputAttributePaths = Sets.newHashSet();
@@ -183,7 +190,7 @@ public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<Mapping
 		// output attribute paths
 		if (expectedMapping.getOutputAttributePath() == null) {
 
-			Assert.assertNull("actual mapping '" + actualMapping.getId() + "' shouldn't have an output attribute path",
+			Assert.assertNull("actual mapping '" + actualMapping.getUuid() + "' shouldn't have an output attribute path",
 					actualMapping.getOutputAttributePath());
 
 		} else if (!checkAttributePath(expectedMapping.getOutputAttributePath(), checkedExpectedAttributePaths)
@@ -195,18 +202,18 @@ public class MappingServiceTestUtils extends BasicDMPJPAServiceTestUtils<Mapping
 		}
 	}
 
-	private boolean checkAttributePath(final MappingAttributePathInstance attributePath, final Set<Long> checkedAttributePaths) {
+	private boolean checkAttributePath(final MappingAttributePathInstance attributePath, final Set<String> checkedAttributePaths) {
 
-		if (attributePath != null && attributePath.getId() != null) {
+		if (attributePath != null && attributePath.getUuid() != null) {
 
-			if (checkedAttributePaths.contains(attributePath.getId())) {
+			if (checkedAttributePaths.contains(attributePath.getUuid())) {
 
 				// attribute path was already checked
 
 				return true;
 			}
 
-			checkedAttributePaths.add(attributePath.getId());
+			checkedAttributePaths.add(attributePath.getUuid());
 		}
 
 		return false;

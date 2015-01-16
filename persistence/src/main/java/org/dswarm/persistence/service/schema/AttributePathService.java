@@ -22,27 +22,28 @@ import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.TypedQuery;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.persist.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.proxy.RetrievalType;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
-import org.dswarm.persistence.service.BasicIDJPAService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.persist.Transactional;
+import org.dswarm.persistence.service.BasicJPAService;
+import org.dswarm.persistence.service.UUIDService;
 
 /**
  * A persistence service for {@link AttributePath}s.
  *
  * @author tgaengler
  */
-public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, AttributePath> {
+public class AttributePathService extends BasicJPAService<ProxyAttributePath, AttributePath> {
 
-	private static final Logger	LOG	= LoggerFactory.getLogger(AttributePathService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AttributePathService.class);
 
 	/**
 	 * Creates a new attribute path persistence service with the given entity manager provider.
@@ -72,12 +73,13 @@ public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, 
 
 	/**
 	 * Tries to retrieve an attribute path object for the given ordered list of attribute paths
+	 * TODO: check, when this method was called in the code
 	 *
 	 * @param attributePathJSONArrayString
 	 * @return
 	 * @throws DMPPersistenceException
 	 */
-	public AttributePath getObject(final String attributePathJSONArrayString) throws DMPPersistenceException {
+	public AttributePath getObjectViaAttributePathJSON(final String attributePathJSONArrayString) throws DMPPersistenceException {
 
 		final EntityManager entityManager = acquire();
 
@@ -93,7 +95,8 @@ public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, 
 	}
 
 	@Override
-	protected ProxyAttributePath createObjectInternal(final AttributePath object, final EntityManager entityManager, final String transactionalType) throws DMPPersistenceException {
+	protected ProxyAttributePath createObjectInternal(final AttributePath object, final EntityManager entityManager, final String transactionalType)
+			throws DMPPersistenceException {
 
 		final AttributePath existingObject = getObject(object.getAttributePathAsJSONObjectString(), entityManager);
 
@@ -182,7 +185,17 @@ public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, 
 
 	private AttributePath mergeAttributesIntoEntityManager(final AttributePath object, final EntityManager entityManager) {
 
-		final AttributePath tempAttributePath = new AttributePath();
+		final String uuid;
+
+		if(object.getUuid() != null) {
+
+			uuid = object.getUuid();
+		} else {
+
+			uuid = UUIDService.getUUID(AttributePath.class.getSimpleName());
+		}
+
+		final AttributePath tempAttributePath = new AttributePath(uuid);
 
 		final List<Attribute> attributes = object.getAttributePath();
 

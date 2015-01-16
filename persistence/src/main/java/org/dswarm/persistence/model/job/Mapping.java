@@ -45,7 +45,7 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
  * A mapping is an instantiation of a {@link Function} or {@link Transformation} with a given collection of input
  * {@link AttributePath}s and an output {@link AttributePath}. Optionally, a mapping can consist of an input {@link Filter} and an
  * output {@link Filter}.
- * 
+ *
  * @author tgaengler
  */
 @XmlRootElement
@@ -58,18 +58,19 @@ public class Mapping extends BasicDMPJPAObject {
 	/**
 	 *
 	 */
-	private static final long					serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The input attribute path collection of the mapping.
 	 */
 	@XmlElement(name = "input_attribute_paths")
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinTable(name = "MAPPINGS_INPUT_ATTRIBUTE_PATHS", joinColumns = { @JoinColumn(name = "MAPPING_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "INPUT_ATTRIBUTE_PATH_ID", referencedColumnName = "ID") })
+	@JoinTable(name = "MAPPINGS_INPUT_ATTRIBUTE_PATHS", joinColumns = { @JoinColumn(name = "MAPPING_UUID", referencedColumnName = "UUID") },
+			inverseJoinColumns = { @JoinColumn(name = "INPUT_ATTRIBUTE_PATH_UUID", referencedColumnName = "UUID") })
 	// @JsonSerialize(using = SetAttributePathReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@XmlList
-	private Set<MappingAttributePathInstance>	inputAttributePaths;
+	private Set<MappingAttributePathInstance> inputAttributePaths;
 
 	/**
 	 * The output attribute path of the mapping.
@@ -79,7 +80,7 @@ public class Mapping extends BasicDMPJPAObject {
 	@JoinColumn(name = "OUTPUT_ATTRIBUTE_PATH")
 	// @JsonSerialize(using = AttributePathReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private MappingAttributePathInstance		outputAttributePath;
+	private MappingAttributePathInstance outputAttributePath;
 
 	/**
 	 * The instantiation ({@link Component}) of the function or transformation that should be applied at this mapping.
@@ -88,11 +89,21 @@ public class Mapping extends BasicDMPJPAObject {
 			CascadeType.REMOVE }, orphanRemoval = true)
 	@JoinColumn(name = "TRANSFORMATION")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private Component							transformation;
+	private Component transformation;
+
+	public Mapping(final String uuidArg) {
+
+		super(uuidArg);
+	}
+
+	protected Mapping() {
+
+		// y?
+	}
 
 	/**
 	 * Gets the input attribute paths of the mapping.
-	 * 
+	 *
 	 * @return the input attribute paths of the mapping
 	 */
 	public Set<MappingAttributePathInstance> getInputAttributePaths() {
@@ -102,7 +113,7 @@ public class Mapping extends BasicDMPJPAObject {
 
 	/**
 	 * Sets the input attribute paths of the mapping
-	 * 
+	 *
 	 * @param inputAttributePathsArg a new collection of input attribute paths
 	 */
 	public void setInputAttributePaths(final Set<MappingAttributePathInstance> inputAttributePathsArg) {
@@ -129,13 +140,13 @@ public class Mapping extends BasicDMPJPAObject {
 
 	/**
 	 * Gets an input attribute path by a given identifier
-	 * 
-	 * @param id the input attribute path identifier
+	 *
+	 * @param uuid the input attribute path identifier
 	 * @return the matched input attribute path or null
 	 */
-	public MappingAttributePathInstance getInputAttributePath(final Long id) {
+	public MappingAttributePathInstance getInputAttributePath(final String uuid) {
 
-		if (id == null) {
+		if (uuid == null) {
 
 			return null;
 		}
@@ -146,7 +157,7 @@ public class Mapping extends BasicDMPJPAObject {
 		}
 
 		final List<MappingAttributePathInstance> inputAttributePathsFiltered = Lambda.filter(
-				Lambda.having(Lambda.on(MappingAttributePathInstance.class).getId(), Matchers.equalTo(id)), inputAttributePaths);
+				Lambda.having(Lambda.on(MappingAttributePathInstance.class).getUuid(), Matchers.equalTo(uuid)), inputAttributePaths);
 
 		if (inputAttributePathsFiltered == null || inputAttributePathsFiltered.isEmpty()) {
 
@@ -159,7 +170,7 @@ public class Mapping extends BasicDMPJPAObject {
 	/**
 	 * Adds a new input attribute path to the collection of input attribute paths of this mapping.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param inputAttributePath a new input attribute path
 	 */
 	public void addInputAttributePath(final MappingAttributePathInstance inputAttributePath) {
@@ -181,7 +192,7 @@ public class Mapping extends BasicDMPJPAObject {
 	/**
 	 * Removes an existing input attribute path from the collection of input attribute paths of this mapping.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param inputAttributePath an existing input attribute path that should be removed
 	 */
 	public void removeInputAttributePath(final MappingAttributePathInstance inputAttributePath) {
@@ -194,7 +205,7 @@ public class Mapping extends BasicDMPJPAObject {
 
 	/**
 	 * Gets the output attribute path of the mapping.
-	 * 
+	 *
 	 * @return the output attribute path of the mapping
 	 */
 	public MappingAttributePathInstance getOutputAttributePath() {
@@ -204,7 +215,7 @@ public class Mapping extends BasicDMPJPAObject {
 
 	/**
 	 * Sets the output attribute path of the mapping
-	 * 
+	 *
 	 * @param outputAttributePathArg a new output attribute path
 	 */
 	public void setOutputAttributePath(final MappingAttributePathInstance outputAttributePathArg) {
@@ -214,7 +225,7 @@ public class Mapping extends BasicDMPJPAObject {
 
 	/**
 	 * Gets the function or transformation instantiation (component) of the mapping.
-	 * 
+	 *
 	 * @return the function or transformation instantiation (component) of the mapping
 	 */
 	public Component getTransformation() {
@@ -224,7 +235,7 @@ public class Mapping extends BasicDMPJPAObject {
 
 	/**
 	 * Sets the function or transformation instantiation (component) of the mapping.
-	 * 
+	 *
 	 * @param transformationArg a new function or transformation instantiation (component)
 	 */
 	public void setTransformation(final Component transformationArg) {
@@ -233,20 +244,14 @@ public class Mapping extends BasicDMPJPAObject {
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
-
-		return Mapping.class.isInstance(obj) && super.equals(obj);
-	}
-
-	@Override
 	public boolean completeEquals(final Object obj) {
 
 		return Mapping.class.isInstance(obj)
 				&& super.completeEquals(obj)
 				&& DMPPersistenceUtil.getMappingAttributePathInstanceUtils().completeEquals(((Mapping) obj).getInputAttributePaths(),
-						getInputAttributePaths())
+				getInputAttributePaths())
 				&& DMPPersistenceUtil.getMappingAttributePathInstanceUtils().completeEquals(((Mapping) obj).getOutputAttributePath(),
-						getOutputAttributePath())
+				getOutputAttributePath())
 				&& DMPPersistenceUtil.getComponentUtils().completeEquals(((Mapping) obj).getTransformation(), getTransformation());
 	}
 }

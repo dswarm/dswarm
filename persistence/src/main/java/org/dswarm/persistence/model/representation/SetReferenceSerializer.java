@@ -26,9 +26,9 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.google.common.collect.Sets;
 
-import org.dswarm.persistence.model.DMPJPAObject;
+import org.dswarm.persistence.model.DMPObject;
 
-abstract class SetReferenceSerializer<DMPOBJECTIMPL extends DMPJPAObject> extends JsonSerializer<Set<DMPOBJECTIMPL>> {
+abstract class SetReferenceSerializer<DMPOBJECTIMPL extends DMPObject> extends JsonSerializer<Set<DMPOBJECTIMPL>> {
 
 	@Override
 	public void serialize(final Set<DMPOBJECTIMPL> objects, final JsonGenerator generator, final SerializerProvider provider) throws IOException {
@@ -44,7 +44,7 @@ abstract class SetReferenceSerializer<DMPOBJECTIMPL extends DMPJPAObject> extend
 
 		for (final DMPOBJECTIMPL object : objects) {
 
-			references.add(new Reference(object.getId()));
+			references.add(new Reference(object.getUuid()));
 		}
 
 		generator.writeObject(references);
@@ -54,16 +54,16 @@ abstract class SetReferenceSerializer<DMPOBJECTIMPL extends DMPJPAObject> extend
 	static class Reference {
 
 		@XmlID
-		private final Long	id;
+		private final String uuid;
 
-		Reference(final Long idArg) {
+		Reference(final String uuidArg) {
 
-			id = idArg;
+			uuid = uuidArg;
 		}
 
-		Long getId() {
+		String getUuid() {
 
-			return id;
+			return uuid;
 		}
 	}
 

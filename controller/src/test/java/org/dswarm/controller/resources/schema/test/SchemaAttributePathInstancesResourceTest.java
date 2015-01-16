@@ -25,6 +25,7 @@ import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxySchemaAttributePathInstance;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 import org.dswarm.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
 import org.dswarm.persistence.service.schema.test.utils.SchemaAttributePathInstanceServiceTestUtils;
@@ -32,7 +33,7 @@ import org.dswarm.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 
 public class SchemaAttributePathInstancesResourceTest
 		extends
-		BasicResourceTest<SchemaAttributePathInstancesResourceTestUtils, SchemaAttributePathInstanceServiceTestUtils, SchemaAttributePathInstanceService, ProxySchemaAttributePathInstance, SchemaAttributePathInstance, Long> {
+		BasicResourceTest<SchemaAttributePathInstancesResourceTestUtils, SchemaAttributePathInstanceServiceTestUtils, SchemaAttributePathInstanceService, ProxySchemaAttributePathInstance, SchemaAttributePathInstance> {
 
 	private SchemasResourceTestUtils                      schemasResourceTestUtils;
 	private AttributePathsResourceTestUtils               attributePathResourceTestUtils;
@@ -60,7 +61,9 @@ public class SchemaAttributePathInstancesResourceTest
 
 		super.prepare();
 
-		final SchemaAttributePathInstance schemaAttributePathInstance = new SchemaAttributePathInstance();
+		final String schemaAttributePathInstanceUuid = UUIDService.getUUID(SchemaAttributePathInstance.class.getSimpleName());
+
+		final SchemaAttributePathInstance schemaAttributePathInstance = new SchemaAttributePathInstance(schemaAttributePathInstanceUuid);
 
 		final AttributePathServiceTestUtils attributePathServiceTestUtils = attributePathResourceTestUtils.getPersistenceServiceTestUtils();
 		final AttributePath attributePath = attributePathServiceTestUtils.getDctermsTitleDctermHaspartDctermsTitleAP();

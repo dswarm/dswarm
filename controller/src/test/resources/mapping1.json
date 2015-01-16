@@ -1,21 +1,21 @@
 {
-    "id": 21,
-    "name": "my mapping update",
-    "transformation": {
-        "id": 64
-    },
-    "input_attribute_paths": [{
-        "type": "MappingAttributePathInstance",
-        "name": "input mapping attribute path instance",
-        "attribute_path": {
-            "attributes": []
-        }
-    }],
-    "output_attribute_path": {
-        "type": "MappingAttributePathInstance",
-        "name": "output mapping attribute path instance",
-        "attribute_path": {
-            "attributes": []
-        }
+  "name" : "my mapping update",
+  "transformation" : {
+    "uuid" : "64"
+  },
+  "input_attribute_paths" : [ {
+    "type" : "MappingAttributePathInstance",
+    "name" : "input mapping attribute path instance",
+    "attribute_path" : {
+      "attributes" : [ ]
     }
+  } ],
+  "output_attribute_path" : {
+    "type" : "MappingAttributePathInstance",
+    "name" : "output mapping attribute path instance",
+    "attribute_path" : {
+      "attributes" : [ ]
+    }
+  },
+  "uuid" : "21"
 }

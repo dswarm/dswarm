@@ -25,12 +25,13 @@ import org.slf4j.LoggerFactory;
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
+import org.dswarm.persistence.service.UUIDService;
 
 public class AttributePathTest extends GuicedTest {
 
-	private static final Logger	LOG				= LoggerFactory.getLogger(AttributePathTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AttributePathTest.class);
 
-	private final ObjectMapper	objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleAttributePathTest() {
@@ -45,7 +46,9 @@ public class AttributePathTest extends GuicedTest {
 
 		final Attribute dctermsHasPart = createAttribute(dctermsHasPartId, dctermsHasPartName);
 
-		final AttributePath attributePath = new AttributePath();
+		final String attributePathUUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath attributePath = new AttributePath(attributePathUUID);
 		// attributePath.setId(UUID.randomUUID().toString());
 
 		attributePath.addAttribute(dctermsHasPart);
@@ -66,7 +69,9 @@ public class AttributePathTest extends GuicedTest {
 
 	private Attribute createAttribute(final String id, final String name) {
 
-		final Attribute attribute = new Attribute(id);
+		final String uuid = UUIDService.getUUID(Attribute.class.getSimpleName());
+
+		final Attribute attribute = new Attribute(uuid, id);
 		attribute.setName(name);
 
 		Assert.assertNotNull("the attribute id shouldn't be null", attribute.getUri());

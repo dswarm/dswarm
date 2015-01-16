@@ -33,7 +33,7 @@ import org.dswarm.persistence.service.job.test.utils.FilterServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class FiltersResourceTest extends
-		BasicResourceTest<FiltersResourceTestUtils, FilterServiceTestUtils, FilterService, ProxyFilter, Filter, Long> {
+		BasicResourceTest<FiltersResourceTestUtils, FilterServiceTestUtils, FilterService, ProxyFilter, Filter> {
 
 	public FiltersResourceTest() {
 

@@ -2,25 +2,19 @@
   "name" : "my task",
   "description" : "my task description",
   "job" : {
-    "id" : 1,
     "mappings" : [ {
-      "id" : 1,
       "name" : "Nr->Nr",
       "transformation" : {
-        "id" : 1,
         "name" : "Nr->Nr transformation component",
         "description" : "Nr->Nr",
         "function" : {
-          "id" : 4,
           "name" : "transformation",
           "type" : "Transformation",
           "components" : [ {
-            "id" : 1,
             "name" : "substring",
             "description" : "Returns a substring",
             "function" : {
               "type" : "Function",
-              "id" : 267,
               "name" : "substring",
               "description" : "Returns a substring",
               "parameters" : [ "start", "end" ],
@@ -39,35 +33,33 @@
                     "optional" : true
                   }
                 }
-              }
+              },
+              "uuid" : "267"
             },
             "parameter_mappings" : {
               "start" : "1",
               "end" : "2"
             },
             "output_components" : [ {
-              "id" : 2,
               "name" : "normalize-utf8",
               "function" : {
                 "type" : "Function",
-                "id" : 260,
                 "name" : "normalize-utf8",
                 "function_description" : {
                   "name" : "normalize-utf8",
                   "dsl" : "metafacture",
                   "reference" : "normalize-utf8"
-                }
+                },
+                "uuid" : "260"
               },
               "input_components" : [ {
-                "id" : 1
+                "uuid" : "1"
               } ],
               "output_components" : [ {
-                "id" : 3,
                 "name" : "htmlanchor",
                 "description" : "Create an HTML anchor.",
                 "function" : {
                   "type" : "Function",
-                  "id" : 257,
                   "name" : "htmlanchor",
                   "description" : "Create an HTML anchor.",
                   "parameters" : [ "prefix", "postfix", "title" ],
@@ -89,41 +81,42 @@
                         "optional" : true
                       }
                     }
-                  }
+                  },
+                  "uuid" : "257"
                 },
                 "input_components" : [ {
-                  "id" : 2
+                  "uuid" : "2"
                 } ],
                 "parameter_mappings" : {
                   "prefix" : "http://av.gl/dmp",
                   "postfix" : "?foo",
                   "title" : "Lorem Ipsum"
-                }
-              } ]
-            } ]
+                },
+                "uuid" : "3"
+              } ],
+              "uuid" : "2"
+            } ],
+            "uuid" : "1"
           }, {
-            "id" : 2,
             "name" : "normalize-utf8",
             "function" : {
               "type" : "Function",
-              "id" : 260,
               "name" : "normalize-utf8",
               "function_description" : {
                 "name" : "normalize-utf8",
                 "dsl" : "metafacture",
                 "reference" : "normalize-utf8"
-              }
+              },
+              "uuid" : "260"
             },
             "input_components" : [ {
-              "id" : 1
+              "uuid" : "1"
             } ],
             "output_components" : [ {
-              "id" : 3,
               "name" : "htmlanchor",
               "description" : "Create an HTML anchor.",
               "function" : {
                 "type" : "Function",
-                "id" : 257,
                 "name" : "htmlanchor",
                 "description" : "Create an HTML anchor.",
                 "parameters" : [ "prefix", "postfix", "title" ],
@@ -145,24 +138,25 @@
                       "optional" : true
                     }
                   }
-                }
+                },
+                "uuid" : "257"
               },
               "input_components" : [ {
-                "id" : 2
+                "uuid" : "2"
               } ],
               "parameter_mappings" : {
                 "prefix" : "http://av.gl/dmp",
                 "postfix" : "?foo",
                 "title" : "Lorem Ipsum"
-              }
-            } ]
+              },
+              "uuid" : "3"
+            } ],
+            "uuid" : "2"
           }, {
-            "id" : 3,
             "name" : "htmlanchor",
             "description" : "Create an HTML anchor.",
             "function" : {
               "type" : "Function",
-              "id" : 257,
               "name" : "htmlanchor",
               "description" : "Create an HTML anchor.",
               "parameters" : [ "prefix", "postfix", "title" ],
@@ -184,144 +178,150 @@
                     "optional" : true
                   }
                 }
-              }
+              },
+              "uuid" : "257"
             },
             "input_components" : [ {
-              "id" : 2
+              "uuid" : "2"
             } ],
             "parameter_mappings" : {
               "prefix" : "http://av.gl/dmp",
               "postfix" : "?foo",
               "title" : "Lorem Ipsum"
-            }
-          } ]
-        }
+            },
+            "uuid" : "3"
+          } ],
+          "uuid" : "4"
+        },
+        "uuid" : "1"
       },
       "input_attribute_paths" : [ {
         "type" : "MappingAttributePathInstance",
         "name" : "input mapping attribute path instance",
-        "id" : 2,
         "attribute_path" : {
-          "id" : 11,
           "attributes" : [ {
-            "id" : 99,
             "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "name" : "feld"
+            "name" : "feld",
+            "uuid" : "99"
           }, {
-            "id" : 98,
             "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
-            "name" : "nr"
-          } ]
-        }
+            "name" : "nr",
+            "uuid" : "98"
+          } ],
+          "uuid" : "11"
+        },
+        "uuid" : "2"
       } ],
       "output_attribute_path" : {
         "type" : "MappingAttributePathInstance",
         "name" : "output mapping attribute path instance",
-        "id" : 3,
         "attribute_path" : {
-          "id" : 11,
           "attributes" : [ {
-            "id" : 99,
             "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "name" : "feld"
+            "name" : "feld",
+            "uuid" : "99"
           }, {
-            "id" : 98,
             "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
-            "name" : "nr"
-          } ]
-        }
-      }
-    } ]
+            "name" : "nr",
+            "uuid" : "98"
+          } ],
+          "uuid" : "11"
+        },
+        "uuid" : "3"
+      },
+      "uuid" : "1"
+    } ],
+    "uuid" : "1"
   },
   "input_data_model" : {
-    "id" : 1,
     "configuration" : {
-      "id" : 1,
       "resources" : [ {
-        "id" : 1
+        "uuid" : "1"
       } ],
       "parameters" : {
         "record_tag" : "record",
         "storage_type" : "xml"
-      }
+      },
+      "uuid" : "1"
     },
     "data_resource" : {
-      "id" : 1,
       "name" : "test-mabxml.xml",
       "type" : "FILE",
       "configurations" : [ {
-        "id" : 1,
         "resources" : [ {
-          "id" : 1
+          "uuid" : "1"
         } ],
         "parameters" : {
           "record_tag" : "record",
           "storage_type" : "xml"
-        }
-      } ]
-    }
+        },
+        "uuid" : "1"
+      } ],
+      "uuid" : "1"
+    },
+    "uuid" : "1"
   },
   "output_data_model" : {
-    "id" : 2,
     "name" : "my output data model",
     "description" : "my output data model description",
     "schema" : {
-      "id" : 2,
       "name" : "my schema",
       "attribute_paths" : [ {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_0",
-        "id" : 0,
         "attribute_path" : {
-          "id" : 11,
           "attributes" : [ {
-            "id" : 90,
             "uri" : "http://purl.org/dc/terms/created",
-            "name" : "created"
-          } ]
-        }
+            "name" : "created",
+            "uuid" : "90"
+          } ],
+          "uuid" : "11"
+        },
+        "uuid" : "0"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_1",
-        "id" : 1,
         "attribute_path" : {
-          "id" : 9,
           "attributes" : [ {
-            "id" : 86,
             "uri" : "http://purl.org/dc/terms/title",
-            "name" : "title"
+            "name" : "title",
+            "uuid" : "86"
           }, {
-            "id" : 87,
             "uri" : "http://purl.org/dc/terms/hasPart",
-            "name" : "hasPart"
+            "name" : "hasPart",
+            "uuid" : "87"
           }, {
-            "id" : 86,
             "uri" : "http://purl.org/dc/terms/title",
-            "name" : "title"
-          } ]
-        }
+            "name" : "title",
+            "uuid" : "86"
+          } ],
+          "uuid" : "9"
+        },
+        "uuid" : "1"
       }, {
         "type" : "SchemaAttributePathInstance",
         "name" : "sapi_2",
-        "id" : 2,
         "attribute_path" : {
-          "id" : 10,
           "attributes" : [ {
-            "id" : 88,
             "uri" : "http://purl.org/dc/terms/creator",
-            "name" : "creator"
+            "name" : "creator",
+            "uuid" : "88"
           }, {
-            "id" : 89,
             "uri" : "http://xmlns.com/foaf/0.1/name",
-            "name" : "name"
-          } ]
-        }
+            "name" : "name",
+            "uuid" : "89"
+          } ],
+          "uuid" : "10"
+        },
+        "uuid" : "2"
       } ],
       "record_class" : {
-        "id" : 21,
         "uri" : "http://purl.org/ontology/bibo/Document",
-        "name" : "document"
-      }
-    }
+        "name" : "document",
+        "uuid" : "21"
+      },
+      "uuid" : "2"
+    },
+    "uuid" : "2"
   }
 }

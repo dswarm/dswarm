@@ -23,7 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
-import org.dswarm.persistence.model.schema.NameSpacePrefixRegistry;
+import org.dswarm.persistence.model.schema.utils.NameSpacePrefixRegistry;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.service.schema.test.utils.AttributePathServiceTestUtils;

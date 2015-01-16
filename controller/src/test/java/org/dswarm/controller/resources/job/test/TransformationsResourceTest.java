@@ -36,7 +36,7 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class TransformationsResourceTest
 		extends
-		BasicResourceTest<TransformationsResourceTestUtils, TransformationServiceTestUtils, TransformationService, ProxyTransformation, Transformation, Long> {
+		BasicResourceTest<TransformationsResourceTestUtils, TransformationServiceTestUtils, TransformationService, ProxyTransformation, Transformation> {
 
 	private FunctionsResourceTestUtils functionsResourceTestUtils;
 
@@ -142,7 +142,7 @@ public class TransformationsResourceTest
 				expectedTransformation);
 
 		Assert.assertNotNull("the transformation JSON string shouldn't be null", updateTransformation);
-		Assert.assertEquals("transformation id shoud be equal", updateTransformation.getId(), persistedTransformation.getId());
+		Assert.assertEquals("transformation id shoud be equal", updateTransformation.getUuid(), persistedTransformation.getUuid());
 		Assert.assertEquals("transformation name shoud be equal", updateTransformation.getName(), updateTransformationNameString);
 		Assert.assertEquals("transformation description shoud be equal", updateTransformation.getDescription(),
 				updateTransformationDescriptionString);

@@ -1,13 +1,13 @@
 {
-    "type": "MappingAttributePathInstance",
-    "name": "input mapping attribute path instance",
-    "id": 1,
-    "attribute_path": {
-        "id": 1,
-        "attributes": [{
-            "name": "title",
-            "uri": "http://purl.org/dc/terms/title",
-            "id": 1
-        }]
-    }
+  "type" : "MappingAttributePathInstance",
+  "name" : "input mapping attribute path instance",
+  "attribute_path" : {
+    "attributes" : [ {
+      "name" : "title",
+      "uri" : "http://purl.org/dc/terms/title",
+      "uuid" : "1"
+    } ],
+    "uuid" : "1"
+  },
+  "uuid" : "1"
 }

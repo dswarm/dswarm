@@ -16,6 +16,7 @@
 package org.dswarm.controller.resources.schema;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -27,6 +28,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -35,8 +37,6 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
 import org.dswarm.controller.DMPControllerException;
-import org.dswarm.controller.resources.schema.utils.MappingAttributePathInstancesResourceUtils;
-import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
 import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxyMappingAttributePathInstance;
@@ -52,21 +52,23 @@ import org.dswarm.persistence.service.schema.MappingAttributePathInstanceService
 @Path("mappingattributepathinstances")
 public class MappingAttributePathInstancesResource
 		extends
-		AttributePathInstancesResource<MappingAttributePathInstancesResourceUtils, MappingAttributePathInstanceService, ProxyMappingAttributePathInstance, MappingAttributePathInstance> {
+		AttributePathInstancesResource<MappingAttributePathInstanceService, ProxyMappingAttributePathInstance, MappingAttributePathInstance> {
 
 	/**
 	 * Creates a new resource (controller service) for {@link MappingAttributePathInstance}s with the provider of the mapping
 	 * attribute path instance persistence service, the object mapper and metrics registry.
 	 *
-	 * @param utilsFactory
+	 * @param persistenceServiceProviderArg
+	 * @param objectMapperProviderArg
 	 * @param dmpStatusArg
 	 * @throws DMPControllerException
 	 */
 	@Inject
-	public MappingAttributePathInstancesResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg)
+	public MappingAttributePathInstancesResource(final Provider<MappingAttributePathInstanceService> persistenceServiceProviderArg,
+			final Provider<ObjectMapper> objectMapperProviderArg, final DMPStatus dmpStatusArg)
 			throws DMPControllerException {
 
-		super(utilsFactory.reset().get(MappingAttributePathInstancesResourceUtils.class), dmpStatusArg);
+		super(MappingAttributePathInstance.class, persistenceServiceProviderArg, objectMapperProviderArg, dmpStatusArg);
 	}
 
 	/**
@@ -85,7 +87,7 @@ public class MappingAttributePathInstancesResource
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "mapping attribute path instance identifier", required = true) @PathParam("id") final Long id)
+	public Response getObject(@ApiParam(value = "mapping attribute path instance identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.getObject(id);
@@ -135,7 +137,7 @@ public class MappingAttributePathInstancesResource
 	 * instance in the database.
 	 *
 	 * @param jsonObjectString a JSON representation of one mapping attribute path instance
-	 * @param id               a mapping attribute path instance identifier
+	 * @param uuid             a mapping attribute path instance identifier
 	 * @return the updated mapping attribute path instance as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -149,10 +151,10 @@ public class MappingAttributePathInstancesResource
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateObject(@ApiParam(value = "mapping attribute path instance (as JSON)", required = true) final String jsonObjectString,
-			@ApiParam(value = "mapping attribute path instance identifier", required = true) @PathParam("id") final Long id)
+			@ApiParam(value = "mapping attribute path instance identifier", required = true) @PathParam("id") final String uuid)
 			throws DMPControllerException {
 
-		return super.updateObject(jsonObjectString, id);
+		return super.updateObject(jsonObjectString, uuid);
 	}
 
 	/**
@@ -174,7 +176,7 @@ public class MappingAttributePathInstancesResource
 	@DELETE
 	@Path("/{id}")
 	@Override
-	public Response deleteObject(@ApiParam(value = "mapping attribute path instance identifier", required = true) @PathParam("id") final Long id)
+	public Response deleteObject(@ApiParam(value = "mapping attribute path instance identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.deleteObject(id);

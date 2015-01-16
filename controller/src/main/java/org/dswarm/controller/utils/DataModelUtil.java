@@ -48,19 +48,19 @@ import org.dswarm.persistence.service.schema.SchemaService;
 /**
  * A utility class for working with data ({@link Model}) and {@link Schema} of a {@link DataModel} (and other related parts of a
  * data model, .e.g, {@link Resource}s).
- * 
+ *
  * @author phorn
  * @author tgaengler
  */
 @Singleton
 public class DataModelUtil {
 
-	private static final Logger							LOG	= LoggerFactory.getLogger(DataModelUtil.class);
-	private final ObjectMapper							objectMapper;
-	private final Provider<ResourceService>				resourceServiceProvider;
-	private final Provider<InternalModelServiceFactory>	internalServiceFactoryProvider;
-	private final Provider<SchemaService>				schemaServiceProvider;
-	private final Provider<DataModelService>			dataModelServiceProvider;
+	private static final Logger LOG = LoggerFactory.getLogger(DataModelUtil.class);
+	private final ObjectMapper                          objectMapper;
+	private final Provider<ResourceService>             resourceServiceProvider;
+	private final Provider<InternalModelServiceFactory> internalServiceFactoryProvider;
+	private final Provider<SchemaService>               schemaServiceProvider;
+	private final Provider<DataModelService>            dataModelServiceProvider;
 
 	@Inject
 	public DataModelUtil(final ObjectMapper objectMapper, final Provider<ResourceService> resourceServiceProvider,
@@ -75,26 +75,26 @@ public class DataModelUtil {
 
 	/**
 	 * Gets the data of the given data model.
-	 * 
-	 * @param dataModelId the identifier of the data model.
+	 *
+	 * @param dataModelUuid the identifier of the data model.
 	 * @return the data of the given data model
 	 */
-	public Optional<Iterator<Tuple<String, JsonNode>>> getData(final long dataModelId) {
-		return getData(dataModelId, Optional.<Integer> absent());
+	public Optional<Iterator<Tuple<String, JsonNode>>> getData(final String dataModelUuid) {
+		return getData(dataModelUuid, Optional.<Integer>absent());
 	}
 
 	/**
 	 * Gets the data of the given data model and maximum in the given amount.
-	 * 
-	 * @param dataModelId the identifer of the data model
-	 * @param atMost the number of records that should be retrieved
+	 *
+	 * @param dataModelUuid the identifer of the data model
+	 * @param atMost        the number of records that should be retrieved
 	 * @return the data of the given data model
 	 */
-	public Optional<Iterator<Tuple<String, JsonNode>>> getData(final long dataModelId, final Optional<Integer> atMost) {
+	public Optional<Iterator<Tuple<String, JsonNode>>> getData(final String dataModelUuid, final Optional<Integer> atMost) {
 
-		DataModelUtil.LOG.debug(String.format("try to get data for data model with id [%d]", dataModelId));
+		DataModelUtil.LOG.debug(String.format("try to get data for data model with id [%s]", dataModelUuid));
 
-		final Optional<Configuration> configurationOptional = fetchConfiguration(dataModelId);
+		final Optional<Configuration> configurationOptional = fetchConfiguration(dataModelUuid);
 
 		if (!configurationOptional.isPresent()) {
 
@@ -112,7 +112,7 @@ public class DataModelUtil {
 
 		try {
 
-			maybeTriples = internalService.getObjects(dataModelId, atMost);
+			maybeTriples = internalService.getObjects(dataModelUuid, atMost);
 		} catch (final DMPPersistenceException e1) {
 
 			DataModelUtil.LOG.debug("couldn't find data", e1);
@@ -130,9 +130,9 @@ public class DataModelUtil {
 		return Optional.of(dataIterator(iterator));
 	}
 
-	public Optional<ObjectNode> getSchema(final long dataModelId) {
+	public Optional<ObjectNode> getSchema(final String dataModelUuid) {
 
-		final Optional<Configuration> configurationOptional = fetchConfiguration(dataModelId);
+		final Optional<Configuration> configurationOptional = fetchConfiguration(dataModelUuid);
 
 		if (!configurationOptional.isPresent()) {
 
@@ -150,7 +150,7 @@ public class DataModelUtil {
 		Optional<Schema> schemaOptional = null;
 		try {
 
-			schemaOptional = internalService.getSchema(dataModelId);
+			schemaOptional = internalService.getSchema(dataModelUuid);
 		} catch (final DMPPersistenceException e) {
 
 			DataModelUtil.LOG.error("something went wrong while schema retrieval", e);
@@ -190,65 +190,65 @@ public class DataModelUtil {
 
 	/**
 	 * Gets the resource for the given resource identifier.
-	 * 
-	 * @param resourceId a resource identifier
+	 *
+	 * @param resourceUuid a resource identifier
 	 * @return (optional) the matched resource
 	 */
-	public Optional<Resource> fetchResource(final long resourceId) {
+	public Optional<Resource> fetchResource(final String resourceUuid) {
 
 		final ResourceService resourceService = resourceServiceProvider.get();
-		final Resource resource = resourceService.getObject(resourceId);
+		final Resource resource = resourceService.getObject(resourceUuid);
 
 		return Optional.fromNullable(resource);
 	}
 
 	/**
 	 * Gets the data model for the given data model identifier.
-	 * 
-	 * @param dataModelId a data model identifier
+	 *
+	 * @param dataModelUuid a data model identifier
 	 * @return (optional) the matched data model
 	 */
-	public Optional<DataModel> fetchDataModel(final long dataModelId) {
+	public Optional<DataModel> fetchDataModel(final String dataModelUuid) {
 
 		final DataModelService dataModelService = dataModelServiceProvider.get();
-		final DataModel dataModel = dataModelService.getObject(dataModelId);
+		final DataModel dataModel = dataModelService.getObject(dataModelUuid);
 
 		return Optional.fromNullable(dataModel);
 	}
 
 	/**
 	 * Gets the configuration for the given resource identifier and configuration identifier
-	 * 
-	 * @param resourceId a resource identifier
-	 * @param configurationId a configuration identifier
+	 *
+	 * @param resourceUuid      a resource identifier
+	 * @param configurationUuid a configuration identifier
 	 * @return (optional) the matched configuration
 	 */
-	public Optional<Configuration> fetchConfiguration(final long resourceId, final long configurationId) {
-		final Optional<Resource> resourceOptional = fetchResource(resourceId);
+	public Optional<Configuration> fetchConfiguration(final String resourceUuid, final String configurationUuid) {
+		final Optional<Resource> resourceOptional = fetchResource(resourceUuid);
 
 		if (!resourceOptional.isPresent()) {
 
-			DataModelUtil.LOG.debug("couldn't find  resource '" + resourceId);
+			DataModelUtil.LOG.debug("couldn't find  resource '" + resourceUuid);
 			return Optional.absent();
 		}
 
-		final Configuration configuration = resourceOptional.get().getConfiguration(configurationId);
+		final Configuration configuration = resourceOptional.get().getConfiguration(configurationUuid);
 
 		return Optional.fromNullable(configuration);
 	}
 
 	/**
 	 * Gets the related configuration for the given data model identifier.
-	 * 
-	 * @param dataModelId a data model identifier
+	 *
+	 * @param dataModelUuid a data model identifier
 	 * @return (optional) the matched configuration
 	 */
-	public Optional<Configuration> fetchConfiguration(final long dataModelId) {
-		final Optional<DataModel> dataModelOptional = fetchDataModel(dataModelId);
+	public Optional<Configuration> fetchConfiguration(final String dataModelUuid) {
+		final Optional<DataModel> dataModelOptional = fetchDataModel(dataModelUuid);
 
 		if (!dataModelOptional.isPresent()) {
 
-			DataModelUtil.LOG.debug("couldn't find data model '" + dataModelId + "'");
+			DataModelUtil.LOG.debug("couldn't find data model '" + dataModelUuid + "'");
 			return Optional.absent();
 		}
 
@@ -259,13 +259,13 @@ public class DataModelUtil {
 
 	/**
 	 * Deletes the resource for the given resource identifier.
-	 * 
-	 * @param resourceId a resource identifier
+	 *
+	 * @param resourceUuid a resource identifier
 	 */
-	public void deleteResource(final long resourceId) {
+	public void deleteResource(final String resourceUuid) {
 
 		final ResourceService resourceService = resourceServiceProvider.get();
-		resourceService.deleteObject(resourceId);
+		resourceService.deleteObject(resourceUuid);
 
 	}
 
@@ -283,7 +283,7 @@ public class DataModelUtil {
 			} else if ("csv".equals(storageType.asText())) {
 
 				return internalServiceFactoryProvider.get().getInternalGDMGraphService();
-			} else if ("xml".equals(storageType.asText()) || "mabxml".equals(storageType.asText())) {
+			} else if ("xml".equals(storageType.asText()) || "mabxml".equals(storageType.asText()) || "marc21".equals(storageType.asText())) {
 
 				return internalServiceFactoryProvider.get().getInternalGDMGraphService();
 			} else {

@@ -42,6 +42,7 @@ import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.ResourceType;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
+import org.dswarm.persistence.model.resource.utils.DataModelUtils;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
@@ -161,9 +162,9 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		// write model and retrieve tuples
 		final InternalGDMGraphService gdmService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
-		gdmService.createObject(updatedInputDataModel.getId(), gdmModel);
+		gdmService.createObject(updatedInputDataModel.getUuid(), gdmModel);
 
-		final Optional<Map<String, Model>> optionalModelMap = gdmService.getObjects(updatedInputDataModel.getId(), Optional.<Integer>absent());
+		final Optional<Map<String, Model>> optionalModelMap = gdmService.getObjects(updatedInputDataModel.getUuid(), Optional.<Integer>absent());
 
 		Assert.assertTrue("there is no map of entry models in the database", optionalModelMap.isPresent());
 
@@ -192,8 +193,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
 		taskJSON.set("input_data_model", inputDataModelJSON);
 
-		// manipulate output data model (output data model = internal model (for now))
-		final long internalModelId = 2;
+		final String internalModelId = DataModelUtils.BIBO_DOCUMENT_DATA_MODEL_UUID;
 		final DataModel outputDataModel = dataModelService.getObject(internalModelId);
 		final String outputDataModelJSONString = objectMapper.writeValueAsString(outputDataModel);
 		final ObjectNode outputDataModelJSON = objectMapper.readValue(outputDataModelJSONString, ObjectNode.class);
@@ -215,7 +215,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		compareResults(expected, actual);
 
 		// retrieve updated fresh data model
-		final DataModel freshInputDataModel = dataModelService.getObject(updatedInputDataModel.getId());
+		final DataModel freshInputDataModel = dataModelService.getObject(updatedInputDataModel.getUuid());
 
 		Assert.assertNotNull("the fresh data model shouldn't be null", freshInputDataModel);
 		Assert.assertNotNull("the schema of the fresh data model shouldn't be null", freshInputDataModel.getSchema());

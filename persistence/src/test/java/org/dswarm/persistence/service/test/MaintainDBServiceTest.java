@@ -28,6 +28,20 @@ import org.dswarm.persistence.service.MaintainDBService;
 public class MaintainDBServiceTest extends GuicedTest {
 
 	@Test
+	public void testResetDB() {
+
+		final MaintainDBService maintainDBService = GuicedTest.injector.getInstance(MaintainDBService.class);
+
+		try {
+
+			maintainDBService.resetDB();
+		} catch (final DMPPersistenceException e) {
+
+			Assert.assertFalse(true);
+		}
+	}
+
+	@Test
 	public void testTruncateTables() {
 
 		final MaintainDBService maintainDBService = GuicedTest.injector.getInstance(MaintainDBService.class);

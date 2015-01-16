@@ -1,5 +1,5 @@
 {
-    "id": 18,
-    "name": "document",
-    "uri": "http://purl.org/ontology/bibo/Document"
+  "name" : "document",
+  "uri" : "http://purl.org/ontology/bibo/Document",
+  "uuid" : "18"
 }

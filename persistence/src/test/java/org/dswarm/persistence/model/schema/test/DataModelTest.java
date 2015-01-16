@@ -33,13 +33,14 @@ import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class DataModelTest extends GuicedTest {
 
-	private static final Logger	LOG				= LoggerFactory.getLogger(DataModelTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DataModelTest.class);
 
-	private final ObjectMapper	objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleDataModelTest() {
@@ -56,7 +57,9 @@ public class DataModelTest extends GuicedTest {
 
 		final Attribute dctermsHasPart = createAttribute(dctermsHasPartId, dctermsHasPartName);
 
-		final AttributePath attributePath1 = new AttributePath();
+		final String attributePath1UUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath attributePath1 = new AttributePath(attributePath1UUID);
 		// attributePath1.setId(UUID.randomUUID().toString());
 
 		attributePath1.addAttribute(dctermsTitle);
@@ -75,7 +78,9 @@ public class DataModelTest extends GuicedTest {
 
 		final Attribute foafName = createAttribute(foafNameId, foafNameName);
 
-		final AttributePath attributePath2 = new AttributePath();
+		final String attributePath2UUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath attributePath2 = new AttributePath(attributePath2UUID);
 		// attributePath2.setId(UUID.randomUUID().toString());
 
 		attributePath2.addAttribute(dctermsCreator);
@@ -88,7 +93,9 @@ public class DataModelTest extends GuicedTest {
 
 		final Attribute dctermsCreated = createAttribute(dctermsCreatedId, dctermsCreatedName);
 
-		final AttributePath attributePath3 = new AttributePath();
+		final String attributePath3UUID = UUIDService.getUUID(AttributePath.class.getSimpleName());
+
+		final AttributePath attributePath3 = new AttributePath(attributePath3UUID);
 		// attributePath3.setId(UUID.randomUUID().toString());
 
 		attributePath3.addAttribute(dctermsCreated);
@@ -98,11 +105,15 @@ public class DataModelTest extends GuicedTest {
 		final String biboDocumentId = "http://purl.org/ontology/bibo/Document";
 		final String biboDocumentName = "document";
 
-		final Clasz biboDocument = new Clasz(biboDocumentId, biboDocumentName);
+		final String uuid = UUIDService.getUUID(Clasz.class.getSimpleName());
+
+		final Clasz biboDocument = new Clasz(uuid, biboDocumentId, biboDocumentName);
 
 		// schema
 
-		final Schema schema = new Schema();
+		final String schemaUUID = UUIDService.getUUID(Schema.class.getSimpleName());
+
+		final Schema schema = new Schema(schemaUUID);
 		// schema.setId(UUID.randomUUID().toString());
 
 		schema.addAttributePath(createAttributePathInstance(attributePath1));
@@ -110,8 +121,10 @@ public class DataModelTest extends GuicedTest {
 		schema.addAttributePath(createAttributePathInstance(attributePath3));
 		schema.setRecordClass(biboDocument);
 
+		final String resourceUUID = UUIDService.getUUID(Resource.class.getSimpleName());
+
 		// data resource
-		final Resource resource = new Resource();
+		final Resource resource = new Resource(resourceUUID);
 
 		resource.setName("bla");
 		resource.setDescription("blubblub");
@@ -125,8 +138,10 @@ public class DataModelTest extends GuicedTest {
 
 		resource.setAttributes(attributes);
 
+		final String configurationUUID = UUIDService.getUUID(Configuration.class.getSimpleName());
+
 		// configuration
-		final Configuration configuration = new Configuration();
+		final Configuration configuration = new Configuration(configurationUUID);
 
 		configuration.setName("my configuration");
 		configuration.setDescription("configuration description");
@@ -140,8 +155,10 @@ public class DataModelTest extends GuicedTest {
 
 		resource.addConfiguration(configuration);
 
+		final String dataModelUUID = UUIDService.getUUID(DataModel.class.getSimpleName());
+
 		// data model
-		final DataModel dataModel = new DataModel();
+		final DataModel dataModel = new DataModel(dataModelUUID);
 		dataModel.setName("my data model");
 		dataModel.setDescription("my data model description");
 		dataModel.setDataResource(resource);
@@ -161,21 +178,26 @@ public class DataModelTest extends GuicedTest {
 		DataModelTest.LOG.debug("data model json: " + json);
 	}
 
-	private Attribute createAttribute(final String id, final String name) {
+	private Attribute createAttribute(final String uri, final String name) {
 
-		final Attribute attribute = new Attribute(id);
+		final String uuid = UUIDService.getUUID(Attribute.class.getSimpleName());
+
+		final Attribute attribute = new Attribute(uuid, uri);
 		attribute.setName(name);
 
-		Assert.assertNotNull("the attribute id shouldn't be null", attribute.getUri());
-		Assert.assertEquals("the attribute ids are not equal", id, attribute.getUri());
+		Assert.assertNotNull("the attribute uri shouldn't be null", attribute.getUri());
+		Assert.assertEquals("the attribute uris are not equal", uri, attribute.getUri());
 		Assert.assertNotNull("the attribute name shouldn't be null", attribute.getName());
 		Assert.assertEquals("the attribute names are not equal", name, attribute.getName());
 
 		return attribute;
 	}
-	
+
 	private static SchemaAttributePathInstance createAttributePathInstance(final AttributePath attributePath) {
-		final SchemaAttributePathInstance attributePathInstance = new SchemaAttributePathInstance();
+
+		final String attributePathInstanceUUID = UUIDService.getUUID(SchemaAttributePathInstance.class.getSimpleName());
+
+		final SchemaAttributePathInstance attributePathInstance = new SchemaAttributePathInstance(attributePathInstanceUUID);
 		attributePathInstance.setAttributePath(attributePath);
 
 		Assert.assertNotNull("the attribute path should not be null", attributePathInstance.getAttributePath());

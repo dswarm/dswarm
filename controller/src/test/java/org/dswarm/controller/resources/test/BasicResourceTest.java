@@ -44,10 +44,9 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
  * @param <POJOCLASSRESOURCETESTUTILS>
  * @param <POJOCLASSPERSISTENCESERVICE>
  * @param <POJOCLASS>
- * @param <POJOCLASSIDTYPE>
  * @author tgaengler
  */
-public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTILS, POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSPERSISTENCESERVICETESTUTILS extends BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE>
+public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTILS, POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS>, POJOCLASSPERSISTENCESERVICETESTUTILS extends BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS>, POJOCLASS extends DMPObject>
 		extends ResourceTest {
 
 	private static final Logger LOG = LoggerFactory.getLogger(BasicResourceTest.class);
@@ -159,7 +158,7 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 
 		final POJOCLASS persistedObject = createObjectInternal();
 
-		final String idEncoded = URLEncoder.encode(persistedObject.getId().toString(), "UTF-8");
+		final String idEncoded = URLEncoder.encode(persistedObject.getUuid(), "UTF-8");
 
 		Assert.assertNotNull("the id shouldn't be null", idEncoded);
 
@@ -192,12 +191,12 @@ public abstract class BasicResourceTest<POJOCLASSRESOURCETESTUTILS extends Basic
 
 		final POJOCLASS actualObject = createObjectInternal();
 
-		final POJOCLASSIDTYPE objectId = actualObject.getId();
+		final String objectId = actualObject.getUuid();
 		String idEncoded = null;
 
 		try {
 
-			idEncoded = URLEncoder.encode(actualObject.getId().toString(), "UTF-8");
+			idEncoded = URLEncoder.encode(objectId, "UTF-8");
 		} catch (final UnsupportedEncodingException e) {
 
 			BasicResourceTest.LOG.debug("couldn't encode id", e);

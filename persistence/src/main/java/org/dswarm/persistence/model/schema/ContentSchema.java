@@ -52,7 +52,7 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 /**
  * A content schema is a schema that builds on top of a structure schema (meta data model), e.g., 'mabxml' is a structure schema
  * for 'mab', which is a content schema.
- * 
+ *
  * @author tgaengler
  */
 @XmlRootElement
@@ -65,9 +65,9 @@ public class ContentSchema extends BasicDMPJPAObject {
 	/**
 	 *
 	 */
-	private static final long			serialVersionUID					= 1L;
+	private static final long serialVersionUID = 1L;
 
-	private static final Logger			LOG									= LoggerFactory.getLogger(AttributePath.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AttributePath.class);
 
 	/**
 	 * The value attribute path of the content schema.
@@ -75,7 +75,7 @@ public class ContentSchema extends BasicDMPJPAObject {
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "RECORD_IDENTIFIER_ATTRIBUTE_PATH")
 	@XmlElement(name = "record_identifier_attribute_path")
-	private AttributePath				recordIdentifierAttributePath;
+	private AttributePath recordIdentifierAttributePath;
 
 	/**
 	 * All utilised attribute path of the key attribute paths.
@@ -83,26 +83,28 @@ public class ContentSchema extends BasicDMPJPAObject {
 	@JsonIgnore
 	@Access(AccessType.FIELD)
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinTable(name = "CONTENT_SCHEMAS_KEY_ATTRIBUTE_PATHS", joinColumns = { @JoinColumn(name = "CONTENT_SCHEMA_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "ATTRIBUTE_PATH_ID", referencedColumnName = "ID") })
-	private Set<AttributePath>			utilisedKeyAttributePaths;
+	@JoinTable(name = "CONTENT_SCHEMAS_KEY_ATTRIBUTE_PATHS",
+			joinColumns = { @JoinColumn(name = "CONTENT_SCHEMA_UUID", referencedColumnName = "UUID") },
+			inverseJoinColumns = { @JoinColumn(name = "ATTRIBUTE_PATH_UUID", referencedColumnName = "UUID") })
+	private Set<AttributePath> utilisedKeyAttributePaths;
 
 	/**
 	 * all attribute paths of the key attribute paths as ordered list.
 	 */
 	@Transient
-	private LinkedList<AttributePath>	orderedKeyAttributePaths;
+	private LinkedList<AttributePath> orderedKeyAttributePaths;
 
 	/**
 	 * A JSON object of the ordered list of key attribute paths.
 	 */
 	@Transient
-	private ArrayNode					orderedKeyAttributePathsJSON;
+	private ArrayNode orderedKeyAttributePathsJSON;
 
 	/**
 	 * A flag that indicates, whether the key attribute paths are initialised or not.
 	 */
 	@Transient
-	private boolean						orderedKeyAttributePathsInitialized;
+	private boolean orderedKeyAttributePathsInitialized;
 
 	/**
 	 * A string that holds the serialised JSON object of the key attribute paths (ordered list of attribute paths).
@@ -110,8 +112,8 @@ public class ContentSchema extends BasicDMPJPAObject {
 	@JsonIgnore
 	@Lob
 	@Access(AccessType.FIELD)
-	@Column(name = "KEY_ATTRIBUTE_PATHS", columnDefinition = "VARCHAR(4000)", length = 4000)
-	private String						keyAttributePaths;
+	@Column(name = "KEY_ATTRIBUTE_PATHS", columnDefinition = "BLOB")
+	private String keyAttributePaths;
 
 	/**
 	 * The value attribute path of the content schema.
@@ -119,24 +121,31 @@ public class ContentSchema extends BasicDMPJPAObject {
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "VALUE_ATTRIBUTE_PATH")
 	@XmlElement(name = "value_attribute_path")
-	private AttributePath				valueAttributePath;
+	private AttributePath valueAttributePath;
 
 	/**
 	 * Creates a new content schema.
 	 */
-	public ContentSchema() {
+	protected ContentSchema() {
 
+	}
+
+	public ContentSchema(final String uuid) {
+
+		super(uuid);
 	}
 
 	/**
 	 * Creates a new content schema with the given ordered list of key attribute paths and the value attribute path.
 	 *
 	 * @param recordIdentifierAttributePathArg the attribute path where the (legacy) record identifier is located
-	 * @param keyAttributePathsArg an ordered list of key attribute paths
-	 * @param valueAttributePath the attribute path where the values are located
+	 * @param keyAttributePathsArg             an ordered list of key attribute paths
+	 * @param valueAttributePath               the attribute path where the values are located
 	 */
-	public ContentSchema(final AttributePath recordIdentifierAttributePathArg, final LinkedList<AttributePath> keyAttributePathsArg, final AttributePath valueAttributePath) {
+	public ContentSchema(final String uuid, final AttributePath recordIdentifierAttributePathArg,
+			final LinkedList<AttributePath> keyAttributePathsArg, final AttributePath valueAttributePath) {
 
+		super(uuid);
 		setRecordIdentifierAttributePath(recordIdentifierAttributePathArg);
 		setKeyAttributePaths(keyAttributePathsArg);
 		setValueAttributePath(valueAttributePath);
@@ -166,7 +175,7 @@ public class ContentSchema extends BasicDMPJPAObject {
 	 * Gets the utilised attribute paths of the ordered list of key attribute paths.<br/>
 	 * note: this is not the ordered list of key attribute paths, i.e., the key attribute paths; these are only the utilised
 	 * attribute paths, i.e., an attribute path can occur multiple times in the ordered list of key attribute paths.
-	 * 
+	 *
 	 * @return the utilised attribute paths of the key attribute paths
 	 */
 	public Set<AttributePath> getUtilisedKeyAttributePaths() {
@@ -176,7 +185,7 @@ public class ContentSchema extends BasicDMPJPAObject {
 
 	/**
 	 * Gets the key attribute paths, i.e., the ordered list of attribute paths.
-	 * 
+	 *
 	 * @return the key attribute paths
 	 */
 	@XmlElement(name = "key_attribute_paths")
@@ -189,7 +198,7 @@ public class ContentSchema extends BasicDMPJPAObject {
 
 	/**
 	 * Sets the key attribute paths (ordered list of attribute paths).
-	 * 
+	 *
 	 * @param keyAttributePathsArg new key attribute paths (ordered list of attribute paths)
 	 */
 	@XmlElement(name = "key_attribute_paths")
@@ -234,7 +243,7 @@ public class ContentSchema extends BasicDMPJPAObject {
 	/**
 	 * Adds a new key attribute path to the end of the ordered list of key attribute paths.<br>
 	 * Created by: tgaengler
-	 * 
+	 *
 	 * @param keyAttributePathArg a new key attribute path
 	 */
 	public void addKeyAttributePath(final AttributePath keyAttributePathArg) {
@@ -254,7 +263,7 @@ public class ContentSchema extends BasicDMPJPAObject {
 
 	/**
 	 * Gets the value attribute path of the content schema.
-	 * 
+	 *
 	 * @return the value attribute path of the content schema
 	 */
 	public AttributePath getValueAttributePath() {
@@ -264,7 +273,7 @@ public class ContentSchema extends BasicDMPJPAObject {
 
 	/**
 	 * Sets the value attribute path of the content schema.
-	 * 
+	 *
 	 * @param valueAttributePathArg a new value attribute path
 	 */
 	public void setValueAttributePath(final AttributePath valueAttributePathArg) {
@@ -296,8 +305,8 @@ public class ContentSchema extends BasicDMPJPAObject {
 	/**
 	 * Adds a new key attribute path to the given position in the ordered list of key attribute paths.<br>
 	 * Created by: tgaengler
-	 * 
-	 * @param keyAttributePathArg a new key attribute path
+	 *
+	 * @param keyAttributePathArg   a new key attribute path
 	 * @param keyAttributePathIndex the position of the key attribute path in the ordered list of key attribute paths
 	 */
 	protected void addKeyAttributePath(final AttributePath keyAttributePathArg, final int keyAttributePathIndex) {
@@ -321,15 +330,16 @@ public class ContentSchema extends BasicDMPJPAObject {
 	/**
 	 * Removes an existing key attribute path from the key attribute paths.<br>
 	 * Created by: tgaengler
-	 * 
-	 * @param keyAttributePath an existing key attribute path that should be removed
+	 *
+	 * @param keyAttributePath      an existing key attribute path that should be removed
 	 * @param keyAttributePathIndex the position of the key attribute path in the ordered list of key attribute paths
 	 */
 	public void removeKeyAttributePath(final AttributePath keyAttributePath, final int keyAttributePathIndex) {
 
 		if (keyAttributePath != null
-				&& ((orderedKeyAttributePaths != null && orderedKeyAttributePaths.contains(keyAttributePath)) || (utilisedKeyAttributePaths != null && utilisedKeyAttributePaths
-						.contains(keyAttributePath)))) {
+				&& ((orderedKeyAttributePaths != null && orderedKeyAttributePaths.contains(keyAttributePath)) || (utilisedKeyAttributePaths != null
+				&& utilisedKeyAttributePaths
+				.contains(keyAttributePath)))) {
 
 			orderedKeyAttributePaths.remove(keyAttributePathIndex);
 
@@ -340,13 +350,6 @@ public class ContentSchema extends BasicDMPJPAObject {
 
 			refreshKeyAttributePathsString();
 		}
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-
-		return ContentSchema.class.isInstance(obj) && super.equals(obj);
-
 	}
 
 	/**
@@ -361,7 +364,7 @@ public class ContentSchema extends BasicDMPJPAObject {
 
 			for (final AttributePath keyAttributePath : orderedKeyAttributePaths) {
 
-				orderedKeyAttributePathsJSON.add(keyAttributePath.getId());
+				orderedKeyAttributePathsJSON.add(keyAttributePath.getUuid());
 			}
 		}
 
@@ -377,7 +380,7 @@ public class ContentSchema extends BasicDMPJPAObject {
 	/**
 	 * Initialises the key attribute paths, collection of attribute paths and JSON object from the string that holds the
 	 * serialised JSON object of the key attribute paths.
-	 * 
+	 *
 	 * @param fromScratch flag that indicates, whether the key attribute paths should be initialised from scratch or not
 	 */
 	private void initKeyAttributePaths(final boolean fromScratch) {
@@ -386,7 +389,7 @@ public class ContentSchema extends BasicDMPJPAObject {
 
 			if (keyAttributePaths == null) {
 
-				ContentSchema.LOG.debug("key attribute paths JSON is null for content schema '" + getId() + "'");
+				ContentSchema.LOG.debug("key attribute paths JSON is null for content schema '" + getUuid() + "'");
 
 				if (fromScratch) {
 
@@ -410,7 +413,7 @@ public class ContentSchema extends BasicDMPJPAObject {
 
 					for (final JsonNode keyAttributePathIdNode : orderedKeyAttributePathsJSON) {
 
-						final AttributePath keyAttributePath = getKeyAttributePath(keyAttributePathIdNode.asLong());
+						final AttributePath keyAttributePath = getKeyAttributePath(keyAttributePathIdNode.asText());
 
 						if (null != keyAttributePath) {
 
@@ -420,7 +423,7 @@ public class ContentSchema extends BasicDMPJPAObject {
 				}
 			} catch (final DMPException e) {
 
-				ContentSchema.LOG.debug("couldn't parse key attribute paths JSON for content schema '" + getId() + "'");
+				ContentSchema.LOG.debug("couldn't parse key attribute paths JSON for content schema '" + getUuid() + "'");
 			}
 
 			orderedKeyAttributePathsInitialized = true;
@@ -429,13 +432,13 @@ public class ContentSchema extends BasicDMPJPAObject {
 
 	/**
 	 * Gets the key attribute path for a given key attribute path identifier.
-	 * 
-	 * @param id a key attribute path identifier
+	 *
+	 * @param uuid a key attribute path identifier
 	 * @return the matched key attribute path or null
 	 */
-	public AttributePath getKeyAttributePath(final Long id) {
+	public AttributePath getKeyAttributePath(final String uuid) {
 
-		if (null == id) {
+		if (null == uuid) {
 
 			return null;
 		}
@@ -451,7 +454,7 @@ public class ContentSchema extends BasicDMPJPAObject {
 		}
 
 		final List<AttributePath> keyAttributePathsFiltered = Lambda.filter(
-				Lambda.having(Lambda.on(AttributePath.class).getId(), Matchers.equalTo(id)), utilisedKeyAttributePaths);
+				Lambda.having(Lambda.on(AttributePath.class).getUuid(), Matchers.equalTo(uuid)), utilisedKeyAttributePaths);
 
 		if (keyAttributePathsFiltered == null || keyAttributePathsFiltered.isEmpty()) {
 
@@ -467,9 +470,9 @@ public class ContentSchema extends BasicDMPJPAObject {
 		return ContentSchema.class.isInstance(obj)
 				&& super.completeEquals(obj)
 				&& DMPPersistenceUtil.getAttributePathUtils().completeEquals(((ContentSchema) obj).getRecordIdentifierAttributePath(),
-						getRecordIdentifierAttributePath())
+				getRecordIdentifierAttributePath())
 				&& DMPPersistenceUtil.getAttributePathUtils().completeEquals(((ContentSchema) obj).getUtilisedKeyAttributePaths(),
-						getUtilisedKeyAttributePaths())
+				getUtilisedKeyAttributePaths())
 				&& DMPPersistenceUtil.getAttributePathUtils().completeEquals(((ContentSchema) obj).getKeyAttributePaths(), getKeyAttributePaths())
 				&& DMPPersistenceUtil.getAttributePathUtils().completeEquals(((ContentSchema) obj).getValueAttributePath(), getValueAttributePath());
 	}
