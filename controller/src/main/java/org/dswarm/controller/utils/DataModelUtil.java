@@ -283,7 +283,7 @@ public class DataModelUtil {
 			} else if ("csv".equals(storageType.asText())) {
 
 				return internalServiceFactoryProvider.get().getInternalGDMGraphService();
-			} else if ("xml".equals(storageType.asText()) || "mabxml".equals(storageType.asText())) {
+			} else if ("xml".equals(storageType.asText()) || "mabxml".equals(storageType.asText()) || "marc21".equals(storageType.asText())) {
 
 				return internalServiceFactoryProvider.get().getInternalGDMGraphService();
 			} else {
