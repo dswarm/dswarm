@@ -18,11 +18,11 @@
         <data name="@component1402051968368" source="@feld_value__0__">
             <split delimiter="\|"/>
         </data>
-        <data name="@component1402052015295" source="@component1402051968368">
-            <compose postfix="}" prefix="{"/>
-        </data>
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" source="@component1402052015295">
             <occurrence only="4" sameEntity="false"/>
+        </data>
+        <data name="@component1402052015295" source="@component1402051968368">
+            <compose postfix="}" prefix="{"/>
         </data>
     </rules>
 </metamorph>
