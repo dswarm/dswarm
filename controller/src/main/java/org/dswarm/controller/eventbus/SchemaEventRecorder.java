@@ -24,6 +24,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import org.culturegraph.mf.types.Triple;
 import org.slf4j.Logger;
@@ -41,11 +42,9 @@ import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
 import org.dswarm.persistence.model.schema.Attribute;
-import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
-import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
 import org.dswarm.persistence.model.schema.proxy.ProxyClasz;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
@@ -53,32 +52,36 @@ import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.service.schema.AttributePathService;
 import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.schema.ClaszService;
+import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 import org.dswarm.persistence.service.schema.SchemaService;
 
 @Singleton
 public class SchemaEventRecorder {
 
-	private static final Logger			LOG	= LoggerFactory.getLogger(SchemaEventRecorder.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SchemaEventRecorder.class);
 
-	private final AttributePathService	attributePathService;
-	private final AttributeService		attributeService;
-	private final ClaszService			claszService;
-	private final DataModelService		dataModelService;
-	private final SchemaService			schemaService;
+	private final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceServiceProvider;
+	private final Provider<AttributePathService>               attributePathServiceProvider;
+	private final Provider<AttributeService>                   attributeServiceProvider;
+	private final Provider<ClaszService>                       claszServiceProvider;
+	private final Provider<DataModelService>                   dataModelServiceProvider;
+	private final Provider<SchemaService>                      schemaServiceProvider;
 
 	@Inject
-	public SchemaEventRecorder(final AttributePathService attributePathService, final AttributeService attributeService,
-			final ClaszService claszService, final DataModelService dataModelService, final SchemaService schemaService/*
+	public SchemaEventRecorder(final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceService,
+			final Provider<AttributePathService> attributePathService, final Provider<AttributeService> attributeService,
+			final Provider<ClaszService> claszService, final Provider<DataModelService> dataModelService, final Provider<SchemaService> schemaService/*
 																														 * , final
 																														 * EventBus
 																														 * eventBus
 																														 */) {
 
-		this.attributePathService = attributePathService;
-		this.attributeService = attributeService;
-		this.claszService = claszService;
-		this.dataModelService = dataModelService;
-		this.schemaService = schemaService;
+		this.schemaAttributePathInstanceServiceProvider = schemaAttributePathInstanceService;
+		this.attributePathServiceProvider = attributePathService;
+		this.attributeServiceProvider = attributeService;
+		this.claszServiceProvider = claszService;
+		this.dataModelServiceProvider = dataModelService;
+		this.schemaServiceProvider = schemaService;
 
 		// eventBus.register(this);
 	}
@@ -92,7 +95,7 @@ public class SchemaEventRecorder {
 			dataModel = event.getDataModel();
 		} else {
 
-			final ProxyDataModel proxyDataModel = dataModelService.createObjectTransactional();
+			final ProxyDataModel proxyDataModel = dataModelServiceProvider.get().createObjectTransactional();
 
 			if (proxyDataModel != null) {
 
@@ -119,7 +122,7 @@ public class SchemaEventRecorder {
 			schema = dataModel.getSchema();
 		} else {
 
-			final ProxySchema proxySchema = schemaService.createObjectTransactional();
+			final ProxySchema proxySchema = schemaServiceProvider.get().createObjectTransactional();
 
 			if (proxySchema != null) {
 
@@ -148,7 +151,7 @@ public class SchemaEventRecorder {
 
 			final String recordClassURI = dataResourceBaseSchemaURI + "RecordType";
 
-			final ProxyClasz proxyNewClasz = claszService.createOrGetObjectTransactional(recordClassURI);
+			final ProxyClasz proxyNewClasz = claszServiceProvider.get().createOrGetObjectTransactional(recordClassURI);
 
 			if (proxyNewClasz == null) {
 
@@ -176,9 +179,12 @@ public class SchemaEventRecorder {
 			stringAttributes.add(triple.getPredicate());
 		}
 
-		final Set<AttributePath> attributePaths = Sets.newLinkedHashSet();
+		final AttributeService attributeService = attributeServiceProvider.get();
+		final AttributePathService attributePathService = attributePathServiceProvider.get();
+		final SchemaAttributePathInstanceService schemaAttributePathInstanceService = schemaAttributePathInstanceServiceProvider.get();
 
 		for (final String stringAttribute : stringAttributes) {
+
 			final String attributeUri = SchemaUtils.mintTermUri(stringAttribute, dataResourceBaseSchemaURI);
 			final ProxyAttribute proxyAttribute = attributeService.createOrGetObjectTransactional(attributeUri);
 
@@ -202,24 +208,9 @@ public class SchemaEventRecorder {
 			final LinkedList<Attribute> attributes = Lists.newLinkedList();
 			attributes.add(attribute);
 
-			final ProxyAttributePath proxyAttributePath = attributePathService.createOrGetObjectTransactional(attributes);
-
-			if (proxyAttributePath == null) {
-
-				throw new DMPPersistenceException("couldn't create or retrieve attribute path");
-			}
-
-			final AttributePath attributePath = proxyAttributePath.getObject();
-
-			if (attributePath == null) {
-
-				throw new DMPPersistenceException("couldn't create or retrieve attribute path");
-			}
-
-			attributePaths.add(attributePath);
+			SchemaUtils.addAttributePaths(schema, attributes, attributePathService, schemaAttributePathInstanceService);
 		}
 
-		schema.setAttributePaths(attributePaths);
 		schema.setRecordClass(clasz);
 		schema.setName(dataModel.getDataResource().getName() + " schema");
 
@@ -236,7 +227,7 @@ public class SchemaEventRecorder {
 					+ dataModel.getConfiguration().getName() + "'");
 		}
 
-		dataModelService.updateObjectTransactional(dataModel);
+		dataModelServiceProvider.get().updateObjectTransactional(dataModel);
 	}
 
 	private Optional<List<Triple>> triplesFromCsv(final Resource resource, final Configuration configuration) {

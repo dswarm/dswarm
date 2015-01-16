@@ -134,7 +134,8 @@ public class StreamUnflattener extends DefaultStreamPipe<StreamReceiver> {
 	 */
 	@Override
 	public void startEntity(final String name) {
-		throw new IllegalStateException(getClass().getName() + " has to be called on a flat stream, e.g. as produces by StreamFlattener");
+		//throw new IllegalStateException(getClass().getName() + " has to be called on a flat stream, e.g. as produces by StreamFlattener");
+		getReceiver().startEntity(name);
 	}
 
 	/**
@@ -142,7 +143,8 @@ public class StreamUnflattener extends DefaultStreamPipe<StreamReceiver> {
 	 */
 	@Override
 	public void endEntity() {
-		throw new IllegalStateException(getClass().getName() + " has to be called on a flat stream, e.g. as produces by StreamFlattener");
+		//throw new IllegalStateException(getClass().getName() + " has to be called on a flat stream, e.g. as produces by StreamFlattener");
+		getReceiver().endEntity();
 	}
 
 	/**

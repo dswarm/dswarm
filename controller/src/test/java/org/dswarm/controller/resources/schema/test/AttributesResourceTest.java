@@ -35,11 +35,17 @@ import org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtil
 public class AttributesResourceTest extends
 		BasicResourceTest<AttributesResourceTestUtils, AttributeServiceTestUtils, AttributeService, ProxyAttribute, Attribute, Long> {
 
-	private static final Logger	LOG	= LoggerFactory.getLogger(AttributesResourceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AttributesResourceTest.class);
 
 	public AttributesResourceTest() {
 
 		super(Attribute.class, AttributeService.class, "attributes", "attribute1.json", new AttributesResourceTestUtils());
+	}
+
+	@Override protected void initObjects() {
+		super.initObjects();
+
+		pojoClassResourceTestUtils = new AttributesResourceTestUtils();
 	}
 
 	@Test
@@ -88,8 +94,6 @@ public class AttributesResourceTest extends
 		Assert.assertNotNull("attribute 2 shouldn't be null in uniqueness test", attribute2);
 
 		Assert.assertEquals("the attributes should be equal", attribute1, attribute2);
-
-		cleanUpDB(attribute1);
 
 		AttributesResourceTest.LOG.debug("end attribute uniqueness test");
 	}
@@ -158,9 +162,6 @@ public class AttributesResourceTest extends
 		Assert.assertEquals("uri's should be equal", updateAttribute.getUri(), modifiedAttribute.getUri());
 		Assert.assertNotEquals("uniqueness dosn't allow update of uri", updateAttribute.getUri(), attribute.getUri());
 
-		cleanUpDB(attribute);
-		cleanUpDB(updateAttribute);
-
 		AttributesResourceTest.LOG.debug("end attribute update test with uri manipulation");
 	}
 
@@ -205,8 +206,6 @@ public class AttributesResourceTest extends
 				.put(Entity.json(attributeJSONString));
 
 		Assert.assertEquals("404 NOT FOUND was expected, i.e., no attribute with the given URI exists in the DB", 404, response.getStatus());
-
-		cleanUpDB(attribute);
 
 		AttributesResourceTest.LOG.debug("end attribute update test with non-existing uri (manipulation)");
 	}

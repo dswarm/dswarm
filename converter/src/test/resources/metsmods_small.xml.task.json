@@ -1,2104 +1,2291 @@
 {
-  "name": "Transformations",
-  "description": "Transformations",
-  "job": {"mappings": [
-      {
-        "id": -1402483329964,
-        "name": "alternative",
-        "transformation": {
-          "name": "transformation",
-          "description": "transformation",
-          "function": {
-            "name": "transformation",
-            "description": "transformation",
-            "type": "Transformation",
-            "components": [
-              {
-                "function": {
-                  "name": "concat",
-                  "description": "Collects all received values and concatenates them on record end.",
-                  "id": 23,
-                  "function_description": {
-                    "name": "concat",
-                    "dsl": "metafacture",
-                    "reference": "concat",
-                    "description": "Collects all received values and concatenates them on record end.",
-                    "parameters": {
-                      "delimiter": {"type": "text"},
-                      "prefix": {
-                        "type": "text",
-                        "optional": true
-                      },
-                      "postfix": {
-                        "type": "text",
-                        "optional": true
-                      }
-                    }
+  "name" : "Transformations",
+  "description" : "Transformations",
+  "job" : {
+    "mappings" : [ {
+      "id" : -1402483329964,
+      "name" : "alternative",
+      "transformation" : {
+        "name" : "transformation",
+        "description" : "transformation",
+        "function" : {
+          "name" : "transformation",
+          "description" : "transformation",
+          "type" : "Transformation",
+          "components" : [ {
+            "function" : {
+              "name" : "concat",
+              "description" : "Collects all received values and concatenates them on record end.",
+              "id" : 23,
+              "function_description" : {
+                "name" : "concat",
+                "dsl" : "metafacture",
+                "reference" : "concat",
+                "description" : "Collects all received values and concatenates them on record end.",
+                "parameters" : {
+                  "delimiter" : {
+                    "type" : "text"
                   },
-                  "parameters": [
-                    "delimiter",
-                    "prefix",
-                    "postfix"
-                  ],
-                  "type": "Function"
-                },
-                "name": "component1402483352013",
-                "id": -1402483351948,
-                "output_components": [{"id": -1402483445745}],
-                "description": "{\"x\":\"note_value\",\"y\":0}",
-                "parameter_mappings": {
-                  "delimiter": "#",
-                  "prefix": "(",
-                  "postfix": ")",
-                  "inputString": "note_value__0__,note_lang__0__"
+                  "prefix" : {
+                    "type" : "text",
+                    "optional" : true
+                  },
+                  "postfix" : {
+                    "type" : "text",
+                    "optional" : true
+                  }
                 }
               },
-              {
-                "function": {
-                  "name": "concat",
-                  "description": "Collects all received values and concatenates them on record end.",
-                  "id": 23,
-                  "function_description": {
-                    "name": "concat",
-                    "dsl": "metafacture",
-                    "reference": "concat",
-                    "description": "Collects all received values and concatenates them on record end.",
-                    "parameters": {
-                      "delimiter": {"type": "text"},
-                      "prefix": {
-                        "type": "text",
-                        "optional": true
-                      },
-                      "postfix": {
-                        "type": "text",
-                        "optional": true
-                      }
-                    }
+              "parameters" : [ "delimiter", "prefix", "postfix" ],
+              "type" : "Function"
+            },
+            "name" : "component1402483352013",
+            "id" : -1402483351948,
+            "output_components" : [ {
+              "id" : -1402483445745
+            } ],
+            "description" : "{\"x\":\"note_value\",\"y\":0}",
+            "parameter_mappings" : {
+              "delimiter" : "#",
+              "prefix" : "(",
+              "postfix" : ")",
+              "inputString" : "note_value__0__,note_lang__0__"
+            }
+          }, {
+            "function" : {
+              "name" : "concat",
+              "description" : "Collects all received values and concatenates them on record end.",
+              "id" : 23,
+              "function_description" : {
+                "name" : "concat",
+                "dsl" : "metafacture",
+                "reference" : "concat",
+                "description" : "Collects all received values and concatenates them on record end.",
+                "parameters" : {
+                  "delimiter" : {
+                    "type" : "text"
                   },
-                  "parameters": [
-                    "delimiter",
-                    "prefix",
-                    "postfix"
-                  ],
-                  "type": "Function"
-                },
-                "name": "component1402483445733",
-                "id": -1402483445745,
-                "input_components": [{"id": -1402483351948}],
-                "description": "{\"x\":\"note_value\",\"y\":1}",
-                "parameter_mappings": {
-                  "delimiter": "+",
-                  "prefix": "[",
-                  "postfix": "]",
-                  "inputString": "component1402483352013,note_displayLabel__0__"
+                  "prefix" : {
+                    "type" : "text",
+                    "optional" : true
+                  },
+                  "postfix" : {
+                    "type" : "text",
+                    "optional" : true
+                  }
                 }
-              }
-            ]
-          },
-          "parameter_mappings": {
-            "__TRANSFORMATION_OUTPUT_VARIABLE__1": "output mapping attribute path instance",
-            "note_value__0__": "note_value__0__",
-            "note_lang__0__": "note_lang__0__",
-            "note_displayLabel__0__": "note_displayLabel__0__"
-          }
-        },
-        "input_attribute_paths": [
-          {
-            "type": "MappingAttributePathInstance",
-            "name": "note_value__0__",
-            "id": -1402483329971,
-            "attribute_path": {
-              "id": 1135,
-              "attributes": [
-                {
-                  "name": "note",
-                  "uri": "http://www.loc.gov/mods/v3#note",
-                  "id": 451
-                },
-                {
-                  "name": "value",
-                  "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-                  "id": 41
-                }
-              ]
-            }
-          },
-          {
-            "type": "MappingAttributePathInstance",
-            "name": "note_lang__0__",
-            "id": -1402483343969,
-            "attribute_path": {
-              "id": 1133,
-              "attributes": [
-                {
-                  "name": "note",
-                  "uri": "http://www.loc.gov/mods/v3#note",
-                  "id": 451
-                },
-                {
-                  "name": "lang",
-                  "uri": "http://www.loc.gov/mods/v3#lang",
-                  "id": 440
-                }
-              ]
-            }
-          },
-          {
-            "type": "MappingAttributePathInstance",
-            "name": "note_displayLabel__0__",
-            "id": -1402483437720,
-            "attribute_path": {
-              "id": 1134,
-              "attributes": [
-                {
-                  "name": "note",
-                  "uri": "http://www.loc.gov/mods/v3#note",
-                  "id": 451
-                },
-                {
-                  "name": "displayLabel",
-                  "uri": "http://www.loc.gov/mods/v3#displayLabel",
-                  "id": 452
-                }
-              ]
-            }
-          }
-        ],
-        "output_attribute_path": {
-          "type": "MappingAttributePathInstance",
-          "name": "output mapping attribute path instance",
-          "id": -1402483329972,
-          "attribute_path": {
-            "id": 3,
-            "attributes": [{
-                "name": "alternative",
-                "uri": "http://purl.org/dc/terms/alternative",
-                "id": 3
-              }]
-          }
-        }
-      },
-      {
-        "id": -1402483505043,
-        "name": "title",
-        "transformation": {
-          "name": "transformation",
-          "description": "transformation",
-          "function": {
-            "name": "transformation",
-            "description": "transformation",
-            "type": "Transformation"
-          },
-          "parameter_mappings": {
-            "__TRANSFORMATION_OUTPUT_VARIABLE__2": "output mapping attribute path instance 2",
-            "titleInfo_title_value__1__": "titleInfo_title_value__1__"
-          }
-        },
-        "input_attribute_paths": [{
-            "type": "MappingAttributePathInstance",
-            "name": "titleInfo_title_value__1__",
-            "id": -1402483505127,
-            "attribute_path": {
-              "id": 1071,
-              "attributes": [
-                {
-                  "name": "titleInfo",
-                  "uri": "http://www.loc.gov/mods/v3#titleInfo",
-                  "id": 425
-                },
-                {
-                  "name": "title",
-                  "uri": "http://www.loc.gov/mods/v3#title",
-                  "id": 426
-                },
-                {
-                  "name": "value",
-                  "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-                  "id": 41
-                }
-              ]
-            }
-          }],
-        "output_attribute_path": {
-          "type": "MappingAttributePathInstance",
-          "name": "output mapping attribute path instance 2",
-          "id": -1402483505128,
-          "attribute_path": {
-            "id": 1,
-            "attributes": [{
-                "name": "title",
-                "uri": "http://purl.org/dc/elements/1.1/title",
-                "id": 1
-              }]
-          }
-        }
-      },
-      {
-        "id": -1402483539669,
-        "name": "edition",
-        "transformation": {
-          "name": "transformation",
-          "description": "transformation",
-          "function": {
-            "name": "transformation",
-            "description": "transformation",
-            "type": "Transformation"
-          },
-          "parameter_mappings": {
-            "__TRANSFORMATION_OUTPUT_VARIABLE__3": "output mapping attribute path instance 3",
-            "originInfo_dateIssued_value__2__": "originInfo_dateIssued_value__2__"
-          }
-        },
-        "input_attribute_paths": [{
-            "type": "MappingAttributePathInstance",
-            "name": "originInfo_dateIssued_value__2__",
-            "id": -1402483539701,
-            "attribute_path": {
-              "id": 1078,
-              "attributes": [
-                {
-                  "name": "originInfo",
-                  "uri": "http://www.loc.gov/mods/v3#originInfo",
-                  "id": 427
-                },
-                {
-                  "name": "dateIssued",
-                  "uri": "http://www.loc.gov/mods/v3#dateIssued",
-                  "id": 428
-                },
-                {
-                  "name": "value",
-                  "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-                  "id": 41
-                }
-              ]
+              },
+              "parameters" : [ "delimiter", "prefix", "postfix" ],
+              "type" : "Function"
             },
-            "filter": {
-              "id": -1402483557058,
-              "expression": "[{\"http://www.loc.gov/mods/v3#originInfo\\u001ehttp://www.loc.gov/mods/v3#dateIssued\\u001ehttp://www.loc.gov/mods/v3#keyDate\":\"yes\"}]"
+            "name" : "component1402483445733",
+            "id" : -1402483445745,
+            "input_components" : [ {
+              "id" : -1402483351948
+            } ],
+            "description" : "{\"x\":\"note_value\",\"y\":1}",
+            "parameter_mappings" : {
+              "delimiter" : "+",
+              "prefix" : "[",
+              "postfix" : "]",
+              "inputString" : "component1402483352013,note_displayLabel__0__"
             }
-          }],
-        "output_attribute_path": {
-          "type": "MappingAttributePathInstance",
-          "name": "output mapping attribute path instance 3",
-          "id": -1402483539702,
-          "attribute_path": {
-            "id": 30,
-            "attributes": [{
-                "name": "edition",
-                "uri": "http://purl.org/ontology/bibo/edition",
-                "id": 30
-              }]
-          }
+          } ]
+        },
+        "parameter_mappings" : {
+          "__TRANSFORMATION_OUTPUT_VARIABLE__1" : "output mapping attribute path instance",
+          "note_value__0__" : "note_value__0__",
+          "note_lang__0__" : "note_lang__0__",
+          "note_displayLabel__0__" : "note_displayLabel__0__"
+        }
+      },
+      "input_attribute_paths" : [ {
+        "type" : "MappingAttributePathInstance",
+        "name" : "note_value__0__",
+        "id" : -1402483329971,
+        "attribute_path" : {
+          "id" : 1135,
+          "attributes" : [ {
+            "name" : "note",
+            "uri" : "http://www.loc.gov/mods/v3#note",
+            "id" : 451
+          }, {
+            "name" : "value",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+            "id" : 41
+          } ]
+        }
+      }, {
+        "type" : "MappingAttributePathInstance",
+        "name" : "note_lang__0__",
+        "id" : -1402483343969,
+        "attribute_path" : {
+          "id" : 1133,
+          "attributes" : [ {
+            "name" : "note",
+            "uri" : "http://www.loc.gov/mods/v3#note",
+            "id" : 451
+          }, {
+            "name" : "lang",
+            "uri" : "http://www.loc.gov/mods/v3#lang",
+            "id" : 440
+          } ]
+        }
+      }, {
+        "type" : "MappingAttributePathInstance",
+        "name" : "note_displayLabel__0__",
+        "id" : -1402483437720,
+        "attribute_path" : {
+          "id" : 1134,
+          "attributes" : [ {
+            "name" : "note",
+            "uri" : "http://www.loc.gov/mods/v3#note",
+            "id" : 451
+          }, {
+            "name" : "displayLabel",
+            "uri" : "http://www.loc.gov/mods/v3#displayLabel",
+            "id" : 452
+          } ]
+        }
+      } ],
+      "output_attribute_path" : {
+        "type" : "MappingAttributePathInstance",
+        "name" : "output mapping attribute path instance",
+        "id" : -1402483329972,
+        "attribute_path" : {
+          "id" : 3,
+          "attributes" : [ {
+            "name" : "alternative",
+            "uri" : "http://purl.org/dc/terms/alternative",
+            "id" : 3
+          } ]
         }
       }
-    ]},
-  "input_data_model": {
-    "name": "metsmods_small.xml",
-    "description": "2",
-    "configuration": {
-      "name": "xml",
-      "description": "xml with id 73",
-      "id": 73,
-      "resources": [{"id": 73}],
-      "parameters": {
-        "storage_type": "xml",
-        "record_tag": "mods"
+    }, {
+      "id" : -1402483505043,
+      "name" : "title",
+      "transformation" : {
+        "name" : "transformation",
+        "description" : "transformation",
+        "function" : {
+          "name" : "transformation",
+          "description" : "transformation",
+          "type" : "Transformation"
+        },
+        "parameter_mappings" : {
+          "__TRANSFORMATION_OUTPUT_VARIABLE__2" : "output mapping attribute path instance 2",
+          "titleInfo_title_value__1__" : "titleInfo_title_value__1__"
+        }
+      },
+      "input_attribute_paths" : [ {
+        "type" : "MappingAttributePathInstance",
+        "name" : "titleInfo_title_value__1__",
+        "id" : -1402483505127,
+        "attribute_path" : {
+          "id" : 1071,
+          "attributes" : [ {
+            "name" : "titleInfo",
+            "uri" : "http://www.loc.gov/mods/v3#titleInfo",
+            "id" : 425
+          }, {
+            "name" : "title",
+            "uri" : "http://www.loc.gov/mods/v3#title",
+            "id" : 426
+          }, {
+            "name" : "value",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+            "id" : 41
+          } ]
+        }
+      } ],
+      "output_attribute_path" : {
+        "type" : "MappingAttributePathInstance",
+        "name" : "output mapping attribute path instance 2",
+        "id" : -1402483505128,
+        "attribute_path" : {
+          "id" : 1,
+          "attributes" : [ {
+            "name" : "title",
+            "uri" : "http://purl.org/dc/elements/1.1/title",
+            "id" : 1
+          } ]
+        }
+      }
+    }, {
+      "id" : -1402483539669,
+      "name" : "edition",
+      "transformation" : {
+        "name" : "transformation",
+        "description" : "transformation",
+        "function" : {
+          "name" : "transformation",
+          "description" : "transformation",
+          "type" : "Transformation"
+        },
+        "parameter_mappings" : {
+          "__TRANSFORMATION_OUTPUT_VARIABLE__3" : "output mapping attribute path instance 3",
+          "originInfo_dateIssued_value__2__" : "originInfo_dateIssued_value__2__"
+        }
+      },
+      "input_attribute_paths" : [ {
+        "type" : "MappingAttributePathInstance",
+        "name" : "originInfo_dateIssued_value__2__",
+        "id" : -1402483539701,
+        "attribute_path" : {
+          "id" : 1078,
+          "attributes" : [ {
+            "name" : "originInfo",
+            "uri" : "http://www.loc.gov/mods/v3#originInfo",
+            "id" : 427
+          }, {
+            "name" : "dateIssued",
+            "uri" : "http://www.loc.gov/mods/v3#dateIssued",
+            "id" : 428
+          }, {
+            "name" : "value",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+            "id" : 41
+          } ]
+        },
+        "filter" : {
+          "id" : -1402483557058,
+          "expression" : "[{\"http://www.loc.gov/mods/v3#originInfo\\u001ehttp://www.loc.gov/mods/v3#dateIssued\\u001ehttp://www.loc.gov/mods/v3#keyDate\":\"yes\"}]"
+        }
+      } ],
+      "output_attribute_path" : {
+        "type" : "MappingAttributePathInstance",
+        "name" : "output mapping attribute path instance 3",
+        "id" : -1402483539702,
+        "attribute_path" : {
+          "id" : 30,
+          "attributes" : [ {
+            "name" : "edition",
+            "uri" : "http://purl.org/ontology/bibo/edition",
+            "id" : 30
+          } ]
+        }
+      }
+    } ]
+  },
+  "input_data_model" : {
+    "name" : "metsmods_small.xml",
+    "description" : "2",
+    "configuration" : {
+      "name" : "xml",
+      "description" : "xml with id 73",
+      "id" : 73,
+      "resources" : [ {
+        "id" : 73
+      } ],
+      "parameters" : {
+        "storage_type" : "xml",
+        "record_tag" : "mods"
       }
     },
-    "schema": {
-      "name": null,
-      "id": 70,
-      "attribute_paths": [
-        {
-          "id": 1069,
-          "attributes": [
-            {
-              "name": "titleInfo",
-              "uri": "http://www.loc.gov/mods/v3#titleInfo",
-              "id": 425
-            },
-            {
-              "name": "title",
-              "uri": "http://www.loc.gov/mods/v3#title",
-              "id": 426
-            }
-          ]
-        },
-        {
-          "id": 1070,
-          "attributes": [
-            {
-              "name": "titleInfo",
-              "uri": "http://www.loc.gov/mods/v3#titleInfo",
-              "id": 425
-            },
-            {
-              "name": "title",
-              "uri": "http://www.loc.gov/mods/v3#title",
-              "id": 426
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1071,
-          "attributes": [
-            {
-              "name": "titleInfo",
-              "uri": "http://www.loc.gov/mods/v3#titleInfo",
-              "id": 425
-            },
-            {
-              "name": "title",
-              "uri": "http://www.loc.gov/mods/v3#title",
-              "id": 426
-            },
-            {
-              "name": "value",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-              "id": 41
-            }
-          ]
-        },
-        {
-          "id": 1072,
-          "attributes": [{
-              "name": "originInfo",
-              "uri": "http://www.loc.gov/mods/v3#originInfo",
-              "id": 427
-            }]
-        },
-        {
-          "id": 1067,
-          "attributes": [{
-              "name": "titleInfo",
-              "uri": "http://www.loc.gov/mods/v3#titleInfo",
-              "id": 425
-            }]
-        },
-        {
-          "id": 1068,
-          "attributes": [
-            {
-              "name": "titleInfo",
-              "uri": "http://www.loc.gov/mods/v3#titleInfo",
-              "id": 425
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1086,
-          "attributes": [
-            {
-              "name": "language",
-              "uri": "http://www.loc.gov/mods/v3#language",
-              "id": 433
-            },
-            {
-              "name": "languageTerm",
-              "uri": "http://www.loc.gov/mods/v3#languageTerm",
-              "id": 434
-            }
-          ]
-        },
-        {
-          "id": 1085,
-          "attributes": [
-            {
-              "name": "language",
-              "uri": "http://www.loc.gov/mods/v3#language",
-              "id": 433
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1088,
-          "attributes": [
-            {
-              "name": "language",
-              "uri": "http://www.loc.gov/mods/v3#language",
-              "id": 433
-            },
-            {
-              "name": "languageTerm",
-              "uri": "http://www.loc.gov/mods/v3#languageTerm",
-              "id": 434
-            },
-            {
-              "name": "type",
-              "uri": "http://www.loc.gov/mods/v3#type",
-              "id": 435
-            }
-          ]
-        },
-        {
-          "id": 1087,
-          "attributes": [
-            {
-              "name": "language",
-              "uri": "http://www.loc.gov/mods/v3#language",
-              "id": 433
-            },
-            {
-              "name": "languageTerm",
-              "uri": "http://www.loc.gov/mods/v3#languageTerm",
-              "id": 434
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1082,
-          "attributes": [
-            {
-              "name": "physicalDescription",
-              "uri": "http://www.loc.gov/mods/v3#physicalDescription",
-              "id": 431
-            },
-            {
-              "name": "digitalOrigin",
-              "uri": "http://www.loc.gov/mods/v3#digitalOrigin",
-              "id": 432
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1081,
-          "attributes": [
-            {
-              "name": "physicalDescription",
-              "uri": "http://www.loc.gov/mods/v3#physicalDescription",
-              "id": 431
-            },
-            {
-              "name": "digitalOrigin",
-              "uri": "http://www.loc.gov/mods/v3#digitalOrigin",
-              "id": 432
-            }
-          ]
-        },
-        {
-          "id": 1084,
-          "attributes": [{
-              "name": "language",
-              "uri": "http://www.loc.gov/mods/v3#language",
-              "id": 433
-            }]
-        },
-        {
-          "id": 1083,
-          "attributes": [
-            {
-              "name": "physicalDescription",
-              "uri": "http://www.loc.gov/mods/v3#physicalDescription",
-              "id": 431
-            },
-            {
-              "name": "digitalOrigin",
-              "uri": "http://www.loc.gov/mods/v3#digitalOrigin",
-              "id": 432
-            },
-            {
-              "name": "value",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-              "id": 41
-            }
-          ]
-        },
-        {
-          "id": 1078,
-          "attributes": [
-            {
-              "name": "originInfo",
-              "uri": "http://www.loc.gov/mods/v3#originInfo",
-              "id": 427
-            },
-            {
-              "name": "dateIssued",
-              "uri": "http://www.loc.gov/mods/v3#dateIssued",
-              "id": 428
-            },
-            {
-              "name": "value",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-              "id": 41
-            }
-          ]
-        },
-        {
-          "id": 1077,
-          "attributes": [
-            {
-              "name": "originInfo",
-              "uri": "http://www.loc.gov/mods/v3#originInfo",
-              "id": 427
-            },
-            {
-              "name": "dateIssued",
-              "uri": "http://www.loc.gov/mods/v3#dateIssued",
-              "id": 428
-            },
-            {
-              "name": "encoding",
-              "uri": "http://www.loc.gov/mods/v3#encoding",
-              "id": 430
-            }
-          ]
-        },
-        {
-          "id": 1080,
-          "attributes": [
-            {
-              "name": "physicalDescription",
-              "uri": "http://www.loc.gov/mods/v3#physicalDescription",
-              "id": 431
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1079,
-          "attributes": [{
-              "name": "physicalDescription",
-              "uri": "http://www.loc.gov/mods/v3#physicalDescription",
-              "id": 431
-            }]
-        },
-        {
-          "id": 1074,
-          "attributes": [
-            {
-              "name": "originInfo",
-              "uri": "http://www.loc.gov/mods/v3#originInfo",
-              "id": 427
-            },
-            {
-              "name": "dateIssued",
-              "uri": "http://www.loc.gov/mods/v3#dateIssued",
-              "id": 428
-            }
-          ]
-        },
-        {
-          "id": 1073,
-          "attributes": [
-            {
-              "name": "originInfo",
-              "uri": "http://www.loc.gov/mods/v3#originInfo",
-              "id": 427
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1076,
-          "attributes": [
-            {
-              "name": "originInfo",
-              "uri": "http://www.loc.gov/mods/v3#originInfo",
-              "id": 427
-            },
-            {
-              "name": "dateIssued",
-              "uri": "http://www.loc.gov/mods/v3#dateIssued",
-              "id": 428
-            },
-            {
-              "name": "keyDate",
-              "uri": "http://www.loc.gov/mods/v3#keyDate",
-              "id": 429
-            }
-          ]
-        },
-        {
-          "id": 1075,
-          "attributes": [
-            {
-              "name": "originInfo",
-              "uri": "http://www.loc.gov/mods/v3#originInfo",
-              "id": 427
-            },
-            {
-              "name": "dateIssued",
-              "uri": "http://www.loc.gov/mods/v3#dateIssued",
-              "id": 428
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1103,
-          "attributes": [
-            {
-              "name": "relatedItem",
-              "uri": "http://www.loc.gov/mods/v3#relatedItem",
-              "id": 437
-            },
-            {
-              "name": "titleInfo",
-              "uri": "http://www.loc.gov/mods/v3#titleInfo",
-              "id": 425
-            },
-            {
-              "name": "title",
-              "uri": "http://www.loc.gov/mods/v3#title",
-              "id": 426
-            }
-          ]
-        },
-        {
-          "id": 1104,
-          "attributes": [
-            {
-              "name": "relatedItem",
-              "uri": "http://www.loc.gov/mods/v3#relatedItem",
-              "id": 437
-            },
-            {
-              "name": "titleInfo",
-              "uri": "http://www.loc.gov/mods/v3#titleInfo",
-              "id": 425
-            },
-            {
-              "name": "title",
-              "uri": "http://www.loc.gov/mods/v3#title",
-              "id": 426
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1101,
-          "attributes": [
-            {
-              "name": "relatedItem",
-              "uri": "http://www.loc.gov/mods/v3#relatedItem",
-              "id": 437
-            },
-            {
-              "name": "titleInfo",
-              "uri": "http://www.loc.gov/mods/v3#titleInfo",
-              "id": 425
-            }
-          ]
-        },
-        {
-          "id": 1102,
-          "attributes": [
-            {
-              "name": "relatedItem",
-              "uri": "http://www.loc.gov/mods/v3#relatedItem",
-              "id": 437
-            },
-            {
-              "name": "titleInfo",
-              "uri": "http://www.loc.gov/mods/v3#titleInfo",
-              "id": 425
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1099,
-          "attributes": [
-            {
-              "name": "relatedItem",
-              "uri": "http://www.loc.gov/mods/v3#relatedItem",
-              "id": 437
-            },
-            {
-              "name": "lang",
-              "uri": "http://www.loc.gov/mods/v3#lang",
-              "id": 440
-            }
-          ]
-        },
-        {
-          "id": 1100,
-          "attributes": [
-            {
-              "name": "relatedItem",
-              "uri": "http://www.loc.gov/mods/v3#relatedItem",
-              "id": 437
-            },
-            {
-              "name": "dwork_name",
-              "uri": "http://www.loc.gov/mods/v3#dwork_name",
-              "id": 441
-            }
-          ]
-        },
-        {
-          "id": 1097,
-          "attributes": [
-            {
-              "name": "relatedItem",
-              "uri": "http://www.loc.gov/mods/v3#relatedItem",
-              "id": 437
-            },
-            {
-              "name": "recordInfo",
-              "uri": "http://www.loc.gov/mods/v3#recordInfo",
-              "id": 438
-            },
-            {
-              "name": "recordIdentifier",
-              "uri": "http://www.loc.gov/mods/v3#recordIdentifier",
-              "id": 439
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1098,
-          "attributes": [
-            {
-              "name": "relatedItem",
-              "uri": "http://www.loc.gov/mods/v3#relatedItem",
-              "id": 437
-            },
-            {
-              "name": "recordInfo",
-              "uri": "http://www.loc.gov/mods/v3#recordInfo",
-              "id": 438
-            },
-            {
-              "name": "recordIdentifier",
-              "uri": "http://www.loc.gov/mods/v3#recordIdentifier",
-              "id": 439
-            },
-            {
-              "name": "value",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-              "id": 41
-            }
-          ]
-        },
-        {
-          "id": 1095,
-          "attributes": [
-            {
-              "name": "relatedItem",
-              "uri": "http://www.loc.gov/mods/v3#relatedItem",
-              "id": 437
-            },
-            {
-              "name": "recordInfo",
-              "uri": "http://www.loc.gov/mods/v3#recordInfo",
-              "id": 438
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1096,
-          "attributes": [
-            {
-              "name": "relatedItem",
-              "uri": "http://www.loc.gov/mods/v3#relatedItem",
-              "id": 437
-            },
-            {
-              "name": "recordInfo",
-              "uri": "http://www.loc.gov/mods/v3#recordInfo",
-              "id": 438
-            },
-            {
-              "name": "recordIdentifier",
-              "uri": "http://www.loc.gov/mods/v3#recordIdentifier",
-              "id": 439
-            }
-          ]
-        },
-        {
-          "id": 1093,
-          "attributes": [
-            {
-              "name": "relatedItem",
-              "uri": "http://www.loc.gov/mods/v3#relatedItem",
-              "id": 437
-            },
-            {
-              "name": "type",
-              "uri": "http://www.loc.gov/mods/v3#type",
-              "id": 435
-            }
-          ]
-        },
-        {
-          "id": 1094,
-          "attributes": [
-            {
-              "name": "relatedItem",
-              "uri": "http://www.loc.gov/mods/v3#relatedItem",
-              "id": 437
-            },
-            {
-              "name": "recordInfo",
-              "uri": "http://www.loc.gov/mods/v3#recordInfo",
-              "id": 438
-            }
-          ]
-        },
-        {
-          "id": 1091,
-          "attributes": [{
-              "name": "relatedItem",
-              "uri": "http://www.loc.gov/mods/v3#relatedItem",
-              "id": 437
-            }]
-        },
-        {
-          "id": 1092,
-          "attributes": [
-            {
-              "name": "relatedItem",
-              "uri": "http://www.loc.gov/mods/v3#relatedItem",
-              "id": 437
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1089,
-          "attributes": [
-            {
-              "name": "language",
-              "uri": "http://www.loc.gov/mods/v3#language",
-              "id": 433
-            },
-            {
-              "name": "languageTerm",
-              "uri": "http://www.loc.gov/mods/v3#languageTerm",
-              "id": 434
-            },
-            {
-              "name": "authority",
-              "uri": "http://www.loc.gov/mods/v3#authority",
-              "id": 436
-            }
-          ]
-        },
-        {
-          "id": 1090,
-          "attributes": [
-            {
-              "name": "language",
-              "uri": "http://www.loc.gov/mods/v3#language",
-              "id": 433
-            },
-            {
-              "name": "languageTerm",
-              "uri": "http://www.loc.gov/mods/v3#languageTerm",
-              "id": 434
-            },
-            {
-              "name": "value",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-              "id": 41
-            }
-          ]
-        },
-        {
-          "id": 1120,
-          "attributes": [
-            {
-              "name": "part",
-              "uri": "http://www.loc.gov/mods/v3#part",
-              "id": 445
-            },
-            {
-              "name": "detail",
-              "uri": "http://www.loc.gov/mods/v3#detail",
-              "id": 447
-            },
-            {
-              "name": "number",
-              "uri": "http://www.loc.gov/mods/v3#number",
-              "id": 448
-            },
-            {
-              "name": "value",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-              "id": 41
-            }
-          ]
-        },
-        {
-          "id": 20,
-          "attributes": [{
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }]
-        },
-        {
-          "id": 1119,
-          "attributes": [
-            {
-              "name": "part",
-              "uri": "http://www.loc.gov/mods/v3#part",
-              "id": 445
-            },
-            {
-              "name": "detail",
-              "uri": "http://www.loc.gov/mods/v3#detail",
-              "id": 447
-            },
-            {
-              "name": "number",
-              "uri": "http://www.loc.gov/mods/v3#number",
-              "id": 448
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1118,
-          "attributes": [
-            {
-              "name": "part",
-              "uri": "http://www.loc.gov/mods/v3#part",
-              "id": 445
-            },
-            {
-              "name": "detail",
-              "uri": "http://www.loc.gov/mods/v3#detail",
-              "id": 447
-            },
-            {
-              "name": "number",
-              "uri": "http://www.loc.gov/mods/v3#number",
-              "id": 448
-            }
-          ]
-        },
-        {
-          "id": 1117,
-          "attributes": [
-            {
-              "name": "part",
-              "uri": "http://www.loc.gov/mods/v3#part",
-              "id": 445
-            },
-            {
-              "name": "detail",
-              "uri": "http://www.loc.gov/mods/v3#detail",
-              "id": 447
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1116,
-          "attributes": [
-            {
-              "name": "part",
-              "uri": "http://www.loc.gov/mods/v3#part",
-              "id": 445
-            },
-            {
-              "name": "detail",
-              "uri": "http://www.loc.gov/mods/v3#detail",
-              "id": 447
-            }
-          ]
-        },
-        {
-          "id": 1115,
-          "attributes": [
-            {
-              "name": "part",
-              "uri": "http://www.loc.gov/mods/v3#part",
-              "id": 445
-            },
-            {
-              "name": "order",
-              "uri": "http://www.loc.gov/mods/v3#order",
-              "id": 446
-            }
-          ]
-        },
-        {
-          "id": 1114,
-          "attributes": [
-            {
-              "name": "part",
-              "uri": "http://www.loc.gov/mods/v3#part",
-              "id": 445
-            },
-            {
-              "name": "type",
-              "uri": "http://www.loc.gov/mods/v3#type",
-              "id": 435
-            }
-          ]
-        },
-        {
-          "id": 1113,
-          "attributes": [
-            {
-              "name": "part",
-              "uri": "http://www.loc.gov/mods/v3#part",
-              "id": 445
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1112,
-          "attributes": [{
-              "name": "part",
-              "uri": "http://www.loc.gov/mods/v3#part",
-              "id": 445
-            }]
-        },
-        {
-          "id": 1111,
-          "attributes": [
-            {
-              "name": "relatedItem",
-              "uri": "http://www.loc.gov/mods/v3#relatedItem",
-              "id": 437
-            },
-            {
-              "name": "recordInfo",
-              "uri": "http://www.loc.gov/mods/v3#recordInfo",
-              "id": 438
-            },
-            {
-              "name": "recordIdentifier",
-              "uri": "http://www.loc.gov/mods/v3#recordIdentifier",
-              "id": 439
-            },
-            {
-              "name": "source",
-              "uri": "http://www.loc.gov/mods/v3#source",
-              "id": 444
-            }
-          ]
-        },
-        {
-          "id": 1110,
-          "attributes": [
-            {
-              "name": "relatedItem",
-              "uri": "http://www.loc.gov/mods/v3#relatedItem",
-              "id": 437
-            },
-            {
-              "name": "location",
-              "uri": "http://www.loc.gov/mods/v3#location",
-              "id": 442
-            },
-            {
-              "name": "url",
-              "uri": "http://www.loc.gov/mods/v3#url",
-              "id": 443
-            },
-            {
-              "name": "value",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-              "id": 41
-            }
-          ]
-        },
-        {
-          "id": 1109,
-          "attributes": [
-            {
-              "name": "relatedItem",
-              "uri": "http://www.loc.gov/mods/v3#relatedItem",
-              "id": 437
-            },
-            {
-              "name": "location",
-              "uri": "http://www.loc.gov/mods/v3#location",
-              "id": 442
-            },
-            {
-              "name": "url",
-              "uri": "http://www.loc.gov/mods/v3#url",
-              "id": 443
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1108,
-          "attributes": [
-            {
-              "name": "relatedItem",
-              "uri": "http://www.loc.gov/mods/v3#relatedItem",
-              "id": 437
-            },
-            {
-              "name": "location",
-              "uri": "http://www.loc.gov/mods/v3#location",
-              "id": 442
-            },
-            {
-              "name": "url",
-              "uri": "http://www.loc.gov/mods/v3#url",
-              "id": 443
-            }
-          ]
-        },
-        {
-          "id": 1107,
-          "attributes": [
-            {
-              "name": "relatedItem",
-              "uri": "http://www.loc.gov/mods/v3#relatedItem",
-              "id": 437
-            },
-            {
-              "name": "location",
-              "uri": "http://www.loc.gov/mods/v3#location",
-              "id": 442
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1106,
-          "attributes": [
-            {
-              "name": "relatedItem",
-              "uri": "http://www.loc.gov/mods/v3#relatedItem",
-              "id": 437
-            },
-            {
-              "name": "location",
-              "uri": "http://www.loc.gov/mods/v3#location",
-              "id": 442
-            }
-          ]
-        },
-        {
-          "id": 1105,
-          "attributes": [
-            {
-              "name": "relatedItem",
-              "uri": "http://www.loc.gov/mods/v3#relatedItem",
-              "id": 437
-            },
-            {
-              "name": "titleInfo",
-              "uri": "http://www.loc.gov/mods/v3#titleInfo",
-              "id": 425
-            },
-            {
-              "name": "title",
-              "uri": "http://www.loc.gov/mods/v3#title",
-              "id": 426
-            },
-            {
-              "name": "value",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-              "id": 41
-            }
-          ]
-        },
-        {
-          "id": 1122,
-          "attributes": [
-            {
-              "name": "location",
-              "uri": "http://www.loc.gov/mods/v3#location",
-              "id": 442
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1121,
-          "attributes": [{
-              "name": "location",
-              "uri": "http://www.loc.gov/mods/v3#location",
-              "id": 442
-            }]
-        },
-        {
-          "id": 1124,
-          "attributes": [
-            {
-              "name": "location",
-              "uri": "http://www.loc.gov/mods/v3#location",
-              "id": 442
-            },
-            {
-              "name": "shelfLocator",
-              "uri": "http://www.loc.gov/mods/v3#shelfLocator",
-              "id": 449
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1123,
-          "attributes": [
-            {
-              "name": "location",
-              "uri": "http://www.loc.gov/mods/v3#location",
-              "id": 442
-            },
-            {
-              "name": "shelfLocator",
-              "uri": "http://www.loc.gov/mods/v3#shelfLocator",
-              "id": 449
-            }
-          ]
-        },
-        {
-          "id": 1126,
-          "attributes": [
-            {
-              "name": "location",
-              "uri": "http://www.loc.gov/mods/v3#location",
-              "id": 442
-            },
-            {
-              "name": "url",
-              "uri": "http://www.loc.gov/mods/v3#url",
-              "id": 443
-            }
-          ]
-        },
-        {
-          "id": 1125,
-          "attributes": [
-            {
-              "name": "location",
-              "uri": "http://www.loc.gov/mods/v3#location",
-              "id": 442
-            },
-            {
-              "name": "shelfLocator",
-              "uri": "http://www.loc.gov/mods/v3#shelfLocator",
-              "id": 449
-            },
-            {
-              "name": "value",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-              "id": 41
-            }
-          ]
-        },
-        {
-          "id": 1128,
-          "attributes": [
-            {
-              "name": "location",
-              "uri": "http://www.loc.gov/mods/v3#location",
-              "id": 442
-            },
-            {
-              "name": "url",
-              "uri": "http://www.loc.gov/mods/v3#url",
-              "id": 443
-            },
-            {
-              "name": "access",
-              "uri": "http://www.loc.gov/mods/v3#access",
-              "id": 450
-            }
-          ]
-        },
-        {
-          "id": 1127,
-          "attributes": [
-            {
-              "name": "location",
-              "uri": "http://www.loc.gov/mods/v3#location",
-              "id": 442
-            },
-            {
-              "name": "url",
-              "uri": "http://www.loc.gov/mods/v3#url",
-              "id": 443
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1130,
-          "attributes": [{
-              "name": "note",
-              "uri": "http://www.loc.gov/mods/v3#note",
-              "id": 451
-            }]
-        },
-        {
-          "id": 1129,
-          "attributes": [
-            {
-              "name": "location",
-              "uri": "http://www.loc.gov/mods/v3#location",
-              "id": 442
-            },
-            {
-              "name": "url",
-              "uri": "http://www.loc.gov/mods/v3#url",
-              "id": 443
-            },
-            {
-              "name": "value",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-              "id": 41
-            }
-          ]
-        },
-        {
-          "id": 1132,
-          "attributes": [
-            {
-              "name": "note",
-              "uri": "http://www.loc.gov/mods/v3#note",
-              "id": 451
-            },
-            {
-              "name": "type",
-              "uri": "http://www.loc.gov/mods/v3#type",
-              "id": 435
-            }
-          ]
-        },
-        {
-          "id": 1131,
-          "attributes": [
-            {
-              "name": "note",
-              "uri": "http://www.loc.gov/mods/v3#note",
-              "id": 451
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1134,
-          "attributes": [
-            {
-              "name": "note",
-              "uri": "http://www.loc.gov/mods/v3#note",
-              "id": 451
-            },
-            {
-              "name": "displayLabel",
-              "uri": "http://www.loc.gov/mods/v3#displayLabel",
-              "id": 452
-            }
-          ]
-        },
-        {
-          "id": 1133,
-          "attributes": [
-            {
-              "name": "note",
-              "uri": "http://www.loc.gov/mods/v3#note",
-              "id": 451
-            },
-            {
-              "name": "lang",
-              "uri": "http://www.loc.gov/mods/v3#lang",
-              "id": 440
-            }
-          ]
-        },
-        {
-          "id": 1136,
-          "attributes": [{
-              "name": "recordInfo",
-              "uri": "http://www.loc.gov/mods/v3#recordInfo",
-              "id": 438
-            }]
-        },
-        {
-          "id": 1135,
-          "attributes": [
-            {
-              "name": "note",
-              "uri": "http://www.loc.gov/mods/v3#note",
-              "id": 451
-            },
-            {
-              "name": "value",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-              "id": 41
-            }
-          ]
-        },
-        {
-          "id": 1137,
-          "attributes": [
-            {
-              "name": "recordInfo",
-              "uri": "http://www.loc.gov/mods/v3#recordInfo",
-              "id": 438
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1138,
-          "attributes": [
-            {
-              "name": "recordInfo",
-              "uri": "http://www.loc.gov/mods/v3#recordInfo",
-              "id": 438
-            },
-            {
-              "name": "recordIdentifier",
-              "uri": "http://www.loc.gov/mods/v3#recordIdentifier",
-              "id": 439
-            }
-          ]
-        },
-        {
-          "id": 1139,
-          "attributes": [
-            {
-              "name": "recordInfo",
-              "uri": "http://www.loc.gov/mods/v3#recordInfo",
-              "id": 438
-            },
-            {
-              "name": "recordIdentifier",
-              "uri": "http://www.loc.gov/mods/v3#recordIdentifier",
-              "id": 439
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1140,
-          "attributes": [
-            {
-              "name": "recordInfo",
-              "uri": "http://www.loc.gov/mods/v3#recordInfo",
-              "id": 438
-            },
-            {
-              "name": "recordIdentifier",
-              "uri": "http://www.loc.gov/mods/v3#recordIdentifier",
-              "id": 439
-            },
-            {
-              "name": "source",
-              "uri": "http://www.loc.gov/mods/v3#source",
-              "id": 444
-            }
-          ]
-        },
-        {
-          "id": 1141,
-          "attributes": [
-            {
-              "name": "recordInfo",
-              "uri": "http://www.loc.gov/mods/v3#recordInfo",
-              "id": 438
-            },
-            {
-              "name": "recordIdentifier",
-              "uri": "http://www.loc.gov/mods/v3#recordIdentifier",
-              "id": 439
-            },
-            {
-              "name": "value",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-              "id": 41
-            }
-          ]
-        },
-        {
-          "id": 1142,
-          "attributes": [{
-              "name": "identifier",
-              "uri": "http://www.loc.gov/mods/v3#identifier",
-              "id": 453
-            }]
-        },
-        {
-          "id": 1143,
-          "attributes": [
-            {
-              "name": "identifier",
-              "uri": "http://www.loc.gov/mods/v3#identifier",
-              "id": 453
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1144,
-          "attributes": [
-            {
-              "name": "identifier",
-              "uri": "http://www.loc.gov/mods/v3#identifier",
-              "id": 453
-            },
-            {
-              "name": "type",
-              "uri": "http://www.loc.gov/mods/v3#type",
-              "id": 435
-            }
-          ]
-        },
-        {
-          "id": 1145,
-          "attributes": [
-            {
-              "name": "identifier",
-              "uri": "http://www.loc.gov/mods/v3#identifier",
-              "id": 453
-            },
-            {
-              "name": "value",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-              "id": 41
-            }
-          ]
-        },
-        {
-          "id": 1146,
-          "attributes": [{
-              "name": "abstract",
-              "uri": "http://www.loc.gov/mods/v3#abstract",
-              "id": 454
-            }]
-        },
-        {
-          "id": 1147,
-          "attributes": [
-            {
-              "name": "abstract",
-              "uri": "http://www.loc.gov/mods/v3#abstract",
-              "id": 454
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 1148,
-          "attributes": [
-            {
-              "name": "abstract",
-              "uri": "http://www.loc.gov/mods/v3#abstract",
-              "id": 454
-            },
-            {
-              "name": "lang",
-              "uri": "http://www.loc.gov/mods/v3#lang",
-              "id": 440
-            }
-          ]
+    "schema" : {
+      "name" : null,
+      "id" : 70,
+      "attribute_paths" : [ {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_0",
+        "id" : 0,
+        "attribute_path" : {
+          "id" : 1069,
+          "attributes" : [ {
+            "name" : "titleInfo",
+            "uri" : "http://www.loc.gov/mods/v3#titleInfo",
+            "id" : 425
+          }, {
+            "name" : "title",
+            "uri" : "http://www.loc.gov/mods/v3#title",
+            "id" : 426
+          } ]
         }
-      ],
-      "record_class": {
-        "name": "modsType",
-        "uri": "http://www.loc.gov/mods/v3#modsType",
-        "id": 34
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_1",
+        "id" : 1,
+        "attribute_path" : {
+          "id" : 1070,
+          "attributes" : [ {
+            "name" : "titleInfo",
+            "uri" : "http://www.loc.gov/mods/v3#titleInfo",
+            "id" : 425
+          }, {
+            "name" : "title",
+            "uri" : "http://www.loc.gov/mods/v3#title",
+            "id" : 426
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_2",
+        "id" : 2,
+        "attribute_path" : {
+          "id" : 1071,
+          "attributes" : [ {
+            "name" : "titleInfo",
+            "uri" : "http://www.loc.gov/mods/v3#titleInfo",
+            "id" : 425
+          }, {
+            "name" : "title",
+            "uri" : "http://www.loc.gov/mods/v3#title",
+            "id" : 426
+          }, {
+            "name" : "value",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+            "id" : 41
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_3",
+        "id" : 3,
+        "attribute_path" : {
+          "id" : 1072,
+          "attributes" : [ {
+            "name" : "originInfo",
+            "uri" : "http://www.loc.gov/mods/v3#originInfo",
+            "id" : 427
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_4",
+        "id" : 4,
+        "attribute_path" : {
+          "id" : 1067,
+          "attributes" : [ {
+            "name" : "titleInfo",
+            "uri" : "http://www.loc.gov/mods/v3#titleInfo",
+            "id" : 425
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_5",
+        "id" : 5,
+        "attribute_path" : {
+          "id" : 1068,
+          "attributes" : [ {
+            "name" : "titleInfo",
+            "uri" : "http://www.loc.gov/mods/v3#titleInfo",
+            "id" : 425
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_6",
+        "id" : 6,
+        "attribute_path" : {
+          "id" : 1086,
+          "attributes" : [ {
+            "name" : "language",
+            "uri" : "http://www.loc.gov/mods/v3#language",
+            "id" : 433
+          }, {
+            "name" : "languageTerm",
+            "uri" : "http://www.loc.gov/mods/v3#languageTerm",
+            "id" : 434
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_7",
+        "id" : 7,
+        "attribute_path" : {
+          "id" : 1085,
+          "attributes" : [ {
+            "name" : "language",
+            "uri" : "http://www.loc.gov/mods/v3#language",
+            "id" : 433
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_8",
+        "id" : 8,
+        "attribute_path" : {
+          "id" : 1088,
+          "attributes" : [ {
+            "name" : "language",
+            "uri" : "http://www.loc.gov/mods/v3#language",
+            "id" : 433
+          }, {
+            "name" : "languageTerm",
+            "uri" : "http://www.loc.gov/mods/v3#languageTerm",
+            "id" : 434
+          }, {
+            "name" : "type",
+            "uri" : "http://www.loc.gov/mods/v3#type",
+            "id" : 435
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_9",
+        "id" : 9,
+        "attribute_path" : {
+          "id" : 1087,
+          "attributes" : [ {
+            "name" : "language",
+            "uri" : "http://www.loc.gov/mods/v3#language",
+            "id" : 433
+          }, {
+            "name" : "languageTerm",
+            "uri" : "http://www.loc.gov/mods/v3#languageTerm",
+            "id" : 434
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_10",
+        "id" : 10,
+        "attribute_path" : {
+          "id" : 1082,
+          "attributes" : [ {
+            "name" : "physicalDescription",
+            "uri" : "http://www.loc.gov/mods/v3#physicalDescription",
+            "id" : 431
+          }, {
+            "name" : "digitalOrigin",
+            "uri" : "http://www.loc.gov/mods/v3#digitalOrigin",
+            "id" : 432
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_11",
+        "id" : 11,
+        "attribute_path" : {
+          "id" : 1081,
+          "attributes" : [ {
+            "name" : "physicalDescription",
+            "uri" : "http://www.loc.gov/mods/v3#physicalDescription",
+            "id" : 431
+          }, {
+            "name" : "digitalOrigin",
+            "uri" : "http://www.loc.gov/mods/v3#digitalOrigin",
+            "id" : 432
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_12",
+        "id" : 12,
+        "attribute_path" : {
+          "id" : 1084,
+          "attributes" : [ {
+            "name" : "language",
+            "uri" : "http://www.loc.gov/mods/v3#language",
+            "id" : 433
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_13",
+        "id" : 13,
+        "attribute_path" : {
+          "id" : 1083,
+          "attributes" : [ {
+            "name" : "physicalDescription",
+            "uri" : "http://www.loc.gov/mods/v3#physicalDescription",
+            "id" : 431
+          }, {
+            "name" : "digitalOrigin",
+            "uri" : "http://www.loc.gov/mods/v3#digitalOrigin",
+            "id" : 432
+          }, {
+            "name" : "value",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+            "id" : 41
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_14",
+        "id" : 14,
+        "attribute_path" : {
+          "id" : 1078,
+          "attributes" : [ {
+            "name" : "originInfo",
+            "uri" : "http://www.loc.gov/mods/v3#originInfo",
+            "id" : 427
+          }, {
+            "name" : "dateIssued",
+            "uri" : "http://www.loc.gov/mods/v3#dateIssued",
+            "id" : 428
+          }, {
+            "name" : "value",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+            "id" : 41
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_15",
+        "id" : 15,
+        "attribute_path" : {
+          "id" : 1077,
+          "attributes" : [ {
+            "name" : "originInfo",
+            "uri" : "http://www.loc.gov/mods/v3#originInfo",
+            "id" : 427
+          }, {
+            "name" : "dateIssued",
+            "uri" : "http://www.loc.gov/mods/v3#dateIssued",
+            "id" : 428
+          }, {
+            "name" : "encoding",
+            "uri" : "http://www.loc.gov/mods/v3#encoding",
+            "id" : 430
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_16",
+        "id" : 16,
+        "attribute_path" : {
+          "id" : 1080,
+          "attributes" : [ {
+            "name" : "physicalDescription",
+            "uri" : "http://www.loc.gov/mods/v3#physicalDescription",
+            "id" : 431
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_17",
+        "id" : 17,
+        "attribute_path" : {
+          "id" : 1079,
+          "attributes" : [ {
+            "name" : "physicalDescription",
+            "uri" : "http://www.loc.gov/mods/v3#physicalDescription",
+            "id" : 431
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_18",
+        "id" : 18,
+        "attribute_path" : {
+          "id" : 1074,
+          "attributes" : [ {
+            "name" : "originInfo",
+            "uri" : "http://www.loc.gov/mods/v3#originInfo",
+            "id" : 427
+          }, {
+            "name" : "dateIssued",
+            "uri" : "http://www.loc.gov/mods/v3#dateIssued",
+            "id" : 428
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_19",
+        "id" : 19,
+        "attribute_path" : {
+          "id" : 1073,
+          "attributes" : [ {
+            "name" : "originInfo",
+            "uri" : "http://www.loc.gov/mods/v3#originInfo",
+            "id" : 427
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_20",
+        "id" : 20,
+        "attribute_path" : {
+          "id" : 1076,
+          "attributes" : [ {
+            "name" : "originInfo",
+            "uri" : "http://www.loc.gov/mods/v3#originInfo",
+            "id" : 427
+          }, {
+            "name" : "dateIssued",
+            "uri" : "http://www.loc.gov/mods/v3#dateIssued",
+            "id" : 428
+          }, {
+            "name" : "keyDate",
+            "uri" : "http://www.loc.gov/mods/v3#keyDate",
+            "id" : 429
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_21",
+        "id" : 21,
+        "attribute_path" : {
+          "id" : 1075,
+          "attributes" : [ {
+            "name" : "originInfo",
+            "uri" : "http://www.loc.gov/mods/v3#originInfo",
+            "id" : 427
+          }, {
+            "name" : "dateIssued",
+            "uri" : "http://www.loc.gov/mods/v3#dateIssued",
+            "id" : 428
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_22",
+        "id" : 22,
+        "attribute_path" : {
+          "id" : 1103,
+          "attributes" : [ {
+            "name" : "relatedItem",
+            "uri" : "http://www.loc.gov/mods/v3#relatedItem",
+            "id" : 437
+          }, {
+            "name" : "titleInfo",
+            "uri" : "http://www.loc.gov/mods/v3#titleInfo",
+            "id" : 425
+          }, {
+            "name" : "title",
+            "uri" : "http://www.loc.gov/mods/v3#title",
+            "id" : 426
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_23",
+        "id" : 23,
+        "attribute_path" : {
+          "id" : 1104,
+          "attributes" : [ {
+            "name" : "relatedItem",
+            "uri" : "http://www.loc.gov/mods/v3#relatedItem",
+            "id" : 437
+          }, {
+            "name" : "titleInfo",
+            "uri" : "http://www.loc.gov/mods/v3#titleInfo",
+            "id" : 425
+          }, {
+            "name" : "title",
+            "uri" : "http://www.loc.gov/mods/v3#title",
+            "id" : 426
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_24",
+        "id" : 24,
+        "attribute_path" : {
+          "id" : 1101,
+          "attributes" : [ {
+            "name" : "relatedItem",
+            "uri" : "http://www.loc.gov/mods/v3#relatedItem",
+            "id" : 437
+          }, {
+            "name" : "titleInfo",
+            "uri" : "http://www.loc.gov/mods/v3#titleInfo",
+            "id" : 425
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_25",
+        "id" : 25,
+        "attribute_path" : {
+          "id" : 1102,
+          "attributes" : [ {
+            "name" : "relatedItem",
+            "uri" : "http://www.loc.gov/mods/v3#relatedItem",
+            "id" : 437
+          }, {
+            "name" : "titleInfo",
+            "uri" : "http://www.loc.gov/mods/v3#titleInfo",
+            "id" : 425
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_26",
+        "id" : 26,
+        "attribute_path" : {
+          "id" : 1099,
+          "attributes" : [ {
+            "name" : "relatedItem",
+            "uri" : "http://www.loc.gov/mods/v3#relatedItem",
+            "id" : 437
+          }, {
+            "name" : "lang",
+            "uri" : "http://www.loc.gov/mods/v3#lang",
+            "id" : 440
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_27",
+        "id" : 27,
+        "attribute_path" : {
+          "id" : 1100,
+          "attributes" : [ {
+            "name" : "relatedItem",
+            "uri" : "http://www.loc.gov/mods/v3#relatedItem",
+            "id" : 437
+          }, {
+            "name" : "dwork_name",
+            "uri" : "http://www.loc.gov/mods/v3#dwork_name",
+            "id" : 441
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_28",
+        "id" : 28,
+        "attribute_path" : {
+          "id" : 1097,
+          "attributes" : [ {
+            "name" : "relatedItem",
+            "uri" : "http://www.loc.gov/mods/v3#relatedItem",
+            "id" : 437
+          }, {
+            "name" : "recordInfo",
+            "uri" : "http://www.loc.gov/mods/v3#recordInfo",
+            "id" : 438
+          }, {
+            "name" : "recordIdentifier",
+            "uri" : "http://www.loc.gov/mods/v3#recordIdentifier",
+            "id" : 439
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_29",
+        "id" : 29,
+        "attribute_path" : {
+          "id" : 1098,
+          "attributes" : [ {
+            "name" : "relatedItem",
+            "uri" : "http://www.loc.gov/mods/v3#relatedItem",
+            "id" : 437
+          }, {
+            "name" : "recordInfo",
+            "uri" : "http://www.loc.gov/mods/v3#recordInfo",
+            "id" : 438
+          }, {
+            "name" : "recordIdentifier",
+            "uri" : "http://www.loc.gov/mods/v3#recordIdentifier",
+            "id" : 439
+          }, {
+            "name" : "value",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+            "id" : 41
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_30",
+        "id" : 30,
+        "attribute_path" : {
+          "id" : 1095,
+          "attributes" : [ {
+            "name" : "relatedItem",
+            "uri" : "http://www.loc.gov/mods/v3#relatedItem",
+            "id" : 437
+          }, {
+            "name" : "recordInfo",
+            "uri" : "http://www.loc.gov/mods/v3#recordInfo",
+            "id" : 438
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_31",
+        "id" : 31,
+        "attribute_path" : {
+          "id" : 1096,
+          "attributes" : [ {
+            "name" : "relatedItem",
+            "uri" : "http://www.loc.gov/mods/v3#relatedItem",
+            "id" : 437
+          }, {
+            "name" : "recordInfo",
+            "uri" : "http://www.loc.gov/mods/v3#recordInfo",
+            "id" : 438
+          }, {
+            "name" : "recordIdentifier",
+            "uri" : "http://www.loc.gov/mods/v3#recordIdentifier",
+            "id" : 439
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_32",
+        "id" : 32,
+        "attribute_path" : {
+          "id" : 1093,
+          "attributes" : [ {
+            "name" : "relatedItem",
+            "uri" : "http://www.loc.gov/mods/v3#relatedItem",
+            "id" : 437
+          }, {
+            "name" : "type",
+            "uri" : "http://www.loc.gov/mods/v3#type",
+            "id" : 435
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_33",
+        "id" : 33,
+        "attribute_path" : {
+          "id" : 1094,
+          "attributes" : [ {
+            "name" : "relatedItem",
+            "uri" : "http://www.loc.gov/mods/v3#relatedItem",
+            "id" : 437
+          }, {
+            "name" : "recordInfo",
+            "uri" : "http://www.loc.gov/mods/v3#recordInfo",
+            "id" : 438
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_34",
+        "id" : 34,
+        "attribute_path" : {
+          "id" : 1091,
+          "attributes" : [ {
+            "name" : "relatedItem",
+            "uri" : "http://www.loc.gov/mods/v3#relatedItem",
+            "id" : 437
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_35",
+        "id" : 35,
+        "attribute_path" : {
+          "id" : 1092,
+          "attributes" : [ {
+            "name" : "relatedItem",
+            "uri" : "http://www.loc.gov/mods/v3#relatedItem",
+            "id" : 437
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_36",
+        "id" : 36,
+        "attribute_path" : {
+          "id" : 1089,
+          "attributes" : [ {
+            "name" : "language",
+            "uri" : "http://www.loc.gov/mods/v3#language",
+            "id" : 433
+          }, {
+            "name" : "languageTerm",
+            "uri" : "http://www.loc.gov/mods/v3#languageTerm",
+            "id" : 434
+          }, {
+            "name" : "authority",
+            "uri" : "http://www.loc.gov/mods/v3#authority",
+            "id" : 436
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_37",
+        "id" : 37,
+        "attribute_path" : {
+          "id" : 1090,
+          "attributes" : [ {
+            "name" : "language",
+            "uri" : "http://www.loc.gov/mods/v3#language",
+            "id" : 433
+          }, {
+            "name" : "languageTerm",
+            "uri" : "http://www.loc.gov/mods/v3#languageTerm",
+            "id" : 434
+          }, {
+            "name" : "value",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+            "id" : 41
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_38",
+        "id" : 38,
+        "attribute_path" : {
+          "id" : 1120,
+          "attributes" : [ {
+            "name" : "part",
+            "uri" : "http://www.loc.gov/mods/v3#part",
+            "id" : 445
+          }, {
+            "name" : "detail",
+            "uri" : "http://www.loc.gov/mods/v3#detail",
+            "id" : 447
+          }, {
+            "name" : "number",
+            "uri" : "http://www.loc.gov/mods/v3#number",
+            "id" : 448
+          }, {
+            "name" : "value",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+            "id" : 41
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_39",
+        "id" : 39,
+        "attribute_path" : {
+          "id" : 20,
+          "attributes" : [ {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_40",
+        "id" : 40,
+        "attribute_path" : {
+          "id" : 1119,
+          "attributes" : [ {
+            "name" : "part",
+            "uri" : "http://www.loc.gov/mods/v3#part",
+            "id" : 445
+          }, {
+            "name" : "detail",
+            "uri" : "http://www.loc.gov/mods/v3#detail",
+            "id" : 447
+          }, {
+            "name" : "number",
+            "uri" : "http://www.loc.gov/mods/v3#number",
+            "id" : 448
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_41",
+        "id" : 41,
+        "attribute_path" : {
+          "id" : 1118,
+          "attributes" : [ {
+            "name" : "part",
+            "uri" : "http://www.loc.gov/mods/v3#part",
+            "id" : 445
+          }, {
+            "name" : "detail",
+            "uri" : "http://www.loc.gov/mods/v3#detail",
+            "id" : 447
+          }, {
+            "name" : "number",
+            "uri" : "http://www.loc.gov/mods/v3#number",
+            "id" : 448
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_42",
+        "id" : 42,
+        "attribute_path" : {
+          "id" : 1117,
+          "attributes" : [ {
+            "name" : "part",
+            "uri" : "http://www.loc.gov/mods/v3#part",
+            "id" : 445
+          }, {
+            "name" : "detail",
+            "uri" : "http://www.loc.gov/mods/v3#detail",
+            "id" : 447
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_43",
+        "id" : 43,
+        "attribute_path" : {
+          "id" : 1116,
+          "attributes" : [ {
+            "name" : "part",
+            "uri" : "http://www.loc.gov/mods/v3#part",
+            "id" : 445
+          }, {
+            "name" : "detail",
+            "uri" : "http://www.loc.gov/mods/v3#detail",
+            "id" : 447
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_44",
+        "id" : 44,
+        "attribute_path" : {
+          "id" : 1115,
+          "attributes" : [ {
+            "name" : "part",
+            "uri" : "http://www.loc.gov/mods/v3#part",
+            "id" : 445
+          }, {
+            "name" : "order",
+            "uri" : "http://www.loc.gov/mods/v3#order",
+            "id" : 446
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_45",
+        "id" : 45,
+        "attribute_path" : {
+          "id" : 1114,
+          "attributes" : [ {
+            "name" : "part",
+            "uri" : "http://www.loc.gov/mods/v3#part",
+            "id" : 445
+          }, {
+            "name" : "type",
+            "uri" : "http://www.loc.gov/mods/v3#type",
+            "id" : 435
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_46",
+        "id" : 46,
+        "attribute_path" : {
+          "id" : 1113,
+          "attributes" : [ {
+            "name" : "part",
+            "uri" : "http://www.loc.gov/mods/v3#part",
+            "id" : 445
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_47",
+        "id" : 47,
+        "attribute_path" : {
+          "id" : 1112,
+          "attributes" : [ {
+            "name" : "part",
+            "uri" : "http://www.loc.gov/mods/v3#part",
+            "id" : 445
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_48",
+        "id" : 48,
+        "attribute_path" : {
+          "id" : 1111,
+          "attributes" : [ {
+            "name" : "relatedItem",
+            "uri" : "http://www.loc.gov/mods/v3#relatedItem",
+            "id" : 437
+          }, {
+            "name" : "recordInfo",
+            "uri" : "http://www.loc.gov/mods/v3#recordInfo",
+            "id" : 438
+          }, {
+            "name" : "recordIdentifier",
+            "uri" : "http://www.loc.gov/mods/v3#recordIdentifier",
+            "id" : 439
+          }, {
+            "name" : "source",
+            "uri" : "http://www.loc.gov/mods/v3#source",
+            "id" : 444
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_49",
+        "id" : 49,
+        "attribute_path" : {
+          "id" : 1110,
+          "attributes" : [ {
+            "name" : "relatedItem",
+            "uri" : "http://www.loc.gov/mods/v3#relatedItem",
+            "id" : 437
+          }, {
+            "name" : "location",
+            "uri" : "http://www.loc.gov/mods/v3#location",
+            "id" : 442
+          }, {
+            "name" : "url",
+            "uri" : "http://www.loc.gov/mods/v3#url",
+            "id" : 443
+          }, {
+            "name" : "value",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+            "id" : 41
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_50",
+        "id" : 50,
+        "attribute_path" : {
+          "id" : 1109,
+          "attributes" : [ {
+            "name" : "relatedItem",
+            "uri" : "http://www.loc.gov/mods/v3#relatedItem",
+            "id" : 437
+          }, {
+            "name" : "location",
+            "uri" : "http://www.loc.gov/mods/v3#location",
+            "id" : 442
+          }, {
+            "name" : "url",
+            "uri" : "http://www.loc.gov/mods/v3#url",
+            "id" : 443
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_51",
+        "id" : 51,
+        "attribute_path" : {
+          "id" : 1108,
+          "attributes" : [ {
+            "name" : "relatedItem",
+            "uri" : "http://www.loc.gov/mods/v3#relatedItem",
+            "id" : 437
+          }, {
+            "name" : "location",
+            "uri" : "http://www.loc.gov/mods/v3#location",
+            "id" : 442
+          }, {
+            "name" : "url",
+            "uri" : "http://www.loc.gov/mods/v3#url",
+            "id" : 443
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_52",
+        "id" : 52,
+        "attribute_path" : {
+          "id" : 1107,
+          "attributes" : [ {
+            "name" : "relatedItem",
+            "uri" : "http://www.loc.gov/mods/v3#relatedItem",
+            "id" : 437
+          }, {
+            "name" : "location",
+            "uri" : "http://www.loc.gov/mods/v3#location",
+            "id" : 442
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_53",
+        "id" : 53,
+        "attribute_path" : {
+          "id" : 1106,
+          "attributes" : [ {
+            "name" : "relatedItem",
+            "uri" : "http://www.loc.gov/mods/v3#relatedItem",
+            "id" : 437
+          }, {
+            "name" : "location",
+            "uri" : "http://www.loc.gov/mods/v3#location",
+            "id" : 442
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_54",
+        "id" : 54,
+        "attribute_path" : {
+          "id" : 1105,
+          "attributes" : [ {
+            "name" : "relatedItem",
+            "uri" : "http://www.loc.gov/mods/v3#relatedItem",
+            "id" : 437
+          }, {
+            "name" : "titleInfo",
+            "uri" : "http://www.loc.gov/mods/v3#titleInfo",
+            "id" : 425
+          }, {
+            "name" : "title",
+            "uri" : "http://www.loc.gov/mods/v3#title",
+            "id" : 426
+          }, {
+            "name" : "value",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+            "id" : 41
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_55",
+        "id" : 55,
+        "attribute_path" : {
+          "id" : 1122,
+          "attributes" : [ {
+            "name" : "location",
+            "uri" : "http://www.loc.gov/mods/v3#location",
+            "id" : 442
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_56",
+        "id" : 56,
+        "attribute_path" : {
+          "id" : 1121,
+          "attributes" : [ {
+            "name" : "location",
+            "uri" : "http://www.loc.gov/mods/v3#location",
+            "id" : 442
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_57",
+        "id" : 57,
+        "attribute_path" : {
+          "id" : 1124,
+          "attributes" : [ {
+            "name" : "location",
+            "uri" : "http://www.loc.gov/mods/v3#location",
+            "id" : 442
+          }, {
+            "name" : "shelfLocator",
+            "uri" : "http://www.loc.gov/mods/v3#shelfLocator",
+            "id" : 449
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_58",
+        "id" : 58,
+        "attribute_path" : {
+          "id" : 1123,
+          "attributes" : [ {
+            "name" : "location",
+            "uri" : "http://www.loc.gov/mods/v3#location",
+            "id" : 442
+          }, {
+            "name" : "shelfLocator",
+            "uri" : "http://www.loc.gov/mods/v3#shelfLocator",
+            "id" : 449
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_59",
+        "id" : 59,
+        "attribute_path" : {
+          "id" : 1126,
+          "attributes" : [ {
+            "name" : "location",
+            "uri" : "http://www.loc.gov/mods/v3#location",
+            "id" : 442
+          }, {
+            "name" : "url",
+            "uri" : "http://www.loc.gov/mods/v3#url",
+            "id" : 443
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_60",
+        "id" : 60,
+        "attribute_path" : {
+          "id" : 1125,
+          "attributes" : [ {
+            "name" : "location",
+            "uri" : "http://www.loc.gov/mods/v3#location",
+            "id" : 442
+          }, {
+            "name" : "shelfLocator",
+            "uri" : "http://www.loc.gov/mods/v3#shelfLocator",
+            "id" : 449
+          }, {
+            "name" : "value",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+            "id" : 41
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_61",
+        "id" : 61,
+        "attribute_path" : {
+          "id" : 1128,
+          "attributes" : [ {
+            "name" : "location",
+            "uri" : "http://www.loc.gov/mods/v3#location",
+            "id" : 442
+          }, {
+            "name" : "url",
+            "uri" : "http://www.loc.gov/mods/v3#url",
+            "id" : 443
+          }, {
+            "name" : "access",
+            "uri" : "http://www.loc.gov/mods/v3#access",
+            "id" : 450
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_62",
+        "id" : 62,
+        "attribute_path" : {
+          "id" : 1127,
+          "attributes" : [ {
+            "name" : "location",
+            "uri" : "http://www.loc.gov/mods/v3#location",
+            "id" : 442
+          }, {
+            "name" : "url",
+            "uri" : "http://www.loc.gov/mods/v3#url",
+            "id" : 443
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_63",
+        "id" : 63,
+        "attribute_path" : {
+          "id" : 1130,
+          "attributes" : [ {
+            "name" : "note",
+            "uri" : "http://www.loc.gov/mods/v3#note",
+            "id" : 451
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_64",
+        "id" : 64,
+        "attribute_path" : {
+          "id" : 1129,
+          "attributes" : [ {
+            "name" : "location",
+            "uri" : "http://www.loc.gov/mods/v3#location",
+            "id" : 442
+          }, {
+            "name" : "url",
+            "uri" : "http://www.loc.gov/mods/v3#url",
+            "id" : 443
+          }, {
+            "name" : "value",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+            "id" : 41
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_65",
+        "id" : 65,
+        "attribute_path" : {
+          "id" : 1132,
+          "attributes" : [ {
+            "name" : "note",
+            "uri" : "http://www.loc.gov/mods/v3#note",
+            "id" : 451
+          }, {
+            "name" : "type",
+            "uri" : "http://www.loc.gov/mods/v3#type",
+            "id" : 435
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_66",
+        "id" : 66,
+        "attribute_path" : {
+          "id" : 1131,
+          "attributes" : [ {
+            "name" : "note",
+            "uri" : "http://www.loc.gov/mods/v3#note",
+            "id" : 451
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_67",
+        "id" : 67,
+        "attribute_path" : {
+          "id" : 1134,
+          "attributes" : [ {
+            "name" : "note",
+            "uri" : "http://www.loc.gov/mods/v3#note",
+            "id" : 451
+          }, {
+            "name" : "displayLabel",
+            "uri" : "http://www.loc.gov/mods/v3#displayLabel",
+            "id" : 452
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_68",
+        "id" : 68,
+        "attribute_path" : {
+          "id" : 1133,
+          "attributes" : [ {
+            "name" : "note",
+            "uri" : "http://www.loc.gov/mods/v3#note",
+            "id" : 451
+          }, {
+            "name" : "lang",
+            "uri" : "http://www.loc.gov/mods/v3#lang",
+            "id" : 440
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_69",
+        "id" : 69,
+        "attribute_path" : {
+          "id" : 1136,
+          "attributes" : [ {
+            "name" : "recordInfo",
+            "uri" : "http://www.loc.gov/mods/v3#recordInfo",
+            "id" : 438
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_70",
+        "id" : 70,
+        "attribute_path" : {
+          "id" : 1135,
+          "attributes" : [ {
+            "name" : "note",
+            "uri" : "http://www.loc.gov/mods/v3#note",
+            "id" : 451
+          }, {
+            "name" : "value",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+            "id" : 41
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_71",
+        "id" : 71,
+        "attribute_path" : {
+          "id" : 1137,
+          "attributes" : [ {
+            "name" : "recordInfo",
+            "uri" : "http://www.loc.gov/mods/v3#recordInfo",
+            "id" : 438
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_72",
+        "id" : 72,
+        "attribute_path" : {
+          "id" : 1138,
+          "attributes" : [ {
+            "name" : "recordInfo",
+            "uri" : "http://www.loc.gov/mods/v3#recordInfo",
+            "id" : 438
+          }, {
+            "name" : "recordIdentifier",
+            "uri" : "http://www.loc.gov/mods/v3#recordIdentifier",
+            "id" : 439
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_73",
+        "id" : 73,
+        "attribute_path" : {
+          "id" : 1139,
+          "attributes" : [ {
+            "name" : "recordInfo",
+            "uri" : "http://www.loc.gov/mods/v3#recordInfo",
+            "id" : 438
+          }, {
+            "name" : "recordIdentifier",
+            "uri" : "http://www.loc.gov/mods/v3#recordIdentifier",
+            "id" : 439
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_74",
+        "id" : 74,
+        "attribute_path" : {
+          "id" : 1140,
+          "attributes" : [ {
+            "name" : "recordInfo",
+            "uri" : "http://www.loc.gov/mods/v3#recordInfo",
+            "id" : 438
+          }, {
+            "name" : "recordIdentifier",
+            "uri" : "http://www.loc.gov/mods/v3#recordIdentifier",
+            "id" : 439
+          }, {
+            "name" : "source",
+            "uri" : "http://www.loc.gov/mods/v3#source",
+            "id" : 444
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_75",
+        "id" : 75,
+        "attribute_path" : {
+          "id" : 1141,
+          "attributes" : [ {
+            "name" : "recordInfo",
+            "uri" : "http://www.loc.gov/mods/v3#recordInfo",
+            "id" : 438
+          }, {
+            "name" : "recordIdentifier",
+            "uri" : "http://www.loc.gov/mods/v3#recordIdentifier",
+            "id" : 439
+          }, {
+            "name" : "value",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+            "id" : 41
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_76",
+        "id" : 76,
+        "attribute_path" : {
+          "id" : 1142,
+          "attributes" : [ {
+            "name" : "identifier",
+            "uri" : "http://www.loc.gov/mods/v3#identifier",
+            "id" : 453
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_77",
+        "id" : 77,
+        "attribute_path" : {
+          "id" : 1143,
+          "attributes" : [ {
+            "name" : "identifier",
+            "uri" : "http://www.loc.gov/mods/v3#identifier",
+            "id" : 453
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_78",
+        "id" : 78,
+        "attribute_path" : {
+          "id" : 1144,
+          "attributes" : [ {
+            "name" : "identifier",
+            "uri" : "http://www.loc.gov/mods/v3#identifier",
+            "id" : 453
+          }, {
+            "name" : "type",
+            "uri" : "http://www.loc.gov/mods/v3#type",
+            "id" : 435
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_79",
+        "id" : 79,
+        "attribute_path" : {
+          "id" : 1145,
+          "attributes" : [ {
+            "name" : "identifier",
+            "uri" : "http://www.loc.gov/mods/v3#identifier",
+            "id" : 453
+          }, {
+            "name" : "value",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+            "id" : 41
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_80",
+        "id" : 80,
+        "attribute_path" : {
+          "id" : 1146,
+          "attributes" : [ {
+            "name" : "abstract",
+            "uri" : "http://www.loc.gov/mods/v3#abstract",
+            "id" : 454
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_81",
+        "id" : 81,
+        "attribute_path" : {
+          "id" : 1147,
+          "attributes" : [ {
+            "name" : "abstract",
+            "uri" : "http://www.loc.gov/mods/v3#abstract",
+            "id" : 454
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_82",
+        "id" : 82,
+        "attribute_path" : {
+          "id" : 1148,
+          "attributes" : [ {
+            "name" : "abstract",
+            "uri" : "http://www.loc.gov/mods/v3#abstract",
+            "id" : 454
+          }, {
+            "name" : "lang",
+            "uri" : "http://www.loc.gov/mods/v3#lang",
+            "id" : 440
+          } ]
+        }
+      } ],
+      "record_class" : {
+        "name" : "modsType",
+        "uri" : "http://www.loc.gov/mods/v3#modsType",
+        "id" : 34
       }
     },
-    "id": 85,
-    "data_resource": {
-      "name": "metsmods_small.xml",
-      "description": "2",
-      "type": "FILE",
-      "id": 73,
-      "resource_attributes": {
-        "path": "/home/dmp/tmp/tmp/resources/metsmods_small.xml",
-        "filetype": "application/xml",
-        "filesize": -1
+    "id" : 85,
+    "data_resource" : {
+      "name" : "metsmods_small.xml",
+      "description" : "2",
+      "type" : "FILE",
+      "id" : 73,
+      "resource_attributes" : {
+        "path" : "/home/dmp/tmp/tmp/resources/metsmods_small.xml",
+        "filetype" : "application/xml",
+        "filesize" : -1
       },
-      "configurations": [{
-          "name": "xml",
-          "description": "xml with id 73",
-          "id": 73,
-          "resources": [{"id": 73}],
-          "parameters": {
-            "storage_type": "xml",
-            "record_tag": "mods"
-          }
-        }]
+      "configurations" : [ {
+        "name" : "xml",
+        "description" : "xml with id 73",
+        "id" : 73,
+        "resources" : [ {
+          "id" : 73
+        } ],
+        "parameters" : {
+          "storage_type" : "xml",
+          "record_tag" : "mods"
+        }
+      } ]
     }
   },
-  "output_data_model": {
-    "name": "Internal Data Model",
-    "description": "SLUB Internal Data Model",
-    "schema": {
-      "name": "Internal Schema",
-      "id": 1,
-      "attribute_paths": [
-        {
-          "id": 37,
-          "attributes": [
-            {
-              "name": "contributor",
-              "uri": "http://purl.org/dc/terms/contributor",
-              "id": 7
-            },
-            {
-              "name": "givenName",
-              "uri": "http://xmlns.com/foaf/0.1/givenName",
-              "id": 33
-            }
-          ]
-        },
-        {
-          "id": 33,
-          "attributes": [
-            {
-              "name": "creator",
-              "uri": "http://purl.org/dc/terms/creator",
-              "id": 5
-            },
-            {
-              "name": "familyName",
-              "uri": "http://xmlns.com/foaf/0.1/familyName",
-              "id": 32
-            }
-          ]
-        },
-        {
-          "id": 34,
-          "attributes": [
-            {
-              "name": "creator",
-              "uri": "http://purl.org/dc/terms/creator",
-              "id": 5
-            },
-            {
-              "name": "givenName",
-              "uri": "http://xmlns.com/foaf/0.1/givenName",
-              "id": 33
-            }
-          ]
-        },
-        {
-          "id": 35,
-          "attributes": [
-            {
-              "name": "contributor",
-              "uri": "http://purl.org/dc/terms/contributor",
-              "id": 7
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 36,
-          "attributes": [
-            {
-              "name": "contributor",
-              "uri": "http://purl.org/dc/terms/contributor",
-              "id": 7
-            },
-            {
-              "name": "familyName",
-              "uri": "http://xmlns.com/foaf/0.1/familyName",
-              "id": 32
-            }
-          ]
-        },
-        {
-          "id": 3,
-          "attributes": [{
-              "name": "alternative",
-              "uri": "http://purl.org/dc/terms/alternative",
-              "id": 3
-            }]
-        },
-        {
-          "id": 4,
-          "attributes": [{
-              "name": "shortTitle",
-              "uri": "http://purl.org/ontology/bibo/shortTitle",
-              "id": 4
-            }]
-        },
-        {
-          "id": 1,
-          "attributes": [{
-              "name": "title",
-              "uri": "http://purl.org/dc/elements/1.1/title",
-              "id": 1
-            }]
-        },
-        {
-          "id": 2,
-          "attributes": [{
-              "name": "otherTitleInformation",
-              "uri": "http://rdvocab.info/Elements/otherTitleInformation",
-              "id": 2
-            }]
-        },
-        {
-          "id": 7,
-          "attributes": [{
-              "name": "contributor",
-              "uri": "http://purl.org/dc/terms/contributor",
-              "id": 7
-            }]
-        },
-        {
-          "id": 8,
-          "attributes": [{
-              "name": "contributor",
-              "uri": "http://purl.org/dc/elements/1.1/contributor",
-              "id": 8
-            }]
-        },
-        {
-          "id": 5,
-          "attributes": [{
-              "name": "creator",
-              "uri": "http://purl.org/dc/terms/creator",
-              "id": 5
-            }]
-        },
-        {
-          "id": 6,
-          "attributes": [{
-              "name": "creator",
-              "uri": "http://purl.org/dc/elements/1.1/creator",
-              "id": 6
-            }]
-        },
-        {
-          "id": 11,
-          "attributes": [{
-              "name": "publisher",
-              "uri": "http://purl.org/dc/elements/1.1/publisher",
-              "id": 11
-            }]
-        },
-        {
-          "id": 12,
-          "attributes": [{
-              "name": "issued",
-              "uri": "http://purl.org/dc/terms/issued",
-              "id": 12
-            }]
-        },
-        {
-          "id": 9,
-          "attributes": [{
-              "name": "publicationStatement",
-              "uri": "http://rdvocab.info/Elements/publicationStatement",
-              "id": 9
-            }]
-        },
-        {
-          "id": 10,
-          "attributes": [{
-              "name": "placeOfPublication",
-              "uri": "http://rdvocab.info/Elements/placeOfPublication",
-              "id": 10
-            }]
-        },
-        {
-          "id": 15,
-          "attributes": [{
-              "name": "issn",
-              "uri": "http://purl.org/ontology/bibo/issn",
-              "id": 15
-            }]
-        },
-        {
-          "id": 16,
-          "attributes": [{
-              "name": "eissn",
-              "uri": "http://purl.org/ontology/bibo/eissn",
-              "id": 16
-            }]
-        },
-        {
-          "id": 13,
-          "attributes": [{
-              "name": "sameAs",
-              "uri": "http://www.w3.org/2002/07/owl#sameAs",
-              "id": 13
-            }]
-        },
-        {
-          "id": 14,
-          "attributes": [{
-              "name": "isLike",
-              "uri": "http://umbel.org/umbel#isLike",
-              "id": 14
-            }]
-        },
-        {
-          "id": 20,
-          "attributes": [{
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }]
-        },
-        {
-          "id": 87,
-          "attributes": [{
-              "name": "familyName",
-              "uri": "http://xmlns.com/foaf/0.1/familyName",
-              "id": 32
-            }]
-        },
-        {
-          "id": 19,
-          "attributes": [{
-              "name": "isbn",
-              "uri": "http://purl.org/ontology/bibo/isbn",
-              "id": 19
-            }]
-        },
-        {
-          "id": 86,
-          "attributes": [{
-              "name": "givenName",
-              "uri": "http://xmlns.com/foaf/0.1/givenName",
-              "id": 33
-            }]
-        },
-        {
-          "id": 18,
-          "attributes": [{
-              "name": "oclcnum",
-              "uri": "http://purl.org/ontology/bibo/oclcnum",
-              "id": 18
-            }]
-        },
-        {
-          "id": 17,
-          "attributes": [{
-              "name": "lccn",
-              "uri": "http://purl.org/ontology/bibo/lccn",
-              "id": 17
-            }]
-        },
-        {
-          "id": 24,
-          "attributes": [{
-              "name": "hasVersion",
-              "uri": "http://purl.org/dc/terms/hasVersion",
-              "id": 24
-            }]
-        },
-        {
-          "id": 23,
-          "attributes": [{
-              "name": "isPartOf",
-              "uri": "http://purl.org/dc/terms/isPartOf",
-              "id": 23
-            }]
-        },
-        {
-          "id": 22,
-          "attributes": [{
-              "name": "hasPart",
-              "uri": "http://purl.org/dc/terms/hasPart",
-              "id": 22
-            }]
-        },
-        {
-          "id": 21,
-          "attributes": [{
-              "name": "medium",
-              "uri": "http://purl.org/dc/terms/medium",
-              "id": 21
-            }]
-        },
-        {
-          "id": 28,
-          "attributes": [{
-              "name": "language",
-              "uri": "http://purl.org/dc/terms/language",
-              "id": 28
-            }]
-        },
-        {
-          "id": 27,
-          "attributes": [{
-              "name": "succeededBy",
-              "uri": "http://rdvocab.info/Elements/succeededBy",
-              "id": 27
-            }]
-        },
-        {
-          "id": 26,
-          "attributes": [{
-              "name": "precededBy",
-              "uri": "http://rdvocab.info/Elements/precededBy",
-              "id": 26
-            }]
-        },
-        {
-          "id": 25,
-          "attributes": [{
-              "name": "isFormatOf",
-              "uri": "http://purl.org/dc/terms/isFormatOf",
-              "id": 25
-            }]
-        },
-        {
-          "id": 32,
-          "attributes": [
-            {
-              "name": "creator",
-              "uri": "http://purl.org/dc/terms/creator",
-              "id": 5
-            },
-            {
-              "name": "type",
-              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-              "id": 20
-            }
-          ]
-        },
-        {
-          "id": 31,
-          "attributes": [{
-              "name": "bibliographicCitation",
-              "uri": "http://purl.org/dc/terms/bibliographicCitation",
-              "id": 31
-            }]
-        },
-        {
-          "id": 30,
-          "attributes": [{
-              "name": "edition",
-              "uri": "http://purl.org/ontology/bibo/edition",
-              "id": 30
-            }]
-        },
-        {
-          "id": 29,
-          "attributes": [{
-              "name": "1053",
-              "uri": "http://iflastandards.info/ns/isbd/elements/1053",
-              "id": 29
-            }]
+  "output_data_model" : {
+    "name" : "Internal Data Model",
+    "description" : "SLUB Internal Data Model",
+    "schema" : {
+      "name" : "Internal Schema",
+      "id" : 1,
+      "attribute_paths" : [ {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_83",
+        "id" : 83,
+        "attribute_path" : {
+          "id" : 37,
+          "attributes" : [ {
+            "name" : "contributor",
+            "uri" : "http://purl.org/dc/terms/contributor",
+            "id" : 7
+          }, {
+            "name" : "givenName",
+            "uri" : "http://xmlns.com/foaf/0.1/givenName",
+            "id" : 33
+          } ]
         }
-      ],
-      "record_class": {
-        "name": "Document",
-        "uri": "http://purl.org/ontology/bibo/Document",
-        "id": 1
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_84",
+        "id" : 84,
+        "attribute_path" : {
+          "id" : 33,
+          "attributes" : [ {
+            "name" : "creator",
+            "uri" : "http://purl.org/dc/terms/creator",
+            "id" : 5
+          }, {
+            "name" : "familyName",
+            "uri" : "http://xmlns.com/foaf/0.1/familyName",
+            "id" : 32
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_85",
+        "id" : 85,
+        "attribute_path" : {
+          "id" : 34,
+          "attributes" : [ {
+            "name" : "creator",
+            "uri" : "http://purl.org/dc/terms/creator",
+            "id" : 5
+          }, {
+            "name" : "givenName",
+            "uri" : "http://xmlns.com/foaf/0.1/givenName",
+            "id" : 33
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_86",
+        "id" : 86,
+        "attribute_path" : {
+          "id" : 35,
+          "attributes" : [ {
+            "name" : "contributor",
+            "uri" : "http://purl.org/dc/terms/contributor",
+            "id" : 7
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_87",
+        "id" : 87,
+        "attribute_path" : {
+          "id" : 36,
+          "attributes" : [ {
+            "name" : "contributor",
+            "uri" : "http://purl.org/dc/terms/contributor",
+            "id" : 7
+          }, {
+            "name" : "familyName",
+            "uri" : "http://xmlns.com/foaf/0.1/familyName",
+            "id" : 32
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_88",
+        "id" : 88,
+        "attribute_path" : {
+          "id" : 3,
+          "attributes" : [ {
+            "name" : "alternative",
+            "uri" : "http://purl.org/dc/terms/alternative",
+            "id" : 3
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_89",
+        "id" : 89,
+        "attribute_path" : {
+          "id" : 4,
+          "attributes" : [ {
+            "name" : "shortTitle",
+            "uri" : "http://purl.org/ontology/bibo/shortTitle",
+            "id" : 4
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_90",
+        "id" : 90,
+        "attribute_path" : {
+          "id" : 1,
+          "attributes" : [ {
+            "name" : "title",
+            "uri" : "http://purl.org/dc/elements/1.1/title",
+            "id" : 1
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_91",
+        "id" : 91,
+        "attribute_path" : {
+          "id" : 2,
+          "attributes" : [ {
+            "name" : "otherTitleInformation",
+            "uri" : "http://rdvocab.info/Elements/otherTitleInformation",
+            "id" : 2
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_92",
+        "id" : 92,
+        "attribute_path" : {
+          "id" : 7,
+          "attributes" : [ {
+            "name" : "contributor",
+            "uri" : "http://purl.org/dc/terms/contributor",
+            "id" : 7
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_93",
+        "id" : 93,
+        "attribute_path" : {
+          "id" : 8,
+          "attributes" : [ {
+            "name" : "contributor",
+            "uri" : "http://purl.org/dc/elements/1.1/contributor",
+            "id" : 8
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_94",
+        "id" : 94,
+        "attribute_path" : {
+          "id" : 5,
+          "attributes" : [ {
+            "name" : "creator",
+            "uri" : "http://purl.org/dc/terms/creator",
+            "id" : 5
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_95",
+        "id" : 95,
+        "attribute_path" : {
+          "id" : 6,
+          "attributes" : [ {
+            "name" : "creator",
+            "uri" : "http://purl.org/dc/elements/1.1/creator",
+            "id" : 6
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_96",
+        "id" : 96,
+        "attribute_path" : {
+          "id" : 11,
+          "attributes" : [ {
+            "name" : "publisher",
+            "uri" : "http://purl.org/dc/elements/1.1/publisher",
+            "id" : 11
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_97",
+        "id" : 97,
+        "attribute_path" : {
+          "id" : 12,
+          "attributes" : [ {
+            "name" : "issued",
+            "uri" : "http://purl.org/dc/terms/issued",
+            "id" : 12
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_98",
+        "id" : 98,
+        "attribute_path" : {
+          "id" : 9,
+          "attributes" : [ {
+            "name" : "publicationStatement",
+            "uri" : "http://rdvocab.info/Elements/publicationStatement",
+            "id" : 9
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_99",
+        "id" : 99,
+        "attribute_path" : {
+          "id" : 10,
+          "attributes" : [ {
+            "name" : "placeOfPublication",
+            "uri" : "http://rdvocab.info/Elements/placeOfPublication",
+            "id" : 10
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_100",
+        "id" : 100,
+        "attribute_path" : {
+          "id" : 15,
+          "attributes" : [ {
+            "name" : "issn",
+            "uri" : "http://purl.org/ontology/bibo/issn",
+            "id" : 15
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_101",
+        "id" : 101,
+        "attribute_path" : {
+          "id" : 16,
+          "attributes" : [ {
+            "name" : "eissn",
+            "uri" : "http://purl.org/ontology/bibo/eissn",
+            "id" : 16
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_102",
+        "id" : 102,
+        "attribute_path" : {
+          "id" : 13,
+          "attributes" : [ {
+            "name" : "sameAs",
+            "uri" : "http://www.w3.org/2002/07/owl#sameAs",
+            "id" : 13
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_103",
+        "id" : 103,
+        "attribute_path" : {
+          "id" : 14,
+          "attributes" : [ {
+            "name" : "isLike",
+            "uri" : "http://umbel.org/umbel#isLike",
+            "id" : 14
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_104",
+        "id" : 104,
+        "attribute_path" : {
+          "id" : 20,
+          "attributes" : [ {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_105",
+        "id" : 105,
+        "attribute_path" : {
+          "id" : 87,
+          "attributes" : [ {
+            "name" : "familyName",
+            "uri" : "http://xmlns.com/foaf/0.1/familyName",
+            "id" : 32
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_106",
+        "id" : 106,
+        "attribute_path" : {
+          "id" : 19,
+          "attributes" : [ {
+            "name" : "isbn",
+            "uri" : "http://purl.org/ontology/bibo/isbn",
+            "id" : 19
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_107",
+        "id" : 107,
+        "attribute_path" : {
+          "id" : 86,
+          "attributes" : [ {
+            "name" : "givenName",
+            "uri" : "http://xmlns.com/foaf/0.1/givenName",
+            "id" : 33
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_108",
+        "id" : 108,
+        "attribute_path" : {
+          "id" : 18,
+          "attributes" : [ {
+            "name" : "oclcnum",
+            "uri" : "http://purl.org/ontology/bibo/oclcnum",
+            "id" : 18
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_109",
+        "id" : 109,
+        "attribute_path" : {
+          "id" : 17,
+          "attributes" : [ {
+            "name" : "lccn",
+            "uri" : "http://purl.org/ontology/bibo/lccn",
+            "id" : 17
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_110",
+        "id" : 110,
+        "attribute_path" : {
+          "id" : 24,
+          "attributes" : [ {
+            "name" : "hasVersion",
+            "uri" : "http://purl.org/dc/terms/hasVersion",
+            "id" : 24
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_111",
+        "id" : 111,
+        "attribute_path" : {
+          "id" : 23,
+          "attributes" : [ {
+            "name" : "isPartOf",
+            "uri" : "http://purl.org/dc/terms/isPartOf",
+            "id" : 23
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_112",
+        "id" : 112,
+        "attribute_path" : {
+          "id" : 22,
+          "attributes" : [ {
+            "name" : "hasPart",
+            "uri" : "http://purl.org/dc/terms/hasPart",
+            "id" : 22
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_113",
+        "id" : 113,
+        "attribute_path" : {
+          "id" : 21,
+          "attributes" : [ {
+            "name" : "medium",
+            "uri" : "http://purl.org/dc/terms/medium",
+            "id" : 21
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_114",
+        "id" : 114,
+        "attribute_path" : {
+          "id" : 28,
+          "attributes" : [ {
+            "name" : "language",
+            "uri" : "http://purl.org/dc/terms/language",
+            "id" : 28
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_115",
+        "id" : 115,
+        "attribute_path" : {
+          "id" : 27,
+          "attributes" : [ {
+            "name" : "succeededBy",
+            "uri" : "http://rdvocab.info/Elements/succeededBy",
+            "id" : 27
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_116",
+        "id" : 116,
+        "attribute_path" : {
+          "id" : 26,
+          "attributes" : [ {
+            "name" : "precededBy",
+            "uri" : "http://rdvocab.info/Elements/precededBy",
+            "id" : 26
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_117",
+        "id" : 117,
+        "attribute_path" : {
+          "id" : 25,
+          "attributes" : [ {
+            "name" : "isFormatOf",
+            "uri" : "http://purl.org/dc/terms/isFormatOf",
+            "id" : 25
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_118",
+        "id" : 118,
+        "attribute_path" : {
+          "id" : 32,
+          "attributes" : [ {
+            "name" : "creator",
+            "uri" : "http://purl.org/dc/terms/creator",
+            "id" : 5
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "id" : 20
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_119",
+        "id" : 119,
+        "attribute_path" : {
+          "id" : 31,
+          "attributes" : [ {
+            "name" : "bibliographicCitation",
+            "uri" : "http://purl.org/dc/terms/bibliographicCitation",
+            "id" : 31
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_120",
+        "id" : 120,
+        "attribute_path" : {
+          "id" : 30,
+          "attributes" : [ {
+            "name" : "edition",
+            "uri" : "http://purl.org/ontology/bibo/edition",
+            "id" : 30
+          } ]
+        }
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_121",
+        "id" : 121,
+        "attribute_path" : {
+          "id" : 29,
+          "attributes" : [ {
+            "name" : "1053",
+            "uri" : "http://iflastandards.info/ns/isbd/elements/1053",
+            "id" : 29
+          } ]
+        }
+      } ],
+      "record_class" : {
+        "name" : "Document",
+        "uri" : "http://purl.org/ontology/bibo/Document",
+        "id" : 1
       }
     },
-    "id": 1
+    "id" : 1
   }
 }

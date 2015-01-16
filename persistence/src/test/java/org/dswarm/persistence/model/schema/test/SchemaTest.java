@@ -16,11 +16,14 @@
 package org.dswarm.persistence.model.schema.test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -36,6 +39,24 @@ public class SchemaTest extends GuicedTest {
 
 	@Test
 	public void simpleSchemaTest() throws IOException {
+
+		final Schema schema = makeTestSchema();
+		final String json = objectMapper.writeValueAsString(schema);
+		final Schema schemaDup = objectMapper.readValue(json, Schema.class);
+		final String jsonDup = objectMapper.writeValueAsString(schemaDup);
+
+		SchemaTest.LOG.debug("schema json: {}", json);
+
+		Assert.assertTrue("the two schemas should be identical", json.equals(jsonDup));
+	}
+	
+	/**
+	 * Test building a schema with sub-schemata
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public void complexSchemaTest() throws IOException {
 
 		final Schema schema = makeTestSchema();
 		final String json = objectMapper.writeValueAsString(schema);
@@ -75,12 +96,23 @@ public class SchemaTest extends GuicedTest {
 
 		return attributePath;
 	}
+	
+	private static SchemaAttributePathInstance createAttributePathInstance(final AttributePath attributePath) {
+		final SchemaAttributePathInstance attributePathInstance = new SchemaAttributePathInstance();
+		attributePathInstance.setAttributePath(attributePath);
+
+		Assert.assertNotNull("the attribute path should not be null", attributePathInstance.getAttributePath());
+
+		return attributePathInstance;
+	}
 
 	private static Schema createSchema(final Clasz recordClass, final AttributePath... attributePaths) {
+		
 		final Schema schema = new Schema();
 		schema.setRecordClass(recordClass);
 		for (final AttributePath attributePath : attributePaths) {
-			schema.addAttributePath(attributePath);
+			SchemaAttributePathInstance pathInstance = createAttributePathInstance(attributePath);
+			schema.addAttributePath(pathInstance);
 		}
 
 		Assert.assertNotNull("the record class should not be null", schema.getRecordClass());

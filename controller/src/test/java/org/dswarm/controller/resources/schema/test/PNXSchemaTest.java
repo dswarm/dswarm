@@ -46,14 +46,15 @@ import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 
 @SuppressWarnings("MethodMayBeStatic")
 public class PNXSchemaTest extends ResourceTest {
 
-	private static final String CONFIGURATION_NAME = "pnx";
+	private static final String CONFIGURATION_NAME        = "pnx";
 	private static final String CONFIGURATION_DESCRIPTION = "pnx config";
-	private static final String RESOURCE_NAME = "pnx";
-	private static final String RESOURCE_DESCRIPTION = "pnx file";
+	private static final String RESOURCE_NAME             = "pnx";
+	private static final String RESOURCE_DESCRIPTION      = "pnx file";
 
 	public PNXSchemaTest() {
 		super(null);
@@ -67,7 +68,6 @@ public class PNXSchemaTest extends ResourceTest {
 		final String dataModelUri = getResourceUri(dataModel);
 
 		compareCreatedSchema(schema, dataModelUri);
-		new CleanupDataModelSchemaTask().cleanUpResources(dataModel, schema);
 	}
 
 	private void compareCreatedSchema(final Schema schema, final String dataModelUri) {
@@ -247,8 +247,8 @@ public class PNXSchemaTest extends ResourceTest {
 	private PathHelper makeActual(final Schema schema, final String dataModelUri) {
 		final PathHelper actual = PathHelpers.newActual(dataModelUri);
 
-		for (final AttributePath attributePath : schema.getUniqueAttributePaths()) {
-			final List<Attribute> attributes = attributePath.getAttributePath();
+		for (final SchemaAttributePathInstance attributePath : schema.getUniqueAttributePaths()) {
+			final List<Attribute> attributes = attributePath.getAttributePath().getAttributePath();
 
 			final String[] attributeNames = new String[attributes.size()];
 			int idx = 0;

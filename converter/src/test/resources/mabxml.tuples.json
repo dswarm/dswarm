@@ -1,0 +1,91 @@
+[ {
+  "v1" : "http://data.slub-dresden.de/datamodels/4/records/8d2da158-08ab-4d99-8cb0-b284b6a82d5d",
+  "v2" : [ {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType"
+  }, {
+    "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ" : "h"
+  }, {
+    "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status" : "n"
+  }, {
+    "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion" : "M2.0"
+  }, {
+    "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld" : [ [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "001"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "test1"
+    } ], [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "029"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "m"
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "ZS"
+    } ], [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "050"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "a|||||||||||||"
+    } ], [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "052"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "p|||||||z||||||"
+    } ] ]
+  } ]
+}, {
+  "v1" : "http://data.slub-dresden.de/datamodels/4/records/460ef315-106e-4fc2-a906-74ca8244060e",
+  "v2" : [ {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType"
+  }, {
+    "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ" : "h"
+  }, {
+    "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status" : "n"
+  }, {
+    "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion" : "M2.0"
+  }, {
+    "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld" : [ [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "001"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "test2"
+    } ], [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "029"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "m"
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "MB"
+    } ], [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "050"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "a|||||||||||||"
+    } ], [ {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "052"
+    }, {
+      "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+    }, {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "p|||||||z||||||"
+    } ] ]
+  } ]
+} ]

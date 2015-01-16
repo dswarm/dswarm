@@ -15,7 +15,11 @@
  */
 package org.dswarm.persistence.service.test;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONException;
 import org.junit.Assert;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,18 +32,35 @@ import org.dswarm.persistence.service.BasicJPAService;
 public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, JPASERVICEIMPL extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSIDTYPE>
 		extends GuicedTest {
 
-	private static final Logger				LOG			= LoggerFactory.getLogger(BasicJPAServiceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BasicJPAServiceTest.class);
 
-	protected final String					type;
-	protected final Class<JPASERVICEIMPL>	jpaServiceClass;
-	protected JPASERVICEIMPL				jpaService	= null;
+	protected ObjectMapper objectMapper = null;
+
+	protected final String                type;
+	protected final Class<JPASERVICEIMPL> jpaServiceClass;
+	protected JPASERVICEIMPL jpaService = null;
+
+	@Test
+	public abstract void testSimpleObject() throws Exception;
 
 	public BasicJPAServiceTest(final String type, final Class<JPASERVICEIMPL> jpaServiceClass) {
 
 		this.type = type;
 		this.jpaServiceClass = jpaServiceClass;
 
+		initObjects();
+	}
+
+	public JPASERVICEIMPL getJpaService() {
+		return jpaService;
+	}
+
+	protected void initObjects() {
+
+		super.initObjects();
+
 		jpaService = GuicedTest.injector.getInstance(jpaServiceClass);
+		objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 		Assert.assertNotNull(type + " service shouldn't be null", jpaService);
 	}
@@ -79,16 +100,14 @@ public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<
 		return proxyUpdatedObject;
 	}
 
-	protected POJOCLASS getObject(final POJOCLASS object) {
+	protected POJOCLASS getObject(final POJOCLASS object) throws JsonProcessingException, JSONException {
 
-		POJOCLASS bbject = null;
+		final POJOCLASS persitentObject = jpaService.getObject(object.getId());
 
-		bbject = jpaService.getObject(object.getId());
+		Assert.assertNotNull("the updated " + type + " shoudln't be null", persitentObject);
+		Assert.assertEquals("the " + type + "s are not equal", object, persitentObject);
 
-		Assert.assertNotNull("the updated " + type + " shoudln't be null", bbject);
-		Assert.assertEquals("the " + type + "s are not equal", object, bbject);
-
-		return bbject;
+		return persitentObject;
 	}
 
 	protected void deleteObject(final POJOCLASSIDTYPE id) {
@@ -98,5 +117,18 @@ public abstract class BasicJPAServiceTest<PROXYPOJOCLASS extends ProxyDMPObject<
 		final POJOCLASS deletedObject = jpaService.getObject(id);
 
 		Assert.assertNull("deleted " + type + " shouldn't exist any more", deletedObject);
+	}
+
+	protected void logObjectJSON(final POJOCLASS object) {
+
+		try {
+
+			final String json = objectMapper.writeValueAsString(object);
+
+			BasicJPAServiceTest.LOG.debug(type + " json: " + json);
+		} catch (final JsonProcessingException e) {
+
+			BasicJPAServiceTest.LOG.error("couldn't serialize " + getClass().getName() + " to JSON", e);
+		}
 	}
 }
