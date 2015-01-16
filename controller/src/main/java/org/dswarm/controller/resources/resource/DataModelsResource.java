@@ -440,6 +440,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 					break;
 				case "xml":
 				case "mabxml":
+				case "marc21":
 
 					// eventBusProvider.get().post(new XMLConverterEvent(dataModel));
 

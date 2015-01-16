@@ -400,9 +400,9 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final Schema schema = dataModel.getSchema();
 
-		if (schema.getUuid().equals(SchemaUtils.MABXML_SCHEMA_UUID)) {
+		if (schema.getUuid().equals(SchemaUtils.MABXML_SCHEMA_UUID) || schema.getUuid().equals(SchemaUtils.MARC21_SCHEMA_UUID)) {
 
-			// mabxml schema is already there
+			// mabxml or marc21 schema is already there
 
 			return dataModel;
 		}
@@ -439,7 +439,9 @@ public class InternalGDMGraphService implements InternalModelService {
 
 			final Configuration configuration = dataModel.getConfiguration();
 
+			// TODO: re-factor this ugly workaround
 			boolean isMabXml = false;
+			boolean isMarc21 = false;
 
 			if (configuration != null) {
 
@@ -449,14 +451,27 @@ public class InternalGDMGraphService implements InternalModelService {
 
 					final String storageType = storageTypeJsonNode.asText();
 
-					if (storageType != null && storageType.equals("mabxml")) {
+					if (storageType != null) {
 
-						isMabXml = true;
+						switch (storageType) {
+
+							case "mabxml":
+
+								isMabXml = true;
+
+								break;
+							case "marc21":
+
+								isMarc21 = true;
+
+								break;
+						}
+
 					}
 				}
 			}
 
-			if (!isMabXml) {
+			if (!isMabXml && !isMarc21) {
 
 				// create new schema
 				final ProxySchema proxySchema = schemaService.get().createObjectTransactional();
@@ -470,9 +485,17 @@ public class InternalGDMGraphService implements InternalModelService {
 				}
 			} else {
 
-				// assign existing mabxml schema to data resource
+				if(isMabXml) {
 
-				schema = schemaService.get().getObject(SchemaUtils.MABXML_SCHEMA_UUID);
+					// assign existing mabxml schema to data resource
+
+					schema = schemaService.get().getObject(SchemaUtils.MABXML_SCHEMA_UUID);
+				} else {
+
+					// assign existing marc21 schema to data resource
+
+					schema = schemaService.get().getObject(SchemaUtils.MARC21_SCHEMA_UUID);
+				}
 			}
 
 			dataModel.setSchema(schema);
