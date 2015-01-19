@@ -17,11 +17,14 @@ package org.dswarm.persistence.model;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.base.Objects;
+import org.eclipse.persistence.annotations.Cache;
+import org.eclipse.persistence.config.CacheIsolationType;
 
 /**
  * The abstract POJO class for entities where the uri of the entity should be provided at object creation.
@@ -30,6 +33,8 @@ import com.google.common.base.Objects;
  */
 @XmlRootElement
 @MappedSuperclass
+@Cacheable(false)
+@Cache(isolation= CacheIsolationType.ISOLATED)
 public abstract class AdvancedDMPJPAObject extends BasicDMPJPAObject {
 
 	/**

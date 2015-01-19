@@ -372,8 +372,9 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 		BasicJPAService.LOG.debug("try to find " + className + " with uuid '" + uuid + "' in the database");
 
-		final POJOCLASS entity = entityManager.find(clasz, uuid,
-				Collections.<String, Object>singletonMap("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS));
+		final POJOCLASS entity = entityManager.find(clasz, uuid);
+		/*,
+				Collections.<String, Object>singletonMap("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS));*/
 
 		if (entity != null) {
 

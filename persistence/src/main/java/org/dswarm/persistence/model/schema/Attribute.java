@@ -15,9 +15,13 @@
  */
 package org.dswarm.persistence.model.schema;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.eclipse.persistence.annotations.Cache;
+import org.eclipse.persistence.config.CacheIsolationType;
 
 import org.dswarm.persistence.model.AdvancedDMPJPAObject;
 
@@ -32,6 +36,8 @@ import org.dswarm.persistence.model.AdvancedDMPJPAObject;
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "ATTRIBUTE")
+@Cacheable(false)
+@Cache(isolation= CacheIsolationType.ISOLATED)
 public class Attribute extends AdvancedDMPJPAObject {
 
 	/**

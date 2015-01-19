@@ -21,6 +21,7 @@ import java.util.Set;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,6 +41,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import org.eclipse.persistence.annotations.Cache;
+import org.eclipse.persistence.config.CacheIsolationType;
 import org.hamcrest.Matchers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +62,8 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "ATTRIBUTE_PATH")
+@Cacheable(false)
+@Cache(isolation= CacheIsolationType.ISOLATED)
 public class AttributePath extends DMPObject {
 
 	/**
@@ -231,7 +236,7 @@ public class AttributePath extends DMPObject {
 
 				if (null == attributes) {
 
-					attributes = Sets.newCopyOnWriteArraySet();
+					attributes = Sets.newConcurrentHashSet();
 				}
 
 				attributes.clear();
@@ -260,7 +265,7 @@ public class AttributePath extends DMPObject {
 
 			if (attributes == null) {
 
-				attributes = Sets.newCopyOnWriteArraySet();
+				attributes = Sets.newConcurrentHashSet();
 			}
 
 			if (orderedAttributes == null) {
