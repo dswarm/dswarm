@@ -168,7 +168,7 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 
 		final POJOCLASS object;
 
-		final String queryString = "from " + className + " where uri = '" + uri + "'";
+		final String queryString = "SELECT o FROM " + className + " o WHERE o.uri = '" + uri + "'";
 		final TypedQuery<POJOCLASS> query = entityManager.createQuery(queryString, clasz);
 
 		try {

@@ -90,6 +90,8 @@ public class JpaHibernateModule extends AbstractModule {
 		properties.setProperty("hibernate.ejb.entitymanager_factory_name", "DMPAppFactory");
 		properties.setProperty("hibernate.hbm2ddl.auto", "");*/
 
+		properties.setProperty("eclipselink.logging.level", "WARNING");
+
 		return properties;
 	}
 

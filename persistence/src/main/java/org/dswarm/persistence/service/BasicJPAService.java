@@ -337,7 +337,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	public List<POJOCLASS> getObjects() {
 
 		final EntityManager entityManager = acquire();
-		final TypedQuery<POJOCLASS> query = entityManager.createQuery("from " + className, clasz);
+		final TypedQuery<POJOCLASS> query = entityManager.createQuery("SELECT o FROM " + className + " o", clasz);
 
 		return query.getResultList();
 	}

@@ -7,6 +7,10 @@ http://java.sun.com/xml/ns/persistence/persistence_2_1.xsd"
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 
 		<!-- classes -->
+		<class>org.dswarm.persistence.model.DMPObject</class>
+		<class>org.dswarm.persistence.model.BasicDMPJPAObject</class>
+		<class>org.dswarm.persistence.model.ExtendedBasicDMPJPAObject</class>
+		<class>org.dswarm.persistence.model.AdvancedDMPJPAObject</class>
 		<class>org.dswarm.persistence.model.resource.Resource</class>
 		<class>org.dswarm.persistence.model.resource.Configuration</class>
 		<class>org.dswarm.persistence.model.resource.DataModel</class>
@@ -20,6 +24,7 @@ http://java.sun.com/xml/ns/persistence/persistence_2_1.xsd"
 		<class>org.dswarm.persistence.model.job.Mapping</class>
 		<class>org.dswarm.persistence.model.job.Project</class>
 		<class>org.dswarm.persistence.model.job.Transformation</class>
+		<class>org.dswarm.persistence.model.schema.AttributePathInstance</class>
 		<class>org.dswarm.persistence.model.schema.MappingAttributePathInstance</class>
 		<class>org.dswarm.persistence.model.schema.SchemaAttributePathInstance</class>
 		<class>org.dswarm.persistence.model.schema.ContentSchema</class>

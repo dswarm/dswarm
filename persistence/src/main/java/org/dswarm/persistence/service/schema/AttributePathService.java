@@ -163,7 +163,7 @@ public class AttributePathService extends BasicJPAService<ProxyAttributePath, At
 
 		final AttributePath object;
 
-		final String queryString = "from " + className + " where attributePath = '" + attributePath + "'";
+		final String queryString = "SELECT o FROM " + className + " o WHERE o.attributePath = '" + attributePath + "'";
 		final TypedQuery<AttributePath> query = entityManager.createQuery(queryString, clasz);
 
 		try {
@@ -231,7 +231,7 @@ public class AttributePathService extends BasicJPAService<ProxyAttributePath, At
 
 		final EntityManager entityManager = acquire(true);
 
-		final String queryString = "from " + AttributePath.class.getName() + " where attributePath = '" + attributePathJSONArrayString + "'";
+		final String queryString = "SELECT o FROM " + AttributePath.class.getName() + " o WHERE o.attributePath = '" + attributePathJSONArrayString + "'";
 
 		final TypedQuery<AttributePath> query = entityManager.createQuery(queryString, AttributePath.class);
 
