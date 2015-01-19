@@ -19,7 +19,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 import com.fasterxml.jackson.module.guice.ObjectMapperModule;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import com.google.inject.AbstractModule;
@@ -49,8 +48,7 @@ public class JacksonObjectMapperModule extends AbstractModule {
 	private Module jacksonModule() {
 
 		final ObjectMapperModule module = new ObjectMapperModule()
-				.registerModule(new JaxbAnnotationModule())
-				.registerModule(new Hibernate4Module());
+				.registerModule(new JaxbAnnotationModule());
 
 		if (includes != null && includes.length > 0) {
 			module.registerModule(new SerializationInclusionModule(includes));
