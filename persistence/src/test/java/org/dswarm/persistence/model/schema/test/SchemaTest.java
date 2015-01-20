@@ -29,7 +29,17 @@ import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
+
+import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
+import org.junit.Assert;
+import org.junit.Test;
 import org.dswarm.persistence.service.UUIDService;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 public class SchemaTest extends GuicedTest {
 
@@ -66,6 +76,16 @@ public class SchemaTest extends GuicedTest {
 		SchemaTest.LOG.debug("schema json: {}", json);
 
 		Assert.assertTrue("the two schemas should be identical", json.equals(jsonDup));
+	}
+
+	@Test
+	public void testMissingAttributePaths() throws Exception {
+		final String json = "{\"name\":\"foo\",\"uuid\":\"-1421687107883\",\"record_class\":{}}";
+
+		final Schema schema = objectMapper.readValue(json, Schema.class);
+		final String schemaAsJson = objectMapper.writeValueAsString(schema);
+
+		JSONAssert.assertEquals(json, schemaAsJson, JSONCompareMode.STRICT_ORDER);
 	}
 
 	private static Schema makeTestSchema() {

@@ -38,7 +38,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -401,18 +400,18 @@ public class Schema extends BasicDMPJPAObject {
 	}
 
 	private void ensureInitializedOrderedAttributePaths() {
-		if (orderedAttributePaths == null) {
-			final Optional<Map<String, SchemaAttributePathInstance>> paths = initializedAttributePaths(true);
-			orderedAttributePaths = paths.or(Maps.<String, SchemaAttributePathInstance>newLinkedHashMap());
+		if (!isOrderedAttributePathsInitialized) {
+			initializedAttributePaths(true);
+			ensureOrderedAttributePaths();
 		}
 	}
 
 	private void tryInitializeOrderedAttributePaths() {
-		final Optional<Map<String, SchemaAttributePathInstance>> paths = initializedAttributePaths(false);
-		orderedAttributePaths = paths.orNull();
+		initializedAttributePaths(false);
+		ensureOrderedAttributePaths();
 	}
 
-	private Optional<Map<String, SchemaAttributePathInstance>> initializedAttributePaths(final boolean fromScratch) {
+	private void initializedAttributePaths(final boolean fromScratch) {
 		if (orderedAttributePathsJson == null && !isOrderedAttributePathsInitialized) {
 
 			if (attributePathsJsonString == null) {
@@ -425,7 +424,7 @@ public class Schema extends BasicDMPJPAObject {
 					isOrderedAttributePathsInitialized = true;
 				}
 
-				return Optional.fromNullable(orderedAttributePaths);
+				return;
 			}
 
 			try {
@@ -446,8 +445,6 @@ public class Schema extends BasicDMPJPAObject {
 			}
 			isOrderedAttributePathsInitialized = true;
 		}
-
-		return Optional.fromNullable(orderedAttributePaths);
 	}
 
 	private void refreshAttributePathsString() {

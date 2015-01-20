@@ -92,6 +92,7 @@ public class JpaHibernateModule extends AbstractModule {
 		properties.setProperty("hibernate.current_session_context_class", "thread");
 		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5InnoDBDialect");
 		properties.setProperty("hibernate.discriminator.ignore_explicit_for_joined", "true");
+		properties.setProperty("hibernate.event.merge.entity_copy_observer", "log");
 		properties.setProperty("hibernate.show_sql", String.valueOf(isLogSql));
 		properties.setProperty("javax.persistence.jdbc.driver", "com.mysql.jdbc.Driver");
 		properties.setProperty("hibernate.jdbc.lob.non_contextual_creation", "true");
