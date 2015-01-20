@@ -17,6 +17,7 @@ package org.dswarm.persistence;
 
 import ch.qos.logback.classic.LoggerContext;
 import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.SharedMetricRegistries;
 import com.codahale.metrics.logback.InstrumentedAppender;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.inject.AbstractModule;
@@ -52,7 +53,7 @@ import org.dswarm.persistence.service.schema.SchemaService;
 
 /**
  * The Guice configuration of the persistence module. Interface/classes that are registered here can be utilised for injection.
- * 
+ *
  * @author phorn
  * @author tgaengler
  */
@@ -88,18 +89,19 @@ public class PersistenceModule extends AbstractModule {
 
 	/**
 	 * Provides the metric registry to register objects for metric statistics.
-	 * 
+	 *
 	 * @return a {@link MetricRegistry} instance as singleton
 	 */
 	@Provides
 	@Singleton
-	protected MetricRegistry provideMetricRegistry() {
-		final MetricRegistry registry = new MetricRegistry();
+	protected static MetricRegistry provideMetricRegistry() {
+		final MetricRegistry registry = SharedMetricRegistries.getOrCreate("dswarm");
+		instrumentLogback(registry);
 
-		// final InstrumentedAppender appender = new InstrumentedAppender(metricRegistry);
-		// appender.activateOptions();
-		// LogManager.getRootLogger().addAppender(appender);
+		return registry;
+	}
 
+	private static void instrumentLogback(final MetricRegistry registry) {
 		final LoggerContext factory = (LoggerContext) LoggerFactory.getILoggerFactory();
 		final ch.qos.logback.classic.Logger root = factory.getLogger(Logger.ROOT_LOGGER_NAME);
 
@@ -108,7 +110,6 @@ public class PersistenceModule extends AbstractModule {
 		metrics.start();
 		root.addAppender(metrics);
 
-		return registry;
 	}
 
 	public static class DmpDeserializerModule extends SimpleModule {

@@ -28,6 +28,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
@@ -38,7 +39,6 @@ import com.wordnik.swagger.annotations.ApiResponses;
 
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.ExtendedBasicDMPResource;
-import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.model.job.Project;
 import org.dswarm.persistence.model.job.proxy.ProxyProject;
 import org.dswarm.persistence.service.job.ProjectService;
@@ -59,13 +59,12 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	 *
 	 * @param persistenceServiceProviderArg
 	 * @param objectMapperProviderArg
-	 * @param dmpStatusArg                  a metrics registry
 	 */
 	@Inject
 	public ProjectsResource(final Provider<ProjectService> persistenceServiceProviderArg,
-			final Provider<ObjectMapper> objectMapperProviderArg, final DMPStatus dmpStatusArg) throws DMPControllerException {
+			final Provider<ObjectMapper> objectMapperProviderArg) throws DMPControllerException {
 
-		super(Project.class, persistenceServiceProviderArg, objectMapperProviderArg, dmpStatusArg);
+		super(Project.class, persistenceServiceProviderArg, objectMapperProviderArg);
 	}
 
 	/**
@@ -121,6 +120,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "returns all available projects (as JSON)"),
 			@ApiResponse(code = 404, message = "could not find any project, i.e., there are no projects available"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override

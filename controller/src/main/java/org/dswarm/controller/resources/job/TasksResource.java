@@ -30,6 +30,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -46,7 +47,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.dswarm.controller.DMPControllerException;
-import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.controller.utils.DataModelUtil;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.flow.TransformationFlow;
@@ -85,11 +85,6 @@ public class TasksResource {
 	private final DataModelUtil dataModelUtil;
 
 	/**
-	 * The metrics registry.
-	 */
-	private final DMPStatus dmpStatus;
-
-	/**
 	 * The object mapper that can be utilised to de-/serialise JSON nodes.
 	 */
 	private final ObjectMapper objectMapper;
@@ -102,14 +97,12 @@ public class TasksResource {
 	 *
 	 * @param dataModelUtilArg the data model util
 	 * @param objectMapperArg  an object mapper
-	 * @param dmpStatusArg     a metrics registry
 	 */
 	@Inject
-	public TasksResource(final DataModelUtil dataModelUtilArg, final ObjectMapper objectMapperArg, final DMPStatus dmpStatusArg,
+	public TasksResource(final DataModelUtil dataModelUtilArg, final ObjectMapper objectMapperArg,
 			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
 
 		dataModelUtil = dataModelUtilArg;
-		dmpStatus = dmpStatusArg;
 		objectMapper = objectMapperArg;
 		internalModelServiceFactoryProvider = internalModelServiceFactoryProviderArg;
 	}
@@ -139,6 +132,7 @@ public class TasksResource {
 	@ApiOperation(value = "execute the given task", notes = "Returns the result data (as JSON) for this task execution.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "task was successfully executed"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@Timed
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -263,6 +257,7 @@ public class TasksResource {
 	@ApiOperation(value = "get the metamorph script of the given task", notes = "Returns the Metamorph as XML.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "metamorph could be built successfully"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@Timed
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_XML)

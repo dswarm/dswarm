@@ -29,6 +29,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.codahale.metrics.annotation.Timed;
 import com.codahale.metrics.health.HealthCheck;
 import com.codahale.metrics.health.HealthCheckRegistry;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -55,6 +56,7 @@ public class HealthResource {
 	}
 
 	@ApiOperation("do a health check (includes check for database connection)")
+	@Timed
 	@GET
 	@Path("/{check: (\\w+)?}")
 	@Produces(MediaType.APPLICATION_JSON)
