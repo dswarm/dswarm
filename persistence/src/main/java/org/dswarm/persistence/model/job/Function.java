@@ -41,8 +41,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Charsets;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,10 +81,11 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	/**
 	 * A string that holds the serialised JSON object of a function description.
 	 */
+	@JsonIgnore
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "FUNCTION_DESCRIPTION", columnDefinition = "BLOB")
-	private String functionDescriptionString;
+	private byte[] functionDescriptionString;
 
 	/**
 	 * A function description as JSON object.
@@ -121,7 +124,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "PARAMETERS", columnDefinition = "BLOB")
-	private String parametersString;
+	private byte[] parametersString;
 
 	/**
 	 * The function type, e.g., function ({@link FunctionType#Function}) or transformation ({@link FunctionType#Transformation}).
@@ -271,7 +274,6 @@ public class Function extends ExtendedBasicDMPJPAObject {
 		return functionType;
 	}
 
-
 	/**
 	 * Refreshs the string that holds the serialised JSON object of the parameters list. This method should be called after every
 	 * manipulation of the parameters list (to keep the states consistent).
@@ -290,7 +292,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 		if (null != parametersJSON && parametersJSON.size() > 0) {
 
-			parametersString = parametersJSON.toString();
+			parametersString = parametersJSON.toString().getBytes(Charsets.UTF_8);
 		} else {
 
 			parametersString = null;
@@ -327,7 +329,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 				parameters = Lists.newLinkedList();
 
 				// parse parameters string
-				parametersJSON = DMPPersistenceUtil.getJSONArray(parametersString);
+				parametersJSON = DMPPersistenceUtil.getJSONArray(StringUtils.toEncodedString(parametersString, Charsets.UTF_8));
 
 				if (null != parametersJSON) {
 
@@ -363,7 +365,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 			return;
 		}
 
-		functionDescriptionString = functionDescription.toString();
+		functionDescriptionString = functionDescription.toString().getBytes(Charsets.UTF_8);
 	}
 
 	/**
@@ -391,7 +393,7 @@ public class Function extends ExtendedBasicDMPJPAObject {
 
 			try {
 
-				functionDescription = DMPPersistenceUtil.getJSON(functionDescriptionString);
+				functionDescription = DMPPersistenceUtil.getJSON(StringUtils.toEncodedString(functionDescriptionString, Charsets.UTF_8));
 			} catch (final DMPException e) {
 
 				Function.LOG.debug("couldn't parse function description JSON string for function '" + getUuid() + "'");

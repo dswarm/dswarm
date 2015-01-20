@@ -15,12 +15,19 @@
  */
 package org.dswarm.persistence.model.job;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Charsets;
 import com.google.common.base.Objects;
+import org.apache.commons.lang3.StringUtils;
 
 import org.dswarm.persistence.model.BasicDMPJPAObject;
 
@@ -40,13 +47,19 @@ public class Filter extends BasicDMPJPAObject {
 	/**
 	 *
 	 */
-	private static final long	serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The filter expression that should be evaluated at execution time.
 	 */
+	@JsonIgnore
+	@Lob
+	@Access(AccessType.FIELD)
 	@Column(name = "EXPRESSION", columnDefinition = "BLOB")
-	private String				expression;
+	private byte[] expressionString;
+
+	@Transient
+	private String expression;
 
 	public Filter(final String uuidArg) {
 
@@ -64,6 +77,8 @@ public class Filter extends BasicDMPJPAObject {
 	 */
 	public String getExpression() {
 
+		expression = StringUtils.toEncodedString(expressionString, Charsets.UTF_8);
+
 		return expression;
 	}
 
@@ -75,11 +90,14 @@ public class Filter extends BasicDMPJPAObject {
 	public void setExpression(final String expressionArg) {
 
 		expression = expressionArg;
+
+		expressionString = expression.getBytes(Charsets.UTF_8);
 	}
 
 	@Override
 	public boolean completeEquals(final Object obj) {
 
-		return Filter.class.isInstance(obj) && super.completeEquals(obj) && Objects.equal(((Filter) obj).getExpression(), getExpression());
+		return Filter.class.isInstance(obj) && super.completeEquals(obj) && Objects
+				.equal(((Filter) obj).getExpression(), getExpression());
 	}
 }

@@ -38,9 +38,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 import ch.lambdaj.Lambda;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Charsets;
 import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
 import com.wordnik.swagger.annotations.ApiModel;
+import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,7 +85,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "attributes", columnDefinition = "BLOB")
-	private String attributesString;
+	private byte[] attributesString;
 
 	/**
 	 * A JSON object for attributes.
@@ -356,7 +358,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 
 		if (attributes != null) {
 
-			attributesString = attributes.toString();
+			attributesString = attributes.toString().getBytes(Charsets.UTF_8);
 		}
 	}
 
@@ -385,7 +387,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 
 			try {
 
-				attributes = DMPPersistenceUtil.getJSON(attributesString);
+				attributes = DMPPersistenceUtil.getJSON(StringUtils.toEncodedString(attributesString, Charsets.UTF_8));
 			} catch (final DMPException e) {
 
 				Resource.LOG.debug("couldn't parse attributes JSON string for resource '" + getUuid() + "'");

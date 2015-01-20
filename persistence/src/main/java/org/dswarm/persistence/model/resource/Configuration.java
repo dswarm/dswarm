@@ -38,8 +38,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Charsets;
 import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,7 +89,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "parameters", columnDefinition = "BLOB")
-	private String parametersString;
+	private byte[] parametersString;
 
 	/**
 	 * A JSON object of configuration parameters.
@@ -292,7 +294,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 
 		if (parameters != null) {
 
-			parametersString = parameters.toString();
+			parametersString = parameters.toString().getBytes(Charsets.UTF_8);
 		}
 	}
 
@@ -322,7 +324,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 
 			try {
 
-				parameters = DMPPersistenceUtil.getJSON(parametersString);
+				parameters = DMPPersistenceUtil.getJSON(StringUtils.toEncodedString(parametersString, Charsets.UTF_8));
 			} catch (final DMPException e) {
 
 				Configuration.LOG.debug("couldn't parse parameters JSON string for configuration '" + getUuid() + "'");

@@ -39,8 +39,10 @@ import ch.lambdaj.Lambda;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,7 +115,7 @@ public class ContentSchema extends BasicDMPJPAObject {
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "KEY_ATTRIBUTE_PATHS", columnDefinition = "BLOB")
-	private String keyAttributePaths;
+	private byte[] keyAttributePaths;
 
 	/**
 	 * The value attribute path of the content schema.
@@ -370,7 +372,7 @@ public class ContentSchema extends BasicDMPJPAObject {
 
 		if (null != orderedKeyAttributePathsJSON && orderedKeyAttributePathsJSON.size() > 0) {
 
-			keyAttributePaths = orderedKeyAttributePathsJSON.toString();
+			keyAttributePaths = orderedKeyAttributePathsJSON.toString().getBytes(Charsets.UTF_8);
 		} else {
 
 			keyAttributePaths = null;
@@ -407,7 +409,7 @@ public class ContentSchema extends BasicDMPJPAObject {
 				orderedKeyAttributePaths = Lists.newLinkedList();
 
 				// parse key attribute paths string
-				orderedKeyAttributePathsJSON = DMPPersistenceUtil.getJSONArray(keyAttributePaths);
+				orderedKeyAttributePathsJSON = DMPPersistenceUtil.getJSONArray(StringUtils.toEncodedString(keyAttributePaths, Charsets.UTF_8));
 
 				if (null != orderedKeyAttributePathsJSON) {
 
@@ -448,7 +450,7 @@ public class ContentSchema extends BasicDMPJPAObject {
 			return null;
 		}
 
-		if (keyAttributePaths.isEmpty()) {
+		if (StringUtils.toEncodedString(keyAttributePaths, Charsets.UTF_8).isEmpty()) {
 
 			return null;
 		}

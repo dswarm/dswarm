@@ -39,8 +39,10 @@ import ch.lambdaj.Lambda;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.persistence.annotations.Cache;
 import org.eclipse.persistence.config.CacheIsolationType;
 import org.hamcrest.Matchers;
@@ -63,7 +65,7 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "ATTRIBUTE_PATH")
 @Cacheable(false)
-@Cache(isolation= CacheIsolationType.ISOLATED)
+@Cache(isolation = CacheIsolationType.ISOLATED)
 public class AttributePath extends DMPObject {
 
 	/**
@@ -110,7 +112,7 @@ public class AttributePath extends DMPObject {
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "ATTRIBUTE_PATH", columnDefinition = "BLOB")
-	private String attributePath;
+	private byte[] attributePath;
 
 	/**
 	 * All schemas that utilise this attribute path
@@ -191,7 +193,7 @@ public class AttributePath extends DMPObject {
 
 		refreshAttributePathString();
 
-		return attributePath;
+		return StringUtils.toEncodedString(attributePath, Charsets.UTF_8);
 	}
 
 	/**
@@ -478,7 +480,7 @@ public class AttributePath extends DMPObject {
 
 		if (null != orderedAttributesJSON && orderedAttributesJSON.size() > 0) {
 
-			attributePath = orderedAttributesJSON.toString();
+			attributePath = orderedAttributesJSON.toString().getBytes(Charsets.UTF_8);
 		} else {
 
 			attributePath = null;
@@ -515,7 +517,7 @@ public class AttributePath extends DMPObject {
 				orderedAttributes = Lists.newLinkedList();
 
 				// parse attribute path string
-				orderedAttributesJSON = DMPPersistenceUtil.getJSONArray(attributePath);
+				orderedAttributesJSON = DMPPersistenceUtil.getJSONArray(StringUtils.toEncodedString(attributePath, Charsets.UTF_8));
 
 				if (null != orderedAttributesJSON) {
 

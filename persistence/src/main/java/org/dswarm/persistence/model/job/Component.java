@@ -43,9 +43,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Charsets;
 import com.google.common.base.Objects;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,9 +73,9 @@ public class Component extends ExtendedBasicDMPJPAObject {
 	/**
 	 *
 	 */
-	private static final long	serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 
-	private static final Logger	LOG					= LoggerFactory.getLogger(Component.class);
+	private static final Logger LOG = LoggerFactory.getLogger(Component.class);
 
 	/**
 	 * The input components collection.
@@ -85,19 +87,21 @@ public class Component extends ExtendedBasicDMPJPAObject {
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@XmlIDREF
 	@XmlList
-	private Set<Component>		inputComponents;
+	private Set<Component> inputComponents;
 
 	/**
 	 * The output components collection.
 	 */
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { /* CascadeType.DETACH, CascadeType.MERGE, */CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinTable(name = "INPUT_COMPONENTS_OUTPUT_COMPONENTS", joinColumns = { @JoinColumn(name = "INPUT_COMPONENT_UUID", referencedColumnName = "UUID") }, inverseJoinColumns = { @JoinColumn(name = "OUTPUT_COMPONENT_UUID", referencedColumnName = "UUID") })
+	@JoinTable(name = "INPUT_COMPONENTS_OUTPUT_COMPONENTS", joinColumns = {
+			@JoinColumn(name = "INPUT_COMPONENT_UUID", referencedColumnName = "UUID") }, inverseJoinColumns = {
+			@JoinColumn(name = "OUTPUT_COMPONENT_UUID", referencedColumnName = "UUID") })
 	@XmlElement(name = "output_components")
 	@JsonSerialize(using = SetComponentReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@XmlIDREF
 	@XmlList
-	private Set<Component>		outputComponents;
+	private Set<Component> outputComponents;
 
 	/**
 	 * The function that is instantiated by this component.
@@ -110,25 +114,25 @@ public class Component extends ExtendedBasicDMPJPAObject {
 	// @JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
 	// @XmlIDREF
 	// @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
-	private Function			function;
+	private Function function;
 
 	/**
 	 * The map of parameter mappings.
 	 */
 	@Transient
-	private Map<String, String>	parameterMappings;
+	private Map<String, String> parameterMappings;
 
 	/**
 	 * The JSON object of the parameter mappings map.
 	 */
 	@Transient
-	private ObjectNode			parameterMappingsJSON;
+	private ObjectNode parameterMappingsJSON;
 
 	/**
 	 * A flag that indicates, whether the parameter mappings are initialized or not.
 	 */
 	@Transient
-	private boolean				parameterMappingsInitialized;
+	private boolean parameterMappingsInitialized;
 
 	/**
 	 * The string that holds the serialised JSON object of the parameter mappings map.
@@ -137,7 +141,7 @@ public class Component extends ExtendedBasicDMPJPAObject {
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "PARAMETER_MAPPINGS", columnDefinition = "BLOB")
-	private String				parameterMappingsString;
+	private byte[] parameterMappingsString;
 
 	// @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH })
 	// @JoinColumn(name = "transformation")
@@ -400,7 +404,7 @@ public class Component extends ExtendedBasicDMPJPAObject {
 	/**
 	 * Adds a new parameter mapping to the parameter mappings collection.
 	 *
-	 * @param keyParameter the key of the parameter mapping
+	 * @param keyParameter   the key of the parameter mapping
 	 * @param valueParameter the value fo the parameter mapping
 	 */
 	public void addParameterMapping(final String keyParameter, final String valueParameter) {
@@ -473,7 +477,7 @@ public class Component extends ExtendedBasicDMPJPAObject {
 
 		if (null != parameterMappingsJSON && parameterMappingsJSON.size() > 0) {
 
-			parameterMappingsString = parameterMappingsJSON.toString();
+			parameterMappingsString = parameterMappingsJSON.toString().getBytes(Charsets.UTF_8);
 		} else {
 
 			parameterMappingsString = null;
@@ -509,7 +513,7 @@ public class Component extends ExtendedBasicDMPJPAObject {
 
 				parameterMappings = Maps.newLinkedHashMap();
 
-				parameterMappingsJSON = DMPPersistenceUtil.getJSON(parameterMappingsString);
+				parameterMappingsJSON = DMPPersistenceUtil.getJSON(StringUtils.toEncodedString(parameterMappingsString, Charsets.UTF_8));
 
 				if (null != parameterMappingsJSON) {
 
@@ -567,7 +571,7 @@ public class Component extends ExtendedBasicDMPJPAObject {
 	 * </p>
 	 *
 	 * @param component the base component that will be copied
-	 * @param uuid the target component's id value
+	 * @param uuid      the target component's id value
 	 * @return a new component with the given id and all other attributes copied from the provided component.
 	 */
 	public static Component withId(final Component component, final String uuid) {
