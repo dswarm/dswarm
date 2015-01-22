@@ -96,7 +96,7 @@ public class MaintainDBService {
 		resetDB();
 		createTables();
 		truncateTables();
-		initFunctions();
+		//initFunctions();
 		initSchemas();
 	}
 
