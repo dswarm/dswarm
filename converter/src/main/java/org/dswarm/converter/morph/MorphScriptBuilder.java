@@ -25,13 +25,8 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -47,6 +42,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -59,6 +55,7 @@ import com.google.common.io.Resources;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.dswarm.persistence.model.job.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
@@ -68,12 +65,8 @@ import org.xml.sax.SAXException;
 
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.init.util.DMPStatics;
-import org.dswarm.persistence.model.job.Component;
-import org.dswarm.persistence.model.job.Function;
-import org.dswarm.persistence.model.job.Mapping;
-import org.dswarm.persistence.model.job.Task;
-import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
+import scala.util.parsing.json.JSONObject;
 
 /**
  * Creates a metamorph script from a given {@link Task}.
@@ -103,6 +96,10 @@ public class MorphScriptBuilder {
 	private static final String FILTER_VARIABLE_POSTFIX = ".filtered";
 
 	private static final String OCCURRENCE_VARIABLE_POSTFIX = ".occurrence";
+
+	private static final Set<String> LOOKUP_FUNCTIONS = new HashSet<String>(Arrays.asList(new String[] {"lookup","setreplace","blacklist","whitelist"}));
+
+	private static final String LOOKUP_MAP_DEFINITION = "lookupString";
 
 	static {
 		System.setProperty("javax.xml.transform.TransformerFactory", MorphScriptBuilder.TRANSFORMER_FACTORY_CLASS);
@@ -238,12 +235,17 @@ public class MorphScriptBuilder {
 		final Element rules = doc.createElement("rules");
 		rootElement.appendChild(rules);
 
+		final Element maps = doc.createElement("maps");
+		rootElement.appendChild(maps);
+
 		final List<String> metas = Lists.newArrayList();
 
 		for (final Mapping mapping : task.getJob().getMappings()) {
 			metas.add(MorphScriptBuilder.MAPPING_PREFIX + mapping.getUuid());
 
 			createTransformation(rules, mapping);
+
+			createLookupTable(maps, mapping.getTransformation());
 		}
 
 		metaName.setTextContent(Joiner.on(", ").join(metas));
@@ -308,6 +310,97 @@ public class MorphScriptBuilder {
 		processTransformationComponentFunction(transformationComponent, mapping, mappingInputsVariablesMap, rules);
 	}
 
+	private void createLookupTable(final Element maps, final Component transformationComponent) throws DMPConverterException {
+
+		final Function transformationFunction = transformationComponent.getFunction();
+
+		if (transformationFunction.getFunctionType() == FunctionType.Transformation) {
+
+			final Transformation transformation = (Transformation) transformationFunction;
+
+			final Set<Component> components = transformation.getComponents();
+
+			for (final Component component : components) {
+
+				if (LOOKUP_FUNCTIONS.contains(component.getFunction().getName())) {
+
+					final Element map = doc.createElement("map");
+					maps.appendChild(map);
+
+					final Map<String, String> componentParameterMapping = component.getParameterMappings();
+
+					if (componentParameterMapping != null) {
+
+						for (final Entry<String, String> parameterMapping : componentParameterMapping.entrySet()) {
+
+							if (parameterMapping.getKey() != null) {
+
+								if (parameterMapping.getKey().equals("in")) {
+
+									map.setAttribute("name", parameterMapping.getValue());
+
+								} else if (parameterMapping.getKey().equals("map")) {
+
+									map.setAttribute("name", parameterMapping.getValue());
+
+								} else if (parameterMapping.getKey().equals(MorphScriptBuilder.LOOKUP_MAP_DEFINITION)) {
+
+									if (parameterMapping.getValue() != null) {
+
+										if (component.getFunction().getName().equals("whitelist") || component.getFunction().getName().equals("blacklist")) {
+
+											List<String> lookupList = new ArrayList();
+
+											ObjectMapper mapper = new ObjectMapper();
+
+											try {
+												lookupList = mapper.readValue(parameterMapping.getValue(), new TypeReference<List<String>>() {
+												});
+											} catch (IOException e) {
+												e.printStackTrace();
+											}
+
+											for (final String lookupEntry : lookupList) {
+
+												final Element lookup = doc.createElement("entry");
+												lookup.setAttribute("name", lookupEntry);
+												map.appendChild(lookup);
+											}
+										} else {
+
+											Map<String, String> lookupEntrys = new HashMap<String, String>();
+
+											ObjectMapper mapper = new ObjectMapper();
+
+											try {
+												lookupEntrys = mapper.readValue(parameterMapping.getValue(), new TypeReference<HashMap<String, String>>() {
+												});
+											} catch (IOException e) {
+												e.printStackTrace();
+											}
+
+											for (final Entry<String, String> lookupEntry : lookupEntrys.entrySet()) {
+
+												final Element lookup = doc.createElement("entry");
+												lookup.setAttribute("name", lookupEntry.getKey());
+												lookup.setAttribute("value", lookupEntry.getValue());
+												map.appendChild(lookup);
+											}
+										}
+									}
+
+								} else {
+
+									continue;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	private void createParameters(final Map<String, String> parameterMappings, final Element component) {
 
 		// TODO: parse parameter values that can be simple string values, JSON objects or JSON arrays (?)
@@ -319,7 +412,8 @@ public class MorphScriptBuilder {
 
 				if (parameterMapping.getKey() != null) {
 
-					if (parameterMapping.getKey().equals(MorphScriptBuilder.INPUT_VARIABLE_IDENTIFIER)) {
+					if (parameterMapping.getKey().equals(MorphScriptBuilder.INPUT_VARIABLE_IDENTIFIER) ||
+						parameterMapping.getKey().equals(MorphScriptBuilder.LOOKUP_MAP_DEFINITION)) {
 
 						continue;
 					}
