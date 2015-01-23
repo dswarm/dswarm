@@ -19,7 +19,6 @@ import java.lang.management.ManagementFactory;
 
 import ch.qos.logback.classic.LoggerContext;
 import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.SharedMetricRegistries;
 import com.codahale.metrics.jvm.BufferPoolMetricSet;
 import com.codahale.metrics.jvm.ClassLoadingGaugeSet;
 import com.codahale.metrics.jvm.FileDescriptorRatioGauge;
@@ -103,7 +102,7 @@ public class PersistenceModule extends AbstractModule {
 	@Provides
 	@Singleton
 	protected static MetricRegistry provideMetricRegistry() {
-		final MetricRegistry registry = SharedMetricRegistries.getOrCreate("dswarm");
+		final MetricRegistry registry = new MetricRegistry();
 		instrumentLogback(registry);
 		instrumentJvm(registry);
 

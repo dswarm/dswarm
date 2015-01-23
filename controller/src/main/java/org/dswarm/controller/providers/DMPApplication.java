@@ -55,8 +55,9 @@ class DMPApplication extends ResourceConfig {
 		registerSwaggerResources();
 		buildGuiceBridge(serviceLocator);
 
-		registerClasses(DMPAppEventListener.class);
-		register(new InstrumentedMetricsEventListener("dswarm"));
+		registerClasses(
+				DMPAppEventListener.class,
+				InstrumentedMetricsEventListener.class);
 	}
 
 	private void registerDMPResources() {

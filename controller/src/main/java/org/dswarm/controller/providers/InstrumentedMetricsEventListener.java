@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
+import javax.inject.Inject;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
@@ -51,12 +52,9 @@ public class InstrumentedMetricsEventListener implements ApplicationEventListene
 	 *
 	 * @param metrics a {@link MetricRegistry}
 	 */
+	@Inject
 	public InstrumentedMetricsEventListener(final MetricRegistry metrics) {
 		this.metrics = metrics;
-	}
-
-	public InstrumentedMetricsEventListener(final String registryName) {
-		this(SharedMetricRegistries.getOrCreate(registryName));
 	}
 
 	@SuppressWarnings("TypeMayBeWeakened")
