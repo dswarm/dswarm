@@ -15,9 +15,17 @@
  */
 package org.dswarm.persistence;
 
+import java.lang.management.ManagementFactory;
+
 import ch.qos.logback.classic.LoggerContext;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.SharedMetricRegistries;
+import com.codahale.metrics.jvm.BufferPoolMetricSet;
+import com.codahale.metrics.jvm.ClassLoadingGaugeSet;
+import com.codahale.metrics.jvm.FileDescriptorRatioGauge;
+import com.codahale.metrics.jvm.GarbageCollectorMetricSet;
+import com.codahale.metrics.jvm.MemoryUsageGaugeSet;
+import com.codahale.metrics.jvm.ThreadStatesGaugeSet;
 import com.codahale.metrics.logback.InstrumentedAppender;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.inject.AbstractModule;
@@ -97,6 +105,7 @@ public class PersistenceModule extends AbstractModule {
 	protected static MetricRegistry provideMetricRegistry() {
 		final MetricRegistry registry = SharedMetricRegistries.getOrCreate("dswarm");
 		instrumentLogback(registry);
+		instrumentJvm(registry);
 
 		return registry;
 	}
@@ -109,7 +118,15 @@ public class PersistenceModule extends AbstractModule {
 		metrics.setContext(root.getLoggerContext());
 		metrics.start();
 		root.addAppender(metrics);
+	}
 
+	private static void instrumentJvm(final MetricRegistry registry) {
+		registry.register("jvm.file_descriptors", new FileDescriptorRatioGauge());
+		registry.register("jvm.buffer_pool", new BufferPoolMetricSet(ManagementFactory.getPlatformMBeanServer()));
+		registry.register("jvm.class_loading", new ClassLoadingGaugeSet());
+		registry.register("jvm.gc", new GarbageCollectorMetricSet());
+		registry.register("jvm.memory", new MemoryUsageGaugeSet());
+		registry.register("jvm.threads", new ThreadStatesGaugeSet());
 	}
 
 	public static class DmpDeserializerModule extends SimpleModule {
