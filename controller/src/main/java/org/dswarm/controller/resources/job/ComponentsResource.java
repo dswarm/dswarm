@@ -38,7 +38,6 @@ import com.wordnik.swagger.annotations.ApiResponses;
 
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.ExtendedBasicDMPResource;
-import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.model.job.Component;
 import org.dswarm.persistence.model.job.proxy.ProxyComponent;
 import org.dswarm.persistence.service.job.ComponentService;
@@ -59,13 +58,12 @@ public class ComponentsResource extends ExtendedBasicDMPResource<ComponentServic
 	 *
 	 * @param persistenceServiceProviderArg
 	 * @param objectMapperProviderArg
-	 * @param dmpStatusArg                  a metrics registry
 	 */
 	@Inject
 	public ComponentsResource(final Provider<ComponentService> persistenceServiceProviderArg,
-			final Provider<ObjectMapper> objectMapperProviderArg, final DMPStatus dmpStatusArg) throws DMPControllerException {
+			final Provider<ObjectMapper> objectMapperProviderArg) throws DMPControllerException {
 
-		super(Component.class, persistenceServiceProviderArg, objectMapperProviderArg, dmpStatusArg);
+		super(Component.class, persistenceServiceProviderArg, objectMapperProviderArg);
 	}
 
 	/**

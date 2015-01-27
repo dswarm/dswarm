@@ -23,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.dswarm.controller.DMPControllerException;
-import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.AdvancedDMPJPAObject;
 import org.dswarm.persistence.model.BasicDMPJPAObject;
@@ -51,12 +50,11 @@ public abstract class AdvancedDMPResource<POJOCLASSPERSISTENCESERVICE extends Ad
 	 * @param pojoClassArg                  a concrete POJO class
 	 * @param persistenceServiceProviderArg the concrete persistence service that is related to the concrete POJO class
 	 * @param objectMapperProviderArg       an object mapper
-	 * @param dmpStatusArg                  a metrics registry
 	 */
 	public AdvancedDMPResource(final Class<POJOCLASS> pojoClassArg, final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
-			final Provider<ObjectMapper> objectMapperProviderArg, final DMPStatus dmpStatusArg) {
+	                           final Provider<ObjectMapper> objectMapperProviderArg) {
 
-		super(pojoClassArg, persistenceServiceProviderArg, objectMapperProviderArg, dmpStatusArg);
+		super(pojoClassArg, persistenceServiceProviderArg, objectMapperProviderArg);
 	}
 
 	/**

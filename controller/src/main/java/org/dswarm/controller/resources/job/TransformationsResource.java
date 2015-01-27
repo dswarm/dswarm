@@ -28,6 +28,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
@@ -37,7 +38,6 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
 import org.dswarm.controller.DMPControllerException;
-import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.job.proxy.ProxyTransformation;
 import org.dswarm.persistence.service.job.TransformationService;
@@ -59,13 +59,12 @@ public class TransformationsResource extends
 	 *
 	 * @param persistenceServiceProviderArg
 	 * @param objectMapperProviderArg
-	 * @param dmpStatusArg                  a metrics registry
 	 */
 	@Inject
 	public TransformationsResource(final Provider<TransformationService> persistenceServiceProviderArg,
-			final Provider<ObjectMapper> objectMapperProviderArg, final DMPStatus dmpStatusArg) throws DMPControllerException {
+			final Provider<ObjectMapper> objectMapperProviderArg) throws DMPControllerException {
 
-		super(Transformation.class, persistenceServiceProviderArg, objectMapperProviderArg, dmpStatusArg);
+		super(Transformation.class, persistenceServiceProviderArg, objectMapperProviderArg);
 	}
 
 	/**

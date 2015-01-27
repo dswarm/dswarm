@@ -43,13 +43,14 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
-import com.codahale.metrics.Timer;
+import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+import com.google.common.io.Files;
 import com.google.common.io.LineProcessor;
 import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
@@ -66,7 +67,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.dswarm.controller.DMPControllerException;
-import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.controller.utils.DMPControllerUtils;
 import org.dswarm.controller.utils.DataModelUtil;
 import org.dswarm.converter.DMPConverterException;
@@ -104,8 +104,6 @@ public class ResourcesResource {
 
 	private final Provider<ConfigurationService> configurationServiceProvider;
 
-	private final DMPStatus dmpStatus;
-
 	private final ObjectMapper  objectMapper;
 	private final DataModelUtil dataModelUtil;
 
@@ -114,21 +112,19 @@ public class ResourcesResource {
 	 * the provider of configuration persistence service, the provider of data model persistence service, the object mapper,
 	 * metrics registry, event bus provider and data model util.
 	 *
-	 * @param dmpStatusArg                    a metrics registry
 	 * @param objectMapperArg                 an object mapper
 	 * @param resourceServiceProviderArg      the provider for the resource persistence service
 	 * @param configurationServiceProviderArg the provider for the configuration persistence service
 	 * @param dataModelUtilArg                the data model util
 	 */
 	@Inject
-	public ResourcesResource(final DMPStatus dmpStatusArg, final ObjectMapper objectMapperArg, final DMPControllerUtils controllerUtilsArg,
+	public ResourcesResource(final ObjectMapper objectMapperArg, final DMPControllerUtils controllerUtilsArg,
 			final Provider<ResourceService> resourceServiceProviderArg, final Provider<ConfigurationService> configurationServiceProviderArg,
 			final DataModelUtil dataModelUtilArg) {
 
 		controllerUtils = controllerUtilsArg;
 		resourceServiceProvider = resourceServiceProviderArg;
 		configurationServiceProvider = configurationServiceProviderArg;
-		dmpStatus = dmpStatusArg;
 		objectMapper = objectMapperArg;
 		dataModelUtil = dataModelUtilArg;
 	}
@@ -194,6 +190,7 @@ public class ResourcesResource {
 	@ApiOperation(value = "upload new data resource", notes = "Returns a new Resource object, when upload was successfull.", response = Resource.class)
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "data resource was successfully uploaded and stored"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@Timed
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response uploadResource(
@@ -201,23 +198,18 @@ public class ResourcesResource {
 			@ApiParam("file metadata") @FormDataParam("file") final FormDataContentDisposition fileDetail,
 			@ApiParam(value = "resource name", required = true) @FormDataParam("name") final String name,
 			@ApiParam("resource description") @FormDataParam("description") final String description) throws DMPControllerException {
-		final Timer.Context context = dmpStatus.createNewResource();
 
 		ResourcesResource.LOG.debug("try to create new resource '" + name + "' for file '" + fileDetail.getFileName() + "'");
 
 		final ProxyResource proxyResource = createResource(uploadedInputStream, fileDetail, name, description);
 
 		if (proxyResource == null) {
-
-			dmpStatus.stop(context);
 			throw new DMPControllerException("couldn't create new resource");
 		}
 
 		final Resource resource = proxyResource.getObject();
 
 		if (resource == null) {
-
-			dmpStatus.stop(context);
 			throw new DMPControllerException("couldn't create new resource");
 		}
 
@@ -230,8 +222,6 @@ public class ResourcesResource {
 
 			resourceJSON = objectMapper.writeValueAsString(resource);
 		} catch (final JsonProcessingException e) {
-
-			dmpStatus.stop(context);
 			throw new DMPControllerException("couldn't transform resource object to JSON string");
 		}
 
@@ -241,7 +231,6 @@ public class ResourcesResource {
 		ResourcesResource.LOG.debug("created new resource at '" + resourceURI.toString() + "' with content ");
 		ResourcesResource.LOG.trace("'" + resourceJSON + "'");
 
-		dmpStatus.stop(context);
 		return buildResponseCreated(resourceJSON, resourceURI, proxyResource.getType(), "resource");
 	}
 
@@ -255,11 +244,10 @@ public class ResourcesResource {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "returns all resources (as JSON)"),
 			@ApiResponse(code = 404, message = "could not find any resource, i.e., there are no resources available"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@Timed
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getResources() throws DMPControllerException {
-		final Timer.Context context = dmpStatus.getAllResources();
-
 		ResourcesResource.LOG.debug("try to get all resources");
 
 		final ResourceService resourceService = resourceServiceProvider.get();
@@ -269,16 +257,12 @@ public class ResourcesResource {
 		if (resources == null) {
 
 			ResourcesResource.LOG.debug("couldn't find resources");
-
-			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
 		if (resources.isEmpty()) {
 
 			ResourcesResource.LOG.debug("there are no resources");
-
-			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
@@ -291,15 +275,12 @@ public class ResourcesResource {
 
 			resourcesJSON = objectMapper.writeValueAsString(resources);
 		} catch (final JsonProcessingException e) {
-
-			dmpStatus.stop(context);
 			throw new DMPControllerException("couldn't transform resources list object to JSON string.\n" + e.getMessage());
 		}
 
 		ResourcesResource.LOG.debug("return all resources ");
 		ResourcesResource.LOG.trace("'" + resourcesJSON + "'");
 
-		dmpStatus.stop(context);
 		return buildResponse(resourcesJSON);
 	}
 
@@ -313,18 +294,15 @@ public class ResourcesResource {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "returns the resource (as JSON) that matches the given uuid"),
 			@ApiResponse(code = 404, message = "could not find a resource for the given uuid"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@Timed
 	@GET
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getResource(@ApiParam(value = "data resource identifier", required = true) @PathParam("uuid") final String uuid)
 			throws DMPControllerException {
-		final Timer.Context context = dmpStatus.getSingleResource();
-
 		final Optional<Resource> resourceOptional = dataModelUtil.fetchResource(uuid);
 
 		if (!resourceOptional.isPresent()) {
-
-			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
@@ -336,15 +314,12 @@ public class ResourcesResource {
 
 			resourceJSON = objectMapper.writeValueAsString(resource);
 		} catch (final JsonProcessingException e) {
-
-			dmpStatus.stop(context);
 			throw new DMPControllerException("couldn't transform resource object to JSON string.\n" + e.getMessage());
 		}
 
 		ResourcesResource.LOG.debug("return resource with uuid '" + uuid + "' and content ");
 		ResourcesResource.LOG.trace("'" + resourceJSON + "'");
 
-		dmpStatus.stop(context);
 		return buildResponse(resourceJSON);
 	}
 
@@ -366,6 +341,7 @@ public class ResourcesResource {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "data resource was successfully updated"),
 			@ApiResponse(code = 404, message = "could not find a resource for the given uuid"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@Timed
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateResource(@ApiParam(value = "resource identifier", required = true) @PathParam("uuid") final String uuid,
@@ -374,13 +350,9 @@ public class ResourcesResource {
 			@ApiParam(value = "resource name", required = true) @FormDataParam("name") final String name,
 			@ApiParam("resource description") @FormDataParam("description") final String description) throws DMPControllerException {
 
-		final Timer.Context context = dmpStatus.updateResource();
-
 		final Optional<Resource> resourceOptional = dataModelUtil.fetchResource(uuid);
 
 		if (!resourceOptional.isPresent()) {
-
-			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
@@ -398,15 +370,12 @@ public class ResourcesResource {
 
 			resourceJSON = objectMapper.writeValueAsString(updateResource);
 		} catch (final JsonProcessingException e) {
-
-			dmpStatus.stop(context);
 			throw new DMPControllerException("couldn't transform resource object to JSON string");
 		}
 
 		ResourcesResource.LOG.debug("updated resource with uuid '" + uuid + "' ");
 		ResourcesResource.LOG.trace("and JSON content '" + resourceJSON + "'");
 
-		dmpStatus.stop(context);
 		return buildResponse(resourceJSON);
 	}
 
@@ -422,11 +391,11 @@ public class ResourcesResource {
 			@ApiResponse(code = 404, message = "could not find a resource for the given uuid"),
 			@ApiResponse(code = 409, message = "resource couldn't be deleted (maybe there are some existing constraints to related objects)"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@Timed
 	@DELETE
 	@Path("/{uuid}")
 	public Response deleteResource(@ApiParam(value = "data resource identifier", required = true) @PathParam("uuid") final String uuid)
 			throws DMPControllerException {
-		final Timer.Context context = dmpStatus.deleteResource();
 
 		ResourcesResource.LOG.debug("try to delete resource with uuid '" + uuid + "'");
 
@@ -435,8 +404,6 @@ public class ResourcesResource {
 		if (!resourceOptional.isPresent()) {
 
 			ResourcesResource.LOG.debug("couldn't find resource '" + uuid + "'");
-
-			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
@@ -447,14 +414,11 @@ public class ResourcesResource {
 		if (resourceOptional.isPresent()) {
 
 			ResourcesResource.LOG.debug("couldn't delete resource '" + uuid + "'");
-
-			dmpStatus.stop(context);
 			return Response.status(Status.CONFLICT).build();
 		}
 
 		ResourcesResource.LOG.debug("deletion of resource with uuid '" + uuid + "' was successful");
 
-		dmpStatus.stop(context);
 		return Response.status(Status.NO_CONTENT).build();
 	}
 
@@ -471,6 +435,7 @@ public class ResourcesResource {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "raw data of data resource could be retrieved"),
 			@ApiResponse(code = 404, message = "could not find a resource for the given uuid"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@Timed
 	@GET
 	@Path("/{uuid}/lines")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -478,13 +443,9 @@ public class ResourcesResource {
 			@ApiParam(value = "number of lines limit", defaultValue = "50") @DefaultValue("50") @QueryParam("atMost") final int atMost,
 			@ApiParam(value = "data resource encoding", defaultValue = "UTF-8") @DefaultValue("UTF-8") @QueryParam("encoding") final String encoding)
 			throws DMPControllerException {
-		final Timer.Context context = dmpStatus.getSingleResource();
-
 		final Optional<Resource> resourceOptional = dataModelUtil.fetchResource(uuid);
 
 		if (!resourceOptional.isPresent()) {
-
-			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
@@ -493,8 +454,6 @@ public class ResourcesResource {
 		final JsonNode path = resource.getAttributes().get("path");
 
 		if (path == null) {
-
-			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
@@ -502,7 +461,7 @@ public class ResourcesResource {
 
 		final List<String> lines;
 		try {
-			lines = com.google.common.io.Files.readLines(new File(filePath), Charset.forName(encoding), new LineProcessor<List<String>>() {
+			lines = Files.readLines(new File(filePath), Charset.forName(encoding), new LineProcessor<List<String>>() {
 
 				private final ImmutableList.Builder<String> lines = ImmutableList.builder();
 				private int linesProcessed = 1;
@@ -524,8 +483,6 @@ public class ResourcesResource {
 				}
 			});
 		} catch (final IOException e) {
-
-			dmpStatus.stop(context);
 			throw new DMPControllerException("couldn't read file contents.\n" + e.getMessage());
 		}
 
@@ -539,12 +496,9 @@ public class ResourcesResource {
 
 			plainJson = objectMapper.writeValueAsString(jsonMap);
 		} catch (final JsonProcessingException e) {
-
-			dmpStatus.stop(context);
 			throw new DMPControllerException("couldn't transform resource contents to JSON array.\n" + e.getMessage());
 		}
 
-		dmpStatus.stop(context);
 		return buildResponse(plainJson);
 	}
 
@@ -559,20 +513,17 @@ public class ResourcesResource {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "returns all configurations (as JSON) of the resource that matches the given uuid"),
 			@ApiResponse(code = 404, message = "could not find a resource for the given uuid"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@Timed
 	@GET
 	@Path("/{uuid}/configurations")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getResourceConfigurations(@ApiParam(value = "data resource identifier", required = true) @PathParam("uuid") final String uuid)
 			throws DMPControllerException {
-		final Timer.Context context = dmpStatus.getAllConfigurations();
-
 		ResourcesResource.LOG.debug("try to get resource configurations for resource with uuid '" + uuid + "'");
 
 		final Optional<Resource> resourceOptional = dataModelUtil.fetchResource(uuid);
 
 		if (!resourceOptional.isPresent()) {
-
-			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
@@ -586,8 +537,6 @@ public class ResourcesResource {
 		if (configurations == null || configurations.isEmpty()) {
 
 			ResourcesResource.LOG.debug("couldn't find configurations for resource '" + uuid + "'; or there are no configurations for this resource");
-
-			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
@@ -600,15 +549,11 @@ public class ResourcesResource {
 
 			configurationsJSON = objectMapper.writeValueAsString(resource.getConfigurations());
 		} catch (final JsonProcessingException e) {
-
-			dmpStatus.stop(context);
 			throw new DMPControllerException("couldn't transform resource configurations set to JSON string.\n" + e.getMessage());
 		}
 
 		ResourcesResource.LOG.debug("return resource configurations for resource with uuid '" + uuid + "' ");
 		ResourcesResource.LOG.trace("and content '" + configurationsJSON + "'");
-
-		dmpStatus.stop(context);
 		return buildResponse(configurationsJSON);
 	}
 
@@ -631,21 +576,18 @@ public class ResourcesResource {
 	@ApiResponses(value = {
 			@ApiResponse(code = 201, message = "configuration was successfully persisted and added to the resource for the given uuid"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@Timed
 	@POST
 	@Path("/{uuid}/configurations")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addConfiguration(@ApiParam(value = "data resource identifier", required = true) @PathParam("uuid") final String uuid,
 			@ApiParam(value = "configuration (as JSON)", required = true) final String jsonObjectString) throws DMPControllerException {
-		final Timer.Context context = dmpStatus.createNewConfiguration();
-
 		ResourcesResource.LOG.debug("try to create new configuration for resource with uuid '" + uuid + "'");
 
 		final Optional<Resource> resourceOptional = dataModelUtil.fetchResource(uuid);
 
 		if (!resourceOptional.isPresent()) {
-
-			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
@@ -658,8 +600,6 @@ public class ResourcesResource {
 		if (proxyConfiguration == null) {
 
 			ResourcesResource.LOG.debug("couldn't add configuration to resource with uuid '" + uuid + "'");
-
-			dmpStatus.stop(context);
 			throw new DMPControllerException("couldn't add configuration to resource with uuid '" + uuid + "'");
 		}
 
@@ -668,8 +608,6 @@ public class ResourcesResource {
 		if (configuration == null) {
 
 			ResourcesResource.LOG.debug("couldn't add configuration to resource with uuid '" + uuid + "'");
-
-			dmpStatus.stop(context);
 			throw new DMPControllerException("couldn't add configuration to resource with uuid '" + uuid + "'");
 		}
 
@@ -682,8 +620,6 @@ public class ResourcesResource {
 
 			configurationJSON = objectMapper.writeValueAsString(configuration);
 		} catch (final JsonProcessingException e) {
-
-			dmpStatus.stop(context);
 			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
 		}
 
@@ -692,8 +628,6 @@ public class ResourcesResource {
 
 		ResourcesResource.LOG.debug("return new configuration at '" + configurationURI.toString() + "' ");
 		ResourcesResource.LOG.trace("with content '" + configurationJSON + "'");
-
-		dmpStatus.stop(context);
 		return buildResponseCreated(configurationJSON, configurationURI, proxyConfiguration.getType(), "configuration");
 	}
 
@@ -710,19 +644,16 @@ public class ResourcesResource {
 			@ApiResponse(code = 200, message = "returns a configuration (as JSON) that matches the given configuration uuid and is related to the resource that matches the given resource uuid"),
 			@ApiResponse(code = 404, message = "could not find a configuration for the given configuration uuid and/or resource uuid"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@Timed
 	@GET
 	@Path("/{uuid}/configurations/{configurationuuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getResourceConfiguration(@ApiParam(value = "data resource identifier", required = true) @PathParam("uuid") final String uuid,
 			@ApiParam(value = "configuration identifier", required = true) @PathParam("configurationuuid") final String configurationUuid)
 			throws DMPControllerException {
-		final Timer.Context context = dmpStatus.getSingleConfiguration();
-
 		final Optional<Configuration> configurationOptional = dataModelUtil.fetchConfiguration(uuid, configurationUuid);
 
 		if (!configurationOptional.isPresent()) {
-
-			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
@@ -732,15 +663,11 @@ public class ResourcesResource {
 
 			configurationJSON = objectMapper.writeValueAsString(configurationOptional.get());
 		} catch (final JsonProcessingException e) {
-
-			dmpStatus.stop(context);
 			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
 		}
 
 		ResourcesResource.LOG.debug("return configuration with uuid '" + configurationUuid + "' for resource with uuid '" + uuid + "' ");
 		ResourcesResource.LOG.trace("and content '" + configurationJSON + "'");
-
-		dmpStatus.stop(context);
 		return buildResponse(configurationJSON);
 	}
 
@@ -758,22 +685,19 @@ public class ResourcesResource {
 			@ApiResponse(code = 200, message = "a preview of the CSV data of the data resource, where the given configuration was applied, could be retrieved"),
 			@ApiResponse(code = 404, message = "could not find a resource for the given uuid or data for this resource"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@Timed
 	@POST
 	@Path("/{uuid}/configurationpreview")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response csvPreviewConfiguration(@ApiParam(value = "data resource identifier", required = true) @PathParam("uuid") final String uuid,
 			@ApiParam(value = "configuration (as JSON)", required = true) final String jsonObjectString) throws DMPControllerException {
-		final Timer.Context context = dmpStatus.configurationsPreview();
-
 		ResourcesResource.LOG.debug("try to apply configuration for resource with uuid '" + uuid + "'");
 		ResourcesResource.LOG.debug("try to receive resource with uuid '" + uuid + "' for csv configuration preview");
 
 		final Optional<Resource> resourceOptional = dataModelUtil.fetchResource(uuid);
 
 		if (!resourceOptional.isPresent()) {
-
-			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
@@ -788,14 +712,10 @@ public class ResourcesResource {
 		if (result == null) {
 
 			ResourcesResource.LOG.debug("couldn't apply configuration to resource with uuid '" + uuid + "'");
-
-			dmpStatus.stop(context);
 			throw new DMPControllerException("couldn't apply configuration to resource with uuid '" + uuid + "'");
 		}
 
 		ResourcesResource.LOG.debug("applied configuration to resource with uuid '" + uuid + "'");
-
-		dmpStatus.stop(context);
 		return buildResponse(result);
 	}
 
@@ -813,22 +733,19 @@ public class ResourcesResource {
 			@ApiResponse(code = 200, message = "a preview of the CSV JSON data of the data resource, where the given configuration was applied, could be retrieved"),
 			@ApiResponse(code = 404, message = "could not find a resource for the given uuid or data for this resource"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@Timed
 	@POST
 	@Path("/{uuid}/configurationpreview")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response csvJSONPreviewConfiguration(@ApiParam(value = "data resource identifier", required = true) @PathParam("uuid") final String uuid,
 			@ApiParam(value = "configuration (as JSON)", required = true) final String jsonObjectString) throws DMPControllerException {
-		final Timer.Context context = dmpStatus.configurationsPreview();
-
 		ResourcesResource.LOG.debug("try to apply configuration for resource with uuid '" + uuid + "'");
 		ResourcesResource.LOG.debug("try to recieve resource with uuid '" + uuid + "' for csv json configuration preview");
 
 		final Optional<Resource> resourceOptional = dataModelUtil.fetchResource(uuid);
 
 		if (!resourceOptional.isPresent()) {
-
-			dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
@@ -843,14 +760,10 @@ public class ResourcesResource {
 		if (result == null) {
 
 			ResourcesResource.LOG.debug("couldn't apply configuration to resource with uuid '" + uuid + "'");
-
-			dmpStatus.stop(context);
 			throw new DMPControllerException("couldn't apply configuration to resource with uuid '" + uuid + "'");
 		}
 
 		ResourcesResource.LOG.debug("applied configuration to resource with uuid '" + uuid + "'");
-
-		dmpStatus.stop(context);
 		return buildResponse(result);
 	}
 

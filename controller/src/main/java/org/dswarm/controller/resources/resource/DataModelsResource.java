@@ -35,6 +35,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -62,7 +63,6 @@ import org.dswarm.controller.eventbus.XMLSchemaEvent;
 import org.dswarm.controller.eventbus.XMLSchemaEventRecorder;
 import org.dswarm.controller.resources.ExtendedBasicDMPResource;
 import org.dswarm.controller.resources.resource.utils.ExportUtils;
-import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.controller.utils.DataModelUtil;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.proxy.RetrievalType;
@@ -104,7 +104,6 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 	 *
 	 * @param persistenceServiceProviderArg
 	 * @param objectMapperProviderArg
-	 * @param dmpStatusArg                         an metrics registry
 	 * @param dataModelUtilArg                     the data model util
 	 * @param schemaEventRecorderProviderArg
 	 * @param xmlSchemaEventRecorderProviderArg
@@ -115,14 +114,14 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 	 */
 	@Inject
 	public DataModelsResource(final javax.inject.Provider<DataModelService> persistenceServiceProviderArg,
-			final javax.inject.Provider<ObjectMapper> objectMapperProviderArg, final DMPStatus dmpStatusArg, final DataModelUtil dataModelUtilArg,
+			final javax.inject.Provider<ObjectMapper> objectMapperProviderArg, final DataModelUtil dataModelUtilArg,
 			final Provider<SchemaEventRecorder> schemaEventRecorderProviderArg,
 			final Provider<XMLSchemaEventRecorder> xmlSchemaEventRecorderProviderArg,
 			final Provider<CSVConverterEventRecorder> csvConverterEventRecorderProviderArg,
 			final Provider<XMLConverterEventRecorder> xmlConverterEventRecorderProviderArg,
 			@Named("dswarm.db.graph.endpoint") final String graphEndpointArg) throws DMPControllerException {
 
-		super(DataModel.class, persistenceServiceProviderArg, objectMapperProviderArg, dmpStatusArg);
+		super(DataModel.class, persistenceServiceProviderArg, objectMapperProviderArg);
 
 		dataModelUtil = dataModelUtilArg;
 		schemaEventRecorderProvider = schemaEventRecorderProviderArg;
@@ -227,6 +226,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "could retrieve the data successfully for the data model that matches the given uuid"),
 			@ApiResponse(code = 404, message = "could not find a data model for the given uuid or data for this data model"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@Timed
 	@GET
 	@Path("/{uuid}/data")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -281,6 +281,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 			@ApiResponse(code = 404, message = "could not find a data model for the given uuid"),
 			@ApiResponse(code = 406, message = "requested export format is not supported"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@Timed
 	@GET
 	@Path("/{uuid}/export")
 	// SR TODO removing of @Produces should result in accepting any requested format (accept header?) Is this what we want as a

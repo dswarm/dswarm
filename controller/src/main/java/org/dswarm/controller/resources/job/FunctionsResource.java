@@ -37,7 +37,6 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
 import org.dswarm.controller.DMPControllerException;
-import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.proxy.ProxyFunction;
 import org.dswarm.persistence.service.job.FunctionService;
@@ -59,13 +58,12 @@ public class FunctionsResource extends BasicFunctionsResource<FunctionService, P
 	 *
 	 * @param persistenceServiceProviderArg
 	 * @param objectMapperProviderArg
-	 * @param dmpStatusArg                  a metrics registry
 	 */
 	@Inject
 	public FunctionsResource(final Provider<FunctionService> persistenceServiceProviderArg,
-			final Provider<ObjectMapper> objectMapperProviderArg, final DMPStatus dmpStatusArg) throws DMPControllerException {
+			final Provider<ObjectMapper> objectMapperProviderArg) throws DMPControllerException {
 
-		super(Function.class, persistenceServiceProviderArg, objectMapperProviderArg, dmpStatusArg);
+		super(Function.class, persistenceServiceProviderArg, objectMapperProviderArg);
 	}
 
 	/**
