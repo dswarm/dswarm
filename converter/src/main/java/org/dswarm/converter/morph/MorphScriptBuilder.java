@@ -328,78 +328,77 @@ public class MorphScriptBuilder {
 
 			for (final Component component : components) {
 
-				if (LOOKUP_FUNCTIONS.contains(component.getFunction().getName())) {
+				final Map<String, String> componentParameterMapping = component.getParameterMappings();
+
+				if (LOOKUP_FUNCTIONS.contains(component.getFunction().getName()) && componentParameterMapping != null) {
 
 					final Element map = doc.createElement("map");
 					maps.appendChild(map);
 
-					final Map<String, String> componentParameterMapping = component.getParameterMappings();
+					for (final Entry<String, String> parameterMapping : componentParameterMapping.entrySet()) {
 
-					if (componentParameterMapping != null) {
+						if (parameterMapping.getKey() != null && parameterMapping.getValue() != null) {
 
-						for (final Entry<String, String> parameterMapping : componentParameterMapping.entrySet()) {
+							switch (parameterMapping.getKey()) {
 
-							if (parameterMapping.getKey() != null) {
-
-								if (parameterMapping.getKey().equals("in")) {
+								case "in":
 
 									map.setAttribute("name", parameterMapping.getValue());
+									break;
 
-								} else if (parameterMapping.getKey().equals("map")) {
+								case "map":
 
 									map.setAttribute("name", parameterMapping.getValue());
+									break;
 
-								} else if (parameterMapping.getKey().equals(MorphScriptBuilder.LOOKUP_MAP_DEFINITION)) {
+								case LOOKUP_MAP_DEFINITION:
 
-									if (parameterMapping.getValue() != null) {
 
-										if (component.getFunction().getName().equals("whitelist") || component.getFunction().getName().equals("blacklist")) {
+									if (component.getFunction().getName().equals("whitelist") || component.getFunction().getName().equals("blacklist")) {
 
-											List<String> lookupList = new ArrayList();
+										List<String> lookupList = new ArrayList();
 
-											ObjectMapper mapper = new ObjectMapper();
 
-											try {
-												lookupList = mapper.readValue(parameterMapping.getValue(), new TypeReference<List<String>>() {
-												});
-											} catch (IOException e) {
-												e.printStackTrace();
-											}
+										ObjectMapper mapper = new ObjectMapper();
 
-											for (final String lookupEntry : lookupList) {
+										try {
+											lookupList = mapper.readValue(parameterMapping.getValue(), new TypeReference<List<String>>() {
+											});
+										} catch (final IOException e) {
+											MorphScriptBuilder.LOG.debug("lookup map as JSON string in parameter mappings could not convert to a list" + e);
+										}
 
-												final Element lookup = doc.createElement("entry");
-												lookup.setAttribute("name", lookupEntry);
-												map.appendChild(lookup);
-											}
-										} else {
+										for (final String lookupEntry : lookupList) {
 
-											Map<String, String> lookupEntrys = new HashMap<String, String>();
+											final Element lookup = doc.createElement("entry");
+											lookup.setAttribute("name", lookupEntry);
+											map.appendChild(lookup);
+										}
+									} else {
 
-											ObjectMapper mapper = new ObjectMapper();
+										Map<String, String> lookupEntrys = new HashMap<String, String>();
 
-											try {
-												lookupEntrys = mapper.readValue(parameterMapping.getValue(), new TypeReference<HashMap<String, String>>() {
-												});
-											} catch (IOException e) {
-												e.printStackTrace();
-											}
+										ObjectMapper mapper = new ObjectMapper();
 
-											for (final Entry<String, String> lookupEntry : lookupEntrys.entrySet()) {
+										try {
+											lookupEntrys = mapper.readValue(parameterMapping.getValue(), new TypeReference<HashMap<String, String>>() {
+											});
+										} catch (final IOException e) {
+											MorphScriptBuilder.LOG.debug("lookup map as JSON string in parameter mappings could not convert to a map" + e);
+										}
 
-												final Element lookup = doc.createElement("entry");
-												lookup.setAttribute("name", lookupEntry.getKey());
-												lookup.setAttribute("value", lookupEntry.getValue());
-												map.appendChild(lookup);
-											}
+										for (final Entry<String, String> lookupEntry : lookupEntrys.entrySet()) {
+
+											final Element lookup = doc.createElement("entry");
+											lookup.setAttribute("name", lookupEntry.getKey());
+											lookup.setAttribute("value", lookupEntry.getValue());
+											map.appendChild(lookup);
 										}
 									}
+									break;
 
-								} else {
-
-									continue;
-								}
 							}
+
 						}
 					}
 				}
