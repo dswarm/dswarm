@@ -16,4 +16,5 @@
             <compose postfix="\\$\$$`}{[" prefix="\\@\@@{`é="/>
         </data>
     </rules>
+    <maps/>
 </metamorph>

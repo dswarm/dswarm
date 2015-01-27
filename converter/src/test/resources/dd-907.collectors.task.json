@@ -14,27 +14,14 @@
           "components" : [ {
             "function" : {
               "name" : "choose",
-              "description" : "Collects all received values and concatenates them on record end.",
+              "description" : "Collects all received values and emits the most preferred one on record end.",
               "function_description" : {
                 "name" : "choose",
                 "dsl" : "metafacture",
                 "reference" : "choose",
-                "description" : "Collects all received values and concatenates them on record end.",
-                "parameters" : {
-                  "delimiter" : {
-                    "type" : "text"
-                  },
-                  "prefix" : {
-                    "type" : "text",
-                    "optional" : true
-                  },
-                  "postfix" : {
-                    "type" : "text",
-                    "optional" : true
-                  }
-                }
+                "description" : "Collects all received values and emits the most preferred one on record end."
               },
-              "parameters" : [ "delimiter", "prefix", "postfix" ],
+              "parameters" : null,
               "type" : "Function",
               "uuid" : "23"
             },
@@ -205,6 +192,104 @@
         "uuid" : "21"
       },
       "uuid" : "-11402051926041"
+    }, {
+      "name" : "xyz789",
+      "transformation" : {
+        "name" : "transformation",
+        "description" : "transformation",
+        "function" : {
+          "name" : "transformation",
+          "description" : "transformation",
+          "type" : "Transformation",
+          "components" : [ {
+            "function" : {
+              "name" : "combine",
+              "description" : "Collects all received values and combine them.",
+              "function_description" : {
+                "name" : "combine",
+                "dsl" : "metafacture",
+                "reference" : "combine",
+                "description" : "Collects all received values and combine them.",
+                "parameters" : {
+                  "value" : {
+                    "type" : "text"
+                  }
+                }
+              },
+              "parameters" : [ "value" ],
+              "type" : "Function",
+              "uuid" : "23"
+            },
+            "name" : "component3402409200787",
+            "description" : "{\"x\":\"title\",\"y\":0}",
+            "parameter_mappings" : {
+              "value" : "COMBINE_PATH1(${feld_value__4__}) und COMBINE_PATH2(${feld_value__5__})",
+              "inputString" : "feld_value__4__,feld_value__5__"
+            },
+            "uuid" : "-3402409200649"
+          } ]
+        },
+        "parameter_mappings" : {
+          "__TRANSFORMATION_OUTPUT_VARIABLE__3" : "output mapping attribute path instance 3",
+          "feld_value__4__" : "feld_value__4__",
+          "feld_value__5__" : "feld_value__5__"
+        }
+      },
+      "input_attribute_paths" : [ {
+        "type" : "MappingAttributePathInstance",
+        "name" : "feld_value__4__",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "feld",
+            "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+            "uuid" : "38"
+          }, {
+            "name" : "value",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+            "uuid" : "41"
+          } ],
+          "uuid" : "146"
+        },
+        "filter" : {
+          "expression" : "[{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr\":\"331\"},{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind\":\" \"}]",
+          "uuid" : "-31402051955808"
+        },
+        "uuid" : "-31402051926047"
+      }, {
+        "type" : "MappingAttributePathInstance",
+        "name" : "feld_value__5__",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "feld",
+            "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+            "uuid" : "38"
+          }, {
+            "name" : "value",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+            "uuid" : "41"
+          } ],
+          "uuid" : "46"
+        },
+        "filter" : {
+          "expression" : "[{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr\":\"335\"},{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind\":\" \"}]",
+          "uuid" : "-31402051955808"
+        },
+        "uuid" : "-31402051926048"
+      } ],
+      "output_attribute_path" : {
+        "type" : "MappingAttributePathInstance",
+        "name" : "output mapping attribute path instance 3",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "fullTitle",
+            "uri" : "http://purl.org/dc/elements/1.1/fullTitle",
+            "uuid" : "3334"
+          } ],
+          "uuid" : "3334"
+        },
+        "uuid" : "31"
+      },
+      "uuid" : "-31402051926041"
     } ]
   },
   "input_data_model" : {

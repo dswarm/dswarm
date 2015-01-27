@@ -312,13 +312,19 @@ public class MorphScriptBuilder {
 
 	private void createLookupTable(final Element maps, final Component transformationComponent) throws DMPConverterException {
 
+		if (transformationComponent == null)
+			return;
+
 		final Function transformationFunction = transformationComponent.getFunction();
 
-		if (transformationFunction.getFunctionType() == FunctionType.Transformation) {
+		if (transformationFunction != null && transformationFunction.getFunctionType() == FunctionType.Transformation) {
 
 			final Transformation transformation = (Transformation) transformationFunction;
 
 			final Set<Component> components = transformation.getComponents();
+
+			if (components == null)
+				return;
 
 			for (final Component component : components) {
 
@@ -451,6 +457,8 @@ public class MorphScriptBuilder {
 
 		final Element collection;
 
+		// convert concat function to combine function because concat are concatenated the
+		// values in the order they appear in the input and not in the order of the <data> sources.
 		if (multipleInputComponent.getFunction().getName().equals("concat")) {
 
 			final Map<String, String> parameters = multipleInputComponent.getParameterMappings();
@@ -459,19 +467,13 @@ public class MorphScriptBuilder {
 
 			String delimiterString = ", ";
 
-			if (parameters.get("prefix") != null) {
-				valueString = parameters.get("prefix");
-			}
-
 			if (parameters.get("delimiter") != null) {
 				delimiterString = parameters.get("delimiter");
 			}
 
-			collection = doc.createElement("combine");
-
-			collection.setAttribute("name", "@" + collectionNameAttribute);
-
-			collection.setAttribute("reset", "true");
+			if (parameters.get("prefix") != null) {
+				valueString = parameters.get("prefix");
+			}
 
 			final Iterator<String> iter = collectionSourceAttributes.iterator();
 
@@ -487,38 +489,43 @@ public class MorphScriptBuilder {
 					valueString += delimiterString;
 				}
 
-				final Element collectionData = doc.createElement("data");
-
-				collectionData.setAttribute("source", "@" + sourceAttribute);
-
-				collectionData.setAttribute("name", sourceAttribute);
-
-				collection.appendChild(collectionData);
 			}
 
 			if (parameters.get("postfix") != null) {
 				valueString += parameters.get("postfix");
 			}
 
-			collection.setAttribute("value", valueString);
+			Map<String, String> extendedParameterMappings = new HashMap<String, String>();
 
-		} else {
+			extendedParameterMappings.put("value", valueString);
 
+			extendedParameterMappings.put("reset", "true");
+
+			multipleInputComponent.setParameterMappings(extendedParameterMappings);
+		}
+
+		final String functionName = multipleInputComponent.getFunction().getName();
+
+		if (functionName.equals("concat"))
+			collection = doc.createElement("combine");
+		else
 			collection = doc.createElement(multipleInputComponent.getFunction().getName());
 
-			createParameters(multipleInputComponent.getParameterMappings(), collection);
+		createParameters(multipleInputComponent.getParameterMappings(), collection);
 
-			collection.setAttribute("name", "@" + collectionNameAttribute);
+		collection.setAttribute("name", "@" + collectionNameAttribute);
 
-			for (final String sourceAttribute : collectionSourceAttributes) {
+		for (final String sourceAttribute : collectionSourceAttributes) {
 
-				final Element collectionData = doc.createElement("data");
+			final Element collectionData = doc.createElement("data");
 
-				collectionData.setAttribute("source", "@" + sourceAttribute);
+			collectionData.setAttribute("source", "@" + sourceAttribute);
 
-				collection.appendChild(collectionData);
-			}
+			collectionData.setAttribute("name", sourceAttribute);
+
+			collection.appendChild(collectionData);
 		}
+
 		return collection;
 	}
 

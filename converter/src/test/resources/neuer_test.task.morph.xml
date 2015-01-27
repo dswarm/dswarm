@@ -32,4 +32,5 @@
         <data name="http://purl.org/dc/elements/1.1/creator" source="@__TRANSFORMATION_OUTPUT_VARIABLE__5"/>
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__5" source="@feld_nr"/>
     </rules>
+    <maps/>
 </metamorph>
