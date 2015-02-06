@@ -64,7 +64,7 @@ public abstract class AdvancedDMPResource<POJOCLASSPERSISTENCESERVICE extends Ad
 	protected PROXYPOJOCLASS createObject(final POJOCLASS objectFromJSON, final POJOCLASSPERSISTENCESERVICE persistenceService)
 			throws DMPPersistenceException {
 
-		return persistenceService.createOrGetObjectTransactional(objectFromJSON.getUri());
+		return persistenceService.createOrGetObjectTransactional(objectFromJSON);
 	}
 
 	@Override

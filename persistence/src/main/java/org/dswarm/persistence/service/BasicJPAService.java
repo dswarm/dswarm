@@ -232,13 +232,13 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 		// TODO: shall we check, whether the entity with the UUID already exists in the DB, or not?
 		final POJOCLASS newObject = createNewObject(object.getUuid());
 
-		persistObject(newObject, entityManager);
-
 		updateObjectInternal(object, newObject, entityManager);
 
-		final POJOCLASS mergedObject = entityManager.merge(newObject);
+		persistObject(newObject, entityManager);
 
-		return createNewProxyObject(mergedObject, RetrievalType.CREATED);
+//		final POJOCLASS mergedObject = entityManager.merge(newObject);
+
+		return createNewProxyObject(newObject, RetrievalType.CREATED);
 	}
 
 	/**

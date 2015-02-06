@@ -453,26 +453,28 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 			throw new DMPControllerException("fresh " + pojoClassName + " shouldn't be null");
 		}
 
-		final POJOCLASS preparedObject = prepareObjectForUpdate(objectFromJSON, object);
+		return proxyObject;
 
-		// update the persistent object in the DB
-
-		try {
-
-			final PROXYPOJOCLASS proxyUpdatedObject = persistenceService.updateObjectTransactional(preparedObject);
-
-			if (proxyUpdatedObject == null) {
-
-				throw new DMPControllerException("something went wrong while " + pojoClassName + " updating");
-			}
-
-			return persistenceServiceProvider.get().createNewProxyObject(proxyUpdatedObject.getObject(), proxyObject.getType());
-		} catch (final DMPPersistenceException e) {
-
-			BasicResource.LOG.debug("something went wrong while " + pojoClassName + " updating");
-
-			throw new DMPControllerException("something went wrong while " + pojoClassName + " updating\n" + e.getMessage());
-		}
+//		final POJOCLASS preparedObject = prepareObjectForUpdate(objectFromJSON, object);
+//
+//		// update the persistent object in the DB
+//
+//		try {
+//
+//			final PROXYPOJOCLASS proxyUpdatedObject = persistenceService.updateObjectTransactional(preparedObject);
+//
+//			if (proxyUpdatedObject == null) {
+//
+//				throw new DMPControllerException("something went wrong while " + pojoClassName + " updating");
+//			}
+//
+//			return persistenceServiceProvider.get().createNewProxyObject(proxyUpdatedObject.getObject(), proxyObject.getType());
+//		} catch (final DMPPersistenceException e) {
+//
+//			BasicResource.LOG.debug("something went wrong while " + pojoClassName + " updating");
+//
+//			throw new DMPControllerException("something went wrong while " + pojoClassName + " updating\n" + e.getMessage());
+//		}
 	}
 
 	/**
@@ -594,6 +596,6 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 	protected PROXYPOJOCLASS createObject(final POJOCLASS objectFromJSON, final POJOCLASSPERSISTENCESERVICE persistenceService)
 			throws DMPPersistenceException {
 
-		return persistenceService.createObjectTransactional();
+		return persistenceService.createObjectTransactional(objectFromJSON);
 	}
 }
