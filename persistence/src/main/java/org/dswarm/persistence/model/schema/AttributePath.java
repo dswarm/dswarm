@@ -43,8 +43,6 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.persistence.annotations.Cache;
-import org.eclipse.persistence.config.CacheIsolationType;
 import org.hamcrest.Matchers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +63,6 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "ATTRIBUTE_PATH")
 @Cacheable(false)
-@Cache(isolation = CacheIsolationType.ISOLATED)
 public class AttributePath extends DMPObject {
 
 	/**
