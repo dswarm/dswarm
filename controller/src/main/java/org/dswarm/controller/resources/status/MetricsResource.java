@@ -15,7 +15,6 @@
  */
 package org.dswarm.controller.resources.status;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -25,14 +24,15 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.annotation.Metered;
 import com.codahale.metrics.json.MetricsModule;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.google.common.net.HttpHeaders;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -43,37 +43,43 @@ import com.wordnik.swagger.annotations.ApiParam;
 @Path("_stats")
 public class MetricsResource {
 
-	private final MetricRegistry	registry;
-	private final ObjectMapper		mapper;
+	private final MetricRegistry registry;
+	private final ObjectMapper mapper;
+
+	private static final CacheControl CACHE_CONTROL;
+	static {
+		final CacheControl control = new CacheControl();
+		control.setMustRevalidate(true);
+		control.setNoCache(true);
+		control.setNoStore(true);
+		CACHE_CONTROL = control;
+	}
 
 	@Inject
 	public MetricsResource(final MetricRegistry registry) {
 
 		this.registry = registry;
+		mapper = configureObjectMapper();
+	}
 
+	private static ObjectMapper configureObjectMapper() {
 		final TimeUnit rateUnit = TimeUnit.SECONDS;
 		final TimeUnit durationUnit = TimeUnit.MILLISECONDS;
 		final boolean showSamples = false;
-
 		final MetricsModule metricsModule = new MetricsModule(rateUnit, durationUnit, showSamples);
-
-		mapper = new ObjectMapper().registerModule(metricsModule);
+		return new ObjectMapper().registerModule(metricsModule);
 	}
 
 	@ApiOperation("get a bunch of metrics and gauges and timers since the last server restart. rates are in per-second, durations in milliseconds.")
+	@Metered
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getStats(
 			@ApiParam(value = "json pretty print", required = false, defaultValue = "false", name = "pretty") @DefaultValue("false") @QueryParam("pretty") final boolean pretty)
 			throws IOException {
-
-		final ByteArrayOutputStream stream = new ByteArrayOutputStream(1024);
-
-		final ObjectWriter writer = pretty ? mapper.writerWithDefaultPrettyPrinter() : mapper.writer();
-
-		writer.writeValue(stream, registry);
-
-		return Response.ok(stream.toString("UTF-8")).header(HttpHeaders.CACHE_CONTROL, "must-revalidate,no-cache,no-store").build();
+		final ObjectMapper requestMapper = mapper.configure(SerializationFeature.INDENT_OUTPUT, pretty);
+		final String serializedMetrics = requestMapper.writeValueAsString(registry);
+		return Response.ok(serializedMetrics).cacheControl(CACHE_CONTROL).build();
 	}
 
 }

@@ -28,6 +28,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
@@ -38,7 +39,6 @@ import com.wordnik.swagger.annotations.ApiResponses;
 
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.AdvancedDMPResource;
-import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
 import org.dswarm.persistence.service.schema.AttributeService;
@@ -59,14 +59,13 @@ public class AttributesResource extends AdvancedDMPResource<AttributeService, Pr
 	 *
 	 * @param persistenceServiceProviderArg
 	 * @param objectMapperProviderArg
-	 * @param dmpStatusArg                  a metrics registry
 	 */
 	@Inject
 	public AttributesResource(final Provider<AttributeService> persistenceServiceProviderArg,
-			final Provider<ObjectMapper> objectMapperProviderArg, final DMPStatus dmpStatusArg)
+			final Provider<ObjectMapper> objectMapperProviderArg)
 			throws DMPControllerException {
 
-		super(Attribute.class, persistenceServiceProviderArg, objectMapperProviderArg, dmpStatusArg);
+		super(Attribute.class, persistenceServiceProviderArg, objectMapperProviderArg);
 	}
 
 	/**

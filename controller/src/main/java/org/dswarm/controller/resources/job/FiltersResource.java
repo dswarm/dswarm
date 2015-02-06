@@ -38,7 +38,6 @@ import com.wordnik.swagger.annotations.ApiResponses;
 
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.BasicDMPResource;
-import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.model.job.Filter;
 import org.dswarm.persistence.model.job.proxy.ProxyFilter;
 import org.dswarm.persistence.service.job.FilterService;
@@ -60,13 +59,12 @@ public class FiltersResource extends BasicDMPResource<FilterService, ProxyFilter
 	 *
 	 * @param persistenceServiceProviderArg
 	 * @param objectMapperProviderArg
-	 * @param dmpStatusArg                  a metrics registry
 	 */
 	@Inject
 	public FiltersResource(final Provider<FilterService> persistenceServiceProviderArg,
-			final Provider<ObjectMapper> objectMapperProviderArg, final DMPStatus dmpStatusArg) throws DMPControllerException {
+			final Provider<ObjectMapper> objectMapperProviderArg) throws DMPControllerException {
 
-		super(Filter.class, persistenceServiceProviderArg, objectMapperProviderArg, dmpStatusArg);
+		super(Filter.class, persistenceServiceProviderArg, objectMapperProviderArg);
 	}
 
 	/**

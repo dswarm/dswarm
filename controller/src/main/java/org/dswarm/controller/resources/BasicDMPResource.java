@@ -19,7 +19,6 @@ import javax.inject.Provider;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.model.BasicDMPJPAObject;
 import org.dswarm.persistence.model.proxy.ProxyBasicDMPJPAObject;
 import org.dswarm.persistence.service.BasicDMPJPAService;
@@ -43,12 +42,11 @@ public abstract class BasicDMPResource<POJOCLASSPERSISTENCESERVICE extends Basic
 	 * @param pojoClassArg                  a concrete POJO class
 	 * @param persistenceServiceProviderArg the concrete persistence service that is related to the concrete POJO class
 	 * @param objectMapperProviderArg       an object mapper
-	 * @param dmpStatusArg                  a metrics registry
 	 */
 	public BasicDMPResource(final Class<POJOCLASS> pojoClassArg, final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
-			final Provider<ObjectMapper> objectMapperProviderArg, final DMPStatus dmpStatusArg) {
+	                        final Provider<ObjectMapper> objectMapperProviderArg) {
 
-		super(pojoClassArg, persistenceServiceProviderArg, objectMapperProviderArg, dmpStatusArg);
+		super(pojoClassArg, persistenceServiceProviderArg, objectMapperProviderArg);
 	}
 
 	/**

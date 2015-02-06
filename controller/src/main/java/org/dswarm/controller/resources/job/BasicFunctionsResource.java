@@ -20,7 +20,6 @@ import javax.inject.Provider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.dswarm.controller.resources.ExtendedBasicDMPResource;
-import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.proxy.ProxyBasicFunction;
 import org.dswarm.persistence.service.job.BasicFunctionService;
@@ -40,15 +39,15 @@ public abstract class BasicFunctionsResource<POJOCLASSPERSISTENCESERVICE extends
 	 * Creates a new resource (controller service) for the given concrete {@link Function} class with the provider of the concrete
 	 * {@link Function} persistence service, the object mapper and metrics registry.
 	 *
+	 * @param dmpStatusArg                  a metrics registry
 	 * @param pojoClassArg                  a concrete POJO class
 	 * @param persistenceServiceProviderArg the concrete persistence service that is related to the concrete POJO class
 	 * @param objectMapperProviderArg       an object mapper
-	 * @param dmpStatusArg                  a metrics registry
 	 */
 	public BasicFunctionsResource(final Class<POJOCLASS> pojoClassArg, final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProviderArg,
-			final Provider<ObjectMapper> objectMapperProviderArg, final DMPStatus dmpStatusArg) {
+	                              final Provider<ObjectMapper> objectMapperProviderArg) {
 
-		super(pojoClassArg, persistenceServiceProviderArg, objectMapperProviderArg, dmpStatusArg);
+		super(pojoClassArg, persistenceServiceProviderArg, objectMapperProviderArg);
 	}
 
 	/**

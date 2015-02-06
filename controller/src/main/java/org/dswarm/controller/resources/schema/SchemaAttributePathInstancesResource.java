@@ -37,7 +37,6 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
 import org.dswarm.controller.DMPControllerException;
-import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxySchemaAttributePathInstance;
@@ -61,14 +60,13 @@ public class SchemaAttributePathInstancesResource
 	 *
 	 * @param persistenceServiceProviderArg
 	 * @param objectMapperProviderArg
-	 * @param dmpStatusArg
 	 * @throws org.dswarm.controller.DMPControllerException
 	 */
 	@Inject
 	public SchemaAttributePathInstancesResource(final Provider<SchemaAttributePathInstanceService> persistenceServiceProviderArg,
-			final Provider<ObjectMapper> objectMapperProviderArg, final DMPStatus dmpStatusArg) throws DMPControllerException {
+			final Provider<ObjectMapper> objectMapperProviderArg) throws DMPControllerException {
 
-		super(SchemaAttributePathInstance.class, persistenceServiceProviderArg, objectMapperProviderArg, dmpStatusArg);
+		super(SchemaAttributePathInstance.class, persistenceServiceProviderArg, objectMapperProviderArg);
 	}
 
 	/**

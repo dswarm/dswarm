@@ -35,6 +35,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -52,7 +53,6 @@ import org.slf4j.LoggerFactory;
 
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.BasicDMPResource;
-import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
@@ -94,17 +94,16 @@ public class SchemasResource extends BasicDMPResource<SchemaService, ProxySchema
 	 * @param attributePathServiceProviderArg
 	 * @param schemaAttributePathInstanceServiceProviderArg
 	 * @param objectMapperProviderArg                       an object mapper
-	 * @param dmpStatusArg                                  a metrics registry
 	 * @throws DMPControllerException
 	 */
 	@Inject
 	public SchemasResource(final Provider<SchemaService> persistenceServiceProviderArg, final Provider<AttributeService> attributeServiceProviderArg,
 			final Provider<AttributePathService> attributePathServiceProviderArg,
 			final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceServiceProviderArg,
-			final Provider<ObjectMapper> objectMapperProviderArg, final DMPStatus dmpStatusArg)
+			final Provider<ObjectMapper> objectMapperProviderArg)
 			throws DMPControllerException {
 
-		super(Schema.class, persistenceServiceProviderArg, objectMapperProviderArg, dmpStatusArg);
+		super(Schema.class, persistenceServiceProviderArg, objectMapperProviderArg);
 
 		attributeServiceProvider = attributeServiceProviderArg;
 		attributePathServiceProvider = attributePathServiceProviderArg;
@@ -207,6 +206,7 @@ public class SchemasResource extends BasicDMPResource<SchemaService, ProxySchema
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "schema was successfully updated"),
 			@ApiResponse(code = 404, message = "could not find a schema for the given uuid"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@Timed
 	@POST
 	@Path("/{uuid}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -279,6 +279,7 @@ public class SchemasResource extends BasicDMPResource<SchemaService, ProxySchema
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "schema was successfully updated"),
 			@ApiResponse(code = 404, message = "could not find a schema for the given id"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@Timed
 	@POST
 	@Path("/{schemauuid}/attributepaths/{attributepathuuid}")
 	@Consumes(MediaType.APPLICATION_JSON)
