@@ -236,9 +236,9 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 		updateObjectInternal(object, newObject, entityManager);
 
-		entityManager.merge(newObject);
+		final POJOCLASS mergedObject = entityManager.merge(newObject);
 
-		return createNewProxyObject(newObject, RetrievalType.CREATED);
+		return createNewProxyObject(mergedObject, RetrievalType.CREATED);
 	}
 
 	/**
@@ -298,20 +298,20 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 		updateObjectInternal(object, updateObject, entityManager);
 
-		entityManager.merge(updateObject);
+		final POJOCLASS mergedUpdatedObject = entityManager.merge(updateObject);
 
 		BasicJPAService.LOG.debug("updated " + className + " with id '" + object.getUuid() + "' " + transactionType);
 
 		if (updateObject != null) {
 
-			BasicJPAService.LOG.debug("updated " + className + " with id '" + updateObject.getUuid() + "' in the database " + transactionType);
-			BasicJPAService.LOG.trace("= '" + ToStringBuilder.reflectionToString(updateObject) + "'");
+			BasicJPAService.LOG.debug("updated " + className + " with id '" + mergedUpdatedObject.getUuid() + "' in the database " + transactionType);
+			BasicJPAService.LOG.trace("= '" + ToStringBuilder.reflectionToString(mergedUpdatedObject) + "'");
 		} else {
 
 			BasicJPAService.LOG.debug("couldn't updated " + className + " with id '" + object.getUuid() + "' in the database " + transactionType);
 		}
 
-		return proxyUpdateObject;
+		return createNewProxyObject(mergedUpdatedObject, proxyUpdateObject.getType());
 	}
 
 	/**
