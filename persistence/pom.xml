@@ -41,6 +41,7 @@
 		<version.lambdaj>2.4</version.lambdaj>
 		<!--<version.maven.plugin.hibernate>1.0.5</version.maven.plugin.hibernate>-->
 		<version.mysql-connector-java>5.1.34</version.mysql-connector-java>
+		<version.eclipselink>2.6.0-M3</version.eclipselink>
 	</properties>
 
 	<repositories>
@@ -85,6 +86,30 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>de.empulse.eclipselink</groupId>
+				<artifactId>staticweave-maven-plugin</artifactId>
+				<version>1.0.0</version>
+				<executions>
+					<execution>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>weave</goal>
+						</goals>
+						<configuration>
+							<persistenceXMLLocation>META-INF/persistence.xml</persistenceXMLLocation>
+							<logLevel>FINE</logLevel>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.eclipse.persistence</groupId>
+						<artifactId>org.eclipse.persistence.jpa</artifactId>
+						<version>${version.eclipselink}</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
@@ -151,7 +176,7 @@
 		<dependency>
 			<groupId>org.eclipse.persistence</groupId>
 			<artifactId>org.eclipse.persistence.jpa</artifactId>
-			<version>2.6.0-M3</version>
+			<version>${version.eclipselink}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>

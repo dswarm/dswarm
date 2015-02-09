@@ -92,7 +92,7 @@ public class JpaHibernateModule extends AbstractModule {
 
 		properties.setProperty("eclipselink.logging.level", "WARNING");
 		properties.setProperty("eclipselink.cache.shared.default", "false");
-		properties.setProperty("eclipselink.weaving", "false");
+		properties.setProperty("eclipselink.weaving", "static");
 
 		return properties;
 	}
