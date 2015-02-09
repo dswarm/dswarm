@@ -113,9 +113,9 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 
 			updateObjectInternal(object, newObject, entityManager);
 
-			persistObject(newObject, entityManager);
+			final POJOCLASS persistedObject = persistObject(newObject, entityManager);
 
-			return createNewProxyObject(newObject);
+			return createNewProxyObject(persistedObject);
 		} else {
 
 			AdvancedDMPJPAService.LOG.debug(className + " with uri '" + uri
@@ -141,9 +141,9 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 
 			updateObjectInternal(object, newObject, entityManager);
 
-			persistObject(newObject, entityManager);
+			final POJOCLASS peristedObject = persistObject(newObject, entityManager);
 
-			return createNewProxyObject(newObject);
+			return createNewProxyObject(peristedObject);
 		} else {
 
 			AdvancedDMPJPAService.LOG.debug(className + " with uri '" + uri

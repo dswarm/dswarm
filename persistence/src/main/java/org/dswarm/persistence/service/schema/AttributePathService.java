@@ -106,9 +106,7 @@ public class AttributePathService extends BasicJPAService<ProxyAttributePath, At
 
 			final AttributePath tempAttributePath = mergeAttributesIntoEntityManager(object, entityManager);
 
-			persistObject(tempAttributePath, entityManager);
-
-			newObject = tempAttributePath;
+			newObject = persistObject(tempAttributePath, entityManager);
 
 			return new ProxyAttributePath(newObject);
 		} else {

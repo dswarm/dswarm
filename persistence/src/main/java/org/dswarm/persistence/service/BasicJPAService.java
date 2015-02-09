@@ -178,18 +178,18 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 		// i.e. uuid will be created on demand in createNewObject
 		final POJOCLASS object = createNewObject(null);
 
-		persistObject(object, entityManager);
+		final POJOCLASS persistedObject = persistObject(object, entityManager);
 
-		return createNewProxyObject(object);
+		return createNewProxyObject(persistedObject);
 	}
 
 	protected PROXYPOJOCLASS createObjectInternal(final String uuid, final EntityManager entityManager) throws DMPPersistenceException {
 
 		final POJOCLASS object = createNewObject(uuid);
 
-		persistObject(object, entityManager);
+		final POJOCLASS persistedObject = persistObject(object, entityManager);
 
-		return createNewProxyObject(object);
+		return createNewProxyObject(persistedObject);
 	}
 
 	/**
@@ -234,11 +234,11 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 		updateObjectInternal(object, newObject, entityManager);
 
-		persistObject(newObject, entityManager);
+		final POJOCLASS persistedObject = persistObject(newObject, entityManager);
 
 //		final POJOCLASS mergedObject = entityManager.merge(newObject);
 
-		return createNewProxyObject(newObject, RetrievalType.CREATED);
+		return createNewProxyObject(persistedObject, RetrievalType.CREATED);
 	}
 
 	/**
@@ -445,13 +445,18 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 		return proxyUpdateObject;
 	}
 
-	protected void persistObject(final POJOCLASS object, final EntityManager entityManager) {
+	protected POJOCLASS persistObject(final POJOCLASS object, final EntityManager entityManager) {
 
 		BasicJPAService.LOG.debug("try to create new " + className);
 
-		entityManager.persist(object);
+		// http://blog.xebia.com/2009/03/23/jpa-implementation-patterns-saving-detached-entities/
+		// "Because of the way merging works, we can also do this if we are unsure whether the object has been already persisted."
+		final POJOCLASS mergedObject = entityManager.merge(object);
+				//.persist(object);
 
 		BasicJPAService.LOG.debug("created new " + className + " with id '" + object.getUuid() + "'");
+
+		return mergedObject;
 	}
 
 	/**
