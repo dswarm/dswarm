@@ -246,22 +246,19 @@ public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 		final DataModelService dataModelService = GuicedTest.injector.getInstance(DataModelService.class);
 		final DataModel dataModel = dataModelService.createObjectTransactional("3").getObject();
 
-		dataModel.setConfiguration(new Configuration() {
+		final Configuration configuration = new Configuration("4");
+		configuration.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("record"));
 
-			{
-				addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("record"));
-			}
-		});
-		dataModel.setDataResource(new Resource() {
+		dataModel.setConfiguration(configuration);
 
-			{
-				addAttribute("path", "/tmp/file.record");
-			}
-		});
+		final Resource resource = new Resource("5");
+		resource.addAttribute("path", "/tmp/file.record");
+
+		dataModel.setDataResource(resource);
 
 		final XMLSourceResourceGDMStmtsFlow flow = new XMLSourceResourceGDMStmtsFlow(dataModel);
 
-		testFlow(flow, "test-pnx.xml", "test-pnx.gson", 196);
+		testFlow(flow, "test-pnx.xml", "test-pnx-converter.gson", 196);
 
 		dataModelService.deleteObject(dataModel.getUuid());
 	}
