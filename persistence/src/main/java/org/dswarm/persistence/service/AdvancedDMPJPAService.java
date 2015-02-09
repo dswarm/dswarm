@@ -86,7 +86,7 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 	/**
 	 * Create and persist an object of the specific class with the given object.<br>
 	 *
-	 * @param object the original object
+	 * @param object          the original object
 	 * @param transactionType
 	 * @return the persisted object of the specific class
 	 * @throws DMPPersistenceException
@@ -109,7 +109,25 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 
 		if (null == existingObject) {
 
-			newObject = createNewObject(object.getUuid(), object.getUri());
+			final POJOCLASS existingUUIDObject;
+
+			if (object.getUuid() != null) {
+
+				// check, whether another object with this uuid exists in the DB or not
+				existingUUIDObject = getObject(object.getUuid());
+			} else {
+
+				existingUUIDObject = null;
+			}
+
+			if (existingUUIDObject == null) {
+
+				// we can create the new object with this uuid
+				newObject = createNewObject(object.getUuid(), object.getUri());
+			} else {
+
+				newObject = createNewObject(object.getUri());
+			}
 
 			updateObjectInternal(object, newObject, entityManager);
 
@@ -273,7 +291,7 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 	 * Creates a new object of the concrete POJO class with the given identifier.
 	 *
 	 * @param uuid the object uuid
-	 * @param uri an object identifier
+	 * @param uri  an object identifier
 	 * @return the new instance of the concrete POJO class
 	 * @throws DMPPersistenceException if something went wrong at object creation
 	 */
@@ -297,7 +315,7 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 
 		final String finalUuid;
 
-		if(uuid != null) {
+		if (uuid != null) {
 
 			finalUuid = uuid;
 		} else {
