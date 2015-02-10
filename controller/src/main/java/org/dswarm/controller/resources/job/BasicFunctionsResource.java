@@ -39,7 +39,6 @@ public abstract class BasicFunctionsResource<POJOCLASSPERSISTENCESERVICE extends
 	 * Creates a new resource (controller service) for the given concrete {@link Function} class with the provider of the concrete
 	 * {@link Function} persistence service, the object mapper and metrics registry.
 	 *
-	 * @param dmpStatusArg                  a metrics registry
 	 * @param pojoClassArg                  a concrete POJO class
 	 * @param persistenceServiceProviderArg the concrete persistence service that is related to the concrete POJO class
 	 * @param objectMapperProviderArg       an object mapper

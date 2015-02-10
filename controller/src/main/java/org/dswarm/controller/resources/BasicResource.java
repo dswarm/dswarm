@@ -28,7 +28,6 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
-import com.codahale.metrics.Timer;
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -454,27 +453,6 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 		}
 
 		return proxyObject;
-
-//		final POJOCLASS preparedObject = prepareObjectForUpdate(objectFromJSON, object);
-//
-//		// update the persistent object in the DB
-//
-//		try {
-//
-//			final PROXYPOJOCLASS proxyUpdatedObject = persistenceService.updateObjectTransactional(preparedObject);
-//
-//			if (proxyUpdatedObject == null) {
-//
-//				throw new DMPControllerException("something went wrong while " + pojoClassName + " updating");
-//			}
-//
-//			return persistenceServiceProvider.get().createNewProxyObject(proxyUpdatedObject.getObject(), proxyObject.getType());
-//		} catch (final DMPPersistenceException e) {
-//
-//			BasicResource.LOG.debug("something went wrong while " + pojoClassName + " updating");
-//
-//			throw new DMPControllerException("something went wrong while " + pojoClassName + " updating\n" + e.getMessage());
-//		}
 	}
 
 	/**

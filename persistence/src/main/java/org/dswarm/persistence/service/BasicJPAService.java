@@ -17,10 +17,8 @@ package org.dswarm.persistence.service;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
 import java.util.List;
 
-import javax.persistence.CacheRetrieveMode;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
@@ -236,8 +234,6 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 		final POJOCLASS persistedObject = persistObject(newObject, entityManager);
 
-//		final POJOCLASS mergedObject = entityManager.merge(newObject);
-
 		return createNewProxyObject(persistedObject, RetrievalType.CREATED);
 	}
 
@@ -452,7 +448,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 		// http://blog.xebia.com/2009/03/23/jpa-implementation-patterns-saving-detached-entities/
 		// "Because of the way merging works, we can also do this if we are unsure whether the object has been already persisted."
 		final POJOCLASS mergedObject = entityManager.merge(object);
-				//.persist(object);
+		//.persist(object);
 
 		BasicJPAService.LOG.debug("created new " + className + " with id '" + object.getUuid() + "'");
 
@@ -542,20 +538,6 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	 * @throws DMPPersistenceException if something went wrong.
 	 */
 	private POJOCLASS createNewObject(final String uuid) throws DMPPersistenceException {
-
-		//		final POJOCLASS object;
-		//
-		//		try {
-		//
-		//			object = clasz.newInstance();
-		//		} catch (final InstantiationException | IllegalAccessException e) {
-		//
-		//			BasicJPAService.LOG.error("something went wrong while " + className + "object creation", e);
-		//
-		//			throw new DMPPersistenceException(e.getMessage());
-		//		}
-		//
-		//		return object;
 
 		final POJOCLASS object;
 
