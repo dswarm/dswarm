@@ -15,33 +15,6 @@
  */
 package org.dswarm.converter.morph;
 
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.util.*;
-import java.util.Map.Entry;
-
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,7 +28,11 @@ import com.google.common.io.Resources;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.dswarm.converter.DMPConverterException;
+import org.dswarm.init.util.DMPStatics;
 import org.dswarm.persistence.model.job.*;
+import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
@@ -63,10 +40,20 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import org.dswarm.converter.DMPConverterException;
-import org.dswarm.init.util.DMPStatics;
-import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
-import scala.util.parsing.json.JSONObject;
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import java.io.*;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Creates a metamorph script from a given {@link Task}.
@@ -84,6 +71,38 @@ public class MorphScriptBuilder {
 	private static final DocumentBuilderFactory DOC_FACTORY = DocumentBuilderFactory.newInstance();
 
 	private static final String SCHEMA_PATH = "schemata/metamorph.xsd";
+
+	private static final String METAMORPH_ELEMENT_META_INFORMATION = "meta";
+
+	private static final String METAMORPH_ELEMENT_RULESET = "rules";
+
+	private static final String METAMORPH_ELEMENT_MAP_CONTAINER = "maps";
+
+	private static final String METAMORPH_ELEMENT_SINGLE_MAP = "map";
+
+	private static final String METAMORPH_ELEMENT_MAP_ENTRY = "entry";
+
+	private static final String METAMORPH_ELEMENT_DATA = "data";
+
+	private static final String METAMORPH_DATA_SOURCE = "source";
+
+	private static final String METAMORPH_DATA_TARGET = "name";
+
+	private static final String METAMORPH_FUNCTION_WHITELIST = "whitelist";
+
+	private static final String METAMORPH_FUNCTION_BLACKLIST = "blacklist";
+
+	private static final String METAMORPH_FUNCTION_CONCAT = "concat";
+
+	private static final String METAMORPH_FUNCTION_COMBINE = "combine";
+
+	private static final String METAMORPH_FUNCTION_OCCURRENCE = "occurrence";
+
+	private static final String METAMORPH_FUNCTION_REGEXP = "regexp";
+
+	private static final String METAMORPH_FUNCTION_ALL = "all";
+
+	private static final String METAMORPH_FUNCTION_IF = "if";
 
 	private static final TransformerFactory TRANSFORMER_FACTORY;
 
@@ -137,14 +156,6 @@ public class MorphScriptBuilder {
 	}
 
 	private Document doc;
-
-	private Element varDefinition(final String key, final String value) {
-		final Element var = doc.createElement("var");
-		var.setAttribute("name", key);
-		var.setAttribute("value", value);
-
-		return var;
-	}
 
 	public String render(final boolean indent, final Charset encoding) {
 		final String defaultEncoding = encoding.name();
@@ -226,16 +237,16 @@ public class MorphScriptBuilder {
 		rootElement.setAttribute("version", "1");
 		doc.appendChild(rootElement);
 
-		final Element meta = doc.createElement("meta");
+		final Element meta = doc.createElement(METAMORPH_ELEMENT_META_INFORMATION);
 		rootElement.appendChild(meta);
 
 		final Element metaName = doc.createElement("name");
 		meta.appendChild(metaName);
 
-		final Element rules = doc.createElement("rules");
+		final Element rules = doc.createElement(METAMORPH_ELEMENT_RULESET);
 		rootElement.appendChild(rules);
 
-		final Element maps = doc.createElement("maps");
+		final Element maps = doc.createElement(METAMORPH_ELEMENT_MAP_CONTAINER);
 		rootElement.appendChild(maps);
 
 		final List<String> metas = Lists.newArrayList();
@@ -317,7 +328,7 @@ public class MorphScriptBuilder {
 
 		final Function transformationFunction = transformationComponent.getFunction();
 
-		if (transformationFunction != null && transformationFunction.getFunctionType() == FunctionType.Transformation) {
+		if (transformationFunction != null && transformationFunction.getFunctionType().equals(FunctionType.Transformation)) {
 
 			final Transformation transformation = (Transformation) transformationFunction;
 
@@ -332,7 +343,7 @@ public class MorphScriptBuilder {
 
 				if (LOOKUP_FUNCTIONS.contains(component.getFunction().getName()) && componentParameterMapping != null) {
 
-					final Element map = doc.createElement("map");
+					final Element map = doc.createElement(METAMORPH_ELEMENT_SINGLE_MAP);
 					maps.appendChild(map);
 
 					for (final Entry<String, String> parameterMapping : componentParameterMapping.entrySet()) {
@@ -342,10 +353,6 @@ public class MorphScriptBuilder {
 							switch (parameterMapping.getKey()) {
 
 								case "in":
-
-									map.setAttribute("name", parameterMapping.getValue());
-									break;
-
 								case "map":
 
 									map.setAttribute("name", parameterMapping.getValue());
@@ -354,42 +361,38 @@ public class MorphScriptBuilder {
 								case LOOKUP_MAP_DEFINITION:
 
 
-									if (component.getFunction().getName().equals("whitelist") || component.getFunction().getName().equals("blacklist")) {
+									if (component.getFunction().getName().equals(METAMORPH_FUNCTION_WHITELIST)
+											|| component.getFunction().getName().equals(METAMORPH_FUNCTION_BLACKLIST)) {
 
-										List<String> lookupList = new ArrayList();
-
-
-										ObjectMapper mapper = new ObjectMapper();
+										List<String> lookupList = null;// new ArrayList();
 
 										try {
-											lookupList = mapper.readValue(parameterMapping.getValue(), new TypeReference<List<String>>() {
-											});
+
+											lookupList = DMPPersistenceUtil.getJSONObjectMapper().readValue(parameterMapping.getValue(), new TypeReference<List<String>>() {});
 										} catch (final IOException e) {
 											MorphScriptBuilder.LOG.debug("lookup map as JSON string in parameter mappings could not convert to a list" + e);
 										}
 
 										for (final String lookupEntry : lookupList) {
 
-											final Element lookup = doc.createElement("entry");
+											final Element lookup = doc.createElement(METAMORPH_ELEMENT_MAP_ENTRY);
 											lookup.setAttribute("name", lookupEntry);
 											map.appendChild(lookup);
 										}
 									} else {
 
-										Map<String, String> lookupEntrys = new HashMap<String, String>();
-
-										ObjectMapper mapper = new ObjectMapper();
+										Map<String, String> lookupEntrys = null;//new HashMap<String, String>();
 
 										try {
-											lookupEntrys = mapper.readValue(parameterMapping.getValue(), new TypeReference<HashMap<String, String>>() {
-											});
+//
+											lookupEntrys = DMPPersistenceUtil.getJSONObjectMapper().readValue(parameterMapping.getValue(), new TypeReference<HashMap<String, String>>() {});
 										} catch (final IOException e) {
 											MorphScriptBuilder.LOG.debug("lookup map as JSON string in parameter mappings could not convert to a map" + e);
 										}
 
 										for (final Entry<String, String> lookupEntry : lookupEntrys.entrySet()) {
 
-											final Element lookup = doc.createElement("entry");
+											final Element lookup = doc.createElement(METAMORPH_ELEMENT_MAP_ENTRY);
 											lookup.setAttribute("name", lookupEntry.getKey());
 											lookup.setAttribute("value", lookupEntry.getValue());
 											map.appendChild(lookup);
@@ -436,11 +439,11 @@ public class MorphScriptBuilder {
 
 	private Element createDataTag(final Component singleInputComponent, final String dataNameAttribute, final String dataSourceAttribute) {
 
-		final Element data = doc.createElement("data");
+		final Element data = doc.createElement(METAMORPH_ELEMENT_DATA);
 
-		data.setAttribute("source", "@" + dataSourceAttribute);
+		data.setAttribute(METAMORPH_DATA_SOURCE, "@" + dataSourceAttribute);
 
-		data.setAttribute("name", "@" + dataNameAttribute);
+		data.setAttribute(METAMORPH_DATA_TARGET, "@" + dataNameAttribute);
 
 		final Element comp = doc.createElement(singleInputComponent.getFunction().getName());
 
@@ -458,7 +461,7 @@ public class MorphScriptBuilder {
 
 		// convert concat function to combine function because concat are concatenated the
 		// values in the order they appear in the input and not in the order of the <data> sources.
-		if (multipleInputComponent.getFunction().getName().equals("concat")) {
+		if (multipleInputComponent.getFunction().getName().equals(METAMORPH_FUNCTION_CONCAT)) {
 
 			final Map<String, String> parameters = multipleInputComponent.getParameterMappings();
 
@@ -505,22 +508,22 @@ public class MorphScriptBuilder {
 
 		final String functionName = multipleInputComponent.getFunction().getName();
 
-		if (functionName.equals("concat"))
-			collection = doc.createElement("combine");
+		if (functionName.equals(METAMORPH_FUNCTION_CONCAT))
+			collection = doc.createElement(METAMORPH_FUNCTION_COMBINE);
 		else
 			collection = doc.createElement(multipleInputComponent.getFunction().getName());
 
 		createParameters(multipleInputComponent.getParameterMappings(), collection);
 
-		collection.setAttribute("name", "@" + collectionNameAttribute);
+		collection.setAttribute(METAMORPH_DATA_TARGET, "@" + collectionNameAttribute);
 
 		for (final String sourceAttribute : collectionSourceAttributes) {
 
-			final Element collectionData = doc.createElement("data");
+			final Element collectionData = doc.createElement(METAMORPH_ELEMENT_DATA);
 
-			collectionData.setAttribute("source", "@" + sourceAttribute);
+			collectionData.setAttribute(METAMORPH_DATA_SOURCE, "@" + sourceAttribute);
 
-			collectionData.setAttribute("name", sourceAttribute);
+			collectionData.setAttribute(METAMORPH_DATA_TARGET, sourceAttribute);
 
 			collection.appendChild(collectionData);
 		}
@@ -575,10 +578,10 @@ public class MorphScriptBuilder {
 
 		if (filterExpressionMap == null || filterExpressionMap.isEmpty()) {
 
-			final Element data = doc.createElement("data");
-			data.setAttribute("source", inputAttributePathStringXMLEscaped);
+			final Element data = doc.createElement(METAMORPH_ELEMENT_DATA);
+			data.setAttribute(METAMORPH_DATA_SOURCE, inputAttributePathStringXMLEscaped);
 
-			data.setAttribute("name", "@" + mappingInput.getName());
+			data.setAttribute(METAMORPH_DATA_TARGET, "@" + mappingInput.getName());
 
 			rules.appendChild(data);
 		} else {
@@ -613,9 +616,9 @@ public class MorphScriptBuilder {
 				continue;
 			}
 
-			final Element dataOutput = doc.createElement("data");
-			dataOutput.setAttribute("source", "@" + variable);
-			dataOutput.setAttribute("name", outputAttributePathStringXMLEscaped);
+			final Element dataOutput = doc.createElement(METAMORPH_ELEMENT_DATA);
+			dataOutput.setAttribute(METAMORPH_DATA_SOURCE, "@" + variable);
+			dataOutput.setAttribute(METAMORPH_DATA_TARGET, outputAttributePathStringXMLEscaped);
 			rules.appendChild(dataOutput);
 		}
 	}
@@ -673,10 +676,10 @@ public class MorphScriptBuilder {
 			inputVariable = "@" + var1000;
 		}
 
-		final Element data = doc.createElement("data");
-		data.setAttribute("source", inputVariable);
+		final Element data = doc.createElement(METAMORPH_ELEMENT_DATA);
+		data.setAttribute(METAMORPH_DATA_SOURCE, inputVariable);
 
-		data.setAttribute("name", StringEscapeUtils.escapeXml(outputMappingAttributePathInstance.getAttributePath().toAttributePath()));
+		data.setAttribute(METAMORPH_DATA_TARGET, StringEscapeUtils.escapeXml(outputMappingAttributePathInstance.getAttributePath().toAttributePath()));
 
 		rules.appendChild(data);
 	}
@@ -730,11 +733,11 @@ public class MorphScriptBuilder {
 
 						final String dataSourceAttribute = mappingInputsVariablesMap.entrySet().iterator().next().getValue().iterator().next();
 
-						final Element data = doc.createElement("data");
+						final Element data = doc.createElement(METAMORPH_ELEMENT_DATA);
 
-						data.setAttribute("source", "@" + dataSourceAttribute);
+						data.setAttribute(METAMORPH_DATA_SOURCE, "@" + dataSourceAttribute);
 
-						data.setAttribute("name", "@" + transformationOutputVariableIdentifier);
+						data.setAttribute(METAMORPH_DATA_TARGET, "@" + transformationOutputVariableIdentifier);
 
 						rules.appendChild(data);
 					}
@@ -925,15 +928,15 @@ public class MorphScriptBuilder {
 
 	private String addOrdinalFilter(final Integer ordinal, final String variable, final Element rules) {
 
-		final Element occurrenceData = doc.createElement("data");
+		final Element occurrenceData = doc.createElement(METAMORPH_ELEMENT_DATA);
 
-		occurrenceData.setAttribute("name", "@" + variable);
+		occurrenceData.setAttribute(METAMORPH_DATA_TARGET, "@" + variable);
 
 		final String manipulatedVariable = variable + MorphScriptBuilder.OCCURRENCE_VARIABLE_POSTFIX;
 
-		occurrenceData.setAttribute("source", "@" + manipulatedVariable);
+		occurrenceData.setAttribute(METAMORPH_DATA_SOURCE, "@" + manipulatedVariable);
 
-		final Element occurrenceFunction = doc.createElement("occurrence");
+		final Element occurrenceFunction = doc.createElement(METAMORPH_FUNCTION_OCCURRENCE);
 
 		occurrenceFunction.setAttribute("only", String.valueOf(ordinal));
 
@@ -947,19 +950,19 @@ public class MorphScriptBuilder {
 	private void addFilter(final String inputAttributePathStringXMLEscaped, final String variable, final Map<String, String> filterExpressionMap,
 			final Element rules) {
 
-		final Element combineAsFilter = doc.createElement("combine");
+		final Element combineAsFilter = doc.createElement(METAMORPH_FUNCTION_COMBINE);
 		combineAsFilter.setAttribute("reset", "true");
 		combineAsFilter.setAttribute("sameEntity", "true");
 		combineAsFilter.setAttribute("includeSubEntities", "true");
-		combineAsFilter.setAttribute("name", "@" + variable);
+		combineAsFilter.setAttribute(METAMORPH_DATA_TARGET, "@" + variable);
 		combineAsFilter.setAttribute("value", "${" + variable + MorphScriptBuilder.FILTER_VARIABLE_POSTFIX + "}");
 
 		final String commonAttributePath = validateCommonAttributePath(inputAttributePathStringXMLEscaped, filterExpressionMap.keySet());
 
 		combineAsFilter.setAttribute("flushWith", commonAttributePath);
 
-		final Element filterIf = doc.createElement("if");
-		final Element filterAll = doc.createElement("all");
+		final Element filterIf = doc.createElement(METAMORPH_FUNCTION_IF);
+		final Element filterAll = doc.createElement(METAMORPH_FUNCTION_ALL);
 		filterAll.setAttribute("name", "CONDITION_ALL");
 		filterAll.setAttribute("reset", "true");
 		filterAll.setAttribute("includeSubEntities", "true");
@@ -967,10 +970,10 @@ public class MorphScriptBuilder {
 
 		for (final Entry<String, String> filter : filterExpressionMap.entrySet()) {
 
-			final Element combineAsFilterData = doc.createElement("data");
-			combineAsFilterData.setAttribute("source", StringEscapeUtils.unescapeXml(filter.getKey()));
+			final Element combineAsFilterData = doc.createElement(METAMORPH_ELEMENT_DATA);
+			combineAsFilterData.setAttribute(METAMORPH_DATA_SOURCE, StringEscapeUtils.unescapeXml(filter.getKey()));
 
-			final Element combineAsFilterDataFunction = doc.createElement("regexp");
+			final Element combineAsFilterDataFunction = doc.createElement(METAMORPH_FUNCTION_REGEXP);
 			combineAsFilterDataFunction.setAttribute("match", filter.getValue());
 
 			combineAsFilterData.appendChild(combineAsFilterDataFunction);
@@ -980,9 +983,9 @@ public class MorphScriptBuilder {
 		filterIf.appendChild(filterAll);
 		combineAsFilter.appendChild(filterIf);
 
-		final Element combineAsFilterDataOut = doc.createElement("data");
-		combineAsFilterDataOut.setAttribute("name", variable + MorphScriptBuilder.FILTER_VARIABLE_POSTFIX);
-		combineAsFilterDataOut.setAttribute("source", inputAttributePathStringXMLEscaped);
+		final Element combineAsFilterDataOut = doc.createElement(METAMORPH_ELEMENT_DATA);
+		combineAsFilterDataOut.setAttribute(METAMORPH_DATA_TARGET, variable + MorphScriptBuilder.FILTER_VARIABLE_POSTFIX);
+		combineAsFilterDataOut.setAttribute(METAMORPH_DATA_SOURCE, inputAttributePathStringXMLEscaped);
 
 		combineAsFilter.appendChild(combineAsFilterDataOut);
 
