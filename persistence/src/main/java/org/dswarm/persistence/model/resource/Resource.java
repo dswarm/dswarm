@@ -37,6 +37,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import ch.lambdaj.Lambda;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Charsets;
 import com.google.common.base.Objects;
@@ -49,6 +50,7 @@ import org.slf4j.LoggerFactory;
 
 import org.dswarm.init.DMPException;
 import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
+import org.dswarm.persistence.model.representation.ConfigurationSetReferenceDeserializer;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -106,7 +108,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 	@ManyToMany(mappedBy = "resources", fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
 			CascadeType.REFRESH })
 	// @JsonSerialize(using = ConfigurationReferenceSerializer.class)
-	// @JsonDeserialize(using = ConfigurationReferenceDeserializer.class)
+	@JsonDeserialize(using = ConfigurationSetReferenceDeserializer.class)
 	@XmlIDREF
 	@XmlList
 	// @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})

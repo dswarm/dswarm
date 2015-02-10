@@ -36,6 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Charsets;
@@ -47,6 +48,7 @@ import org.slf4j.LoggerFactory;
 
 import org.dswarm.init.DMPException;
 import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
+import org.dswarm.persistence.model.representation.ResourceSetReferenceDeserializer;
 import org.dswarm.persistence.model.representation.SetResourceReferenceSerializer;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
@@ -77,7 +79,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 			inverseJoinColumns = { @JoinColumn(name = "RESOURCE_UUID", referencedColumnName = "UUID") })
 	@JsonSerialize(using = SetResourceReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	// @JsonDeserialize(using = ResourceReferenceDeserializer.class)
+	@JsonDeserialize(using = ResourceSetReferenceDeserializer.class)
 	@XmlIDREF
 	@XmlList
 	// @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
