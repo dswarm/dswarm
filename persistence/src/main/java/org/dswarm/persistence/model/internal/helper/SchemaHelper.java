@@ -92,7 +92,7 @@ public class SchemaHelper {
 
 			if (arrayNode.size() > 0) {
 
-				json.put(property, arrayNode);
+				json.set(property, arrayNode);
 			} else {
 
 				return new TextNode(property);
@@ -101,7 +101,7 @@ public class SchemaHelper {
 
 			final JsonNode object = objects.get(0);
 
-			json.put(property, object);
+			json.set(property, object);
 		} else {
 
 			return new TextNode(property);

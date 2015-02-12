@@ -25,8 +25,10 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.json.JSONException;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,24 +42,24 @@ import org.dswarm.persistence.service.BasicJPAService;
 import org.dswarm.persistence.service.test.utils.BasicJPAServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
-public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTILS extends BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS, POJOCLASSIDTYPE>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS, POJOCLASSIDTYPE>, POJOCLASS extends DMPObject<POJOCLASSIDTYPE>, POJOCLASSIDTYPE>
+public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTILS extends BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS>, POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS>, POJOCLASS extends DMPObject>
 		extends ResourceTest {
 
-	private static final Logger									LOG	= LoggerFactory.getLogger(BasicResourceTestUtils.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BasicResourceTestUtils.class);
 
-	protected final Class<POJOCLASS>							pojoClass;
+	protected final Class<POJOCLASS> pojoClass;
 
-	protected final String										pojoClassName;
+	protected final String pojoClassName;
 
-	protected final POJOCLASSPERSISTENCESERVICE					persistenceService;
+	protected final POJOCLASSPERSISTENCESERVICE persistenceService;
 
-	protected final POJOCLASSPERSISTENCESERVICETESTUTILS		persistenceServiceTestUtils;
+	protected final POJOCLASSPERSISTENCESERVICETESTUTILS persistenceServiceTestUtils;
 
-	protected final Class<POJOCLASSPERSISTENCESERVICE>			persistenceServiceClass;
+	protected final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClass;
 
-	protected final Class<POJOCLASSPERSISTENCESERVICETESTUTILS>	persistenceServiceTestUtilsClass;
+	protected final Class<POJOCLASSPERSISTENCESERVICETESTUTILS> persistenceServiceTestUtilsClass;
 
-	protected final ObjectMapper								objectMapper;
+	protected final ObjectMapper objectMapper;
 
 	public BasicResourceTestUtils(final String resourceIdentifier, final Class<POJOCLASS> pojoClassArg,
 			final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg,
@@ -74,7 +76,8 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 		persistenceService = GuicedTest.injector.getInstance(persistenceServiceClass);
 
-		persistenceServiceTestUtils = GuicedTest.injector.getInstance(persistenceServiceTestUtilsClass);// createNewPersistenceServiceTestUtilsInstance();
+		persistenceServiceTestUtils = GuicedTest.injector
+				.getInstance(persistenceServiceTestUtilsClass);// createNewPersistenceServiceTestUtilsInstance();
 		// injector.getInstance(persistenceServiceTestUtilsClass); -> doesn't seem to work right - how can I inject test class
 		// from other sub modules?
 
@@ -86,7 +89,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 		return persistenceServiceTestUtils;
 	}
 
-	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) {
+	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) throws JsonProcessingException, JSONException {
 
 		persistenceServiceTestUtils.compareObjects(expectedObject, actualObject);
 	}
@@ -96,7 +99,8 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 		persistenceServiceTestUtils.evaluateObjects(objectsJSON, expectedObjects);
 	}
 
-	public void compareObjects(final Set<POJOCLASS> expectedObjects, final Map<POJOCLASSIDTYPE, POJOCLASS> actualObjects) {
+	public void compareObjects(final Set<POJOCLASS> expectedObjects, final Map<String, POJOCLASS> actualObjects)
+			throws JsonProcessingException, JSONException {
 
 		persistenceServiceTestUtils.compareObjects(expectedObjects, actualObjects);
 	}
@@ -108,7 +112,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 	public POJOCLASS getObjectAndCompare(final POJOCLASS expectedObject) throws Exception {
 
-		final POJOCLASS responseObject = getObject(expectedObject.getId());
+		final POJOCLASS responseObject = getObject(expectedObject.getUuid());
 
 		reset();
 		compareObjects(expectedObject, responseObject);
@@ -116,23 +120,23 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 		return responseObject;
 	}
 
-	public POJOCLASS getObject(final POJOCLASSIDTYPE id) throws Exception {
+	public POJOCLASS getObject(final String uuid) throws Exception {
 
 		String idEncoded = null;
 
 		try {
 
-			idEncoded = URLEncoder.encode(id.toString(), "UTF-8");
+			idEncoded = URLEncoder.encode(uuid, "UTF-8");
 		} catch (final UnsupportedEncodingException e) {
 
-			BasicResourceTestUtils.LOG.debug("couldn't encode id", e);
+			BasicResourceTestUtils.LOG.debug("couldn't encode uuid", e);
 
 			Assert.assertTrue(false);
 		}
 
-		Assert.assertNotNull("the id shouldn't be null", idEncoded);
+		Assert.assertNotNull("the uuid shouldn't be null", idEncoded);
 
-		BasicResourceTestUtils.LOG.debug("try to retrieve " + pojoClassName + " with id '" + idEncoded + "'");
+		BasicResourceTestUtils.LOG.debug("try to retrieve " + pojoClassName + " with uuid '" + idEncoded + "'");
 
 		final Response response = target(idEncoded).request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
 
@@ -151,7 +155,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 	/**
 	 * Load file containing JSON string and call {@link #createObject(String, DMPObject)} to create it in db.
-	 * 
+	 *
 	 * @param objectJSONFileName name of file containing JSON string of object to be created
 	 * @return the object returned by {@link #createObject(String, DMPObject)}.
 	 * @throws Exception
@@ -177,7 +181,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 	/**
 	 * Creates the object in db and asserts the response status is '201 created' but does not compare the response with the JSON
 	 * string.
-	 * 
+	 *
 	 * @param objectJSONString the JSON string of the object to be created
 	 * @return the actual object as created in db, never null.
 	 * @throws Exception
@@ -192,9 +196,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
 
-		final POJOCLASS actualObject = objectMapper.readValue(responseString, pojoClass);
-
-		return actualObject;
+		return objectMapper.readValue(responseString, pojoClass);
 	}
 
 	public POJOCLASS updateObject(final POJOCLASS persistedObject, final String updateObjectJSONFileName) throws Exception {
@@ -202,7 +204,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 		String updateObjectJSONString = DMPPersistenceUtil.getResourceAsString(updateObjectJSONFileName);
 
 		final ObjectNode objectJSON = objectMapper.readValue(updateObjectJSONString, ObjectNode.class);
-		objectJSON.put("id", String.valueOf(persistedObject.getId()));
+		objectJSON.put("uuid", String.valueOf(persistedObject.getUuid()));
 
 		updateObjectJSONString = objectMapper.writeValueAsString(objectJSON);
 
@@ -220,11 +222,11 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 	public POJOCLASS updateObject(final String updateObjectJSONString, final POJOCLASS expectedObject) throws Exception {
 
-		final POJOCLASSIDTYPE objectId = objectMapper.readValue(updateObjectJSONString, pojoClass).getId();
+		final String objectUuid = objectMapper.readValue(updateObjectJSONString, pojoClass).getUuid();
 
-		Assert.assertEquals("the ids of the updated object should be equal", expectedObject.getId(), objectId);
+		Assert.assertEquals("the ids of the updated object should be equal", expectedObject.getUuid(), objectUuid);
 
-		final POJOCLASS updatedObject = updateObjectWithoutComparison(updateObjectJSONString, objectId);
+		final POJOCLASS updatedObject = updateObjectWithoutComparison(updateObjectJSONString, objectUuid);
 
 		compareObjects(expectedObject, updatedObject);
 
@@ -234,14 +236,14 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 	public POJOCLASS updateObjectWithoutComparison(final POJOCLASS updateObject) throws Exception {
 
 		final String updateObjectJSONString = objectMapper.writeValueAsString(updateObject);
-		final POJOCLASSIDTYPE objectId = updateObject.getId();
+		final String objectUuid = updateObject.getUuid();
 
-		return updateObjectWithoutComparison(updateObjectJSONString, objectId);
+		return updateObjectWithoutComparison(updateObjectJSONString, objectUuid);
 	}
 
-	private POJOCLASS updateObjectWithoutComparison(final String updateObjectJSONString, final POJOCLASSIDTYPE objectId) throws Exception {
+	private POJOCLASS updateObjectWithoutComparison(final String updateObjectJSONString, final String objectUuid) throws Exception {
 
-		final Response response = target(String.valueOf(objectId)).request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+		final Response response = target(String.valueOf(objectUuid)).request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
 				.put(Entity.json(updateObjectJSONString));
 
 		Assert.assertEquals("200 Updated was expected", 200, response.getStatus());
@@ -259,21 +261,21 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 			// clean-up DB
 
-			final POJOCLASSIDTYPE objectId = object.getId();
+			final String objectUuid = object.getUuid();
 
-			final POJOCLASS toBeDeletedObject = persistenceService.getObject(objectId);
+			final POJOCLASS toBeDeletedObject = persistenceService.getObject(objectUuid);
 
 			if (toBeDeletedObject == null) {
 
 				BasicResourceTestUtils.LOG
-						.info(pojoClassName + " with id '" + objectId + "' has already been deleted from DB or never existed there");
+						.info(pojoClassName + " with id '" + objectUuid + "' has already been deleted from DB or never existed there");
 
 				return;
 			}
 
-			persistenceService.deleteObject(objectId);
+			persistenceService.deleteObject(objectUuid);
 
-			final POJOCLASS deletedObject = persistenceService.getObject(objectId);
+			final POJOCLASS deletedObject = persistenceService.getObject(objectUuid);
 
 			Assert.assertNull("the deleted " + pojoClassName + " should be null", deletedObject);
 		}
@@ -294,7 +296,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 	/**
 	 * Creates a new object of the concrete POJO class.
-	 * 
+	 *
 	 * @return a new instance of the concrete POJO class
 	 * @throws DMPPersistenceException if something went wrong.
 	 */

@@ -15,25 +15,52 @@
  */
 package org.dswarm.persistence.service.schema.test.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.json.JSONException;
 import org.junit.Assert;
 
 import org.dswarm.persistence.model.job.Filter;
+import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxyMappingAttributePathInstance;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.job.test.utils.FilterServiceTestUtils;
 import org.dswarm.persistence.service.schema.MappingAttributePathInstanceService;
 
-public class MappingAttributePathInstanceServiceTestUtils extends
+public class MappingAttributePathInstanceServiceTestUtils
+		extends
 		AttributePathInstanceServiceTestUtils<MappingAttributePathInstanceService, ProxyMappingAttributePathInstance, MappingAttributePathInstance> {
 
-	private final FilterServiceTestUtils	filtersResourceTestUtils;
+	private final FilterServiceTestUtils fstUtils;
 
 	public MappingAttributePathInstanceServiceTestUtils() {
 
 		super(MappingAttributePathInstance.class, MappingAttributePathInstanceService.class);
 
-		filtersResourceTestUtils = new FilterServiceTestUtils();
+		fstUtils = new FilterServiceTestUtils();
+	}
+
+	@Override public MappingAttributePathInstance createObject(String identifier) throws Exception {
+		return null;
+	}
+
+	@Override public MappingAttributePathInstance createAndPersistDefaultObject() throws Exception {
+
+		return createMappingAttributePathInstance(attributePathServiceTestUtils.createAndPersistDefaultObject());
+	}
+
+	@Override public MappingAttributePathInstance createDefaultObject() throws Exception {
+		return null;
+	}
+
+	@Override public MappingAttributePathInstance createAndPersistDefaultCompleteObject() throws Exception {
+		final MappingAttributePathInstance mapi = createAndPersistDefaultObject();
+		mapi.setOrdinal(1);
+		mapi.setFilter(fstUtils.createAndPersistDefaultObject());
+
+		return updateAndCompareObject(mapi, mapi);
 	}
 
 	/**
@@ -41,45 +68,72 @@ public class MappingAttributePathInstanceServiceTestUtils extends
 	 * Assert ordinals are equal. <br />
 	 * Assert either no filters are present or filters are equal, see
 	 * {@link FilterServiceTestUtils#compareObjects(Filter, Filter)} for details.
-	 * 
+	 *
 	 * @param expectedMappingAttributePathInstance
 	 * @param actualMappingAttributePathInstance
 	 */
 	@Override
 	public void compareObjects(final MappingAttributePathInstance expectedMappingAttributePathInstance,
-			final MappingAttributePathInstance actualMappingAttributePathInstance) {
+			final MappingAttributePathInstance actualMappingAttributePathInstance) throws JsonProcessingException, JSONException {
 
 		super.compareObjects(expectedMappingAttributePathInstance, actualMappingAttributePathInstance);
 
-		Assert.assertEquals("the ordinals of the mapping attribute path should be equal", expectedMappingAttributePathInstance.getOrdinal(),
-				actualMappingAttributePathInstance.getOrdinal());
+		if (expectedMappingAttributePathInstance.getOrdinal() != null) {
+
+			Assert.assertNotNull(actualMappingAttributePathInstance.getOrdinal());
+			Assert.assertEquals("the ordinals of the mapping attribute path should be equal", expectedMappingAttributePathInstance.getOrdinal(),
+					actualMappingAttributePathInstance.getOrdinal());
+		} else {
+
+			Assert.assertNull(actualMappingAttributePathInstance.getOrdinal());
+		}
 
 		if (expectedMappingAttributePathInstance.getFilter() == null) {
 
-			Assert.assertNull("the actual mapping attribute path instance should not have a filter", actualMappingAttributePathInstance.getFilter());
+			Assert.assertNull("the actual mapping attribute path instance should not have a filter",
+					actualMappingAttributePathInstance.getFilter());
 
 		} else {
 
-			filtersResourceTestUtils.compareObjects(expectedMappingAttributePathInstance.getFilter(), actualMappingAttributePathInstance.getFilter());
+			fstUtils.compareObjects(expectedMappingAttributePathInstance.getFilter(),
+					actualMappingAttributePathInstance.getFilter());
 		}
 	}
 
 	public MappingAttributePathInstance createMappingAttributePathInstance(final String name, final AttributePath attributePath,
 			final Integer ordinal, final Filter filter) throws Exception {
 
-		final MappingAttributePathInstance mappingAttributePathInstance = new MappingAttributePathInstance();
+		// TODO: think about this?
+		final String mappingAttributePathInstanceUUID = UUIDService.getUUID(MappingAttributePathInstance.class.getSimpleName());
 
+		final MappingAttributePathInstance mappingAttributePathInstance = new MappingAttributePathInstance(mappingAttributePathInstanceUUID);
 		mappingAttributePathInstance.setName(name);
 		mappingAttributePathInstance.setAttributePath(attributePath);
 		mappingAttributePathInstance.setOrdinal(ordinal);
 		mappingAttributePathInstance.setFilter(filter);
-
-		final MappingAttributePathInstance updatedMappingAttributePathInstance = createObject(mappingAttributePathInstance,
+		final MappingAttributePathInstance updatedMappingAttributePathInstance = createAndCompareObject(mappingAttributePathInstance,
 				mappingAttributePathInstance);
-
-		Assert.assertNotNull(updatedMappingAttributePathInstance.getId());
-
+		Assert.assertNotNull(updatedMappingAttributePathInstance.getUuid());
 		return updatedMappingAttributePathInstance;
+	}
+
+	@Override
+	protected MappingAttributePathInstance createAttributePathInstance(String name, AttributePath attributePath, JsonNode objectDescription)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public MappingAttributePathInstance createMappingAttributePathInstance(final AttributePath attributePath) throws Exception {
+		return createMappingAttributePathInstance(null, attributePath, 0, null);
+	}
+
+	/**
+	 * Convenience method
+	 */
+	public MappingAttributePathInstance createMappingAttributePathInstance(final Attribute attribute) throws Exception {
+		AttributePath attributePath = attributePathServiceTestUtils.createAttributePath(attribute);
+		return createMappingAttributePathInstance(attributePath);
 	}
 
 	/**
@@ -101,6 +155,42 @@ public class MappingAttributePathInstanceServiceTestUtils extends
 	public void reset() {
 
 		super.reset();
-		filtersResourceTestUtils.reset();
+		fstUtils.reset();
+	}
+
+	public MappingAttributePathInstance getDefaultInputMAPI() throws Exception {
+
+		final AttributePath inputAttributePath = attributePathServiceTestUtils.getDctermsTitleAP();
+
+		return createMappingAttributePathInstance("input mapping attribute path instance", inputAttributePath, null, null);
+	}
+
+	public MappingAttributePathInstance getDefaultOutputMAPI() throws Exception {
+
+		final AttributePath outputAttributePath = attributePathServiceTestUtils.getRDFSLabelAP();
+
+		return createMappingAttributePathInstance("output mapping attribute path instance", outputAttributePath, null, null);
+	}
+
+	public MappingAttributePathInstance getDctermsCreatorFoafFirstnameMAPI() throws Exception {
+
+		final AttributePath dctermsCreatorFoafFirstnameAP = attributePathServiceTestUtils.getDctermsCreatorFoafFirstnameAP();
+
+		return createMappingAttributePathInstance("dcterms:creator/foaf:firstName MAPI", dctermsCreatorFoafFirstnameAP, null, null);
+	}
+
+	public MappingAttributePathInstance getDctermsCreatorFoafFamilynameMAPI() throws Exception {
+
+		final AttributePath dctermsCreatorFoafFamilynameAP = attributePathServiceTestUtils.getDctermsCreatorFoafFamilynameAP();
+
+		return createMappingAttributePathInstance("dcterms:creator/foaf:familyName MAPI", dctermsCreatorFoafFamilynameAP, null, null);
+	}
+
+	public MappingAttributePathInstance getDctermsCreatorFoafNameMAPI() throws Exception {
+
+		final AttributePath dctermsCreatorFoafMameAP = attributePathServiceTestUtils.getDctermsCreatorFoafNameAP();
+
+		return createMappingAttributePathInstance("dcterms:creator/foaf:name MAPI", dctermsCreatorFoafMameAP, null, null);
 	}
 }
+

@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -46,9 +47,6 @@ import org.slf4j.LoggerFactory;
 
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.BasicDMPResource;
-import org.dswarm.controller.resources.schema.utils.ContentSchemasResourceUtils;
-import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
-import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.proxy.ProxyContentSchema;
@@ -56,40 +54,33 @@ import org.dswarm.persistence.service.schema.ContentSchemaService;
 
 /**
  * A resource (controller service) for {@link org.dswarm.persistence.model.schema.ContentSchema}s.
- * 
+ *
  * @author tgaengler
  */
 @RequestScoped
 @Api(value = "/contentschemas", description = "Operations about content schemas")
 @Path("contentschemas")
-public class ContentSchemasResource extends BasicDMPResource<ContentSchemasResourceUtils, ContentSchemaService, ProxyContentSchema, ContentSchema> {
+public class ContentSchemasResource extends BasicDMPResource<ContentSchemaService, ProxyContentSchema, ContentSchema> {
 
-	private static final Logger			LOG	= LoggerFactory.getLogger(ContentSchemasResource.class);
-
-	private final ResourceUtilsFactory	utilsFactory;
-	private final ObjectMapper			objectMapper;
+	private static final Logger LOG = LoggerFactory.getLogger(ContentSchemasResource.class);
 
 	/**
 	 * Creates a new resource (controller service) for {@link org.dswarm.persistence.model.schema.ContentSchema}s with the
 	 * provider of the content schema persistence service, the object mapper and metrics registry.
-	 * 
-	 * @param utilsFactoryArg the utils factory
-	 * @param objectMapperArg an object mapper
-	 * @param dmpStatusArg a metrics registry
+	 *
+	 * @param persistenceServiceProviderArg
+	 * @param objectMapperProviderArg
 	 */
 	@Inject
-	public ContentSchemasResource(final ResourceUtilsFactory utilsFactoryArg, final ObjectMapper objectMapperArg, final DMPStatus dmpStatusArg)
-			throws DMPControllerException {
+	public ContentSchemasResource(final Provider<ContentSchemaService> persistenceServiceProviderArg,
+			final Provider<ObjectMapper> objectMapperProviderArg) throws DMPControllerException {
 
-		super(utilsFactoryArg.reset().get(ContentSchemasResourceUtils.class), dmpStatusArg);
-
-		utilsFactory = utilsFactoryArg;
-		objectMapper = objectMapperArg;
+		super(ContentSchema.class, persistenceServiceProviderArg, objectMapperProviderArg);
 	}
 
 	/**
 	 * This endpoint returns a content schema as JSON representation for the provided content schema identifier.
-	 * 
+	 *
 	 * @param id a schema identifier
 	 * @return a JSON representation of a content schema
 	 */
@@ -101,14 +92,15 @@ public class ContentSchemasResource extends BasicDMPResource<ContentSchemasResou
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "schema identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+	public Response getObject(@ApiParam(value = "schema identifier", required = true) @PathParam("id") final String id)
+			throws DMPControllerException {
 
 		return super.getObject(id);
 	}
 
 	/**
 	 * This endpoint consumes a content schema as JSON representation and persists this content schema in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one content schema
 	 * @return the persisted content schema as JSON representation
 	 * @throws DMPControllerException
@@ -128,7 +120,7 @@ public class ContentSchemasResource extends BasicDMPResource<ContentSchemasResou
 
 	/**
 	 * This endpoint returns a list of all content schemas as JSON representation.
-	 * 
+	 *
 	 * @return a list of all content schemas as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -146,9 +138,9 @@ public class ContentSchemasResource extends BasicDMPResource<ContentSchemasResou
 
 	/**
 	 * This endpoint consumes a content schema as JSON representation and updates this content schema in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one content schema
-	 * @param id a content schema identifier
+	 * @param uuid             a content schema identifier
 	 * @return the updated content schema as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -162,17 +154,17 @@ public class ContentSchemasResource extends BasicDMPResource<ContentSchemasResou
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateObject(@ApiParam(value = "content schema (as JSON)", required = true) final String jsonObjectString,
-			@ApiParam(value = "content schema identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+			@ApiParam(value = "content schema identifier", required = true) @PathParam("id") final String uuid) throws DMPControllerException {
 
-		return super.updateObject(jsonObjectString, id);
+		return super.updateObject(jsonObjectString, uuid);
 	}
 
 	/**
 	 * This endpoint deletes a content schema that matches the given id.
-	 * 
+	 *
 	 * @param id a content schema identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
-	 *         went wrong
+	 * went wrong
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "delete content schema that matches the given id", notes = "Returns status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong.")
@@ -183,7 +175,7 @@ public class ContentSchemasResource extends BasicDMPResource<ContentSchemasResou
 	@DELETE
 	@Path("/{id}")
 	@Override
-	public Response deleteObject(@ApiParam(value = "content schema identifier", required = true) @PathParam("id") final Long id)
+	public Response deleteObject(@ApiParam(value = "content schema identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.deleteObject(id);
@@ -218,11 +210,12 @@ public class ContentSchemasResource extends BasicDMPResource<ContentSchemasResou
 				for (final AttributePath keyAttributePath : keyAttributePaths) {
 
 					// note: one could even collect all key attribute path ids and replace them by their actual ones
+					// => ok, let's do this
 
-					if (keyAttributePath.getId() < 0) {
+					//if (keyAttributePath.getId() < 0) {
 
-						keyAttributePathStringsFromDummyIdsFromObjectFromJSON.add(keyAttributePath.toAttributePath());
-					}
+					keyAttributePathStringsFromDummyIdsFromObjectFromJSON.add(keyAttributePath.toAttributePath());
+					//}
 				}
 
 				// collect key attribute paths that match the attribute paths of the key attribute path with dummy id

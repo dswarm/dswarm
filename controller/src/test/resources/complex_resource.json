@@ -1,1 +1,20 @@
-{"id":2,"name":"bla","type":"FILE","description":"blubblub","resource_attributes":{"path":"/path/to/file.end"},"configurations":[{"id":1,"parameters":{"fieldseparator":"|"}},{"id":2,"parameters":{"lineseparator":"\n"}}]}
+{
+  "name" : "bla",
+  "type" : "FILE",
+  "description" : "blubblub",
+  "resource_attributes" : {
+    "path" : "/path/to/file.end"
+  },
+  "configurations" : [ {
+    "parameters" : {
+      "fieldseparator" : "|"
+    },
+    "uuid" : "1"
+  }, {
+    "parameters" : {
+      "lineseparator" : "\n"
+    },
+    "uuid" : "2"
+  } ],
+  "uuid" : "2"
+}

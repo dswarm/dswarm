@@ -15,15 +15,16 @@
  */
 package org.dswarm.controller.resources.schema.test.utils;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.json.JSONException;
 
 import org.dswarm.controller.resources.test.utils.BasicResourceTestUtils;
 import org.dswarm.persistence.model.schema.Attribute;
@@ -34,7 +35,7 @@ import org.dswarm.persistence.service.schema.test.utils.AttributePathServiceTest
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class AttributePathsResourceTestUtils extends
-		BasicResourceTestUtils<AttributePathServiceTestUtils, AttributePathService, ProxyAttributePath, AttributePath, Long> {
+		BasicResourceTestUtils<AttributePathServiceTestUtils, AttributePathService, ProxyAttributePath, AttributePath> {
 
 	public AttributePathsResourceTestUtils() {
 
@@ -42,7 +43,7 @@ public class AttributePathsResourceTestUtils extends
 	}
 
 	@Override
-	public void compareObjects(final AttributePath expectedObject, final AttributePath actualObject) {
+	public void compareObjects(final AttributePath expectedObject, final AttributePath actualObject) throws JsonProcessingException, JSONException {
 
 		// note: expected object need to be patched here
 
@@ -66,11 +67,12 @@ public class AttributePathsResourceTestUtils extends
 				for (final Attribute attribute : attributePath) {
 
 					// note: one could even collect all attribute ids and replace them by their actual ones
+					// => ok, let's do this
 
-					if (attribute.getId() < 0) {
+					//if (attribute.getId() < 0) {
 
-						attributeURIsFromDummyIdsFromObjectFromJSON.add(attribute.getUri());
-					}
+					attributeURIsFromDummyIdsFromObjectFromJSON.add(attribute.getUri());
+					//}
 				}
 
 				// collect attributes that match the uris of the attribute with dummy id
@@ -107,8 +109,8 @@ public class AttributePathsResourceTestUtils extends
 		super.compareObjects(expectedObject, actualObject);
 	}
 
-	public AttributePath prepareAttributePath(final String attributePathJSONFileName, final Map<Long, AttributePath> attributePaths,
-			final Map<Long, Attribute> attributes) throws Exception {
+	public AttributePath prepareAttributePath(final String attributePathJSONFileName, final Map<String, AttributePath> attributePaths,
+			final Map<String, Attribute> attributes) throws Exception {
 
 		String attributePathJSONString = DMPPersistenceUtil.getResourceAsString(attributePathJSONFileName);
 		final AttributePath attributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
@@ -126,7 +128,7 @@ public class AttributePathsResourceTestUtils extends
 		final AttributePath expectedAttributePath = objectMapper.readValue(attributePathJSONString, AttributePath.class);
 		final AttributePath actualAttributePath = createObject(attributePathJSONString, expectedAttributePath);
 
-		attributePaths.put(actualAttributePath.getId(), actualAttributePath);
+		attributePaths.put(actualAttributePath.getUuid(), actualAttributePath);
 
 		return actualAttributePath;
 	}

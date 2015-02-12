@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.schema.Attribute;
+import org.dswarm.persistence.service.UUIDService;
 
 public class AttributeTest extends GuicedTest {
 
@@ -34,14 +35,16 @@ public class AttributeTest extends GuicedTest {
 	@Test
 	public void simpleAttributeTest() {
 
-		final String attributeId = "http://purl.org/dc/terms/title";
+		final String attributeUri = "http://purl.org/dc/terms/title";
 		final String attributeName = "title";
 
-		final Attribute dctermsTitle = new Attribute(attributeId);
+		final String uuid = UUIDService.getUUID(Attribute.class.getSimpleName());
+
+		final Attribute dctermsTitle = new Attribute(uuid, attributeUri);
 		dctermsTitle.setName(attributeName);
 
-		Assert.assertNotNull("the attribute id shouldn't be null", dctermsTitle.getUri());
-		Assert.assertEquals("the attribute ids are not equal", attributeId, dctermsTitle.getUri());
+		Assert.assertNotNull("the attribute uri shouldn't be null", dctermsTitle.getUri());
+		Assert.assertEquals("the attribute uris are not equal", attributeUri, dctermsTitle.getUri());
 		Assert.assertNotNull("the attribute name shouldn't be null", dctermsTitle.getName());
 		Assert.assertEquals("the attribute names are not equal", attributeName, dctermsTitle.getName());
 

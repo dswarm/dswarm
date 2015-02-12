@@ -1,23 +1,23 @@
 {
-    "id": 2,
-    "name": "test_csv.csv",
-    "type": "FILE",
-    "description": "blubblub",
-    "resource_attributes": {
-        "path": "dummy/path/to/test_csv.csv",
-		"filesize": 766,
-		"filetype": "text/csv"
+  "name" : "test_csv.csv",
+  "type" : "FILE",
+  "description" : "blubblub",
+  "resource_attributes" : {
+    "path" : "dummy/path/to/test_csv.csv",
+    "filesize" : 766,
+    "filetype" : "text/csv"
+  },
+  "configurations" : [ {
+    "name" : "foo",
+    "description" : "bar",
+    "parameters" : {
+      "encoding" : "UTF-8",
+      "escape_character" : "\\",
+      "quote_character" : "\"",
+      "column_delimiter" : ";",
+      "row_delimiter" : "\n"
     },
-    "configurations": [{
-        "id": 1,
-        "name": "foo",
-        "description": "bar",
-        "parameters": {
-            "encoding": "UTF-8",
-            "escape_character": "\\",
-            "quote_character": "\"",
-            "column_delimiter": ";",
-            "row_delimiter": "\n"
-        }
-    }]
+    "uuid" : "1"
+  } ],
+  "uuid" : "2"
 }

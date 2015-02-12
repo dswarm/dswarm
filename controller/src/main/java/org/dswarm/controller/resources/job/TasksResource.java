@@ -30,6 +30,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -46,7 +47,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.dswarm.controller.DMPControllerException;
-import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.controller.utils.DataModelUtil;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.flow.TransformationFlow;
@@ -59,10 +59,11 @@ import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * A resource (controller service) for {@link Task}s.
- * 
+ *
  * @author tgaengler
  */
 @RequestScoped
@@ -70,52 +71,45 @@ import org.dswarm.persistence.service.InternalModelServiceFactory;
 @Path("/tasks")
 public class TasksResource {
 
-	private static final Logger							LOG	= LoggerFactory.getLogger(TasksResource.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TasksResource.class);
 
 	/**
 	 * The base URI of this resource.
 	 */
 	@Context
-	UriInfo												uri;
+	UriInfo uri;
 
 	/**
 	 * The data model util.
 	 */
-	private final DataModelUtil							dataModelUtil;
-
-	/**
-	 * The metrics registry.
-	 */
-	private final DMPStatus								dmpStatus;
+	private final DataModelUtil dataModelUtil;
 
 	/**
 	 * The object mapper that can be utilised to de-/serialise JSON nodes.
 	 */
-	private final ObjectMapper							objectMapper;
+	private final ObjectMapper objectMapper;
 
-	private final Provider<InternalModelServiceFactory>	internalModelServiceFactoryProvider;
+	private final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider;
 
 	/**
 	 * Creates a new resource (controller service) for {@link Transformation}s with the provider of the transformation persistence
 	 * service, the object mapper and metrics registry.
-	 * 
+	 *
 	 * @param dataModelUtilArg the data model util
-	 * @param objectMapperArg an object mapper
-	 * @param dmpStatusArg a metrics registry
+	 * @param objectMapperArg  an object mapper
 	 */
 	@Inject
-	public TasksResource(final DataModelUtil dataModelUtilArg, final ObjectMapper objectMapperArg, final DMPStatus dmpStatusArg,
+	public TasksResource(final DataModelUtil dataModelUtilArg, final ObjectMapper objectMapperArg,
 			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
 
 		dataModelUtil = dataModelUtilArg;
-		dmpStatus = dmpStatusArg;
 		objectMapper = objectMapperArg;
 		internalModelServiceFactoryProvider = internalModelServiceFactoryProviderArg;
 	}
 
 	/**
 	 * Builds a positive response with the given content.
-	 * 
+	 *
 	 * @param responseContent a response message
 	 * @return the response
 	 */
@@ -128,7 +122,7 @@ public class TasksResource {
 
 	/**
 	 * This endpoint executes the task that is given via its JSON representation and returns the result of the task execution.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one task
 	 * @return the result of the task execution
 	 * @throws IOException
@@ -138,6 +132,7 @@ public class TasksResource {
 	@ApiOperation(value = "execute the given task", notes = "Returns the result data (as JSON) for this task execution.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "task was successfully executed"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@Timed
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -201,7 +196,7 @@ public class TasksResource {
 
 		final TransformationFlow flow = TransformationFlow.fromTask(task, internalModelServiceFactoryProvider);
 
-		final Optional<Iterator<Tuple<String, JsonNode>>> inputData = dataModelUtil.getData(inputDataModel.getId());
+		final Optional<Iterator<Tuple<String, JsonNode>>> inputData = dataModelUtil.getData(inputDataModel.getUuid());
 
 		if (!inputData.isPresent()) {
 
@@ -244,31 +239,7 @@ public class TasksResource {
 			return buildResponse(null);
 		}
 
-		final ArrayNode feFriendlyJSON = objectMapper.createArrayNode();
-
-		for (final JsonNode entry : resultJSON) {
-
-			final Iterator<String> fieldNamesIter = entry.fieldNames();
-
-			if (fieldNamesIter == null || !fieldNamesIter.hasNext()) {
-
-				continue;
-			}
-
-			final String recordURI = fieldNamesIter.next();
-			final JsonNode recordContentNode = entry.get(recordURI);
-
-			if (recordContentNode == null) {
-
-				continue;
-			}
-
-			final ObjectNode recordNode = objectMapper.createObjectNode();
-			recordNode.put("record_id", recordURI);
-			recordNode.put("record_data", recordContentNode);
-
-			feFriendlyJSON.add(recordNode);
-		}
+		final ArrayNode feFriendlyJSON = transformModelJSONtoFEFriendlyJSON(resultJSON);
 
 		final String resultString = objectMapper.writeValueAsString(feFriendlyJSON);
 
@@ -277,7 +248,7 @@ public class TasksResource {
 
 	/**
 	 * This endpoint returns the metamorph script of the given task as XML.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one task
 	 * @return the result of the task execution
 	 * @throws IOException
@@ -286,6 +257,7 @@ public class TasksResource {
 	@ApiOperation(value = "get the metamorph script of the given task", notes = "Returns the Metamorph as XML.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "metamorph could be built successfully"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@Timed
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_XML)
@@ -320,6 +292,36 @@ public class TasksResource {
 		}
 
 		return new MorphScriptBuilder().apply(task).toString();
+	}
+
+	private ArrayNode transformModelJSONtoFEFriendlyJSON(final ArrayNode resultJSON) {
+
+		final ArrayNode feFriendlyJSON = objectMapper.createArrayNode();
+
+		for (final JsonNode entry : resultJSON) {
+
+			final Iterator<String> fieldNamesIter = entry.fieldNames();
+
+			if (fieldNamesIter == null || !fieldNamesIter.hasNext()) {
+
+				continue;
+			}
+
+			final String recordURI = fieldNamesIter.next();
+			final JsonNode recordContentNode = entry.get(recordURI);
+
+			if (recordContentNode == null) {
+
+				continue;
+			}
+
+			final ObjectNode recordNode = objectMapper.createObjectNode();
+			recordNode.put(DMPPersistenceUtil.RECORD_ID, recordURI);
+			recordNode.set(DMPPersistenceUtil.RECORD_DATA, recordContentNode);
+
+			feFriendlyJSON.add(recordNode);
+		}
+		return feFriendlyJSON;
 	}
 
 }

@@ -18,8 +18,6 @@ package org.dswarm.controller.resources.job.test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Map;
-import java.util.Set;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
@@ -33,24 +31,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import com.google.common.collect.Maps;
 import com.google.common.io.Resources;
 import org.apache.commons.io.FileUtils;
 import org.apache.tika.Tika;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.dswarm.controller.resources.resource.test.utils.ConfigurationsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
-import org.dswarm.controller.resources.schema.test.utils.AttributePathsResourceTestUtils;
-import org.dswarm.controller.resources.schema.test.utils.AttributesResourceTestUtils;
-import org.dswarm.controller.resources.schema.test.utils.ClaszesResourceTestUtils;
-import org.dswarm.controller.resources.schema.test.utils.SchemasResourceTestUtils;
 import org.dswarm.controller.resources.test.ResourceTest;
 import org.dswarm.controller.test.GuicedTest;
 import org.dswarm.persistence.model.resource.Configuration;
@@ -58,60 +48,39 @@ import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.ResourceType;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
-import org.dswarm.persistence.model.schema.Attribute;
-import org.dswarm.persistence.model.schema.AttributePath;
-import org.dswarm.persistence.model.schema.Clasz;
+import org.dswarm.persistence.model.resource.utils.DataModelUtils;
 import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class TasksResourceTest extends ResourceTest {
 
-	private static final Logger						LOG				= LoggerFactory.getLogger(TasksResourceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TasksResourceTest.class);
 
-	private String									taskJSONString	= null;
+	private String taskJSONString = null;
 
-	private final ResourcesResourceTestUtils		resourcesResourceTestUtils;
+	private ResourcesResourceTestUtils resourcesResourceTestUtils;
 
-	private final ConfigurationsResourceTestUtils	configurationsResourceTestUtils;
+	private DataModelsResourceTestUtils dataModelsResourceTestUtils;
 
-	private final DataModelsResourceTestUtils		dataModelsResourceTestUtils;
-
-	private final SchemasResourceTestUtils			schemasResourceTestUtils;
-
-	private final ClaszesResourceTestUtils			classesResourceTestUtils;
-
-	private final AttributesResourceTestUtils		attributesResourceTestUtils;
-
-	private final AttributePathsResourceTestUtils	attributePathsResourceTestUtils;
-
-	private final ObjectMapper						objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
-
-	private Configuration							configuration;
-
-	private Resource								resource;
-
-	private DataModel inputDataModel;
-
-	private Schema schema;
-
-	private Clasz recordClass;
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	public TasksResourceTest() {
 
 		super("tasks");
-
-		resourcesResourceTestUtils = new ResourcesResourceTestUtils();
-		configurationsResourceTestUtils = new ConfigurationsResourceTestUtils();
-		dataModelsResourceTestUtils = new DataModelsResourceTestUtils();
-		schemasResourceTestUtils = new SchemasResourceTestUtils();
-		classesResourceTestUtils = new ClaszesResourceTestUtils();
-		attributePathsResourceTestUtils = new AttributePathsResourceTestUtils();
-		attributesResourceTestUtils = new AttributesResourceTestUtils();
 	}
 
-	@Before
-	public void prepare() throws IOException {
+	@Override protected void initObjects() {
+		super.initObjects();
+
+		resourcesResourceTestUtils = new ResourcesResourceTestUtils();
+		dataModelsResourceTestUtils = new DataModelsResourceTestUtils();
+	}
+
+	@Override
+	public void prepare() throws Exception {
+
+		super.prepare();
 
 		taskJSONString = DMPPersistenceUtil.getResourceAsString("task.json");
 	}
@@ -123,7 +92,9 @@ public class TasksResourceTest extends ResourceTest {
 
 		final String resourceFileName = "controller_test-mabxml.xml";
 
-		final Resource res1 = new Resource();
+		final String resource1Uuid = UUIDService.getUUID(Resource.class.getSimpleName());
+
+		final Resource res1 = new Resource(resource1Uuid);
 		res1.setName(resourceFileName);
 		res1.setDescription("this is a description");
 		res1.setType(ResourceType.FILE);
@@ -155,10 +126,12 @@ public class TasksResourceTest extends ResourceTest {
 		res1.setAttributes(attributes1);
 
 		// upload data resource
-		resource = resourcesResourceTestUtils.uploadResource(resourceFile, res1);
+		Resource resource = resourcesResourceTestUtils.uploadResource(resourceFile, res1);
+
+		final String configuration1Uuid = UUIDService.getUUID(Configuration.class.getSimpleName());
 
 		// process input data model
-		final Configuration conf1 = new Configuration();
+		final Configuration conf1 = new Configuration(configuration1Uuid);
 
 		conf1.setName("configuration 1");
 		conf1.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("datensatz"));
@@ -168,9 +141,11 @@ public class TasksResourceTest extends ResourceTest {
 		final String configurationJSONString = objectMapper.writeValueAsString(conf1);
 
 		// create configuration
-		configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
+		Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
 
-		final DataModel data1 = new DataModel();
+		final String dataModel1Uuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+
+		final DataModel data1 = new DataModel(dataModel1Uuid);
 		data1.setName("'" + res1.getName() + "' + '" + conf1.getName() + "' data model");
 		data1.setDescription("data model of resource '" + res1.getName() + "' and configuration '" + conf1.getName() + "'");
 		data1.setDataResource(resource);
@@ -180,12 +155,12 @@ public class TasksResourceTest extends ResourceTest {
 
 		final String inputDataModelJSONString = objectMapper.writeValueAsString(data1);
 
-		inputDataModel = dataModelsResourceTestUtils.createObjectWithoutComparison(inputDataModelJSONString);
+		DataModel inputDataModel = dataModelsResourceTestUtils.createObjectWithoutComparison(inputDataModelJSONString);
 
 		Assert.assertNotNull("the data model shouldn't be null", inputDataModel);
 
 		// check processed data
-		final String data = dataModelsResourceTestUtils.getData(inputDataModel.getId(), 1);
+		final String data = dataModelsResourceTestUtils.getData(inputDataModel.getUuid(), 1);
 
 		Assert.assertNotNull("the data shouldn't be null", data);
 
@@ -194,14 +169,14 @@ public class TasksResourceTest extends ResourceTest {
 		final ObjectNode finalInputDataModelJSON = objectMapper.readValue(finalInputDataModelJSONString, ObjectNode.class);
 
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
-		taskJSON.put("input_data_model", finalInputDataModelJSON);
+		taskJSON.set("input_data_model", finalInputDataModelJSON);
 
 		// utilise internal model as output data model
-		final DataModel outputDataModel = dataModelsResourceTestUtils.getObject((long) 1);
+		final DataModel outputDataModel = dataModelsResourceTestUtils.getObject(DataModelUtils.BIBO_DOCUMENT_DATA_MODEL_UUID);
 		final String outputDataModelJSONString = objectMapper.writeValueAsString(outputDataModel);
 		final ObjectNode outputDataModelJSON = objectMapper.readValue(outputDataModelJSONString, ObjectNode.class);
 
-		taskJSON.put("output_data_model", outputDataModelJSON);
+		taskJSON.set("output_data_model", outputDataModelJSON);
 
 		final String finalTaskJSONString = objectMapper.writeValueAsString(taskJSON);
 
@@ -234,11 +209,11 @@ public class TasksResourceTest extends ResourceTest {
 		final String expectedResultString = DMPPersistenceUtil.getResourceAsString("controller_task-result.json");
 
 		final ArrayNode expectedJSONArray = objectMapper.readValue(expectedResultString, ArrayNode.class);
-		final ObjectNode expectedJSON = (ObjectNode) expectedJSONArray.get(0).get("record_data").get(0);
+		final ObjectNode expectedJSON = (ObjectNode) expectedJSONArray.get(0).get(DMPPersistenceUtil.RECORD_DATA).get(0);
 		final String finalExpectedJSONString = objectMapper.writeValueAsString(expectedJSON);
 
 		final ArrayNode actualJSONArray = objectMapper.readValue(responseString, ArrayNode.class);
-		final ArrayNode actualKeyArray = (ArrayNode) actualJSONArray.get(0).get("record_data");
+		final ArrayNode actualKeyArray = (ArrayNode) actualJSONArray.get(0).get(DMPPersistenceUtil.RECORD_DATA);
 		ObjectNode actualJSON = null;
 
 		for (final JsonNode actualKeyArrayItem : actualKeyArray) {
@@ -259,72 +234,19 @@ public class TasksResourceTest extends ResourceTest {
 
 		Assert.assertEquals(finalExpectedJSONString.length(), finalActualJSONString.length());
 
-		inputDataModel = dataModelsResourceTestUtils.getObject(inputDataModel.getId());
+		inputDataModel = dataModelsResourceTestUtils.getObject(inputDataModel.getUuid());
 
 		Assert.assertNotNull("the data model shouldn't be null", inputDataModel);
 		Assert.assertNotNull("the data model schema shouldn't be null", inputDataModel.getSchema());
 
-		this.schema = inputDataModel.getSchema();
+		Schema schema1 = inputDataModel.getSchema();
 
-		Assert.assertNotNull("the data model schema record class shouldn't be null", this.schema.getRecordClass());
+		Assert.assertNotNull("the data model schema record class shouldn't be null", schema1.getRecordClass());
 
-		recordClass = this.schema.getRecordClass();
-
-		final DataModel finalOutputDataModel = dataModelsResourceTestUtils.getObject(outputDataModel.getId());
+		final DataModel finalOutputDataModel = dataModelsResourceTestUtils.getObject(outputDataModel.getUuid());
 		finalOutputDataModel.setSchema(null);
 		dataModelsResourceTestUtils.updateObjectWithoutComparison(finalOutputDataModel);
 
 		TasksResourceTest.LOG.debug("end task execution test");
-	}
-
-	@After
-	public void cleanUp() {
-
-		final Map<Long, Attribute> attributes = Maps.newHashMap();
-
-		final Map<Long, AttributePath> attributePaths = Maps.newLinkedHashMap();
-
-		if (schema != null) {
-
-			final Set<AttributePath> attributePathsToDelete = schema.getUniqueAttributePaths();
-
-			if (attributePathsToDelete != null) {
-
-				for (final AttributePath attributePath : attributePathsToDelete) {
-
-					attributePaths.put(attributePath.getId(), attributePath);
-
-					final Set<Attribute> attributesToDelete = attributePath.getAttributes();
-
-					if (attributes != null) {
-
-						for (final Attribute attribute : attributesToDelete) {
-
-							attributes.put(attribute.getId(), attribute);
-						}
-					}
-				}
-			}
-		}
-
-		dataModelsResourceTestUtils.deleteObject(inputDataModel);
-		schemasResourceTestUtils.deleteObject(schema);
-
-		for (final AttributePath attributePath : attributePaths.values()) {
-
-			attributePathsResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(attributePath);
-		}
-
-		for (final Attribute attribute : attributes.values()) {
-
-			attributesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(attribute);
-		}
-
-		classesResourceTestUtils.deleteObjectViaPersistenceServiceTestUtils(recordClass);
-		resourcesResourceTestUtils.deleteObject(resource);
-		configurationsResourceTestUtils.deleteObject(configuration);
-
-		// clean-up graph db
-		InternalGDMGraphServiceTestUtils.cleanGraphDB();
 	}
 }

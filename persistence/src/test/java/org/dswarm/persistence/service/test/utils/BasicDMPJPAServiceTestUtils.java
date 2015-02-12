@@ -15,6 +15,8 @@
  */
 package org.dswarm.persistence.service.test.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.json.JSONException;
 import org.junit.Assert;
 
 import org.dswarm.persistence.model.BasicDMPJPAObject;
@@ -22,7 +24,7 @@ import org.dswarm.persistence.model.proxy.ProxyBasicDMPJPAObject;
 import org.dswarm.persistence.service.BasicDMPJPAService;
 
 public abstract class BasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE extends BasicDMPJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyBasicDMPJPAObject<POJOCLASS>, POJOCLASS extends BasicDMPJPAObject>
-		extends BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS, Long> {
+		extends BasicJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
 
 	public BasicDMPJPAServiceTestUtils(final Class<POJOCLASS> pojoClassArg, final Class<POJOCLASSPERSISTENCESERVICE> persistenceServiceClassArg) {
 
@@ -32,12 +34,12 @@ public abstract class BasicDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE ex
 	/**
 	 * {@inheritDoc} <br />
 	 * Assert that their names are equal.
-	 * 
+	 *
 	 * @param expectedObject
 	 * @param actualObject
 	 */
 	@Override
-	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) {
+	public void compareObjects(final POJOCLASS expectedObject, final POJOCLASS actualObject) throws JsonProcessingException, JSONException {
 
 		super.compareObjects(expectedObject, actualObject);
 

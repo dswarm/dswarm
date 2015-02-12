@@ -1,135 +1,135 @@
 {
-    "id": 47,
-    "name": "my data model",
-    "description": "my data model description",
-    "configuration": {
-        "id": 64,
-        "name": "foo xml",
-        "description": "bar xml",
-        "resources": [{
-            "id": 66
-        }],
-        "parameters": {
-            "storage_type": "xml",
-            "record_tag": "datensatz",
-            "xml_namespace": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd"
-        }
+  "name" : "my data model",
+  "description" : "my data model description",
+  "configuration" : {
+    "name" : "foo xml",
+    "description" : "bar xml",
+    "resources" : [ {
+      "uuid" : "66"
+    } ],
+    "parameters" : {
+      "storage_type" : "xml",
+      "record_tag" : "datensatz",
+      "xml_namespace" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd"
     },
-    "schema": {
-        "id": 53,
-        "attribute_paths": [{
-            "id": 414,
-            "attributes": [{
-                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion",
-                "name": "#mabVersion"
-            }]
-        }, {
-            "id": 415,
-            "attributes": [{
-                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                "name": "#feld"
-            }]
-        }, {
-            "id": 416,
-            "attributes": [{
-                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                "name": "#feld"
-            }, {
-                "id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                "name": "#type"
-            }]
-        }, {
-            "id": 424,
-            "attributes": [{
-                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status",
-                "name": "#status"
-            }]
-        }, {
-            "id": 423,
-            "attributes": [{
-                "id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                "name": "#type"
-            }]
-        }, {
-            "id": 422,
-            "attributes": [{
-                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ",
-                "name": "#typ"
-            }]
-        }, {
-            "id": 421,
-            "attributes": [{
-                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                "name": "#feld"
-            }, {
-                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
-                "name": "#tf"
-            }, {
-                "id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                "name": "#type"
-            }]
-        }, {
-            "id": 420,
-            "attributes": [{
-                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                "name": "#feld"
-            }, {
-                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
-                "name": "#tf"
-            }]
-        }, {
-            "id": 419,
-            "attributes": [{
-                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                "name": "#feld"
-            }, {
-                "id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-                "name": "#value"
-            }]
-        }, {
-            "id": 418,
-            "attributes": [{
-                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                "name": "#feld"
-            }, {
-                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind",
-                "name": "#ind"
-            }]
-        }, {
-            "id": 417,
-            "attributes": [{
-                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                "name": "#feld"
-            }, {
-                "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
-                "name": "#nr"
-            }]
-        }],
-        "record_class": {
-            "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType"
-        }
+    "uuid" : "64"
+  },
+  "schema" : {
+    "attribute_paths" : [ {
+      "attributes" : [ {
+        "name" : "#mabVersion",
+        "uuid" : "0"
+      } ],
+      "uuid" : "414"
+    }, {
+      "attributes" : [ {
+        "name" : "#feld",
+        "uuid" : "0"
+      } ],
+      "uuid" : "415"
+    }, {
+      "attributes" : [ {
+        "name" : "#feld",
+        "uuid" : "0"
+      }, {
+        "name" : "#type",
+        "uuid" : "0"
+      } ],
+      "uuid" : "416"
+    }, {
+      "attributes" : [ {
+        "name" : "#status",
+        "uuid" : "0"
+      } ],
+      "uuid" : "424"
+    }, {
+      "attributes" : [ {
+        "name" : "#type",
+        "uuid" : "0"
+      } ],
+      "uuid" : "423"
+    }, {
+      "attributes" : [ {
+        "name" : "#typ",
+        "uuid" : "0"
+      } ],
+      "uuid" : "422"
+    }, {
+      "attributes" : [ {
+        "name" : "#feld",
+        "uuid" : "0"
+      }, {
+        "name" : "#tf",
+        "uuid" : "0"
+      }, {
+        "name" : "#type",
+        "uuid" : "0"
+      } ],
+      "uuid" : "421"
+    }, {
+      "attributes" : [ {
+        "name" : "#feld",
+        "uuid" : "0"
+      }, {
+        "name" : "#tf",
+        "uuid" : "0"
+      } ],
+      "uuid" : "420"
+    }, {
+      "attributes" : [ {
+        "name" : "#feld",
+        "uuid" : "0"
+      }, {
+        "name" : "#value",
+        "uuid" : "0"
+      } ],
+      "uuid" : "419"
+    }, {
+      "attributes" : [ {
+        "name" : "#feld",
+        "uuid" : "0"
+      }, {
+        "name" : "#ind",
+        "uuid" : "0"
+      } ],
+      "uuid" : "418"
+    }, {
+      "attributes" : [ {
+        "name" : "#feld",
+        "uuid" : "0"
+      }, {
+        "name" : "#nr",
+        "uuid" : "0"
+      } ],
+      "uuid" : "417"
+    } ],
+    "record_class" : {
+      "uuid" : "0"
     },
-    "data_resource": {
-        "id": 66,
-        "name": "controller_test-mabxml.xml",
-        "description": "this is a description",
-        "type": "FILE",
-        "resource_attributes": {
-            "path": "/home/tgaengler/git/tgaengler/datamanagement-platform/init/../tmp/resources/controller_test-mabxml.xml",
-            "filesize": 2279
-        },
-        "configurations": [{
-            "id": 64,
-            "name": "foo xml",
-            "description": "bar xml",
-            "resources": [{
-                "id": 66
-            }],
-            "parameters": {
-                "storage_type": "xml",
-                "record_tag": "datensatz",
-                "xml_namespace": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd"
-            }
-        }]
-    }
+    "uuid" : "53"
+  },
+  "data_resource" : {
+    "name" : "controller_test-mabxml.xml",
+    "description" : "this is a description",
+    "type" : "FILE",
+    "resource_attributes" : {
+      "path" : "/home/tgaengler/git/tgaengler/datamanagement-platform/init/../tmp/resources/controller_test-mabxml.xml",
+      "filesize" : 2279
+    },
+    "configurations" : [ {
+      "name" : "foo xml",
+      "description" : "bar xml",
+      "resources" : [ {
+        "uuid" : "66"
+      } ],
+      "parameters" : {
+        "storage_type" : "xml",
+        "record_tag" : "datensatz",
+        "xml_namespace" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd"
+      },
+      "uuid" : "64"
+    } ],
+    "uuid" : "66"
+  },
+  "uuid" : "47"
 }

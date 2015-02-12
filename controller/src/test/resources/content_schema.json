@@ -1,46 +1,46 @@
 {
-    "name": "my content schema",
-    "id": 12,
-    "key_attribute_paths": [{
-        "id": 44,
-        "attributes": [{
-            "name": "title",
-            "uri": "http://purl.org/dc/terms/title",
-            "id": 40
-        }, {
-            "name": "hasPart",
-            "uri": "http://purl.org/dc/terms/hasPart",
-            "id": 24
-        }, {
-            "name": "title",
-            "uri": "http://purl.org/dc/terms/title",
-            "id": 40
-        }]
+  "name" : "my content schema",
+  "key_attribute_paths" : [ {
+    "attributes" : [ {
+      "name" : "title",
+      "uri" : "http://purl.org/dc/terms/title",
+      "uuid" : "40"
     }, {
-        "id": 45,
-        "attributes": [{
-            "name": "creator",
-            "uri": "http://purl.org/dc/terms/creator",
-            "id": 8
-        }, {
-            "name": "name",
-            "uri": "http://xmlns.com/foaf/0.1/name",
-            "id": 41
-        }]
+      "name" : "hasPart",
+      "uri" : "http://purl.org/dc/terms/hasPart",
+      "uuid" : "24"
     }, {
-        "id": 46,
-        "attributes": [{
-            "name": "created",
-            "uri": "http://purl.org/dc/terms/created",
-            "id": 42
-        }]
-    }],
-    "value_attribute_path": {
-        "id": 47,
-        "attributes": [{
-            "name": "value",
-            "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-            "id": 43
-        }]
-    }
+      "name" : "title",
+      "uri" : "http://purl.org/dc/terms/title",
+      "uuid" : "40"
+    } ],
+    "uuid" : "44"
+  }, {
+    "attributes" : [ {
+      "name" : "creator",
+      "uri" : "http://purl.org/dc/terms/creator",
+      "uuid" : "8"
+    }, {
+      "name" : "name",
+      "uri" : "http://xmlns.com/foaf/0.1/name",
+      "uuid" : "41"
+    } ],
+    "uuid" : "45"
+  }, {
+    "attributes" : [ {
+      "name" : "created",
+      "uri" : "http://purl.org/dc/terms/created",
+      "uuid" : "42"
+    } ],
+    "uuid" : "46"
+  } ],
+  "value_attribute_path" : {
+    "attributes" : [ {
+      "name" : "value",
+      "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+      "uuid" : "43"
+    } ],
+    "uuid" : "47"
+  },
+  "uuid" : "12"
 }

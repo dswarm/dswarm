@@ -33,13 +33,19 @@ import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtils;
 
 public class AttributesResourceTest extends
-		BasicResourceTest<AttributesResourceTestUtils, AttributeServiceTestUtils, AttributeService, ProxyAttribute, Attribute, Long> {
+		BasicResourceTest<AttributesResourceTestUtils, AttributeServiceTestUtils, AttributeService, ProxyAttribute, Attribute> {
 
-	private static final Logger	LOG	= LoggerFactory.getLogger(AttributesResourceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AttributesResourceTest.class);
 
 	public AttributesResourceTest() {
 
 		super(Attribute.class, AttributeService.class, "attributes", "attribute1.json", new AttributesResourceTestUtils());
+	}
+
+	@Override protected void initObjects() {
+		super.initObjects();
+
+		pojoClassResourceTestUtils = new AttributesResourceTestUtils();
 	}
 
 	@Test
@@ -54,7 +60,7 @@ public class AttributesResourceTest extends
 			attribute1 = pojoClassResourceTestUtils.createObject(objectJSONString, expectedObject);
 		} catch (final Exception e) {
 
-			AttributesResourceTest.LOG.error("coudln't create attribute 1 for uniqueness test");
+			AttributesResourceTest.LOG.error("couldn't create attribute 1 for uniqueness test");
 
 			Assert.assertTrue(false);
 		}
@@ -80,7 +86,7 @@ public class AttributesResourceTest extends
 
 		} catch (final Exception e) {
 
-			AttributesResourceTest.LOG.error("coudln't create attribute 2 for uniqueness test");
+			AttributesResourceTest.LOG.error("couldn't create attribute 2 for uniqueness test");
 
 			Assert.assertTrue(false);
 		}
@@ -88,8 +94,6 @@ public class AttributesResourceTest extends
 		Assert.assertNotNull("attribute 2 shouldn't be null in uniqueness test", attribute2);
 
 		Assert.assertEquals("the attributes should be equal", attribute1, attribute2);
-
-		cleanUpDB(attribute1);
 
 		AttributesResourceTest.LOG.debug("end attribute uniqueness test");
 	}
@@ -106,7 +110,7 @@ public class AttributesResourceTest extends
 			attribute = pojoClassResourceTestUtils.createObject(objectJSONString, expectedObject);
 		} catch (final Exception e) {
 
-			AttributesResourceTest.LOG.error("coudln't create attribute for update test");
+			AttributesResourceTest.LOG.error("couldn't create attribute for update test");
 
 			Assert.assertTrue(false);
 		}
@@ -122,13 +126,13 @@ public class AttributesResourceTest extends
 
 		Attribute updateAttribute = pojoClassResourceTestUtils.updateObject(attributeJSONString, attribute);
 
-		Assert.assertEquals("the persisted attribute shoud be equal to the modified attribute for update", updateAttribute, attribute);
+		Assert.assertEquals("the persisted attribute should be equal to the modified attribute for update", updateAttribute, attribute);
 
 		final ObjectNode attributeJSON = objectMapper.readValue(attributeJSONString, ObjectNode.class);
 
-		Assert.assertNotNull("the attribut JSON shouldn't be null", attributeJSON);
+		Assert.assertNotNull("the attribute JSON shouldn't be null", attributeJSON);
 
-		// uniqueness dosn't allow that
+		// uniqueness doesn't allow that
 		attributeJSON.put("uri", attribute.getUri().replaceAll("http", "https"));
 
 		attributeJSONString = objectMapper.writeValueAsString(attributeJSON);
@@ -142,7 +146,7 @@ public class AttributesResourceTest extends
 			modifiedAttribute = pojoClassResourceTestUtils.createObject(attributeJSONString, modifiedAttributeFromJSON);
 		} catch (final Exception e) {
 
-			AttributesResourceTest.LOG.error("coudln't create modified attribute for update test");
+			AttributesResourceTest.LOG.error("couldn't create modified attribute for update test");
 
 			Assert.assertTrue(false);
 		}
@@ -151,15 +155,12 @@ public class AttributesResourceTest extends
 
 		Assert.assertNotNull("attribute shouldn't be null", attribute);
 		Assert.assertNotNull("updated attribute shouldn't be null", updateAttribute);
-		Assert.assertEquals("ids of the modified attribute should be equal", modifiedAttribute.getId(), updateAttribute.getId());
-		Assert.assertNotEquals("id should be different, when uri was \"updated\" (uniqueness dosn't allow update of uri)", updateAttribute.getId(),
-				attribute.getId());
+		Assert.assertEquals("ids of the modified attribute should be equal", modifiedAttribute.getUuid(), updateAttribute.getUuid());
+		Assert.assertNotEquals("id should be different, when uri was \"updated\" (uniqueness constraint doesn't allow update of uri)", updateAttribute.getUuid(),
+				attribute.getUuid());
 
 		Assert.assertEquals("uri's should be equal", updateAttribute.getUri(), modifiedAttribute.getUri());
 		Assert.assertNotEquals("uniqueness dosn't allow update of uri", updateAttribute.getUri(), attribute.getUri());
-
-		cleanUpDB(attribute);
-		cleanUpDB(updateAttribute);
 
 		AttributesResourceTest.LOG.debug("end attribute update test with uri manipulation");
 	}
@@ -197,16 +198,14 @@ public class AttributesResourceTest extends
 
 		attributeJSONString = objectMapper.writeValueAsString(attributeJSON);
 
-		final Long objectId = objectMapper.readValue(attributeJSONString, pojoClass).getId();
+		final String objectUuid = objectMapper.readValue(attributeJSONString, pojoClass).getUuid();
 
-		Assert.assertEquals("the id of the updated object should be equal", objectId, attribute.getId());
+		Assert.assertEquals("the id of the updated object should be equal", objectUuid, attribute.getUuid());
 
-		final Response response = target(String.valueOf(objectId)).request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+		final Response response = target(String.valueOf(objectUuid)).request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
 				.put(Entity.json(attributeJSONString));
 
 		Assert.assertEquals("404 NOT FOUND was expected, i.e., no attribute with the given URI exists in the DB", 404, response.getStatus());
-
-		cleanUpDB(attribute);
 
 		AttributesResourceTest.LOG.debug("end attribute update test with non-existing uri (manipulation)");
 	}

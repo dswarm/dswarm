@@ -18,10 +18,12 @@ package org.dswarm.controller.resources.status;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.google.common.net.HttpHeaders;
+import com.codahale.metrics.annotation.Metered;
+import com.codahale.metrics.annotation.Timed;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -29,14 +31,24 @@ import com.wordnik.swagger.annotations.ApiOperation;
 @RequestScoped
 @Api(value = "/_ping", description = "Ping the server for a heartbeat.")
 @Path("_ping")
-public class HeartbeatResource {
+public final class HeartbeatResource {
 
-	private static final String	RESPONSE	= "pong";
+	private static final String RESPONSE = "pong";
+
+	private static final CacheControl CACHE_CONTROL;
+	static {
+		final CacheControl control = new CacheControl();
+		control.setMustRevalidate(true);
+		control.setNoCache(true);
+		control.setNoStore(true);
+		CACHE_CONTROL = control;
+	}
 
 	@ApiOperation("send a ping, receive a pong")
+	@Timed
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response getPong() {
-		return Response.ok(HeartbeatResource.RESPONSE).header(HttpHeaders.CACHE_CONTROL, "must-revalidate,no-cache,no-store").build();
+	public static Response getPong() {
+		return Response.ok(RESPONSE).cacheControl(CACHE_CONTROL).build();
 	}
 }

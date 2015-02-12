@@ -1,426 +1,586 @@
 {
-    "name": "mabxml schema",
-    "id": 4,
-    "attribute_paths": [{
-        "id": 1,
-        "attributes": [{
-            "name": "type",
-            "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "id": 1
-        }]
-    }, {
-        "id": 40,
-        "attributes": [{
-            "name": "id",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id",
-            "id": 36
-        }]
-    }, {
-        "id": 41,
-        "attributes": [{
-            "name": "typ",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ",
-            "id": 37
-        }]
-    }, {
-        "id": 42,
-        "attributes": [{
-            "name": "status",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status",
-            "id": 38
-        }]
-    }, {
-        "id": 43,
-        "attributes": [{
-            "name": "mabVersion",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion",
-            "id": 39
-        }]
-    }, {
-        "id": 44,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }]
-    }, {
-        "id": 45,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "type",
-            "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "id": 1
-        }]
-    }, {
-        "id": 54,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "id",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id",
-            "id": 36
-        }]
-    }, {
-        "id": 46,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "nr",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
-            "id": 41
-        }]
-    }, {
-        "id": 47,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "ind",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind",
-            "id": 42
-        }]
-    }, {
-        "id": 48,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "value",
-            "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-            "id": 43
-        }]
-    }, {
-        "id": 52,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "tf",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
-            "id": 45
-        }]
-    }, {
-        "id": 53,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "tf",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
-            "id": 45
-        }, {
-            "name": "type",
-            "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "id": 1
-        }]
-    }, {
-        "id": 55,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "stw",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#stw",
-            "id": 46
-        }]
-    }, {
-        "id": 56,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "stw",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#stw",
-            "id": 46
-        }, {
-            "name": "type",
-            "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "id": 1
-        }]
-    }, {
-        "id": 57,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "stw",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#stw",
-            "id": 46
-        }, {
-            "name": "value",
-            "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-            "id": 43
-        }]
-    }, {
-        "id": 49,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "ns",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
-            "id": 44
-        }]
-    }, {
-        "id": 50,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "ns",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
-            "id": 44
-        }, {
-            "name": "type",
-            "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "id": 1
-        }]
-    }, {
-        "id": 51,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "ns",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
-            "id": 44
-        }, {
-            "name": "value",
-            "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-            "id": 43
-        }]
-    }, {
-        "id": 58,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "uf",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
-            "id": 47
-        }]
-    }, {
-        "id": 59,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "uf",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
-            "id": 47
-        }, {
-            "name": "type",
-            "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "id": 1
-        }]
-    }, {
-        "id": 60,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "uf",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
-            "id": 47
-        }, {
-            "name": "id",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id",
-            "id": 36
-        }]
-    }, {
-        "id": 61,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "uf",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
-            "id": 47
-        }, {
-            "name": "code",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code",
-            "id": 48
-        }]
-    }, {
-        "id": 62,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "uf",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
-            "id": 47
-        }, {
-            "name": "value",
-            "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-            "id": 43
-        }]
-    }, {
-        "id": 63,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "uf",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
-            "id": 47
-        }, {
-            "name": "tf",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
-            "id": 45
-        }]
-    }, {
-        "id": 64,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "uf",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
-            "id": 47
-        }, {
-            "name": "tf",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
-            "id": 45
-        }, {
-            "name": "type",
-            "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "id": 1
-        }]
-    }, {
-        "id": 65,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "uf",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
-            "id": 47
-        }, {
-            "name": "stw",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#stw",
-            "id": 46
-        }]
-    }, {
-        "id": 66,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "uf",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
-            "id": 47
-        }, {
-            "name": "stw",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#stw",
-            "id": 46
-        }, {
-            "name": "type",
-            "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "id": 1
-        }]
-    }, {
-        "id": 67,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "uf",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
-            "id": 47
-        }, {
-            "name": "stw",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#stw",
-            "id": 46
-        }, {
-            "name": "value",
-            "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-            "id": 43
-        }]
-    }, {
-        "id": 68,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "uf",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
-            "id": 47
-        }, {
-            "name": "ns",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
-            "id": 44
-        }]
-    }, {
-        "id": 69,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "uf",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
-            "id": 47
-        }, {
-            "name": "ns",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
-            "id": 44
-        }, {
-            "name": "type",
-            "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "id": 1
-        }]
-    }, {
-        "id": 70,
-        "attributes": [{
-            "name": "feld",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-            "id": 40
-        }, {
-            "name": "uf",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
-            "id": 47
-        }, {
-            "name": "ns",
-            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
-            "id": 44
-        }, {
-            "name": "value",
-            "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-            "id": 43
-        }]
-    }],
-    "record_class": {
-        "name": "datensatzType",
-        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType",
-        "id": 3
-    }
+  "name" : "mabxml schema",
+  "attribute_paths" : [ {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_32",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "type",
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "uuid" : "1"
+      } ],
+      "uuid" : "1"
+    },
+    "uuid" : "32"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_33",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "id",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id",
+        "uuid" : "36"
+      } ],
+      "uuid" : "40"
+    },
+    "uuid" : "33"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_34",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "typ",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ",
+        "uuid" : "37"
+      } ],
+      "uuid" : "41"
+    },
+    "uuid" : "34"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_35",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "status",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status",
+        "uuid" : "38"
+      } ],
+      "uuid" : "42"
+    },
+    "uuid" : "35"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_36",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "mabVersion",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion",
+        "uuid" : "39"
+      } ],
+      "uuid" : "43"
+    },
+    "uuid" : "36"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_37",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      } ],
+      "uuid" : "44"
+    },
+    "uuid" : "37"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_38",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "type",
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "uuid" : "1"
+      } ],
+      "uuid" : "45"
+    },
+    "uuid" : "38"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_39",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "id",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id",
+        "uuid" : "36"
+      } ],
+      "uuid" : "54"
+    },
+    "uuid" : "39"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_40",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "nr",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
+        "uuid" : "41"
+      } ],
+      "uuid" : "46"
+    },
+    "uuid" : "40"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_41",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "ind",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind",
+        "uuid" : "42"
+      } ],
+      "uuid" : "47"
+    },
+    "uuid" : "41"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_42",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "value",
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+        "uuid" : "43"
+      } ],
+      "uuid" : "48"
+    },
+    "uuid" : "42"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_43",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "tf",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
+        "uuid" : "45"
+      } ],
+      "uuid" : "52"
+    },
+    "uuid" : "43"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_44",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "tf",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
+        "uuid" : "45"
+      }, {
+        "name" : "type",
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "uuid" : "1"
+      } ],
+      "uuid" : "53"
+    },
+    "uuid" : "44"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_45",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "stw",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#stw",
+        "uuid" : "46"
+      } ],
+      "uuid" : "55"
+    },
+    "uuid" : "45"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_46",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "stw",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#stw",
+        "uuid" : "46"
+      }, {
+        "name" : "type",
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "uuid" : "1"
+      } ],
+      "uuid" : "56"
+    },
+    "uuid" : "46"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_47",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "stw",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#stw",
+        "uuid" : "46"
+      }, {
+        "name" : "value",
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+        "uuid" : "43"
+      } ],
+      "uuid" : "57"
+    },
+    "uuid" : "47"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_48",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "ns",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
+        "uuid" : "44"
+      } ],
+      "uuid" : "49"
+    },
+    "uuid" : "48"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_49",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "ns",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
+        "uuid" : "44"
+      }, {
+        "name" : "type",
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "uuid" : "1"
+      } ],
+      "uuid" : "50"
+    },
+    "uuid" : "49"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_50",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "ns",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
+        "uuid" : "44"
+      }, {
+        "name" : "value",
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+        "uuid" : "43"
+      } ],
+      "uuid" : "51"
+    },
+    "uuid" : "50"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_51",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "uf",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
+        "uuid" : "47"
+      } ],
+      "uuid" : "58"
+    },
+    "uuid" : "51"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_52",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "uf",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
+        "uuid" : "47"
+      }, {
+        "name" : "type",
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "uuid" : "1"
+      } ],
+      "uuid" : "59"
+    },
+    "uuid" : "52"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_53",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "uf",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
+        "uuid" : "47"
+      }, {
+        "name" : "id",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id",
+        "uuid" : "36"
+      } ],
+      "uuid" : "60"
+    },
+    "uuid" : "53"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_54",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "uf",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
+        "uuid" : "47"
+      }, {
+        "name" : "code",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code",
+        "uuid" : "48"
+      } ],
+      "uuid" : "61"
+    },
+    "uuid" : "54"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_55",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "uf",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
+        "uuid" : "47"
+      }, {
+        "name" : "value",
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+        "uuid" : "43"
+      } ],
+      "uuid" : "62"
+    },
+    "uuid" : "55"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_56",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "uf",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
+        "uuid" : "47"
+      }, {
+        "name" : "tf",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
+        "uuid" : "45"
+      } ],
+      "uuid" : "63"
+    },
+    "uuid" : "56"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_57",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "uf",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
+        "uuid" : "47"
+      }, {
+        "name" : "tf",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
+        "uuid" : "45"
+      }, {
+        "name" : "type",
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "uuid" : "1"
+      } ],
+      "uuid" : "64"
+    },
+    "uuid" : "57"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_58",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "uf",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
+        "uuid" : "47"
+      }, {
+        "name" : "stw",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#stw",
+        "uuid" : "46"
+      } ],
+      "uuid" : "65"
+    },
+    "uuid" : "58"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_59",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "uf",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
+        "uuid" : "47"
+      }, {
+        "name" : "stw",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#stw",
+        "uuid" : "46"
+      }, {
+        "name" : "type",
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "uuid" : "1"
+      } ],
+      "uuid" : "66"
+    },
+    "uuid" : "59"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_60",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "uf",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
+        "uuid" : "47"
+      }, {
+        "name" : "stw",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#stw",
+        "uuid" : "46"
+      }, {
+        "name" : "value",
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+        "uuid" : "43"
+      } ],
+      "uuid" : "67"
+    },
+    "uuid" : "60"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_61",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "uf",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
+        "uuid" : "47"
+      }, {
+        "name" : "ns",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
+        "uuid" : "44"
+      } ],
+      "uuid" : "68"
+    },
+    "uuid" : "61"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_62",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "uf",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
+        "uuid" : "47"
+      }, {
+        "name" : "ns",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
+        "uuid" : "44"
+      }, {
+        "name" : "type",
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "uuid" : "1"
+      } ],
+      "uuid" : "69"
+    },
+    "uuid" : "62"
+  }, {
+    "type" : "SchemaAttributePathInstance",
+    "name" : "sapi_63",
+    "attribute_path" : {
+      "attributes" : [ {
+        "name" : "feld",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+        "uuid" : "40"
+      }, {
+        "name" : "uf",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf",
+        "uuid" : "47"
+      }, {
+        "name" : "ns",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
+        "uuid" : "44"
+      }, {
+        "name" : "value",
+        "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+        "uuid" : "43"
+      } ],
+      "uuid" : "70"
+    },
+    "uuid" : "63"
+  } ],
+  "record_class" : {
+    "name" : "datensatzType",
+    "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType",
+    "uuid" : "3"
+  },
+  "uuid" : "4"
 }

@@ -21,6 +21,7 @@ import java.util.Set;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,15 +39,17 @@ import ch.lambdaj.Lambda;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.dswarm.init.DMPException;
 import org.dswarm.init.util.DMPStatics;
-import org.dswarm.persistence.model.DMPJPAObject;
+import org.dswarm.persistence.model.DMPObject;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -59,14 +62,15 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "ATTRIBUTE_PATH")
-public class AttributePath extends DMPJPAObject {
+@Cacheable(false)
+public class AttributePath extends DMPObject {
 
 	/**
 	 *
 	 */
-	private static final long		serialVersionUID				= 1L;
+	private static final long serialVersionUID = 1L;
 
-	private static final Logger		LOG								= LoggerFactory.getLogger(AttributePath.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AttributePath.class);
 
 	/**
 	 * All utilised attributes of this attribute path.
@@ -76,8 +80,9 @@ public class AttributePath extends DMPJPAObject {
 	@JsonIgnore
 	@Access(AccessType.FIELD)
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinTable(name = "ATTRIBUTE_PATHS_ATTRIBUTES", joinColumns = { @JoinColumn(name = "ATTRIBUTE_PATH_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "ATTRIBUTE_ID", referencedColumnName = "ID") })
-	private Set<Attribute>			attributes;
+	@JoinTable(name = "ATTRIBUTE_PATHS_ATTRIBUTES", joinColumns = { @JoinColumn(name = "ATTRIBUTE_PATH_UUID", referencedColumnName = "UUID") },
+			inverseJoinColumns = { @JoinColumn(name = "ATTRIBUTE_UUID", referencedColumnName = "UUID") })
+	private Set<Attribute> attributes;
 
 	/**
 	 * all attributes of this attribute path as ordered list.
@@ -89,13 +94,13 @@ public class AttributePath extends DMPJPAObject {
 	 * A JSON object of the ordered list of attributes.
 	 */
 	@Transient
-	private ArrayNode				orderedAttributesJSON;
+	private ArrayNode orderedAttributesJSON;
 
 	/**
 	 * A flag that indicates, whether the attributes are initialised or not.
 	 */
 	@Transient
-	private boolean					orderedAttributesInitialized;
+	private boolean orderedAttributesInitialized;
 
 	/**
 	 * A string that holds the serialised JSON object of the attribute path (ordered list of attributes).
@@ -103,8 +108,8 @@ public class AttributePath extends DMPJPAObject {
 	@JsonIgnore
 	@Lob
 	@Access(AccessType.FIELD)
-	@Column(name = "ATTRIBUTE_PATH", columnDefinition = "VARCHAR(4000)", length = 4000)
-	private String					attributePath;
+	@Column(name = "ATTRIBUTE_PATH", columnDefinition = "BLOB")
+	private byte[] attributePath;
 
 	/**
 	 * All schemas that utilise this attribute path
@@ -118,8 +123,15 @@ public class AttributePath extends DMPJPAObject {
 	/**
 	 * Creates a new attribute path.
 	 */
-	public AttributePath() {
+	protected AttributePath() {
 
+	}
+
+	public AttributePath(final String uuid) {
+
+		// TODO: how should be implement the uniqueness constraint (URI) properly now?
+
+		super(uuid);
 	}
 
 	/**
@@ -178,7 +190,7 @@ public class AttributePath extends DMPJPAObject {
 
 		refreshAttributePathString();
 
-		return attributePath;
+		return StringUtils.toEncodedString(attributePath, Charsets.UTF_8);
 	}
 
 	/**
@@ -223,7 +235,7 @@ public class AttributePath extends DMPJPAObject {
 
 				if (null == attributes) {
 
-					attributes = Sets.newCopyOnWriteArraySet();
+					attributes = Sets.newConcurrentHashSet();
 				}
 
 				attributes.clear();
@@ -252,7 +264,7 @@ public class AttributePath extends DMPJPAObject {
 
 			if (attributes == null) {
 
-				attributes = Sets.newCopyOnWriteArraySet();
+				attributes = Sets.newConcurrentHashSet();
 			}
 
 			if (orderedAttributes == null) {
@@ -322,7 +334,7 @@ public class AttributePath extends DMPJPAObject {
 	 * Removes an existing attribute from this attribute path.<br>
 	 * Created by: tgaengler
 	 *
-	 * @param attribute an existing attribute that should be removed
+	 * @param attribute      an existing attribute that should be removed
 	 * @param attributeIndex the position of the attribute in the attribute path
 	 */
 	public void removeAttribute(final Attribute attribute, final int attributeIndex) {
@@ -447,13 +459,6 @@ public class AttributePath extends DMPJPAObject {
 		return sb.toString();
 	}
 
-	@Override
-	public boolean equals(final Object obj) {
-
-		return AttributePath.class.isInstance(obj) && super.equals(obj);
-
-	}
-
 	/**
 	 * Refreshs the string that holds the serialised JSON object of the attribute path (ordered list of attributes). This method
 	 * should be called after every manipulation of the attribute path (to keep the states consistent).
@@ -466,13 +471,13 @@ public class AttributePath extends DMPJPAObject {
 
 			for (final Attribute attribute : orderedAttributes) {
 
-				orderedAttributesJSON.add(attribute.getId());
+				orderedAttributesJSON.add(attribute.getUuid());
 			}
 		}
 
 		if (null != orderedAttributesJSON && orderedAttributesJSON.size() > 0) {
 
-			attributePath = orderedAttributesJSON.toString();
+			attributePath = orderedAttributesJSON.toString().getBytes(Charsets.UTF_8);
 		} else {
 
 			attributePath = null;
@@ -491,7 +496,7 @@ public class AttributePath extends DMPJPAObject {
 
 			if (attributePath == null) {
 
-				AttributePath.LOG.debug("attributes path JSON is null for '" + getId() + "'");
+				AttributePath.LOG.debug("attributes path JSON is null for '" + getUuid() + "'");
 
 				if (fromScratch) {
 
@@ -509,13 +514,13 @@ public class AttributePath extends DMPJPAObject {
 				orderedAttributes = Lists.newLinkedList();
 
 				// parse attribute path string
-				orderedAttributesJSON = DMPPersistenceUtil.getJSONArray(attributePath);
+				orderedAttributesJSON = DMPPersistenceUtil.getJSONArray(StringUtils.toEncodedString(attributePath, Charsets.UTF_8));
 
 				if (null != orderedAttributesJSON) {
 
 					for (final JsonNode attributeIdNode : orderedAttributesJSON) {
 
-						final Attribute attribute = getAttribute(attributeIdNode.asLong());
+						final Attribute attribute = getAttribute(attributeIdNode.asText());
 
 						if (null != attribute) {
 
@@ -525,7 +530,7 @@ public class AttributePath extends DMPJPAObject {
 				}
 			} catch (final DMPException e) {
 
-				AttributePath.LOG.debug("couldn't parse attribute path JSON for attribute path '" + getId() + "'");
+				AttributePath.LOG.debug("couldn't parse attribute path JSON for attribute path '" + getUuid() + "'");
 			}
 
 			orderedAttributesInitialized = true;
@@ -535,12 +540,12 @@ public class AttributePath extends DMPJPAObject {
 	/**
 	 * Gets the attribute for a given attribute identifier.
 	 *
-	 * @param id an attribute identifier
+	 * @param uuid an attribute identifier
 	 * @return the matched attribute or null
 	 */
-	public Attribute getAttribute(final Long id) {
+	public Attribute getAttribute(final String uuid) {
 
-		if (null == id) {
+		if (null == uuid) {
 
 			return null;
 		}
@@ -555,7 +560,8 @@ public class AttributePath extends DMPJPAObject {
 			return null;
 		}
 
-		final List<Attribute> attributesFiltered = Lambda.filter(Lambda.having(Lambda.on(Attribute.class).getId(), Matchers.equalTo(id)), attributes);
+		final List<Attribute> attributesFiltered = Lambda
+				.filter(Lambda.having(Lambda.on(Attribute.class).getUuid(), Matchers.equalTo(uuid)), attributes);
 
 		if (attributesFiltered == null || attributesFiltered.isEmpty()) {
 

@@ -15,19 +15,22 @@
  */
 package org.dswarm.persistence.service.schema.test.internalmodel;
 
-import org.dswarm.persistence.model.schema.NameSpacePrefixRegistry;
+import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.model.schema.utils.NameSpacePrefixRegistry;
+import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 
 public class BiboDocumentSchemaBuilder extends SchemaBuilder {
 
 	@Override
-	public Schema buildSchema() {
+	public Schema buildSchema() throws Exception {
 
 		final AttributePathBuilder builder = new AttributePathBuilder();
 
-		final Schema tempSchema = new Schema();
+		// we should take a static identifier here
+		final Schema tempSchema = new Schema(SchemaUtils.BIBO_DOCUMENT_SCHEMA_UUID);
 
-		tempSchema.setRecordClass(builder.createClass(NameSpacePrefixRegistry.BIBO + "Document", "Document"));
+		final Clasz clasz = claszServiceTestUtils.createObject(NameSpacePrefixRegistry.BIBO + "Document", "Document");
 
 		/*
 		 * // Example of how to use the normal API of the attribute path builder
@@ -35,56 +38,47 @@ public class BiboDocumentSchemaBuilder extends SchemaBuilder {
 		 */
 
 		// basic properties used in DINI-AG Titeldaten recommendations
-		tempSchema.addAttributePath(builder.parsePrefixPath("dc:title"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("rda:otherTitleInformation"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("dcterms:alternative"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("bibo:shortTitle"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("dcterms:creator"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("dc:creator"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("dcterms:contributor"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("dc:contributor"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("rda:publicationStatement"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("rda:placeOfPublication"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("dc:publisher"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("dcterms:issued"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("owl:sameAs"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("umbel:isLike"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("umbel:isLike"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("bibo:issn"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("bibo:eissn"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("bibo:lccn"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("bibo:oclcnum"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("bibo:isbn"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("rdf:type"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("dcterms:medium"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("dcterms:hasPart"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("dcterms:isPartOf"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("dcterms:hasVersion"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("dcterms:isFormatOf"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("rda:precededBy"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("rda:succeededBy"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("dcterms:language"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("isbd:1053"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("bibo:edition"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("dcterms:bibliographicCitation"));
-
-		// extra (added to have some details on creator/contributor resources):
-		tempSchema.addAttributePath(builder.parsePrefixPath("dcterms:creator/rdf:type"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("dcterms:creator/foaf:familyName"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("dcterms:creator/foaf:givenName"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("dcterms:contributor/rdf:type"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("dcterms:contributor/foaf:familyName"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("dcterms:contributor/foaf:givenName"));
-
-		// This can be generated from an excel file Jan curates
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dc:title"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("rda:otherTitleInformation"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:alternative"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("bibo:shortTitle"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dc:creator"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dc:contributor"));
+		{
+			// add "deep" paths as schema attribute path instances with attached sub-schemata ...
+			final Schema foafPersonSchema = new FoafPersonSchemaBuilder().buildSchema();
+			tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:creator", foafPersonSchema));
+			tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:contributor", foafPersonSchema));
+		}
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("rda:publicationStatement"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("rda:placeOfPublication"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dc:publisher"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:issued"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("owl:sameAs"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("umbel:isLike"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("bibo:issn"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("bibo:eissn"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("bibo:lccn"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("bibo:oclcnum"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("bibo:isbn"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("rdf:type"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:medium"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:hasPart"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:isPartOf"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:hasVersion"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:isFormatOf"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("rda:precededBy"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("rda:succeededBy"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:language"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("isbd:1053"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("bibo:edition"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:bibliographicCitation"));
 
 		// store all parsed paths as an overview
 		prefixPaths = builder.getPrefixPaths();
 
-		final Schema persistentSchema = createSchema("bibo:Document-Schema (KIM-Titeldaten)", tempSchema.getUniqueAttributePaths(),
-				tempSchema.getRecordClass());
-
-		return persistentSchema;
+		return schemaServiceTestUtils.createAndPersistSchema(tempSchema.getUuid(), "bibo:Document-Schema (KIM-Titeldaten)",
+				tempSchema.getUniqueAttributePaths(), clasz);
 	}
 
 }

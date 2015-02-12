@@ -35,7 +35,7 @@ import org.dswarm.controller.providers.handler.WebApplicationExceptionHandler;
 /**
  * The configuration for the backend API. Packages with (web) resources, API feature classes (e.g. {@link MultiPartFeature}) etc.
  * can be registered here.
- * 
+ *
  * @author phorn
  * @author tgaengler
  */
@@ -44,19 +44,20 @@ class DMPApplication extends ResourceConfig {
 
 	/**
 	 * Creates a new backend API configuration with the given service locator (H2K service registry).
-	 * 
+	 *
 	 * @param serviceLocator a H2K service registry
 	 */
 	@Inject
 	public DMPApplication(final ServiceLocator serviceLocator) {
-
 		setApplicationName("d:swarm");
 
 		registerDMPResources();
 		registerSwaggerResources();
 		buildGuiceBridge(serviceLocator);
 
-		registerClasses(DMPAppEventListener.class);
+		registerClasses(
+				DMPAppEventListener.class,
+				InstrumentedMetricsEventListener.class);
 	}
 
 	private void registerDMPResources() {
@@ -70,7 +71,7 @@ class DMPApplication extends ResourceConfig {
 		registerClasses(ApiListingResourceJSON.class, JerseyApiDeclarationProvider.class, JerseyResourceListingProvider.class);
 	}
 
-	private void buildGuiceBridge(final ServiceLocator serviceLocator) {
+	private static void buildGuiceBridge(final ServiceLocator serviceLocator) {
 		GuiceBridge.getGuiceBridge().initializeGuiceBridge(serviceLocator);
 		final GuiceIntoHK2Bridge guiceBridge = serviceLocator.getService(GuiceIntoHK2Bridge.class);
 		guiceBridge.bridgeGuiceInjector(DMPInjector.getOrDefault());

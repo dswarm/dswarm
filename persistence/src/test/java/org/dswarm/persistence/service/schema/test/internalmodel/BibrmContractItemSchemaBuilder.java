@@ -15,44 +15,39 @@
  */
 package org.dswarm.persistence.service.schema.test.internalmodel;
 
-import org.dswarm.persistence.model.schema.NameSpacePrefixRegistry;
+import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.model.schema.utils.NameSpacePrefixRegistry;
+import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 
+// TODO make this schema also use sub-schemata when everything works for the document schema
 public class BibrmContractItemSchemaBuilder extends SchemaBuilder {
 
-	// private static final Logger LOG = LoggerFactory.getLogger(ERMSchemaBuilder.class);
+	// private static final Logger LOG = LoggerFactory.getLogger(BibrmContractItemSchemaBuilder.class);
 
 	@Override
-	public Schema buildSchema() {
+	public Schema buildSchema() throws Exception {
 
 		final AttributePathBuilder builder = new AttributePathBuilder();
 
-		final Schema tempSchema = new Schema();
+		// we should take a static identifier here
+		final Schema tempSchema = new Schema(SchemaUtils.BIBRM_CONTRACT_ITEM_SCHEMA_UUID);
 
-		tempSchema.setRecordClass(builder.createClass(NameSpacePrefixRegistry.BIBRM + "ContractItem", "ContractItem"));
-
-		/*
-		 * // Example of how to use the normal API of the attribute path builder
-		 * biboDocumentSchema.addAttributePath(builder.start().add(DC + "creator").add(FOAF + "first_name").getPath());
-		 */
+		final Clasz clasz = claszServiceTestUtils.createObject(NameSpacePrefixRegistry.BIBRM + "ContractItem", "ContractItem");
 
 		// basic properties for ERM example
 		// tempSchema.addAttributePath(builder.parsePrefixPath("bibrm:hasItem")); // this needs to go to the schema of Contract
 		// itself
-		tempSchema.addAttributePath(builder.parsePrefixPath("rdf:type"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("bibrm:EISSN"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("dc:title"));
-		tempSchema.addAttributePath(builder.parsePrefixPath("bibrm:price"));
-
-		// This can be generated from an excel file Jan curates
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("rdf:type"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("bibrm:EISSN"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dc:title"));
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("bibrm:price"));
 
 		// store all parsed paths as an overview
 		prefixPaths = builder.getPrefixPaths();
 
-		final Schema persistentSchema = createSchema("bibrm:ContractItem-Schema (ERM-Scenario)", tempSchema.getUniqueAttributePaths(),
-				tempSchema.getRecordClass());
-
-		return persistentSchema;
+		return schemaServiceTestUtils.createAndPersistSchema(tempSchema.getUuid(), "bibrm:ContractItem-Schema (ERM-Scenario)",
+				tempSchema.getUniqueAttributePaths(), clasz);
 	}
 
 	@Override

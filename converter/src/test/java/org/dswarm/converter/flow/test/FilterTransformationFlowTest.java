@@ -28,6 +28,7 @@ import org.junit.Test;
 
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.TransformationFlow;
+import org.dswarm.converter.flow.utils.DMPConverterUtils;
 import org.dswarm.converter.morph.MorphScriptBuilder;
 import org.dswarm.persistence.model.job.Task;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
@@ -187,11 +188,15 @@ public class FilterTransformationFlowTest extends GuicedTest {
 		flow.getScript();
 
 		final String actual = flow.applyResource("test-mabxml.tuples.json");
+		final ArrayNode actualJSONArray = DMPPersistenceUtil.getJSONObjectMapper().readValue(actual, ArrayNode.class);
+		final JsonNode cleanedActualJSONArray = DMPConverterUtils.removeRecordIdFields(actualJSONArray);
+		final String finalActual = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(cleanedActualJSONArray);
 
 		final ArrayNode expectedJson = replaceKeyWithActualKey(expected, actual);
-		final String finalExpected = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(expectedJson);
+		final JsonNode cleanedExpectedJson = DMPConverterUtils.removeRecordIdFields(expectedJson);
+		final String finalExpected = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(cleanedExpectedJson);
 
-		Assert.assertEquals(finalExpected, actual);
+		Assert.assertEquals(finalExpected, finalActual);
 	}
 
 	private ArrayNode replaceKeyWithActualKey(final String expected, final String actual) throws IOException {
@@ -266,7 +271,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 			Assert.assertTrue("the actual content JSON should be a JSON object", actualContentJson.isObject());
 
 			final ObjectNode newExpectedContentJson = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
-			newExpectedContentJson.put(actualContentJson.fieldNames().next(), expectedContentValue);
+			newExpectedContentJson.set(actualContentJson.fieldNames().next(), expectedContentValue);
 			final ArrayNode newExpectedContent = DMPPersistenceUtil.getJSONObjectMapper().createArrayNode();
 
 			if (typeNode != null) {
@@ -290,7 +295,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 
 				newExpectedContent.add(newExpectedContentJson);
 			}
-			expectedTuple.put(expectedFieldName, newExpectedContent);
+			expectedTuple.set(expectedFieldName, newExpectedContent);
 
 			iterCount++;
 		}

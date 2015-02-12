@@ -48,13 +48,14 @@ import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.ResourceType;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.schema.Attribute;
-import org.dswarm.persistence.model.schema.AttributePath;
+import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
+import org.dswarm.persistence.service.UUIDService;
 
 @SuppressWarnings("MethodMayBeStatic")
 public class SchemaOrderTest extends ResourceTest {
 
-	private Resource resource;
-	private DataModel dataModel;
+	private Resource      resource;
+	private DataModel     dataModel;
 	private Configuration configuration;
 
 	public SchemaOrderTest() {
@@ -68,8 +69,6 @@ public class SchemaOrderTest extends ResourceTest {
 		whenConfiguringTheSchema();
 
 		assertThatAllAttributePathsAreInOrder();
-
-		new CleanupDataModelSchemaTask().cleanUpResources(dataModel, dataModel.getSchema());
 	}
 
 	private void givenUploadedResource() throws URISyntaxException, IOException {
@@ -107,22 +106,24 @@ public class SchemaOrderTest extends ResourceTest {
 		final Resource thisResource = this.resource;
 		final List<String> names = Lists.newArrayList("id", "val1", "val2", "val3", "val4", "val5", "val6", "type");
 		return Lists.transform(names, new Function<String, String>() {
+
 			@Override
 			public String apply(final String input) {
 				if (input.equals("type")) {
 					return "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
 				}
-				return String.format("http://data.slub-dresden.de/resources/%d/schema#%s", thisResource.getId(), input);
+				return String.format("http://data.slub-dresden.de/resources/%s/schema#%s", thisResource.getUuid(), input);
 			}
 		});
 	}
 
 	private List<String> getActuals() {
 		final List<String> actuals = Lists.newArrayList();
-		final Collection<AttributePath> attributePaths = dataModel.getSchema().getAttributePaths();
-		for (final AttributePath attributePath : attributePaths) {
-			final Iterable<Attribute> path = attributePath.getAttributePath();
+		final Collection<SchemaAttributePathInstance> attributePaths = dataModel.getSchema().getAttributePaths();
+		for (final SchemaAttributePathInstance attributePath : attributePaths) {
+			final Iterable<Attribute> path = attributePath.getAttributePath().getAttributePath();
 			final Iterable<String> pathUris = Iterables.transform(path, new Function<Attribute, String>() {
+
 				@Override
 				public String apply(final Attribute input) {
 					return input.getUri();
@@ -210,7 +211,9 @@ public class SchemaOrderTest extends ResourceTest {
 		final String name = "DD-492";
 		final String description = "DD-492 config";
 
-		configuration = new Configuration();
+		final String configurationUuid = UUIDService.getUUID(Configuration.class.getSimpleName());
+
+		configuration = new Configuration(configurationUuid);
 		configuration.setName(name);
 		configuration.setDescription(description);
 		configuration.addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode("csv"));
@@ -218,7 +221,10 @@ public class SchemaOrderTest extends ResourceTest {
 	}
 
 	private DataModel createDataModel() {
-		final DataModel dataModel = new DataModel();
+
+		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+
+		final DataModel dataModel = new DataModel(dataModelUuid);
 		dataModel.setDataResource(resource);
 		dataModel.setConfiguration(configuration);
 		return dataModel;

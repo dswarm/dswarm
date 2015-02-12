@@ -16,6 +16,7 @@
 package org.dswarm.controller.resources.job;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -27,6 +28,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -36,40 +38,37 @@ import com.wordnik.swagger.annotations.ApiResponses;
 
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.ExtendedBasicDMPResource;
-import org.dswarm.controller.resources.job.utils.ProjectsResourceUtils;
-import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
-import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.model.job.Project;
 import org.dswarm.persistence.model.job.proxy.ProxyProject;
 import org.dswarm.persistence.service.job.ProjectService;
 
 /**
  * A resource (controller service) for {@link Project}s.
- * 
+ *
  * @author tgaengler
  */
 @RequestScoped
 @Api(value = "/projects", description = "Operations about projects.")
 @Path("projects")
-public class ProjectsResource extends ExtendedBasicDMPResource<ProjectsResourceUtils, ProjectService, ProxyProject, Project> {
+public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, ProxyProject, Project> {
 
 	/**
 	 * Creates a new resource (controller service) for {@link Project}s with the provider of the project persistence service, the
 	 * object mapper and metrics registry.
-	 * 
-	 * @param projectServiceProviderArg the project persistence service provider
-	 * @param objectMapperArg an object mapper
-	 * @param dmpStatusArg a metrics registry
+	 *
+	 * @param persistenceServiceProviderArg
+	 * @param objectMapperProviderArg
 	 */
 	@Inject
-	public ProjectsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
+	public ProjectsResource(final Provider<ProjectService> persistenceServiceProviderArg,
+			final Provider<ObjectMapper> objectMapperProviderArg) throws DMPControllerException {
 
-		super(utilsFactory.reset().get(ProjectsResourceUtils.class), dmpStatusArg);
+		super(Project.class, persistenceServiceProviderArg, objectMapperProviderArg);
 	}
 
 	/**
 	 * This endpoint returns a project as JSON representation for the provided project identifier.
-	 * 
+	 *
 	 * @param id a project identifier
 	 * @return a JSON representation of a project
 	 */
@@ -81,7 +80,8 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectsResourceU
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "project identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+	public Response getObject(@ApiParam(value = "project identifier", required = true) @PathParam("id") final String id)
+			throws DMPControllerException {
 
 		return super.getObject(id);
 	}
@@ -91,7 +91,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectsResourceU
 	 * elements, e.g., mappings will be persisted as well) in the database. <br/>
 	 * Note: please utilise negative 'long' values for assigning a dummy id to an object. The same dummy id addresses the same
 	 * object for a certain domain model class.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one project
 	 * @return the persisted project as JSON representation
 	 * @throws DMPControllerException
@@ -103,14 +103,15 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectsResourceU
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response createObject(@ApiParam(value = "project (as JSON)", required = true) final String jsonObjectString) throws DMPControllerException {
+	public Response createObject(@ApiParam(value = "project (as JSON)", required = true) final String jsonObjectString)
+			throws DMPControllerException {
 
 		return super.createObject(jsonObjectString);
 	}
 
 	/**
 	 * This endpoint returns a list of all projects as JSON representation.
-	 * 
+	 *
 	 * @return a list of all projects as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -118,6 +119,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectsResourceU
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "returns all available projects (as JSON)"),
 			@ApiResponse(code = 404, message = "could not find any project, i.e., there are no projects available"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
@@ -128,9 +130,9 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectsResourceU
 
 	/**
 	 * This endpoint consumes a project as JSON representation and updates this project in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one project
-	 * @param id a project identifier
+	 * @param uuid             a project identifier
 	 * @return the updated project as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -144,17 +146,17 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectsResourceU
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateObject(@ApiParam(value = "project (as JSON)", required = true) final String jsonObjectString,
-			@ApiParam(value = "project identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+			@ApiParam(value = "project identifier", required = true) @PathParam("id") final String uuid) throws DMPControllerException {
 
-		return super.updateObject(jsonObjectString, id);
+		return super.updateObject(jsonObjectString, uuid);
 	}
 
 	/**
 	 * This endpoint deletes a project that matches the given id.
-	 * 
+	 *
 	 * @param id a project identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
-	 *         went wrong
+	 * went wrong
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "delete project that matches the given id", notes = "Returns status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong.")
@@ -165,7 +167,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectsResourceU
 	@DELETE
 	@Path("/{id}")
 	@Override
-	public Response deleteObject(@ApiParam(value = "project identifier", required = true) @PathParam("id") final Long id)
+	public Response deleteObject(@ApiParam(value = "project identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.deleteObject(id);

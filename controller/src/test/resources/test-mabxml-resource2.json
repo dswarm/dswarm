@@ -1,11 +1,11 @@
 {
-    "id": 1,
-    "name": "test-mabxml2.xml",
-    "type": "FILE",
-    "description": "this is a description",
-    "resource_attributes": {
-        "path": "dummy/path/to/test-mabxml2.xml",
-		"filesize": 2279,
-		"filetype": "application/xml"
-    }
+  "name" : "test-mabxml2-controller.xml",
+  "type" : "FILE",
+  "description" : "this is a description",
+  "resource_attributes" : {
+    "path" : "dummy/path/to/test-mabxml2.xml",
+    "filesize" : 2279,
+    "filetype" : "application/xml"
+  },
+  "uuid" : "1"
 }

@@ -16,6 +16,7 @@
 package org.dswarm.controller.resources.job;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -27,6 +28,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -35,41 +37,38 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
 import org.dswarm.controller.DMPControllerException;
-import org.dswarm.controller.resources.job.utils.TransformationsResourceUtils;
-import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
-import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.job.proxy.ProxyTransformation;
 import org.dswarm.persistence.service.job.TransformationService;
 
 /**
  * A resource (controller service) for {@link Transformation}s.
- * 
+ *
  * @author tgaengler
  */
 @RequestScoped
 @Api(value = "/transformations", description = "Operations about transformations.")
 @Path("transformations")
 public class TransformationsResource extends
-		BasicFunctionsResource<TransformationsResourceUtils, TransformationService, ProxyTransformation, Transformation> {
+		BasicFunctionsResource<TransformationService, ProxyTransformation, Transformation> {
 
 	/**
 	 * Creates a new resource (controller service) for {@link Transformation}s with the provider of the transformation persistence
 	 * service, the object mapper and metrics registry.
-	 * 
-	 * @param transformationServiceProviderArg the transformation persistence service provider
-	 * @param objectMapperArg an object mapper
-	 * @param dmpStatusArg a metrics registry
+	 *
+	 * @param persistenceServiceProviderArg
+	 * @param objectMapperProviderArg
 	 */
 	@Inject
-	public TransformationsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg) throws DMPControllerException {
+	public TransformationsResource(final Provider<TransformationService> persistenceServiceProviderArg,
+			final Provider<ObjectMapper> objectMapperProviderArg) throws DMPControllerException {
 
-		super(utilsFactory.reset().get(TransformationsResourceUtils.class), dmpStatusArg);
+		super(Transformation.class, persistenceServiceProviderArg, objectMapperProviderArg);
 	}
 
 	/**
 	 * This endpoint returns a transformation as JSON representation for the provided transformation identifier.
-	 * 
+	 *
 	 * @param id a transformation identifier
 	 * @return a JSON representation of a transformation
 	 */
@@ -81,7 +80,7 @@ public class TransformationsResource extends
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "transformation identifier", required = true) @PathParam("id") final Long id)
+	public Response getObject(@ApiParam(value = "transformation identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.getObject(id);
@@ -89,7 +88,7 @@ public class TransformationsResource extends
 
 	/**
 	 * This endpoint consumes a transformation as JSON representation and persists this transformation in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one transformation
 	 * @return the persisted transformation as JSON representation
 	 * @throws DMPControllerException
@@ -109,7 +108,7 @@ public class TransformationsResource extends
 
 	/**
 	 * This endpoint returns a list of all transformations as JSON representation.
-	 * 
+	 *
 	 * @return a list of all transformations as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -127,9 +126,9 @@ public class TransformationsResource extends
 
 	/**
 	 * This endpoint consumes a transformation as JSON representation and updates this transformation in the database.
-	 * 
+	 *
 	 * @param jsonObjectString a JSON representation of one transformation
-	 * @param id a transformation identifier
+	 * @param uuid             a transformation identifier
 	 * @return the updated transformation as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -143,17 +142,17 @@ public class TransformationsResource extends
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateObject(@ApiParam(value = "transformation (as JSON)", required = true) final String jsonObjectString,
-			@ApiParam(value = "transformation identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+			@ApiParam(value = "transformation identifier", required = true) @PathParam("id") final String uuid) throws DMPControllerException {
 
-		return super.updateObject(jsonObjectString, id);
+		return super.updateObject(jsonObjectString, uuid);
 	}
 
 	/**
 	 * This endpoint deletes a transformation that matches the given id.
-	 * 
+	 *
 	 * @param id a transformation identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
-	 *         went wrong
+	 * went wrong
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "delete transformation that matches the given id", notes = "Returns status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong.")
@@ -164,7 +163,7 @@ public class TransformationsResource extends
 	@DELETE
 	@Path("/{id}")
 	@Override
-	public Response deleteObject(@ApiParam(value = "transformation identifier", required = true) @PathParam("id") final Long id)
+	public Response deleteObject(@ApiParam(value = "transformation identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.deleteObject(id);

@@ -35,8 +35,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterators;
@@ -61,10 +62,7 @@ import org.dswarm.controller.eventbus.XMLConverterEventRecorder;
 import org.dswarm.controller.eventbus.XMLSchemaEvent;
 import org.dswarm.controller.eventbus.XMLSchemaEventRecorder;
 import org.dswarm.controller.resources.ExtendedBasicDMPResource;
-import org.dswarm.controller.resources.resource.utils.DataModelsResourceUtils;
 import org.dswarm.controller.resources.resource.utils.ExportUtils;
-import org.dswarm.controller.resources.utils.ResourceUtilsFactory;
-import org.dswarm.controller.status.DMPStatus;
 import org.dswarm.controller.utils.DataModelUtil;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.proxy.RetrievalType;
@@ -83,45 +81,47 @@ import org.dswarm.persistence.util.GDMUtil;
 @RequestScoped
 @Api(value = "/datamodels", description = "Operations about data models.")
 @Path("datamodels")
-public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResourceUtils, DataModelService, ProxyDataModel, DataModel> {
+public class DataModelsResource extends ExtendedBasicDMPResource<DataModelService, ProxyDataModel, DataModel> {
 
-	private static final Logger							LOG	= LoggerFactory.getLogger(DataModelsResource.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DataModelsResource.class);
 
 	/**
 	 * The data model util
 	 */
-	private final DataModelUtil							dataModelUtil;
+	private final DataModelUtil dataModelUtil;
 
-	private final Provider<SchemaEventRecorder>			schemaEventRecorderProvider;
-	private final Provider<XMLSchemaEventRecorder>		xmlSchemaEventRecorderProvider;
-	private final Provider<CSVConverterEventRecorder>	csvConverterEventRecorderProvider;
-	private final Provider<XMLConverterEventRecorder>	xmlConvertEventRecorderProvider;
+	private final Provider<SchemaEventRecorder>       schemaEventRecorderProvider;
+	private final Provider<XMLSchemaEventRecorder>    xmlSchemaEventRecorderProvider;
+	private final Provider<CSVConverterEventRecorder> csvConverterEventRecorderProvider;
+	private final Provider<XMLConverterEventRecorder> xmlConvertEventRecorderProvider;
 
 	// this is likely to be http://localhost:7474/graph
-	private final String								graphEndpoint;
+	private final String graphEndpoint;
 
 	/**
 	 * Creates a new resource (controller service) for {@link DataModel}s with the provider of the data model persistence service,
 	 * the object mapper, metrics registry, event bus provider and data model util.
 	 *
-	 * @param utilsFactory
-	 * @param dmpStatusArg an metrics registry
-	 * @param dataModelUtilArg the data model util
+	 * @param persistenceServiceProviderArg
+	 * @param objectMapperProviderArg
+	 * @param dataModelUtilArg                     the data model util
 	 * @param schemaEventRecorderProviderArg
 	 * @param xmlSchemaEventRecorderProviderArg
 	 * @param csvConverterEventRecorderProviderArg
 	 * @param xmlConverterEventRecorderProviderArg
+	 * @param graphEndpointArg
 	 * @throws DMPControllerException
 	 */
 	@Inject
-	public DataModelsResource(final ResourceUtilsFactory utilsFactory, final DMPStatus dmpStatusArg, final DataModelUtil dataModelUtilArg,
+	public DataModelsResource(final javax.inject.Provider<DataModelService> persistenceServiceProviderArg,
+			final javax.inject.Provider<ObjectMapper> objectMapperProviderArg, final DataModelUtil dataModelUtilArg,
 			final Provider<SchemaEventRecorder> schemaEventRecorderProviderArg,
 			final Provider<XMLSchemaEventRecorder> xmlSchemaEventRecorderProviderArg,
 			final Provider<CSVConverterEventRecorder> csvConverterEventRecorderProviderArg,
 			final Provider<XMLConverterEventRecorder> xmlConverterEventRecorderProviderArg,
 			@Named("dswarm.db.graph.endpoint") final String graphEndpointArg) throws DMPControllerException {
 
-		super(utilsFactory.reset().get(DataModelsResourceUtils.class), dmpStatusArg);
+		super(DataModel.class, persistenceServiceProviderArg, objectMapperProviderArg);
 
 		dataModelUtil = dataModelUtilArg;
 		schemaEventRecorderProvider = schemaEventRecorderProviderArg;
@@ -145,7 +145,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final Long id)
+	public Response getObject(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.getObject(id);
@@ -195,7 +195,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 	 * This endpoint consumes a data model as JSON representation and updates this data model in the database.
 	 *
 	 * @param jsonObjectString a JSON representation of one data model
-	 * @param id a data model identifier
+	 * @param uuid             a data model identifier
 	 * @return the updated data model as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -209,38 +209,39 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateObject(@ApiParam(value = "data model (as JSON)", required = true) final String jsonObjectString,
-			@ApiParam(value = "data model identifier", required = true) @PathParam("id") final Long id) throws DMPControllerException {
+			@ApiParam(value = "data model identifier", required = true) @PathParam("id") final String uuid) throws DMPControllerException {
 
-		return super.updateObject(jsonObjectString, id);
+		return super.updateObject(jsonObjectString, uuid);
 	}
 
 	/**
 	 * Returns the data for a given data model.
 	 *
-	 * @param id the data model identifier
+	 * @param uuid   the data model identifier
 	 * @param atMost the number of records that should be returned at most
 	 * @return the data for a given data model
 	 * @throws DMPControllerException
 	 */
-	@ApiOperation(value = "get the data of the data model that matches the given data model id", notes = "Returns the data of the data model that matches the given data model id.")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "could retrieve the data successfully for the data model that matches the given id"),
-			@ApiResponse(code = 404, message = "could not find a data model for the given id or data for this data model"),
+	@ApiOperation(value = "get the data of the data model that matches the given data model uuid", notes = "Returns the data of the data model that matches the given data model uuid.")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "could retrieve the data successfully for the data model that matches the given uuid"),
+			@ApiResponse(code = 404, message = "could not find a data model for the given uuid or data for this data model"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@Timed
 	@GET
-	@Path("/{id}/data")
+	@Path("/{uuid}/data")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getData(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final Long id,
+	public Response getData(@ApiParam(value = "data model identifier", required = true) @PathParam("uuid") final String uuid,
 			@ApiParam("number of records limit") @QueryParam("atMost") final Integer atMost) throws DMPControllerException {
 
 		// final Timer.Context context = dmpStatus.getConfigurationData();
 
-		DataModelsResource.LOG.debug("try to get data for data model with id '" + id + "'");
+		DataModelsResource.LOG.debug("try to get data for data model with uuid '" + uuid + "'");
 
-		final Optional<Iterator<Tuple<String, JsonNode>>> data = dataModelUtil.getData(id, Optional.fromNullable(atMost));
+		final Optional<Iterator<Tuple<String, JsonNode>>> data = dataModelUtil.getData(uuid, Optional.fromNullable(atMost));
 
 		if (!data.isPresent()) {
 
-			DataModelsResource.LOG.debug("couldn't find data for data model with id '" + id + "'");
+			DataModelsResource.LOG.debug("couldn't find data for data model with uuid '" + uuid + "'");
 
 			// dmpStatus.stop(context);
 			return Response.status(Status.NOT_FOUND).build();
@@ -254,24 +255,15 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 			tupleIterator = data.get();
 		}
 
-		final ObjectNode json = pojoClassResourceUtils.getObjectMapper().createObjectNode();
+		final ObjectNode json = objectMapperProvider.get().createObjectNode();
 		while (tupleIterator.hasNext()) {
 			final Tuple<String, JsonNode> tuple = data.get().next();
-			json.put(tuple.v1(), tuple.v2());
+			json.set(tuple.v1(), tuple.v2());
 		}
 
-		final String jsonString;
+		final String jsonString = serializeObject(json);
 
-		try {
-
-			jsonString = pojoClassResourceUtils.getObjectMapper().writeValueAsString(json);
-		} catch (final JsonProcessingException e) {
-
-			// dmpStatus.stop(context);
-			throw new DMPControllerException("couldn't transform data to JSON string.\n" + e.getMessage());
-		}
-
-		DataModelsResource.LOG.debug("return data for data model with id '" + id + "' ");
+		DataModelsResource.LOG.debug("return data for data model with uuid '" + uuid + "' ");
 		DataModelsResource.LOG.trace("and content '" + jsonString + "'");
 
 		// dmpStatus.stop(context);
@@ -279,36 +271,37 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 	}
 
 	/**
-	 * @param id
+	 * @param uuid
 	 * @param format serialization format the data model should be serialized in, injected from accept header field
 	 * @return a single data model, serialized in exportLanguage
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "exports a selected data model from the graph DB in the requested RDF serialisation format", notes = "Returns exported data in the requested RDF serialisation format.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "export was successfully processed"),
-			@ApiResponse(code = 404, message = "could not find a data model for the given id"),
+			@ApiResponse(code = 404, message = "could not find a data model for the given uuid"),
 			@ApiResponse(code = 406, message = "requested export format is not supported"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@Timed
 	@GET
-	@Path("/{id}/export")
+	@Path("/{uuid}/export")
 	// SR TODO removing of @Produces should result in accepting any requested format (accept header?) Is this what we want as a
 	// proxy endpoint - let the graph endpoint decide which formats are accepted
 	// @Produces({ MediaTypeUtil.N_QUADS, MediaTypeUtil.RDF_XML, MediaTypeUtil.TRIG, MediaTypeUtil.TURTLE, MediaTypeUtil.N3 })
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	public Response exportForDownload(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final Long id,
+	public Response exportForDownload(@ApiParam(value = "data model identifier", required = true) @PathParam("uuid") final String uuid,
 			@QueryParam("format") String format) throws DMPControllerException {
 
-		// check if id is present, return 404 if not
-		final DataModelService persistenceService = pojoClassResourceUtils.getPersistenceService();
-		final DataModel freshDataModel = persistenceService.getObject(id);
+		// check if uuid is present, return 404 if not
+		final DataModelService persistenceService = persistenceServiceProvider.get();
+		final DataModel freshDataModel = persistenceService.getObject(uuid);
 		if (freshDataModel == null) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		// construct dataModelURI from data model id
-		final String dataModelURI = GDMUtil.getDataModelGraphURI(id);
+		// construct dataModelURI from data model uuid
+		final String dataModelURI = GDMUtil.getDataModelGraphURI(uuid);
 
-		LOG.debug("Forwarding to graph db: request to export rdf of datamodel with id \"" + id + "\" to " + format);
+		LOG.debug("Forwarding to graph db: request to export rdf of datamodel with uuid \"" + uuid + "\" to " + format);
 
 		// send the request to graph DB
 		final WebTarget target = target("/export");
@@ -322,7 +315,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 	 *
 	 * @param id a data model identifier
 	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
-	 *         went wrong
+	 * went wrong
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "delete data model that matches the given id", notes = "Returns status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong.")
@@ -333,7 +326,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 	@DELETE
 	@Path("/{id}")
 	@Override
-	public Response deleteObject(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final Long id)
+	public Response deleteObject(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final String id)
 			throws DMPControllerException {
 
 		return super.deleteObject(id);
@@ -367,12 +360,12 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 
 			try {
 
-				final ProxyDataModel proxyUpdatedDataModel = pojoClassResourceUtils.getPersistenceService().updateObjectTransactional(dataModel);
+				final ProxyDataModel proxyUpdatedDataModel = persistenceServiceProvider.get().updateObjectTransactional(dataModel);
 
 				if (proxyUpdatedDataModel == null) {
 
 					DataModelsResource.LOG.error("something went wrong, when trying to add configuration to data resource of data model '"
-							+ dataModel.getId() + "'");
+							+ dataModel.getUuid() + "'");
 
 					proxyDataModel = null;
 				} else {
@@ -384,7 +377,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 			} catch (final DMPPersistenceException e) {
 
 				DataModelsResource.LOG.error("something went wrong, when trying to add configuration to data resource of data model '"
-						+ dataModel.getId() + "'");
+						+ dataModel.getUuid() + "'");
 
 				proxyDataModel = null;
 			}
@@ -404,7 +397,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 
 		// final Timer.Context context = dmpStatus.createNewConfiguration();
 
-		DataModelsResource.LOG.debug("try to process data for data model with id '" + dataModel.getId() + "'");
+		DataModelsResource.LOG.debug("try to process data for data model with id '" + dataModel.getUuid() + "'");
 
 		final Configuration configuration = dataModel.getConfiguration();
 
@@ -448,6 +441,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 					break;
 				case "xml":
 				case "mabxml":
+				case "marc21":
 
 					// eventBusProvider.get().post(new XMLConverterEvent(dataModel));
 
@@ -459,8 +453,8 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelsResou
 		}
 
 		// refresh data model
-		final DataModelService persistenceService = pojoClassResourceUtils.getPersistenceService();
-		final DataModel freshDataModel = persistenceService.getObject(dataModel.getId());
+		final DataModelService persistenceService = persistenceServiceProvider.get();
+		final DataModel freshDataModel = persistenceService.getObject(dataModel.getUuid());
 		final RetrievalType type = proxyDataModel.getType();
 
 		proxyDataModel = new ProxyDataModel(freshDataModel, type);

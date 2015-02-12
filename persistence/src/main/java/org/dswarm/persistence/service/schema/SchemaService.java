@@ -15,7 +15,7 @@
  */
 package org.dswarm.persistence.service.schema;
 
-import java.util.List;
+import java.util.Collection;
 
 import javax.persistence.EntityManager;
 
@@ -23,10 +23,10 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import org.dswarm.persistence.DMPPersistenceException;
-import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
 import org.dswarm.persistence.service.BasicDMPJPAService;
 
@@ -68,7 +68,7 @@ public class SchemaService extends BasicDMPJPAService<ProxySchema, Schema> {
 	protected void updateObjectInternal(final Schema object, final Schema updateObject, final EntityManager entityManager)
 			throws DMPPersistenceException {
 
-		final List<AttributePath> attributePaths = object.getAttributePaths();
+		final Collection<SchemaAttributePathInstance> attributePaths = object.getAttributePaths();
 		final Clasz recordClass = object.getRecordClass();
 		final ContentSchema contentSchema = object.getContentSchema();
 

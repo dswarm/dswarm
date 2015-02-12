@@ -17,7 +17,6 @@ package org.dswarm.converter.schema;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -25,10 +24,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -40,19 +36,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-import org.dswarm.graph.json.Resource;
-import org.dswarm.graph.json.ResourceNode;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelperHelper;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
+import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.schema.AttributePathService;
 import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.schema.ClaszService;
+import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 import org.dswarm.persistence.service.schema.SchemaService;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.dswarm.persistence.util.GDMUtil;
 import org.dswarm.xsd2jsonschema.JsonSchemaParser;
 import org.dswarm.xsd2jsonschema.model.JSRoot;
@@ -70,6 +65,8 @@ public class XMLSchemaParser {
 
 	private final Provider<AttributePathService> attributePathServiceProvider;
 
+	private final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceServiceProvider;
+
 	private final Provider<AttributeService> attributeServiceProvider;
 
 	private final Provider<ObjectMapper> objectMapperProvider;
@@ -78,55 +75,60 @@ public class XMLSchemaParser {
 	private static final String UNKNOWN_JSON_SCHEMA_ATTRIBUTE_TYPE = "__UNKNOWN__";
 	private static final String STRING_JSON_SCHEMA_ATTRIBUTE_TYPE  = "string";
 	private static final String OBJECT_JSON_SCHEMA_ATTRIBUTE_TYPE  = "object";
+	private static final String ARRAY_JSON_SCHEMA_ATTRIBUTE_TYPE   = "array";
 
 	private static final String JSON_SCHEMA_PROPERTIES_IDENTIFIER = "properties";
+	private static final String JSON_SCHEMA_ITEMS_IDENTIFIER      = "items";
 	private static final String JSON_SCHEMA_TYPE_IDENTIFIER       = "type";
 	private static final String JSON_SCHEMA_MIXED_IDENTIFIER      = "mixed";
 
 	@Inject
 	public XMLSchemaParser(final Provider<SchemaService> schemaServiceProviderArg,
 			final Provider<ClaszService> classServiceProviderArg, final Provider<AttributePathService> attributePathServiceProviderArg,
+			final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceServiceProviderArg,
 			final Provider<AttributeService> attributeServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg) {
 
 		schemaServiceProvider = schemaServiceProviderArg;
 		classServiceProvider = classServiceProviderArg;
 		attributePathServiceProvider = attributePathServiceProviderArg;
+		schemaAttributePathInstanceServiceProvider = schemaAttributePathInstanceServiceProviderArg;
 		attributeServiceProvider = attributeServiceProviderArg;
 		objectMapperProvider = objectMapperProviderArg;
 	}
 
-	public Optional<Schema> parse(final String xmlSchemaFilePath, final String recordTag, final String schemaName) throws DMPPersistenceException {
+	public Optional<Schema> parse(final String xmlSchemaFilePath, final String recordTag, final String uuid, final String schemaName)
+			throws DMPPersistenceException {
 
 		final Optional<List<JsonNode>> optionalRecordTags = getRecordTagNodes(xmlSchemaFilePath, recordTag);
 
-		if(!optionalRecordTags.isPresent()) {
+		if (!optionalRecordTags.isPresent()) {
 
 			return Optional.absent();
 		}
 
 		final List<JsonNode> recordTagNodes = optionalRecordTags.get();
 
-		final Optional<Schema> optionalSchema = createSchema();
+		final Optional<Schema> optionalSchema = createSchema(uuid);
 
-		if(!optionalSchema.isPresent()) {
+		if (!optionalSchema.isPresent()) {
 
 			return Optional.absent();
 		}
 
 		final Schema schema = optionalSchema.get();
 
-		if(schemaName != null) {
+		if (schemaName != null) {
 
 			schema.setName(schemaName);
 		}
 
 		final Optional<String> optionalRecordTagAttribute = getAttribute(recordTagNodes.get(0));
 
-		if(optionalRecordTagAttribute.isPresent()) {
+		if (optionalRecordTagAttribute.isPresent()) {
 
 			final String recordTagAttribute = optionalRecordTagAttribute.get();
 
-			final String recordTagAttributeURI = SchemaUtils.mintSchemaTermURI(recordTagAttribute, schema.getId());
+			final String recordTagAttributeURI = SchemaUtils.mintSchemaTermURI(recordTagAttribute, schema.getUuid());
 
 			final String recordClassUri = recordTagAttributeURI + "Type";
 
@@ -135,7 +137,8 @@ public class XMLSchemaParser {
 
 		final Set<AttributePathHelper> attributePaths = parseAttributePaths(recordTagNodes);
 
-		SchemaUtils.addAttributePaths(schema, attributePaths, attributePathServiceProvider, attributeServiceProvider);
+		SchemaUtils.addAttributePaths(schema, attributePaths, attributePathServiceProvider, schemaAttributePathInstanceServiceProvider,
+				attributeServiceProvider);
 
 		final Schema updatedSchema = SchemaUtils.updateSchema(schema, schemaServiceProvider);
 
@@ -146,7 +149,7 @@ public class XMLSchemaParser {
 
 		final Optional<List<JsonNode>> optionalRecordTags = getRecordTagNodes(xmlSchemaFilePath, recordTag);
 
-		if(!optionalRecordTags.isPresent()) {
+		if (!optionalRecordTags.isPresent()) {
 
 			return Optional.absent();
 		}
@@ -203,30 +206,39 @@ public class XMLSchemaParser {
 
 	private void getRecordTagNodes(final JsonNode currentJSONSchemaNode, final String recordTag, final List<JsonNode> recordTagNodes) {
 
-		final JsonNode currentJSONSchemaNodeProperties = currentJSONSchemaNode.get(XMLSchemaParser.JSON_SCHEMA_PROPERTIES_IDENTIFIER);
+		final Optional<JsonNode> optionalCurrentJSONSchemaNode = determineCurrentJSONSchemaNode(currentJSONSchemaNode);
 
-		if (currentJSONSchemaNodeProperties == null || currentJSONSchemaNodeProperties.size() <= 0) {
+		if (!optionalCurrentJSONSchemaNode.isPresent()) {
 
 			return;
 		}
 
-		final Iterator<Map.Entry<String, JsonNode>> iter = currentJSONSchemaNodeProperties.fields();
+		final JsonNode newCurrentJSONSchemaNode = optionalCurrentJSONSchemaNode.get();
+
+		final Iterator<Map.Entry<String, JsonNode>> iter = newCurrentJSONSchemaNode.fields();
 
 		while (iter.hasNext()) {
 
-			final Map.Entry<String, JsonNode> currentJSONSchemaNodePropertiesEntry = iter.next();
+			final Map.Entry<String, JsonNode> currentJSONSchemaNodeEntry = iter.next();
 
-			if (currentJSONSchemaNodePropertiesEntry.getKey().endsWith(recordTag)) {
+			if (currentJSONSchemaNodeEntry.getKey().endsWith(recordTag)) {
 
-				final ObjectNode recordTagNode = objectMapperProvider.get().createObjectNode();
-				recordTagNode.put(currentJSONSchemaNodePropertiesEntry.getKey(), currentJSONSchemaNodePropertiesEntry.getValue());
+				final JsonNode currentJSONSchemaNodeEntryValue = currentJSONSchemaNodeEntry.getValue();
+				final String type = determineJSONSchemaNodeType(currentJSONSchemaNodeEntryValue);
 
-				recordTagNodes.add(recordTagNode);
+				// to go deeper, when it's an array
+				if (!type.equals(XMLSchemaParser.ARRAY_JSON_SCHEMA_ATTRIBUTE_TYPE)) {
 
-				break;
+					final ObjectNode recordTagNode = objectMapperProvider.get().createObjectNode();
+					recordTagNode.set(currentJSONSchemaNodeEntry.getKey(), currentJSONSchemaNodeEntry.getValue());
+
+					recordTagNodes.add(recordTagNode);
+
+					break;
+				}
 			}
 
-			getRecordTagNodes(currentJSONSchemaNodePropertiesEntry.getValue(), recordTag, recordTagNodes);
+			getRecordTagNodes(currentJSONSchemaNodeEntry.getValue(), recordTag, recordTagNodes);
 		}
 	}
 
@@ -290,110 +302,79 @@ public class XMLSchemaParser {
 
 		final String attribute = optionalAttribute.get();
 
-		final boolean isXMLAttribute;
-
-		if (attribute.startsWith("@")) {
-
-			isXMLAttribute = true;
-		} else {
-
-			isXMLAttribute = false;
-		}
-
-		final String finalAttribute;
-
-		if (isXMLAttribute) {
-
-			finalAttribute = attribute.substring(1, attribute.length());
-		} else {
-
-			finalAttribute = attribute;
-		}
-
-		final AttributePathHelper finalAttributePathHelper;
-
-		if (addRootAttribute) {
-
-			finalAttributePathHelper = AttributePathHelperHelper.addAttributePath(finalAttribute, attributePaths, attributePath);
-		} else {
-
-			finalAttributePathHelper = attributePath;
-		}
-
 		final JsonNode jsonSchemaAttributeContentNode = jsonSchemaAttributeNode.get(attribute);
 
-		final JsonNode typeNode = jsonSchemaAttributeContentNode.get(XMLSchemaParser.JSON_SCHEMA_TYPE_IDENTIFIER);
+		final String type = determineJSONSchemaNodeType(jsonSchemaAttributeContentNode);
 
-		final String type;
+		if (type.equals(XMLSchemaParser.ARRAY_JSON_SCHEMA_ATTRIBUTE_TYPE)) {
 
-		if (typeNode != null) {
+			// do something with the array, i.e., go deeper in hierarchy (via recursion)
+			final JsonNode jsonSchemaAttributeItemsNode = jsonSchemaAttributeContentNode.get(XMLSchemaParser.JSON_SCHEMA_ITEMS_IDENTIFIER);
+			final Tuple<List<JsonNode>, List<JsonNode>> resultSet = determineAttributeAndElementNodes(jsonSchemaAttributeItemsNode);
 
-			type = typeNode.asText();
+			determineAttributePaths(attributePaths, attributePath, resultSet.v1());
+			determineAttributePaths(attributePaths, attributePath, resultSet.v2());
+
+			return attributePaths;
+
 		} else {
 
-			type = XMLSchemaParser.UNKNOWN_JSON_SCHEMA_ATTRIBUTE_TYPE;
-		}
+			final boolean isXMLAttribute = attribute.startsWith("@");
 
-		if ((type.equals(XMLSchemaParser.STRING_JSON_SCHEMA_ATTRIBUTE_TYPE) || type.equals(OBJECT_JSON_SCHEMA_ATTRIBUTE_TYPE)) && !isXMLAttribute) {
+			final String finalAttribute;
 
-			// add rdf:type attribute
-			AttributePathHelperHelper.addAttributePath(GDMUtil.RDF_type, attributePaths, finalAttributePathHelper);
-		}
+			if (isXMLAttribute) {
 
-		final JsonNode jsonSchemaAttributePropertiesNode = jsonSchemaAttributeContentNode.get(XMLSchemaParser.JSON_SCHEMA_PROPERTIES_IDENTIFIER);
+				finalAttribute = attribute.substring(1, attribute.length());
+			} else {
 
-		final boolean noProperties;
+				finalAttribute = attribute;
+			}
 
-		noProperties = jsonSchemaAttributePropertiesNode == null || jsonSchemaAttributePropertiesNode.size() <= 0;
+			final AttributePathHelper finalAttributePathHelper;
 
-		final JsonNode mixedNode = jsonSchemaAttributeContentNode.get(XMLSchemaParser.JSON_SCHEMA_MIXED_IDENTIFIER);
+			if (addRootAttribute) {
 
-		final boolean isMixed;
+				finalAttributePathHelper = AttributePathHelperHelper.addAttributePath(finalAttribute, attributePaths, attributePath);
+			} else {
 
-		isMixed = mixedNode != null && mixedNode.asBoolean();
+				finalAttributePathHelper = attributePath;
+			}
 
-		final boolean addRDFValueAttributePath;
+			if ((type.equals(XMLSchemaParser.STRING_JSON_SCHEMA_ATTRIBUTE_TYPE) || type.equals(OBJECT_JSON_SCHEMA_ATTRIBUTE_TYPE))
+					&& !isXMLAttribute) {
 
-		addRDFValueAttributePath =
-				(type.equals(XMLSchemaParser.STRING_JSON_SCHEMA_ATTRIBUTE_TYPE) || (type.equals(OBJECT_JSON_SCHEMA_ATTRIBUTE_TYPE) && isMixed))
-						&& !isXMLAttribute;
+				// add rdf:type attribute
+				AttributePathHelperHelper.addAttributePath(GDMUtil.RDF_type, attributePaths, finalAttributePathHelper);
+			}
 
-		if (noProperties) {
+			final JsonNode jsonSchemaAttributePropertiesNode = jsonSchemaAttributeContentNode.get(XMLSchemaParser.JSON_SCHEMA_PROPERTIES_IDENTIFIER);
 
+			final boolean noProperties = jsonSchemaAttributePropertiesNode == null || jsonSchemaAttributePropertiesNode.size() <= 0;
+
+			final JsonNode mixedNode = jsonSchemaAttributeContentNode.get(XMLSchemaParser.JSON_SCHEMA_MIXED_IDENTIFIER);
+
+			final boolean isMixed = mixedNode != null && mixedNode.asBoolean();
+
+			final boolean addRDFValueAttributePath =
+					(type.equals(XMLSchemaParser.STRING_JSON_SCHEMA_ATTRIBUTE_TYPE) || (type.equals(OBJECT_JSON_SCHEMA_ATTRIBUTE_TYPE) && isMixed))
+							&& !isXMLAttribute;
+
+			if (noProperties) {
+
+				addRDFValueAttributePath(addRDFValueAttributePath, attributePaths, finalAttributePathHelper);
+
+				return attributePaths;
+			}
+
+			final Tuple<List<JsonNode>, List<JsonNode>> resultSet = determineAttributeAndElementNodes(jsonSchemaAttributePropertiesNode);
+
+			determineAttributePaths(attributePaths, finalAttributePathHelper, resultSet.v1());
 			addRDFValueAttributePath(addRDFValueAttributePath, attributePaths, finalAttributePathHelper);
+			determineAttributePaths(attributePaths, finalAttributePathHelper, resultSet.v2());
 
 			return attributePaths;
 		}
-
-		final Iterator<Map.Entry<String, JsonNode>> iter = jsonSchemaAttributePropertiesNode.fields();
-
-		final List<JsonNode> newAttributeNodes = Lists.newArrayList();
-		final List<JsonNode> newElementNodes = Lists.newArrayList();
-
-		while (iter.hasNext()) {
-
-			final Map.Entry<String, JsonNode> entry = iter.next();
-
-			final ObjectNode newJSONSchemaAttributeNode = objectMapperProvider.get().createObjectNode();
-
-			final String newAttribute = entry.getKey();
-
-			newJSONSchemaAttributeNode.put(newAttribute, entry.getValue());
-
-			if (newAttribute.startsWith("@")) {
-
-				newAttributeNodes.add(newJSONSchemaAttributeNode);
-			} else {
-
-				newElementNodes.add(newJSONSchemaAttributeNode);
-			}
-		}
-
-		determineAttributePaths(attributePaths, finalAttributePathHelper, newAttributeNodes);
-		addRDFValueAttributePath(addRDFValueAttributePath, attributePaths, finalAttributePathHelper);
-		determineAttributePaths(attributePaths, finalAttributePathHelper, newElementNodes);
-
-		return attributePaths;
 	}
 
 	private void determineAttributePaths(final Set<AttributePathHelper> attributePaths, final AttributePathHelper finalAttributePathHelper,
@@ -427,10 +408,10 @@ public class XMLSchemaParser {
 		}
 	}
 
-	private Optional<Schema> createSchema() throws DMPPersistenceException {
+	private Optional<Schema> createSchema(final String uuid) throws DMPPersistenceException {
 
 		// create new schema
-		final ProxySchema proxySchema = schemaServiceProvider.get().createObjectTransactional();
+		final ProxySchema proxySchema = schemaServiceProvider.get().createObjectTransactional(uuid);
 
 		final Schema schema;
 
@@ -443,6 +424,79 @@ public class XMLSchemaParser {
 		}
 
 		return Optional.fromNullable(schema);
+	}
+
+	private String determineJSONSchemaNodeType(final JsonNode jsonSchemaNode) {
+
+		final JsonNode typeNode = jsonSchemaNode.get(XMLSchemaParser.JSON_SCHEMA_TYPE_IDENTIFIER);
+
+		final String type;
+
+		// determine schema element type, e.g., 'object' or 'string'
+		if (typeNode != null) {
+
+			type = typeNode.asText();
+		} else {
+
+			type = XMLSchemaParser.UNKNOWN_JSON_SCHEMA_ATTRIBUTE_TYPE;
+		}
+
+		return type;
+	}
+
+	private Optional<JsonNode> determineCurrentJSONSchemaNode(final JsonNode jsonSchemaNode) {
+
+		final JsonNode currentJSONSchemaNodeProperties = jsonSchemaNode.get(XMLSchemaParser.JSON_SCHEMA_PROPERTIES_IDENTIFIER);
+
+		if (currentJSONSchemaNodeProperties != null && currentJSONSchemaNodeProperties.size() > 0) {
+
+			return Optional.of(currentJSONSchemaNodeProperties);
+		}
+
+		final JsonNode currentJSONSchemaNodeItems = jsonSchemaNode.get(XMLSchemaParser.JSON_SCHEMA_ITEMS_IDENTIFIER);
+
+		if (currentJSONSchemaNodeItems != null && currentJSONSchemaNodeItems.size() > 0) {
+
+			return Optional.of(currentJSONSchemaNodeItems);
+		}
+
+		return Optional.absent();
+	}
+
+	/**
+	 * v1 = attribute nodes
+	 * v2 = element nodes
+	 *
+	 * @param jsonSchemaAttributeContentSubNode
+	 * @return
+	 */
+	private Tuple<List<JsonNode>, List<JsonNode>> determineAttributeAndElementNodes(final JsonNode jsonSchemaAttributeContentSubNode) {
+
+		final Iterator<Map.Entry<String, JsonNode>> iter = jsonSchemaAttributeContentSubNode.fields();
+
+		final List<JsonNode> newAttributeNodes = Lists.newArrayList();
+		final List<JsonNode> newElementNodes = Lists.newArrayList();
+
+		while (iter.hasNext()) {
+
+			final Map.Entry<String, JsonNode> entry = iter.next();
+
+			final ObjectNode newJSONSchemaAttributeNode = objectMapperProvider.get().createObjectNode();
+
+			final String newAttribute = entry.getKey();
+
+			newJSONSchemaAttributeNode.set(newAttribute, entry.getValue());
+
+			if (newAttribute.startsWith("@")) {
+
+				newAttributeNodes.add(newJSONSchemaAttributeNode);
+			} else {
+
+				newElementNodes.add(newJSONSchemaAttributeNode);
+			}
+		}
+
+		return Tuple.tuple(newAttributeNodes, newElementNodes);
 	}
 
 }

@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.schema.Clasz;
+import org.dswarm.persistence.service.UUIDService;
 
 public class ClaszTest extends GuicedTest {
 
@@ -37,7 +38,9 @@ public class ClaszTest extends GuicedTest {
 		final String biboDocumentId = "http://purl.org/ontology/bibo/Document";
 		final String biboDocumentName = "document";
 
-		final Clasz biboDocument = new Clasz(biboDocumentId, biboDocumentName);
+		final String uuid = UUIDService.getUUID(Clasz.class.getSimpleName());
+
+		final Clasz biboDocument = new Clasz(uuid, biboDocumentId, biboDocumentName);
 
 		Assert.assertNotNull("the clasz id shouldn't be null", biboDocument.getUri());
 		Assert.assertEquals("the clasz ids are not equal", biboDocumentId, biboDocument.getUri());

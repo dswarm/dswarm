@@ -1,9 +1,8 @@
-
 {
-    "id": 47,
-    "attributes": [{
-        "name": "identifier",
-        "uri": "http://purl.org/dc/terms/identifier",
-        "id": 43
-    }]
+  "attributes" : [ {
+    "name" : "identifier",
+    "uri" : "http://purl.org/dc/terms/identifier",
+    "uuid" : "43"
+  } ],
+  "uuid" : "47"
 }

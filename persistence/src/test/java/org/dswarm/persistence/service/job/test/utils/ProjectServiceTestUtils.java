@@ -18,7 +18,11 @@ package org.dswarm.persistence.service.job.test.utils;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import org.json.JSONException;
 import org.junit.Assert;
 
 import org.dswarm.persistence.model.job.Function;
@@ -26,17 +30,18 @@ import org.dswarm.persistence.model.job.Mapping;
 import org.dswarm.persistence.model.job.Project;
 import org.dswarm.persistence.model.job.proxy.ProxyProject;
 import org.dswarm.persistence.model.resource.DataModel;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.job.ProjectService;
 import org.dswarm.persistence.service.resource.test.utils.DataModelServiceTestUtils;
 import org.dswarm.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestUtils;
 
 public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils<ProjectService, ProxyProject, Project> {
 
-	private final FunctionServiceTestUtils	functionServiceTestUtils;
+	private final FunctionServiceTestUtils functionServiceTestUtils;
 
-	private final MappingServiceTestUtils	mappingServiceTestUtils;
+	private final MappingServiceTestUtils mappingServiceTestUtils;
 
-	private final DataModelServiceTestUtils	dataModelServiceTestUtils;
+	private final DataModelServiceTestUtils dataModelServiceTestUtils;
 
 	public ProjectServiceTestUtils() {
 
@@ -45,6 +50,86 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 		functionServiceTestUtils = new FunctionServiceTestUtils();
 		mappingServiceTestUtils = new MappingServiceTestUtils();
 		dataModelServiceTestUtils = new DataModelServiceTestUtils();
+	}
+
+	@Override public Project createObject(JsonNode objectDescription) throws Exception {
+		return null;
+	}
+
+	@Override public Project createObject(String identifier) throws Exception {
+		return null;
+	}
+
+	@Override public Project createAndPersistDefaultObject() throws Exception {
+
+		final Mapping simpleMapping = mappingServiceTestUtils.createAndPersistDefaultObject();
+		final Mapping complexMapping = mappingServiceTestUtils.createAndPersistDefaultCompleteObject();
+
+		final Set<Mapping> mappings = Sets.newLinkedHashSet();
+		mappings.add(simpleMapping);
+		mappings.add(complexMapping);
+
+		final DataModel inputDataModel = dataModelServiceTestUtils.createAndPersistDefaultObject();
+		final DataModel outputDataModel = dataModelServiceTestUtils.createAndPersistDefaultObject();
+
+		final Function function1 = simpleMapping.getTransformation().getFunction();
+
+		final Set<Function> functions = Sets.newLinkedHashSet();
+		functions.add(function1);
+
+		final String projectName = "my project";
+		final String projectDescription = "my project description";
+
+		return createAndPersistProject(projectName, projectDescription, mappings, inputDataModel, outputDataModel, functions);
+	}
+
+	@Override public Project createDefaultObject() throws Exception {
+
+		final Mapping simpleMapping = mappingServiceTestUtils.createAndPersistDefaultObject();
+		final Mapping complexMapping = mappingServiceTestUtils.createAndPersistDefaultCompleteObject();
+
+		final Set<Mapping> mappings = Sets.newLinkedHashSet();
+		mappings.add(simpleMapping);
+		mappings.add(complexMapping);
+
+		final DataModel inputDataModel = dataModelServiceTestUtils.createAndPersistDefaultObject();
+		final DataModel outputDataModel = dataModelServiceTestUtils.createAndPersistDefaultObject();
+
+		final Function function1 = simpleMapping.getTransformation().getFunction();
+
+		final Set<Function> functions = Sets.newLinkedHashSet();
+		functions.add(function1);
+
+		final String projectName = "my project";
+		final String projectDescription = "my project description";
+
+		return createProject(projectName, projectDescription, mappings, inputDataModel, outputDataModel, functions);
+	}
+
+	public Project createAndPersistProject(final String name, final String description, final Set<Mapping> mappings, final DataModel inputDataModel,
+			final DataModel outputDataModel, final Set<Function> functions)
+			throws Exception {
+
+		final Project project = createProject(name, description, mappings, inputDataModel, outputDataModel, functions);
+
+		return createAndCompareObject(project, project);
+	}
+
+	public Project createProject(final String name, final String description, final Set<Mapping> mappings, final DataModel inputDataModel,
+			final DataModel outputDataModel,
+			final Set<Function> functions) {
+
+		final String uuid = UUIDService.getUUID(Project.class.getSimpleName());
+
+		final Project project = new Project(uuid);
+		project.setName(name);
+		project.setDescription(description);
+		project.setMappings(mappings);
+		project.setInputDataModel(inputDataModel);
+		project.setOutputDataModel(outputDataModel);
+		project.setFunctions(functions);
+
+		return project;
 	}
 
 	/**
@@ -59,14 +144,14 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 	 * {@link FunctionServiceTestUtils#compareObjects(Function, Function)}. <br />
 	 */
 	@Override
-	public void compareObjects(final Project expectedProject, final Project actualProject) {
+	public void compareObjects(final Project expectedProject, final Project actualProject) throws JsonProcessingException, JSONException {
 
 		super.compareObjects(expectedProject, actualProject);
 
 		// compare input data models
 		if (expectedProject.getInputDataModel() == null) {
 
-			Assert.assertNull("the actual project '" + actualProject.getId() + "' should not have an input data model",
+			Assert.assertNull("the actual project '" + actualProject.getUuid() + "' should not have an input data model",
 					actualProject.getInputDataModel());
 
 		} else {
@@ -76,7 +161,7 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 		// compare output data models
 		if (expectedProject.getOutputDataModel() == null) {
 
-			Assert.assertNull("the actual project '" + actualProject.getId() + "' should not have an output data model",
+			Assert.assertNull("the actual project '" + actualProject.getUuid() + "' should not have an output data model",
 					actualProject.getOutputDataModel());
 
 		} else {
@@ -87,20 +172,20 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 		if (expectedProject.getMappings() == null || expectedProject.getMappings().isEmpty()) {
 
 			final boolean actualProjectHasNoMappings = (actualProject.getMappings() == null || actualProject.getMappings().isEmpty());
-			Assert.assertTrue("the actual project '" + actualProject.getId() + "' shouldn't have any mappings", actualProjectHasNoMappings);
+			Assert.assertTrue("the actual project '" + actualProject.getUuid() + "' shouldn't have any mappings", actualProjectHasNoMappings);
 
 		} else { // !null && !empty
 
 			final Set<Mapping> actualMappings = actualProject.getMappings();
 
-			Assert.assertNotNull("mappings of project '" + actualProject.getId() + "' shouldn't be null", actualMappings);
-			Assert.assertFalse("mappings of project '" + actualProject.getId() + "' shouldn't be empty", actualMappings.isEmpty());
+			Assert.assertNotNull("mappings of project '" + actualProject.getUuid() + "' shouldn't be null", actualMappings);
+			Assert.assertFalse("mappings of project '" + actualProject.getUuid() + "' shouldn't be empty", actualMappings.isEmpty());
 
-			final Map<Long, Mapping> actualMappingsMap = Maps.newHashMap();
+			final Map<String, Mapping> actualMappingsMap = Maps.newHashMap();
 
 			for (final Mapping actualMapping : actualMappings) {
 
-				actualMappingsMap.put(actualMapping.getId(), actualMapping);
+				actualMappingsMap.put(actualMapping.getUuid(), actualMapping);
 			}
 
 			mappingServiceTestUtils.compareObjects(expectedProject.getMappings(), actualMappingsMap);
@@ -110,20 +195,20 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 		if (expectedProject.getFunctions() == null || expectedProject.getFunctions().isEmpty()) {
 
 			final boolean actualProjectHasNoFunctions = (actualProject.getFunctions() == null || actualProject.getFunctions().isEmpty());
-			Assert.assertTrue("the actual project '" + actualProject.getId() + "' shouldn't have any functions", actualProjectHasNoFunctions);
+			Assert.assertTrue("the actual project '" + actualProject.getUuid() + "' shouldn't have any functions", actualProjectHasNoFunctions);
 
 		} else { // !null && !empty
 
 			final Set<Function> actualFunctions = actualProject.getFunctions();
 
-			Assert.assertNotNull("functions of project '" + actualProject.getId() + "' shouldn't be null", actualFunctions);
-			Assert.assertFalse("functions of project '" + actualProject.getId() + "' shouldn't be empty", actualFunctions.isEmpty());
+			Assert.assertNotNull("functions of project '" + actualProject.getUuid() + "' shouldn't be null", actualFunctions);
+			Assert.assertFalse("functions of project '" + actualProject.getUuid() + "' shouldn't be empty", actualFunctions.isEmpty());
 
-			final Map<Long, Function> actualFunctionsMap = Maps.newHashMap();
+			final Map<String, Function> actualFunctionsMap = Maps.newHashMap();
 
 			for (final Function actualFunction : actualFunctions) {
 
-				actualFunctionsMap.put(actualFunction.getId(), actualFunction);
+				actualFunctionsMap.put(actualFunction.getUuid(), actualFunction);
 			}
 
 			functionServiceTestUtils.compareObjects(expectedProject.getFunctions(), actualFunctionsMap);

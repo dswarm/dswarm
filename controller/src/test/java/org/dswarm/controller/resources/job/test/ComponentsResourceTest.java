@@ -16,7 +16,6 @@
 package org.dswarm.controller.resources.job.test;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.junit.After;
 import org.junit.Assert;
 
 import org.dswarm.controller.resources.job.test.utils.ComponentsResourceTestUtils;
@@ -29,12 +28,9 @@ import org.dswarm.persistence.service.job.ComponentService;
 import org.dswarm.persistence.service.job.test.utils.ComponentServiceTestUtils;
 
 public class ComponentsResourceTest extends
-		BasicResourceTest<ComponentsResourceTestUtils, ComponentServiceTestUtils, ComponentService, ProxyComponent, Component, Long> {
+		BasicResourceTest<ComponentsResourceTestUtils, ComponentServiceTestUtils, ComponentService, ProxyComponent, Component> {
 
-	private FunctionsResourceTestUtils	functionsResourceTestUtils;
-	private ComponentsResourceTestUtils	componentsResourceTestUtils;
-
-	private Function					function;
+	private FunctionsResourceTestUtils functionsResourceTestUtils;
 
 	public ComponentsResourceTest() {
 
@@ -48,24 +44,14 @@ public class ComponentsResourceTest extends
 
 		pojoClassResourceTestUtils = new ComponentsResourceTestUtils();
 		functionsResourceTestUtils = new FunctionsResourceTestUtils();
-		componentsResourceTestUtils = new ComponentsResourceTestUtils();
-	}
-
-	private void resetObjectVars() {
-
-		function = null;
 	}
 
 	@Override
 	public void prepare() throws Exception {
 
-		restartServer();
-		initObjects();
-		resetObjectVars();
-
 		super.prepare();
 
-		function = functionsResourceTestUtils.createObject("function.json");
+		final Function function = functionsResourceTestUtils.createObject("function.json");
 
 		// prepare component json for function manipulation
 		final ObjectNode objectJSON = objectMapper.readValue(objectJSONString, ObjectNode.class);
@@ -78,17 +64,11 @@ public class ComponentsResourceTest extends
 
 		Assert.assertNotNull("the function JSON shouldn't be null", finalFunctionJSON);
 
-		objectJSON.put("function", finalFunctionJSON);
+		objectJSON.set("function", finalFunctionJSON);
 
 		// re-init expect object
 		objectJSONString = objectMapper.writeValueAsString(objectJSON);
 		expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
-	}
-
-	@After
-	public void tearDown2() throws Exception {
-
-		functionsResourceTestUtils.deleteObject(function);
 	}
 
 	@Override
@@ -108,7 +88,7 @@ public class ComponentsResourceTest extends
 
 		Assert.assertNotNull("the component JSON string shouldn't be null", updateComponentJSONString);
 
-		final Component updateComponent = componentsResourceTestUtils.updateObject(updateComponentJSONString, actualComponent);
+		final Component updateComponent = pojoClassResourceTestUtils.updateObject(updateComponentJSONString, actualComponent);
 
 		Assert.assertNotNull("the component JSON string shouldn't be null", updateComponent);
 		Assert.assertEquals("function names shoud be equal", updateComponent.getFunction().getName(), functionName);

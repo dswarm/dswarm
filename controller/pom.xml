@@ -32,11 +32,14 @@
 	<url>http://dswarm.org/</url>
 
 	<properties>
-		<h2k.version>2.2.0</h2k.version>
-		<jetty-maven-plugin.version>9.2.0.RC0</jetty-maven-plugin.version>
-		<maven-tomcat-plugin.version>2.2</maven-tomcat-plugin.version>
-		<grizzly-http-servlet.version>2.3.8</grizzly-http-servlet.version>
-		<es-metrics-reporter.version>2.0</es-metrics-reporter.version>
+		<version.es-metrics-reporter>2.0</version.es-metrics-reporter>
+		<version.grizzly-http>2.3.8</version.grizzly-http>
+		<version.h2k>2.2.0</version.h2k>
+		<version.javax.servlet-api>3.1.0</version.javax.servlet-api>
+		<version.jcl-over-slf4j>1.7.10</version.jcl-over-slf4j>
+		<version.jena>2.12.1</version.jena>
+		<version.maven.plugin.jetty>9.2.6.v20141205</version.maven.plugin.jetty>
+		<version.maven.plugin.tomcat>2.2</version.maven.plugin.tomcat>
 	</properties>
 
 	<build>
@@ -44,7 +47,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
-				<version>${exec-maven-plugin.version}</version>
+				<version>${version.maven.plugin.exec}</version>
 				<executions>
 					<execution>
 						<goals>
@@ -70,7 +73,7 @@
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-				<version>${jetty-maven-plugin.version}</version>
+				<version>${version.maven.plugin.jetty}</version>
 				<configuration>
 					<httpConnector>
 						<port>8086</port>
@@ -83,7 +86,7 @@
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
-				<version>${maven-tomcat-plugin.version}</version>
+				<version>${version.maven.plugin.tomcat}</version>
 				<configuration>
 					<port>8087</port>
 					<path>/dmp</path>
@@ -125,7 +128,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>${maven-war-plugin.version}</version>
+				<version>${version.maven.plugin.war}</version>
 				<configuration>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 					<webResources>
@@ -143,17 +146,24 @@
 		<dependency>
 			<groupId>org.dswarm</groupId>
 			<artifactId>dswarm-converter</artifactId>
-			<version>0.1-SNAPSHOT</version>
+			<version>${dmp.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.dswarm</groupId>
+			<artifactId>dswarm-converter</artifactId>
+			<version>${dmp.version}</version>
+			<type>test-jar</type>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.dswarm</groupId>
 			<artifactId>dswarm-init</artifactId>
-			<version>0.1-SNAPSHOT</version>
+			<version>${dmp.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.dswarm</groupId>
 			<artifactId>dswarm-persistence</artifactId>
-			<version>0.1-SNAPSHOT</version>
+			<version>${dmp.version}</version>
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
@@ -161,7 +171,7 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-servlet-core</artifactId>
-			<version>${jersey.version}</version>
+			<version>${version.jersey}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>guava</artifactId>
@@ -176,7 +186,7 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-grizzly2-http</artifactId>
-			<version>${jersey.version}</version>
+			<version>${version.jersey}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>guava</artifactId>
@@ -187,35 +197,35 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-servlet</artifactId>
-			<version>${jersey.version}</version>
+			<version>${version.jersey}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.grizzly</groupId>
 			<artifactId>grizzly-http-servlet</artifactId>
-			<version>${grizzly-http-servlet.version}</version>
+			<version>${version.grizzly-http}</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
+			<version>${version.javax.servlet-api}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.jaxrs</groupId>
 			<artifactId>jackson-jaxrs-json-provider</artifactId>
-			<version>${jackson.version}</version>
+			<version>${version.jackson}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-multipart</artifactId>
-			<version>${jersey.version}</version>
+			<version>${version.jersey}</version>
 		</dependency>
 
 		<!-- swagger for API docu -->
 		<dependency>
 			<groupId>com.wordnik</groupId>
 			<artifactId>swagger-core_2.10</artifactId>
-			<version>${swagger.version}</version>
+			<version>${version.swagger}</version>
 			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
@@ -260,7 +270,7 @@
 			<groupId>com.wordnik</groupId>
 			<artifactId>swagger-jersey2-jaxrs_2.10</artifactId>
 			<scope>compile</scope>
-			<version>${swagger.version}</version>
+			<version>${version.swagger}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>javax.ws.rs</groupId>
@@ -289,38 +299,29 @@
 		<dependency>
 			<groupId>org.glassfish.hk2</groupId>
 			<artifactId>guice-bridge</artifactId>
-			<version>${h2k.version}</version>
+			<version>${version.h2k}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-servlet</artifactId>
-			<version>${guice.version}</version>
+			<version>${version.guice}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-assistedinject</artifactId>
-			<version>${guice.version}</version>
+			<version>${version.guice}</version>
 		</dependency>
 		<!-- Other Dependencies -->
 		<dependency>
-			<groupId>com.codahale.metrics</groupId>
-			<artifactId>metrics-json</artifactId>
-			<version>${metrics.version}</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>jackson-databind</artifactId>
-					<groupId>com.fasterxml.jackson.core</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>metrics-elasticsearch-reporter</artifactId>
-			<version>${es-metrics-reporter.version}</version>
+			<version>${version.es-metrics-reporter}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.codahale.metrics</groupId>
+					<artifactId>metrics-core</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.jena</groupId>
@@ -344,12 +345,12 @@
 					<groupId>org.slf4j</groupId>
 				</exclusion>
 			</exclusions>
-			<version>2.11.1</version>
+			<version>${version.jena}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
-			<version>1.7.7</version>
+			<version>${version.jcl-over-slf4j}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.dswarm</groupId>
@@ -368,18 +369,9 @@
 				<dependency>
 					<groupId>javax.servlet</groupId>
 					<artifactId>javax.servlet-api</artifactId>
-					<version>3.1.0</version>
+					<version>${version.javax.servlet-api}</version>
 				</dependency>
 			</dependencies>
-		</profile>
-		<profile>
-			<id>TOMCAT</id>
-			<properties>
-				<env>dev</env>
-				<rdb.url>${db.mysql.url}</rdb.url>
-				<rdb.username>${db.mysql.username}</rdb.username>
-				<rdb.password>${db.mysql.password}</rdb.password>
-			</properties>
 		</profile>
 	</profiles>
 

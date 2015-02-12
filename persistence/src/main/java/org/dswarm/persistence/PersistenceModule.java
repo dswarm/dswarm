@@ -15,8 +15,16 @@
  */
 package org.dswarm.persistence;
 
+import java.lang.management.ManagementFactory;
+
 import ch.qos.logback.classic.LoggerContext;
 import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.jvm.BufferPoolMetricSet;
+import com.codahale.metrics.jvm.ClassLoadingGaugeSet;
+import com.codahale.metrics.jvm.FileDescriptorRatioGauge;
+import com.codahale.metrics.jvm.GarbageCollectorMetricSet;
+import com.codahale.metrics.jvm.MemoryUsageGaugeSet;
+import com.codahale.metrics.jvm.ThreadStatesGaugeSet;
 import com.codahale.metrics.logback.InstrumentedAppender;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.inject.AbstractModule;
@@ -31,6 +39,7 @@ import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.job.utils.TransformationDeserializer;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.service.MaintainDBService;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.internal.InternalServiceFactoryImpl;
 import org.dswarm.persistence.service.job.ComponentService;
 import org.dswarm.persistence.service.job.FilterService;
@@ -46,11 +55,12 @@ import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.schema.ClaszService;
 import org.dswarm.persistence.service.schema.ContentSchemaService;
 import org.dswarm.persistence.service.schema.MappingAttributePathInstanceService;
+import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 import org.dswarm.persistence.service.schema.SchemaService;
 
 /**
  * The Guice configuration of the persistence module. Interface/classes that are registered here can be utilised for injection.
- * 
+ *
  * @author phorn
  * @author tgaengler
  */
@@ -75,8 +85,10 @@ public class PersistenceModule extends AbstractModule {
 		bind(FilterService.class).in(Scopes.SINGLETON);
 		bind(ProjectService.class).in(Scopes.SINGLETON);
 		bind(MappingAttributePathInstanceService.class).in(Scopes.SINGLETON);
+		bind(SchemaAttributePathInstanceService.class).in(Scopes.SINGLETON);
 		bind(ContentSchemaService.class).in(Scopes.SINGLETON);
 		bind(MaintainDBService.class).in(Scopes.SINGLETON);
+		bind(UUIDService.class).in(Scopes.SINGLETON);
 
 		bind(InternalModelServiceFactory.class).to(InternalServiceFactoryImpl.class).in(Scopes.SINGLETON);
 		bind(DMPUtil.class);
@@ -84,18 +96,20 @@ public class PersistenceModule extends AbstractModule {
 
 	/**
 	 * Provides the metric registry to register objects for metric statistics.
-	 * 
+	 *
 	 * @return a {@link MetricRegistry} instance as singleton
 	 */
 	@Provides
 	@Singleton
-	protected MetricRegistry provideMetricRegistry() {
+	protected static MetricRegistry provideMetricRegistry() {
 		final MetricRegistry registry = new MetricRegistry();
+		instrumentLogback(registry);
+		instrumentJvm(registry);
 
-		// final InstrumentedAppender appender = new InstrumentedAppender(metricRegistry);
-		// appender.activateOptions();
-		// LogManager.getRootLogger().addAppender(appender);
+		return registry;
+	}
 
+	private static void instrumentLogback(final MetricRegistry registry) {
 		final LoggerContext factory = (LoggerContext) LoggerFactory.getILoggerFactory();
 		final ch.qos.logback.classic.Logger root = factory.getLogger(Logger.ROOT_LOGGER_NAME);
 
@@ -103,8 +117,15 @@ public class PersistenceModule extends AbstractModule {
 		metrics.setContext(root.getLoggerContext());
 		metrics.start();
 		root.addAppender(metrics);
+	}
 
-		return registry;
+	private static void instrumentJvm(final MetricRegistry registry) {
+		registry.register("jvm.file_descriptors", new FileDescriptorRatioGauge());
+		registry.register("jvm.buffer_pool", new BufferPoolMetricSet(ManagementFactory.getPlatformMBeanServer()));
+		registry.register("jvm.class_loading", new ClassLoadingGaugeSet());
+		registry.register("jvm.gc", new GarbageCollectorMetricSet());
+		registry.register("jvm.memory", new MemoryUsageGaugeSet());
+		registry.register("jvm.threads", new ThreadStatesGaugeSet());
 	}
 
 	public static class DmpDeserializerModule extends SimpleModule {

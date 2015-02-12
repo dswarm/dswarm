@@ -36,19 +36,19 @@ import org.dswarm.persistence.model.proxy.RetrievalType;
 /**
  * A generic persistence service implementation for {@link AdvancedDMPJPAObject}s, i.e., where the identifier will be set on
  * object creation.
- * 
- * @author tgaengler
+ *
  * @param <POJOCLASS> a concrete POJO class
+ * @author tgaengler
  */
 public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvancedDMPJPAObject<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
 		extends BasicDMPJPAService<PROXYPOJOCLASS, POJOCLASS> {
 
-	private static final Logger	LOG	= LoggerFactory.getLogger(AdvancedDMPJPAService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AdvancedDMPJPAService.class);
 
 	/**
 	 * Creates a new persistence service for the given concrete POJO class and the entity manager provider.
-	 * 
-	 * @param clasz a concrete POJO class
+	 *
+	 * @param clasz                 a concrete POJO class
 	 * @param entityManagerProvider an entity manager provider
 	 */
 	protected AdvancedDMPJPAService(final Class<POJOCLASS> clasz, final Class<PROXYPOJOCLASS> proxyClasz,
@@ -58,35 +58,48 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 	}
 
 	/**
+	 * Create and persist an object of the specific class with the given object.<br>
+	 *
+	 * @param object the object that should be utilised for checking or creating a new persistent object
+	 * @return the persisted object of the specific class
+	 */
+	@Transactional(rollbackOn = DMPPersistenceException.class)
+	public PROXYPOJOCLASS createOrGetObjectTransactional(final POJOCLASS object) throws DMPPersistenceException {
+
+		return createOrGetObject(object, "transactional");
+	}
+
+	/**
 	 * Create and persist an object of the specific class with the given identifier.<br>
-	 * 
-	 * @param uri the identifier of the object
+	 *
+	 * @param uri the object identifier
 	 * @return the persisted object of the specific class
 	 */
 	@Transactional(rollbackOn = DMPPersistenceException.class)
 	public PROXYPOJOCLASS createOrGetObjectTransactional(final String uri) throws DMPPersistenceException {
 
-		final POJOCLASS tempObject = createNewObject(uri);
+		final POJOCLASS object = createNewObject(uri);
 
-		return createObject(tempObject);
+		return createOrGetObject(object, "transactional");
 	}
 
 	/**
-	 * Create and persist an object of the specific class with the given identifier.<br>
-	 * 
-	 * @param id the identifier of the object
+	 * Create and persist an object of the specific class with the given object.<br>
+	 *
+	 * @param object          the original object
+	 * @param transactionType
 	 * @return the persisted object of the specific class
+	 * @throws DMPPersistenceException
 	 */
-	@Override
-	public PROXYPOJOCLASS createObject(final POJOCLASS object) throws DMPPersistenceException {
+	public PROXYPOJOCLASS createOrGetObject(final POJOCLASS object, final String transactionType) throws DMPPersistenceException {
 
 		final EntityManager em = acquire();
 
-		return createObjectInternal(object, em);
+		return createOrGetObjectInternal(object, em, transactionType);
 	}
 
-	@Override
-	protected PROXYPOJOCLASS createObjectInternal(final POJOCLASS object, final EntityManager entityManager) throws DMPPersistenceException {
+	protected PROXYPOJOCLASS createOrGetObjectInternal(final POJOCLASS object, final EntityManager entityManager, final String transactionType)
+			throws DMPPersistenceException {
 
 		final String uri = object.getUri();
 
@@ -96,11 +109,59 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 
 		if (null == existingObject) {
 
-			newObject = createNewObject(uri);
+			final POJOCLASS existingUUIDObject;
 
-			persistObject(newObject, entityManager);
+			if (object.getUuid() != null) {
 
-			return createNewProxyObject(newObject);
+				// check, whether another object with this uuid exists in the DB or not
+				existingUUIDObject = getObject(object.getUuid());
+			} else {
+
+				existingUUIDObject = null;
+			}
+
+			if (existingUUIDObject == null) {
+
+				// we can create the new object with this uuid
+				newObject = createNewObject(object.getUuid(), object.getUri());
+			} else {
+
+				newObject = createNewObject(object.getUri());
+			}
+
+			updateObjectInternal(object, newObject, entityManager);
+
+			final POJOCLASS persistedObject = persistObject(newObject, entityManager);
+
+			return createNewProxyObject(persistedObject);
+		} else {
+
+			AdvancedDMPJPAService.LOG.debug(className + " with uri '" + uri
+					+ "' exists already in the database, will return the existing object, instead creating a new one");
+
+			return createNewProxyObject(existingObject, RetrievalType.RETRIEVED);
+		}
+	}
+
+	@Override
+	protected PROXYPOJOCLASS createObjectInternal(final POJOCLASS object, final EntityManager entityManager, final String transactionType)
+			throws DMPPersistenceException {
+
+		final String uri = object.getUri();
+
+		final POJOCLASS existingObject = getObjectByUri(uri, entityManager);
+
+		final POJOCLASS newObject;
+
+		if (null == existingObject) {
+
+			newObject = createNewObject(object.getUuid(), uri);
+
+			updateObjectInternal(object, newObject, entityManager);
+
+			final POJOCLASS peristedObject = persistObject(newObject, entityManager);
+
+			return createNewProxyObject(peristedObject);
 		} else {
 
 			AdvancedDMPJPAService.LOG.debug(className + " with uri '" + uri
@@ -167,7 +228,7 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 
 		final POJOCLASS object;
 
-		final String queryString = "from " + className + " where uri = '" + uri + "'";
+		final String queryString = "SELECT o FROM " + className + " o WHERE o.uri = '" + uri + "'";
 		final TypedQuery<POJOCLASS> query = entityManager.createQuery(queryString, clasz);
 
 		try {
@@ -188,8 +249,8 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 
 	/**
 	 * Creates a new object of the concrete POJO class with the given identifier.
-	 * 
-	 * @param id an object identifier
+	 *
+	 * @param uri an object identifier
 	 * @return the new instance of the concrete POJO class
 	 * @throws DMPPersistenceException if something went wrong at object creation
 	 */
@@ -200,7 +261,7 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 		Constructor<POJOCLASS> constructor = null;
 
 		try {
-			constructor = clasz.getConstructor(String.class);
+			constructor = clasz.getConstructor(String.class, String.class);
 		} catch (final SecurityException | NoSuchMethodException e1) {
 
 			throw new DMPPersistenceException(e1.getMessage());
@@ -211,9 +272,60 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 			throw new DMPPersistenceException("couldn't find constructor to instantiate new '" + className + "' with uri '" + uri + "'");
 		}
 
+		final String uuid = UUIDService.getUUID(className);
+
 		try {
 
-			object = constructor.newInstance(uri);
+			object = constructor.newInstance(uuid, uri);
+		} catch (final InstantiationException | InvocationTargetException | IllegalArgumentException | IllegalAccessException e) {
+
+			AdvancedDMPJPAService.LOG.error("something went wrong while " + className + "object creation", e);
+
+			throw new DMPPersistenceException(e.getMessage());
+		}
+
+		return object;
+	}
+
+	/**
+	 * Creates a new object of the concrete POJO class with the given identifier.
+	 *
+	 * @param uuid the object uuid
+	 * @param uri  an object identifier
+	 * @return the new instance of the concrete POJO class
+	 * @throws DMPPersistenceException if something went wrong at object creation
+	 */
+	private POJOCLASS createNewObject(final String uuid, final String uri) throws DMPPersistenceException {
+
+		final POJOCLASS object;
+
+		Constructor<POJOCLASS> constructor = null;
+
+		try {
+			constructor = clasz.getConstructor(String.class, String.class);
+		} catch (final SecurityException | NoSuchMethodException e1) {
+
+			throw new DMPPersistenceException(e1.getMessage());
+		}
+
+		if (null == constructor) {
+
+			throw new DMPPersistenceException("couldn't find constructor to instantiate new '" + className + "' with uri '" + uri + "'");
+		}
+
+		final String finalUuid;
+
+		if (uuid != null) {
+
+			finalUuid = uuid;
+		} else {
+
+			finalUuid = UUIDService.getUUID(className);
+		}
+
+		try {
+
+			object = constructor.newInstance(finalUuid, uri);
 		} catch (final InstantiationException | InvocationTargetException | IllegalArgumentException | IllegalAccessException e) {
 
 			AdvancedDMPJPAService.LOG.error("something went wrong while " + className + "object creation", e);

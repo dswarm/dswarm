@@ -162,18 +162,18 @@ public class TransformationFlowTest extends GuicedTest {
 		// System.out.println(Util.getJSONObjectMapper().configure(SerializationFeature.INDENT_OUTPUT,
 		// true).writeValueAsString(gdmModel.getModel()));
 
-		gdmService.createObject(inputDataModel.getId(), gdmModel);
+		gdmService.createObject(inputDataModel.getUuid(), gdmModel);
 		// finished writing CSV statements to graph
 
 		// retrieve updated fresh data model
-		final DataModel freshInputDataModel = dataModelService.getObject(updatedInputDataModel.getId());
+		final DataModel freshInputDataModel = dataModelService.getObject(updatedInputDataModel.getUuid());
 
 		Assert.assertNotNull("the fresh data model shouldn't be null", freshInputDataModel);
 		Assert.assertNotNull("the schema of the fresh data model shouldn't be null", freshInputDataModel.getSchema());
 
 		final Schema schema = freshInputDataModel.getSchema();
 
-		final Optional<Map<String, Model>> optionalModelMap = gdmService.getObjects(updatedInputDataModel.getId(), Optional.<Integer>absent());
+		final Optional<Map<String, Model>> optionalModelMap = gdmService.getObjects(updatedInputDataModel.getUuid(), Optional.<Integer>absent());
 
 		Assert.assertNotNull("CSV record model map optional shouldn't be null", optionalModelMap);
 		Assert.assertTrue("CSV record model map should be present", optionalModelMap.isPresent());
@@ -200,13 +200,13 @@ public class TransformationFlowTest extends GuicedTest {
 
 		// manipulate input data model
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
-		taskJSON.put("input_data_model", inputDataModelJSON);
+		taskJSON.set("input_data_model", inputDataModelJSON);
 
-		final long internalModelId = 1;
+		final String internalModelId = DataModelUtils.BIBO_DOCUMENT_DATA_MODEL_UUID;
 		final DataModel outputDataModel = dataModelService.getObject(internalModelId);
 		final String outputDataModelJSONString = objectMapper.writeValueAsString(outputDataModel);
 		final ObjectNode outputDataModelJSON = objectMapper.readValue(outputDataModelJSONString, ObjectNode.class);
-		taskJSON.put("output_data_model", outputDataModelJSON);
+		taskJSON.set("output_data_model", outputDataModelJSON);
 
 		// manipulate attributes
 		final ObjectNode mappingJSON = (ObjectNode) taskJSON.get("job").get("mappings").get(0);
@@ -290,71 +290,7 @@ public class TransformationFlowTest extends GuicedTest {
 					Matchers.equalTo(expectedRecordData.get(expectedDataResourceSchemaBaseURI + "description").asText()));
 		}
 
-		// clean-up
-		// TODO: move clean-up to @After
-
-		final DataModel freshOutputDataModel = dataModelService.getObject(internalModelId);
-
-		final Schema outputDataModelSchema = freshOutputDataModel.getSchema();
-
-		final Map<Long, Attribute> attributes = Maps.newHashMap();
-
-		final Map<Long, AttributePath> attributePaths = Maps.newLinkedHashMap();
-
-		final Clasz recordClass = schema.getRecordClass();
-
-		final Set<AttributePath> attributePathsToDelete = schema.getUniqueAttributePaths();
-
-		if (attributePathsToDelete != null) {
-
-			for (final AttributePath attributePath : attributePathsToDelete) {
-
-				attributePaths.put(attributePath.getId(), attributePath);
-
-				final Set<Attribute> attributesToDelete = attributePath.getAttributes();
-
-				if (attributesToDelete != null) {
-
-					for (final Attribute attribute : attributesToDelete) {
-
-						attributes.put(attribute.getId(), attribute);
-					}
-				}
-			}
 		}
-
-		dataModelService.deleteObject(updatedInputDataModel.getId());
-		final SchemaService schemaService = GuicedTest.injector.getInstance(SchemaService.class);
-		final SchemaServiceTestUtils schemaServiceTestUtils = new SchemaServiceTestUtils();
-
-		schemaServiceTestUtils.removeAddedAttributePathsFromOutputModelSchema(outputDataModelSchema, attributes, attributePaths);
-		schemaService.deleteObject(schema.getId());
-
-		final AttributePathServiceTestUtils attributePathServiceTestUtils = new AttributePathServiceTestUtils();
-
-		for (final AttributePath attributePath : attributePaths.values()) {
-
-			attributePathServiceTestUtils.deleteObject(attributePath);
-		}
-
-		final AttributeServiceTestUtils attributeServiceTestUtils = new AttributeServiceTestUtils();
-
-		for (final Attribute attribute : attributes.values()) {
-
-			attributeServiceTestUtils.deleteObject(attribute);
-		}
-
-		final ClaszServiceTestUtils claszServiceTestUtils = new ClaszServiceTestUtils();
-
-		claszServiceTestUtils.deleteObject(recordClass);
-
-		// clean-up
-		configurationService.deleteObject(updatedConfiguration.getId());
-		resourceService.deleteObject(updatedResource.getId());
-
-		// clean-up graph db
-		InternalGDMGraphServiceTestUtils.cleanGraphDB();
-	}
 
 	public void readCSVTest() throws Exception {
 

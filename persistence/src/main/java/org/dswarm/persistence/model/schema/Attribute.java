@@ -15,6 +15,7 @@
  */
 package org.dswarm.persistence.model.schema;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -32,6 +33,7 @@ import org.dswarm.persistence.model.AdvancedDMPJPAObject;
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "ATTRIBUTE")
+@Cacheable(false)
 public class Attribute extends AdvancedDMPJPAObject {
 
 	/**
@@ -51,9 +53,8 @@ public class Attribute extends AdvancedDMPJPAObject {
 	/**
 	 * Creates new attribute with no identifier.
 	 */
-	public Attribute() {
+	protected Attribute() {
 
-		super();
 	}
 
 	/**
@@ -61,9 +62,14 @@ public class Attribute extends AdvancedDMPJPAObject {
 	 *
 	 * @param id an attribute identifier
 	 */
-	public Attribute(final String uriArg) {
+	public Attribute(final String uuid) {
 
-		super(uriArg);
+		super(uuid);
+	}
+
+	public Attribute(final String uuid, final String uriArg) {
+
+		super(uuid, uriArg);
 	}
 
 	/**
@@ -72,9 +78,9 @@ public class Attribute extends AdvancedDMPJPAObject {
 	 * @param id an attribute identifier
 	 * @param name an attribute name
 	 */
-	public Attribute(final String uriArg, final String name) {
+	public Attribute(final String uuid, final String uriArg, final String name) {
 
-		super(uriArg, name);
+		super(uuid, uriArg, name);
 	}
 
 	// public Set<AttributePath> getUniqueAttributePaths() {
@@ -190,21 +196,6 @@ public class Attribute extends AdvancedDMPJPAObject {
 	// attributePath.removeAttribute(this);
 	// }
 	// }
-
-	@Override
-	public boolean equals(final Object obj) {
-
-		if (!Attribute.class.isInstance(obj)) {
-
-			return false;
-		}
-
-		final boolean result = super.equals(obj);
-
-		// TODO: do uri comparison here or in upper class?
-
-		return result;
-	}
 
 	@Override
 	public boolean completeEquals(final Object obj) {

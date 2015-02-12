@@ -15,6 +15,7 @@
  */
 package org.dswarm.persistence.model;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -28,7 +29,8 @@ import com.google.common.base.Objects;
  */
 @XmlRootElement
 @MappedSuperclass
-public abstract class BasicDMPJPAObject extends DMPJPAObject {
+@Cacheable(false)
+public abstract class BasicDMPJPAObject extends DMPObject {
 
 	/**
 	 *
@@ -40,6 +42,14 @@ public abstract class BasicDMPJPAObject extends DMPJPAObject {
 	 */
 	@Column(name = "NAME")
 	private String				name;
+
+	public BasicDMPJPAObject(final String uuidArg) {
+		super(uuidArg);
+	}
+
+	protected BasicDMPJPAObject() {
+
+	}
 
 	/**
 	 * Gets the name of the entity.

@@ -80,15 +80,15 @@ public class StreamUnflattenerTest {
 		Mockito.verify(mockedReceiver).endRecord();
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public void testStartEntity() throws Exception {
-		unflattener.startEntity("foobar");
-	}
+//	@Test(expected = IllegalStateException.class)
+//	public void testStartEntity() throws Exception {
+//		unflattener.startEntity("foobar");
+//	}
 
-	@Test(expected = IllegalStateException.class)
-	public void testEndEntity() throws Exception {
-		unflattener.endEntity();
-	}
+//	@Test(expected = IllegalStateException.class)
+//	public void testEndEntity() throws Exception {
+//		unflattener.endEntity();
+//	}
 
 	@Test
 	public void testLiteralNoHierarchy() throws Exception {

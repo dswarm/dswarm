@@ -15,7 +15,6 @@
  */
 package org.dswarm.persistence.service.schema;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -34,16 +33,17 @@ import org.dswarm.persistence.model.proxy.RetrievalType;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
-import org.dswarm.persistence.service.BasicIDJPAService;
+import org.dswarm.persistence.service.BasicJPAService;
+import org.dswarm.persistence.service.UUIDService;
 
 /**
  * A persistence service for {@link AttributePath}s.
  *
  * @author tgaengler
  */
-public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, AttributePath> {
+public class AttributePathService extends BasicJPAService<ProxyAttributePath, AttributePath> {
 
-	private static final Logger	LOG	= LoggerFactory.getLogger(AttributePathService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AttributePathService.class);
 
 	/**
 	 * Creates a new attribute path persistence service with the given entity manager provider.
@@ -73,12 +73,13 @@ public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, 
 
 	/**
 	 * Tries to retrieve an attribute path object for the given ordered list of attribute paths
+	 * TODO: check, when this method was called in the code
 	 *
 	 * @param attributePathJSONArrayString
 	 * @return
 	 * @throws DMPPersistenceException
 	 */
-	public AttributePath getObject(final String attributePathJSONArrayString) throws DMPPersistenceException {
+	public AttributePath getObjectViaAttributePathJSON(final String attributePathJSONArrayString) throws DMPPersistenceException {
 
 		final EntityManager entityManager = acquire();
 
@@ -90,11 +91,12 @@ public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, 
 
 		final EntityManager em = acquire();
 
-		return createObjectInternal(object, em);
+		return createObjectInternal(object, em, "non-transactional");
 	}
 
 	@Override
-	protected ProxyAttributePath createObjectInternal(final AttributePath object, final EntityManager entityManager) throws DMPPersistenceException {
+	protected ProxyAttributePath createObjectInternal(final AttributePath object, final EntityManager entityManager, final String transactionalType)
+			throws DMPPersistenceException {
 
 		final AttributePath existingObject = getObject(object.getAttributePathAsJSONObjectString(), entityManager);
 
@@ -104,9 +106,7 @@ public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, 
 
 			final AttributePath tempAttributePath = mergeAttributesIntoEntityManager(object, entityManager);
 
-			persistObject(tempAttributePath, entityManager);
-
-			newObject = tempAttributePath;
+			newObject = persistObject(tempAttributePath, entityManager);
 
 			return new ProxyAttributePath(newObject);
 		} else {
@@ -161,7 +161,7 @@ public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, 
 
 		final AttributePath object;
 
-		final String queryString = "from " + className + " where attributePath = '" + attributePath + "'";
+		final String queryString = "SELECT o FROM " + className + " o WHERE o.attributePath = '" + attributePath + "'";
 		final TypedQuery<AttributePath> query = entityManager.createQuery(queryString, clasz);
 
 		try {
@@ -183,7 +183,17 @@ public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, 
 
 	private AttributePath mergeAttributesIntoEntityManager(final AttributePath object, final EntityManager entityManager) {
 
-		final AttributePath tempAttributePath = new AttributePath();
+		final String uuid;
+
+		if(object.getUuid() != null) {
+
+			uuid = object.getUuid();
+		} else {
+
+			uuid = UUIDService.getUUID(AttributePath.class.getSimpleName());
+		}
+
+		final AttributePath tempAttributePath = new AttributePath(uuid);
 
 		final List<Attribute> attributes = object.getAttributePath();
 
@@ -219,7 +229,7 @@ public class AttributePathService extends BasicIDJPAService<ProxyAttributePath, 
 
 		final EntityManager entityManager = acquire(true);
 
-		final String queryString = "from " + AttributePath.class.getName() + " where attributePath = '" + attributePathJSONArrayString + "'";
+		final String queryString = "SELECT o FROM " + AttributePath.class.getName() + " o WHERE o.attributePath = '" + attributePathJSONArrayString + "'";
 
 		final TypedQuery<AttributePath> query = entityManager.createQuery(queryString, AttributePath.class);
 

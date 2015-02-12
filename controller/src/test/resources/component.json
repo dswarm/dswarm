@@ -1,10 +1,10 @@
 {
-    "id": 1,
-    "name": "my trim component",
-    "function": {
-        "id": 1
-    },
-    "parameter_mappings": {
-        "inputString": "previousComponent.outputString"
-    }
+  "name" : "my trim component",
+  "function" : {
+    "uuid" : "1"
+  },
+  "parameter_mappings" : {
+    "inputString" : "previousComponent.outputString"
+  },
+  "uuid" : "1"
 }

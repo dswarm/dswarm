@@ -26,6 +26,7 @@ import com.google.common.io.Resources;
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
+import org.glassfish.jersey.media.multipart.file.StreamDataBodyPart;
 import org.junit.Assert;
 
 import org.dswarm.controller.resources.test.utils.ExtendedBasicDMPResourceTestUtils;
@@ -35,9 +36,10 @@ import org.dswarm.persistence.model.resource.proxy.ProxyResource;
 import org.dswarm.persistence.service.resource.ResourceService;
 import org.dswarm.persistence.service.resource.test.utils.ResourceServiceTestUtils;
 
-public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtils<ResourceServiceTestUtils, ResourceService, ProxyResource, Resource> {
+public class ResourcesResourceTestUtils
+		extends ExtendedBasicDMPResourceTestUtils<ResourceServiceTestUtils, ResourceService, ProxyResource, Resource> {
 
-	private final ConfigurationsResourceTestUtils	configurationsResourceTestUtils;
+	private final ConfigurationsResourceTestUtils configurationsResourceTestUtils;
 
 	public ResourcesResourceTestUtils() {
 
@@ -57,13 +59,12 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 		Assert.assertNotNull("name of resource from JSON shouldn't be null", resourceFromJSON.getName());
 
 		final URL fileURL = Resources.getResource(resourceFromJSON.getName());
-		final File resourceFile = FileUtils.toFile(fileURL);
 
 		final FormDataMultiPart form = new FormDataMultiPart();
-		form.field("name", resourceFile.getName());
-		form.field("filename", resourceFile.getName());
+		form.field("name", resourceFromJSON.getName());
+		form.field("filename", resourceFromJSON.getName());
 		form.field("description", resourceFromJSON.getDescription());
-		form.bodyPart(new FileDataBodyPart("file", resourceFile, MediaType.MULTIPART_FORM_DATA_TYPE));
+		form.bodyPart(new StreamDataBodyPart("file", fileURL.openStream(), resourceFromJSON.getName(), MediaType.MULTIPART_FORM_DATA_TYPE));
 
 		final Response response = target().request(MediaType.MULTIPART_FORM_DATA_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
 				.post(Entity.entity(form, MediaType.MULTIPART_FORM_DATA));
@@ -83,7 +84,7 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 			final Configuration configurationFromJSON = resourceFromJSON.getConfigurations().iterator().next();
 			final String configurationJSON = objectMapper.writeValueAsString(configurationFromJSON);
 
-			final Response response2 = target(String.valueOf(responseResource.getId()), "/configurations").request(MediaType.APPLICATION_JSON_TYPE)
+			final Response response2 = target(String.valueOf(responseResource.getUuid()), "/configurations").request(MediaType.APPLICATION_JSON_TYPE)
 					.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(configurationJSON));
 
 			Assert.assertEquals("201 CREATED was expected", 201, response2.getStatus());
@@ -100,7 +101,7 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 
 			// retrieve resource (with configuration)
 
-			final Response response3 = target(String.valueOf(responseResource.getId())).request().accept(MediaType.APPLICATION_JSON_TYPE)
+			final Response response3 = target(String.valueOf(responseResource.getUuid())).request().accept(MediaType.APPLICATION_JSON_TYPE)
 					.get(Response.class);
 
 			Assert.assertEquals("200 OK was expected", 200, response3.getStatus());
@@ -109,9 +110,7 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 
 			Assert.assertNotNull("response resource JSON string shouldn't be null", responseResource2String);
 
-			final Resource responseResource2 = objectMapper.readValue(responseResource2String, Resource.class);
-
-			responseResource = responseResource2;
+			responseResource = objectMapper.readValue(responseResource2String, Resource.class);
 
 		}
 
@@ -150,7 +149,7 @@ public class ResourcesResourceTestUtils extends ExtendedBasicDMPResourceTestUtil
 
 	public Configuration addResourceConfiguration(final Resource resource, final String configurationJSON) throws Exception {
 
-		final Response response = target(String.valueOf(resource.getId()), "/configurations").request(MediaType.APPLICATION_JSON_TYPE)
+		final Response response = target(String.valueOf(resource.getUuid()), "/configurations").request(MediaType.APPLICATION_JSON_TYPE)
 				.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(configurationJSON));
 
 		final String responseConfigurationJSON = response.readEntity(String.class);

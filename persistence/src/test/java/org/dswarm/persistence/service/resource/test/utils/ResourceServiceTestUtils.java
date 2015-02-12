@@ -20,29 +20,89 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.json.JSONException;
 import org.junit.Assert;
 
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.ResourceType;
 import org.dswarm.persistence.model.resource.proxy.ProxyResource;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.resource.ResourceService;
 import org.dswarm.persistence.service.test.utils.BasicJPAServiceTestUtils;
 import org.dswarm.persistence.service.test.utils.ExtendedBasicDMPJPAServiceTestUtils;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils<ResourceService, ProxyResource, Resource> {
 
-	private final ConfigurationServiceTestUtils	configurationsResourceTestUtils;
+	private final ConfigurationServiceTestUtils configurationsServiceTestUtils;
 
 	public ResourceServiceTestUtils() {
 
 		super(Resource.class, ResourceService.class);
 
-		configurationsResourceTestUtils = new ConfigurationServiceTestUtils();
+		configurationsServiceTestUtils = new ConfigurationServiceTestUtils(this);
+	}
+
+	public ResourceServiceTestUtils(final ConfigurationServiceTestUtils configurationServiceTestUtilsArg) {
+
+		super(Resource.class, ResourceService.class);
+
+		configurationsServiceTestUtils = configurationServiceTestUtilsArg;
+	}
+
+	public ConfigurationServiceTestUtils getConfigurationsServiceTestUtils() {
+
+		return configurationsServiceTestUtils;
+	}
+
+	@Override public Resource createObject(JsonNode objectDescription) throws Exception {
+		return null;
+	}
+
+	@Override public Resource createObject(String identifier) throws Exception {
+		return null;
+	}
+
+	@Override public Resource createAndPersistDefaultObject() throws Exception {
+
+		// TODO: think about this?
+		final String resourceUUID = UUIDService.getUUID(Resource.class.getSimpleName());
+
+		final Resource resource = new Resource(resourceUUID);
+
+		resource.setName("bla");
+		resource.setDescription("blubblub");
+		resource.setType(ResourceType.FILE);
+
+		final ObjectNode attributes = new ObjectNode(DMPPersistenceUtil.getJSONFactory());
+
+		final String attributeKey = "path";
+		final String attributeValue = "/path/to/file.end";
+
+		attributes.put(attributeKey, attributeValue);
+
+		resource.setAttributes(attributes);
+
+		return createAndCompareObject(resource, resource);
+	}
+
+	@Override public Resource createDefaultObject() throws Exception {
+		return null;
+	}
+
+	@Override public Resource createAndPersistDefaultCompleteObject() throws Exception {
+
+		final Resource resource = createAndPersistDefaultObject();
+		final Configuration configuration = configurationsServiceTestUtils.createAndPersistDefaultObject();
+		resource.addConfiguration(configuration);
+
+		return updateAndCompareObject(resource, resource);
 	}
 
 	/**
@@ -53,7 +113,7 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 	 * {@link BasicJPAServiceTestUtils#compareObjects(Set, Map)} for details.
 	 */
 	@Override
-	public void compareObjects(final Resource expectedResource, final Resource actualResource) {
+	public void compareObjects(final Resource expectedResource, final Resource actualResource) throws JsonProcessingException, JSONException {
 
 		super.compareObjects(expectedResource, actualResource);
 
@@ -118,25 +178,28 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 
 			final Set<Configuration> actualConfigurations = actualResource.getConfigurations();
 
-			Assert.assertNotNull("configurations of actual resource '" + actualResource.getId() + "' shouldn't be null", actualConfigurations);
-			Assert.assertFalse("configurations of actual resource '" + actualResource.getId() + "' shouldn't be empty",
+			Assert.assertNotNull("configurations of actual resource '" + actualResource.getUuid() + "' shouldn't be null", actualConfigurations);
+			Assert.assertFalse("configurations of actual resource '" + actualResource.getUuid() + "' shouldn't be empty",
 					actualConfigurations.isEmpty());
 
-			final Map<Long, Configuration> actualConfigurationsMap = Maps.newHashMap();
+			final Map<String, Configuration> actualConfigurationsMap = Maps.newHashMap();
 
 			for (final Configuration actualConfiguration : actualConfigurations) {
 
-				actualConfigurationsMap.put(actualConfiguration.getId(), actualConfiguration);
+				actualConfigurationsMap.put(actualConfiguration.getUuid(), actualConfiguration);
 			}
 
-			configurationsResourceTestUtils.compareObjects(expectedResource.getConfigurations(), actualConfigurationsMap);
+			configurationsServiceTestUtils.compareObjects(expectedResource.getConfigurations(), actualConfigurationsMap);
 		}
 	}
 
 	public Resource createResource(final String name, final String description, final ResourceType resourceType, final ObjectNode attributes,
 			final Set<Configuration> configurations) throws Exception {
 
-		final Resource resource = new Resource();
+		// TODO: think about this?
+		final String resourceUUID = UUIDService.getUUID(Resource.class.getSimpleName());
+
+		final Resource resource = new Resource(resourceUUID);
 
 		resource.setName(name);
 		resource.setDescription(description);
@@ -148,60 +211,61 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 		final String resourceJSONString = objectMapper.writeValueAsString(resource);
 		final Resource expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
 
-		final Resource updatedResource = createObject(resource, expectedResource);
+		final Resource updatedResource = createAndCompareObject(resource, expectedResource);
 
 		Assert.assertNotNull("updated resource shouldn't be null", updatedResource);
-		Assert.assertNotNull("updated resource id shouldn't be null", updatedResource.getId());
+		Assert.assertNotNull("updated resource id shouldn't be null", updatedResource.getUuid());
 
 		return updatedResource;
 	}
 
+//	/**
+//	 * note: legacy
+//	 *
+//	 * @param resource
+//	 * @param updatedResource
+//	 * @param attributeKey
+//	 * @param attributeValue
+//	 */
+//	public void checkSimpleResource(final Resource resource, final Resource updatedResource, final String attributeKey, final String attributeValue) {
+//
+//		Assert.assertNotNull("the name of the updated resource shouldn't be null", updatedResource.getName());
+//		Assert.assertEquals("the names of the resource are not equal", resource.getName(), updatedResource.getName());
+//		Assert.assertNotNull("the description of the updated resource shouldn't be null", updatedResource.getDescription());
+//		Assert.assertEquals("the descriptions of the resource are not equal", resource.getDescription(), updatedResource.getDescription());
+//		Assert.assertNotNull("the type of the updated resource shouldn't be null", updatedResource.getType());
+//		Assert.assertEquals("the types of the resource are not equal", resource.getType(), updatedResource.getType());
+//		Assert.assertNotNull("the attributes of the updated resource shouldn't be null", updatedResource.getAttributes());
+//		Assert.assertEquals("the attributes of the resource are not equal", resource.getAttributes(), updatedResource.getAttributes());
+//		Assert.assertNotNull("the attribute value shouldn't be null", resource.getAttribute(attributeKey));
+//		Assert.assertEquals("the attribute value should be equal", resource.getAttribute(attributeKey).asText(), attributeValue);
+//	}
+//
+//	/**
+//	 * note: legacy
+//	 *
+//	 * @param resource
+//	 * @param updatedResource
+//	 * @param parameterKey
+//	 * @param parameterValue
+//	 */
+//	public void checkComplexResource(final Resource resource, final Resource updatedResource, final String parameterKey,
+//			final String parameterValue) {
+//
+//		checkComplexResource(resource, updatedResource);
+//
+//		Assert.assertEquals("the configuration of the resource is not equal", resource.getConfigurations().iterator().next(), resource
+//				.getConfigurations().iterator().next());
+//		Assert.assertEquals("the configuration parameter '" + parameterKey + "' of the resource is not equal", resource.getConfigurations()
+//				.iterator().next().getParameter(parameterKey), resource.getConfigurations().iterator().next().getParameter(parameterKey));
+//		Assert.assertEquals("the configuration parameter value for '" + parameterKey + "' of the resource is not equal", resource.getConfigurations()
+//				.iterator().next().getParameter(parameterKey).asText(), resource.getConfigurations().iterator().next().getParameter(parameterKey)
+//				.asText());
+//	}
+
 	/**
 	 * note: legacy
-	 * 
-	 * @param resource
-	 * @param updatedResource
-	 * @param attributeKey
-	 * @param attributeValue
-	 */
-	public void checkSimpleResource(final Resource resource, final Resource updatedResource, final String attributeKey, final String attributeValue) {
-
-		Assert.assertNotNull("the name of the updated resource shouldn't be null", updatedResource.getName());
-		Assert.assertEquals("the names of the resource are not equal", resource.getName(), updatedResource.getName());
-		Assert.assertNotNull("the description of the updated resource shouldn't be null", updatedResource.getDescription());
-		Assert.assertEquals("the descriptions of the resource are not equal", resource.getDescription(), updatedResource.getDescription());
-		Assert.assertNotNull("the type of the updated resource shouldn't be null", updatedResource.getType());
-		Assert.assertEquals("the types of the resource are not equal", resource.getType(), updatedResource.getType());
-		Assert.assertNotNull("the attributes of the updated resource shouldn't be null", updatedResource.getAttributes());
-		Assert.assertEquals("the attributes of the resource are not equal", resource.getAttributes(), updatedResource.getAttributes());
-		Assert.assertNotNull("the attribute value shouldn't be null", resource.getAttribute(attributeKey));
-		Assert.assertEquals("the attribute value should be equal", resource.getAttribute(attributeKey).asText(), attributeValue);
-	}
-
-	/**
-	 * note: legacy
-	 * 
-	 * @param resource
-	 * @param updatedResource
-	 * @param parameterKey
-	 * @param parameterValue
-	 */
-	public void checkComplexResource(final Resource resource, final Resource updatedResource, final String parameterKey, final String parameterValue) {
-
-		checkComplexResource(resource, updatedResource);
-
-		Assert.assertEquals("the configuration of the resource is not equal", resource.getConfigurations().iterator().next(), resource
-				.getConfigurations().iterator().next());
-		Assert.assertEquals("the configuration parameter '" + parameterKey + "' of the resource is not equal", resource.getConfigurations()
-				.iterator().next().getParameter(parameterKey), resource.getConfigurations().iterator().next().getParameter(parameterKey));
-		Assert.assertEquals("the configuration parameter value for '" + parameterKey + "' of the resource is not equal", resource.getConfigurations()
-				.iterator().next().getParameter(parameterKey).asText(), resource.getConfigurations().iterator().next().getParameter(parameterKey)
-				.asText());
-	}
-
-	/**
-	 * note: legacy
-	 * 
+	 *
 	 * @param resource
 	 * @param updatedResource
 	 */
@@ -237,7 +301,7 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 			}
 		} else {
 
-			newConfigurations = configurations;
+			newConfigurations = null;
 		}
 
 		object.setConfigurations(newConfigurations);
@@ -256,6 +320,6 @@ public class ResourceServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtil
 	@Override
 	public void reset() {
 
-		configurationsResourceTestUtils.reset();
+		configurationsServiceTestUtils.reset();
 	}
 }

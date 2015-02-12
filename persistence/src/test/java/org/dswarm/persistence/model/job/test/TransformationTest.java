@@ -36,9 +36,9 @@ import org.dswarm.persistence.model.job.Transformation;
 
 public class TransformationTest extends GuicedTest {
 
-	private static final Logger	LOG				= LoggerFactory.getLogger(TransformationTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TransformationTest.class);
 
-	private final ObjectMapper	objectMapper	= GuicedTest.injector.getInstance(ObjectMapper.class);
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
 	@Test
 	public void simpleTransformationTest() {
@@ -48,7 +48,7 @@ public class TransformationTest extends GuicedTest {
 		final String functionDescription = "trims leading and trailing whitespaces from a given string";
 		final String functionParameter = "inputString";
 
-		final Function function = new Function();
+		final Function function = new Function(functionId);
 		// function.setId(functionId);
 		function.setName(functionName);
 		function.setDescription(functionDescription);
@@ -63,7 +63,7 @@ public class TransformationTest extends GuicedTest {
 
 		parameterMapping.put(functionParameterName, componentVariableName);
 
-		final Component component = new Component();
+		final Component component = new Component(componentId);
 		// component.setId(componentId);
 		component.setName(componentName);
 		component.setFunction(function);
@@ -80,7 +80,7 @@ public class TransformationTest extends GuicedTest {
 
 		components.add(component);
 
-		final Transformation transformation = new Transformation();
+		final Transformation transformation = new Transformation(transformationId);
 		// transformation.setId(transformationId);
 		transformation.setName(transformationName);
 		transformation.setDescription(transformationDescription);
@@ -139,7 +139,7 @@ public class TransformationTest extends GuicedTest {
 		final String function2Parameter = "regex";
 		final String function3Parameter = "replaceString";
 
-		final Function function1 = new Function();
+		final Function function1 = new Function(function1Id);
 		// function1.setId(function1Id);
 		function1.setName(function1Name);
 		function1.setDescription(function1Description);
@@ -162,7 +162,7 @@ public class TransformationTest extends GuicedTest {
 		parameterMapping1.put(functionParameterName2, componentVariableName2);
 		parameterMapping1.put(functionParameterName3, componentVariableName3);
 
-		final Component component1 = new Component();
+		final Component component1 = new Component(component1Id);
 		// component1.setId(component1Id);
 		component1.setName(component1Name);
 		component1.setFunction(function1);
@@ -175,7 +175,7 @@ public class TransformationTest extends GuicedTest {
 		final String function2Description = "lower cases all characters of a given string";
 		final String function4Parameter = "inputString";
 
-		final Function function2 = new Function();
+		final Function function2 = new Function(function2Id);
 		// function2.setId(function2Id);
 		function2.setName(function2Name);
 		function2.setDescription(function2Description);
@@ -190,7 +190,7 @@ public class TransformationTest extends GuicedTest {
 
 		parameterMapping2.put(functionParameterName4, componentVariableName4);
 
-		final Component component2 = new Component();
+		final Component component2 = new Component(component2Id);
 		// component2.setId(component2Id);
 		component2.setName(component2Name);
 		component2.setFunction(function2);
@@ -203,7 +203,7 @@ public class TransformationTest extends GuicedTest {
 		final String functionDescription = "trims leading and trailing whitespaces from a given string";
 		final String functionParameter = "inputString";
 
-		final Function function = new Function();
+		final Function function = new Function(functionId);
 		// function.setId(functionId);
 		function.setName(functionName);
 		function.setDescription(functionDescription);
@@ -226,7 +226,7 @@ public class TransformationTest extends GuicedTest {
 
 		outputComponents.add(component2);
 
-		final Component component = new Component();
+		final Component component = new Component(componentId);
 		// component.setId(componentId);
 		component.setName(componentName);
 		component.setFunction(function);
@@ -247,7 +247,7 @@ public class TransformationTest extends GuicedTest {
 		components.add(component);
 		components.add(component2);
 
-		final Transformation transformation = new Transformation();
+		final Transformation transformation = new Transformation(transformationId);
 		// transformation.setId(transformationId);
 		transformation.setName(transformationName);
 		transformation.setDescription(transformationDescription);
@@ -291,15 +291,15 @@ public class TransformationTest extends GuicedTest {
 						mainComponent.getParameterMappings().get(functionParameterName));
 				Assert.assertNotNull("the component input components set shouldn't be null", mainComponent.getInputComponents());
 				Assert.assertEquals("the component input components set are not equal", 1, mainComponent.getInputComponents().size());
-				Assert.assertTrue("the component input components set doesn't contain component '" + component1.getId() + "'", mainComponent
+				Assert.assertTrue("the component input components set doesn't contain component '" + component1.getUuid() + "'", mainComponent
 						.getInputComponents().contains(component1));
-				Assert.assertEquals("the component input component '" + component1.getId() + "' are not equal", component1, mainComponent
+				Assert.assertEquals("the component input component '" + component1.getUuid() + "' are not equal", component1, mainComponent
 						.getInputComponents().iterator().next());
 				Assert.assertNotNull("the component output components set shouldn't be null", mainComponent.getOutputComponents());
 				Assert.assertEquals("the component output components set are not equal", 1, mainComponent.getOutputComponents().size());
-				Assert.assertTrue("the component output components set doesn't contain component '" + component2.getId() + "'", mainComponent
+				Assert.assertTrue("the component output components set doesn't contain component '" + component2.getUuid() + "'", mainComponent
 						.getOutputComponents().contains(component2));
-				Assert.assertEquals("the component output component '" + component2.getId() + "' are not equal", component2, mainComponent
+				Assert.assertEquals("the component output component '" + component2.getUuid() + "' are not equal", component2, mainComponent
 						.getOutputComponents().iterator().next());
 			}
 		}

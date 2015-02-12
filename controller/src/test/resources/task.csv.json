@@ -1,250 +1,297 @@
 {
-    "job": {
-        "mappings": [{
-            "output_attribute_path": {
-                "type": "MappingAttributePathInstance",
-                "name": "output mapping attribute path instance",
-                "id": 3,
-                "attribute_path": {
-                    "attributes": [{
-                        "id": 89,
-                        "name": "description",
-                        "uri": "/test_csv.csv#description"
-                    }],
-                    "id": 98
-                }
+  "job" : {
+    "mappings" : [ {
+      "output_attribute_path" : {
+        "type" : "MappingAttributePathInstance",
+        "name" : "output mapping attribute path instance",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "description",
+            "uri" : "/test_csv.csv#description",
+            "uuid" : "89"
+          } ],
+          "uuid" : "98"
+        },
+        "uuid" : "3"
+      },
+      "input_attribute_paths" : [ {
+        "type" : "MappingAttributePathInstance",
+        "name" : "description",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "description",
+            "uri" : "/test_csv.csv#description",
+            "uuid" : "89"
+          } ],
+          "uuid" : "98"
+        },
+        "uuid" : "2"
+      } ],
+      "transformation" : {
+        "parameter_mappings" : {
+          "description" : "description",
+          "__TRANSFORMATION_OUTPUT_VARIABLE__1" : "output mapping attribute path instance"
+        },
+        "function" : {
+          "components" : [ {
+            "parameter_mappings" : {
+              "inputString" : "description",
+              "with" : "x",
+              "pattern" : "a"
             },
-            "input_attribute_paths": [{
-                "type": "MappingAttributePathInstance",
-                "name": "description",
-                "id": 2,
-                "attribute_path": {
-                    "attributes": [{
-                        "id": 89,
-                        "name": "description",
-                        "uri": "/test_csv.csv#description"
-                    }],
-                    "id": 98
-                }
-            }],
-            "transformation": {
-                "parameter_mappings": {
-                    "description": "description",
-                    "__TRANSFORMATION_OUTPUT_VARIABLE__1": "output mapping attribute path instance"
-                 },
-                "function": {
-                    "components": [{
-                        "parameter_mappings": {
-                            "inputString": "description",
-                            "with": "x",
-                            "pattern": "a"
-                        },
-                        "function": {
-                            "type": "Function",
-                            "parameters": [
-                                "pattern",
-                                "with"
-                            ],
-                            "name": "replace",
-                            "function_description": {
-                                "parameters": {
-                                    "with": {
-                                        "data": "x",
-                                        "description": "The replacement",
-                                        "type": "text"
-                                    },
-                                    "pattern": {
-                                        "data": "a",
-                                        "type": "regexp"
-                                    }
-                                },
-                                "description": "String replace based on a regular expression. Pattern syntax corresponds to Java Regular Expressions.",
-                                "reference": "replace",
-                                "dsl": "metafacture",
-                                "name": "replace"
-                            }
-                        },
-                        "description": "String replace based on a regular expression. Pattern syntax corresponds to Java Regular Expressions.",
-                        "name": "replace"
-                    }],
-                    "type": "Transformation",
-                    "name": "transformation"
+            "function" : {
+              "type" : "Function",
+              "parameters" : [ "pattern", "with" ],
+              "name" : "replace",
+              "function_description" : {
+                "parameters" : {
+                  "with" : {
+                    "data" : "x",
+                    "description" : "The replacement",
+                    "type" : "text"
+                  },
+                  "pattern" : {
+                    "data" : "a",
+                    "type" : "regexp"
+                  }
                 },
-                "name": "sadfadgsagsadsf"
+                "description" : "String replace based on a regular expression. Pattern syntax corresponds to Java Regular Expressions.",
+                "reference" : "replace",
+                "dsl" : "metafacture",
+                "name" : "replace"
+              }
             },
-            "name": "sadfadgsagsadsf"
-        }]
+            "description" : "String replace based on a regular expression. Pattern syntax corresponds to Java Regular Expressions.",
+            "name" : "replace"
+          } ],
+          "type" : "Transformation",
+          "name" : "transformation"
+        },
+        "name" : "sadfadgsagsadsf"
+      },
+      "name" : "sadfadgsagsadsf"
+    } ]
+  },
+  "output_data_model" : {
+    "data_resource" : {
+      "configurations" : [ {
+        "parameters" : {
+          "storage_type" : "csv",
+          "column_names" : "columnN",
+          "quote_character" : "\"",
+          "escape_character" : "\\",
+          "column_delimiter" : ";"
+        },
+        "resources" : [ {
+          "uuid" : "2"
+        } ],
+        "uuid" : "2"
+      } ],
+      "resource_attributes" : {
+        "filesize" : -1,
+        "path" : "/Users/knut/Development/Projects/DMP/init/../tmp/resources/test_csv.csv"
+      },
+      "type" : "FILE",
+      "description" : "ssdfadfsdf",
+      "name" : "test_csv.csv",
+      "uuid" : "2"
     },
-    "output_data_model": {
-        "data_resource": {
-            "configurations": [{
-                "parameters": {
-                    "storage_type": "csv",
-                    "column_names": "columnN",
-                    "quote_character": "\"",
-                    "escape_character": "\\",
-                    "column_delimiter": ";"
-                },
-                "resources": [{
-                    "id": 2
-                }],
-                "id": 2
-            }],
-            "resource_attributes": {
-                "filesize": -1,
-                "path": "/Users/knut/Development/Projects/DMP/init/../tmp/resources/test_csv.csv"
-            },
-            "type": "FILE",
-            "description": "ssdfadfsdf",
-            "name": "test_csv.csv",
-            "id": 2
+    "schema" : {
+      "record_class" : {
+        "name" : "record type",
+        "uri" : "/test_csv.csv#RecordType",
+        "uuid" : "80"
+      },
+      "attribute_paths" : [ {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_6",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "description",
+            "uri" : "/test_csv.csv#description",
+            "uuid" : "89"
+          } ],
+          "uuid" : "98"
         },
-        "schema": {
-            "record_class": {
-                "id": 80,
-                "name": "record type",
-                "uri": "/test_csv.csv#RecordType"
-            },
-            "attribute_paths": [{
-                "attributes": [{
-                    "id": 89,
-                    "name": "description",
-                    "uri": "/test_csv.csv#description"
-                }],
-                "id": 98
-            }, {
-                "attributes": [{
-                    "id": 88,
-                    "name": "id",
-                    "uri": "/test_csv.csv#id"
-                }],
-                "id": 96
-            }, {
-                "attributes": [{
-                    "id": 87,
-                    "name": "name",
-                    "uri": "/test_csv.csv#name"
-                }],
-                "id": 97
-            }, {
-                "attributes": [{
-                    "id": 86,
-                    "name": "year",
-                    "uri": "/test_csv.csv#year"
-                }],
-                "id": 100
-            }, {
-                "attributes": [{
-                    "id": 85,
-                    "name": "isbn",
-                    "uri": "/test_csv.csv#isbn"
-                }],
-                "id": 99
-            }],
-            "name": "test_csv.csv schema",
-            "id": 6
+        "uuid" : "6"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_7",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "id",
+            "uri" : "/test_csv.csv#id",
+            "uuid" : "88"
+          } ],
+          "uuid" : "96"
         },
-        "configuration": {
-            "parameters": {
-                "storage_type": "csv",
-                "column_names": "columnN",
-                "quote_character": "\"",
-                "escape_character": "\\",
-                "column_delimiter": ";"
-            },
-            "resources": [{
-                "id": 2
-            }],
-            "id": 2
+        "uuid" : "7"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_8",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "name",
+            "uri" : "/test_csv.csv#name",
+            "uuid" : "87"
+          } ],
+          "uuid" : "97"
         },
-        "description": " data model of resource test_csv.csv and configuration  null",
-        "name": "test_csv.csv + null data model",
-        "id": 6
+        "uuid" : "8"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_9",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "year",
+            "uri" : "/test_csv.csv#year",
+            "uuid" : "86"
+          } ],
+          "uuid" : "100"
+        },
+        "uuid" : "9"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_10",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "isbn",
+            "uri" : "/test_csv.csv#isbn",
+            "uuid" : "85"
+          } ],
+          "uuid" : "99"
+        },
+        "uuid" : "10"
+      } ],
+      "name" : "test_csv.csv schema",
+      "uuid" : "6"
     },
-    "input_data_model": {
-        "data_resource": {
-            "configurations": [{
-                "parameters": {
-                    "storage_type": "csv",
-                    "column_names": "columnN",
-                    "quote_character": "\"",
-                    "escape_character": "\\",
-                    "column_delimiter": ";"
-                },
-                "resources": [{
-                    "id": 2
-                }],
-                "id": 2
-            }],
-            "resource_attributes": {
-                "filesize": -1,
-                "path": "/Users/knut/Development/Projects/DMP/init/../tmp/resources/test_csv.csv"
-            },
-            "type": "FILE",
-            "description": "ssdfadfsdf",
-            "name": "test_csv.csv",
-            "id": 2
+    "configuration" : {
+      "parameters" : {
+        "storage_type" : "csv",
+        "column_names" : "columnN",
+        "quote_character" : "\"",
+        "escape_character" : "\\",
+        "column_delimiter" : ";"
+      },
+      "resources" : [ {
+        "uuid" : "2"
+      } ],
+      "uuid" : "2"
+    },
+    "description" : " data model of resource test_csv.csv and configuration  null",
+    "name" : "test_csv.csv + null data model",
+    "uuid" : "6"
+  },
+  "input_data_model" : {
+    "data_resource" : {
+      "configurations" : [ {
+        "parameters" : {
+          "storage_type" : "csv",
+          "column_names" : "columnN",
+          "quote_character" : "\"",
+          "escape_character" : "\\",
+          "column_delimiter" : ";"
         },
-        "schema": {
-            "record_class": {
-                "id": 80,
-                "name": "record type",
-                "uri": "/test_csv.csv#RecordType"
-            },
-            "attribute_paths": [{
-                "attributes": [{
-                    "id": 89,
-                    "name": "description",
-                    "uri": "/test_csv.csv#description"
-                }],
-                "id": 98
-            }, {
-                "attributes": [{
-                    "id": 88,
-                    "name": "id",
-                    "uri": "/test_csv.csv#id"
-                }],
-                "id": 96
-            }, {
-                "attributes": [{
-                    "id": 87,
-                    "name": "name",
-                    "uri": "/test_csv.csv#name"
-                }],
-                "id": 97
-            }, {
-                "attributes": [{
-                    "id": 86,
-                    "name": "year",
-                    "uri": "/test_csv.csv#year"
-                }],
-                "id": 100
-            }, {
-                "attributes": [{
-                    "id": 85,
-                    "name": "isbn",
-                    "uri": "/test_csv.csv#isbn"
-                }],
-                "id": 99
-            }],
-            "name": "test_csv.csv schema",
-            "id": 6
+        "resources" : [ {
+          "uuid" : "2"
+        } ],
+        "uuid" : "2"
+      } ],
+      "resource_attributes" : {
+        "filesize" : -1,
+        "path" : "/Users/knut/Development/Projects/DMP/init/../tmp/resources/test_csv.csv"
+      },
+      "type" : "FILE",
+      "description" : "ssdfadfsdf",
+      "name" : "test_csv.csv",
+      "uuid" : "2"
+    },
+    "schema" : {
+      "record_class" : {
+        "name" : "record type",
+        "uri" : "/test_csv.csv#RecordType",
+        "uuid" : "80"
+      },
+      "attribute_paths" : [ {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_1",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "description",
+            "uri" : "/test_csv.csv#description",
+            "uuid" : "89"
+          } ],
+          "uuid" : "98"
         },
-        "configuration": {
-            "parameters": {
-                "storage_type": "csv",
-                "column_names": "columnN",
-                "quote_character": "\"",
-                "escape_character": "\\",
-                "column_delimiter": ";"
-            },
-            "resources": [{
-                "id": 2
-            }],
-            "id": 2
+        "uuid" : "1"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_2",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "id",
+            "uri" : "/test_csv.csv#id",
+            "uuid" : "88"
+          } ],
+          "uuid" : "96"
         },
-        "description": " data model of resource test_csv.csv and configuration  null",
-        "name": "test_csv.csv + null data model",
-        "id": 6
-    }
+        "uuid" : "2"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_3",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "name",
+            "uri" : "/test_csv.csv#name",
+            "uuid" : "87"
+          } ],
+          "uuid" : "97"
+        },
+        "uuid" : "3"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_4",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "year",
+            "uri" : "/test_csv.csv#year",
+            "uuid" : "86"
+          } ],
+          "uuid" : "100"
+        },
+        "uuid" : "4"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_5",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "isbn",
+            "uri" : "/test_csv.csv#isbn",
+            "uuid" : "85"
+          } ],
+          "uuid" : "99"
+        },
+        "uuid" : "5"
+      } ],
+      "name" : "test_csv.csv schema",
+      "uuid" : "6"
+    },
+    "configuration" : {
+      "parameters" : {
+        "storage_type" : "csv",
+        "column_names" : "columnN",
+        "quote_character" : "\"",
+        "escape_character" : "\\",
+        "column_delimiter" : ";"
+      },
+      "resources" : [ {
+        "uuid" : "2"
+      } ],
+      "uuid" : "2"
+    },
+    "description" : " data model of resource test_csv.csv and configuration  null",
+    "name" : "test_csv.csv + null data model",
+    "uuid" : "6"
+  }
 }

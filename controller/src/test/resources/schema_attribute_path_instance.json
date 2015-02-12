@@ -1,0 +1,67 @@
+{
+  "type" : "SchemaAttributePathInstance",
+  "name" : null,
+  "attribute_path" : {
+    "attributes" : [ {
+      "name" : "title",
+      "uri" : "http://purl.org/dc/terms/title",
+      "uuid" : "49"
+    }, {
+      "name" : "hasPart",
+      "uri" : "http://purl.org/dc/terms/hasPart",
+      "uuid" : "24"
+    }, {
+      "name" : "title",
+      "uri" : "http://purl.org/dc/terms/title",
+      "uuid" : "49"
+    } ],
+    "uuid" : "71"
+  },
+  "sub_schema" : {
+    "name" : "Default Schema",
+    "attribute_paths" : [ {
+      "type" : "SchemaAttributePathInstance",
+      "name" : null,
+      "attribute_path" : {
+        "attributes" : [ {
+          "name" : "title",
+          "uri" : "http://purl.org/dc/terms/title",
+          "uuid" : "49"
+        }, {
+          "name" : "hasPart",
+          "uri" : "http://purl.org/dc/terms/hasPart",
+          "uuid" : "24"
+        }, {
+          "name" : "title",
+          "uri" : "http://purl.org/dc/terms/title",
+          "uuid" : "49"
+        } ],
+        "uuid" : "71"
+      },
+      "uuid" : "75"
+    }, {
+      "type" : "SchemaAttributePathInstance",
+      "name" : null,
+      "attribute_path" : {
+        "attributes" : [ {
+          "name" : "title",
+          "uri" : "http://purl.org/dc/terms/title",
+          "uuid" : "49"
+        }, {
+          "name" : "hasPart",
+          "uri" : "http://purl.org/dc/terms/hasPart",
+          "uuid" : "24"
+        } ],
+        "uuid" : "72"
+      },
+      "uuid" : "76"
+    } ],
+    "record_class" : {
+      "name" : "document",
+      "uri" : "http://purl.org/ontology/bibo/Document",
+      "uuid" : "2"
+    },
+    "uuid" : "4"
+  },
+  "uuid" : "74"
+}

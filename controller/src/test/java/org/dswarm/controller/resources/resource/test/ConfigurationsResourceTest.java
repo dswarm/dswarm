@@ -24,7 +24,7 @@ import org.dswarm.persistence.service.resource.test.utils.ConfigurationServiceTe
 
 public class ConfigurationsResourceTest
 		extends
-		BasicResourceTest<ConfigurationsResourceTestUtils, ConfigurationServiceTestUtils, ConfigurationService, ProxyConfiguration, Configuration, Long> {
+		BasicResourceTest<ConfigurationsResourceTestUtils, ConfigurationServiceTestUtils, ConfigurationService, ProxyConfiguration, Configuration> {
 
 	public ConfigurationsResourceTest() {
 
@@ -32,5 +32,11 @@ public class ConfigurationsResourceTest
 				new ConfigurationsResourceTestUtils());
 
 		updateObjectJSONFileName = "configuration2.json";
+	}
+
+	@Override protected void initObjects() {
+		super.initObjects();
+
+		pojoClassResourceTestUtils = new ConfigurationsResourceTestUtils();
 	}
 }
