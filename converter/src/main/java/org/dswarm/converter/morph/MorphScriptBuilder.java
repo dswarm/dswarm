@@ -364,39 +364,41 @@ public class MorphScriptBuilder {
 									if (component.getFunction().getName().equals(METAMORPH_FUNCTION_WHITELIST)
 											|| component.getFunction().getName().equals(METAMORPH_FUNCTION_BLACKLIST)) {
 
-										List<String> lookupList = null;// new ArrayList();
-
 										try {
 
-											lookupList = DMPPersistenceUtil.getJSONObjectMapper().readValue(parameterMapping.getValue(), new TypeReference<List<String>>() {});
+											final List<String> lookupList = DMPPersistenceUtil.getJSONObjectMapper().readValue(parameterMapping.getValue(),
+													new TypeReference<List<String>>() {});
+
+											for (final String lookupEntry : lookupList) {
+
+												final Element lookup = doc.createElement(METAMORPH_ELEMENT_MAP_ENTRY);
+												lookup.setAttribute("name", lookupEntry);
+												map.appendChild(lookup);
+											}
 										} catch (final IOException e) {
+
 											MorphScriptBuilder.LOG.debug("lookup map as JSON string in parameter mappings could not convert to a list" + e);
 										}
 
-										for (final String lookupEntry : lookupList) {
-
-											final Element lookup = doc.createElement(METAMORPH_ELEMENT_MAP_ENTRY);
-											lookup.setAttribute("name", lookupEntry);
-											map.appendChild(lookup);
-										}
 									} else {
-
-										Map<String, String> lookupEntrys = null;//new HashMap<String, String>();
 
 										try {
 //
-											lookupEntrys = DMPPersistenceUtil.getJSONObjectMapper().readValue(parameterMapping.getValue(), new TypeReference<HashMap<String, String>>() {});
+											final Map<String, String> lookupEntrys = DMPPersistenceUtil.getJSONObjectMapper().readValue(parameterMapping.getValue(),
+													new TypeReference<HashMap<String, String>>() {});
+
+											for (final Entry<String, String> lookupEntry : lookupEntrys.entrySet()) {
+
+												final Element lookup = doc.createElement(METAMORPH_ELEMENT_MAP_ENTRY);
+												lookup.setAttribute("name", lookupEntry.getKey());
+												lookup.setAttribute("value", lookupEntry.getValue());
+												map.appendChild(lookup);
+											}
 										} catch (final IOException e) {
+
 											MorphScriptBuilder.LOG.debug("lookup map as JSON string in parameter mappings could not convert to a map" + e);
 										}
 
-										for (final Entry<String, String> lookupEntry : lookupEntrys.entrySet()) {
-
-											final Element lookup = doc.createElement(METAMORPH_ELEMENT_MAP_ENTRY);
-											lookup.setAttribute("name", lookupEntry.getKey());
-											lookup.setAttribute("value", lookupEntry.getValue());
-											map.appendChild(lookup);
-										}
 									}
 									break;
 
