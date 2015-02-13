@@ -45,6 +45,8 @@ public final class LoggingConfigurator {
 
 	private static final String FILE_SEPARATOR = System.getProperty("file.separator", "/");
 	private static final String LOGGING_PATH_CONFIG = "dswarm.paths.logging";
+	private static final String LOGLEVEL_CONFIG = "dswarm.loglevel";
+	private static final String ROOT_LOGLEVEL_CONFIG = "dswarm.root-loglevel";
 
 	private static final AtomicBoolean ALREADY_CONFIGURED = new AtomicBoolean(false);
 
@@ -52,10 +54,13 @@ public final class LoggingConfigurator {
 
 	public static void configureFrom(final Config config) {
 		Preconditions.checkNotNull(config);
-		configure(config.getString(LOGGING_PATH_CONFIG));
+		configure(
+				config.getString(LOGGING_PATH_CONFIG),
+				config.getString(ROOT_LOGLEVEL_CONFIG),
+				config.getString(LOGLEVEL_CONFIG));
 	}
 
-	private static void configure(final String loggingPath) {
+	private static void configure(final String loggingPath, final String logLevel, final String rootLogLevel) {
 		if (ALREADY_CONFIGURED.getAndSet(true)) {
 			return;
 		}
@@ -69,30 +74,39 @@ public final class LoggingConfigurator {
 		if (sm != null)  {
 			sm.add(new InfoStatus("Setting up dswarm configuration.", lc));
 		}
-		configureLogback(loggingPath, lc);
+
+		final Level level = Level.toLevel(logLevel, Level.INFO);
+		final Level rootLevel = Level.toLevel(rootLogLevel, Level.INFO);
+		configureLogback(loggingPath, lc, level, rootLevel);
 	}
 
 	private static String filePath(final String... paths) {
 		return Joiner.on(FILE_SEPARATOR).join(paths);
 	}
 
-	private static void configureLogback(final String loggingPath, final LoggerContext lc) {
+	private static void configureLogback(final String loggingPath, final LoggerContext lc, final Level logLevel, final Level rootLogLevel) {
+		configureDswarmLogger(loggingPath, lc, logLevel);
+		configureRootLogger(loggingPath, lc, rootLogLevel);
+		OnConsoleStatusListener.addNewInstanceToContext(lc);
+	}
 
+	private static void configureDswarmLogger(final String loggingPath, final LoggerContext lc, final Level logLevel) {
 		final Logger dswarmLogger = lc.getLogger("org.dswarm");
-		// TODO: decrease/increase logging level as necessary
-		// TODO: make logging level configurable via Typesafe config
-		// dswarmLogger.setLevel(Level.DEBUG);
-		dswarmLogger.addAppender(addFileAppender(lc, loggingPath, Level.DEBUG));
+		dswarmLogger.setLevel(logLevel);
 		dswarmLogger.addAppender(addFileAppender(lc, loggingPath, Level.TRACE));
+		dswarmLogger.addAppender(addFileAppender(lc, loggingPath, Level.DEBUG));
 		dswarmLogger.addAppender(addFileAppender(lc, loggingPath, Level.INFO));
 		dswarmLogger.addAppender(addFileAppender(lc, loggingPath, Level.WARN));
 		dswarmLogger.addAppender(addFileAppender(lc, loggingPath, Level.ERROR));
+	}
 
+	private static void configureRootLogger(final String loggingPath, final LoggerContext lc, final Level logLevel) {
 		final Logger rootLogger = lc.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
-		rootLogger.setLevel(Level.INFO);
+		rootLogger.setLevel(logLevel);
+		rootLogger.addAppender(addFileAppender(lc, loggingPath, "default", Level.DEBUG));
 		rootLogger.addAppender(addFileAppender(lc, loggingPath, "default", Level.INFO));
-
-		OnConsoleStatusListener.addNewInstanceToContext(lc);
+		rootLogger.addAppender(addFileAppender(lc, loggingPath, "default", Level.WARN));
+		rootLogger.addAppender(addFileAppender(lc, loggingPath, "default", Level.ERROR));
 	}
 
 	private static Appender<ILoggingEvent> addFileAppender(final LoggerContext lc, final String loggingPath, final Level level) {

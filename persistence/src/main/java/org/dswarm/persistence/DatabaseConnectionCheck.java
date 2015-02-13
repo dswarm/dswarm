@@ -15,7 +15,6 @@
  */
 package org.dswarm.persistence;
 
-import java.math.BigInteger;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
@@ -55,7 +54,7 @@ public class DatabaseConnectionCheck {
 		final Query nativeQuery = entityManager.createNativeQuery(preferredTestQuery);
 
 		// TODO: Very much tied to SELECT 1
-		final int firstResult = ((BigInteger) nativeQuery.getSingleResult()).intValue();
+		final int firstResult = ((Long) nativeQuery.getSingleResult()).intValue();
 
 		return firstResult == 1;
 	}

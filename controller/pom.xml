@@ -56,7 +56,16 @@
 					</execution>
 				</executions>
 				<configuration>
-					<mainClass>org.dswarm.controller.Main</mainClass>
+					<executable>java</executable>
+					<arguments>
+						<argument>-Xms6g</argument>
+						<argument>-Xmx6g</argument>
+						<argument>-Dconfig.file=${project.basedir}/../dswarm.conf</argument>
+						<!--argument>-agentpath:/home/phorn/yjp-2015-eap-build-15026/bin/linux-x86-64/libyjpagent.so</argument-->
+						<argument>-classpath</argument>
+						<classpath/>
+						<argument>org.dswarm.controller.Main</argument>
+					</arguments>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -79,7 +88,7 @@
 						<port>8086</port>
 					</httpConnector>
 					<webApp>
-						<contextPath>/docs</contextPath>
+						<contextPath>/dmp</contextPath>
 					</webApp>
 				</configuration>
 			</plugin>
