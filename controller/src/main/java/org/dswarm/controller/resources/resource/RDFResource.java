@@ -64,6 +64,8 @@ public class RDFResource {
 	}
 
 	/**
+	 * TODO: move this to "../datamodels/content" or "../datamodels/export", i.e., DataModelsResource
+	 *
 	 * for triggering a download
 	 *
 	 * @throws DMPControllerException

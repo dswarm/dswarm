@@ -30,6 +30,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -52,6 +53,7 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.dswarm.common.DMPStatics;
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.eventbus.CSVConverterEvent;
 import org.dswarm.controller.eventbus.CSVConverterEventRecorder;
@@ -70,6 +72,8 @@ import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
+import org.dswarm.persistence.model.schema.Clasz;
+import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.util.GDMUtil;
@@ -272,12 +276,14 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 	}
 
 	/**
+	 * TODO: rename endpoint to "../content" instead of "../export"
+	 *
 	 * @param uuid
 	 * @param format serialization format the data model should be serialized in, injected from accept header field
 	 * @return a single data model, serialized in exportLanguage
 	 * @throws DMPControllerException
 	 */
-	@ApiOperation(value = "exports a selected data model from the graph DB in the requested RDF serialisation format", notes = "Returns exported data in the requested RDF serialisation format.")
+	@ApiOperation(value = "exports a selected data model from the graph DB in the requested format, .e.g., various RDF serialisation formats or XML", notes = "Returns exported data in the requested format.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "export was successfully processed"),
 			@ApiResponse(code = 404, message = "could not find a data model for the given uuid"),
 			@ApiResponse(code = 406, message = "requested export format is not supported"),
@@ -302,11 +308,66 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 		// construct dataModelURI from data model uuid
 		final String dataModelURI = GDMUtil.getDataModelGraphURI(uuid);
 
-		LOG.debug("Forwarding to graph db: request to export rdf of datamodel with uuid \"" + uuid + "\" to " + format);
+		LOG.debug("Forwarding to graph db: request to export content of data model with uuid \"" + uuid + "\" to " + format);
 
-		// send the request to graph DB
-		final WebTarget target = target("/export");
-		final Response responseFromGraph = target.queryParam("data_model_uri", dataModelURI).request().accept(format).get(Response.class);
+		final Response responseFromGraph;
+
+		if (format != null && MediaType.APPLICATION_XML.equals(format)) {
+
+			// build request JSON
+
+			final ObjectNode requestJson = objectMapperProvider.get().createObjectNode();
+
+			// record class uri
+			final Optional<Schema> optionalSchema = Optional.fromNullable(freshDataModel.getSchema());
+
+			if(optionalSchema.isPresent()) {
+
+				final Optional<Clasz> optionalRecordClass = Optional.fromNullable(optionalSchema.get().getRecordClass());
+
+				if(optionalRecordClass.isPresent()) {
+
+					final String recordClassURI = optionalRecordClass.get().getUri();
+
+					requestJson.put(DMPStatics.RECORD_CLASS_URI_IDENTIFIER, recordClassURI);
+				}
+			}
+
+			// data model uri
+			requestJson.put(DMPStatics.DATA_MODEL_URI_IDENTIFIER, dataModelURI);
+
+			// root attribute path
+			// TODO
+
+			// record tag
+			final Optional<Configuration> optionalConfiguration = Optional.fromNullable(freshDataModel.getConfiguration());
+
+			if(optionalConfiguration.isPresent()) {
+
+				final Optional<JsonNode> optionalRecordTagNode = Optional.fromNullable(optionalConfiguration.get().getParameter(ConfigurationStatics.RECORD_TAG));
+
+				if(optionalRecordTagNode.isPresent()) {
+
+					final String recordTag = optionalRecordTagNode.get().asText();
+
+					requestJson.put(DMPStatics.RECORD_TAG_IDENTIFIER, recordTag);
+				}
+			}
+
+			// version
+			// TODO
+
+			final String requestJsonString = serializeObject(requestJson);
+
+			// send the request to graph DB
+			final WebTarget target = service().path("/xml/get");
+			responseFromGraph = target.request(MediaType.APPLICATION_XML_TYPE).post(Entity.entity(requestJsonString, MediaType.APPLICATION_JSON));
+		} else {
+
+			// send the request to graph DB
+			final WebTarget target = target("/export");
+			responseFromGraph = target.queryParam("data_model_uri", dataModelURI).request().accept(format).get(Response.class);
+		}
 
 		return ExportUtils.processGraphDBResponseInternal(responseFromGraph);
 	}
@@ -487,9 +548,14 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 		return builder.register(MultiPartFeature.class).build();
 	}
 
+	private WebTarget service() {
+
+		return client().target(graphEndpoint);
+	}
+
 	private WebTarget target() {
 
-		return client().target(graphEndpoint).path(RDFResource.resourceIdentifier);
+		return service().path(RDFResource.resourceIdentifier);
 	}
 
 	private WebTarget target(final String... path) {
