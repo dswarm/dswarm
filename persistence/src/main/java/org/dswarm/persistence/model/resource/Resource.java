@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013, 2014 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
+ * Copyright (C) 2013 – 2015 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,16 +37,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import ch.lambdaj.Lambda;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Charsets;
 import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
 import com.wordnik.swagger.annotations.ApiModel;
+import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.dswarm.init.DMPException;
 import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
+import org.dswarm.persistence.model.representation.ConfigurationSetReferenceDeserializer;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -83,7 +87,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "attributes", columnDefinition = "BLOB")
-	private String attributesString;
+	private byte[] attributesString;
 
 	/**
 	 * A JSON object for attributes.
@@ -104,7 +108,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 	@ManyToMany(mappedBy = "resources", fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
 			CascadeType.REFRESH })
 	// @JsonSerialize(using = ConfigurationReferenceSerializer.class)
-	// @JsonDeserialize(using = ConfigurationReferenceDeserializer.class)
+	@JsonDeserialize(using = ConfigurationSetReferenceDeserializer.class)
 	@XmlIDREF
 	@XmlList
 	// @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
@@ -356,7 +360,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 
 		if (attributes != null) {
 
-			attributesString = attributes.toString();
+			attributesString = attributes.toString().getBytes(Charsets.UTF_8);
 		}
 	}
 
@@ -385,7 +389,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 
 			try {
 
-				attributes = DMPPersistenceUtil.getJSON(attributesString);
+				attributes = DMPPersistenceUtil.getJSON(StringUtils.toEncodedString(attributesString, Charsets.UTF_8));
 			} catch (final DMPException e) {
 
 				Resource.LOG.debug("couldn't parse attributes JSON string for resource '" + getUuid() + "'");

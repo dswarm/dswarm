@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013, 2014 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
+ * Copyright (C) 2013 – 2015 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,15 +36,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Charsets;
 import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.dswarm.init.DMPException;
 import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
+import org.dswarm.persistence.model.representation.ResourceSetReferenceDeserializer;
 import org.dswarm.persistence.model.representation.SetResourceReferenceSerializer;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
@@ -75,7 +79,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 			inverseJoinColumns = { @JoinColumn(name = "RESOURCE_UUID", referencedColumnName = "UUID") })
 	@JsonSerialize(using = SetResourceReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	// @JsonDeserialize(using = ResourceReferenceDeserializer.class)
+	@JsonDeserialize(using = ResourceSetReferenceDeserializer.class)
 	@XmlIDREF
 	@XmlList
 	// @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
@@ -87,7 +91,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "parameters", columnDefinition = "BLOB")
-	private String parametersString;
+	private byte[] parametersString;
 
 	/**
 	 * A JSON object of configuration parameters.
@@ -292,7 +296,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 
 		if (parameters != null) {
 
-			parametersString = parameters.toString();
+			parametersString = parameters.toString().getBytes(Charsets.UTF_8);
 		}
 	}
 
@@ -322,7 +326,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 
 			try {
 
-				parameters = DMPPersistenceUtil.getJSON(parametersString);
+				parameters = DMPPersistenceUtil.getJSON(StringUtils.toEncodedString(parametersString, Charsets.UTF_8));
 			} catch (final DMPException e) {
 
 				Configuration.LOG.debug("couldn't parse parameters JSON string for configuration '" + getUuid() + "'");

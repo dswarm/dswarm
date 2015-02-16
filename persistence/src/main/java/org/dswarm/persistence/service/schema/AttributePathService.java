@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013, 2014 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
+ * Copyright (C) 2013 – 2015 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -106,9 +106,7 @@ public class AttributePathService extends BasicJPAService<ProxyAttributePath, At
 
 			final AttributePath tempAttributePath = mergeAttributesIntoEntityManager(object, entityManager);
 
-			persistObject(tempAttributePath, entityManager);
-
-			newObject = tempAttributePath;
+			newObject = persistObject(tempAttributePath, entityManager);
 
 			return new ProxyAttributePath(newObject);
 		} else {
@@ -163,7 +161,7 @@ public class AttributePathService extends BasicJPAService<ProxyAttributePath, At
 
 		final AttributePath object;
 
-		final String queryString = "from " + className + " where attributePath = '" + attributePath + "'";
+		final String queryString = "SELECT o FROM " + className + " o WHERE o.attributePath = '" + attributePath + "'";
 		final TypedQuery<AttributePath> query = entityManager.createQuery(queryString, clasz);
 
 		try {
@@ -231,7 +229,7 @@ public class AttributePathService extends BasicJPAService<ProxyAttributePath, At
 
 		final EntityManager entityManager = acquire(true);
 
-		final String queryString = "from " + AttributePath.class.getName() + " where attributePath = '" + attributePathJSONArrayString + "'";
+		final String queryString = "SELECT o FROM " + AttributePath.class.getName() + " o WHERE o.attributePath = '" + attributePathJSONArrayString + "'";
 
 		final TypedQuery<AttributePath> query = entityManager.createQuery(queryString, AttributePath.class);
 

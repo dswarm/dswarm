@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013, 2014 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
+ * Copyright (C) 2013 – 2015 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,9 +38,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,7 +107,7 @@ public class Schema extends BasicDMPJPAObject {
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "SCHEMA_ATTRIBUTE_PATH_INSTANCES", columnDefinition = "LONGBLOB")
-	private String attributePathsJsonString;
+	private byte[] attributePathsJsonString;
 
 	/**
 	 * The record class of the schema.
@@ -429,7 +431,7 @@ public class Schema extends BasicDMPJPAObject {
 
 			try {
 				orderedAttributePaths = Maps.newLinkedHashMap();
-				orderedAttributePathsJson = DMPPersistenceUtil.getJSONArray(attributePathsJsonString);
+				orderedAttributePathsJson = DMPPersistenceUtil.getJSONArray(StringUtils.toEncodedString(attributePathsJsonString, Charsets.UTF_8));
 
 				if (orderedAttributePathsJson != null) {
 
@@ -456,7 +458,7 @@ public class Schema extends BasicDMPJPAObject {
 		}
 
 		if (orderedAttributePathsJson != null && orderedAttributePathsJson.size() > 0) {
-			attributePathsJsonString = orderedAttributePathsJson.toString();
+			attributePathsJsonString = orderedAttributePathsJson.toString().getBytes(Charsets.UTF_8);
 		} else {
 			attributePathsJsonString = null;
 		}

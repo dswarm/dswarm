@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013, 2014 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
+ * Copyright (C) 2013 – 2015 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.util.Set;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,8 +39,10 @@ import ch.lambdaj.Lambda;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +62,7 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 // @Cacheable(true)
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "ATTRIBUTE_PATH")
+@Cacheable(false)
 public class AttributePath extends DMPObject {
 
 	/**
@@ -105,7 +109,7 @@ public class AttributePath extends DMPObject {
 	@Lob
 	@Access(AccessType.FIELD)
 	@Column(name = "ATTRIBUTE_PATH", columnDefinition = "BLOB")
-	private String attributePath;
+	private byte[] attributePath;
 
 	/**
 	 * All schemas that utilise this attribute path
@@ -186,7 +190,7 @@ public class AttributePath extends DMPObject {
 
 		refreshAttributePathString();
 
-		return attributePath;
+		return StringUtils.toEncodedString(attributePath, Charsets.UTF_8);
 	}
 
 	/**
@@ -231,7 +235,7 @@ public class AttributePath extends DMPObject {
 
 				if (null == attributes) {
 
-					attributes = Sets.newCopyOnWriteArraySet();
+					attributes = Sets.newConcurrentHashSet();
 				}
 
 				attributes.clear();
@@ -260,7 +264,7 @@ public class AttributePath extends DMPObject {
 
 			if (attributes == null) {
 
-				attributes = Sets.newCopyOnWriteArraySet();
+				attributes = Sets.newConcurrentHashSet();
 			}
 
 			if (orderedAttributes == null) {
@@ -473,7 +477,7 @@ public class AttributePath extends DMPObject {
 
 		if (null != orderedAttributesJSON && orderedAttributesJSON.size() > 0) {
 
-			attributePath = orderedAttributesJSON.toString();
+			attributePath = orderedAttributesJSON.toString().getBytes(Charsets.UTF_8);
 		} else {
 
 			attributePath = null;
@@ -510,7 +514,7 @@ public class AttributePath extends DMPObject {
 				orderedAttributes = Lists.newLinkedList();
 
 				// parse attribute path string
-				orderedAttributesJSON = DMPPersistenceUtil.getJSONArray(attributePath);
+				orderedAttributesJSON = DMPPersistenceUtil.getJSONArray(StringUtils.toEncodedString(attributePath, Charsets.UTF_8));
 
 				if (null != orderedAttributesJSON) {
 

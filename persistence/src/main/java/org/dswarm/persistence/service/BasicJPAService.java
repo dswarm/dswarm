@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013, 2014 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
+ * Copyright (C) 2013 – 2015 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,8 @@ package org.dswarm.persistence.service;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
 import java.util.List;
 
-import javax.persistence.CacheRetrieveMode;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
@@ -178,18 +176,18 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 		// i.e. uuid will be created on demand in createNewObject
 		final POJOCLASS object = createNewObject(null);
 
-		persistObject(object, entityManager);
+		final POJOCLASS persistedObject = persistObject(object, entityManager);
 
-		return createNewProxyObject(object);
+		return createNewProxyObject(persistedObject);
 	}
 
 	protected PROXYPOJOCLASS createObjectInternal(final String uuid, final EntityManager entityManager) throws DMPPersistenceException {
 
 		final POJOCLASS object = createNewObject(uuid);
 
-		persistObject(object, entityManager);
+		final POJOCLASS persistedObject = persistObject(object, entityManager);
 
-		return createNewProxyObject(object);
+		return createNewProxyObject(persistedObject);
 	}
 
 	/**
@@ -232,13 +230,11 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 		// TODO: shall we check, whether the entity with the UUID already exists in the DB, or not?
 		final POJOCLASS newObject = createNewObject(object.getUuid());
 
-		persistObject(newObject, entityManager);
-
 		updateObjectInternal(object, newObject, entityManager);
 
-		entityManager.merge(newObject);
+		final POJOCLASS persistedObject = persistObject(newObject, entityManager);
 
-		return createNewProxyObject(newObject, RetrievalType.CREATED);
+		return createNewProxyObject(persistedObject, RetrievalType.CREATED);
 	}
 
 	/**
@@ -298,20 +294,20 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 		updateObjectInternal(object, updateObject, entityManager);
 
-		entityManager.merge(updateObject);
+		final POJOCLASS mergedUpdatedObject = entityManager.merge(updateObject);
 
 		BasicJPAService.LOG.debug("updated " + className + " with id '" + object.getUuid() + "' " + transactionType);
 
 		if (updateObject != null) {
 
-			BasicJPAService.LOG.debug("updated " + className + " with id '" + updateObject.getUuid() + "' in the database " + transactionType);
-			BasicJPAService.LOG.trace("= '" + ToStringBuilder.reflectionToString(updateObject) + "'");
+			BasicJPAService.LOG.debug("updated " + className + " with id '" + mergedUpdatedObject.getUuid() + "' in the database " + transactionType);
+			BasicJPAService.LOG.trace("= '" + ToStringBuilder.reflectionToString(mergedUpdatedObject) + "'");
 		} else {
 
 			BasicJPAService.LOG.debug("couldn't updated " + className + " with id '" + object.getUuid() + "' in the database " + transactionType);
 		}
 
-		return proxyUpdateObject;
+		return createNewProxyObject(mergedUpdatedObject, proxyUpdateObject.getType());
 	}
 
 	/**
@@ -337,7 +333,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	public List<POJOCLASS> getObjects() {
 
 		final EntityManager entityManager = acquire();
-		final TypedQuery<POJOCLASS> query = entityManager.createQuery("from " + className, clasz);
+		final TypedQuery<POJOCLASS> query = entityManager.createQuery("SELECT o FROM " + className + " o", clasz);
 
 		return query.getResultList();
 	}
@@ -372,8 +368,9 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 		BasicJPAService.LOG.debug("try to find " + className + " with uuid '" + uuid + "' in the database");
 
-		final POJOCLASS entity = entityManager.find(clasz, uuid,
-				Collections.<String, Object>singletonMap("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS));
+		final POJOCLASS entity = entityManager.find(clasz, uuid);
+		/*,
+				Collections.<String, Object>singletonMap("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS));*/
 
 		if (entity != null) {
 
@@ -444,13 +441,18 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 		return proxyUpdateObject;
 	}
 
-	protected void persistObject(final POJOCLASS object, final EntityManager entityManager) {
+	protected POJOCLASS persistObject(final POJOCLASS object, final EntityManager entityManager) {
 
 		BasicJPAService.LOG.debug("try to create new " + className);
 
-		entityManager.persist(object);
+		// http://blog.xebia.com/2009/03/23/jpa-implementation-patterns-saving-detached-entities/
+		// "Because of the way merging works, we can also do this if we are unsure whether the object has been already persisted."
+		final POJOCLASS mergedObject = entityManager.merge(object);
+		//.persist(object);
 
 		BasicJPAService.LOG.debug("created new " + className + " with id '" + object.getUuid() + "'");
+
+		return mergedObject;
 	}
 
 	/**
@@ -536,20 +538,6 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	 * @throws DMPPersistenceException if something went wrong.
 	 */
 	private POJOCLASS createNewObject(final String uuid) throws DMPPersistenceException {
-
-		//		final POJOCLASS object;
-		//
-		//		try {
-		//
-		//			object = clasz.newInstance();
-		//		} catch (final InstantiationException | IllegalAccessException e) {
-		//
-		//			BasicJPAService.LOG.error("something went wrong while " + className + "object creation", e);
-		//
-		//			throw new DMPPersistenceException(e.getMessage());
-		//		}
-		//
-		//		return object;
 
 		final POJOCLASS object;
 

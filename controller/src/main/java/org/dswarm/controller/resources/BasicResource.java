@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013, 2014 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
+ * Copyright (C) 2013 – 2015 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
-import com.codahale.metrics.Timer;
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -453,26 +452,7 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 			throw new DMPControllerException("fresh " + pojoClassName + " shouldn't be null");
 		}
 
-		final POJOCLASS preparedObject = prepareObjectForUpdate(objectFromJSON, object);
-
-		// update the persistent object in the DB
-
-		try {
-
-			final PROXYPOJOCLASS proxyUpdatedObject = persistenceService.updateObjectTransactional(preparedObject);
-
-			if (proxyUpdatedObject == null) {
-
-				throw new DMPControllerException("something went wrong while " + pojoClassName + " updating");
-			}
-
-			return persistenceServiceProvider.get().createNewProxyObject(proxyUpdatedObject.getObject(), proxyObject.getType());
-		} catch (final DMPPersistenceException e) {
-
-			BasicResource.LOG.debug("something went wrong while " + pojoClassName + " updating");
-
-			throw new DMPControllerException("something went wrong while " + pojoClassName + " updating\n" + e.getMessage());
-		}
+		return proxyObject;
 	}
 
 	/**
@@ -594,6 +574,6 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 	protected PROXYPOJOCLASS createObject(final POJOCLASS objectFromJSON, final POJOCLASSPERSISTENCESERVICE persistenceService)
 			throws DMPPersistenceException {
 
-		return persistenceService.createObjectTransactional();
+		return persistenceService.createObjectTransactional(objectFromJSON);
 	}
 }

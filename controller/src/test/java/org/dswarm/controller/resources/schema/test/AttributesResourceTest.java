@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013, 2014 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
+ * Copyright (C) 2013 – 2015 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -156,7 +156,7 @@ public class AttributesResourceTest extends
 		Assert.assertNotNull("attribute shouldn't be null", attribute);
 		Assert.assertNotNull("updated attribute shouldn't be null", updateAttribute);
 		Assert.assertEquals("ids of the modified attribute should be equal", modifiedAttribute.getUuid(), updateAttribute.getUuid());
-		Assert.assertNotEquals("id should be different, when uri was \"updated\" (uniqueness dosn't allow update of uri)", updateAttribute.getUuid(),
+		Assert.assertNotEquals("id should be different, when uri was \"updated\" (uniqueness constraint doesn't allow update of uri)", updateAttribute.getUuid(),
 				attribute.getUuid());
 
 		Assert.assertEquals("uri's should be equal", updateAttribute.getUri(), modifiedAttribute.getUri());

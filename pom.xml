@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (C) 2013, 2014 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
+    Copyright (C) 2013 – 2015 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -70,7 +70,8 @@
 		<version.maven.plugin.failsafe>2.18.1</version.maven.plugin.failsafe>
 		<version.maven.plugin.install>2.5.2</version.maven.plugin.install>
 		<version.maven.plugin.jar>2.5</version.maven.plugin.jar>
-		<version.maven.plugin.javadoc>2.10.1</version.maven.plugin.javadoc>
+		<!-- before changing the javadoc plugin version, checkout http://stackoverflow.com/a/25986409/2996265 -->
+		<version.maven.plugin.javadoc>2.9.1</version.maven.plugin.javadoc>
 		<version.maven.plugin.jxr>2.5</version.maven.plugin.jxr>
 		<version.maven.plugin.license>2.7</version.maven.plugin.license>
 		<version.maven.plugin.pmd>3.3</version.maven.plugin.pmd>
@@ -380,6 +381,7 @@
 					<configuration>
 						<source>${java.source.version}</source>
 						<show>private</show>
+						<failOnError>false</failOnError>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -413,7 +415,7 @@
 					<header>com/mycila/maven/plugin/license/templates/APACHE-2.txt</header>
 					<properties>
 						<owner>SLUB Dresden &amp; Avantgarde Labs GmbH</owner>
-						<project.inceptionYear>2013, 2014</project.inceptionYear>
+						<project.inceptionYear>2013 &ndash; 2015</project.inceptionYear>
 						<email>&lt;code@dswarm.org&gt;</email>
 					</properties>
 					<useDefaultExcludes>true</useDefaultExcludes>
@@ -491,6 +493,7 @@
 						<artifactId>doclet</artifactId>
 						<version>${version.umlgraph-doclet}</version>
 					</docletArtifact>
+					<failOnError>false</failOnError>
 					<show>private</show>
 					<additionalparam>-all -constructors -inferdepinpackage -inferrel</additionalparam>
 					<useStandardDocletOptions>false</useStandardDocletOptions>

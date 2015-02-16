@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013, 2014 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
+ * Copyright (C) 2013 – 2015 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,12 +64,12 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 	protected final String exampleDataResourceFileName;
 
-	protected final ObjectMapper objectMapper;
+	protected Provider<ObjectMapper> objectMapper;
 
 	public AbstractXMLTransformationFlowTest(final String taskJSONFileNameArg, final String expectedResultJSONFileNameArg, final String recordTagArg,
 			final String xmlNamespaceArg, final String exampleDataResourceFileNameArg) {
 
-		objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
+		objectMapper = GuicedTest.injector.getProvider(ObjectMapper.class);
 
 		taskJSONFileName = taskJSONFileNameArg;
 		expectedResultJSONFileName = expectedResultJSONFileNameArg;
@@ -186,22 +186,25 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		//
 		// System.out.println(tuplesJSON);
 
-		final String inputDataModelJSONString = objectMapper.writeValueAsString(updatedInputDataModel);
-		final ObjectNode inputDataModelJSON = objectMapper.readValue(inputDataModelJSONString, ObjectNode.class);
+		final String inputDataModelJSONString = objectMapper.get().writeValueAsString(updatedInputDataModel);
+		final ObjectNode inputDataModelJSON = objectMapper.get().readValue(inputDataModelJSONString, ObjectNode.class);
 
 		// manipulate input data model
-		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
+		final ObjectNode taskJSON = objectMapper.get().readValue(taskJSONString, ObjectNode.class);
 		taskJSON.set("input_data_model", inputDataModelJSON);
 
 		final String internalModelId = DataModelUtils.BIBO_DOCUMENT_DATA_MODEL_UUID;
 		final DataModel outputDataModel = dataModelService.getObject(internalModelId);
-		final String outputDataModelJSONString = objectMapper.writeValueAsString(outputDataModel);
-		final ObjectNode outputDataModelJSON = objectMapper.readValue(outputDataModelJSONString, ObjectNode.class);
+		final String outputDataModelJSONString = objectMapper.get().writeValueAsString(outputDataModel);
+		final ObjectNode outputDataModelJSON = objectMapper.get().readValue(outputDataModelJSONString, ObjectNode.class);
 		taskJSON.set("output_data_model", outputDataModelJSON);
 
-		final String finalTaskJSONString = objectMapper.writeValueAsString(taskJSON);
+		final String finalTaskJSONString = objectMapper.get().writeValueAsString(taskJSON);
 
-		final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
+		// note: we need to re-inject the object mapper here, because the entity manager factory got closed in between and cannot be utilised anymore
+		objectMapper = GuicedTest.injector.getProvider(ObjectMapper.class);
+
+		final Task task = objectMapper.get().readValue(finalTaskJSONString, Task.class);
 
 		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
 				.getProvider(InternalModelServiceFactory.class);
@@ -229,13 +232,13 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 	protected void compareResults(final String expectedResultJSONString, final String actualResultJSONString) throws Exception {
 
-		final ArrayNode expectedJSONArray = objectMapper.readValue(expectedResultJSONString, ArrayNode.class);
+		final ArrayNode expectedJSONArray = objectMapper.get().readValue(expectedResultJSONString, ArrayNode.class);
 		final ObjectNode expectedElementInArray = (ObjectNode) expectedJSONArray.get(0);
 		final String expectedKeyInArray = expectedElementInArray.fieldNames().next();
 		final ObjectNode expectedJSON = (ObjectNode) expectedElementInArray.get(expectedKeyInArray).get(0);
-		final String finalExpectedJSONString = objectMapper.writeValueAsString(expectedJSON);
+		final String finalExpectedJSONString = objectMapper.get().writeValueAsString(expectedJSON);
 
-		final ArrayNode actualJSONArray = objectMapper.readValue(actualResultJSONString, ArrayNode.class);
+		final ArrayNode actualJSONArray = objectMapper.get().readValue(actualResultJSONString, ArrayNode.class);
 		final ObjectNode actualElementInArray = (ObjectNode) actualJSONArray.get(0);
 		final String actualKeyInArray = actualElementInArray.fieldNames().next();
 		final Iterable<JsonNode> actualKeyArray = actualElementInArray.get(actualKeyInArray);
@@ -253,7 +256,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 			actualJSON = (ObjectNode) actualKeyArrayItem;
 		}
 
-		final String finalActualJSONString = objectMapper.writeValueAsString(actualJSON);
+		final String finalActualJSONString = objectMapper.get().writeValueAsString(actualJSON);
 
 		Assert.assertEquals(finalExpectedJSONString.length(), finalActualJSONString.length());
 	}

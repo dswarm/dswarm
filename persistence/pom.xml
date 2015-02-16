@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (C) 2013, 2014 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
+    Copyright (C) 2013 – 2015 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -35,12 +35,13 @@
 		<project.root>${basedir}/..</project.root>
 		<!-- <version.ehcache>2.7.2</version.ehcache> -->
 		<version.hamcrest>1.3</version.hamcrest>
-		<version.hibernate>4.3.8.Final</version.hibernate>
-		<version.hibernate-validator>5.1.3.Final</version.hibernate-validator>
+		<!--<version.hibernate>4.3.8.Final</version.hibernate>
+		<version.hibernate-validator>5.1.3.Final</version.hibernate-validator>-->
 		<version.javax.el-api>3.0.0</version.javax.el-api>
 		<version.lambdaj>2.4</version.lambdaj>
-		<version.maven.plugin.hibernate>1.0.5</version.maven.plugin.hibernate>
+		<!--<version.maven.plugin.hibernate>1.0.5</version.maven.plugin.hibernate>-->
 		<version.mysql-connector-java>5.1.34</version.mysql-connector-java>
+		<version.eclipselink>2.6.0-M3</version.eclipselink>
 	</properties>
 
 	<repositories>
@@ -57,13 +58,13 @@
 
 	<build>
 		<plugins>
-			<plugin>
+			<!--<plugin>
 				<groupId>de.juplo</groupId>
 				<artifactId>hibernate4-maven-plugin</artifactId>
-				<version>${version.maven.plugin.hibernate}</version>
+				<version>${version.maven.plugin.hibernate}</version>-->
 				<!-- <executions> <execution> <goals> <goal>export</goal> </goals> </execution>
 					</executions> -->
-				<configuration>
+				<!--<configuration>
 					<hibernateProperties>${project.build.directory}/test-classes/hibernate.hbm2ddl.properties</hibernateProperties>
 					<target>SCRIPT</target>
 				</configuration>
@@ -74,7 +75,7 @@
 						<version>${version.mysql-connector-java}</version>
 					</dependency>
 				</dependencies>
-			</plugin>
+			</plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -85,6 +86,30 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>de.empulse.eclipselink</groupId>
+				<artifactId>staticweave-maven-plugin</artifactId>
+				<version>1.0.0</version>
+				<executions>
+					<execution>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>weave</goal>
+						</goals>
+						<configuration>
+							<persistenceXMLLocation>META-INF/persistence.xml</persistenceXMLLocation>
+							<logLevel>FINE</logLevel>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.eclipse.persistence</groupId>
+						<artifactId>org.eclipse.persistence.jpa</artifactId>
+						<version>${version.eclipselink}</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
@@ -105,7 +130,7 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>${version.mysql-connector-java}</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<version>${version.hibernate}</version>
@@ -147,6 +172,11 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-c3p0</artifactId>
 			<version>${version.hibernate}</version>
+		</dependency> -->
+		<dependency>
+			<groupId>org.eclipse.persistence</groupId>
+			<artifactId>org.eclipse.persistence.jpa</artifactId>
+			<version>${version.eclipselink}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
@@ -247,11 +277,11 @@
 			</exclusions>
 		</dependency>
 		<!-- jackson -->
-		<dependency>
+		<!--<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-hibernate4</artifactId>
 			<version>${version.jackson}</version>
-		</dependency>
+		</dependency>-->
 		<dependency>
 			<groupId>com.fasterxml.jackson.jaxrs</groupId>
 			<artifactId>jackson-jaxrs-json-provider</artifactId>

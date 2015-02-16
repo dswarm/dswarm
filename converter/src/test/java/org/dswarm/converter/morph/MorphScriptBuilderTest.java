@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013, 2014 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
+ * Copyright (C) 2013 – 2015 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,6 +71,12 @@ public class MorphScriptBuilderTest extends GuicedTest {
 	public void testMabxmlOneMappingWithFilterAndMultipleFunctionsToMorph() throws Exception {
 
 		compareTaskGeneratedMorphscript("dd-528.mabxml.task.json", "dd-528.mabxml.morph.xml");
+	}
+
+	@Test
+	public void tesDd906LookupFunction() throws Exception {
+
+		compareTaskGeneratedMorphscript("dd-906.lookups.task.json", "dd-906.lookups.morph.result.xml");
 	}
 
 	private void compareTaskGeneratedMorphscript(final String taskJSONFileName, final String morphFileName) throws Exception {

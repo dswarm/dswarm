@@ -153,7 +153,7 @@ SET foreign_key_checks = 0;
         UUID VARCHAR(160) not null,
         NAME varchar(255),
         DESCRIPTION VARCHAR(4000),
-        FUNCTION_DESCRIPTION VARCHAR(4000),
+        FUNCTION_DESCRIPTION BLOB,
         FUNCTION_TYPE varchar(255),
         PARAMETERS BLOB,
         primary key (UUID)

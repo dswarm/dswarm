@@ -74,4 +74,5 @@
             <compose postfix="d-com"/>
         </data>
     </rules>
+    <maps/>
 </metamorph>

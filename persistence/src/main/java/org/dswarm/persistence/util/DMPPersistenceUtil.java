@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013, 2014 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
+ * Copyright (C) 2013 – 2015 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
@@ -115,7 +114,7 @@ public final class DMPPersistenceUtil {
 	static {
 		MAPPER = new ObjectMapper();
 		final JaxbAnnotationModule module = new JaxbAnnotationModule();
-		DMPPersistenceUtil.MAPPER.registerModule(module).registerModule(new Hibernate4Module()).setSerializationInclusion(Include.NON_NULL)
+		DMPPersistenceUtil.MAPPER.registerModule(module).setSerializationInclusion(Include.NON_NULL)
 				.setSerializationInclusion(Include.NON_EMPTY);
 
 		FACTORY = DMPPersistenceUtil.MAPPER.getNodeFactory();

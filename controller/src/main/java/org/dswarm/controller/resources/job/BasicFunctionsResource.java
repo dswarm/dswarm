@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013, 2014 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
+ * Copyright (C) 2013 – 2015 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,6 @@ public abstract class BasicFunctionsResource<POJOCLASSPERSISTENCESERVICE extends
 	 * Creates a new resource (controller service) for the given concrete {@link Function} class with the provider of the concrete
 	 * {@link Function} persistence service, the object mapper and metrics registry.
 	 *
-	 * @param dmpStatusArg                  a metrics registry
 	 * @param pojoClassArg                  a concrete POJO class
 	 * @param persistenceServiceProviderArg the concrete persistence service that is related to the concrete POJO class
 	 * @param objectMapperProviderArg       an object mapper

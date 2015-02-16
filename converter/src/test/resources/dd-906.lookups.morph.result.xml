@@ -1,0 +1,54 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+    <meta>
+        <name>mapping-4402051926041, mapping-1402051926041</name>
+    </meta>
+    <rules>
+        <combine flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld" includeSubEntities="true" name="@feld_value__1__" reset="true" sameEntity="true" value="${feld_value__1__.filtered}">
+            <if>
+                <all flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" includeSubEntities="true" name="CONDITION_ALL" reset="true">
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
+                        <regexp match="029"/>
+                    </data>
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
+                        <regexp match="m"/>
+                    </data>
+                </all>
+            </if>
+            <data name="feld_value__1__.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+        </combine>
+        <data name="http://purl.org/dc/elements/1.1/whitelist" source="@__TRANSFORMATION_OUTPUT_VARIABLE__2"/>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__2" source="@feld_value__1__">
+            <whitelist map="lookuplist_whitelist"/>
+        </data>
+        <combine flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld" includeSubEntities="true" name="@feld_value__0__" reset="true" sameEntity="true" value="${feld_value__0__.filtered}">
+            <if>
+                <all flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" includeSubEntities="true" name="CONDITION_ALL" reset="true">
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
+                        <regexp match="029"/>
+                    </data>
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
+                        <regexp match="m"/>
+                    </data>
+                </all>
+            </if>
+            <data name="feld_value__0__.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+        </combine>
+        <data name="http://purl.org/dc/elements/1.1/medium" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" source="@feld_value__0__">
+            <lookup default="n/a" in="lookupmap_language"/>
+        </data>
+    </rules>
+    <maps>
+        <map name="lookuplist_whitelist">
+            <entry name="MB"/>
+            <entry name="AB"/>
+            <entry name="CD"/>
+        </map>
+        <map name="lookupmap_language">
+            <entry name="XY" value="Andere"/>
+            <entry name="MB" value="Buch"/>
+            <entry name="ZS" value="Zeitschrift"/>
+        </map>
+    </maps>
+</metamorph>
