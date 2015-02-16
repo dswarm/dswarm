@@ -1,0 +1,99 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+    <meta>
+        <name>mapping-1402051926041</name>
+    </meta>
+    <rules>
+        <combine flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld" includeSubEntities="true" name="@feld_value__0__false" reset="true" sameEntity="true" value="${feld_value__0__.filtered}">
+            <if>
+                <all flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" includeSubEntities="true" name="CONDITION_ALL" reset="true">
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
+                        <regexp match="111"/>
+                    </data>
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
+                        <regexp match="x"/>
+                    </data>
+                </all>
+            </if>
+            <data name="feld_value__0__.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+        </combine>
+        <combine flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld" includeSubEntities="true" name="@feld_value__1__false" reset="true" sameEntity="true" value="${feld_value__1__.filtered}">
+            <if>
+                <all flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" includeSubEntities="true" name="CONDITION_ALL" reset="true">
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
+                        <regexp match="222"/>
+                    </data>
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
+                        <regexp match="y"/>
+                    </data>
+                </all>
+            </if>
+            <data name="feld_value__1__.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+        </combine>
+        <combine flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld" includeSubEntities="true" name="@feld_value__2__true" reset="true" sameEntity="true" value="${feld_value__2__.filtered}">
+            <if>
+                <all flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" includeSubEntities="true" name="CONDITION_ALL" reset="true">
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
+                        <regexp match="029"/>
+                    </data>
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
+                        <regexp match="m"/>
+                    </data>
+                </all>
+            </if>
+            <data name="feld_value__2__.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+        </combine>
+        <combine flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld" includeSubEntities="true" name="@feld_value__3__true" reset="true" sameEntity="true" value="${feld_value__3__.filtered}">
+            <if>
+                <all flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" includeSubEntities="true" name="CONDITION_ALL" reset="true">
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
+                        <regexp match="050"/>
+                    </data>
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
+                        <regexp match=" "/>
+                    </data>
+                </all>
+            </if>
+            <data name="feld_value__3__.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+        </combine>
+
+        <!-- test choose function -->
+        <data name="http://purl.org/dc/elements/1.1/choose" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
+        <choose name="@__TRANSFORMATION_OUTPUT_VARIABLE__1">
+            <data source="@feld_value__0__false"/>
+            <data source="@feld_value__2__true"/>
+            <data source="@feld_value__1__false"/>
+        </choose>
+
+        <!-- test all function -->
+        <data name="http://purl.org/dc/elements/1.1/all" source="@__TRANSFORMATION_OUTPUT_VARIABLE__2"/>
+        <all name="@__TRANSFORMATION_OUTPUT_VARIABLE__2" value="all fires">
+            <data source="@feld_value__2__true"/>
+            <data source="@feld_value__3__true"/>
+        </all>
+
+        <!-- test all function don't fire - no output -->
+        <data name="http://purl.org/dc/elements/1.1/all" source="@__TRANSFORMATION_OUTPUT_VARIABLE__3"/>
+        <all name="@__TRANSFORMATION_OUTPUT_VARIABLE__3" value="all fires">
+            <data source="@feld_value__2__true"/>
+            <data source="@feld_value__1__false"/>
+            <data source="@feld_value__3__true"/>
+        </all>
+
+        <!-- test none function -->
+        <data name="http://purl.org/dc/elements/1.1/none" source="@__TRANSFORMATION_OUTPUT_VARIABLE__4"/>
+        <none name="@__TRANSFORMATION_OUTPUT_VARIABLE__4" value="none fires">
+            <data source="@feld_value__0__false"/>
+            <data source="@feld_value__1__false"/>
+        </none>
+
+        <!-- test any function -->
+        <data name="http://purl.org/dc/elements/1.1/any" source="@__TRANSFORMATION_OUTPUT_VARIABLE__5"/>
+        <any name="@__TRANSFORMATION_OUTPUT_VARIABLE__5" value="any fires">
+            <data source="@feld_value__0__false"/>
+            <data source="@feld_value__1__false"/>
+            <data source="@feld_value__2__true"/>
+            <data source="@feld_value__3__true"/>
+        </any>
+    </rules>
+</metamorph>

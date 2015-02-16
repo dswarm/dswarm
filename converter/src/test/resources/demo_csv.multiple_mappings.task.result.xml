@@ -18,4 +18,5 @@
             <replace pattern="19" with="16"/>
         </data>
     </rules>
+    <maps/>
 </metamorph>

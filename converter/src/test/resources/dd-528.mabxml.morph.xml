@@ -25,4 +25,5 @@
             <compose postfix="}" prefix="{"/>
         </data>
     </rules>
+    <maps/>
 </metamorph>

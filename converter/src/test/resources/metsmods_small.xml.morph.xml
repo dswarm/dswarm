@@ -32,4 +32,5 @@
         <data name="http://purl.org/ontology/bibo/edition" source="@__TRANSFORMATION_OUTPUT_VARIABLE__3"/>
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__3" source="@originInfo_dateIssued_value__2__"/>
     </rules>
+    <maps/>
 </metamorph>

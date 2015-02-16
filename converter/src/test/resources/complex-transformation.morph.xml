@@ -31,4 +31,5 @@
             <data name="givenName" source="@givenName"/>
         </combine>
     </rules>
+    <maps/>
 </metamorph>
