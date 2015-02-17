@@ -1,0 +1,10 @@
+{
+  "name" : "pnx xml config",
+  "description" : "pnx xml config",
+  "parameters" : {
+    "storage_type" : "pnx",
+    "record_tag" : "record",
+    "xml_namespace" : "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib"
+  },
+  "uuid" : "0815"
+}

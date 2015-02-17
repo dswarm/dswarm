@@ -362,14 +362,16 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 			// send the request to graph DB
 			final WebTarget target = service().path("/xml/get");
 			responseFromGraph = target.request(MediaType.APPLICATION_XML_TYPE).post(Entity.entity(requestJsonString, MediaType.APPLICATION_JSON));
+
+			return  ExportUtils.processGraphDBXMLResponseInternal(responseFromGraph);
 		} else {
 
 			// send the request to graph DB
 			final WebTarget target = target("/export");
 			responseFromGraph = target.queryParam("data_model_uri", dataModelURI).request().accept(format).get(Response.class);
-		}
 
-		return ExportUtils.processGraphDBResponseInternal(responseFromGraph);
+			return ExportUtils.processGraphDBResponseInternal(responseFromGraph);
+		}
 	}
 
 	/**

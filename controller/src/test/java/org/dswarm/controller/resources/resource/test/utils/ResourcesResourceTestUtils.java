@@ -23,7 +23,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.google.common.io.Resources;
-import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import org.glassfish.jersey.media.multipart.file.StreamDataBodyPart;
@@ -128,7 +127,19 @@ public class ResourcesResourceTestUtils
 		// set to these hard coded values.
 		form.field("name", resourceFile.getName());
 		form.field("filename", resourceFile.getName());
-		form.field("description", "this is a description");
+
+		final String description;
+
+		if (expectedResource != null && expectedResource.getDescription() != null) {
+
+			description = expectedResource.getDescription();
+		} else {
+
+			description = "this is a description";
+		}
+
+		form.field("description", description);
+
 		form.bodyPart(new FileDataBodyPart("file", resourceFile, MediaType.MULTIPART_FORM_DATA_TYPE));
 
 		final Response response = target().request(MediaType.MULTIPART_FORM_DATA_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)

@@ -80,4 +80,43 @@ public final class ExportUtils {
 		return responseToRequester;
 	}
 
+	/**
+	 * Process a response received from graph db and prepare a new response to be sent to a requester by "forwarding" the graph db
+	 * resonse's content and Content-Disposition header
+	 *
+	 * @param responseFromGraph response received from graph db
+	 * @return a new response to be sent to a requester by "forwarding" the graph db resonse's content and Content-Disposition
+	 *         header
+	 * @throws DMPControllerException for two reasons<br />
+	 *             in case the status code of the response received from graph db is not 200 or 406<br />
+	 *             in case the Content-Disposition is not as expected
+	 */
+	public static Response processGraphDBXMLResponseInternal(final Response responseFromGraph) throws DMPControllerException {
+
+		final Response responseToRequester;
+
+		switch (responseFromGraph.getStatus()) {
+
+			case HttpStatus.SC_OK:
+				final InputStream result = responseFromGraph.readEntity(InputStream.class);
+
+				final String contenDispositionValue = "attachment; filename*=UTF-8''dmp_export.xml";
+
+				responseToRequester = Response.ok(result, responseFromGraph.getMediaType())
+						.header(ExportUtils.CONTENT_DISPOSITION, contenDispositionValue).build();
+				break;
+
+			case HttpStatus.SC_NOT_ACCEPTABLE:
+				responseToRequester = Response.status(HttpStatus.SC_NOT_ACCEPTABLE).build();
+				break;
+
+			default:
+				// TODO forward GE HTTP Response, e.g. if the requested format is not supported
+				throw new DMPControllerException("Couldn't export data from database. Received status code '" + responseFromGraph.getStatus()
+						+ "' from database endpoint.");
+
+		}
+		return responseToRequester;
+	}
+
 }
