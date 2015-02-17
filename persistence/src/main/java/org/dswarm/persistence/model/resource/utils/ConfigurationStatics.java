@@ -123,4 +123,14 @@ public interface ConfigurationStatics {
 	 * The storage type of the data resource.
 	 */
 	public static final String		STORAGE_TYPE					= "storage_type";
+
+	public static final String CSV_STORAGE_TYPE = "csv";
+
+	public static final String XML_STORAGE_TYPE = "xml";
+
+	public static final String MABXML_STORAGE_TYPE = "mabxml";
+
+	public static final String MARCXML_STORAGE_TYPE = "marc21";
+
+	public static final String PNX_STORAGE_TYPE = "pnx";
 }

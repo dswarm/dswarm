@@ -56,6 +56,7 @@ import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
+import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.ContentSchema;
@@ -439,13 +440,11 @@ public class InternalGDMGraphService implements InternalModelService {
 
 			final Configuration configuration = dataModel.getConfiguration();
 
-			// TODO: re-factor this ugly workaround
-			boolean isMabXml = false;
-			boolean isMarc21 = false;
+			Optional<String> optionalPresetSchema = null;
 
 			if (configuration != null) {
 
-				final JsonNode storageTypeJsonNode = configuration.getParameter("storage_type");
+				final JsonNode storageTypeJsonNode = configuration.getParameter(ConfigurationStatics.STORAGE_TYPE);
 
 				if (storageTypeJsonNode != null) {
 
@@ -455,14 +454,11 @@ public class InternalGDMGraphService implements InternalModelService {
 
 						switch (storageType) {
 
-							case "mabxml":
+							case ConfigurationStatics.MABXML_STORAGE_TYPE:
+							case ConfigurationStatics.MARCXML_STORAGE_TYPE:
+							case ConfigurationStatics.PNX_STORAGE_TYPE:
 
-								isMabXml = true;
-
-								break;
-							case "marc21":
-
-								isMarc21 = true;
+								optionalPresetSchema = Optional.of(storageType);
 
 								break;
 						}
@@ -471,7 +467,7 @@ public class InternalGDMGraphService implements InternalModelService {
 				}
 			}
 
-			if (!isMabXml && !isMarc21) {
+			if (optionalPresetSchema == null || !optionalPresetSchema.isPresent()) {
 
 				// create new schema
 				final ProxySchema proxySchema = schemaService.get().createObjectTransactional();
@@ -485,16 +481,35 @@ public class InternalGDMGraphService implements InternalModelService {
 				}
 			} else {
 
-				if(isMabXml) {
+				switch (optionalPresetSchema.get()) {
 
-					// assign existing mabxml schema to data resource
+					case ConfigurationStatics.MABXML_STORAGE_TYPE:
 
-					schema = schemaService.get().getObject(SchemaUtils.MABXML_SCHEMA_UUID);
-				} else {
+						// assign existing mabxml schema to data resource
 
-					// assign existing marc21 schema to data resource
+						schema = schemaService.get().getObject(SchemaUtils.MABXML_SCHEMA_UUID);
 
-					schema = schemaService.get().getObject(SchemaUtils.MARC21_SCHEMA_UUID);
+						break;
+					case ConfigurationStatics.MARCXML_STORAGE_TYPE:
+
+						// assign existing marc21 schema to data resource
+
+						schema = schemaService.get().getObject(SchemaUtils.MARC21_SCHEMA_UUID);
+
+						break;
+					case ConfigurationStatics.PNX_STORAGE_TYPE:
+
+						// assign existing pnx schema to data resource
+
+						schema = schemaService.get().getObject(SchemaUtils.PNX_SCHEMA_UUID);
+
+						break;
+
+					default:
+
+						LOG.debug("could not determine and set preset schema for identifier '" + optionalPresetSchema.get() + "'");
+
+						schema = null;
 				}
 			}
 

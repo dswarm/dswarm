@@ -69,6 +69,7 @@ import org.dswarm.persistence.model.proxy.RetrievalType;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
+import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.util.GDMUtil;
@@ -410,7 +411,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 			return proxyDataModel;
 		}
 
-		final JsonNode jsStorageType = configuration.getParameters().get("storage_type");
+		final JsonNode jsStorageType = configuration.getParameters().get(ConfigurationStatics.STORAGE_TYPE);
 		if (jsStorageType != null) {
 			final String storageType = jsStorageType.asText();
 
@@ -431,7 +432,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 					xmlSchemaEventRecorderProvider.get().convertConfiguration(xmlSchemaEvent);
 
 					break;
-				case "csv":
+				case ConfigurationStatics.CSV_STORAGE_TYPE:
 
 					// eventBusProvider.get().post(new CSVConverterEvent(dataModel));
 
@@ -439,9 +440,10 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 					csvConverterEventRecorderProvider.get().convertConfiguration(csvConverterEvent);
 
 					break;
-				case "xml":
-				case "mabxml":
-				case "marc21":
+				case ConfigurationStatics.XML_STORAGE_TYPE:
+				case ConfigurationStatics.MABXML_STORAGE_TYPE:
+				case ConfigurationStatics.MARCXML_STORAGE_TYPE:
+				case ConfigurationStatics.PNX_STORAGE_TYPE:
 
 					// eventBusProvider.get().post(new XMLConverterEvent(dataModel));
 
