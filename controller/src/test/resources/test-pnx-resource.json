@@ -1,0 +1,11 @@
+{
+  "name" : "test-pnx2-controller.xml",
+  "type" : "FILE",
+  "description" : "this is a description of a pnx file",
+  "resource_attributes" : {
+    "path" : "dummy/path/to/test-pnx2-controller.xml",
+    "filesize" : 2279,
+    "filetype" : "application/xml"
+  },
+  "uuid" : "10815"
+}
