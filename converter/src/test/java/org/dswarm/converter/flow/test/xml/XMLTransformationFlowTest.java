@@ -139,6 +139,12 @@ public class XMLTransformationFlowTest extends GuicedTest {
 	}
 
 	@Test
+	public void testDd980Morph() throws Exception {
+
+		testXMLMorphWithTuples("dd-980.xml.task.result.json", "dd-980.morph.xml", "rvk_lokal_cdata.tuples.json");
+	}
+
+	@Test
 	public void testMetsmodsXmlWithFilterAndMapping() throws Exception {
 
 		testXMLTaskWithTuples("metsmods_small.xml.task.result.json", "metsmods_small.xml.task.json", "metsmods_small.xml.tuples.json");
