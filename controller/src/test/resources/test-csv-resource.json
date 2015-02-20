@@ -1,0 +1,11 @@
+{
+  "resource_attributes" : {
+    "filesize" : -1,
+    "path" : "/Users/knut/Development/Projects/DMP/init/../tmp/resources/test_csv.csv",
+    "filetype": "text/csv"
+  },
+  "type" : "FILE",
+  "description" : "ssdfadfsdf",
+  "name" : "test_csv-controller.csv",
+  "uuid" : "2"
+}

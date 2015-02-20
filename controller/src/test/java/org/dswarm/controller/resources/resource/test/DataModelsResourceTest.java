@@ -256,52 +256,13 @@ public class DataModelsResourceTest extends
 	@Test
 	public void testPNXExport() throws Exception {
 
-		DataModelsResourceTest.LOG.debug("start export PNX test");
+		testXMLExport("PNX", "test-pnx-resource.json", "test-pnx2-controller.xml", "pnx-configuration.json", "pnx", "test-pnx2-expected.xml");
+	}
 
-		// prepare resource
-		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("test-pnx-resource.json");
+	@Test
+	public void testCSVXMLExport() throws Exception {
 
-		final Resource expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
-
-		final URL fileURL = Resources.getResource("test-pnx2-controller.xml");
-		final File resourceFile = FileUtils.toFile(fileURL);
-
-		final String configurationJSONString = DMPPersistenceUtil.getResourceAsString("pnx-configuration.json");
-
-		// add resource and config
-		final Resource resource = resourcesResourceTestUtils.uploadResource(resourceFile, expectedResource);
-
-		final Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
-
-		final String dataModel1Uuid = UUIDService.getUUID(DataModel.class.getSimpleName());
-
-		final DataModel dataModel1 = new DataModel(dataModel1Uuid);
-		dataModel1.setName("my pnx data model");
-		dataModel1.setDescription("my pnx data model description");
-		dataModel1.setDataResource(resource);
-		dataModel1.setConfiguration(configuration);
-
-		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
-
-		// create (persist) data model (incl. content)
-		final DataModel dataModel = pojoClassResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
-
-		final Response response = target(String.valueOf(dataModel.getUuid()), "export").queryParam("format", MediaType.APPLICATION_XML).request()
-				.accept(MediaType.APPLICATION_OCTET_STREAM_TYPE).get(Response.class);
-
-		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
-
-		final String actualXML = response.readEntity(String.class);
-
-		final String expectedPNX = DMPPersistenceUtil.getResourceAsString("test-pnx2-expected.xml");
-
-		// do comparison: check for XML similarity
-		final Diff xmlDiff = DiffBuilder.compare(Input.fromMemory(expectedPNX))
-				.withTest(Input.fromMemory(actualXML)).checkForSimilar().build();
-
-		Assert.assertFalse(xmlDiff.hasDifferences());
-
-		DataModelsResourceTest.LOG.debug("end export PNX test");
+		testXMLExport("CSV XML", "test-csv-resource.json", "test_csv-controller.csv", "test-csv-configuration.json", "csv", "test-csv-expected.xml");
 	}
 
 	@Test
@@ -691,5 +652,56 @@ public class DataModelsResourceTest extends
 		final String dataModelJSONString = objectMapper.writeValueAsString(dataModelToCreate);
 
 		return pojoClassResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
+	}
+
+	private void testXMLExport(final String type, final String resourceJSONFile, final String dataResourceFile, final String configurationJSONFile,
+			final String dataModelType, final String expectedXMLFile) throws Exception {
+
+		DataModelsResourceTest.LOG.debug("start export " + type + " export test");
+
+		// prepare resource
+		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString(resourceJSONFile);
+
+		final Resource expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
+
+		final URL fileURL = Resources.getResource(dataResourceFile);
+		final File resourceFile = FileUtils.toFile(fileURL);
+
+		final String configurationJSONString = DMPPersistenceUtil.getResourceAsString(configurationJSONFile);
+
+		// add resource and config
+		final Resource resource = resourcesResourceTestUtils.uploadResource(resourceFile, expectedResource);
+
+		final Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
+
+		final String dataModel1Uuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+
+		final DataModel dataModel1 = new DataModel(dataModel1Uuid);
+		dataModel1.setName("my " + dataModelType + " data model");
+		dataModel1.setDescription("my " + dataModelType + " data model description");
+		dataModel1.setDataResource(resource);
+		dataModel1.setConfiguration(configuration);
+
+		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
+
+		// create (persist) data model (incl. content)
+		final DataModel dataModel = pojoClassResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
+
+		final Response response = target(String.valueOf(dataModel.getUuid()), "export").queryParam("format", MediaType.APPLICATION_XML).request()
+				.accept(MediaType.APPLICATION_OCTET_STREAM_TYPE).get(Response.class);
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+
+		final String actualXML = response.readEntity(String.class);
+
+		final String expectedPNX = DMPPersistenceUtil.getResourceAsString(expectedXMLFile);
+
+		// do comparison: check for XML similarity
+		final Diff xmlDiff = DiffBuilder.compare(Input.fromMemory(expectedPNX))
+				.withTest(Input.fromMemory(actualXML)).checkForSimilar().build();
+
+		Assert.assertFalse(xmlDiff.hasDifferences());
+
+		DataModelsResourceTest.LOG.debug("end export " + type + " export test");
 	}
 }

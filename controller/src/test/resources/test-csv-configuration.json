@@ -1,0 +1,10 @@
+{
+  "parameters": {
+    "storage_type": "csv",
+    "column_names": "columnN",
+    "quote_character": "\"",
+    "escape_character": "\\",
+    "column_delimiter": ";"
+  },
+  "uuid": "2"
+}
