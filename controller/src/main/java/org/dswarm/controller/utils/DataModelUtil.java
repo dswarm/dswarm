@@ -37,6 +37,7 @@ import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
+import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.InternalModelService;
@@ -271,7 +272,7 @@ public class DataModelUtil {
 
 	private InternalModelService determineInternalService(final Configuration configuration) throws DMPControllerException {
 
-		final JsonNode storageType = configuration.getParameters().get("storage_type");
+		final JsonNode storageType = configuration.getParameters().get(ConfigurationStatics.STORAGE_TYPE);
 
 		if (storageType != null) {
 
@@ -280,10 +281,12 @@ public class DataModelUtil {
 				// TODO: fix this as needed
 
 				return null;
-			} else if ("csv".equals(storageType.asText())) {
+			} else if (ConfigurationStatics.CSV_STORAGE_TYPE.equals(storageType.asText())) {
 
 				return internalServiceFactoryProvider.get().getInternalGDMGraphService();
-			} else if ("xml".equals(storageType.asText()) || "mabxml".equals(storageType.asText()) || "marc21".equals(storageType.asText())) {
+			} else if (ConfigurationStatics.XML_STORAGE_TYPE.equals(storageType.asText()) || ConfigurationStatics.MABXML_STORAGE_TYPE
+					.equals(storageType.asText()) || ConfigurationStatics.MARCXML_STORAGE_TYPE.equals(storageType.asText())
+					|| ConfigurationStatics.PNX_STORAGE_TYPE.equals(storageType.asText())) {
 
 				return internalServiceFactoryProvider.get().getInternalGDMGraphService();
 			} else {

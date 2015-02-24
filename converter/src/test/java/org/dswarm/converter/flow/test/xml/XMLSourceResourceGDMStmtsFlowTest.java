@@ -43,6 +43,7 @@ import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
+import org.dswarm.persistence.model.resource.utils.DataModelUtils;
 import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
@@ -249,6 +250,7 @@ public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 		final Configuration configuration = new Configuration("4");
 		configuration.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("record"));
 
+
 		dataModel.setConfiguration(configuration);
 
 		final Resource resource = new Resource("5");
@@ -259,6 +261,30 @@ public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 		final XMLSourceResourceGDMStmtsFlow flow = new XMLSourceResourceGDMStmtsFlow(dataModel);
 
 		testFlow(flow, "test-pnx.xml", "test-pnx-converter.gson", 196);
+
+		dataModelService.deleteObject(dataModel.getUuid());
+	}
+
+	@Test
+	public void testFromConfiguration4() throws Exception {
+
+		final DataModelService dataModelService = GuicedTest.injector.getInstance(DataModelService.class);
+		final DataModel dataModel = dataModelService.getObject(DataModelUtils.PNX_DATA_MODEL_UUID);
+
+		final Configuration configuration = new Configuration("4");
+		configuration.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("record"));
+		configuration.addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode("pnx"));
+
+		dataModel.setConfiguration(configuration);
+
+		final Resource resource = new Resource("5");
+		resource.addAttribute("path", "/tmp/file.record");
+
+		dataModel.setDataResource(resource);
+
+		final XMLSourceResourceGDMStmtsFlow flow = new XMLSourceResourceGDMStmtsFlow(dataModel);
+
+		testFlow(flow, "test-pnx2.xml", "test-pnx2.gson", null);
 
 		dataModelService.deleteObject(dataModel.getUuid());
 	}

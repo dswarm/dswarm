@@ -38,6 +38,9 @@ public class SchemaEvent extends DataModelEvent {
 			if ("marc21".equals(type)) {
 				return XSD;
 			}
+			if ("pnx".equals(type)) {
+				return XSD;
+			}
 			throw new IllegalArgumentException("No schema type for [" + type + "]");
 		}
 	}
