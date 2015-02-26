@@ -1,0 +1,829 @@
+{
+  "name": "Transformations",
+  "description": "Transformations",
+  "job": {
+    "mappings": [
+      {
+        "uuid": "c6c27eec-4816-205f-f6a7-aea986790e0b",
+        "name": "sdaas",
+        "transformation": {
+          "uuid": "7a80b2b2-962f-935b-5c6b-20842a2542d8",
+          "name": "transformation",
+          "description": "transformation",
+          "function": {
+            "uuid": "d468c713-f699-0282-e3b4-10085215076f",
+            "name": "transformation",
+            "description": "transformation",
+            "type": "Transformation",
+            "components": [
+              {
+                "function": {
+                  "uuid": "Function-e4c6c5af-45a5-4530-9a5e-61edf253fb1e",
+                  "name": "lookup",
+                  "description": "Performs a table lookup",
+                  "function_description": {
+                    "name": "lookup",
+                    "dsl": "metafacture",
+                    "reference": "lookup",
+                    "description": "Performs a table lookup",
+                    "parameters": {
+                      "lookupString": {
+                        "type": "lookupmap"
+                      },
+                      "default": {
+                        "type": "text",
+                        "optional": true,
+                        "description": "Value used if no corresponding key is found."
+                      }
+                    }
+                  },
+                  "parameters": [
+                    "lookupString",
+                    "default"
+                  ],
+                  "type": "Function"
+                },
+                "name": "component41121219-aea5-2de0-264c-4947f10ba8e2",
+                "uuid": "9f6c36de-7340-1498-8905-43d02912a464",
+                "description": "{\"x\":\"definition__2fb91b5b-b03b-e2e0-ecbb-18c47d59390e\",\"y\":0}",
+                "parameter_mappings": {
+                  "lookupString": "{\"Country or territory name\":\"01127\"}",
+                  "inputString": "definition__2fb91b5b-b03b-e2e0-ecbb-18c47d59390e__0__"
+                }
+              }
+            ]
+          },
+          "parameter_mappings": {
+            "__TRANSFORMATION_OUTPUT_VARIABLE__3": "__OUTPUT_MAPPING_ATTRIBUTE_PATH_INSTANCE__4",
+            "definition__2fb91b5b-b03b-e2e0-ecbb-18c47d59390e__0__": "definition__2fb91b5b-b03b-e2e0-ecbb-18c47d59390e__0__"
+          }
+        },
+        "input_attribute_paths": [
+          {
+            "type": "MappingAttributePathInstance",
+            "name": "definition__2fb91b5b-b03b-e2e0-ecbb-18c47d59390e__0__",
+            "uuid": "2fb91b5b-b03b-e2e0-ecbb-18c47d59390e",
+            "attribute_path": {
+              "uuid": "AttributePath-1e15d68e-0110-44ec-bbd1-bd5cc9906afa",
+              "attributes": [
+                {
+                  "uuid": "Attribute-3392b9a8-5b5a-4469-be96-45ec54b30064",
+                  "name": "definition",
+                  "uri": "http://data.slub-dresden.de/resources/Resource-12ce86cf-4b5c-4f4a-ab9f-b81835695922/schema#definition"
+                }
+              ]
+            }
+          }
+        ],
+        "output_attribute_path": {
+          "type": "MappingAttributePathInstance",
+          "name": "__OUTPUT_MAPPING_ATTRIBUTE_PATH_INSTANCE__4",
+          "uuid": "a247268d-4b3b-7ff5-0df8-f3c45a0f0f82",
+          "attribute_path": {
+            "uuid": "AttributePath-8341cdec-592a-4a06-9f21-55af7012fca4",
+            "attributes": [
+              {
+                "uuid": "Attribute-404e8596-55f7-475d-9634-6570927ad3f3",
+                "name": "publicationStatement",
+                "uri": "http://rdvocab.info/Elements/publicationStatement"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "input_data_model": {
+    "uuid": "DataModel-b7a414f7-f814-4033-a08b-eb2d915f7115/records",
+    "name": "TB_data_dictionary_2013-11-11.csv + Foo data model",
+    "description": " data model of resource 'TB_data_dictionary_2013-11-11.csv' and configuration ' Foo'",
+    "configuration": {
+      "uuid": "39e2e78d-1c82-0b90-5fb8-743e00f9a0f9",
+      "name": "Foo",
+      "description": "Bar",
+      "resources": [
+        {
+          "uuid": "Resource-12ce86cf-4b5c-4f4a-ab9f-b81835695922"
+        }
+      ],
+      "parameters": {
+        "column_delimiter": ",",
+        "escape_character": "\\",
+        "quote_character": "\"",
+        "first_row_is_headings": true,
+        "column_names": "columnN",
+        "storage_type": "csv"
+      }
+    },
+    "schema": {
+      "uuid": "Schema-7e0d9621-8dd3-4a6d-8ca8-fc5bc9577a5f",
+      "name": "TB_data_dictionary_2013-11-11.csv schema",
+      "attribute_paths": [
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-93345d19-c02d-446b-b982-2228cbef4649",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-3db0412a-09df-4dab-9e0d-ed5cd537b1d0",
+            "attributes": [
+              {
+                "uuid": "Attribute-302bb8d5-ec78-41a1-a128-1be4e2fecedc",
+                "name": "variable_name",
+                "uri": "http://data.slub-dresden.de/resources/Resource-12ce86cf-4b5c-4f4a-ab9f-b81835695922/schema#variable_name"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-1e71f62e-2d77-46db-b395-2738cd18e1eb",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-e33665df-0b51-4f1e-92c1-d962f15d7e9a",
+            "attributes": [
+              {
+                "uuid": "Attribute-be95f3a7-091a-4adb-b452-e9795d8a7928",
+                "name": "dataset",
+                "uri": "http://data.slub-dresden.de/resources/Resource-12ce86cf-4b5c-4f4a-ab9f-b81835695922/schema#dataset"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-b224fbd0-271e-4910-b0d7-a4eb16fa3a13",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-282290c9-0d66-4f08-85db-66fdbe4c5cbb",
+            "attributes": [
+              {
+                "uuid": "Attribute-a94212bf-2a7d-401b-a957-2d7aa44250e5",
+                "name": "code_list",
+                "uri": "http://data.slub-dresden.de/resources/Resource-12ce86cf-4b5c-4f4a-ab9f-b81835695922/schema#code_list"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-99497350-c62d-4dcd-ba1b-ae3f393f3bc1",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-1e15d68e-0110-44ec-bbd1-bd5cc9906afa",
+            "attributes": [
+              {
+                "uuid": "Attribute-3392b9a8-5b5a-4469-be96-45ec54b30064",
+                "name": "definition",
+                "uri": "http://data.slub-dresden.de/resources/Resource-12ce86cf-4b5c-4f4a-ab9f-b81835695922/schema#definition"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-ee7a6d72-c6e2-4fe2-8e07-93400174fd55",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-15eb1696-59f2-4ee6-a19d-8bbe60162796",
+            "attributes": [
+              {
+                "uuid": "Attribute-a513da32-2af5-49af-aabe-ee1150d9f6db",
+                "name": "type",
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+              }
+            ]
+          }
+        }
+      ],
+      "record_class": {
+        "uuid": "Clasz-790ae93a-217d-4944-8e09-1f276f8fe254",
+        "name": "record type",
+        "uri": "http://data.slub-dresden.de/resources/Resource-12ce86cf-4b5c-4f4a-ab9f-b81835695922/schema#RecordType"
+      }
+    },
+    "data_resource": {
+      "uuid": "Resource-12ce86cf-4b5c-4f4a-ab9f-b81835695922",
+      "name": "TB_data_dictionary_2013-11-11.csv",
+      "description": "sadsad",
+      "type": "FILE",
+      "configurations": [
+        {
+          "uuid": "39e2e78d-1c82-0b90-5fb8-743e00f9a0f9",
+          "name": "Foo",
+          "description": "Bar",
+          "resources": [
+            {
+              "uuid": "Resource-12ce86cf-4b5c-4f4a-ab9f-b81835695922"
+            }
+          ],
+          "parameters": {
+            "column_delimiter": ",",
+            "escape_character": "\\",
+            "quote_character": "\"",
+            "first_row_is_headings": true,
+            "column_names": "columnN",
+            "storage_type": "csv"
+          }
+        }
+      ],
+      "resource_attributes": {
+        "path": "/home/dmp/tmp/tmp/resources/TB_data_dictionary_2013-11-11.csv",
+        "filesize": -1,
+        "filetype": "text/csv"
+      }
+    }
+  },
+  "output_data_model": {
+    "uuid": "DataModel-cf998267-392a-4d87-a33a-88dd1bffb016",
+    "name": "Internal Data Model BiboDocument",
+    "description": "Internal Data Model BiboDocument",
+    "schema": {
+      "uuid": "Schema-ff62ec21-0a11-4c27-a704-d7ca53a21521",
+      "name": "bibo:Document-Schema (KIM-Titeldaten)",
+      "attribute_paths": [
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-c0bec3ba-f4c8-43bc-ae07-3589926047c8",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-0c4af265-ec65-4d13-b728-d2872e59d0d2",
+            "attributes": [
+              {
+                "uuid": "Attribute-7be25029-a0d4-47e8-8507-dceb5a5278eb",
+                "name": "title",
+                "uri": "http://purl.org/dc/elements/1.1/title"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-334c50c7-5931-423e-a2a4-a4750ebf690a",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-7c4b90f0-1f0a-4dd0-9c38-394075130f8b",
+            "attributes": [
+              {
+                "uuid": "Attribute-237e1dd6-42b3-43d7-9127-e1c973014ae8",
+                "name": "otherTitleInformation",
+                "uri": "http://rdvocab.info/Elements/otherTitleInformation"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-659b4071-d6df-47e3-8f1b-85280907091b",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-f7bd5228-facb-4fe7-93df-5a06763874d8",
+            "attributes": [
+              {
+                "uuid": "Attribute-e27b3e61-72a2-40a7-b69a-76edf90d4927",
+                "name": "alternative",
+                "uri": "http://purl.org/dc/terms/alternative"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-40322916-80c4-4dd4-9bfe-c48811d0c959",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-3a4a22ab-8227-4dbc-8738-5ef4a49d9689",
+            "attributes": [
+              {
+                "uuid": "Attribute-8beaace3-339a-4b6a-9436-41a867f58abb",
+                "name": "shortTitle",
+                "uri": "http://purl.org/ontology/bibo/shortTitle"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-771262db-3373-4db9-b1b8-b8a7358cf7fc",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-0d332d35-d525-4e72-83c2-c7516cec70a4",
+            "attributes": [
+              {
+                "uuid": "Attribute-bc8d6ee7-3007-43eb-82d2-d87782d57eb9",
+                "name": "creator",
+                "uri": "http://purl.org/dc/elements/1.1/creator"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-b5480616-04c2-460b-9dae-8f774912c45e",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-f6da5272-1f0e-44a3-bb9e-e901400e6df2",
+            "attributes": [
+              {
+                "uuid": "Attribute-0af43ce4-37cb-4567-ad50-6bbb6084323a",
+                "name": "contributor",
+                "uri": "http://purl.org/dc/elements/1.1/contributor"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-52c0232e-efa3-4687-af89-72fb71efd3e5",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-6c060de0-23e8-4579-9dcc-4bb5b30b6a8b",
+            "attributes": [
+              {
+                "uuid": "Attribute-5d6f045b-f3a4-4244-b5fb-4dd2f37f1f5d",
+                "name": "creator",
+                "uri": "http://purl.org/dc/terms/creator"
+              }
+            ]
+          },
+          "sub_schema": {
+            "uuid": "Schema-309e901c-3da9-4d82-a694-bab632eaa340",
+            "name": "foaf:Person-Schema",
+            "attribute_paths": [
+              {
+                "type": "SchemaAttributePathInstance",
+                "uuid": "SchemaAttributePathInstance-0448f250-e3ec-4c0d-87d7-fb39fa60f355",
+                "name": null,
+                "attribute_path": {
+                  "uuid": "AttributePath-15eb1696-59f2-4ee6-a19d-8bbe60162796",
+                  "attributes": [
+                    {
+                      "uuid": "Attribute-a513da32-2af5-49af-aabe-ee1150d9f6db",
+                      "name": "type",
+                      "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "SchemaAttributePathInstance",
+                "uuid": "SchemaAttributePathInstance-7f6c5661-0b84-4b1c-bae0-23b5b6f3d5a3",
+                "name": null,
+                "attribute_path": {
+                  "uuid": "AttributePath-cba78a66-3381-4c47-9475-d27142fdb57f",
+                  "attributes": [
+                    {
+                      "uuid": "Attribute-78bb3b95-b998-43fb-a9a7-8f37dcbb603b",
+                      "name": "familyName",
+                      "uri": "http://xmlns.com/foaf/0.1/familyName"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "SchemaAttributePathInstance",
+                "uuid": "SchemaAttributePathInstance-f8dbc7c9-d8ba-4521-8014-596dc6032773",
+                "name": null,
+                "attribute_path": {
+                  "uuid": "AttributePath-c9045799-ddbf-4b99-9577-1a3c3aa96307",
+                  "attributes": [
+                    {
+                      "uuid": "Attribute-da470963-4ab5-481c-88e5-c8ef4bdfcbc5",
+                      "name": "givenName",
+                      "uri": "http://xmlns.com/foaf/0.1/givenName"
+                    }
+                  ]
+                }
+              }
+            ],
+            "record_class": {
+              "uuid": "Clasz-aa27a39b-5477-41d3-aa18-da2ec2a52b34",
+              "name": "Person",
+              "uri": "http://xmlns.com/foaf/0.1/Person"
+            }
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-81999c4e-f612-43cc-b6d2-62e6b82e6ec3",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-c87bc01c-f15c-4ac0-be4c-425b1fd731c3",
+            "attributes": [
+              {
+                "uuid": "Attribute-86538b40-7b06-4551-bfec-18f524993b89",
+                "name": "contributor",
+                "uri": "http://purl.org/dc/terms/contributor"
+              }
+            ]
+          },
+          "sub_schema": {
+            "uuid": "Schema-309e901c-3da9-4d82-a694-bab632eaa340",
+            "name": "foaf:Person-Schema",
+            "attribute_paths": [
+              {
+                "type": "SchemaAttributePathInstance",
+                "uuid": "SchemaAttributePathInstance-0448f250-e3ec-4c0d-87d7-fb39fa60f355",
+                "name": null,
+                "attribute_path": {
+                  "uuid": "AttributePath-15eb1696-59f2-4ee6-a19d-8bbe60162796",
+                  "attributes": [
+                    {
+                      "uuid": "Attribute-a513da32-2af5-49af-aabe-ee1150d9f6db",
+                      "name": "type",
+                      "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "SchemaAttributePathInstance",
+                "uuid": "SchemaAttributePathInstance-7f6c5661-0b84-4b1c-bae0-23b5b6f3d5a3",
+                "name": null,
+                "attribute_path": {
+                  "uuid": "AttributePath-cba78a66-3381-4c47-9475-d27142fdb57f",
+                  "attributes": [
+                    {
+                      "uuid": "Attribute-78bb3b95-b998-43fb-a9a7-8f37dcbb603b",
+                      "name": "familyName",
+                      "uri": "http://xmlns.com/foaf/0.1/familyName"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "SchemaAttributePathInstance",
+                "uuid": "SchemaAttributePathInstance-f8dbc7c9-d8ba-4521-8014-596dc6032773",
+                "name": null,
+                "attribute_path": {
+                  "uuid": "AttributePath-c9045799-ddbf-4b99-9577-1a3c3aa96307",
+                  "attributes": [
+                    {
+                      "uuid": "Attribute-da470963-4ab5-481c-88e5-c8ef4bdfcbc5",
+                      "name": "givenName",
+                      "uri": "http://xmlns.com/foaf/0.1/givenName"
+                    }
+                  ]
+                }
+              }
+            ],
+            "record_class": {
+              "uuid": "Clasz-aa27a39b-5477-41d3-aa18-da2ec2a52b34",
+              "name": "Person",
+              "uri": "http://xmlns.com/foaf/0.1/Person"
+            }
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-83e44e69-5467-4ab9-92f3-c191aa3569e4",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-8341cdec-592a-4a06-9f21-55af7012fca4",
+            "attributes": [
+              {
+                "uuid": "Attribute-404e8596-55f7-475d-9634-6570927ad3f3",
+                "name": "publicationStatement",
+                "uri": "http://rdvocab.info/Elements/publicationStatement"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-a22c9a4e-96fa-4894-8ac6-2628ce3906fe",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-40fab3f4-706a-40d3-81d2-d183f70cfe3e",
+            "attributes": [
+              {
+                "uuid": "Attribute-effeb686-136c-430e-970a-1fbf38cb1d69",
+                "name": "placeOfPublication",
+                "uri": "http://rdvocab.info/Elements/placeOfPublication"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-ca426755-5b54-435d-83ef-e91265fdb324",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-6b9a782b-4105-407a-81da-fe99c612facd",
+            "attributes": [
+              {
+                "uuid": "Attribute-17cd179f-9327-4843-b662-bdd414db00a1",
+                "name": "publisher",
+                "uri": "http://purl.org/dc/elements/1.1/publisher"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-635d6883-07d5-43f8-a5a4-9a0451e487f8",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-3d4f16ba-e7ff-460b-b3e3-3abdbca53930",
+            "attributes": [
+              {
+                "uuid": "Attribute-c9bdf78c-f15d-4d9d-840c-942eee71d262",
+                "name": "issued",
+                "uri": "http://purl.org/dc/terms/issued"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-7baf5965-bf54-47c3-8c50-2d9fb955f840",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-0b55efb5-2d01-4468-b600-390cd53beecd",
+            "attributes": [
+              {
+                "uuid": "Attribute-ca824a03-5517-401c-84db-c4cf4f318c7b",
+                "name": "sameAs",
+                "uri": "http://www.w3.org/2002/07/owl#sameAs"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-d9da5c9d-8c31-4e90-8956-5f71aa7a9a34",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-6154ad3f-2a73-4b71-b255-df18254c366c",
+            "attributes": [
+              {
+                "uuid": "Attribute-817f1738-a898-4a86-b637-31e8f2d1a945",
+                "name": "isLike",
+                "uri": "http://umbel.org/umbel#isLike"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-1b2bfb34-044b-4114-baa7-29ca492a94b1",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-07eabffe-84e3-40ff-8bdd-246081f7db99",
+            "attributes": [
+              {
+                "uuid": "Attribute-05a252fb-388c-4b66-8aa0-ec065bf96170",
+                "name": "issn",
+                "uri": "http://purl.org/ontology/bibo/issn"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-f2d2e0dd-ed86-4e65-af3b-9687ea662da0",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-6a121b36-1de5-46a4-87c1-c69e3870d5ee",
+            "attributes": [
+              {
+                "uuid": "Attribute-9c550219-6b34-4703-ac44-84d6eec6a331",
+                "name": "eissn",
+                "uri": "http://purl.org/ontology/bibo/eissn"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-9b0e1f36-6680-4142-af9e-83bd611fd914",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-643295ac-0f84-4cbd-9f50-664ef204d8e4",
+            "attributes": [
+              {
+                "uuid": "Attribute-c889d7db-6699-4bb5-86de-6c1a7c2164b0",
+                "name": "lccn",
+                "uri": "http://purl.org/ontology/bibo/lccn"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-2649d554-f873-4b1c-a08a-a487a79d5f5c",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-e24285b5-7ee8-4628-9c81-db386593faed",
+            "attributes": [
+              {
+                "uuid": "Attribute-63c0ee52-9998-48a5-9dfe-d6908b75af2d",
+                "name": "oclcnum",
+                "uri": "http://purl.org/ontology/bibo/oclcnum"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-4f659e49-5cd4-4823-85fe-8b9a25f023ec",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-33f81c21-49b1-4644-9909-446df1ecb2e4",
+            "attributes": [
+              {
+                "uuid": "Attribute-768025e0-d07a-4a4a-adfd-cb40a71d38c1",
+                "name": "isbn",
+                "uri": "http://purl.org/ontology/bibo/isbn"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-44292f40-5955-44f4-a787-3eabb13dc75c",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-15eb1696-59f2-4ee6-a19d-8bbe60162796",
+            "attributes": [
+              {
+                "uuid": "Attribute-a513da32-2af5-49af-aabe-ee1150d9f6db",
+                "name": "type",
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-543e9637-d60c-4c8a-9519-5310bd3fe602",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-c40fd936-54f0-4d99-a08b-5014851d27ad",
+            "attributes": [
+              {
+                "uuid": "Attribute-8025d2a1-5d14-4a0a-b18a-a9ba32448178",
+                "name": "medium",
+                "uri": "http://purl.org/dc/terms/medium"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-e08a54cd-2099-444f-b5d6-d7e4d1bae40b",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-a5f7d9a8-bc1f-498c-9098-078ef7f43ce1",
+            "attributes": [
+              {
+                "uuid": "Attribute-5973d4a2-fc73-4ed3-984d-498c8e666079",
+                "name": "hasPart",
+                "uri": "http://purl.org/dc/terms/hasPart"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-a1386f7b-2174-4d76-af78-1bdaf5b3e5b2",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-06f4f995-6d04-4926-9a86-8f1cff7190a5",
+            "attributes": [
+              {
+                "uuid": "Attribute-faa60b16-d53c-4a95-a459-be398d9bfb61",
+                "name": "isPartOf",
+                "uri": "http://purl.org/dc/terms/isPartOf"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-09eb309c-c2ff-4f0a-82b2-5fb831cd5fad",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-5a4cd430-c30e-4174-9df4-caa92d540c67",
+            "attributes": [
+              {
+                "uuid": "Attribute-d077bb12-69f0-4a4a-a6c6-8c948ca3daae",
+                "name": "hasVersion",
+                "uri": "http://purl.org/dc/terms/hasVersion"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-58f96967-6e3d-457f-a184-129d3dafeeb7",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-76a86c81-d147-4796-80f2-8861eb6ecf90",
+            "attributes": [
+              {
+                "uuid": "Attribute-f91ac343-b6fe-4c56-a62c-5c158d81ffbb",
+                "name": "isFormatOf",
+                "uri": "http://purl.org/dc/terms/isFormatOf"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-c83a9893-86bb-4aaf-a28b-3c2e0d15d6d9",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-f6815007-c9cc-4c0e-8cf7-3306566531fe",
+            "attributes": [
+              {
+                "uuid": "Attribute-d4f4387e-28fc-4b77-b77d-ceb3ff95f23c",
+                "name": "precededBy",
+                "uri": "http://rdvocab.info/Elements/precededBy"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-9768545a-5234-4f76-a6a8-4820c9735661",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-301e4ba9-fffd-498e-8906-bc73072fac60",
+            "attributes": [
+              {
+                "uuid": "Attribute-3d16f34d-cdfd-4d15-8a52-714ea69d2338",
+                "name": "succeededBy",
+                "uri": "http://rdvocab.info/Elements/succeededBy"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-028239aa-4acc-460e-b70b-fc73c8e4823d",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-599a1178-c510-41f6-b2a4-1b112bd3bc07",
+            "attributes": [
+              {
+                "uuid": "Attribute-429ff812-772d-4f22-aa73-825cb6729367",
+                "name": "language",
+                "uri": "http://purl.org/dc/terms/language"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-1fedcbfe-4e9c-47ca-a9aa-4158ca33d347",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-6d48d031-b40b-421b-9d82-91ae1c0c44c2",
+            "attributes": [
+              {
+                "uuid": "Attribute-a8bbe4e4-02a7-473c-8361-21f8139b7bf8",
+                "name": "1053",
+                "uri": "http://iflastandards.info/ns/isbd/elements/1053"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-64aa7cdd-6fc7-4252-8405-2cdc7cb29595",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-819d2762-60e8-4759-bb95-1f019d990771",
+            "attributes": [
+              {
+                "uuid": "Attribute-d0a95fd5-8555-4085-b291-36fca4c7cb13",
+                "name": "edition",
+                "uri": "http://purl.org/ontology/bibo/edition"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-3d009c24-e6c5-4a24-aa40-0b086b1503e1",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-b6bbf17a-58f4-448b-95d4-018c5d44ce0b",
+            "attributes": [
+              {
+                "uuid": "Attribute-764e28f2-e92e-417f-b545-a1737e9d8599",
+                "name": "bibliographicCitation",
+                "uri": "http://purl.org/dc/terms/bibliographicCitation"
+              }
+            ]
+          }
+        }
+      ],
+      "record_class": {
+        "uuid": "Clasz-3f772842-4414-4b5c-9062-6f4256d05c57",
+        "name": "Document",
+        "uri": "http://purl.org/ontology/bibo/Document"
+      }
+    }
+  }
+}
