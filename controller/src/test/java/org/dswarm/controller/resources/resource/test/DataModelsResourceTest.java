@@ -47,6 +47,7 @@ import org.slf4j.LoggerFactory;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.builder.Input;
 import org.xmlunit.diff.Diff;
+import org.xmlunit.diff.Difference;
 
 import org.dswarm.common.MediaTypeUtil;
 import org.dswarm.controller.resources.resource.test.utils.ConfigurationsResourceTestUtils;
@@ -694,11 +695,11 @@ public class DataModelsResourceTest extends
 
 		final String actualXML = response.readEntity(String.class);
 
-		final String expectedPNX = DMPPersistenceUtil.getResourceAsString(expectedXMLFile);
+		final String expectedXML = DMPPersistenceUtil.getResourceAsString(expectedXMLFile);
 
 		// do comparison: check for XML similarity
-		final Diff xmlDiff = DiffBuilder.compare(Input.fromMemory(expectedPNX))
-				.withTest(Input.fromMemory(actualXML)).checkForSimilar().build();
+		final Diff xmlDiff = DiffBuilder.compare(Input.fromString(expectedXML))
+				.withTest(Input.fromString(actualXML)).checkForSimilar().build();
 
 		Assert.assertFalse(xmlDiff.hasDifferences());
 
