@@ -39,13 +39,14 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 
 	private static final Logger LOG = LoggerFactory.getLogger(DataModelUtils.class);
 
-	public static final String BIBRM_CONTRACT_DATA_MODEL_UUID = "DataModel-7e170c22-1371-4836-9a09-515524a1a8d5";
-	public static final String BIBO_DOCUMENT_DATA_MODEL_UUID  = "DataModel-cf998267-392a-4d87-a33a-88dd1bffb016";
-	public static final String MABXML_DATA_MODEL_UUID         = "DataModel-4f399d11-81ae-45af-b2f4-645aa177ab85";
-	public static final String FOAF_PERSON_DATA_MODEL_UUID    = "DataModel-23451d9d-adf6-4352-90f8-4f17cccf5d36";
-	public static final String PNX_DATA_MODEL_UUID            = "DataModel-a65018b1-d27b-4125-9eff-5f6fd860079d";
-	public static final String MARC21_DATA_MODEL_UUID         = "DataModel-326d3380-258e-43fd-83d2-6a87daa8480a";
-	public static final String FINC_SOLR_DATA_MODEL_UUID      = "5fddf2c5-916b-49dc-a07d-af04020c17f7";
+	public static final String BIBRM_CONTRACT_DATA_MODEL_UUID      = "DataModel-7e170c22-1371-4836-9a09-515524a1a8d5";
+	public static final String BIBO_DOCUMENT_DATA_MODEL_UUID       = "DataModel-cf998267-392a-4d87-a33a-88dd1bffb016";
+	public static final String MABXML_DATA_MODEL_UUID              = "DataModel-4f399d11-81ae-45af-b2f4-645aa177ab85";
+	public static final String FOAF_PERSON_DATA_MODEL_UUID         = "DataModel-23451d9d-adf6-4352-90f8-4f17cccf5d36";
+	public static final String PNX_DATA_MODEL_UUID                 = "DataModel-a65018b1-d27b-4125-9eff-5f6fd860079d";
+	public static final String MARC21_DATA_MODEL_UUID              = "DataModel-326d3380-258e-43fd-83d2-6a87daa8480a";
+	public static final String FINC_SOLR_DATA_MODEL_UUID           = "5fddf2c5-916b-49dc-a07d-af04020c17f7";
+	public static final String OAI_PMH_DC_ELEMENTS_DATA_MODEL_UUID = "DataModel-fbf2e242-0a6b-4306-9264-d0ff420398b1";
 
 	public static String determineDataModelSchemaBaseURI(final DataModel dataModel) {
 

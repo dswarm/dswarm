@@ -16,11 +16,14 @@
 package org.dswarm.converter.schema.test;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
+import com.google.inject.Provider;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -28,12 +31,17 @@ import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.schema.XMLSchemaParser;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
+import org.dswarm.persistence.model.internal.helper.AttributePathHelperHelper;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
+import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.UUIDService;
+import org.dswarm.persistence.service.schema.AttributePathService;
+import org.dswarm.persistence.service.schema.AttributeService;
+import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
@@ -77,6 +85,44 @@ public class XMLSchemaParserTest extends GuicedTest {
 		testAttributePathsParsing("pnx.xsd", "record", "pnx_schema_-_attribute_paths.txt");
 	}
 
+	@Test
+	public void testAttributePathsParsingForDCElements() throws IOException {
+
+		testAttributePathsParsing("dc.xsd", null, "dc_elements_schema_-_attribute_paths.txt");
+	}
+
+	@Test
+	public void testAttributePathsParsingForDCTerms() throws IOException {
+
+		testAttributePathsParsing("dcterms.xsd", null, "dc_terms_schema_-_attribute_paths.txt");
+	}
+
+	@Test
+	public void testAttributePathsParsingForOAIPMH() throws IOException {
+
+		testAttributePathsParsing("OAI-PMH.xsd", "record", "oai-pmh_schema_-_attribute_paths.txt");
+	}
+
+	@Test
+	public void testAttributePathsParsingForOAIPMHPlusDCElements() throws IOException {
+
+		final Map<String, AttributePathHelper> rootAttributePaths = parseAttributePaths("OAI-PMH.xsd", "record");
+
+		final String rootAttributePathIdentifier = "http://www.openarchives.org/OAI/2.0/metadata";
+		final AttributePathHelper rootAttributePath = rootAttributePaths.get(rootAttributePathIdentifier);
+
+		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths("dc.xsd", null);
+
+		final Map<String, AttributePathHelper> newAttributePaths = composeAttributePaths(rootAttributePaths, rootAttributePath, childAttributePaths);
+
+		compareAttributePaths("oai-pmh_plus_dc_elements_schema_-_attribute_paths.txt", newAttributePaths);
+	}
+
+	public static Schema parseOAIPMHPlusDCElementsSchema() throws DMPPersistenceException {
+
+		return parseOAIPMHPlusXSchema("dc.xsd", "DC Elements");
+	}
+
 	/**
 	 * note: creates the mabxml from the given xml schema file from scratch
 	 *
@@ -102,7 +148,6 @@ public class XMLSchemaParserTest extends GuicedTest {
 	 * @throws DMPPersistenceException
 	 */
 	public static Schema parseMabxmlSchema() throws IOException, DMPPersistenceException {
-
 
 		final Schema schema = parseSchema("mabxml-1.xsd", "datensatz", SchemaUtils.MABXML_SCHEMA_UUID, "mabxml schema");
 
@@ -185,18 +230,30 @@ public class XMLSchemaParserTest extends GuicedTest {
 		return optionalSchema.get();
 	}
 
-	private void testAttributePathsParsing(final String xsdFileName, final String recordIdentifier, final String resultFileName) throws IOException {
+	private static Tuple<Schema, Map<String, AttributePathHelper>> parseSchemaSeparately(final String xsdFileName, final String recordIdentifier,
+			final String schemaUUID, final String schemaName)
+			throws DMPPersistenceException {
 
 		final XMLSchemaParser xmlSchemaParser = GuicedTest.injector.getInstance(XMLSchemaParser.class);
-		final Optional<Set<AttributePathHelper>> optionalAttributePaths = xmlSchemaParser.parseAttributePaths(xsdFileName, recordIdentifier);
+		final Optional<Tuple<Schema, Map<String, AttributePathHelper>>> optionalResult = xmlSchemaParser.parseSeparately(xsdFileName,
+				recordIdentifier, schemaUUID, schemaName);
+		Assert.assertTrue(optionalResult.isPresent());
 
-		Assert.assertTrue(optionalAttributePaths.isPresent());
+		return optionalResult.get();
+	}
 
-		final Set<AttributePathHelper> attributePaths = optionalAttributePaths.get();
+	private void testAttributePathsParsing(final String xsdFileName, final String recordIdentifier, final String resultFileName) throws IOException {
+
+		final Map<String, AttributePathHelper> attributePaths = parseAttributePaths(xsdFileName, recordIdentifier);
+
+		compareAttributePaths(resultFileName, attributePaths);
+	}
+
+	private void compareAttributePaths(final String resultFileName, final Map<String, AttributePathHelper> attributePaths) throws IOException {
 
 		final StringBuilder sb = new StringBuilder();
 
-		for (final AttributePathHelper attributePath : attributePaths) {
+		for (final AttributePathHelper attributePath : attributePaths.values()) {
 
 			sb.append(attributePath.toString()).append("\n");
 		}
@@ -205,6 +262,17 @@ public class XMLSchemaParserTest extends GuicedTest {
 		final String actualAttributePaths = sb.toString();
 
 		Assert.assertEquals(expectedAttributePaths, actualAttributePaths);
+	}
+
+	private static Map<String, AttributePathHelper> parseAttributePaths(final String xsdFileName, final String recordIdentifier) {
+
+		final XMLSchemaParser xmlSchemaParser = GuicedTest.injector.getInstance(XMLSchemaParser.class);
+		final Optional<Map<String, AttributePathHelper>> optionalAttributePaths = xmlSchemaParser.parseAttributePathsMap(xsdFileName,
+				Optional.fromNullable(recordIdentifier));
+
+		Assert.assertTrue(optionalAttributePaths.isPresent());
+
+		return optionalAttributePaths.get();
 	}
 
 	private static Map<String, AttributePath> generateAttributePathMap(final Schema schema) {
@@ -220,7 +288,8 @@ public class XMLSchemaParserTest extends GuicedTest {
 		return aps;
 	}
 
-	private static Schema fillContentSchemaAndUpdateSchema(final ContentSchema contentSchema, final AttributePath recordIdentifierAP, final AttributePath valueAP, final Schema schema)
+	private static Schema fillContentSchemaAndUpdateSchema(final ContentSchema contentSchema, final AttributePath recordIdentifierAP,
+			final AttributePath valueAP, final Schema schema)
 			throws DMPPersistenceException {
 
 		contentSchema.setRecordIdentifierAttributePath(recordIdentifierAP);
@@ -233,6 +302,78 @@ public class XMLSchemaParserTest extends GuicedTest {
 		schemaService.updateObjectTransactional(schema);
 
 		return schema;
+	}
+
+	private static Map<String, AttributePathHelper> composeAttributePaths(final Map<String, AttributePathHelper> rootAttributePaths,
+			final AttributePathHelper rootAttributePath,
+			final Map<String, AttributePathHelper> childAttributePaths) {
+
+		final Set<AttributePathHelper> compoundAttributePaths = new LinkedHashSet<>();
+
+		for (final AttributePathHelper attributePath : childAttributePaths.values()) {
+
+			AttributePathHelperHelper.addAttributePath(attributePath, compoundAttributePaths, rootAttributePath);
+		}
+
+		final Map<String, AttributePathHelper> newAttributePaths = new LinkedHashMap<>();
+		final String rootAttributePathIdentifier = rootAttributePath.toString();
+
+		for (final Map.Entry<String, AttributePathHelper> rootAttributePathEntry : rootAttributePaths.entrySet()) {
+
+			newAttributePaths.put(rootAttributePathEntry.getKey(), rootAttributePathEntry.getValue());
+
+			if (rootAttributePathEntry.getKey().equals(rootAttributePathIdentifier)) {
+
+				for (final AttributePathHelper attributePath : compoundAttributePaths) {
+
+					newAttributePaths.put(attributePath.toString(), attributePath);
+				}
+			}
+		}
+
+		return newAttributePaths;
+	}
+
+	private static Set<AttributePathHelper> convertToSet(final Map<String, AttributePathHelper> attributePathsMap) {
+
+		final Set<AttributePathHelper> attributePaths = new LinkedHashSet<>();
+
+		for (final AttributePathHelper attributePath : attributePathsMap.values()) {
+
+			attributePaths.add(attributePath);
+		}
+
+		return attributePaths;
+	}
+
+	private static Schema parseOAIPMHPlusXSchema(final String childSchemaFileName, final String childSchemaName) throws DMPPersistenceException {
+
+		final Tuple<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("OAI-PMH.xsd", "record",
+				SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID, "OAI-PMH + " + childSchemaName + " schema");
+
+		final Map<String, AttributePathHelper> rootAttributePaths = result.v2();
+
+		final String rootAttributePathIdentifier = "http://www.openarchives.org/OAI/2.0/metadata";
+		final AttributePathHelper rootAttributePath = rootAttributePaths.get(rootAttributePathIdentifier);
+
+		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths(childSchemaFileName, null);
+
+		final Map<String, AttributePathHelper> newAttributePaths = composeAttributePaths(rootAttributePaths, rootAttributePath, childAttributePaths);
+
+		final Schema schema = result.v1();
+		final Set<AttributePathHelper> attributePaths = convertToSet(newAttributePaths);
+		final Provider<AttributePathService> attributePathServiceProvider = GuicedTest.injector.getProvider(AttributePathService.class);
+		final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceServiceProvider = GuicedTest.injector.getProvider(
+				SchemaAttributePathInstanceService.class);
+		final Provider<AttributeService> attributeServiceProvider = GuicedTest.injector.getProvider(AttributeService.class);
+		final Provider<SchemaService> schemaServiceProvider = GuicedTest.injector.getProvider(SchemaService.class);
+
+		SchemaUtils.addAttributePaths(schema, attributePaths, attributePathServiceProvider, schemaAttributePathInstanceServiceProvider,
+				attributeServiceProvider);
+
+		// TODO: add content schema, when necessary
+
+		return SchemaUtils.updateSchema(schema, schemaServiceProvider);
 	}
 
 }
