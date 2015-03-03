@@ -72,6 +72,7 @@ import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
+import org.dswarm.persistence.model.resource.utils.DataModelUtils;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.types.Tuple;
@@ -321,11 +322,11 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 			// record class uri
 			final Optional<Schema> optionalSchema = Optional.fromNullable(freshDataModel.getSchema());
 
-			if(optionalSchema.isPresent()) {
+			if (optionalSchema.isPresent()) {
 
 				final Optional<Clasz> optionalRecordClass = Optional.fromNullable(optionalSchema.get().getRecordClass());
 
-				if(optionalRecordClass.isPresent()) {
+				if (optionalRecordClass.isPresent()) {
 
 					final String recordClassURI = optionalRecordClass.get().getUri();
 
@@ -342,11 +343,12 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 			// record tag
 			final Optional<Configuration> optionalConfiguration = Optional.fromNullable(freshDataModel.getConfiguration());
 
-			if(optionalConfiguration.isPresent()) {
+			if (optionalConfiguration.isPresent()) {
 
-				final Optional<JsonNode> optionalRecordTagNode = Optional.fromNullable(optionalConfiguration.get().getParameter(ConfigurationStatics.RECORD_TAG));
+				final Optional<JsonNode> optionalRecordTagNode = Optional
+						.fromNullable(optionalConfiguration.get().getParameter(ConfigurationStatics.RECORD_TAG));
 
-				if(optionalRecordTagNode.isPresent()) {
+				if (optionalRecordTagNode.isPresent()) {
 
 					final String recordTag = optionalRecordTagNode.get().asText();
 
@@ -357,13 +359,77 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 			// version
 			// TODO
 
+			// original data model type
+			final Optional<String> optionalOriginalDataModelType;
+
+			switch (freshDataModel.getUuid()) {
+
+				case DataModelUtils.MABXML_DATA_MODEL_UUID:
+				case DataModelUtils.MARC21_DATA_MODEL_UUID:
+				case DataModelUtils.PNX_DATA_MODEL_UUID:
+
+					optionalOriginalDataModelType = Optional.of(DMPStatics.XML_DATA_TYPE);
+
+					break;
+				default:
+
+					if (optionalConfiguration.isPresent()) {
+
+						final Configuration configuration = optionalConfiguration.get();
+
+						final Optional<JsonNode> optionalStorageTypeNode = Optional
+								.fromNullable(configuration.getParameter(ConfigurationStatics.STORAGE_TYPE));
+
+						if (optionalStorageTypeNode.isPresent()) {
+
+							final JsonNode storageTypeNode = optionalStorageTypeNode.get();
+
+							final Optional<String> optionalStorageType = Optional.fromNullable(storageTypeNode.asText());
+
+							if (optionalStorageType.isPresent()) {
+
+								final String storageType = optionalStorageType.get();
+
+								switch (storageType) {
+
+									case ConfigurationStatics.XML_STORAGE_TYPE:
+									case ConfigurationStatics.PNX_STORAGE_TYPE:
+									case ConfigurationStatics.MABXML_STORAGE_TYPE:
+									case ConfigurationStatics.MARCXML_STORAGE_TYPE:
+
+										optionalOriginalDataModelType = Optional.of(DMPStatics.XML_DATA_TYPE);
+
+										break;
+									default:
+
+										optionalOriginalDataModelType = Optional.absent();
+								}
+							} else {
+
+								optionalOriginalDataModelType = Optional.absent();
+							}
+						} else {
+
+							optionalOriginalDataModelType = Optional.absent();
+						}
+					} else {
+
+						optionalOriginalDataModelType = Optional.absent();
+					}
+			}
+
+			if (optionalOriginalDataModelType.isPresent()) {
+
+				requestJson.put(DMPStatics.ORIGINAL_DATA_TYPE_IDENTIFIER, optionalOriginalDataModelType.get());
+			}
+
 			final String requestJsonString = serializeObject(requestJson);
 
 			// send the request to graph DB
 			final WebTarget target = service().path("/xml/get");
 			responseFromGraph = target.request(MediaType.APPLICATION_XML_TYPE).post(Entity.entity(requestJsonString, MediaType.APPLICATION_JSON));
 
-			return  ExportUtils.processGraphDBXMLResponseInternal(responseFromGraph);
+			return ExportUtils.processGraphDBXMLResponseInternal(responseFromGraph);
 		} else {
 
 			// send the request to graph DB

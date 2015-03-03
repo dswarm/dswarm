@@ -19,6 +19,7 @@ import com.google.inject.AbstractModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.dswarm.converter.schema.SolrSchemaParser;
 import org.dswarm.converter.schema.XMLSchemaParser;
 import org.dswarm.init.util.DMPUtil;
 
@@ -35,5 +36,6 @@ public class ConverterModule extends AbstractModule {
 	protected void configure() {
 
 		bind(XMLSchemaParser.class);
+		bind(SolrSchemaParser.class);
 	}
 }

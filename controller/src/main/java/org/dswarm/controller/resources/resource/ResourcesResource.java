@@ -183,6 +183,7 @@ public class ResourcesResource {
 	 * @param fileDetail          file metadata
 	 * @param name                the name of the resource
 	 * @param description         an description of the resource
+	 * @param uuid                a preset resource uuid
 	 * @return a JSON representation of the created resource
 	 * @throws DMPControllerException
 	 */
@@ -197,11 +198,12 @@ public class ResourcesResource {
 			@ApiParam(value = "file input stream", required = true) @FormDataParam("file") final InputStream uploadedInputStream,
 			@ApiParam("file metadata") @FormDataParam("file") final FormDataContentDisposition fileDetail,
 			@ApiParam(value = "resource name", required = true) @FormDataParam("name") final String name,
-			@ApiParam("resource description") @FormDataParam("description") final String description) throws DMPControllerException {
+			@ApiParam("resource description") @FormDataParam("description") final String description,
+			@ApiParam("resource uuid") @FormDataParam("uuid") final String uuid) throws DMPControllerException {
 
 		ResourcesResource.LOG.debug("try to create new resource '" + name + "' for file '" + fileDetail.getFileName() + "'");
 
-		final ProxyResource proxyResource = createResource(uploadedInputStream, fileDetail, name, description);
+		final ProxyResource proxyResource = createResource(uploadedInputStream, fileDetail, name, description, uuid);
 
 		if (proxyResource == null) {
 			throw new DMPControllerException("couldn't create new resource");
@@ -770,6 +772,8 @@ public class ResourcesResource {
 	/**
 	 * Process stores the input stream and creates and persists a new resource with the related metadata.
 	 *
+	 * TODO: reduce transactions (one instead of two)
+	 *
 	 * @param uploadInputedStream an input stream that should be uploaded
 	 * @param fileDetail          metadata of the given input stream
 	 * @param name                the name of the resource
@@ -778,15 +782,17 @@ public class ResourcesResource {
 	 * @throws DMPControllerException
 	 */
 	private ProxyResource createResource(final InputStream uploadInputedStream, final FormDataContentDisposition fileDetail, final String name,
-			final String description) throws DMPControllerException {
+			final String description, final String uuid) throws DMPControllerException {
 
 		final ResourceService resourceService = resourceServiceProvider.get();
+
+		final Resource newResource = new Resource(uuid);
 
 		ProxyResource proxyResource;
 
 		try {
 
-			proxyResource = resourceService.createObjectTransactional();
+			proxyResource = resourceService.createObjectTransactional(newResource);
 		} catch (final DMPPersistenceException e) {
 
 			ResourcesResource.LOG.debug("something went wrong while resource creation");
@@ -809,9 +815,8 @@ public class ResourcesResource {
 		final ProxyResource refreshedResource = refreshResource(resource, uploadInputedStream, fileDetail, name, description);
 
 		// re-wrap with correct type (created)
-		final ProxyResource refreshedProxyResource = new ProxyResource(refreshedResource.getObject(), proxyResource.getType());
 
-		return refreshedProxyResource;
+		return new ProxyResource(refreshedResource.getObject(), proxyResource.getType());
 	}
 
 	/**
