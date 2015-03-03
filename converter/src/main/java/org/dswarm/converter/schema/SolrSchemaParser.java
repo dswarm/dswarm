@@ -108,7 +108,7 @@ public class SolrSchemaParser {
 
 		if (!optionalDocument.isPresent()) {
 
-			LOG.error("parsed Solr schema (from '" + solrSchemaFilePath + "') is not present");
+			LOG.error("parsed Solr schema (from '{}') is not present", solrSchemaFilePath);
 
 			return Optional.empty();
 		}
@@ -119,7 +119,7 @@ public class SolrSchemaParser {
 
 		if (!optionalFields.isPresent()) {
 
-			LOG.error("couldn't find fields in the Solr schema (from '" + solrSchemaFilePath + "')");
+			LOG.error("couldn't find fields in the Solr schema (from '{}')", solrSchemaFilePath);
 
 			return Optional.empty();
 		}
@@ -132,7 +132,7 @@ public class SolrSchemaParser {
 
 		if (attributes.isEmpty()) {
 
-			LOG.error("could not extract any attribute from the Solr schema at '" + solrSchemaFilePath + "'");
+			LOG.error("could not extract any attribute from the Solr schema at '{}'", solrSchemaFilePath);
 
 			return Optional.empty();
 		}
@@ -142,7 +142,7 @@ public class SolrSchemaParser {
 
 		if (attributePaths.isEmpty()) {
 
-			LOG.error("couldn't create any attribute path from the extracted attributes from the Solr schem at '" + solrSchemaFilePath + "'");
+			LOG.error("couldn't create any attribute path from the extracted attributes from the Solr schem at '{}'", solrSchemaFilePath);
 
 			return Optional.empty();
 		}
@@ -194,12 +194,12 @@ public class SolrSchemaParser {
 			return Optional.ofNullable(document);
 		} catch (final SAXException e) {
 
-			LOG.error("couldn't parse the Solr schema file at '" + solrSchemaFilePath + "'", e);
+			LOG.error("couldn't parse the Solr schema file at '{}'", solrSchemaFilePath, e);
 
 			return Optional.empty();
 		} catch (final IOException e) {
 
-			LOG.error("couldn't read the Solr schema fila at '" + solrSchemaFilePath + "'", e);
+			LOG.error("couldn't read the Solr schema fila at '{}'", solrSchemaFilePath, e);
 
 			return Optional.empty();
 		}
@@ -228,7 +228,7 @@ public class SolrSchemaParser {
 			result = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
 		} catch (final XPathExpressionException e) {
 
-			LOG.error("could not execute xpath query against document (from '" + solrSchemaFilePath + "')", e);
+			LOG.error("could not execute xpath query against document (from '{}')", solrSchemaFilePath, e);
 
 			return Optional.empty();
 		}
@@ -247,7 +247,10 @@ public class SolrSchemaParser {
 
 			if (!field.hasAttributes()) {
 
-				LOG.debug("field ('" + ToStringBuilder.reflectionToString(field) + "') has no attributes, cannot parse an attribute from it");
+				if (LOG.isDebugEnabled()) {
+
+					LOG.debug("field ('{}') has no attributes, cannot parse an attribute from it", ToStringBuilder.reflectionToString(field));
+				}
 
 				continue;
 			}
@@ -258,7 +261,10 @@ public class SolrSchemaParser {
 
 			if (!optionalNameNode.isPresent()) {
 
-				LOG.debug("field ('" + ToStringBuilder.reflectionToString(field) + "') has no name XML attribute, cannot parse an attribute from it");
+				if (LOG.isDebugEnabled()) {
+
+					LOG.debug("field ('{}') has no name XML attribute, cannot parse an attribute from it", ToStringBuilder.reflectionToString(field));
+				}
 
 				continue;
 			}
@@ -269,7 +275,10 @@ public class SolrSchemaParser {
 
 			if (!optionalName.isPresent()) {
 
-				LOG.debug("field ('" + ToStringBuilder.reflectionToString(field) + "') has no name, cannot parse an attribute from it");
+				if (LOG.isDebugEnabled()) {
+
+					LOG.debug("field ('{}') has no name, cannot parse an attribute from it", ToStringBuilder.reflectionToString(field));
+				}
 
 				continue;
 			}

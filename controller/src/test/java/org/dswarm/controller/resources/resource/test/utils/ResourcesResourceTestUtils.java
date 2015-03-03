@@ -140,6 +140,11 @@ public class ResourcesResourceTestUtils
 
 		form.field("description", description);
 
+		if(expectedResource != null && expectedResource.getUuid() != null) {
+
+			form.field("uuid", expectedResource.getUuid());
+		}
+
 		form.bodyPart(new FileDataBodyPart("file", resourceFile, MediaType.MULTIPART_FORM_DATA_TYPE));
 
 		final Response response = target().request(MediaType.MULTIPART_FORM_DATA_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
