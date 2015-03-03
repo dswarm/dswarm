@@ -118,9 +118,29 @@ public class XMLSchemaParserTest extends GuicedTest {
 		compareAttributePaths("oai-pmh_plus_dc_elements_schema_-_attribute_paths.txt", newAttributePaths);
 	}
 
+	@Test
+	public void testAttributePathsParsingForOAIPMHPlusDCTerms() throws IOException {
+
+		final Map<String, AttributePathHelper> rootAttributePaths = parseAttributePaths("OAI-PMH.xsd", "record");
+
+		final String rootAttributePathIdentifier = "http://www.openarchives.org/OAI/2.0/metadata";
+		final AttributePathHelper rootAttributePath = rootAttributePaths.get(rootAttributePathIdentifier);
+
+		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths("dcterms.xsd", null);
+
+		final Map<String, AttributePathHelper> newAttributePaths = composeAttributePaths(rootAttributePaths, rootAttributePath, childAttributePaths);
+
+		compareAttributePaths("oai-pmh_plus_dc_terms_schema_-_attribute_paths.txt", newAttributePaths);
+	}
+
 	public static Schema parseOAIPMHPlusDCElementsSchema() throws DMPPersistenceException {
 
-		return parseOAIPMHPlusXSchema("dc.xsd", "DC Elements");
+		return parseOAIPMHPlusXSchema("dc.xsd", "DC Elements", SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID);
+	}
+
+	public static Schema parseOAIPMHPlusDCTermsSchema() throws DMPPersistenceException {
+
+		return parseOAIPMHPlusXSchema("dcterms.xsd", "DC Terms", SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID);
 	}
 
 	/**
@@ -346,10 +366,11 @@ public class XMLSchemaParserTest extends GuicedTest {
 		return attributePaths;
 	}
 
-	private static Schema parseOAIPMHPlusXSchema(final String childSchemaFileName, final String childSchemaName) throws DMPPersistenceException {
+	private static Schema parseOAIPMHPlusXSchema(final String childSchemaFileName, final String childSchemaName, final String schemaUUID)
+			throws DMPPersistenceException {
 
-		final Tuple<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("OAI-PMH.xsd", "record",
-				SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID, "OAI-PMH + " + childSchemaName + " schema");
+		final Tuple<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("OAI-PMH.xsd", "record", schemaUUID,
+				"OAI-PMH + " + childSchemaName + " schema");
 
 		final Map<String, AttributePathHelper> rootAttributePaths = result.v2();
 
