@@ -276,22 +276,29 @@ public class DataModelUtil {
 
 		if (storageType != null) {
 
-			if ("schema".equals(storageType.asText())) {
+			switch (storageType.asText()) {
 
-				// TODO: fix this as needed
+				case ConfigurationStatics.SCHEMA_STORAGE_TYPE:
 
-				return null;
-			} else if (ConfigurationStatics.CSV_STORAGE_TYPE.equals(storageType.asText())) {
+					// TODO: fix this as needed
 
-				return internalServiceFactoryProvider.get().getInternalGDMGraphService();
-			} else if (ConfigurationStatics.XML_STORAGE_TYPE.equals(storageType.asText()) || ConfigurationStatics.MABXML_STORAGE_TYPE
-					.equals(storageType.asText()) || ConfigurationStatics.MARCXML_STORAGE_TYPE.equals(storageType.asText())
-					|| ConfigurationStatics.PNX_STORAGE_TYPE.equals(storageType.asText())) {
+					return null;
+				case ConfigurationStatics.CSV_STORAGE_TYPE:
 
-				return internalServiceFactoryProvider.get().getInternalGDMGraphService();
-			} else {
+					return internalServiceFactoryProvider.get().getInternalGDMGraphService();
 
-				throw new DMPControllerException("couldn't determine internal service type from storage type = '" + storageType.asText() + "'");
+				case ConfigurationStatics.XML_STORAGE_TYPE:
+				case ConfigurationStatics.MABXML_STORAGE_TYPE:
+				case ConfigurationStatics.MARCXML_STORAGE_TYPE:
+				case ConfigurationStatics.PNX_STORAGE_TYPE:
+				case ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE:
+				case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
+				case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
+
+					return internalServiceFactoryProvider.get().getInternalGDMGraphService();
+				default:
+
+					throw new DMPControllerException("couldn't determine internal service type from storage type = '" + storageType.asText() + "'");
 			}
 		} else {
 
