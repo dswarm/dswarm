@@ -133,14 +133,36 @@ public class XMLSchemaParserTest extends GuicedTest {
 		compareAttributePaths("oai-pmh_plus_dc_terms_schema_-_attribute_paths.txt", newAttributePaths);
 	}
 
+	@Test
+	public void testAttributePathsParsingForOAIPMHPlusMARCXML() throws IOException {
+
+		final Map<String, AttributePathHelper> rootAttributePaths = parseAttributePaths("OAI-PMH.xsd", "record");
+
+		final String rootAttributePathIdentifier = "http://www.openarchives.org/OAI/2.0/metadata";
+		final AttributePathHelper rootAttributePath = rootAttributePaths.get(rootAttributePathIdentifier);
+
+		// collection - to include "record" attribute into the attribute paths
+		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths("MARC21slim.xsd", "collection");
+
+		final Map<String, AttributePathHelper> newAttributePaths = composeAttributePaths(rootAttributePaths, rootAttributePath, childAttributePaths);
+
+		compareAttributePaths("oai-pmh_plus_marcxml_schema_-_attribute_paths.txt", newAttributePaths);
+	}
+
 	public static Schema parseOAIPMHPlusDCElementsSchema() throws DMPPersistenceException {
 
-		return parseOAIPMHPlusXSchema("dc.xsd", "DC Elements", SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID);
+		return parseOAIPMHPlusXSchema("dc.xsd", "DC Elements", SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID, null);
 	}
 
 	public static Schema parseOAIPMHPlusDCTermsSchema() throws DMPPersistenceException {
 
-		return parseOAIPMHPlusXSchema("dcterms.xsd", "DC Terms", SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID);
+		return parseOAIPMHPlusXSchema("dcterms.xsd", "DC Terms", SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID, null);
+	}
+
+	public static Schema parseOAIPMHPlusMARCXMLSchema() throws DMPPersistenceException {
+
+		// collection - to include "record" attribute into the attribute paths
+		return parseOAIPMHPlusXSchema("MARC21slim.xsd", "MARCXML", SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID, "collection");
 	}
 
 	/**
@@ -366,7 +388,8 @@ public class XMLSchemaParserTest extends GuicedTest {
 		return attributePaths;
 	}
 
-	private static Schema parseOAIPMHPlusXSchema(final String childSchemaFileName, final String childSchemaName, final String schemaUUID)
+	private static Schema parseOAIPMHPlusXSchema(final String childSchemaFileName, final String childSchemaName, final String schemaUUID,
+			final String childRecordIdentifier)
 			throws DMPPersistenceException {
 
 		final Tuple<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("OAI-PMH.xsd", "record", schemaUUID,
@@ -377,7 +400,7 @@ public class XMLSchemaParserTest extends GuicedTest {
 		final String rootAttributePathIdentifier = "http://www.openarchives.org/OAI/2.0/metadata";
 		final AttributePathHelper rootAttributePath = rootAttributePaths.get(rootAttributePathIdentifier);
 
-		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths(childSchemaFileName, null);
+		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths(childSchemaFileName, childRecordIdentifier);
 
 		final Map<String, AttributePathHelper> newAttributePaths = composeAttributePaths(rootAttributePaths, rootAttributePath, childAttributePaths);
 
