@@ -151,18 +151,69 @@ public class XMLSchemaParserTest extends GuicedTest {
 
 	public static Schema parseOAIPMHPlusDCElementsSchema() throws DMPPersistenceException {
 
-		return parseOAIPMHPlusXSchema("dc.xsd", "DC Elements", SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID, null);
+		final Schema schema = parseOAIPMHPlusXSchema("dc.xsd", "DC Elements", SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID, null);
+
+		final Map<String, AttributePath> aps = generateAttributePathMap(schema);
+
+		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
+
+		final ContentSchema contentSchema = new ContentSchema(uuid);
+		contentSchema.setName("OAI-PMH + DC Elements content schema");
+
+		final AttributePath id = aps
+				.get("http://www.openarchives.org/OAI/2.0/header\u001Ehttp://www.openarchives.org/OAI/2.0/identifier\u001Ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#value");
+
+		return fillContentSchemaAndUpdateSchema(contentSchema, id, null, schema);
 	}
 
 	public static Schema parseOAIPMHPlusDCTermsSchema() throws DMPPersistenceException {
 
-		return parseOAIPMHPlusXSchema("dcterms.xsd", "DC Terms", SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID, null);
+		final Schema schema = parseOAIPMHPlusXSchema("dcterms.xsd", "DC Terms", SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID, null);
+
+		final Map<String, AttributePath> aps = generateAttributePathMap(schema);
+
+		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
+
+		final ContentSchema contentSchema = new ContentSchema(uuid);
+		contentSchema.setName("OAI-PMH + DC Terms content schema");
+
+		final AttributePath id = aps
+				.get("http://www.openarchives.org/OAI/2.0/header\u001Ehttp://www.openarchives.org/OAI/2.0/identifier\u001Ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#value");
+
+		return fillContentSchemaAndUpdateSchema(contentSchema, id, null, schema);
 	}
 
 	public static Schema parseOAIPMHPlusMARCXMLSchema() throws DMPPersistenceException {
 
 		// collection - to include "record" attribute into the attribute paths
-		return parseOAIPMHPlusXSchema("MARC21slim.xsd", "MARCXML", SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID, "collection");
+		final Schema schema = parseOAIPMHPlusXSchema("MARC21slim.xsd", "MARCXML", SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID, "collection");
+
+		final Map<String, AttributePath> aps = generateAttributePathMap(schema);
+
+		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
+
+		final ContentSchema contentSchema = new ContentSchema(uuid);
+		contentSchema.setName("OAI-PMH + MARCXML content schema");
+
+		final AttributePath datafieldTag = aps
+				.get("http://www.openarchives.org/OAI/2.0/metadata\u001Ehttp://www.loc.gov/MARC21/slim#record\u001Ehttp://www.loc.gov/MARC21/slim#datafield\u001Ehttp://www.loc.gov/MARC21/slim#tag");
+		final AttributePath datafieldInd1 = aps
+				.get("http://www.openarchives.org/OAI/2.0/metadata\u001Ehttp://www.loc.gov/MARC21/slim#record\u001Ehttp://www.loc.gov/MARC21/slim#datafield\u001Ehttp://www.loc.gov/MARC21/slim#ind1");
+		final AttributePath datafieldInd2 = aps
+				.get("http://www.openarchives.org/OAI/2.0/metadata\u001Ehttp://www.loc.gov/MARC21/slim#record\u001Ehttp://www.loc.gov/MARC21/slim#datafield\u001Ehttp://www.loc.gov/MARC21/slim#ind2");
+		final AttributePath datafieldSubfieldCode = aps
+				.get("http://www.openarchives.org/OAI/2.0/metadata\u001Ehttp://www.loc.gov/MARC21/slim#record\u001Ehttp://www.loc.gov/MARC21/slim#datafield\u001Ehttp://www.loc.gov/MARC21/slim#subfield\u001Ehttp://www.loc.gov/MARC21/slim#code");
+		final AttributePath id = aps
+				.get("http://www.openarchives.org/OAI/2.0/header\u001Ehttp://www.openarchives.org/OAI/2.0/identifier\u001Ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#value");
+		final AttributePath datafieldSubfieldValue = aps
+				.get("http://www.openarchives.org/OAI/2.0/metadata\u001Ehttp://www.loc.gov/MARC21/slim#record\u001Ehttp://www.loc.gov/MARC21/slim#datafield\u001Ehttp://www.loc.gov/MARC21/slim#subfield\u001Ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#value");
+
+		contentSchema.addKeyAttributePath(datafieldTag);
+		contentSchema.addKeyAttributePath(datafieldInd1);
+		contentSchema.addKeyAttributePath(datafieldInd2);
+		contentSchema.addKeyAttributePath(datafieldSubfieldCode);
+
+		return fillContentSchemaAndUpdateSchema(contentSchema, id, datafieldSubfieldValue, schema);
 	}
 
 	/**
@@ -222,7 +273,19 @@ public class XMLSchemaParserTest extends GuicedTest {
 	 */
 	public static Schema parsePNXSchema() throws IOException, DMPPersistenceException {
 
-		return parseSchema("pnx.xsd", "record", SchemaUtils.PNX_SCHEMA_UUID, "pnx schema");
+		final Schema schema = parseSchema("pnx.xsd", "record", SchemaUtils.PNX_SCHEMA_UUID, "pnx schema");
+
+		final Map<String, AttributePath> aps = generateAttributePathMap(schema);
+
+		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
+
+		final ContentSchema contentSchema = new ContentSchema(uuid);
+		contentSchema.setName("PNX content schema");
+
+		final AttributePath id = aps
+				.get("http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#control\u001Ehttp://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#sourcerecordid\u001Ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#value");
+
+		return fillContentSchemaAndUpdateSchema(contentSchema, id, null, schema);
 	}
 
 	/**
@@ -335,7 +398,11 @@ public class XMLSchemaParserTest extends GuicedTest {
 			throws DMPPersistenceException {
 
 		contentSchema.setRecordIdentifierAttributePath(recordIdentifierAP);
-		contentSchema.setValueAttributePath(valueAP);
+
+		if (valueAP != null) {
+
+			contentSchema.setValueAttributePath(valueAP);
+		}
 
 		schema.setContentSchema(contentSchema);
 
