@@ -74,6 +74,7 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		final Schema mabxmlSchema = XMLSchemaParserTest.parseMabxmlSchema();
 		final Schema pnxSchema = XMLSchemaParserTest.parsePNXSchema();
 		final Schema marc21Schema = XMLSchemaParserTest.parseMarc21Schema();
+		final Schema fincSolrSchema = SolrSchemaParserTest.parseFincSolrSchema();
 
 		final String bibrmContractDM = "Internal Data Model ContractItem";
 		final String biboDocumentDM = "Internal Data Model BiboDocument";
@@ -82,6 +83,7 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		final String marc21SchemaDM = "Internal Data Model Marc21";
 		// [@tgaengler]: just prevention, but I guess that we also need a (default) data model for the foaf:Person schema (right now)
 		final String foafPersonDM = "Internal Data Model foafPerson";
+		final String fincSolrSchemaDM = "Internal Data Model finc Solr";
 
 		final Schema foafPersonSchema = biboDocumentSchema.getAttributePathByURIPath(AttributeServiceTestUtils.DCTERMS_CREATOR).getSubSchema();
 
@@ -91,6 +93,7 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		createSchemaDataModel(DataModelUtils.PNX_DATA_MODEL_UUID, pnxSchemaDM, pnxSchemaDM, pnxSchema);
 		createSchemaDataModel(DataModelUtils.MARC21_DATA_MODEL_UUID, marc21SchemaDM, marc21SchemaDM, marc21Schema);
 		createSchemaDataModel(DataModelUtils.FOAF_PERSON_DATA_MODEL_UUID, foafPersonDM, foafPersonDM, foafPersonSchema);
+		createSchemaDataModel(DataModelUtils.FINC_SOLR_DATA_MODEL_UUID, fincSolrSchemaDM, fincSolrSchemaDM, fincSolrSchema);
 
 		final String sep = File.separator;
 

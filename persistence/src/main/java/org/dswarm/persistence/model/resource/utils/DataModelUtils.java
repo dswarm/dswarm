@@ -45,6 +45,7 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 	public static final String FOAF_PERSON_DATA_MODEL_UUID    = "DataModel-23451d9d-adf6-4352-90f8-4f17cccf5d36";
 	public static final String PNX_DATA_MODEL_UUID            = "DataModel-a65018b1-d27b-4125-9eff-5f6fd860079d";
 	public static final String MARC21_DATA_MODEL_UUID         = "DataModel-326d3380-258e-43fd-83d2-6a87daa8480a";
+	public static final String FINC_SOLR_DATA_MODEL_UUID      = "5fddf2c5-916b-49dc-a07d-af04020c17f7";
 
 	public static String determineDataModelSchemaBaseURI(final DataModel dataModel) {
 
