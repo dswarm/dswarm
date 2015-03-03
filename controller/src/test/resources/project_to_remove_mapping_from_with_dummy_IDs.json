@@ -28,7 +28,7 @@
         "attribute_path" : {
           "attributes" : [ {
             "name" : "type",
-            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type2",
             "uuid" : "Attribute-a513da32-2af5-49af-aabe-ee1150d9f6db"
           } ],
           "uuid" : "AttributePath-8131149a-6165-4ee0-bb6f-0a942776caa4"
@@ -139,7 +139,7 @@
       "attribute_path" : {
         "attributes" : [ {
           "name" : "type",
-          "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+          "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type2",
           "uuid" : "Attribute-a513da32-2af5-49af-aabe-ee1150d9f6db"
         } ],
         "uuid" : "AttributePath-8131149a-6165-4ee0-bb6f-0a942776caa4"
@@ -152,7 +152,7 @@
       "attribute_path" : {
         "attributes" : [ {
           "name" : "type",
-          "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+          "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type2",
           "uuid" : "Attribute-a513da32-2af5-49af-aabe-ee1150d9f6db"
         } ],
         "uuid" : "AttributePath-8131149a-6165-4ee0-bb6f-0a942776caa4"
@@ -252,7 +252,7 @@
       "attribute_path" : {
         "attributes" : [ {
           "name" : "contributor",
-          "uri" : "http://purl.org/dc/elements/1.1/contributor",
+          "uri" : "http://purl.org/dc/elements/1.1/contributor2",
           "uuid" : "Attribute-0af43ce4-37cb-4567-ad50-6bbb6084323a"
         } ],
         "uuid" : "AttributePath-f6da5272-1f0e-44a3-bb9e-e901400e6df2"
@@ -281,7 +281,7 @@
       "attribute_path" : {
         "attributes" : [ {
           "name" : "shortTitle",
-          "uri" : "http://purl.org/ontology/bibo/shortTitle",
+          "uri" : "http://purl.org/ontology/bibo/shortTitle2",
           "uuid" : "Attribute-8beaace3-339a-4b6a-9436-41a867f58abb"
         } ],
         "uuid" : "AttributePath-3a4a22ab-8227-4dbc-8738-5ef4a49d9689"
@@ -327,7 +327,7 @@
         "attribute_path" : {
           "attributes" : [ {
             "name" : "type",
-            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type2",
             "uuid" : "Attribute-a513da32-2af5-49af-aabe-ee1150d9f6db"
           } ],
           "uuid" : "AttributePath-8131149a-6165-4ee0-bb6f-0a942776caa4"
@@ -339,7 +339,7 @@
         "attribute_path" : {
           "attributes" : [ {
             "name" : "shortTitle",
-            "uri" : "http://purl.org/ontology/bibo/shortTitle",
+            "uri" : "http://purl.org/ontology/bibo/shortTitle2",
             "uuid" : "Attribute-8beaace3-339a-4b6a-9436-41a867f58abb"
           } ],
           "uuid" : "AttributePath-3a4a22ab-8227-4dbc-8738-5ef4a49d9689"
@@ -351,7 +351,7 @@
         "attribute_path" : {
           "attributes" : [ {
             "name" : "contributor",
-            "uri" : "http://purl.org/dc/elements/1.1/contributor",
+            "uri" : "http://purl.org/dc/elements/1.1/contributor2",
             "uuid" : "Attribute-0af43ce4-37cb-4567-ad50-6bbb6084323a"
           } ],
           "uuid" : "AttributePath-f6da5272-1f0e-44a3-bb9e-e901400e6df2"
@@ -363,7 +363,7 @@
         "attribute_path" : {
           "attributes" : [ {
             "name" : "publicationStatement",
-            "uri" : "http://rdvocab.info/Elements/publicationStatement",
+            "uri" : "http://rdvocab.info/Elements/publicationStatement2",
             "uuid" : "Attribute-404e8596-55f7-475d-9634-6570927ad3f3"
           } ],
           "uuid" : "AttributePath-8341cdec-592a-4a06-9f21-55af7012fca4"
@@ -372,7 +372,7 @@
       } ],
       "record_class" : {
         "name" : "Document",
-        "uri" : "http://purl.org/ontology/bibo/Document",
+        "uri" : "http://purl.org/ontology/bibo/Document2",
         "uuid" : "Clasz-3f772842-4414-4b5c-9062-6f4256d05c57"
       },
       "uuid" : "-2062991439511256064"
