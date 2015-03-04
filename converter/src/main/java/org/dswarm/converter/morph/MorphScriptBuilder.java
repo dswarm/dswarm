@@ -108,6 +108,16 @@ public class MorphScriptBuilder {
 
 	private static final String METAMORPH_FUNCTION_IF = "if";
 
+	private static final String METAMORPH_LOOKUP_ATTRIBUTE_MAP = "map";
+
+	private static final String METAMORPH_LOOKUP_ATTRIBUTE_IN = "in";
+
+	private static final String METAMORPH_MAP_KEY = "name";
+
+	private static final String METAMORPH_MAP_VALUE = "value";
+
+	private static final String METAMORPH_MAP_NAME = "name";
+
 	private static final TransformerFactory TRANSFORMER_FACTORY;
 
 	private static final String TRANSFORMER_FACTORY_CLASS = "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl";
@@ -348,7 +358,7 @@ public class MorphScriptBuilder {
 				if (LOOKUP_FUNCTIONS.contains(component.getFunction().getName()) && componentParameterMapping != null) {
 
 					final Element map = doc.createElement(METAMORPH_ELEMENT_SINGLE_MAP);
-					map.setAttribute("name", component.getName());
+					map.setAttribute(METAMORPH_MAP_NAME, component.getName());
 					maps.appendChild(map);
 
 					for (final Entry<String, String> parameterMapping : componentParameterMapping.entrySet()) {
@@ -368,7 +378,7 @@ public class MorphScriptBuilder {
 										for (final String lookupEntry : lookupList) {
 
 											final Element lookup = doc.createElement(METAMORPH_ELEMENT_MAP_ENTRY);
-											lookup.setAttribute("name", lookupEntry);
+											lookup.setAttribute(METAMORPH_MAP_KEY, lookupEntry);
 											map.appendChild(lookup);
 										}
 									} catch (final IOException e) {
@@ -388,8 +398,8 @@ public class MorphScriptBuilder {
 										for (final Entry<String, String> lookupEntry : lookupEntrys.entrySet()) {
 
 											final Element lookup = doc.createElement(METAMORPH_ELEMENT_MAP_ENTRY);
-											lookup.setAttribute("name", lookupEntry.getKey());
-											lookup.setAttribute("value", lookupEntry.getValue());
+											lookup.setAttribute(METAMORPH_MAP_KEY, lookupEntry.getKey());
+											lookup.setAttribute(METAMORPH_MAP_VALUE, lookupEntry.getValue());
 											map.appendChild(lookup);
 											}
 									} catch (final IOException e) {
@@ -414,7 +424,8 @@ public class MorphScriptBuilder {
 
 		if (LOOKUP_FUNCTIONS.contains(funtionName)) {
 
-			final String lookupNameAttr = funtionName.equals(METAMORPH_FUNCTION_LOOKUP) ? "in" : "map";
+			final String lookupNameAttr = funtionName.equals(METAMORPH_FUNCTION_LOOKUP) ? METAMORPH_LOOKUP_ATTRIBUTE_IN
+					: METAMORPH_LOOKUP_ATTRIBUTE_MAP;
 
 			final Attr param = doc.createAttribute(lookupNameAttr);
 			param.setValue(component.getName());
