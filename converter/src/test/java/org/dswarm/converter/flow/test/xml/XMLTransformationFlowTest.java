@@ -133,6 +133,18 @@ public class XMLTransformationFlowTest extends GuicedTest {
 	}
 
 	@Test
+	public void testDd980Task() throws Exception {
+
+		testXMLTaskWithTuples("dd-980.xml.task.result.json", "dd-980.xml.task.json", "rvk_lokal_cdata.tuples.json");
+	}
+
+	@Test
+	public void testDd980Morph() throws Exception {
+
+		testXMLMorphWithTuples("dd-980.xml.morph.result.json", "dd-980.morph.xml", "rvk_lokal_cdata.tuples.json");
+	}
+
+	@Test
 	public void testMetsmodsXmlWithFilterAndMapping() throws Exception {
 
 		testXMLTaskWithTuples("metsmods_small.xml.task.result.json", "metsmods_small.xml.task.json", "metsmods_small.xml.tuples.json");
@@ -168,10 +180,14 @@ public class XMLTransformationFlowTest extends GuicedTest {
 
 		final String actual = flow.applyResource(tuplesJSONFileName);
 		final ArrayNode array = objectMapper2.readValue(actual, ArrayNode.class);
-		final String finalActual = objectMapper2.writeValueAsString(array);
 
 		final ArrayNode expectedArray = objectMapper2.readValue(expected, ArrayNode.class);
-		final String finalExpected = objectMapper2.writeValueAsString(expectedArray);
+
+		final JsonNode acutalJSONNode = DMPConverterUtils.removeRecordIdFields(array);
+		final JsonNode expectedJSONNode = DMPConverterUtils.removeRecordIdFields(expectedArray);
+
+		final String finalActual = objectMapper2.writeValueAsString(acutalJSONNode);
+		final String finalExpected = objectMapper2.writeValueAsString(expectedJSONNode);
 
 		JSONAssert.assertEquals(finalExpected, finalActual, true);
 	}

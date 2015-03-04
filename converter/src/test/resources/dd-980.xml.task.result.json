@@ -1,0 +1,111 @@
+[ {
+  "http://data.slub-dresden.de/datamodels/DataModel-e5f5640f-767e-4019-a4f7-fb8c6ee51903/records/7605b78a-bc15-4aeb-8192-21fd70b7d01a" : [ {
+    "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#sort" : [ {
+      "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#title" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "VBA mit Access"
+      }, { } ]
+    }, { } ]
+  }, {
+    "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#search" : [ {
+      "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#title" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "VBA mit Access"
+      }, { } ]
+    }, { } ]
+  }, {
+    "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#display" : [ {
+      "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#title" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "VBA mit Access"
+      }, { } ]
+    }, { } ]
+  }, {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://purl.org/ontology/bibo/Document"
+  } ]
+}, {
+  "http://data.slub-dresden.de/datamodels/DataModel-e5f5640f-767e-4019-a4f7-fb8c6ee51903/records/a010e05d-4082-4f5e-92f3-11393cf39dd8" : [ {
+    "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#sort" : [ {
+      "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#title" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Topographische Karte"
+      }, { } ]
+    }, { } ]
+  }, {
+    "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#search" : [ {
+      "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#title" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Topographische Karte"
+      }, { } ]
+    }, { } ]
+  }, {
+    "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#display" : [ {
+      "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#title" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Topographische Karte"
+      }, { } ]
+    }, { } ]
+  }, {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://purl.org/ontology/bibo/Document"
+  } ]
+}, {
+  "http://data.slub-dresden.de/datamodels/DataModel-e5f5640f-767e-4019-a4f7-fb8c6ee51903/records/efb839a4-0f48-4277-9a7e-ed6655425d11" : [ {
+    "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#sort" : [ {
+      "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#title" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "A - L"
+      }, { } ]
+    }, { } ]
+  }, {
+    "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#search" : [ {
+      "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#title" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "A - L"
+      }, { } ]
+    }, { } ]
+  }, {
+    "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#display" : [ {
+      "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#title" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "A - L"
+      }, { } ]
+    }, { } ]
+  }, {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://purl.org/ontology/bibo/Document"
+  } ]
+}, {
+  "http://data.slub-dresden.de/datamodels/DataModel-e5f5640f-767e-4019-a4f7-fb8c6ee51903/records/67e6efab-aa53-46f3-8181-804d9445e4b6" : [ {
+    "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#sort" : [ {
+      "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#title" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "PostScript"
+      }, { } ]
+    }, { } ]
+  }, {
+    "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#search" : [ {
+      "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#title" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "PostScript"
+      }, { } ]
+    }, { } ]
+  }, {
+    "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#display" : [ {
+      "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#title" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "PostScript"
+      }, { } ]
+    }, { } ]
+  }, {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://purl.org/ontology/bibo/Document"
+  } ]
+}, {
+  "http://data.slub-dresden.de/datamodels/DataModel-e5f5640f-767e-4019-a4f7-fb8c6ee51903/records/d299c647-1a11-421a-ac18-f998fc814bc1" : [ {
+    "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#sort" : [ {
+      "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#title" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "PostScript"
+      }, { } ]
+    }, { } ]
+  }, {
+    "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#search" : [ {
+      "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#title" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "PostScript"
+      }, { } ]
+    }, { } ]
+  }, {
+    "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#display" : [ {
+      "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#title" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "PostScript"
+      }, { } ]
+    }, { } ]
+  }, {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://purl.org/ontology/bibo/Document"
+  } ]
+} ]

@@ -1,0 +1,3327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+<ListRecords>
+  <record>
+   <header>
+    <identifier>libero-publish:16039569</identifier>
+   </header>
+   <metadata>
+    <record xmlns="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd">
+     <leader>01130nM2.01200024||||||h</leader>
+     <controlfield tag="LDR">01130nM2.01200024||||||h</controlfield>
+     <controlfield tag="SYS">16039569</controlfield>
+    <datafield tag="000" ind1="" ind2="">
+      <subfield code="a"><![CDATA[16039569]]></subfield>
+    </datafield>
+    <datafield tag="001" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[399001956]]></subfield>
+    </datafield>
+    <datafield tag="002" ind1="a" ind2="">
+      <subfield code="a"><![CDATA[20131212]]></subfield>
+    </datafield>
+    <datafield tag="003" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[20140701104548]]></subfield>
+    </datafield>
+    <datafield tag="025" ind1="a" ind2="">
+      <subfield code="a"><![CDATA[1043660461]]></subfield>
+    </datafield>
+    <datafield tag="026" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[DNB1043660461]]></subfield>
+    </datafield>
+    <datafield tag="029" ind1="m" ind2="">
+      <subfield code="a"><![CDATA[B]]></subfield>
+    </datafield>
+    <datafield tag="030" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[a|zu|||z|0017]]></subfield>
+    </datafield>
+    <datafield tag="036" ind1="a" ind2="">
+      <subfield code="a"><![CDATA[XA-DE-NW]]></subfield>
+    </datafield>
+    <datafield tag="037" ind1="b" ind2="">
+      <subfield code="a"><![CDATA[ger]]></subfield>
+    </datafield>
+    <datafield tag="050" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[a|||||||||||||]]></subfield>
+    </datafield>
+    <datafield tag="051" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[m||||||]]></subfield>
+    </datafield>
+    <datafield tag="070" ind1="a" ind2="">
+      <subfield code="a"><![CDATA[BSZ]]></subfield>
+    </datafield>
+    <datafield tag="076" ind1="c" ind2="">
+      <subfield code="a"><![CDATA[druck]]></subfield>
+    </datafield>
+    <datafield tag="080" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[KNFH]]></subfield>
+    </datafield>
+    <datafield tag="088" ind1="a" ind2="">
+      <subfield code="a"><![CDATA[http://deposit.d-nb.de/cgi-bin/dokserv?id=4490650&amp;prov=M&amp;dok%5Fvar=1&amp;dok%5Fext=htm]]></subfield>
+    </datafield>
+    <datafield tag="088" ind1="z" ind2="">
+      <subfield code="a"><![CDATA[Inhaltstext]]></subfield>
+    </datafield>
+    <datafield tag="100" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Held, Bernd]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="b" ind2="">
+      <subfield code="a"><![CDATA[293774919]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[2452540]]></subfield>
+      <subfield code="a"><![CDATA[###]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[00353nM2.01200024      p]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[2452540]]></subfield>
+      <subfield code="a"><![CDATA[001]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[293774919]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[2452540]]></subfield>
+      <subfield code="a"><![CDATA[002]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[20020219]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[2452540]]></subfield>
+      <subfield code="a"><![CDATA[003]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[20130629235252]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[2452540]]></subfield>
+      <subfield code="a"><![CDATA[028]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[123580501]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[2452540]]></subfield>
+      <subfield code="a"><![CDATA[028]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[123580501]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[2452540]]></subfield>
+      <subfield code="a"><![CDATA[030]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[za1ucrz||||||]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[2452540]]></subfield>
+      <subfield code="a"><![CDATA[036]]></subfield>
+      <subfield code="b"><![CDATA[c]]></subfield>
+      <subfield code="c"><![CDATA[XA-DE]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[2452540]]></subfield>
+      <subfield code="a"><![CDATA[065]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[a|||]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[2452540]]></subfield>
+      <subfield code="a"><![CDATA[068]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[f]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[2452540]]></subfield>
+      <subfield code="a"><![CDATA[068]]></subfield>
+      <subfield code="b"><![CDATA[e]]></subfield>
+      <subfield code="c"><![CDATA[v]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[2452540]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[z]]></subfield>
+      <subfield code="c"><![CDATA[800 Held, Bernd++123580501++pnd]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[2452540]]></subfield>
+      <subfield code="a"><![CDATA[080]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[PND]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[2452540]]></subfield>
+      <subfield code="a"><![CDATA[800]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[Held, Bernd]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[2452540]]></subfield>
+      <subfield code="a"><![CDATA[815]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[1969 -]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[2452540]]></subfield>
+      <subfield code="a"><![CDATA[815]]></subfield>
+      <subfield code="b"><![CDATA[e]]></subfield>
+      <subfield code="c"><![CDATA[209143223           Vaihingen an der Enz]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[2452540]]></subfield>
+      <subfield code="a"><![CDATA[815]]></subfield>
+      <subfield code="b"><![CDATA[i]]></subfield>
+      <subfield code="c"><![CDATA[209694017           Informatiker]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[2452540]]></subfield>
+      <subfield code="a"><![CDATA[815]]></subfield>
+      <subfield code="b"><![CDATA[o]]></subfield>
+      <subfield code="c"><![CDATA[209780568           Dozent]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[2452540]]></subfield>
+      <subfield code="a"><![CDATA[815]]></subfield>
+      <subfield code="b"><![CDATA[o]]></subfield>
+      <subfield code="c"><![CDATA[|VBA-Entwickler]]></subfield>
+    </datafield>
+    <datafield tag="331" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[VBA mit Access]]></subfield>
+    </datafield>
+    <datafield tag="335" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[das umfassende Handbuch ; [VBA-Lösungen für Access 97 bis 2013 ; CD-ROM 600 geprüfte Makros zum sofortigen Einsatz]]]></subfield>
+    </datafield>
+    <datafield tag="359" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Bernd Held]]></subfield>
+    </datafield>
+    <datafield tag="403" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[1. Aufl.]]></subfield>
+    </datafield>
+    <datafield tag="410" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Bonn]]></subfield>
+    </datafield>
+    <datafield tag="412" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Galileo Press]]></subfield>
+    </datafield>
+    <datafield tag="425" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[2014]]></subfield>
+    </datafield>
+    <datafield tag="425" ind1="a" ind2="">
+      <subfield code="a"><![CDATA[2014]]></subfield>
+    </datafield>
+    <datafield tag="433" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[812 S. : Ill., graph. Darst.]]></subfield>
+    </datafield>
+    <datafield tag="435" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[240 mm x 168 mm]]></subfield>
+    </datafield>
+    <datafield tag="437" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[1 CD-ROM]]></subfield>
+    </datafield>
+    <datafield tag="451" ind1="b" ind2="">
+      <subfield code="a"><![CDATA[Galileo Computing]]></subfield>
+    </datafield>
+    <datafield tag="536" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[201402]]></subfield>
+    </datafield>
+    <datafield tag="537" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[5090 HAMZFW; 5090 DDFHTW; 5090: ddsu/sred]]></subfield>
+    </datafield>
+    <datafield tag="540" ind1="a" ind2="">
+      <subfield code="a"><![CDATA[ISBN 978-3-8362-2596-0 Gb. : EUR 49.90 (DE), EUR 51.30 (AT), sfr 77.90 (freier Pr.)]]></subfield>
+    </datafield>
+    <datafield tag="540" ind1="a" ind2="">
+      <subfield code="a"><![CDATA[ISBN 3-8362-2596-4]]></subfield>
+    </datafield>
+    <datafield tag="553" ind1="a" ind2="">
+      <subfield code="a"><![CDATA[9783836225960]]></subfield>
+    </datafield>
+    <datafield tag="574" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[13,N46]]></subfield>
+    </datafield>
+    <datafield tag="655" ind1="e" ind2="">
+      <subfield code="a"><![CDATA[ mX:MVB qtext/html uhttp://deposit.d-nb.de/cgi-bin/dokserv?id=4490650&amp;prov=M&amp;dok%5Fvar=1&amp;dok%5Fext=htm 3Inhaltstext]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="b" ind2="">
+      <subfield code="a"><![CDATA[|004]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="g" ind2="">
+      <subfield code="a"><![CDATA[20087747X           ST 271]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174920]]></subfield>
+      <subfield code="a"><![CDATA[###]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[00381nM2.01200024      q]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174920]]></subfield>
+      <subfield code="a"><![CDATA[001]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[20087747X]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174920]]></subfield>
+      <subfield code="a"><![CDATA[002]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[20010522]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174920]]></subfield>
+      <subfield code="a"><![CDATA[003]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[20100828125240]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174920]]></subfield>
+      <subfield code="a"><![CDATA[030]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[aa1u|z|||||||]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174920]]></subfield>
+      <subfield code="a"><![CDATA[041]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[g|]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174920]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[rvkn]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174920]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Informatik]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174920]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Monographien]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174920]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Software und -entwicklung]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174920]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Datenbanken, Datenbanksysteme, Data base management, Informationssysteme]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174920]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[SQ-SU]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174920]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[ST]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174920]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[ST 230-ST 285]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174920]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[ST 270]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174920]]></subfield>
+      <subfield code="a"><![CDATA[080]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[RVK]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174920]]></subfield>
+      <subfield code="a"><![CDATA[800]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[ST 271]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174920]]></subfield>
+      <subfield code="a"><![CDATA[803]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[RVK; alphabet.]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174920]]></subfield>
+      <subfield code="a"><![CDATA[840]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[Einzelne Datenbanksprachen und Datenbanksysteme]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="g" ind2="">
+      <subfield code="a"><![CDATA[200877445           ST 250]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174917]]></subfield>
+      <subfield code="a"><![CDATA[###]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[00368nM2.01200024      q]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174917]]></subfield>
+      <subfield code="a"><![CDATA[001]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[200877445]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174917]]></subfield>
+      <subfield code="a"><![CDATA[002]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[20010522]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174917]]></subfield>
+      <subfield code="a"><![CDATA[003]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[20101105020017]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174917]]></subfield>
+      <subfield code="a"><![CDATA[030]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[aa1u|z|||||||]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174917]]></subfield>
+      <subfield code="a"><![CDATA[041]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[g|]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174917]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[rvkn]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174917]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Informatik]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174917]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Monographien]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174917]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Software und -entwicklung]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174917]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Programmiersprachen]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174917]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[SQ-SU]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174917]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[ST]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174917]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[ST 230-ST 285]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174917]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[ST 240-ST 250]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174917]]></subfield>
+      <subfield code="a"><![CDATA[080]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[RVK]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174917]]></subfield>
+      <subfield code="a"><![CDATA[800]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[ST 250]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174917]]></subfield>
+      <subfield code="a"><![CDATA[803]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[RVK; Alphabetische Ordnung durch Kurz-CSN des Programmnamens]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[174917]]></subfield>
+      <subfield code="a"><![CDATA[840]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[Einzelne Programmiersprachen (A-Z)]]></subfield>
+    </datafield>
+    <datafield tag="705" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[ a005.7565 c005.7565 eDDC22ger]]></subfield>
+    </datafield>
+    <datafield tag="705" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[ a005.133 c005.133 eDDC22ger]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="s" ind2="">
+      <subfield code="a"><![CDATA[  381098877           Access 2013]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1069798]]></subfield>
+      <subfield code="a"><![CDATA[###]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[00196nM2.01200024      s]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1069798]]></subfield>
+      <subfield code="a"><![CDATA[001]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[381098877]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1069798]]></subfield>
+      <subfield code="a"><![CDATA[002]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[20130412]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1069798]]></subfield>
+      <subfield code="a"><![CDATA[003]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[20131211094105]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1069798]]></subfield>
+      <subfield code="a"><![CDATA[028]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[1033492388]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1069798]]></subfield>
+      <subfield code="a"><![CDATA[030]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[za1u|rz||||||]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1069798]]></subfield>
+      <subfield code="a"><![CDATA[040]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[30m]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1069798]]></subfield>
+      <subfield code="a"><![CDATA[040]]></subfield>
+      <subfield code="b"><![CDATA[b]]></subfield>
+      <subfield code="c"><![CDATA[005.7565]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1069798]]></subfield>
+      <subfield code="a"><![CDATA[068]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[s]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1069798]]></subfield>
+      <subfield code="a"><![CDATA[080]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[GND]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1069798]]></subfield>
+      <subfield code="a"><![CDATA[800]]></subfield>
+      <subfield code="b"><![CDATA[s]]></subfield>
+      <subfield code="c"><![CDATA[Access 2013]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1069798]]></subfield>
+      <subfield code="a"><![CDATA[808]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[Homepage]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1069798]]></subfield>
+      <subfield code="a"><![CDATA[830]]></subfield>
+      <subfield code="b"><![CDATA[s]]></subfield>
+      <subfield code="c"><![CDATA[Microsoft  Access 2013]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="s" ind2="">
+      <subfield code="a"><![CDATA[  212485695           Access 97]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[683819]]></subfield>
+      <subfield code="a"><![CDATA[###]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[00308nM2.01200024      s]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[683819]]></subfield>
+      <subfield code="a"><![CDATA[001]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[212485695]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[683819]]></subfield>
+      <subfield code="a"><![CDATA[002]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[19970226]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[683819]]></subfield>
+      <subfield code="a"><![CDATA[003]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[20131215152051]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[683819]]></subfield>
+      <subfield code="a"><![CDATA[028]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[4442527-2]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[683819]]></subfield>
+      <subfield code="a"><![CDATA[028]]></subfield>
+      <subfield code="b"><![CDATA[c]]></subfield>
+      <subfield code="c"><![CDATA[4442527-2]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[683819]]></subfield>
+      <subfield code="a"><![CDATA[030]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[za1u|rz||||||]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[683819]]></subfield>
+      <subfield code="a"><![CDATA[040]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[30m]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[683819]]></subfield>
+      <subfield code="a"><![CDATA[040]]></subfield>
+      <subfield code="b"><![CDATA[b]]></subfield>
+      <subfield code="c"><![CDATA[005.7565]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[683819]]></subfield>
+      <subfield code="a"><![CDATA[068]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[s]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[683819]]></subfield>
+      <subfield code="a"><![CDATA[068]]></subfield>
+      <subfield code="b"><![CDATA[e]]></subfield>
+      <subfield code="c"><![CDATA[w]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[683819]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[z]]></subfield>
+      <subfield code="c"><![CDATA[800sACCESS 97++4442527-2++swd]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[683819]]></subfield>
+      <subfield code="a"><![CDATA[080]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[SWD]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[683819]]></subfield>
+      <subfield code="a"><![CDATA[800]]></subfield>
+      <subfield code="b"><![CDATA[s]]></subfield>
+      <subfield code="c"><![CDATA[Access 97]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[683819]]></subfield>
+      <subfield code="a"><![CDATA[808]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[Vorlage]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[683819]]></subfield>
+      <subfield code="a"><![CDATA[808]]></subfield>
+      <subfield code="b"><![CDATA[d]]></subfield>
+      <subfield code="c"><![CDATA[vgl. die 808d bei EXCEL 97]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[683819]]></subfield>
+      <subfield code="a"><![CDATA[830]]></subfield>
+      <subfield code="b"><![CDATA[s]]></subfield>
+      <subfield code="c"><![CDATA[Microsoft Access 97]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[683819]]></subfield>
+      <subfield code="a"><![CDATA[850]]></subfield>
+      <subfield code="b"><![CDATA[s]]></subfield>
+      <subfield code="c"><![CDATA[|Relationales Datenbanksystem]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="s" ind2="">
+      <subfield code="a"><![CDATA[  211423653           VisualBASIC für Applikationen]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[633602]]></subfield>
+      <subfield code="a"><![CDATA[###]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[00330nM2.01200024      s]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[633602]]></subfield>
+      <subfield code="a"><![CDATA[001]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[211423653]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[633602]]></subfield>
+      <subfield code="a"><![CDATA[002]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[19940704]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[633602]]></subfield>
+      <subfield code="a"><![CDATA[003]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[20131215144823]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[633602]]></subfield>
+      <subfield code="a"><![CDATA[028]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[4341325-0]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[633602]]></subfield>
+      <subfield code="a"><![CDATA[028]]></subfield>
+      <subfield code="b"><![CDATA[c]]></subfield>
+      <subfield code="c"><![CDATA[4341325-0]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[633602]]></subfield>
+      <subfield code="a"><![CDATA[030]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[za1u|rz||||||]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[633602]]></subfield>
+      <subfield code="a"><![CDATA[040]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[30m]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[633602]]></subfield>
+      <subfield code="a"><![CDATA[040]]></subfield>
+      <subfield code="b"><![CDATA[b]]></subfield>
+      <subfield code="c"><![CDATA[005.133]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[633602]]></subfield>
+      <subfield code="a"><![CDATA[068]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[s]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[633602]]></subfield>
+      <subfield code="a"><![CDATA[068]]></subfield>
+      <subfield code="b"><![CDATA[e]]></subfield>
+      <subfield code="c"><![CDATA[w]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[633602]]></subfield>
+      <subfield code="a"><![CDATA[068]]></subfield>
+      <subfield code="b"><![CDATA[e]]></subfield>
+      <subfield code="c"><![CDATA[z]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[633602]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[z]]></subfield>
+      <subfield code="c"><![CDATA[800sVisualBASIC für Applikationen++4341325-0++swd]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[633602]]></subfield>
+      <subfield code="a"><![CDATA[080]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[SWD]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[633602]]></subfield>
+      <subfield code="a"><![CDATA[800]]></subfield>
+      <subfield code="b"><![CDATA[s]]></subfield>
+      <subfield code="c"><![CDATA[VisualBASIC für Applikationen]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[633602]]></subfield>
+      <subfield code="a"><![CDATA[808]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[dtv-Comp.-Lex.]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[633602]]></subfield>
+      <subfield code="a"><![CDATA[830]]></subfield>
+      <subfield code="b"><![CDATA[s]]></subfield>
+      <subfield code="c"><![CDATA[VBA]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[633602]]></subfield>
+      <subfield code="a"><![CDATA[830]]></subfield>
+      <subfield code="b"><![CDATA[s]]></subfield>
+      <subfield code="c"><![CDATA[VisualBasic for Applications]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[633602]]></subfield>
+      <subfield code="a"><![CDATA[850]]></subfield>
+      <subfield code="b"><![CDATA[s]]></subfield>
+      <subfield code="c"><![CDATA[|Makrosprache]]></subfield>
+    </datafield>
+    <datafield tag="904" ind1="a" ind2="">
+      <subfield code="a"><![CDATA[DDB]]></subfield>
+    </datafield>
+    <datafield tag="997" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[x131]]></subfield>
+    </datafield>
+    <datafield tag="AVA" ind1="" ind2="">
+      <subfield code="a"><![CDATA[33236956]]></subfield>
+      <subfield code="b"><![CDATA[zell9]]></subfield>
+      <subfield code="c"><![CDATA[6]]></subfield>
+      <subfield code="d"><![CDATA[zell9]]></subfield>
+      <subfield code="e"><![CDATA[N]]></subfield>
+      <subfield code="f"><![CDATA[FH1]]></subfield>
+      <subfield code="g"><![CDATA[2014 8 014922]]></subfield>
+      <subfield code="g"><![CDATA[ST 271 A06 H474 V3]]></subfield>
+      <subfield code="h"><![CDATA[K]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="" ind2="">
+      <subfield code="a"><![CDATA[7732185|792432657]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[7732185]]></subfield>
+      <subfield code="a"><![CDATA[###]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[00199cM2.01200024      l]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[7732185]]></subfield>
+      <subfield code="a"><![CDATA[001]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[792432657]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[7732185]]></subfield>
+      <subfield code="a"><![CDATA[002]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[20140408]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[7732185]]></subfield>
+      <subfield code="a"><![CDATA[003]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[20140701104548]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[7732185]]></subfield>
+      <subfield code="a"><![CDATA[012]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[399001956]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[7732185]]></subfield>
+      <subfield code="a"><![CDATA[030]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[||1u|||||||||]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[7732185]]></subfield>
+      <subfield code="a"><![CDATA[071]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[14]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[7732185]]></subfield>
+      <subfield code="a"><![CDATA[080]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[DDSU]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[7732185]]></subfield>
+      <subfield code="a"><![CDATA[081]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[Held, Bernd: VBA mit Access]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[7732185]]></subfield>
+      <subfield code="a"><![CDATA[125]]></subfield>
+      <subfield code="b"><![CDATA[b]]></subfield>
+      <subfield code="c"><![CDATA[automat]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[7732185]]></subfield>
+      <subfield code="a"><![CDATA[700]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[335713270           ST 271 A06]]></subfield>
+    </datafield>
+    </record>
+   </metadata>
+  </record>
+  <record>
+   <header>
+    <identifier>libero-publish:423355</identifier>
+   </header>
+   <metadata>
+    <record xmlns="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd">
+     <leader>01065nM2.01200024||||||h</leader>
+     <controlfield tag="LDR">01065nM2.01200024||||||h</controlfield>
+     <controlfield tag="SYS">423355</controlfield>
+    <datafield tag="000" ind1="" ind2="">
+      <subfield code="a"><![CDATA[423355]]></subfield>
+    </datafield>
+    <datafield tag="001" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[044813732]]></subfield>
+    </datafield>
+    <datafield tag="002" ind1="a" ind2="">
+      <subfield code="a"><![CDATA[19950411]]></subfield>
+    </datafield>
+    <datafield tag="003" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[20120101000000]]></subfield>
+    </datafield>
+    <datafield tag="025" ind1="a" ind2="">
+      <subfield code="a"><![CDATA[551964057]]></subfield>
+    </datafield>
+    <datafield tag="026" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[DNB551964057]]></subfield>
+    </datafield>
+    <datafield tag="029" ind1="m" ind2="">
+      <subfield code="a"><![CDATA[MB]]></subfield>
+    </datafield>
+    <datafield tag="030" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[a|zu|||z|0035]]></subfield>
+    </datafield>
+    <datafield tag="037" ind1="b" ind2="">
+      <subfield code="a"><![CDATA[ger]]></subfield>
+    </datafield>
+    <datafield tag="037" ind1="z" ind2="">
+      <subfield code="a"><![CDATA[dt.]]></subfield>
+    </datafield>
+    <datafield tag="050" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[a|||||||||a|||]]></subfield>
+    </datafield>
+    <datafield tag="051" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[n||||||]]></subfield>
+    </datafield>
+    <datafield tag="070" ind1="a" ind2="">
+      <subfield code="a"><![CDATA[BSZ]]></subfield>
+    </datafield>
+    <datafield tag="076" ind1="a" ind2="">
+      <subfield code="a"><![CDATA[kart]]></subfield>
+    </datafield>
+    <datafield tag="076" ind1="a" ind2="">
+      <subfield code="a"><![CDATA[SAXB]]></subfield>
+    </datafield>
+    <datafield tag="076" ind1="b" ind2="">
+      <subfield code="a"><![CDATA[mb]]></subfield>
+    </datafield>
+    <datafield tag="076" ind1="c" ind2="">
+      <subfield code="a"><![CDATA[druck]]></subfield>
+    </datafield>
+    <datafield tag="077" ind1="m" ind2="">
+      <subfield code="a"><![CDATA[1:25000]]></subfield>
+    </datafield>
+    <datafield tag="080" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[DDSU]]></subfield>
+    </datafield>
+    <datafield tag="200" ind1="b" ind2="">
+      <subfield code="a"><![CDATA[Sachsen / Landesvermessungsamt]]></subfield>
+    </datafield>
+    <datafield tag="202" ind1="b" ind2="">
+      <subfield code="a"><![CDATA[194121143]]></subfield>
+    </datafield>
+    <datafield tag="202" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[206861]]></subfield>
+      <subfield code="a"><![CDATA[###]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[00391nM2.01200024      k]]></subfield>
+    </datafield>
+    <datafield tag="202" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[206861]]></subfield>
+      <subfield code="a"><![CDATA[001]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[194121143]]></subfield>
+    </datafield>
+    <datafield tag="202" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[206861]]></subfield>
+      <subfield code="a"><![CDATA[002]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[19920708]]></subfield>
+    </datafield>
+    <datafield tag="202" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[206861]]></subfield>
+      <subfield code="a"><![CDATA[003]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[20130521151847]]></subfield>
+    </datafield>
+    <datafield tag="202" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[206861]]></subfield>
+      <subfield code="a"><![CDATA[028]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[2122970-3]]></subfield>
+    </datafield>
+    <datafield tag="202" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[206861]]></subfield>
+      <subfield code="a"><![CDATA[028]]></subfield>
+      <subfield code="b"><![CDATA[b]]></subfield>
+      <subfield code="c"><![CDATA[2122970-3]]></subfield>
+    </datafield>
+    <datafield tag="202" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[206861]]></subfield>
+      <subfield code="a"><![CDATA[030]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[za1ucrz||||||]]></subfield>
+    </datafield>
+    <datafield tag="202" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[206861]]></subfield>
+      <subfield code="a"><![CDATA[036]]></subfield>
+      <subfield code="b"><![CDATA[c]]></subfield>
+      <subfield code="c"><![CDATA[XA-DE]]></subfield>
+    </datafield>
+    <datafield tag="202" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[206861]]></subfield>
+      <subfield code="a"><![CDATA[068]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[f]]></subfield>
+    </datafield>
+    <datafield tag="202" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[206861]]></subfield>
+      <subfield code="a"><![CDATA[068]]></subfield>
+      <subfield code="b"><![CDATA[e]]></subfield>
+      <subfield code="c"><![CDATA[z]]></subfield>
+    </datafield>
+    <datafield tag="202" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[206861]]></subfield>
+      <subfield code="a"><![CDATA[068]]></subfield>
+      <subfield code="b"><![CDATA[e]]></subfield>
+      <subfield code="c"><![CDATA[v]]></subfield>
+    </datafield>
+    <datafield tag="202" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[206861]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[z]]></subfield>
+      <subfield code="c"><![CDATA[800 Sachsen / Landesvermessungsamt++2122970-3++gkd]]></subfield>
+    </datafield>
+    <datafield tag="202" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[206861]]></subfield>
+      <subfield code="a"><![CDATA[080]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[GKD]]></subfield>
+    </datafield>
+    <datafield tag="202" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[206861]]></subfield>
+      <subfield code="a"><![CDATA[800]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[Sachsen / Landesvermessungsamt]]></subfield>
+    </datafield>
+    <datafield tag="202" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[206861]]></subfield>
+      <subfield code="a"><![CDATA[806]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[4051176-5]]></subfield>
+    </datafield>
+    <datafield tag="202" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[206861]]></subfield>
+      <subfield code="a"><![CDATA[810]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[Landesvermessungsamt &lt;Sachsen&gt;]]></subfield>
+    </datafield>
+    <datafield tag="202" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[206861]]></subfield>
+      <subfield code="a"><![CDATA[850]]></subfield>
+      <subfield code="b"><![CDATA[c]]></subfield>
+      <subfield code="c"><![CDATA[Staatsbetrieb Geobasisinformation und Vermessung Sachsen &lt;Dresden&gt;]]></subfield>
+    </datafield>
+    <datafield tag="202" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[206861]]></subfield>
+      <subfield code="a"><![CDATA[852]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[10366108-6]]></subfield>
+    </datafield>
+    <datafield tag="202" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[206861]]></subfield>
+      <subfield code="a"><![CDATA[852]]></subfield>
+      <subfield code="b"><![CDATA[b]]></subfield>
+      <subfield code="c"><![CDATA[294253300]]></subfield>
+    </datafield>
+    <datafield tag="204" ind1="b" ind2="">
+      <subfield code="a"><![CDATA[Geodäsie und Kartographie &lt;Dresden&gt;]]></subfield>
+    </datafield>
+    <datafield tag="206" ind1="b" ind2="">
+      <subfield code="a"><![CDATA[194143953]]></subfield>
+    </datafield>
+    <datafield tag="206" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[214728]]></subfield>
+      <subfield code="a"><![CDATA[###]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[00334nM2.01200024      k]]></subfield>
+    </datafield>
+    <datafield tag="206" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[214728]]></subfield>
+      <subfield code="a"><![CDATA[001]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[194143953]]></subfield>
+    </datafield>
+    <datafield tag="206" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[214728]]></subfield>
+      <subfield code="a"><![CDATA[002]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[19920815]]></subfield>
+    </datafield>
+    <datafield tag="206" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[214728]]></subfield>
+      <subfield code="a"><![CDATA[003]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[20120425230000]]></subfield>
+    </datafield>
+    <datafield tag="206" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[214728]]></subfield>
+      <subfield code="a"><![CDATA[028]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[2123197-7]]></subfield>
+    </datafield>
+    <datafield tag="206" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[214728]]></subfield>
+      <subfield code="a"><![CDATA[028]]></subfield>
+      <subfield code="b"><![CDATA[b]]></subfield>
+      <subfield code="c"><![CDATA[2123197-7]]></subfield>
+    </datafield>
+    <datafield tag="206" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[214728]]></subfield>
+      <subfield code="a"><![CDATA[030]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[za1ucrz||||||]]></subfield>
+    </datafield>
+    <datafield tag="206" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[214728]]></subfield>
+      <subfield code="a"><![CDATA[036]]></subfield>
+      <subfield code="b"><![CDATA[c]]></subfield>
+      <subfield code="c"><![CDATA[XA-DE]]></subfield>
+    </datafield>
+    <datafield tag="206" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[214728]]></subfield>
+      <subfield code="a"><![CDATA[040]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[10.12b]]></subfield>
+    </datafield>
+    <datafield tag="206" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[214728]]></subfield>
+      <subfield code="a"><![CDATA[068]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[f]]></subfield>
+    </datafield>
+    <datafield tag="206" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[214728]]></subfield>
+      <subfield code="a"><![CDATA[068]]></subfield>
+      <subfield code="b"><![CDATA[e]]></subfield>
+      <subfield code="c"><![CDATA[v]]></subfield>
+    </datafield>
+    <datafield tag="206" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[214728]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[z]]></subfield>
+      <subfield code="c"><![CDATA[800 Geodäsie und Kartographie &lt;Dresden&gt;++2123197-7++gkd]]></subfield>
+    </datafield>
+    <datafield tag="206" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[214728]]></subfield>
+      <subfield code="a"><![CDATA[080]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[GKD]]></subfield>
+    </datafield>
+    <datafield tag="206" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[214728]]></subfield>
+      <subfield code="a"><![CDATA[800]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[Geodäsie und Kartographie &lt;Dresden&gt;]]></subfield>
+    </datafield>
+    <datafield tag="206" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[214728]]></subfield>
+      <subfield code="a"><![CDATA[850]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[VEB Geodäsie und Kartographie &lt;Dresden&gt;]]></subfield>
+    </datafield>
+    <datafield tag="206" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[214728]]></subfield>
+      <subfield code="a"><![CDATA[852]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[2123196-5]]></subfield>
+    </datafield>
+    <datafield tag="206" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[214728]]></subfield>
+      <subfield code="a"><![CDATA[852]]></subfield>
+      <subfield code="b"><![CDATA[b]]></subfield>
+      <subfield code="c"><![CDATA[194143945]]></subfield>
+    </datafield>
+    <datafield tag="208" ind1="b" ind2="">
+      <subfield code="a"><![CDATA[Staatsbetrieb Geobasisinformation und Vermessung Sachsen &lt;Dresden&gt;]]></subfield>
+    </datafield>
+    <datafield tag="210" ind1="b" ind2="">
+      <subfield code="a"><![CDATA[294253300]]></subfield>
+    </datafield>
+    <datafield tag="210" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[213792]]></subfield>
+      <subfield code="a"><![CDATA[###]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[00419nM2.01200024      k]]></subfield>
+    </datafield>
+    <datafield tag="210" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[213792]]></subfield>
+      <subfield code="a"><![CDATA[001]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[294253300]]></subfield>
+    </datafield>
+    <datafield tag="210" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[213792]]></subfield>
+      <subfield code="a"><![CDATA[002]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[20081210]]></subfield>
+    </datafield>
+    <datafield tag="210" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[213792]]></subfield>
+      <subfield code="a"><![CDATA[003]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[20130515203220]]></subfield>
+    </datafield>
+    <datafield tag="210" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[213792]]></subfield>
+      <subfield code="a"><![CDATA[028]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[10366108-6]]></subfield>
+    </datafield>
+    <datafield tag="210" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[213792]]></subfield>
+      <subfield code="a"><![CDATA[028]]></subfield>
+      <subfield code="b"><![CDATA[b]]></subfield>
+      <subfield code="c"><![CDATA[10366108-6]]></subfield>
+    </datafield>
+    <datafield tag="210" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[213792]]></subfield>
+      <subfield code="a"><![CDATA[030]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[za1ucrz||||||]]></subfield>
+    </datafield>
+    <datafield tag="210" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[213792]]></subfield>
+      <subfield code="a"><![CDATA[036]]></subfield>
+      <subfield code="b"><![CDATA[c]]></subfield>
+      <subfield code="c"><![CDATA[XA-DE-SN]]></subfield>
+    </datafield>
+    <datafield tag="210" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[213792]]></subfield>
+      <subfield code="a"><![CDATA[040]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[10.12b]]></subfield>
+    </datafield>
+    <datafield tag="210" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[213792]]></subfield>
+      <subfield code="a"><![CDATA[068]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[f]]></subfield>
+    </datafield>
+    <datafield tag="210" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[213792]]></subfield>
+      <subfield code="a"><![CDATA[068]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[s]]></subfield>
+    </datafield>
+    <datafield tag="210" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[213792]]></subfield>
+      <subfield code="a"><![CDATA[068]]></subfield>
+      <subfield code="b"><![CDATA[e]]></subfield>
+      <subfield code="c"><![CDATA[v]]></subfield>
+    </datafield>
+    <datafield tag="210" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[213792]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[z]]></subfield>
+      <subfield code="c"><![CDATA[800 Staatsbetrieb Geobasisinformation und Vermessung Sachsen &lt;Dresden&gt;++10366108-6++gkd]]></subfield>
+    </datafield>
+    <datafield tag="210" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[213792]]></subfield>
+      <subfield code="a"><![CDATA[080]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[GKD]]></subfield>
+    </datafield>
+    <datafield tag="210" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[213792]]></subfield>
+      <subfield code="a"><![CDATA[800]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[Staatsbetrieb Geobasisinformation und Vermessung Sachsen &lt;Dresden&gt;]]></subfield>
+    </datafield>
+    <datafield tag="210" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[213792]]></subfield>
+      <subfield code="a"><![CDATA[805]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[1.8.2008 -]]></subfield>
+    </datafield>
+    <datafield tag="210" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[213792]]></subfield>
+      <subfield code="a"><![CDATA[810]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[GeoSN]]></subfield>
+    </datafield>
+    <datafield tag="210" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[213792]]></subfield>
+      <subfield code="a"><![CDATA[850]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[Sachsen / Landesvermessungsamt]]></subfield>
+    </datafield>
+    <datafield tag="210" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[213792]]></subfield>
+      <subfield code="a"><![CDATA[852]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[2122970-3]]></subfield>
+    </datafield>
+    <datafield tag="210" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[213792]]></subfield>
+      <subfield code="a"><![CDATA[852]]></subfield>
+      <subfield code="b"><![CDATA[b]]></subfield>
+      <subfield code="c"><![CDATA[194121143]]></subfield>
+    </datafield>
+    <datafield tag="310" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Topographische Karte &lt;1:25000&gt;]]></subfield>
+    </datafield>
+    <datafield tag="331" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Topographische Karte]]></subfield>
+    </datafield>
+    <datafield tag="359" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Landesvermessungsamt Sachsen]]></subfield>
+    </datafield>
+    <datafield tag="370" ind1="a" ind2="">
+      <subfield code="a"><![CDATA[25000 von Sachsen]]></subfield>
+    </datafield>
+    <datafield tag="370" ind1="a" ind2="">
+      <subfield code="a"><![CDATA[Wanderkarte]]></subfield>
+    </datafield>
+    <datafield tag="403" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Ausg. mit Wanderwegen]]></subfield>
+    </datafield>
+    <datafield tag="407" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[1:25 000]]></subfield>
+    </datafield>
+    <datafield tag="410" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Dresden]]></subfield>
+    </datafield>
+    <datafield tag="412" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Landesvermessungsamt Sachsen]]></subfield>
+    </datafield>
+    <datafield tag="501" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Anfangs mit dem Hauptsacht.: Topographische Karte 1:25000 von Sachsen, hrsg. von Geodäsie und Kartographie Dresden. - Mit Höhenlinien]]></subfield>
+    </datafield>
+    <datafield tag="505" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Nebent.: Wanderkarte]]></subfield>
+    </datafield>
+    <datafield tag="533" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Zwischenzeitl. u.d.T.: Wanderkarte von Sachsen &lt;1:25000&gt;]]></subfield>
+    </datafield>
+    <datafield tag="537" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[580:C1UB/sdo; 5090 ddsu,sred]]></subfield>
+    </datafield>
+    <datafield tag="574" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[94,C04,0449]]></subfield>
+    </datafield>
+    <datafield tag="675" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[ausgabe mit wanderwegen]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="g" ind2="">
+      <subfield code="a"><![CDATA[201608049           RH 35783]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[###]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[00909nM2.01200024      q]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[001]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[201608049]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[002]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[20020315]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[003]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[20100828081149]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[030]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[aa1u|z|||||||]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[041]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[g|]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[rvkn]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Geographie]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Regionale Geographie]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Europa]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Mitteleuropa]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Deutschland]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Deutschland (Östliche Länder)]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Sachsen]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Sachschlüssel zur Geographie]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Allgemeine Geographie]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Anthropogeographie]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Wirtschafts-, Handels- und Verkehrsgeographie]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Verkehrsgeographie]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Verkehrsformen, Verkehrsmittel, Verkehrswege, Verkehrsplanung]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[R]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[RC-RZ]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[RC 10000-RQ 90918]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[RC 15000-RL 95918]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[RC 20000-RH 75918]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[RG 10000-RH 75918]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[RH 35000-RH 75918]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[RH 35000-RH 35918]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[RH 35103-RH 35850]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[RH 35540-RH 35850]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[RH 35645-RH 35789]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[RH 35759-RH 35789]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[RH 35768]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[080]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[RVK]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[800]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[RH 35783]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[803]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[RVK]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[840]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[Erholungs- und Fremdenverkehr]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[845]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[Sachsen / Regionale Geographie / Fremdenverkehrsgeographie]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[193409]]></subfield>
+      <subfield code="a"><![CDATA[845]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[Sachsen / Regionale Geographie / Verkehrsgeographie / Freizeitverkehr]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="g" ind2="">
+      <subfield code="a"><![CDATA[  209091789           Sachsen]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[###]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[00675nM2.01200024      s]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[001]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[209091789]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[002]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[19900324]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[003]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[20140515143604]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[028]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[4051176-5]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[028]]></subfield>
+      <subfield code="b"><![CDATA[c]]></subfield>
+      <subfield code="c"><![CDATA[4051176-5]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[030]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[za1u|rz||||||]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[036]]></subfield>
+      <subfield code="b"><![CDATA[c]]></subfield>
+      <subfield code="c"><![CDATA[XA-DE-SN]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[036]]></subfield>
+      <subfield code="b"><![CDATA[c]]></subfield>
+      <subfield code="c"><![CDATA[XA-DXDE]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[040]]></subfield>
+      <subfield code="b"><![CDATA[b]]></subfield>
+      <subfield code="c"><![CDATA[T2--4321]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[068]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[s]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[068]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[f]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[068]]></subfield>
+      <subfield code="b"><![CDATA[e]]></subfield>
+      <subfield code="c"><![CDATA[w]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[068]]></subfield>
+      <subfield code="b"><![CDATA[e]]></subfield>
+      <subfield code="c"><![CDATA[z]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[z]]></subfield>
+      <subfield code="c"><![CDATA[800gSachsen++4051176-5++swd]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[z]]></subfield>
+      <subfield code="c"><![CDATA[800 Sachsen++35916-6++gkd]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[080]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[SWD]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[800]]></subfield>
+      <subfield code="b"><![CDATA[g]]></subfield>
+      <subfield code="c"><![CDATA[Sachsen]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[808]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[B 2006, GKD]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[808]]></subfield>
+      <subfield code="b"><![CDATA[b]]></subfield>
+      <subfield code="c"><![CDATA[Bundesland]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[808]]></subfield>
+      <subfield code="b"><![CDATA[c]]></subfield>
+      <subfield code="c"><![CDATA[Benutzt für das wettinische Herzogtum, Kurfürstentum (1423), Königreich und Land bis 23.7.1952 und ab 3.10.1990]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[808]]></subfield>
+      <subfield code="b"><![CDATA[d]]></subfield>
+      <subfield code="c"><![CDATA[MMm]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[830]]></subfield>
+      <subfield code="b"><![CDATA[g]]></subfield>
+      <subfield code="c"><![CDATA[Königreich Sachsen]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[830]]></subfield>
+      <subfield code="b"><![CDATA[g]]></subfield>
+      <subfield code="c"><![CDATA[Kurfürstentum Sachsen]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[830]]></subfield>
+      <subfield code="b"><![CDATA[g]]></subfield>
+      <subfield code="c"><![CDATA[Land Sachsen]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[830]]></subfield>
+      <subfield code="b"><![CDATA[g]]></subfield>
+      <subfield code="c"><![CDATA[Kursachsen]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[830]]></subfield>
+      <subfield code="b"><![CDATA[g]]></subfield>
+      <subfield code="c"><![CDATA[Freistaat Sachsen]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[830]]></subfield>
+      <subfield code="b"><![CDATA[g]]></subfield>
+      <subfield code="c"><![CDATA[Free State of Saxony]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[830]]></subfield>
+      <subfield code="b"><![CDATA[g]]></subfield>
+      <subfield code="c"><![CDATA[Saxe]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[830]]></subfield>
+      <subfield code="b"><![CDATA[g]]></subfield>
+      <subfield code="c"><![CDATA[Sajonia]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[830]]></subfield>
+      <subfield code="b"><![CDATA[g]]></subfield>
+      <subfield code="c"><![CDATA[Sasko]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[830]]></subfield>
+      <subfield code="b"><![CDATA[g]]></subfield>
+      <subfield code="c"><![CDATA[Saxony]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[830]]></subfield>
+      <subfield code="b"><![CDATA[g]]></subfield>
+      <subfield code="c"><![CDATA[Chur-Sachsen]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[830]]></subfield>
+      <subfield code="b"><![CDATA[g]]></subfield>
+      <subfield code="c"><![CDATA[Etat Libre de Saxe]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[830]]></subfield>
+      <subfield code="b"><![CDATA[g]]></subfield>
+      <subfield code="c"><![CDATA[Republik Sachsen]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[540793]]></subfield>
+      <subfield code="a"><![CDATA[860]]></subfield>
+      <subfield code="b"><![CDATA[s]]></subfield>
+      <subfield code="c"><![CDATA[|Sachsen &lt;Volk&gt;]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="s" ind2="">
+      <subfield code="a"><![CDATA[  209646098           Topographie]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[552923]]></subfield>
+      <subfield code="a"><![CDATA[###]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[00307nM2.01200024      s]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[552923]]></subfield>
+      <subfield code="a"><![CDATA[001]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[209646098]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[552923]]></subfield>
+      <subfield code="a"><![CDATA[002]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[19900330]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[552923]]></subfield>
+      <subfield code="a"><![CDATA[003]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[20140218143114]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[552923]]></subfield>
+      <subfield code="a"><![CDATA[028]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[4133697-5]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[552923]]></subfield>
+      <subfield code="a"><![CDATA[028]]></subfield>
+      <subfield code="b"><![CDATA[c]]></subfield>
+      <subfield code="c"><![CDATA[4133697-5]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[552923]]></subfield>
+      <subfield code="a"><![CDATA[030]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[za1u|rz||||||]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[552923]]></subfield>
+      <subfield code="a"><![CDATA[040]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[19.1b]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[552923]]></subfield>
+      <subfield code="a"><![CDATA[040]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[19.2]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[552923]]></subfield>
+      <subfield code="a"><![CDATA[040]]></subfield>
+      <subfield code="b"><![CDATA[b]]></subfield>
+      <subfield code="c"><![CDATA[526]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[552923]]></subfield>
+      <subfield code="a"><![CDATA[040]]></subfield>
+      <subfield code="b"><![CDATA[b]]></subfield>
+      <subfield code="c"><![CDATA[551.41]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[552923]]></subfield>
+      <subfield code="a"><![CDATA[068]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[s]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[552923]]></subfield>
+      <subfield code="a"><![CDATA[068]]></subfield>
+      <subfield code="b"><![CDATA[e]]></subfield>
+      <subfield code="c"><![CDATA[w]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[552923]]></subfield>
+      <subfield code="a"><![CDATA[068]]></subfield>
+      <subfield code="b"><![CDATA[e]]></subfield>
+      <subfield code="c"><![CDATA[z]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[552923]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[z]]></subfield>
+      <subfield code="c"><![CDATA[800sTopographie++4133697-5++swd]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[552923]]></subfield>
+      <subfield code="a"><![CDATA[080]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[SWD]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[552923]]></subfield>
+      <subfield code="a"><![CDATA[800]]></subfield>
+      <subfield code="b"><![CDATA[s]]></subfield>
+      <subfield code="c"><![CDATA[Topographie]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[552923]]></subfield>
+      <subfield code="a"><![CDATA[808]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[M 1., B 1986]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[552923]]></subfield>
+      <subfield code="a"><![CDATA[830]]></subfield>
+      <subfield code="b"><![CDATA[s]]></subfield>
+      <subfield code="c"><![CDATA[Topografie]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[552923]]></subfield>
+      <subfield code="a"><![CDATA[850]]></subfield>
+      <subfield code="b"><![CDATA[s]]></subfield>
+      <subfield code="c"><![CDATA[|Geodäsie]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[552923]]></subfield>
+      <subfield code="a"><![CDATA[860]]></subfield>
+      <subfield code="b"><![CDATA[s]]></subfield>
+      <subfield code="c"><![CDATA[|Topograph]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[552923]]></subfield>
+      <subfield code="a"><![CDATA[860]]></subfield>
+      <subfield code="b"><![CDATA[s]]></subfield>
+      <subfield code="c"><![CDATA[|Topographin]]></subfield>
+    </datafield>
+    <datafield tag="902" ind1="f" ind2="">
+      <subfield code="a"><![CDATA[  |Karte]]></subfield>
+    </datafield>
+    <datafield tag="904" ind1="a" ind2="">
+      <subfield code="a"><![CDATA[SWB]]></subfield>
+    </datafield>
+    <datafield tag="997" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[o]]></subfield>
+    </datafield>
+    <datafield tag="998" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[o]]></subfield>
+    </datafield>
+    <datafield tag="2001" ind1="" ind2="">
+      <subfield code="a"><![CDATA[105914878||3572917|| 3861700123|Topographische Karte &lt;1:25000&gt; - 51||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2002" ind1="" ind2="">
+      <subfield code="a"><![CDATA[105915653||3572934|| 3861709031|Topographische Karte &lt;1:25000&gt; - 43||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2003" ind1="" ind2="">
+      <subfield code="a"><![CDATA[108328937||13593648|| 3861701200|Topographische Karte &lt;1:25000&gt; - 30||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2004" ind1="" ind2="">
+      <subfield code="a"><![CDATA[108331059||13593672|| 3861700158|Topographische Karte &lt;1:25000&gt; - 52||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2005" ind1="" ind2="">
+      <subfield code="a"><![CDATA[113343043||13661321|| 3861701561|Topographische Karte &lt;1:25000&gt; - 34||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2006" ind1="" ind2="">
+      <subfield code="a"><![CDATA[113343833||13661325|| 3896793497|Topographische Karte &lt;1:25000&gt; - 40||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2007" ind1="" ind2="">
+      <subfield code="a"><![CDATA[113344074||13661330|| 386170496X|Topographische Karte &lt;1:25000&gt; - 16||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2008" ind1="" ind2="">
+      <subfield code="a"><![CDATA[117594997||13730180|| 3896793357|Topographische Karte &lt;1:25000&gt; - 21||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2009" ind1="" ind2="">
+      <subfield code="a"><![CDATA[117595616||13730218|| 3861701588|Topographische Karte &lt;1:25000&gt; - 36||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2010" ind1="" ind2="">
+      <subfield code="a"><![CDATA[117599034||13730233|| 3861709023|Topographische Karte &lt;1:25000&gt; - 44||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2011" ind1="" ind2="">
+      <subfield code="a"><![CDATA[117862533||13811407|| 3861700166|Topographische Karte &lt;1:25000&gt; - 38||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2012" ind1="" ind2="">
+      <subfield code="a"><![CDATA[121959856||15654876|| 3861703114|Topographische Karte &lt;1:25000&gt; - 33||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2013" ind1="" ind2="">
+      <subfield code="a"><![CDATA[121976483||15764741|| 3861700093|Topographische Karte &lt;1:25000&gt; - 42||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2014" ind1="" ind2="">
+      <subfield code="a"><![CDATA[121978850||15764719|| 3896790617|Topographische Karte &lt;1:25000&gt; - 48||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2015" ind1="" ind2="">
+      <subfield code="a"><![CDATA[121981894||15764712|| 3861700077|Topographische Karte &lt;1:25000&gt; - 49||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2016" ind1="" ind2="">
+      <subfield code="a"><![CDATA[121983730||15764705|| 3861700131|Topographische Karte &lt;1:25000&gt; - 50||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2017" ind1="" ind2="">
+      <subfield code="a"><![CDATA[256537976||13934047|| 386170157X|Topographische Karte &lt;1:25000&gt; - 35||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2018" ind1="" ind2="">
+      <subfield code="a"><![CDATA[256541000||13934048|| 3861700166|Topographische Karte &lt;1:25000&gt; - 38||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2019" ind1="" ind2="">
+      <subfield code="a"><![CDATA[256542139||13934049|| 386170451X|Topographische Karte &lt;1:25000&gt; - 45||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2020" ind1="" ind2="">
+      <subfield code="a"><![CDATA[259880957||13982714|| 3861700123|Topographische Karte &lt;1:25000&gt; - 51||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2021" ind1="" ind2="">
+      <subfield code="a"><![CDATA[259882798||13982484|| 3896793497|Topographische Karte &lt;1:25000&gt; - 40||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2022" ind1="" ind2="">
+      <subfield code="a"><![CDATA[261779273||14008857|| 3861703114|Topographische Karte &lt;1:25000&gt; - 33||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2023" ind1="" ind2="">
+      <subfield code="a"><![CDATA[278361013||14189605|| 9783861709275|Topographische Karte &lt;1:25000&gt; - 37||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2024" ind1="" ind2="">
+      <subfield code="a"><![CDATA[278370802||14189731|| 9783896790613|Topographische Karte &lt;1:25000&gt; - 48||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2025" ind1="" ind2="">
+      <subfield code="a"><![CDATA[278374824||14189769|| 9783861709039|Topographische Karte &lt;1:25000&gt; - 43||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2026" ind1="" ind2="">
+      <subfield code="a"><![CDATA[278378218||14189818|| 9783861700098|Topographische Karte &lt;1:25000&gt; - 42||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2027" ind1="" ind2="">
+      <subfield code="a"><![CDATA[305278398||14362888|| 9783861700128|Topographische Karte &lt;1:25000&gt; - 51||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2028" ind1="" ind2="">
+      <subfield code="a"><![CDATA[317972189||14504478|| 9783861703181|Topographische Karte &lt;1:25000&gt; - 27||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2029" ind1="" ind2="">
+      <subfield code="a"><![CDATA[317975315||14504520|| 9783861703150|Topographische Karte &lt;1:25000&gt; - 26||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2030" ind1="" ind2="">
+      <subfield code="a"><![CDATA[317976257||14504534|| 9783861703198|Topographische Karte &lt;1:25000&gt; - 23||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2031" ind1="" ind2="">
+      <subfield code="a"><![CDATA[346374006||15471503|| 9783861709039|Topographische Karte &lt;1:25000&gt; - 43||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2032" ind1="" ind2="">
+      <subfield code="a"><![CDATA[346375118||15471538|| 9783861704966|Topographische Karte &lt;1:25000&gt; - 16||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2033" ind1="" ind2="">
+      <subfield code="a"><![CDATA[346387906||15471959|| 9783861707172|Topographische Karte &lt;1:25000&gt; - 15||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2034" ind1="" ind2="">
+      <subfield code="a"><![CDATA[346392187||15472096|| 9783861702634|Topographische Karte &lt;1:25000&gt; - 14||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2035" ind1="" ind2="">
+      <subfield code="a"><![CDATA[362354243||15679105|| 9783861709954|Topographische Karte &lt;1:25000&gt; - 4||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2036" ind1="" ind2="">
+      <subfield code="a"><![CDATA[362356394||15679146|| 9783861709008|Topographische Karte &lt;1:25000&gt; - 5||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2037" ind1="" ind2="">
+      <subfield code="a"><![CDATA[362358885||15679153|| 9783861703136|Topographische Karte &lt;1:25000&gt; - 13||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2038" ind1="" ind2="">
+      <subfield code="a"><![CDATA[362360758||15679159|| 9783896790620|Topographische Karte &lt;1:25000&gt; - 41||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2039" ind1="" ind2="">
+      <subfield code="a"><![CDATA[370116003||15764700|| 3861700123|Topographische Karte &lt;1:25000&gt; - 51||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2040" ind1="" ind2="">
+      <subfield code="a"><![CDATA[380439999||15878577|||Topographische Karte &lt;1:25000&gt; - 40||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2041" ind1="" ind2="">
+      <subfield code="a"><![CDATA[380440636||15878590|| 9783861700166|Topographische Karte &lt;1:25000&gt; - 38||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2042" ind1="" ind2="">
+      <subfield code="a"><![CDATA[380923939||15881845|| 9783861700128|Topographische Karte &lt;1:25000&gt; - 51||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2043" ind1="" ind2="">
+      <subfield code="a"><![CDATA[380934795||15881984|| 9783861700821|Topographische Karte &lt;1:25000&gt; - 31||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2044" ind1="" ind2="">
+      <subfield code="a"><![CDATA[400235153||16014579|| 9783861709275|Topographische Karte &lt;1:25000&gt; - 37||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2045" ind1="" ind2="">
+      <subfield code="a"><![CDATA[400237520||16014596|| 9783861709022|Topographische Karte &lt;1:25000&gt; - 44||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2046" ind1="" ind2="">
+      <subfield code="a"><![CDATA[400238888||16014605|| 9783861703181|Topographische Karte &lt;1:25000&gt; - 27||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2047" ind1="" ind2="">
+      <subfield code="a"><![CDATA[400243016||16014637|| 9783896790613|Topographische Karte &lt;1:25000&gt; - 48||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2048" ind1="" ind2="">
+      <subfield code="a"><![CDATA[040831760||285490|| 3861701588|Topographische Karte &lt;1:25000&gt; - 36||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2049" ind1="" ind2="">
+      <subfield code="a"><![CDATA[041052757||288041|| 3861701561|Topographische Karte &lt;1:25000&gt; - 34||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2050" ind1="" ind2="">
+      <subfield code="a"><![CDATA[041053532||288056|| 3861701200|Topographische Karte &lt;1:25000&gt; - 30||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2051" ind1="" ind2="">
+      <subfield code="a"><![CDATA[041053621||288058|| 3861700824|Topographische Karte &lt;1:25000&gt; - 31||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2052" ind1="" ind2="">
+      <subfield code="a"><![CDATA[044810423||423304|| 3861700131|Topographische Karte &lt;1:25000&gt; - 50||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2053" ind1="" ind2="">
+      <subfield code="a"><![CDATA[044810598||423308|| 3861700158|Topographische Karte &lt;1:25000&gt; - 52||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2054" ind1="" ind2="">
+      <subfield code="a"><![CDATA[044814224||1982197|| 3861700107|Topographische Karte &lt;1:25000&gt; - 37||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2055" ind1="" ind2="">
+      <subfield code="a"><![CDATA[044814550||423369|| 3861700093|Topographische Karte &lt;1:25000&gt; - 42||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2056" ind1="" ind2="">
+      <subfield code="a"><![CDATA[044814879||423373|| 3861700115|Topographische Karte &lt;1:25000&gt; - 43||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2057" ind1="" ind2="">
+      <subfield code="a"><![CDATA[044815735||423393|| 3861700042|Topographische Karte &lt;1:25000&gt; - 45||KT|Dresden : Geodäsie und Kartographie|0]]></subfield>
+    </datafield>
+    <datafield tag="2058" ind1="" ind2="">
+      <subfield code="a"><![CDATA[044816073||423399|| 3861700085|Topographische Karte &lt;1:25000&gt; - 48||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2059" ind1="" ind2="">
+      <subfield code="a"><![CDATA[044816391||423406|| 3861700077|Topographische Karte &lt;1:25000&gt; - 49||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2060" ind1="" ind2="">
+      <subfield code="a"><![CDATA[04815721X||523532|| 3861700026|Topographische Karte &lt;1:25000&gt; - 44||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2061" ind1="" ind2="">
+      <subfield code="a"><![CDATA[048331155||670797|| 3861700123|Topographische Karte &lt;1:25000&gt; - 51||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2062" ind1="" ind2="">
+      <subfield code="a"><![CDATA[059902094||932864|| 386170496X|Topographische Karte &lt;1:25000&gt; - 16||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2063" ind1="" ind2="">
+      <subfield code="a"><![CDATA[059902590||932873|| 3861703114|Topographische Karte &lt;1:25000&gt; - 33||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2064" ind1="" ind2="">
+      <subfield code="a"><![CDATA[059902930||932878|| 386170451X|Topographische Karte &lt;1:25000&gt; - 45||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2065" ind1="" ind2="">
+      <subfield code="a"><![CDATA[059913096||933061|| 3861709031|Topographische Karte &lt;1:25000&gt; - 43||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2066" ind1="" ind2="">
+      <subfield code="a"><![CDATA[059913916||933076|| 3861709007|Topographische Karte &lt;1:25000&gt; - 5||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2067" ind1="" ind2="">
+      <subfield code="a"><![CDATA[059914254||933079|| 3861709015|Topographische Karte &lt;1:25000&gt; - 25||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2068" ind1="" ind2="">
+      <subfield code="a"><![CDATA[06660933X||1141434|| 3861709953|Topographische Karte &lt;1:25000&gt; - 4||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2069" ind1="" ind2="">
+      <subfield code="a"><![CDATA[066609429||1141435|| 386170935X|Topographische Karte &lt;1:25000&gt; - 6||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2070" ind1="" ind2="">
+      <subfield code="a"><![CDATA[066794528||1143936|| 3861703165|Topographische Karte &lt;1:25000&gt; - 1||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2071" ind1="" ind2="">
+      <subfield code="a"><![CDATA[066794994||1143947|| 3861709341|Topographische Karte &lt;1:25000&gt; - 2||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2072" ind1="" ind2="">
+      <subfield code="a"><![CDATA[06840154X||15764726|| 3861709023|Topographische Karte &lt;1:25000&gt; - 44||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2073" ind1="" ind2="">
+      <subfield code="a"><![CDATA[068402422||15764351|| 3861709279|Topographische Karte &lt;1:25000&gt; - 37||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2074" ind1="" ind2="">
+      <subfield code="a"><![CDATA[079238068||1392020|| 3896792776|Topographische Karte &lt;1:25000&gt; - 9||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2075" ind1="" ind2="">
+      <subfield code="a"><![CDATA[079238939||1392026|| 386170451X|Topographische Karte &lt;1:25000&gt; - 45||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2076" ind1="" ind2="">
+      <subfield code="a"><![CDATA[079239129||1392028|| 3896790625|Topographische Karte &lt;1:25000&gt; - 41||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2077" ind1="" ind2="">
+      <subfield code="a"><![CDATA[10591519X||3572926|| 389679339X|Topographische Karte &lt;1:25000&gt; - 17||KT|Dresden : Landesvermessungsamt Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2078" ind1="" ind2="">
+      <subfield code="a"><![CDATA[30527502X||14362851|| 3861709023|Topographische Karte &lt;1:25000&gt; - 44||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2079" ind1="" ind2="">
+      <subfield code="a"><![CDATA[30527984X||14362909|| 9783861703112|Topographische Karte &lt;1:25000&gt; - 33||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2080" ind1="" ind2="">
+      <subfield code="a"><![CDATA[30528164X||14362943|| 9783861702603|Topographische Karte &lt;1:25000&gt; - 32||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2081" ind1="" ind2="">
+      <subfield code="a"><![CDATA[30528231X||14362949|| 9783861700821|Topographische Karte &lt;1:25000&gt; - 31||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2082" ind1="" ind2="">
+      <subfield code="a"><![CDATA[31797839X||14504566|| 9783861703143|Topographische Karte &lt;1:25000&gt; - 22||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2083" ind1="" ind2="">
+      <subfield code="a"><![CDATA[36236351X||15679175|| 9783861704515|Topographische Karte &lt;1:25000&gt; - 45||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="2084" ind1="" ind2="">
+      <subfield code="a"><![CDATA[40024487X||16014646|| 9783861700074|Topographische Karte &lt;1:25000&gt; - 49||KT|Dresden : Staatsbetrieb Geobasisinformation und Vermessung Sachsen|0]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="" ind2="">
+      <subfield code="a"><![CDATA[3759666|483546771]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3759666]]></subfield>
+      <subfield code="a"><![CDATA[###]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[00190cM2.01200024      l]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3759666]]></subfield>
+      <subfield code="a"><![CDATA[001]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[483546771]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3759666]]></subfield>
+      <subfield code="a"><![CDATA[002]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[19950411]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3759666]]></subfield>
+      <subfield code="a"><![CDATA[003]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[20060831143930]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3759666]]></subfield>
+      <subfield code="a"><![CDATA[012]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[044813732]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3759666]]></subfield>
+      <subfield code="a"><![CDATA[030]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[||1u|||||||||]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3759666]]></subfield>
+      <subfield code="a"><![CDATA[071]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[14]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3759666]]></subfield>
+      <subfield code="a"><![CDATA[080]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[DDSU]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3759666]]></subfield>
+      <subfield code="a"><![CDATA[081]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[Topographische Karte &lt;1:25000&gt;]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3759666]]></subfield>
+      <subfield code="a"><![CDATA[700]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[222720123           RH 35783.1]]></subfield>
+    </datafield>
+    </record>
+   </metadata>
+  </record>
+  <record>
+   <header>
+    <identifier>libero-publish:296666</identifier>
+   </header>
+   <metadata>
+    <record xmlns="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd">
+     <leader>00749nM2.01200024||||||u</leader>
+     <controlfield tag="LDR">00749nM2.01200024||||||u</controlfield>
+     <controlfield tag="SYS">296666</controlfield>
+    <datafield tag="000" ind1="" ind2="">
+      <subfield code="a"><![CDATA[296666]]></subfield>
+    </datafield>
+    <datafield tag="001" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[000045764]]></subfield>
+    </datafield>
+    <datafield tag="002" ind1="a" ind2="">
+      <subfield code="a"><![CDATA[19850101]]></subfield>
+    </datafield>
+    <datafield tag="003" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[20120101000000]]></subfield>
+    </datafield>
+    <datafield tag="010" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[000045756]]></subfield>
+    </datafield>
+    <datafield tag="025" ind1="o" ind2="">
+      <subfield code="a"><![CDATA[309911160]]></subfield>
+    </datafield>
+    <datafield tag="026" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[BSZ000045764]]></subfield>
+    </datafield>
+    <datafield tag="029" ind1="m" ind2="">
+      <subfield code="a"><![CDATA[B]]></subfield>
+    </datafield>
+    <datafield tag="030" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[a|zu|||z|00||]]></subfield>
+    </datafield>
+    <datafield tag="037" ind1="b" ind2="">
+      <subfield code="a"><![CDATA[ger]]></subfield>
+    </datafield>
+    <datafield tag="037" ind1="z" ind2="">
+      <subfield code="a"><![CDATA[dt.]]></subfield>
+    </datafield>
+    <datafield tag="050" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[a|||||||||||||]]></subfield>
+    </datafield>
+    <datafield tag="051" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[|||||||]]></subfield>
+    </datafield>
+    <datafield tag="070" ind1="a" ind2="">
+      <subfield code="a"><![CDATA[BSZ]]></subfield>
+    </datafield>
+    <datafield tag="076" ind1="b" ind2="">
+      <subfield code="a"><![CDATA[od]]></subfield>
+    </datafield>
+    <datafield tag="076" ind1="c" ind2="">
+      <subfield code="a"><![CDATA[druck]]></subfield>
+    </datafield>
+    <datafield tag="080" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[KNUB]]></subfield>
+    </datafield>
+    <datafield tag="081" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Baetke, Walter: Wörterbuch zur altnordischen Prosaliteratur]]></subfield>
+    </datafield>
+    <datafield tag="089" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[1]]></subfield>
+    </datafield>
+    <datafield tag="090" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[000001........................]]></subfield>
+    </datafield>
+    <datafield tag="331" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[A - L]]></subfield>
+    </datafield>
+    <datafield tag="410" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Berlin]]></subfield>
+    </datafield>
+    <datafield tag="412" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Akad.-Verl.]]></subfield>
+    </datafield>
+    <datafield tag="425" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[1965]]></subfield>
+    </datafield>
+    <datafield tag="425" ind1="a" ind2="">
+      <subfield code="a"><![CDATA[1965]]></subfield>
+    </datafield>
+    <datafield tag="433" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[398 S]]></subfield>
+    </datafield>
+    <datafield tag="451" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Sitzungsberichte der Sächsischen Akademie der Wissenschaften zu Leipzig, Philologisch-Historische Klasse ; Bd. 111, H. 1]]></subfield>
+    </datafield>
+    <datafield tag="453" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[014578328]]></subfield>
+    </datafield>
+    <datafield tag="454" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Sächsische Akademie der Wissenschaften &lt;Leipzig&gt; / Philologisch-Historische Klasse: Sitzungsberichte der Sächsischen Akademie der Wissenschaften zu Leipzig, Philologisch-Historische Klasse]]></subfield>
+    </datafield>
+    <datafield tag="455" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[111,1]]></subfield>
+    </datafield>
+    <datafield tag="456" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[000111500001..................]]></subfield>
+    </datafield>
+    <datafield tag="537" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[5090: L1UB/sred]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="g" ind2="">
+      <subfield code="a"><![CDATA[20182776X           GW 1465]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[###]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[00515nM2.01200024      q]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[001]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[20182776X]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[002]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[20020403]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[003]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[20100827165640]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[030]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[aa1u|z|||||||]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[041]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[g|]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[rvkn]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Germanistik. Niederlandistik. Skandinavistik]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Skandinavistik]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Linguistik (Sprachwissenschaft)]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Sprachen und Sprachgeschichte bis 1550]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Westnordische Sprachen]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Norwegisch]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Lexikologie]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[G]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[GW-GZ]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[GW 1020-GW 4797]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[GW 1145-GW 1724]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[GW 1203-GW 1490]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[GW 1350-GW 1490]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[GW 1445-GW 1465]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[080]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[RVK]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[800]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[GW 1465]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[803]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[RVK]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[840]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[Besonderes]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[199804]]></subfield>
+      <subfield code="a"><![CDATA[845]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[Altnorwegisch / Lexikologie / Besonderes]]></subfield>
+    </datafield>
+    <datafield tag="997" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[ret]]></subfield>
+    </datafield>
+    <datafield tag="998" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[ret]]></subfield>
+    </datafield>
+    <datafield tag="AVA" ind1="" ind2="">
+      <subfield code="a"><![CDATA[30264655]]></subfield>
+      <subfield code="b"><![CDATA[zell1]]></subfield>
+      <subfield code="c"><![CDATA[A]]></subfield>
+      <subfield code="d"><![CDATA[zell1]]></subfield>
+      <subfield code="e"><![CDATA[P1]]></subfield>
+      <subfield code="f"><![CDATA[FH1]]></subfield>
+      <subfield code="g"><![CDATA[94 8 49217]]></subfield>
+      <subfield code="g"><![CDATA[94 8 49217 001]]></subfield>
+      <subfield code="g"><![CDATA[GW 1630 B142-1]]></subfield>
+      <subfield code="h"><![CDATA[X]]></subfield>
+    </datafield>
+    <datafield tag="AVA" ind1="" ind2="">
+      <subfield code="a"><![CDATA[30315203]]></subfield>
+      <subfield code="b"><![CDATA[zell1]]></subfield>
+      <subfield code="c"><![CDATA[A]]></subfield>
+      <subfield code="d"><![CDATA[zell1]]></subfield>
+      <subfield code="e"><![CDATA[PM2]]></subfield>
+      <subfield code="f"><![CDATA[MZ]]></subfield>
+      <subfield code="g"><![CDATA[Z. 8. 781-111,1]]></subfield>
+      <subfield code="h"><![CDATA[X]]></subfield>
+    </datafield>
+    <datafield tag="AVA" ind1="" ind2="">
+      <subfield code="a"><![CDATA[30642160]]></subfield>
+      <subfield code="b"><![CDATA[zell1]]></subfield>
+      <subfield code="c"><![CDATA[A]]></subfield>
+      <subfield code="d"><![CDATA[zell1]]></subfield>
+      <subfield code="e"><![CDATA[NM]]></subfield>
+      <subfield code="f"><![CDATA[MAG]]></subfield>
+      <subfield code="g"><![CDATA[49.8.4278-1]]></subfield>
+      <subfield code="h"><![CDATA[X]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="" ind2="">
+      <subfield code="a"><![CDATA[3761267|00040392X]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3761267]]></subfield>
+      <subfield code="a"><![CDATA[###]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[00249cM2.01200024      l]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3761267]]></subfield>
+      <subfield code="a"><![CDATA[001]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[00040392X]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3761267]]></subfield>
+      <subfield code="a"><![CDATA[002]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[19941103]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3761267]]></subfield>
+      <subfield code="a"><![CDATA[003]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[20080216173536]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3761267]]></subfield>
+      <subfield code="a"><![CDATA[012]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[000045764]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3761267]]></subfield>
+      <subfield code="a"><![CDATA[030]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[||1u|||||||||]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3761267]]></subfield>
+      <subfield code="a"><![CDATA[071]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[14]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3761267]]></subfield>
+      <subfield code="a"><![CDATA[080]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[DDSU]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3761267]]></subfield>
+      <subfield code="a"><![CDATA[081]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[Baetke, Walter: Wörterbuch zur altnordischen Prosaliteratur]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3761267]]></subfield>
+      <subfield code="a"><![CDATA[100]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[94 8 49217]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3761267]]></subfield>
+      <subfield code="a"><![CDATA[220]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[_a94 8 49217]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3761267]]></subfield>
+      <subfield code="a"><![CDATA[700]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[22216333X           GW 1630]]></subfield>
+    </datafield>
+    </record>
+   </metadata>
+  </record>
+  <record>
+   <header>
+    <identifier>libero-publish:51019</identifier>
+   </header>
+   <metadata>
+    <record xmlns="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd">
+     <leader>00395nM2.01200024||||||h</leader>
+     <controlfield tag="LDR">00395nM2.01200024||||||h</controlfield>
+     <controlfield tag="SYS">51019</controlfield>
+    <datafield tag="000" ind1="" ind2="">
+      <subfield code="a"><![CDATA[51019]]></subfield>
+    </datafield>
+    <datafield tag="001" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[027718247]]></subfield>
+    </datafield>
+    <datafield tag="002" ind1="a" ind2="">
+      <subfield code="a"><![CDATA[19920323]]></subfield>
+    </datafield>
+    <datafield tag="003" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[20120101000000]]></subfield>
+    </datafield>
+    <datafield tag="026" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[BSZ027718247]]></subfield>
+    </datafield>
+    <datafield tag="029" ind1="m" ind2="">
+      <subfield code="a"><![CDATA[MB]]></subfield>
+    </datafield>
+    <datafield tag="030" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[e|zu|||z|0017]]></subfield>
+    </datafield>
+    <datafield tag="037" ind1="b" ind2="">
+      <subfield code="a"><![CDATA[ger]]></subfield>
+    </datafield>
+    <datafield tag="037" ind1="z" ind2="">
+      <subfield code="a"><![CDATA[dt.]]></subfield>
+    </datafield>
+    <datafield tag="050" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[a|||||||||||||]]></subfield>
+    </datafield>
+    <datafield tag="051" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[n||||||]]></subfield>
+    </datafield>
+    <datafield tag="070" ind1="a" ind2="">
+      <subfield code="a"><![CDATA[BSZ]]></subfield>
+    </datafield>
+    <datafield tag="076" ind1="b" ind2="">
+      <subfield code="a"><![CDATA[mb]]></subfield>
+    </datafield>
+    <datafield tag="076" ind1="c" ind2="">
+      <subfield code="a"><![CDATA[druck]]></subfield>
+    </datafield>
+    <datafield tag="080" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[HDUB]]></subfield>
+    </datafield>
+    <datafield tag="100" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Renner, Gerhard]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="b" ind2="">
+      <subfield code="a"><![CDATA[16383332X]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1390708]]></subfield>
+      <subfield code="a"><![CDATA[###]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[00133nM2.01200024      p]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1390708]]></subfield>
+      <subfield code="a"><![CDATA[001]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[16383332X]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1390708]]></subfield>
+      <subfield code="a"><![CDATA[002]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[19860606]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1390708]]></subfield>
+      <subfield code="a"><![CDATA[003]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[20120921201113]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1390708]]></subfield>
+      <subfield code="a"><![CDATA[030]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[zz1ucrz||||||]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1390708]]></subfield>
+      <subfield code="a"><![CDATA[065]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[b|||]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1390708]]></subfield>
+      <subfield code="a"><![CDATA[068]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[f]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1390708]]></subfield>
+      <subfield code="a"><![CDATA[080]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[PND]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1390708]]></subfield>
+      <subfield code="a"><![CDATA[800]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[Renner, Gerhard]]></subfield>
+    </datafield>
+    <datafield tag="331" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[PostScript]]></subfield>
+    </datafield>
+    <datafield tag="359" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Gerhard Renner]]></subfield>
+    </datafield>
+    <datafield tag="410" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Haar bei München]]></subfield>
+    </datafield>
+    <datafield tag="412" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Markt-u.-Technik-Verl.]]></subfield>
+    </datafield>
+    <datafield tag="537" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[5090 KNWEPH/sred]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="g" ind2="">
+      <subfield code="a"><![CDATA[201523949           ST 351]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[###]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[00381nM2.01200024      q]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[001]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[201523949]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[002]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[20020314]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[003]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[20101105020133]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[030]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[aa1u|z|||||||]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[041]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[g|]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[rvkn]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Informatik]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Monographien]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Einzelne Anwendungen der Datenverarbeitung]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Textverarbeitung, Desktop Publishing]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[SQ-SU]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[ST]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[ST 320-ST 690]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[ST 350]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[080]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[RVK]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[800]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[ST 351]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[803]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[RVK]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[840]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[Einzelne Programme (A-Z, CSN der Programme)]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[845]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[Desktop publishing / Programm]]></subfield>
+    </datafield>
+    <datafield tag="740" ind1="s" ind2="">
+      <subfield code="a"><![CDATA[PostScript (Programming language)]]></subfield>
+    </datafield>
+    <datafield tag="2001" ind1="" ind2="">
+      <subfield code="a"><![CDATA[021806748||581300|| 3890903371|Renner, Gerhard: PostScript - [1]||B|Haar bei München : Markt-u.-Technik-Verl.|0]]></subfield>
+    </datafield>
+    <datafield tag="2002" ind1="" ind2="">
+      <subfield code="a"><![CDATA[024604747||48016|| 389090968X|Renner, Gerhard: PostScript - 2||B|Haar bei München : Markt-u.-Technik-Verl.|0]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="" ind2="">
+      <subfield code="a"><![CDATA[3757137|182125998]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3757137]]></subfield>
+      <subfield code="a"><![CDATA[###]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[00203cM2.01200024      l]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3757137]]></subfield>
+      <subfield code="a"><![CDATA[001]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[182125998]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3757137]]></subfield>
+      <subfield code="a"><![CDATA[002]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[19930311]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3757137]]></subfield>
+      <subfield code="a"><![CDATA[003]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[20110322093717]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3757137]]></subfield>
+      <subfield code="a"><![CDATA[012]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[027718247]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3757137]]></subfield>
+      <subfield code="a"><![CDATA[030]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[||1u|||||||||]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3757137]]></subfield>
+      <subfield code="a"><![CDATA[071]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[14]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3757137]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[ddub]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3757137]]></subfield>
+      <subfield code="a"><![CDATA[080]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[DDSU]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3757137]]></subfield>
+      <subfield code="a"><![CDATA[081]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[Renner, Gerhard &lt;P&gt;: PostScript]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3757137]]></subfield>
+      <subfield code="a"><![CDATA[125]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[LSTO: 08,09,30,99]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3757137]]></subfield>
+      <subfield code="a"><![CDATA[700]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[|ST 351 P69]]></subfield>
+    </datafield>
+    </record>
+   </metadata>
+  </record>
+  <record>
+   <header>
+    <identifier>libero-publish:51019</identifier>
+   </header>
+   <metadata>
+    <record xmlns="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd">
+     <leader>00395nM2.01200024||||||h</leader>
+     <controlfield tag="LDR">00395nM2.01200024||||||h</controlfield>
+     <controlfield tag="SYS">51019</controlfield>
+    <datafield tag="000" ind1="" ind2="">
+      <subfield code="a"><![CDATA[51019]]></subfield>
+    </datafield>
+    <datafield tag="001" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[027718247]]></subfield>
+    </datafield>
+    <datafield tag="002" ind1="a" ind2="">
+      <subfield code="a"><![CDATA[19920323]]></subfield>
+    </datafield>
+    <datafield tag="003" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[20120101000000]]></subfield>
+    </datafield>
+    <datafield tag="026" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[BSZ027718247]]></subfield>
+    </datafield>
+    <datafield tag="029" ind1="m" ind2="">
+      <subfield code="a"><![CDATA[MB]]></subfield>
+    </datafield>
+    <datafield tag="030" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[e|zu|||z|0017]]></subfield>
+    </datafield>
+    <datafield tag="037" ind1="b" ind2="">
+      <subfield code="a"><![CDATA[ger]]></subfield>
+    </datafield>
+    <datafield tag="037" ind1="z" ind2="">
+      <subfield code="a"><![CDATA[dt.]]></subfield>
+    </datafield>
+    <datafield tag="050" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[a|||||||||||||]]></subfield>
+    </datafield>
+    <datafield tag="051" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[n||||||]]></subfield>
+    </datafield>
+    <datafield tag="070" ind1="a" ind2="">
+      <subfield code="a"><![CDATA[BSZ]]></subfield>
+    </datafield>
+    <datafield tag="076" ind1="b" ind2="">
+      <subfield code="a"><![CDATA[mb]]></subfield>
+    </datafield>
+    <datafield tag="076" ind1="c" ind2="">
+      <subfield code="a"><![CDATA[druck]]></subfield>
+    </datafield>
+    <datafield tag="080" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[HDUB]]></subfield>
+    </datafield>
+    <datafield tag="100" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Renner, Gerhard]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="b" ind2="">
+      <subfield code="a"><![CDATA[16383332X]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1390708]]></subfield>
+      <subfield code="a"><![CDATA[###]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[00133nM2.01200024      p]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1390708]]></subfield>
+      <subfield code="a"><![CDATA[001]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[16383332X]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1390708]]></subfield>
+      <subfield code="a"><![CDATA[002]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[19860606]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1390708]]></subfield>
+      <subfield code="a"><![CDATA[003]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[20120921201113]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1390708]]></subfield>
+      <subfield code="a"><![CDATA[030]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[zz1ucrz||||||]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1390708]]></subfield>
+      <subfield code="a"><![CDATA[065]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[b|||]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1390708]]></subfield>
+      <subfield code="a"><![CDATA[068]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[f]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1390708]]></subfield>
+      <subfield code="a"><![CDATA[080]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[PND]]></subfield>
+    </datafield>
+    <datafield tag="102" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[1390708]]></subfield>
+      <subfield code="a"><![CDATA[800]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[Renner, Gerhard]]></subfield>
+    </datafield>
+    <datafield tag="331" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[PostScript]]></subfield>
+    </datafield>
+    <datafield tag="359" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Gerhard Renner]]></subfield>
+    </datafield>
+    <datafield tag="410" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Haar bei München]]></subfield>
+    </datafield>
+    <datafield tag="412" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[Markt-u.-Technik-Verl.]]></subfield>
+    </datafield>
+    <datafield tag="537" ind1=" " ind2="">
+      <subfield code="a"><![CDATA[5090 KNWEPH/sred]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="g" ind2="">
+      <subfield code="a"><![CDATA[201523949           ST 351]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[###]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[00381nM2.01200024      q]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[001]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[201523949]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[002]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[20020314]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[003]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[20101105020133]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[030]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[aa1u|z|||||||]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[041]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[g|]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[rvkn]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Informatik]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Monographien]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Einzelne Anwendungen der Datenverarbeitung]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[m]]></subfield>
+      <subfield code="c"><![CDATA[Textverarbeitung, Desktop Publishing]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[SQ-SU]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[ST]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[ST 320-ST 690]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[n]]></subfield>
+      <subfield code="c"><![CDATA[ST 350]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[080]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[RVK]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[800]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[ST 351]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[803]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[RVK]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[840]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[Einzelne Programme (A-Z, CSN der Programme)]]></subfield>
+    </datafield>
+    <datafield tag="700" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[190100]]></subfield>
+      <subfield code="a"><![CDATA[845]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[Desktop publishing / Programm]]></subfield>
+    </datafield>
+    <datafield tag="740" ind1="s" ind2="">
+      <subfield code="a"><![CDATA[PostScript (Programming language)]]></subfield>
+    </datafield>
+    <datafield tag="2001" ind1="" ind2="">
+      <subfield code="a"><![CDATA[021806748||581300|| 3890903371|Renner, Gerhard: PostScript - [1]||B|Haar bei München : Markt-u.-Technik-Verl.|0]]></subfield>
+    </datafield>
+    <datafield tag="2002" ind1="" ind2="">
+      <subfield code="a"><![CDATA[024604747||48016|| 389090968X|Renner, Gerhard: PostScript - 2||B|Haar bei München : Markt-u.-Technik-Verl.|0]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="" ind2="">
+      <subfield code="a"><![CDATA[3757137|182125998]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3757137]]></subfield>
+      <subfield code="a"><![CDATA[###]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[00203cM2.01200024      l]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3757137]]></subfield>
+      <subfield code="a"><![CDATA[001]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[182125998]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3757137]]></subfield>
+      <subfield code="a"><![CDATA[002]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[19930311]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3757137]]></subfield>
+      <subfield code="a"><![CDATA[003]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[20110322093717]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3757137]]></subfield>
+      <subfield code="a"><![CDATA[012]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[027718247]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3757137]]></subfield>
+      <subfield code="a"><![CDATA[030]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[||1u|||||||||]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3757137]]></subfield>
+      <subfield code="a"><![CDATA[071]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[14]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3757137]]></subfield>
+      <subfield code="a"><![CDATA[076]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[ddub]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3757137]]></subfield>
+      <subfield code="a"><![CDATA[080]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[DDSU]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3757137]]></subfield>
+      <subfield code="a"><![CDATA[081]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[Renner, Gerhard &lt;P&gt;: PostScript]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3757137]]></subfield>
+      <subfield code="a"><![CDATA[125]]></subfield>
+      <subfield code="b"><![CDATA[a]]></subfield>
+      <subfield code="c"><![CDATA[LSTO: 08,09,30,99]]></subfield>
+    </datafield>
+    <datafield tag="3001" ind1="x" ind2="">
+      <subfield code="_"><![CDATA[3757137]]></subfield>
+      <subfield code="a"><![CDATA[700]]></subfield>
+      <subfield code="b"><![CDATA[ ]]></subfield>
+      <subfield code="c"><![CDATA[|ST 351 P69]]></subfield>
+    </datafield>
+    </record>
+   </metadata>
+  </record>
+</ListRecords>
+</OAI-PMH>
