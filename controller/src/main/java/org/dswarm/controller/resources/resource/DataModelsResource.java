@@ -435,6 +435,8 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 			final WebTarget target = service().path("/xml/get");
 			responseFromGraph = target.request(MediaType.APPLICATION_XML_TYPE).post(Entity.entity(requestJsonString, MediaType.APPLICATION_JSON));
 
+			LOG.debug("request data from graph db with '{}' + '{}'", target.getUri(), serializeObject(requestJsonString));
+
 			return ExportUtils.processGraphDBXMLResponseInternal(responseFromGraph);
 		} else {
 
