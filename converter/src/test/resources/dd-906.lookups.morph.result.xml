@@ -19,7 +19,7 @@
         </combine>
         <data name="http://purl.org/dc/elements/1.1/whitelist" source="@__TRANSFORMATION_OUTPUT_VARIABLE__2"/>
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__2" source="@feld_value__1__">
-            <whitelist map="lookuplist_whitelist"/>
+            <whitelist map="component4402409200787"/>
         </data>
         <combine flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld" includeSubEntities="true" name="@feld_value__0__" reset="true" sameEntity="true" value="${feld_value__0__.filtered}">
             <if>
@@ -36,16 +36,16 @@
         </combine>
         <data name="http://purl.org/dc/elements/1.1/medium" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" source="@feld_value__0__">
-            <lookup default="n/a" in="lookupmap_language"/>
+            <lookup default="n/a" in="component1402409200787"/>
         </data>
     </rules>
     <maps>
-        <map name="lookuplist_whitelist">
+        <map name="component4402409200787">
             <entry name="MB"/>
             <entry name="AB"/>
             <entry name="CD"/>
         </map>
-        <map name="lookupmap_language">
+        <map name="component1402409200787">
             <entry name="XY" value="Andere"/>
             <entry name="MB" value="Buch"/>
             <entry name="ZS" value="Zeitschrift"/>

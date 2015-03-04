@@ -1,0 +1,18 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+    <meta>
+        <name>mappingc6c27eec-4816-205f-f6a7-aea986790e0b</name>
+    </meta>
+    <rules>
+        <data name="@definition__2fb91b5b-b03b-e2e0-ecbb-18c47d59390e__0__" source="http://data.slub-dresden.de/resources/Resource-12ce86cf-4b5c-4f4a-ab9f-b81835695922/schema#definition"/>
+        <data name="http://rdvocab.info/Elements/publicationStatement" source="@__TRANSFORMATION_OUTPUT_VARIABLE__3"/>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__3" source="@definition__2fb91b5b-b03b-e2e0-ecbb-18c47d59390e__0__">
+            <lookup in="component41121219-aea5-2de0-264c-4947f10ba8e2"/>
+        </data>
+    </rules>
+    <maps>
+        <map name="component41121219-aea5-2de0-264c-4947f10ba8e2">
+            <entry name="Country or territory name" value="01127"/>
+        </map>
+    </maps>
+</metamorph>

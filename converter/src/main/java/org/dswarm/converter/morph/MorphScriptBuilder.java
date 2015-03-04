@@ -92,6 +92,10 @@ public class MorphScriptBuilder {
 
 	private static final String METAMORPH_FUNCTION_BLACKLIST = "blacklist";
 
+	private static final String METAMORPH_FUNCTION_LOOKUP = "lookup";
+
+	private static final String METAMORPH_FUNCTION_SETREPLACE = "setreplace";
+
 	private static final String METAMORPH_FUNCTION_CONCAT = "concat";
 
 	private static final String METAMORPH_FUNCTION_COMBINE = "combine";
@@ -103,6 +107,16 @@ public class MorphScriptBuilder {
 	private static final String METAMORPH_FUNCTION_ALL = "all";
 
 	private static final String METAMORPH_FUNCTION_IF = "if";
+
+	private static final String METAMORPH_LOOKUP_ATTRIBUTE_MAP = "map";
+
+	private static final String METAMORPH_LOOKUP_ATTRIBUTE_IN = "in";
+
+	private static final String METAMORPH_MAP_KEY = "name";
+
+	private static final String METAMORPH_MAP_VALUE = "value";
+
+	private static final String METAMORPH_MAP_NAME = "name";
 
 	private static final TransformerFactory TRANSFORMER_FACTORY;
 
@@ -344,66 +358,56 @@ public class MorphScriptBuilder {
 				if (LOOKUP_FUNCTIONS.contains(component.getFunction().getName()) && componentParameterMapping != null) {
 
 					final Element map = doc.createElement(METAMORPH_ELEMENT_SINGLE_MAP);
+					map.setAttribute(METAMORPH_MAP_NAME, component.getName());
 					maps.appendChild(map);
 
 					for (final Entry<String, String> parameterMapping : componentParameterMapping.entrySet()) {
 
-						if (parameterMapping.getKey() != null && parameterMapping.getValue() != null) {
+						if (parameterMapping.getKey().equals(LOOKUP_MAP_DEFINITION) && parameterMapping.getValue() != null) {
 
-							switch (parameterMapping.getKey()) {
+							switch (component.getFunction().getName()) {
 
-								case "in":
-								case "map":
+								case METAMORPH_FUNCTION_WHITELIST:
+								case METAMORPH_FUNCTION_BLACKLIST:
 
-									map.setAttribute("name", parameterMapping.getValue());
-									break;
+									try {
 
-								case LOOKUP_MAP_DEFINITION:
+										final List<String> lookupList = DMPPersistenceUtil.getJSONObjectMapper().readValue(parameterMapping.getValue(),
+												new TypeReference<List<String>>() {});
 
+										for (final String lookupEntry : lookupList) {
 
-									if (component.getFunction().getName().equals(METAMORPH_FUNCTION_WHITELIST)
-											|| component.getFunction().getName().equals(METAMORPH_FUNCTION_BLACKLIST)) {
-
-										try {
-
-											final List<String> lookupList = DMPPersistenceUtil.getJSONObjectMapper().readValue(parameterMapping.getValue(),
-													new TypeReference<List<String>>() {});
-
-											for (final String lookupEntry : lookupList) {
-
-												final Element lookup = doc.createElement(METAMORPH_ELEMENT_MAP_ENTRY);
-												lookup.setAttribute("name", lookupEntry);
-												map.appendChild(lookup);
-											}
-										} catch (final IOException e) {
-
-											MorphScriptBuilder.LOG.debug("lookup map as JSON string in parameter mappings could not convert to a list" + e);
+											final Element lookup = doc.createElement(METAMORPH_ELEMENT_MAP_ENTRY);
+											lookup.setAttribute(METAMORPH_MAP_KEY, lookupEntry);
+											map.appendChild(lookup);
 										}
+									} catch (final IOException e) {
 
-									} else {
-
-										try {
-//
-											final Map<String, String> lookupEntrys = DMPPersistenceUtil.getJSONObjectMapper().readValue(parameterMapping.getValue(),
-													new TypeReference<HashMap<String, String>>() {});
-
-											for (final Entry<String, String> lookupEntry : lookupEntrys.entrySet()) {
-
-												final Element lookup = doc.createElement(METAMORPH_ELEMENT_MAP_ENTRY);
-												lookup.setAttribute("name", lookupEntry.getKey());
-												lookup.setAttribute("value", lookupEntry.getValue());
-												map.appendChild(lookup);
-											}
-										} catch (final IOException e) {
-
-											MorphScriptBuilder.LOG.debug("lookup map as JSON string in parameter mappings could not convert to a map" + e);
-										}
-
+										MorphScriptBuilder.LOG.debug("lookup map as JSON string in parameter mappings could not convert to a list" + e);
 									}
 									break;
 
-							}
+								case METAMORPH_FUNCTION_LOOKUP:
+								case METAMORPH_FUNCTION_SETREPLACE:
 
+									try {
+//
+										final Map<String, String> lookupEntrys = DMPPersistenceUtil.getJSONObjectMapper().readValue(parameterMapping.getValue(),
+												new TypeReference<HashMap<String, String>>() {});
+
+										for (final Entry<String, String> lookupEntry : lookupEntrys.entrySet()) {
+
+											final Element lookup = doc.createElement(METAMORPH_ELEMENT_MAP_ENTRY);
+											lookup.setAttribute(METAMORPH_MAP_KEY, lookupEntry.getKey());
+											lookup.setAttribute(METAMORPH_MAP_VALUE, lookupEntry.getValue());
+											map.appendChild(lookup);
+											}
+									} catch (final IOException e) {
+
+										MorphScriptBuilder.LOG.debug("lookup map as JSON string in parameter mappings could not convert to a map" + e);
+									}
+									break;
+							}
 						}
 					}
 				}
@@ -411,10 +415,24 @@ public class MorphScriptBuilder {
 		}
 	}
 
-	private void createParameters(final Map<String, String> parameterMappings, final Element component) {
+	private void createParameters(final Component component, final Element componentElement) {
 
 		// TODO: parse parameter values that can be simple string values, JSON objects or JSON arrays (?)
 		// => for now we expect only simple string values
+
+		final String funtionName = component.getFunction().getName();
+
+		if (LOOKUP_FUNCTIONS.contains(funtionName)) {
+
+			final String lookupNameAttr = funtionName.equals(METAMORPH_FUNCTION_LOOKUP) ? METAMORPH_LOOKUP_ATTRIBUTE_IN
+					: METAMORPH_LOOKUP_ATTRIBUTE_MAP;
+
+			final Attr param = doc.createAttribute(lookupNameAttr);
+			param.setValue(component.getName());
+			componentElement.setAttributeNode(param);
+		}
+
+		final Map<String, String> parameterMappings = component.getParameterMappings();
 
 		if (parameterMappings != null) {
 
@@ -423,7 +441,7 @@ public class MorphScriptBuilder {
 				if (parameterMapping.getKey() != null) {
 
 					if (parameterMapping.getKey().equals(MorphScriptBuilder.INPUT_VARIABLE_IDENTIFIER) ||
-						parameterMapping.getKey().equals(MorphScriptBuilder.LOOKUP_MAP_DEFINITION)) {
+							parameterMapping.getKey().equals(MorphScriptBuilder.LOOKUP_MAP_DEFINITION)) {
 
 						continue;
 					}
@@ -432,7 +450,7 @@ public class MorphScriptBuilder {
 
 						final Attr param = doc.createAttribute(parameterMapping.getKey());
 						param.setValue(parameterMapping.getValue());
-						component.setAttributeNode(param);
+						componentElement.setAttributeNode(param);
 					}
 				}
 			}
@@ -449,7 +467,7 @@ public class MorphScriptBuilder {
 
 		final Element comp = doc.createElement(singleInputComponent.getFunction().getName());
 
-		createParameters(singleInputComponent.getParameterMappings(), comp);
+		createParameters(singleInputComponent, comp);
 
 		data.appendChild(comp);
 
@@ -515,7 +533,7 @@ public class MorphScriptBuilder {
 		else
 			collection = doc.createElement(multipleInputComponent.getFunction().getName());
 
-		createParameters(multipleInputComponent.getParameterMappings(), collection);
+		createParameters(multipleInputComponent, collection);
 
 		collection.setAttribute(METAMORPH_DATA_TARGET, "@" + collectionNameAttribute);
 

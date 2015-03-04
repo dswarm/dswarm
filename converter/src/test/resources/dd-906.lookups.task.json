@@ -21,25 +21,23 @@
                 "reference" : "lookup",
                 "description" : "Performs a table lookup",
                 "parameters" : {
-                  "in" : {
-                    "type" : "text",
-                    "description" : "Unique name of the lookup table"
-                  },
                   "default" : {
                     "type" : "text",
                     "description" : "Value used if no corresponding key is found.",
                     "optional" : true
+                  },
+                  "lookupString" : {
+                    "type" : "lookupmap"
                   }
                 }
               },
-              "parameters" : [ "in", "default" ],
+              "parameters" : [ "default", "lookupString" ],
               "type" : "Function",
               "uuid" : "323"
             },
             "name" : "component1402409200787",
             "description" : "{\"x\":\"medium\",\"y\":0}",
             "parameter_mappings" : {
-              "in" : "lookupmap_language",
               "default" : "n/a",
               "lookupString" : "{\"MB\" : \"Buch\", \"ZS\" : \"Zeitschrift\", \"XY\" : \"Andere\"}"
             },
@@ -105,20 +103,18 @@
                 "reference" : "whitelist",
                 "description" : "Whitelist filter.",
                 "parameters" : {
-                  "map" : {
-                    "type" : "text",
-                    "description" : "Unique name of the replacement table."
+                  "lookupString" : {
+                    "type" : "lookuplist"
                   }
                 }
               },
-              "parameters" : [ "map" ],
+              "parameters" : [ "lookupString" ],
               "type" : "Function",
               "uuid" : "423"
             },
             "name" : "component4402409200787",
             "description" : "{\"x\":\"whitelist\",\"y\":0}",
             "parameter_mappings" : {
-              "map" : "lookuplist_whitelist",
               "lookupString" : "[\"MB\" , \"AB\", \"CD\"]"
             },
             "uuid" : "-4402409200649"
