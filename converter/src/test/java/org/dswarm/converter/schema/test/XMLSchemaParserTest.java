@@ -70,63 +70,69 @@ public class XMLSchemaParserTest extends GuicedTest {
 	@Test
 	public void testAttributePathsParsingForMabxml() throws IOException {
 
-		testAttributePathsParsing("mabxml-1.xsd", "datensatz", "mabxml-1.attribute_paths.txt");
+		testAttributePathsParsing("mabxml-1.xsd", "datensatz", "mabxml-1.attribute_paths.txt", false);
 	}
 
 	@Test
 	public void testAttributePathsParsingForMarc21() throws IOException {
 
-		testAttributePathsParsing("MARC21slim.xsd", "record", "marc21_schema_attribute_paths.txt");
+		testAttributePathsParsing("MARC21slim.xsd", "record", "marc21_schema_attribute_paths.txt", false);
 	}
 
 	@Test
 	public void testAttributePathsParsingForPNX() throws IOException {
 
-		testAttributePathsParsing("pnx.xsd", "record", "pnx_schema_-_attribute_paths.txt");
+		testAttributePathsParsing("pnx.xsd", "record", "pnx_schema_-_attribute_paths.txt", false);
 	}
 
 	@Test
 	public void testAttributePathsParsingForDCElements() throws IOException {
 
-		testAttributePathsParsing("dc.xsd", null, "dc_elements_schema_-_attribute_paths.txt");
+		testAttributePathsParsing("dc.xsd", null, "dc_elements_schema_-_attribute_paths.txt", false);
+	}
+
+	@Test
+	public void testAttributePathsParsingForOAIDCElements() throws IOException {
+
+		testAttributePathsParsing("oai_dc.xsd", "dc", "oai_dc_elements_schema_-_attribute_paths.txt", true);
 	}
 
 	@Test
 	public void testAttributePathsParsingForDCTerms() throws IOException {
 
-		testAttributePathsParsing("dcterms.xsd", null, "dc_terms_schema_-_attribute_paths.txt");
+		testAttributePathsParsing("dcterms.xsd", null, "dc_terms_schema_-_attribute_paths.txt", false);
 	}
 
 	@Test
 	public void testAttributePathsParsingForOAIPMH() throws IOException {
 
-		testAttributePathsParsing("OAI-PMH.xsd", "record", "oai-pmh_schema_-_attribute_paths.txt");
+		testAttributePathsParsing("OAI-PMH.xsd", "record", "oai-pmh_schema_-_attribute_paths.txt", false);
 	}
 
 	@Test
-	public void testAttributePathsParsingForOAIPMHPlusDCElements() throws IOException {
+	public void testAttributePathsParsingForOAIPMHPlusOAIDCElements() throws IOException {
 
-		final Map<String, AttributePathHelper> rootAttributePaths = parseAttributePaths("OAI-PMH.xsd", "record");
+		final Map<String, AttributePathHelper> rootAttributePaths = parseAttributePaths("OAI-PMH.xsd", "record", false);
 
 		final String rootAttributePathIdentifier = "http://www.openarchives.org/OAI/2.0/metadata";
 		final AttributePathHelper rootAttributePath = rootAttributePaths.get(rootAttributePathIdentifier);
 
-		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths("dc.xsd", null);
+		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths("oai_dc.xsd", "dc", true);
 
 		final Map<String, AttributePathHelper> newAttributePaths = composeAttributePaths(rootAttributePaths, rootAttributePath, childAttributePaths);
 
-		compareAttributePaths("oai-pmh_plus_dc_elements_schema_-_attribute_paths.txt", newAttributePaths);
+		compareAttributePaths("oai-pmh_plus_oai_dc_elements_schema_-_attribute_paths.txt", newAttributePaths);
 	}
 
 	@Test
 	public void testAttributePathsParsingForOAIPMHPlusDCTerms() throws IOException {
 
-		final Map<String, AttributePathHelper> rootAttributePaths = parseAttributePaths("OAI-PMH.xsd", "record");
+		final Map<String, AttributePathHelper> rootAttributePaths = parseAttributePaths("OAI-PMH.xsd", "record", false);
 
 		final String rootAttributePathIdentifier = "http://www.openarchives.org/OAI/2.0/metadata";
 		final AttributePathHelper rootAttributePath = rootAttributePaths.get(rootAttributePathIdentifier);
 
-		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths("dcterms.xsd", null);
+		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths("dcterms.xsd", null, false);
 
 		final Map<String, AttributePathHelper> newAttributePaths = composeAttributePaths(rootAttributePaths, rootAttributePath, childAttributePaths);
 
@@ -136,13 +142,13 @@ public class XMLSchemaParserTest extends GuicedTest {
 	@Test
 	public void testAttributePathsParsingForOAIPMHPlusMARCXML() throws IOException {
 
-		final Map<String, AttributePathHelper> rootAttributePaths = parseAttributePaths("OAI-PMH.xsd", "record");
+		final Map<String, AttributePathHelper> rootAttributePaths = parseAttributePaths("OAI-PMH.xsd", "record", false);
 
 		final String rootAttributePathIdentifier = "http://www.openarchives.org/OAI/2.0/metadata";
 		final AttributePathHelper rootAttributePath = rootAttributePaths.get(rootAttributePathIdentifier);
 
 		// collection - to include "record" attribute into the attribute paths
-		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths("MARC21slim.xsd", "collection");
+		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths("MARC21slim.xsd", "collection", false);
 
 		final Map<String, AttributePathHelper> newAttributePaths = composeAttributePaths(rootAttributePaths, rootAttributePath, childAttributePaths);
 
@@ -151,7 +157,7 @@ public class XMLSchemaParserTest extends GuicedTest {
 
 	public static Schema parseOAIPMHPlusDCElementsSchema() throws DMPPersistenceException {
 
-		final Schema schema = parseOAIPMHPlusXSchema("dc.xsd", "DC Elements", SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID, null);
+		final Schema schema = parseOAIPMHPlusXSchema("oai_dc.xsd", "DC Elements", SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID, "dc", true);
 
 		final Map<String, AttributePath> aps = generateAttributePathMap(schema);
 
@@ -168,7 +174,7 @@ public class XMLSchemaParserTest extends GuicedTest {
 
 	public static Schema parseOAIPMHPlusDCTermsSchema() throws DMPPersistenceException {
 
-		final Schema schema = parseOAIPMHPlusXSchema("dcterms.xsd", "DC Terms", SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID, null);
+		final Schema schema = parseOAIPMHPlusXSchema("dcterms.xsd", "DC Terms", SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID, null, false);
 
 		final Map<String, AttributePath> aps = generateAttributePathMap(schema);
 
@@ -186,7 +192,7 @@ public class XMLSchemaParserTest extends GuicedTest {
 	public static Schema parseOAIPMHPlusMARCXMLSchema() throws DMPPersistenceException {
 
 		// collection - to include "record" attribute into the attribute paths
-		final Schema schema = parseOAIPMHPlusXSchema("MARC21slim.xsd", "MARCXML", SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID, "collection");
+		final Schema schema = parseOAIPMHPlusXSchema("MARC21slim.xsd", "MARCXML", SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID, "collection", false);
 
 		final Map<String, AttributePath> aps = generateAttributePathMap(schema);
 
@@ -347,9 +353,9 @@ public class XMLSchemaParserTest extends GuicedTest {
 		return optionalResult.get();
 	}
 
-	private void testAttributePathsParsing(final String xsdFileName, final String recordIdentifier, final String resultFileName) throws IOException {
+	private void testAttributePathsParsing(final String xsdFileName, final String recordIdentifier, final String resultFileName, final boolean includeRecordTag) throws IOException {
 
-		final Map<String, AttributePathHelper> attributePaths = parseAttributePaths(xsdFileName, recordIdentifier);
+		final Map<String, AttributePathHelper> attributePaths = parseAttributePaths(xsdFileName, recordIdentifier, includeRecordTag);
 
 		compareAttributePaths(resultFileName, attributePaths);
 	}
@@ -369,9 +375,10 @@ public class XMLSchemaParserTest extends GuicedTest {
 		Assert.assertEquals(expectedAttributePaths, actualAttributePaths);
 	}
 
-	private static Map<String, AttributePathHelper> parseAttributePaths(final String xsdFileName, final String recordIdentifier) {
+	private static Map<String, AttributePathHelper> parseAttributePaths(final String xsdFileName, final String recordIdentifier, final boolean includeRecordTag) {
 
 		final XMLSchemaParser xmlSchemaParser = GuicedTest.injector.getInstance(XMLSchemaParser.class);
+		xmlSchemaParser.setIncludeRecordTag(includeRecordTag);
 		final Optional<Map<String, AttributePathHelper>> optionalAttributePaths = xmlSchemaParser.parseAttributePathsMap(xsdFileName,
 				Optional.fromNullable(recordIdentifier));
 
@@ -456,7 +463,7 @@ public class XMLSchemaParserTest extends GuicedTest {
 	}
 
 	private static Schema parseOAIPMHPlusXSchema(final String childSchemaFileName, final String childSchemaName, final String schemaUUID,
-			final String childRecordIdentifier)
+			final String childRecordIdentifier, final boolean includeRecordTag)
 			throws DMPPersistenceException {
 
 		final Tuple<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("OAI-PMH.xsd", "record", schemaUUID,
@@ -467,7 +474,7 @@ public class XMLSchemaParserTest extends GuicedTest {
 		final String rootAttributePathIdentifier = "http://www.openarchives.org/OAI/2.0/metadata";
 		final AttributePathHelper rootAttributePath = rootAttributePaths.get(rootAttributePathIdentifier);
 
-		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths(childSchemaFileName, childRecordIdentifier);
+		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths(childSchemaFileName, childRecordIdentifier, includeRecordTag);
 
 		final Map<String, AttributePathHelper> newAttributePaths = composeAttributePaths(rootAttributePaths, rootAttributePath, childAttributePaths);
 

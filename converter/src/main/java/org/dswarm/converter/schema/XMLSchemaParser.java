@@ -84,6 +84,8 @@ public class XMLSchemaParser {
 	private static final String JSON_SCHEMA_MIXED_IDENTIFIER      = "mixed";
 	private static final String JSON_SCHEMA_TITLE_IDENTIFIER      = "title";
 
+	private boolean includeRecordTag = false;
+
 	@Inject
 	public XMLSchemaParser(final Provider<SchemaService> schemaServiceProviderArg,
 			final Provider<ClaszService> classServiceProviderArg, final Provider<AttributePathService> attributePathServiceProviderArg,
@@ -96,6 +98,11 @@ public class XMLSchemaParser {
 		schemaAttributePathInstanceServiceProvider = schemaAttributePathInstanceServiceProviderArg;
 		attributeServiceProvider = attributeServiceProviderArg;
 		objectMapperProvider = objectMapperProviderArg;
+	}
+
+	public void setIncludeRecordTag(final boolean includeRecordTagArg) {
+
+		includeRecordTag = includeRecordTagArg;
 	}
 
 	public Optional<Schema> parse(final String xmlSchemaFilePath, final String recordTag, final String uuid, final String schemaName)
@@ -268,7 +275,7 @@ public class XMLSchemaParser {
 
 			Set<AttributePathHelper> recordTagNodeAttributePaths = Sets.newLinkedHashSet();
 
-			recordTagNodeAttributePaths = determineAttributePaths(recordTagNode, recordTagNodeAttributePaths, new AttributePathHelper(), false);
+			recordTagNodeAttributePaths = determineAttributePaths(recordTagNode, recordTagNodeAttributePaths, new AttributePathHelper(), includeRecordTag);
 
 			if (recordTagNodeAttributePaths != null && !recordTagNodeAttributePaths.isEmpty()) {
 
