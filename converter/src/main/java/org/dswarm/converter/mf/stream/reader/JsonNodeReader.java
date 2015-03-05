@@ -30,7 +30,7 @@ import org.culturegraph.mf.framework.StreamReceiver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.dswarm.persistence.model.types.Tuple;
+import org.dswarm.common.types.Tuple;
 
 /**
  * @author phorn

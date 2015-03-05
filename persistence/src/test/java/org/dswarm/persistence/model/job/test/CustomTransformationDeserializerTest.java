@@ -36,6 +36,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.dswarm.common.types.Tuple;
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.PersistenceModule;
 import org.dswarm.persistence.model.job.Component;
@@ -44,7 +45,6 @@ import org.dswarm.persistence.model.job.FunctionType;
 import org.dswarm.persistence.model.job.Mapping;
 import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.resource.Configuration;
-import org.dswarm.persistence.model.types.Tuple;
 
 public class CustomTransformationDeserializerTest extends GuicedTest {
 

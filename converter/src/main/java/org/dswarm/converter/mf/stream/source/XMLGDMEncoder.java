@@ -39,6 +39,7 @@ import org.culturegraph.mf.framework.annotations.Out;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import org.dswarm.common.types.Tuple;
 import org.dswarm.graph.json.LiteralNode;
 import org.dswarm.graph.json.Model;
 import org.dswarm.graph.json.Node;
@@ -49,7 +50,6 @@ import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
-import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.util.GDMUtil;
 
 /**

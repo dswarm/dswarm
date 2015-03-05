@@ -29,7 +29,7 @@ import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
-import org.dswarm.persistence.model.types.Tuple;
+import org.dswarm.common.types.Tuple;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -45,13 +45,13 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 public final class CSVJSONEncoder extends DefaultStreamPipe<ObjectReceiver<JsonNode>> {
 
 	private List<String>				header;
-	private List<Tuple<String, String>>	values;
-	private ArrayNode					schemaJSON;
-	private ObjectNode					dataJSON;
+	private List<Tuple<String, String>> values;
+	private ArrayNode                   schemaJSON;
+	private ObjectNode                  dataJSON;
 
-	private boolean						withHeader;
-	private boolean						firstLine;
-	private boolean						firstLineInitialized;
+	private boolean withHeader;
+	private boolean firstLine;
+	private boolean firstLineInitialized;
 
 	@Override
 	public void startRecord(final String id) {

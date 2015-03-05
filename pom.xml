@@ -46,6 +46,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<version.apache.commons>3.3.2</version.apache.commons>
 		<version.commons-io>2.4</version.commons-io>
+		<version.dswarm.common>0.0.2-SNAPSHOT</version.dswarm.common>
 		<version.findebugs.jsr305>3.0.0</version.findebugs.jsr305>
 		<version.google-collections>1.0</version.google-collections>
 		<version.guava-jdk5>14.0.1</version.guava-jdk5>
@@ -721,6 +722,12 @@
 			<artifactId>jsonassert</artifactId>
 			<version>${version.jsonassert}</version>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.dswarm</groupId>
+			<artifactId>common</artifactId>
+			<version>${version.dswarm.common}</version>
 		</dependency>
 	</dependencies>
 </project>
