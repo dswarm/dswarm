@@ -27,6 +27,7 @@ import com.google.inject.Provider;
 import org.junit.Assert;
 import org.junit.Test;
 
+import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.schema.XMLSchemaParser;
 import org.dswarm.persistence.DMPPersistenceException;
@@ -37,7 +38,6 @@ import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
-import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.schema.AttributePathService;
 import org.dswarm.persistence.service.schema.AttributeService;
