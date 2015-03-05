@@ -229,9 +229,6 @@ public class TasksCsvResourceTest extends ResourceTest {
 		final ArrayNode expectedJSONArray = objectMapper.readValue(expectedResultString, ArrayNode.class);
 		final ArrayNode actualJSONArray = objectMapper.readValue(responseString, ArrayNode.class);
 
-		System.out.println("expected=" + objectMapper.writeValueAsString(expectedJSONArray));
-		System.out.println("actual=" + objectMapper.writeValueAsString(actualJSONArray));
-
 		Assert.assertThat(expectedJSONArray.size(), Matchers.equalTo(actualJSONArray.size()));
 
 		final Map<String, JsonNode> actualNodes = new HashMap<>(actualJSONArray.size());
