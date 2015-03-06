@@ -46,6 +46,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<version.apache.commons>3.3.2</version.apache.commons>
 		<version.commons-io>2.4</version.commons-io>
+		<version.dswarm.common>0.0.2-SNAPSHOT</version.dswarm.common>
 		<version.findebugs.jsr305>3.0.0</version.findebugs.jsr305>
 		<version.google-collections>1.0</version.google-collections>
 		<version.guava-jdk5>14.0.1</version.guava-jdk5>
@@ -90,6 +91,7 @@
 		<version.tika>1.6</version.tika>
 		<version.typesafe-config>1.2.1</version.typesafe-config>
 		<version.umlgraph-doclet>5.1</version.umlgraph-doclet>
+		<version.xmlunit>2.0.0-SNAPSHOT</version.xmlunit>
 	</properties>
 
 	<repositories>
@@ -118,6 +120,12 @@
 			<releases>
 				<enabled>true</enabled>
 			</releases>
+		</repository>
+		<repository>
+			<id>snapshots-repo</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<releases><enabled>false</enabled></releases>
+			<snapshots><enabled>true</enabled></snapshots>
 		</repository>
 	</repositories>
 
@@ -721,6 +729,12 @@
 			<artifactId>jsonassert</artifactId>
 			<version>${version.jsonassert}</version>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.dswarm</groupId>
+			<artifactId>common</artifactId>
+			<version>${version.dswarm.common}</version>
 		</dependency>
 	</dependencies>
 </project>

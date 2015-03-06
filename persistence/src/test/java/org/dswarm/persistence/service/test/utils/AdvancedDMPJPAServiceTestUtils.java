@@ -22,10 +22,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.json.JSONException;
 import org.junit.Assert;
 
+import org.dswarm.common.types.Tuple;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.AdvancedDMPJPAObject;
 import org.dswarm.persistence.model.proxy.ProxyAdvancedDMPJPAObject;
-import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.AdvancedDMPJPAService;
 
 public abstract class AdvancedDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE extends AdvancedDMPJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyAdvancedDMPJPAObject<POJOCLASS>, POJOCLASS extends AdvancedDMPJPAObject>
@@ -41,7 +41,7 @@ public abstract class AdvancedDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE
 	/**
 	 * {@inheritDoc} <br />
 	 * Assert that their URIs are equal. <br />
-	 * 
+	 *
 	 * @param expectedObject
 	 * @param actualObject
 	 */
@@ -59,10 +59,10 @@ public abstract class AdvancedDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE
 
 		return jpaService.createObjectTransactional(object);
 	}
-	
+
 	/**
 	 * note: if the object was created before, you'll get the cached result. if you would like to get a fresh object from the database (e.g. for uniqueness test etc.), then you should utilise, e.g., the #createAttribute(String, String) method (of the concrete implementation)
-	 * 
+	 *
 	 * @param identifier
 	 * @return
 	 * @throws Exception
@@ -72,9 +72,10 @@ public abstract class AdvancedDMPJPAServiceTestUtils<POJOCLASSPERSISTENCESERVICE
 
 		if (!cache.containsKey(identifier)) {
 
-			if(!commonTermsMap.containsKey(identifier)) {
+			if (!commonTermsMap.containsKey(identifier)) {
 
-				throw new DMPPersistenceException(identifier + " is no common object, please define it or utilise another appropriated method for creating it");
+				throw new DMPPersistenceException(
+						identifier + " is no common object, please define it or utilise another appropriated method for creating it");
 			}
 
 			final Tuple<String, String> tuple = commonTermsMap.get(identifier);

@@ -20,9 +20,9 @@ import java.util.Set;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Sets;
 
+import org.dswarm.common.types.Tuple;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.proxy.ProxyClasz;
-import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.schema.ClaszService;
 import org.dswarm.persistence.service.test.utils.AdvancedDMPJPAServiceTestUtils;

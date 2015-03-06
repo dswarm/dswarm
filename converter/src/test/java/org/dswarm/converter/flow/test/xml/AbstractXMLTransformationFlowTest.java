@@ -31,6 +31,7 @@ import com.google.inject.Provider;
 import org.junit.Assert;
 import org.junit.Test;
 
+import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.TransformationFlow;
 import org.dswarm.converter.flow.XMLSourceResourceGDMStmtsFlow;
@@ -44,7 +45,6 @@ import org.dswarm.persistence.model.resource.ResourceType;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
 import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.service.internal.graph.InternalGDMGraphService;
 import org.dswarm.persistence.service.resource.ConfigurationService;

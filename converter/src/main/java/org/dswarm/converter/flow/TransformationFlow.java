@@ -45,6 +45,7 @@ import org.culturegraph.mf.morph.Metamorph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.DMPMorphDefException;
 import org.dswarm.converter.mf.stream.GDMEncoder;
@@ -63,7 +64,6 @@ import org.dswarm.persistence.model.job.Task;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.InternalModelService;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.util.DMPPersistenceUtil;

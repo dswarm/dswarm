@@ -17,9 +17,9 @@ package org.dswarm.persistence.service.schema.test.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import org.dswarm.common.types.Tuple;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
-import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.test.utils.AdvancedDMPJPAServiceTestUtils;
@@ -39,16 +39,16 @@ public class AttributeServiceTestUtils extends AdvancedDMPJPAServiceTestUtils<At
 
 	static {
 
-		commonTermsMap.put(DCTERMS_TITLE, new Tuple<>(DCTERMS_TITLE, "title"));
-		commonTermsMap.put(DCTERMS_HASPART, new Tuple<>(DCTERMS_HASPART, "hasPart"));
-		commonTermsMap.put(DCTERMS_CREATED, new Tuple<>(DCTERMS_CREATED, "created"));
-		commonTermsMap.put(RDF_VALUE, new Tuple<>(RDF_VALUE, "value"));
-		commonTermsMap.put(MABXML_ID, new Tuple<>(MABXML_ID, "id"));
-		commonTermsMap.put(RDFS_LABEL, new Tuple<>(RDFS_LABEL, "label"));
-		commonTermsMap.put(DCTERMS_CREATOR, new Tuple<>(DCTERMS_CREATOR, "creator"));
-		commonTermsMap.put(FOAF_FIRSTNAME, new Tuple<>(FOAF_FIRSTNAME, "first name"));
-		commonTermsMap.put(FOAF_FAMILYNAME, new Tuple<>(FOAF_FAMILYNAME, "family name"));
-		commonTermsMap.put(FOAF_NAME, new Tuple<>(FOAF_NAME, "name"));
+		commonTermsMap.put(DCTERMS_TITLE, Tuple.tuple(DCTERMS_TITLE, "title"));
+		commonTermsMap.put(DCTERMS_HASPART, Tuple.tuple(DCTERMS_HASPART, "hasPart"));
+		commonTermsMap.put(DCTERMS_CREATED, Tuple.tuple(DCTERMS_CREATED, "created"));
+		commonTermsMap.put(RDF_VALUE, Tuple.tuple(RDF_VALUE, "value"));
+		commonTermsMap.put(MABXML_ID, Tuple.tuple(MABXML_ID, "id"));
+		commonTermsMap.put(RDFS_LABEL, Tuple.tuple(RDFS_LABEL, "label"));
+		commonTermsMap.put(DCTERMS_CREATOR, Tuple.tuple(DCTERMS_CREATOR, "creator"));
+		commonTermsMap.put(FOAF_FIRSTNAME, Tuple.tuple(FOAF_FIRSTNAME, "first name"));
+		commonTermsMap.put(FOAF_FAMILYNAME, Tuple.tuple(FOAF_FAMILYNAME, "family name"));
+		commonTermsMap.put(FOAF_NAME, Tuple.tuple(FOAF_NAME, "name"));
 	}
 
 	public AttributeServiceTestUtils() {

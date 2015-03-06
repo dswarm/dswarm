@@ -34,11 +34,11 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.Key;
 
+import org.dswarm.common.types.Tuple;
 import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
 import org.dswarm.persistence.model.job.Component;
 import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.Transformation;
-import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.job.ComponentService;
 

@@ -21,7 +21,6 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,6 +43,7 @@ import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 
+import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.CSVSourceResourceTriplesFlow;
 import org.dswarm.converter.flow.TransformationFlow;
@@ -60,22 +60,12 @@ import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.ResourceType;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
-import org.dswarm.persistence.model.schema.Attribute;
-import org.dswarm.persistence.model.schema.AttributePath;
-import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.service.internal.graph.InternalGDMGraphService;
-import org.dswarm.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 import org.dswarm.persistence.service.resource.ConfigurationService;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.service.resource.ResourceService;
-import org.dswarm.persistence.service.schema.SchemaService;
-import org.dswarm.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
-import org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtils;
-import org.dswarm.persistence.service.schema.test.utils.ClaszServiceTestUtils;
-import org.dswarm.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class TransformationFlowTest extends GuicedTest {
@@ -290,7 +280,7 @@ public class TransformationFlowTest extends GuicedTest {
 					Matchers.equalTo(expectedRecordData.get(expectedDataResourceSchemaBaseURI + "description").asText()));
 		}
 
-		}
+	}
 
 	public void readCSVTest() throws Exception {
 
