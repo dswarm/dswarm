@@ -27,6 +27,8 @@ import com.google.inject.Key;
 import com.google.inject.name.Names;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.builder.Input;
 import org.xmlunit.diff.Diff;
@@ -43,6 +45,8 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
  */
 public class SolrXMLDataSourceConfigGeneratorTest extends GuicedTest {
 
+	private static final Logger LOG = LoggerFactory.getLogger(SolrXMLDataSourceConfigGeneratorTest.class);
+
 	@Test
 	public void testSolrXMLDataSourceConfigGenerator() throws IOException, XMLStreamException {
 
@@ -53,7 +57,23 @@ public class SolrXMLDataSourceConfigGeneratorTest extends GuicedTest {
 		final String dswarmRoot = GuicedTest.injector.getInstance(Key.get(String.class, Names.named("dswarm.paths.root")));
 		final String sep = File.separator;
 		final String fileName = "data-config.xml";
-		final String fullFileName = dswarmRoot + sep + "converter" + sep + "target" + sep + "classes" + sep + fileName;
+
+		final StringBuilder sb = new StringBuilder();
+
+		sb.append(dswarmRoot).append(sep);
+
+		final String converterModule = "converter";
+
+		if (!dswarmRoot.endsWith(converterModule)) {
+
+			sb.append(converterModule).append(sep);
+		}
+
+		sb.append("target").append(sep).append("classes").append(sep).append(fileName);
+
+		final String fullFileName = sb.toString();
+
+		LOG.debug("Solr XML data source config file = '{}'", fullFileName);
 
 		final File file = new File(fullFileName);
 		final OutputStream fop = new FileOutputStream(file);
