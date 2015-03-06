@@ -54,7 +54,7 @@ public class SolrXMLDataSourceConfigGeneratorTest extends GuicedTest {
 
 		final Schema fincSolrSchema = schemaService.getObject(SchemaUtils.FINC_SOLR_SCHEMA_UUID);
 
-		final String dswarmRoot = GuicedTest.injector.getInstance(Key.get(String.class, Names.named("dswarm.paths.root")));
+		final String dswarmRoot = System.getProperty("user.dir");
 		final String sep = File.separator;
 		final String fileName = "data-config.xml";
 
