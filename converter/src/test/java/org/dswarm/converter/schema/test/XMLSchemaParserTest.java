@@ -16,11 +16,14 @@
 package org.dswarm.converter.schema.test;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
+import com.google.inject.Provider;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -28,12 +31,17 @@ import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.schema.XMLSchemaParser;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
+import org.dswarm.persistence.model.internal.helper.AttributePathHelperHelper;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
+import org.dswarm.persistence.model.types.Tuple;
 import org.dswarm.persistence.service.UUIDService;
+import org.dswarm.persistence.service.schema.AttributePathService;
+import org.dswarm.persistence.service.schema.AttributeService;
+import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
@@ -62,19 +70,156 @@ public class XMLSchemaParserTest extends GuicedTest {
 	@Test
 	public void testAttributePathsParsingForMabxml() throws IOException {
 
-		testAttributePathsParsing("mabxml-1.xsd", "datensatz", "mabxml-1.attribute_paths.txt");
+		testAttributePathsParsing("mabxml-1.xsd", "datensatz", "mabxml-1.attribute_paths.txt", false);
 	}
 
 	@Test
 	public void testAttributePathsParsingForMarc21() throws IOException {
 
-		testAttributePathsParsing("MARC21slim.xsd", "record", "marc21_schema_attribute_paths.txt");
+		testAttributePathsParsing("MARC21slim.xsd", "record", "marc21_schema_attribute_paths.txt", false);
 	}
 
 	@Test
 	public void testAttributePathsParsingForPNX() throws IOException {
 
-		testAttributePathsParsing("pnx.xsd", "record", "pnx_schema_-_attribute_paths.txt");
+		testAttributePathsParsing("pnx.xsd", "record", "pnx_schema_-_attribute_paths.txt", false);
+	}
+
+	@Test
+	public void testAttributePathsParsingForDCElements() throws IOException {
+
+		testAttributePathsParsing("dc.xsd", null, "dc_elements_schema_-_attribute_paths.txt", false);
+	}
+
+	@Test
+	public void testAttributePathsParsingForOAIDCElements() throws IOException {
+
+		testAttributePathsParsing("oai_dc.xsd", "dc", "oai_dc_elements_schema_-_attribute_paths.txt", true);
+	}
+
+	@Test
+	public void testAttributePathsParsingForDCTerms() throws IOException {
+
+		testAttributePathsParsing("dcterms.xsd", null, "dc_terms_schema_-_attribute_paths.txt", false);
+	}
+
+	@Test
+	public void testAttributePathsParsingForOAIPMH() throws IOException {
+
+		testAttributePathsParsing("OAI-PMH.xsd", "record", "oai-pmh_schema_-_attribute_paths.txt", false);
+	}
+
+	@Test
+	public void testAttributePathsParsingForOAIPMHPlusOAIDCElements() throws IOException {
+
+		final Map<String, AttributePathHelper> rootAttributePaths = parseAttributePaths("OAI-PMH.xsd", "record", false);
+
+		final String rootAttributePathIdentifier = "http://www.openarchives.org/OAI/2.0/metadata";
+		final AttributePathHelper rootAttributePath = rootAttributePaths.get(rootAttributePathIdentifier);
+
+		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths("oai_dc.xsd", "dc", true);
+
+		final Map<String, AttributePathHelper> newAttributePaths = composeAttributePaths(rootAttributePaths, rootAttributePath, childAttributePaths);
+
+		compareAttributePaths("oai-pmh_plus_oai_dc_elements_schema_-_attribute_paths.txt", newAttributePaths);
+	}
+
+	@Test
+	public void testAttributePathsParsingForOAIPMHPlusDCTerms() throws IOException {
+
+		final Map<String, AttributePathHelper> rootAttributePaths = parseAttributePaths("OAI-PMH.xsd", "record", false);
+
+		final String rootAttributePathIdentifier = "http://www.openarchives.org/OAI/2.0/metadata";
+		final AttributePathHelper rootAttributePath = rootAttributePaths.get(rootAttributePathIdentifier);
+
+		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths("dcterms.xsd", null, false);
+
+		final Map<String, AttributePathHelper> newAttributePaths = composeAttributePaths(rootAttributePaths, rootAttributePath, childAttributePaths);
+
+		compareAttributePaths("oai-pmh_plus_dc_terms_schema_-_attribute_paths.txt", newAttributePaths);
+	}
+
+	@Test
+	public void testAttributePathsParsingForOAIPMHPlusMARCXML() throws IOException {
+
+		final Map<String, AttributePathHelper> rootAttributePaths = parseAttributePaths("OAI-PMH.xsd", "record", false);
+
+		final String rootAttributePathIdentifier = "http://www.openarchives.org/OAI/2.0/metadata";
+		final AttributePathHelper rootAttributePath = rootAttributePaths.get(rootAttributePathIdentifier);
+
+		// collection - to include "record" attribute into the attribute paths
+		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths("MARC21slim.xsd", "collection", false);
+
+		final Map<String, AttributePathHelper> newAttributePaths = composeAttributePaths(rootAttributePaths, rootAttributePath, childAttributePaths);
+
+		compareAttributePaths("oai-pmh_plus_marcxml_schema_-_attribute_paths.txt", newAttributePaths);
+	}
+
+	public static Schema parseOAIPMHPlusDCElementsSchema() throws DMPPersistenceException {
+
+		final Schema schema = parseOAIPMHPlusXSchema("oai_dc.xsd", "DC Elements", SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID, "dc", true);
+
+		final Map<String, AttributePath> aps = generateAttributePathMap(schema);
+
+		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
+
+		final ContentSchema contentSchema = new ContentSchema(uuid);
+		contentSchema.setName("OAI-PMH + DC Elements content schema");
+
+		final AttributePath id = aps
+				.get("http://www.openarchives.org/OAI/2.0/header\u001Ehttp://www.openarchives.org/OAI/2.0/identifier\u001Ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#value");
+
+		return fillContentSchemaAndUpdateSchema(contentSchema, id, null, schema);
+	}
+
+	public static Schema parseOAIPMHPlusDCTermsSchema() throws DMPPersistenceException {
+
+		final Schema schema = parseOAIPMHPlusXSchema("dcterms.xsd", "DC Terms", SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID, null, false);
+
+		final Map<String, AttributePath> aps = generateAttributePathMap(schema);
+
+		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
+
+		final ContentSchema contentSchema = new ContentSchema(uuid);
+		contentSchema.setName("OAI-PMH + DC Terms content schema");
+
+		final AttributePath id = aps
+				.get("http://www.openarchives.org/OAI/2.0/header\u001Ehttp://www.openarchives.org/OAI/2.0/identifier\u001Ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#value");
+
+		return fillContentSchemaAndUpdateSchema(contentSchema, id, null, schema);
+	}
+
+	public static Schema parseOAIPMHPlusMARCXMLSchema() throws DMPPersistenceException {
+
+		// collection - to include "record" attribute into the attribute paths
+		final Schema schema = parseOAIPMHPlusXSchema("MARC21slim.xsd", "MARCXML", SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID, "collection", false);
+
+		final Map<String, AttributePath> aps = generateAttributePathMap(schema);
+
+		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
+
+		final ContentSchema contentSchema = new ContentSchema(uuid);
+		contentSchema.setName("OAI-PMH + MARCXML content schema");
+
+		final AttributePath datafieldTag = aps
+				.get("http://www.openarchives.org/OAI/2.0/metadata\u001Ehttp://www.loc.gov/MARC21/slim#record\u001Ehttp://www.loc.gov/MARC21/slim#datafield\u001Ehttp://www.loc.gov/MARC21/slim#tag");
+		final AttributePath datafieldInd1 = aps
+				.get("http://www.openarchives.org/OAI/2.0/metadata\u001Ehttp://www.loc.gov/MARC21/slim#record\u001Ehttp://www.loc.gov/MARC21/slim#datafield\u001Ehttp://www.loc.gov/MARC21/slim#ind1");
+		final AttributePath datafieldInd2 = aps
+				.get("http://www.openarchives.org/OAI/2.0/metadata\u001Ehttp://www.loc.gov/MARC21/slim#record\u001Ehttp://www.loc.gov/MARC21/slim#datafield\u001Ehttp://www.loc.gov/MARC21/slim#ind2");
+		final AttributePath datafieldSubfieldCode = aps
+				.get("http://www.openarchives.org/OAI/2.0/metadata\u001Ehttp://www.loc.gov/MARC21/slim#record\u001Ehttp://www.loc.gov/MARC21/slim#datafield\u001Ehttp://www.loc.gov/MARC21/slim#subfield\u001Ehttp://www.loc.gov/MARC21/slim#code");
+		final AttributePath id = aps
+				.get("http://www.openarchives.org/OAI/2.0/header\u001Ehttp://www.openarchives.org/OAI/2.0/identifier\u001Ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#value");
+		final AttributePath datafieldSubfieldValue = aps
+				.get("http://www.openarchives.org/OAI/2.0/metadata\u001Ehttp://www.loc.gov/MARC21/slim#record\u001Ehttp://www.loc.gov/MARC21/slim#datafield\u001Ehttp://www.loc.gov/MARC21/slim#subfield\u001Ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#value");
+
+		contentSchema.addKeyAttributePath(datafieldTag);
+		contentSchema.addKeyAttributePath(datafieldInd1);
+		contentSchema.addKeyAttributePath(datafieldInd2);
+		contentSchema.addKeyAttributePath(datafieldSubfieldCode);
+
+		return fillContentSchemaAndUpdateSchema(contentSchema, id, datafieldSubfieldValue, schema);
 	}
 
 	/**
@@ -102,7 +247,6 @@ public class XMLSchemaParserTest extends GuicedTest {
 	 * @throws DMPPersistenceException
 	 */
 	public static Schema parseMabxmlSchema() throws IOException, DMPPersistenceException {
-
 
 		final Schema schema = parseSchema("mabxml-1.xsd", "datensatz", SchemaUtils.MABXML_SCHEMA_UUID, "mabxml schema");
 
@@ -135,7 +279,19 @@ public class XMLSchemaParserTest extends GuicedTest {
 	 */
 	public static Schema parsePNXSchema() throws IOException, DMPPersistenceException {
 
-		return parseSchema("pnx.xsd", "record", SchemaUtils.PNX_SCHEMA_UUID, "pnx schema");
+		final Schema schema = parseSchema("pnx.xsd", "record", SchemaUtils.PNX_SCHEMA_UUID, "pnx schema");
+
+		final Map<String, AttributePath> aps = generateAttributePathMap(schema);
+
+		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
+
+		final ContentSchema contentSchema = new ContentSchema(uuid);
+		contentSchema.setName("PNX content schema");
+
+		final AttributePath id = aps
+				.get("http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#control\u001Ehttp://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#sourcerecordid\u001Ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#value");
+
+		return fillContentSchemaAndUpdateSchema(contentSchema, id, null, schema);
 	}
 
 	/**
@@ -185,18 +341,30 @@ public class XMLSchemaParserTest extends GuicedTest {
 		return optionalSchema.get();
 	}
 
-	private void testAttributePathsParsing(final String xsdFileName, final String recordIdentifier, final String resultFileName) throws IOException {
+	private static Tuple<Schema, Map<String, AttributePathHelper>> parseSchemaSeparately(final String xsdFileName, final String recordIdentifier,
+			final String schemaUUID, final String schemaName)
+			throws DMPPersistenceException {
 
 		final XMLSchemaParser xmlSchemaParser = GuicedTest.injector.getInstance(XMLSchemaParser.class);
-		final Optional<Set<AttributePathHelper>> optionalAttributePaths = xmlSchemaParser.parseAttributePaths(xsdFileName, recordIdentifier);
+		final Optional<Tuple<Schema, Map<String, AttributePathHelper>>> optionalResult = xmlSchemaParser.parseSeparately(xsdFileName,
+				recordIdentifier, schemaUUID, schemaName);
+		Assert.assertTrue(optionalResult.isPresent());
 
-		Assert.assertTrue(optionalAttributePaths.isPresent());
+		return optionalResult.get();
+	}
 
-		final Set<AttributePathHelper> attributePaths = optionalAttributePaths.get();
+	private void testAttributePathsParsing(final String xsdFileName, final String recordIdentifier, final String resultFileName, final boolean includeRecordTag) throws IOException {
+
+		final Map<String, AttributePathHelper> attributePaths = parseAttributePaths(xsdFileName, recordIdentifier, includeRecordTag);
+
+		compareAttributePaths(resultFileName, attributePaths);
+	}
+
+	private void compareAttributePaths(final String resultFileName, final Map<String, AttributePathHelper> attributePaths) throws IOException {
 
 		final StringBuilder sb = new StringBuilder();
 
-		for (final AttributePathHelper attributePath : attributePaths) {
+		for (final AttributePathHelper attributePath : attributePaths.values()) {
 
 			sb.append(attributePath.toString()).append("\n");
 		}
@@ -205,6 +373,18 @@ public class XMLSchemaParserTest extends GuicedTest {
 		final String actualAttributePaths = sb.toString();
 
 		Assert.assertEquals(expectedAttributePaths, actualAttributePaths);
+	}
+
+	private static Map<String, AttributePathHelper> parseAttributePaths(final String xsdFileName, final String recordIdentifier, final boolean includeRecordTag) {
+
+		final XMLSchemaParser xmlSchemaParser = GuicedTest.injector.getInstance(XMLSchemaParser.class);
+		xmlSchemaParser.setIncludeRecordTag(includeRecordTag);
+		final Optional<Map<String, AttributePathHelper>> optionalAttributePaths = xmlSchemaParser.parseAttributePathsMap(xsdFileName,
+				Optional.fromNullable(recordIdentifier));
+
+		Assert.assertTrue(optionalAttributePaths.isPresent());
+
+		return optionalAttributePaths.get();
 	}
 
 	private static Map<String, AttributePath> generateAttributePathMap(final Schema schema) {
@@ -220,11 +400,16 @@ public class XMLSchemaParserTest extends GuicedTest {
 		return aps;
 	}
 
-	private static Schema fillContentSchemaAndUpdateSchema(final ContentSchema contentSchema, final AttributePath recordIdentifierAP, final AttributePath valueAP, final Schema schema)
+	private static Schema fillContentSchemaAndUpdateSchema(final ContentSchema contentSchema, final AttributePath recordIdentifierAP,
+			final AttributePath valueAP, final Schema schema)
 			throws DMPPersistenceException {
 
 		contentSchema.setRecordIdentifierAttributePath(recordIdentifierAP);
-		contentSchema.setValueAttributePath(valueAP);
+
+		if (valueAP != null) {
+
+			contentSchema.setValueAttributePath(valueAP);
+		}
 
 		schema.setContentSchema(contentSchema);
 
@@ -233,6 +418,80 @@ public class XMLSchemaParserTest extends GuicedTest {
 		schemaService.updateObjectTransactional(schema);
 
 		return schema;
+	}
+
+	private static Map<String, AttributePathHelper> composeAttributePaths(final Map<String, AttributePathHelper> rootAttributePaths,
+			final AttributePathHelper rootAttributePath,
+			final Map<String, AttributePathHelper> childAttributePaths) {
+
+		final Set<AttributePathHelper> compoundAttributePaths = new LinkedHashSet<>();
+
+		for (final AttributePathHelper attributePath : childAttributePaths.values()) {
+
+			AttributePathHelperHelper.addAttributePath(attributePath, compoundAttributePaths, rootAttributePath);
+		}
+
+		final Map<String, AttributePathHelper> newAttributePaths = new LinkedHashMap<>();
+		final String rootAttributePathIdentifier = rootAttributePath.toString();
+
+		for (final Map.Entry<String, AttributePathHelper> rootAttributePathEntry : rootAttributePaths.entrySet()) {
+
+			newAttributePaths.put(rootAttributePathEntry.getKey(), rootAttributePathEntry.getValue());
+
+			if (rootAttributePathEntry.getKey().equals(rootAttributePathIdentifier)) {
+
+				for (final AttributePathHelper attributePath : compoundAttributePaths) {
+
+					newAttributePaths.put(attributePath.toString(), attributePath);
+				}
+			}
+		}
+
+		return newAttributePaths;
+	}
+
+	private static Set<AttributePathHelper> convertToSet(final Map<String, AttributePathHelper> attributePathsMap) {
+
+		final Set<AttributePathHelper> attributePaths = new LinkedHashSet<>();
+
+		for (final AttributePathHelper attributePath : attributePathsMap.values()) {
+
+			attributePaths.add(attributePath);
+		}
+
+		return attributePaths;
+	}
+
+	private static Schema parseOAIPMHPlusXSchema(final String childSchemaFileName, final String childSchemaName, final String schemaUUID,
+			final String childRecordIdentifier, final boolean includeRecordTag)
+			throws DMPPersistenceException {
+
+		final Tuple<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("OAI-PMH.xsd", "record", schemaUUID,
+				"OAI-PMH + " + childSchemaName + " schema");
+
+		final Map<String, AttributePathHelper> rootAttributePaths = result.v2();
+
+		final String rootAttributePathIdentifier = "http://www.openarchives.org/OAI/2.0/metadata";
+		final AttributePathHelper rootAttributePath = rootAttributePaths.get(rootAttributePathIdentifier);
+
+		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths(childSchemaFileName, childRecordIdentifier, includeRecordTag);
+
+		final Map<String, AttributePathHelper> newAttributePaths = composeAttributePaths(rootAttributePaths, rootAttributePath, childAttributePaths);
+
+		final Schema schema = result.v1();
+		final Set<AttributePathHelper> attributePaths = convertToSet(newAttributePaths);
+		final Provider<AttributePathService> attributePathServiceProvider = GuicedTest.injector.getProvider(AttributePathService.class);
+		final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceServiceProvider = GuicedTest.injector.getProvider(
+				SchemaAttributePathInstanceService.class);
+		final Provider<AttributeService> attributeServiceProvider = GuicedTest.injector.getProvider(AttributeService.class);
+		final Provider<SchemaService> schemaServiceProvider = GuicedTest.injector.getProvider(SchemaService.class);
+
+		SchemaUtils.addAttributePaths(schema, attributePaths, attributePathServiceProvider, schemaAttributePathInstanceServiceProvider,
+				attributeServiceProvider);
+
+		// TODO: add content schema, when necessary
+
+		return SchemaUtils.updateSchema(schema, schemaServiceProvider);
 	}
 
 }

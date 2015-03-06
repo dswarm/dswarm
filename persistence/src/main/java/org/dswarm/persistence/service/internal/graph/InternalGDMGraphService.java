@@ -457,6 +457,9 @@ public class InternalGDMGraphService implements InternalModelService {
 							case ConfigurationStatics.MABXML_STORAGE_TYPE:
 							case ConfigurationStatics.MARCXML_STORAGE_TYPE:
 							case ConfigurationStatics.PNX_STORAGE_TYPE:
+							case ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE:
+							case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
+							case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
 
 								optionalPresetSchema = Optional.of(storageType);
 
@@ -504,7 +507,27 @@ public class InternalGDMGraphService implements InternalModelService {
 						schema = schemaService.get().getObject(SchemaUtils.PNX_SCHEMA_UUID);
 
 						break;
+					case ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE:
 
+						// assign existing OAI-PMH + DC Elements schema to data resource
+
+						schema = schemaService.get().getObject(SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID);
+
+						break;
+					case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
+
+						// assign existing OAI-PMH + DC Terms schema to data resource
+
+						schema = schemaService.get().getObject(SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID);
+
+						break;
+					case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
+
+						// assign existing OAI-PMH + MARCXML schema to data resource
+
+						schema = schemaService.get().getObject(SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID);
+
+						break;
 					default:
 
 						LOG.debug("could not determine and set preset schema for identifier '" + optionalPresetSchema.get() + "'");

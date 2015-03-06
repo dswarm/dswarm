@@ -49,6 +49,18 @@ public class AttributePathHelperHelper {
 		return schemaNormalizerHelper;
 	}
 
+	public static AttributePathHelper addAttributePath(final AttributePathHelper childAttributePath, final Set<AttributePathHelper> attributePaths,
+			final AttributePathHelper rootAttributePath) {
+
+		final LinkedList<String> currentAttributePath = Lists.newLinkedList(rootAttributePath.getAttributePath());
+		currentAttributePath.addAll(childAttributePath.getAttributePath());
+		final AttributePathHelper schemaNormalizerHelper = new AttributePathHelper();
+		schemaNormalizerHelper.setAttributePath(currentAttributePath);
+		attributePaths.add(schemaNormalizerHelper);
+
+		return schemaNormalizerHelper;
+	}
+
 	public static boolean levelAsArray(final List<AttributePathHelper> attributePaths, final String levelCurrentRootAttributePath) {
 
 		boolean levelAsArray = false;

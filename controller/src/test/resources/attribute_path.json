@@ -1,11 +1,11 @@
 {
   "attributes" : [ {
     "name" : "hasPart",
-    "uri" : "http://purl.org/dc/terms/hasPart",
+    "uri" : "http://purl.org/dc/terms/hasPart2",
     "uuid" : "2"
   }, {
     "name" : "title",
-    "uri" : "http://purl.org/dc/terms/title",
+    "uri" : "http://purl.org/dc/terms/title2",
     "uuid" : "1"
   } ],
   "uuid" : "1"

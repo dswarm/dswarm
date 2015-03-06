@@ -45,7 +45,7 @@
         } ]
       },
       "parameter_mappings" : {
-        "transformationInputString" : "http://purl.org/dc/terms/title",
+        "transformationInputString" : "http://purl.org/dc/terms/title2",
         "transformationOutputVariable" : "http://www.w3.org/2000/01/rdf-schema#label"
       }
     },
@@ -56,7 +56,7 @@
       "attribute_path" : {
         "uuid" : "iap_uuid_1234",
         "attributes" : [ {
-          "uri" : "http://purl.org/dc/terms/title",
+          "uri" : "http://purl.org/dc/terms/title2",
           "name" : "title",
           "uuid" : "-4072354651565733000"
         } ]
@@ -137,15 +137,15 @@
         "name" : "sapi_-1",
         "attribute_path" : {
           "attributes" : [ {
-            "uri" : "http://purl.org/dc/terms/title",
+            "uri" : "http://purl.org/dc/terms/title2",
             "name" : "title",
             "uuid" : "-4072354651565733000"
           }, {
-            "uri" : "http://purl.org/dc/terms/hasPart",
+            "uri" : "http://purl.org/dc/terms/hasPart2",
             "name" : "hasPart",
             "uuid" : "Attribute-5973d4a2-fc73-4ed3-984d-498c8e666079"
           }, {
-            "uri" : "http://purl.org/dc/terms/title",
+            "uri" : "http://purl.org/dc/terms/title2",
             "name" : "title",
             "uuid" : "-4072354651565733000"
           } ],
@@ -157,7 +157,7 @@
         "name" : "sapi_-2",
         "attribute_path" : {
           "attributes" : [ {
-            "uri" : "http://purl.org/dc/terms/creator",
+            "uri" : "http://purl.org/dc/terms/creator2",
             "name" : "creator",
             "uuid" : "Attribute-5d6f045b-f3a4-4244-b5fb-4dd2f37f1f5d"
           }, {
@@ -173,7 +173,7 @@
         "name" : "sapi_-3",
         "attribute_path" : {
           "attributes" : [ {
-            "uri" : "http://purl.org/dc/terms/created",
+            "uri" : "http://purl.org/dc/terms/created2",
             "name" : "created",
             "uuid" : "-316094765520770048"
           } ],
@@ -182,7 +182,7 @@
         "uuid" : "-3"
       } ],
       "record_class" : {
-        "uri" : "http://purl.org/ontology/bibo/Document",
+        "uri" : "http://purl.org/ontology/bibo/Document2",
         "name" : "document",
         "uuid" : "Clasz-3f772842-4414-4b5c-9062-6f4256d05c57"
       },
@@ -225,15 +225,15 @@
         "name" : "sapi_-4",
         "attribute_path" : {
           "attributes" : [ {
-            "uri" : "http://purl.org/dc/terms/title",
+            "uri" : "http://purl.org/dc/terms/title2",
             "name" : "title",
             "uuid" : "-4072354651565733000"
           }, {
-            "uri" : "http://purl.org/dc/terms/hasPart",
+            "uri" : "http://purl.org/dc/terms/hasPart2",
             "name" : "hasPart",
             "uuid" : "Attribute-5973d4a2-fc73-4ed3-984d-498c8e666079"
           }, {
-            "uri" : "http://purl.org/dc/terms/title",
+            "uri" : "http://purl.org/dc/terms/title2",
             "name" : "title",
             "uuid" : "-4072354651565733000"
           } ],
@@ -245,7 +245,7 @@
         "name" : "sapi_-5",
         "attribute_path" : {
           "attributes" : [ {
-            "uri" : "http://purl.org/dc/terms/creator",
+            "uri" : "http://purl.org/dc/terms/creator2",
             "name" : "creator",
             "uuid" : "Attribute-5d6f045b-f3a4-4244-b5fb-4dd2f37f1f5d"
           }, {
@@ -261,7 +261,7 @@
         "name" : "sapi_-6",
         "attribute_path" : {
           "attributes" : [ {
-            "uri" : "http://purl.org/dc/terms/created",
+            "uri" : "http://purl.org/dc/terms/created2",
             "name" : "created",
             "uuid" : "-316094765520770048"
           } ],
@@ -270,7 +270,7 @@
         "uuid" : "-6"
       } ],
       "record_class" : {
-        "uri" : "http://purl.org/ontology/bibo/Document",
+        "uri" : "http://purl.org/ontology/bibo/Document2",
         "name" : "document",
         "uuid" : "Clasz-3f772842-4414-4b5c-9062-6f4256d05c57"
       },

@@ -367,6 +367,9 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 				case DataModelUtils.MABXML_DATA_MODEL_UUID:
 				case DataModelUtils.MARC21_DATA_MODEL_UUID:
 				case DataModelUtils.PNX_DATA_MODEL_UUID:
+				case DataModelUtils.OAI_PMH_DC_ELEMENTS_DATA_MODEL_UUID:
+				case DataModelUtils.OAI_PMH_DC_TERMS_DATA_MODEL_UUID:
+				case DataModelUtils.OAI_PMH_MARCXML_DATA_MODEL_UUID:
 
 					optionalOriginalDataModelType = Optional.of(DMPStatics.XML_DATA_TYPE);
 
@@ -396,6 +399,9 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 									case ConfigurationStatics.PNX_STORAGE_TYPE:
 									case ConfigurationStatics.MABXML_STORAGE_TYPE:
 									case ConfigurationStatics.MARCXML_STORAGE_TYPE:
+									case ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE:
+									case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
+									case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
 
 										optionalOriginalDataModelType = Optional.of(DMPStatics.XML_DATA_TYPE);
 
@@ -428,6 +434,8 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 			// send the request to graph DB
 			final WebTarget target = service().path("/xml/get");
 			responseFromGraph = target.request(MediaType.APPLICATION_XML_TYPE).post(Entity.entity(requestJsonString, MediaType.APPLICATION_JSON));
+
+			LOG.debug("request data from graph db with '{}' + '{}'", target.getUri(), serializeObject(requestJsonString));
 
 			return ExportUtils.processGraphDBXMLResponseInternal(responseFromGraph);
 		} else {
@@ -553,7 +561,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 			}
 
 			switch (storageType) {
-				case "schema":
+				case ConfigurationStatics.SCHEMA_STORAGE_TYPE:
 
 					// eventBusProvider.get().post(new XMLSchemaEvent(configuration, dataModel.getDataResource()));
 
@@ -573,6 +581,9 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 				case ConfigurationStatics.MABXML_STORAGE_TYPE:
 				case ConfigurationStatics.MARCXML_STORAGE_TYPE:
 				case ConfigurationStatics.PNX_STORAGE_TYPE:
+				case ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE:
+				case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
+				case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
 
 					// eventBusProvider.get().post(new XMLConverterEvent(dataModel));
 

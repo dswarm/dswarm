@@ -75,6 +75,9 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		final Schema pnxSchema = XMLSchemaParserTest.parsePNXSchema();
 		final Schema marc21Schema = XMLSchemaParserTest.parseMarc21Schema();
 		final Schema fincSolrSchema = SolrSchemaParserTest.parseFincSolrSchema();
+		final Schema oaipmhDCElementsSchema = XMLSchemaParserTest.parseOAIPMHPlusDCElementsSchema();
+		final Schema oaipmhDCTermsSchema = XMLSchemaParserTest.parseOAIPMHPlusDCTermsSchema();
+		final Schema oaipmhMARCXMLSchema = XMLSchemaParserTest.parseOAIPMHPlusMARCXMLSchema();
 
 		final String bibrmContractDM = "Internal Data Model ContractItem";
 		final String biboDocumentDM = "Internal Data Model BiboDocument";
@@ -84,6 +87,9 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		// [@tgaengler]: just prevention, but I guess that we also need a (default) data model for the foaf:Person schema (right now)
 		final String foafPersonDM = "Internal Data Model foafPerson";
 		final String fincSolrSchemaDM = "Internal Data Model finc Solr";
+		final String oaipmhDCElementsSchemaDM = "Internal Data Model OAI-PMH + DC Elements";
+		final String oaipmhDCTermsSchemaDM = "Internal Data Model OAI-PMH + DC Terms";
+		final String oaipmhMARCXMLSchemaDM = "Internal Data Model OAI-PNH + MARCXML";
 
 		final Schema foafPersonSchema = biboDocumentSchema.getAttributePathByURIPath(AttributeServiceTestUtils.DCTERMS_CREATOR).getSubSchema();
 
@@ -94,6 +100,10 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		createSchemaDataModel(DataModelUtils.MARC21_DATA_MODEL_UUID, marc21SchemaDM, marc21SchemaDM, marc21Schema);
 		createSchemaDataModel(DataModelUtils.FOAF_PERSON_DATA_MODEL_UUID, foafPersonDM, foafPersonDM, foafPersonSchema);
 		createSchemaDataModel(DataModelUtils.FINC_SOLR_DATA_MODEL_UUID, fincSolrSchemaDM, fincSolrSchemaDM, fincSolrSchema);
+		createSchemaDataModel(DataModelUtils.OAI_PMH_DC_ELEMENTS_DATA_MODEL_UUID, oaipmhDCElementsSchemaDM, oaipmhDCElementsSchemaDM,
+				oaipmhDCElementsSchema);
+		createSchemaDataModel(DataModelUtils.OAI_PMH_DC_TERMS_DATA_MODEL_UUID, oaipmhDCTermsSchemaDM, oaipmhDCTermsSchemaDM, oaipmhDCTermsSchema);
+		createSchemaDataModel(DataModelUtils.OAI_PMH_MARCXML_DATA_MODEL_UUID, oaipmhMARCXMLSchemaDM, oaipmhMARCXMLSchemaDM, oaipmhMARCXMLSchema);
 
 		final String sep = File.separator;
 
