@@ -54,9 +54,9 @@ import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
-public class TasksCsvResourceTest extends ResourceTest {
+public class TasksCsvResourceTest2 extends ResourceTest {
 
-	private static final Logger LOG = LoggerFactory.getLogger(TasksCsvResourceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TasksCsvResourceTest2.class);
 
 	private String taskJSONString;
 
@@ -66,7 +66,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	public TasksCsvResourceTest() {
+	public TasksCsvResourceTest2() {
 
 		super("tasks");
 	}
@@ -89,7 +89,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 	@Test
 	public void testTaskExecution() throws Exception {
 
-		TasksCsvResourceTest.LOG.debug("start task execution test");
+		TasksCsvResourceTest2.LOG.debug("start task execution test");
 
 		final String resourceFileName = "test_csv-controller.csv";
 
@@ -114,7 +114,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 			// fileType = Files.probeContentType(resourceFile.toPath());
 		} catch (final IOException e1) {
 
-			TasksCsvResourceTest.LOG.debug("couldn't determine file type from file '" + resourceFile.getAbsolutePath() + "'");
+			TasksCsvResourceTest2.LOG.debug("couldn't determine file type from file '" + resourceFile.getAbsolutePath() + "'");
 		}
 
 		if (fileType != null) {
@@ -211,7 +211,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 		final String finalTaskJSONString = objectMapper.writeValueAsString(taskJSON);
 
-		final Response response = target().queryParam("persist", Boolean.TRUE).request(MediaType.APPLICATION_JSON_TYPE)
+		final Response response = target().queryParam("persist", Boolean.TRUE).queryParam("atMost", 10).request(MediaType.APPLICATION_JSON_TYPE)
 				.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(finalTaskJSONString));
 
 		// SR Start checking response
@@ -222,14 +222,14 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
 
-		TasksCsvResourceTest.LOG.debug("task execution response = '" + responseString + "'");
+		TasksCsvResourceTest2.LOG.debug("task execution response = '" + responseString + "'");
 
-		final String expectedResultString = DMPPersistenceUtil.getResourceAsString("controller_task-result.csv.json");
+		final String expectedResultString = DMPPersistenceUtil.getResourceAsString("controller_task-result2.csv.json");
 
 		final ArrayNode expectedJSONArray = objectMapper.readValue(expectedResultString, ArrayNode.class);
 		final ArrayNode actualJSONArray = objectMapper.readValue(responseString, ArrayNode.class);
 
-		Assert.assertThat(expectedJSONArray.size(), Matchers.equalTo(actualJSONArray.size()));
+		Assert.assertThat(actualJSONArray.size(), Matchers.equalTo(expectedJSONArray.size()));
 
 		final Map<String, JsonNode> actualNodes = new HashMap<>(actualJSONArray.size());
 		for (final JsonNode node : actualJSONArray) {
@@ -281,7 +281,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 		Assert.assertNotNull("the data model schema record class shouldn't be null", schema.getRecordClass());
 
-		TasksCsvResourceTest.LOG.debug("end task execution test");
+		TasksCsvResourceTest2.LOG.debug("end task execution test");
 	}
 
 	private JsonNode getRecordData(final String recordData, final ArrayNode jsonArray, final String key) {

@@ -47,6 +47,7 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.dswarm.common.DMPStatics;
 import org.dswarm.graph.json.Resource;
 import org.dswarm.graph.json.util.Util;
 import org.dswarm.persistence.DMPPersistenceException;
@@ -224,7 +225,7 @@ public class InternalGDMGraphService implements InternalModelService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Optional<Map<String, Model>> getObjects(final String dataModelUuid, final Optional<Integer> atMost) throws DMPPersistenceException {
+	public Optional<Map<String, Model>> getObjects(final String dataModelUuid, final Optional<Integer> optionalAtMost) throws DMPPersistenceException {
 
 		if (dataModelUuid == null) {
 
@@ -238,7 +239,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		if (dataModel == null) {
 
-			InternalGDMGraphService.LOG.debug("couldn't find data model '" + dataModelUuid + "' to retrieve record class from");
+			InternalGDMGraphService.LOG.debug("couldn't find data model '{}' to retrieve record class from", dataModelUuid);
 
 			throw new DMPPersistenceException("couldn't find data model '" + dataModelUuid + "' to retrieve record class from");
 		}
@@ -247,7 +248,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		if (schema == null) {
 
-			InternalGDMGraphService.LOG.debug("couldn't find schema in data model '" + dataModelUuid + "'");
+			InternalGDMGraphService.LOG.debug("couldn't find schema in data model '{}'", dataModelUuid);
 
 			throw new DMPPersistenceException("couldn't find schema in data model '" + dataModelUuid + "'");
 		}
@@ -257,7 +258,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		if (recordClass == null) {
 
 			InternalGDMGraphService.LOG
-					.debug("couldn't find record class in schema '" + schema.getUuid() + "' of data model '" + dataModelUuid + "'");
+					.debug("couldn't find record class in schema '{}' of data model '{}'", schema.getUuid(), dataModelUuid);
 
 			throw new DMPPersistenceException(
 					"couldn't find record class in schema '" + schema.getUuid() + "' of data model '" + dataModelUuid + "'");
@@ -265,18 +266,18 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final String recordClassUri = recordClass.getUri();
 
-		final org.dswarm.graph.json.Model model = readGDMFromDB(recordClassUri, dataModelURI);
+		final org.dswarm.graph.json.Model model = readGDMFromDB(recordClassUri, dataModelURI, optionalAtMost);
 
 		if (model == null) {
 
-			InternalGDMGraphService.LOG.debug("couldn't find model for data model '" + dataModelUuid + "' in database");
+			InternalGDMGraphService.LOG.debug("couldn't find model for data model '{}' in database", dataModelUuid);
 
 			return Optional.absent();
 		}
 
 		if (model.size() <= 0) {
 
-			InternalGDMGraphService.LOG.debug("model is empty for data model '" + dataModelUuid + "' in database");
+			InternalGDMGraphService.LOG.debug("model is empty for data model '{}' in database", dataModelUuid);
 
 			return Optional.absent();
 		}
@@ -285,24 +286,14 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		if (recordResources == null || recordResources.isEmpty()) {
 
-			InternalGDMGraphService.LOG.debug("couldn't find records for record class'" + recordClassUri + "' in data model '" + dataModelUuid + "'");
+			InternalGDMGraphService.LOG.debug("couldn't find records for record class'{}' in data model '{}'", recordClassUri, dataModelUuid);
 
 			throw new DMPPersistenceException("couldn't find records for record class'" + recordClassUri + "' in data model '" + dataModelUuid + "'");
 		}
 
 		final Map<String, Model> modelMap = Maps.newLinkedHashMap();
 
-		int i = 0;
-
 		for (final Resource recordResource : recordResources) {
-
-			if (atMost.isPresent()) {
-
-				if (i >= atMost.get()) {
-
-					break;
-				}
-			}
 
 			final org.dswarm.graph.json.Model recordModel = new org.dswarm.graph.json.Model();
 			recordModel.addResource(recordResource);
@@ -310,8 +301,6 @@ public class InternalGDMGraphService implements InternalModelService {
 			final Model rdfModel = new GDMModel(recordModel, recordResource.getUri());
 
 			modelMap.put(recordResource.getUri(), rdfModel);
-
-			i++;
 		}
 
 		return Optional.of(modelMap);
@@ -659,15 +648,20 @@ public class InternalGDMGraphService implements InternalModelService {
 		}
 	}
 
-	private org.dswarm.graph.json.Model readGDMFromDB(final String recordClassUri, final String dataModelUri) throws DMPPersistenceException {
+	private org.dswarm.graph.json.Model readGDMFromDB(final String recordClassUri, final String dataModelUri, final Optional<Integer> optionalAtMost) throws DMPPersistenceException {
 
 		final WebTarget target = target("/get");
 
 		final ObjectMapper objectMapper = DMPPersistenceUtil.getJSONObjectMapper();
 		final ObjectNode requestJson = objectMapper.createObjectNode();
 
-		requestJson.put("record_class_uri", recordClassUri);
-		requestJson.put("data_model_uri", dataModelUri);
+		requestJson.put(DMPStatics.RECORD_CLASS_URI_IDENTIFIER, recordClassUri);
+		requestJson.put(DMPStatics.DATA_MODEL_URI_IDENTIFIER, dataModelUri);
+
+		if(optionalAtMost.isPresent()) {
+
+			requestJson.put(DMPStatics.AT_MOST_IDENTIFIER, optionalAtMost.get());
+		}
 
 		String requestJsonString;
 
