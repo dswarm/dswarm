@@ -124,6 +124,8 @@ public class TasksResource {
 	 * This endpoint executes the task that is given via its JSON representation and returns the result of the task execution.
 	 *
 	 * @param jsonObjectString a JSON representation of one task
+	 * @param persistResult    flag that indicates whether the result should be persisted in the datahub or not
+	 * @param atMost           the number of result records that should be returned at most
 	 * @return the result of the task execution
 	 * @throws IOException
 	 * @throws DMPConverterException
@@ -137,7 +139,8 @@ public class TasksResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response executeTask(@ApiParam(value = "task (as JSON)", required = true) final String jsonObjectString,
-			@ApiParam("perist result set") @QueryParam("persist") @DefaultValue(value = "false") final Boolean persistResult) throws IOException,
+			@ApiParam("persist result set") @QueryParam("persist") @DefaultValue(value = "false") final Boolean persistResult,
+			@ApiParam("number of result records limit") @QueryParam("atMost") final Integer atMost) throws IOException,
 			DMPConverterException, DMPControllerException {
 
 		final Task task;
@@ -196,7 +199,7 @@ public class TasksResource {
 
 		final TransformationFlow flow = TransformationFlow.fromTask(task, internalModelServiceFactoryProvider);
 
-		final Optional<Iterator<Tuple<String, JsonNode>>> inputData = dataModelUtil.getData(inputDataModel.getUuid());
+		final Optional<Iterator<Tuple<String, JsonNode>>> inputData = dataModelUtil.getData(inputDataModel.getUuid(), Optional.fromNullable(atMost));
 
 		if (!inputData.isPresent()) {
 

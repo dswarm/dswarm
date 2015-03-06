@@ -47,7 +47,6 @@ import org.slf4j.LoggerFactory;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.builder.Input;
 import org.xmlunit.diff.Diff;
-import org.xmlunit.diff.Difference;
 
 import org.dswarm.common.MediaTypeUtil;
 import org.dswarm.controller.resources.resource.test.utils.ConfigurationsResourceTestUtils;
