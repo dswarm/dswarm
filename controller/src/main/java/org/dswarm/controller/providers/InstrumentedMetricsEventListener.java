@@ -206,7 +206,7 @@ public class InstrumentedMetricsEventListener implements ApplicationEventListene
 		public void onEvent(final RequestEvent event) {
 			if (event.getType() == RequestEvent.Type.RESOURCE_METHOD_START) {
 				getDefinitionMethod(event)
-						.map(meters::get)
+						.flatMap(m -> Optional.ofNullable(meters.get(m)))
 						.ifPresent(Meter::mark);
 			}
 		}
