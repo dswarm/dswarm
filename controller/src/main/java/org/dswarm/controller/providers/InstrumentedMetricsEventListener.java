@@ -19,6 +19,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
@@ -33,7 +35,6 @@ import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.Metric;
 import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.SharedMetricRegistries;
 import com.codahale.metrics.Timer;
 import com.codahale.metrics.Timer.Context;
 import com.codahale.metrics.annotation.Metered;
@@ -41,6 +42,10 @@ import com.codahale.metrics.annotation.Timed;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import org.glassfish.jersey.server.ContainerRequest;
+import org.glassfish.jersey.server.ExtendedUriInfo;
+import org.glassfish.jersey.server.model.Invocable;
 import org.glassfish.jersey.server.model.Producing;
 import org.glassfish.jersey.server.model.Resource;
 import org.glassfish.jersey.server.model.ResourceMethod;
@@ -157,32 +162,35 @@ public class InstrumentedMetricsEventListener implements ApplicationEventListene
 
 	private static class TimerRequestEventListener implements RequestEventListener {
 		private final ImmutableMap<Method, Timer> timers;
-		private Context context;
+		private final Map<ContainerRequest, Context> contexts;
 
 		public TimerRequestEventListener(final ImmutableMap<Method, Timer> timers) {
 			this.timers = timers;
+			contexts = Maps.newHashMap();
 		}
 
 		@Override
 		public void onEvent(final RequestEvent event) {
+			final ContainerRequest containerRequest = event.getContainerRequest();
 			if (event.getType() == RequestEvent.Type.RESOURCE_METHOD_START) {
-				final Timer timer = timers.get(event.getUriInfo()
-								.getMatchedResourceMethod()
-								.getInvocable()
-								.getDefinitionMethod());
-				if (timer != null) {
-					context = timer.time();
-				}
+				getDefinitionMethod(event)
+						.flatMap(m -> Optional.ofNullable(timers.get(m)))
+						.ifPresent(timer -> {
+							final Context context = timer.time();
+							contexts.put(containerRequest, context);
+						});
 			} else if (event.getType() == RequestEvent.Type.RESOURCE_METHOD_FINISHED) {
-				if (context != null) {
-					context.close();
-					context = null;
-				}
+				Optional.ofNullable(contexts.get(containerRequest))
+						.ifPresent(context -> {
+							context.close();
+							contexts.remove(containerRequest, context);
+						});
 			} else if (event.getType() == RequestEvent.Type.ON_EXCEPTION) {
-				if (context != null) {
-					context.close();
-					context = null;
-				}
+				Optional.ofNullable(contexts.get(containerRequest))
+						.ifPresent(context -> {
+							context.close();
+							contexts.remove(containerRequest, context);
+						});
 			}
 		}
 	}
@@ -197,13 +205,18 @@ public class InstrumentedMetricsEventListener implements ApplicationEventListene
 		@Override
 		public void onEvent(final RequestEvent event) {
 			if (event.getType() == RequestEvent.Type.RESOURCE_METHOD_START) {
-				final Meter meter = meters.get(event.getUriInfo()
-						.getMatchedResourceMethod().getInvocable().getDefinitionMethod());
-				if (meter != null) {
-					meter.mark();
-				}
+				getDefinitionMethod(event)
+						.flatMap(m -> Optional.ofNullable(meters.get(m)))
+						.ifPresent(Meter::mark);
 			}
 		}
+	}
+
+	private static Optional<Method> getDefinitionMethod(final RequestEvent event) {
+		return Optional.ofNullable(event.getUriInfo())
+				.map(ExtendedUriInfo::getMatchedResourceMethod)
+				.map(ResourceMethod::getInvocable)
+				.map(Invocable::getDefinitionMethod);
 	}
 
 	private static class ChainedRequestEventListener implements RequestEventListener {
