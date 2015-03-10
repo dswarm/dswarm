@@ -41,7 +41,7 @@
 		<version.lambdaj>2.4</version.lambdaj>
 		<!--<version.maven.plugin.hibernate>1.0.5</version.maven.plugin.hibernate>-->
 		<version.mysql-connector-java>5.1.34</version.mysql-connector-java>
-		<version.eclipselink>2.6.0-RC1</version.eclipselink>
+		<version.eclipselink>2.6.0-RC2</version.eclipselink>
 	</properties>
 
 	<repositories>
