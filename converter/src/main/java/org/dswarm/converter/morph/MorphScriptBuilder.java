@@ -62,21 +62,11 @@ import java.util.Map.Entry;
  * @author niederl
  * @author tgaengler
  */
-public class MorphScriptBuilder {
+public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBuilder> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(MorphScriptBuilder.class);
 
 	private static final String MAPPING_PREFIX = "mapping";
-
-	private static final DocumentBuilderFactory DOC_FACTORY = DocumentBuilderFactory.newInstance();
-
-	private static final String SCHEMA_PATH = "schemata/metamorph.xsd";
-
-	private static final String METAMORPH_ELEMENT_META_INFORMATION = "meta";
-
-	private static final String METAMORPH_ELEMENT_RULESET = "rules";
-
-	private static final String METAMORPH_ELEMENT_MAP_CONTAINER = "maps";
 
 	private static final String METAMORPH_ELEMENT_SINGLE_MAP = "map";
 
@@ -118,10 +108,6 @@ public class MorphScriptBuilder {
 
 	private static final String METAMORPH_MAP_NAME = "name";
 
-	private static final TransformerFactory TRANSFORMER_FACTORY;
-
-	private static final String TRANSFORMER_FACTORY_CLASS = "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl";
-
 	private static final String INPUT_VARIABLE_IDENTIFIER = "inputString";
 
 	private static final String OUTPUT_VARIABLE_PREFIX_IDENTIFIER = "__TRANSFORMATION_OUTPUT_VARIABLE__";
@@ -134,134 +120,10 @@ public class MorphScriptBuilder {
 
 	private static final String LOOKUP_MAP_DEFINITION = "lookupString";
 
-	static {
-		System.setProperty("javax.xml.transform.TransformerFactory", MorphScriptBuilder.TRANSFORMER_FACTORY_CLASS);
-		TRANSFORMER_FACTORY = TransformerFactory.newInstance();
-		MorphScriptBuilder.TRANSFORMER_FACTORY.setAttribute("indent-number", 4);
-
-		final URL resource = Resources.getResource(MorphScriptBuilder.SCHEMA_PATH);
-		final CharSource inputStreamInputSupplier = Resources.asCharSource(resource, Charsets.UTF_8);
-
-		try (final Reader schemaStream = inputStreamInputSupplier.openStream()) {
-
-			// final StreamSource SCHEMA_SOURCE = new StreamSource(schemaStream);
-			final SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			Schema schema = null;
-
-			try {
-
-				// TODO: dummy schema right now, since it couldn't parse the metamorph schema for some reason
-				schema = sf.newSchema();
-			} catch (final SAXException e) {
-
-				e.printStackTrace();
-			}
-
-			if (schema == null) {
-
-				MorphScriptBuilder.LOG.error("couldn't parse schema");
-			}
-
-			MorphScriptBuilder.DOC_FACTORY.setSchema(schema);
-
-		} catch (final IOException e1) {
-			MorphScriptBuilder.LOG.error("couldn't read schema resource", e1);
-		}
-	}
-
-	private Document doc;
-
-	public String render(final boolean indent, final Charset encoding) {
-		final String defaultEncoding = encoding.name();
-		final Transformer transformer;
-		try {
-			transformer = MorphScriptBuilder.TRANSFORMER_FACTORY.newTransformer();
-		} catch (final TransformerConfigurationException e) {
-			e.printStackTrace();
-			return null;
-		}
-
-		transformer.setOutputProperty(OutputKeys.INDENT, indent ? "yes" : "no");
-
-		transformer.setOutputProperty(OutputKeys.ENCODING, defaultEncoding);
-
-		final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-
-		final StreamResult result;
-		try {
-			result = new StreamResult(new OutputStreamWriter(stream, defaultEncoding));
-		} catch (final UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return null;
-		}
-
-		try {
-			transformer.transform(new DOMSource(doc), result);
-		} catch (final TransformerException e) {
-			e.printStackTrace();
-			return null;
-		}
-
-		try {
-			return stream.toString(defaultEncoding);
-		} catch (final UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public String render(final boolean indent) {
-		return render(indent, Charset.forName("UTF-8"));
-	}
-
 	@Override
-	public String toString() {
-		return render(true);
-	}
-
-	public File toFile() throws IOException {
-		final String str = render(false);
-
-		final File file = File.createTempFile("avgl_dmp", ".tmp");
-
-		final BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-		bw.write(str);
-		bw.close();
-
-		return file;
-	}
-
 	public MorphScriptBuilder apply(final Task task) throws DMPConverterException {
 
-		final DocumentBuilder docBuilder;
-		try {
-			docBuilder = MorphScriptBuilder.DOC_FACTORY.newDocumentBuilder();
-		} catch (final ParserConfigurationException e) {
-			throw new DMPConverterException(e.getMessage());
-		}
-
-		doc = docBuilder.newDocument();
-		doc.setXmlVersion("1.1");
-
-		final Element rootElement = doc.createElement("metamorph");
-		rootElement.setAttribute("xmlns", "http://www.culturegraph.org/metamorph");
-		rootElement.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-		rootElement.setAttribute("xsi:schemaLocation", "http://www.culturegraph.org/metamorph metamorph.xsd");
-		rootElement.setAttribute("entityMarker", DMPStatics.ATTRIBUTE_DELIMITER.toString());
-		rootElement.setAttribute("version", "1");
-		doc.appendChild(rootElement);
-
-		final Element meta = doc.createElement(METAMORPH_ELEMENT_META_INFORMATION);
-		rootElement.appendChild(meta);
-
-		final Element metaName = doc.createElement("name");
-		meta.appendChild(metaName);
-
-		final Element rules = doc.createElement(METAMORPH_ELEMENT_RULESET);
-		rootElement.appendChild(rules);
-
-		final Element maps = doc.createElement(METAMORPH_ELEMENT_MAP_CONTAINER);
-		rootElement.appendChild(maps);
+		super.apply(task);
 
 		final List<String> metas = Lists.newArrayList();
 
