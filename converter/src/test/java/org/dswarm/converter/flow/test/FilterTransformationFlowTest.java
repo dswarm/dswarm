@@ -68,6 +68,19 @@ public class FilterTransformationFlowTest extends GuicedTest {
 		testFilter("test-mabxml.tuples.3.json", Optional.of("skipfiltermorph1.xml"), "transformationmorph1.xml", "skipfilter.morph.result.1.json");
 	}
 
+	/**
+	 * takes only the records where the value from field where feld->nr = 076 + feld->ind = v is 5
+	 * in the transformation only the value from field where feld->nr = 076 + feld->ind = k will be selected
+	 * note: source has also a record with field with a value = 5 but where the other conditions don't match
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testFilterEndToEndWithOneResultSF2() throws Exception {
+
+		testFilter("test-mabxml.tuples.3.2.json", Optional.of("skipfiltermorph1.2.xml"), "transformationmorph1.xml", "skipfilter.morph.result.1.json");
+	}
+
 	@Test
 	public void testFilterEndToEndWithMultipleResults() throws Exception {
 

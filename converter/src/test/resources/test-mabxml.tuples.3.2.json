@@ -1079,7 +1079,7 @@
     }, {
       "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "b"
     }, {
-      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "9"
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "5"
     } ], [ {
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
     }, {
