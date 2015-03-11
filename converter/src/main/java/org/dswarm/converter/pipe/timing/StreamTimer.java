@@ -43,7 +43,7 @@ public final class StreamTimer extends TimerBased<StreamReceiver> implements Str
 
 	@Override
 	public void startRecord(final String identifier) {
-		final TimingContext context = startMeasurement(identifier);
+		final TimingContext context = startMeasurement("records");
 		recordContexts.offerLast(context);
 		getReceiver().startRecord(identifier);
 	}
@@ -59,7 +59,7 @@ public final class StreamTimer extends TimerBased<StreamReceiver> implements Str
 
 	@Override
 	public void startEntity(final String name) {
-		final TimingContext context = startMeasurement(name);
+		final TimingContext context = startMeasurement("entities");
 		entityContexts.offerLast(context);
 		getReceiver().startEntity(name);
 	}
@@ -75,8 +75,8 @@ public final class StreamTimer extends TimerBased<StreamReceiver> implements Str
 
 	@Override
 	public void literal(final String name, final String value) {
-		final TimingContext context = startMeasurement(name);
 		getReceiver().literal(name, value);
 		context.stop();
+		final TimingContext context = startMeasurement("literals");
 	}
 }
