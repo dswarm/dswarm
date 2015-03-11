@@ -182,6 +182,12 @@ public class FilterTransformationFlowTest extends GuicedTest {
 	}
 
 	@Test
+	public void testFilterAndSelectingValueIsOnAnotherHierarchy2SF() throws Exception {
+
+		testFilter("ralfs_mabxml.tuples.json", Optional.of("skipfiltermorph3.xml"), "filtermorph7.xml", "test-ralfs_mabxml.filter.result.7.1.json");
+	}
+
+	@Test
 	public void testFilterAndSelectingValueIsOnAnotherHierarchyAndSelectingSpecificIndex() throws Exception {
 
 		testFilter("ralfs_mabxml.tuples.json", Optional.<String>empty(), "filtermorph6.xml", "test-ralfs_mabxml.filter.result.6.json");
