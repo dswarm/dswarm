@@ -81,11 +81,12 @@ public final class LoggingConfigurator {
 		final Level level = Level.toLevel(logLevel, Level.INFO);
 		final Level rootLevel = Level.toLevel(rootLogLevel, Level.INFO);
 		configureLogback(loggingPath, lc, level, rootLevel);
+		lc.start();
 	}
 
 	private static void configureLogback(final String loggingPath, final LoggerContext lc, final Level logLevel, final Level rootLogLevel) {
-		configureDswarmLogger(loggingPath, lc, logLevel);
 		configureRootLogger(loggingPath, lc, rootLogLevel);
+		configureDswarmLogger(loggingPath, lc, logLevel);
 		configureMonitoringLogger(loggingPath, lc);
 	}
 
@@ -95,43 +96,30 @@ public final class LoggingConfigurator {
 
 		LoggingAppender.of(lc)
 				.withBasePath(loggingPath).addPath("dmp")
-				.withName("FAT")
-				.withLevel(Level.TRACE)
-				.appendTo(logger)
-				.withName("FAD")
-				.withLevel(Level.DEBUG)
-				.appendTo(logger)
-				.withName("FAI")
-				.withLevel(Level.INFO)
-				.appendTo(logger)
-				.withName("FAW")
-				.withLevel(Level.WARN)
-				.appendTo(logger)
-				.withName("FAE")
-				.withLevel(Level.ERROR)
-				.appendTo(logger);
+				.withName("FAT").withLevel(Level.TRACE).appendTo(logger)
+				.withName("FAD").withLevel(Level.DEBUG).appendTo(logger)
+				.withName("FAI").withLevel(Level.INFO).appendTo(logger)
+				.withName("FAW").withLevel(Level.WARN).appendTo(logger)
+				.withName("FAE").withLevel(Level.ERROR).appendTo(logger);
 	}
 
 	private static void configureRootLogger(final String loggingPath, final LoggerContext lc, final Level logLevel) {
 		final Logger logger = lc.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
+		final Logger orgLogger = lc.getLogger("org");
 		logger.setLevel(logLevel);
+		orgLogger.setLevel(logLevel);
 
 		LoggingAppender.of(lc)
 				.withBasePath(loggingPath).addPath("default")
 				.withName("RootLogger")
-				.withLevel(Level.DEBUG)
-				.appendTo(logger)
-				.withLevel(Level.INFO)
-				.appendTo(logger)
-				.withLevel(Level.WARN)
-				.appendTo(logger)
-				.withLevel(Level.ERROR)
-				.appendTo(logger);
+				.withLevel(Level.DEBUG).appendTo(logger).appendTo(orgLogger)
+				.withLevel(Level.INFO).appendTo(logger).appendTo(orgLogger)
+				.withLevel(Level.WARN).appendTo(logger).appendTo(orgLogger)
+				.withLevel(Level.ERROR).appendTo(logger).appendTo(orgLogger);
 	}
 
 	private static void configureMonitoringLogger(final String loggingPath, final LoggerContext lc) {
 		final Logger logger = lc.getLogger(Monitoring.LOGGER_NAME);
-		logger.detachAndStopAllAppenders();
 		logger.setLevel(Level.INFO);
 
 		LoggingAppender.of(lc)
@@ -139,7 +127,7 @@ public final class LoggingConfigurator {
 				.withName("Monitoring")
 				.withLevel(Level.INFO)
 				.appendTo(logger)
-				.withMarkerFilter("EXECUTION")
+				.withMarker("EXECUTION")
 				.withName("Execution")
 				.withLogFileBaseName("executions")
 				.appendTo(logger);

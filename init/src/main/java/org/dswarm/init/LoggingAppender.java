@@ -47,18 +47,22 @@ final class LoggingAppender {
 	private final String logFileBaseName;
 	private final String name;
 	private final Level level;
-	private final Optional<Filter<ILoggingEvent>> filter;
+	private final Optional<String> marker;
 	private final int maxFileSizeInMB;
 	private final int maxHistory;
 
-	private LoggingAppender(final Context context, final String basePath, final List<String> extraPaths, final String logFileBaseName, final String name, final Level level, final Optional<Filter<ILoggingEvent>> filter, final int maxFileSizeInMB, final int maxHistory) {
+	private LoggingAppender(
+			final Context context, final String basePath,
+			final List<String> extraPaths, final String logFileBaseName,
+			final String name, final Level level, final Optional<String> marker,
+			final int maxFileSizeInMB, final int maxHistory) {
 		this.context = context;
 		this.basePath = basePath;
 		this.extraPaths = extraPaths;
 		this.logFileBaseName = logFileBaseName;
 		this.name = name;
 		this.level = level;
-		this.filter = filter;
+		this.marker = marker;
 		this.maxFileSizeInMB = maxFileSizeInMB;
 		this.maxHistory = maxHistory;
 	}
@@ -76,7 +80,7 @@ final class LoggingAppender {
 				.withMaxFileSizeInMB(prototype.maxFileSizeInMB)
 				.withMaxHistory(prototype.maxHistory);
 		prototype.extraPaths.forEach(builder::addPath);
-		return prototype.filter.map(builder::withFilter).orElse(builder);
+		return prototype.marker.map(builder::withMarker).orElse(builder);
 	}
 
 	private String filePath(final String suffix) {
@@ -122,6 +126,20 @@ final class LoggingAppender {
 		return filter;
 	}
 
+	private Filter<ILoggingEvent> markerFilter(final String marker) {
+		final OnMarkerEvaluator markerEvaluator = new OnMarkerEvaluator();
+		markerEvaluator.setContext(context);
+		markerEvaluator.addMarker(marker);
+		markerEvaluator.start();
+
+		final EvaluatorFilter<ILoggingEvent> filter = new EvaluatorFilter<>();
+		filter.setContext(context);
+		filter.setEvaluator(markerEvaluator);
+		filter.start();
+
+		return filter;
+	}
+
 	private RollingFileAppender<ILoggingEvent> rollingAppender() {
 		final RollingFileAppender<ILoggingEvent> fileAppender = new RollingFileAppender<>();
 		fileAppender.setContext(context);
@@ -138,8 +156,7 @@ final class LoggingAppender {
 		rollingPolicy.setParent(fileAppender);
 		fileAppender.setRollingPolicy(rollingPolicy);
 		fileAppender.addFilter(levelFilter());
-		filter.ifPresent(fileAppender::addFilter);
-		filter.ifPresent(Filter::start);
+		marker.map(this::markerFilter).ifPresent(fileAppender::addFilter);
 		fileAppender.setEncoder(encoder());
 		rollingPolicy.start();
 		fileAppender.start();
@@ -163,7 +180,7 @@ final class LoggingAppender {
 		private String name;
 		private String logFileBaseName = "messages";
 		private Level level = Level.INFO;
-		private Optional<Filter<ILoggingEvent>> filter = Optional.empty();
+		private Optional<String> marker = Optional.empty();
 		private int maxFileSizeInMB = 50;
 		private int maxHistory = 30;
 
@@ -171,63 +188,58 @@ final class LoggingAppender {
 			this.context = context;
 		}
 
-		public Builder withBasePath(final String basePath) {
+		Builder withBasePath(final String basePath) {
 			this.basePath = basePath;
 			return this;
 		}
 
-		public Builder addPath(final String path) {
+		Builder addPath(final String path) {
 			addPaths.add(path);
 			return this;
 		}
 
-		public Builder withLogFileBaseName(final String logFileBaseName) {
+		Builder withLogFileBaseName(final String logFileBaseName) {
 			this.logFileBaseName = logFileBaseName;
 			return this;
 		}
 
-		public Builder withName(final String name) {
+		Builder withName(final String name) {
 			this.name = name;
 			return this;
 		}
 
-		public Builder withLevel(final Level level) {
+		Builder withLevel(final Level level) {
 			this.level = level;
 			return this;
 		}
 
-		public Builder withFilter(final Filter<ILoggingEvent> filter) {
-			this.filter = Optional.of(filter);
+		Builder withMarker(final String marker) {
+			this.marker = Optional.of(marker);
 			return this;
 		}
 
-		public Builder withMarkerFilter(final String marker) {
-			final OnMarkerEvaluator markerEvaluator = new OnMarkerEvaluator();
-			markerEvaluator.addMarker(marker);
-
-			final EvaluatorFilter<ILoggingEvent> filter = new EvaluatorFilter<>();
-			filter.setEvaluator(markerEvaluator);
-
-			return withFilter(filter);
+		Builder withOutMarker() {
+			this.marker = Optional.empty();
+			return this;
 		}
 
-		public Builder withMaxFileSizeInMB(final int maxFileSizeInMB) {
+		Builder withMaxFileSizeInMB(final int maxFileSizeInMB) {
 			this.maxFileSizeInMB = maxFileSizeInMB;
 			return this;
 		}
 
-		public Builder withMaxHistory(final int maxHistory) {
+		Builder withMaxHistory(final int maxHistory) {
 			this.maxHistory = maxHistory;
 			return this;
 		}
 
-		public LoggingAppender build() {
+		LoggingAppender build() {
 			return new LoggingAppender(
 					context, basePath, addPaths.build(), logFileBaseName,
-					name, level, filter, maxFileSizeInMB, maxHistory);
+					name, level, marker, maxFileSizeInMB, maxHistory);
 		}
 
-		public Builder appendTo(final AppenderAttachable<ILoggingEvent> logger) {
+		Builder appendTo(final AppenderAttachable<ILoggingEvent> logger) {
 			return build().appendTo(logger).copy();
 		}
 	}
