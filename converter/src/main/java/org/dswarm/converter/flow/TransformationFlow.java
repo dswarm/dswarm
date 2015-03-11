@@ -24,6 +24,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer;
+import com.codahale.metrics.Timer.Context;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -54,12 +57,15 @@ import org.dswarm.converter.DMPMorphDefException;
 import org.dswarm.converter.mf.stream.GDMEncoder;
 import org.dswarm.converter.mf.stream.GDMModelReceiver;
 import org.dswarm.converter.mf.stream.reader.JsonNodeReader;
-import org.dswarm.converter.pipe.StreamJsonCollapser;
 import org.dswarm.converter.pipe.StreamUnflattener;
+import org.dswarm.converter.pipe.timing.ObjectTimer;
+import org.dswarm.converter.pipe.timing.StreamTimer;
+import org.dswarm.converter.pipe.timing.TimerBasedFactory;
 import org.dswarm.graph.json.Model;
 import org.dswarm.graph.json.Predicate;
 import org.dswarm.graph.json.Resource;
 import org.dswarm.graph.json.ResourceNode;
+import org.dswarm.init.Monitoring;
 import org.dswarm.init.util.DMPStatics;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
@@ -84,28 +90,41 @@ public class TransformationFlow {
 	private static final Logger LOG               = LoggerFactory.getLogger(TransformationFlow.class);
 	private static final String BIBO_DOCUMENT_URI = "http://purl.org/ontology/bibo/Document";
 
-	private final Optional<Filter> optionalSkipFilter;
-
 	private final Metamorph transformer;
 
 	private final String script;
+
+	private final Optional<Filter> optionalSkipFilter;
 
 	private final Optional<DataModel> outputDataModel;
 
 	private final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider;
 
+	private final TimerBasedFactory timerBasedFactory;
+
+	private final Timer morphTimer;
+
+	private final Timer gdmTimer;
+
+
 	@Inject
 	private TransformationFlow(
 			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg,
+			@Monitoring final MetricRegistry registry,
+			final TimerBasedFactory timerBasedFactory,
 			@Assisted final Metamorph transformer,
 			@Assisted final String scriptArg,
 			@Assisted final Optional<DataModel> outputDataModelArg,
 			@Assisted final Optional<Filter> optionalSkipFilterArg) {
+		this.timerBasedFactory = timerBasedFactory;
 		this.transformer = transformer;
 		script = scriptArg == null ? "" : scriptArg;
 		outputDataModel = outputDataModelArg;
 		optionalSkipFilter = optionalSkipFilterArg;
 		internalModelServiceFactoryProvider = internalModelServiceFactoryProviderArg;
+
+		morphTimer = registry.timer("metamorph");
+		gdmTimer = registry.timer("gdm-transformer");
 	}
 
 	public String getScript() {
@@ -171,31 +190,37 @@ public class TransformationFlow {
 			final ObjectPipe<Iterator<Tuple<String, JsonNode>>, StreamReceiver> opener,
 			final boolean writeResultToDatahub) throws DMPConverterException {
 
+		final Context morphContext = morphTimer.time();
+
 		// final String recordDummy = "record";
 
+		final StreamTimer inputTimer = timerBasedFactory.forStream("stream-input");
+		final ObjectTimer gdmModelsTimer = timerBasedFactory.forObject("gdm-models");
 		final StreamUnflattener unflattener = new StreamUnflattener("", DMPStatics.ATTRIBUTE_DELIMITER);
-		final StreamJsonCollapser collapser = new StreamJsonCollapser();
+//		final StreamJsonCollapser collapser = new StreamJsonCollapser();
 		final GDMEncoder converter = new GDMEncoder(outputDataModel);
 		final GDMModelReceiver writer = new GDMModelReceiver();
 
 		final StreamPipe<StreamReceiver> starter;
 		if(optionalSkipFilter.isPresent()) {
 
-			// skip filter + transformation morph script
+			// skip filter + input timer
 			starter = opener
 					.setReceiver(optionalSkipFilter.get())
-					.setReceiver(transformer);
+					.setReceiver(inputTimer);
 
 		} else {
 
-			// transformation morph script
-			starter = opener
-					.setReceiver(transformer);
+			// input timer
+			starter = opener.setReceiver(inputTimer);
 		}
 
 		starter
+				.setReceiver(transformer)
+				.setReceiver(transformer)
 				.setReceiver(unflattener)
 				.setReceiver(converter)
+				.setReceiver(gdmModelsTimer)
 				.setReceiver(writer);
 
 		opener.process(tuples);
@@ -203,6 +228,9 @@ public class TransformationFlow {
 		// objectReceiver.closeStream();
 
 		// return stringWriter.toString();
+
+		morphContext.stop();
+		final Context gdmContext = gdmTimer.time();
 
 		final ImmutableList<GDMModel> gdmModels = writer.getCollection();
 
@@ -343,6 +371,8 @@ public class TransformationFlow {
 
 			throw new DMPConverterException(message, e);
 		}
+
+		gdmContext.stop();
 
 		return resultString;
 	}
