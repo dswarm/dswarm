@@ -130,8 +130,20 @@ public class FilterTransformationFlowTest extends GuicedTest {
 	@Test
 	public void testFilterEndToEndWithMultipleResultsAndRepeatableElementsSF() throws Exception {
 
-		testFilter("test-mabxml.tuples.5.json", Optional.of("skipfiltermorph3.xml"), "transformationmorph3.xml",
+		testFilter("test-mabxml.tuples.5.json", Optional.of("skipfiltermorph2.xml"), "transformationmorph3.xml",
 				"test-mabxml.filter.result.3.1.json");
+	}
+
+	/**
+	 * selects the 2nd value
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testFilterEndToEndWithMultipleResultsAndRepeatableElementsSF2() throws Exception {
+
+		testFilter("test-mabxml.tuples.5.json", Optional.of("skipfiltermorph2.xml"), "transformationmorph3.1.xml",
+				"test-mabxml.filter.result.3.2.json");
 	}
 
 	@Test
@@ -140,6 +152,11 @@ public class FilterTransformationFlowTest extends GuicedTest {
 		testFilter("test-mabxml.tuples.json", Optional.<String>empty(), "filtermorph4.xml", "test-mabxml.filter.result.4.json");
 	}
 
+	/**
+	 * ... of all occurences, i.e., the values could be part of different fields, e.g., as it is the case in the 4th record (there the first field contains only one value)
+	 *
+	 * @throws Exception
+	 */
 	@Test
 	public void testFilterEndToEndWithMultipleResultsAndSelectingSpecificIndexSF() throws Exception {
 
@@ -150,6 +167,12 @@ public class FilterTransformationFlowTest extends GuicedTest {
 	public void testFilterAndSelectingValueIsOnAnotherHierarchy() throws Exception {
 
 		testFilter("ralfs_mabxml.tuples.json", Optional.<String>empty(), "filtermorph5.xml", "test-ralfs_mabxml.filter.result.5.json");
+	}
+
+	@Test
+	public void testFilterAndSelectingValueIsOnAnotherHierarchySF() throws Exception {
+
+		testFilter("ralfs_mabxml.tuples.json", Optional.of("skipfiltermorph3.xml"), "filtermorph5.xml", "test-ralfs_mabxml.filter.result.5.1.json");
 	}
 
 	@Test
