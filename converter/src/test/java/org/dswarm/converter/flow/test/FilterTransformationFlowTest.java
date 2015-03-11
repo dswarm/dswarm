@@ -39,132 +39,48 @@ public class FilterTransformationFlowTest extends GuicedTest {
 	@Test
 	public void testFilterEndToEndWithOneResult() throws Exception {
 
-		final String expected = DMPPersistenceUtil.getResourceAsString("test-mabxml.filter.result.json");
-
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
-				.getProvider(InternalModelServiceFactory.class);
-
-		final TransformationFlow flow = TransformationFlow.fromFile("filtermorph.xml", internalModelServiceFactoryProvider);
-
-		final String actual = flow.applyResource("test-mabxml.tuples.json");
-
-		final ArrayNode expectedJson = replaceKeyWithActualKey(expected, actual);
-		final String finalExpected = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(expectedJson);
-
-		Assert.assertEquals(finalExpected, actual);
+		testFilter("test-mabxml.tuples.json", "filtermorph.xml", "test-mabxml.filter.result.json");
 	}
 
 	@Test
 	public void testFilterEndToEndWithMultipleResults() throws Exception {
 
-		final String expected = DMPPersistenceUtil.getResourceAsString("test-mabxml.filter.result.2.json");
-
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
-				.getProvider(InternalModelServiceFactory.class);
-
-		final TransformationFlow flow = TransformationFlow.fromFile("filtermorph2.xml", internalModelServiceFactoryProvider);
-
-		final String actual = flow.applyResource("test-mabxml.tuples.2.json");
-
-		final ArrayNode expectedJson = replaceKeyWithActualKey(expected, actual);
-		final String finalExpected = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(expectedJson);
-
-		Assert.assertEquals(finalExpected, actual);
+		testFilter("test-mabxml.tuples.2.json", "filtermorph2.xml", "test-mabxml.filter.result.2.json");
 	}
 
 	/**
 	 * selects the 2nd value of the 2nd match
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testFilterEndToEndWithMultipleResultsAndRepeatableElements() throws Exception {
 
-		final String expected = DMPPersistenceUtil.getResourceAsString("test-mabxml.filter.result.3.json");
-
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
-				.getProvider(InternalModelServiceFactory.class);
-
-		final TransformationFlow flow = TransformationFlow.fromFile("filtermorph3.xml", internalModelServiceFactoryProvider);
-
-		final String actual = flow.applyResource("test-mabxml.tuples.json");
-
-		final ArrayNode expectedJson = replaceKeyWithActualKey(expected, actual);
-		final String finalExpected = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(expectedJson);
-
-		Assert.assertEquals(finalExpected, actual);
+		testFilter("test-mabxml.tuples.json", "filtermorph3.xml", "test-mabxml.filter.result.3.json");
 	}
 
 	@Test
 	public void testFilterEndToEndWithMultipleResultsAndSelectingSpecificIndex() throws Exception {
 
-		final String expected = DMPPersistenceUtil.getResourceAsString("test-mabxml.filter.result.4.json");
-
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
-				.getProvider(InternalModelServiceFactory.class);
-
-		final TransformationFlow flow = TransformationFlow.fromFile("filtermorph4.xml", internalModelServiceFactoryProvider);
-
-		final String actual = flow.applyResource("test-mabxml.tuples.json");
-
-		final ArrayNode expectedJson = replaceKeyWithActualKey(expected, actual);
-		final String finalExpected = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(expectedJson);
-
-		Assert.assertEquals(finalExpected, actual);
+		testFilter("test-mabxml.tuples.json", "filtermorph4.xml", "test-mabxml.filter.result.4.json");
 	}
 
 	@Test
 	public void testFilterAndSelectingValueIsOnAnotherHierarchy() throws Exception {
 
-		final String expected = DMPPersistenceUtil.getResourceAsString("test-ralfs_mabxml.filter.result.5.json");
-
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
-				.getProvider(InternalModelServiceFactory.class);
-
-		final TransformationFlow flow = TransformationFlow.fromFile("filtermorph5.xml", internalModelServiceFactoryProvider);
-
-		final String actual = flow.applyResource("ralfs_mabxml.tuples.json");
-
-		final ArrayNode expectedJson = replaceKeyWithActualKey(expected, actual);
-		final String finalExpected = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(expectedJson);
-
-		Assert.assertEquals(finalExpected, actual);
+		testFilter("ralfs_mabxml.tuples.json", "filtermorph5.xml", "test-ralfs_mabxml.filter.result.5.json");
 	}
 
 	@Test
 	public void testFilterAndSelectingValueIsOnAnotherHierarchy2() throws Exception {
 
-		final String expected = DMPPersistenceUtil.getResourceAsString("test-ralfs_mabxml.filter.result.7.json");
-
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
-				.getProvider(InternalModelServiceFactory.class);
-
-		final TransformationFlow flow = TransformationFlow.fromFile("filtermorph7.xml", internalModelServiceFactoryProvider);
-
-		final String actual = flow.applyResource("ralfs_mabxml.tuples.json");
-
-		final ArrayNode expectedJson = replaceKeyWithActualKey(expected, actual);
-		final String finalExpected = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(expectedJson);
-
-		Assert.assertEquals(finalExpected, actual);
+		testFilter("ralfs_mabxml.tuples.json", "filtermorph7.xml", "test-ralfs_mabxml.filter.result.7.json");
 	}
 
 	@Test
 	public void testFilterAndSelectingValueIsOnAnotherHierarchyAndSelectingSpecificIndex() throws Exception {
 
-		final String expected = DMPPersistenceUtil.getResourceAsString("test-ralfs_mabxml.filter.result.6.json");
-
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
-				.getProvider(InternalModelServiceFactory.class);
-
-		final TransformationFlow flow = TransformationFlow.fromFile("filtermorph6.xml", internalModelServiceFactoryProvider);
-
-		final String actual = flow.applyResource("ralfs_mabxml.tuples.json");
-
-		final ArrayNode expectedJson = replaceKeyWithActualKey(expected, actual);
-		final String finalExpected = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(expectedJson);
-
-		Assert.assertEquals(finalExpected, actual);
+		testFilter("ralfs_mabxml.tuples.json", "filtermorph6.xml", "test-ralfs_mabxml.filter.result.6.json");
 	}
 
 	@Test
@@ -197,6 +113,24 @@ public class FilterTransformationFlowTest extends GuicedTest {
 		final String finalExpected = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(cleanedExpectedJson);
 
 		Assert.assertEquals(finalExpected, finalActual);
+	}
+
+	private void testFilter(final String inputTuplesFileName, final String transformationMorphScriptFileName, final String resultFileName)
+			throws Exception {
+
+		final String expected = DMPPersistenceUtil.getResourceAsString(resultFileName);
+
+		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
+				.getProvider(InternalModelServiceFactory.class);
+
+		final TransformationFlow flow = TransformationFlow.fromFile(transformationMorphScriptFileName, internalModelServiceFactoryProvider);
+
+		final String actual = flow.applyResource(inputTuplesFileName);
+
+		final ArrayNode expectedJson = replaceKeyWithActualKey(expected, actual);
+		final String finalExpected = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(expectedJson);
+
+		Assert.assertEquals(finalExpected, actual);
 	}
 
 	private ArrayNode replaceKeyWithActualKey(final String expected, final String actual) throws IOException {
