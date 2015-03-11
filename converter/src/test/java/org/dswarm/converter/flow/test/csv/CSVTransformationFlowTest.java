@@ -21,14 +21,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.google.inject.Provider;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.TransformationFlow;
+import org.dswarm.converter.flow.TransformationFlowFactory;
 import org.dswarm.persistence.model.job.Task;
-import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -97,8 +96,8 @@ public class CSVTransformationFlowTest extends GuicedTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString(taskResultJSONFileName);
 
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
-				.getProvider(InternalModelServiceFactory.class);
+		final TransformationFlowFactory flowFactory = GuicedTest.injector
+				.getInstance(TransformationFlowFactory.class);
 
 		final String finalTaskJSONString = DMPPersistenceUtil.getResourceAsString(taskJSONFileName);
 		final ObjectMapper objectMapper = DMPPersistenceUtil.getJSONObjectMapper();
@@ -110,7 +109,7 @@ public class CSVTransformationFlowTest extends GuicedTest {
 
 		final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
 
-		final TransformationFlow flow = TransformationFlow.fromTask(task, internalModelServiceFactoryProvider);
+		final TransformationFlow flow = flowFactory.fromTask(task);
 
 		flow.getScript();
 
@@ -130,8 +129,8 @@ public class CSVTransformationFlowTest extends GuicedTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString(resultJSONFileName);
 
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
-				.getProvider(InternalModelServiceFactory.class);
+		final TransformationFlowFactory flowFactory = GuicedTest.injector
+				.getInstance(TransformationFlowFactory.class);
 
 		final String finalMorphXmlString = DMPPersistenceUtil.getResourceAsString(morphXMLFileName);
 

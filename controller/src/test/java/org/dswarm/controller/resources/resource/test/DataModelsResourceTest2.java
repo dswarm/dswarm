@@ -247,7 +247,7 @@ public class DataModelsResourceTest2 extends
 
 		Assert.assertNotNull("the expected data JSON shouldn't be null", expectedJson);
 
-		System.out.println("expected JSON = '" + objectMapper.writeValueAsString(expectedJson) + "'");
+//		System.out.println("expected JSON = '" + objectMapper.writeValueAsString(expectedJson) + "'");
 
 		Assert.assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", json),
 				CoreMatchers.equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", expectedJson)));

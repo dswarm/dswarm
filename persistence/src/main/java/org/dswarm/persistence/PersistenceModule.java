@@ -16,9 +16,13 @@
 package org.dswarm.persistence;
 
 import java.lang.management.ManagementFactory;
+import java.util.concurrent.TimeUnit;
 
 import ch.qos.logback.classic.LoggerContext;
 import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.SharedMetricRegistries;
+import com.codahale.metrics.Slf4jReporter;
+import com.codahale.metrics.Slf4jReporter.LoggingLevel;
 import com.codahale.metrics.jvm.BufferPoolMetricSet;
 import com.codahale.metrics.jvm.ClassLoadingGaugeSet;
 import com.codahale.metrics.jvm.FileDescriptorRatioGauge;
@@ -31,9 +35,11 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.dswarm.init.Monitoring;
 import org.dswarm.init.util.DMPUtil;
 import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.job.utils.TransformationDeserializer;
@@ -107,6 +113,40 @@ public class PersistenceModule extends AbstractModule {
 		instrumentJvm(registry);
 
 		return registry;
+	}
+
+	/**
+	 * Provides the metric registry to register objects for metric statistics.
+	 * This instance is specific for advanced monitoring only and should be
+	 * injected using the {@link org.dswarm.init.Monitoring} annotation.
+	 *
+	 * @return a {@link MetricRegistry} instance as singleton
+	 */
+	@Provides @Monitoring
+	@Singleton
+	protected static MetricRegistry provideMonitoringMetricRegistry(
+			@Named("dswarm.logging.metrics-interval") final long reportInterval,
+			@Named("dswarm.logging.log-metrics") final boolean shouldLogMetrics) {
+		final MetricRegistry registry = SharedMetricRegistries.getOrCreate(Monitoring.LOGGER_NAME);
+		if (shouldLogMetrics) {
+			startSlf4jLogging(registry, Monitoring.LOGGER_NAME, reportInterval, TimeUnit.MILLISECONDS);
+		}
+		return registry;
+	}
+
+	private static void startSlf4jLogging(
+			final MetricRegistry registry,
+			final String loggerName,
+			final long reportInterval,
+			final TimeUnit unit) {
+		final Slf4jReporter reporter = Slf4jReporter.forRegistry(registry)
+				.outputTo(LoggerFactory.getLogger(loggerName))
+				.convertRatesTo(TimeUnit.SECONDS)
+				.convertDurationsTo(TimeUnit.MILLISECONDS)
+				.withLoggingLevel(LoggingLevel.INFO)
+				.build();
+		reporter.start(reportInterval, unit);
+		reporter.report();
 	}
 
 	private static void instrumentLogback(final MetricRegistry registry) {

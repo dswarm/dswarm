@@ -237,7 +237,7 @@ public class DataModelsResourceTest extends
 
 		Assert.assertNotNull("the expected data JSON shouldn't be null", expectedJson);
 
-		System.out.println("expected JSON = '" + objectMapper.writeValueAsString(expectedJson) + "'");
+//		System.out.println("expected JSON = '" + objectMapper.writeValueAsString(expectedJson) + "'");
 
 		Assert.assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", json),
 				CoreMatchers.equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", expectedJson)));
@@ -505,7 +505,7 @@ public class DataModelsResourceTest extends
 		}
 
 		// check Content-Type header for correct content type (hint: even though we did not request the content type via an accept
-		// header field, we do want to get the content type specified in query parameter format) 
+		// header field, we do want to get the content type specified in query parameter format)
 		ExportTestUtils.checkContentTypeHeader(response, expectedExportMediaType.toString());
 
 		// check Content-Disposition header for correct file ending

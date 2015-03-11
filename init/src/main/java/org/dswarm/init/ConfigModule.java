@@ -17,10 +17,14 @@ package org.dswarm.init;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -42,17 +46,33 @@ import org.slf4j.LoggerFactory;
 public final class ConfigModule extends AbstractModule {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ConfigModule.class);
-	private static final String LOG_CONFIG_ON_START = "dswarm.log-config-on-start";
+	private static final String OLD_LOG_CONFIG_ON_START = "dswarm.log-config-on-start";
+	private static final String LOG_CONFIG_ON_START = "dswarm.logging.log-config-on-start";
 
 	@Override
 	protected void configure() {
 		final Config config = ConfigFactoryWithOffloading.loadConfig();
-		if (LOG.isInfoEnabled() && config.hasPath(LOG_CONFIG_ON_START) && config.getBoolean(LOG_CONFIG_ON_START)) {
+		if (LOG.isInfoEnabled() && hasEnabled(config, LOG_CONFIG_ON_START, OLD_LOG_CONFIG_ON_START)) {
 			LOG.info(config.root().render());
 		}
 
 		bind(Config.class).toInstance(config);
 		bindConfig(config);
+	}
+
+	static boolean hasEnabled(final Config config, final String... paths) {
+		return Arrays.stream(paths)
+				.filter(config::hasPath)
+				.map(config::getBoolean)
+				.findFirst()
+				.orElse(false);
+	}
+
+	static Optional<String> firstString(final Config config, final String... paths) {
+		return Arrays.stream(paths)
+				.filter(config::hasPath)
+				.map(config::getString)
+				.findFirst();
 	}
 
 	private void bindPrimitive(final Named key, final Boolean value) {
@@ -70,19 +90,19 @@ public final class ConfigModule extends AbstractModule {
 		LOG.trace("bound {} to {}", key.value(), value);
 	}
 
-	private <T> List<T> collectFrom(final List<Object> objects, final Class<T> cls) {
+	private static <T> List<T> collectFrom(final Collection<Object> objects, final Class<T> cls) {
 		final List<T> values = new ArrayList<>(objects.size());
-		for (final Object o : objects) {
-			if (o != null && cls.isInstance(o)) {
-				values.add(cls.cast(o));
-			}
-		}
+		values.addAll(objects.stream()
+						.filter(o -> o != null && cls.isInstance(o))
+						.map(cls::cast)
+						.collect(Collectors.toList())
+		);
 		return values;
 	}
 
 	private <T> void bindList(final Named key, final TypeLiteral<List<T>> typeLiteral, final List<T> values) {
 		bind(typeLiteral).annotatedWith(key).toInstance(values);
-		LOG.trace("bound {} to {}", key.value(), values.toString());
+		LOG.trace("bound {} to {}", key.value(), values);
 	}
 
 	private void bindList(final Named key, final List<Object> values, final ConfigValue configValue) {
@@ -121,7 +141,7 @@ public final class ConfigModule extends AbstractModule {
 			final Named key = Names.named(entry.getKey());
 			switch (configValue.valueType()) {
 				case BOOLEAN:
-					bindPrimitive(key, ((Boolean) configValue.unwrapped()));
+					bindPrimitive(key, (Boolean) configValue.unwrapped());
 					break;
 
 				case NUMBER:
@@ -140,7 +160,7 @@ public final class ConfigModule extends AbstractModule {
 					break;
 
 				case LIST:
-					bindList(key, ((List<Object>) configValue.unwrapped()), configValue);
+					bindList(key, (List<Object>) configValue.unwrapped(), configValue);
 					break;
 
 				case OBJECT:

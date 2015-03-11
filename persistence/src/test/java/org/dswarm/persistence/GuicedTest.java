@@ -48,7 +48,9 @@ public abstract class GuicedTest {
 		LoggingConfigurator.configureFrom(config);
 
 		return configInjector.createChildInjector(
-				new PersistenceModule(), new JacksonObjectMapperModule(), new JpaHibernateModule(configInjector));
+				new PersistenceModule(),
+				new JacksonObjectMapperModule(),
+				new JpaHibernateModule(configInjector));
 	}
 
 	public static <T> T configValue(final String configPath, final Class<T> cls) {

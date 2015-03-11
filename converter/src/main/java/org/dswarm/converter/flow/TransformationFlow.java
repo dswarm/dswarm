@@ -16,18 +16,17 @@
 package org.dswarm.converter.flow;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer;
+import com.codahale.metrics.Timer.Context;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -38,7 +37,11 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.common.io.Files;
+import com.google.common.io.Resources;
+import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.assistedinject.Assisted;
 import org.culturegraph.mf.exceptions.MorphDefException;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.StreamPipe;
@@ -54,17 +57,18 @@ import org.dswarm.converter.DMPMorphDefException;
 import org.dswarm.converter.mf.stream.GDMEncoder;
 import org.dswarm.converter.mf.stream.GDMModelReceiver;
 import org.dswarm.converter.mf.stream.reader.JsonNodeReader;
-import org.dswarm.converter.morph.FilterMorphScriptBuilder;
-import org.dswarm.converter.morph.MorphScriptBuilder;
-import org.dswarm.converter.pipe.StreamJsonCollapser;
 import org.dswarm.converter.pipe.StreamUnflattener;
+import org.dswarm.converter.pipe.timing.ObjectTimer;
+import org.dswarm.converter.pipe.timing.StreamTimer;
+import org.dswarm.converter.pipe.timing.TimerBasedFactory;
+import org.dswarm.graph.json.Model;
 import org.dswarm.graph.json.Predicate;
 import org.dswarm.graph.json.Resource;
 import org.dswarm.graph.json.ResourceNode;
+import org.dswarm.init.Monitoring;
 import org.dswarm.init.util.DMPStatics;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
-import org.dswarm.persistence.model.job.Task;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
@@ -86,81 +90,42 @@ public class TransformationFlow {
 	private static final Logger LOG               = LoggerFactory.getLogger(TransformationFlow.class);
 	private static final String BIBO_DOCUMENT_URI = "http://purl.org/ontology/bibo/Document";
 
-	private final Optional<Filter> optionalSkipFilter;
-
 	private final Metamorph transformer;
 
 	private final String script;
+
+	private final Optional<Filter> optionalSkipFilter;
 
 	private final Optional<DataModel> outputDataModel;
 
 	private final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider;
 
-	public TransformationFlow(final Metamorph transformer, final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
+	private final TimerBasedFactory timerBasedFactory;
 
-		this.optionalSkipFilter = Optional.absent();
+	private final Timer morphTimer;
+
+	private final Timer gdmTimer;
+
+
+	@Inject
+	private TransformationFlow(
+			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg,
+			@Monitoring final MetricRegistry registry,
+			final TimerBasedFactory timerBasedFactory,
+			@Assisted final Metamorph transformer,
+			@Assisted final String scriptArg,
+			@Assisted final Optional<DataModel> outputDataModelArg,
+			@Assisted final Optional<Filter> optionalSkipFilterArg) {
+		this.timerBasedFactory = timerBasedFactory;
 		this.transformer = transformer;
-		script = null;
-		outputDataModel = Optional.absent();
+		script = scriptArg == null ? "" : scriptArg;
+		outputDataModel = outputDataModelArg;
+		optionalSkipFilter = optionalSkipFilterArg;
 		internalModelServiceFactoryProvider = internalModelServiceFactoryProviderArg;
+
+		morphTimer = registry.timer("metamorph");
+		gdmTimer = registry.timer("gdm-transformer");
 	}
-
-	public TransformationFlow(final Filter skipFilter, final Metamorph transformer,
-			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
-
-		this.optionalSkipFilter = Optional.fromNullable(skipFilter);
-		this.transformer = transformer;
-		script = null;
-		outputDataModel = Optional.absent();
-		internalModelServiceFactoryProvider = internalModelServiceFactoryProviderArg;
-	}
-
-	public TransformationFlow(final Metamorph transformer, final String scriptArg,
-			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
-
-		this.optionalSkipFilter = Optional.absent();
-		this.transformer = transformer;
-		script = scriptArg;
-		outputDataModel = Optional.absent();
-		internalModelServiceFactoryProvider = internalModelServiceFactoryProviderArg;
-	}
-
-	public TransformationFlow(final Optional<Filter> optionalSkipFilter, final Metamorph transformer, final String scriptArg,
-			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
-
-		this.optionalSkipFilter = optionalSkipFilter;
-		this.transformer = transformer;
-		script = scriptArg;
-		outputDataModel = Optional.absent();
-		internalModelServiceFactoryProvider = internalModelServiceFactoryProviderArg;
-	}
-
-	public TransformationFlow(final Metamorph transformer, final String scriptArg, final DataModel outputDataModelArg,
-			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
-
-		this.optionalSkipFilter = Optional.absent();
-		this.transformer = transformer;
-		script = scriptArg;
-		outputDataModel = Optional.of(outputDataModelArg);
-		internalModelServiceFactoryProvider = internalModelServiceFactoryProviderArg;
-	}
-
-	public TransformationFlow(final Optional<Filter> optionalSkipFilter, final Metamorph transformer, final String scriptArg, final DataModel outputDataModelArg,
-			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
-
-		this.optionalSkipFilter = optionalSkipFilter;
-		this.transformer = transformer;
-		script = scriptArg;
-		outputDataModel = Optional.of(outputDataModelArg);
-		internalModelServiceFactoryProvider = internalModelServiceFactoryProviderArg;
-	}
-
-	// public String applyRecord(final String record) {
-	//
-	// final StringReader opener = new StringReader();
-	//
-	// return apply(record, opener);
-	// }
 
 	public String getScript() {
 
@@ -220,35 +185,43 @@ public class TransformationFlow {
 		return applyRecord(resourceString);
 	}
 
-	public String apply(final Iterator<Tuple<String, JsonNode>> tuples, final ObjectPipe<Iterator<Tuple<String, JsonNode>>, StreamReceiver> opener,
+	public String apply(
+			final Iterator<Tuple<String, JsonNode>> tuples,
+			final ObjectPipe<Iterator<Tuple<String, JsonNode>>, StreamReceiver> opener,
 			final boolean writeResultToDatahub) throws DMPConverterException {
+
+		final Context morphContext = morphTimer.time();
 
 		// final String recordDummy = "record";
 
+		final StreamTimer inputTimer = timerBasedFactory.forStream("stream-input");
+		final ObjectTimer gdmModelsTimer = timerBasedFactory.forObject("gdm-models");
 		final StreamUnflattener unflattener = new StreamUnflattener("", DMPStatics.ATTRIBUTE_DELIMITER);
-		final StreamJsonCollapser collapser = new StreamJsonCollapser();
+//		final StreamJsonCollapser collapser = new StreamJsonCollapser();
 		final GDMEncoder converter = new GDMEncoder(outputDataModel);
 		final GDMModelReceiver writer = new GDMModelReceiver();
 
-		// .setReceiver(collapser)
-
 		final StreamPipe<StreamReceiver> starter;
-
 		if(optionalSkipFilter.isPresent()) {
 
-			// skip filter + transformation morph script
-
-			starter = opener.setReceiver(optionalSkipFilter.get()).setReceiver(transformer);
+			// skip filter + input timer
+			starter = opener
+					.setReceiver(optionalSkipFilter.get())
+					.setReceiver(inputTimer);
 
 		} else {
 
-			// transformation morph script
-
-			starter = opener.setReceiver(transformer);
+			// input timer
+			starter = opener.setReceiver(inputTimer);
 		}
 
-		starter.setReceiver(unflattener).setReceiver(converter).setReceiver(writer);
-		//opener.setReceiver(transformer).setReceiver(converter).setReceiver(writer);
+		starter
+				.setReceiver(transformer)
+				.setReceiver(transformer)
+				.setReceiver(unflattener)
+				.setReceiver(converter)
+				.setReceiver(gdmModelsTimer)
+				.setReceiver(writer);
 
 		opener.process(tuples);
 		opener.closeStream();
@@ -256,9 +229,12 @@ public class TransformationFlow {
 
 		// return stringWriter.toString();
 
+		morphContext.stop();
+		final Context gdmContext = gdmTimer.time();
+
 		final ImmutableList<GDMModel> gdmModels = writer.getCollection();
 
-		final org.dswarm.graph.json.Model model = new org.dswarm.graph.json.Model();
+		final Model model = new Model();
 		String recordClassUri = null;
 
 		// transform to FE friendly JSON => or use Model#toJSON() ;)
@@ -289,10 +265,7 @@ public class TransformationFlow {
 				continue;
 			}
 
-			for (final org.dswarm.graph.json.Resource jsonResource : gdmModel.getModel().getResources()) {
-
-				model.addResource(jsonResource);
-			}
+			gdmModel.getModel().getResources().forEach(model::addResource);
 
 			if (recordClassUri == null) {
 
@@ -399,6 +372,8 @@ public class TransformationFlow {
 			throw new DMPConverterException(message, e);
 		}
 
+		gdmContext.stop();
+
 		return resultString;
 	}
 
@@ -409,170 +384,49 @@ public class TransformationFlow {
 		return apply(tuples, opener, writeResultToDatahub);
 	}
 
-	public static TransformationFlow fromString(final String morphScriptString,
-			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) throws DMPMorphDefException {
-
-		final StringReader stringReader = new StringReader(morphScriptString);
-		final Metamorph transformer = createMorph(stringReader);
-
-		return new TransformationFlow(transformer, morphScriptString, internalModelServiceFactoryProviderArg);
-	}
-
-	public static TransformationFlow fromString(final Optional<String> optionalSkipFilterMorphScriptString, final String morphScriptString,
-			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) throws DMPMorphDefException {
-
-		final Optional<Filter> optionalSkipFilter = createFilter(optionalSkipFilterMorphScriptString);
-		final StringReader stringReader = new StringReader(morphScriptString);
-		final Metamorph transformer = createMorph(stringReader);
-
-		return new TransformationFlow(optionalSkipFilter, transformer, morphScriptString, internalModelServiceFactoryProviderArg);
-	}
-
-	public static TransformationFlow fromString(final String morphScriptString, final DataModel outputDataModel,
-			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) throws DMPConverterException {
-
-		final java.io.StringReader stringReader = new java.io.StringReader(morphScriptString);
-		final Metamorph transformer = createMorph(stringReader);
-
-		return new TransformationFlow(transformer, morphScriptString, outputDataModel, internalModelServiceFactoryProviderArg);
-	}
-
-	public static TransformationFlow fromString(final Optional<String> skipFilterMorphScriptString, final String morphScriptString,
-			final DataModel outputDataModel,
-			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) throws DMPConverterException {
-
-		final Optional<Filter> optionalSkipFilter = createFilter(skipFilterMorphScriptString);
-		final StringReader stringReader = new StringReader(morphScriptString);
-		final Metamorph transformer = createMorph(stringReader);
-
-		return new TransformationFlow(optionalSkipFilter, transformer, morphScriptString, outputDataModel, internalModelServiceFactoryProviderArg);
-	}
-
-	public static TransformationFlow fromFile(final File file, final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg)
-			throws FileNotFoundException, DMPConverterException {
-
-		final Metamorph transformer = createMorph(file);
-
-		return new TransformationFlow(transformer, internalModelServiceFactoryProviderArg);
-	}
-
-	public static TransformationFlow fromFile(final File skipFilterFile, final File file,
-			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg)
-			throws FileNotFoundException, DMPConverterException {
-
-		final Filter skipFilter = createFilter(skipFilterFile);
-		final Metamorph transformer = createMorph(file);
-
-		return new TransformationFlow(skipFilter, transformer, internalModelServiceFactoryProviderArg);
-	}
-
-	public static TransformationFlow fromFile(final String resourcePath,
-			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) throws DMPConverterException {
-
-		final Metamorph transformer = createMorph(resourcePath);
-
-		return new TransformationFlow(transformer, internalModelServiceFactoryProviderArg);
-	}
-
-	public static TransformationFlow fromFile(final String skipFilterResourcePath, final String resourcePath,
-			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) throws DMPConverterException {
-
-		final Filter skipFilter = createFilterFromResource(skipFilterResourcePath);
-		final Metamorph transformer = createMorph(resourcePath);
-
-		return new TransformationFlow(skipFilter, transformer, internalModelServiceFactoryProviderArg);
-	}
-
-	public static TransformationFlow fromTask(final Task task, final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg)
-			throws DMPConverterException {
-
-		final Optional<String> optionalSkipFilterMorphScriptString = Optional.fromNullable(new FilterMorphScriptBuilder().apply(task).toString());
-		final String morphScriptString = new MorphScriptBuilder().apply(task).toString();
-
-		final DataModel outputDataModel = task.getOutputDataModel();
-
-		return TransformationFlow
-				.fromString(optionalSkipFilterMorphScriptString, morphScriptString, outputDataModel, internalModelServiceFactoryProviderArg);
-	}
-
-	private static Reader getReader(final InputStream is) throws DMPConverterException {
-
-		final Reader reader;
-
+	static Metamorph createMorph(final Reader morphString) throws DMPMorphDefException {
 		try {
-
-			reader = new InputStreamReader(is, "UTF-8");
-		} catch (final UnsupportedEncodingException e) {
-
-			try {
-
-				is.close();
-			} catch (final IOException e1) {
-
-				TransformationFlow.LOG.error("couldn't close file input stream");
-			}
-
-			throw new DMPConverterException("couldn't parse file with UTF-8", e);
-		}
-
-		return reader;
-	}
-
-	private static Optional<Filter> createFilter(final Optional<String> optionalSkipFilterMorphScriptString) throws DMPMorphDefException {
-
-		if (!optionalSkipFilterMorphScriptString.isPresent()) {
-
-			return Optional.absent();
-		}
-
-		final StringReader skipFilterStringReader = new StringReader(optionalSkipFilterMorphScriptString.get());
-		final Metamorph skipFilterMorph = createMorph(skipFilterStringReader);
-
-		return Optional.of(new Filter(skipFilterMorph));
-	}
-
-	private static Filter createFilter(final File skipFilterFile) throws DMPConverterException, FileNotFoundException {
-
-		final Metamorph skipFilterMorph = createMorph(skipFilterFile);
-
-		return new Filter(skipFilterMorph);
-	}
-
-	private static Filter createFilterFromResource(final String skipFilterResourcePath) throws DMPConverterException {
-
-		final Metamorph skipFilterMorph = createMorph(skipFilterResourcePath);
-
-		return new Filter(skipFilterMorph);
-	}
-
-	private static Metamorph createMorph(final Reader stringReader) throws DMPMorphDefException {
-
-		final Metamorph transformer;
-
-		try {
-
-			transformer = new Metamorph(stringReader);
+			return new Metamorph(morphString);
 		} catch (final MorphDefException e) {
-
 			throw new DMPMorphDefException(e.getMessage(), e);
 		}
-
-		return transformer;
 	}
 
-	private static Metamorph createMorph(final File file) throws FileNotFoundException, DMPConverterException {
-
-		final FileInputStream is = new FileInputStream(file);
-		final Reader inputSource = TransformationFlow.getReader(is);
-
-		return new Metamorph(inputSource);
+	static Filter createFilter(final Reader filterString) throws DMPMorphDefException {
+		return new Filter(createMorph(filterString));
 	}
 
-	private static Metamorph createMorph(final String resourcePath) throws DMPConverterException {
+	static Reader readString(final String string) throws DMPConverterException {
+		if (string == null) {
+			throw new DMPConverterException("The script string must not be null");
+		}
+		return new StringReader(string);
+	}
 
-		final InputStream morph = TransformationFlow.class.getClassLoader().getResourceAsStream(resourcePath);
-		final Reader inputSource = TransformationFlow.getReader(morph);
+	static Optional<Reader> readString(final Optional<String> string) throws DMPConverterException {
+		if (string.isPresent()) {
+			return Optional.of(readString(string.get()));
+		}
+		return Optional.absent();
+	}
 
-		return createMorph(inputSource);
+	static Reader readFile(final File file) throws DMPConverterException {
+		try {
+			return Files
+					.asCharSource(file, StandardCharsets.UTF_8)
+					.openBufferedStream();
+		} catch (final IOException e) {
+			throw new DMPConverterException("Could not read script file", e);
+		}
+	}
+
+	static Reader readResource(final String path) throws DMPConverterException {
+		try {
+			return Resources
+					.asCharSource(Resources.getResource(path), StandardCharsets.UTF_8)
+					.openBufferedStream();
+		} catch (final IOException e) {
+			throw new DMPConverterException("Could not read script resource", e);
+		}
 	}
 }

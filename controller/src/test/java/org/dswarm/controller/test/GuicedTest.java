@@ -22,19 +22,16 @@ import com.google.inject.Injector;
 import com.google.inject.name.Names;
 import com.google.inject.persist.PersistService;
 import com.typesafe.config.Config;
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 
 import org.dswarm.controller.guice.DMPModule;
+import org.dswarm.converter.ConverterModule;
 import org.dswarm.init.ConfigModule;
 import org.dswarm.init.LoggingConfigurator;
 import org.dswarm.persistence.JacksonObjectMapperModule;
 import org.dswarm.persistence.JpaHibernateModule;
 import org.dswarm.persistence.PersistenceModule;
-import org.dswarm.persistence.service.MaintainDBService;
-import org.dswarm.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
 
 public abstract class GuicedTest {
 
@@ -55,6 +52,7 @@ public abstract class GuicedTest {
 				objectMapperModule,
 				new JpaHibernateModule(configInjector),
 				new PersistenceModule(),
+				new ConverterModule(),
 				new DMPModule(),
 				new TestModule());
 	}
