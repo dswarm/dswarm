@@ -16,6 +16,7 @@
 package org.dswarm.controller.resources.job;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Iterator;
 
 import javax.inject.Inject;
@@ -30,6 +31,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer;
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,6 +47,9 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
+import org.slf4j.helpers.BasicMarker;
 
 import org.dswarm.common.types.Tuple;
 import org.dswarm.controller.DMPControllerException;
@@ -52,7 +58,9 @@ import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.flow.TransformationFlow;
 import org.dswarm.converter.flow.TransformationFlowFactory;
 import org.dswarm.converter.morph.MorphScriptBuilder;
+import org.dswarm.init.Monitoring;
 import org.dswarm.persistence.model.job.Job;
+import org.dswarm.persistence.model.job.Mapping;
 import org.dswarm.persistence.model.job.Task;
 import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.resource.Configuration;
@@ -71,6 +79,10 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 public class TasksResource {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TasksResource.class);
+	private static final Logger MONITOR_LOG = LoggerFactory.getLogger(Monitoring.LOGGER_NAME);
+	private static final Marker EXECUTION_MARKER = MarkerFactory.getMarker("EXECUTION");
+
+	private final Timer executionsTimer;
 
 	/**
 	 * The base URI of this resource.
@@ -89,6 +101,7 @@ public class TasksResource {
 	private final ObjectMapper objectMapper;
 
 	private final TransformationFlowFactory transformationFlowFactory;
+	private final MetricRegistry registry;
 
 	/**
 	 * Creates a new resource (controller service) for {@link Transformation}s with the provider of the transformation persistence
@@ -96,16 +109,20 @@ public class TasksResource {
 	 * @param dataModelUtilArg the data model util
 	 * @param objectMapperArg  an object mapper
 	 * @param transformationFlowFactoryArg the factory for creating transformation flows
+	 * @param registryArg the registry for monitoring purposes
 	 */
 	@Inject
 	public TasksResource(
 			final DataModelUtil dataModelUtilArg,
 			final ObjectMapper objectMapperArg,
-			final TransformationFlowFactory transformationFlowFactoryArg) {
+			final TransformationFlowFactory transformationFlowFactoryArg,
+			@Monitoring final MetricRegistry registryArg){
 
 		dataModelUtil = dataModelUtilArg;
 		objectMapper = objectMapperArg;
 		transformationFlowFactory = transformationFlowFactoryArg;
+		registry = registryArg;
+		executionsTimer = registry.timer(MetricRegistry.name(Task.class, "executions"));
 	}
 
 	/**
@@ -211,9 +228,15 @@ public class TasksResource {
 
 		final boolean writeResultToDatahub = persistResult != null && persistResult;
 
+		monitorTaskExecution(task);
+
+		final Timer.Context context = executionsTimer.time();
+
 		final TransformationFlow flow = transformationFlowFactory.fromTask(task);
 
 		final String result = flow.apply(tupleIterator, writeResultToDatahub);
+
+		context.stop();
 
 		if (result == null) {
 
@@ -246,6 +269,28 @@ public class TasksResource {
 		final String resultString = objectMapper.writeValueAsString(feFriendlyJSON);
 
 		return buildResponse(resultString);
+	}
+
+	private void monitorTaskExecution(final Task task) {
+		final Instant now = Instant.now();
+		MONITOR_LOG.debug(EXECUTION_MARKER,
+				"Task execution of [{}] at [{}], unix [{}]",
+				task.getUuid(), now, now.getEpochSecond());
+
+		task.getJob().getMappings().forEach(this::monitorMapping);
+		monitorDataModel(task.getInputDataModel(), "source");
+		monitorDataModel(task.getOutputDataModel(), "target");
+	}
+
+	private void monitorMapping(final Mapping mapping) {
+		if (mapping != null && mapping.getUuid() != null) {
+			registry.meter(MetricRegistry.name(Mapping.class, mapping.getUuid())).mark();
+		}
+	}
+	private void monitorDataModel(final DataModel dataModel, final String suffix) {
+		if (dataModel.getUuid() != null) {
+			registry.meter(MetricRegistry.name(DataModel.class, dataModel.getUuid(), suffix)).mark();
+		}
 	}
 
 	/**
