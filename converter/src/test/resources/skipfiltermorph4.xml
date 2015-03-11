@@ -6,7 +6,6 @@
 		<name>mapping1</name>
 	</meta>
 	<rules>
-		<!-- <choose name="ok" flushWith="record"> -->
 		<combine name="ok" value="${ok2}" flushWith="record" reset="false">
 			<combine name="ok2" value="${out}" sameEntity="true"
 					 flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield"
@@ -23,18 +22,17 @@
 								source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind1">
 							<equals string="a"/>
 						</data>
+						<data
+								source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code">
+							<equals string="a"/>
+						</data>
 					</all>
 				</if>
 				<data name="out"
-					  source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value">
+					  source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code">
 					<constant value="true"/>
 				</data>
 			</combine>
-			<!-- <data name="out2"
-				  source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value">
-				<constant value=""/>
-			</data>
-		</choose> -->
 		</combine>
 	</rules>
 </metamorph>
