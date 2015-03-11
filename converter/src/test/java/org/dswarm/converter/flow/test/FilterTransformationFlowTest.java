@@ -17,14 +17,18 @@ package org.dswarm.converter.flow.test;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Provider;
 import org.junit.Assert;
 import org.junit.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
 
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.TransformationFlow;
@@ -39,13 +43,36 @@ public class FilterTransformationFlowTest extends GuicedTest {
 	@Test
 	public void testFilterEndToEndWithOneResult() throws Exception {
 
-		testFilter("test-mabxml.tuples.json", "filtermorph.xml", "test-mabxml.filter.result.json");
+		testFilter("test-mabxml.tuples.json", Optional.<String>empty(), "filtermorph.xml", "test-mabxml.filter.result.json");
+	}
+
+	/**
+	 * multiple records
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testFilterEndToEndWithOneResult2() throws Exception {
+
+		testFilter("test-mabxml.tuples.3.json", Optional.<String>empty(), "filtermorph.xml", "test-mabxml.filter.result.1.2.json");
+	}
+
+	/**
+	 * takes only the records where the value from field where feld->nr = 076 + feld->ind = v is 5
+	 * in the transformation only the value from field where feld->nr = 076 + feld->ind = k will be selected
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testFilterEndToEndWithOneResultSF() throws Exception {
+
+		testFilter("test-mabxml.tuples.3.json", Optional.of("skipfiltermorph1.xml"), "transformationmorph1.xml", "skipfilter.morph.result.1.json");
 	}
 
 	@Test
 	public void testFilterEndToEndWithMultipleResults() throws Exception {
 
-		testFilter("test-mabxml.tuples.2.json", "filtermorph2.xml", "test-mabxml.filter.result.2.json");
+		testFilter("test-mabxml.tuples.2.json", Optional.<String>empty(), "filtermorph2.xml", "test-mabxml.filter.result.2.json");
 	}
 
 	/**
@@ -56,31 +83,31 @@ public class FilterTransformationFlowTest extends GuicedTest {
 	@Test
 	public void testFilterEndToEndWithMultipleResultsAndRepeatableElements() throws Exception {
 
-		testFilter("test-mabxml.tuples.json", "filtermorph3.xml", "test-mabxml.filter.result.3.json");
+		testFilter("test-mabxml.tuples.json", Optional.<String>empty(), "filtermorph3.xml", "test-mabxml.filter.result.3.json");
 	}
 
 	@Test
 	public void testFilterEndToEndWithMultipleResultsAndSelectingSpecificIndex() throws Exception {
 
-		testFilter("test-mabxml.tuples.json", "filtermorph4.xml", "test-mabxml.filter.result.4.json");
+		testFilter("test-mabxml.tuples.json", Optional.<String>empty(), "filtermorph4.xml", "test-mabxml.filter.result.4.json");
 	}
 
 	@Test
 	public void testFilterAndSelectingValueIsOnAnotherHierarchy() throws Exception {
 
-		testFilter("ralfs_mabxml.tuples.json", "filtermorph5.xml", "test-ralfs_mabxml.filter.result.5.json");
+		testFilter("ralfs_mabxml.tuples.json", Optional.<String>empty(), "filtermorph5.xml", "test-ralfs_mabxml.filter.result.5.json");
 	}
 
 	@Test
 	public void testFilterAndSelectingValueIsOnAnotherHierarchy2() throws Exception {
 
-		testFilter("ralfs_mabxml.tuples.json", "filtermorph7.xml", "test-ralfs_mabxml.filter.result.7.json");
+		testFilter("ralfs_mabxml.tuples.json", Optional.<String>empty(), "filtermorph7.xml", "test-ralfs_mabxml.filter.result.7.json");
 	}
 
 	@Test
 	public void testFilterAndSelectingValueIsOnAnotherHierarchyAndSelectingSpecificIndex() throws Exception {
 
-		testFilter("ralfs_mabxml.tuples.json", "filtermorph6.xml", "test-ralfs_mabxml.filter.result.6.json");
+		testFilter("ralfs_mabxml.tuples.json", Optional.<String>empty(), "filtermorph6.xml", "test-ralfs_mabxml.filter.result.6.json");
 	}
 
 	@Test
@@ -115,7 +142,8 @@ public class FilterTransformationFlowTest extends GuicedTest {
 		Assert.assertEquals(finalExpected, finalActual);
 	}
 
-	private void testFilter(final String inputTuplesFileName, final String transformationMorphScriptFileName, final String resultFileName)
+	private void testFilter(final String inputTuplesFileName, final Optional<String> optionalSkipFilterMorphScriptFileName,
+			final String transformationMorphScriptFileName, final String resultFileName)
 			throws Exception {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString(resultFileName);
@@ -123,14 +151,32 @@ public class FilterTransformationFlowTest extends GuicedTest {
 		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
 				.getProvider(InternalModelServiceFactory.class);
 
-		final TransformationFlow flow = TransformationFlow.fromFile(transformationMorphScriptFileName, internalModelServiceFactoryProvider);
+		final TransformationFlow flow;
+
+		if (optionalSkipFilterMorphScriptFileName.isPresent()) {
+
+			flow = TransformationFlow
+					.fromFile(optionalSkipFilterMorphScriptFileName.get(), transformationMorphScriptFileName, internalModelServiceFactoryProvider);
+		} else {
+
+			flow = TransformationFlow.fromFile(transformationMorphScriptFileName, internalModelServiceFactoryProvider);
+		}
 
 		final String actual = flow.applyResource(inputTuplesFileName);
 
 		final ArrayNode expectedJson = replaceKeyWithActualKey(expected, actual);
 		final String finalExpected = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(expectedJson);
 
-		Assert.assertEquals(finalExpected, actual);
+		final ObjectMapper objectMapper2 = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL).configure(
+				SerializationFeature.INDENT_OUTPUT, true);
+
+		final ArrayNode array = objectMapper2.readValue(actual, ArrayNode.class);
+		final String finalActual = objectMapper2.writeValueAsString(array);
+
+		final ArrayNode expectedArray = objectMapper2.readValue(finalExpected, ArrayNode.class);
+		final String finalExpected2 = objectMapper2.writeValueAsString(expectedArray);
+
+		JSONAssert.assertEquals(finalExpected2, finalActual, true);
 	}
 
 	private ArrayNode replaceKeyWithActualKey(final String expected, final String actual) throws IOException {
