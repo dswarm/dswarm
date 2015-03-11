@@ -120,6 +120,17 @@ public class FilterTransformationFlowTest extends GuicedTest {
 		testFilter("test-mabxml.tuples.json", Optional.<String>empty(), "filtermorph3.xml", "test-mabxml.filter.result.3.json");
 	}
 
+	/**
+	 * selects the 2nd value of the 2nd match
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testFilterEndToEndWithMultipleResultsAndRepeatableElementsSF() throws Exception {
+
+		testFilter("test-mabxml.tuples.5.json", Optional.of("skipfiltermorph3.xml"), "transformationmorph3.xml", "test-mabxml.filter.result.3.1.json");
+	}
+
 	@Test
 	public void testFilterEndToEndWithMultipleResultsAndSelectingSpecificIndex() throws Exception {
 
