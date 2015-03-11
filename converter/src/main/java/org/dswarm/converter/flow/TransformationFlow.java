@@ -217,7 +217,6 @@ public class TransformationFlow {
 
 		starter
 				.setReceiver(transformer)
-				.setReceiver(transformer)
 				.setReceiver(unflattener)
 				.setReceiver(converter)
 				.setReceiver(gdmModelsTimer)

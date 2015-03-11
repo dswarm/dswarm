@@ -154,7 +154,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 
 		if (optionalSkipFilterMorphScriptFileName.isPresent()) {
 
-			flow = flowFactory.fromFile(optionalSkipFilterMorphScriptFileName.get(), transformationMorphScriptFileName);
+			flow = flowFactory.fromFile(transformationMorphScriptFileName, optionalSkipFilterMorphScriptFileName.get());
 		} else {
 
 			flow = flowFactory.fromFile(transformationMorphScriptFileName);

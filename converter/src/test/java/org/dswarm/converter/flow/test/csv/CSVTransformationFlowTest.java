@@ -145,10 +145,10 @@ public class CSVTransformationFlowTest extends GuicedTest {
 
 		if (optionalSkipFilterMorphXMLFileName.isPresent()) {
 
-			flow = flowFactory.fromString(morphXMLFileName, optionalSkipFilterMorphXMLFileName.get());
+			flow = flowFactory.fromFile(morphXMLFileName, optionalSkipFilterMorphXMLFileName.get());
 		} else {
 
-			flow = flowFactory.fromString(finalMorphXmlString);
+			flow = flowFactory.fromFile(finalMorphXmlString);
 		}
 
 		flow.getScript();
