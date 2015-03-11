@@ -15,12 +15,13 @@
  */
 package org.dswarm.converter.flow.test.csv;
 
+import java.util.Optional;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Provider;
-import org.junit.Assert;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
@@ -75,7 +76,14 @@ public class CSVTransformationFlowTest extends GuicedTest {
 	@Test
 	public void testCSVFilterOutputBeforeFilterCondition() throws Exception {
 
-		testCSVMorphWithTuples("dd-747.csv.morph.result.json", "dd-747.csv.morph.xml", "dd-747.csv.tuples.json");
+		testCSVMorphWithTuples("dd-747.csv.morph.result.json", "dd-747.csv.morph.xml", "dd-747.csv.tuples.json", Optional.<String>empty());
+	}
+
+	@Test
+	public void testCSVWSkipFilterFilterCondition() throws Exception {
+
+		testCSVMorphWithTuples("skipfilter.morph.result.json", "transformationmorph.xml", "dd-747.csv.tuples.json",
+				Optional.of("skipfiltermorph.xml"));
 	}
 
 	@Test
@@ -116,7 +124,8 @@ public class CSVTransformationFlowTest extends GuicedTest {
 		JSONAssert.assertEquals(finalExpected, finalActual, true);
 	}
 
-	private void testCSVMorphWithTuples(final String resultJSONFileName, final String morphXMLFileName, final String tuplesJSONFileName)
+	private void testCSVMorphWithTuples(final String resultJSONFileName, final String morphXMLFileName, final String tuplesJSONFileName,
+			final Optional<String> optionalSkipFilterMorphXMLFileName)
 			throws Exception {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString(resultJSONFileName);
@@ -133,7 +142,15 @@ public class CSVTransformationFlowTest extends GuicedTest {
 
 		// final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
 
-		final TransformationFlow flow = TransformationFlow.fromString(finalMorphXmlString, internalModelServiceFactoryProvider);
+		final TransformationFlow flow;
+
+		if (optionalSkipFilterMorphXMLFileName.isPresent()) {
+
+			flow = TransformationFlow.fromFile(optionalSkipFilterMorphXMLFileName.get(), morphXMLFileName, internalModelServiceFactoryProvider);
+		} else {
+
+			flow = TransformationFlow.fromString(finalMorphXmlString, internalModelServiceFactoryProvider);
+		}
 
 		flow.getScript();
 
