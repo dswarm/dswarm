@@ -149,12 +149,11 @@ public final class ConfigModule extends AbstractModule {
 					break;
 
 				case STRING:
-					try {
-						final long duration = config.getDuration(entry.getKey(), TimeUnit.MILLISECONDS);
-						bindPrimitive(key, duration);
-					} catch (final ConfigException.BadValue ignore) {
-						// BadValue is thrown when the string could not be parsed as a duration,
-						// but that's OK, just use it as a regular string then.
+					final String configKey = entry.getKey();
+					final boolean specialValue =
+							tryParseDuration(config, configKey, key) ||
+							tryParseBoolean(config, configKey, key);
+					if (!specialValue) {
 						bindPrimitive(key, configValue.unwrapped().toString());
 					}
 					break;
@@ -169,6 +168,26 @@ public final class ConfigModule extends AbstractModule {
 				default:
 					throw unexpectedConfigType(configValue);
 			}
+		}
+	}
+
+	private boolean tryParseDuration(final Config config, final String configKey, final Named bindKey) {
+		try {
+			final long duration = config.getDuration(configKey, TimeUnit.MILLISECONDS);
+			bindPrimitive(bindKey, duration);
+			return true;
+		} catch (final ConfigException.BadValue | ConfigException.WrongType ignore) {
+			return false;
+		}
+	}
+
+	private boolean tryParseBoolean(final Config config, final String configKey, final Named bindKey) {
+		try {
+			final boolean duration = config.getBoolean(configKey);
+			bindPrimitive(bindKey, duration);
+			return true;
+		} catch (final ConfigException.BadValue | ConfigException.WrongType ignore) {
+			return false;
 		}
 	}
 
