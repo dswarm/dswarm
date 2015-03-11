@@ -16,9 +16,11 @@
 package org.dswarm.converter;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.dswarm.converter.flow.TransformationFlowFactory;
 import org.dswarm.converter.schema.SolrSchemaParser;
 import org.dswarm.converter.schema.XMLSchemaParser;
 
@@ -36,5 +38,7 @@ public class ConverterModule extends AbstractModule {
 
 		bind(XMLSchemaParser.class);
 		bind(SolrSchemaParser.class);
+
+		install(new FactoryModuleBuilder().build(TransformationFlowFactory.class));
 	}
 }

@@ -36,7 +36,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
-import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -51,6 +50,7 @@ import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.utils.DataModelUtil;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.flow.TransformationFlow;
+import org.dswarm.converter.flow.TransformationFlowFactory;
 import org.dswarm.converter.morph.MorphScriptBuilder;
 import org.dswarm.persistence.model.job.Job;
 import org.dswarm.persistence.model.job.Task;
@@ -58,7 +58,6 @@ import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
-import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -89,22 +88,24 @@ public class TasksResource {
 	 */
 	private final ObjectMapper objectMapper;
 
-	private final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider;
+	private final TransformationFlowFactory transformationFlowFactory;
 
 	/**
 	 * Creates a new resource (controller service) for {@link Transformation}s with the provider of the transformation persistence
 	 * service, the object mapper and metrics registry.
-	 *
 	 * @param dataModelUtilArg the data model util
 	 * @param objectMapperArg  an object mapper
+	 * @param transformationFlowFactoryArg the factory for creating transformation flows
 	 */
 	@Inject
-	public TasksResource(final DataModelUtil dataModelUtilArg, final ObjectMapper objectMapperArg,
-			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg) {
+	public TasksResource(
+			final DataModelUtil dataModelUtilArg,
+			final ObjectMapper objectMapperArg,
+			final TransformationFlowFactory transformationFlowFactoryArg) {
 
 		dataModelUtil = dataModelUtilArg;
 		objectMapper = objectMapperArg;
-		internalModelServiceFactoryProvider = internalModelServiceFactoryProviderArg;
+		transformationFlowFactory = transformationFlowFactoryArg;
 	}
 
 	/**
@@ -197,8 +198,6 @@ public class TasksResource {
 			throw new DMPConverterException("there is no configuration for this input data model of this task");
 		}
 
-		final TransformationFlow flow = TransformationFlow.fromTask(task, internalModelServiceFactoryProvider);
-
 		final Optional<Iterator<Tuple<String, JsonNode>>> inputData = dataModelUtil.getData(inputDataModel.getUuid(), Optional.fromNullable(atMost));
 
 		if (!inputData.isPresent()) {
@@ -210,9 +209,9 @@ public class TasksResource {
 
 		final Iterator<Tuple<String, JsonNode>> tupleIterator = inputData.get();
 
-		final boolean writeResultToDatahub;
+		final boolean writeResultToDatahub = persistResult != null && persistResult;
 
-		writeResultToDatahub = persistResult != null && persistResult;
+		final TransformationFlow flow = transformationFlowFactory.fromTask(task);
 
 		final String result = flow.apply(tupleIterator, writeResultToDatahub);
 

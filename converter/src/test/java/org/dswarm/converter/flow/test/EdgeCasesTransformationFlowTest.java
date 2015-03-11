@@ -20,14 +20,13 @@ import java.io.IOException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Provider;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.TransformationFlow;
-import org.dswarm.persistence.service.InternalModelServiceFactory;
+import org.dswarm.converter.flow.TransformationFlowFactory;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class EdgeCasesTransformationFlowTest extends GuicedTest {
@@ -38,10 +37,10 @@ public class EdgeCasesTransformationFlowTest extends GuicedTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("test-mabxml.ws1ec1.result.json");
 
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
-				.getProvider(InternalModelServiceFactory.class);
+		final TransformationFlowFactory flowFactory = GuicedTest.injector
+				.getInstance(TransformationFlowFactory.class);
 
-		final TransformationFlow flow = TransformationFlow.fromFile("ws1ec1morph.xml", internalModelServiceFactoryProvider);
+		final TransformationFlow flow = flowFactory.fromFile("ws1ec1morph.xml");
 
 		final String actual = flow.applyResource("ralfs_mabxml.tuples.json");
 

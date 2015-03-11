@@ -22,16 +22,15 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Provider;
 import org.junit.Assert;
 import org.junit.Test;
 
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.TransformationFlow;
+import org.dswarm.converter.flow.TransformationFlowFactory;
 import org.dswarm.converter.flow.utils.DMPConverterUtils;
 import org.dswarm.converter.morph.MorphScriptBuilder;
 import org.dswarm.persistence.model.job.Task;
-import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class FilterTransformationFlowTest extends GuicedTest {
@@ -41,10 +40,10 @@ public class FilterTransformationFlowTest extends GuicedTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("test-mabxml.filter.result.json");
 
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
-				.getProvider(InternalModelServiceFactory.class);
+		final TransformationFlowFactory flowFactory = GuicedTest.injector
+				.getInstance(TransformationFlowFactory.class);
 
-		final TransformationFlow flow = TransformationFlow.fromFile("filtermorph.xml", internalModelServiceFactoryProvider);
+		final TransformationFlow flow = flowFactory.fromFile("filtermorph.xml");
 
 		final String actual = flow.applyResource("test-mabxml.tuples.json");
 
@@ -59,10 +58,10 @@ public class FilterTransformationFlowTest extends GuicedTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("test-mabxml.filter.result.2.json");
 
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
-				.getProvider(InternalModelServiceFactory.class);
+		final TransformationFlowFactory flowFactory = GuicedTest.injector
+				.getInstance(TransformationFlowFactory.class);
 
-		final TransformationFlow flow = TransformationFlow.fromFile("filtermorph2.xml", internalModelServiceFactoryProvider);
+		final TransformationFlow flow = flowFactory.fromFile("filtermorph2.xml");
 
 		final String actual = flow.applyResource("test-mabxml.tuples.2.json");
 
@@ -74,7 +73,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 
 	/**
 	 * selects the 2nd value of the 2nd match
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -82,10 +81,10 @@ public class FilterTransformationFlowTest extends GuicedTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("test-mabxml.filter.result.3.json");
 
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
-				.getProvider(InternalModelServiceFactory.class);
+		final TransformationFlowFactory flowFactory = GuicedTest.injector
+				.getInstance(TransformationFlowFactory.class);
 
-		final TransformationFlow flow = TransformationFlow.fromFile("filtermorph3.xml", internalModelServiceFactoryProvider);
+		final TransformationFlow flow = flowFactory.fromFile("filtermorph3.xml");
 
 		final String actual = flow.applyResource("test-mabxml.tuples.json");
 
@@ -100,10 +99,10 @@ public class FilterTransformationFlowTest extends GuicedTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("test-mabxml.filter.result.4.json");
 
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
-				.getProvider(InternalModelServiceFactory.class);
+		final TransformationFlowFactory flowFactory = GuicedTest.injector
+				.getInstance(TransformationFlowFactory.class);
 
-		final TransformationFlow flow = TransformationFlow.fromFile("filtermorph4.xml", internalModelServiceFactoryProvider);
+		final TransformationFlow flow = flowFactory.fromFile("filtermorph4.xml");
 
 		final String actual = flow.applyResource("test-mabxml.tuples.json");
 
@@ -118,10 +117,10 @@ public class FilterTransformationFlowTest extends GuicedTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("test-ralfs_mabxml.filter.result.5.json");
 
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
-				.getProvider(InternalModelServiceFactory.class);
+		final TransformationFlowFactory flowFactory = GuicedTest.injector
+				.getInstance(TransformationFlowFactory.class);
 
-		final TransformationFlow flow = TransformationFlow.fromFile("filtermorph5.xml", internalModelServiceFactoryProvider);
+		final TransformationFlow flow = flowFactory.fromFile("filtermorph5.xml");
 
 		final String actual = flow.applyResource("ralfs_mabxml.tuples.json");
 
@@ -136,10 +135,10 @@ public class FilterTransformationFlowTest extends GuicedTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("test-ralfs_mabxml.filter.result.7.json");
 
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
-				.getProvider(InternalModelServiceFactory.class);
+		final TransformationFlowFactory flowFactory = GuicedTest.injector
+				.getInstance(TransformationFlowFactory.class);
 
-		final TransformationFlow flow = TransformationFlow.fromFile("filtermorph7.xml", internalModelServiceFactoryProvider);
+		final TransformationFlow flow = flowFactory.fromFile("filtermorph7.xml");
 
 		final String actual = flow.applyResource("ralfs_mabxml.tuples.json");
 
@@ -154,10 +153,10 @@ public class FilterTransformationFlowTest extends GuicedTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("test-ralfs_mabxml.filter.result.6.json");
 
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
-				.getProvider(InternalModelServiceFactory.class);
+		final TransformationFlowFactory flowFactory = GuicedTest.injector
+				.getInstance(TransformationFlowFactory.class);
 
-		final TransformationFlow flow = TransformationFlow.fromFile("filtermorph6.xml", internalModelServiceFactoryProvider);
+		final TransformationFlow flow = flowFactory.fromFile("filtermorph6.xml");
 
 		final String actual = flow.applyResource("ralfs_mabxml.tuples.json");
 
@@ -172,8 +171,8 @@ public class FilterTransformationFlowTest extends GuicedTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("test-mabxml.filter.morphscript.result.json");
 
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
-				.getProvider(InternalModelServiceFactory.class);
+		final TransformationFlowFactory flowFactory = GuicedTest.injector
+				.getInstance(TransformationFlowFactory.class);
 
 		final String request = DMPPersistenceUtil.getResourceAsString("task.filter.json");
 
@@ -183,7 +182,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 
 		final String morphScriptString = new MorphScriptBuilder().apply(task).toString();
 
-		final TransformationFlow flow = TransformationFlow.fromString(morphScriptString, internalModelServiceFactoryProvider);
+		final TransformationFlow flow = flowFactory.fromString(morphScriptString);
 
 		flow.getScript();
 

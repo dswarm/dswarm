@@ -19,14 +19,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.google.inject.Provider;
 import org.junit.Assert;
 import org.junit.Test;
 
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.TransformationFlow;
+import org.dswarm.converter.flow.TransformationFlowFactory;
 import org.dswarm.persistence.model.job.Task;
-import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -39,8 +38,8 @@ public class CSVTransformationFlowTestSorted extends GuicedTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("test_transf_sorted.result.json");
 
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
-				.getProvider(InternalModelServiceFactory.class);
+		final TransformationFlowFactory flowFactory = GuicedTest.injector
+				.getInstance(TransformationFlowFactory.class);
 
 		final String finalTaskJSONString = DMPPersistenceUtil.getResourceAsString("dd-474.task.json");
 		final ObjectMapper objectMapper = DMPPersistenceUtil.getJSONObjectMapper();
@@ -52,7 +51,7 @@ public class CSVTransformationFlowTestSorted extends GuicedTest {
 
 		final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
 
-		final TransformationFlow flow = TransformationFlow.fromTask(task, internalModelServiceFactoryProvider);
+		final TransformationFlow flow = flowFactory.fromTask(task);
 
 		flow.getScript();
 
