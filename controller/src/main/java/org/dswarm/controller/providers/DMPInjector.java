@@ -25,6 +25,7 @@ import com.typesafe.config.Config;
 
 import org.dswarm.controller.guice.DMPModule;
 import org.dswarm.controller.guice.DMPServletModule;
+import org.dswarm.converter.ConverterModule;
 import org.dswarm.init.ConfigModule;
 import org.dswarm.init.LoggingConfigurator;
 import org.dswarm.persistence.JacksonObjectMapperModule;
@@ -88,6 +89,7 @@ public class DMPInjector extends GuiceServletContextListener {
 				new JpaHibernateModule(configInjector),
 				new JacksonObjectMapperModule(),
 				new PersistenceModule(),
+				new ConverterModule(),
 				new DMPModule(),
 				new DMPServletModule());
 	}

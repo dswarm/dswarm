@@ -54,6 +54,7 @@ public abstract class GuicedTest {
 		return configInjector.createChildInjector(
 				objectMapperModule,
 				new PersistenceModule(),
+				new ConverterModule(),
 				new JpaHibernateModule(configInjector));
 	}
 

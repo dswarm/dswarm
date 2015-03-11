@@ -26,6 +26,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 import org.dswarm.controller.guice.DMPModule;
+import org.dswarm.converter.ConverterModule;
 import org.dswarm.init.ConfigModule;
 import org.dswarm.init.LoggingConfigurator;
 import org.dswarm.persistence.JacksonObjectMapperModule;
@@ -51,6 +52,7 @@ public abstract class GuicedTest {
 				objectMapperModule,
 				new JpaHibernateModule(configInjector),
 				new PersistenceModule(),
+				new ConverterModule(),
 				new DMPModule(),
 				new TestModule());
 	}
