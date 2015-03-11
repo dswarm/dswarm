@@ -81,10 +81,32 @@ public class FilterTransformationFlowTest extends GuicedTest {
 		testFilter("test-mabxml.tuples.3.2.json", Optional.of("skipfiltermorph1.2.xml"), "transformationmorph1.xml", "skipfilter.morph.result.1.json");
 	}
 
+	/**
+	 * field (with two values) occurs only once
+	 *
+	 * @throws Exception
+	 */
 	@Test
 	public void testFilterEndToEndWithMultipleResults() throws Exception {
 
 		testFilter("test-mabxml.tuples.2.json", Optional.<String>empty(), "filtermorph2.xml", "test-mabxml.filter.result.2.json");
+	}
+
+	/**
+	 * field (with two values) occurs twice
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testFilterEndToEndWithMultipleResults2() throws Exception {
+
+		testFilter("test-mabxml.tuples.json", Optional.<String>empty(), "filtermorph2.xml", "test-mabxml.filter.result.2.1.json");
+	}
+
+	@Test
+	public void testFilterEndToEndWithMultipleResultsSF() throws Exception {
+
+		testFilter("test-mabxml.tuples.4.json", Optional.of("skipfiltermorph2.xml"), "transformationmorph2.xml", "test-mabxml.filter.result.2.2.json");
 	}
 
 	/**

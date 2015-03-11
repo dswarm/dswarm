@@ -1,1 +1,8 @@
-[{"http://data.slub-dresden.de/datamodels/1/records/8fd200b4-b432-4618-9c1a-6cded44848de":[{"http://www.w3.org/1999/02/22-rdf-syntax-ns#type":"http://purl.org/ontology/bibo/Document"},{"http://data.slub-dresden.de/datamodels/db071822-a8b1-4b8c-a6fc-a09a4fad2bc9/schema#ok2":"Roll, Gernot"}]}]
+[
+  {
+    "http://data.slub-dresden.de/datamodels/1/records/8fd200b4-b432-4618-9c1a-6cded44848de": [
+      {"http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"},
+      {"http://data.slub-dresden.de/datamodels/db071822-a8b1-4b8c-a6fc-a09a4fad2bc9/schema#ok2": "Roll, Gernot"}
+    ]
+  }
+]
