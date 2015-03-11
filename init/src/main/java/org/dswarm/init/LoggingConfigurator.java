@@ -138,6 +138,10 @@ public final class LoggingConfigurator {
 				.withBasePath(loggingPath).addPath("monitoring")
 				.withName("Monitoring")
 				.withLevel(Level.INFO)
+				.appendTo(logger)
+				.withMarkerFilter("EXECUTION")
+				.withName("Execution")
+				.withLogFileBaseName("executions")
 				.appendTo(logger);
 	}
 }
