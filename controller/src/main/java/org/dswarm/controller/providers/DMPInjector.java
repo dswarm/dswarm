@@ -34,7 +34,7 @@ import org.dswarm.persistence.PersistenceModule;
 /**
  * The Guice injector for the backend API. Register here all Guice configuration that should be recognized when the backend API is
  * running.
- * 
+ *
  * @author phorn
  */
 public class DMPInjector extends GuiceServletContextListener {

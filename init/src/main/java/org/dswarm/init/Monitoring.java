@@ -13,28 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dswarm.converter;
+package org.dswarm.init;
 
-import com.google.inject.AbstractModule;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.google.inject.BindingAnnotation;
+import java.lang.annotation.Target;
+import java.lang.annotation.Retention;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
 
-import org.dswarm.converter.schema.SolrSchemaParser;
-import org.dswarm.converter.schema.XMLSchemaParser;
-
-/**
- * The Guice configuration of the converter module. Interface/classes that are registered here can be utilised for injection.
- *
- * @author phorn
- */
-public class ConverterModule extends AbstractModule {
-
-	private static final Logger	LOG	= LoggerFactory.getLogger(ConverterModule.class);
-
-	@Override
-	protected void configure() {
-
-		bind(XMLSchemaParser.class);
-		bind(SolrSchemaParser.class);
-	}
+@BindingAnnotation @Target({ FIELD, PARAMETER, METHOD }) @Retention(RUNTIME)
+public @interface Monitoring {
+	String LOGGER_NAME = "dswarm.monitoring";
 }

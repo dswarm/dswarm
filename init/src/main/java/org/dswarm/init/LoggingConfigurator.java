@@ -104,6 +104,7 @@ public final class LoggingConfigurator {
 	private static void configureLogback(final String loggingPath, final LoggerContext lc, final Level logLevel, final Level rootLogLevel) {
 		configureDswarmLogger(loggingPath, lc, logLevel);
 		configureRootLogger(loggingPath, lc, rootLogLevel);
+		configureMonitoringLogger(loggingPath, lc);
 	}
 
 	private static void configureDswarmLogger(final String loggingPath, final LoggerContext lc, final Level logLevel) {
@@ -123,6 +124,13 @@ public final class LoggingConfigurator {
 		rootLogger.addAppender(addFileAppender(lc, loggingPath, "default", Level.INFO));
 		rootLogger.addAppender(addFileAppender(lc, loggingPath, "default", Level.WARN));
 		rootLogger.addAppender(addFileAppender(lc, loggingPath, "default", Level.ERROR));
+	}
+
+	private static void configureMonitoringLogger(final String loggingPath, final LoggerContext lc) {
+		final Logger logger = lc.getLogger(Monitoring.LOGGER_NAME);
+		logger.detachAndStopAllAppenders();
+		logger.setLevel(Level.INFO);
+		logger.addAppender(addFileAppender(lc, loggingPath, "monitoring", Level.INFO));
 	}
 
 	private static Appender<ILoggingEvent> addFileAppender(final Context lc, final String loggingPath, final Level level) {

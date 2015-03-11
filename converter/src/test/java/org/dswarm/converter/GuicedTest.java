@@ -37,7 +37,7 @@ import org.dswarm.persistence.service.internal.test.utils.InternalGDMGraphServic
 public abstract class GuicedTest {
 
 	protected static Injector injector;
-	
+
 	protected MaintainDBService maintainDBService;
 
 	public static Injector getInjector() {
@@ -71,7 +71,7 @@ public abstract class GuicedTest {
 		GuicedTest.injector.getInstance(PersistService.class).stop();
 		org.dswarm.persistence.GuicedTest.tearDown();
 	}
-	
+
 	@Before
 	public void prepare() throws Exception {
 
@@ -93,7 +93,7 @@ public abstract class GuicedTest {
 		//		maintainDBService.truncateTables();
 		InternalGDMGraphServiceTestUtils.cleanGraphDB();
 	}
-	
+
 	protected void initObjects() {
 
 		maintainDBService = GuicedTest.injector.getInstance(MaintainDBService.class);
