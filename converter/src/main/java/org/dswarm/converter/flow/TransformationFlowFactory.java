@@ -34,6 +34,7 @@ import org.dswarm.persistence.model.job.Task;
 import org.dswarm.persistence.model.resource.DataModel;
 
 import static org.dswarm.converter.flow.TransformationFlow.createFilter;
+import static org.dswarm.converter.flow.TransformationFlow.createMorph;
 import static org.dswarm.converter.flow.TransformationFlow.readFile;
 import static org.dswarm.converter.flow.TransformationFlow.readResource;
 import static org.dswarm.converter.flow.TransformationFlow.readString;
@@ -147,15 +148,15 @@ public interface TransformationFlowFactory {
 			final Optional<Reader> filterScript,
 			final Optional<DataModel> outputDataModel) throws DMPMorphDefException {
 
-		final String content;
+		final String morphContent;
 		try {
-			content = CharStreams.toString(morphScript);
-			morphScript.reset();
+			morphContent = CharStreams.toString(morphScript);
+			morphScript.close();
 		} catch (final IOException e) {
 			throw new DMPMorphDefException("could not read morph string", e);
 		}
 
-		final Metamorph morph = TransformationFlow.createMorph(morphScript);
+		final Metamorph morph = createMorph(new StringReader(morphContent));
 		final Optional<Filter> filter;
 		if (filterScript.isPresent()) {
 			filter = Optional.of(createFilter(filterScript.get()));
@@ -163,7 +164,6 @@ public interface TransformationFlowFactory {
 			filter = Optional.absent();
 		}
 
-		return create(morph, content, outputDataModel, filter);
-
+		return create(morph, morphContent, outputDataModel, filter);
 	}
 }
