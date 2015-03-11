@@ -43,7 +43,6 @@ public final class ObjectTimer extends TimerBased<ObjectReceiver<GDMModel>>
 	@Override
 	public void process(final GDMModel obj) {
 		final TimingContext context = startMeasurement("process");
-		// TODO: measure gdm level metrics?
 		try {
 			getReceiver().process(obj);
 		} finally {

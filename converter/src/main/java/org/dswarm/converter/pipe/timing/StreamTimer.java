@@ -45,15 +45,24 @@ public final class StreamTimer extends TimerBased<StreamReceiver> implements Str
 	public void startRecord(final String identifier) {
 		final TimingContext context = startMeasurement("records");
 		recordContexts.offerLast(context);
-		getReceiver().startRecord(identifier);
+		try {
+			getReceiver().startRecord(identifier);
+		} catch (final Throwable t) {
+			// Remove context for failed downstream calls
+			// Not closing/stopping the context does not track the time
+			recordContexts.removeLast();
+		}
 	}
 
 	@Override
 	public void endRecord() {
-		getReceiver().endRecord();
-		final TimingContext context = recordContexts.pollLast();
-		if (context != null) {
-			context.stop();
+		try {
+			getReceiver().endRecord();
+		} finally {
+			final TimingContext context = recordContexts.pollLast();
+			if (context != null) {
+				context.stop();
+			}
 		}
 	}
 
@@ -61,22 +70,34 @@ public final class StreamTimer extends TimerBased<StreamReceiver> implements Str
 	public void startEntity(final String name) {
 		final TimingContext context = startMeasurement("entities");
 		entityContexts.offerLast(context);
-		getReceiver().startEntity(name);
+		try {
+			getReceiver().startEntity(name);
+		} catch (final Throwable t) {
+			// Remove context for failed downstream calls
+			// Not closing/stopping the context does not track the time
+			entityContexts.removeLast();
+		}
 	}
 
 	@Override
 	public void endEntity() {
-		getReceiver().endEntity();
-		final TimingContext context = entityContexts.pollLast();
-		if (context != null) {
-			context.stop();
+		try {
+			getReceiver().endEntity();
+		} finally {
+			final TimingContext context = entityContexts.pollLast();
+			if (context != null) {
+				context.stop();
+			}
 		}
 	}
 
 	@Override
 	public void literal(final String name, final String value) {
-		getReceiver().literal(name, value);
-		context.stop();
 		final TimingContext context = startMeasurement("literals");
+		try {
+			getReceiver().literal(name, value);
+		} finally {
+			context.stop();
+		}
 	}
 }
