@@ -78,7 +78,8 @@ public class FilterTransformationFlowTest extends GuicedTest {
 	@Test
 	public void testFilterEndToEndWithOneResultSF2() throws Exception {
 
-		testFilter("test-mabxml.tuples.3.2.json", Optional.of("skipfiltermorph1.2.xml"), "transformationmorph1.xml", "skipfilter.morph.result.1.json");
+		testFilter("test-mabxml.tuples.3.2.json", Optional.of("skipfiltermorph1.2.xml"), "transformationmorph1.xml",
+				"skipfilter.morph.result.1.json");
 	}
 
 	/**
@@ -106,7 +107,8 @@ public class FilterTransformationFlowTest extends GuicedTest {
 	@Test
 	public void testFilterEndToEndWithMultipleResultsSF() throws Exception {
 
-		testFilter("test-mabxml.tuples.4.json", Optional.of("skipfiltermorph2.xml"), "transformationmorph2.xml", "test-mabxml.filter.result.2.2.json");
+		testFilter("test-mabxml.tuples.4.json", Optional.of("skipfiltermorph2.xml"), "transformationmorph2.xml",
+				"test-mabxml.filter.result.2.2.json");
 	}
 
 	/**
@@ -128,13 +130,20 @@ public class FilterTransformationFlowTest extends GuicedTest {
 	@Test
 	public void testFilterEndToEndWithMultipleResultsAndRepeatableElementsSF() throws Exception {
 
-		testFilter("test-mabxml.tuples.5.json", Optional.of("skipfiltermorph3.xml"), "transformationmorph3.xml", "test-mabxml.filter.result.3.1.json");
+		testFilter("test-mabxml.tuples.5.json", Optional.of("skipfiltermorph3.xml"), "transformationmorph3.xml",
+				"test-mabxml.filter.result.3.1.json");
 	}
 
 	@Test
 	public void testFilterEndToEndWithMultipleResultsAndSelectingSpecificIndex() throws Exception {
 
 		testFilter("test-mabxml.tuples.json", Optional.<String>empty(), "filtermorph4.xml", "test-mabxml.filter.result.4.json");
+	}
+
+	@Test
+	public void testFilterEndToEndWithMultipleResultsAndSelectingSpecificIndexSF() throws Exception {
+
+		testFilter("test-mabxml.tuples.5.json", Optional.of("skipfiltermorph2.xml"), "filtermorph4.xml", "test-mabxml.filter.result.4.1.json");
 	}
 
 	@Test
@@ -236,6 +245,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 			final ObjectNode expectedTuple = (ObjectNode) iter.next();
 			final String expectedFieldName = expectedTuple.fieldNames().next();
 			final ArrayNode expectedContent = (ArrayNode) expectedTuple.get(expectedFieldName);
+			final int expectedContentSize = expectedContent.size();
 			ObjectNode expectedContentJson = null;
 			JsonNode typeNode = null;
 
@@ -254,6 +264,8 @@ public class FilterTransformationFlowTest extends GuicedTest {
 			}
 
 			if (expectedContentJson == null) {
+
+				iterCount++;
 
 				continue;
 			}
@@ -291,14 +303,23 @@ public class FilterTransformationFlowTest extends GuicedTest {
 				actualContentJson = actualContentJsonCandidate;
 			}
 
-			Assert.assertNotNull("the actual content JSON shouldn't be null", actualContentJson);
-			Assert.assertTrue("the actual content JSON should be a JSON object", actualContentJson.isObject());
+			final ObjectNode newExpectedContentJson;
 
-			final ObjectNode newExpectedContentJson = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
-			newExpectedContentJson.set(actualContentJson.fieldNames().next(), expectedContentValue);
+			if ((expectedContentSize > 1 && typeNode != null) || (typeNode == null && expectedContentSize == 1)) {
+
+				Assert.assertNotNull("the actual content JSON shouldn't be null", actualContentJson);
+				Assert.assertTrue("the actual content JSON should be a JSON object", actualContentJson.isObject());
+
+				newExpectedContentJson = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
+				newExpectedContentJson.set(actualContentJson.fieldNames().next(), expectedContentValue);
+			} else {
+
+				newExpectedContentJson = null;
+			}
+
 			final ArrayNode newExpectedContent = DMPPersistenceUtil.getJSONObjectMapper().createArrayNode();
 
-			if (typeNode != null) {
+			if (typeNode != null && newExpectedContentJson != null) {
 
 				if (typeNodePosition != null) {
 
@@ -315,10 +336,14 @@ public class FilterTransformationFlowTest extends GuicedTest {
 
 					newExpectedContent.add(newExpectedContentJson);
 				}
-			} else {
+			} else if (newExpectedContentJson != null) {
 
 				newExpectedContent.add(newExpectedContentJson);
+			} else {
+
+				newExpectedContent.add(typeNode);
 			}
+
 			expectedTuple.set(expectedFieldName, newExpectedContent);
 
 			iterCount++;
