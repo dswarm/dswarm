@@ -41,6 +41,7 @@ import com.google.common.collect.Sets;
 import com.google.inject.Provider;
 import org.culturegraph.mf.exceptions.MorphDefException;
 import org.culturegraph.mf.framework.ObjectPipe;
+import org.culturegraph.mf.framework.StreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.stream.pipe.Filter;
@@ -230,7 +231,23 @@ public class TransformationFlow {
 		final GDMModelReceiver writer = new GDMModelReceiver();
 
 		// .setReceiver(collapser)
-		opener.setReceiver(transformer).setReceiver(unflattener).setReceiver(converter).setReceiver(writer);
+
+		final StreamPipe<StreamReceiver> starter;
+
+		if(optionalSkipFilter.isPresent()) {
+
+			// skip filter + transformation morph script
+
+			starter = opener.setReceiver(optionalSkipFilter.get()).setReceiver(transformer);
+
+		} else {
+
+			// transformation morph script
+
+			starter = opener.setReceiver(transformer);
+		}
+
+		starter.setReceiver(unflattener).setReceiver(converter).setReceiver(writer);
 		//opener.setReceiver(transformer).setReceiver(converter).setReceiver(writer);
 
 		opener.process(tuples);
