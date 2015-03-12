@@ -14,11 +14,11 @@
 					 flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" includeSubEntities="true">
 					<data
 							source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
-						<equals string="p"/>
+						<regexp match="p"/>
 					</data>
 					<data
 							source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
-						<equals string="077"/>
+						<regexp match="077"/>
 					</data>
 				</all>
 			</if>

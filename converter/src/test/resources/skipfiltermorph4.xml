@@ -6,13 +6,12 @@
 		<name>mapping1</name>
 	</meta>
 	<rules>
-		<combine name="ok" value="${ok2}" flushWith="record" reset="false">
-			<combine name="ok2" value="${out}" sameEntity="true"
+			<combine name="ok" value="${out}" sameEntity="true"
 					 flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield"
 					 reset="true" includeSubEntities="true">
 				<if>
 					<all name="CONDITION_ALL" reset="true"
-						 flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind1"
+						 flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code"
 						 includeSubEntities="true">
 						<data
 								source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag">
@@ -33,6 +32,5 @@
 					<constant value="true"/>
 				</data>
 			</combine>
-		</combine>
 	</rules>
 </metamorph>

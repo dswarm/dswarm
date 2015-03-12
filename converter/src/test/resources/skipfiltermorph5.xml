@@ -6,25 +6,31 @@
 		<name>mapping1</name>
 	</meta>
 	<rules>
-
 		<combine name="ok" value="${out}" sameEntity="true"
 				 flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield"
 				 reset="true" includeSubEntities="true">
 			<if>
 				<all name="CONDITION_ALL" reset="true"
-					 flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind1" includeSubEntities="true">
+					 flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code"
+					 includeSubEntities="true">
 					<data
 							source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag">
-						<regexp match="088"/>
+						<regexp match="102"/>
 					</data>
 					<data
 							source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind1">
-						<regexp match="a"/>
+						<regexp match="x"/>
+					</data>
+					<data
+							source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code">
+						<regexp match="c"/>
 					</data>
 				</all>
 			</if>
 			<data name="out"
-				  source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+				  source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code">
+				<constant value="true"/>
+			</data>
 		</combine>
 	</rules>
 </metamorph>
