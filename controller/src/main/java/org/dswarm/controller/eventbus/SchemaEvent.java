@@ -16,6 +16,7 @@
 package org.dswarm.controller.eventbus;
 
 import org.dswarm.persistence.model.resource.DataModel;
+import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 
 public class SchemaEvent extends DataModelEvent {
 
@@ -23,29 +24,35 @@ public class SchemaEvent extends DataModelEvent {
 		CSV, XML, XSD;
 
 		public static SchemaType fromString(final String type) {
-			if ("schema".equals(type)) {
-				return XSD;
+
+			if (type == null) {
+
+				throw new IllegalArgumentException("couldn't determine schema type, because it is null");
 			}
-			if ("csv".equals(type)) {
-				return CSV;
+
+			switch (type) {
+
+				case ConfigurationStatics.SCHEMA_STORAGE_TYPE:
+				case ConfigurationStatics.XML_STORAGE_TYPE:
+				case ConfigurationStatics.MABXML_STORAGE_TYPE:
+				case ConfigurationStatics.MARCXML_STORAGE_TYPE:
+				case ConfigurationStatics.PNX_STORAGE_TYPE:
+				case ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE:
+				case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
+				case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
+
+					return XSD;
+				case ConfigurationStatics.CSV_STORAGE_TYPE:
+
+					return CSV;
+				default:
+
+					throw new IllegalArgumentException("No schema type for [" + type + "]");
 			}
-			if ("xml".equals(type)) {
-				return XSD;
-			}
-			if ("mabxml".equals(type)) {
-				return XSD;
-			}
-			if ("marc21".equals(type)) {
-				return XSD;
-			}
-			if ("pnx".equals(type)) {
-				return XSD;
-			}
-			throw new IllegalArgumentException("No schema type for [" + type + "]");
 		}
 	}
 
-	private final SchemaType	schemaType;
+	private final SchemaType schemaType;
 
 	public SchemaEvent(final DataModel dataModel, final SchemaType schemaType) {
 
