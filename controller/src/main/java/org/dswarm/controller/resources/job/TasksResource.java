@@ -39,6 +39,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
+import com.google.inject.name.Named;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -59,6 +60,7 @@ import org.dswarm.converter.flow.TransformationFlow;
 import org.dswarm.converter.flow.TransformationFlowFactory;
 import org.dswarm.converter.morph.MorphScriptBuilder;
 import org.dswarm.init.Monitoring;
+import org.dswarm.persistence.MonitoringLogger;
 import org.dswarm.persistence.model.job.Job;
 import org.dswarm.persistence.model.job.Mapping;
 import org.dswarm.persistence.model.job.Task;
@@ -102,6 +104,7 @@ public class TasksResource {
 
 	private final TransformationFlowFactory transformationFlowFactory;
 	private final MetricRegistry registry;
+	private final MonitoringLogger monitoringLogger;
 
 	/**
 	 * Creates a new resource (controller service) for {@link Transformation}s with the provider of the transformation persistence
@@ -110,18 +113,21 @@ public class TasksResource {
 	 * @param objectMapperArg  an object mapper
 	 * @param transformationFlowFactoryArg the factory for creating transformation flows
 	 * @param registryArg the registry for monitoring purposes
+	 * @param monitoringLogger A logger that produces the logfiles for the monitoring
 	 */
 	@Inject
 	public TasksResource(
 			final DataModelUtil dataModelUtilArg,
 			final ObjectMapper objectMapperArg,
 			final TransformationFlowFactory transformationFlowFactoryArg,
-			@Monitoring final MetricRegistry registryArg){
+			@Monitoring final MetricRegistry registryArg,
+			@Monitoring final MonitoringLogger monitoringLogger){
 
 		dataModelUtil = dataModelUtilArg;
 		objectMapper = objectMapperArg;
 		transformationFlowFactory = transformationFlowFactoryArg;
 		registry = registryArg;
+		this.monitoringLogger = monitoringLogger;
 		executionsTimer = registry.timer(MetricRegistry.name(Task.class, "executions"));
 	}
 
@@ -232,11 +238,18 @@ public class TasksResource {
 
 		final Timer.Context context = executionsTimer.time();
 
-		final TransformationFlow flow = transformationFlowFactory.fromTask(task);
+		final String result;
+		try {
 
-		final String result = flow.apply(tupleIterator, writeResultToDatahub);
+			final TransformationFlow flow = transformationFlowFactory.fromTask(task);
+			result = flow.apply(tupleIterator, writeResultToDatahub);
 
-		context.stop();
+		} finally {
+
+			context.stop();
+			monitoringLogger.report();
+		}
+
 
 		if (result == null) {
 
@@ -273,7 +286,7 @@ public class TasksResource {
 
 	private void monitorTaskExecution(final Task task) {
 		final Instant now = Instant.now();
-		MONITOR_LOG.debug(EXECUTION_MARKER,
+		MONITOR_LOG.info(EXECUTION_MARKER,
 				"Task execution of [{}] at [{}], unix [{}]",
 				task.getUuid(), now, now.getEpochSecond());
 

@@ -42,15 +42,15 @@ public abstract class GuicedTest {
 	public static Injector getInjector() {
 
 		final ConfigModule configModule = new ConfigModule();
-		final Injector configInjector = Guice.createInjector(configModule);
-
-		final Config config = configInjector.getInstance(Config.class);
+		final Config config = configModule.getConfig();
 		LoggingConfigurator.configureFrom(config);
 
-		return configInjector.createChildInjector(
+		return Guice.createInjector(
+				configModule,
 				new PersistenceModule(),
 				new JacksonObjectMapperModule(),
-				new JpaHibernateModule(configInjector));
+				new JpaHibernateModule(config)
+		);
 	}
 
 	public static <T> T configValue(final String configPath, final Class<T> cls) {

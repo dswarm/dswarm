@@ -19,7 +19,6 @@ import java.util.Properties;
 
 import com.google.common.base.Preconditions;
 import com.google.inject.AbstractModule;
-import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.typesafe.config.Config;
@@ -32,9 +31,8 @@ public class JpaHibernateModule extends AbstractModule {
 	private final boolean isLogSql;
 	private final String  jpaUnit;
 
-	public JpaHibernateModule(final Injector configInjector) {
-		Preconditions.checkNotNull(configInjector);
-		final Config config = configInjector.getInstance(Config.class);
+	public JpaHibernateModule(final Config config) {
+		Preconditions.checkNotNull(config);
 		final Config metadataConfig = config.getConfig("dswarm.db.metadata");
 
 		uri = metadataConfig.getString("uri");

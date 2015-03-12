@@ -35,6 +35,7 @@ import ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP;
 import ch.qos.logback.core.rolling.TimeBasedFileNamingAndTriggeringPolicy;
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
 import ch.qos.logback.core.spi.AppenderAttachable;
+import ch.qos.logback.core.spi.FilterReply;
 import com.google.common.collect.ImmutableList;
 
 final class LoggingAppender {
@@ -135,6 +136,8 @@ final class LoggingAppender {
 		final EvaluatorFilter<ILoggingEvent> filter = new EvaluatorFilter<>();
 		filter.setContext(context);
 		filter.setEvaluator(markerEvaluator);
+		filter.setOnMatch(FilterReply.ACCEPT);
+		filter.setOnMismatch(FilterReply.DENY);
 		filter.start();
 
 		return filter;
@@ -155,8 +158,8 @@ final class LoggingAppender {
 
 		rollingPolicy.setParent(fileAppender);
 		fileAppender.setRollingPolicy(rollingPolicy);
-		fileAppender.addFilter(levelFilter());
 		marker.map(this::markerFilter).ifPresent(fileAppender::addFilter);
+		fileAppender.addFilter(levelFilter());
 		fileAppender.setEncoder(encoder());
 		rollingPolicy.start();
 		fileAppender.start();

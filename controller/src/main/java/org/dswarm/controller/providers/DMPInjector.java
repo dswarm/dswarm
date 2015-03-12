@@ -80,17 +80,17 @@ public class DMPInjector extends GuiceServletContextListener {
 
 	private static Injector defaultInjector() {
 		final ConfigModule configModule = new ConfigModule();
-		final Injector configInjector = Guice.createInjector(configModule);
-
-		final Config config = configInjector.getInstance(Config.class);
+		final Config config = configModule.getConfig();
 		LoggingConfigurator.configureFrom(config);
 
-		return configInjector.createChildInjector(
-				new JpaHibernateModule(configInjector),
+		return Guice.createInjector(
+				configModule,
+				new JpaHibernateModule(config),
 				new JacksonObjectMapperModule(),
 				new PersistenceModule(),
 				new ConverterModule(),
 				new DMPModule(),
-				new DMPServletModule());
+				new DMPServletModule()
+		);
 	}
 }

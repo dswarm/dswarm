@@ -98,6 +98,8 @@ public class PersistenceModule extends AbstractModule {
 
 		bind(InternalModelServiceFactory.class).to(InternalServiceFactoryImpl.class).in(Scopes.SINGLETON);
 		bind(DMPUtil.class);
+
+		bind(MonitoringLogger.class).annotatedWith(Monitoring.class).to(MonitoringLogger.class);
 	}
 
 	/**
@@ -122,25 +124,30 @@ public class PersistenceModule extends AbstractModule {
 	 *
 	 * @return a {@link MetricRegistry} instance as singleton
 	 */
-	@Provides @Monitoring
-	@Singleton
+	@Provides @Monitoring @Singleton
 	protected static MetricRegistry provideMonitoringMetricRegistry(
+			@Monitoring final Logger logger,
 			@Named("dswarm.logging.metrics-interval") final long reportInterval,
 			@Named("dswarm.logging.log-metrics") final boolean shouldLogMetrics) {
 		final MetricRegistry registry = SharedMetricRegistries.getOrCreate(Monitoring.LOGGER_NAME);
-		if (shouldLogMetrics) {
-			startSlf4jLogging(registry, Monitoring.LOGGER_NAME, reportInterval, TimeUnit.MILLISECONDS);
-		}
+//		if (shouldLogMetrics) {
+//			startSlf4jLogging(registry, logger, reportInterval, TimeUnit.MILLISECONDS);
+//		}
 		return registry;
+	}
+
+	@Provides @Monitoring @Singleton
+	protected static Logger provideMonitoringLogger() {
+		return LoggerFactory.getLogger(Monitoring.LOGGER_NAME);
 	}
 
 	private static void startSlf4jLogging(
 			final MetricRegistry registry,
-			final String loggerName,
+			final Logger logger,
 			final long reportInterval,
 			final TimeUnit unit) {
 		final Slf4jReporter reporter = Slf4jReporter.forRegistry(registry)
-				.outputTo(LoggerFactory.getLogger(loggerName))
+				.outputTo(logger)
 				.convertRatesTo(TimeUnit.SECONDS)
 				.convertDurationsTo(TimeUnit.MILLISECONDS)
 				.withLoggingLevel(LoggingLevel.INFO)

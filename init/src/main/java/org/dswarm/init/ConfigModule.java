@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import javax.naming.InitialContext;
@@ -49,15 +50,35 @@ public final class ConfigModule extends AbstractModule {
 	private static final String OLD_LOG_CONFIG_ON_START = "dswarm.log-config-on-start";
 	private static final String LOG_CONFIG_ON_START = "dswarm.logging.log-config-on-start";
 
+	private static final AtomicReference<Optional<Config>> LOADED_CONFIG = new AtomicReference<>(Optional.empty());
+
+	public Config getConfig() {
+		return config;
+	}
+
+	private Config config;
+
 	@Override
 	protected void configure() {
-		final Config config = ConfigFactoryWithOffloading.loadConfig();
+		config = loadConfig();
 		if (LOG.isInfoEnabled() && hasEnabled(config, LOG_CONFIG_ON_START, OLD_LOG_CONFIG_ON_START)) {
 			LOG.info(config.root().render());
 		}
 
 		bind(Config.class).toInstance(config);
 		bindConfig(config);
+	}
+
+	public static Config loadConfig() {
+		Optional<Config> prev, next;
+		do {
+			prev = LOADED_CONFIG.get();
+			if (prev.isPresent()) {
+				return prev.get();
+			}
+			next = Optional.of(ConfigFactoryWithOffloading.loadConfig());
+		} while (!LOADED_CONFIG.compareAndSet(prev, next));
+		return LOADED_CONFIG.get().get();
 	}
 
 	static boolean hasEnabled(final Config config, final String... paths) {
