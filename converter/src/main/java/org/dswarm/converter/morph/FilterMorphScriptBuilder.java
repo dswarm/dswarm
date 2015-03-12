@@ -15,6 +15,8 @@
  */
 package org.dswarm.converter.morph;
 
+import org.w3c.dom.Element;
+
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.persistence.model.job.Task;
 
@@ -28,5 +30,12 @@ public class FilterMorphScriptBuilder extends AbstractMorphScriptBuilder<FilterM
 		// TODO: add skip filter morph script generation here
 
 		return this;
+	}
+
+	@Override protected Element createFilterDataElement(final String variable, final String attributePathString) {
+
+		// TODO
+
+		return null;
 	}
 }

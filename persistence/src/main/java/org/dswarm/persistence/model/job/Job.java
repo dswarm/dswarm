@@ -52,11 +52,11 @@ public class Job extends ExtendedBasicDMPJPAObject {
 	private Set<Mapping> mappings;
 
 	/**
-	 * The filter of this job. Utilised as skip filter to skip the job for records that doesn't match the filter conditions.
+	 * The skip filter of this job. A skip filter to skip the job for records that doesn't match the filter conditions.
 	 */
-	@XmlElement(name = "filter")
+	@XmlElement(name = "skip_filter")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private Filter filter;
+	private Filter skipFilter;
 
 	protected Job() {
 
@@ -105,23 +105,23 @@ public class Job extends ExtendedBasicDMPJPAObject {
 	}
 
 	/**
-	 * Gets the filter of the job.
+	 * Gets the skip filter of the job.
 	 *
-	 * @return the filter of the job
+	 * @return the skip filter of the job
 	 */
-	public Filter getFilter() {
+	public Filter getSkipFilter() {
 
-		return filter;
+		return skipFilter;
 	}
 
 	/**
-	 * Sets the filter of the job.
+	 * Sets the skip filter of the job.
 	 *
-	 * @param filterArg a new filter
+	 * @param skipFilterArg a new skip filter
 	 */
-	public void setFilter(final Filter filterArg) {
+	public void setFilter(final Filter skipFilterArg) {
 
-		filter = filterArg;
+		skipFilter = skipFilterArg;
 	}
 
 	@Override
@@ -129,6 +129,6 @@ public class Job extends ExtendedBasicDMPJPAObject {
 
 		return Job.class.isInstance(obj) && super.completeEquals(obj)
 				&& DMPPersistenceUtil.getMappingUtils().completeEquals(((Job) obj).getMappings(), getMappings())
-				&& DMPPersistenceUtil.getFilterUtils().completeEquals(((Job) obj).getFilter(), getFilter());
+				&& DMPPersistenceUtil.getFilterUtils().completeEquals(((Job) obj).getSkipFilter(), getSkipFilter());
 	}
 }
