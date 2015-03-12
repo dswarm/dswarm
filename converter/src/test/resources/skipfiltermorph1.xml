@@ -6,19 +6,33 @@
 		<name>mapping1</name>
 	</meta>
 	<rules>
-				<all name="CONDITION_ALL">
-					<data
-							source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
-						<equals string="076"/>
-					</data>
-					<data
-							source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
-						<equals string="v"/>
-					</data>
-					<data
-							source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value">
-						<equals string="5"/>
-					</data>
-				</all>
+		<combine name="ok" value="${ok2}" flushWith="record" reset="false">
+			<combine name="ok2" value="${out}" sameEntity="true" reset="true" includeSubEntities="true"
+					 flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld">
+				<if>
+					<all name="CONDITION_ALL" reset="true"
+						 flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+						 includeSubEntities="true">
+						<data
+								source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
+							<equals string="076"/>
+						</data>
+						<data
+								source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
+							<equals string="v"/>
+						</data>
+						<data
+								source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value">
+							<equals string="5"/>
+						</data>
+					</all>
+				</if>
+				<!-- source must be an existing attribute path + constant can be an arbitrary value -->
+				<data name="out"
+					  source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value">
+					<constant value="true"/>
+				</data>
+			</combine>
+		</combine>
 	</rules>
 </metamorph>

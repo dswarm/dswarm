@@ -6,27 +6,29 @@
 		<name>mapping1</name>
 	</meta>
 	<rules>
-		<combine name="ok" value="${out}" sameEntity="true" reset="false" includeSubEntities="true"
-				 flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld">
-			<if>
-				<all name="CONDITION_ALL" reset="true"
-					 flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind"
-					 includeSubEntities="true">
-					<data
-							source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
-						<equals string="077"/>
-					</data>
-					<data
-							source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
-						<equals string="p"/>
-					</data>
-				</all>
-			</if>
-			<!-- source must be an existing attribute path + constant can be an arbitrary value -->
-			<data name="out"
-				  source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
-				<constant value="true"/>
-			</data>
+		<combine name="ok" value="${ok2}" flushWith="record" reset="false">
+			<combine name="ok2" value="${out}" sameEntity="true" reset="true" includeSubEntities="true"
+					 flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld">
+				<if>
+					<all name="CONDITION_ALL" reset="true"
+						 flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind"
+						 includeSubEntities="true">
+						<data
+								source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
+							<regexp match="077"/>
+						</data>
+						<data
+								source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
+							<regexp match="p"/>
+						</data>
+					</all>
+				</if>
+				<!-- source must be an existing attribute path + constant can be an arbitrary value -->
+				<data name="out"
+					  source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
+					<constant value="true"/>
+				</data>
+			</combine>
 		</combine>
 	</rules>
 </metamorph>

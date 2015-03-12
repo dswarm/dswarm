@@ -16,15 +16,15 @@
 						 includeSubEntities="true">
 						<data
 								source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag">
-							<equals string="088"/>
+							<regexp match="088"/>
 						</data>
 						<data
 								source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind1">
-							<equals string="a"/>
+							<regexp match="a"/>
 						</data>
 						<data
 								source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code">
-							<equals string="a"/>
+							<regexp match="a"/>
 						</data>
 					</all>
 				</if>
