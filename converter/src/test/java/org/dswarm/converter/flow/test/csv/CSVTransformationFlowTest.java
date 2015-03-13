@@ -59,6 +59,29 @@ public class CSVTransformationFlowTest extends GuicedTest {
 		testCSVTaskWithTuples("demo_csv.multiple_mappings.result.json", "demo_csv.multiple_mappings.task.json", "demo_csv.tuples.json");
 	}
 
+	/**
+	 * with skip filter
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testCSVMultipleMappings2() throws Exception {
+
+		testCSVTaskWithTuples("demo_csv.multiple_mappings.result.2.json", "demo_csv.multiple_mappings.task.2.json", "demo_csv.tuples.json");
+	}
+
+	/**
+	 * with skip filter
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testCSVMultipleMappings2Morph() throws Exception {
+
+		testCSVMorphWithTuples("demo_csv.multiple_mappings.result.2.json", "transformationmorph4.xml", "demo_csv.tuples.json",
+				Optional.of("skipfiltermorph6.xml"));
+	}
+
 	@Test
 	public void testCSVOneMappingWithMultipleFunctions() throws Exception {
 

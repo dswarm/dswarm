@@ -292,14 +292,27 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 	}
 
 	protected void addFilter(final String inputAttributePathStringXMLEscaped, final String variable, final Map<String, String> filterExpressionMap,
-			final Element rules) {
+			final Element rules, final boolean resultNameAsVariable) {
+
+		final String combineValueVariable = variable + MorphScriptBuilder.FILTER_VARIABLE_POSTFIX;
 
 		final Element combineAsFilter = doc.createElement(METAMORPH_FUNCTION_COMBINE);
 		combineAsFilter.setAttribute(MF_COLLECTOR_RESET_ATTRIBUTE_IDENTIFIER, BOOLEAN_VALUE_TRUE);
 		combineAsFilter.setAttribute(MF_COLLECTOR_SAME_ENTITY_ATTRIBUTE_IDENTIFIER, BOOLEAN_VALUE_TRUE);
 		combineAsFilter.setAttribute(MF_COLLECTOR_INCLUDE_SUB_ENTITIES_ATTRIBUTE_IDENTIFIER, BOOLEAN_VALUE_TRUE);
-		combineAsFilter.setAttribute(METAMORPH_DATA_TARGET, "@" + variable);
-		combineAsFilter.setAttribute(MF_ELEMENT_VALUE_ATTRIBUTE_IDENTIFIER, "${" + variable + MorphScriptBuilder.FILTER_VARIABLE_POSTFIX + "}");
+
+		final String resultName;
+
+		if(resultNameAsVariable) {
+
+			resultName = "@" + variable;
+		} else {
+
+			resultName = variable;
+		}
+
+		combineAsFilter.setAttribute(METAMORPH_DATA_TARGET, resultName);
+		combineAsFilter.setAttribute(MF_ELEMENT_VALUE_ATTRIBUTE_IDENTIFIER, "${" + combineValueVariable + "}");
 
 		final String commonAttributePath = validateCommonAttributePath(inputAttributePathStringXMLEscaped, filterExpressionMap.keySet());
 
@@ -328,7 +341,7 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 		filterIf.appendChild(filterAll);
 		combineAsFilter.appendChild(filterIf);
 
-		final Element combineAsFilterDataOut = createFilterDataElement(variable, inputAttributePathStringXMLEscaped);
+		final Element combineAsFilterDataOut = createFilterDataElement(combineValueVariable, inputAttributePathStringXMLEscaped);
 
 		combineAsFilter.appendChild(combineAsFilterDataOut);
 

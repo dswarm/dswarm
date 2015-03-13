@@ -101,6 +101,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		final List<String> metas = Lists.newArrayList();
 
 		for (final Mapping mapping : task.getJob().getMappings()) {
+
 			metas.add(MorphScriptBuilder.MAPPING_PREFIX + mapping.getUuid());
 
 			createTransformation(rules, mapping);
@@ -116,7 +117,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	@Override protected Element createFilterDataElement(final String variable, final String attributePathString) {
 
 		final Element combineAsFilterDataOut = doc.createElement(METAMORPH_ELEMENT_DATA);
-		combineAsFilterDataOut.setAttribute(METAMORPH_DATA_TARGET, variable + MorphScriptBuilder.FILTER_VARIABLE_POSTFIX);
+		combineAsFilterDataOut.setAttribute(METAMORPH_DATA_TARGET, variable);
 		combineAsFilterDataOut.setAttribute(METAMORPH_DATA_SOURCE, attributePathString);
 
 		return combineAsFilterDataOut;
@@ -461,7 +462,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 			rules.appendChild(data);
 		} else {
 
-			addFilter(inputAttributePathStringXMLEscaped, manipulatedVariable, filterExpressionMap, rules);
+			addFilter(inputAttributePathStringXMLEscaped, manipulatedVariable, filterExpressionMap, rules, true);
 		}
 
 		mappingInputsVariablesMap.put(inputAttributePathStringXMLEscaped, variables);
@@ -539,7 +540,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 		if (filterExpressionMap != null && !filterExpressionMap.isEmpty()) {
 
-			addFilter(inputAttributePathStringXMLEscaped, var1000, filterExpressionMap, rules);
+			addFilter(inputAttributePathStringXMLEscaped, var1000, filterExpressionMap, rules, true);
 			takeVariable = true;
 		}
 
