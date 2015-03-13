@@ -372,7 +372,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 				valueString += parameters.get(MF_CONCAT_FUNCTION_POSTFIX_ATTRIBUTE_IDENTIFIER);
 			}
 
-			Map<String, String> extendedParameterMappings = new HashMap<String, String>();
+			Map<String, String> extendedParameterMappings = new HashMap<>();
 
 			extendedParameterMappings.put(MF_ELEMENT_VALUE_ATTRIBUTE_IDENTIFIER, valueString);
 

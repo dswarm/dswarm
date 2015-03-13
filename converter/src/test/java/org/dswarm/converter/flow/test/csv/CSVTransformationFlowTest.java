@@ -132,8 +132,6 @@ public class CSVTransformationFlowTest extends GuicedTest {
 		final TransformationFlowFactory flowFactory = GuicedTest.injector
 				.getInstance(TransformationFlowFactory.class);
 
-		final String finalMorphXmlString = DMPPersistenceUtil.getResourceAsString(morphXMLFileName);
-
 		// looks like that the utilised ObjectMappers getting a bit mixed, i.e., actual sometimes delivers a result that is not in
 		// pretty print and sometimes it is in pretty print ... (that's why the reformatting of both - expected and actual)
 		final ObjectMapper objectMapper2 = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL).configure(
@@ -148,7 +146,7 @@ public class CSVTransformationFlowTest extends GuicedTest {
 			flow = flowFactory.fromFile(morphXMLFileName, optionalSkipFilterMorphXMLFileName.get());
 		} else {
 
-			flow = flowFactory.fromFile(finalMorphXmlString);
+			flow = flowFactory.fromFile(morphXMLFileName);
 		}
 
 		flow.getScript();
