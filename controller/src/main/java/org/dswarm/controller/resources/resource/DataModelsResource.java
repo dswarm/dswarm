@@ -76,6 +76,7 @@ import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.model.schema.utils.ClaszUtils;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.util.GDMUtil;
 
@@ -348,12 +349,18 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 				final Optional<JsonNode> optionalRecordTagNode = Optional
 						.fromNullable(optionalConfiguration.get().getParameter(ConfigurationStatics.RECORD_TAG));
 
+				final String recordTag;
+
 				if (optionalRecordTagNode.isPresent()) {
 
-					final String recordTag = optionalRecordTagNode.get().asText();
+					recordTag = optionalRecordTagNode.get().asText();
+				} else {
 
-					requestJson.put(DMPStatics.RECORD_TAG_IDENTIFIER, recordTag);
+					// fallback: bibo:Document as default record class
+					recordTag = ClaszUtils.BIBO_DOCUMENT_URI;
 				}
+
+				requestJson.put(DMPStatics.RECORD_TAG_IDENTIFIER, recordTag);
 			}
 
 			// version

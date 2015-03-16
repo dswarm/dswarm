@@ -72,6 +72,7 @@ import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.model.schema.utils.ClaszUtils;
 import org.dswarm.persistence.service.InternalModelService;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
@@ -88,7 +89,6 @@ import org.dswarm.persistence.util.GDMUtil;
 public class TransformationFlow {
 
 	private static final Logger LOG               = LoggerFactory.getLogger(TransformationFlow.class);
-	private static final String BIBO_DOCUMENT_URI = "http://purl.org/ontology/bibo/Document";
 
 	private final Metamorph transformer;
 
@@ -244,7 +244,7 @@ public class TransformationFlow {
 			defaultRecordClassURI = optionalDataModelSchemaRecordClassURI.get();
 		} else {
 
-			defaultRecordClassURI = BIBO_DOCUMENT_URI;
+			defaultRecordClassURI = ClaszUtils.BIBO_DOCUMENT_URI;
 		}
 
 		// transform to FE friendly JSON => or use Model#toJSON() ;)
