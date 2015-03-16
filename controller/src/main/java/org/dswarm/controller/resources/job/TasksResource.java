@@ -20,6 +20,7 @@ import java.time.Instant;
 import java.util.Iterator;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.POST;
@@ -39,7 +40,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
-import com.google.inject.name.Named;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -48,9 +48,6 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.Marker;
-import org.slf4j.MarkerFactory;
-import org.slf4j.helpers.BasicMarker;
 
 import org.dswarm.common.types.Tuple;
 import org.dswarm.controller.DMPControllerException;
@@ -59,7 +56,6 @@ import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.flow.TransformationFlow;
 import org.dswarm.converter.flow.TransformationFlowFactory;
 import org.dswarm.converter.morph.MorphScriptBuilder;
-import org.dswarm.init.Monitoring;
 import org.dswarm.persistence.MonitoringLogger;
 import org.dswarm.persistence.model.job.Job;
 import org.dswarm.persistence.model.job.Mapping;
@@ -81,8 +77,6 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 public class TasksResource {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TasksResource.class);
-	private static final Logger MONITOR_LOG = LoggerFactory.getLogger(Monitoring.LOGGER_NAME);
-	private static final Marker EXECUTION_MARKER = MarkerFactory.getMarker("EXECUTION");
 
 	private final Timer executionsTimer;
 
@@ -120,8 +114,8 @@ public class TasksResource {
 			final DataModelUtil dataModelUtilArg,
 			final ObjectMapper objectMapperArg,
 			final TransformationFlowFactory transformationFlowFactoryArg,
-			@Monitoring final MetricRegistry registryArg,
-			@Monitoring final MonitoringLogger monitoringLogger){
+			@Named("Monitoring") final MetricRegistry registryArg,
+			@Named("Monitoring") final MonitoringLogger monitoringLogger){
 
 		dataModelUtil = dataModelUtilArg;
 		objectMapper = objectMapperArg;
@@ -137,7 +131,7 @@ public class TasksResource {
 	 * @param responseContent a response message
 	 * @return the response
 	 */
-	private Response buildResponse(final String responseContent) {
+	private static Response buildResponse(final String responseContent) {
 
 		return Response.ok(responseContent).build();
 	}
@@ -286,7 +280,7 @@ public class TasksResource {
 
 	private void monitorTaskExecution(final Task task) {
 		final Instant now = Instant.now();
-		MONITOR_LOG.info(EXECUTION_MARKER,
+		monitoringLogger.markExecution(
 				"Task execution of [{}] at [{}], unix [{}]",
 				task.getUuid(), now, now.getEpochSecond());
 

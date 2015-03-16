@@ -18,13 +18,13 @@ package org.dswarm.converter.pipe.timing;
 import com.codahale.metrics.MetricRegistry;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.name.Named;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
-import org.dswarm.init.Monitoring;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 
 @In(GDMModel.class)
@@ -35,7 +35,7 @@ public final class ObjectTimer extends TimerBased<ObjectReceiver<GDMModel>>
 
 	@Inject
 	private ObjectTimer(
-			@Monitoring final MetricRegistry registry,
+			@Named("Monitoring") final MetricRegistry registry,
 			@Assisted final String prefix) {
 		super(registry, prefix);
 	}

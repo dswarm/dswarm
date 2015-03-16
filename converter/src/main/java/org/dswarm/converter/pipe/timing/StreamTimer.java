@@ -21,10 +21,10 @@ import java.util.LinkedList;
 import com.codahale.metrics.MetricRegistry;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.name.Named;
 import org.culturegraph.mf.framework.StreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 
-import org.dswarm.init.Monitoring;
 
 public final class StreamTimer extends TimerBased<StreamReceiver> implements StreamPipe<StreamReceiver> {
 
@@ -33,7 +33,7 @@ public final class StreamTimer extends TimerBased<StreamReceiver> implements Str
 
 	@Inject
 	private StreamTimer(
-			@Monitoring final MetricRegistry registry,
+			@Named("Monitoring") final MetricRegistry registry,
 			@Assisted final String prefix) {
 		super(registry, prefix);
 

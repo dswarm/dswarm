@@ -119,7 +119,7 @@ public final class LoggingConfigurator {
 	}
 
 	private static void configureMonitoringLogger(final String loggingPath, final LoggerContext lc) {
-		final Logger logger = lc.getLogger(Monitoring.LOGGER_NAME);
+		final Logger logger = lc.getLogger("dswarm.monitoring");
 		logger.setLevel(Level.INFO);
 
 		LoggingAppender.of(lc)

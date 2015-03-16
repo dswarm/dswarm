@@ -42,6 +42,7 @@ import com.google.common.io.Resources;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.name.Named;
 import org.culturegraph.mf.exceptions.MorphDefException;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.StreamPipe;
@@ -65,7 +66,6 @@ import org.dswarm.graph.json.Model;
 import org.dswarm.graph.json.Predicate;
 import org.dswarm.graph.json.Resource;
 import org.dswarm.graph.json.ResourceNode;
-import org.dswarm.init.Monitoring;
 import org.dswarm.init.util.DMPStatics;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
@@ -109,7 +109,7 @@ public class TransformationFlow {
 	@Inject
 	private TransformationFlow(
 			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg,
-			@Monitoring final MetricRegistry registry,
+			@Named("Monitoring") final MetricRegistry registry,
 			final TimerBasedFactory timerBasedFactory,
 			@Assisted final Metamorph transformer,
 			@Assisted final String scriptArg,

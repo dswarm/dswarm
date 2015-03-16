@@ -28,13 +28,16 @@ import com.codahale.metrics.Timer;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import org.slf4j.Logger;
-
-import org.dswarm.init.Monitoring;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 
 @Singleton
 public final class MonitoringLogger implements Reporter {
+
+	private static final Marker EXECUTION_MARKER = MarkerFactory.getMarker("EXECUTION");
 
 	private final Provider<MetricRegistry> registryProvider;
 	private final Logger logger;
@@ -45,8 +48,8 @@ public final class MonitoringLogger implements Reporter {
 
 	@Inject
 	private MonitoringLogger(
-			@Monitoring final Provider<MetricRegistry> registryProvider,
-			@Monitoring final Logger logger) {
+			@Named("Monitoring") final Provider<MetricRegistry> registryProvider,
+			@Named("Monitoring") final Logger logger) {
 		this.registryProvider = registryProvider;
 		this.logger = logger;
 
@@ -128,5 +131,11 @@ public final class MonitoringLogger implements Reporter {
 
 	private double convertRate(final double rate) {
 		return rate * rateFactor;
+	}
+
+	public void markExecution(final String message, final Object... arguments) {
+		if (logger.isInfoEnabled()) {
+			logger.info(EXECUTION_MARKER, message, arguments);
+		}
 	}
 }
