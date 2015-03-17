@@ -698,7 +698,7 @@ public class DataModelsResourceTest extends
 
 		// do comparison: check for XML similarity
 		final Diff xmlDiff = DiffBuilder.compare(Input.fromString(expectedXML))
-				.withTest(Input.fromString(actualXML)).checkForSimilar().build();
+				.withTest(Input.fromString(actualXML)).checkForSimilar().ignoreWhitespace().build();
 
 		Assert.assertFalse(xmlDiff.hasDifferences());
 

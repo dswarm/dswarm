@@ -327,12 +327,18 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 
 				final Optional<Clasz> optionalRecordClass = Optional.fromNullable(optionalSchema.get().getRecordClass());
 
+				final String recordClassURI;
+
 				if (optionalRecordClass.isPresent()) {
 
-					final String recordClassURI = optionalRecordClass.get().getUri();
+					recordClassURI = optionalRecordClass.get().getUri();
+				} else {
 
-					requestJson.put(DMPStatics.RECORD_CLASS_URI_IDENTIFIER, recordClassURI);
+					// fallback: bibo:Document as default record class
+					recordClassURI = ClaszUtils.BIBO_DOCUMENT_URI;
 				}
+
+				requestJson.put(DMPStatics.RECORD_CLASS_URI_IDENTIFIER, recordClassURI);
 			}
 
 			// data model uri
@@ -349,18 +355,10 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 				final Optional<JsonNode> optionalRecordTagNode = Optional
 						.fromNullable(optionalConfiguration.get().getParameter(ConfigurationStatics.RECORD_TAG));
 
-				final String recordTag;
-
 				if (optionalRecordTagNode.isPresent()) {
 
-					recordTag = optionalRecordTagNode.get().asText();
-				} else {
-
-					// fallback: bibo:Document as default record class
-					recordTag = ClaszUtils.BIBO_DOCUMENT_URI;
+					requestJson.put(DMPStatics.RECORD_TAG_IDENTIFIER, optionalRecordTagNode.get().asText());
 				}
-
-				requestJson.put(DMPStatics.RECORD_TAG_IDENTIFIER, recordTag);
 			}
 
 			// version
