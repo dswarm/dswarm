@@ -1,0 +1,48 @@
+[
+  {
+    "http://data.slub-dresden.de/datamodels/1/records/8fd200b4-b432-4618-9c1a-6cded44848de": [
+      {
+        "http://data.slub-dresden.de/datamodels/86bd8121-a09c-44c4-a2e0-442e09486a19/schema#ok4": [
+          "Roll, Gernot",
+          "Thomas, Eugen"
+        ]
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://data.slub-dresden.de/datamodels/1/records/8fd200b4-b432-4618-9c1a-6cded4454321": [
+      {
+        "http://data.slub-dresden.de/datamodels/86bd8121-a09c-44c4-a2e0-442e09486a19/schema#ok4": "Roll, Gernot3333"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://data.slub-dresden.de/datamodels/1/records/8fd200b4-b432-4618-9c1a-6cded4498765": [
+      {
+        "http://data.slub-dresden.de/datamodels/86bd8121-a09c-44c4-a2e0-442e09486a19/schema#ok4": "Thomas, Eugen4444"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://data.slub-dresden.de/datamodels/1/records/8fd200b4-b432-4618-9c1a-6cded449876555555": [
+      {
+        "http://data.slub-dresden.de/datamodels/86bd8121-a09c-44c4-a2e0-442e09486a19/schema#ok4": [
+          "Roll, Gernot55555",
+          "Thomas, Eugen5555"
+        ]
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  }
+]

@@ -16,42 +16,22 @@
 package org.dswarm.converter.morph;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.common.base.Joiner;
-import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.io.CharSource;
-import com.google.common.io.Resources;
-import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils;
+
 import org.dswarm.converter.DMPConverterException;
-import org.dswarm.init.util.DMPStatics;
 import org.dswarm.persistence.model.job.*;
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 import java.io.*;
-import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -62,31 +42,15 @@ import java.util.Map.Entry;
  * @author niederl
  * @author tgaengler
  */
-public class MorphScriptBuilder {
+public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBuilder> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(MorphScriptBuilder.class);
 
 	private static final String MAPPING_PREFIX = "mapping";
 
-	private static final DocumentBuilderFactory DOC_FACTORY = DocumentBuilderFactory.newInstance();
-
-	private static final String SCHEMA_PATH = "schemata/metamorph.xsd";
-
-	private static final String METAMORPH_ELEMENT_META_INFORMATION = "meta";
-
-	private static final String METAMORPH_ELEMENT_RULESET = "rules";
-
-	private static final String METAMORPH_ELEMENT_MAP_CONTAINER = "maps";
-
 	private static final String METAMORPH_ELEMENT_SINGLE_MAP = "map";
 
 	private static final String METAMORPH_ELEMENT_MAP_ENTRY = "entry";
-
-	private static final String METAMORPH_ELEMENT_DATA = "data";
-
-	private static final String METAMORPH_DATA_SOURCE = "source";
-
-	private static final String METAMORPH_DATA_TARGET = "name";
 
 	private static final String METAMORPH_FUNCTION_WHITELIST = "whitelist";
 
@@ -98,15 +62,7 @@ public class MorphScriptBuilder {
 
 	private static final String METAMORPH_FUNCTION_CONCAT = "concat";
 
-	private static final String METAMORPH_FUNCTION_COMBINE = "combine";
-
 	private static final String METAMORPH_FUNCTION_OCCURRENCE = "occurrence";
-
-	private static final String METAMORPH_FUNCTION_REGEXP = "regexp";
-
-	private static final String METAMORPH_FUNCTION_ALL = "all";
-
-	private static final String METAMORPH_FUNCTION_IF = "if";
 
 	private static final String METAMORPH_LOOKUP_ATTRIBUTE_MAP = "map";
 
@@ -118,154 +74,34 @@ public class MorphScriptBuilder {
 
 	private static final String METAMORPH_MAP_NAME = "name";
 
-	private static final TransformerFactory TRANSFORMER_FACTORY;
-
-	private static final String TRANSFORMER_FACTORY_CLASS = "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl";
-
 	private static final String INPUT_VARIABLE_IDENTIFIER = "inputString";
 
 	private static final String OUTPUT_VARIABLE_PREFIX_IDENTIFIER = "__TRANSFORMATION_OUTPUT_VARIABLE__";
 
-	private static final String FILTER_VARIABLE_POSTFIX = ".filtered";
-
 	private static final String OCCURRENCE_VARIABLE_POSTFIX = ".occurrence";
 
-	private static final Set<String> LOOKUP_FUNCTIONS = new HashSet<String>(Arrays.asList(new String[] {"lookup","setreplace","blacklist","whitelist"}));
+	private static final Set<String> LOOKUP_FUNCTIONS = new HashSet<>(Arrays.asList(
+			new String[] { METAMORPH_FUNCTION_LOOKUP, METAMORPH_FUNCTION_SETREPLACE, METAMORPH_FUNCTION_BLACKLIST, METAMORPH_FUNCTION_WHITELIST }));
 
 	private static final String LOOKUP_MAP_DEFINITION = "lookupString";
 
-	static {
-		System.setProperty("javax.xml.transform.TransformerFactory", MorphScriptBuilder.TRANSFORMER_FACTORY_CLASS);
-		TRANSFORMER_FACTORY = TransformerFactory.newInstance();
-		MorphScriptBuilder.TRANSFORMER_FACTORY.setAttribute("indent-number", 4);
+	private static final String MF_OCCURRENCE_FUNCTION_ONLY_ATTRIBUTE_IDENTIFIER = "only";
 
-		final URL resource = Resources.getResource(MorphScriptBuilder.SCHEMA_PATH);
-		final CharSource inputStreamInputSupplier = Resources.asCharSource(resource, Charsets.UTF_8);
+	private static final String MF_CONCAT_FUNCTION_DELIMITER_ATTRIBUTE_IDENTIFIER = "delimiter";
 
-		try (final Reader schemaStream = inputStreamInputSupplier.openStream()) {
+	private static final String MF_CONCAT_FUNCTION_PREFIX_ATTRIBUTE_IDENTIFIER = "prefix";
 
-			// final StreamSource SCHEMA_SOURCE = new StreamSource(schemaStream);
-			final SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			Schema schema = null;
-
-			try {
-
-				// TODO: dummy schema right now, since it couldn't parse the metamorph schema for some reason
-				schema = sf.newSchema();
-			} catch (final SAXException e) {
-
-				e.printStackTrace();
-			}
-
-			if (schema == null) {
-
-				MorphScriptBuilder.LOG.error("couldn't parse schema");
-			}
-
-			MorphScriptBuilder.DOC_FACTORY.setSchema(schema);
-
-		} catch (final IOException e1) {
-			MorphScriptBuilder.LOG.error("couldn't read schema resource", e1);
-		}
-	}
-
-	private Document doc;
-
-	public String render(final boolean indent, final Charset encoding) {
-		final String defaultEncoding = encoding.name();
-		final Transformer transformer;
-		try {
-			transformer = MorphScriptBuilder.TRANSFORMER_FACTORY.newTransformer();
-		} catch (final TransformerConfigurationException e) {
-			e.printStackTrace();
-			return null;
-		}
-
-		transformer.setOutputProperty(OutputKeys.INDENT, indent ? "yes" : "no");
-
-		transformer.setOutputProperty(OutputKeys.ENCODING, defaultEncoding);
-
-		final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-
-		final StreamResult result;
-		try {
-			result = new StreamResult(new OutputStreamWriter(stream, defaultEncoding));
-		} catch (final UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return null;
-		}
-
-		try {
-			transformer.transform(new DOMSource(doc), result);
-		} catch (final TransformerException e) {
-			e.printStackTrace();
-			return null;
-		}
-
-		try {
-			return stream.toString(defaultEncoding);
-		} catch (final UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public String render(final boolean indent) {
-		return render(indent, Charset.forName("UTF-8"));
-	}
+	private static final String MF_CONCAT_FUNCTION_POSTFIX_ATTRIBUTE_IDENTIFIER = "postfix";
 
 	@Override
-	public String toString() {
-		return render(true);
-	}
-
-	public File toFile() throws IOException {
-		final String str = render(false);
-
-		final File file = File.createTempFile("avgl_dmp", ".tmp");
-
-		final BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-		bw.write(str);
-		bw.close();
-
-		return file;
-	}
-
 	public MorphScriptBuilder apply(final Task task) throws DMPConverterException {
 
-		final DocumentBuilder docBuilder;
-		try {
-			docBuilder = MorphScriptBuilder.DOC_FACTORY.newDocumentBuilder();
-		} catch (final ParserConfigurationException e) {
-			throw new DMPConverterException(e.getMessage());
-		}
-
-		doc = docBuilder.newDocument();
-		doc.setXmlVersion("1.1");
-
-		final Element rootElement = doc.createElement("metamorph");
-		rootElement.setAttribute("xmlns", "http://www.culturegraph.org/metamorph");
-		rootElement.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-		rootElement.setAttribute("xsi:schemaLocation", "http://www.culturegraph.org/metamorph metamorph.xsd");
-		rootElement.setAttribute("entityMarker", DMPStatics.ATTRIBUTE_DELIMITER.toString());
-		rootElement.setAttribute("version", "1");
-		doc.appendChild(rootElement);
-
-		final Element meta = doc.createElement(METAMORPH_ELEMENT_META_INFORMATION);
-		rootElement.appendChild(meta);
-
-		final Element metaName = doc.createElement("name");
-		meta.appendChild(metaName);
-
-		final Element rules = doc.createElement(METAMORPH_ELEMENT_RULESET);
-		rootElement.appendChild(rules);
-
-		final Element maps = doc.createElement(METAMORPH_ELEMENT_MAP_CONTAINER);
-		rootElement.appendChild(maps);
+		super.apply(task);
 
 		final List<String> metas = Lists.newArrayList();
 
 		for (final Mapping mapping : task.getJob().getMappings()) {
+
 			metas.add(MorphScriptBuilder.MAPPING_PREFIX + mapping.getUuid());
 
 			createTransformation(rules, mapping);
@@ -278,6 +114,15 @@ public class MorphScriptBuilder {
 		return this;
 	}
 
+	@Override protected Element createFilterDataElement(final String variable, final String attributePathString) {
+
+		final Element combineAsFilterDataOut = doc.createElement(METAMORPH_ELEMENT_DATA);
+		combineAsFilterDataOut.setAttribute(METAMORPH_DATA_TARGET, variable);
+		combineAsFilterDataOut.setAttribute(METAMORPH_DATA_SOURCE, attributePathString);
+
+		return combineAsFilterDataOut;
+	}
+
 	private void createTransformation(final Element rules, final Mapping mapping) throws DMPConverterException {
 
 		// first handle the parameter mapping from the attribute paths of the mapping to the transformation component
@@ -286,7 +131,8 @@ public class MorphScriptBuilder {
 
 		if (transformationComponent == null) {
 
-			MorphScriptBuilder.LOG.debug("transformation component for mapping '" + mapping.getUuid() + "' was empty. Just delegate mapping input to mapping output.");
+			MorphScriptBuilder.LOG
+					.debug("transformation component for mapping '{}' was empty. Just delegate mapping input to mapping output.", mapping.getUuid());
 
 			// just delegate input attribute path to output attribute path
 
@@ -297,7 +143,9 @@ public class MorphScriptBuilder {
 
 		if (transformationComponent.getParameterMappings() == null || transformationComponent.getParameterMappings().isEmpty()) {
 
-			MorphScriptBuilder.LOG.debug("parameter mappings for transformation component shouldn't be empty, mapping: '" + mapping.getUuid() + "'. Delegate mapping input to mapping output and process transformation.");
+			MorphScriptBuilder.LOG
+					.debug("parameter mappings for transformation component shouldn't be empty, mapping: '{}'. Delegate mapping input to mapping output and process transformation.",
+							mapping.getUuid());
 
 			// delegate input attribute path to output attribute path + add possible transformations (components)
 
@@ -372,8 +220,11 @@ public class MorphScriptBuilder {
 
 									try {
 
-										final List<String> lookupList = DMPPersistenceUtil.getJSONObjectMapper().readValue(parameterMapping.getValue(),
-												new TypeReference<List<String>>() {});
+										final List<String> lookupList = DMPPersistenceUtil.getJSONObjectMapper()
+												.readValue(parameterMapping.getValue(),
+														new TypeReference<List<String>>() {
+
+														});
 
 										for (final String lookupEntry : lookupList) {
 
@@ -383,7 +234,8 @@ public class MorphScriptBuilder {
 										}
 									} catch (final IOException e) {
 
-										MorphScriptBuilder.LOG.debug("lookup map as JSON string in parameter mappings could not convert to a list" + e);
+										MorphScriptBuilder.LOG
+												.debug("lookup map as JSON string in parameter mappings could not convert to a list", e);
 									}
 									break;
 
@@ -391,9 +243,12 @@ public class MorphScriptBuilder {
 								case METAMORPH_FUNCTION_SETREPLACE:
 
 									try {
-//
-										final Map<String, String> lookupEntrys = DMPPersistenceUtil.getJSONObjectMapper().readValue(parameterMapping.getValue(),
-												new TypeReference<HashMap<String, String>>() {});
+										//
+										final Map<String, String> lookupEntrys = DMPPersistenceUtil.getJSONObjectMapper()
+												.readValue(parameterMapping.getValue(),
+														new TypeReference<HashMap<String, String>>() {
+
+														});
 
 										for (final Entry<String, String> lookupEntry : lookupEntrys.entrySet()) {
 
@@ -401,10 +256,11 @@ public class MorphScriptBuilder {
 											lookup.setAttribute(METAMORPH_MAP_KEY, lookupEntry.getKey());
 											lookup.setAttribute(METAMORPH_MAP_VALUE, lookupEntry.getValue());
 											map.appendChild(lookup);
-											}
+										}
 									} catch (final IOException e) {
 
-										MorphScriptBuilder.LOG.debug("lookup map as JSON string in parameter mappings could not convert to a map" + e);
+										MorphScriptBuilder.LOG
+												.debug("lookup map as JSON string in parameter mappings could not convert to a map", e);
 									}
 									break;
 							}
@@ -489,12 +345,12 @@ public class MorphScriptBuilder {
 
 			String delimiterString = ", ";
 
-			if (parameters.get("delimiter") != null) {
-				delimiterString = parameters.get("delimiter");
+			if (parameters.get(MF_CONCAT_FUNCTION_DELIMITER_ATTRIBUTE_IDENTIFIER) != null) {
+				delimiterString = parameters.get(MF_CONCAT_FUNCTION_DELIMITER_ATTRIBUTE_IDENTIFIER);
 			}
 
-			if (parameters.get("prefix") != null) {
-				valueString = parameters.get("prefix");
+			if (parameters.get(MF_CONCAT_FUNCTION_PREFIX_ATTRIBUTE_IDENTIFIER) != null) {
+				valueString = parameters.get(MF_CONCAT_FUNCTION_PREFIX_ATTRIBUTE_IDENTIFIER);
 			}
 
 			final Iterator<String> iter = collectionSourceAttributes.iterator();
@@ -513,15 +369,15 @@ public class MorphScriptBuilder {
 
 			}
 
-			if (parameters.get("postfix") != null) {
-				valueString += parameters.get("postfix");
+			if (parameters.get(MF_CONCAT_FUNCTION_POSTFIX_ATTRIBUTE_IDENTIFIER) != null) {
+				valueString += parameters.get(MF_CONCAT_FUNCTION_POSTFIX_ATTRIBUTE_IDENTIFIER);
 			}
 
-			Map<String, String> extendedParameterMappings = new HashMap<String, String>();
+			Map<String, String> extendedParameterMappings = new HashMap<>();
 
-			extendedParameterMappings.put("value", valueString);
+			extendedParameterMappings.put(MF_ELEMENT_VALUE_ATTRIBUTE_IDENTIFIER, valueString);
 
-			extendedParameterMappings.put("reset", "true");
+			extendedParameterMappings.put(MF_COLLECTOR_RESET_ATTRIBUTE_IDENTIFIER, BOOLEAN_VALUE_TRUE);
 
 			multipleInputComponent.setParameterMappings(extendedParameterMappings);
 		}
@@ -606,7 +462,7 @@ public class MorphScriptBuilder {
 			rules.appendChild(data);
 		} else {
 
-			addFilter(inputAttributePathStringXMLEscaped, manipulatedVariable, filterExpressionMap, rules);
+			addFilter(inputAttributePathStringXMLEscaped, manipulatedVariable, filterExpressionMap, rules, true);
 		}
 
 		mappingInputsVariablesMap.put(inputAttributePathStringXMLEscaped, variables);
@@ -649,7 +505,7 @@ public class MorphScriptBuilder {
 
 		if (inputMappingAttributePathInstances == null || inputMappingAttributePathInstances.isEmpty()) {
 
-			LOG.debug("there are no mapping inputs for mapping '" + mapping.getName() + "'");
+			LOG.debug("there are no mapping inputs for mapping '{}'", mapping.getName());
 
 			return;
 		}
@@ -658,7 +514,7 @@ public class MorphScriptBuilder {
 
 		if (outputMappingAttributePathInstance == null) {
 
-			LOG.debug("there is no mapping output for mapping '" + mapping.getName() + "'");
+			LOG.debug("there is no mapping output for mapping '{}'", mapping.getName());
 
 			return;
 		}
@@ -684,7 +540,7 @@ public class MorphScriptBuilder {
 
 		if (filterExpressionMap != null && !filterExpressionMap.isEmpty()) {
 
-			addFilter(inputAttributePathStringXMLEscaped, var1000, filterExpressionMap, rules);
+			addFilter(inputAttributePathStringXMLEscaped, var1000, filterExpressionMap, rules, true);
 			takeVariable = true;
 		}
 
@@ -699,7 +555,8 @@ public class MorphScriptBuilder {
 		final Element data = doc.createElement(METAMORPH_ELEMENT_DATA);
 		data.setAttribute(METAMORPH_DATA_SOURCE, inputVariable);
 
-		data.setAttribute(METAMORPH_DATA_TARGET, StringEscapeUtils.escapeXml(outputMappingAttributePathInstance.getAttributePath().toAttributePath()));
+		data.setAttribute(METAMORPH_DATA_TARGET,
+				StringEscapeUtils.escapeXml(outputMappingAttributePathInstance.getAttributePath().toAttributePath()));
 
 		rules.appendChild(data);
 	}
@@ -716,7 +573,7 @@ public class MorphScriptBuilder {
 
 		if (transformationFunction == null) {
 
-			MorphScriptBuilder.LOG.debug("transformation component's function for mapping '" + mapping.getUuid() + "' was empty");
+			MorphScriptBuilder.LOG.debug("transformation component's function for mapping '{}' was empty", mapping.getUuid());
 
 			// nothing to do - mapping from input attribute path to output attribute path should be fine already
 
@@ -729,8 +586,9 @@ public class MorphScriptBuilder {
 
 				// TODO: process simple function
 
-				MorphScriptBuilder.LOG.error("transformation component's function for mapping '" + mapping.getUuid()
-						+ "' was a real FUNCTION. this is not supported right now.");
+				MorphScriptBuilder.LOG
+						.error("transformation component's function for mapping '{}' was a real FUNCTION. this is not supported right now.",
+								mapping.getUuid());
 
 				break;
 
@@ -744,8 +602,8 @@ public class MorphScriptBuilder {
 
 				if (components == null || components.isEmpty()) {
 
-					MorphScriptBuilder.LOG.debug("transformation component's transformation's components for mapping '" + mapping.getUuid()
-							+ "' are empty");
+					MorphScriptBuilder.LOG
+							.debug("transformation component's transformation's components for mapping '{}' are empty", mapping.getUuid());
 
 					if (mappingInputsVariablesMap != null && !mappingInputsVariablesMap.isEmpty()) {
 
@@ -927,17 +785,7 @@ public class MorphScriptBuilder {
 
 	private String getFilterExpression(final MappingAttributePathInstance mappingAttributePathInstance) {
 
-		if (mappingAttributePathInstance.getFilter() != null) {
-
-			final String filterExpressionString = mappingAttributePathInstance.getFilter().getExpression();
-
-			if (filterExpressionString != null && !filterExpressionString.isEmpty()) {
-
-				return StringEscapeUtils.unescapeXml(filterExpressionString);
-			}
-		}
-
-		return null;
+		return getFilterExpression(mappingAttributePathInstance.getFilter());
 	}
 
 	private boolean checkOrdinal(final Integer ordinal) {
@@ -958,177 +806,12 @@ public class MorphScriptBuilder {
 
 		final Element occurrenceFunction = doc.createElement(METAMORPH_FUNCTION_OCCURRENCE);
 
-		occurrenceFunction.setAttribute("only", String.valueOf(ordinal));
+		occurrenceFunction.setAttribute(MF_OCCURRENCE_FUNCTION_ONLY_ATTRIBUTE_IDENTIFIER, String.valueOf(ordinal));
 
 		occurrenceData.appendChild(occurrenceFunction);
 
 		rules.appendChild(occurrenceData);
 
 		return manipulatedVariable;
-	}
-
-	private void addFilter(final String inputAttributePathStringXMLEscaped, final String variable, final Map<String, String> filterExpressionMap,
-			final Element rules) {
-
-		final Element combineAsFilter = doc.createElement(METAMORPH_FUNCTION_COMBINE);
-		combineAsFilter.setAttribute("reset", "true");
-		combineAsFilter.setAttribute("sameEntity", "true");
-		combineAsFilter.setAttribute("includeSubEntities", "true");
-		combineAsFilter.setAttribute(METAMORPH_DATA_TARGET, "@" + variable);
-		combineAsFilter.setAttribute("value", "${" + variable + MorphScriptBuilder.FILTER_VARIABLE_POSTFIX + "}");
-
-		final String commonAttributePath = validateCommonAttributePath(inputAttributePathStringXMLEscaped, filterExpressionMap.keySet());
-
-		combineAsFilter.setAttribute("flushWith", commonAttributePath);
-
-		final Element filterIf = doc.createElement(METAMORPH_FUNCTION_IF);
-		final Element filterAll = doc.createElement(METAMORPH_FUNCTION_ALL);
-		filterAll.setAttribute("name", "CONDITION_ALL");
-		filterAll.setAttribute("reset", "true");
-		filterAll.setAttribute("includeSubEntities", "true");
-		filterAll.setAttribute("flushWith", StringEscapeUtils.unescapeXml(Iterators.getLast(filterExpressionMap.keySet().iterator())));
-
-		for (final Entry<String, String> filter : filterExpressionMap.entrySet()) {
-
-			final Element combineAsFilterData = doc.createElement(METAMORPH_ELEMENT_DATA);
-			combineAsFilterData.setAttribute(METAMORPH_DATA_SOURCE, StringEscapeUtils.unescapeXml(filter.getKey()));
-
-			final Element combineAsFilterDataFunction = doc.createElement(METAMORPH_FUNCTION_REGEXP);
-			combineAsFilterDataFunction.setAttribute("match", filter.getValue());
-
-			combineAsFilterData.appendChild(combineAsFilterDataFunction);
-			filterAll.appendChild(combineAsFilterData);
-		}
-
-		filterIf.appendChild(filterAll);
-		combineAsFilter.appendChild(filterIf);
-
-		final Element combineAsFilterDataOut = doc.createElement(METAMORPH_ELEMENT_DATA);
-		combineAsFilterDataOut.setAttribute(METAMORPH_DATA_TARGET, variable + MorphScriptBuilder.FILTER_VARIABLE_POSTFIX);
-		combineAsFilterDataOut.setAttribute(METAMORPH_DATA_SOURCE, inputAttributePathStringXMLEscaped);
-
-		combineAsFilter.appendChild(combineAsFilterDataOut);
-
-		rules.appendChild(combineAsFilter);
-	}
-
-	private Map<String, String> extractFilterExpressions(final String filterExpressionString) {
-
-		final Map<String, String> filterExpressionMap = Maps.newLinkedHashMap();
-
-		final ObjectMapper objectMapper = new ObjectMapper();
-
-		if (filterExpressionString != null && !filterExpressionString.isEmpty()) {
-
-			ArrayNode filterExpressionArray = null;
-
-			try {
-
-				filterExpressionArray = objectMapper.readValue(filterExpressionString, ArrayNode.class);
-
-			} catch (final IOException e) {
-
-				MorphScriptBuilder.LOG.debug("something went wrong while deserializing filter expression" + e);
-			}
-
-			if (filterExpressionArray != null) {
-
-				for (final JsonNode filterExpressionNode : filterExpressionArray) {
-
-					final Iterator<Entry<String, JsonNode>> filterExpressionIter = filterExpressionNode.fields();
-
-					while (filterExpressionIter.hasNext()) {
-
-						final Entry<String, JsonNode> filterExpressionEntry = filterExpressionIter.next();
-						filterExpressionMap.put(filterExpressionEntry.getKey(), filterExpressionEntry.getValue().asText());
-					}
-				}
-			}
-		}
-
-		return filterExpressionMap;
-	}
-
-	private String determineCommonAttributePath(final String valueAttributePath, final Set<String> filterAttributePaths) {
-
-		final String[] attributePaths = new String[filterAttributePaths.size() + 1];
-
-		attributePaths[0] = valueAttributePath;
-
-		int i = 1;
-
-		for (final String filterAttributePath : filterAttributePaths) {
-
-			attributePaths[i] = StringEscapeUtils.unescapeXml(filterAttributePath);
-
-			i++;
-		}
-
-		final String commonPrefix = StringUtils.getCommonPrefix(attributePaths);
-
-		if (!commonPrefix.endsWith(DMPStatics.ATTRIBUTE_DELIMITER.toString())) {
-
-			if (!commonPrefix.contains(DMPStatics.ATTRIBUTE_DELIMITER.toString())) {
-
-				return commonPrefix;
-			}
-
-			return commonPrefix.substring(0, commonPrefix.lastIndexOf(DMPStatics.ATTRIBUTE_DELIMITER));
-		}
-
-		return commonPrefix.substring(0, commonPrefix.length() - 1);
-	}
-
-	private String validateCommonAttributePath(final String valueAttributePath, final Set<String> filterAttributePaths) {
-
-		final String commonAttributePath = determineCommonAttributePath(valueAttributePath, filterAttributePaths);
-
-		if (commonAttributePath == null || commonAttributePath.isEmpty()) {
-
-			// to flush at record level
-			return "record";
-		}
-
-		final String[] commonAttributePathAttributes = determineAttributes(commonAttributePath);
-		final String[] valueAttributePathAttributes = determineAttributes(valueAttributePath);
-
-		boolean isValid = true;
-
-		for (int i = 0; i < commonAttributePathAttributes.length; i++) {
-
-			final String commonAttributePathAttribute = commonAttributePathAttributes[i];
-			final String valueAttributePathAttribute = valueAttributePathAttributes[i];
-
-			if (!commonAttributePathAttribute.equals(valueAttributePathAttribute)) {
-
-				isValid = false;
-
-				break;
-			}
-		}
-
-		if (isValid) {
-
-			return commonAttributePath;
-		} else {
-
-			// to flush at record level
-			return "record";
-		}
-	}
-
-	private String[] determineAttributes(final String attributePath) {
-
-		final String[] attributes;
-
-		if (attributePath.contains(DMPStatics.ATTRIBUTE_DELIMITER.toString())) {
-
-			attributes = attributePath.split(DMPStatics.ATTRIBUTE_DELIMITER.toString());
-		} else {
-
-			attributes = new String[] { attributePath };
-		}
-
-		return attributes;
 	}
 }

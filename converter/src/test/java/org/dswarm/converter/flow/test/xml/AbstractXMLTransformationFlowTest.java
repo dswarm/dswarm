@@ -34,6 +34,7 @@ import org.junit.Test;
 import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.TransformationFlow;
+import org.dswarm.converter.flow.TransformationFlowFactory;
 import org.dswarm.converter.flow.XMLSourceResourceGDMStmtsFlow;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
@@ -45,7 +46,6 @@ import org.dswarm.persistence.model.resource.ResourceType;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
 import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.service.internal.graph.InternalGDMGraphService;
 import org.dswarm.persistence.service.resource.ConfigurationService;
 import org.dswarm.persistence.service.resource.DataModelService;
@@ -66,8 +66,12 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 	protected Provider<ObjectMapper> objectMapper;
 
-	public AbstractXMLTransformationFlowTest(final String taskJSONFileNameArg, final String expectedResultJSONFileNameArg, final String recordTagArg,
-			final String xmlNamespaceArg, final String exampleDataResourceFileNameArg) {
+	public AbstractXMLTransformationFlowTest(
+			final String taskJSONFileNameArg,
+			final String expectedResultJSONFileNameArg,
+			final String recordTagArg,
+			final String xmlNamespaceArg,
+			final String exampleDataResourceFileNameArg) {
 
 		objectMapper = GuicedTest.injector.getProvider(ObjectMapper.class);
 
@@ -206,10 +210,10 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		final Task task = objectMapper.get().readValue(finalTaskJSONString, Task.class);
 
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
-				.getProvider(InternalModelServiceFactory.class);
+		final TransformationFlowFactory flowFactory = GuicedTest.injector
+				.getInstance(TransformationFlowFactory.class);
 
-		final TransformationFlow flow = TransformationFlow.fromTask(task, internalModelServiceFactoryProvider);
+		final TransformationFlow flow = flowFactory.fromTask(task);
 
 		flow.getScript();
 

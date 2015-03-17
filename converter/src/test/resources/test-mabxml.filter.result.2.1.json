@@ -1,0 +1,17 @@
+[
+  {
+    "http://data.slub-dresden.de/datamodels/1/records/8fd200b4-b432-4618-9c1a-6cded44848de": [
+      {
+        "http://data.slub-dresden.de/datamodels/b520ab9e-70b4-4d5f-ad52-17da37b3b837/schema#ok": [
+          "00872805",
+          "Roll, Gernot",
+          "00872284",
+          "Thomas, Eugen"
+        ]
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  }
+]

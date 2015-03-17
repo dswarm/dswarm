@@ -32,7 +32,6 @@ import com.google.common.base.Optional;
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Maps;
 import com.google.common.io.Resources;
-import com.google.inject.Provider;
 import org.apache.commons.io.FileUtils;
 import org.culturegraph.mf.stream.converter.JsonEncoder;
 import org.culturegraph.mf.stream.sink.ObjectJavaIoWriter;
@@ -47,6 +46,7 @@ import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.CSVSourceResourceTriplesFlow;
 import org.dswarm.converter.flow.TransformationFlow;
+import org.dswarm.converter.flow.TransformationFlowFactory;
 import org.dswarm.converter.mf.stream.reader.CsvReader;
 import org.dswarm.graph.json.LiteralNode;
 import org.dswarm.graph.json.Predicate;
@@ -61,7 +61,6 @@ import org.dswarm.persistence.model.resource.ResourceType;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
 import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.service.internal.graph.InternalGDMGraphService;
 import org.dswarm.persistence.service.resource.ConfigurationService;
 import org.dswarm.persistence.service.resource.DataModelService;
@@ -228,10 +227,10 @@ public class TransformationFlowTest extends GuicedTest {
 
 		final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
 
-		final Provider<InternalModelServiceFactory> internalModelServiceFactoryProvider = GuicedTest.injector
-				.getProvider(InternalModelServiceFactory.class);
+		final TransformationFlowFactory flowFactory = GuicedTest.injector
+				.getInstance(TransformationFlowFactory.class);
 
-		final TransformationFlow flow = TransformationFlow.fromTask(task, internalModelServiceFactoryProvider);
+		final TransformationFlow flow = flowFactory.fromTask(task);
 
 		flow.getScript();
 

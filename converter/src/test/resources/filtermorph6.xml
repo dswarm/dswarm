@@ -15,15 +15,15 @@
 					 flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code" includeSubEntities="true">
 					<data
 							source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag">
-						<equals string="102"/>
+						<regexp match="102"/>
 					</data>
 					<data
 							source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind1">
-						<equals string="x"/>
+						<regexp match="x"/>
 					</data>
 					<data
 							source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code">
-						<equals string="c"/>
+						<regexp match="c"/>
 					</data>
 				</all>
 			</if>

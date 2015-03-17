@@ -16,16 +16,18 @@
 package org.dswarm.converter;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.dswarm.converter.flow.TransformationFlowFactory;
+import org.dswarm.converter.pipe.timing.TimerBasedFactory;
 import org.dswarm.converter.schema.SolrSchemaParser;
 import org.dswarm.converter.schema.XMLSchemaParser;
-import org.dswarm.init.util.DMPUtil;
 
 /**
  * The Guice configuration of the converter module. Interface/classes that are registered here can be utilised for injection.
- * 
+ *
  * @author phorn
  */
 public class ConverterModule extends AbstractModule {
@@ -37,5 +39,8 @@ public class ConverterModule extends AbstractModule {
 
 		bind(XMLSchemaParser.class);
 		bind(SolrSchemaParser.class);
+
+		install(new FactoryModuleBuilder().build(TransformationFlowFactory.class));
+		install(new FactoryModuleBuilder().build(TimerBasedFactory.class));
 	}
 }

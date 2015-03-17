@@ -1,1 +1,15 @@
-[{"http://data.slub-dresden.de/datamodels/2/records/f499ab99-21e3-4b42-ac43-3c35e30c1faf":[{"http://data.slub-dresden.de/datamodels/de5ce955-f83f-42f2-aafe-03b07b86a6e9/schema#ok":"http://dx.doi.org/bsz112113605inh.htm"},{"http://www.w3.org/1999/02/22-rdf-syntax-ns#type":"http://purl.org/ontology/bibo/Document"}]},{"http://data.slub-dresden.de/datamodels/2/records/315ac631-c321-4447-8d49-40cb4cec7c75":[{"http://data.slub-dresden.de/datamodels/de5ce955-f83f-42f2-aafe-03b07b86a6e9/schema#ok":"http://digitool.hbz-nrw.de:1801/webclient/DeliveryManager?pid=3597032"},{"http://www.w3.org/1999/02/22-rdf-syntax-ns#type":"http://purl.org/ontology/bibo/Document"}]},{"http://data.slub-dresden.de/datamodels/2/records/69112f3a-74d2-4734-9ca4-afaec41336cb":[{"http://www.w3.org/1999/02/22-rdf-syntax-ns#type":"http://purl.org/ontology/bibo/Document"}]}]
+[
+  {
+    "http://data.slub-dresden.de/datamodels/2/records/f499ab99-21e3-4b42-ac43-3c35e30c1faf": [
+      {"http://data.slub-dresden.de/datamodels/de5ce955-f83f-42f2-aafe-03b07b86a6e9/schema#ok": "http://dx.doi.org/bsz112113605inh.htm"},
+      {"http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"}
+    ]
+  },
+  {
+    "http://data.slub-dresden.de/datamodels/2/records/315ac631-c321-4447-8d49-40cb4cec7c75": [
+      {"http://data.slub-dresden.de/datamodels/de5ce955-f83f-42f2-aafe-03b07b86a6e9/schema#ok": "http://digitool.hbz-nrw.de:1801/webclient/DeliveryManager?pid=3597032"},
+      {"http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"}
+    ]
+  },
+  {"http://data.slub-dresden.de/datamodels/2/records/69112f3a-74d2-4734-9ca4-afaec41336cb": [{"http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"}]}
+]

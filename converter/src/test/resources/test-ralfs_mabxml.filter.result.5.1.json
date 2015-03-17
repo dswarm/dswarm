@@ -1,0 +1,22 @@
+[
+  {
+    "http://data.slub-dresden.de/datamodels/2/records/f499ab99-21e3-4b42-ac43-3c35e30c1faf": [
+      {
+        "http://data.slub-dresden.de/datamodels/191ca5fb-7b0b-4c01-b375-6e63e1cdf84c/schema#ok": "http://dx.doi.org/bsz112113605inh.htm"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://data.slub-dresden.de/datamodels/2/records/315ac631-c321-4447-8d49-40cb4cec7c75": [
+      {
+        "http://data.slub-dresden.de/datamodels/191ca5fb-7b0b-4c01-b375-6e63e1cdf84c/schema#ok": "http://digitool.hbz-nrw.de:1801/webclient/DeliveryManager?pid=3597032"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  }
+]

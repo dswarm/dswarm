@@ -190,7 +190,7 @@ public class TasksResourceTest extends ResourceTest {
 		final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		final javax.xml.validation.Schema schema = schemaFactory.newSchema();
 
-		System.out.println("DocumentBuilderFactory = " + builderFactory.getClass().getName());
+//		System.out.println("DocumentBuilderFactory = " + builderFactory.getClass().getName());
 		try {
 			builderFactory.setSchema(schema);
 		} catch (final UnsupportedOperationException e) {

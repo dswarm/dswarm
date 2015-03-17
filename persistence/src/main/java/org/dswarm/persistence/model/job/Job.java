@@ -17,6 +17,7 @@ package org.dswarm.persistence.model.job;
 
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -39,7 +40,7 @@ public class Job extends ExtendedBasicDMPJPAObject {
 	/**
 	 *
 	 */
-	private static final long	serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The collection of mappings of the job.
@@ -48,10 +49,16 @@ public class Job extends ExtendedBasicDMPJPAObject {
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	// @XmlIDREF
 	@XmlList
-	private Set<Mapping>		mappings;
+	private Set<Mapping> mappings;
+
+	/**
+	 * The skip filter of this job. A skip filter to skip the job for records that doesn't match the filter conditions.
+	 */
+	@XmlElement(name = "skip_filter")
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private Filter skipFilter;
 
 	protected Job() {
-
 
 	}
 
@@ -97,10 +104,31 @@ public class Job extends ExtendedBasicDMPJPAObject {
 		}
 	}
 
+	/**
+	 * Gets the skip filter of the job.
+	 *
+	 * @return the skip filter of the job
+	 */
+	public Filter getSkipFilter() {
+
+		return skipFilter;
+	}
+
+	/**
+	 * Sets the skip filter of the job.
+	 *
+	 * @param skipFilterArg a new skip filter
+	 */
+	public void setFilter(final Filter skipFilterArg) {
+
+		skipFilter = skipFilterArg;
+	}
+
 	@Override
 	public boolean completeEquals(final Object obj) {
 
 		return Job.class.isInstance(obj) && super.completeEquals(obj)
-				&& DMPPersistenceUtil.getMappingUtils().completeEquals(((Job) obj).getMappings(), getMappings());
+				&& DMPPersistenceUtil.getMappingUtils().completeEquals(((Job) obj).getMappings(), getMappings())
+				&& DMPPersistenceUtil.getFilterUtils().completeEquals(((Job) obj).getSkipFilter(), getSkipFilter());
 	}
 }

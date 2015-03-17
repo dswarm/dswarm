@@ -67,7 +67,7 @@ public class MappingsResourceTest extends
 		objectJSONString = objectMapper.writeValueAsString(mapping);
 		expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
 
-		System.out.println("mapping json = '" + objectJSONString + "'");
+//		System.out.println("mapping json = '" + objectJSONString + "'");
 	}
 
 	@Override

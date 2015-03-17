@@ -1,0 +1,21 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+	<meta>
+		<name/>
+	</meta>
+	<rules>
+		<combine flushWith="http://data.slub-dresden.de/resources/1/schema#nummer" includeSubEntities="true" name="out" reset="true" sameEntity="true" value="${out.filtered}">
+			<if>
+				<all flushWith="http://data.slub-dresden.de/resources/1/schema#nummer" includeSubEntities="true" name="CONDITION_ALL" reset="true">
+					<data source="http://data.slub-dresden.de/resources/1/schema#nummer">
+						<regexp match="^42"/>
+					</data>
+				</all>
+			</if>
+			<data name="out.filtered" source="http://data.slub-dresden.de/resources/1/schema#nummer">
+				<constant value="true"/>
+			</data>
+		</combine>
+	</rules>
+	<maps/>
+</metamorph>

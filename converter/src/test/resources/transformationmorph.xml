@@ -1,0 +1,10 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+	<meta>
+		<name>mapping6</name>
+	</meta>
+	<rules>
+		<data name="http://purl.org/dc/elements/1.1/name" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
+		<data name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" source="http://data.slub-dresden.de/resources/1/schema#name"/>
+	</rules>
+</metamorph>

@@ -1,0 +1,36 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph"
+		   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;"
+		   version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+	<meta>
+		<name>mapping1</name>
+	</meta>
+	<rules>
+			<combine name="ok" value="${out}" sameEntity="true"
+					 flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield"
+					 reset="true" includeSubEntities="true">
+				<if>
+					<all name="CONDITION_ALL" reset="true"
+						 flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code"
+						 includeSubEntities="true">
+						<data
+								source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag">
+							<regexp match="088"/>
+						</data>
+						<data
+								source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind1">
+							<regexp match="a"/>
+						</data>
+						<data
+								source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code">
+							<regexp match="a"/>
+						</data>
+					</all>
+				</if>
+				<data name="out"
+					  source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code">
+					<constant value="true"/>
+				</data>
+			</combine>
+	</rules>
+</metamorph>
