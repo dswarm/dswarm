@@ -106,7 +106,6 @@ public class TransformationFlow {
 
 	private final Timer gdmTimer;
 
-
 	@Inject
 	private TransformationFlow(
 			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg,
@@ -197,12 +196,12 @@ public class TransformationFlow {
 		final StreamTimer inputTimer = timerBasedFactory.forStream("stream-input");
 		final ObjectTimer gdmModelsTimer = timerBasedFactory.forObject("gdm-models");
 		final StreamUnflattener unflattener = new StreamUnflattener("", DMPStatics.ATTRIBUTE_DELIMITER);
-//		final StreamJsonCollapser collapser = new StreamJsonCollapser();
+		//		final StreamJsonCollapser collapser = new StreamJsonCollapser();
 		final GDMEncoder converter = new GDMEncoder(outputDataModel);
 		final GDMModelReceiver writer = new GDMModelReceiver();
 
 		final StreamPipe<StreamReceiver> starter;
-		if(optionalSkipFilter.isPresent()) {
+		if (optionalSkipFilter.isPresent()) {
 
 			// skip filter + input timer
 			starter = opener
@@ -235,6 +234,18 @@ public class TransformationFlow {
 
 		final Model model = new Model();
 		String recordClassUri = null;
+
+		final Optional<String> optionalDataModelSchemaRecordClassURI = getDataModelSchemaRecordClassURI();
+
+		final String defaultRecordClassURI;
+
+		if (optionalDataModelSchemaRecordClassURI.isPresent()) {
+
+			defaultRecordClassURI = optionalDataModelSchemaRecordClassURI.get();
+		} else {
+
+			defaultRecordClassURI = BIBO_DOCUMENT_URI;
+		}
 
 		// transform to FE friendly JSON => or use Model#toJSON() ;)
 
@@ -273,11 +284,10 @@ public class TransformationFlow {
 
 			final GDMModel finalGDMModel;
 
-			// TODO: this a WORKAROUND to insert a default type (bibo:Document) for records in the output data model
+			// TODO: this a WORKAROUND to insert a default type (data model schema record class URI or bibo:Document) for records in the output data model
 			if (gdmModel.getRecordClassURI() == null) {
 
 				final String recordURI = gdmModel.getRecordURIs().iterator().next();
-				final String defaultRecordClassURI = BIBO_DOCUMENT_URI;
 
 				final Resource recordResource = model.getResource(recordURI);
 
@@ -305,22 +315,10 @@ public class TransformationFlow {
 			recordURIs.addAll(recordURIsFromGDMModel);
 		}
 
-		if (recordClassUri == null) {
+		if (recordClassUri == null && optionalDataModelSchemaRecordClassURI.isPresent()) {
 
-			if (outputDataModel.isPresent()) {
-
-				final Schema schema = outputDataModel.get().getSchema();
-
-				if (schema != null) {
-
-					final Clasz recordClass = schema.getRecordClass();
-
-					if (recordClass != null) {
-
-						recordClassUri = recordClass.getUri();
-					}
-				}
-			}
+			// set data model schema record class URI
+			recordClassUri = optionalDataModelSchemaRecordClassURI.get();
 		}
 
 		// note: we may don't really need the record class uri here (I guess), because we can provide the record identifiers
@@ -427,5 +425,29 @@ public class TransformationFlow {
 		} catch (final IOException e) {
 			throw new DMPConverterException("Could not read script resource", e);
 		}
+	}
+
+	private Optional<String> getDataModelSchemaRecordClassURI() {
+
+		if (!outputDataModel.isPresent()) {
+
+			return Optional.absent();
+		}
+
+		final Schema schema = outputDataModel.get().getSchema();
+
+		if (schema == null) {
+
+			return Optional.absent();
+		}
+
+		final Clasz recordClass = schema.getRecordClass();
+
+		if (recordClass == null) {
+
+			return Optional.absent();
+		}
+
+		return Optional.fromNullable(recordClass.getUri());
 	}
 }
