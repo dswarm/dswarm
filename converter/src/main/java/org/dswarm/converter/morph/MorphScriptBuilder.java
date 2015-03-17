@@ -341,16 +341,26 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 			final Map<String, String> parameters = multipleInputComponent.getParameterMappings();
 
-			String valueString = "";
+			String valueString;
 
-			String delimiterString = ", ";
+			final String delimiterString;
 
 			if (parameters.get(MF_CONCAT_FUNCTION_DELIMITER_ATTRIBUTE_IDENTIFIER) != null) {
+
 				delimiterString = parameters.get(MF_CONCAT_FUNCTION_DELIMITER_ATTRIBUTE_IDENTIFIER);
+			} else {
+
+				// fallback default
+				delimiterString = "";
 			}
 
 			if (parameters.get(MF_CONCAT_FUNCTION_PREFIX_ATTRIBUTE_IDENTIFIER) != null) {
+
 				valueString = parameters.get(MF_CONCAT_FUNCTION_PREFIX_ATTRIBUTE_IDENTIFIER);
+			} else {
+
+				// fallback default
+				valueString = "";
 			}
 
 			final Iterator<String> iter = collectionSourceAttributes.iterator();
@@ -364,12 +374,14 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 				valueString += "${" + sourceAttribute + "}";
 
 				if ((i++ + 1) < collectionSourceAttributes.size()) {
+
 					valueString += delimiterString;
 				}
 
 			}
 
 			if (parameters.get(MF_CONCAT_FUNCTION_POSTFIX_ATTRIBUTE_IDENTIFIER) != null) {
+
 				valueString += parameters.get(MF_CONCAT_FUNCTION_POSTFIX_ATTRIBUTE_IDENTIFIER);
 			}
 

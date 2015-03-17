@@ -1,0 +1,8 @@
+[
+  {
+    "http://data.slub-dresden.de/datamodels/1/records/8fd200b4-b432-4618-9c1a-6cded44848de": [
+      {"http://purl.org/dc/elements/1.1/title": "Wallensteinnach der Biographie von Golo Mann für das Fernsehen erzählt von Leopold Ahlsen"},
+      {"http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"}
+    ]
+  }
+]

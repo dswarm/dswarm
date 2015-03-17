@@ -96,6 +96,13 @@ public class CSVTransformationFlowTest extends GuicedTest {
 	}
 
 	@Test
+	public void testCSVMultipleMappingsWithAlmostAllFunctions2() throws Exception {
+
+		testCSVTaskWithTuples("almost.all.functions.complex.test.csv.result.1.json", "almost.all.functions.complex.test.csv.task.1.json",
+				"almost.all.functions.complex.test.csv.tuples.json");
+	}
+
+	@Test
 	public void testCSVFilterOutputBeforeFilterCondition() throws Exception {
 
 		testCSVMorphWithTuples("dd-747.csv.morph.result.json", "dd-747.csv.morph.xml", "dd-747.csv.tuples.json", Optional.<String>empty());

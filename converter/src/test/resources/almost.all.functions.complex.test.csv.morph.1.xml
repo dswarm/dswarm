@@ -1,0 +1,78 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+    <meta>
+        <name>mapping-1402409142712, mapping-1402408992686, mapping-1402409083236, mapping-1402409132666, mapping-1402409005527, mapping-1402409026713, mapping-1402409053390, mapping-1402409065445, mapping-1402409156359, mapping-1402409115043</name>
+    </meta>
+    <rules>
+        <data name="@isbn__8__" source="http://data.slub-dresden.de/resources/1/schema#isbn"/>
+        <data name="http://purl.org/ontology/bibo/isbn" source="@__TRANSFORMATION_OUTPUT_VARIABLE__17"/>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__17" source="@isbn__8__">
+            <isbn to="clean"/>
+        </data>
+        <data name="@type__0__" source="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+        <data name="http://www.w3.org/1999/02/22-rdf-syntax-ns#type" source="@__TRANSFORMATION_OUTPUT_VARIABLE__9"/>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__9" source="@type__0__"/>
+        <data name="@date__5__" source="http://data.slub-dresden.de/resources/1/schema#date"/>
+        <data name="http://purl.org/ontology/bibo/edition" source="@__TRANSFORMATION_OUTPUT_VARIABLE__14"/>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__14" source="@date__5__">
+            <regexp format="Jahr: ${1}, Monat: ${3}, Tag: ${2}" match="(\d*).(\d\d)\/(\d{2})"/>
+        </data>
+        <data name="@language__7__" source="http://data.slub-dresden.de/resources/1/schema#language"/>
+        <data name="http://purl.org/dc/terms/language" source="@__TRANSFORMATION_OUTPUT_VARIABLE__16"/>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__16" source="@language__7__">
+            <replace pattern="en" with=""/>
+        </data>
+        <data name="@givenname__1__" source="http://data.slub-dresden.de/resources/1/schema#givenname"/>
+        <data name="@sn__1__" source="http://data.slub-dresden.de/resources/1/schema#sn"/>
+        <data name="http://purl.org/dc/elements/1.1/creator" source="@__TRANSFORMATION_OUTPUT_VARIABLE__10"/>
+        <combine name="@__TRANSFORMATION_OUTPUT_VARIABLE__10" reset="true" value="${sn__1__}, ${givenname__1__}">
+            <data name="sn__1__" source="@sn__1__"/>
+            <data name="givenname__1__" source="@givenname__1__"/>
+        </combine>
+        <data name="@title__2__" source="http://data.slub-dresden.de/resources/1/schema#title"/>
+        <data name="@subtitle__2__" source="http://data.slub-dresden.de/resources/1/schema#subtitle"/>
+        <data name="http://purl.org/dc/elements/1.1/title" source="@__TRANSFORMATION_OUTPUT_VARIABLE__11"/>
+        <data name="@component1402409245895" source="@subtitle__2__">
+            <trim/>
+        </data>
+        <data name="@component1402409261374" source="@component1402409257014">
+            <case to="upper"/>
+        </data>
+        <combine name="@__TRANSFORMATION_OUTPUT_VARIABLE__11" reset="true" value="${component1402409245895} ${component1402409261374}">
+            <data name="component1402409245895" source="@component1402409245895"/>
+            <data name="component1402409261374" source="@component1402409261374"/>
+        </combine>
+        <data name="@component1402409257014" source="@title__2__">
+            <substring end="3" start="2"/>
+        </data>
+        <data name="@givenname__3__" source="http://data.slub-dresden.de/resources/1/schema#givenname"/>
+        <data name="http://xmlns.com/foaf/0.1/givenName" source="@__TRANSFORMATION_OUTPUT_VARIABLE__12"/>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__12" source="@givenname__3__"/>
+        <data name="@sn__4__" source="http://data.slub-dresden.de/resources/1/schema#sn"/>
+        <data name="http://xmlns.com/foaf/0.1/familyName" source="@__TRANSFORMATION_OUTPUT_VARIABLE__13"/>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__13" source="@sn__4__"/>
+        <data name="@isbn__9__" source="http://data.slub-dresden.de/resources/1/schema#isbn"/>
+        <data name="http://rdvocab.info/Elements/placeOfPublication" source="@__TRANSFORMATION_OUTPUT_VARIABLE__18"/>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__18" source="@component1402409710693">
+            <htmlanchor prefix="www.doi.org/isbn/" title="@Title"/>
+        </data>
+        <data name="@component1402409710693" source="@isbn__9__">
+            <isbn to="clean"/>
+        </data>
+        <data name="@attributes__6__" source="http://data.slub-dresden.de/resources/1/schema#attributes"/>
+        <data name="http://purl.org/dc/terms/medium" source="@__TRANSFORMATION_OUTPUT_VARIABLE__15"/>
+        <data name="@component1402409341363" source="@attributes__6__">
+            <split delimiter="\|"/>
+        </data>
+        <data name="@component1402409348679" source="@component1402409341363">
+            <occurrence only="4" sameEntity="true"/>
+        </data>
+        <data name="@component1402409352178" source="@component1402409348679">
+            <equals string="c"/>
+        </data>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__15" source="@component1402409352178">
+            <compose postfix="d-com"/>
+        </data>
+    </rules>
+    <maps/>
+</metamorph>

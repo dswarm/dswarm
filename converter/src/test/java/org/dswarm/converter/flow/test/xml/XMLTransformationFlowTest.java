@@ -78,6 +78,12 @@ public class XMLTransformationFlowTest extends GuicedTest {
 	}
 
 	@Test
+	public void testMabxmlConcatOneMappingOnFeldValueWithTwoFiltersTask2() throws Exception {
+
+		testXMLTaskWithTuples("dd-530.mabxml.task.result.1.json", "dd-530.mabxml.task.1.json", "test-mabxml.tuples.json");
+	}
+
+	@Test
 	public void testMabxmlFilterWithRegexMorph() throws Exception {
 
 		testXMLMorphWithTuples("dd-650.mabxml.morph.result.json", "dd-650.mabxml.morph.xml", "test-mabxml.tuples.json");

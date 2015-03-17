@@ -1,0 +1,898 @@
+{
+  "name" : "xyz123",
+  "description" : "A Transformation",
+  "job" : {
+    "mappings" : [ {
+      "name" : "xyz123",
+      "transformation" : {
+        "name" : "transformation",
+        "description" : "transformation",
+        "function" : {
+          "name" : "transformation",
+          "description" : "transformation",
+          "type" : "Transformation",
+          "components" : [ {
+            "function" : {
+              "name" : "concat",
+              "description" : "Collects all received values and concatenates them on record end.",
+              "function_description" : {
+                "name" : "concat",
+                "dsl" : "metafacture",
+                "reference" : "concat",
+                "description" : "Collects all received values and concatenates them on record end.",
+                "parameters" : {
+                  "delimiter" : {
+                    "type" : "text",
+                    "optional" : true
+                  },
+                  "prefix" : {
+                    "type" : "text",
+                    "optional" : true
+                  },
+                  "postfix" : {
+                    "type" : "text",
+                    "optional" : true
+                  }
+                }
+              },
+              "parameters" : [ "delimiter", "prefix", "postfix" ],
+              "type" : "Function",
+              "uuid" : "23"
+            },
+            "name" : "component1402409200787",
+            "description" : "{\"x\":\"title\",\"y\":0}",
+            "parameter_mappings" : {
+              "inputString" : "feld_value__0__,feld_value__1__"
+            },
+            "uuid" : "-1402409200649"
+          } ]
+        },
+        "parameter_mappings" : {
+          "__TRANSFORMATION_OUTPUT_VARIABLE__1" : "output mapping attribute path instance",
+          "feld_value__0__" : "feld_value__0__",
+          "feld_value__1__" : "feld_value__1__"
+        }
+      },
+      "input_attribute_paths" : [ {
+        "type" : "MappingAttributePathInstance",
+        "name" : "feld_value__0__",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "feld",
+            "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+            "uuid" : "38"
+          }, {
+            "name" : "value",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+            "uuid" : "41"
+          } ],
+          "uuid" : "46"
+        },
+        "filter" : {
+          "expression" : "[{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr\":\"331\"},{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind\":\" \"}]",
+          "uuid" : "-1402051955808"
+        },
+        "uuid" : "-1402051926047"
+      }, {
+        "type" : "MappingAttributePathInstance",
+        "name" : "feld_value__1__",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "feld",
+            "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+            "uuid" : "38"
+          }, {
+            "name" : "value",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+            "uuid" : "41"
+          } ],
+          "uuid" : "46"
+        },
+        "filter" : {
+          "expression" : "[{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr\":\"335\"},{\"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind\":\" \"}]",
+          "uuid" : "-1402051955808"
+        },
+        "uuid" : "-1402051926048"
+      } ],
+      "output_attribute_path" : {
+        "type" : "MappingAttributePathInstance",
+        "name" : "output mapping attribute path instance",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "title",
+            "uri" : "http://purl.org/dc/elements/1.1/title",
+            "uuid" : "1"
+          } ],
+          "uuid" : "1"
+        },
+        "uuid" : "-1402051926048"
+      },
+      "uuid" : "-1402051926041"
+    } ]
+  },
+  "input_data_model" : {
+    "name" : "mabxml_dmp.xml",
+    "description" : "mabxml",
+    "configuration" : {
+      "name" : "xml",
+      "description" : "xml with id 64",
+      "resources" : [ {
+        "uuid" : "64"
+      } ],
+      "parameters" : {
+        "storage_type" : "xml",
+        "record_tag" : "datensatz"
+      },
+      "uuid" : "64"
+    },
+    "schema" : {
+      "name" : null,
+      "attribute_paths" : [ {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_0",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "uuid" : "20"
+          } ],
+          "uuid" : "20"
+        },
+        "uuid" : "0"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_1",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "id",
+            "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id",
+            "uuid" : "34"
+          } ],
+          "uuid" : "38"
+        },
+        "uuid" : "1"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_2",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "typ",
+            "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ",
+            "uuid" : "35"
+          } ],
+          "uuid" : "39"
+        },
+        "uuid" : "2"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_3",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "status",
+            "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status",
+            "uuid" : "36"
+          } ],
+          "uuid" : "40"
+        },
+        "uuid" : "3"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_4",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "feld",
+            "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+            "uuid" : "38"
+          }, {
+            "name" : "tf",
+            "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
+            "uuid" : "43"
+          } ],
+          "uuid" : "50"
+        },
+        "uuid" : "4"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_5",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "feld",
+            "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+            "uuid" : "38"
+          }, {
+            "name" : "ns",
+            "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
+            "uuid" : "42"
+          }, {
+            "name" : "value",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+            "uuid" : "41"
+          } ],
+          "uuid" : "49"
+        },
+        "uuid" : "5"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_6",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "feld",
+            "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+            "uuid" : "38"
+          }, {
+            "name" : "tf",
+            "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
+            "uuid" : "43"
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "uuid" : "20"
+          } ],
+          "uuid" : "51"
+        },
+        "uuid" : "6"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_7",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "feld",
+            "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+            "uuid" : "38"
+          }, {
+            "name" : "ind",
+            "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind",
+            "uuid" : "40"
+          } ],
+          "uuid" : "45"
+        },
+        "uuid" : "7"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_8",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "feld",
+            "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+            "uuid" : "38"
+          }, {
+            "name" : "value",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+            "uuid" : "41"
+          } ],
+          "uuid" : "46"
+        },
+        "uuid" : "8"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_9",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "feld",
+            "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+            "uuid" : "38"
+          }, {
+            "name" : "ns",
+            "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
+            "uuid" : "42"
+          } ],
+          "uuid" : "47"
+        },
+        "uuid" : "9"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_10",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "feld",
+            "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+            "uuid" : "38"
+          }, {
+            "name" : "ns",
+            "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
+            "uuid" : "42"
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "uuid" : "20"
+          } ],
+          "uuid" : "48"
+        },
+        "uuid" : "10"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_11",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "mabVersion",
+            "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion",
+            "uuid" : "37"
+          } ],
+          "uuid" : "41"
+        },
+        "uuid" : "11"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_12",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "feld",
+            "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+            "uuid" : "38"
+          } ],
+          "uuid" : "42"
+        },
+        "uuid" : "12"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_13",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "feld",
+            "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+            "uuid" : "38"
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "uuid" : "20"
+          } ],
+          "uuid" : "43"
+        },
+        "uuid" : "13"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_14",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "feld",
+            "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+            "uuid" : "38"
+          }, {
+            "name" : "nr",
+            "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
+            "uuid" : "39"
+          } ],
+          "uuid" : "44"
+        },
+        "uuid" : "14"
+      } ],
+      "record_class" : {
+        "name" : "datensatzType",
+        "uri" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType",
+        "uuid" : "2"
+      },
+      "uuid" : "63"
+    },
+    "data_resource" : {
+      "name" : "mabxml_dmp.xml",
+      "description" : "mabxml",
+      "type" : "FILE",
+      "resource_attributes" : {
+        "path" : "/home/dmp/tmp/tmp/resources/mabxml_dmp.xml",
+        "filetype" : "application/xml",
+        "filesize" : -1
+      },
+      "configurations" : [ {
+        "name" : "xml",
+        "description" : "xml with id 64",
+        "resources" : [ {
+          "uuid" : "64"
+        } ],
+        "parameters" : {
+          "storage_type" : "xml",
+          "record_tag" : "datensatz"
+        },
+        "uuid" : "64"
+      } ],
+      "uuid" : "64"
+    },
+    "uuid" : "75"
+  },
+  "output_data_model" : {
+    "name" : "Internal Data Model",
+    "description" : "SLUB Internal Data Model",
+    "schema" : {
+      "name" : "Internal Schema",
+      "attribute_paths" : [ {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_15",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "contributor",
+            "uri" : "http://purl.org/dc/terms/contributor",
+            "uuid" : "7"
+          }, {
+            "name" : "givenName",
+            "uri" : "http://xmlns.com/foaf/0.1/givenName",
+            "uuid" : "33"
+          } ],
+          "uuid" : "37"
+        },
+        "uuid" : "15"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_16",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "creator",
+            "uri" : "http://purl.org/dc/terms/creator",
+            "uuid" : "5"
+          }, {
+            "name" : "familyName",
+            "uri" : "http://xmlns.com/foaf/0.1/familyName",
+            "uuid" : "32"
+          } ],
+          "uuid" : "33"
+        },
+        "uuid" : "16"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_17",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "creator",
+            "uri" : "http://purl.org/dc/terms/creator",
+            "uuid" : "5"
+          }, {
+            "name" : "givenName",
+            "uri" : "http://xmlns.com/foaf/0.1/givenName",
+            "uuid" : "33"
+          } ],
+          "uuid" : "34"
+        },
+        "uuid" : "17"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_18",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "contributor",
+            "uri" : "http://purl.org/dc/terms/contributor",
+            "uuid" : "7"
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "uuid" : "20"
+          } ],
+          "uuid" : "35"
+        },
+        "uuid" : "18"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_19",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "contributor",
+            "uri" : "http://purl.org/dc/terms/contributor",
+            "uuid" : "7"
+          }, {
+            "name" : "familyName",
+            "uri" : "http://xmlns.com/foaf/0.1/familyName",
+            "uuid" : "32"
+          } ],
+          "uuid" : "36"
+        },
+        "uuid" : "19"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_20",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "alternative",
+            "uri" : "http://purl.org/dc/terms/alternative",
+            "uuid" : "3"
+          } ],
+          "uuid" : "3"
+        },
+        "uuid" : "20"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_21",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "shortTitle",
+            "uri" : "http://purl.org/ontology/bibo/shortTitle",
+            "uuid" : "4"
+          } ],
+          "uuid" : "4"
+        },
+        "uuid" : "21"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_22",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "title",
+            "uri" : "http://purl.org/dc/elements/1.1/title",
+            "uuid" : "1"
+          } ],
+          "uuid" : "1"
+        },
+        "uuid" : "22"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_23",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "otherTitleInformation",
+            "uri" : "http://rdvocab.info/Elements/otherTitleInformation",
+            "uuid" : "2"
+          } ],
+          "uuid" : "2"
+        },
+        "uuid" : "23"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_24",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "contributor",
+            "uri" : "http://purl.org/dc/terms/contributor",
+            "uuid" : "7"
+          } ],
+          "uuid" : "7"
+        },
+        "uuid" : "24"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_25",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "contributor",
+            "uri" : "http://purl.org/dc/elements/1.1/contributor",
+            "uuid" : "8"
+          } ],
+          "uuid" : "8"
+        },
+        "uuid" : "25"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_26",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "creator",
+            "uri" : "http://purl.org/dc/terms/creator",
+            "uuid" : "5"
+          } ],
+          "uuid" : "5"
+        },
+        "uuid" : "26"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_27",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "creator",
+            "uri" : "http://purl.org/dc/elements/1.1/creator",
+            "uuid" : "6"
+          } ],
+          "uuid" : "6"
+        },
+        "uuid" : "27"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_28",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "publisher",
+            "uri" : "http://purl.org/dc/elements/1.1/publisher",
+            "uuid" : "11"
+          } ],
+          "uuid" : "11"
+        },
+        "uuid" : "28"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_29",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "issued",
+            "uri" : "http://purl.org/dc/terms/issued",
+            "uuid" : "12"
+          } ],
+          "uuid" : "12"
+        },
+        "uuid" : "29"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_30",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "publicationStatement",
+            "uri" : "http://rdvocab.info/Elements/publicationStatement",
+            "uuid" : "9"
+          } ],
+          "uuid" : "9"
+        },
+        "uuid" : "30"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_31",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "placeOfPublication",
+            "uri" : "http://rdvocab.info/Elements/placeOfPublication",
+            "uuid" : "10"
+          } ],
+          "uuid" : "10"
+        },
+        "uuid" : "31"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_32",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "issn",
+            "uri" : "http://purl.org/ontology/bibo/issn",
+            "uuid" : "15"
+          } ],
+          "uuid" : "15"
+        },
+        "uuid" : "32"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_33",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "eissn",
+            "uri" : "http://purl.org/ontology/bibo/eissn",
+            "uuid" : "16"
+          } ],
+          "uuid" : "16"
+        },
+        "uuid" : "33"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_34",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "sameAs",
+            "uri" : "http://www.w3.org/2002/07/owl#sameAs",
+            "uuid" : "13"
+          } ],
+          "uuid" : "13"
+        },
+        "uuid" : "34"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_35",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "isLike",
+            "uri" : "http://umbel.org/umbel#isLike",
+            "uuid" : "14"
+          } ],
+          "uuid" : "14"
+        },
+        "uuid" : "35"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_36",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "uuid" : "20"
+          } ],
+          "uuid" : "20"
+        },
+        "uuid" : "36"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_37",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "familyName",
+            "uri" : "http://xmlns.com/foaf/0.1/familyName",
+            "uuid" : "32"
+          } ],
+          "uuid" : "87"
+        },
+        "uuid" : "37"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_38",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "isbn",
+            "uri" : "http://purl.org/ontology/bibo/isbn",
+            "uuid" : "19"
+          } ],
+          "uuid" : "19"
+        },
+        "uuid" : "38"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_39",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "givenName",
+            "uri" : "http://xmlns.com/foaf/0.1/givenName",
+            "uuid" : "33"
+          } ],
+          "uuid" : "86"
+        },
+        "uuid" : "39"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_40",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "oclcnum",
+            "uri" : "http://purl.org/ontology/bibo/oclcnum",
+            "uuid" : "18"
+          } ],
+          "uuid" : "18"
+        },
+        "uuid" : "40"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_41",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "lccn",
+            "uri" : "http://purl.org/ontology/bibo/lccn",
+            "uuid" : "17"
+          } ],
+          "uuid" : "17"
+        },
+        "uuid" : "41"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_42",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "hasVersion",
+            "uri" : "http://purl.org/dc/terms/hasVersion",
+            "uuid" : "24"
+          } ],
+          "uuid" : "24"
+        },
+        "uuid" : "42"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_43",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "isPartOf",
+            "uri" : "http://purl.org/dc/terms/isPartOf",
+            "uuid" : "23"
+          } ],
+          "uuid" : "23"
+        },
+        "uuid" : "43"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_44",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "hasPart",
+            "uri" : "http://purl.org/dc/terms/hasPart",
+            "uuid" : "22"
+          } ],
+          "uuid" : "22"
+        },
+        "uuid" : "44"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_45",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "medium",
+            "uri" : "http://purl.org/dc/terms/medium",
+            "uuid" : "21"
+          } ],
+          "uuid" : "21"
+        },
+        "uuid" : "45"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_46",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "language",
+            "uri" : "http://purl.org/dc/terms/language",
+            "uuid" : "28"
+          } ],
+          "uuid" : "28"
+        },
+        "uuid" : "46"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_47",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "succeededBy",
+            "uri" : "http://rdvocab.info/Elements/succeededBy",
+            "uuid" : "27"
+          } ],
+          "uuid" : "27"
+        },
+        "uuid" : "47"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_48",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "precededBy",
+            "uri" : "http://rdvocab.info/Elements/precededBy",
+            "uuid" : "26"
+          } ],
+          "uuid" : "26"
+        },
+        "uuid" : "48"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_49",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "isFormatOf",
+            "uri" : "http://purl.org/dc/terms/isFormatOf",
+            "uuid" : "25"
+          } ],
+          "uuid" : "25"
+        },
+        "uuid" : "49"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_50",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "creator",
+            "uri" : "http://purl.org/dc/terms/creator",
+            "uuid" : "5"
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "uuid" : "20"
+          } ],
+          "uuid" : "32"
+        },
+        "uuid" : "50"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_51",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "bibliographicCitation",
+            "uri" : "http://purl.org/dc/terms/bibliographicCitation",
+            "uuid" : "31"
+          } ],
+          "uuid" : "31"
+        },
+        "uuid" : "51"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_52",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "edition",
+            "uri" : "http://purl.org/ontology/bibo/edition",
+            "uuid" : "30"
+          } ],
+          "uuid" : "30"
+        },
+        "uuid" : "52"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_53",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "1053",
+            "uri" : "http://iflastandards.info/ns/isbd/elements/1053",
+            "uuid" : "29"
+          } ],
+          "uuid" : "29"
+        },
+        "uuid" : "53"
+      } ],
+      "record_class" : {
+        "name" : "Document",
+        "uri" : "http://purl.org/ontology/bibo/Document",
+        "uuid" : "1"
+      },
+      "uuid" : "1"
+    },
+    "uuid" : "1"
+  }
+}
