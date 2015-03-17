@@ -32,7 +32,6 @@
 	<name>d:swarm - Converter</name>
 
 	<properties>
-		<version.commons-csv>1.1</version.commons-csv>
 		<version.mockito-core>1.10.19</version.mockito-core>
 		<version.xalan>2.7.2</version.xalan>
 		<version.xerces>2.11.0</version.xerces>
