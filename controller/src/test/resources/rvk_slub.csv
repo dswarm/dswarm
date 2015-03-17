@@ -1,0 +1,507 @@
+A,Allgemeines
+AA,Allgemeines
+AB,Allgemeines
+AC,Allgemeines
+AD,Allgemeines
+AE,Allgemeines
+AF,Allgemeines
+AH,Allgemeines
+AK,Allgemeines
+AL,Allgemeines
+AM,Allgemeines
+AN,Allgemeines
+AP,Allgemeines
+AR,Allgemeines
+YN,Medizin
+YO,Medizin
+YP,Medizin
+YQ,Medizin
+YR,Medizin
+YT,Medizin
+YU,Medizin
+YV,Medizin
+ZA,"Land- u. Forst-, Fischerei-, Hauswirtschaft"
+ZB,"Land- u. Forst-, Fischerei-, Hauswirtschaft"
+ZC,"Land- u. Forst-, Fischerei-, Hauswirtschaft"
+ZD,"Land- u. Forst-, Fischerei-, Hauswirtschaft"
+ZE,"Land- u. Forst-, Fischerei-, Hauswirtschaft"
+ZG,Technik
+ZH,Technik
+ZI,Technik
+ZK,Technik
+ZL,Technik
+ZM,Technik
+ZN,Technik
+ZO,Technik
+ZP,Technik
+ZQ,Technik
+ZS,Technik
+ZX,Sport
+ZY,Sport
+AV,Allgemeines
+AW,Allgemeines
+AX,Allgemeines
+AZ,Allgemeines
+B,Theologie u. Religionswissenschaften
+BA,Theologie u. Religionswissenschaften
+BB,Theologie u. Religionswissenschaften
+BC,Theologie u. Religionswissenschaften
+BD,Theologie u. Religionswissenschaften
+BE,Theologie u. Religionswissenschaften
+BF,Theologie u. Religionswissenschaften
+BG,Theologie u. Religionswissenschaften
+BH,Theologie u. Religionswissenschaften
+BK,Theologie u. Religionswissenschaften
+BL,Theologie u. Religionswissenschaften
+BM,Theologie u. Religionswissenschaften
+BN,Theologie u. Religionswissenschaften
+BO,Theologie u. Religionswissenschaften
+BP,Theologie u. Religionswissenschaften
+BQ,Theologie u. Religionswissenschaften
+BR,Theologie u. Religionswissenschaften
+BS,Theologie u. Religionswissenschaften
+BT,Theologie u. Religionswissenschaften
+BU,Theologie u. Religionswissenschaften
+BV,Theologie u. Religionswissenschaften
+BW,Theologie u. Religionswissenschaften
+BX,Theologie u. Religionswissenschaften
+CA,Philosophie
+CB,Philosophie
+CC,Philosophie
+CD,Philosophie
+CI,Philosophie
+CL,Psychologie
+CM,Psychologie
+CN,Psychologie
+CP,Psychologie
+CQ,Psychologie
+CR,Psychologie
+CS,Psychologie
+CT,Psychologie
+EW,Indogerm. Sprachwissenschaft u. indische Sprachen
+EX,"Balkansprachen, Sprachen Altitaliens u. der Pyrenäenhalbinsel"
+EY,Keltische Sprachen
+EZ,Baltische Sprachen (ohne Estnisch)
+F,Klassische Philologie
+FA,Klassische Philologie
+FB,Altertumskunde
+FC,Griechische Philologie
+FD,Griechische Philologie
+FE,Griechische Philologie
+FF,Griechische Philologie
+FG,Griechische Philologie
+FH,Griechische Philologie
+FK,Griechische Philologie
+FL,Griechische Philologie
+FN,Lateinische Philologie
+FO,Lateinische Philologie
+FP,Lateinische Philologie
+FQ,Lateinische Philologie
+FR,Lateinische Philologie
+FS,Lateinische Philologie
+FT,Lateinische Philologie
+FU,Lateinische Philologie
+FV,Lateinische Philologie
+FX,Lateinische Philologie
+FY,Lateinische Philologie
+FZ,Lateinische Philologie
+G,"Germanistik, Niederlandistik, Skandinavistik"
+GA,"Germanistik, Niederlandistik, Skandinavistik"
+GB,Germanistik
+GC,Germanistik
+GD,Germanistik
+GE,Germanistik
+GF,Germanistik
+GG,Germanistik
+GH,Germanistik
+GI,Germanistik
+GJ,Germanistik
+GK,Germanistik
+GL,Germanistik
+GM,Germanistik
+GN,Germanistik
+GO,Germanistik
+GP,Germanistik
+GQ,Germanistik
+GR,Germanistik
+GS,Germanistik
+GT,Germanistik
+GU,Niederlandistik
+GV,Niederlandistik
+GW,Skandinavistik
+GX,Skandinavistik
+GY,Skandinavistik
+GZ,Skandinavistik
+H,"Anglistik, Amerikanistik"
+HC,"Anglistik, Amerikanistik"
+HD,"Anglistik, Amerikanistik"
+HE,Engl. Sprache u. Literatur
+HF,Engl. Sprache u. Literatur
+HG,Engl. Sprache u. Literatur
+HH,Engl. Sprache u. Literatur
+HI,Engl. Sprache u. Literatur
+HK,Engl. Sprache u. Literatur
+HL,Engl. Sprache u. Literatur
+HM,Engl. Sprache u. Literatur
+HN,Engl. Sprache u. Literatur
+HP,Engl. Sprache u. Literatur
+HQ,Engl. Sprache u. Literatur
+HR,Amerik. Literatur
+HS,Amerik. Literatur
+HT,Amerik. Literatur
+HU,Amerik. Literatur
+I,Romanistik 
+IA,Romanistik 
+IB,Romanistik 
+ID,Französische Sprache u. Literatur
+IE,Französische Sprache u. Literatur
+IF,Französische Sprache u. Literatur
+IG,Französische Sprache u. Literatur
+IH,Französische Sprache u. Literatur
+IJ,Französische Sprache u. Literatur
+IK,Okzitanische Sprache u. Literatur
+IL,Katalanische Sprache u. Literatur
+IM,Spanische Sprache u. Literatur 
+IN,Spanische Sprache u. Literatur 
+IO,Spanische Sprache u. Literatur 
+IP,Spanische Sprache u. Literatur 
+IQ,Spanische / Portugiesische Sprache u. Literatur 
+IR,Portugiesische Sprache u. Literatur (mit Galicien)
+IS,Italienische Sprache u. Literatur 
+IT,Italienische Sprache u. Literatur 
+IU,Italienische Sprache u. Literatur 
+IV,Italienische Sprache u. Literatur 
+IW,Sardische / Rätoromanische Sprache u. Literatur
+IX,Rumänische Sprache u. Literatur
+K,Slavistik
+KA,Slavistik
+KC,Slavische Sprachen u. Literaturen
+KD,Slavische Sprachen u. Literaturen
+KE,Slavische Sprachen u. Literaturen
+KF,Slavische Sprachen u. Literaturen
+KG,Russische Sprache u. Literatur
+KH,Russische Sprache u. Literatur
+KI,Russische Sprache u. Literatur
+KJ,Russische Sprache u. Literatur
+KK,Russische Sprache u. Literatur
+KL,Ukrainische Sprache u. Literatur
+KM,Weißrussische Sprache u. Literatur
+KN,Polnische Sprache und Literatur
+KO,Polnische Sprache und Literatur
+KP,Polnische Sprache und Literatur
+KQ,"Sorbische, Elb- u. ostseeslav. Sprachen u. Literaturen"
+KR,Tschechische Sprache u. Literatur
+KS,Tschechische Sprache u. Literatur
+KU,Slovakische Sprache u. Literatur 
+KV,Serbokroatische Sprache u. Literatur
+KW,Serbokroatische Sprache u. Literatur
+KX,Slovenische Sprache u. Literatur
+KY,Bulgarische Sprache u. Literatur
+KZ,Makedonische Sprache u. Literatur
+LA,Ethnologie 
+LB,Ethnologie 
+LC,Ethnologie 
+LE,Klassische Archäologie
+LF,Klassische Archäologie
+LG,Klassische Archäologie
+LH,Kunstgeschichte
+LI,Kunstgeschichte
+LK,Kunstgeschichte
+LL,Kunstgeschichte
+LM,Kunstgeschichte
+LN,Kunstgeschichte
+LO,Kunstgeschichte
+LP,Musikwissenschaft
+LQ,Musikwissenschaft
+LR,Musikwissenschaft
+LS,Musikwissenschaft
+LT,Musikwissenschaft
+LU,Musikwissenschaft
+LV,Musikwissenschaft
+LW,Musikwissenschaft
+LX,Musikwissenschaft
+LY,Musikwissenschaft
+M,Politologie
+MA,Politologie
+MB,Politologie
+MC,Politologie
+MD,Politologie
+ME,Politologie
+MF,Politologie
+MG,Politologie
+MH,Politologie
+MI,Politologie
+MJ,Politologie
+MK,Politologie
+ML,Politologie
+MO,Soziologie
+MP,Soziologie
+MQ,Soziologie
+MR,Soziologie
+MS,Soziologie
+MT,Soziologie
+MU,Soziologie
+MV,Soziologie
+MW,Soziologie
+MX,Militärwissenschaft
+MY,Militärwissenschaft
+MZ,Militärwissenschaft
+N,Geschichte
+NA,Geschichte
+NB,Geschichte
+NC,Geschichte
+ND,Geschichte
+NF,Geschichte
+NG,Geschichte
+NH,Geschichte
+NK,Geschichte
+NM,Geschichte
+NN,Geschichte
+NO,Geschichte
+NP,Geschichte
+NQ,Geschichte
+NR,Geschichte
+NS,Geschichte
+NT,Geschichte
+NU,Geschichte
+NV,Geschichte
+NW,Geschichte
+NY,Geschichte
+NZ,Geschichte
+P,Rechtswissenschaft
+PA,Rechtswissenschaft
+PB,Rechtswissenschaft
+PC,Rechtswissenschaft
+PD,Rechtswissenschaft
+PE,Rechtswissenschaft
+PF,Rechtswissenschaft
+PG,Rechtswissenschaft
+PH,Rechtswissenschaft
+PI,Rechtswissenschaft
+PK,Rechtswissenschaft
+PL,Rechtswissenschaft
+PM,Rechtswissenschaft
+PN,Rechtswissenschaft
+PO,Rechtswissenschaft
+PP,Rechtswissenschaft
+PQ,Rechtswissenschaft
+PR,Rechtswissenschaft
+PS,Rechtswissenschaft
+PT,Rechtswissenschaft
+PU,Rechtswissenschaft
+PV,Rechtswissenschaft
+PW,Rechtswissenschaft
+PX,Rechtswissenschaft
+PY,Rechtswissenschaft
+PZ,Rechtswissenschaft
+Q,Wirtschaftswissenschaften
+QA,Wirtschaftswissenschaften
+QB,Wirtschaftswissenschaften
+QC,Wirtschaftswissenschaften
+QD,Wirtschaftswissenschaften
+QE,Wirtschaftswissenschaften
+QF,Wirtschaftswissenschaften
+QG,Wirtschaftswissenschaften
+QH,Wirtschaftswissenschaften
+QI,Wirtschaftswissenschaften
+QK,Wirtschaftswissenschaften
+QL,Wirtschaftswissenschaften
+QM,Wirtschaftswissenschaften
+QN,Wirtschaftswissenschaften
+QO,Wirtschaftswissenschaften
+QP,Wirtschaftswissenschaften
+QQ,Wirtschaftswissenschaften
+QR,Wirtschaftswissenschaften
+QS,Wirtschaftswissenschaften
+QT,Wirtschaftswissenschaften
+QU,Wirtschaftswissenschaften
+QV,Wirtschaftswissenschaften
+QW,Wirtschaftswissenschaften
+QX,Wirtschaftswissenschaften
+QY,Wirtschaftswissenschaften
+R,Geographie
+RA,Geographie
+RB,Geographie
+RC,Geographie
+RM,Geographie
+RN,Geographie
+RO,Geographie
+RP,Geographie
+RR,Geographie
+RS,Geographie
+RT,Geographie
+RX,Geographie
+RY,Geographie
+SA,Mathematik
+SB,Mathematik
+SC,Mathematik
+SD,Mathematik
+SE,Mathematik
+SF,Mathematik
+SG,Mathematik
+SH,Mathematik
+SI,Mathematik
+SK,Mathematik
+SM,Mathematik
+SN,Mathematik
+SP,Mathematik
+SQ,Informatik
+SR,Informatik
+SS,Informatik
+ST,Informatik
+SU,Informatik
+TA,Allgemeine Naturwissenschaft
+TB,Allgemeine Naturwissenschaft
+TC,Allgemeine Naturwissenschaft
+TD,Allgemeine Naturwissenschaft
+TE,Geologie u. Paläontologie
+TF,Geologie u. Paläontologie
+TG,Geologie u. Paläontologie
+TH,Geologie u. Paläontologie
+TI,Geologie u. Paläontologie
+TJ,Geologie u. Paläontologie
+TK,Geologie u. Paläontologie
+TL,Geologie u. Paläontologie
+TM,Geologie u. Paläontologie
+TN,Geologie u. Paläontologie
+TO,Geologie u. Paläontologie
+TP,Geologie u. Paläontologie
+TQ,Geologie u. Paläontologie
+TR,Geologie u. Paläontologie
+TS,Geologie u. Paläontologie
+TT,Geologie u. Paläontologie
+TU,Geologie u. Paläontologie
+TV,Geologie u. Paläontologie
+TW,Geologie u. Paläontologie
+TX,Geologie u. Paläontologie
+TY,Geologie u. Paläontologie
+TZ,Geologie u. Paläontologie
+U,Physik 
+UA,Physik 
+UB,Physik 
+UC,Physik 
+UD,Physik 
+UF,Physik 
+UG,Physik 
+UH,Physik 
+UK,Physik 
+UL,Physik 
+UM,Physik 
+UN,Physik 
+UO,Physik 
+UP,Physik 
+UQ,Physik 
+UR,Physik 
+US,Physik 
+UT,Physik 
+UV,Physik 
+UX,Physik 
+V,Chemie u. Pharmazie
+VA,Chemie u. Pharmazie
+VB,Chemie u. Pharmazie
+VC,Chemie u. Pharmazie
+VE,Chemie u. Pharmazie
+VG,Chemie u. Pharmazie
+VH,Chemie u. Pharmazie
+VK,Chemie u. Pharmazie
+VN,Chemie u. Pharmazie
+VR,Chemie u. Pharmazie
+VS,Chemie u. Pharmazie
+VT,Chemie u. Pharmazie
+VW,Chemie u. Pharmazie
+VX,Chemie u. Pharmazie
+W,Biologie
+WA,Biologie
+WB,Biologie
+WC,Biologie
+WD,Biologie
+WE,Biologie
+WF,Biologie
+WG,Biologie
+WH,Biologie
+WI,Biologie
+WK,Biologie
+WL,Biologie
+WM,Biologie
+WN,Biologie
+WP,Biologie
+WQ,Biologie
+WR,Biologie
+WS,Biologie
+WT,Biologie
+WU,Biologie
+WW,Biologie
+WX,Biologie
+XA,Medizin
+XB,Medizin
+XC,Medizin
+XD,Medizin
+XE,Medizin
+XF,Medizin
+XG,Medizin
+XH,Medizin
+XI,Medizin
+XL,Medizin
+XX,Medizin
+X-Y,Medizin
+YB,Medizin
+YC,Medizin
+YD,Medizin
+YE,Medizin
+YF,Medizin
+YG,Medizin
+YH,Medizin
+YI,Medizin
+YK,Medizin
+YM,Medizin
+CU,Psychologie
+CV,Psychologie
+CW,Psychologie
+CX,Psychologie
+CZ,Psychologie
+D,Pädagogik
+DA,Pädagogik
+DB,Pädagogik
+DD,Pädagogik
+DF,Pädagogik
+DG,Pädagogik
+DH,Pädagogik
+DI,Pädagogik
+DK,Pädagogik
+DL,Pädagogik
+DM,Pädagogik
+DN,Pädagogik
+DO,Pädagogik
+DP,Pädagogik
+DQ,Pädagogik
+DR,Pädagogik
+DS,Pädagogik
+DT,Pädagogik
+DU,Pädagogik
+DV,Pädagogik
+DW,Pädagogik
+DX,Pädagogik
+DY,Pädagogik
+DZ,Pädagogik
+EA,Allg. u. vergl. Literaturwissenschaft
+EB,Allg. u. vergl. Literaturwissenschaft
+EC,Allg. u. vergl. Literaturwissenschaft
+ED,Allg. u. vergl. Literaturwissenschaft
+EE,"Sprache u. Literatur außereurop. Sprachen, Uralisch, Kaukasisch, Finnisch, Estnisch"
+EF,"Sprache u. Literatur außereurop. Sprachen, Uralisch, Kaukasisch, Finnisch, Estnisch"
+EG,"Sprache u. Literatur außereurop. Sprachen, Uralisch, Kaukasisch, Finnisch, Estnisch"
+EH,"Sprache u. Literatur außereurop. Sprachen, Uralisch, Kaukasisch, Finnisch, Estnisch"
+EI,"Sprache u. Literatur außereurop. Sprachen, Uralisch, Kaukasisch, Finnisch, Estnisch"
+EJ,"Sprache u. Literatur außereurop. Sprachen, Uralisch, Kaukasisch, Finnisch, Estnisch"
+EK,"Sprache u. Literatur außereurop. Sprachen, Uralisch, Kaukasisch, Finnisch, Estnisch"
+EL,"Sprache u. Literatur außereurop. Sprachen, Uralisch, Kaukasisch, Finnisch, Estnisch"
+EM,"Sprache u. Literatur außereurop. Sprachen, Uralisch, Kaukasisch, Finnisch, Estnisch"
+EN,"Sprache u. Literatur außereurop. Sprachen, Uralisch, Kaukasisch, Finnisch, Estnisch"
+EO,"Sprache u. Literatur außereurop. Sprachen, Uralisch, Kaukasisch, Finnisch, Estnisch"
+EP,"Sprache u. Literatur außereurop. Sprachen, Uralisch, Kaukasisch, Finnisch, Estnisch"
+EQ,Allgemeine Sprachwissenschaft
+ER,Allgemeine Sprachwissenschaft
+ES,Allgemeine Sprachwissenschaft
+ET,Allgemeine Sprachwissenschaft
+EU,Indogerm. Sprachwissenschaft u. indische Sprachen
+EV,Indogerm. Sprachwissenschaft u. indische Sprachen

@@ -45,6 +45,7 @@
 		<maxallowedviolations>7000</maxallowedviolations>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<version.apache.commons>3.3.2</version.apache.commons>
+		<version.commons-csv>1.1</version.commons-csv>
 		<version.commons-io>2.4</version.commons-io>
 		<version.dswarm.common>0.0.2-SNAPSHOT</version.dswarm.common>
 		<version.findebugs.jsr305>3.0.0</version.findebugs.jsr305>
