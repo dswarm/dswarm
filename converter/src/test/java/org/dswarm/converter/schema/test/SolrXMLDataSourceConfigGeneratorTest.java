@@ -23,8 +23,8 @@ import java.util.Optional;
 
 import javax.xml.stream.XMLStreamException;
 
-import com.google.inject.Key;
-import com.google.inject.name.Names;
+import com.google.common.io.Files;
+import org.apache.commons.io.Charsets;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -50,43 +50,37 @@ public class SolrXMLDataSourceConfigGeneratorTest extends GuicedTest {
 	@Test
 	public void testSolrXMLDataSourceConfigGenerator() throws IOException, XMLStreamException {
 
+		internalTestSolrXMLDataSourceConfigGenerator("data-config.xml", Optional.of("http://purl.org/ontology/bibo/Document"),
+				"expected-data-config.xml");
+	}
+
+	@Test
+	public void testSolrXMLDataSourceConfigGenerator2() throws IOException, XMLStreamException {
+
+		internalTestSolrXMLDataSourceConfigGenerator("data-config2.xml", Optional.empty(),
+				"expected-data-config2.xml");
+	}
+
+	private void internalTestSolrXMLDataSourceConfigGenerator(final String tempDataConfigFileName, final Optional<String> optionalRecordTag,
+			final String exectedDataConfigFileName) throws IOException, XMLStreamException {
+
 		final SchemaService schemaService = GuicedTest.injector.getInstance(SchemaService.class);
 
 		final Schema fincSolrSchema = schemaService.getObject(SchemaUtils.FINC_SOLR_SCHEMA_UUID);
 
-		final String dswarmRoot = System.getProperty("user.dir");
-		final String sep = File.separator;
-		final String fileName = "data-config.xml";
-
-		final StringBuilder sb = new StringBuilder();
-
-		sb.append(dswarmRoot).append(sep);
-
-		final String converterModule = "converter";
-
-		if (!dswarmRoot.endsWith(converterModule)) {
-
-			sb.append(converterModule).append(sep);
-		}
-
-		sb.append("target").append(sep).append("classes").append(sep).append(fileName);
-
-		final String fullFileName = sb.toString();
-
-		LOG.debug("Solr XML data source config file = '{}'", fullFileName);
-
-		final File file = new File(fullFileName);
+		final String[] fileNameParts = tempDataConfigFileName.split("\\.");
+		final File file = File.createTempFile(fileNameParts[0], fileNameParts[1]);
 		final OutputStream fop = new FileOutputStream(file);
 
 		SolrXMLDataSourceConfigGenerator
-				.generateSolrXMLDataSourceConfig(fincSolrSchema, Optional.of("http://purl.org/ontology/bibo/Document"), Optional.<String>empty(),
+				.generateSolrXMLDataSourceConfig(fincSolrSchema, optionalRecordTag, Optional.<String>empty(),
 						fop);
 
-		final String expectedDataConfig = DMPPersistenceUtil.getResourceAsString("expected-data-config.xml");
+		final String expectedDataConfig = DMPPersistenceUtil.getResourceAsString(exectedDataConfigFileName);
 
 		Assert.assertNotNull(expectedDataConfig);
 
-		final String actualDataConfig = DMPPersistenceUtil.getResourceAsString(fileName);
+		final String actualDataConfig = Files.toString(file, Charsets.UTF_8);
 
 		Assert.assertNotNull(actualDataConfig);
 
