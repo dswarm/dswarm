@@ -362,6 +362,11 @@
 			<version>${version.xmlunit}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-csv</artifactId>
+			<version>${version.commons-csv}</version>
+		</dependency>
 	</dependencies>
 
 	<profiles>
