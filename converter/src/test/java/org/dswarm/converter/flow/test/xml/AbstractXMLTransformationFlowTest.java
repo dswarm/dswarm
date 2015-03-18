@@ -36,6 +36,7 @@ import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.TransformationFlow;
 import org.dswarm.converter.flow.TransformationFlowFactory;
 import org.dswarm.converter.flow.XMLSourceResourceGDMStmtsFlow;
+import org.dswarm.converter.flow.XmlResourceFlowFactory;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.job.Task;
@@ -119,7 +120,9 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		final DataModel updatedInputDataModel = dataModelService.updateObjectTransactional(inputDataModel).getObject();
 
-		final XMLSourceResourceGDMStmtsFlow flow2 = new XMLSourceResourceGDMStmtsFlow(updatedInputDataModel);
+		final XMLSourceResourceGDMStmtsFlow flow2 = injector
+				.getInstance(XmlResourceFlowFactory.class)
+				.fromDataModel(updatedInputDataModel);
 
 		final List<GDMModel> gdmModels = flow2.applyResource(exampleDataResourceFileName);
 

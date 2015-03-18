@@ -19,13 +19,15 @@ import java.util.Collection;
 import java.util.List;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.dswarm.controller.DMPControllerException;
-import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.flow.XMLSourceResourceGDMStmtsFlow;
+import org.dswarm.converter.flow.XmlResourceFlowFactory;
+import org.dswarm.graph.json.Model;
 import org.dswarm.graph.json.Resource;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
@@ -34,7 +36,7 @@ import org.dswarm.persistence.service.InternalModelServiceFactory;
 
 /**
  * An event recorder for converting XML documents.
- * 
+ *
  * @author phorn
  * @author tgaengler
  */
@@ -47,23 +49,24 @@ public class XMLConverterEventRecorder {
 	 * The internal model service factory
 	 */
 	private final InternalModelServiceFactory	internalServiceFactory;
+	private final Provider<XmlResourceFlowFactory> xmlFlowFactory;
 
 	/**
 	 * Creates a new event recorder for converting XML documents with the given internal model service factory and event bus.
-	 * 
+	 *
 	 * @param internalModelServiceFactory an internal model service factory
-	 * @param eventBus an event bus, where this event record will be registered
 	 */
 	@Inject
-	public XMLConverterEventRecorder(final InternalModelServiceFactory internalModelServiceFactory/* , final EventBus eventBus */) {
-
+	public XMLConverterEventRecorder(
+			final InternalModelServiceFactory internalModelServiceFactory,
+			final Provider<XmlResourceFlowFactory> xmlFlowFactory) {
 		internalServiceFactory = internalModelServiceFactory;
-		// eventBus.register(this);
+		this.xmlFlowFactory = xmlFlowFactory;
 	}
 
 	/**
 	 * Processes the XML document of the data model of the given event and persists the converted data.
-	 * 
+	 *
 	 * @param event an converter event that provides a data model
 	 */
 	// @Subscribe
@@ -75,20 +78,20 @@ public class XMLConverterEventRecorder {
 
 		try {
 
-			final XMLSourceResourceGDMStmtsFlow flow = new XMLSourceResourceGDMStmtsFlow(dataModel);
+			final XMLSourceResourceGDMStmtsFlow flow = xmlFlowFactory.get().fromDataModel(dataModel);
 
 			final String path = dataModel.getDataResource().getAttribute("path").asText();
 			final List<GDMModel> gdmModels = flow.applyResource(path);
 
 			// write GDM models at once
-			final org.dswarm.graph.json.Model model = new org.dswarm.graph.json.Model();
+			final Model model = new Model();
 			String recordClassUri = null;
 
 			for (final GDMModel gdmModel : gdmModels) {
 
 				if (gdmModel.getModel() != null) {
 
-					final org.dswarm.graph.json.Model aModel = gdmModel.getModel();
+					final Model aModel = gdmModel.getModel();
 
 					if (aModel.getResources() != null) {
 
@@ -109,7 +112,7 @@ public class XMLConverterEventRecorder {
 
 			result = new GDMModel(model, null, recordClassUri);
 
-		} catch (final DMPConverterException | NullPointerException e) {
+		} catch (final NullPointerException e) {
 
 			final String message = "couldn't convert the XML data of data model '" + dataModel.getUuid() + "'";
 
@@ -125,19 +128,16 @@ public class XMLConverterEventRecorder {
 			throw new DMPControllerException(message + " " + e.getMessage(), e);
 		}
 
-		if (result != null) {
+		try {
 
-			try {
+			internalServiceFactory.getInternalGDMGraphService().createObject(dataModel.getUuid(), result);
+		} catch (final DMPPersistenceException e) {
 
-				internalServiceFactory.getInternalGDMGraphService().createObject(dataModel.getUuid(), result);
-			} catch (final DMPPersistenceException e) {
+			final String message = "couldn't persist the converted data of data model '" + dataModel.getUuid() + "'";
 
-				final String message = "couldn't persist the converted data of data model '" + dataModel.getUuid() + "'";
+			XMLConverterEventRecorder.LOG.error(message, e);
 
-				XMLConverterEventRecorder.LOG.error(message, e);
-
-				throw new DMPControllerException(message + " " + e.getMessage(), e);
-			}
+			throw new DMPControllerException(message + " " + e.getMessage(), e);
 		}
 	}
 }

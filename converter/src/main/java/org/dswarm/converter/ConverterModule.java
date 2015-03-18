@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import org.dswarm.converter.flow.CSVResourceFlowFactory;
 import org.dswarm.converter.flow.TransformationFlowFactory;
+import org.dswarm.converter.flow.XmlResourceFlowFactory;
 import org.dswarm.converter.pipe.timing.TimerBasedFactory;
 import org.dswarm.converter.schema.SolrSchemaParser;
 import org.dswarm.converter.schema.XMLSchemaParser;
@@ -44,5 +45,6 @@ public class ConverterModule extends AbstractModule {
 		install(new FactoryModuleBuilder().build(CSVResourceFlowFactory.class));
 		install(new FactoryModuleBuilder().build(TimerBasedFactory.class));
 		install(new FactoryModuleBuilder().build(TransformationFlowFactory.class));
+		install(new FactoryModuleBuilder().build(XmlResourceFlowFactory.class));
 	}
 }

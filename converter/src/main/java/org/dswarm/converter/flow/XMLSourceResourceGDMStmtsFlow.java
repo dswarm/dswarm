@@ -20,6 +20,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Optional;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.stream.converter.xml.XmlDecoder;
@@ -38,7 +40,7 @@ import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 
 /**
  * Flow that transforms a given XML source into GDM statements.
- * 
+ *
  * @author tgaengler
  */
 public class XMLSourceResourceGDMStmtsFlow {
@@ -48,7 +50,9 @@ public class XMLSourceResourceGDMStmtsFlow {
 	private final Optional<String>		recordTagName;
 	private final Optional<DataModel>	dataModel;
 
-	public XMLSourceResourceGDMStmtsFlow(final DataModel dataModel) throws DMPConverterException {
+	@Inject
+	private XMLSourceResourceGDMStmtsFlow(
+			@Assisted final DataModel dataModel) throws DMPConverterException {
 
 		if (dataModel == null) {
 
