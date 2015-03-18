@@ -68,13 +68,13 @@ public class SchemaEventRecorder {
 	private final Provider<SchemaService>                      schemaServiceProvider;
 
 	@Inject
-	public SchemaEventRecorder(final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceService,
-			final Provider<AttributePathService> attributePathService, final Provider<AttributeService> attributeService,
-			final Provider<ClaszService> claszService, final Provider<DataModelService> dataModelService, final Provider<SchemaService> schemaService/*
-																														 * , final
-																														 * EventBus
-																														 * eventBus
-																														 */) {
+	public SchemaEventRecorder(
+			final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceService,
+			final Provider<AttributePathService> attributePathService,
+			final Provider<AttributeService> attributeService,
+			final Provider<ClaszService> claszService,
+			final Provider<DataModelService> dataModelService,
+			final Provider<SchemaService> schemaService) {
 
 		this.schemaAttributePathInstanceServiceProvider = schemaAttributePathInstanceService;
 		this.attributePathServiceProvider = attributePathService;

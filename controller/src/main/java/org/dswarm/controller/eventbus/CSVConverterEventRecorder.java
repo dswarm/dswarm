@@ -20,7 +20,9 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import org.culturegraph.mf.types.Triple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,10 +31,13 @@ import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.flow.CSVResourceFlowFactory;
 import org.dswarm.converter.flow.CSVSourceResourceTriplesFlow;
 import org.dswarm.graph.json.LiteralNode;
+import org.dswarm.graph.json.Model;
 import org.dswarm.graph.json.Predicate;
 import org.dswarm.graph.json.Resource;
 import org.dswarm.graph.json.ResourceNode;
 import org.dswarm.persistence.DMPPersistenceException;
+import org.dswarm.persistence.MonitoringLogger;
+import org.dswarm.persistence.MonitoringLogger.MonitoringHelper;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
@@ -44,20 +49,28 @@ public class CSVConverterEventRecorder {
 	private static final Logger					LOG	= LoggerFactory.getLogger(CSVConverterEventRecorder.class);
 
 	private final InternalModelServiceFactory	internalServiceFactory;
+	private final Provider<MonitoringLogger> loggerProvider;
 
 	@Inject
-	public CSVConverterEventRecorder(final InternalModelServiceFactory internalServiceFactory/* , final EventBus eventBus */) {
+	public CSVConverterEventRecorder(
+			final InternalModelServiceFactory internalServiceFactory,
+			final Provider<MonitoringLogger> loggerProvider) {
 
 		this.internalServiceFactory = internalServiceFactory;
-		// eventBus.register(this);
+		this.loggerProvider = loggerProvider;
 	}
 
-	// @Subscribe
 	public void convertConfiguration(final CSVConverterEvent event) throws DMPControllerException {
-
 		final DataModel dataModel = event.getDataModel();
 
-		List<org.culturegraph.mf.types.Triple> result = null;
+		try (final MonitoringHelper ignore = loggerProvider.get().startIngest(dataModel)) {
+			convertConfiguration(dataModel);
+		}
+	}
+
+	private void convertConfiguration(final DataModel dataModel) throws DMPControllerException {
+
+		List<Triple> result = null;
 		try {
 			final CSVSourceResourceTriplesFlow flow = CSVResourceFlowFactory.fromDataModel(dataModel, CSVSourceResourceTriplesFlow.class);
 
@@ -83,15 +96,15 @@ public class CSVConverterEventRecorder {
 		if (result != null) {
 
 			// convert result to GDM
-			final Map<Long, org.dswarm.graph.json.Resource> recordResources = Maps.newLinkedHashMap();
+			final Map<Long, Resource> recordResources = Maps.newLinkedHashMap();
 
-			final org.dswarm.graph.json.Model model = new org.dswarm.graph.json.Model();
+			final Model model = new Model();
 
 			final String dataResourceBaseSchemaURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
 			final String recordClassURI = dataResourceBaseSchemaURI + "RecordType";
 			final ResourceNode recordClassNode = new ResourceNode(recordClassURI);
 
-			for (final org.culturegraph.mf.types.Triple triple : result) {
+			for (final Triple triple : result) {
 
 				// 1. create resource uri from subject (line number)
 				// 2. create property object from property uri string
