@@ -49,14 +49,21 @@ final class LoggingAppender {
 	private final String name;
 	private final Level level;
 	private final Optional<String> marker;
+	private final FilterReply markerReply;
 	private final int maxFileSizeInMB;
 	private final int maxHistory;
 
 	private LoggingAppender(
-			final Context context, final String basePath,
-			final List<String> extraPaths, final String logFileBaseName,
-			final String name, final Level level, final Optional<String> marker,
-			final int maxFileSizeInMB, final int maxHistory) {
+			final Context context,
+			final String basePath,
+			final List<String> extraPaths,
+			final String logFileBaseName,
+			final String name,
+			final Level level,
+			final Optional<String> marker,
+			final FilterReply markerReply,
+			final int maxFileSizeInMB,
+			final int maxHistory) {
 		this.context = context;
 		this.basePath = basePath;
 		this.extraPaths = extraPaths;
@@ -64,6 +71,7 @@ final class LoggingAppender {
 		this.name = name;
 		this.level = level;
 		this.marker = marker;
+		this.markerReply = markerReply;
 		this.maxFileSizeInMB = maxFileSizeInMB;
 		this.maxHistory = maxHistory;
 	}
@@ -81,7 +89,14 @@ final class LoggingAppender {
 				.withMaxFileSizeInMB(prototype.maxFileSizeInMB)
 				.withMaxHistory(prototype.maxHistory);
 		prototype.extraPaths.forEach(builder::addPath);
-		return prototype.marker.map(builder::withMarker).orElse(builder);
+
+		if (prototype.markerReply == FilterReply.ACCEPT) {
+			prototype.marker.ifPresent(builder::withMarker);
+		} else if (prototype.markerReply == FilterReply.DENY) {
+			prototype.marker.ifPresent(builder::withoutMarker);
+		}
+
+		return builder;
 	}
 
 	private String filePath(final String suffix) {
@@ -136,8 +151,8 @@ final class LoggingAppender {
 		final EvaluatorFilter<ILoggingEvent> filter = new EvaluatorFilter<>();
 		filter.setContext(context);
 		filter.setEvaluator(markerEvaluator);
-		filter.setOnMatch(FilterReply.ACCEPT);
-		filter.setOnMismatch(FilterReply.DENY);
+		filter.setOnMatch(markerReply);
+		filter.setOnMismatch(markerReply == FilterReply.ACCEPT ? FilterReply.DENY : FilterReply.NEUTRAL);
 		filter.start();
 
 		return filter;
@@ -184,6 +199,7 @@ final class LoggingAppender {
 		private String logFileBaseName = "messages";
 		private Level level = Level.INFO;
 		private Optional<String> marker = Optional.empty();
+		private FilterReply markerReply = FilterReply.NEUTRAL;
 		private int maxFileSizeInMB = 50;
 		private int maxHistory = 30;
 
@@ -218,11 +234,13 @@ final class LoggingAppender {
 
 		Builder withMarker(final String marker) {
 			this.marker = Optional.of(marker);
+			this.markerReply = FilterReply.ACCEPT;
 			return this;
 		}
 
-		Builder withOutMarker() {
-			this.marker = Optional.empty();
+		Builder withoutMarker(final String marker) {
+			this.marker = Optional.of(marker);
+			this.markerReply = FilterReply.DENY;
 			return this;
 		}
 
@@ -238,8 +256,16 @@ final class LoggingAppender {
 
 		LoggingAppender build() {
 			return new LoggingAppender(
-					context, basePath, addPaths.build(), logFileBaseName,
-					name, level, marker, maxFileSizeInMB, maxHistory);
+					context,
+					basePath,
+					addPaths.build(),
+					logFileBaseName,
+					name,
+					level,
+					marker,
+					markerReply,
+					maxFileSizeInMB,
+					maxHistory);
 		}
 
 		Builder appendTo(final AppenderAttachable<ILoggingEvent> logger) {

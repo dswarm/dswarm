@@ -105,6 +105,8 @@ public final class LoggingConfigurator {
 
 	private static void configureRootLogger(final String loggingPath, final LoggerContext lc, final Level logLevel) {
 		final Logger logger = lc.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
+		// dedicated logger for org, otherwise third-parties with 'org'
+		// would use the 'org.dswarm' logger
 		final Logger orgLogger = lc.getLogger("org");
 		logger.setLevel(logLevel);
 		orgLogger.setLevel(logLevel);
@@ -124,6 +126,7 @@ public final class LoggingConfigurator {
 
 		LoggingAppender.of(lc)
 				.withBasePath(loggingPath).addPath("monitoring")
+				.withoutMarker("EXECUTION")
 				.withName("Monitoring")
 				.withLevel(Level.INFO)
 				.appendTo(logger)
