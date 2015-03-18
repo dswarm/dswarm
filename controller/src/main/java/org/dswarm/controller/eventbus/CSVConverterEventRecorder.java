@@ -48,14 +48,17 @@ public class CSVConverterEventRecorder {
 
 	private static final Logger					LOG	= LoggerFactory.getLogger(CSVConverterEventRecorder.class);
 
+	private final Provider<CSVResourceFlowFactory> flowFactory2;
 	private final InternalModelServiceFactory	internalServiceFactory;
 	private final Provider<MonitoringLogger> loggerProvider;
 
 	@Inject
 	public CSVConverterEventRecorder(
+			final Provider<CSVResourceFlowFactory> flowFactory2,
 			final InternalModelServiceFactory internalServiceFactory,
 			final Provider<MonitoringLogger> loggerProvider) {
 
+		this.flowFactory2 = flowFactory2;
 		this.internalServiceFactory = internalServiceFactory;
 		this.loggerProvider = loggerProvider;
 	}
@@ -72,7 +75,7 @@ public class CSVConverterEventRecorder {
 
 		List<Triple> result = null;
 		try {
-			final CSVSourceResourceTriplesFlow flow = CSVResourceFlowFactory.fromDataModel(dataModel, CSVSourceResourceTriplesFlow.class);
+			final CSVSourceResourceTriplesFlow flow = flowFactory2.get().fromDataModel(dataModel);
 
 			final String path = dataModel.getDataResource().getAttribute("path").asText();
 			result = flow.applyFile(path);

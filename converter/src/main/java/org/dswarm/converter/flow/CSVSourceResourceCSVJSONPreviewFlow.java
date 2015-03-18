@@ -18,6 +18,8 @@ package org.dswarm.converter.flow;
 import java.io.Reader;
 
 import com.google.common.base.Optional;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 
@@ -26,28 +28,28 @@ import org.dswarm.converter.mf.stream.reader.CsvReader;
 import org.dswarm.converter.mf.stream.source.CSVJSONEncoder;
 import org.dswarm.converter.mf.stream.source.CSVJSONWriter;
 import org.dswarm.persistence.model.resource.Configuration;
-import org.dswarm.persistence.model.resource.DataModel;
 
 /**
  * Flow that reads and parses a given CSV document and returns a preview of its content as JSON representation.
- * 
+ *
  * @author tgaengler
  * @author phorn
  */
 public class CSVSourceResourceCSVJSONPreviewFlow extends AbstractCSVResourceFlow<String> {
 
-	public CSVSourceResourceCSVJSONPreviewFlow(final String encoding, final Character escapeCharacter, final Character quoteCharacter,
-			final Character columnDelimiter, final String rowDelimiter) {
+	@AssistedInject
+	private CSVSourceResourceCSVJSONPreviewFlow(
+			@Assisted("encoding") final String encoding,
+			@Assisted("escapeCharacter") final Character escapeCharacter,
+			@Assisted("quoteCharacter") final Character quoteCharacter,
+			@Assisted("columnDelimiter") final Character columnDelimiter,
+			@Assisted("rowDelimiter") final String rowDelimiter) {
 		super(encoding, escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter);
 	}
 
-	public CSVSourceResourceCSVJSONPreviewFlow(final Configuration configuration) throws DMPConverterException {
+	@AssistedInject
+	private CSVSourceResourceCSVJSONPreviewFlow(@Assisted final Configuration configuration) throws DMPConverterException {
 		super(configuration);
-	}
-
-	public CSVSourceResourceCSVJSONPreviewFlow(final DataModel dataModel) throws DMPConverterException {
-
-		super(dataModel);
 	}
 
 	@Override

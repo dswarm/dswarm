@@ -109,6 +109,7 @@ public class ResourcesResource extends AbstractBaseResource {
 
 	private final ObjectMapper  objectMapper;
 	private final DataModelUtil dataModelUtil;
+	private final Provider<CSVResourceFlowFactory> flowFactory2;
 
 	/**
 	 * Creates a new resource (controller service) for {@link Resource}s with the provider of the resource persistence service,
@@ -121,15 +122,20 @@ public class ResourcesResource extends AbstractBaseResource {
 	 * @param dataModelUtilArg                the data model util
 	 */
 	@Inject
-	public ResourcesResource(final ObjectMapper objectMapperArg, final DMPControllerUtils controllerUtilsArg,
-			final Provider<ResourceService> resourceServiceProviderArg, final Provider<ConfigurationService> configurationServiceProviderArg,
-			final DataModelUtil dataModelUtilArg) {
+	public ResourcesResource(
+			final ObjectMapper objectMapperArg,
+			final DMPControllerUtils controllerUtilsArg,
+			final Provider<ResourceService> resourceServiceProviderArg,
+			final Provider<ConfigurationService> configurationServiceProviderArg,
+			final DataModelUtil dataModelUtilArg,
+			final Provider<CSVResourceFlowFactory> flowFactory2) {
 
 		controllerUtils = controllerUtilsArg;
 		resourceServiceProvider = resourceServiceProviderArg;
 		configurationServiceProvider = configurationServiceProviderArg;
 		objectMapper = objectMapperArg;
 		dataModelUtil = dataModelUtilArg;
+		this.flowFactory2 = flowFactory2;
 	}
 
 	/**
@@ -269,7 +275,7 @@ public class ResourcesResource extends AbstractBaseResource {
 
 			resourcesJSON = objectMapper.writeValueAsString(resources);
 		} catch (final JsonProcessingException e) {
-			throw new DMPControllerException("couldn't transform resources list object to JSON string.\n" + e.getMessage());
+			throw new DMPControllerException("couldn't transform resources list object to JSON string.\n", e);
 		}
 
 		ResourcesResource.LOG.debug("return all resources ");
@@ -501,7 +507,7 @@ public class ResourcesResource extends AbstractBaseResource {
 				}
 			});
 		} catch (final IOException e) {
-			throw new DMPControllerException("couldn't read file contents.\n" + e.getMessage());
+			throw new DMPControllerException("couldn't read file contents", e);
 		}
 
 		final Map<String, Object> jsonMap = new HashMap<>(1);
@@ -681,7 +687,7 @@ public class ResourcesResource extends AbstractBaseResource {
 
 			configurationJSON = objectMapper.writeValueAsString(configurationOptional.get());
 		} catch (final JsonProcessingException e) {
-			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
+			throw new DMPControllerException("couldn't transform resource configuration to JSON string", e);
 		}
 
 		ResourcesResource.LOG.debug("return configuration with uuid '{}' for resource with uuid '{}' ", configurationUuid, uuid);
@@ -1090,14 +1096,7 @@ public class ResourcesResource extends AbstractBaseResource {
 			throw new DMPControllerException("couldn't determine file path");
 		}
 
-		final CSVSourceResourceCSVPreviewFlow flow;
-
-		try {
-			flow = CSVResourceFlowFactory.fromConfiguration(configurationFromJSON, CSVSourceResourceCSVPreviewFlow.class);
-		} catch (final DMPConverterException e) {
-
-			throw new DMPControllerException(e.getMessage());
-		}
+		final CSVSourceResourceCSVPreviewFlow flow = flowFactory2.get().csvPreview(configurationFromJSON);
 
 		try {
 			return flow.applyFile(filePathNode.asText());
@@ -1122,16 +1121,9 @@ public class ResourcesResource extends AbstractBaseResource {
 			throw new DMPControllerException("couldn't determine file path");
 		}
 
-		final CSVSourceResourceCSVJSONPreviewFlow flow;
-
-		try {
-			flow = CSVResourceFlowFactory.fromConfiguration(configurationFromJSON, CSVSourceResourceCSVJSONPreviewFlow.class);
-		} catch (final DMPConverterException e) {
-
-			throw new DMPControllerException(e.getMessage());
-		}
-
-		flow.withLimit(50);
+		final CSVSourceResourceCSVJSONPreviewFlow flow = flowFactory2.get()
+				.jsonPreview(configurationFromJSON)
+				.withLimit(50);
 
 		try {
 			return flow.applyFile(filePathNode.asText());

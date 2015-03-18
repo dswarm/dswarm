@@ -44,10 +44,10 @@ public class DMPModule extends AbstractModule {
 	@Override
 	protected void configure() {
 
-		bind(SchemaEventRecorder.class).asEagerSingleton();
-		bind(CSVConverterEventRecorder.class).asEagerSingleton();
-		bind(XMLConverterEventRecorder.class).asEagerSingleton();
-		bind(XMLSchemaEventRecorder.class).asEagerSingleton();
+		bind(SchemaEventRecorder.class);
+		bind(CSVConverterEventRecorder.class);
+		bind(XMLConverterEventRecorder.class);
+		bind(XMLSchemaEventRecorder.class);
 
 		bind(DataModelUtil.class);
 		// TODO bind persistence services here ???

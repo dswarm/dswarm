@@ -27,21 +27,23 @@ import org.culturegraph.mf.stream.source.FileOpener;
 import org.junit.Assert;
 import org.junit.Test;
 
+import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.CSVResourceFlowFactory;
 import org.dswarm.converter.flow.CSVSourceResourceCSVPreviewFlow;
 import org.dswarm.converter.mf.stream.reader.CsvReader;
 import org.dswarm.converter.mf.stream.source.CSVEncoder;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
-public class CSVSourceResourceCSVPreviewFlowTest {
+public class CSVSourceResourceCSVPreviewFlowTest extends GuicedTest {
 
 	@Test
 	public void testEndToEnd() throws Exception {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("test_csv.csv");
 
-		final CSVSourceResourceCSVPreviewFlow flow = CSVResourceFlowFactory.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ';', "\n",
-				CSVSourceResourceCSVPreviewFlow.class);
+		final CSVSourceResourceCSVPreviewFlow flow = injector
+				.getInstance(CSVResourceFlowFactory.class)
+				.csvPreview(Charsets.UTF_8.name(), '\\', '"', ';', "\n");
 
 		final URL url = Resources.getResource("test_csv.csv");
 		final File file = FileUtils.toFile(url);
@@ -70,7 +72,7 @@ public class CSVSourceResourceCSVPreviewFlowTest {
 		final CSVEncoder converter = new CSVEncoder();
 		converter.withHeader();
 		final StringWriter stringWriter = new StringWriter();
-		final ObjectJavaIoWriter<String> writer = new ObjectJavaIoWriter<String>(stringWriter);
+		final ObjectJavaIoWriter<String> writer = new ObjectJavaIoWriter<>(stringWriter);
 
 		opener.setReceiver(reader).setReceiver(converter).setReceiver(writer);
 

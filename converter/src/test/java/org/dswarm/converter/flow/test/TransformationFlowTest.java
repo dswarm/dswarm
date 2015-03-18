@@ -44,6 +44,7 @@ import org.junit.Test;
 
 import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.GuicedTest;
+import org.dswarm.converter.flow.CSVResourceFlowFactory;
 import org.dswarm.converter.flow.CSVSourceResourceTriplesFlow;
 import org.dswarm.converter.flow.TransformationFlow;
 import org.dswarm.converter.flow.TransformationFlowFactory;
@@ -108,7 +109,9 @@ public class TransformationFlowTest extends GuicedTest {
 
 		final DataModel updatedInputDataModel = dataModelService.updateObjectTransactional(inputDataModel).getObject();
 
-		final CSVSourceResourceTriplesFlow flow2 = new CSVSourceResourceTriplesFlow(updatedInputDataModel);
+		final CSVSourceResourceTriplesFlow flow2 = injector
+				.getInstance(CSVResourceFlowFactory.class)
+				.fromDataModel(updatedInputDataModel);
 
 		final List<Triple> csvRecordTriples = flow2.applyResource("test_csv.csv");
 

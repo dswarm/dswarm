@@ -18,6 +18,8 @@ package org.dswarm.converter.flow;
 import java.io.Reader;
 
 import com.google.common.collect.ImmutableList;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.stream.converter.StreamToTriples;
@@ -33,18 +35,25 @@ import org.dswarm.persistence.model.resource.DataModel;
  */
 public class CSVSourceResourceTriplesFlow extends AbstractCSVResourceFlow<ImmutableList<Triple>> {
 
-	public CSVSourceResourceTriplesFlow(final String encoding, final Character escapeCharacter, final Character quoteCharacter,
-			final Character columnDelimiter, final String rowDelimiter) {
+	@AssistedInject
+	private CSVSourceResourceTriplesFlow(
+			@Assisted("encoding") final String encoding,
+			@Assisted("escapeCharacter") final Character escapeCharacter,
+			@Assisted("quoteCharacter") final Character quoteCharacter,
+			@Assisted("columnDelimiter") final Character columnDelimiter,
+			@Assisted("rowDelimiter") final String rowDelimiter) {
 		super(encoding, escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter);
 	}
 
-	public CSVSourceResourceTriplesFlow(final Configuration configuration) throws DMPConverterException {
-
+	@AssistedInject
+	private CSVSourceResourceTriplesFlow(
+			@Assisted final Configuration configuration) throws DMPConverterException {
 		super(configuration);
 	}
 
-	public CSVSourceResourceTriplesFlow(final DataModel dataModel) throws DMPConverterException {
-
+	@AssistedInject
+	private CSVSourceResourceTriplesFlow(
+			@Assisted final DataModel dataModel) throws DMPConverterException {
 		super(dataModel);
 	}
 
