@@ -110,6 +110,7 @@ public final class MonitoringLogger implements Reporter {
 		meters.forEach(this::logMeter);
 		timers.forEach(this::logTimer);
 		logTimer(executionsTimerName, executionsTimer, EXECUTION_MARKER);
+		logTimer(ingestTimerName, ingestTimer, INGEST_MARKER);
 	}
 
 	private void logMeter(final String name, final Metered meter) {
@@ -293,20 +294,20 @@ public final class MonitoringLogger implements Reporter {
 	public static final class MonitoringHelper implements AutoCloseable {
 
 		private final Context context;
-		private final MDCCloseable taskIdentifier;
-		private final MonitoringLogger monitoringLogger;
+		private final MDCCloseable identifier;
+		private final MonitoringLogger logger;
 
-		private MonitoringHelper(final Timer executionsTimer, final MDCCloseable taskIdentifier, final MonitoringLogger monitoringLogger) {
-			this.taskIdentifier = taskIdentifier;
-			this.monitoringLogger = monitoringLogger;
-			context = executionsTimer.time();
+		private MonitoringHelper(final Timer timer, final MDCCloseable identifier, final MonitoringLogger logger) {
+			this.identifier = identifier;
+			this.logger = logger;
+			context = timer.time();
 		}
 
 		@Override
 		public void close() {
 			context.close();
-			monitoringLogger.report();
-			taskIdentifier.close();
+			logger.report();
+			identifier.close();
 		}
 	}
 
