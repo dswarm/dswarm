@@ -146,7 +146,7 @@ public class ResourcesResource extends AbstractBaseResource {
 	 * @return the response
 	 * @throws DMPControllerException
 	 */
-	private Response buildResponseCreated(final String responseContent, final URI responseURI, final RetrievalType type, final String objectType)
+	private static Response buildResponseCreated(final String responseContent, final URI responseURI, final RetrievalType type, final String objectType)
 			throws DMPControllerException {
 
 		final ResponseBuilder responseBuilder;
@@ -226,9 +226,9 @@ public class ResourcesResource extends AbstractBaseResource {
 		}
 
 		final URI baseURI = uri.getRequestUri();
-		final URI resourceURI = URI.create(baseURI.toString() + "/" + resource.getUuid());
+		final URI resourceURI = URI.create(baseURI + "/" + resource.getUuid());
 
-		ResourcesResource.LOG.debug("created new resource at '{}' with content ", resourceURI.toString());
+		ResourcesResource.LOG.debug("created new resource at '{}' with content ", resourceURI);
 		ResourcesResource.LOG.trace("'{}'", resourceJSON);
 
 		return buildResponseCreated(resourceJSON, resourceURI, proxyResource.getType(), "resource");
@@ -648,9 +648,9 @@ public class ResourcesResource extends AbstractBaseResource {
 		}
 
 		final URI baseURI = uri.getRequestUri();
-		final URI configurationURI = URI.create(baseURI.toString() + "/" + configuration.getUuid());
+		final URI configurationURI = URI.create(baseURI + "/" + configuration.getUuid());
 
-		ResourcesResource.LOG.debug("return new configuration at '{}' ", configurationURI.toString());
+		ResourcesResource.LOG.debug("return new configuration at '{}' ", configurationURI);
 		ResourcesResource.LOG.trace("with content '{}'", configurationJSON);
 		return buildResponseCreated(configurationJSON, configurationURI, proxyConfiguration.getType(), "configuration");
 	}
@@ -1051,7 +1051,7 @@ public class ResourcesResource extends AbstractBaseResource {
 	 * @return the new persisted configuration
 	 * @throws DMPControllerException
 	 */
-	private ProxyConfiguration createNewConfiguration(final ConfigurationService configurationService) throws DMPControllerException {
+	private static ProxyConfiguration createNewConfiguration(final ConfigurationService configurationService) throws DMPControllerException {
 
 		final ProxyConfiguration proxyConfiguration;
 
