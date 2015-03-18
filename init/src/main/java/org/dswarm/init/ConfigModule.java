@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import javax.naming.InitialContext;
@@ -49,15 +50,33 @@ public final class ConfigModule extends AbstractModule {
 	private static final String OLD_LOG_CONFIG_ON_START = "dswarm.log-config-on-start";
 	private static final String LOG_CONFIG_ON_START = "dswarm.logging.log-config-on-start";
 
-	@Override
-	protected void configure() {
-		final Config config = ConfigFactoryWithOffloading.loadConfig();
-		if (LOG.isInfoEnabled() && hasEnabled(config, LOG_CONFIG_ON_START, OLD_LOG_CONFIG_ON_START)) {
-			LOG.info(config.root().render());
-		}
+	private static final AtomicReference<Optional<Config>> LOADED_CONFIG = new AtomicReference<>(Optional.empty());
+	private static final TypeLiteral<List<Integer>> INT_LIST = new TypeLiteral<List<Integer>>() {
+	};
+	private static final TypeLiteral<List<Long>> LONG_LIST = new TypeLiteral<List<Long>>() {
+	};
+	private static final TypeLiteral<List<Double>> DOUBLE_LIST = new TypeLiteral<List<Double>>() {
+	};
+	private static final TypeLiteral<List<Boolean>> BOOL_LIST = new TypeLiteral<List<Boolean>>() {
+	};
+	private static final TypeLiteral<List<String>> STRING_LIST = new TypeLiteral<List<String>>() {
+	};
+	private final Config config;
 
-		bind(Config.class).toInstance(config);
-		bindConfig(config);
+	public ConfigModule() {
+		config = loadConfig();
+	}
+
+	public static Config loadConfig() {
+		Optional<Config> prev, next;
+		do {
+			prev = LOADED_CONFIG.get();
+			if (prev.isPresent()) {
+				return prev.get();
+			}
+			next = Optional.of(ConfigFactoryWithOffloading.loadConfig());
+		} while (!LOADED_CONFIG.compareAndSet(prev, next));
+		return LOADED_CONFIG.get().get();
 	}
 
 	static boolean hasEnabled(final Config config, final String... paths) {
@@ -75,6 +94,42 @@ public final class ConfigModule extends AbstractModule {
 				.findFirst();
 	}
 
+	private static <T> List<T> collectFrom(final Collection<Object> objects, final Class<T> cls) {
+		final List<T> values = new ArrayList<>(objects.size());
+		values.addAll(objects.stream()
+						.filter(o -> o != null && cls.isInstance(o))
+						.map(cls::cast)
+						.collect(Collectors.toList())
+		);
+		return values;
+	}
+
+	private static RuntimeException unexpectedConfigType(final ConfigValue configValue) {
+		final String msg = String.format(
+				"Did not expect a value of type [%s] at [%s]", configValue.valueType(), configValue.origin());
+		return new IllegalArgumentException(msg);
+	}
+
+	private static RuntimeException unexpectedListType(final Object head, final ConfigValue configValue) {
+		final String msg = String.format(
+				"Unsupported list type: [%s] at [%s]", head.getClass(), configValue.origin());
+		return new IllegalArgumentException(msg);
+	}
+
+	public Config getConfig() {
+		return config;
+	}
+
+	@Override
+	protected void configure() {
+		if (LOG.isInfoEnabled() && hasEnabled(config, LOG_CONFIG_ON_START, OLD_LOG_CONFIG_ON_START)) {
+			LOG.info(config.root().render());
+		}
+
+		bind(Config.class).toInstance(config);
+		bindConfig();
+	}
+
 	private void bindPrimitive(final Named key, final Boolean value) {
 		bindConstant().annotatedWith(key).to(value);
 		LOG.trace("bound {} to {}", key.value(), value);
@@ -88,16 +143,6 @@ public final class ConfigModule extends AbstractModule {
 	private void bindPrimitive(final Named key, final long value) {
 		bindConstant().annotatedWith(key).to(value);
 		LOG.trace("bound {} to {}", key.value(), value);
-	}
-
-	private static <T> List<T> collectFrom(final Collection<Object> objects, final Class<T> cls) {
-		final List<T> values = new ArrayList<>(objects.size());
-		values.addAll(objects.stream()
-						.filter(o -> o != null && cls.isInstance(o))
-						.map(cls::cast)
-						.collect(Collectors.toList())
-		);
-		return values;
 	}
 
 	private <T> void bindList(final Named key, final TypeLiteral<List<T>> typeLiteral, final List<T> values) {
@@ -115,27 +160,22 @@ public final class ConfigModule extends AbstractModule {
 			final Object head = values.get(0);
 			if (head instanceof Integer) {
 				bindList(key, INT_LIST, collectFrom(values, Integer.class));
-			}
-			else if (head instanceof Long) {
+			} else if (head instanceof Long) {
 				bindList(key, LONG_LIST, collectFrom(values, Long.class));
-			}
-			else if (head instanceof Double) {
+			} else if (head instanceof Double) {
 				bindList(key, DOUBLE_LIST, collectFrom(values, Double.class));
-			}
-			else if (head instanceof Boolean) {
+			} else if (head instanceof Boolean) {
 				bindList(key, BOOL_LIST, collectFrom(values, Boolean.class));
-			}
-			else if (head instanceof String) {
+			} else if (head instanceof String) {
 				bindList(key, STRING_LIST, collectFrom(values, String.class));
-			}
-			else {
+			} else {
 				throw unexpectedListType(head, configValue);
 			}
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	private void bindConfig(final Config config) {
+	private void bindConfig() {
 		for (final Map.Entry<String, ConfigValue> entry : config.entrySet()) {
 			final ConfigValue configValue = entry.getValue();
 			final Named key = Names.named(entry.getKey());
@@ -151,8 +191,8 @@ public final class ConfigModule extends AbstractModule {
 				case STRING:
 					final String configKey = entry.getKey();
 					final boolean specialValue =
-							tryParseDuration(config, configKey, key) ||
-							tryParseBoolean(config, configKey, key);
+							tryParseDuration(configKey, key) ||
+									tryParseBoolean(configKey, key);
 					if (!specialValue) {
 						bindPrimitive(key, configValue.unwrapped().toString());
 					}
@@ -171,7 +211,7 @@ public final class ConfigModule extends AbstractModule {
 		}
 	}
 
-	private boolean tryParseDuration(final Config config, final String configKey, final Named bindKey) {
+	private boolean tryParseDuration(final String configKey, final Named bindKey) {
 		try {
 			final long duration = config.getDuration(configKey, TimeUnit.MILLISECONDS);
 			bindPrimitive(bindKey, duration);
@@ -181,7 +221,7 @@ public final class ConfigModule extends AbstractModule {
 		}
 	}
 
-	private boolean tryParseBoolean(final Config config, final String configKey, final Named bindKey) {
+	private boolean tryParseBoolean(final String configKey, final Named bindKey) {
 		try {
 			final boolean duration = config.getBoolean(configKey);
 			bindPrimitive(bindKey, duration);
@@ -190,24 +230,6 @@ public final class ConfigModule extends AbstractModule {
 			return false;
 		}
 	}
-
-	private static RuntimeException unexpectedConfigType(final ConfigValue configValue) {
-		final String msg = String.format(
-				"Did not expect a value of type [%s] at [%s]", configValue.valueType(), configValue.origin());
-		return new IllegalArgumentException(msg);
-	}
-
-	private static RuntimeException unexpectedListType(final Object head, final ConfigValue configValue) {
-		final String msg = String.format(
-				"Unsupported list type: [%s] at [%s]", head.getClass(), configValue.origin());
-		return new IllegalArgumentException(msg);
-	}
-
-	private static final TypeLiteral<List<Integer>> INT_LIST = new TypeLiteral<List<Integer>>() {};
-	private static final TypeLiteral<List<Long>> LONG_LIST = new TypeLiteral<List<Long>>() {};
-	private static final TypeLiteral<List<Double>> DOUBLE_LIST = new TypeLiteral<List<Double>>() {};
-	private static final TypeLiteral<List<Boolean>> BOOL_LIST = new TypeLiteral<List<Boolean>>() {};
-	private static final TypeLiteral<List<String>> STRING_LIST = new TypeLiteral<List<String>>() {};
 
 	private static class ConfigFactoryWithOffloading {
 
@@ -221,7 +243,7 @@ public final class ConfigModule extends AbstractModule {
 			}
 			try {
 				return ConfigFactory.parseFile(new File(configFileFromJndi));
-			} catch (final ConfigException e ) {
+			} catch (final ConfigException e) {
 				LOG.warn(String.format("Could not load config [%s] from JNDI", configFileFromJndi), e);
 			}
 			return ConfigFactory.empty();

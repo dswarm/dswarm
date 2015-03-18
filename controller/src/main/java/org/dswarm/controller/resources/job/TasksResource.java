@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Provider;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.POST;
@@ -52,6 +54,8 @@ import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.flow.TransformationFlow;
 import org.dswarm.converter.flow.TransformationFlowFactory;
 import org.dswarm.converter.morph.MorphScriptBuilder;
+import org.dswarm.persistence.MonitoringLogger;
+import org.dswarm.persistence.MonitoringLogger.MonitoringHelper;
 import org.dswarm.persistence.model.job.Job;
 import org.dswarm.persistence.model.job.Task;
 import org.dswarm.persistence.model.job.Transformation;
@@ -89,6 +93,7 @@ public class TasksResource {
 	private final ObjectMapper objectMapper;
 
 	private final TransformationFlowFactory transformationFlowFactory;
+	private final Provider<MonitoringLogger> monitoringLogger;
 
 	/**
 	 * Creates a new resource (controller service) for {@link Transformation}s with the provider of the transformation persistence
@@ -96,16 +101,19 @@ public class TasksResource {
 	 * @param dataModelUtilArg the data model util
 	 * @param objectMapperArg  an object mapper
 	 * @param transformationFlowFactoryArg the factory for creating transformation flows
+	 * @param monitoringLogger A logger that produces the logfiles for the monitoring
 	 */
 	@Inject
 	public TasksResource(
 			final DataModelUtil dataModelUtilArg,
 			final ObjectMapper objectMapperArg,
-			final TransformationFlowFactory transformationFlowFactoryArg) {
+			final TransformationFlowFactory transformationFlowFactoryArg,
+			@Named("Monitoring") final Provider<MonitoringLogger> monitoringLogger){
 
 		dataModelUtil = dataModelUtilArg;
 		objectMapper = objectMapperArg;
 		transformationFlowFactory = transformationFlowFactoryArg;
+		this.monitoringLogger = monitoringLogger;
 	}
 
 	/**
@@ -114,7 +122,7 @@ public class TasksResource {
 	 * @param responseContent a response message
 	 * @return the response
 	 */
-	private Response buildResponse(final String responseContent) {
+	private static Response buildResponse(final String responseContent) {
 
 		return Response.ok(responseContent).build();
 	}
@@ -211,9 +219,11 @@ public class TasksResource {
 
 		final boolean writeResultToDatahub = persistResult != null && persistResult;
 
-		final TransformationFlow flow = transformationFlowFactory.fromTask(task);
-
-		final String result = flow.apply(tupleIterator, writeResultToDatahub);
+		final String result;
+		try (final MonitoringHelper ignore = monitoringLogger.get().startExecution(task)) {
+			final TransformationFlow flow = transformationFlowFactory.fromTask(task);
+			result = flow.apply(tupleIterator, writeResultToDatahub);
+		}
 
 		if (result == null) {
 

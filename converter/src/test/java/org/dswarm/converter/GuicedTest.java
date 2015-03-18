@@ -26,6 +26,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 import org.dswarm.init.ConfigModule;
+import org.dswarm.init.ExecutionScope;
 import org.dswarm.init.LoggingConfigurator;
 import org.dswarm.persistence.JacksonObjectMapperModule;
 import org.dswarm.persistence.JpaHibernateModule;
@@ -42,34 +43,38 @@ public abstract class GuicedTest {
 
 	public static Injector getInjector() {
 		final ConfigModule configModule = new ConfigModule();
-		final Injector configInjector = Guice.createInjector(configModule);
-
-		final Config config = configInjector.getInstance(Config.class);
+		final Config config = configModule.getConfig();
 		LoggingConfigurator.configureFrom(config);
 
 		final JacksonObjectMapperModule objectMapperModule = new JacksonObjectMapperModule()
 				.include(JsonInclude.Include.NON_NULL, JsonInclude.Include.NON_EMPTY)
 				.withoutTransformation();
 
-		return configInjector.createChildInjector(
+		return Guice.createInjector(
+				configModule,
 				objectMapperModule,
 				new PersistenceModule(),
 				new ConverterModule(),
-				new JpaHibernateModule(configInjector));
+				new JpaHibernateModule(config)
+		);
 	}
 
 	@BeforeClass
 	public static void startUp() throws Exception {
 
-		GuicedTest.injector = GuicedTest.getInjector();
-		GuicedTest.injector.getInstance(PersistService.class).start();
-		org.dswarm.persistence.GuicedTest.startUp();
+		final Injector newInjector = GuicedTest.getInjector();
+		newInjector.getInstance(PersistService.class).start();
+		newInjector.getInstance(ExecutionScope.class).enter();
+		startUp(newInjector);
+	}
+
+	public static void startUp(final Injector newInjector) {
+		GuicedTest.injector = newInjector;
+		org.dswarm.persistence.GuicedTest.startUp(newInjector);
 	}
 
 	@AfterClass
 	public static void tearDown() throws Exception {
-
-		GuicedTest.injector.getInstance(PersistService.class).stop();
 		org.dswarm.persistence.GuicedTest.tearDown();
 	}
 

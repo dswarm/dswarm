@@ -21,10 +21,10 @@ import java.util.LinkedList;
 import com.codahale.metrics.MetricRegistry;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.name.Named;
 import org.culturegraph.mf.framework.StreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 
-import org.dswarm.init.Monitoring;
 
 public final class StreamTimer extends TimerBased<StreamReceiver> implements StreamPipe<StreamReceiver> {
 
@@ -33,7 +33,7 @@ public final class StreamTimer extends TimerBased<StreamReceiver> implements Str
 
 	@Inject
 	private StreamTimer(
-			@Monitoring final MetricRegistry registry,
+			@Named("Monitoring") final MetricRegistry registry,
 			@Assisted final String prefix) {
 		super(registry, prefix);
 
@@ -43,40 +43,61 @@ public final class StreamTimer extends TimerBased<StreamReceiver> implements Str
 
 	@Override
 	public void startRecord(final String identifier) {
-		final TimingContext context = startMeasurement(identifier);
+		final TimingContext context = startMeasurement("records");
 		recordContexts.offerLast(context);
-		getReceiver().startRecord(identifier);
+		try {
+			getReceiver().startRecord(identifier);
+		} catch (final Throwable t) {
+			// Remove context for failed downstream calls
+			// Not closing/stopping the context does not track the time
+			recordContexts.removeLast();
+		}
 	}
 
 	@Override
 	public void endRecord() {
-		getReceiver().endRecord();
-		final TimingContext context = recordContexts.pollLast();
-		if (context != null) {
-			context.stop();
+		try {
+			getReceiver().endRecord();
+		} finally {
+			final TimingContext context = recordContexts.pollLast();
+			if (context != null) {
+				context.stop();
+			}
 		}
 	}
 
 	@Override
 	public void startEntity(final String name) {
-		final TimingContext context = startMeasurement(name);
+		final TimingContext context = startMeasurement("entities");
 		entityContexts.offerLast(context);
-		getReceiver().startEntity(name);
+		try {
+			getReceiver().startEntity(name);
+		} catch (final Throwable t) {
+			// Remove context for failed downstream calls
+			// Not closing/stopping the context does not track the time
+			entityContexts.removeLast();
+		}
 	}
 
 	@Override
 	public void endEntity() {
-		getReceiver().endEntity();
-		final TimingContext context = entityContexts.pollLast();
-		if (context != null) {
-			context.stop();
+		try {
+			getReceiver().endEntity();
+		} finally {
+			final TimingContext context = entityContexts.pollLast();
+			if (context != null) {
+				context.stop();
+			}
 		}
 	}
 
 	@Override
 	public void literal(final String name, final String value) {
-		final TimingContext context = startMeasurement(name);
-		getReceiver().literal(name, value);
-		context.stop();
+		final TimingContext context = startMeasurement("literals");
+		try {
+			getReceiver().literal(name, value);
+		} finally {
+			context.stop();
+		}
 	}
 }

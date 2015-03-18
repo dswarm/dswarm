@@ -21,10 +21,9 @@ import com.codahale.metrics.Timer;
 import com.codahale.metrics.Timer.Context;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.name.Named;
 import org.culturegraph.mf.framework.Receiver;
 import org.culturegraph.mf.framework.Sender;
-
-import org.dswarm.init.Monitoring;
 
 import static com.codahale.metrics.MetricRegistry.name;
 
@@ -40,7 +39,7 @@ public abstract class TimerBased<R extends Receiver> implements Sender<R> {
 
 	@Inject
 	protected TimerBased(
-			@Monitoring final MetricRegistry registry,
+			@Named("Monitoring") final MetricRegistry registry,
 			@Assisted final String prefix) {
 		this.registry = registry;
 		this.prefix = prefix;

@@ -16,13 +16,9 @@
 package org.dswarm.persistence;
 
 import java.lang.management.ManagementFactory;
-import java.util.concurrent.TimeUnit;
 
 import ch.qos.logback.classic.LoggerContext;
 import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.SharedMetricRegistries;
-import com.codahale.metrics.Slf4jReporter;
-import com.codahale.metrics.Slf4jReporter.LoggingLevel;
 import com.codahale.metrics.jvm.BufferPoolMetricSet;
 import com.codahale.metrics.jvm.ClassLoadingGaugeSet;
 import com.codahale.metrics.jvm.FileDescriptorRatioGauge;
@@ -30,16 +26,19 @@ import com.codahale.metrics.jvm.GarbageCollectorMetricSet;
 import com.codahale.metrics.jvm.MemoryUsageGaugeSet;
 import com.codahale.metrics.jvm.ThreadStatesGaugeSet;
 import com.codahale.metrics.logback.InstrumentedAppender;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import com.google.inject.name.Names;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.dswarm.init.Monitoring;
+import org.dswarm.init.ExecutionScope;
+import org.dswarm.init.ExecutionScoped;
 import org.dswarm.init.util.DMPUtil;
 import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.job.utils.TransformationDeserializer;
@@ -72,11 +71,16 @@ import org.dswarm.persistence.service.schema.SchemaService;
  */
 public class PersistenceModule extends AbstractModule {
 
+	private static final ExecutionScope EXECUTION = new ExecutionScope();
+
 	/**
 	 * registers all persistence services and other related properties etc.
 	 */
 	@Override
 	protected void configure() {
+		bindScope(ExecutionScoped.class, EXECUTION);
+		bind(ExecutionScope.class).toInstance(EXECUTION);
+
 		bind(ResourceService.class).in(Scopes.SINGLETON);
 		bind(ConfigurationService.class).in(Scopes.SINGLETON);
 		bind(AttributeService.class).in(Scopes.SINGLETON);
@@ -98,6 +102,12 @@ public class PersistenceModule extends AbstractModule {
 
 		bind(InternalModelServiceFactory.class).to(InternalServiceFactoryImpl.class).in(Scopes.SINGLETON);
 		bind(DMPUtil.class);
+
+		bind(String.class).annotatedWith(Names.named("Monitoring")).toInstance("dswarm.monitoring");
+		bind(MonitoringLogger.class)
+				.annotatedWith(Names.named("Monitoring"))
+				.to(MonitoringLogger.class)
+				.in(EXECUTION);
 	}
 
 	/**
@@ -118,35 +128,23 @@ public class PersistenceModule extends AbstractModule {
 	/**
 	 * Provides the metric registry to register objects for metric statistics.
 	 * This instance is specific for advanced monitoring only and should be
-	 * injected using the {@link org.dswarm.init.Monitoring} annotation.
+	 * injected using the {@code @Named("Monitoring")} annotation.
 	 *
 	 * @return a {@link MetricRegistry} instance as singleton
 	 */
-	@Provides @Monitoring
-	@Singleton
-	protected static MetricRegistry provideMonitoringMetricRegistry(
-			@Named("dswarm.logging.metrics-interval") final long reportInterval,
-			@Named("dswarm.logging.log-metrics") final boolean shouldLogMetrics) {
-		final MetricRegistry registry = SharedMetricRegistries.getOrCreate(Monitoring.LOGGER_NAME);
-		if (shouldLogMetrics) {
-			startSlf4jLogging(registry, Monitoring.LOGGER_NAME, reportInterval, TimeUnit.MILLISECONDS);
-		}
-		return registry;
+	@Provides @Named("Monitoring") @ExecutionScoped
+	protected static MetricRegistry provideMonitoringMetricRegistry() {
+		return new MetricRegistry();
 	}
 
-	private static void startSlf4jLogging(
-			final MetricRegistry registry,
-			final String loggerName,
-			final long reportInterval,
-			final TimeUnit unit) {
-		final Slf4jReporter reporter = Slf4jReporter.forRegistry(registry)
-				.outputTo(LoggerFactory.getLogger(loggerName))
-				.convertRatesTo(TimeUnit.SECONDS)
-				.convertDurationsTo(TimeUnit.MILLISECONDS)
-				.withLoggingLevel(LoggingLevel.INFO)
-				.build();
-		reporter.start(reportInterval, unit);
-		reporter.report();
+	@Provides @Named("Monitoring") @Singleton
+	protected static Logger provideMonitoringLogger(@Named("Monitoring") final String loggerName) {
+		return LoggerFactory.getLogger(loggerName);
+	}
+
+	@Provides @Named("Monitoring") @Singleton
+	protected static ObjectMapper providerMonitoringMapper() {
+		return new ObjectMapper();
 	}
 
 	private static void instrumentLogback(final MetricRegistry registry) {
