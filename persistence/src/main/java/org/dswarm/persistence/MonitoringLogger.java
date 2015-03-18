@@ -15,50 +15,67 @@
  */
 package org.dswarm.persistence;
 
+import java.io.IOException;
+import java.io.StringWriter;
+import java.time.Instant;
 import java.util.Locale;
-import java.util.Map;
 import java.util.SortedMap;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.Metered;
+import com.codahale.metrics.MetricFilter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Reporter;
 import com.codahale.metrics.Snapshot;
 import com.codahale.metrics.Timer;
+import com.codahale.metrics.Timer.Context;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.CharMatcher;
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
+import org.slf4j.MDC;
+import org.slf4j.MDC.MDCCloseable;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
+import org.dswarm.persistence.model.job.Mapping;
+import org.dswarm.persistence.model.job.Task;
+import org.dswarm.persistence.model.resource.DataModel;
+
+import static com.codahale.metrics.MetricRegistry.name;
 
 public final class MonitoringLogger implements Reporter {
 
 	private static final Marker EXECUTION_MARKER = MarkerFactory.getMarker("EXECUTION");
 
-	private final Provider<MetricRegistry> registryProvider;
 	private final ObjectMapper mapper;
+	private final MetricRegistry registry;
 	private final Logger logger;
 	private final long rateFactor;
 	private final double durationFactor;
 	private final String durationUnit;
 	private final String rateUnit;
+	private final Timer executionsTimer;
+	private final MetricFilter noExecutionsTimer;
+	private final String executionsTimerName;
 
 	@Inject
 	private MonitoringLogger(
-			@Named("Monitoring") final Provider<MetricRegistry> registryProvider,
 			@Named("Monitoring") final ObjectMapper mapper,
+			@Named("Monitoring") final MetricRegistry registry,
 			@Named("Monitoring") final Logger logger) {
-		this.registryProvider = registryProvider;
 		this.mapper = mapper;
+		this.registry = registry;
 		this.logger = logger;
 
-		// TODO: assistedInject
+		// TODO: config value
 		final TimeUnit rateUnit = TimeUnit.SECONDS;
 		final TimeUnit durationUnit = TimeUnit.MILLISECONDS;
 
@@ -66,21 +83,19 @@ public final class MonitoringLogger implements Reporter {
 		this.durationUnit = durationUnit.toString().toLowerCase(Locale.US);
 		rateFactor = rateUnit.toSeconds(1);
 		durationFactor = 1.0 / durationUnit.toNanos(1);
+
+		executionsTimerName = name(Task.class, "executions");
+		noExecutionsTimer = (name, metric) -> ! executionsTimerName.equals(name);
+		executionsTimer = registry.timer(executionsTimerName);
 	}
 
 	public void report() {
-		// TODO: async logging with disruptor
-		synchronized (this) {
-			final MetricRegistry registry = registryProvider.get();
-			final SortedMap<String, Meter> meters = registry.getMeters();
-			final SortedMap<String, Timer> timers = registry.getTimers();
-			report(meters, timers);
-		}
-	}
+		final SortedMap<String, Meter> meters = registry.getMeters();
+		final SortedMap<String, Timer> timers = registry.getTimers(noExecutionsTimer);
 
-	private void report(final Map<String, Meter> meters, final Map<String, Timer> timers) {
 		meters.forEach(this::logMeter);
 		timers.forEach(this::logTimer);
+		logTimer(executionsTimerName, executionsTimer, EXECUTION_MARKER);
 	}
 
 	private void logMeter(final String name, final Metered meter) {
@@ -97,6 +112,16 @@ public final class MonitoringLogger implements Reporter {
 		if (logger.isInfoEnabled()) {
 			try {
 				logger.info(serialiseTimer(name, timer));
+			} catch (final IOException | MonitoringException e) {
+				logger.warn("Could not log timer", e);
+			}
+		}
+	}
+
+	private void logTimer(final String name, final Timer timer, final Marker marker) {
+		if (logger.isInfoEnabled()) {
+			try {
+				logger.info(marker, serialiseTimer(name, timer));
 			} catch (final IOException | MonitoringException e) {
 				logger.warn("Could not log timer", e);
 			}
@@ -176,6 +201,74 @@ public final class MonitoringLogger implements Reporter {
 	public void markExecution(final String message, final Object... arguments) {
 		if (logger.isInfoEnabled()) {
 			logger.info(EXECUTION_MARKER, message, arguments);
+		}
+	}
+
+	public MonitoringHelper startExecution(final Task task) {
+		final String identifier = getTaskIdentifier(task);
+		final MDCCloseable mdc = MDC.putCloseable("taskIdentifier", identifier);
+
+		final Instant now = Instant.now();
+		markExecution(
+				"Task execution of [{}] at [{}], unix [{}]",
+				task.getUuid(), now, now.getEpochSecond());
+
+		task.getJob().getMappings().forEach(this::monitorMapping);
+		monitorDataModel(task.getInputDataModel(), "source");
+		monitorDataModel(task.getOutputDataModel(), "target");
+
+		return new MonitoringHelper(executionsTimer, mdc, this);
+	}
+
+	private static String getTaskIdentifier(final Task task) {
+		final String taskName = StringUtils.defaultIfEmpty(task.getName(), "Unknown Task");
+		final String taskDescription = StringUtils.defaultString(task.getDescription());
+		final String baseIdentifier = String.format("%s-%s", taskName, taskDescription);
+
+		final String normalizedIdentifier = StringUtils.stripAccents(baseIdentifier);
+
+		final Iterable<String> nonWhitespaceParts = Splitter.on(CharMatcher.WHITESPACE)
+				.omitEmptyStrings().split(normalizedIdentifier);
+
+		final String identifier = Joiner.on('-').join(nonWhitespaceParts);
+
+		return StringUtils.abbreviate(identifier, 50);
+	}
+
+	public void monitorMapping(final Mapping mapping) {
+		if (mapping != null && mapping.getUuid() != null) {
+			registry.meter(name(Mapping.class, mapping.getUuid())).mark();
+		}
+	}
+	public void monitorDataModel(final DataModel dataModel, final String suffix) {
+		if (dataModel.getUuid() != null) {
+			registry.meter(name(DataModel.class, dataModel.getUuid(), suffix)).mark();
+		}
+	}
+
+	public static final class MonitoringHelper implements AutoCloseable {
+
+		private final Context context;
+		private final MDCCloseable taskIdentifier;
+		private final MonitoringLogger monitoringLogger;
+
+		private MonitoringHelper(final Timer executionsTimer, final MDCCloseable taskIdentifier, final MonitoringLogger monitoringLogger) {
+			this.taskIdentifier = taskIdentifier;
+			this.monitoringLogger = monitoringLogger;
+			context = executionsTimer.time();
+		}
+
+		@Override
+		public void close() {
+			context.close();
+			monitoringLogger.report();
+			taskIdentifier.close();
+		}
+	}
+
+	private static final class MonitoringException extends RuntimeException {
+		public MonitoringException(final Throwable cause) {
+			super(cause);
 		}
 	}
 }
