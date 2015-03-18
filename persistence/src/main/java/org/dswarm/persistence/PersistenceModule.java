@@ -26,6 +26,7 @@ import com.codahale.metrics.jvm.GarbageCollectorMetricSet;
 import com.codahale.metrics.jvm.MemoryUsageGaugeSet;
 import com.codahale.metrics.jvm.ThreadStatesGaugeSet;
 import com.codahale.metrics.logback.InstrumentedAppender;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -103,7 +104,10 @@ public class PersistenceModule extends AbstractModule {
 		bind(DMPUtil.class);
 
 		bind(String.class).annotatedWith(Names.named("Monitoring")).toInstance("dswarm.monitoring");
-		bind(MonitoringLogger.class).annotatedWith(Names.named("Monitoring")).to(MonitoringLogger.class);
+		bind(MonitoringLogger.class)
+				.annotatedWith(Names.named("Monitoring"))
+				.to(MonitoringLogger.class)
+				.in(EXECUTION);
 	}
 
 	/**
@@ -128,7 +132,7 @@ public class PersistenceModule extends AbstractModule {
 	 *
 	 * @return a {@link MetricRegistry} instance as singleton
 	 */
-	@Provides @Named("Monitoring") @Singleton
+	@Provides @Named("Monitoring") @ExecutionScoped
 	protected static MetricRegistry provideMonitoringMetricRegistry() {
 		return new MetricRegistry();
 	}
@@ -138,20 +142,10 @@ public class PersistenceModule extends AbstractModule {
 		return LoggerFactory.getLogger(loggerName);
 	}
 
-//	private static void startSlf4jLogging(
-//			final MetricRegistry registry,
-//			final Logger logger,
-//			final long reportInterval,
-//			final TimeUnit unit) {
-//		final Slf4jReporter reporter = Slf4jReporter.forRegistry(registry)
-//				.outputTo(logger)
-//				.convertRatesTo(TimeUnit.SECONDS)
-//				.convertDurationsTo(TimeUnit.MILLISECONDS)
-//				.withLoggingLevel(LoggingLevel.INFO)
-//				.build();
-//		reporter.start(reportInterval, unit);
-//		reporter.report();
-//	}
+	@Provides @Named("Monitoring") @Singleton
+	protected static ObjectMapper providerMonitoringMapper() {
+		return new ObjectMapper();
+	}
 
 	private static void instrumentLogback(final MetricRegistry registry) {
 		final LoggerContext factory = (LoggerContext) LoggerFactory.getILoggerFactory();

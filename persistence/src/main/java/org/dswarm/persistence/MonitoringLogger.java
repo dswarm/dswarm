@@ -34,7 +34,6 @@ import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
 
-@Singleton
 public final class MonitoringLogger implements Reporter {
 
 	private static final Marker EXECUTION_MARKER = MarkerFactory.getMarker("EXECUTION");
