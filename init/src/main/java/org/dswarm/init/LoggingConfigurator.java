@@ -126,16 +126,23 @@ public final class LoggingConfigurator {
 
 		LoggingAppender.of(lc)
 				.withBasePath(loggingPath).addPath("monitoring")
-				.withDiscriminationKey("taskIdentifier")
 				.withPattern("%date | %msg%n")
-				.withoutMarker("EXECUTION")
+				.withLevel(Level.INFO)
+				.withDiscriminationKey("entityIdentifier")
+				// metrics log
+				.withoutMarkers("EXECUTION", "INGEST")
 				.withName("Monitoring")
 				.withLogFileBaseName("metrics")
-				.withLevel(Level.INFO)
 				.appendTo(logger)
+				// task executions log
 				.withMarker("EXECUTION")
 				.withName("Execution")
 				.withLogFileBaseName("executions")
+				.appendTo(logger)
+				// data model ingest log
+				.withMarker("INGEST")
+				.withName("Ingest")
+				.withLogFileBaseName("ingests")
 				.appendTo(logger);
 	}
 }

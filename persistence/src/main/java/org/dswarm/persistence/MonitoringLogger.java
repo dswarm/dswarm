@@ -45,7 +45,8 @@ import org.slf4j.MDC.MDCCloseable;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
-import org.dswarm.persistence.model.job.Mapping;
+import org.dswarm.persistence.model.DMPObject;
+import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
 import org.dswarm.persistence.model.job.Task;
 import org.dswarm.persistence.model.resource.DataModel;
 
@@ -54,6 +55,7 @@ import static com.codahale.metrics.MetricRegistry.name;
 public final class MonitoringLogger implements Reporter {
 
 	private static final Marker EXECUTION_MARKER = MarkerFactory.getMarker("EXECUTION");
+	private static final Marker INGEST_MARKER = MarkerFactory.getMarker("INGEST");
 
 	private final ObjectMapper mapper;
 	private final MetricRegistry registry;
@@ -63,8 +65,15 @@ public final class MonitoringLogger implements Reporter {
 	private final String durationUnit;
 	private final String rateUnit;
 	private final Timer executionsTimer;
-	private final MetricFilter noExecutionsTimer;
+	private final Timer ingestTimer;
 	private final String executionsTimerName;
+	private final String ingestTimerName;
+	private final MetricFilter noSpecialTimer;
+	private static final CharMatcher MATCHER =
+			CharMatcher.ASCII
+					.and(CharMatcher.JAVA_LETTER_OR_DIGIT)
+					.negate()
+					.or(CharMatcher.WHITESPACE);
 
 	@Inject
 	private MonitoringLogger(
@@ -85,13 +94,18 @@ public final class MonitoringLogger implements Reporter {
 		durationFactor = 1.0 / durationUnit.toNanos(1);
 
 		executionsTimerName = name(Task.class, "executions");
-		noExecutionsTimer = (name, metric) -> ! executionsTimerName.equals(name);
 		executionsTimer = registry.timer(executionsTimerName);
+
+		ingestTimerName = name(DataModel.class, "ingest");
+		ingestTimer = registry.timer(ingestTimerName);
+
+		noSpecialTimer = (name, metric) ->
+				!(executionsTimerName.equals(name) || ingestTimerName.equals(name));
 	}
 
 	public void report() {
 		final SortedMap<String, Meter> meters = registry.getMeters();
-		final SortedMap<String, Timer> timers = registry.getTimers(noExecutionsTimer);
+		final SortedMap<String, Timer> timers = registry.getTimers(noSpecialTimer);
 
 		meters.forEach(this::logMeter);
 		timers.forEach(this::logTimer);
@@ -198,51 +212,81 @@ public final class MonitoringLogger implements Reporter {
 		return rate * rateFactor;
 	}
 
-	public void markExecution(final String message, final Object... arguments) {
+	private void markExecution(final DMPObject entity) {
+		logActionWithMarker(entity, EXECUTION_MARKER);
+	}
+
+	private void markIngest(final DMPObject entity) {
+		logActionWithMarker(entity, INGEST_MARKER);
+	}
+
+	private void logActionWithMarker(final DMPObject entity, final Marker marker) {
 		if (logger.isInfoEnabled()) {
-			logger.info(EXECUTION_MARKER, message, arguments);
+			final Instant now = Instant.now();
+			final String entityName = entity.getClass().getSimpleName();
+			logger.info(marker, "{} {} of [{}] at [{}], unix [{}]",
+					entityName, marker.getName().toLowerCase(), entity.getUuid(), now, now.getEpochSecond());
 		}
 	}
 
+	public MonitoringHelper startIngest(final DataModel dataModel) {
+		markIngest(dataModel);
+		final MDCCloseable mdc = setEntityIdentifier(dataModel);
+
+		monitorEntity(dataModel.getDataResource());
+		monitorEntity(dataModel.getSchema());
+
+		return new MonitoringHelper(ingestTimer, mdc, this);
+	}
+
 	public MonitoringHelper startExecution(final Task task) {
-		final String identifier = getTaskIdentifier(task);
-		final MDCCloseable mdc = MDC.putCloseable("taskIdentifier", identifier);
+		markExecution(task);
+		final MDCCloseable mdc = setEntityIdentifier(task);
 
-		final Instant now = Instant.now();
-		markExecution(
-				"Task execution of [{}] at [{}], unix [{}]",
-				task.getUuid(), now, now.getEpochSecond());
-
-		task.getJob().getMappings().forEach(this::monitorMapping);
-		monitorDataModel(task.getInputDataModel(), "source");
-		monitorDataModel(task.getOutputDataModel(), "target");
+		task.getJob().getMappings().forEach(this::monitorEntity);
+		monitorEntity(task.getInputDataModel(), "source");
+		monitorEntity(task.getOutputDataModel(), "target");
 
 		return new MonitoringHelper(executionsTimer, mdc, this);
 	}
 
-	private static String getTaskIdentifier(final Task task) {
-		final String taskName = StringUtils.defaultIfEmpty(task.getName(), "Unknown Task");
-		final String taskDescription = StringUtils.defaultString(task.getDescription());
-		final String baseIdentifier = String.format("%s-%s", taskName, taskDescription);
-
-		final String normalizedIdentifier = StringUtils.stripAccents(baseIdentifier);
-
-		final Iterable<String> nonWhitespaceParts = Splitter.on(CharMatcher.WHITESPACE)
-				.omitEmptyStrings().split(normalizedIdentifier);
-
-		final String identifier = Joiner.on('-').join(nonWhitespaceParts);
-
-		return StringUtils.abbreviate(identifier, 50);
+	private static MDCCloseable setEntityIdentifier(final ExtendedBasicDMPJPAObject entity) {
+		final String identifier = getEntityIdentifier(entity);
+		return MDC.putCloseable("entityIdentifier", identifier);
 	}
 
-	public void monitorMapping(final Mapping mapping) {
-		if (mapping != null && mapping.getUuid() != null) {
-			registry.meter(name(Mapping.class, mapping.getUuid())).mark();
-		}
+	private static String getEntityIdentifier(final ExtendedBasicDMPJPAObject entity) {
+		final String entityClass =
+				entity.getClass().getSimpleName();
+
+		final String entityName =
+				StringUtils.defaultIfEmpty(entity.getName(), "Unknown " + entityClass);
+
+		final String entityDescription =
+				StringUtils.defaultString(entity.getDescription());
+
+		final String baseIdentifier =
+				String.format("%s-%s-%s", entityClass, entityName, entityDescription);
+
+		final String normalizedIdentifier =
+				StringUtils.stripAccents(baseIdentifier);
+
+		final Iterable<String> asciiParts =
+				Splitter.on(MATCHER).omitEmptyStrings().split(normalizedIdentifier);
+
+		final String identifier =
+				Joiner.on('-').join(asciiParts);
+
+		return StringUtils.abbreviate(identifier, 65);
 	}
-	public void monitorDataModel(final DataModel dataModel, final String suffix) {
-		if (dataModel.getUuid() != null) {
-			registry.meter(name(DataModel.class, dataModel.getUuid(), suffix)).mark();
+
+	public void monitorEntity(final DMPObject mapping) {
+		monitorEntity(mapping, null);
+	}
+
+	public void monitorEntity(final DMPObject entity, final String suffix) {
+		if (entity != null && entity.getUuid() != null) {
+			registry.meter(name(entity.getClass(), entity.getUuid(), suffix)).mark();
 		}
 	}
 
