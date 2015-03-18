@@ -104,12 +104,12 @@ final class LoggingAppender {
 		return builder;
 	}
 
-	private String filePath(final String suffix) {
+	private String filePath(final CharSequence baseName, final String suffix) {
 		final StringJoiner joiner = new StringJoiner(FILE_SEPARATOR).add(basePath);
 		extraPaths.forEach(joiner::add);
 		return joiner
 				.add(level.levelStr.toLowerCase())
-				.add(logFileBaseName) + "." + suffix;
+				.add(baseName) + "." + suffix;
 	}
 
 	private TimeBasedFileNamingAndTriggeringPolicy<ILoggingEvent> sizedBasedNaming(final Context context) {
@@ -119,10 +119,10 @@ final class LoggingAppender {
 		return fnatp;
 	}
 
-	private RollingPolicy rollingPolicy(final Context context) {
+	private RollingPolicy rollingPolicy(final CharSequence baseName, final Context context) {
 		final TimeBasedRollingPolicy<ILoggingEvent> rollingPolicy = new TimeBasedRollingPolicy<>();
 		rollingPolicy.setContext(context);
-		rollingPolicy.setFileNamePattern(filePath("%d{yyyy-MM-dd}.%i.log"));
+		rollingPolicy.setFileNamePattern(filePath(baseName, "%d{yyyy-MM-dd}.%i.log"));
 		rollingPolicy.setTimeBasedFileNamingAndTriggeringPolicy(sizedBasedNaming(context));
 		rollingPolicy.setMaxHistory(maxHistory);
 
@@ -167,22 +167,22 @@ final class LoggingAppender {
 		return filter;
 	}
 
-	private RollingFileAppender<ILoggingEvent> rollingAppender(final Context context) {
+	private RollingFileAppender<ILoggingEvent> rollingAppender(final CharSequence baseName, final Context context) {
 		final RollingFileAppender<ILoggingEvent> fileAppender = new RollingFileAppender<>();
 		fileAppender.setContext(context);
 		fileAppender.setName(name);
-		fileAppender.setFile(filePath("log"));
+		fileAppender.setFile(filePath(baseName, "log"));
 
 		return fileAppender;
 	}
 
 	Appender<ILoggingEvent> createFileAppender() {
-		return createFileAppender(context);
+		return createFileAppender(logFileBaseName, context);
 	}
 
-	Appender<ILoggingEvent> createFileAppender(final Context context) {
-		final RollingFileAppender<ILoggingEvent> fileAppender = rollingAppender(context);
-		final RollingPolicy rollingPolicy = rollingPolicy(context);
+	Appender<ILoggingEvent> createFileAppender(final CharSequence baseName, final Context context) {
+		final RollingFileAppender<ILoggingEvent> fileAppender = rollingAppender(baseName, context);
+		final RollingPolicy rollingPolicy = rollingPolicy(baseName, context);
 
 		rollingPolicy.setParent(fileAppender);
 		fileAppender.setRollingPolicy(rollingPolicy);
