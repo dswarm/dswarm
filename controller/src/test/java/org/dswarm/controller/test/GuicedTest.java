@@ -20,12 +20,12 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
-import com.google.inject.persist.PersistService;
 import com.typesafe.config.Config;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 import org.dswarm.controller.guice.DMPModule;
+import org.dswarm.controller.guice.DMPServletModule;
 import org.dswarm.converter.ConverterModule;
 import org.dswarm.init.ConfigModule;
 import org.dswarm.init.LoggingConfigurator;
@@ -47,6 +47,7 @@ public abstract class GuicedTest {
 				.withoutTransformation();
 
 		return Guice.createInjector(
+				new DMPServletModule(),
 				configModule,
 				objectMapperModule,
 				new JpaHibernateModule(config),
@@ -60,17 +61,19 @@ public abstract class GuicedTest {
 	@BeforeClass
 	public static void startUp() throws Exception {
 
-		GuicedTest.injector = GuicedTest.getInjector();
-		GuicedTest.injector.getInstance(PersistService.class).start();
-		org.dswarm.persistence.GuicedTest.startUp();
+		final Injector newInjector = GuicedTest.getInjector();
+		startUp(newInjector);
+		// no manual PersistService start needed when the DMPServletModule is installed
+	}
+
+	public static void startUp(final Injector newInjector) {
+		GuicedTest.injector = newInjector;
+		org.dswarm.converter.GuicedTest.startUp(newInjector);
 	}
 
 	@AfterClass
 	public static void tearDown() throws Exception {
-
-		final PersistService persistService = GuicedTest.injector.getInstance(PersistService.class);
-		persistService.stop();
-		org.dswarm.persistence.GuicedTest.tearDown();
+		// no manual PersistService stop needed when the DMPServletModule is installed
 	}
 
 	static class TestModule extends AbstractModule {

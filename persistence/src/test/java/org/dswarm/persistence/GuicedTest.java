@@ -29,6 +29,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 
 import org.dswarm.init.ConfigModule;
+import org.dswarm.init.ExecutionScope;
 import org.dswarm.init.LoggingConfigurator;
 import org.dswarm.persistence.service.MaintainDBService;
 import org.dswarm.persistence.service.internal.test.utils.InternalGDMGraphServiceTestUtils;
@@ -95,16 +96,27 @@ public abstract class GuicedTest {
 	@BeforeClass
 	public static void startUp() throws Exception {
 
-		GuicedTest.injector = GuicedTest.getInjector();
-		GuicedTest.injector.getInstance(PersistService.class).start();
+		final Injector newInjector = GuicedTest.getInjector();
+		newInjector.getInstance(PersistService.class).start();
+		newInjector.getInstance(ExecutionScope.class).enter();
+		startUp(newInjector);
+	}
+
+	public static void startUp(final Injector newInjector) {
+		GuicedTest.injector = newInjector;
 	}
 
 	@AfterClass
 	public static void tearDown() throws Exception {
 
 		if (GuicedTest.injector != null) {
-
-			GuicedTest.injector.getInstance(PersistService.class).stop();
+			try {
+				GuicedTest.injector.getInstance(PersistService.class).stop();
+				GuicedTest.injector.getInstance(ExecutionScope.class).leave();
+			} catch (final IllegalStateException ignore) {
+				// was already closed, ignore this
+			}
+			GuicedTest.injector = null;
 		}
 	}
 }

@@ -19,6 +19,7 @@ import com.google.inject.persist.PersistFilter;
 import com.google.inject.servlet.ServletModule;
 
 import org.dswarm.controller.doc.SwaggerConfiguration;
+import org.dswarm.controller.providers.filter.ExecutionScopeFilter;
 
 /**
  * The Guice configuration of the servlet of the backend API.
@@ -35,5 +36,6 @@ public class DMPServletModule extends ServletModule {
 	protected void configureServlets() {
 		serve("/api-docs").with(SwaggerConfiguration.class);
 		filter("/*").through(PersistFilter.class);
+		filter("/*").through(ExecutionScopeFilter.class);
 	}
 }
