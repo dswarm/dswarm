@@ -50,6 +50,7 @@ final class LoggingAppender {
 	private final Level level;
 	private final Optional<String> marker;
 	private final FilterReply markerReply;
+	private final String pattern;
 	private final int maxFileSizeInMB;
 	private final int maxHistory;
 
@@ -62,6 +63,7 @@ final class LoggingAppender {
 			final Level level,
 			final Optional<String> marker,
 			final FilterReply markerReply,
+			final String pattern,
 			final int maxFileSizeInMB,
 			final int maxHistory) {
 		this.context = context;
@@ -72,6 +74,7 @@ final class LoggingAppender {
 		this.level = level;
 		this.marker = marker;
 		this.markerReply = markerReply;
+		this.pattern = pattern;
 		this.maxFileSizeInMB = maxFileSizeInMB;
 		this.maxHistory = maxHistory;
 	}
@@ -86,6 +89,7 @@ final class LoggingAppender {
 				.withName(prototype.name)
 				.withLogFileBaseName(prototype.logFileBaseName)
 				.withLevel(prototype.level)
+				.withPattern(prototype.pattern)
 				.withMaxFileSizeInMB(prototype.maxFileSizeInMB)
 				.withMaxHistory(prototype.maxHistory);
 		prototype.extraPaths.forEach(builder::addPath);
@@ -127,7 +131,7 @@ final class LoggingAppender {
 	private Encoder<ILoggingEvent> encoder() {
 		final PatternLayoutEncoder encoder = new PatternLayoutEncoder();
 		encoder.setContext(context);
-		encoder.setPattern("%date %level [%thread] %logger [%file:%line] %msg%n");
+		encoder.setPattern(pattern);
 		encoder.start();
 
 		return encoder;
@@ -198,6 +202,7 @@ final class LoggingAppender {
 		private String name;
 		private String logFileBaseName = "messages";
 		private Level level = Level.INFO;
+		private String pattern = "%date %level [%thread] %logger [%file:%line] %msg%n";
 		private Optional<String> marker = Optional.empty();
 		private FilterReply markerReply = FilterReply.NEUTRAL;
 		private int maxFileSizeInMB = 50;
@@ -229,6 +234,11 @@ final class LoggingAppender {
 
 		Builder withLevel(final Level level) {
 			this.level = level;
+			return this;
+		}
+
+		Builder withPattern(final String pattern) {
+			this.pattern = pattern;
 			return this;
 		}
 
@@ -264,6 +274,7 @@ final class LoggingAppender {
 					level,
 					marker,
 					markerReply,
+					pattern,
 					maxFileSizeInMB,
 					maxHistory);
 		}

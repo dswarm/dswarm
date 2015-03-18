@@ -126,6 +126,7 @@ public final class LoggingConfigurator {
 
 		LoggingAppender.of(lc)
 				.withBasePath(loggingPath).addPath("monitoring")
+				.withPattern("%date | %msg%n")
 				.withoutMarker("EXECUTION")
 				.withName("Monitoring")
 				.withLevel(Level.INFO)
