@@ -21,10 +21,13 @@ import java.util.SortedMap;
 import java.util.concurrent.TimeUnit;
 
 import com.codahale.metrics.Meter;
+import com.codahale.metrics.Metered;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Reporter;
 import com.codahale.metrics.Snapshot;
 import com.codahale.metrics.Timer;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -39,6 +42,7 @@ public final class MonitoringLogger implements Reporter {
 	private static final Marker EXECUTION_MARKER = MarkerFactory.getMarker("EXECUTION");
 
 	private final Provider<MetricRegistry> registryProvider;
+	private final ObjectMapper mapper;
 	private final Logger logger;
 	private final long rateFactor;
 	private final double durationFactor;
@@ -48,8 +52,10 @@ public final class MonitoringLogger implements Reporter {
 	@Inject
 	private MonitoringLogger(
 			@Named("Monitoring") final Provider<MetricRegistry> registryProvider,
+			@Named("Monitoring") final ObjectMapper mapper,
 			@Named("Monitoring") final Logger logger) {
 		this.registryProvider = registryProvider;
+		this.mapper = mapper;
 		this.logger = logger;
 
 		// TODO: assistedInject
@@ -77,45 +83,80 @@ public final class MonitoringLogger implements Reporter {
 		timers.forEach(this::logTimer);
 	}
 
-	private void logMeter(final String name, final Meter meter) {
+	private void logMeter(final String name, final Metered meter) {
 		if (logger.isInfoEnabled()) {
-			logger.info(
-					"type=METER, name={}, count={}, mean_rate={}, m1={}, m5={}, m15={}, rate_unit={}",
-					name,
-					meter.getCount(),
-					convertRate(meter.getMeanRate()),
-					convertRate(meter.getOneMinuteRate()),
-					convertRate(meter.getFiveMinuteRate()),
-					convertRate(meter.getFifteenMinuteRate()),
-					rateUnit);
+			try {
+				logger.info(serialiseMeter(name, meter));
+			} catch (final IOException | MonitoringException e) {
+				logger.warn("Could not log meter", e);
+			}
 		}
 	}
 
 	private void logTimer(final String name, final Timer timer) {
 		if (logger.isInfoEnabled()) {
-			final Snapshot snapshot = timer.getSnapshot();
-			logger.info(
-					"type=TIMER, name={}, count={}, min={}, max={}, mean={}, stddev={}, " +
-							"median={}, p75={}, p95={}, p98={}, p99={}, p999={}, mean_rate={}, " +
-							"m1={}, m5={}, m15={}, rate_unit={}, duration_unit={}",
-					name,
-					timer.getCount(),
-					convertDuration(snapshot.getMin()),
-					convertDuration(snapshot.getMax()),
-					convertDuration(snapshot.getMean()),
-					convertDuration(snapshot.getStdDev()),
-					convertDuration(snapshot.getMedian()),
-					convertDuration(snapshot.get75thPercentile()),
-					convertDuration(snapshot.get95thPercentile()),
-					convertDuration(snapshot.get98thPercentile()),
-					convertDuration(snapshot.get99thPercentile()),
-					convertDuration(snapshot.get999thPercentile()),
-					convertRate(timer.getMeanRate()),
-					convertRate(timer.getOneMinuteRate()),
-					convertRate(timer.getFiveMinuteRate()),
-					convertRate(timer.getFifteenMinuteRate()),
-					rateUnit,
-					durationUnit);
+			try {
+				logger.info(serialiseTimer(name, timer));
+			} catch (final IOException | MonitoringException e) {
+				logger.warn("Could not log timer", e);
+			}
+		}
+	}
+
+	private String serialiseMeter(final String name, final Metered meter) throws MonitoringException, IOException {
+		return serialiseMetric(generator -> writeMetered(name, meter, generator));
+	}
+
+	private String serialiseTimer(final String name, final Timer timer) throws MonitoringException, IOException {
+		return serialiseMetric(generator -> {
+			writeMetered(name, timer, generator);
+			writeSnapshot(generator, timer.getSnapshot());
+		});
+	}
+
+	private String serialiseMetric(final Consumer<JsonGenerator> body) throws MonitoringException, IOException {
+		final StringWriter writer = new StringWriter();
+		final JsonGenerator generator = mapper.getFactory().createGenerator(writer);
+
+		generator.writeStartObject();
+		body.accept(generator);
+		generator.writeEndObject();
+
+		generator.flush();
+		generator.close();
+
+		return writer.toString();
+	}
+
+	private void writeMetered(final String name, final Metered meter, final JsonGenerator generator) {
+		try {
+			generator.writeStringField("name", name);
+			generator.writeNumberField("count", meter.getCount());
+			generator.writeNumberField("mean_rate", convertRate(meter.getMeanRate()));
+			generator.writeNumberField("m1", convertRate(meter.getOneMinuteRate()));
+			generator.writeNumberField("m5", convertRate(meter.getFiveMinuteRate()));
+			generator.writeNumberField("m15", convertRate(meter.getFifteenMinuteRate()));
+			generator.writeStringField("rate_unit", rateUnit);
+		} catch (final IOException e) {
+			throw new MonitoringException(e);
+		}
+	}
+
+	private void writeSnapshot(final JsonGenerator generator, final Snapshot snapshot) {
+		try {
+			generator.writeNumberField("min", convertDuration(snapshot.getMin()));
+			generator.writeNumberField("max", convertDuration(snapshot.getMax()));
+			generator.writeNumberField("mean", convertDuration(snapshot.getMean()));
+			generator.writeNumberField("stddev", convertDuration(snapshot.getStdDev()));
+			generator.writeNumberField("median", convertDuration(snapshot.getMedian()));
+			generator.writeNumberField("p75", convertDuration(snapshot.get75thPercentile()));
+			generator.writeNumberField("p95", convertDuration(snapshot.get95thPercentile()));
+			generator.writeNumberField("p98", convertDuration(snapshot.get98thPercentile()));
+			generator.writeNumberField("p99", convertDuration(snapshot.get99thPercentile()));
+			generator.writeNumberField("p999", convertDuration(snapshot.get999thPercentile()));
+			generator.writeStringField("duration_unit", durationUnit);
+		} catch (final IOException e) {
+			throw new MonitoringException(e);
 		}
 	}
 
