@@ -24,6 +24,8 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.boolex.OnMarkerEvaluator;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.filter.ThresholdFilter;
+import ch.qos.logback.classic.sift.MDCBasedDiscriminator;
+import ch.qos.logback.classic.sift.SiftingAppender;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.Context;
@@ -35,6 +37,8 @@ import ch.qos.logback.core.rolling.RollingPolicy;
 import ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP;
 import ch.qos.logback.core.rolling.TimeBasedFileNamingAndTriggeringPolicy;
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
+import ch.qos.logback.core.sift.AppenderFactory;
+import ch.qos.logback.core.sift.Discriminator;
 import ch.qos.logback.core.spi.AppenderAttachable;
 import ch.qos.logback.core.spi.FilterReply;
 import com.google.common.collect.ImmutableList;
@@ -54,6 +58,7 @@ final class LoggingAppender {
 	private final String pattern;
 	private final int maxFileSizeInMB;
 	private final int maxHistory;
+	private final Optional<String> discriminationKey;
 
 	private LoggingAppender(
 			final Context context,
@@ -66,7 +71,8 @@ final class LoggingAppender {
 			final FilterReply markerReply,
 			final String pattern,
 			final int maxFileSizeInMB,
-			final int maxHistory) {
+			final int maxHistory,
+			final Optional<String> discriminationKey) {
 		this.context = context;
 		this.basePath = basePath;
 		this.extraPaths = extraPaths;
@@ -78,6 +84,7 @@ final class LoggingAppender {
 		this.pattern = pattern;
 		this.maxFileSizeInMB = maxFileSizeInMB;
 		this.maxHistory = maxHistory;
+		this.discriminationKey = discriminationKey;
 	}
 
 	static Builder of(final Context context) {
@@ -94,6 +101,7 @@ final class LoggingAppender {
 				.withMaxFileSizeInMB(prototype.maxFileSizeInMB)
 				.withMaxHistory(prototype.maxHistory);
 		prototype.extraPaths.forEach(builder::addPath);
+		prototype.discriminationKey.ifPresent(builder::withDiscriminationKey);
 
 		if (prototype.markerReply == FilterReply.ACCEPT) {
 			prototype.marker.ifPresent(builder::withMarker);
@@ -196,8 +204,41 @@ final class LoggingAppender {
 		return fileAppender;
 	}
 
+	Appender<ILoggingEvent> createSwiftingAppender(final String discriminationKey) {
+		return createSwiftingAppender(discriminationKey, context);
+	}
+
+	Appender<ILoggingEvent> createSwiftingAppender(final String discriminationKey, final Context context) {
+
+		final AppenderFactory<ILoggingEvent> appenderFactory =
+				(subContext, discriminatingValue) ->
+						createFileAppender(
+								String.format("%s-%s", logFileBaseName, discriminatingValue),
+								subContext);
+
+		final SiftingAppender siftingAppender = new SiftingAppender();
+		siftingAppender.setContext(context);
+		siftingAppender.setDiscriminator(getMdcBasedDiscriminator(discriminationKey));
+		siftingAppender.setAppenderFactory(appenderFactory);
+		siftingAppender.start();
+
+		return siftingAppender;
+	}
+
+	private static Discriminator<ILoggingEvent> getMdcBasedDiscriminator(final String key) {
+		final MDCBasedDiscriminator discriminator = new MDCBasedDiscriminator();
+		discriminator.setKey(key);
+		discriminator.setDefaultValue("Unknown");
+		discriminator.start();
+		return discriminator;
+	}
+
 	LoggingAppender appendTo(final AppenderAttachable<ILoggingEvent> logger) {
-		logger.addAppender(createFileAppender());
+		final Appender<ILoggingEvent> appender = discriminationKey
+				.map(this::createSwiftingAppender)
+				.orElseGet(this::createFileAppender);
+
+		logger.addAppender(appender);
 		return this;
 	}
 
@@ -217,6 +258,7 @@ final class LoggingAppender {
 		private FilterReply markerReply = FilterReply.NEUTRAL;
 		private int maxFileSizeInMB = 50;
 		private int maxHistory = 30;
+		private Optional<String> discriminationKey = Optional.empty();
 
 		private Builder(final Context context) {
 			this.context = context;
@@ -274,6 +316,11 @@ final class LoggingAppender {
 			return this;
 		}
 
+		Builder withDiscriminationKey(final String discriminationKey) {
+			this.discriminationKey = Optional.of(discriminationKey);
+			return this;
+		}
+
 		LoggingAppender build() {
 			return new LoggingAppender(
 					context,
@@ -286,7 +333,8 @@ final class LoggingAppender {
 					markerReply,
 					pattern,
 					maxFileSizeInMB,
-					maxHistory);
+					maxHistory,
+					discriminationKey);
 		}
 
 		Builder appendTo(final AppenderAttachable<ILoggingEvent> logger) {

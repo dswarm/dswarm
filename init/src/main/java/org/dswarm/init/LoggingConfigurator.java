@@ -126,9 +126,11 @@ public final class LoggingConfigurator {
 
 		LoggingAppender.of(lc)
 				.withBasePath(loggingPath).addPath("monitoring")
+				.withDiscriminationKey("taskIdentifier")
 				.withPattern("%date | %msg%n")
 				.withoutMarker("EXECUTION")
 				.withName("Monitoring")
+				.withLogFileBaseName("metrics")
 				.withLevel(Level.INFO)
 				.appendTo(logger)
 				.withMarker("EXECUTION")
