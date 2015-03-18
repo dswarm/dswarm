@@ -18,6 +18,7 @@ package org.dswarm.init;
 import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
+import java.util.function.Function;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.boolex.OnMarkerEvaluator;
@@ -111,24 +112,24 @@ final class LoggingAppender {
 				.add(logFileBaseName) + "." + suffix;
 	}
 
-	private TimeBasedFileNamingAndTriggeringPolicy<ILoggingEvent> sizedBasedNaming() {
+	private TimeBasedFileNamingAndTriggeringPolicy<ILoggingEvent> sizedBasedNaming(final Context context) {
 		final SizeAndTimeBasedFNATP<ILoggingEvent> fnatp = new SizeAndTimeBasedFNATP<>();
 		fnatp.setContext(context);
 		fnatp.setMaxFileSize(maxFileSizeInMB + "MB");
 		return fnatp;
 	}
 
-	private RollingPolicy rollingPolicy() {
+	private RollingPolicy rollingPolicy(final Context context) {
 		final TimeBasedRollingPolicy<ILoggingEvent> rollingPolicy = new TimeBasedRollingPolicy<>();
 		rollingPolicy.setContext(context);
 		rollingPolicy.setFileNamePattern(filePath("%d{yyyy-MM-dd}.%i.log"));
-		rollingPolicy.setTimeBasedFileNamingAndTriggeringPolicy(sizedBasedNaming());
+		rollingPolicy.setTimeBasedFileNamingAndTriggeringPolicy(sizedBasedNaming(context));
 		rollingPolicy.setMaxHistory(maxHistory);
 
 		return rollingPolicy;
 	}
 
-	private Encoder<ILoggingEvent> encoder() {
+	private Encoder<ILoggingEvent> encoder(final Context context) {
 		final PatternLayoutEncoder encoder = new PatternLayoutEncoder();
 		encoder.setContext(context);
 		encoder.setPattern(pattern);
@@ -137,7 +138,7 @@ final class LoggingAppender {
 		return encoder;
 	}
 
-	private Filter<ILoggingEvent> levelFilter() {
+	private Filter<ILoggingEvent> levelFilter(final Context context) {
 		final ThresholdFilter filter = new ThresholdFilter();
 		filter.setContext(context);
 		filter.setLevel(level.levelStr);
@@ -146,7 +147,11 @@ final class LoggingAppender {
 		return filter;
 	}
 
-	private Filter<ILoggingEvent> markerFilter(final String marker) {
+	private Function<String, Filter<ILoggingEvent>> markerFilter(final Context context) {
+		return marker -> markerFilter(marker, context);
+	}
+
+	private Filter<ILoggingEvent> markerFilter(final String marker, final Context context) {
 		final OnMarkerEvaluator markerEvaluator = new OnMarkerEvaluator();
 		markerEvaluator.setContext(context);
 		markerEvaluator.addMarker(marker);
@@ -162,7 +167,7 @@ final class LoggingAppender {
 		return filter;
 	}
 
-	private RollingFileAppender<ILoggingEvent> rollingAppender() {
+	private RollingFileAppender<ILoggingEvent> rollingAppender(final Context context) {
 		final RollingFileAppender<ILoggingEvent> fileAppender = new RollingFileAppender<>();
 		fileAppender.setContext(context);
 		fileAppender.setName(name);
@@ -172,14 +177,19 @@ final class LoggingAppender {
 	}
 
 	Appender<ILoggingEvent> createFileAppender() {
-		final RollingFileAppender<ILoggingEvent> fileAppender = rollingAppender();
-		final RollingPolicy rollingPolicy = rollingPolicy();
+		return createFileAppender(context);
+	}
+
+	Appender<ILoggingEvent> createFileAppender(final Context context) {
+		final RollingFileAppender<ILoggingEvent> fileAppender = rollingAppender(context);
+		final RollingPolicy rollingPolicy = rollingPolicy(context);
 
 		rollingPolicy.setParent(fileAppender);
 		fileAppender.setRollingPolicy(rollingPolicy);
-		marker.map(this::markerFilter).ifPresent(fileAppender::addFilter);
-		fileAppender.addFilter(levelFilter());
-		fileAppender.setEncoder(encoder());
+		marker.map(markerFilter(context)).ifPresent(fileAppender::addFilter);
+		fileAppender.addFilter(levelFilter(context));
+		fileAppender.setEncoder(encoder(context));
+
 		rollingPolicy.start();
 		fileAppender.start();
 
