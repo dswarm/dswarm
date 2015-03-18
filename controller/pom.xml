@@ -315,11 +315,6 @@
 			<artifactId>guice-servlet</artifactId>
 			<version>${version.guice}</version>
 		</dependency>
-		<dependency>
-			<groupId>com.google.inject.extensions</groupId>
-			<artifactId>guice-assistedinject</artifactId>
-			<version>${version.guice}</version>
-		</dependency>
 		<!-- Other Dependencies -->
 		<dependency>
 			<groupId>org.elasticsearch</groupId>
