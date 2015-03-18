@@ -76,6 +76,7 @@ import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.model.schema.utils.ClaszUtils;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.util.GDMUtil;
 
@@ -326,12 +327,18 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 
 				final Optional<Clasz> optionalRecordClass = Optional.fromNullable(optionalSchema.get().getRecordClass());
 
+				final String recordClassURI;
+
 				if (optionalRecordClass.isPresent()) {
 
-					final String recordClassURI = optionalRecordClass.get().getUri();
+					recordClassURI = optionalRecordClass.get().getUri();
+				} else {
 
-					requestJson.put(DMPStatics.RECORD_CLASS_URI_IDENTIFIER, recordClassURI);
+					// fallback: bibo:Document as default record class
+					recordClassURI = ClaszUtils.BIBO_DOCUMENT_URI;
 				}
+
+				requestJson.put(DMPStatics.RECORD_CLASS_URI_IDENTIFIER, recordClassURI);
 			}
 
 			// data model uri
@@ -350,9 +357,7 @@ public class DataModelsResource extends ExtendedBasicDMPResource<DataModelServic
 
 				if (optionalRecordTagNode.isPresent()) {
 
-					final String recordTag = optionalRecordTagNode.get().asText();
-
-					requestJson.put(DMPStatics.RECORD_TAG_IDENTIFIER, recordTag);
+					requestJson.put(DMPStatics.RECORD_TAG_IDENTIFIER, optionalRecordTagNode.get().asText());
 				}
 			}
 

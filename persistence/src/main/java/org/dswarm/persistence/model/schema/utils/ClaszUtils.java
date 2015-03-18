@@ -20,4 +20,5 @@ import org.dswarm.persistence.model.utils.AdvancedDMPJPAObjectUtils;
 
 public final class ClaszUtils extends AdvancedDMPJPAObjectUtils<Clasz> {
 
+	public static final String BIBO_DOCUMENT_URI = "http://purl.org/ontology/bibo/Document";
 }
