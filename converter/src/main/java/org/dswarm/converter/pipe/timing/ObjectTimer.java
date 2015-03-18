@@ -22,16 +22,10 @@ import com.google.inject.name.Named;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
-import org.culturegraph.mf.framework.annotations.In;
-import org.culturegraph.mf.framework.annotations.Out;
 
-import org.dswarm.persistence.model.internal.gdm.GDMModel;
-
-@In(GDMModel.class)
-@Out(GDMModel.class)
 @Description("Benchmarks the execution time of the downstream modules.")
-public final class ObjectTimer extends TimerBased<ObjectReceiver<GDMModel>>
-		implements ObjectPipe<GDMModel, ObjectReceiver<GDMModel>> {
+public final class ObjectTimer<T> extends TimerBased<ObjectReceiver<T>>
+		implements ObjectPipe<T, ObjectReceiver<T>> {
 
 	@Inject
 	private ObjectTimer(
@@ -41,7 +35,7 @@ public final class ObjectTimer extends TimerBased<ObjectReceiver<GDMModel>>
 	}
 
 	@Override
-	public void process(final GDMModel obj) {
+	public void process(final T obj) {
 		final TimingContext context = startMeasurement("process");
 		try {
 			getReceiver().process(obj);

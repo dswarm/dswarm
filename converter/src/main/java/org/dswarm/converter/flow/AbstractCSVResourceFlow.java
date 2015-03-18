@@ -189,7 +189,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 		this.dataResourceSchemaBaseURI = null;
 	}
 
-	private JsonNode getParameterValue(final Configuration configuration, final String key) throws DMPConverterException {
+	private static JsonNode getParameterValue(final Configuration configuration, final String key) throws DMPConverterException {
 
 		if (key == null) {
 
@@ -200,13 +200,13 @@ public abstract class AbstractCSVResourceFlow<T> {
 
 		if (valueNode == null) {
 
-			AbstractCSVResourceFlow.LOG.debug("couldn't find value for parameter '" + key + "'; try to utilise default value for this parameter");
+			AbstractCSVResourceFlow.LOG.debug("couldn't find value for parameter '{}'; try to utilise default value for this parameter", key);
 		}
 
 		return valueNode;
 	}
 
-	private Optional<String> getStringParameter(final Configuration configuration, final String key) throws DMPConverterException {
+	private static Optional<String> getStringParameter(final Configuration configuration, final String key) throws DMPConverterException {
 		final JsonNode jsonNode = getParameterValue(configuration, key);
 		if (jsonNode == null) {
 			return Optional.absent();
@@ -215,7 +215,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 		return Optional.of(jsonNode.asText());
 	}
 
-	private Optional<Character> getCharParameter(final Configuration configuration, final String key) throws DMPConverterException {
+	private static Optional<Character> getCharParameter(final Configuration configuration, final String key) throws DMPConverterException {
 		final JsonNode jsonNode = getParameterValue(configuration, key);
 		if (jsonNode == null) {
 			return Optional.absent();
@@ -233,7 +233,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 		return Optional.of(text.charAt(0));
 	}
 
-	private Optional<Integer> getNumberParameter(final Configuration configuration, final String key) throws DMPConverterException {
+	private static Optional<Integer> getNumberParameter(final Configuration configuration, final String key) throws DMPConverterException {
 		final JsonNode jsonNode = getParameterValue(configuration, key);
 		if (jsonNode == null) {
 			return Optional.absent();
@@ -255,7 +255,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 		return Optional.of(intValue);
 	}
 
-	private boolean getBooleanParameter(final Configuration configuration, final String key, final boolean defaultValue) throws DMPConverterException {
+	private static boolean getBooleanParameter(final Configuration configuration, final String key, final boolean defaultValue) throws DMPConverterException {
 		final JsonNode jsonNode = getParameterValue(configuration, key);
 		if (jsonNode == null) {
 			return defaultValue;
