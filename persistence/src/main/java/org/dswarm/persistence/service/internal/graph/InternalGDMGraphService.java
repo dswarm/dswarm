@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -200,10 +201,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 					final LinkedHashSet<String> recordURIs = Sets.newLinkedHashSet();
 
-					for (final Resource recordResource : recordResources) {
-
-						recordURIs.add(recordResource.getUri());
-					}
+					recordURIs.addAll(recordResources.stream().map(Resource::getUri).collect(Collectors.toList()));
 
 					gdmModel.setRecordURIs(recordURIs);
 				}
@@ -225,7 +223,8 @@ public class InternalGDMGraphService implements InternalModelService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Optional<Map<String, Model>> getObjects(final String dataModelUuid, final Optional<Integer> optionalAtMost) throws DMPPersistenceException {
+	public Optional<Map<String, Model>> getObjects(final String dataModelUuid, final Optional<Integer> optionalAtMost)
+			throws DMPPersistenceException {
 
 		if (dataModelUuid == null) {
 
@@ -345,7 +344,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		if (dataModel == null) {
 
-			InternalGDMGraphService.LOG.debug("couldn't find data model '" + dataModelUuid + "' to retrieve it's schema");
+			InternalGDMGraphService.LOG.debug("couldn't find data model '{}' to retrieve it's schema", dataModelUuid);
 
 			throw new DMPPersistenceException("couldn't find data model '" + dataModelUuid + "' to retrieve it's schema");
 		}
@@ -389,12 +388,24 @@ public class InternalGDMGraphService implements InternalModelService {
 			throws DMPPersistenceException {
 
 		final Schema schema = dataModel.getSchema();
+		final String schemaUUID = schema.getUuid();
 
-		if (schema.getUuid().equals(SchemaUtils.MABXML_SCHEMA_UUID) || schema.getUuid().equals(SchemaUtils.MARC21_SCHEMA_UUID)) {
+		if (schemaUUID != null) {
 
-			// mabxml or marc21 schema is already there
+			switch (schemaUUID) {
 
-			return dataModel;
+				case SchemaUtils.MABXML_SCHEMA_UUID:
+				case SchemaUtils.MARC21_SCHEMA_UUID:
+				case SchemaUtils.PNX_SCHEMA_UUID:
+				case SchemaUtils.FINC_SOLR_SCHEMA_UUID:
+				case SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID:
+				case SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID:
+				case SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID:
+
+					// those schemas are already there and shouldn't be manipulated by data that differs from those schemas
+
+					return dataModel;
+			}
 		}
 
 		final boolean result = SchemaUtils.addAttributePaths(schema, attributePathHelpers,
@@ -519,7 +530,7 @@ public class InternalGDMGraphService implements InternalModelService {
 						break;
 					default:
 
-						LOG.debug("could not determine and set preset schema for identifier '" + optionalPresetSchema.get() + "'");
+						LOG.debug("could not determine and set preset schema for identifier '{}'", optionalPresetSchema.get());
 
 						schema = null;
 				}
@@ -537,7 +548,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		if (dataModel == null) {
 
-			InternalGDMGraphService.LOG.debug("couldn't find data model '" + dataModelUuid + "'");
+			InternalGDMGraphService.LOG.debug("couldn't find data model '{}'", dataModelUuid);
 
 			return null;
 		}
@@ -576,7 +587,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		if (optionalDeprecateMissingRecords.isPresent() && optionalRecordClassUri.isPresent()) {
 
-			multiPart.bodyPart(new BodyPart(Boolean.valueOf(optionalDeprecateMissingRecords.get()).toString(), MediaType.TEXT_PLAIN_TYPE))
+			multiPart.bodyPart(new BodyPart(optionalDeprecateMissingRecords.get().toString(), MediaType.TEXT_PLAIN_TYPE))
 					.bodyPart(new BodyPart(optionalRecordClassUri.get(), MediaType.TEXT_PLAIN_TYPE));
 		}
 
@@ -648,7 +659,8 @@ public class InternalGDMGraphService implements InternalModelService {
 		}
 	}
 
-	private org.dswarm.graph.json.Model readGDMFromDB(final String recordClassUri, final String dataModelUri, final Optional<Integer> optionalAtMost) throws DMPPersistenceException {
+	private org.dswarm.graph.json.Model readGDMFromDB(final String recordClassUri, final String dataModelUri, final Optional<Integer> optionalAtMost)
+			throws DMPPersistenceException {
 
 		final WebTarget target = target("/get");
 
@@ -658,7 +670,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		requestJson.put(DMPStatics.RECORD_CLASS_URI_IDENTIFIER, recordClassUri);
 		requestJson.put(DMPStatics.DATA_MODEL_URI_IDENTIFIER, dataModelUri);
 
-		if(optionalAtMost.isPresent()) {
+		if (optionalAtMost.isPresent()) {
 
 			requestJson.put(DMPStatics.AT_MOST_IDENTIFIER, optionalAtMost.get());
 		}
