@@ -589,7 +589,7 @@ public class ResourcesResourceTest extends ResourceTest {
 		expectedResource.setDescription(expectedResource.getDescription() + " update");
 
 		// update resource (test PUT in API)
-		final String updateResourceJSON = resourceUpdateInteral(resourceFile, expectedResource, createResource.getUuid());
+		final String updateResourceJSON = resourcesResourceTestUtils.updateResource(resourceFile, expectedResource, createResource.getUuid());
 
 		// check response
 		ResourcesResourceTest.LOG.debug("update resource = '{}'", updateResourceJSON);
@@ -680,29 +680,6 @@ public class ResourcesResourceTest extends ResourceTest {
 				.post(Entity.entity(form, MediaType.MULTIPART_FORM_DATA));
 
 		Assert.assertEquals("201 CREATED was expected", 201, response.getStatus());
-
-		final String responseResourceString = response.readEntity(String.class);
-
-		Assert.assertNotNull("resource shouldn't be null", responseResourceString);
-
-		final Resource responseResource = objectMapper.readValue(responseResourceString, Resource.class);
-
-		resourcesResourceTestUtils.getPersistenceServiceTestUtils().compareObjects(expectedResource, responseResource);
-
-		return responseResourceString;
-	}
-
-	private String resourceUpdateInteral(final File resourceFile, final Resource expectedResource, final String uuid) throws Exception {
-
-		final FormDataMultiPart form = new FormDataMultiPart();
-		form.field("name", expectedResource.getName());
-		form.field("description", expectedResource.getDescription());
-		form.bodyPart(new FileDataBodyPart("file", resourceFile, MediaType.MULTIPART_FORM_DATA_TYPE));
-
-		final Response response = target(String.valueOf(uuid)).request(MediaType.MULTIPART_FORM_DATA_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
-				.put(Entity.entity(form, MediaType.MULTIPART_FORM_DATA));
-
-		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
 
 		final String responseResourceString = response.readEntity(String.class);
 

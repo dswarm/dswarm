@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -38,10 +39,12 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.dswarm.common.types.Tuple;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
 import org.dswarm.controller.resources.test.BasicResourceTest;
 import org.dswarm.controller.test.GuicedTest;
+import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
@@ -119,58 +122,107 @@ public class DataModelsResourceTest2 extends
 
 		DataModelsResourceTest2.LOG.debug("start get CSV data test");
 
-		// START DATA MODEL CREATION
-
-		final String dataResourceResourceFileName = "resource.json";
-		final String dataResourceFileName = "test_csv-controller.csv";
-		final String configurationFileName = "controller_configuration.json";
-		final String dataModelName = "mabxml";
-
-		final DataModel dataModel = createDataModel(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName);
-
-		// END DATA MODEL CREATION
-
-		final int atMost = 1;
-
-		final InternalModelServiceFactory serviceFactory = GuicedTest.injector.getInstance(Key.get(InternalModelServiceFactory.class));
-		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
-		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getUuid(), Optional.of(atMost));
-
-		Assert.assertTrue(data.isPresent());
-		Assert.assertFalse(data.get().isEmpty());
-		Assert.assertThat(data.get().size(), CoreMatchers.equalTo(atMost));
-
-		final String recordId = data.get().keySet().iterator().next();
-
-		final Response response = target(String.valueOf(dataModel.getUuid()), "data").queryParam("atMost", atMost).request()
-				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
-
-		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
-
-		final ObjectNode assoziativeJsonArray = response.readEntity(ObjectNode.class);
-
-		Assert.assertThat(assoziativeJsonArray.size(), CoreMatchers.equalTo(atMost));
-
-		final JsonNode json = assoziativeJsonArray.get(recordId);
-
-		Assert.assertNotNull("the JSON structure for record '" + recordId + "' shouldn't be null", json);
-
-		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
-
-		Assert.assertNotNull("the data resource schema base uri shouldn't be null", dataResourceSchemaBaseURI);
-
-		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "id", json),
-				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "id", data.get().get(recordId).toRawJSON())));
-		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "year", json),
-				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "year", data.get().get(recordId).toRawJSON())));
-		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "description", json),
-				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "description", data.get().get(recordId).toRawJSON())));
-		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "name", json),
-				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "name", data.get().get(recordId).toRawJSON())));
-		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "isbn", json),
-				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "isbn", data.get().get(recordId).toRawJSON())));
+		testCSVDataInternal();
 
 		DataModelsResourceTest2.LOG.debug("end get CSV data test");
+	}
+
+	/**
+	 * note doesn't work right now
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testCSVDataUpdate() throws Exception {
+
+		DataModelsResourceTest2.LOG.debug("start CSV data update test");
+
+		final DataModel dataModel = testCSVDataInternal();
+
+		// prepare resource
+
+		final Resource expectedResource = dataModel.getDataResource();
+
+		final URL fileURL = Resources.getResource("test_csv-controller2.csv");
+		final File resourceFile = FileUtils.toFile(fileURL);
+
+		// update resource
+		resourcesResourceTestUtils.updateResource(resourceFile, expectedResource, expectedResource.getUuid());
+
+		final DataModel updateDataModel = pojoClassResourceTestUtils.getObject(dataModel.getUuid());
+
+		final String updateObjectJSONString = objectMapper.writeValueAsString(updateDataModel);
+
+		// update data model
+		final Response response = target(String.valueOf(updateDataModel.getUuid())).queryParam("updateContent", Boolean.TRUE).request(
+				MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+				.put(Entity.json(updateObjectJSONString));
+
+		Assert.assertEquals("200 Updated was expected", 200, response.getStatus());
+
+		final String responseString = response.readEntity(String.class);
+
+		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
+
+		final Tuple<Optional<Map<String, Model>>, ObjectNode> result = readData(updateDataModel, Optional.<Integer>absent());
+
+		final Optional<Map<String, Model>> data = result.v1();
+		final ObjectNode assoziativeJsonArray = result.v2();
+
+		Assert.assertTrue(data.isPresent());
+		Assert.assertNotNull(assoziativeJsonArray);
+
+		System.out.println(objectMapper.writeValueAsString(assoziativeJsonArray));
+
+		DataModelsResourceTest2.LOG.debug("end CSV data update test");
+	}
+
+	/**
+	 * note works somehow right now, but empty PUT might not be the best solution
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testCSVDataUpdate2() throws Exception {
+
+		DataModelsResourceTest2.LOG.debug("start CSV data update test");
+
+		final DataModel dataModel = testCSVDataInternal();
+
+		// prepare resource
+
+		final Resource expectedResource = dataModel.getDataResource();
+
+		final URL fileURL = Resources.getResource("test_csv-controller2.csv");
+		final File resourceFile = FileUtils.toFile(fileURL);
+
+		// update resource
+		resourcesResourceTestUtils.updateResource(resourceFile, expectedResource, expectedResource.getUuid());
+
+		final DataModel updateDataModel = pojoClassResourceTestUtils.getObject(dataModel.getUuid());
+
+		final String updateObjectJSONString = objectMapper.writeValueAsString(updateDataModel);
+
+		// update data model
+		final Response response = target(String.valueOf(updateDataModel.getUuid()), "/data").request().put(Entity.text(updateObjectJSONString));
+
+		Assert.assertEquals("200 Updated was expected", 200, response.getStatus());
+
+		final String responseString = response.readEntity(String.class);
+
+		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
+
+		final Tuple<Optional<Map<String, Model>>, ObjectNode> result = readData(updateDataModel, Optional.<Integer>absent());
+
+		final Optional<Map<String, Model>> data = result.v1();
+		final ObjectNode assoziativeJsonArray = result.v2();
+
+		Assert.assertTrue(data.isPresent());
+		Assert.assertNotNull(assoziativeJsonArray);
+
+		System.out.println(objectMapper.writeValueAsString(assoziativeJsonArray));
+
+		DataModelsResourceTest2.LOG.debug("end CSV data update test");
 	}
 
 	@Test
@@ -191,26 +243,11 @@ public class DataModelsResourceTest2 extends
 
 		final int atMost = 1;
 
-		final InternalModelServiceFactory serviceFactory = GuicedTest.injector.getInstance(Key.get(InternalModelServiceFactory.class));
-		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
-		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getUuid(), Optional.of(atMost));
+		final Tuple<Optional<Map<String, Model>>, ObjectNode> result = readData(dataModel, Optional.of(atMost));
 
-		Assert.assertTrue(data.isPresent());
-		Assert.assertFalse(data.get().isEmpty());
-		Assert.assertThat(data.get().size(), CoreMatchers.equalTo(atMost));
-
+		final Optional<Map<String, Model>> data = result.v1();
+		final ObjectNode assoziativeJsonArray = result.v2();
 		final String recordId = data.get().keySet().iterator().next();
-
-		final Response response = target(String.valueOf(dataModel.getUuid()), "data").queryParam("atMost", atMost).request()
-				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
-
-		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
-
-		// final String assoziativeJsonArrayString = response.readEntity(String.class);
-		//
-		// System.out.println("result = '" + assoziativeJsonArrayString + "'");
-
-		final ObjectNode assoziativeJsonArray = response.readEntity(ObjectNode.class);
 
 		Assert.assertThat(assoziativeJsonArray.size(), CoreMatchers.equalTo(atMost));
 
@@ -336,10 +373,10 @@ public class DataModelsResourceTest2 extends
 		final URL fileURL = Resources.getResource(dataResourceFileName);
 		final File resourceFile = FileUtils.toFile(fileURL);
 
-		final String configurationJSONString = DMPPersistenceUtil.getResourceAsString(configurationFileName);
-
-		// add resource and config
+		// create resource
 		final Resource resource = resourcesResourceTestUtils.uploadResource(resourceFile, expectedResource);
+
+		final String configurationJSONString = DMPPersistenceUtil.getResourceAsString(configurationFileName);
 
 		final Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
 
@@ -421,5 +458,86 @@ public class DataModelsResourceTest2 extends
 		Assert.assertTrue("the value should be a string", jsonNode.isTextual());
 
 		return jsonNode.asText();
+	}
+
+	private DataModel testCSVDataInternal() throws Exception {
+
+		// START DATA MODEL CREATION
+
+		final String dataResourceResourceFileName = "resource.json";
+		final String dataResourceFileName = "test_csv-controller.csv";
+		final String configurationFileName = "controller_configuration.json";
+		final String dataModelName = "mabxml";
+
+		final DataModel dataModel = createDataModel(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName);
+
+		// END DATA MODEL CREATION
+
+		final int atMost = 1;
+
+		final Tuple<Optional<Map<String, Model>>, ObjectNode> result = readData(dataModel, Optional.of(atMost));
+
+		final Optional<Map<String, Model>> data = result.v1();
+		final ObjectNode assoziativeJsonArray = result.v2();
+		final String recordId = data.get().keySet().iterator().next();
+
+		Assert.assertThat(assoziativeJsonArray.size(), CoreMatchers.equalTo(atMost));
+
+		final JsonNode json = assoziativeJsonArray.get(recordId);
+
+		Assert.assertNotNull("the JSON structure for record '" + recordId + "' shouldn't be null", json);
+
+		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
+
+		Assert.assertNotNull("the data resource schema base uri shouldn't be null", dataResourceSchemaBaseURI);
+
+		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "id", json),
+				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "id", data.get().get(recordId).toRawJSON())));
+		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "year", json),
+				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "year", data.get().get(recordId).toRawJSON())));
+		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "description", json),
+				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "description", data.get().get(recordId).toRawJSON())));
+		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "name", json),
+				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "name", data.get().get(recordId).toRawJSON())));
+		Assert.assertThat(getValue(dataResourceSchemaBaseURI + "isbn", json),
+				CoreMatchers.equalTo(getValue(dataResourceSchemaBaseURI + "isbn", data.get().get(recordId).toRawJSON())));
+
+		return dataModel;
+	}
+
+	private Tuple<Optional<Map<String, Model>>, ObjectNode> readData(final DataModel dataModel, final Optional<Integer> optionalAtMost)
+			throws DMPPersistenceException {
+
+		final InternalModelServiceFactory serviceFactory = GuicedTest.injector.getInstance(Key.get(InternalModelServiceFactory.class));
+		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
+		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getUuid(), optionalAtMost);
+
+		Assert.assertTrue(data.isPresent());
+		Assert.assertFalse(data.get().isEmpty());
+
+		if (optionalAtMost.isPresent()) {
+
+			Assert.assertThat(data.get().size(), CoreMatchers.equalTo(optionalAtMost.get()));
+		}
+
+		final WebTarget target = target(String.valueOf(dataModel.getUuid()), "data");
+
+		final WebTarget finalTarget;
+
+		if (optionalAtMost.isPresent()) {
+
+			finalTarget = target.queryParam("atMost", optionalAtMost.get());
+		} else {
+
+			finalTarget = target;
+		}
+
+		final Response response = finalTarget.request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+
+		final ObjectNode assoziativeJsonArray = response.readEntity(ObjectNode.class);
+
+		return Tuple.tuple(data, assoziativeJsonArray);
 	}
 }
