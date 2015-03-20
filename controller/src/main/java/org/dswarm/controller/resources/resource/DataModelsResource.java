@@ -674,7 +674,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 		// final Timer.Context context = dmpStatus.createNewConfiguration();
 
-		DataModelsResource.LOG.debug("try to process data for data model with id '{}'", dataModel.getUuid());
+		DataModelsResource.LOG.debug("try to process data for data model with id '" + dataModel.getUuid() + "'");
 
 		final Configuration configuration = dataModel.getConfiguration();
 
