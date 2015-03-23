@@ -214,11 +214,10 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	}
 
 	/**
-	 * This endpoint consumes a data model as JSON representation and updates this data model in the metadata repository + its content in the datahub.
+	 * This endpoint consumes a data model as JSON representation and updates this data model in the metadata repository.
 	 *
 	 * @param jsonObjectString a JSON representation of one data model
 	 * @param uuid             a data model identifier
-	 * @param updateContent the update-content-toggle, if true, then the content of the data model would be updated in the datahub as well
 	 * @return the updated data model as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -231,56 +230,55 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateObject(@ApiParam(value = "data model (as JSON)", required = true) final String jsonObjectString,
-			@ApiParam(value = "data model identifier", required = true) @PathParam("id") final String uuid,
-			@ApiParam(value = "update content toggle") @PathParam("updateContent")  @DefaultValue(value = "false") final Boolean updateContent) throws DMPControllerException {
+			@ApiParam(value = "data model identifier", required = true) @PathParam("id") final String uuid) throws DMPControllerException {
 
-		if (updateContent == null || updateContent.equals(Boolean.FALSE)) {
+		//if (updateContent == null || updateContent.equals(Boolean.FALSE)) {
 
 			// only the data model metadata would be updated
 			return super.updateObject(jsonObjectString, uuid);
-		}
+		//}
 
-		DataModelsResource.LOG.debug("try to update {} '{}'", pojoClassName, uuid);
-
-		final DataModel objectFromDB = retrieveObject(uuid, jsonObjectString);
-
-		if (objectFromDB == null) {
-
-			return Response.status(Status.NOT_FOUND).build();
-		}
-
-		// update data model metadata
-		final Tuple<ProxyDataModel, DataModel> updateResult = updateObjectInternal2(jsonObjectString, uuid, objectFromDB);
-
-		// update data model content (especially)
-		final ProxyDataModel updatedProxyDataModel = updateDataModel(updateResult.v1(), updateResult.v2());
-
-		if (updatedProxyDataModel == null) {
-
-			DataModelsResource.LOG.debug("couldn't update content for data model '{}'", uuid);
-
-			throw new DMPControllerException("couldn't update content for data model '" + uuid + "'");
-		}
-
-		final DataModel object = updatedProxyDataModel.getObject();
-
-		if (object == null) {
-
-			DataModelsResource.LOG.debug("couldn't update content for data model '{}'", uuid);
-
-			throw new DMPControllerException("couldn't update content for data model '" + uuid + "'");
-		}
-
-		DataModelsResource.LOG.debug("updated content for data model '{}'", uuid);
-
-		if (DataModelsResource.LOG.isTraceEnabled()) {
-
-			DataModelsResource.LOG.trace(" = '{}'", ToStringBuilder.reflectionToString(object));
-		}
-
-		final String newJsonObjectString = serializeObject(updatedProxyDataModel.getObject());
-
-		return createUpdateResponse(updatedProxyDataModel, object, newJsonObjectString);
+//		DataModelsResource.LOG.debug("try to update {} '{}'", pojoClassName, uuid);
+//
+//		final DataModel objectFromDB = retrieveObject(uuid, jsonObjectString);
+//
+//		if (objectFromDB == null) {
+//
+//			return Response.status(Status.NOT_FOUND).build();
+//		}
+//
+//		// update data model metadata
+//		final Tuple<ProxyDataModel, DataModel> updateResult = updateObjectInternal2(jsonObjectString, uuid, objectFromDB);
+//
+//		// update data model content (especially)
+//		final ProxyDataModel updatedProxyDataModel = updateDataModel(updateResult.v1(), updateResult.v2());
+//
+//		if (updatedProxyDataModel == null) {
+//
+//			DataModelsResource.LOG.debug("couldn't update content for data model '{}'", uuid);
+//
+//			throw new DMPControllerException("couldn't update content for data model '" + uuid + "'");
+//		}
+//
+//		final DataModel object = updatedProxyDataModel.getObject();
+//
+//		if (object == null) {
+//
+//			DataModelsResource.LOG.debug("couldn't update content for data model '{}'", uuid);
+//
+//			throw new DMPControllerException("couldn't update content for data model '" + uuid + "'");
+//		}
+//
+//		DataModelsResource.LOG.debug("updated content for data model '{}'", uuid);
+//
+//		if (DataModelsResource.LOG.isTraceEnabled()) {
+//
+//			DataModelsResource.LOG.trace(" = '{}'", ToStringBuilder.reflectionToString(object));
+//		}
+//
+//		final String newJsonObjectString = serializeObject(updatedProxyDataModel.getObject());
+//
+//		return createUpdateResponse(updatedProxyDataModel, object, newJsonObjectString);
 	}
 
 	/**
@@ -294,7 +292,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "data model was successfully updated"),
 			@ApiResponse(code = 404, message = "could not find a data model for the given id"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
-	@PUT
+	@POST
 	@Path("/{id}/data")
 	public Response updateDataModelData(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final String uuid) throws DMPControllerException {
 
