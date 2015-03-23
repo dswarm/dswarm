@@ -119,7 +119,7 @@ public class Job extends ExtendedBasicDMPJPAObject {
 	 *
 	 * @param skipFilterArg a new skip filter
 	 */
-	public void setFilter(final Filter skipFilterArg) {
+	public void setSkipFilter(final Filter skipFilterArg) {
 
 		skipFilter = skipFilterArg;
 	}

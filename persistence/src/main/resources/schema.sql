@@ -72,7 +72,7 @@ SET foreign_key_checks = 0;
     create table ATTRIBUTE_PATH_INSTANCE (
         UUID VARCHAR(160) not null,
         NAME varchar(255),
-        ATTRIBUTE_PATH_INSTANCE_TYPE varchar(255),
+        ATTRIBUTE_PATH_INSTANCE_TYPE varchar(31) not null,
         ATTRIBUTE_PATH VARCHAR(160),
         primary key (UUID)
     ) ENGINE=InnoDB;
@@ -154,7 +154,7 @@ SET foreign_key_checks = 0;
         NAME varchar(255),
         DESCRIPTION VARCHAR(4000),
         FUNCTION_DESCRIPTION BLOB,
-        FUNCTION_TYPE varchar(255),
+        FUNCTION_TYPE varchar(31) not null,
         PARAMETERS BLOB,
         primary key (UUID)
     ) ENGINE=InnoDB;
@@ -192,6 +192,7 @@ SET foreign_key_checks = 0;
         DESCRIPTION VARCHAR(4000),
         INPUT_DATA_MODEL VARCHAR(160),
         OUTPUT_DATA_MODEL VARCHAR(160),
+        SKIP_FILTER VARCHAR(160),
         primary key (UUID)
     ) ENGINE=InnoDB;
 
@@ -394,6 +395,12 @@ SET foreign_key_checks = 0;
         add constraint FK_6unsgihaswor2ftvtcwmwg4nc
         foreign key (OUTPUT_DATA_MODEL)
         references DATA_MODEL (UUID);
+
+    alter table PROJECT
+        add index FK_6unsgihaswor2ftvtcwmwg4cn (SKIP_FILTER),
+        add constraint FK_6unsgihaswor2ftvtcwmwg4cn
+        foreign key (SKIP_FILTER)
+        references FILTER (UUID);
 
     alter table PROJECTS_FUNCTIONS
         add index FK_6ja5bqjo5suu7p0wa0ac1cxa8 (FUNCTION_UUID),

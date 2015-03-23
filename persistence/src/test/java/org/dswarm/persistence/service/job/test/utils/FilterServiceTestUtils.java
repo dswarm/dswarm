@@ -53,7 +53,14 @@ public class FilterServiceTestUtils extends BasicDMPJPAServiceTestUtils<FilterSe
 		}
 	}
 
-	public Filter createFilter(final String name, final String expression) throws Exception {
+	public Filter createAndPersistFilter(final String name, final String expression) throws Exception {
+
+		final Filter filter = createFilter(name, expression);
+
+		return createAndCompareObject(filter, filter);
+	}
+
+	public Filter createFilter(final String name, final String expression) {
 
 		// TODO: think about this?
 		final String uuid = UUIDService.getUUID(Filter.class.getSimpleName());
@@ -63,7 +70,7 @@ public class FilterServiceTestUtils extends BasicDMPJPAServiceTestUtils<FilterSe
 		filter.setName(name);
 		filter.setExpression(expression);
 
-		return createAndCompareObject(filter, filter);
+		return filter;
 	}
 
 	/**
@@ -98,6 +105,13 @@ public class FilterServiceTestUtils extends BasicDMPJPAServiceTestUtils<FilterSe
 
 	@Override public Filter createAndPersistDefaultObject() throws Exception {
 
+		final Filter filter = createDefaultObject();
+
+		return createAndCompareObject(filter, filter);
+	}
+
+	@Override public Filter createDefaultObject() throws Exception {
+
 		final String filterName = "my filter";
 
 		final String filterExpression = "SELECT ?identifier ?url\n" + "WHERE {\n" + "    ?record custmabxml:metadata ?metadata ;\n"
@@ -106,9 +120,5 @@ public class FilterServiceTestUtils extends BasicDMPJPAServiceTestUtils<FilterSe
 				+ "               m:ind1 \"a\" ;\n" + "               m:subfield ?subField .\n" + "    ?subField rdf:value ?url .\n" + "}";
 
 		return createFilter(filterName, filterExpression);
-	}
-
-	@Override public Filter createDefaultObject() throws Exception {
-		return null;
 	}
 }

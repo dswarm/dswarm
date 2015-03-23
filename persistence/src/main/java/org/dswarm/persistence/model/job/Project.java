@@ -86,7 +86,16 @@ public class Project extends ExtendedBasicDMPJPAObject {
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	// @XmlIDREF
 	@XmlList
-	private Set<Mapping>		mappings;
+	private Set<Mapping> mappings;
+
+	/**
+	 * The skip filter of this project. A skip filter to skip all mappings for records that doesn't match the filter conditions.
+	 */
+	@XmlElement(name = "skip_filter")
+	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@JoinColumn(name = "SKIP_FILTER")
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private Filter skipFilter;
 
 	/**
 	 * The collection of functions that are created in this project, i.e., those functions are only visible to this project.
@@ -186,6 +195,26 @@ public class Project extends ExtendedBasicDMPJPAObject {
 	}
 
 	/**
+	 * Gets the skip filter of the project.
+	 *
+	 * @return the skip filter of the project
+	 */
+	public Filter getSkipFilter() {
+
+		return skipFilter;
+	}
+
+	/**
+	 * Sets the skip filter of the project.
+	 *
+	 * @param skipFilterArg a new skip filter
+	 */
+	public void setSkipFilter(final Filter skipFilterArg) {
+
+		skipFilter = skipFilterArg;
+	}
+
+	/**
 	 * Gets the functions of the project.
 	 *
 	 * @return the functions of the project
@@ -229,6 +258,7 @@ public class Project extends ExtendedBasicDMPJPAObject {
 				&& DMPPersistenceUtil.getDataModelUtils().completeEquals(((Project) obj).getInputDataModel(), getInputDataModel())
 				&& DMPPersistenceUtil.getDataModelUtils().completeEquals(((Project) obj).getOutputDataModel(), getOutputDataModel())
 				&& DMPPersistenceUtil.getMappingUtils().completeEquals(((Project) obj).getMappings(), getMappings())
+				&& DMPPersistenceUtil.getFilterUtils().completeEquals(((Project) obj).getSkipFilter(), getSkipFilter())
 				&& DMPPersistenceUtil.getFunctionUtils().completeEquals(((Project) obj).getFunctions(), getFunctions());
 	}
 }

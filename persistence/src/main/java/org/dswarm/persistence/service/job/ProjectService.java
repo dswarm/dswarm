@@ -23,6 +23,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import org.dswarm.persistence.DMPPersistenceException;
+import org.dswarm.persistence.model.job.Filter;
 import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.Mapping;
 import org.dswarm.persistence.model.job.Project;
@@ -59,6 +60,7 @@ public class ProjectService extends ExtendedBasicDMPJPAService<ProxyProject, Pro
 		object.setInputDataModel(null);
 		object.setOutputDataModel(null);
 		object.setMappings(null);
+		object.setSkipFilter(null);
 		object.setFunctions(null);
 	}
 
@@ -74,11 +76,13 @@ public class ProjectService extends ExtendedBasicDMPJPAService<ProxyProject, Pro
 		final DataModel inputDataModel = object.getInputDataModel();
 		final DataModel outputDataModel = object.getOutputDataModel();
 		final Set<Mapping> mappings = object.getMappings();
+		final Filter skipFilter = object.getSkipFilter();
 		final Set<Function> functions = object.getFunctions();
 
 		updateObject.setInputDataModel(inputDataModel);
 		updateObject.setOutputDataModel(outputDataModel);
 		updateObject.setMappings(mappings);
+		updateObject.setSkipFilter(skipFilter);
 		updateObject.setFunctions(functions);
 	}
 
