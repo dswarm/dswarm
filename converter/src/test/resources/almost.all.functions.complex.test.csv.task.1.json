@@ -1,0 +1,1599 @@
+{
+  "name" : "Transformations",
+  "description" : "Transformations",
+  "job" : {
+    "mappings" : [ {
+      "name" : "type_map",
+      "transformation" : {
+        "name" : "transformation",
+        "description" : "transformation",
+        "function" : {
+          "name" : "transformation",
+          "description" : "transformation",
+          "type" : "Transformation"
+        },
+        "parameter_mappings" : {
+          "__TRANSFORMATION_OUTPUT_VARIABLE__9" : "output mapping attribute path instance",
+          "type__0__" : "type__0__"
+        }
+      },
+      "input_attribute_paths" : [ {
+        "type" : "MappingAttributePathInstance",
+        "name" : "type__0__",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "uuid" : "20"
+          } ],
+          "uuid" : "20"
+        },
+        "uuid" : "-1402408992696"
+      } ],
+      "output_attribute_path" : {
+        "type" : "MappingAttributePathInstance",
+        "name" : "output mapping attribute path instance",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "uuid" : "20"
+          } ],
+          "uuid" : "20"
+        },
+        "uuid" : "-1402408992697"
+      },
+      "uuid" : "-1402408992686"
+    }, {
+      "name" : "creator",
+      "transformation" : {
+        "name" : "transformation",
+        "description" : "transformation",
+        "function" : {
+          "name" : "transformation",
+          "description" : "transformation",
+          "type" : "Transformation",
+          "components" : [ {
+            "function" : {
+              "name" : "concat",
+              "description" : "Collects all received values and concatenates them on record end.",
+              "function_description" : {
+                "name" : "concat",
+                "dsl" : "metafacture",
+                "reference" : "concat",
+                "description" : "Collects all received values and concatenates them on record end.",
+                "parameters" : {
+                  "delimiter" : {
+                    "type" : "text"
+                  },
+                  "prefix" : {
+                    "type" : "text",
+                    "optional" : true
+                  },
+                  "postfix" : {
+                    "type" : "text",
+                    "optional" : true
+                  }
+                }
+              },
+              "parameters" : [ "delimiter", "prefix", "postfix" ],
+              "type" : "Function",
+              "uuid" : "23"
+            },
+            "name" : "component1402409200787",
+            "description" : "{\"x\":\"givenname\",\"y\":0}",
+            "parameter_mappings" : {
+              "delimiter" : ", ",
+              "inputString" : "sn__1__,givenname__1__"
+            },
+            "uuid" : "-1402409200649"
+          } ]
+        },
+        "parameter_mappings" : {
+          "__TRANSFORMATION_OUTPUT_VARIABLE__10" : "output mapping attribute path instance 2",
+          "givenname__1__" : "givenname__1__",
+          "sn__1__" : "sn__1__"
+        }
+      },
+      "input_attribute_paths" : [ {
+        "type" : "MappingAttributePathInstance",
+        "name" : "givenname__1__",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "givenname",
+            "uri" : "http://data.slub-dresden.de/resources/1/schema#givenname",
+            "uuid" : "466"
+          } ],
+          "uuid" : "1160"
+        },
+        "uuid" : "-1402409005651"
+      }, {
+        "type" : "MappingAttributePathInstance",
+        "name" : "sn__1__",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "sn",
+            "uri" : "http://data.slub-dresden.de/resources/1/schema#sn",
+            "uuid" : "465"
+          } ],
+          "uuid" : "1159"
+        },
+        "uuid" : "-1402409019528"
+      } ],
+      "output_attribute_path" : {
+        "type" : "MappingAttributePathInstance",
+        "name" : "output mapping attribute path instance 2",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "creator",
+            "uri" : "http://purl.org/dc/elements/1.1/creator",
+            "uuid" : "6"
+          } ],
+          "uuid" : "6"
+        },
+        "uuid" : "-1402409005652"
+      },
+      "uuid" : "-1402409005527"
+    }, {
+      "name" : "title",
+      "transformation" : {
+        "name" : "transformation",
+        "description" : "transformation",
+        "function" : {
+          "name" : "transformation",
+          "description" : "transformation",
+          "type" : "Transformation",
+          "components" : [ {
+            "function" : {
+              "name" : "trim",
+              "description" : "Trimms the value",
+              "function_description" : {
+                "name" : "trim",
+                "dsl" : "metafacture",
+                "reference" : "trim",
+                "description" : "Trimms the value"
+              },
+              "type" : "Function",
+              "uuid" : "19"
+            },
+            "name" : "component1402409245895",
+            "output_components" : [ {
+              "uuid" : "-1402409265714"
+            } ],
+            "description" : "{\"x\":\"subtitle\",\"y\":0}",
+            "parameter_mappings" : {
+              "inputString" : "subtitle__2__"
+            },
+            "uuid" : "-1402409245883"
+          }, {
+            "function" : {
+              "name" : "substring",
+              "description" : "Returns a substring",
+              "function_description" : {
+                "name" : "substring",
+                "dsl" : "metafacture",
+                "reference" : "substring",
+                "description" : "Returns a substring",
+                "parameters" : {
+                  "start" : {
+                    "type" : "number",
+                    "optional" : true
+                  },
+                  "end" : {
+                    "type" : "number",
+                    "optional" : true
+                  }
+                }
+              },
+              "parameters" : [ "start", "end" ],
+              "type" : "Function",
+              "uuid" : "17"
+            },
+            "name" : "component1402409257014",
+            "output_components" : [ {
+              "uuid" : "-1402409261554"
+            } ],
+            "description" : "{\"x\":\"title\",\"y\":0}",
+            "parameter_mappings" : {
+              "start" : "2",
+              "end" : "3",
+              "inputString" : "title__2__"
+            },
+            "uuid" : "-1402409256815"
+          }, {
+            "function" : {
+              "name" : "case",
+              "description" : "Upper/lower-case transformation.",
+              "function_description" : {
+                "name" : "case",
+                "dsl" : "metafacture",
+                "reference" : "case",
+                "description" : "Upper/lower-case transformation.",
+                "parameters" : {
+                  "to" : {
+                    "type" : "radio",
+                    "choices" : [ "upper", "lower" ]
+                  },
+                  "language" : {
+                    "type" : "text",
+                    "optional" : true
+                  }
+                }
+              },
+              "parameters" : [ "to", "language" ],
+              "type" : "Function",
+              "uuid" : "2"
+            },
+            "name" : "component1402409261374",
+            "output_components" : [ {
+              "uuid" : "-1402409265714"
+            } ],
+            "input_components" : [ {
+              "uuid" : "-1402409256815"
+            } ],
+            "description" : "{\"x\":\"title\",\"y\":1}",
+            "parameter_mappings" : {
+              "to" : "upper",
+              "inputString" : "component1402409257014"
+            },
+            "uuid" : "-1402409261554"
+          }, {
+            "function" : {
+              "name" : "concat",
+              "description" : "Collects all received values and concatenates them on record end.",
+              "function_description" : {
+                "name" : "concat",
+                "dsl" : "metafacture",
+                "reference" : "concat",
+                "description" : "Collects all received values and concatenates them on record end.",
+                "parameters" : {
+                  "delimiter" : {
+                    "type" : "text"
+                  },
+                  "prefix" : {
+                    "type" : "text",
+                    "optional" : true
+                  },
+                  "postfix" : {
+                    "type" : "text",
+                    "optional" : true
+                  }
+                }
+              },
+              "parameters" : [ "delimiter", "prefix", "postfix" ],
+              "type" : "Function",
+              "uuid" : "23"
+            },
+            "name" : "component1402409266087",
+            "input_components" : [ {
+              "uuid" : "-1402409261554"
+            }, {
+              "uuid" : "-1402409245883"
+            } ],
+            "description" : "{\"x\":\"title\",\"y\":2}",
+            "parameter_mappings" : {
+              "delimiter" : " ",
+              "inputString" : "component1402409245895,component1402409261374"
+            },
+            "uuid" : "-1402409265714"
+          } ]
+        },
+        "parameter_mappings" : {
+          "__TRANSFORMATION_OUTPUT_VARIABLE__11" : "output mapping attribute path instance 3",
+          "subtitle__2__" : "subtitle__2__",
+          "title__2__" : "title__2__"
+        }
+      },
+      "input_attribute_paths" : [ {
+        "type" : "MappingAttributePathInstance",
+        "name" : "subtitle__2__",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "subtitle",
+            "uri" : "http://data.slub-dresden.de/resources/1/schema#subtitle",
+            "uuid" : "464"
+          } ],
+          "uuid" : "1158"
+        },
+        "uuid" : "-1402409026756"
+      }, {
+        "type" : "MappingAttributePathInstance",
+        "name" : "title__2__",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "title",
+            "uri" : "http://data.slub-dresden.de/resources/1/schema#title",
+            "uuid" : "463"
+          } ],
+          "uuid" : "1157"
+        },
+        "uuid" : "-1402409035498"
+      } ],
+      "output_attribute_path" : {
+        "type" : "MappingAttributePathInstance",
+        "name" : "output mapping attribute path instance 3",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "title",
+            "uri" : "http://purl.org/dc/elements/1.1/title",
+            "uuid" : "1"
+          } ],
+          "uuid" : "1"
+        },
+        "uuid" : "-1402409026757"
+      },
+      "uuid" : "-1402409026713"
+    }, {
+      "name" : "givenname",
+      "transformation" : {
+        "name" : "transformation",
+        "description" : "transformation",
+        "function" : {
+          "name" : "transformation",
+          "description" : "transformation",
+          "type" : "Transformation"
+        },
+        "parameter_mappings" : {
+          "__TRANSFORMATION_OUTPUT_VARIABLE__12" : "output mapping attribute path instance 4",
+          "givenname__3__" : "givenname__3__"
+        }
+      },
+      "input_attribute_paths" : [ {
+        "type" : "MappingAttributePathInstance",
+        "name" : "givenname__3__",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "givenname",
+            "uri" : "http://data.slub-dresden.de/resources/1/schema#givenname",
+            "uuid" : "466"
+          } ],
+          "uuid" : "1160"
+        },
+        "uuid" : "-1402409053440"
+      } ],
+      "output_attribute_path" : {
+        "type" : "MappingAttributePathInstance",
+        "name" : "output mapping attribute path instance 4",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "givenName",
+            "uri" : "http://xmlns.com/foaf/0.1/givenName",
+            "uuid" : "33"
+          } ],
+          "uuid" : "86"
+        },
+        "uuid" : "-1402409053441"
+      },
+      "uuid" : "-1402409053390"
+    }, {
+      "name" : "surname",
+      "transformation" : {
+        "name" : "transformation",
+        "description" : "transformation",
+        "function" : {
+          "name" : "transformation",
+          "description" : "transformation",
+          "type" : "Transformation"
+        },
+        "parameter_mappings" : {
+          "__TRANSFORMATION_OUTPUT_VARIABLE__13" : "output mapping attribute path instance 5",
+          "sn__4__" : "sn__4__"
+        }
+      },
+      "input_attribute_paths" : [ {
+        "type" : "MappingAttributePathInstance",
+        "name" : "sn__4__",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "sn",
+            "uri" : "http://data.slub-dresden.de/resources/1/schema#sn",
+            "uuid" : "465"
+          } ],
+          "uuid" : "1159"
+        },
+        "uuid" : "-1402409065602"
+      } ],
+      "output_attribute_path" : {
+        "type" : "MappingAttributePathInstance",
+        "name" : "output mapping attribute path instance 5",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "familyName",
+            "uri" : "http://xmlns.com/foaf/0.1/familyName",
+            "uuid" : "32"
+          } ],
+          "uuid" : "87"
+        },
+        "uuid" : "-1402409065603"
+      },
+      "uuid" : "-1402409065445"
+    }, {
+      "name" : "edition",
+      "transformation" : {
+        "name" : "transformation",
+        "description" : "transformation",
+        "function" : {
+          "name" : "transformation",
+          "description" : "transformation",
+          "type" : "Transformation",
+          "components" : [ {
+            "function" : {
+              "name" : "regexp",
+              "description" : "Extract data based on a regular expression. Syntax corresponds to Java Regular Expressions.",
+              "function_description" : {
+                "name" : "regexp",
+                "dsl" : "metafacture",
+                "reference" : "regexp",
+                "description" : "Extract data based on a regular expression. Syntax corresponds to Java Regular Expressions.",
+                "parameters" : {
+                  "match" : {
+                    "type" : "text"
+                  },
+                  "format" : {
+                    "type" : "text",
+                    "optional" : true
+                  }
+                }
+              },
+              "parameters" : [ "match", "format" ],
+              "type" : "Function",
+              "uuid" : "13"
+            },
+            "name" : "component1402409306669",
+            "description" : "{\"x\":\"date\",\"y\":0}",
+            "parameter_mappings" : {
+              "match" : "(\\d*).(\\d\\d)\\/(\\d{2})",
+              "format" : "Jahr: ${1}, Monat: ${3}, Tag: ${2}",
+              "inputString" : "date__5__"
+            },
+            "uuid" : "-1402409307437"
+          } ]
+        },
+        "parameter_mappings" : {
+          "__TRANSFORMATION_OUTPUT_VARIABLE__14" : "output mapping attribute path instance 6",
+          "date__5__" : "date__5__"
+        }
+      },
+      "input_attribute_paths" : [ {
+        "type" : "MappingAttributePathInstance",
+        "name" : "date__5__",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "date",
+            "uri" : "http://data.slub-dresden.de/resources/1/schema#date",
+            "uuid" : "470"
+          } ],
+          "uuid" : "1164"
+        },
+        "uuid" : "-1402409083401"
+      } ],
+      "output_attribute_path" : {
+        "type" : "MappingAttributePathInstance",
+        "name" : "output mapping attribute path instance 6",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "edition",
+            "uri" : "http://purl.org/ontology/bibo/edition",
+            "uuid" : "30"
+          } ],
+          "uuid" : "30"
+        },
+        "uuid" : "-1402409083402"
+      },
+      "uuid" : "-1402409083236"
+    }, {
+      "name" : "medium",
+      "transformation" : {
+        "name" : "transformation",
+        "description" : "transformation",
+        "function" : {
+          "name" : "transformation",
+          "description" : "transformation",
+          "type" : "Transformation",
+          "components" : [ {
+            "function" : {
+              "name" : "split",
+              "description" : "Split string based on a regular expression. Pattern syntax corresponds to Java Regular Expressions.",
+              "function_description" : {
+                "name" : "split",
+                "dsl" : "metafacture",
+                "reference" : "split",
+                "description" : "Split string based on a regular expression. Pattern syntax corresponds to Java Regular Expressions.",
+                "parameters" : {
+                  "delimiter" : {
+                    "type" : "text",
+                    "description" : "Regular expression, defining the split"
+                  }
+                }
+              },
+              "parameters" : [ "delimiter" ],
+              "type" : "Function",
+              "uuid" : "16"
+            },
+            "name" : "component1402409341363",
+            "output_components" : [ {
+              "uuid" : "-1402409348142"
+            } ],
+            "description" : "{\"x\":\"attributes\",\"y\":0}",
+            "parameter_mappings" : {
+              "delimiter" : "\\|",
+              "inputString" : "attributes__6__"
+            },
+            "uuid" : "-1402409341740"
+          }, {
+            "function" : {
+              "name" : "occurrence",
+              "description" : "Filter by number of occurrence.",
+              "function_description" : {
+                "name" : "occurrence",
+                "dsl" : "metafacture",
+                "reference" : "occurrence",
+                "description" : "Filter by number of occurrence.",
+                "parameters" : {
+                  "only" : {
+                    "type" : "text",
+                    "pattern" : "(lessThen |moreThen )?\\d+"
+                  },
+                  "sameEntity" : {
+                    "type" : "checkbox",
+                    "optional" : true
+                  }
+                }
+              },
+              "parameters" : [ "only", "sameEntity" ],
+              "type" : "Function",
+              "uuid" : "12"
+            },
+            "name" : "component1402409348679",
+            "output_components" : [ {
+              "uuid" : "-1402409351641"
+            } ],
+            "input_components" : [ {
+              "uuid" : "-1402409341740"
+            } ],
+            "description" : "{\"x\":\"attributes\",\"y\":1}",
+            "parameter_mappings" : {
+              "only" : "4",
+              "sameEntity" : "true",
+              "inputString" : "component1402409341363"
+            },
+            "uuid" : "-1402409348142"
+          }, {
+            "function" : {
+              "name" : "equals",
+              "description" : "Returns the value only if equality holds.",
+              "function_description" : {
+                "name" : "equals",
+                "dsl" : "metafacture",
+                "reference" : "equals",
+                "description" : "Returns the value only if equality holds.",
+                "parameters" : {
+                  "string" : {
+                    "type" : "text"
+                  }
+                }
+              },
+              "parameters" : [ "string" ],
+              "type" : "Function",
+              "uuid" : "6"
+            },
+            "name" : "component1402409352178",
+            "output_components" : [ {
+              "uuid" : "-1402409357507"
+            } ],
+            "input_components" : [ {
+              "uuid" : "-1402409348142"
+            } ],
+            "description" : "{\"x\":\"attributes\",\"y\":2}",
+            "parameter_mappings" : {
+              "string" : "c",
+              "inputString" : "component1402409348679"
+            },
+            "uuid" : "-1402409351641"
+          }, {
+            "function" : {
+              "name" : "compose",
+              "description" : "Add pre- or postfix to a string.",
+              "function_description" : {
+                "name" : "compose",
+                "dsl" : "metafacture",
+                "reference" : "compose",
+                "description" : "Add pre- or postfix to a string.",
+                "parameters" : {
+                  "prefix" : {
+                    "type" : "text",
+                    "optional" : true
+                  },
+                  "postfix" : {
+                    "type" : "text",
+                    "optional" : true
+                  }
+                }
+              },
+              "parameters" : [ "prefix", "postfix" ],
+              "type" : "Function",
+              "uuid" : "3"
+            },
+            "name" : "component1402409357881",
+            "input_components" : [ {
+              "uuid" : "-1402409351641"
+            } ],
+            "description" : "{\"x\":\"attributes\",\"y\":3}",
+            "parameter_mappings" : {
+              "postfix" : "d-com",
+              "inputString" : "component1402409352178"
+            },
+            "uuid" : "-1402409357507"
+          } ]
+        },
+        "parameter_mappings" : {
+          "__TRANSFORMATION_OUTPUT_VARIABLE__15" : "output mapping attribute path instance 7",
+          "attributes__6__" : "attributes__6__"
+        }
+      },
+      "input_attribute_paths" : [ {
+        "type" : "MappingAttributePathInstance",
+        "name" : "attributes__6__",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "attributes",
+            "uri" : "http://data.slub-dresden.de/resources/1/schema#attributes",
+            "uuid" : "469"
+          } ],
+          "uuid" : "1163"
+        },
+        "uuid" : "-1402409115212"
+      } ],
+      "output_attribute_path" : {
+        "type" : "MappingAttributePathInstance",
+        "name" : "output mapping attribute path instance 7",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "medium",
+            "uri" : "http://purl.org/dc/terms/medium",
+            "uuid" : "21"
+          } ],
+          "uuid" : "21"
+        },
+        "uuid" : "-1402409115213"
+      },
+      "uuid" : "-1402409115043"
+    }, {
+      "name" : "language",
+      "transformation" : {
+        "name" : "transformation",
+        "description" : "transformation",
+        "function" : {
+          "name" : "transformation",
+          "description" : "transformation",
+          "type" : "Transformation",
+          "components" : [ {
+            "function" : {
+              "name" : "replace",
+              "description" : "String replace based on a regular expression. Pattern syntax corresponds to Java Regular Expressions.",
+              "function_description" : {
+                "name" : "replace",
+                "dsl" : "metafacture",
+                "reference" : "replace",
+                "description" : "String replace based on a regular expression. Pattern syntax corresponds to Java Regular Expressions.",
+                "parameters" : {
+                  "pattern" : {
+                    "type" : "regexp"
+                  },
+                  "with" : {
+                    "type" : "text",
+                    "description" : "The replacement"
+                  }
+                }
+              },
+              "parameters" : [ "pattern", "with" ],
+              "type" : "Function",
+              "uuid" : "14"
+            },
+            "name" : "component1402409667814",
+            "description" : "{\"x\":\"language\",\"y\":0}",
+            "parameter_mappings" : {
+              "pattern" : "en",
+              "with" : "",
+              "inputString" : "language__7__"
+            },
+            "uuid" : "-1402409668033"
+          } ]
+        },
+        "parameter_mappings" : {
+          "__TRANSFORMATION_OUTPUT_VARIABLE__16" : "output mapping attribute path instance 8",
+          "language__7__" : "language__7__"
+        }
+      },
+      "input_attribute_paths" : [ {
+        "type" : "MappingAttributePathInstance",
+        "name" : "language__7__",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "language",
+            "uri" : "http://data.slub-dresden.de/resources/1/schema#language",
+            "uuid" : "468"
+          } ],
+          "uuid" : "1162"
+        },
+        "uuid" : "-1402409132867"
+      } ],
+      "output_attribute_path" : {
+        "type" : "MappingAttributePathInstance",
+        "name" : "output mapping attribute path instance 8",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "language",
+            "uri" : "http://purl.org/dc/terms/language",
+            "uuid" : "28"
+          } ],
+          "uuid" : "28"
+        },
+        "uuid" : "-1402409132868"
+      },
+      "uuid" : "-1402409132666"
+    }, {
+      "name" : "isbn_map",
+      "transformation" : {
+        "name" : "transformation",
+        "description" : "transformation",
+        "function" : {
+          "name" : "transformation",
+          "description" : "transformation",
+          "type" : "Transformation",
+          "components" : [ {
+            "function" : {
+              "name" : "isbn",
+              "description" : "ISBN conversion and verification.",
+              "function_description" : {
+                "name" : "isbn",
+                "dsl" : "metafacture",
+                "reference" : "isbn",
+                "description" : "ISBN conversion and verification.",
+                "parameters" : {
+                  "to" : {
+                    "type" : "radio",
+                    "choices" : [ "isbn13", "isbn10", "clean" ]
+                  },
+                  "verifyCheckDigit" : {
+                    "type" : "checkbox",
+                    "optional" : true
+                  }
+                }
+              },
+              "parameters" : [ "to", "verifyCheckDigit" ],
+              "type" : "Function",
+              "uuid" : "8"
+            },
+            "name" : "component1402409693840",
+            "description" : "{\"x\":\"isbn\",\"y\":0}",
+            "parameter_mappings" : {
+              "to" : "clean",
+              "inputString" : "isbn__8__"
+            },
+            "uuid" : "-1402409693721"
+          } ]
+        },
+        "parameter_mappings" : {
+          "__TRANSFORMATION_OUTPUT_VARIABLE__17" : "output mapping attribute path instance 9",
+          "isbn__8__" : "isbn__8__"
+        }
+      },
+      "input_attribute_paths" : [ {
+        "type" : "MappingAttributePathInstance",
+        "name" : "isbn__8__",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "isbn",
+            "uri" : "http://data.slub-dresden.de/resources/1/schema#isbn",
+            "uuid" : "467"
+          } ],
+          "uuid" : "1161"
+        },
+        "uuid" : "-1402409142892"
+      } ],
+      "output_attribute_path" : {
+        "type" : "MappingAttributePathInstance",
+        "name" : "output mapping attribute path instance 9",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "isbn",
+            "uri" : "http://purl.org/ontology/bibo/isbn",
+            "uuid" : "19"
+          } ],
+          "uuid" : "19"
+        },
+        "uuid" : "-1402409142893"
+      },
+      "uuid" : "-1402409142712"
+    }, {
+      "name" : "www_location",
+      "transformation" : {
+        "name" : "transformation",
+        "description" : "transformation",
+        "function" : {
+          "name" : "transformation",
+          "description" : "transformation",
+          "type" : "Transformation",
+          "components" : [ {
+            "function" : {
+              "name" : "isbn",
+              "description" : "ISBN conversion and verification.",
+              "function_description" : {
+                "name" : "isbn",
+                "dsl" : "metafacture",
+                "reference" : "isbn",
+                "description" : "ISBN conversion and verification.",
+                "parameters" : {
+                  "to" : {
+                    "type" : "radio",
+                    "choices" : [ "isbn13", "isbn10", "clean" ]
+                  },
+                  "verifyCheckDigit" : {
+                    "type" : "checkbox",
+                    "optional" : true
+                  }
+                }
+              },
+              "parameters" : [ "to", "verifyCheckDigit" ],
+              "type" : "Function",
+              "uuid" : "8"
+            },
+            "name" : "component1402409710693",
+            "output_components" : [ {
+              "uuid" : "-1402409718719"
+            } ],
+            "description" : "{\"x\":\"isbn\",\"y\":0}",
+            "parameter_mappings" : {
+              "to" : "clean",
+              "inputString" : "isbn__9__"
+            },
+            "uuid" : "-1402409710909"
+          }, {
+            "function" : {
+              "name" : "htmlanchor",
+              "description" : "Create an HTML anchor.",
+              "function_description" : {
+                "name" : "htmlanchor",
+                "dsl" : "metafacture",
+                "reference" : "htmlanchor",
+                "description" : "Create an HTML anchor.",
+                "parameters" : {
+                  "prefix" : {
+                    "type" : "text"
+                  },
+                  "postfix" : {
+                    "type" : "text",
+                    "optional" : true
+                  },
+                  "title" : {
+                    "type" : "text",
+                    "optional" : true
+                  }
+                }
+              },
+              "parameters" : [ "prefix", "postfix", "title" ],
+              "type" : "Function",
+              "uuid" : "7"
+            },
+            "name" : "component1402409718282",
+            "input_components" : [ {
+              "uuid" : "-1402409710909"
+            } ],
+            "description" : "{\"x\":\"isbn\",\"y\":1}",
+            "parameter_mappings" : {
+              "prefix" : "www.doi.org/isbn/",
+              "title" : "@Title",
+              "inputString" : "component1402409710693"
+            },
+            "uuid" : "-1402409718719"
+          } ]
+        },
+        "parameter_mappings" : {
+          "__TRANSFORMATION_OUTPUT_VARIABLE__18" : "output mapping attribute path instance 10",
+          "isbn__9__" : "isbn__9__"
+        }
+      },
+      "input_attribute_paths" : [ {
+        "type" : "MappingAttributePathInstance",
+        "name" : "isbn__9__",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "isbn",
+            "uri" : "http://data.slub-dresden.de/resources/1/schema#isbn",
+            "uuid" : "467"
+          } ],
+          "uuid" : "1161"
+        },
+        "uuid" : "-1402409156564"
+      } ],
+      "output_attribute_path" : {
+        "type" : "MappingAttributePathInstance",
+        "name" : "output mapping attribute path instance 10",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "placeOfPublication",
+            "uri" : "http://rdvocab.info/Elements/placeOfPublication",
+            "uuid" : "10"
+          } ],
+          "uuid" : "10"
+        },
+        "uuid" : "-1402409156565"
+      },
+      "uuid" : "-1402409156359"
+    } ]
+  },
+  "input_data_model" : {
+    "name" : "almost.all.functions.test.csv + null data model",
+    "description" : " data model of resource 'almost.all.functions.test.csv' and configuration ' null'",
+    "configuration" : {
+      "name" : null,
+      "description" : null,
+      "resources" : [ {
+        "uuid" : "1"
+      } ],
+      "parameters" : {
+        "column_delimiter" : ",",
+        "escape_character" : "\\",
+        "quote_character" : "\"",
+        "first_row_is_headings" : true,
+        "column_names" : "columnN",
+        "storage_type" : "csv"
+      },
+      "uuid" : "67"
+    },
+    "schema" : {
+      "name" : "almost.all.functions.test.csv schema",
+      "attribute_paths" : [ {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_0",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "uuid" : "20"
+          } ],
+          "uuid" : "20"
+        },
+        "uuid" : "0"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_1",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "givenname",
+            "uri" : "http://data.slub-dresden.de/resources/1/schema#givenname",
+            "uuid" : "466"
+          } ],
+          "uuid" : "1160"
+        },
+        "uuid" : "1"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_2",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "sn",
+            "uri" : "http://data.slub-dresden.de/resources/1/schema#sn",
+            "uuid" : "465"
+          } ],
+          "uuid" : "1159"
+        },
+        "uuid" : "2"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_3",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "subtitle",
+            "uri" : "http://data.slub-dresden.de/resources/1/schema#subtitle",
+            "uuid" : "464"
+          } ],
+          "uuid" : "1158"
+        },
+        "uuid" : "3"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_4",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "title",
+            "uri" : "http://data.slub-dresden.de/resources/1/schema#title",
+            "uuid" : "463"
+          } ],
+          "uuid" : "1157"
+        },
+        "uuid" : "4"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_5",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "date",
+            "uri" : "http://data.slub-dresden.de/resources/1/schema#date",
+            "uuid" : "470"
+          } ],
+          "uuid" : "1164"
+        },
+        "uuid" : "5"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_6",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "attributes",
+            "uri" : "http://data.slub-dresden.de/resources/1/schema#attributes",
+            "uuid" : "469"
+          } ],
+          "uuid" : "1163"
+        },
+        "uuid" : "6"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_7",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "language",
+            "uri" : "http://data.slub-dresden.de/resources/1/schema#language",
+            "uuid" : "468"
+          } ],
+          "uuid" : "1162"
+        },
+        "uuid" : "7"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_8",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "isbn",
+            "uri" : "http://data.slub-dresden.de/resources/1/schema#isbn",
+            "uuid" : "467"
+          } ],
+          "uuid" : "1161"
+        },
+        "uuid" : "8"
+      } ],
+      "record_class" : {
+        "name" : "record type",
+        "uri" : "http://data.slub-dresden.de/resources/1/schema#RecordType",
+        "uuid" : "36"
+      },
+      "uuid" : "66"
+    },
+    "data_resource" : {
+      "name" : "almost.all.functions.test.csv",
+      "description" : "4jtest3",
+      "type" : "FILE",
+      "resource_attributes" : {
+        "path" : "/home/dmp/tmp/tmp/resources/almost.all.functions.test.csv",
+        "filetype" : "text/csv",
+        "filesize" : -1
+      },
+      "configurations" : [ {
+        "name" : null,
+        "description" : null,
+        "resources" : [ {
+          "uuid" : "1"
+        } ],
+        "parameters" : {
+          "column_delimiter" : ",",
+          "escape_character" : "\\",
+          "quote_character" : "\"",
+          "first_row_is_headings" : true,
+          "column_names" : "columnN",
+          "storage_type" : "csv"
+        },
+        "uuid" : "67"
+      } ],
+      "uuid" : "1"
+    },
+    "uuid" : "78"
+  },
+  "output_data_model" : {
+    "name" : "Internal Data Model",
+    "description" : "SLUB Internal Data Model",
+    "schema" : {
+      "name" : "Internal Schema",
+      "attribute_paths" : [ {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_9",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "contributor",
+            "uri" : "http://purl.org/dc/terms/contributor",
+            "uuid" : "7"
+          }, {
+            "name" : "givenName",
+            "uri" : "http://xmlns.com/foaf/0.1/givenName",
+            "uuid" : "33"
+          } ],
+          "uuid" : "37"
+        },
+        "uuid" : "9"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_10",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "creator",
+            "uri" : "http://purl.org/dc/terms/creator",
+            "uuid" : "5"
+          }, {
+            "name" : "familyName",
+            "uri" : "http://xmlns.com/foaf/0.1/familyName",
+            "uuid" : "32"
+          } ],
+          "uuid" : "33"
+        },
+        "uuid" : "10"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_11",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "creator",
+            "uri" : "http://purl.org/dc/terms/creator",
+            "uuid" : "5"
+          }, {
+            "name" : "givenName",
+            "uri" : "http://xmlns.com/foaf/0.1/givenName",
+            "uuid" : "33"
+          } ],
+          "uuid" : "34"
+        },
+        "uuid" : "11"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_12",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "contributor",
+            "uri" : "http://purl.org/dc/terms/contributor",
+            "uuid" : "7"
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "uuid" : "20"
+          } ],
+          "uuid" : "35"
+        },
+        "uuid" : "12"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_13",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "contributor",
+            "uri" : "http://purl.org/dc/terms/contributor",
+            "uuid" : "7"
+          }, {
+            "name" : "familyName",
+            "uri" : "http://xmlns.com/foaf/0.1/familyName",
+            "uuid" : "32"
+          } ],
+          "uuid" : "36"
+        },
+        "uuid" : "13"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_14",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "alternative",
+            "uri" : "http://purl.org/dc/terms/alternative",
+            "uuid" : "3"
+          } ],
+          "uuid" : "3"
+        },
+        "uuid" : "14"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_15",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "shortTitle",
+            "uri" : "http://purl.org/ontology/bibo/shortTitle",
+            "uuid" : "4"
+          } ],
+          "uuid" : "4"
+        },
+        "uuid" : "15"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_16",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "title",
+            "uri" : "http://purl.org/dc/elements/1.1/title",
+            "uuid" : "1"
+          } ],
+          "uuid" : "1"
+        },
+        "uuid" : "16"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_17",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "otherTitleInformation",
+            "uri" : "http://rdvocab.info/Elements/otherTitleInformation",
+            "uuid" : "2"
+          } ],
+          "uuid" : "2"
+        },
+        "uuid" : "17"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_18",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "contributor",
+            "uri" : "http://purl.org/dc/terms/contributor",
+            "uuid" : "7"
+          } ],
+          "uuid" : "7"
+        },
+        "uuid" : "18"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_19",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "contributor",
+            "uri" : "http://purl.org/dc/elements/1.1/contributor",
+            "uuid" : "8"
+          } ],
+          "uuid" : "8"
+        },
+        "uuid" : "19"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_20",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "creator",
+            "uri" : "http://purl.org/dc/terms/creator",
+            "uuid" : "5"
+          } ],
+          "uuid" : "5"
+        },
+        "uuid" : "20"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_21",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "creator",
+            "uri" : "http://purl.org/dc/elements/1.1/creator",
+            "uuid" : "6"
+          } ],
+          "uuid" : "6"
+        },
+        "uuid" : "21"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_22",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "publisher",
+            "uri" : "http://purl.org/dc/elements/1.1/publisher",
+            "uuid" : "11"
+          } ],
+          "uuid" : "11"
+        },
+        "uuid" : "22"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_23",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "issued",
+            "uri" : "http://purl.org/dc/terms/issued",
+            "uuid" : "12"
+          } ],
+          "uuid" : "12"
+        },
+        "uuid" : "23"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_24",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "publicationStatement",
+            "uri" : "http://rdvocab.info/Elements/publicationStatement",
+            "uuid" : "9"
+          } ],
+          "uuid" : "9"
+        },
+        "uuid" : "24"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_25",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "placeOfPublication",
+            "uri" : "http://rdvocab.info/Elements/placeOfPublication",
+            "uuid" : "10"
+          } ],
+          "uuid" : "10"
+        },
+        "uuid" : "25"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_26",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "issn",
+            "uri" : "http://purl.org/ontology/bibo/issn",
+            "uuid" : "15"
+          } ],
+          "uuid" : "15"
+        },
+        "uuid" : "26"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_27",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "eissn",
+            "uri" : "http://purl.org/ontology/bibo/eissn",
+            "uuid" : "16"
+          } ],
+          "uuid" : "16"
+        },
+        "uuid" : "27"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_28",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "sameAs",
+            "uri" : "http://www.w3.org/2002/07/owl#sameAs",
+            "uuid" : "13"
+          } ],
+          "uuid" : "13"
+        },
+        "uuid" : "28"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_29",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "isLike",
+            "uri" : "http://umbel.org/umbel#isLike",
+            "uuid" : "14"
+          } ],
+          "uuid" : "14"
+        },
+        "uuid" : "29"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_30",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "uuid" : "20"
+          } ],
+          "uuid" : "20"
+        },
+        "uuid" : "30"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_31",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "familyName",
+            "uri" : "http://xmlns.com/foaf/0.1/familyName",
+            "uuid" : "32"
+          } ],
+          "uuid" : "87"
+        },
+        "uuid" : "31"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_32",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "isbn",
+            "uri" : "http://purl.org/ontology/bibo/isbn",
+            "uuid" : "19"
+          } ],
+          "uuid" : "19"
+        },
+        "uuid" : "32"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_33",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "givenName",
+            "uri" : "http://xmlns.com/foaf/0.1/givenName",
+            "uuid" : "33"
+          } ],
+          "uuid" : "86"
+        },
+        "uuid" : "33"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_34",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "oclcnum",
+            "uri" : "http://purl.org/ontology/bibo/oclcnum",
+            "uuid" : "18"
+          } ],
+          "uuid" : "18"
+        },
+        "uuid" : "34"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_35",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "lccn",
+            "uri" : "http://purl.org/ontology/bibo/lccn",
+            "uuid" : "17"
+          } ],
+          "uuid" : "17"
+        },
+        "uuid" : "35"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_36",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "hasVersion",
+            "uri" : "http://purl.org/dc/terms/hasVersion",
+            "uuid" : "24"
+          } ],
+          "uuid" : "24"
+        },
+        "uuid" : "36"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_37",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "isPartOf",
+            "uri" : "http://purl.org/dc/terms/isPartOf",
+            "uuid" : "23"
+          } ],
+          "uuid" : "23"
+        },
+        "uuid" : "37"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_38",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "hasPart",
+            "uri" : "http://purl.org/dc/terms/hasPart",
+            "uuid" : "22"
+          } ],
+          "uuid" : "22"
+        },
+        "uuid" : "38"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_39",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "medium",
+            "uri" : "http://purl.org/dc/terms/medium",
+            "uuid" : "21"
+          } ],
+          "uuid" : "21"
+        },
+        "uuid" : "39"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_40",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "language",
+            "uri" : "http://purl.org/dc/terms/language",
+            "uuid" : "28"
+          } ],
+          "uuid" : "28"
+        },
+        "uuid" : "40"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_41",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "succeededBy",
+            "uri" : "http://rdvocab.info/Elements/succeededBy",
+            "uuid" : "27"
+          } ],
+          "uuid" : "27"
+        },
+        "uuid" : "41"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_42",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "precededBy",
+            "uri" : "http://rdvocab.info/Elements/precededBy",
+            "uuid" : "26"
+          } ],
+          "uuid" : "26"
+        },
+        "uuid" : "42"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_43",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "isFormatOf",
+            "uri" : "http://purl.org/dc/terms/isFormatOf",
+            "uuid" : "25"
+          } ],
+          "uuid" : "25"
+        },
+        "uuid" : "43"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_44",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "creator",
+            "uri" : "http://purl.org/dc/terms/creator",
+            "uuid" : "5"
+          }, {
+            "name" : "type",
+            "uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "uuid" : "20"
+          } ],
+          "uuid" : "32"
+        },
+        "uuid" : "44"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_45",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "bibliographicCitation",
+            "uri" : "http://purl.org/dc/terms/bibliographicCitation",
+            "uuid" : "31"
+          } ],
+          "uuid" : "31"
+        },
+        "uuid" : "45"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_46",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "edition",
+            "uri" : "http://purl.org/ontology/bibo/edition",
+            "uuid" : "30"
+          } ],
+          "uuid" : "30"
+        },
+        "uuid" : "46"
+      }, {
+        "type" : "SchemaAttributePathInstance",
+        "name" : "sapi_47",
+        "attribute_path" : {
+          "attributes" : [ {
+            "name" : "1053",
+            "uri" : "http://iflastandards.info/ns/isbd/elements/1053",
+            "uuid" : "29"
+          } ],
+          "uuid" : "29"
+        },
+        "uuid" : "47"
+      } ],
+      "record_class" : {
+        "name" : "Document",
+        "uri" : "http://purl.org/ontology/bibo/Document",
+        "uuid" : "1"
+      },
+      "uuid" : "1"
+    },
+    "uuid" : "1"
+  }
+}

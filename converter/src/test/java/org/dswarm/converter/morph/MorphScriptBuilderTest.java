@@ -62,6 +62,12 @@ public class MorphScriptBuilderTest extends GuicedTest {
 	}
 
 	@Test
+	public void testCSVMultipleMappingsWithAlmostAllFunctionsToMorph2() throws Exception {
+
+		compareTaskGeneratedMorphscript("almost.all.functions.complex.test.csv.task.1.json", "almost.all.functions.complex.test.csv.morph.1.xml");
+	}
+
+	@Test
 	public void testMetsmodsXmlWithFilterAndMappingToMorph() throws Exception {
 
 		compareTaskGeneratedMorphscript("metsmods_small.xml.task.json", "metsmods_small.xml.morph.xml");

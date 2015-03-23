@@ -1,63 +1,80 @@
-[ {
-    "http://data.slub-dresden.de/datamodels/107/records/8cbb958b-dc12-40b1-9ae4-cfab55f6059d" : [ {
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/1/schema#RecordType"
-    }, {
-        "http://purl.org/dc/elements/1.1/title" : "and the 1 T"
-    }, {
-        "http://xmlns.com/foaf/0.1/familyName" : "Öß'äü"
-    }, {
-        "http://purl.org/dc/elements/1.1/creator" : "Öß'äü, Jim"
-    }, {
-        "http://xmlns.com/foaf/0.1/givenName" : "Jim"
-    }, {
-        "http://purl.org/ontology/bibo/isbn" : "9783866801929"
-    }, {
-        "http://rdvocab.info/Elements/placeOfPublication" : "<a href=\"www.doi.org/isbn/9783866801929\">@Title</a>"
-    }, {
-        "http://purl.org/dc/terms/language" : "en_US"
-    }, {
-        "http://purl.org/ontology/bibo/edition" : "Jahr: 2013, Monat: 05, Tag: 31"
-    } ]
-}, {
-    "http://data.slub-dresden.de/datamodels/107/records/a41e2a41-95fc-4d13-826e-1451e3dfc4f5" : [ {
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/1/schema#RecordType"
-    }, {
-        "http://purl.org/dc/elements/1.1/title" : " T"
-    }, {
-        "http://xmlns.com/foaf/0.1/familyName" : "Èuhg"
-    }, {
-        "http://purl.org/dc/elements/1.1/creator" : "Èuhg, Jack"
-    }, {
-        "http://xmlns.com/foaf/0.1/givenName" : "Jack"
-    }, {
-        "http://purl.org/ontology/bibo/isbn" : "9783866801929"
-    }, {
-        "http://rdvocab.info/Elements/placeOfPublication" : "<a href=\"www.doi.org/isbn/9783866801929\">@Title</a>"
-    }, {
-        "http://purl.org/dc/terms/language" : "en_US"
-    }, {
-        "http://purl.org/dc/terms/medium" : "cd-com"
-    }, {
-        "http://purl.org/ontology/bibo/edition" : "Jahr: 2014, Monat: 01, Tag: 01"
-    } ]
-}, {
-    "http://data.slub-dresden.de/datamodels/107/records/de943644-0591-401f-a286-ba90e65e637f" : [ {
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/resources/1/schema#RecordType"
-    }, {
-        "http://purl.org/dc/elements/1.1/title" : "(Part 3) T"
-    }, {
-        "http://xmlns.com/foaf/0.1/familyName" : "Ú'üöäßí"
-    }, {
-        "http://purl.org/dc/elements/1.1/creator" : "Ú'üöäßí, Jonny"
-    }, {
-        "http://xmlns.com/foaf/0.1/givenName" : "Jonny"
-    }, {
-        "http://purl.org/ontology/bibo/isbn" : "9783866801929"
-    }, {
-        "http://rdvocab.info/Elements/placeOfPublication" : "<a href=\"www.doi.org/isbn/9783866801929\">@Title</a>"
-    }, {
-        "http://purl.org/dc/terms/language" : "en_US"
-    }, {
-        "http://purl.org/ontology/bibo/edition" : "Jahr: 2012, Monat: 12, Tag: 31"
-    } ]
-} ]
+[
+  {
+    "http://data.slub-dresden.de/datamodels/107/records/8cbb958b-dc12-40b1-9ae4-cfab55f6059d": [
+      {"http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"},
+      {"http://purl.org/dc/elements/1.1/title": "and the 1 T"},
+      {"http://xmlns.com/foaf/0.1/familyName": "Öß'äü"},
+      {"http://purl.org/dc/elements/1.1/creator": "Öß'äü, Jim"},
+      {"http://xmlns.com/foaf/0.1/givenName": "Jim"},
+      {"http://purl.org/ontology/bibo/isbn": "9783866801929"},
+      {"http://rdvocab.info/Elements/placeOfPublication": "<a href=\"www.doi.org/isbn/9783866801929\">@Title</a>"},
+      {"http://purl.org/dc/terms/language": "en_US"},
+      {"http://purl.org/ontology/bibo/edition": "Jahr: 2013, Monat: 05, Tag: 31"}
+    ]
+  },
+  {
+    "http://data.slub-dresden.de/datamodels/107/records/a41e2a41-95fc-4d13-826e-1451e3dfc4f5": [
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+      },
+      {
+        "http://purl.org/dc/elements/1.1/title": " T"
+      },
+      {
+        "http://xmlns.com/foaf/0.1/familyName": "Èuhg"
+      },
+      {
+        "http://purl.org/dc/elements/1.1/creator": "Èuhg, Jack"
+      },
+      {
+        "http://xmlns.com/foaf/0.1/givenName": "Jack"
+      },
+      {
+        "http://purl.org/ontology/bibo/isbn": "9783866801929"
+      },
+      {
+        "http://rdvocab.info/Elements/placeOfPublication": "<a href=\"www.doi.org/isbn/9783866801929\">@Title</a>"
+      },
+      {
+        "http://purl.org/dc/terms/language": "en_US"
+      },
+      {
+        "http://purl.org/dc/terms/medium": "cd-com"
+      },
+      {
+        "http://purl.org/ontology/bibo/edition": "Jahr: 2014, Monat: 01, Tag: 01"
+      }
+    ]
+  },
+  {
+    "http://data.slub-dresden.de/datamodels/107/records/de943644-0591-401f-a286-ba90e65e637f": [
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/resources/1/schema#RecordType"
+      },
+      {
+        "http://purl.org/dc/elements/1.1/title": "(Part 3) T"
+      },
+      {
+        "http://xmlns.com/foaf/0.1/familyName": "Ú'üöäßí"
+      },
+      {
+        "http://purl.org/dc/elements/1.1/creator": "Ú'üöäßí, Jonny"
+      },
+      {
+        "http://xmlns.com/foaf/0.1/givenName": "Jonny"
+      },
+      {
+        "http://purl.org/ontology/bibo/isbn": "9783866801929"
+      },
+      {
+        "http://rdvocab.info/Elements/placeOfPublication": "<a href=\"www.doi.org/isbn/9783866801929\">@Title</a>"
+      },
+      {
+        "http://purl.org/dc/terms/language": "en_US"
+      },
+      {
+        "http://purl.org/ontology/bibo/edition": "Jahr: 2012, Monat: 12, Tag: 31"
+      }
+    ]
+  }
+]
