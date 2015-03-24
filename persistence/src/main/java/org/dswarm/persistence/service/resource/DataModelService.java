@@ -21,23 +21,24 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import org.dswarm.persistence.DMPPersistenceException;
+import org.dswarm.persistence.dto.resource.MediumDataModelDTO;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
 import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.service.ExtendedBasicDMPJPAService;
+import org.dswarm.persistence.service.ExtendedMediumBasicDMPJPAService;
 
 /**
  * A persistence service for {@link DataModel}s.
- * 
+ *
  * @author tgaengler
  */
-public class DataModelService extends ExtendedBasicDMPJPAService<ProxyDataModel, DataModel> {
+public class DataModelService extends ExtendedMediumBasicDMPJPAService<ProxyDataModel, DataModel, MediumDataModelDTO> {
 
 	/**
 	 * Creates a new data model persistence service with the given entity manager provider.
-	 * 
+	 *
 	 * @param entityManagerProvider an entity manager provider
 	 */
 	@Inject
@@ -77,4 +78,8 @@ public class DataModelService extends ExtendedBasicDMPJPAService<ProxyDataModel,
 		updateObject.setConfiguration(configuration);
 	}
 
+	@Override
+	public MediumDataModelDTO createMediumVariant(final DataModel object) {
+		return MediumDataModelDTO.of(object, null);
+	}
 }

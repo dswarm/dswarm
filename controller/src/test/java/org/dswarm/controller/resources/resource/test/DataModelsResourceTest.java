@@ -42,6 +42,7 @@ import org.apache.jena.riot.RDFLanguages;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmlunit.builder.DiffBuilder;
@@ -49,6 +50,7 @@ import org.xmlunit.builder.Input;
 import org.xmlunit.diff.Diff;
 
 import org.dswarm.common.MediaTypeUtil;
+import org.dswarm.controller.resources.POJOFormat;
 import org.dswarm.controller.resources.resource.test.utils.ConfigurationsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ExportTestUtils;
@@ -57,6 +59,8 @@ import org.dswarm.controller.resources.schema.test.utils.ClaszesResourceTestUtil
 import org.dswarm.controller.resources.schema.test.utils.SchemasResourceTestUtils;
 import org.dswarm.controller.resources.test.BasicResourceTest;
 import org.dswarm.controller.test.GuicedTest;
+import org.dswarm.persistence.dto.ShortExtendendBasicDMPDTO;
+import org.dswarm.persistence.dto.resource.MediumDataModelDTO;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
@@ -293,7 +297,7 @@ public class DataModelsResourceTest extends
 
 		// FIXME even though the export of data containing UTF-8 characters is requested, the exported data is not checked for
 		// encoding issues yet
-		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
+		final DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 		loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
 		testExportInternal(MediaTypeUtil.N3, datamodelUTF8csv.getUuid(), HttpStatus.SC_OK, MediaTypeUtil.N3_TYPE, "UTF-8.n3", ".n3");
@@ -312,7 +316,7 @@ public class DataModelsResourceTest extends
 		// SR hint: the resource's description needs to be "this is a description" since this is hard coded in
 		// org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils.uploadResource(File, Resource)
 		// should be refactored some day
-		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
+		final DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 		loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
 		testExportInternal(MediaTypeUtil.RDF_XML, datamodelUTF8csv.getUuid(), HttpStatus.SC_OK, MediaTypeUtil.RDF_XML_TYPE, "UTF-8.n3", ".rdf");
@@ -330,7 +334,7 @@ public class DataModelsResourceTest extends
 		// SR hint: the resource's description needs to be "this is a description" since this is hard coded in
 		// org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils.uploadResource(File, Resource)
 		// should be refactored some day
-		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
+		final DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 		loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
 		testExportInternal(MediaTypeUtil.N_QUADS, datamodelUTF8csv.getUuid(), HttpStatus.SC_OK, MediaTypeUtil.N_QUADS_TYPE, "UTF-8.n3", ".nq");
@@ -348,7 +352,7 @@ public class DataModelsResourceTest extends
 		// SR hint: the resource's description needs to be "this is a description" since this is hard coded in
 		// org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils.uploadResource(File, Resource)
 		// should be refactored some day
-		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
+		final DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 		loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
 		testExportInternal(MediaTypeUtil.TRIG, datamodelUTF8csv.getUuid(), HttpStatus.SC_OK, MediaTypeUtil.TRIG_TYPE, "UTF-8.n3", ".trig");
@@ -366,7 +370,7 @@ public class DataModelsResourceTest extends
 		// SR hint: the resource's description needs to be "this is a description" since this is hard coded in
 		// org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils.uploadResource(File, Resource)
 		// should be refactored some day
-		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
+		final DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 		loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
 		testExportInternal(MediaTypeUtil.TURTLE, datamodelUTF8csv.getUuid(), HttpStatus.SC_OK, MediaTypeUtil.TURTLE_TYPE, "UTF-8.n3", ".ttl");
@@ -385,7 +389,7 @@ public class DataModelsResourceTest extends
 		// SR hint: the resource's description needs to be "this is a description" since this is hard coded in
 		// org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils.uploadResource(File, Resource)
 		// should be refactored some day
-		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
+		final DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 		loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
 		testExportInternal("", datamodelUTF8csv.getUuid(), HttpStatus.SC_OK, MediaTypeUtil.N_QUADS_TYPE, "UTF-8.n3", ".nq");
@@ -404,7 +408,7 @@ public class DataModelsResourceTest extends
 		// SR hint: the resource's description needs to be "this is a description" since this is hard coded in
 		// org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils.uploadResource(File, Resource)
 		// should be refactored some day
-		DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
+		final DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
 		loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
 		testExportInternal(null, datamodelUTF8csv.getUuid(), HttpStatus.SC_OK, MediaTypeUtil.N_QUADS_TYPE, "UTF-8.n3", ".nq");
@@ -438,7 +442,7 @@ public class DataModelsResourceTest extends
 		// org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils.uploadResource(File, Resource)
 		// should be refactored some day
 		loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
-		DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
+		final DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
 		testExportInternal(MediaType.TEXT_PLAIN, datamodelAtMostcsv.getUuid(), HttpStatus.SC_NOT_ACCEPTABLE, null, null, null);
 
@@ -457,7 +461,7 @@ public class DataModelsResourceTest extends
 		// org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils.uploadResource(File, Resource)
 		// should be refactored some day
 		loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
-		DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
+		final DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
 
 		testExportInternal("khlav/kalash", datamodelAtMostcsv.getUuid(), HttpStatus.SC_NOT_ACCEPTABLE, null, null, null);
 
@@ -487,7 +491,7 @@ public class DataModelsResourceTest extends
 			final MediaType expectedExportMediaType, final String expectedModelFile, final String expectedFileEnding) throws Exception {
 
 		// request export of a data model
-		String datamodelId = String.valueOf(datamodelUuid);
+		final String datamodelId = String.valueOf(datamodelUuid);
 		WebTarget targetBE = target(datamodelId, "export");
 		// be able to simulate absence of query parameter
 		if (requestedExportLanguage != null) {
@@ -516,7 +520,7 @@ public class DataModelsResourceTest extends
 
 		Assert.assertNotNull("response body shouldn't be null", body);
 
-		LOG.trace("Response body:\n" + body);
+		LOG.trace("Response body:\n{}", body);
 
 		final InputStream inputStream = new ByteArrayInputStream(body.getBytes("UTF-8"));
 
@@ -528,7 +532,7 @@ public class DataModelsResourceTest extends
 		RDFDataMgr.read(actualModel, inputStream, expectedExportLanguage);
 
 		Assert.assertNotNull("actual model shouldn't be null", actualModel);
-		LOG.debug("exported '" + actualModel.size() + "' statements");
+		LOG.debug("exported '{}' statements", actualModel.size());
 
 		// read expected model from file
 		final com.hp.hpl.jena.rdf.model.Model expectedModel = RDFDataMgr.loadModel(expectedModelFile);
@@ -581,7 +585,7 @@ public class DataModelsResourceTest extends
 		return updateDataModel;
 	}
 
-	private JsonNode getValueNode(final String key, final JsonNode json) {
+	private static JsonNode getValueNode(final String key, final JsonNode json) {
 
 		Assert.assertNotNull("the JSON structure shouldn't be null", json);
 		Assert.assertTrue("the JSON structure should be an array", json.isArray());
@@ -606,7 +610,7 @@ public class DataModelsResourceTest extends
 		return null;
 	}
 
-	private String getValue(final String key, final JsonNode json) {
+	private static String getValue(final String key, final JsonNode json) {
 
 		final JsonNode jsonNode = getValueNode(key, json);
 
@@ -657,7 +661,7 @@ public class DataModelsResourceTest extends
 	private void testXMLExport(final String type, final String resourceJSONFile, final String dataResourceFile, final String configurationJSONFile,
 			final String dataModelType, final String expectedXMLFile) throws Exception {
 
-		DataModelsResourceTest.LOG.debug("start export " + type + " export test");
+		DataModelsResourceTest.LOG.debug("start export {} export test", type);
 
 		// prepare resource
 		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString(resourceJSONFile);
@@ -702,6 +706,101 @@ public class DataModelsResourceTest extends
 
 		Assert.assertFalse(xmlDiff.hasDifferences());
 
-		DataModelsResourceTest.LOG.debug("end export " + type + " export test");
+		DataModelsResourceTest.LOG.debug("end export {} export test", type);
+	}
+
+	@Test
+	public void testGetShortObject() throws Exception {
+
+		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+		final String dataModelName = "my pnx data model";
+		final String dataModelDescription = "my pnx data model description";
+
+		final String expectedJson =
+				objectMapper.writeValueAsString(
+						new ShortExtendendBasicDMPDTO(
+								dataModelUuid,
+								dataModelName,
+								dataModelDescription,
+								target(dataModelUuid).getUri().toString()
+						)
+				);
+
+		final DataModel dataModel = new DataModel(dataModelUuid);
+		dataModel.setName(dataModelName);
+		dataModel.setDescription(dataModelDescription);
+		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel);
+
+		// create (persist) data model
+		pojoClassResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
+
+		final Response response = target(dataModelUuid)
+				.queryParam("format", POJOFormat.SHORT.toString())
+				.request().get(Response.class);
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+
+		final String actualJson = response.readEntity(String.class);
+		JSONAssert.assertEquals(expectedJson, actualJson, true);
+	}
+
+	@Test
+	public void testGetMediumObject() throws Exception {
+
+		final String resourceJSONFile = "test-pnx-resource.json";
+		final String dataResourceFile = "test-pnx2-controller.xml";
+		final String configurationJSONFile = "pnx-configuration.json";
+
+		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+		final String dataModelName = "my pnx data model";
+		final String dataModelDescription = "my pnx data model description";
+
+		// prepare resource
+		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString(resourceJSONFile);
+		final Resource expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
+
+		final URL fileURL = Resources.getResource(dataResourceFile);
+		final File resourceFile = FileUtils.toFile(fileURL);
+
+		final String configurationJSONString = DMPPersistenceUtil.getResourceAsString(configurationJSONFile);
+
+		// add resource and config
+		final Resource resource = resourcesResourceTestUtils.uploadResource(resourceFile, expectedResource);
+		final Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
+
+		final String expectedJson =
+				objectMapper.writeValueAsString(
+						new MediumDataModelDTO(
+								dataModelUuid,
+								dataModelName,
+								dataModelDescription,
+								target(dataModelUuid).getUri().toString(),
+								resource,
+								configuration
+						)
+				);
+
+		final DataModel dataModel = new DataModel(dataModelUuid);
+		dataModel.setName(dataModelName);
+		dataModel.setDescription(dataModelDescription);
+		dataModel.setDataResource(resource);
+		dataModel.setConfiguration(configuration);
+		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel);
+
+		// create (persist) data model
+		pojoClassResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
+
+		final Response response = target(dataModelUuid)
+				.queryParam("format", POJOFormat.MEDIUM.toString())
+				.request().get(Response.class);
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+
+		final String actualJson = response.readEntity(String.class);
+
+		System.out.println("expectedJson = " + expectedJson);
+		System.out.println("actualJson = " + actualJson);
+
+		JSONAssert.assertEquals(expectedJson, actualJson, true);
 	}
 }
