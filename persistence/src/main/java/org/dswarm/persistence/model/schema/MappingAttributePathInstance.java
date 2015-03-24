@@ -56,7 +56,7 @@ public class MappingAttributePathInstance extends AttributePathInstance {
 	 * The filter of this mapping attribute path instance.
 	 */
 	@XmlElement(name = "filter")
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "FILTER")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private Filter				filter;

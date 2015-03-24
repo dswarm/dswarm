@@ -52,7 +52,7 @@ public class SchemaAttributePathInstance extends AttributePathInstance {
 	 * further prescribe how the (complex) value of the last attribute of an attribute path
 	 * is meant to be structured.
 	 */
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "SUB_SCHEMA")
 	@XmlElement(name = "sub_schema")
 	private Schema subSchema;

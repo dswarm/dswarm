@@ -73,9 +73,9 @@ public class Schema extends BasicDMPJPAObject {
 	/**
 	 * All attribute path (instances) of the schema.
 	 */
-	// @ManyToMany(mappedBy = "schemas", fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE,
+	// @ManyToMany(mappedBy = "schemas", fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE,
 	// CascadeType.PERSIST, CascadeType.REFRESH })
-	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "SCHEMAS_SCHEMA_ATTRIBUTE_PATH_INSTANCES", joinColumns = { @JoinColumn(name = "SCHEMA_UUID", referencedColumnName = "UUID") },
 			inverseJoinColumns = { @JoinColumn(name = "SCHEMA_ATTRIBUTE_PATH_INSTANCE_UUID", referencedColumnName = "UUID") })
 	@JsonIgnore
@@ -112,7 +112,7 @@ public class Schema extends BasicDMPJPAObject {
 	/**
 	 * The record class of the schema.
 	 */
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "RECORD_CLASS")
 	@XmlElement(name = "record_class")
 	private Clasz recordClass;
@@ -120,7 +120,7 @@ public class Schema extends BasicDMPJPAObject {
 	/**
 	 * The content schema of the schema.
 	 */
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "CONTENT_SCHEMA")
 	@XmlElement(name = "content_schema")
 	private ContentSchema contentSchema;

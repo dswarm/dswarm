@@ -64,7 +64,7 @@ public class Mapping extends BasicDMPJPAObject {
 	 * The input attribute path collection of the mapping.
 	 */
 	@XmlElement(name = "input_attribute_paths")
-	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "MAPPINGS_INPUT_ATTRIBUTE_PATHS", joinColumns = { @JoinColumn(name = "MAPPING_UUID", referencedColumnName = "UUID") },
 			inverseJoinColumns = { @JoinColumn(name = "INPUT_ATTRIBUTE_PATH_UUID", referencedColumnName = "UUID") })
 	// @JsonSerialize(using = SetAttributePathReferenceSerializer.class)
@@ -76,7 +76,7 @@ public class Mapping extends BasicDMPJPAObject {
 	 * The output attribute path of the mapping.
 	 */
 	@XmlElement(name = "output_attribute_path")
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "OUTPUT_ATTRIBUTE_PATH")
 	// @JsonSerialize(using = AttributePathReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
@@ -85,7 +85,7 @@ public class Mapping extends BasicDMPJPAObject {
 	/**
 	 * The instantiation ({@link Component}) of the function or transformation that should be applied at this mapping.
 	 */
-	@OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH,
+	@OneToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH,
 			CascadeType.REMOVE }, orphanRemoval = true)
 	@JoinColumn(name = "TRANSFORMATION")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
