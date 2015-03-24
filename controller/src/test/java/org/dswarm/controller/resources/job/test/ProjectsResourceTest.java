@@ -224,9 +224,6 @@ public class ProjectsResourceTest extends
 
 		final String actualJson = response.readEntity(String.class);
 
-		System.out.println("expectedJson = " + expectedJson);
-		System.out.println("actualJson = " + actualJson);
-
 		JSONAssert.assertEquals(expectedJson, actualJson, true);
 	}
 }
