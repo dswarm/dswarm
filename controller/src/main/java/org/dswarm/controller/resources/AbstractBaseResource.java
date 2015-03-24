@@ -5,6 +5,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.core.Context;
@@ -39,7 +40,7 @@ public abstract class AbstractBaseResource {
 	/**
 	 * Creates the resource URI for the given object.
 	 *
-	 * @param object an object
+	 * @param uuid an ID string
 	 * @return the resource URI for the given object
 	 */
 	protected final URI createObjectURI(final String uuid) {
@@ -51,7 +52,7 @@ public abstract class AbstractBaseResource {
 			final String idEncoded = URLEncoder.encode(uuid, "UTF-8");
 			final String path = pathSegments.stream()
 					.map(PathSegment::getPath)
-					.filter(p -> !idEncoded.equals(p))
+					.filter(Predicate.isEqual(idEncoded).negate())
 					.collect(Collectors.joining("/", uri.getBaseUri().getPath(), "/" + idEncoded));
 
 			return new URI(
