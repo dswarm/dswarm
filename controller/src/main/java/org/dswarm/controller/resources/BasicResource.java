@@ -16,20 +16,13 @@
 package org.dswarm.controller.resources;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.inject.Provider;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.UriInfo;
 
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -58,7 +51,7 @@ import org.dswarm.persistence.service.BasicJPAService;
  * @author tgaengler
  * @author fniederlein
  */
-public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS>, POJOCLASS extends DMPObject> {
+public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS>, POJOCLASS extends DMPObject> extends AbstractBaseResource {
 
 	private static final Logger LOG = LoggerFactory.getLogger(BasicResource.class);
 
@@ -69,12 +62,6 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 	protected final Provider<POJOCLASSPERSISTENCESERVICE> persistenceServiceProvider;
 
 	protected final Provider<ObjectMapper> objectMapperProvider;
-
-	/**
-	 * The base URI of this resource.
-	 */
-	@Context
-	UriInfo uri;
 
 	/**
 	 * Creates a new resource (controller service) for the given concrete POJO class with the provider of the concrete persistence
@@ -101,17 +88,6 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 	public Class<POJOCLASS> getClasz() {
 
 		return pojoClass;
-	}
-
-	/**
-	 * Builds a positive response with the given content.
-	 *
-	 * @param responseContent a response message
-	 * @return the response
-	 */
-	protected Response buildResponse(final String responseContent) {
-
-		return Response.ok(responseContent).build();
 	}
 
 	/**
@@ -389,36 +365,6 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 	 */
 	protected URI createObjectURI(final POJOCLASS object) {
 		return createObjectURI(object.getUuid());
-	}
-
-	/**
-	 * Creates the resource URI for the given object.
-	 *
-	 * @param object an object
-	 * @return the resource URI for the given object
-	 */
-	protected URI createObjectURI(final String uuid) {
-
-		final URI baseURI = uri.getBaseUri();
-		final List<PathSegment> pathSegments = uri.getPathSegments();
-
-		try {
-			final String idEncoded = URLEncoder.encode(uuid, "UTF-8");
-			final String path = pathSegments.stream()
-					.map(PathSegment::getPath)
-					.filter(p -> !idEncoded.equals(p))
-					.collect(Collectors.joining("/", uri.getBaseUri().getPath(), "/" + idEncoded));
-
-			return new URI(
-					baseURI.getScheme(),
-					baseURI.getAuthority(),
-					path,
-					null,
-					null);
-		} catch (UnsupportedEncodingException | URISyntaxException e) {
-			BasicResource.LOG.debug("couldn't encode id", e);
-			return null;
-		}
 	}
 
 	/**
