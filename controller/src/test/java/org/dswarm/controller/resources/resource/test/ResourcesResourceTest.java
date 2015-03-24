@@ -45,14 +45,17 @@ import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.dswarm.controller.resources.POJOFormat;
 import org.dswarm.controller.resources.resource.test.utils.ConfigurationsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
 import org.dswarm.controller.resources.test.ResourceTest;
 import org.dswarm.controller.test.GuicedTest;
 import org.dswarm.init.util.CmdUtil;
+import org.dswarm.persistence.dto.ShortExtendendBasicDMPDTO;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.service.UUIDService;
@@ -107,7 +110,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final String resourceJSON = resourceUploadInteral(resourceFile, expectedResource);
 
-		ResourcesResourceTest.LOG.debug("created resource = '" + resourceJSON + "'");
+		ResourcesResourceTest.LOG.debug("created resource = '{}'", resourceJSON);
 
 		objectMapper.readValue(resourceJSON, Resource.class);
 
@@ -127,7 +130,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final String resourceJSON = resourceUploadInteral(resourceFile, expectedResource);
 
-		ResourcesResourceTest.LOG.debug("created resource = '" + resourceJSON + "'");
+		ResourcesResourceTest.LOG.debug("created resource = '{}'", resourceJSON);
 
 		objectMapper.readValue(resourceJSON, Resource.class);
 
@@ -141,14 +144,14 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final String resourceJSON = resourceUploadInteral(resourceFile, expectedResource);
 
-		ResourcesResourceTest.LOG.debug("created resource = '" + resourceJSON + "'");
+		ResourcesResourceTest.LOG.debug("created resource = '{}'", resourceJSON);
 
 		final Resource resource = objectMapper.readValue(resourceJSON, Resource.class);
 
 		Assert.assertNotNull("resource shouldn't be null", resource);
 		Assert.assertNotNull("resource id shouldn't be null", resource.getUuid());
 
-		ResourcesResourceTest.LOG.debug("try to retrieve resource '" + resource.getUuid() + "'");
+		ResourcesResourceTest.LOG.debug("try to retrieve resource '{}'", resource.getUuid());
 
 		final Response response = target(String.valueOf(resource.getUuid())).request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
 
@@ -167,14 +170,14 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final String resourceJSON = resourceUploadInteral(resourceFile, expectedResource);
 
-		ResourcesResourceTest.LOG.debug("created resource = '" + resourceJSON + "'");
+		ResourcesResourceTest.LOG.debug("created resource = '{}'", resourceJSON);
 
 		final Resource resource = objectMapper.readValue(resourceJSON, Resource.class);
 
 		Assert.assertNotNull("resource shouldn't be null", resource);
 		Assert.assertNotNull("resource id shouldn't be null", resource.getUuid());
 
-		ResourcesResourceTest.LOG.debug("try to retrieve resource '" + resource.getUuid() + "'");
+		ResourcesResourceTest.LOG.debug("try to retrieve resource '{}'", resource.getUuid());
 
 		final List<String> expectedLines = Files.readLines(resourceFile, Charset.forName("UTF-8"));
 
@@ -230,14 +233,14 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final String resourceJSON = resourceUploadInteral(resourceFile, expectedResource);
 
-		ResourcesResourceTest.LOG.debug("created resource = '" + resourceJSON + "'");
+		ResourcesResourceTest.LOG.debug("created resource = '{}'", resourceJSON);
 
 		final Resource resource = objectMapper.readValue(resourceJSON, Resource.class);
 
 		Assert.assertNotNull("resource shouldn't be null", resource);
 		Assert.assertNotNull("resource id shouldn't be null", resource.getUuid());
 
-		ResourcesResourceTest.LOG.debug("try to retrieve resource '" + resource.getUuid() + "'");
+		ResourcesResourceTest.LOG.debug("try to retrieve resource '{}'", resource.getUuid());
 
 		final List<String> expectedLines = Files.readLines(resourceFile, Charset.forName("UTF-8"));
 
@@ -364,14 +367,14 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final String resourceJSON = resourceUploadInteral(resourceFile, expectedResource);
 
-		ResourcesResourceTest.LOG.debug("created resource = '" + resourceJSON + "'");
+		ResourcesResourceTest.LOG.debug("created resource = '{}'", resourceJSON);
 
 		final Resource resource = objectMapper.readValue(resourceJSON, Resource.class);
 
 		Assert.assertNotNull("resource shouldn't be null", resource);
 		Assert.assertNotNull("resource id shouldn't be null", resource.getUuid());
 
-		ResourcesResourceTest.LOG.debug("try to retrieve resource '" + resource.getUuid() + "'");
+		ResourcesResourceTest.LOG.debug("try to retrieve resource '{}'", resource.getUuid());
 
 		final Response response = target(String.valueOf(resource.getUuid()), "configurations").request().accept(MediaType.APPLICATION_JSON_TYPE)
 				.get(Response.class);
@@ -400,7 +403,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final Configuration configuration = resource.getConfigurations().iterator().next();
 
-		ResourcesResourceTest.LOG.debug("try to retrieve resource configuration '" + configuration.getUuid() + "'");
+		ResourcesResourceTest.LOG.debug("try to retrieve resource configuration '{}'", configuration.getUuid());
 
 		final Response response = target(String.valueOf(resource.getUuid()), "/configurations/", String.valueOf(configuration.getUuid())).request()
 				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
@@ -427,7 +430,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final String resourceJSON = resourceUploadInteral(resourceFile, expectedResource);
 
-		ResourcesResourceTest.LOG.debug("created resource = '" + resourceJSON + "'");
+		ResourcesResourceTest.LOG.debug("created resource = '{}'", resourceJSON);
 
 		final Resource resource = objectMapper.readValue(resourceJSON, Resource.class);
 
@@ -436,7 +439,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final String resource2JSON = resourceUploadInteral(resourceFile, expectedResource);
 
-		ResourcesResourceTest.LOG.debug("created resource = '" + resource2JSON + "'");
+		ResourcesResourceTest.LOG.debug("created resource = '{}'", resource2JSON);
 
 		final Resource resource2 = objectMapper.readValue(resource2JSON, Resource.class);
 
@@ -497,7 +500,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final String resourceJSON = resourceUploadInteral(resourceFile, expectedResource);
 
-		ResourcesResourceTest.LOG.debug("created resource = '" + resourceJSON + "'");
+		ResourcesResourceTest.LOG.debug("created resource = '{}'", resourceJSON);
 
 		final Resource resource = objectMapper.readValue(resourceJSON, Resource.class);
 
@@ -525,7 +528,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final String resourceJSON = resourceUploadInteral(resourceFile, expectedResource);
 
-		ResourcesResourceTest.LOG.debug("created resource = '" + resourceJSON + "'");
+		ResourcesResourceTest.LOG.debug("created resource = '{}'", resourceJSON);
 
 		final Resource resource = objectMapper.readValue(resourceJSON, Resource.class);
 
@@ -562,7 +565,7 @@ public class ResourcesResourceTest extends ResourceTest {
 		// create resource
 		final String createResourceJSON = resourceUploadInteral(resourceFile, expectedResource);
 
-		ResourcesResourceTest.LOG.debug("created resource for update = '" + createResourceJSON + "'");
+		ResourcesResourceTest.LOG.debug("created resource for update = '{}'", createResourceJSON);
 
 		// check created resource
 		final Resource createResource = objectMapper.readValue(createResourceJSON, Resource.class);
@@ -570,7 +573,7 @@ public class ResourcesResourceTest extends ResourceTest {
 		Assert.assertNotNull("resource shouldn't be null", createResource);
 		Assert.assertNotNull("resource id shouldn't be null", createResource.getUuid());
 
-		ResourcesResourceTest.LOG.debug("try to retrieve resource '" + createResource.getUuid() + "'");
+		ResourcesResourceTest.LOG.debug("try to retrieve resource '{}'", createResource.getUuid());
 
 		final Response createResponse = target(String.valueOf(createResource.getUuid())).request().accept(MediaType.APPLICATION_JSON_TYPE)
 				.get(Response.class);
@@ -589,14 +592,14 @@ public class ResourcesResourceTest extends ResourceTest {
 		final String updateResourceJSON = resourceUpdateInteral(resourceFile, expectedResource, createResource.getUuid());
 
 		// check response
-		ResourcesResourceTest.LOG.debug("update resource = '" + updateResourceJSON + "'");
+		ResourcesResourceTest.LOG.debug("update resource = '{}'", updateResourceJSON);
 
 		final Resource updateResource = objectMapper.readValue(updateResourceJSON, Resource.class);
 
 		Assert.assertNotNull("updated resource shouldn't be null", updateResource);
 		Assert.assertEquals("updated resource ids should be equals", updateResource.getUuid(), createResource.getUuid());
 
-		ResourcesResourceTest.LOG.debug("try to retrieve updated resource '" + updateResource.getUuid() + "'");
+		ResourcesResourceTest.LOG.debug("try to retrieve updated resource '{}'", updateResource.getUuid());
 
 		// get updated resource via API and compare to result from updating the resource
 		final Response updateResponse = target(String.valueOf(updateResource.getUuid())).request().accept(MediaType.APPLICATION_JSON_TYPE)
@@ -617,7 +620,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final String resourceJSON = resourceUploadInteral(resourceFile, expectedResource);
 
-		ResourcesResourceTest.LOG.debug("created resource = '" + resourceJSON + "'");
+		ResourcesResourceTest.LOG.debug("created resource = '{}'", resourceJSON);
 
 		final Resource resource = objectMapper.readValue(resourceJSON, Resource.class);
 
@@ -626,7 +629,7 @@ public class ResourcesResourceTest extends ResourceTest {
 		Assert.assertNotNull("resource shouldn't be null", resource);
 		Assert.assertNotNull("resource id shouldn't be null", resourceId);
 
-		ResourcesResourceTest.LOG.debug("try to retrieve resource '" + resource.getUuid() + "'");
+		ResourcesResourceTest.LOG.debug("try to retrieve resource '{}'", resource.getUuid());
 
 		final Response response = target(String.valueOf(resource.getUuid())).request().delete();
 
@@ -637,6 +640,35 @@ public class ResourcesResourceTest extends ResourceTest {
 		Assert.assertNull(deletedResource);
 
 		ResourcesResourceTest.LOG.debug("end DELETE resource test");
+	}
+
+	@Test
+	public void testShortVariant() throws Exception {
+
+		final String resourceJSON = resourceUploadInteral(resourceFile, expectedResource);
+		final Resource resource = objectMapper.readValue(resourceJSON, Resource.class);
+
+		final String expectedJson =
+				objectMapper.writeValueAsString(
+						new ShortExtendendBasicDMPDTO(
+								resource.getUuid(),
+								resourceFile.getName(),
+								"this is a description",
+								target(resource.getUuid()).getUri().toString()
+						)
+				);
+
+		final Response response = target(resource.getUuid()).queryParam("format", POJOFormat.SHORT)
+				.request().get(Response.class);
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+
+		final String actualJson = response.readEntity(String.class);
+
+		System.out.println("expectedJson = " + expectedJson);
+		System.out.println("actualJson = " + actualJson);
+
+		JSONAssert.assertEquals(expectedJson, actualJson, true);
 	}
 
 	private String resourceUploadInteral(final File resourceFile, final Resource expectedResource) throws Exception {
@@ -691,14 +723,14 @@ public class ResourcesResourceTest extends ResourceTest {
 
 		final String resourceJSON = resourceUploadInteral(resourceFile, expectedResource);
 
-		ResourcesResourceTest.LOG.debug("created resource = '" + resourceJSON + "'");
+		ResourcesResourceTest.LOG.debug("created resource = '{}'", resourceJSON);
 
 		final Resource resource = objectMapper.readValue(resourceJSON, Resource.class);
 
 		Assert.assertNotNull("resource shouldn't be null", resource);
 		Assert.assertNotNull("resource id shouldn't be null", resource.getUuid());
 
-		ResourcesResourceTest.LOG.debug("try to add configuration to resource '" + resource.getUuid() + "'");
+		ResourcesResourceTest.LOG.debug("try to add configuration to resource '{}'", resource.getUuid());
 
 		final String configurationJSON = DMPPersistenceUtil.getResourceAsString(configurationFileName);
 		final Configuration configuration = objectMapper.readValue(configurationJSON, Configuration.class);
@@ -807,7 +839,7 @@ public class ResourcesResourceTest extends ResourceTest {
 		Assert.assertNotNull("updated resource shouldn't be null", updatedComplexResource);
 		Assert.assertNotNull("updated resource id shouldn't be null", updatedComplexResource.getUuid());
 
-		ResourcesResourceTest.LOG.debug("try to retrieve configurations of resource '" + updatedComplexResource.getUuid() + "'");
+		ResourcesResourceTest.LOG.debug("try to retrieve configurations of resource '{}'", updatedComplexResource.getUuid());
 
 		// expected==actual since to use updated ids from db in expected.
 		actualResource = updatedComplexResource;
