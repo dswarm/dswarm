@@ -19,12 +19,14 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -38,6 +40,7 @@ import com.wordnik.swagger.annotations.ApiResponses;
 
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.ExtendedBasicDMPResource;
+import org.dswarm.controller.resources.POJOFormat;
 import org.dswarm.persistence.model.job.Project;
 import org.dswarm.persistence.model.job.proxy.ProxyProject;
 import org.dswarm.persistence.service.job.ProjectService;
@@ -80,10 +83,13 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObject(@ApiParam(value = "project identifier", required = true) @PathParam("id") final String id)
+	public Response getObject(
+			@ApiParam(value = "project identifier", required = true) @PathParam("id") final String id,
+			@ApiParam(value = "'short' for only uuid,name,description, 'full' for the complete entity")
+			@QueryParam("format") @DefaultValue("full") final POJOFormat format)
 			throws DMPControllerException {
 
-		return super.getObject(id);
+		return super.getObject(id, format);
 	}
 
 	/**
@@ -123,9 +129,11 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response getObjects() throws DMPControllerException {
+	public Response getObjects(
+			@ApiParam(value = "'short' for only uuid,name,description, 'full' for the complete entity")
+			@QueryParam("format") @DefaultValue("full") final POJOFormat format) throws DMPControllerException {
 
-		return super.getObjects();
+		return super.getObjects(format);
 	}
 
 	/**
