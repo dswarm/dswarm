@@ -274,21 +274,19 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 		if (proxyUpdateObject == null) {
 
-			BasicJPAService.LOG.debug("couldn't continue " + transactionType + " update for " + className + " with id '" + object.getUuid()
-					+ "', because the proxy object is invalid.");
+			BasicJPAService.LOG.debug("couldn't continue {} update for {} with id '{}', because the proxy object is invalid.", transactionType, className, object.getUuid());
 
 			return proxyUpdateObject;
 		}
 
 		if (proxyUpdateObject.getObject() == null) {
 
-			BasicJPAService.LOG.debug("couldn't continue " + transactionType + " update for " + className + " with id '" + object.getUuid()
-					+ "', because the retrieved/created object is invalid.");
+			BasicJPAService.LOG.debug("couldn't continue {} update for {} with id '{}', because the retrieved/created object is invalid.", transactionType, className, object.getUuid());
 
 			return proxyUpdateObject;
 		}
 
-		BasicJPAService.LOG.debug("try to update " + className + " with id '" + object.getUuid() + "' " + transactionType);
+		BasicJPAService.LOG.debug("try to update {} with id '{}' {}", className, object.getUuid(), transactionType);
 
 		final POJOCLASS updateObject = proxyUpdateObject.getObject();
 
@@ -296,15 +294,15 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 		final POJOCLASS mergedUpdatedObject = entityManager.merge(updateObject);
 
-		BasicJPAService.LOG.debug("updated " + className + " with id '" + object.getUuid() + "' " + transactionType);
+		BasicJPAService.LOG.debug("updated {} with id '{}' {}", className, object.getUuid(), transactionType);
 
 		if (updateObject != null) {
 
-			BasicJPAService.LOG.debug("updated " + className + " with id '" + mergedUpdatedObject.getUuid() + "' in the database " + transactionType);
-			BasicJPAService.LOG.trace("= '" + ToStringBuilder.reflectionToString(mergedUpdatedObject) + "'");
+			BasicJPAService.LOG.debug("updated {} with id '{}' in the database {}", className, mergedUpdatedObject.getUuid(), transactionType);
+			BasicJPAService.LOG.trace("= '{}'", ToStringBuilder.reflectionToString(mergedUpdatedObject));
 		} else {
 
-			BasicJPAService.LOG.debug("couldn't updated " + className + " with id '" + object.getUuid() + "' in the database " + transactionType);
+			BasicJPAService.LOG.debug("couldn't updated {} with id '{}' in the database {}", className, object.getUuid(), transactionType);
 		}
 
 		return createNewProxyObject(mergedUpdatedObject, proxyUpdateObject.getType());
@@ -342,7 +340,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	 * Generic 'exist instance for identifier of a specific class' method.<br>
 	 * Created by: tgaengler
 	 *
-	 * @param id the idenfier of the requested instance of a specific class
+	 * @param id the identifier of the requested instance of a specific class
 	 * @return the instance for the identifier of the specific class
 	 */
 	public POJOCLASS getObject(final String id) {
@@ -366,19 +364,18 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 	protected POJOCLASS getObjectInternal(final String uuid, final EntityManager entityManager) {
 
-		BasicJPAService.LOG.debug("try to find " + className + " with uuid '" + uuid + "' in the database");
+		BasicJPAService.LOG.debug("try to find {} with uuid '{}' in the database", className, uuid);
 
 		final POJOCLASS entity = entityManager.find(clasz, uuid);
-		/*,
-				Collections.<String, Object>singletonMap("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS));*/
 
 		if (entity != null) {
 
-			BasicJPAService.LOG.debug("found " + className + " with uuid '" + uuid + "' in the database");
-			BasicJPAService.LOG.trace(" = '" + ToStringBuilder.reflectionToString(entity) + "'");
+			BasicJPAService.LOG.debug("found {} with uuid '{}' in the database", className, uuid);
+			if (BasicJPAService.LOG.isTraceEnabled()) {
+				BasicJPAService.LOG.trace(" = '{}'", ToStringBuilder.reflectionToString(entity));
+			}
 		} else {
-
-			BasicJPAService.LOG.debug("couldn't find " + className + " with uuid '" + uuid + "' in the database");
+			BasicJPAService.LOG.debug("couldn't find {} with uuid '{}' in the database", className, uuid);
 		}
 
 		return entity;
@@ -396,13 +393,13 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 		final EntityManager entityManager = acquire(false);
 		final POJOCLASS updateObject = entityManager.find(clasz, uuid);
 
-		BasicJPAService.LOG.debug("try to delete " + className + " with uuid '" + uuid + "' from the database");
+		BasicJPAService.LOG.debug("try to delete {} with uuid '{}' from the database", className, uuid);
 
 		prepareObjectForRemoval(updateObject);
 
 		entityManager.remove(updateObject);
 
-		BasicJPAService.LOG.debug("deleted " + className + " with uuid '" + uuid + "' from the database");
+		BasicJPAService.LOG.debug("deleted {} with uuid '{}' from the database", className, uuid);
 	}
 
 	/**
@@ -430,7 +427,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 			// TODO: we don't need to generate new objects here, or?
 
-			BasicJPAService.LOG.debug(className + " id is null, will create a new " + className);
+			BasicJPAService.LOG.debug("{} id is null, will create a new {}", className, className);
 
 			proxyUpdateObject = createObjectInternal(object, entityManager, transactionType);
 		} else {
@@ -443,14 +440,14 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 	protected POJOCLASS persistObject(final POJOCLASS object, final EntityManager entityManager) {
 
-		BasicJPAService.LOG.debug("try to create new " + className);
+		BasicJPAService.LOG.debug("try to create new {}", className);
 
 		// http://blog.xebia.com/2009/03/23/jpa-implementation-patterns-saving-detached-entities/
 		// "Because of the way merging works, we can also do this if we are unsure whether the object has been already persisted."
 		final POJOCLASS mergedObject = entityManager.merge(object);
 		//.persist(object);
 
-		BasicJPAService.LOG.debug("created new " + className + " with id '" + object.getUuid() + "'");
+		BasicJPAService.LOG.debug("created new {} with id '{}'", className, object.getUuid());
 
 		return mergedObject;
 	}
@@ -485,7 +482,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 			proxyObject = constructor.newInstance(object);
 		} catch (final InstantiationException | InvocationTargetException | IllegalArgumentException | IllegalAccessException e) {
 
-			BasicJPAService.LOG.error("something went wrong while " + proxyClassName + " object creation", e);
+			BasicJPAService.LOG.error("something went wrong while {} object creation", proxyClassName, e);
 
 			throw new DMPPersistenceException(e.getMessage());
 		}
@@ -523,7 +520,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 			proxyObject = constructor.newInstance(object, type);
 		} catch (final InstantiationException | InvocationTargetException | IllegalArgumentException | IllegalAccessException e) {
 
-			BasicJPAService.LOG.error("something went wrong while " + proxyClassName + " object creation", e);
+			BasicJPAService.LOG.error("something went wrong while {} object creation", proxyClassName, e);
 
 			throw new DMPPersistenceException(e.getMessage());
 		}
@@ -569,7 +566,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 			object = constructor.newInstance(finalUUID);
 		} catch (final InstantiationException | InvocationTargetException | IllegalArgumentException | IllegalAccessException e) {
 
-			BasicJPAService.LOG.error("something went wrong while " + className + "object creation", e);
+			BasicJPAService.LOG.error("something went wrong while {}object creation", className, e);
 
 			throw new DMPPersistenceException(e.getMessage());
 		}

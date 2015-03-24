@@ -79,7 +79,7 @@ public class AttributePath extends DMPObject {
 	// CascadeType.PERSIST, CascadeType.REFRESH })
 	@JsonIgnore
 	@Access(AccessType.FIELD)
-	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "ATTRIBUTE_PATHS_ATTRIBUTES", joinColumns = { @JoinColumn(name = "ATTRIBUTE_PATH_UUID", referencedColumnName = "UUID") },
 			inverseJoinColumns = { @JoinColumn(name = "ATTRIBUTE_UUID", referencedColumnName = "UUID") })
 	private Set<Attribute> attributes;

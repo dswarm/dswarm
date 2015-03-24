@@ -17,6 +17,9 @@ package org.dswarm.persistence.service.schema;
 
 import javax.persistence.EntityManager;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Schema;
@@ -24,12 +27,9 @@ import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxySchemaAttributePathInstance;
 import org.dswarm.persistence.service.UUIDService;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-
 /**
  * A persistence service for {@link SchemaAttributePathInstance}s.
- * 
+ *
  * @author polowins - adapted from {@link MappingAttributePathInstanceService}
  */
 public class SchemaAttributePathInstanceService extends
@@ -37,7 +37,7 @@ public class SchemaAttributePathInstanceService extends
 
 	/**
 	 * Creates a new schema attribute path instance persistence service with the given entity manager provider.
-	 * 
+	 *
 	 * @param entityManagerProvider an entity manager provider
 	 */
 	@Inject
@@ -54,7 +54,7 @@ public class SchemaAttributePathInstanceService extends
 	protected void prepareObjectForRemoval(final SchemaAttributePathInstance object) {
 
 		super.prepareObjectForRemoval(object);
-		
+
 		// should clear the relationship to the subschema
 		object.setSubSchema(null);
 	}

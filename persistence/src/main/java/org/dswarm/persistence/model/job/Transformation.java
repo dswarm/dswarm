@@ -59,7 +59,7 @@ public class Transformation extends Function {
 	/**
 	 * The components of the transformation.
 	 */
-	@OneToMany(/* mappedBy = "transformation", */fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+	@OneToMany(/* mappedBy = "transformation", */fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
 			CascadeType.REFRESH, CascadeType.REMOVE }, orphanRemoval = true)
 	@JoinColumn(name = "TRANSFORMATION", referencedColumnName = "UUID")
 	@JsonInclude(JsonInclude.Include.NON_NULL)

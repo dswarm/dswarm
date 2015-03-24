@@ -17,11 +17,16 @@ package org.dswarm.controller.resources.job.test;
 
 import java.util.Set;
 
+import javax.ws.rs.core.Response;
+
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
 import org.junit.Assert;
+import org.junit.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
 
+import org.dswarm.controller.resources.POJOFormat;
 import org.dswarm.controller.resources.job.test.utils.ComponentsResourceTestUtils;
 import org.dswarm.controller.resources.job.test.utils.FunctionsResourceTestUtils;
 import org.dswarm.controller.resources.job.test.utils.MappingsResourceTestUtils;
@@ -32,6 +37,7 @@ import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTest
 import org.dswarm.controller.resources.schema.test.utils.ClaszesResourceTestUtils;
 import org.dswarm.controller.resources.schema.test.utils.SchemasResourceTestUtils;
 import org.dswarm.controller.resources.test.BasicResourceTest;
+import org.dswarm.persistence.dto.ShortExtendendBasicDMPDTO;
 import org.dswarm.persistence.model.job.Component;
 import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.Mapping;
@@ -193,5 +199,31 @@ public class ProjectsResourceTest extends
 		Assert.assertEquals("projects should be equal", persistedProject, updateProject);
 
 		return updateProject;
+	}
+
+	@Test
+	public void testShortVariant() throws Exception {
+
+		final Project project = createObjectInternal();
+
+		final String expectedJson =
+				objectMapper.writeValueAsString(
+						new ShortExtendendBasicDMPDTO(
+								project.getUuid(),
+								project.getName(),
+								project.getDescription(),
+								target(project.getUuid()).getUri().toString()
+						)
+				);
+
+		final Response response = target(project.getUuid())
+				.queryParam("format", POJOFormat.SHORT)
+				.request().get(Response.class);
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+
+		final String actualJson = response.readEntity(String.class);
+
+		JSONAssert.assertEquals(expectedJson, actualJson, true);
 	}
 }

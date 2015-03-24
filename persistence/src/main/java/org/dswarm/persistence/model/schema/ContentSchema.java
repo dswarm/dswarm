@@ -74,7 +74,7 @@ public class ContentSchema extends BasicDMPJPAObject {
 	/**
 	 * The value attribute path of the content schema.
 	 */
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "RECORD_IDENTIFIER_ATTRIBUTE_PATH")
 	@XmlElement(name = "record_identifier_attribute_path")
 	private AttributePath recordIdentifierAttributePath;
@@ -84,7 +84,7 @@ public class ContentSchema extends BasicDMPJPAObject {
 	 */
 	@JsonIgnore
 	@Access(AccessType.FIELD)
-	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "CONTENT_SCHEMAS_KEY_ATTRIBUTE_PATHS",
 			joinColumns = { @JoinColumn(name = "CONTENT_SCHEMA_UUID", referencedColumnName = "UUID") },
 			inverseJoinColumns = { @JoinColumn(name = "ATTRIBUTE_PATH_UUID", referencedColumnName = "UUID") })
@@ -120,7 +120,7 @@ public class ContentSchema extends BasicDMPJPAObject {
 	/**
 	 * The value attribute path of the content schema.
 	 */
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "VALUE_ATTRIBUTE_PATH")
 	@XmlElement(name = "value_attribute_path")
 	private AttributePath valueAttributePath;

@@ -89,6 +89,8 @@ public class JpaHibernateModule extends AbstractModule {
 		properties.setProperty("hibernate.hbm2ddl.auto", "");*/
 
 		properties.setProperty("eclipselink.logging.level", "WARNING");
+//		properties.setProperty("eclipselink.logging.level.sql", "FINE");
+//		properties.setProperty("eclipselink.logging.parameters", "true");
 		properties.setProperty("eclipselink.cache.shared.default", "false");
 		properties.setProperty("eclipselink.weaving", "static");
 

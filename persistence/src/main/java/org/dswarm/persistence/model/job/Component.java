@@ -80,7 +80,7 @@ public class Component extends ExtendedBasicDMPJPAObject {
 	/**
 	 * The input components collection.
 	 */
-	@ManyToMany(mappedBy = "outputComponents", fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+	@ManyToMany(mappedBy = "outputComponents", fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
 			CascadeType.REFRESH })
 	@XmlElement(name = "input_components")
 	@JsonSerialize(using = SetComponentReferenceSerializer.class)
@@ -108,7 +108,7 @@ public class Component extends ExtendedBasicDMPJPAObject {
 	 */
 	// @ManyToOne(fetch = FetchType.LAZY/*, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
 	// CascadeType.REFRESH }*/)
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "FUNCTION")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	// @JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)

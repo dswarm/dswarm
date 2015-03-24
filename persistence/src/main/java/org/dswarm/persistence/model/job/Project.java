@@ -59,7 +59,7 @@ public class Project extends ExtendedBasicDMPJPAObject {
 	 * The sample input data model that will be utilised for demonstration or testing of the mappings of the project.
 	 */
 	@XmlElement(name = "input_data_model")
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "INPUT_DATA_MODEL")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	// @JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
@@ -70,7 +70,7 @@ public class Project extends ExtendedBasicDMPJPAObject {
 	 * The output data model that contains the output schema.
 	 */
 	@XmlElement(name = "output_data_model")
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "OUTPUT_DATA_MODEL")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	// @JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
@@ -80,7 +80,7 @@ public class Project extends ExtendedBasicDMPJPAObject {
 	/**
 	 * The collection of mappings the project.
 	 */
-	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "PROJECTS_MAPPINGS", joinColumns = { @JoinColumn(name = "PROJECT_UUID", referencedColumnName = "UUID") }, inverseJoinColumns = { @JoinColumn(name = "MAPPING_UUID", referencedColumnName = "UUID") })
 	// @JsonSerialize(using = SetMappingReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
@@ -91,7 +91,7 @@ public class Project extends ExtendedBasicDMPJPAObject {
 	/**
 	 * The collection of functions that are created in this project, i.e., those functions are only visible to this project.
 	 */
-	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "PROJECTS_FUNCTIONS", joinColumns = { @JoinColumn(name = "PROJECT_UUID", referencedColumnName = "UUID") }, inverseJoinColumns = { @JoinColumn(name = "FUNCTION_UUID", referencedColumnName = "UUID") })
 	// @JsonSerialize(using = SetFunctionReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)

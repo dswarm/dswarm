@@ -52,7 +52,7 @@ public class DataModel extends ExtendedBasicDMPJPAObject {
 	 * The data resource (origin or raw data).
 	 */
 	@XmlElement(name = "data_resource")
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "DATA_RESOURCE")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	// @JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
@@ -62,7 +62,7 @@ public class DataModel extends ExtendedBasicDMPJPAObject {
 	/**
 	 * The related configuration.
 	 */
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "CONFIGURATION")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	// @JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
@@ -72,7 +72,7 @@ public class DataModel extends ExtendedBasicDMPJPAObject {
 	/**
 	 * The data schema.
 	 */
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "DATA_SCHEMA")
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	// @JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
