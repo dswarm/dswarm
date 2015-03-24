@@ -15,10 +15,21 @@
  */
 package org.dswarm.controller.resources;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.inject.Provider;
+import javax.ws.rs.core.Response;
 
+import com.codahale.metrics.annotation.Timed;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import org.dswarm.controller.DMPControllerException;
+import org.dswarm.persistence.dto.ShortExtendendBasicDMPDTO;
 import org.dswarm.persistence.model.BasicDMPJPAObject;
 import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
 import org.dswarm.persistence.model.proxy.ProxyExtendedBasicDMPJPAObject;
@@ -36,6 +47,8 @@ import org.dswarm.persistence.service.ExtendedBasicDMPJPAService;
 public abstract class ExtendedBasicDMPResource<POJOCLASSPERSISTENCESERVICE extends ExtendedBasicDMPJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyExtendedBasicDMPJPAObject<POJOCLASS>, POJOCLASS extends ExtendedBasicDMPJPAObject>
 		extends BasicDMPResource<POJOCLASSPERSISTENCESERVICE, PROXYPOJOCLASS, POJOCLASS> {
 
+	private static final Logger LOG = LoggerFactory.getLogger(ExtendedBasicDMPResource.class);
+
 	/**
 	 * Creates a new resource (controller service) for the given concrete POJO class with the provider of the concrete persistence
 	 * service, the object mapper and metrics registry.
@@ -51,6 +64,49 @@ public abstract class ExtendedBasicDMPResource<POJOCLASSPERSISTENCESERVICE exten
 	}
 
 	/**
+	 * This endpoint returns an object of the type of the POJO class as JSON representation for the provided object uuid.
+	 * The format of the object might either be a full or an abbreviated short variant.
+	 *
+	 * @param uuid an object uuid
+	 * @param format an enum that specifies which format to use
+	 * @return a JSON representation of an object of the type of the POJO class
+	 */
+	@Timed
+	public Response getObject(
+			   /* @PathParam("uuid") */ final String uuid,
+			/* @QueryParam("format") */ final POJOFormat format) throws DMPControllerException {
+
+		switch (format) {
+			case SHORT:
+				return getShortObject(uuid);
+//			case FULL:
+			default:
+				return getObject(uuid);
+		}
+	}
+
+	/**
+	 * This endpoint returns a list of all objects of the type of the POJO class as JSON representation.
+	 * The format of the objects might either be a full or an abbreviated short variant.
+	 *
+	 * @param format an enum that specifies which format to use
+	 * @return a list of all objects of the type of the POJO class as JSON representation
+	 * @throws DMPControllerException
+	 */
+	@Timed
+	public Response getObjects(final POJOFormat format) throws DMPControllerException {
+
+		switch (format) {
+			case SHORT:
+				return getShortObjects();
+//			case FULL:
+			default:
+				return getObjects();
+		}
+	}
+
+
+	/**
 	 * {@inheritDoc}<br/>
 	 * Updates the name and description of the object.
 	 */
@@ -62,5 +118,87 @@ public abstract class ExtendedBasicDMPResource<POJOCLASSPERSISTENCESERVICE exten
 		object.setDescription(objectFromJSON.getDescription());
 
 		return object;
+	}
+
+	private Response getShortObject(final String uuid) throws DMPControllerException {
+
+		LOG.debug("try to get {} with uuid '{}'", pojoClassName, uuid);
+
+		final POJOCLASSPERSISTENCESERVICE persistenceService = persistenceServiceProvider.get();
+		final POJOCLASS object = persistenceService.getObject(uuid);
+
+		if (object == null) {
+
+			LOG.debug("couldn't find {} '{}'", pojoClassName, uuid);
+
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
+		LOG.debug("got {} with uuid '{}'", pojoClassName, uuid);
+		if (LOG.isTraceEnabled()) {
+			LOG.trace(" = '{}'", ToStringBuilder.reflectionToString(object));
+		}
+
+		final String objectJSON = serializeShortObject(object);
+
+		LOG.debug("return {} with uuid '{}'", pojoClassName, uuid);
+		if (LOG.isTraceEnabled()) {
+			LOG.trace(" = '{}'", objectJSON);
+		}
+
+		return buildResponse(objectJSON);
+	}
+
+	private Response getShortObjects() throws DMPControllerException {
+
+		LOG.debug("try to get all {}s", pojoClassName);
+
+		final POJOCLASSPERSISTENCESERVICE persistenceService = persistenceServiceProvider.get();
+
+		final List<ShortExtendendBasicDMPDTO> objects = persistenceService.getShortObjects();
+
+		if (objects == null) {
+
+			LOG.debug("couldn't find {}s", pojoClassName);
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
+
+		if (objects.isEmpty()) {
+
+			LOG.debug("there are no {}s", pojoClassName);
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
+
+		LOG.debug("got all {}s ", pojoClassName);
+		if (LOG.isTraceEnabled()) {
+			LOG.trace(" = '{}'", ToStringBuilder.reflectionToString(objects));
+		}
+
+		final List<ShortExtendendBasicDMPDTO> dtos = objects.stream()
+				.map(dto -> dto.withHref(createObjectURI(dto.uuid)))
+				.collect(Collectors.toList());
+
+		final String objectsJSON = serializeObject(dtos);
+
+		LOG.debug("return all {}s ", pojoClassName);
+		if (LOG.isTraceEnabled()) {
+			LOG.trace("'{}'", objectsJSON);
+		}
+
+		return buildResponse(objectsJSON);
+	}
+
+	private String serializeShortObject(final POJOCLASS pojo) throws DMPControllerException {
+
+		final ShortExtendendBasicDMPDTO dto = shortVersionOf(pojo);
+
+		try {
+			return objectMapperProvider.get().writeValueAsString(dto);
+		} catch (final JsonProcessingException e) {
+			throw new DMPControllerException("couldn't serialize short " + pojoClassName + " JSON", e);
+		}
+	}
+
+	private ShortExtendendBasicDMPDTO shortVersionOf(final POJOCLASS pojo) {
+		return ShortExtendendBasicDMPDTO.of(pojo, createObjectURI(pojo));
 	}
 }
