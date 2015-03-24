@@ -190,12 +190,7 @@ public abstract class ExtendedBasicDMPResource<POJOCLASSPERSISTENCESERVICE exten
 	private String serializeShortObject(final POJOCLASS pojo) throws DMPControllerException {
 
 		final ShortExtendendBasicDMPDTO dto = shortVersionOf(pojo);
-
-		try {
-			return objectMapperProvider.get().writeValueAsString(dto);
-		} catch (final JsonProcessingException e) {
-			throw new DMPControllerException("couldn't serialize short " + pojoClassName + " JSON", e);
-		}
+		return serializeObject(dto);
 	}
 
 	private ShortExtendendBasicDMPDTO shortVersionOf(final POJOCLASS pojo) {

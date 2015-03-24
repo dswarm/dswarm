@@ -177,12 +177,7 @@ public abstract class ExtendedMediumBasicDMPResource<
 	private String serializeMediumObject(final POJOCLASS pojo) throws DMPControllerException {
 
 		final MEDIUMCLASS dto = mediumVersionOf(pojo);
-
-		try {
-			return objectMapperProvider.get().writeValueAsString(dto);
-		} catch (final JsonProcessingException e) {
-			throw new DMPControllerException("couldn't serialize medium " + pojoClassName + " JSON", e);
-		}
+		return serializeObject(dto);
 	}
 
 	private MEDIUMCLASS mediumVersionOf(final POJOCLASS pojo) {
