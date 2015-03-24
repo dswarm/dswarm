@@ -15,21 +15,22 @@
  */
 package org.dswarm.controller.resources;
 
+import java.util.Locale;
+
+import javax.ws.rs.BadRequestException;
+
+@SuppressWarnings("UnusedDeclaration")
 public enum POJOFormat {
 	FULL, MEDIUM, SHORT;
 
 	// Required for Jersey, so that we can use 'full' instead of 'FULL'
-	@SuppressWarnings("UnusedDeclaration")
 	public static POJOFormat fromString(final String name) {
-		switch (name.toLowerCase()) {
-			case "short":
-				return SHORT;
-			case "medium":
-				return MEDIUM;
-			// case "full":
-			// TODO: should we fail for an invalid format instead of defaulting to full?
-			default:
-				return FULL;
+		try {
+			return valueOf(name.toUpperCase(Locale.ENGLISH));
+		} catch (final IllegalArgumentException iae) {
+			throw new BadRequestException(
+					String.format("POJOFormat must be one of {full|medium|short}, but got [%s] instead", name),
+					iae);
 		}
 	}
 }
